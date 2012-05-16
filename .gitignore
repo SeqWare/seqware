@@ -3,6 +3,7 @@
 
 # Package Files #
 *.jar
+*.ear
 *.war
 *.earseqware-upload-download/target
 
@@ -19,4 +20,3 @@ backend/testclasses
 # /seqware-queryengine/.settings/
 /.settings/org.eclipse.m2e.core.prefs
 /.settings/org.eclipse.core.resources.prefs
-
