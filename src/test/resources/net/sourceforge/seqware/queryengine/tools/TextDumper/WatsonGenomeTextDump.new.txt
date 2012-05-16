@@ -1,0 +1,801 @@
+mismatch_id	ref_qual_call	cons_qual_call	max_mapping_qual	ref_max_seq_qual	ref_ave_seq_qual	cons_max_seq_qual	cons_ave_seq_qual	zygosity	base_count_forward	base_count_reverse	base_count	contig	start	stop	ref_base	cons_base	called_base	read_count	type	read_bases	base_qual	call_one	call_two	reads_support_call_one	reads_support_call_two	reads_support_call_three
+Variant: 1	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	41920	41921	G		C	4	1					0	0	0
+	tags:
+		BJW-1117373
+		not_dbSNP:novel
+		heterozygous
+		native_id:BJW-1117373
+		chr1
+		novel
+Variant: 2	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	1	0	1	chr1	42100	42101	T		G	1	1					0	0	0
+	tags:
+		BJW-1117523
+		rs2691277.1
+		unknown_zygosity
+		native_id:BJW-1117523
+		chr1
+		is_dbSNP:rs2691277.1
+Variant: 3	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	3	0	3	chr1	45407	45408	C		T	3	1					0	0	0
+	tags:
+		rs28396308
+		unknown_zygosity
+		native_id:BJW-1119675
+		chr1
+		BJW-1119675
+		is_dbSNP:rs28396308
+Variant: 4	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	4	0	4	chr1	46243	46244	T		C	5	1					0	0	0
+	tags:
+		BJW-1120399
+		not_dbSNP:novel
+		heterozygous
+		native_id:BJW-1120399
+		chr1
+		novel
+Variant: 5	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	1	0	1	chr1	47814	47815	A		C	1	1					0	0	0
+	tags:
+		BJW-1121446
+		rs2691334
+		unknown_zygosity
+		native_id:BJW-1121446
+		chr1
+		is_dbSNP:rs2691334
+Variant: 6	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	1	0	1	chr1	48073	48074	A		G	1	1					0	0	0
+	tags:
+		rs2691335.2
+		BJW-1121620
+		unknown_zygosity
+		native_id:BJW-1121620
+		chr1
+		is_dbSNP:rs2691335.2
+Variant: 7	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	48633	48634	T		C	12	1					0	0	0
+	tags:
+		not_dbSNP:novel
+		heterozygous
+		native_id:BJW-1122030
+		BJW-1122030
+		chr1
+		novel
+Variant: 8	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	51304	51305	A		G	2	1					0	0	0
+	tags:
+		BJW-1123396
+		rs2531261
+		unknown_zygosity
+		native_id:BJW-1123396
+		chr1
+		is_dbSNP:rs2531261
+Variant: 9	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	53130	53131	T		C	2	1					0	0	0
+	tags:
+		rs28664618
+		BJW-1124265
+		heterozygous
+		native_id:BJW-1124265
+		chr1
+		is_dbSNP:rs28664618
+Variant: 10	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	1	0	1	chr1	59373	59374	A		G	1	1					0	0	0
+	tags:
+		BJW-1130361
+		unknown_zygosity
+		native_id:BJW-1130361
+		chr1
+		rs2691305
+		is_dbSNP:rs2691305
+Variant: 11	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	77052	77053	G		A	6	1					0	0	0
+	tags:
+		BJW-1145094
+		rs1524602
+		heterozygous
+		native_id:BJW-1145094
+		chr1
+		is_dbSNP:rs1524602
+Variant: 12	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	3	0	3	chr1	78200	78201	G		A	3	1					0	0	0
+	tags:
+		BJW-1145915
+		not_dbSNP:novel
+		unknown_zygosity
+		native_id:BJW-1145915
+		chr1
+		novel
+Variant: 13	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	4	0	4	chr1	554724	554725	T		C	11	1					0	0	0
+	tags:
+		BJW-1126214
+		rs1988726
+		heterozygous
+		native_id:BJW-1126214
+		chr1
+		is_dbSNP:rs1988726
+Variant: 14	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	555763	555764	G		A	2	1					0	0	0
+	tags:
+		BJW-1126357
+		rs7411575
+		heterozygous
+		native_id:BJW-1126357
+		chr1
+		is_dbSNP:rs7411575
+Variant: 15	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	5	0	5	chr1	556233	556234	A		G	97	1					0	0	0
+	tags:
+		rs1832731
+		BJW-1126415
+		heterozygous
+		native_id:BJW-1126415
+		chr1
+		is_dbSNP:rs1832731
+Variant: 16	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	556633	556634	C		T	80	1					0	0	0
+	tags:
+		rs2185536
+		heterozygous
+		native_id:BJW-1126439
+		chr1
+		BJW-1126439
+		is_dbSNP:rs2185536
+Variant: 17	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	75	0	75	chr1	556654	556655	T		C	79	1					0	0	0
+	tags:
+		rs9283152
+		BJW-1126442
+		heterozygous
+		native_id:BJW-1126442
+		chr1
+		is_dbSNP:rs9283152
+Variant: 18	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	75	0	75	chr1	556678	556679	C		A	79	1					0	0	0
+	tags:
+		BJW-1126445
+		rs2185537
+		heterozygous
+		native_id:BJW-1126445
+		chr1
+		is_dbSNP:rs2185537
+Variant: 19	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	557104	557105	G		A	2	1					0	0	0
+	tags:
+		BJW-1126502
+		rs7518996
+		unknown_zygosity
+		native_id:BJW-1126502
+		chr1
+		is_dbSNP:rs7518996
+Variant: 20	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	557216	557217	C		T	2	1					0	0	0
+	tags:
+		BJW-1126515
+		not_dbSNP:novel
+		unknown_zygosity
+		native_id:BJW-1126515
+		chr1
+		novel
+Variant: 21	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	4	0	4	chr1	557223	557224	G		A	4	1					0	0	0
+	tags:
+		not_dbSNP:novel
+		unknown_zygosity
+		native_id:BJW-1126516
+		chr1
+		novel
+		BJW-1126516
+Variant: 22	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	3	0	3	chr1	557645	557646	T		C	72	1					0	0	0
+	tags:
+		rs2000095
+		heterozygous
+		native_id:BJW-1126555
+		chr1
+		BJW-1126555
+		is_dbSNP:rs2000095
+Variant: 23	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	9	0	9	chr1	558325	558326	A		G	9	1					0	0	0
+	tags:
+		BJW-1126645
+		rs2153587
+		unknown_zygosity
+		native_id:BJW-1126645
+		chr1
+		is_dbSNP:rs2153587
+Variant: 24	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	558434	558435	G		A	74	1					0	0	0
+	tags:
+		BJW-1126664
+		heterozygous
+		native_id:BJW-1126664
+		chr1
+		rs7413388
+		is_dbSNP:rs7413388
+Variant: 25	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	558553	558554	T		C	42	1					0	0	0
+	tags:
+		rs8179256
+		BJW-1126681
+		heterozygous
+		native_id:BJW-1126681
+		chr1
+		is_dbSNP:rs8179256
+Variant: 26	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	88	0	88	chr1	558565	558566	A		G	88	1					0	0	0
+	tags:
+		rs7411906
+		BJW-1126683
+		unknown_zygosity
+		native_id:BJW-1126683
+		chr1
+		is_dbSNP:rs7411906
+Variant: 27	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	88	0	88	chr1	558580	558581	C		T	88	1					0	0	0
+	tags:
+		BJW-1126684
+		unknown_zygosity
+		native_id:BJW-1126684
+		chr1
+		rs7417964
+		is_dbSNP:rs7417964
+Variant: 28	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	62	0	62	chr1	558872	558873	T		C	62	1					0	0	0
+	tags:
+		BJW-1126719
+		unknown_zygosity
+		native_id:BJW-1126719
+		chr1
+		is_dbSNP:rs9285836
+		rs9285836
+Variant: 29	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	62	0	62	chr1	558914	558915	C		T	62	1					0	0	0
+	tags:
+		BJW-1126720
+		rs2153588
+		unknown_zygosity
+		native_id:BJW-1126720
+		chr1
+		is_dbSNP:rs2153588
+Variant: 30	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	558956	558957	A		G	2	1					0	0	0
+	tags:
+		rs9283154
+		BJW-1126723
+		unknown_zygosity
+		native_id:BJW-1126723
+		chr1
+		is_dbSNP:rs9283154
+Variant: 31	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	98	0	98	chr1	559088	559089	C		A	98	1					0	0	0
+	tags:
+		BJW-1126730
+		rs6594032
+		unknown_zygosity
+		native_id:BJW-1126730
+		chr1
+		is_dbSNP:rs6594032
+Variant: 32	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	98	0	98	chr1	559112	559113	G		A	98	1					0	0	0
+	tags:
+		BJW-1126733
+		unknown_zygosity
+		native_id:BJW-1126733
+		chr1
+		is_dbSNP:rs2000975
+		rs2000975
+Variant: 33	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	559129	559130	G		A	2	1					0	0	0
+	tags:
+		BJW-1126738
+		unknown_zygosity
+		native_id:BJW-1126738
+		chr1
+		is_dbSNP:rs6650105
+		rs6650105
+Variant: 34	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	6	0	6	chr1	559471	559472	A		C	7	1					0	0	0
+	tags:
+		BJW-1126780
+		rs6594034
+		heterozygous
+		native_id:BJW-1126780
+		chr1
+		is_dbSNP:rs6594034
+Variant: 35	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	33	0	33	chr1	559938	559939	T		C	33	1					0	0	0
+	tags:
+		rs9326625
+		unknown_zygosity
+		native_id:BJW-1126817
+		BJW-1126817
+		chr1
+		is_dbSNP:rs9326625
+Variant: 36	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	34	0	34	chr1	559941	559942	C		T	34	1					0	0	0
+	tags:
+		rs9283156
+		unknown_zygosity
+		native_id:BJW-1126819
+		chr1
+		BJW-1126819
+		is_dbSNP:rs9283156
+Variant: 37	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	35	0	35	chr1	559951	559952	C		T	35	1					0	0	0
+	tags:
+		BJW-1126821
+		not_dbSNP:novel
+		unknown_zygosity
+		native_id:BJW-1126821
+		chr1
+		novel
+Variant: 38	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	559956	559957	G		A	2	1					0	0	0
+	tags:
+		BJW-1126822
+		rs7339962
+		unknown_zygosity
+		native_id:BJW-1126822
+		chr1
+		is_dbSNP:rs7339962
+Variant: 39	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	559959	559960	A		G	2	1					0	0	0
+	tags:
+		unknown_zygosity
+		native_id:BJW-1126825
+		chr1
+		rs2298012
+		BJW-1126825
+		is_dbSNP:rs2298012
+Variant: 40	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	710659	710660	G		A	4	1					0	0	0
+	tags:
+		rs3115846
+		BJW-1139739
+		heterozygous
+		native_id:BJW-1139739
+		chr1
+		is_dbSNP:rs3115846
+Variant: 41	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	5	0	5	chr1	713753	713754	G		C	5	1					0	0	0
+	tags:
+		BJW-1140001
+		rs2977670
+		unknown_zygosity
+		native_id:BJW-1140001
+		chr1
+		is_dbSNP:rs2977670
+Variant: 42	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	718021	718022	C		T	3	1					0	0	0
+	tags:
+		rs3131978
+		heterozygous
+		native_id:BJW-1140250
+		chr1
+		BJW-1140250
+		is_dbSNP:rs3131978
+Variant: 43	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	719541	719542	C		G	2	1					0	0	0
+	tags:
+		BJW-1140412
+		rs4951859
+		heterozygous
+		native_id:BJW-1140412
+		chr1
+		is_dbSNP:rs4951859
+Variant: 44	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	3	0	3	chr1	721580	721581	T		C	3	1					0	0	0
+	tags:
+		BJW-1140582
+		not_dbSNP:novel
+		unknown_zygosity
+		native_id:BJW-1140582
+		chr1
+		novel
+Variant: 45	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	721894	721895	A		C	4	1					0	0	0
+	tags:
+		BJW-1140625
+		not_dbSNP:novel
+		heterozygous
+		native_id:BJW-1140625
+		chr1
+		novel
+Variant: 46	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	726151	726152	T		A	2	1					0	0	0
+	tags:
+		not_dbSNP:novel
+		unknown_zygosity
+		native_id:BJW-1141021
+		chr1
+		BJW-1141021
+		novel
+Variant: 47	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	1	0	1	chr1	726384	726385	A		T	1	1					0	0	0
+	tags:
+		BJW-1141033
+		rs3094318
+		unknown_zygosity
+		native_id:BJW-1141033
+		chr1
+		is_dbSNP:rs3094318
+Variant: 48	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	1	0	1	chr1	726385	726386	T		C	1	1					0	0	0
+	tags:
+		rs3131974
+		BJW-1141034
+		unknown_zygosity
+		native_id:BJW-1141034
+		chr1
+		is_dbSNP:rs3131974
+Variant: 49	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	727986	727987	G		A	4	1					0	0	0
+	tags:
+		BJW-1141228
+		heterozygous
+		native_id:BJW-1141228
+		chr1
+		rs2427920
+		is_dbSNP:rs2427920
+Variant: 50	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	7	0	7	chr1	729072	729073	A		G	7	1					0	0	0
+	tags:
+		BJW-1141355
+		rs2427917
+		unknown_zygosity
+		native_id:BJW-1141355
+		chr1
+		is_dbSNP:rs2427917
+Variant: 51	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	1	0	1	chr1	729288	729289	A		G	1	1					0	0	0
+	tags:
+		rs3131973
+		unknown_zygosity
+		native_id:BJW-1141372
+		chr1
+		BJW-1141372
+		is_dbSNP:rs3131973
+Variant: 52	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	741618	741619	T		C	6	1					0	0	0
+	tags:
+		rs28527770
+		BJW-1142783
+		heterozygous
+		native_id:BJW-1142783
+		chr1
+		is_dbSNP:rs28527770
+Variant: 53	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	742428	742429	G		A	2	1					0	0	0
+	tags:
+		BJW-1142886
+		rs3094315
+		unknown_zygosity
+		native_id:BJW-1142886
+		chr1
+		is_dbSNP:rs3094315
+Variant: 54	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	742583	742584	A		G	4	1					0	0	0
+	tags:
+		heterozygous
+		native_id:BJW-1142893
+		chr1
+		BJW-1142893
+		rs3131972
+		is_dbSNP:rs3131972
+Variant: 55	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	742756	742757	T		C	3	1					0	0	0
+	tags:
+		heterozygous
+		native_id:BJW-1142902
+		chr1
+		rs3131971
+		BJW-1142902
+		is_dbSNP:rs3131971
+Variant: 56	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	5	0	5	chr1	743131	743132	C		G	5	1					0	0	0
+	tags:
+		rs3115861
+		unknown_zygosity
+		native_id:BJW-1142935
+		chr1
+		BJW-1142935
+		is_dbSNP:rs3115861
+Variant: 57	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	743403	743404	G		A	3	1					0	0	0
+	tags:
+		rs2073813
+		heterozygous
+		native_id:BJW-1142950
+		BJW-1142950
+		chr1
+		is_dbSNP:rs2073813
+Variant: 58	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	1	0	1	chr1	744196	744197	T		C	1	1					0	0	0
+	tags:
+		rs3131967
+		BJW-1143009
+		unknown_zygosity
+		native_id:BJW-1143009
+		chr1
+		is_dbSNP:rs3131967
+Variant: 59	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	744365	744366	G		A	2	1					0	0	0
+	tags:
+		BJW-1143022
+		unknown_zygosity
+		native_id:BJW-1143022
+		chr1
+		is_dbSNP:rs3115859
+		rs3115859
+Variant: 60	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	4	0	4	chr1	744826	744827	C		T	4	1					0	0	0
+	tags:
+		BJW-1143078
+		rs3131966
+		unknown_zygosity
+		native_id:BJW-1143078
+		chr1
+		is_dbSNP:rs3131966
+Variant: 61	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	3	0	3	chr1	745749	745750	C		G	3	1					0	0	0
+	tags:
+		rs3131964
+		BJW-1143185
+		unknown_zygosity
+		native_id:BJW-1143185
+		chr1
+		is_dbSNP:rs3131964
+Variant: 62	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	746466	746467	A		G	3	1					0	0	0
+	tags:
+		rs3131962
+		BJW-1143245
+		heterozygous
+		native_id:BJW-1143245
+		chr1
+		is_dbSNP:rs3131962
+Variant: 63	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	747502	747503	G		A	2	1					0	0	0
+	tags:
+		BJW-1143321
+		rs3115853
+		unknown_zygosity
+		native_id:BJW-1143321
+		chr1
+		is_dbSNP:rs3115853
+Variant: 64	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	1	0	1	chr1	747798	747799	C		A	1	1					0	0	0
+	tags:
+		rs4951862
+		BJW-1143366
+		unknown_zygosity
+		native_id:BJW-1143366
+		chr1
+		is_dbSNP:rs4951862
+Variant: 65	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	748186	748187	T		C	3	1					0	0	0
+	tags:
+		BJW-1143385
+		rs3131955
+		heterozygous
+		native_id:BJW-1143385
+		chr1
+		is_dbSNP:rs3131955
+Variant: 66	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	749155	749156	T		A	4	1					0	0	0
+	tags:
+		rs10157329
+		heterozygous
+		native_id:BJW-1143431
+		chr1
+		BJW-1143431
+		is_dbSNP:rs10157329
+Variant: 67	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	749562	749563	T		C	3	1					0	0	0
+	tags:
+		rs3115852
+		BJW-1143463
+		heterozygous
+		native_id:BJW-1143463
+		chr1
+		is_dbSNP:rs3115852
+Variant: 68	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	749699	749700	T		A	3	1					0	0	0
+	tags:
+		rs3115851
+		BJW-1143480
+		heterozygous
+		native_id:BJW-1143480
+		chr1
+		is_dbSNP:rs3115851
+Variant: 69	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	5	0	5	chr1	750774	750775	C		T	5	1					0	0	0
+	tags:
+		rs1048488
+		unknown_zygosity
+		native_id:BJW-1143585
+		chr1
+		BJW-1143585
+		is_dbSNP:rs1048488
+Variant: 70	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	751614	751615	C		T	4	1					0	0	0
+	tags:
+		BJW-1143631
+		heterozygous
+		native_id:BJW-1143631
+		chr1
+		rs1057213
+		is_dbSNP:rs1057213
+Variant: 71	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	751662	751663	A		T	4	1					0	0	0
+	tags:
+		rs1064272
+		heterozygous
+		native_id:BJW-1143636
+		chr1
+		BJW-1143636
+		is_dbSNP:rs1064272
+Variant: 72	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	752463	752464	T		C	2	1					0	0	0
+	tags:
+		BJW-1143679
+		rs3131949
+		unknown_zygosity
+		native_id:BJW-1143679
+		chr1
+		is_dbSNP:rs3131949
+Variant: 73	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	1	0	1	chr1	752494	752495	T		A	1	1					0	0	0
+	tags:
+		rs3131948
+		BJW-1143680
+		unknown_zygosity
+		native_id:BJW-1143680
+		chr1
+		is_dbSNP:rs3131948
+Variant: 74	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	3	0	3	chr1	754053	754054	T		G	4	1					0	0	0
+	tags:
+		BJW-1143766
+		heterozygous
+		native_id:BJW-1143766
+		chr1
+		rs7515915
+		is_dbSNP:rs7515915
+Variant: 75	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	755770	755771	A		G	3	1					0	0	0
+	tags:
+		BJW-1143864
+		rs2519017
+		heterozygous
+		native_id:BJW-1143864
+		chr1
+		is_dbSNP:rs2519017
+Variant: 76	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	755810	755811	C		T	2	1					0	0	0
+	tags:
+		BJW-1143866
+		rs2519016
+		heterozygous
+		native_id:BJW-1143866
+		chr1
+		is_dbSNP:rs2519016
+Variant: 77	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	755869	755870	A		C	2	1					0	0	0
+	tags:
+		BJW-1143869
+		not_dbSNP:novel
+		unknown_zygosity
+		native_id:BJW-1143869
+		chr1
+		novel
+Variant: 78	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	755967	755968	T		A	2	1					0	0	0
+	tags:
+		BJW-1143879
+		rs2519015
+		heterozygous
+		native_id:BJW-1143879
+		chr1
+		is_dbSNP:rs2519015
+Variant: 79	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	757642	757643	G		A	2	1					0	0	0
+	tags:
+		rs2905042
+		unknown_zygosity
+		native_id:BJW-1143901
+		chr1
+		BJW-1143901
+		is_dbSNP:rs2905042
+Variant: 80	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	3	0	3	chr1	759085	759086	C		G	4	1					0	0	0
+	tags:
+		BJW-1144024
+		not_dbSNP:novel
+		heterozygous
+		native_id:BJW-1144024
+		chr1
+		novel
+Variant: 81	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	759691	759692	C		A	2	1					0	0	0
+	tags:
+		rs2977607
+		unknown_zygosity
+		native_id:BJW-1144069
+		chr1
+		BJW-1144069
+		is_dbSNP:rs2977607
+Variant: 82	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	4	0	4	chr1	759937	759938	C		T	4	1					0	0	0
+	tags:
+		BJW-1144103
+		rs2977606
+		unknown_zygosity
+		native_id:BJW-1144103
+		chr1
+		is_dbSNP:rs2977606
+Variant: 83	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	760780	760781	T		G	3	1					0	0	0
+	tags:
+		BJW-1144171
+		rs12069423
+		heterozygous
+		native_id:BJW-1144171
+		chr1
+		is_dbSNP:rs12069423
+Variant: 84	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	761272	761273	C		T	5	1					0	0	0
+	tags:
+		rs2519006
+		heterozygous
+		native_id:BJW-1144195
+		BJW-1144195
+		chr1
+		is_dbSNP:rs2519006
+Variant: 85	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	4	0	4	chr1	761685	761686	T		C	6	1					0	0	0
+	tags:
+		rs2977605
+		heterozygous
+		native_id:BJW-1144216
+		BJW-1144216
+		chr1
+		is_dbSNP:rs2977605
+Variant: 86	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	761829	761830	G		A	4	1					0	0	0
+	tags:
+		not_dbSNP:novel
+		BJW-1144231
+		heterozygous
+		native_id:BJW-1144231
+		chr1
+		novel
+Variant: 87	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	1	0	1	chr1	762617	762618	A		C	1	1					0	0	0
+	tags:
+		BJW-1144306
+		rs2905039
+		unknown_zygosity
+		native_id:BJW-1144306
+		chr1
+		is_dbSNP:rs2905039
+Variant: 88	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	3	0	3	chr1	765043	765044	A		G	7	1					0	0	0
+	tags:
+		BJW-1144567
+		not_dbSNP:novel
+		heterozygous
+		native_id:BJW-1144567
+		chr1
+		novel
+Variant: 89	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	765288	765289	G		A	2	1					0	0	0
+	tags:
+		rs2905037
+		BJW-1144588
+		heterozygous
+		native_id:BJW-1144588
+		chr1
+		is_dbSNP:rs2905037
+Variant: 90	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	765521	765522	A		G	4	1					0	0	0
+	tags:
+		BJW-1144608
+		rs2905035
+		heterozygous
+		native_id:BJW-1144608
+		chr1
+		is_dbSNP:rs2905035
+Variant: 91	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	4	0	4	chr1	768431	768432	A		G	4	1					0	0	0
+	tags:
+		rs2977615
+		BJW-1144851
+		unknown_zygosity
+		native_id:BJW-1144851
+		chr1
+		is_dbSNP:rs2977615
+Variant: 92	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	769184	769185	A		G	3	1					0	0	0
+	tags:
+		BJW-1144918
+		heterozygous
+		native_id:BJW-1144918
+		chr1
+		rs4040617
+		is_dbSNP:rs4040617
+Variant: 93	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	8	0	8	chr1	769889	769890	G		T	8	1					0	0	0
+	tags:
+		rs2977613
+		BJW-1145032
+		unknown_zygosity
+		native_id:BJW-1145032
+		chr1
+		is_dbSNP:rs2977613
+Variant: 94	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	770647	770648	T		A	2	1					0	0	0
+	tags:
+		BJW-1145105
+		unknown_zygosity
+		native_id:BJW-1145105
+		chr1
+		rs2977612
+		is_dbSNP:rs2977612
+Variant: 95	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	772843	772844	C		T	2	1					0	0	0
+	tags:
+		rs6594026
+		BJW-1145241
+		unknown_zygosity
+		native_id:BJW-1145241
+		chr1
+		is_dbSNP:rs6594026
+Variant: 96	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	2	0	2	chr1	773166	773167	T		C	2	1					0	0	0
+	tags:
+		BJW-1145268
+		rs2980295
+		unknown_zygosity
+		native_id:BJW-1145268
+		chr1
+		is_dbSNP:rs2980295
+Variant: 97	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	2	0	2	chr1	774912	774913	G		A	3	1					0	0	0
+	tags:
+		rs2905062
+		BJW-1145362
+		heterozygous
+		native_id:BJW-1145362
+		chr1
+		is_dbSNP:rs2905062
+Variant: 98	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	5	0	5	chr1	776672	776673	G		A	5	1					0	0	0
+	tags:
+		BJW-1145584
+		rs2905061
+		unknown_zygosity
+		native_id:BJW-1145584
+		chr1
+		is_dbSNP:rs2905061
+Variant: 99	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	1	0	1	chr1	777124	777125	C		G	1	1					0	0	0
+	tags:
+		rs2905056
+		unknown_zygosity
+		native_id:BJW-1145621
+		chr1
+		BJW-1145621
+		is_dbSNP:rs2905056
+Variant: 100	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	0	1	chr1	777261	777262	G		T	4	1					0	0	0
+	tags:
+		rs2905055
+		BJW-1145633
+		heterozygous
+		native_id:BJW-1145633
+		chr1
+		is_dbSNP:rs2905055

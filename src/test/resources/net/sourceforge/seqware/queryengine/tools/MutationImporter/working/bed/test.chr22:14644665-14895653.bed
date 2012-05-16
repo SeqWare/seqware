@@ -1,0 +1,2 @@
+chr22	14644665	14644670	DEL:AAATA->-----(34:4:11.8%[F:1:2.9%|R:3:8.8%]call=heterozygous:genome_phred=140.0:snp_phred=140.0:max_mapping_qual=255.0)	140.0	+	14644665	14644670	80,175,175	1	5	0
+chr22	14895653	14895654	INS:----->CCTT(12:4:33.3%[F:3:25.0%|R:1:8.3%]call=heterozygous:genome_phred=18.0:snp_phred=218.0:max_mapping_qual=255.0)	218.0	+	14895653	14895654	80,175,175	1	1	0

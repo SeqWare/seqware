@@ -1,0 +1,15 @@
+tag	count
+SNV	8
+abnormal-ref-gene-model-lacking-stop-codon	1
+chr10	1
+chr22	12
+coding-nonsynonymous	1
+early-termination	2
+frameshift	2
+heterozygous	7
+homozygous	5
+indel	4
+intron-splice-site-mutation	2
+is_dbSNP	3
+not_dbSNP	5
+utr-mutation	1

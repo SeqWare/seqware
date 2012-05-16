@@ -1,0 +1,601 @@
+mismatch_id	ref_qual_call	cons_qual_call	max_mapping_qual	ref_max_seq_qual	ref_ave_seq_qual	cons_max_seq_qual	cons_ave_seq_qual	zygosity	base_count_forward	base_count_reverse	base_count	contig	start	stop	ref_base	cons_base	called_base	read_count	type	read_bases	base_qual	call_one	call_two	reads_support_call_one	reads_support_call_two	reads_support_call_three
+Variant: 1	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	55607	55608	A		G	2	1					0	0	0
+	tags:
+		1103675000000
+		homozygous
+		native_id:1103675000000
+		chr1
+Variant: 2	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	55659	55660	T		C	2	1					0	0	0
+	tags:
+		1103675000001
+		homozygous
+		native_id:1103675000001
+		chr1
+Variant: 3	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	55734	55735	T		G	2	1					0	0	0
+	tags:
+		1103675000002
+		homozygous
+		native_id:1103675000002
+		chr1
+Variant: 4	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	55870	55871	C		G	2	1					0	0	0
+	tags:
+		1103675000003
+		homozygous
+		native_id:1103675000003
+		chr1
+Variant: 5	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	56024	56025	A		T	2	1					0	0	0
+	tags:
+		1103675000004
+		homozygous
+		native_id:1103675000004
+		chr1
+Variant: 6	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	56120	56121	A		G	2	1					0	0	0
+	tags:
+		1103675000005
+		homozygous
+		native_id:1103675000005
+		chr1
+Variant: 7	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	56137	56138	A		T	2	1					0	0	0
+	tags:
+		1103675000006
+		homozygous
+		native_id:1103675000006
+		chr1
+Variant: 8	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	56174	56175	A		T	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000008
+		native_id:1103675000008
+		chr1
+Variant: 9	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	1	2	chr1	556001	556002	A		C	2	1					0	0	0
+	tags:
+		1103675000013
+		heterozygous
+		native_id:1103675000013
+		chr1
+Variant: 10	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	652719	652720	G		A	2	1					0	0	0
+	tags:
+		1103675000017
+		homozygous
+		native_id:1103675000017
+		chr1
+Variant: 11	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	694229	694230	T		C	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000019
+		native_id:1103675000019
+		chr1
+Variant: 12	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	705210	705211	T		G	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000020
+		chr1
+		1103675000020
+Variant: 13	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	705858	705859	A		T	2	1					0	0	0
+	tags:
+		1103675000021
+		homozygous
+		native_id:1103675000021
+		chr1
+Variant: 14	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	708248	708249	A		G	2	1					0	0	0
+	tags:
+		1103675000022
+		homozygous
+		native_id:1103675000022
+		chr1
+Variant: 15	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	708417	708418	T		C	2	1					0	0	0
+	tags:
+		1103675000023
+		homozygous
+		native_id:1103675000023
+		chr1
+Variant: 16	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	713753	713754	G		C	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000030
+		chr1
+		1103675000030
+Variant: 17	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	714731	714732	C		A	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000031
+		chr1
+		1103675000031
+Variant: 18	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	714733	714734	C		G	2	1					0	0	0
+	tags:
+		1103675000032
+		homozygous
+		native_id:1103675000032
+		chr1
+Variant: 19	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	716343	716344	T		G	2	1					0	0	0
+	tags:
+		1103675000033
+		homozygous
+		native_id:1103675000033
+		chr1
+Variant: 20	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	716801	716802	G		C	2	1					0	0	0
+	tags:
+		1103675000034
+		homozygous
+		native_id:1103675000034
+		chr1
+Variant: 21	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	716806	716807	C		G	2	1					0	0	0
+	tags:
+		1103675000035
+		homozygous
+		native_id:1103675000035
+		chr1
+Variant: 22	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	742428	742429	G		A	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000042
+		native_id:1103675000042
+		chr1
+Variant: 23	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	742583	742584	A		G	2	1					0	0	0
+	tags:
+		1103675000043
+		homozygous
+		native_id:1103675000043
+		chr1
+Variant: 24	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	742756	742757	T		C	2	1					0	0	0
+	tags:
+		1103675000044
+		homozygous
+		native_id:1103675000044
+		chr1
+Variant: 25	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	743131	743132	C		G	2	1					0	0	0
+	tags:
+		1103675000045
+		homozygous
+		native_id:1103675000045
+		chr1
+Variant: 26	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	743287	743288	T		C	2	1					0	0	0
+	tags:
+		1103675000047
+		homozygous
+		native_id:1103675000047
+		chr1
+Variant: 27	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	744044	744045	A		G	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000050
+		native_id:1103675000050
+		chr1
+Variant: 28	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	744054	744055	A		G	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000051
+		native_id:1103675000051
+		chr1
+Variant: 29	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	744196	744197	T		C	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000052
+		native_id:1103675000052
+		chr1
+Variant: 30	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	744365	744366	G		A	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000053
+		native_id:1103675000053
+		chr1
+Variant: 31	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	744826	744827	C		T	2	1					0	0	0
+	tags:
+		1103675000054
+		homozygous
+		native_id:1103675000054
+		chr1
+Variant: 32	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	745637	745638	A		G	2	1					0	0	0
+	tags:
+		1103675000055
+		homozygous
+		native_id:1103675000055
+		chr1
+Variant: 33	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	745749	745750	C		G	2	1					0	0	0
+	tags:
+		1103675000056
+		homozygous
+		native_id:1103675000056
+		chr1
+Variant: 34	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	745752	745753	A		T	2	1					0	0	0
+	tags:
+		1103675000057
+		homozygous
+		native_id:1103675000057
+		chr1
+Variant: 35	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	745802	745803	C		T	2	1					0	0	0
+	tags:
+		1103675000058
+		homozygous
+		native_id:1103675000058
+		chr1
+Variant: 36	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	746242	746243	T		A	2	1					0	0	0
+	tags:
+		1103675000059
+		homozygous
+		native_id:1103675000059
+		chr1
+Variant: 37	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	746466	746467	A		G	2	1					0	0	0
+	tags:
+		1103675000060
+		homozygous
+		native_id:1103675000060
+		chr1
+Variant: 38	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	747502	747503	G		A	2	1					0	0	0
+	tags:
+		1103675000061
+		homozygous
+		native_id:1103675000061
+		chr1
+Variant: 39	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	747596	747597	C		T	2	1					0	0	0
+	tags:
+		1103675000062
+		homozygous
+		native_id:1103675000062
+		chr1
+Variant: 40	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	747798	747799	C		A	2	1					0	0	0
+	tags:
+		1103675000063
+		homozygous
+		native_id:1103675000063
+		chr1
+Variant: 41	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	748006	748007	A		G	2	1					0	0	0
+	tags:
+		1103675000064
+		homozygous
+		native_id:1103675000064
+		chr1
+Variant: 42	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	748186	748187	T		C	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000065
+		native_id:1103675000065
+		chr1
+Variant: 43	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	748488	748489	C		T	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000066
+		native_id:1103675000066
+		chr1
+Variant: 44	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	749562	749563	T		C	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000067
+		native_id:1103675000067
+		chr1
+Variant: 45	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	749699	749700	T		A	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000068
+		native_id:1103675000068
+		chr1
+Variant: 46	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	750774	750775	C		T	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000069
+		chr1
+		1103675000069
+Variant: 47	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	751009	751010	T		C	2	1					0	0	0
+	tags:
+		1103675000070
+		homozygous
+		native_id:1103675000070
+		chr1
+Variant: 48	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	751594	751595	C		T	2	1					0	0	0
+	tags:
+		1103675000071
+		homozygous
+		native_id:1103675000071
+		chr1
+Variant: 49	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	751614	751615	C		T	2	1					0	0	0
+	tags:
+		1103675000072
+		homozygous
+		native_id:1103675000072
+		chr1
+Variant: 50	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	751662	751663	A		T	2	1					0	0	0
+	tags:
+		1103675000073
+		homozygous
+		native_id:1103675000073
+		chr1
+Variant: 51	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	751673	751674	G		A	2	1					0	0	0
+	tags:
+		1103675000074
+		homozygous
+		native_id:1103675000074
+		chr1
+Variant: 52	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	752135	752136	G		A	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000077
+		native_id:1103675000077
+		chr1
+Variant: 53	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	752451	752452	G		C	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000078
+		native_id:1103675000078
+		chr1
+Variant: 54	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	752454	752455	C		G	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000079
+		native_id:1103675000079
+		chr1
+Variant: 55	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	752463	752464	T		C	2	1					0	0	0
+	tags:
+		1103675000080
+		homozygous
+		native_id:1103675000080
+		chr1
+Variant: 56	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	752494	752495	T		A	2	1					0	0	0
+	tags:
+		1103675000081
+		homozygous
+		native_id:1103675000081
+		chr1
+Variant: 57	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	753256	753257	G		A	2	1					0	0	0
+	tags:
+		1103675000082
+		homozygous
+		native_id:1103675000082
+		chr1
+Variant: 58	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	755967	755968	T		A	2	1					0	0	0
+	tags:
+		1103675000084
+		homozygous
+		native_id:1103675000084
+		chr1
+Variant: 59	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	757642	757643	G		A	2	1					0	0	0
+	tags:
+		1103675000085
+		homozygous
+		native_id:1103675000085
+		chr1
+Variant: 60	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	758115	758116	A		C	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000088
+		chr1
+		1103675000088
+Variant: 61	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	759691	759692	C		A	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000089
+		1103675000089
+		chr1
+Variant: 62	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	759937	759938	C		T	2	1					0	0	0
+	tags:
+		1103675000090
+		homozygous
+		native_id:1103675000090
+		chr1
+Variant: 63	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	760430	760431	A		G	2	1					0	0	0
+	tags:
+		1103675000091
+		homozygous
+		native_id:1103675000091
+		chr1
+Variant: 64	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	760780	760781	T		G	2	1					0	0	0
+	tags:
+		1103675000092
+		homozygous
+		native_id:1103675000092
+		chr1
+Variant: 65	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	761272	761273	C		T	2	1					0	0	0
+	tags:
+		1103675000093
+		homozygous
+		native_id:1103675000093
+		chr1
+Variant: 66	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	761685	761686	T		C	2	1					0	0	0
+	tags:
+		1103675000094
+		homozygous
+		native_id:1103675000094
+		chr1
+Variant: 67	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	762617	762618	A		C	2	1					0	0	0
+	tags:
+		1103675000095
+		homozygous
+		native_id:1103675000095
+		chr1
+Variant: 68	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	764598	764599	A		C	2	1					0	0	0
+	tags:
+		1103675000096
+		homozygous
+		native_id:1103675000096
+		chr1
+Variant: 69	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	764647	764648	G		A	2	1					0	0	0
+	tags:
+		1103675000097
+		homozygous
+		native_id:1103675000097
+		chr1
+Variant: 70	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	764736	764737	A		C	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000098
+		1103675000098
+		chr1
+Variant: 71	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	764745	764746	G		A	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000099
+		chr1
+		1103675000099
+Variant: 72	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	765288	765289	G		A	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000100
+		chr1
+		1103675000100
+Variant: 73	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	765521	765522	A		G	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000101
+		chr1
+		1103675000101
+Variant: 74	0.0	0.0	0.0	0.0	0.0	0.0	0.0	2	1	1	2	chr1	766408	766409	G		A	2	1					0	0	0
+	tags:
+		1103675000102
+		heterozygous
+		native_id:1103675000102
+		chr1
+Variant: 75	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	766984	766985	A		T	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000104
+		native_id:1103675000104
+		chr1
+Variant: 76	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	768431	768432	A		G	2	1					0	0	0
+	tags:
+		1103675000109
+		homozygous
+		native_id:1103675000109
+		chr1
+Variant: 77	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	769889	769890	G		T	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000110
+		chr1
+		1103675000110
+Variant: 78	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	770647	770648	T		A	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000111
+		1103675000111
+		chr1
+Variant: 79	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	773166	773167	T		C	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000112
+		chr1
+		1103675000112
+Variant: 80	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	774912	774913	G		A	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000113
+		native_id:1103675000113
+		chr1
+Variant: 81	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	775851	775852	T		C	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000114
+		native_id:1103675000114
+		chr1
+Variant: 82	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	776672	776673	G		A	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000115
+		native_id:1103675000115
+		chr1
+Variant: 83	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	776881	776882	C		T	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000116
+		native_id:1103675000116
+		chr1
+Variant: 84	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	776997	776998	A		G	2	1					0	0	0
+	tags:
+		1103675000117
+		homozygous
+		native_id:1103675000117
+		chr1
+Variant: 85	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	777047	777048	G		A	2	1					0	0	0
+	tags:
+		1103675000118
+		homozygous
+		native_id:1103675000118
+		chr1
+Variant: 86	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	777067	777068	G		A	2	1					0	0	0
+	tags:
+		1103675000119
+		homozygous
+		native_id:1103675000119
+		chr1
+Variant: 87	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	777124	777125	C		G	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000120
+		native_id:1103675000120
+		chr1
+Variant: 88	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	777261	777262	G		T	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000121
+		native_id:1103675000121
+		chr1
+Variant: 89	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	777547	777548	G		T	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000122
+		native_id:1103675000122
+		chr1
+Variant: 90	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	777706	777707	C		T	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000123
+		native_id:1103675000123
+		chr1
+Variant: 91	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	778575	778576	T		C	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000124
+		1103675000124
+		chr1
+Variant: 92	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	778702	778703	T		C	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000125
+		chr1
+		1103675000125
+Variant: 93	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	778706	778707	C		G	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000126
+		chr1
+		1103675000126
+Variant: 94	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	778751	778752	C		T	2	1					0	0	0
+	tags:
+		homozygous
+		native_id:1103675000127
+		chr1
+		1103675000127
+Variant: 95	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	778761	778762	G		C	2	1					0	0	0
+	tags:
+		1103675000128
+		homozygous
+		native_id:1103675000128
+		chr1
+Variant: 96	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	778765	778766	G		A	2	1					0	0	0
+	tags:
+		1103675000129
+		homozygous
+		native_id:1103675000129
+		chr1
+Variant: 97	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	778856	778857	G		C	2	1					0	0	0
+	tags:
+		1103675000130
+		homozygous
+		native_id:1103675000130
+		chr1
+Variant: 98	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	778863	778864	G		A	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000131
+		native_id:1103675000131
+		chr1
+Variant: 99	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	778961	778962	G		A	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000132
+		native_id:1103675000132
+		chr1
+Variant: 100	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1	1	1	2	chr1	779118	779119	T		C	2	1					0	0	0
+	tags:
+		homozygous
+		1103675000133
+		native_id:1103675000133
+		chr1

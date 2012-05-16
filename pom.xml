@@ -1,0 +1,180 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>seqware-queryengine</artifactId>
+
+    <name>seqware-queryengine</name>
+    <description>SeqWare sra export tool</description>
+    <url>http://seqware.sf.net</url>
+
+    <parent>
+        <groupId>net.sourceforge.seqware</groupId>
+        <artifactId>seqware</artifactId>
+        <version>0.11.4-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>edu.unc.med.lccc.tcgasra.main.CreateXML</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.11</version>
+                <configuration>
+                    <!-- NOTE: you can change groups to "berkeleydb" (default), "hbase", or 
+                    "postgresql" (or a comma-delimited, no space list of multiple) to test 
+                    those, just make sure you setup hbase/postgresql first -->
+                    <groups>hbase</groups>
+                    <systemPropertyVariables>
+                       <QE_BERKELEYDB_PATH>/tmp/seqware_qe_berkeleydb_test</QE_BERKELEYDB_PATH>
+                       <QE_BERKELEYDB_COVERAGE_BIN_SIZE>5</QE_BERKELEYDB_COVERAGE_BIN_SIZE>
+                       <QE_BERKELEYDB_CACHE_SIZE>10000</QE_BERKELEYDB_CACHE_SIZE>
+                       <QE_POSTGRESQL_HOST>localhost</QE_POSTGRESQL_HOST>
+                       <QE_POSTGRESQL_PORT>5432</QE_POSTGRESQL_PORT>
+                       <QE_POSTGRESQL_USER>seqware</QE_POSTGRESQL_USER>
+                       <QE_POSTGRESQL_PASS>seqware7420</QE_POSTGRESQL_PASS>
+                       <QE_POSTGRESQL_DB>seqware_qe_db</QE_POSTGRESQL_DB>
+                    </systemPropertyVariables>
+                    <!--<excludes>
+                        <exclude>**/*Test.java</exclude>
+                    </excludes> -->
+                </configuration>
+               
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>cloudera-cdh3-hadoop-repository</id>
+            <name>CDH3 Cloudera Maven Repository</name>
+            <!-- <url>https://repository.cloudera.com/content/repositories/releases</url> -->
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos</url> 
+        </repository>
+        <repository>
+            <id>biojava3-repository</id>
+            <name>BioJava Repository</name>
+            <url>http://biojava.org/download/maven</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.hadoop.thirdparty.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>r09-jarjar</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>3.3.4-cdh3u3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase</artifactId>
+            <version>0.90.6-cdh3u4</version>
+        </dependency>
+	<!-- 
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>cloudera-transactional</artifactId>
+            <version>0.20.3-1</version>
+        </dependency>
+	-->
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase</artifactId>
+            <version>0.90.6-cdh3u4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-impl</artifactId>                        
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>                        
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <artifactId>hadoop-core</artifactId>
+            <groupId>org.apache.hadoop</groupId>
+            <version>0.20.2-cdh3u4</version>
+        </dependency>
+        <dependency>
+            <artifactId>hadoop-tools</artifactId>
+            <groupId>org.apache.hadoop</groupId>
+            <version>0.20.2-cdh3u4</version>
+        </dependency>
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>berkeley-db</groupId>
+            <artifactId>c-lib-with-java</artifactId>
+            <version>4.7.25</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.biojava</groupId>
+            <artifactId>biojava3-genome</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.1.1</version>
+            <scope>test</scope>
+        </dependency>
+
+<dependency>
+  <groupId>log4j</groupId>
+  <artifactId>log4j</artifactId>
+  <version>1.2.15</version>
+  <scope>provided</scope>
+  <exclusions>
+    <exclusion>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+    </exclusion>
+    <exclusion>
+      <groupId>javax.jms</groupId>
+      <artifactId>jms</artifactId>
+    </exclusion>
+    <exclusion>
+      <groupId>com.sun.jdmk</groupId>
+      <artifactId>jmxtools</artifactId>
+    </exclusion>
+    <exclusion>
+      <groupId>com.sun.jmx</groupId>
+      <artifactId>jmxri</artifactId>
+    </exclusion>
+  </exclusions>
+</dependency>
+
+    </dependencies>
+</project>

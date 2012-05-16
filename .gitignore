@@ -1,0 +1,22 @@
+*.class
+.svn
+
+# Package Files #
+*.jar
+*.war
+*.earseqware-upload-download/target
+
+.classpath
+.project
+.settings
+target
+webservice/classes
+webservice/dist
+backend/classes
+backend/dist
+backend/testclasses
+
+# /seqware-queryengine/.settings/
+/.settings/org.eclipse.m2e.core.prefs
+/.settings/org.eclipse.core.resources.prefs
+
