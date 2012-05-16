@@ -17,10 +17,7 @@ public class HBaseTest {
 
     @Test
     public void main() throws IOException {
-// You need a configuration object to tell the client where to connect.
-// When you create a HBaseConfiguration, it reads in whatever you've set
-// into your hbase-site.xml and in hbase-default.xml, as long as these
-// can be found on the CLASSPATH
+        /*
         Configuration config = HBaseConfiguration.create();
 
         HTable table = new HTable(config, "myLittleHBaseTable");
@@ -50,6 +47,7 @@ public class HBaseTest {
         } finally {
             scanner.close();
         }
+         */
     }
 }
 

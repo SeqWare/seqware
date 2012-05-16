@@ -1,5 +1,8 @@
 package com.github.seqware.model;
 
+import java.lang.String;
+import java.util.UUID;
+
 public class Feature {
 
     /**
@@ -12,7 +15,7 @@ public class Feature {
     /**
      * Internally used unique identifier of this feature.
      */
-    private long uid;
+    private UUID uuid;
 
     /**
      * User provided ID for the feature (optional).
@@ -22,7 +25,7 @@ public class Feature {
     /**
      * Reference system used for coordinates, for example, versioned name of genome assembly used.
      */
-    String reference;
+    private String reference;
 
     /**
      * Start coordinate.
@@ -38,5 +41,45 @@ public class Feature {
      * Strand of the feature.
      */
     private Strand strand;
+
+    private Feature() {
+        // TODO This will have to be replaced with a stronger UUID generation method.
+        this.uuid = UUID.randomUUID();
+    }
+
+    /**
+     * Create a new location based non-stranded feature.
+     *
+     * @param reference Reference system used for coordinates, for example, versioned name of genome assembly used.
+     * @param start Start coordinate.
+     * @param stop Stop coordinate.
+     */
+    public Feature(String reference, long start, long stop) {
+        this();
+    }
+
+    /**
+     * Create a new location based feature.
+     *
+     * @param reference Reference system used for coordinates, for example, versioned name of genome assembly used.
+     * @param start Start coordinate.
+     * @param stop Stop coordinate.
+     * @param strand Strand of the feature.
+     */
+    public Feature(String reference, long start, long stop, Strand strand) {
+        this(reference, start, stop);
+
+        if (strand != null)
+            this.strand = strand;
+        else
+            this.strand = Strand.NOT_STRANDED;
+    }
+
+    /**
+     * Get the universally unique identifier of this feature.
+     */
+    public UUID getUUID() {
+        return this.uuid;
+    }
 }
 
