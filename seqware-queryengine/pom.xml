@@ -1,0 +1,58 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>seqware-queryengine</artifactId>
+
+    <name>seqware-queryengine</name>
+    <description>SeqWare Query Backend</description>
+    <url>https://github.com/SeqWare/seqware</url>
+
+    <parent>
+        <groupId>com.github.seqware</groupId>
+        <artifactId>seqware</artifactId>
+        <version>0.12.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase</artifactId>
+            <version>0.92.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-impl</artifactId>                        
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>                        
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <artifactId>hadoop-core</artifactId>
+            <groupId>org.apache.hadoop</groupId>
+            <version>0.20.205.0</version>
+        </dependency>
+        <dependency>
+            <artifactId>hadoop-tools</artifactId>
+            <groupId>org.apache.hadoop</groupId>
+            <version>0.20.205.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
