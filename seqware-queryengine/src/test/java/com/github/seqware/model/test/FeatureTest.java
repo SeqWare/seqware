@@ -1,7 +1,6 @@
 package com.github.seqware.model.test;
 
 import com.github.seqware.model.Feature;
-
 import org.junit.Assert;
 import org.junit.Test;
 

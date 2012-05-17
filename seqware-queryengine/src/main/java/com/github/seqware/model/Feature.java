@@ -10,7 +10,7 @@ import java.util.UUID;
  * ACL features on a Feature level since there will be many many features
  * @author dyuen
  */
-public abstract class Feature implements Taggable {
+public class Feature implements Taggable {
 
     /**
      * Strand locations of features.
@@ -87,6 +87,18 @@ public abstract class Feature implements Taggable {
      */
     public UUID getUUID() {
         return this.uuid;
+    }
+    
+    public boolean associateTag(Tag tag) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public boolean associateTag(Tag tag, String value) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public boolean associateTag(Tag tag, String value, String predicate) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
 
