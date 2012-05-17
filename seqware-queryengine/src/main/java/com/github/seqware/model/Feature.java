@@ -2,7 +2,7 @@ package com.github.seqware.model;
 
 import java.util.UUID;
 
-public abstract class Feature implements Taggable, ACLable, Versionable{
+public abstract class Feature implements Taggable {
 
     /**
      * Strand locations of features.
