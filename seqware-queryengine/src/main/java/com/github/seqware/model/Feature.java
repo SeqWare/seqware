@@ -10,7 +10,7 @@ import java.util.UUID;
  * ACL features on a Feature level since there will be many many features
  * @author dyuen
  */
-public abstract class Feature implements Taggable, Versionable{
+public abstract class Feature implements Taggable {
 
     /**
      * Strand locations of features.

@@ -9,13 +9,27 @@ public interface Versionable {
     
     /**
      * Get version for the subject
-     * @return 
+     * @return Version of the subject.
      */
     public long getVersion();
-    
-    /**
-     * Allow the user to override the version for a subject
-     * @param version version to set on subject
+
+    /*
+     * Set version for a subject
+     * @param version Version to set on subject.
      */
-    public void setVersion(long version);
+    public void setVersion(String version);
+
+    /**
+     * Returns the subject (if any) that represents a previous version.
+     *
+     * @return Previous (preceding) subject that represents an earlier version of the subject.
+     */
+    public Versionable getPrecedingVersion();
+
+    /**
+     * Sets the relationship to an earlier version of the subject.
+     *
+     * @param predecessor Preceding subject that represents an earlier version of this subject.
+     */
+    public void setPrecedingVersion(Versionable predecessor);
 }
