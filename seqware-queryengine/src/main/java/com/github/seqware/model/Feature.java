@@ -2,7 +2,15 @@ package com.github.seqware.model;
 
 import java.util.UUID;
 
-public abstract class Feature implements Taggable, ACLable, Versionable{
+/**
+ * Features should be able to represent a GVF (which is a more generic version of a VCF)
+ * See http://genomebiology.com/2010/11/8/R88
+ * 
+ * We will want to tag features and version features, however we probably do not want 
+ * ACL features on a Feature level since there will be many many features
+ * @author dyuen
+ */
+public abstract class Feature implements Taggable, Versionable{
 
     /**
      * Strand locations of features.

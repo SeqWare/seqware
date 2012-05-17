@@ -15,6 +15,7 @@ public interface ACLable {
     /**
      * Set permissions for a subject
      * @param acl new permissions to set on the subject
+     * @return true iff success
      */
-    public void setPermissions(ACL acl);
+    public boolean setPermissions(ACL acl);
 }

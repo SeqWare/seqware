@@ -6,13 +6,12 @@ import java.util.UUID;
  *
  * @author dyuen
  */
-public abstract class ACL {
+public abstract class ACL implements Versionable{
     
     /**
      * Internally used unique identifier of this feature.
      */
     private UUID uuid;
-    private String version;
     
     /**
      * Create a new user
@@ -27,24 +26,5 @@ public abstract class ACL {
      */
     public UUID getUUID() {
         return this.uuid;
-    }
-
-    /**
-     * Get the version number of a user
-     * @return  
-     */
-    public String getVersion() {
-        return version;
-    }
-
-    /**
-     * Set the version number of a user
-     * @param version 
-     */
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    
-    
+    }  
 }
