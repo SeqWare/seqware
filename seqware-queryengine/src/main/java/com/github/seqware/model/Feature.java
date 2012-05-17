@@ -1,6 +1,5 @@
 package com.github.seqware.model;
 
-import java.lang.String;
 import java.util.UUID;
 
 public class Feature {
