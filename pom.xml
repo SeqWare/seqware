@@ -35,7 +35,7 @@
                     <!-- NOTE: you can change groups to "berkeleydb" (default), "hbase", or 
                     "postgresql" (or a comma-delimited, no space list of multiple) to test 
                     those, just make sure you setup hbase/postgresql first -->
-                    <groups>hbase</groups>
+                    <groups>berkeleydb</groups>
                     <systemPropertyVariables>
                        <QE_BERKELEYDB_PATH>/tmp/seqware_qe_berkeleydb_test</QE_BERKELEYDB_PATH>
                        <QE_BERKELEYDB_COVERAGE_BIN_SIZE>5</QE_BERKELEYDB_COVERAGE_BIN_SIZE>
@@ -45,6 +45,7 @@
                        <QE_POSTGRESQL_USER>seqware</QE_POSTGRESQL_USER>
                        <QE_POSTGRESQL_PASS>seqware7420</QE_POSTGRESQL_PASS>
                        <QE_POSTGRESQL_DB>seqware_qe_db</QE_POSTGRESQL_DB>
+                       <QE_HBASE_FEATUREID>GO:12323121hg18.chr22:000000000001234.feature.Genome032399.v1337266516375</QE_HBASE_FEATUREID>
                     </systemPropertyVariables>
                     <!--<excludes>
                         <exclude>**/*Test.java</exclude>
@@ -144,13 +145,6 @@
             <version>6.1.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>6.1.1</version>
-            <scope>test</scope>
-        </dependency>
-
 <dependency>
   <groupId>log4j</groupId>
   <artifactId>log4j</artifactId>

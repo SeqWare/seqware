@@ -77,9 +77,9 @@
 
 <!-- TESTS -->
 <!-- PROTOTYPE TESTS -->
+    <!-- 
     <target name="test-hbase" depends="compile" description="Creates and tests DB roundtrip using command line tools.">
-    	<!-- IMPORT MUTATIONS -->
-        <java classname="net.sourceforge.seqware.queryengine.prototypes.hadoop.HBaseWrite" fork="true" classpathref="classpath">
+    	<java classname="net.sourceforge.seqware.queryengine.prototypes.hadoop.HBaseWrite" fork="true" classpathref="classpath">
         	<classpath>
                 <pathelement path="${classes}"/>
                 <pathelement path="${classes.test}"/>
@@ -94,7 +94,8 @@
         	</classpath>
         	<arg value="GO:12323121hg18.chr22:000000000001234.feature.Genome032399.v1337181530274"/>
         </java>
-    </target>
+    </target> 
+    -->
 <!-- TEST USING COMMAND LINE TOOLS -->
     <target name="test-cmdline" depends="compile" description="Creates and tests DB roundtrip using command line tools.">
     	<!-- CLEANUP PREVIOUS DB -->
