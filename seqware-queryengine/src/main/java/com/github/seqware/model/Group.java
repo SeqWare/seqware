@@ -6,7 +6,7 @@ import java.util.UUID;
  *
  * @author dyuen
  */
-public abstract class Group implements Versionable, Taggable{
+public abstract class Group extends Molecule{
     
     /**
      * Internally used unique identifier of this feature.

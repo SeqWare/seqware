@@ -7,7 +7,7 @@ import java.util.UUID;
 /**
  * 
  */
-public abstract class ReferenceSet implements Taggable, Versionable, ACLable {
+public abstract class ReferenceSet extends Molecule{
 
     /**
      * Internally used unique identifier of this feature.

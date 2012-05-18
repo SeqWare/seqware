@@ -6,7 +6,7 @@ import java.util.UUID;
  *
  * @author dyuen
  */
-public abstract class ACL implements Versionable{
+public abstract class ACL implements ACLable {
     
     /**
      * Internally used unique identifier of this feature.

@@ -6,7 +6,7 @@ import java.util.UUID;
  *
  * @author dyuen
  */
-public abstract class Reference implements Versionable, Taggable, ACLable {
+public abstract class Reference extends Molecule{
     
     /**
      * Internally used unique identifier of this feature.

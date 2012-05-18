@@ -9,7 +9,7 @@ import java.util.UUID;
  *
  * @author jbaran
  */
-public class FeatureSet extends Atom implements Versionable, ACLable {
+public class FeatureSet extends Molecule {
 
     /**
      * Internally used unique identifier of this feature.
@@ -27,29 +27,5 @@ public class FeatureSet extends Atom implements Versionable, ACLable {
     public FeatureSet() {
         // TODO This will have to be replaced with a stronger UUID generation method.
         this.uuid = UUID.randomUUID();
-    }
-
-    public ACL getPermissions() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public boolean setPermissions(ACL acl) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public long getVersion() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void setVersion(String version) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public Versionable getPrecedingVersion() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void setPrecedingVersion(Versionable predecessor) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
