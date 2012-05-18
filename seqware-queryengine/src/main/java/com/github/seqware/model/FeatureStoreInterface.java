@@ -3,7 +3,7 @@ package com.github.seqware.model;
 import com.github.seqware.util.SeqWareIterator;
 
 /**
- * 
+ * Leaving this here just to provoke thought
  * @author dyuen
  */
 public interface FeatureStoreInterface {
@@ -19,27 +19,24 @@ public interface FeatureStoreInterface {
 //    public boolean isActiveTransaction();
 //    // FIXME: this is a BerkeleyDB exception type!
 //    public void abortTransaction() throws DatabaseException;
-      // VERSION INFO
-      
+
     /**
-     * 
-     * @return information on the version of the back-end currently in use 
+     *
+     * @return information on the version of the back-end currently in use
      */
     public String getVersion();
 // 
 //    // USER/GROUP/ACL METHODS
 //    // ACL operations TBD
+
     /**
-     * 
-     * @return an iterator that iterates through all users in all groups 
+     *
+     * @return an iterator that iterates through all users in all groups
      */
     public SeqWareIterator<User> getUsers();
-
     // I don't think we'll have this, probably simpler to create users directly from groups
-    // we can have a "ungrouped" group in the worst case
-//    public void addUser(User newUser);
-
-    
+    // we can have a "ungrouped" group in the worst case. Symmetry with References, Tags, etc.
+    // public void addUser(User newUser);
 //    public void updateUser(User user);
 //    public SeqWareIterator getGroups();
 //    public void addGroup(Group newGroup);

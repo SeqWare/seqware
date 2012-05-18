@@ -1,6 +1,6 @@
 package com.github.seqware.model;
 
-import java.util.List;
+import com.github.seqware.util.SeqWareIterator;
 import java.util.UUID;
 
 /**
@@ -50,7 +50,7 @@ public abstract class Reference extends Molecule {
      * TODO: Wouldn't this be large? Maybe there should be a better way of 
      * accessing this information?
      *
-     * @return list of feature sets associated with this reference
+     * @return SeqWareIterator of feature sets associated with this reference
      */
-    public abstract List<FeatureSet> featureSets();
+    public abstract SeqWareIterator<FeatureSet> featureSets();
 }

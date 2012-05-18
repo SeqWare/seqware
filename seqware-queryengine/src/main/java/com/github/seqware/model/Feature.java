@@ -11,6 +11,9 @@ import java.util.UUID;
  * want ACL features on a Feature level since there will be many many features
  * 
  * Immutable (but tags are not)
+ * 
+ * TODO: RESTful API seems to imply that we can create "homeless" Features that
+ * are not part of a FeatureSet unlike Reference/ReferenceSet or Tag/TagSet or etc.
  *
  * @author dyuen
  * @author jbaran
