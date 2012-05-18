@@ -9,8 +9,9 @@ import java.util.UUID;
  * We will want to tag features and version features, however we probably do not want 
  * ACL features on a Feature level since there will be many many features
  * @author dyuen
+ * @author jbaran
  */
-public class Feature implements Taggable {
+public class Feature extends Atom {
 
     /**
      * Strand locations of features.
@@ -87,18 +88,6 @@ public class Feature implements Taggable {
      */
     public UUID getUUID() {
         return this.uuid;
-    }
-    
-    public boolean associateTag(Tag tag) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public boolean associateTag(Tag tag, String value) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public boolean associateTag(Tag tag, String value, String predicate) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
 
