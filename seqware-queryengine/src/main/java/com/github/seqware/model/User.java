@@ -6,7 +6,7 @@ import java.util.UUID;
  *
  * @author dyuen
  */
-public abstract class User extends Molecule{
+public abstract class User extends Molecule {
     
     /**
      * Internally used unique identifier of this feature.

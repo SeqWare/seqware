@@ -11,27 +11,22 @@ import java.util.List;
  * @author jbaran
  */
 public abstract class Atom implements Taggable {
-    @Override
     public boolean associateTag(Tag tag) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
     public boolean associateTag(Tag tag, String value) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
     public boolean associateTag(Tag tag, String value, String predicate) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    @Override
     public boolean dissociateTag(Tag tag){
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    @Override
     public List<Tag> getTags(){
         throw new UnsupportedOperationException("Not supported yet.");
     }

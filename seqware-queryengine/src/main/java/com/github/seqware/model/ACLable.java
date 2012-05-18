@@ -1,21 +1,25 @@
 package com.github.seqware.model;
 
+import java.lang.SecurityException;
+
 /**
+ * Interface for object under access control.
  *
  * @author dyuen
+ * @author jbaran
  */
 public interface ACLable {
     
     /**
-     * Get permissions for the subject
-     * @return 
+     * Get permissions for the subject.
+     * @return Access control list object.
      */
     public ACL getPermissions();
     
     /**
      * Set permissions for a subject
      * @param acl new permissions to set on the subject
-     * @return true iff success
+     * @throws SecurityException Thrown if the permissions cannot be set under the current ACL rules.
      */
-    public boolean setPermissions(ACL acl);
+    public void setPermissions(ACL acl) throws SecurityException;
 }

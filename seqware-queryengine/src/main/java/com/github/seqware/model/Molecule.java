@@ -1,5 +1,7 @@
 package com.github.seqware.model;
 
+import java.lang.SecurityException;
+
 /**
  * Implements core functionality that is shared by classes that are
  * controlled by permissions and versionable (as well as Taggable)
@@ -15,7 +17,7 @@ public abstract class Molecule<T> extends Atom implements ACLable, Versionable<T
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public boolean setPermissions(ACL acl) {
+    public void setPermissions(ACL acl) throws SecurityException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
