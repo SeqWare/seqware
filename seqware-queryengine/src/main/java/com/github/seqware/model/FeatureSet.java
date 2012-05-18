@@ -5,10 +5,12 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * A feature set is a set (a.k.a. collection, bag) of features.
+ * A feature set is a set (ex: collection, bag) of features. A feature set
+ * cannot exist with a reference even if the reference is ad hoc and/or
+ * user-created
  *
  * Immutable (but tags are not)
- * 
+ *
  * @author jbaran
  */
 public class FeatureSet extends Molecule {
@@ -17,17 +19,31 @@ public class FeatureSet extends Molecule {
      * Internally used unique identifier of this feature.
      */
     private UUID uuid;
-
     /**
      * The set of features this instance represents.
      */
     private Set<Feature> features = new HashSet<Feature>();
+    
+    /**
+     * associated reference
+     */
+    private Reference reference;
 
     /**
      * Creates an instance of an anonymous feature set.
      */
-    public FeatureSet() {
+    private FeatureSet() {
         // TODO This will have to be replaced with a stronger UUID generation method.
         this.uuid = UUID.randomUUID();
+    }
+
+    /**
+     * Creates a FeatureSet with an associated reference
+     *
+     * @param reference associated reference
+     */
+    public FeatureSet(Reference reference) {
+        this();
+        this.reference = reference;
     }
 }

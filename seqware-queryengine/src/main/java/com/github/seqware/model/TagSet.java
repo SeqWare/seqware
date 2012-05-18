@@ -3,10 +3,12 @@ package com.github.seqware.model;
 import java.util.UUID;
 
 /**
- * A Group of users that may share ACL permissions
+ * A set of Tags
+ * TODO: RESTful API implies tagging of tagSets, do we want this or do we remove
+ * it along with tagging of tags?
  * @author dyuen
  */
-public abstract class Group extends Molecule{
+public abstract class TagSet extends Molecule{
     
     /**
      * Internally used unique identifier of this feature.
@@ -14,9 +16,9 @@ public abstract class Group extends Molecule{
     private UUID uuid;  
     
     /**
-     * Create a new user
+     * Create a new TagSet
      */
-    public Group() {
+    public TagSet() {
         // TODO This will have to be replaced with a stronger UUID generation method.
         this.uuid = UUID.randomUUID();
     }

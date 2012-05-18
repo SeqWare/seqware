@@ -27,6 +27,11 @@ public abstract class Atom implements Taggable {
     }
     
     @Override
+    public boolean dissociateTag(Tag tag){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    @Override
     public List<Tag> getTags(){
         throw new UnsupportedOperationException("Not supported yet.");
     }

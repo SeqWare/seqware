@@ -33,6 +33,13 @@ public interface Taggable<T> {
     public boolean associateTag(Tag tag, String value, String predicate);
     
     /**
+     * Remove a tag from a subject
+     * @param tag tag to be removed
+     * @return whether the tag was successfully removed
+     */
+    public boolean dissociateTag(Tag tag);
+    
+    /**
      * Get the List of tags that the implementing class has been tagged with
      * @return list of tags
      */
