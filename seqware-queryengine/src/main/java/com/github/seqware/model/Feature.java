@@ -9,6 +9,8 @@ import java.util.UUID;
  *
  * We will want to tag features and version features, however we probably do not
  * want ACL features on a Feature level since there will be many many features
+ * 
+ * Immutable (but tags are not)
  *
  * @author dyuen
  * @author jbaran
@@ -28,6 +30,16 @@ public class Feature extends Atom {
      * Internally used unique identifier of this feature.
      */
     private UUID uuid;
+    
+    /**
+     * GVF provides pragmas that are file-wide
+     * 
+     * Not sure if they affect us, but I guess we'll need to store them for a 
+     * round-trip import and export
+     */
+    private String pragma;
+    
+    
     /**
      * (GVF: The source is a free text qualifier intended to describe the
      * algorithm or operating procedure that generated this feature.)
@@ -122,63 +134,36 @@ public class Feature extends Atom {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getReference() {
         return reference;
-    }
-
-    public void setReference(String reference) {
-        this.reference = reference;
     }
 
     public Double getScore() {
         return score;
     }
 
-    public void setScore(Double score) {
-        this.score = score;
-    }
-
     public String getSource() {
         return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
     }
 
     public long getStart() {
         return start;
     }
 
-    public void setStart(long start) {
-        this.start = start;
-    }
-
     public long getStop() {
         return stop;
-    }
-
-    public void setStop(long stop) {
-        this.stop = stop;
     }
 
     public Strand getStrand() {
         return strand;
     }
 
-    public void setStrand(Strand strand) {
-        this.strand = strand;
-    }
-
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public String getPragma() {
+        return pragma;
     }
+    
 }

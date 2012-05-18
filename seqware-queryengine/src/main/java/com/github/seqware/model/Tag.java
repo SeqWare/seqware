@@ -3,7 +3,6 @@ package com.github.seqware.model;
 import java.util.UUID;
 
 /**
- *
  * @author dyuen
  */
 public abstract class Tag implements Versionable {

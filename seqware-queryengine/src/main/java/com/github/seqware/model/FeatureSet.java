@@ -7,6 +7,8 @@ import java.util.UUID;
 /**
  * A feature set is a set (a.k.a. collection, bag) of features.
  *
+ * Immutable (but tags are not)
+ * 
  * @author jbaran
  */
 public class FeatureSet extends Molecule {
