@@ -1,18 +1,19 @@
 package com.github.seqware.model;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
- * Features should be able to represent a GVF (which is a more generic version
- * of a VCF) See http://genomebiology.com/2010/11/8/R88
+ * Features represent a GVF (which is a more generic version of a VCF). See
+ * http://genomebiology.com/2010/11/8/R88 or better
+ * http://www.sequenceontology.org/resources/gvf.html#quick_gvf_examples
  *
  * We will want to tag features and version features, however we probably do not
  * want ACL features on a Feature level since there will be many many features
  *
  * @author dyuen
+ * @author jbaran
  */
-public class Feature implements Taggable {
+public class Feature extends Atom {
 
     /**
      * Strand locations of features.
@@ -27,7 +28,6 @@ public class Feature implements Taggable {
      * Internally used unique identifier of this feature.
      */
     private UUID uuid;
-
     /**
      * (GVF: The source is a free text qualifier intended to describe the
      * algorithm or operating procedure that generated this feature.)
@@ -56,8 +56,8 @@ public class Feature implements Taggable {
     private String id;
     /**
      * Reference system used for coordinates, for example, versioned name of
-     * genome assembly used. (GVF: The ID of the landmark used to establish the coordinate system for
-     * the current feature.)
+     * genome assembly used. (GVF: The ID of the landmark used to establish the
+     * coordinate system for the current feature.)
      */
     private String reference;
     /**
@@ -116,22 +116,6 @@ public class Feature implements Taggable {
      */
     public UUID getUUID() {
         return this.uuid;
-    }
-
-    public boolean associateTag(Tag tag) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public boolean associateTag(Tag tag, String value) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public boolean associateTag(Tag tag, String value, String predicate) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public List getTags() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public String getId() {
@@ -197,6 +181,4 @@ public class Feature implements Taggable {
     public void setType(String type) {
         this.type = type;
     }
-    
-    
 }
