@@ -6,17 +6,17 @@ import java.util.UUID;
  *
  * @author dyuen
  */
-public abstract class User implements Taggable, ACLable, Versionable{
+public abstract class Group implements Versionable, Taggable{
     
     /**
      * Internally used unique identifier of this feature.
      */
-    private UUID uuid;
+    private UUID uuid;  
     
     /**
      * Create a new user
      */
-    public User() {
+    public Group() {
         // TODO This will have to be replaced with a stronger UUID generation method.
         this.uuid = UUID.randomUUID();
     }
@@ -27,4 +27,7 @@ public abstract class User implements Taggable, ACLable, Versionable{
     public UUID getUUID() {
         return this.uuid;
     }
+
+    
+    
 }

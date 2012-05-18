@@ -5,7 +5,7 @@ package com.github.seqware.model;
  * TODO : should this really be changeable by the user as implied by the RESTful API?
  * @author dyuen
  */
-public interface Versionable {
+public interface Versionable<T> {
     
     /**
      * Get version for the subject
@@ -24,12 +24,12 @@ public interface Versionable {
      *
      * @return Previous (preceding) subject that represents an earlier version of the subject.
      */
-    public Versionable getPrecedingVersion();
+    public Versionable<T> getPrecedingVersion();
 
     /**
      * Sets the relationship to an earlier version of the subject.
      *
      * @param predecessor Preceding subject that represents an earlier version of this subject.
      */
-    public void setPrecedingVersion(Versionable predecessor);
+    public void setPrecedingVersion(Versionable<T> predecessor);
 }

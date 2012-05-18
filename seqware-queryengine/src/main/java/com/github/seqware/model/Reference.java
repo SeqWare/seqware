@@ -6,7 +6,7 @@ import java.util.UUID;
  *
  * @author dyuen
  */
-public abstract class Groups implements Versionable, Taggable{
+public abstract class Reference implements Versionable, Taggable, ACLable {
     
     /**
      * Internally used unique identifier of this feature.
@@ -14,9 +14,9 @@ public abstract class Groups implements Versionable, Taggable{
     private UUID uuid;  
     
     /**
-     * Create a new user
+     * Create a new reference
      */
-    public Groups() {
+    public Reference() {
         // TODO This will have to be replaced with a stronger UUID generation method.
         this.uuid = UUID.randomUUID();
     }

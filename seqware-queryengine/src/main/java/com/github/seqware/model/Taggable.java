@@ -1,10 +1,12 @@
 package com.github.seqware.model;
 
+import java.util.List;
+
 /**
  *
  * @author dyuen
  */
-public interface Taggable {
+public interface Taggable<T> {
 
     /**
      * associate tag to a subject with a null value and a null predicate
@@ -30,5 +32,10 @@ public interface Taggable {
      */
     public boolean associateTag(Tag tag, String value, String predicate);
     
+    /**
+     * Get the List of tags that the implementing class has been tagged with
+     * @return list of tags
+     */
+    public List<Tag> getTags();
     
 }
