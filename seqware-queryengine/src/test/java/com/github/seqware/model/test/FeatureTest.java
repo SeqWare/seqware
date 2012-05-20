@@ -8,11 +8,11 @@ public class FeatureTest {
 
     @Test
     public void testUUIDGenerationNonStrandedFeature() {
-        Assert.assertNotNull("Feature UUID is null, which means that no UUID was generated for the feature.", new Feature("GRCh37", 1000000, 1000100).getUUID());
+        Assert.assertNotNull("Feature UUID is null, which means that no UUID was generated for the feature.", new Feature(1000000, 1000100).getUUID());
     }
 
     @Test
     public void testUUIDGenerationStrandedFeature() {
-        Assert.assertNotNull("Feature UUID is null, which means that no UUID was generated for the feature.", new Feature("GRCh37", 1000000, 1000100, Feature.Strand.POSITIVE).getUUID());
+        Assert.assertNotNull("Feature UUID is null, which means that no UUID was generated for the feature.", new Feature(1000000, 1000100, Feature.Strand.POSITIVE).getUUID());
     }
 }

@@ -1,6 +1,7 @@
 package com.github.seqware.model;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
@@ -9,7 +10,7 @@ import java.util.UUID;
  * cannot exist with a reference even if the reference is ad hoc and/or
  * user-created
  *
- * Immutable (but tags are not)
+ * Immutable (but tags are not).
  *
  * @author jbaran
  */
@@ -45,5 +46,14 @@ public class FeatureSet extends Molecule {
     public FeatureSet(Reference reference) {
         this();
         this.reference = reference;
+    }
+
+    /**
+     * Get the list of features associated with this feature set.
+     *
+     * @return Iterator of features.
+     */
+    public Iterator<Feature> features() {
+        throw new UnsupportedOperationException("Not yet implemented.");
     }
 }

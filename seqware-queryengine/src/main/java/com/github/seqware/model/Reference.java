@@ -1,12 +1,13 @@
 package com.github.seqware.model;
 
-import com.github.seqware.util.SeqWareIterator;
+import java.util.Iterator;
 import java.util.UUID;
 
 /**
- * A reference is a particular build version such as "hg 19" or "hg 18"
+ * A reference is a particular build version such as "hg19" or "hg18".
  *
  * @author dyuen
+ * @author jbaran
  */
 public abstract class Reference extends Molecule {
 
@@ -14,6 +15,7 @@ public abstract class Reference extends Molecule {
      * Internally used unique identifier of this feature.
      */
     private UUID uuid;
+
     /**
      * parent set
      */
@@ -46,11 +48,9 @@ public abstract class Reference extends Molecule {
     }
 
     /**
-     * Get the list of feature sets associated with this reference 
-     * TODO: Wouldn't this be large? Maybe there should be a better way of 
-     * accessing this information?
+     * Get the list of feature sets associated with this reference.
      *
-     * @return SeqWareIterator of feature sets associated with this reference
+     * @return Iterator of feature sets associated with this reference.
      */
-    public abstract SeqWareIterator<FeatureSet> featureSets();
+    public abstract Iterator<FeatureSet> featureSets();
 }
