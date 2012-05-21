@@ -14,16 +14,12 @@ import java.util.UUID;
  *
  * @author jbaran
  */
-public class FeatureSet extends Molecule {
+public abstract class FeatureSet extends Molecule {
 
     /**
      * Internally used unique identifier of this feature.
      */
     private UUID uuid;
-    /**
-     * The set of features this instance represents.
-     */
-    private Set<Feature> features = new HashSet<Feature>();
     
     /**
      * associated reference
@@ -49,11 +45,23 @@ public class FeatureSet extends Molecule {
     }
 
     /**
+     * Adds a single new Feature to the set.
+     *
+     * @param feature The feature that is to be added to the feature set.
+     */
+    public abstract void add(Feature feature);
+
+    /**
+     * Adds a collection of new Feature to the set.
+     *
+     * @param features The features that are to be added to the feature set.
+     */
+    public abstract void add(Set<Feature> features);
+
+    /**
      * Get the list of features associated with this feature set.
      *
      * @return Iterator of features.
      */
-    public Iterator<Feature> features() {
-        throw new UnsupportedOperationException("Not yet implemented.");
-    }
+    public abstract Iterator<Feature> getFeatures();
 }

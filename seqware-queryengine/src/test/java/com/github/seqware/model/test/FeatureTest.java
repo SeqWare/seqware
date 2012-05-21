@@ -4,6 +4,11 @@ import com.github.seqware.model.Feature;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Unit tests of Feature.
+ *
+ * @author jbaran
+ */
 public class FeatureTest {
 
     @Test
