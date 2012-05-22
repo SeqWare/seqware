@@ -31,9 +31,9 @@ public class FeatureSetTest {
 
         Set<Feature> testFeatures = new HashSet<Feature>();
 
-        testFeatures.add(new Feature(1000000, 1000100));
-        testFeatures.add(new Feature(1000200, 1000300));
-        testFeatures.add(new Feature(1000400, 1000500));
+        testFeatures.add(new Feature(aSet, 1000000, 1000100));
+        testFeatures.add(new Feature(aSet, 1000200, 1000300));
+        testFeatures.add(new Feature(aSet, 1000400, 1000500));
 
         for (Feature testFeature : testFeatures)
             aSet.add(testFeature);
