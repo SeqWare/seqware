@@ -12,11 +12,6 @@ import java.util.UUID;
 public abstract class Reference extends Molecule {
 
     /**
-     * Internally used unique identifier of this feature.
-     */
-    private UUID uuid;
-
-    /**
      * parent set
      */
     private ReferenceSet set;
@@ -25,8 +20,7 @@ public abstract class Reference extends Molecule {
      * Create a new reference
      */
     private Reference() {
-        // TODO This will have to be replaced with a stronger UUID generation method.
-        this.uuid = UUID.randomUUID();
+        super();
     }
 
     /**
@@ -38,13 +32,6 @@ public abstract class Reference extends Molecule {
     public Reference(ReferenceSet set) {
         this();
         this.set = set;
-    }
-
-    /**
-     * Get the universally unique identifier of this feature.
-     */
-    public UUID getUUID() {
-        return this.uuid;
     }
 
     /**

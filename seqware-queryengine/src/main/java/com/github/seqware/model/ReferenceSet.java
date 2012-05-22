@@ -13,18 +13,13 @@ import java.util.UUID;
  */
 public abstract class ReferenceSet extends Molecule {
 
-    /**
-     * Internally used unique identifier of this feature.
-     */
-    private UUID uuid;
     private Set<Reference> references = new HashSet<Reference>();
 
     /**
      * Creates an instance of an anonymous feature set.
      */
     public ReferenceSet() {
-        // TODO This will have to be replaced with a stronger UUID generation method.
-        this.uuid = UUID.randomUUID();
+        super();
     }
 
     /**

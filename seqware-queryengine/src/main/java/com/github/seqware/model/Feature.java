@@ -26,10 +26,6 @@ public class Feature extends Atom {
 
         POSITIVE, NEGATIVE, NOT_STRANDED, UNKNOWN
     }
-    /**
-     * Internally used unique identifier of this feature.
-     */
-    private UUID uuid;
     
     /**
      * GVF provides pragmas that are file-wide
@@ -88,8 +84,7 @@ public class Feature extends Atom {
     private Strand strand;
 
     private Feature() {
-        // TODO This will have to be replaced with a stronger UUID generation method.
-        this.uuid = UUID.randomUUID();
+        super();
     }
 
     /**
@@ -117,13 +112,6 @@ public class Feature extends Atom {
         } else {
             this.strand = Strand.NOT_STRANDED;
         }
-    }
-
-    /**
-     * Get the universally unique identifier of this feature.
-     */
-    public UUID getUUID() {
-        return this.uuid;
     }
 
     public String getId() {

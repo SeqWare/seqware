@@ -1,13 +1,11 @@
 package com.github.seqware.model;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * A feature set is a set (ex: collection, bag) of features. A feature set
- * cannot exist with a reference even if the reference is ad hoc and/or
+ * cannot exist without a reference even if the reference is ad hoc and/or
  * user-created
  *
  * Immutable (but tags are not).
@@ -16,10 +14,6 @@ import java.util.UUID;
  */
 public abstract class FeatureSet extends Molecule {
 
-    /**
-     * Internally used unique identifier of this feature.
-     */
-    private UUID uuid;
     
     /**
      * associated reference
@@ -30,8 +24,7 @@ public abstract class FeatureSet extends Molecule {
      * Creates an instance of an anonymous feature set.
      */
     private FeatureSet() {
-        // TODO This will have to be replaced with a stronger UUID generation method.
-        this.uuid = UUID.randomUUID();
+        super();
     }
 
     /**

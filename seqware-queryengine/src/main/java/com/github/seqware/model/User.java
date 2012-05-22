@@ -1,30 +1,76 @@
 package com.github.seqware.model;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author dyuen
  */
 public abstract class User extends Molecule {
-    
-    /**
-     * Internally used unique identifier of this feature.
-     */
-    private UUID uuid;
+
+    private String firstName;
+    private String lastName;
+    private String emailAddress;
+    private List<Group> groups;
     
     /**
      * Create a new user
      */
-    public User() {
-        // TODO This will have to be replaced with a stronger UUID generation method.
-        this.uuid = UUID.randomUUID();
+    private User() {
+        super();
+        groups = new ArrayList();
+    }
+
+    /**
+     * Create a user (input will probably need to be cleaned and checked for
+     * hazards at some point)
+     *
+     * @param firstName
+     * @param lastName
+     * @param emailAddress
+     */
+    public User(Group group, String firstName, String lastName, String emailAddress) {
+        this();
+        this.groups.add(group);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.emailAddress = emailAddress;
+    }
+
+    /**
+     * Get email address
+     *
+     * @return email address as a String
+     */
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    /**
+     * Get first name
+     *
+     * @return first name as a String
+     */
+    public String getFirstName() {
+        return firstName;
+    }
+
+    /**
+     * Get last name
+     * @return last name as a String 
+     */
+    public String getLastName() {
+        return lastName;
+    }
+
+    /**
+     * Get list of groups that this user is a part of
+     * @return list of groups
+     */
+    public List<Group> getGroups() {
+        return groups;
     }
     
-    /**
-     * Get the universally unique identifier of this feature.
-     */
-    public UUID getUUID() {
-        return this.uuid;
-    }
+    
 }

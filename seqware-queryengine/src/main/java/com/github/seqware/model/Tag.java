@@ -9,18 +9,13 @@ import java.util.UUID;
  */
 public abstract class Tag implements Versionable {
     
-    /**
-     * Internally used unique identifier of this feature.
-     */
-    private UUID uuid;
     private TagSet tagSet;
     
     /**
      * Create a new tag
      */
     private Tag() {
-        // TODO This will have to be replaced with a stronger UUID generation method.
-        this.uuid = UUID.randomUUID();
+        super();
     }
     
     /**
@@ -30,13 +25,6 @@ public abstract class Tag implements Versionable {
     public Tag(TagSet tagSet){
         this();
         this.tagSet = tagSet; 
-    }
-    
-    /**
-     * Get the universally unique identifier of this feature.
-     */
-    public UUID getUUID() {
-        return this.uuid;
     }
 
     
