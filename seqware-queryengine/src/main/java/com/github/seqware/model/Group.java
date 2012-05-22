@@ -9,12 +9,12 @@ import java.util.UUID;
 public abstract class Group extends Molecule{
     
     /**
-     * Internally used unique identifier of this feature.
+     * Internally used unique identifier of this group.
      */
     private UUID uuid;  
     
     /**
-     * Create a new user
+     * Create a new user group
      */
     public Group() {
         // TODO This will have to be replaced with a stronger UUID generation method.

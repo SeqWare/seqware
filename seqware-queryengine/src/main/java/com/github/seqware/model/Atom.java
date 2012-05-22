@@ -1,6 +1,6 @@
 package com.github.seqware.model;
 
-import java.util.List;
+import com.github.seqware.util.SeqWareIterator;
 
 /**
  * Implements core functionality that is shared by Feature and FeatureSets.
@@ -11,6 +11,7 @@ import java.util.List;
  * @author jbaran
  */
 public abstract class Atom implements Taggable {
+    
     public boolean associateTag(Tag tag) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -27,7 +28,9 @@ public abstract class Atom implements Taggable {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    public List<Tag> getTags(){
+    public SeqWareIterator<Tag> getTags(){
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    
+    
 }

@@ -7,6 +7,7 @@ import java.util.UUID;
 /**
  * A ReferenceSet is a collection of references which are a collection of
  * contigs and coordinates. Consider an example to be "Homo Sapiens"
+ * 
  *
  * @author dyuen
  */

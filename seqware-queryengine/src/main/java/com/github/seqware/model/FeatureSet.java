@@ -1,6 +1,7 @@
 package com.github.seqware.model;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
@@ -9,20 +10,16 @@ import java.util.UUID;
  * cannot exist with a reference even if the reference is ad hoc and/or
  * user-created
  *
- * Immutable (but tags are not)
+ * Immutable (but tags are not).
  *
  * @author jbaran
  */
-public class FeatureSet extends Molecule {
+public abstract class FeatureSet extends Molecule {
 
     /**
      * Internally used unique identifier of this feature.
      */
     private UUID uuid;
-    /**
-     * The set of features this instance represents.
-     */
-    private Set<Feature> features = new HashSet<Feature>();
     
     /**
      * associated reference
@@ -46,4 +43,25 @@ public class FeatureSet extends Molecule {
         this();
         this.reference = reference;
     }
+
+    /**
+     * Adds a single new Feature to the set.
+     *
+     * @param feature The feature that is to be added to the feature set.
+     */
+    public abstract void add(Feature feature);
+
+    /**
+     * Adds a collection of new Feature to the set.
+     *
+     * @param features The features that are to be added to the feature set.
+     */
+    public abstract void add(Set<Feature> features);
+
+    /**
+     * Get the list of features associated with this feature set.
+     *
+     * @return Iterator of features.
+     */
+    public abstract Iterator<Feature> getFeatures();
 }

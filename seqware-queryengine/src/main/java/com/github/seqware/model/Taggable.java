@@ -1,6 +1,6 @@
 package com.github.seqware.model;
 
-import java.util.List;
+import com.github.seqware.util.SeqWareIterator;
 
 /**
  *
@@ -40,9 +40,9 @@ public interface Taggable<T> {
     public boolean dissociateTag(Tag tag);
     
     /**
-     * Get the List of tags that the implementing class has been tagged with
-     * @return list of tags
+     * Get the SeqWareIterator of tags that the implementing class has been tagged with
+     * @return SeqWareIterator of tags
      */
-    public List<Tag> getTags();
+    public SeqWareIterator<Tag> getTags();
     
 }

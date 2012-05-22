@@ -38,13 +38,13 @@ public class Feature extends Atom {
      * round-trip import and export
      */
     private String pragma;
-    
-    
+
     /**
      * (GVF: The source is a free text qualifier intended to describe the
      * algorithm or operating procedure that generated this feature.)
      */
     private String source;
+
     /**
      * (GVF: The type of the feature. This is constrained to be either: (a) the
      * SO term sequence_alteration (SO:0001059), (b) a child term of
@@ -52,36 +52,36 @@ public class Feature extends Atom {
      * accession number for any of the previous terms.)
      */
     private String type;
+
     /**
      * (GVF: The score of the feature, an integer or floating point number.)
      */
     private Double score;
+
     /**
      * (GVF: The phase column is not used in GVF, but is maintained with the
      * placeholder '.' (period) for compatibility with GFF3 and tools that
      * conform to the GFF3 specification.)
      */
     private static final String phase = ".";
+
     /**
      * User provided ID for the feature (optional).
      */
     private String id;
-    /**
-     * Reference system used for coordinates, for example, versioned name of
-     * genome assembly used. (GVF: The ID of the landmark used to establish the
-     * coordinate system for the current feature.)
-     */
-    private String reference;
+
     /**
      * Start coordinate, 0-based. (GVF: 1-based integer for the beginning of the
      * sequence_alteration locus on the plus strand (integer))
      */
     private long start;
+
     /**
      * Stop coordinate, 0-based. (GVF: 1-based integer of the end of the
      * sequence_alteration on plus strand (integer).)
      */
     private long stop;
+
     /**
      * Strand of the feature. (GVF: The strand of the feature (+/-))
      */
@@ -95,26 +95,22 @@ public class Feature extends Atom {
     /**
      * Create a new location based non-stranded feature.
      *
-     * @param reference Reference system used for coordinates, for example,
-     * versioned name of genome assembly used.
      * @param start Start coordinate.
      * @param stop Stop coordinate.
      */
-    public Feature(String reference, long start, long stop) {
+    public Feature(long start, long stop) {
         this();
     }
 
     /**
      * Create a new location based feature.
      *
-     * @param reference Reference system used for coordinates, for example,
-     * versioned name of genome assembly used.
      * @param start Start coordinate.
      * @param stop Stop coordinate.
      * @param strand Strand of the feature.
      */
-    public Feature(String reference, long start, long stop, Strand strand) {
-        this(reference, start, stop);
+    public Feature(long start, long stop, Strand strand) {
+        this(start, stop);
 
         if (strand != null) {
             this.strand = strand;
@@ -132,10 +128,6 @@ public class Feature extends Atom {
 
     public String getId() {
         return id;
-    }
-
-    public String getReference() {
-        return reference;
     }
 
     public Double getScore() {
