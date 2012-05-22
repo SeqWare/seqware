@@ -4,11 +4,12 @@ package com.github.seqware.model;
  * A Tag represents the first part of a tuple that can describe an attribute
  * in a GVF (ex: ID=ID_1 or Variant_seq=A,G or Reference_seq=G ).
  * 
- * Tags themselves are immutable but adding and removing tags on objects is 
+ * Tags themselves are immutable (and thus do not
+ * need Versionable) but adding and removing tags on objects is 
  * of course possible given the right permissions
  * @author dyuen
  */
-public abstract class Tag extends Particle implements Versionable {
+public abstract class Tag extends Particle {
     
     private TagSet tagSet;
     private String subject;

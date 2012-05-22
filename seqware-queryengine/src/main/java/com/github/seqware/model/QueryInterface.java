@@ -58,8 +58,8 @@ public interface QueryInterface {
     public QueryFuture getFeatures(FeatureSet set, int hours);
 
     /**
-     * filter features relative to a reference TODO: FeatureSets should only
-     * have one reference, not sure what this does
+     * filter features relative to a reference 
+     * TODO: FeatureSets should only have one reference, not sure what this does
      *
      * @param set parent FeatureSet
      * @param reference reference
