@@ -1,7 +1,5 @@
 package com.github.seqware.model;
 
-import java.lang.SecurityException;
-
 /**
  * Implements core functionality that is shared by classes that are
  * controlled by permissions and versionable (as well as Taggable)

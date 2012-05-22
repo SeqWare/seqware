@@ -12,15 +12,15 @@ import com.github.seqware.util.SeqWareIterator;
  */
 public abstract class Atom extends Particle implements Taggable {
        
-    public boolean associateTag(Tag tag) {
+    public boolean associateTag(String subject) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public boolean associateTag(Tag tag, String value) {
+    public boolean associateTag(String subject, String value) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public boolean associateTag(Tag tag, String value, String predicate) {
+    public boolean associateTag(String subject, String value, String predicate) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

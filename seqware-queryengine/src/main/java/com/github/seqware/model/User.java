@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * A user of the Generic Feature Store.
+ * 
+ * TODO: If Users (or Groups) are versioned (as implied by the RESTful API), we may need a 
+ * "persistent" ID that does not change between versions
+ * 
  * @author dyuen
  */
 public abstract class User extends Molecule {

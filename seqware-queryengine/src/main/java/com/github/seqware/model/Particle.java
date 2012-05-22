@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import java.security.AccessControlException;
 import java.util.UUID;
 
 /**
@@ -23,30 +24,53 @@ public abstract class Particle {
 
     /**
      * Place-holder. I think we can implicitly add objects as they are created.
-     * But if we want something implicit, we can decide to use this and reorganize
+     * But if we want something implicit, we can decide to use this and 
+     * reorganize
+     * @throws AccessControlException if the user is not allowed to write to the 
+     * parent object (i.e. create a Reference in a ReferenceSet without write 
+     * permission to that ReferenceSet)
      */
-    public void add(){
+    public void add() throws AccessControlException {
         throw new UnsupportedOperationException("It does nothing.");
     }
     
     
     /**
      * Notify the back-end that it should record the changes made to the current 
-     * object
+     * object. Updates cascade downward (i.e. changing a ReferenceSet will 
+     * result in a copy-on-write that copies all children References as well)
+     * @throws AccessControlException if the user does not have permission to
+     * change this object
+     * @return Due to copy-on-write, this can result in a new object that the 
+     * user may wish to subsequently work on
      */
-    public void update() {
+    public Object update() throws AccessControlException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
     /**
      * Update the current object with any changes that may have been made to the
      * current object
+     * @throws AccessControlException if the user has lost permission to 
+     * read the object 
+     * @return Due to copy-on-write, this may return a new object with 
+     * updated information
      */
-    public void refresh(){
+    public Object refresh() throws AccessControlException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-        /**
+    /**
+     * Delete the current object (will cascade in the case of sets to their 
+     * children)
+     * @throws AccessControlException  if the user does not have permission to
+     * delete this (or children) objects
+     */
+    public void delete() throws AccessControlException{
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    /**
      * Get the universally unique identifier of this feature.
      */
     public UUID getUUID() {

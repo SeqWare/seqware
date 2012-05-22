@@ -31,7 +31,7 @@ package com.github.seqware.model;
  *
  * @author boconnor
  */
-interface AnalysisPluginInterface {
+public interface AnalysisPluginInterface {
 
     // need to think about settings, logger, and other util objects
     public ReturnValue init();
