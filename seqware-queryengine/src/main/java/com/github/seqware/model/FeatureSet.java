@@ -12,7 +12,7 @@ import java.util.Set;
  *
  * @author jbaran
  */
-public abstract class FeatureSet extends Molecule {
+public abstract class FeatureSet extends Molecule implements Iterable<Feature>{
 
     /**
      * Associated reference.
@@ -56,4 +56,8 @@ public abstract class FeatureSet extends Molecule {
      * @return Iterator of features.
      */
     public abstract Iterator<Feature> getFeatures();
+    
+    public Iterator<Feature> iterator(){
+        return this.getFeatures();
+    }
 }
