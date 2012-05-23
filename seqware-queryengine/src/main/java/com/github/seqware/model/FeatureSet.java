@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * A feature set is a set (ex: collection, bag) of features. A feature set
  * cannot exist without a reference even if the reference is ad hoc and/or
- * user-created
+ * user-created.
  *
  * Immutable (but tags are not).
  *
@@ -14,9 +14,8 @@ import java.util.Set;
  */
 public abstract class FeatureSet extends Molecule {
 
-    
     /**
-     * associated reference
+     * Associated reference.
      */
     private Reference reference;
 
@@ -28,7 +27,7 @@ public abstract class FeatureSet extends Molecule {
     }
 
     /**
-     * Creates a FeatureSet with an associated reference
+     * Creates a FeatureSet with an associated reference.
      *
      * @param reference associated reference
      */

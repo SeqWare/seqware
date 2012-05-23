@@ -103,12 +103,12 @@ public interface QueryInterface {
         /**
          * Blocking call to retrieve results of a query
          *
-         * @return FeatureSet with desired results, null in case of failiure?
+         * @return FeatureSet with desired results, null in case of failure?
          */
         public FeatureSet get();
 
         /**
-         * Returns true iff the query is ready with its results
+         * Returns true iff the query is ready with its results.
          */
         public boolean isDone();
     }

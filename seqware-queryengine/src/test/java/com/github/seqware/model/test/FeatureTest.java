@@ -17,12 +17,7 @@ public class FeatureTest {
     
     @BeforeClass
     public static void setupTests(){
-        aSet = new InMemoryFeatureSet(new Reference(new ReferenceSet() {
-            @Override
-            public Set<Reference> getReferences() {
-                return null;
-            }
-        }) {
+        aSet = new InMemoryFeatureSet(new Reference() {
             @Override
             public Iterator<FeatureSet> featureSets() {
                 return null;

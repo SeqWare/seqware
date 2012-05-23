@@ -17,12 +17,7 @@ public class FeatureSetTest {
 
     @Test
     public void testConsistentStorageSingleFeatures() {
-        FeatureSet aSet = new InMemoryFeatureSet(new Reference(new ReferenceSet() {
-            @Override
-            public Set<Reference> getReferences() {
-                return null;
-            }
-        }) {
+        FeatureSet aSet = new InMemoryFeatureSet(new Reference() {
             @Override
             public Iterator<FeatureSet> featureSets() {
                 return null;
