@@ -1,6 +1,8 @@
 package com.github.seqware.model;
 
 import java.util.UUID;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * Features represent a GVF (which is a more generic version of a VCF). See
@@ -143,5 +145,15 @@ public class Feature extends Atom {
 
     public String getPragma() {
         return pragma;
+    }
+    
+    @Override
+    public boolean equals(Object obj){
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+    
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
     }
 }

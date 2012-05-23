@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import com.github.seqware.factory.Factory;
 import java.security.AccessControlException;
 import java.util.UUID;
 
@@ -23,15 +24,13 @@ public abstract class Particle {
     }
 
     /**
-     * Place-holder. I think we can implicitly add objects as they are created.
-     * But if we want something implicit, we can decide to use this and 
-     * reorganize
+     * Notify the back-end that it should keep track of the current object.
      * @throws AccessControlException if the user is not allowed to write to the 
      * parent object (i.e. create a Reference in a ReferenceSet without write 
      * permission to that ReferenceSet)
      */
     public void add() throws AccessControlException {
-        throw new UnsupportedOperationException("It does nothing.");
+        Factory.getBackEnd().store(this);
     }
     
     
@@ -45,7 +44,7 @@ public abstract class Particle {
      * user may wish to subsequently work on
      */
     public Object update() throws AccessControlException{
-        throw new UnsupportedOperationException("Not supported yet.");
+         return Factory.getBackEnd().update(this);
     }
     
     /**
@@ -57,7 +56,7 @@ public abstract class Particle {
      * updated information
      */
     public Object refresh() throws AccessControlException{
-        throw new UnsupportedOperationException("Not supported yet.");
+        return Factory.getBackEnd().refresh(this);
     }
     
     /**
@@ -67,7 +66,7 @@ public abstract class Particle {
      * delete this (or children) objects
      */
     public void delete() throws AccessControlException{
-        throw new UnsupportedOperationException("Not supported yet.");
+        Factory.getBackEnd().delete(this);
     }
     
     /**
