@@ -53,242 +53,161 @@
 <p>Additional fields can be shown by adding ?show to the query parameters, e.g. /metadata/db/lanes/1234?show=workflowRun shows the workflow run associated with this lane. </p>
 
 <h2 id="resources">Resources</h2>
+<p>The Web service that this API refers to is http://localhost:8888/seqware-webservice. For more information about each resource and the correct, complete URI, please follow the link to the resource-specific page.</p>
 
-<table>
+<table cellspacing="5" border="1">
 <tr>
-<th><b>Resource</b></th>
-    <th><b>Description</b></th>
-  </tr>
-<tr>
-<td>GET /experiments</td>
-    <td>Lists</td>
-  </tr>
-<tr>
-<td>POST /experiments</td>
-    <td> </td>
-  </tr>
-<tr>
-<td>GET /experiments/(experimentSWID)</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /files</td>
-    <td>parameters: id</td>
-  </tr>
-<tr>
-<td>POST /files</td>
-    <td>|
-  </td>
+<th><strong>URI</strong></th>
+<th><strong>Description</strong></th>
 </tr>
 <tr>
-<td>GET /files/(fileSWID)</td>
-    <td></td>
-  </tr>
-<tr>
-<td>PUT /files/(fileSWID)</td>
-    <td>|
-  </td>
+<td><a href="experiment_get/" alt="GET /experiments/(experimentSWID)">/experiments/(experimentSWID)</a></td>
+<td>Retrieves a list of experiments.</td>
 </tr>
 <tr>
-<td>GET /ius</td>
-    <td>parameters: id</td>
-  </tr>
-<tr>
-<td>GET /ius/(SWID)</td>
-    <td></td>
-  </tr>
-<tr>
-<td>PUT /ius/(SWID)</td>
-    <td>|
-  </td>
+<td><a href="experiments_get/" alt="Metadata DB Experiments">/experiments</a></td>
+<td>Retrieves one or more experiments, depending on parameters.</td>
 </tr>
 <tr>
-<td>GET /lanes</td>
-    <td>params: id</td>
-  </tr>
-<tr>
-<td>GET /lanes/(laneSWID)</td>
-    <td>fields: sequencerRun</td>
-  </tr>
-<tr>
-<td>PUT /lanes/(laneSWID)</td>
-    <td>|
-  </td>
+<td><a href="experiments_post/" alt="POST experiment">/experiments</a></td>
+<td>Adds a new experiment to the experiment table.</td>
 </tr>
 <tr>
-<td>GET /processes/(processSWID)</td>
-    <td>fields: workflowRun</td>
-  </tr>
-<tr>
-<td>PUT /processes/(processSWID)</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /processes</td>
-    <td>params: id, fields: files</td>
-  </tr>
-<tr>
-<td>POST /processes</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /samples/</td>
-    <td>params: title, name</td>
-  </tr>
-<tr>
-<td>POST /samples/</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /samples/(sampleSWID)</td>
-    <td>fields: lanes, ius</td>
-  </tr>
-<tr>
-<td>GET /sequencerruns</td>
-    <td>params: name</td>
-  </tr>
-<tr>
-<td>GET /sequencerruns/(sequencerRunSWID)</td>
-    <td>fields: lanes</td>
-  </tr>
-<tr>
-<td>PUT /sequencerruns/(sequencerRunSWID)</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /studies/</td>
-    <td>params: title</td>
-  </tr>
-<tr>
-<td>POST /studies/</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /studies/(studySWID)</td>
-    <td>|
-  </td>
+<td><a href="file_get/" alt="GET file">/files/(fileSWID)</a></td>
+<td>Retrieves a file using its SWID.</td>
 </tr>
 <tr>
-<td>GET /workflows/</td>
-    <td>params: id, name, version</td>
-  </tr>
+<td><a href="file_put/" alt="PUT file">/files/(fileSWID)</a></td>
+<td>Updates a file with the given SWID.</td>
+</tr>
 <tr>
-<td>POST /workflows/</td>
-    <td></td>
-  </tr>
+<td><a href="files_get/" alt="GET files">/files</a></td>
+<td>Retrieves a list of files.</td>
+</tr>
 <tr>
-<td>GET /workflows/(workflowSWID)</td>
-    <td>params: params</td>
-  </tr>
+<td><a href="files_post/" alt="POST /files">/experiments</a></td>
+<td>Adds metadata about a file to the database.</td>
+</tr>
 <tr>
-<td>PUT /workflows/(workflowSWID)</td>
-    <td></td>
-  </tr>
+<td><a href="ius_get/" alt="GET /ius/(iusSWID)">/ius/(iusSWID)</a></td>
+<td>Retrieves an experiment based on the SWID.</td>
+</tr>
 <tr>
-<td>GET /workflowparams</td>
-    <td>params: id</td>
-  </tr>
+<td><a href="ius_put/" alt="PUT ius">/ius/(iusSWID)</a></td>
+<td>Update an ius with the given SWID.</td>
+</tr>
 <tr>
-<td>POST /workflowparams</td>
-    <td></td>
-  </tr>
+<td><a href="iuses_get/" alt="GET iuses">/ius</a></td>
+<td>Retrieves a list of IUSes.</td>
+</tr>
 <tr>
-<td>GET /workflowparamvalues</td>
-    <td>params: id</td>
-  </tr>
+<td><a href="lane_get/" alt="GET a lane">/lane/(laneSWID)</a></td>
+<td>Retrieves a lane with a particular SWID.</td>
+</tr>
 <tr>
-<td>POST /workflowparamvalues</td>
-    <td></td>
-  </tr>
+<td><a href="lane_put/" alt="">/lane/(laneSWID)</a></td>
+<td>Updates a lane with the given SWID.</td>
+</tr>
 <tr>
-<td>GET /workflowruns/</td>
-    <td>params: id</td>
-  </tr>
+<td><a href="lanes_get/" alt="GET lanes">/lanes</a></td>
+<td>Retrieves a list of lanes.</td>
+</tr>
 <tr>
-<td>POST /workflowruns/</td>
-    <td></td>
-  </tr>
+<td><a href="post/" alt="Metadata DB"></a></td>
+<td></td>
+</tr>
 <tr>
-<td>GET /workflowruns/(workflowRunSWID)</td>
-    <td>fields: lanes, ius, processes</td>
-  </tr>
+<td><a href="processing_get/" alt="GET processing">/processes/(processSWID)</a></td>
+<td>Retrieves a processing object by its SWID.</td>
+</tr>
 <tr>
-<td>PUT /workflowruns/(workflowRunSWID)</td>
-    <td></td>
-  </tr>
-<p>GET /experiments/(experimentSWID)</p>
-
-  <p>Metadata DB Experiments</p>
-
-  <p>POST experiment</p>
-
-  <p>GET file</p>
-
-  <p>PUT file</p>
-
-  <p>GET files</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
+<td><a href="processing_put/" alt="PUT processing">/processes/(processSWID)</a></td>
+<td>Updates a processing object with the given SWID.</td>
+</tr>
+<tr>
+<td><a href="processings_get/" alt="GET processings">/processes</a></td>
+<td>Retrieves a list of processings.</td>
+</tr>
+<tr>
+<td><a href="processings_post/" alt="POST processing">/processes</a></td>
+<td>Add a new processing object to the database.</td>
+</tr>
+<tr>
+<td><a href="sample_get/" alt="GET a sample">/samples/(sampleSWID)</a></td>
+<td>Retrieves a sample using its SWID.</td>
+</tr>
+<tr>
+<td><a href="samples_get/" alt="GET samples">/samples</a></td>
+<td>Retrieves a list of samples</td>
+</tr>
+<tr>
+<td><a href="samples_post/" alt="POST a sample">/samples</a></td>
+<td>Add a new sample to the database.</td>
+</tr>
+<tr>
+<td><a href="sequencerrun_get/" alt="GET a sequencer run">/sequencerrun/(sequencerRunSWID)</a></td>
+<td>Retrieves a sequencer run by SWID.</td>
+</tr>
+<tr>
+<td><a href="sequencerruns_get/" alt="GET /sequencerruns">/sequencerruns</a></td>
+<td>Retrieves a list of sequencer runs.</td>
+</tr>
+<tr>
+<td><a href="studies_get/" alt="GET /studies">/studies</a></td>
+<td>Retrieves a list of studies</td>
+</tr>
+<tr>
+<td><a href="studies_post/" alt="POST /studies">/studies</a></td>
+<td>Adds a new study to the database</td>
+</tr>
+<tr>
+<td><a href="study_get/" alt="GET a study">/studies/(studySWID)</a></td>
+<td>Retrieves a study using its SWID.</td>
+</tr>
+<tr>
+<td><a href="workflow_get/" alt="GET a workflow">/workflows/(workflowSWID)</a></td>
+<td>Retrieves a workflow using its SWID.</td>
+</tr>
+<tr>
+<td><a href="workflowparams_get/" alt="GET workflowparams">/workflowparams</a></td>
+<td>Retrieves a list of workflow parameters.</td>
+</tr>
+<tr>
+<td><a href="workflowparams_post/" alt="POST workflow param">/workflowparams</a></td>
+<td>Add a new workflow parameter to the database.</td>
+</tr>
+<tr>
+<td><a href="workflowparamvalues_get/" alt="GET /workflowparamvalues">/workflowparamvalues</a></td>
+<td>Retrieves a list of workflow parameter values.</td>
+</tr>
+<tr>
+<td><a href="workflowparamvalues_post/" alt="">/workflowparamvalues</a></td>
+<td>Adds a workflow parameter value to the database</td>
+</tr>
+<tr>
+<td><a href="workflowrun_get/" alt="GET a workflow run">/workflowruns/(workflowRunSWID)</a></td>
+<td>Retrieves a workflow run by SWID</td>
+</tr>
+<tr>
+<td><a href="workflowrun_put/" alt="PUT a workflow run">/workflowruns/(workflowRunSWID)</a></td>
+<td>Updates a workflow run with the given SWID.</td>
+</tr>
+<tr>
+<td><a href="workflowruns_get/" alt="GET workflow runs">/workflowruns</a></td>
+<td>Retrieves a list of workflow runs.</td>
+</tr>
+<tr>
+<td><a href="workflowruns_post/" alt="POST /workflowruns">/workflowruns</a></td>
+<td>Inserts a new workflow run into the database.</td>
+</tr>
+<tr>
+<td><a href="workflows_get/" alt="GET /workflows">/workflows</a></td>
+<td>Retrieves a list of workflows.</td>
+</tr>
+<tr>
+<td><a href="workflows_post/" alt="POST a workflow">/workflows</a></td>
+<td>Adds a new workflow to the database.</td>
+</tr>
 </table>
 </div>
 

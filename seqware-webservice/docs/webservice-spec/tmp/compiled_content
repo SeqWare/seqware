@@ -1857,7 +1857,7 @@ I"“<h2 id="overview">Overview</h2>
 
 <p>These resources are for those under development or in a testing phase. They can be turned off at runtime to prohibit risky operations. </p>
 
-<h2 id="resources">Resources</h2>;T;@™I"/v1/metadata/db/;T{;{	;I" <!DOCTYPE html>
+<h2 id="resources">Resources</h2>;T;@™I"/v1/metadata/db/;T{;{	;I"4'<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -1912,242 +1912,161 @@ I"“<h2 id="overview">Overview</h2>
 <p>Additional fields can be shown by adding ?show to the query parameters, e.g. /metadata/db/lanes/1234?show=workflowRun shows the workflow run associated with this lane. </p>
 
 <h2 id="resources">Resources</h2>
+<p>The Web service that this API refers to is http://localhost:8888/seqware-webservice. For more information about each resource and the correct, complete URI, please follow the link to the resource-specific page.</p>
 
-<table>
+<table cellspacing="5" border="1">
 <tr>
-<th><b>Resource</b></th>
-    <th><b>Description</b></th>
-  </tr>
-<tr>
-<td>GET /experiments</td>
-    <td>Lists</td>
-  </tr>
-<tr>
-<td>POST /experiments</td>
-    <td> </td>
-  </tr>
-<tr>
-<td>GET /experiments/(experimentSWID)</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /files</td>
-    <td>parameters: id</td>
-  </tr>
-<tr>
-<td>POST /files</td>
-    <td>|
-  </td>
+<th><strong>URI</strong></th>
+<th><strong>Description</strong></th>
 </tr>
 <tr>
-<td>GET /files/(fileSWID)</td>
-    <td></td>
-  </tr>
-<tr>
-<td>PUT /files/(fileSWID)</td>
-    <td>|
-  </td>
+<td><a href="experiment_get/" alt="GET /experiments/(experimentSWID)">/experiments/(experimentSWID)</a></td>
+<td>Retrieves a list of experiments.</td>
 </tr>
 <tr>
-<td>GET /ius</td>
-    <td>parameters: id</td>
-  </tr>
-<tr>
-<td>GET /ius/(SWID)</td>
-    <td></td>
-  </tr>
-<tr>
-<td>PUT /ius/(SWID)</td>
-    <td>|
-  </td>
+<td><a href="experiments_get/" alt="Metadata DB Experiments">/experiments</a></td>
+<td>Retrieves one or more experiments, depending on parameters.</td>
 </tr>
 <tr>
-<td>GET /lanes</td>
-    <td>params: id</td>
-  </tr>
-<tr>
-<td>GET /lanes/(laneSWID)</td>
-    <td>fields: sequencerRun</td>
-  </tr>
-<tr>
-<td>PUT /lanes/(laneSWID)</td>
-    <td>|
-  </td>
+<td><a href="experiments_post/" alt="POST experiment">/experiments</a></td>
+<td>Adds a new experiment to the experiment table.</td>
 </tr>
 <tr>
-<td>GET /processes/(processSWID)</td>
-    <td>fields: workflowRun</td>
-  </tr>
-<tr>
-<td>PUT /processes/(processSWID)</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /processes</td>
-    <td>params: id, fields: files</td>
-  </tr>
-<tr>
-<td>POST /processes</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /samples/</td>
-    <td>params: title, name</td>
-  </tr>
-<tr>
-<td>POST /samples/</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /samples/(sampleSWID)</td>
-    <td>fields: lanes, ius</td>
-  </tr>
-<tr>
-<td>GET /sequencerruns</td>
-    <td>params: name</td>
-  </tr>
-<tr>
-<td>GET /sequencerruns/(sequencerRunSWID)</td>
-    <td>fields: lanes</td>
-  </tr>
-<tr>
-<td>PUT /sequencerruns/(sequencerRunSWID)</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /studies/</td>
-    <td>params: title</td>
-  </tr>
-<tr>
-<td>POST /studies/</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /studies/(studySWID)</td>
-    <td>|
-  </td>
+<td><a href="file_get/" alt="GET file">/files/(fileSWID)</a></td>
+<td>Retrieves a file using its SWID.</td>
 </tr>
 <tr>
-<td>GET /workflows/</td>
-    <td>params: id, name, version</td>
-  </tr>
+<td><a href="file_put/" alt="PUT file">/files/(fileSWID)</a></td>
+<td>Updates a file with the given SWID.</td>
+</tr>
 <tr>
-<td>POST /workflows/</td>
-    <td></td>
-  </tr>
+<td><a href="files_get/" alt="GET files">/files</a></td>
+<td>Retrieves a list of files.</td>
+</tr>
 <tr>
-<td>GET /workflows/(workflowSWID)</td>
-    <td>params: params</td>
-  </tr>
+<td><a href="files_post/" alt="POST /files">/experiments</a></td>
+<td>Adds metadata about a file to the database.</td>
+</tr>
 <tr>
-<td>PUT /workflows/(workflowSWID)</td>
-    <td></td>
-  </tr>
+<td><a href="ius_get/" alt="GET /ius/(iusSWID)">/ius/(iusSWID)</a></td>
+<td>Retrieves an experiment based on the SWID.</td>
+</tr>
 <tr>
-<td>GET /workflowparams</td>
-    <td>params: id</td>
-  </tr>
+<td><a href="ius_put/" alt="PUT ius">/ius/(iusSWID)</a></td>
+<td>Update an ius with the given SWID.</td>
+</tr>
 <tr>
-<td>POST /workflowparams</td>
-    <td></td>
-  </tr>
+<td><a href="iuses_get/" alt="GET iuses">/ius</a></td>
+<td>Retrieves a list of IUSes.</td>
+</tr>
 <tr>
-<td>GET /workflowparamvalues</td>
-    <td>params: id</td>
-  </tr>
+<td><a href="lane_get/" alt="GET a lane">/lane/(laneSWID)</a></td>
+<td>Retrieves a lane with a particular SWID.</td>
+</tr>
 <tr>
-<td>POST /workflowparamvalues</td>
-    <td></td>
-  </tr>
+<td><a href="lane_put/" alt="">/lane/(laneSWID)</a></td>
+<td>Updates a lane with the given SWID.</td>
+</tr>
 <tr>
-<td>GET /workflowruns/</td>
-    <td>params: id</td>
-  </tr>
+<td><a href="lanes_get/" alt="GET lanes">/lanes</a></td>
+<td>Retrieves a list of lanes.</td>
+</tr>
 <tr>
-<td>POST /workflowruns/</td>
-    <td></td>
-  </tr>
+<td><a href="post/" alt="Metadata DB"></a></td>
+<td></td>
+</tr>
 <tr>
-<td>GET /workflowruns/(workflowRunSWID)</td>
-    <td>fields: lanes, ius, processes</td>
-  </tr>
+<td><a href="processing_get/" alt="GET processing">/processes/(processSWID)</a></td>
+<td>Retrieves a processing object by its SWID.</td>
+</tr>
 <tr>
-<td>PUT /workflowruns/(workflowRunSWID)</td>
-    <td></td>
-  </tr>
-<p>GET /experiments/(experimentSWID)</p>
-
-  <p>Metadata DB Experiments</p>
-
-  <p>POST experiment</p>
-
-  <p>GET file</p>
-
-  <p>PUT file</p>
-
-  <p>GET files</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
+<td><a href="processing_put/" alt="PUT processing">/processes/(processSWID)</a></td>
+<td>Updates a processing object with the given SWID.</td>
+</tr>
+<tr>
+<td><a href="processings_get/" alt="GET processings">/processes</a></td>
+<td>Retrieves a list of processings.</td>
+</tr>
+<tr>
+<td><a href="processings_post/" alt="POST processing">/processes</a></td>
+<td>Add a new processing object to the database.</td>
+</tr>
+<tr>
+<td><a href="sample_get/" alt="GET a sample">/samples/(sampleSWID)</a></td>
+<td>Retrieves a sample using its SWID.</td>
+</tr>
+<tr>
+<td><a href="samples_get/" alt="GET samples">/samples</a></td>
+<td>Retrieves a list of samples</td>
+</tr>
+<tr>
+<td><a href="samples_post/" alt="POST a sample">/samples</a></td>
+<td>Add a new sample to the database.</td>
+</tr>
+<tr>
+<td><a href="sequencerrun_get/" alt="GET a sequencer run">/sequencerrun/(sequencerRunSWID)</a></td>
+<td>Retrieves a sequencer run by SWID.</td>
+</tr>
+<tr>
+<td><a href="sequencerruns_get/" alt="GET /sequencerruns">/sequencerruns</a></td>
+<td>Retrieves a list of sequencer runs.</td>
+</tr>
+<tr>
+<td><a href="studies_get/" alt="GET /studies">/studies</a></td>
+<td>Retrieves a list of studies</td>
+</tr>
+<tr>
+<td><a href="studies_post/" alt="POST /studies">/studies</a></td>
+<td>Adds a new study to the database</td>
+</tr>
+<tr>
+<td><a href="study_get/" alt="GET a study">/studies/(studySWID)</a></td>
+<td>Retrieves a study using its SWID.</td>
+</tr>
+<tr>
+<td><a href="workflow_get/" alt="GET a workflow">/workflows/(workflowSWID)</a></td>
+<td>Retrieves a workflow using its SWID.</td>
+</tr>
+<tr>
+<td><a href="workflowparams_get/" alt="GET workflowparams">/workflowparams</a></td>
+<td>Retrieves a list of workflow parameters.</td>
+</tr>
+<tr>
+<td><a href="workflowparams_post/" alt="POST workflow param">/workflowparams</a></td>
+<td>Add a new workflow parameter to the database.</td>
+</tr>
+<tr>
+<td><a href="workflowparamvalues_get/" alt="GET /workflowparamvalues">/workflowparamvalues</a></td>
+<td>Retrieves a list of workflow parameter values.</td>
+</tr>
+<tr>
+<td><a href="workflowparamvalues_post/" alt="">/workflowparamvalues</a></td>
+<td>Adds a workflow parameter value to the database</td>
+</tr>
+<tr>
+<td><a href="workflowrun_get/" alt="GET a workflow run">/workflowruns/(workflowRunSWID)</a></td>
+<td>Retrieves a workflow run by SWID</td>
+</tr>
+<tr>
+<td><a href="workflowrun_put/" alt="PUT a workflow run">/workflowruns/(workflowRunSWID)</a></td>
+<td>Updates a workflow run with the given SWID.</td>
+</tr>
+<tr>
+<td><a href="workflowruns_get/" alt="GET workflow runs">/workflowruns</a></td>
+<td>Retrieves a list of workflow runs.</td>
+</tr>
+<tr>
+<td><a href="workflowruns_post/" alt="POST /workflowruns">/workflowruns</a></td>
+<td>Inserts a new workflow run into the database.</td>
+</tr>
+<tr>
+<td><a href="workflows_get/" alt="GET /workflows">/workflows</a></td>
+<td>Retrieves a list of workflows.</td>
+</tr>
+<tr>
+<td><a href="workflows_post/" alt="POST a workflow">/workflows</a></td>
+<td>Adds a new workflow to the database.</td>
+</tr>
 </table>
 </div>
 
@@ -2221,7 +2140,7 @@ I"“<h2 id="overview">Overview</h2>
     </script>
 </body>
 </html>
-;T;	I"8Overview
+;T;	I" Overview
 -----------
 
 This sub-domain is exclusively for low-level access of database tables. Each URI actually retrieves one or more rows from a database table. The output format is exclusively XML produced by JAXB.
@@ -2244,165 +2163,15 @@ Additional fields can be shown by adding ?show to the query parameters, e.g. /me
 
 Resources
 ---------------
+The Web service that this API refers to is <%= server_name %>. For more information about each resource and the correct, complete URI, please follow the link to the resource-specific page.
 
-<table>
-  <tr>
-    <th><b>Resource</b></th>
-    <th><b>Description</b></th>
-  </tr>
-  <tr>
-    <td>GET /experiments</td>
-    <td>Lists</td>
-  </tr>
-  <tr>
-    <td>POST /experiments</td>
-    <td> </td>
-  </tr>
-  <tr>
-    <td>GET /experiments/(experimentSWID)</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>GET /files</td>
-    <td>parameters: id</td>
-  </tr>
-  <tr>
-    <td>POST /files</td>
-    <td>|
-  <tr>
-    <td>GET /files/(fileSWID)</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>PUT /files/(fileSWID)</td>
-    <td>|
-  <tr>
-    <td>GET /ius</td>
-    <td>parameters: id</td>
-  </tr>
-  <tr>
-    <td>GET /ius/(SWID)</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>PUT /ius/(SWID)</td>
-    <td>|
-  <tr>
-    <td>GET /lanes</td>
-    <td>params: id</td>
-  </tr>
-  <tr>
-    <td>GET /lanes/(laneSWID)</td>
-    <td>fields: sequencerRun</td>
-  </tr>
-  <tr>
-    <td>PUT /lanes/(laneSWID)</td>
-    <td>|
-  <tr>
-    <td>GET /processes/(processSWID)</td>
-    <td>fields: workflowRun</td>
-  </tr>
-  <tr>
-    <td>PUT /processes/(processSWID)</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>GET /processes</td>
-    <td>params: id, fields: files</td>
-  </tr>
-  <tr>
-    <td>POST /processes</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>GET /samples/</td>
-    <td>params: title, name</td>
-  </tr>
-  <tr>
-    <td>POST /samples/</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>GET /samples/(sampleSWID)</td>
-    <td>fields: lanes, ius</td>
-  </tr>
-  <tr>
-    <td>GET /sequencerruns</td>
-    <td>params: name</td>
-  </tr>
-  <tr>
-    <td>GET /sequencerruns/(sequencerRunSWID)</td>
-    <td>fields: lanes</td>
-  </tr>
-  <tr>
-    <td>PUT /sequencerruns/(sequencerRunSWID)</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>GET /studies/</td>
-    <td>params: title</td>
-  </tr>
-  <tr>
-    <td>POST /studies/</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>GET /studies/(studySWID)</td>
-    <td>|
-  <tr>
-    <td>GET /workflows/</td>
-    <td>params: id, name, version</td>
-  </tr>
-  <tr>
-    <td>POST /workflows/</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>GET /workflows/(workflowSWID)</td>
-    <td>params: params</td>
-  </tr>
-  <tr>
-    <td>PUT /workflows/(workflowSWID)</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>GET /workflowparams</td>
-    <td>params: id</td>
-  </tr>
-  <tr>
-    <td>POST /workflowparams</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>GET /workflowparamvalues</td>
-    <td>params: id</td>
-  </tr>
-  <tr>
-    <td>POST /workflowparamvalues</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>GET /workflowruns/</td>
-    <td>params: id</td>
-  </tr>
-  <tr>
-    <td>POST /workflowruns/</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>GET /workflowruns/(workflowRunSWID)</td>
-    <td>fields: lanes, ius, processes</td>
-  </tr>
-  <tr>
-    <td>PUT /workflowruns/(workflowRunSWID)</td>
-    <td></td>
-  </tr>
-</table>
-
+<table cellspacing="5" border="1">
+<tr><th><strong>URI</strong></th><th><strong>Description</strong></th></tr>
 <% @item.children.each do |img| %>
-  <p><%= content_for(img, :summary) || img[:title] %></p>
-<% end %>;T;
-I"Ô<h2 id="overview">Overview</h2>
+  <tr><td><a href="<%= img.path %>" alt="<%= img[:title] %>"><%= img[:uri] %></a></td><td><%= img[:summary] %></td></tr>
+<% end %>
+</table>;T;
+I"V<h2 id="overview">Overview</h2>
 
 <p>This sub-domain is exclusively for low-level access of database tables. Each URI actually retrieves one or more rows from a database table. The output format is exclusively XML produced by JAXB.</p>
 
@@ -2423,242 +2192,161 @@ I"Ô<h2 id="overview">Overview</h2>
 </ul><p>Additional fields can be shown by adding ?show to the query parameters, e.g. /metadata/db/lanes/1234?show=workflowRun shows the workflow run associated with this lane. </p>
 
 <h2 id="resources">Resources</h2>
+<p>The Web service that this API refers to is http://localhost:8888/seqware-webservice. For more information about each resource and the correct, complete URI, please follow the link to the resource-specific page.</p>
 
-<table>
+<table cellspacing="5" border="1">
 <tr>
-<th><b>Resource</b></th>
-    <th><b>Description</b></th>
-  </tr>
-<tr>
-<td>GET /experiments</td>
-    <td>Lists</td>
-  </tr>
-<tr>
-<td>POST /experiments</td>
-    <td> </td>
-  </tr>
-<tr>
-<td>GET /experiments/(experimentSWID)</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /files</td>
-    <td>parameters: id</td>
-  </tr>
-<tr>
-<td>POST /files</td>
-    <td>|
-  </td>
+<th><strong>URI</strong></th>
+<th><strong>Description</strong></th>
 </tr>
 <tr>
-<td>GET /files/(fileSWID)</td>
-    <td></td>
-  </tr>
-<tr>
-<td>PUT /files/(fileSWID)</td>
-    <td>|
-  </td>
+<td><a href="/v1/metadata/db/experiment_get/" alt="GET /experiments/(experimentSWID)">/experiments/(experimentSWID)</a></td>
+<td>Retrieves a list of experiments.</td>
 </tr>
 <tr>
-<td>GET /ius</td>
-    <td>parameters: id</td>
-  </tr>
-<tr>
-<td>GET /ius/(SWID)</td>
-    <td></td>
-  </tr>
-<tr>
-<td>PUT /ius/(SWID)</td>
-    <td>|
-  </td>
+<td><a href="/v1/metadata/db/experiments_get/" alt="Metadata DB Experiments">/experiments</a></td>
+<td>Retrieves one or more experiments, depending on parameters.</td>
 </tr>
 <tr>
-<td>GET /lanes</td>
-    <td>params: id</td>
-  </tr>
-<tr>
-<td>GET /lanes/(laneSWID)</td>
-    <td>fields: sequencerRun</td>
-  </tr>
-<tr>
-<td>PUT /lanes/(laneSWID)</td>
-    <td>|
-  </td>
+<td><a href="/v1/metadata/db/experiments_post/" alt="POST experiment">/experiments</a></td>
+<td>Adds a new experiment to the experiment table.</td>
 </tr>
 <tr>
-<td>GET /processes/(processSWID)</td>
-    <td>fields: workflowRun</td>
-  </tr>
-<tr>
-<td>PUT /processes/(processSWID)</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /processes</td>
-    <td>params: id, fields: files</td>
-  </tr>
-<tr>
-<td>POST /processes</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /samples/</td>
-    <td>params: title, name</td>
-  </tr>
-<tr>
-<td>POST /samples/</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /samples/(sampleSWID)</td>
-    <td>fields: lanes, ius</td>
-  </tr>
-<tr>
-<td>GET /sequencerruns</td>
-    <td>params: name</td>
-  </tr>
-<tr>
-<td>GET /sequencerruns/(sequencerRunSWID)</td>
-    <td>fields: lanes</td>
-  </tr>
-<tr>
-<td>PUT /sequencerruns/(sequencerRunSWID)</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /studies/</td>
-    <td>params: title</td>
-  </tr>
-<tr>
-<td>POST /studies/</td>
-    <td></td>
-  </tr>
-<tr>
-<td>GET /studies/(studySWID)</td>
-    <td>|
-  </td>
+<td><a href="/v1/metadata/db/file_get/" alt="GET file">/files/(fileSWID)</a></td>
+<td>Retrieves a file using its SWID.</td>
 </tr>
 <tr>
-<td>GET /workflows/</td>
-    <td>params: id, name, version</td>
-  </tr>
+<td><a href="/v1/metadata/db/file_put/" alt="PUT file">/files/(fileSWID)</a></td>
+<td>Updates a file with the given SWID.</td>
+</tr>
 <tr>
-<td>POST /workflows/</td>
-    <td></td>
-  </tr>
+<td><a href="/v1/metadata/db/files_get/" alt="GET files">/files</a></td>
+<td>Retrieves a list of files.</td>
+</tr>
 <tr>
-<td>GET /workflows/(workflowSWID)</td>
-    <td>params: params</td>
-  </tr>
+<td><a href="/v1/metadata/db/files_post/" alt="POST /files">/experiments</a></td>
+<td>Adds metadata about a file to the database.</td>
+</tr>
 <tr>
-<td>PUT /workflows/(workflowSWID)</td>
-    <td></td>
-  </tr>
+<td><a href="/v1/metadata/db/ius_get/" alt="GET /ius/(iusSWID)">/ius/(iusSWID)</a></td>
+<td>Retrieves an experiment based on the SWID.</td>
+</tr>
 <tr>
-<td>GET /workflowparams</td>
-    <td>params: id</td>
-  </tr>
+<td><a href="/v1/metadata/db/ius_put/" alt="PUT ius">/ius/(iusSWID)</a></td>
+<td>Update an ius with the given SWID.</td>
+</tr>
 <tr>
-<td>POST /workflowparams</td>
-    <td></td>
-  </tr>
+<td><a href="/v1/metadata/db/iuses_get/" alt="GET iuses">/ius</a></td>
+<td>Retrieves a list of IUSes.</td>
+</tr>
 <tr>
-<td>GET /workflowparamvalues</td>
-    <td>params: id</td>
-  </tr>
+<td><a href="/v1/metadata/db/lane_get/" alt="GET a lane">/lane/(laneSWID)</a></td>
+<td>Retrieves a lane with a particular SWID.</td>
+</tr>
 <tr>
-<td>POST /workflowparamvalues</td>
-    <td></td>
-  </tr>
+<td><a href="/v1/metadata/db/lane_put/" alt="">/lane/(laneSWID)</a></td>
+<td>Updates a lane with the given SWID.</td>
+</tr>
 <tr>
-<td>GET /workflowruns/</td>
-    <td>params: id</td>
-  </tr>
+<td><a href="/v1/metadata/db/lanes_get/" alt="GET lanes">/lanes</a></td>
+<td>Retrieves a list of lanes.</td>
+</tr>
 <tr>
-<td>POST /workflowruns/</td>
-    <td></td>
-  </tr>
+<td><a href="/v1/metadata/db/post/" alt="Metadata DB"></a></td>
+<td></td>
+</tr>
 <tr>
-<td>GET /workflowruns/(workflowRunSWID)</td>
-    <td>fields: lanes, ius, processes</td>
-  </tr>
+<td><a href="/v1/metadata/db/processing_get/" alt="GET processing">/processes/(processSWID)</a></td>
+<td>Retrieves a processing object by its SWID.</td>
+</tr>
 <tr>
-<td>PUT /workflowruns/(workflowRunSWID)</td>
-    <td></td>
-  </tr>
-<p>GET /experiments/(experimentSWID)</p>
-
-  <p>Metadata DB Experiments</p>
-
-  <p>POST experiment</p>
-
-  <p>GET file</p>
-
-  <p>PUT file</p>
-
-  <p>GET files</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
-
-  <p>Metadata DB</p>
+<td><a href="/v1/metadata/db/processing_put/" alt="PUT processing">/processes/(processSWID)</a></td>
+<td>Updates a processing object with the given SWID.</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/processings_get/" alt="GET processings">/processes</a></td>
+<td>Retrieves a list of processings.</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/processings_post/" alt="POST processing">/processes</a></td>
+<td>Add a new processing object to the database.</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/sample_get/" alt="GET a sample">/samples/(sampleSWID)</a></td>
+<td>Retrieves a sample using its SWID.</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/samples_get/" alt="GET samples">/samples</a></td>
+<td>Retrieves a list of samples</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/samples_post/" alt="POST a sample">/samples</a></td>
+<td>Add a new sample to the database.</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/sequencerrun_get/" alt="GET a sequencer run">/sequencerrun/(sequencerRunSWID)</a></td>
+<td>Retrieves a sequencer run by SWID.</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/sequencerruns_get/" alt="GET /sequencerruns">/sequencerruns</a></td>
+<td>Retrieves a list of sequencer runs.</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/studies_get/" alt="GET /studies">/studies</a></td>
+<td>Retrieves a list of studies</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/studies_post/" alt="POST /studies">/studies</a></td>
+<td>Adds a new study to the database</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/study_get/" alt="GET a study">/studies/(studySWID)</a></td>
+<td>Retrieves a study using its SWID.</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/workflow_get/" alt="GET a workflow">/workflows/(workflowSWID)</a></td>
+<td>Retrieves a workflow using its SWID.</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/workflowparams_get/" alt="GET workflowparams">/workflowparams</a></td>
+<td>Retrieves a list of workflow parameters.</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/workflowparams_post/" alt="POST workflow param">/workflowparams</a></td>
+<td>Add a new workflow parameter to the database.</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/workflowparamvalues_get/" alt="GET /workflowparamvalues">/workflowparamvalues</a></td>
+<td>Retrieves a list of workflow parameter values.</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/workflowparamvalues_post/" alt="">/workflowparamvalues</a></td>
+<td>Adds a workflow parameter value to the database</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/workflowrun_get/" alt="GET a workflow run">/workflowruns/(workflowRunSWID)</a></td>
+<td>Retrieves a workflow run by SWID</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/workflowrun_put/" alt="PUT a workflow run">/workflowruns/(workflowRunSWID)</a></td>
+<td>Updates a workflow run with the given SWID.</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/workflowruns_get/" alt="GET workflow runs">/workflowruns</a></td>
+<td>Retrieves a list of workflow runs.</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/workflowruns_post/" alt="POST /workflowruns">/workflowruns</a></td>
+<td>Inserts a new workflow run into the database.</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/workflows_get/" alt="GET /workflows">/workflows</a></td>
+<td>Retrieves a list of workflows.</td>
+</tr>
+<tr>
+<td><a href="/v1/metadata/db/workflows_post/" alt="POST a workflow">/workflows</a></td>
+<td>Adds a new workflow to the database.</td>
+</tr>
 </table>;T;@∞I" /v1/metadata/db/experiment/;T{;{	;I"n<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -3299,7 +2987,7 @@ I"D<p>Lorem ipsum</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@»I"/v1/metadata/db/files_get/;T{;{	;I"Ç<!DOCTYPE html>
+</code></pre>;T;@»I"/v1/metadata/db/files_get/;T{;{	;I"¨<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -3338,9 +3026,8 @@ Code Block
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>id</dt>
+  <dd>Returns the file with the given id (primary key)</dd>
 </dl>
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
@@ -3421,7 +3108,7 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"Â<%= @item[:summary] %>
+;T;	I"<%= @item[:summary] %>
 
 Resource URL
 --------------
@@ -3430,10 +3117,8 @@ Resource URL
 
 Parameters
 --------------
-show
-: 
 id
-:
+: Returns the file with the given id (primary key)
 
 Example Requests
 --------------
@@ -3444,16 +3129,15 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"X<p>Retrieves a list of files.</p>
+I"Ç<p>Retrieves a list of files.</p>
 
 <h2 id="resource-url">Resource URL</h2>
 <p>GET http://localhost:8888/seqware-webservice/files</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>id</dt>
+  <dd>Returns the file with the given id (primary key)</dd>
 </dl><h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 
@@ -3620,14 +3304,14 @@ I"i<p>Retrieves a file using its SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@‘I"/v1/metadata/db/ius_get/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@‘I"/v1/metadata/db/ius_get/;T{;{	;I"¨<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET /ius/(iusSWID)</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -3651,11 +3335,11 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET /ius/(iusSWID)</h1>
+	<p>Retrieves an experiment based on the SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/ius/(iusSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -3742,11 +3426,12 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"Â<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
@@ -3764,10 +3449,10 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"p<p>Retrieves an experiment based on the SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/ius/(iusSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -3780,14 +3465,14 @@ I"D<p>Lorem ipsum</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@⁄I"/v1/metadata/db/iuses_get/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@⁄I"/v1/metadata/db/iuses_get/;T{;{	;I"≥<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET iuses</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -3811,17 +3496,16 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET iuses</h1>
+	<p>Retrieves a list of IUSes.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/ius</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>id</dt>
+  <dd>Returns the IUS with the given id (primary key, not SWID)</dd>
 </dl>
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
@@ -3902,18 +3586,17 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
-show
-: 
 id
-:
+: Returns the IUS with the given id (primary key, not SWID)
 
 Example Requests
 --------------
@@ -3924,30 +3607,29 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"â<p>Retrieves a list of IUSes.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/ius</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>id</dt>
+  <dd>Returns the IUS with the given id (primary key, not SWID)</dd>
 </dl><h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 
 <pre><code>
 Code Block
 
-</code></pre>;T;@‡I"/v1/metadata/db/lanes_get/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@‡I"/v1/metadata/db/lanes_get/;T{;{	;I"∂<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET lanes</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -3971,17 +3653,16 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET lanes</h1>
+	<p>Retrieves a list of lanes.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/lanes</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>id</dt>
+  <dd>Returns the Lane with the given id (primary key, not SWID)</dd>
 </dl>
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
@@ -4062,18 +3743,17 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
-show
-: 
 id
-:
+: Returns the Lane with the given id (primary key, not SWID)
 
 Example Requests
 --------------
@@ -4084,30 +3764,29 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"å<p>Retrieves a list of lanes.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/lanes</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>id</dt>
+  <dd>Returns the Lane with the given id (primary key, not SWID)</dd>
 </dl><h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 
 <pre><code>
 Code Block
 
-</code></pre>;T;@ÊI"/v1/metadata/db/lane_get/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@ÊI"/v1/metadata/db/lane_get/;T{;{	;I"∑<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET a lane</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -4131,17 +3810,174 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET a lane</h1>
+	<p>Retrieves a lane with a particular SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/lane/(laneSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<p>show
+:sequencerRun - shows the lane with its sequencer run </p>
+
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
+
+    <div id="js-sidebar" class="sidebar-shell">
+      <div class="js-toggle-list sidebar-module expandable">
+	<ul>
+<li class="js-topic">
+            <h3>
+<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../">SeqWare Webservice RESTful API</a>
+</h3>
+            <ul class="js-guides">
+<li><a href="../../">Metadata</a></li>
+              <li><a href="../../../pipeline/">Pipeline</a></li>
+            </ul>
+</li>
+          <li class="js-topic">
+            <h3>
+<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../">Metadata Resources</a>
+</h3>
+            <ul class="js-guides">
+<li><a href="../">Data</a></li>
+              <li><a href="../../report/">Reports</a></li>
+              <li><a href="../../job/">Jobs</a></li>
+              <li><a href="../../x/">Experimental</a></li>
+            </ul>
+</li>
+          <li class="js-topic">
+            <h3>
+<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../pipeline/">Pipeline Resources</a>
+</h3>
+            <ul class="js-guides">
+<li><a href="../../../pipeline/job/">Jobs</a></li>
+            </ul>
+</li>
+        </ul>
+</div> <!-- /sidebar-module -->
+    </div>
+<!-- /sidebar-shell -->
+
+    </div>
+<!-- #wrapper -->
+
+    <div id="footer">
+      <div class="lower_footer">
+        <div class="footer_inner clearfix">
+            <div id="legal"> 
+              <!--[if IE]><a class="home_ie" href="http://oicr.on.ca">Home</a><![endif]-->
+              <a class="home" href="http://oicr.on.ca">Home</a>
+
+              <p>¬© <span id="year">year</span> Ontario Institute for Cancer Research. All rights reserved.</p>
+            </div>
+<!-- /#legal or /#legal_ie-->
+        </div>
+<!-- /.site -->
+      </div>
+<!-- /.lower_footer -->
+    </div>
+<!-- /#footer -->
+    <script type="text/javascript">
+      var _gauges = _gauges || [];
+      (function() {
+        var t   = document.createElement('script');
+        t.type  = 'text/javascript';
+        t.async = true;
+        t.id    = 'gauges-tracker';
+        t.setAttribute('data-site-id', '4f2038e0cb25bc1b55000003');
+        t.src = '//secure.gaug.es/track.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(t, s);
+      })();
+    </script>
+</body>
+</html>
+;T;	I"<%= @item[:summary] %>
+
+Resource URL
+--------------
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
+
+Parameters
+--------------
+show
+:sequencerRun - shows the lane with its sequencer run 
+
+Example Requests
+--------------
+<%= server_name %>
+
+~~~~~
+
+Code Block
+
+~~~~~;T;
+I"å<p>Retrieves a lane with a particular SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/lane/(laneSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<p>show
+:sequencerRun - shows the lane with its sequencer run </p>
+
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>;T;@ÏI"%/v1/metadata/db/processings_get/;T{;{	;I"<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="imagetoolbar" content="false">
+<meta name="MSSmartTagsPreventParsing" content="true">
+<title>SeqWare Web Service API: GET processings</title>
+<link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
+<link href="../../../../css/960.css" rel="stylesheet" type="text/css">
+<link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
+<link href="../../../../shared/css/documentation.css" media="screen" rel="stylesheet" type="text/css">
+<link href="../../../../shared/css/pygments.css" media="screen" rel="stylesheet" type="text/css">
+<script src="../../../../shared/js/jquery.js" type="text/javascript"></script><script src="../../../../shared/js/documentation.js" type="text/javascript"></script>
+</head>
+<body class="api">
+    <div id="header-wrapper">
+      <div id="header">
+        <div>
+          <a class="logo" href="http://oicr.on.ca/"><img src="../../../../images/OICR2logo.png" height="45"></a>
+          <ul class="nav">
+<li><a href="../../../">SeqWare Web Service API</a></li>
+          </ul>
+</div>
+      </div>
+<!-- #header -->
+    </div>
+<!-- #header-wrapper -->
+
+    <div id="wrapper">
+      <div class="content">
+	<h1>GET processings</h1>
+	<p>Retrieves a list of processings.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/processes</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt>show</dt>
-  <dd>id
-:</dd>
+  <dd>files - shows the processing with its attached files 
+id</dd>
+  <dd>Returns the Processing with the given id (primary key, not SWID)</dd>
 </dl>
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
@@ -4222,18 +4058,19 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"[<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
 show
-: 
+: files - shows the processing with its attached files 
 id
-:
+: Returns the Processing with the given id (primary key, not SWID)
 
 Example Requests
 --------------
@@ -4244,30 +4081,31 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"‚<p>Retrieves a list of processings.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/processes</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt>show</dt>
-  <dd>id
-:</dd>
+  <dd>files - shows the processing with its attached files 
+id</dd>
+  <dd>Returns the Processing with the given id (primary key, not SWID)</dd>
 </dl><h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 
 <pre><code>
 Code Block
 
-</code></pre>;T;@ÏI"%/v1/metadata/db/processings_get/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@ÚI"$/v1/metadata/db/processing_get/;T{;{	;I"„<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET processing</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -4291,17 +4129,16 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET processing</h1>
+	<p>Retrieves a processing object by its SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/processes/(processSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt>show</dt>
-  <dd>id
-:</dd>
+  <dd>workflowRun - shows the processing with its workflow run </dd>
 </dl>
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
@@ -4382,18 +4219,17 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
 show
-: 
-id
-:
+: workflowRun - shows the processing with its workflow run 
 
 Example Requests
 --------------
@@ -4404,30 +4240,29 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"Ø<p>Retrieves a processing object by its SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/processes/(processSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt>show</dt>
-  <dd>id
-:</dd>
+  <dd>workflowRun - shows the processing with its workflow run </dd>
 </dl><h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 
 <pre><code>
 Code Block
 
-</code></pre>;T;@ÚI"$/v1/metadata/db/processing_get/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@¯I"!/v1/metadata/db/samples_get/;T{;{	;I"J<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET samples</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -4451,17 +4286,18 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET samples</h1>
+	<p>Retrieves a list of samples</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/samples</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>title</dt>
+  <dd>Returns the Sample with the given title (most samples have names, all samples have titles)
+name</dd>
+  <dd>Returns the Sample with the given name (most samples have names, all samples have titles)</dd>
 </dl>
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
@@ -4542,18 +4378,19 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"ú<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
-show
-: 
-id
-:
+title
+: Returns the Sample with the given title (most samples have names, all samples have titles)
+name
+: Returns the Sample with the given name (most samples have names, all samples have titles)
 
 Example Requests
 --------------
@@ -4564,30 +4401,31 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"<p>Retrieves a list of samples</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/samples</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>title</dt>
+  <dd>Returns the Sample with the given title (most samples have names, all samples have titles)
+name</dd>
+  <dd>Returns the Sample with the given name (most samples have names, all samples have titles)</dd>
 </dl><h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 
 <pre><code>
 Code Block
 
-</code></pre>;T;@¯I"!/v1/metadata/db/samples_get/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@˛I" /v1/metadata/db/sample_get/;T{;{	;I"˜<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET a sample</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -4611,17 +4449,17 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET a sample</h1>
+	<p>Retrieves a sample using its SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/samples/(sampleSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt>show</dt>
-  <dd>id
-:</dd>
+  <dd>lanes - Returns the sample with its lanes</dd>
+  <dd>ius - Returns the sample with its IUSes</dd>
 </dl>
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
@@ -4702,18 +4540,19 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"4<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
+
 
 Parameters
 --------------
 show
-: 
-id
-:
+: lanes - Returns the sample with its lanes
+: ius - Returns the sample with its IUSes
 
 Example Requests
 --------------
@@ -4724,30 +4563,30 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"«<p>Retrieves a sample using its SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/samples/(sampleSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt>show</dt>
-  <dd>id
-:</dd>
+  <dd>lanes - Returns the sample with its lanes</dd>
+  <dd>ius - Returns the sample with its IUSes</dd>
 </dl><h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 
 <pre><code>
 Code Block
 
-</code></pre>;T;@˛I" /v1/metadata/db/sample_get/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@I"'/v1/metadata/db/sequencerruns_get/;T{;{	;I"Œ<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET /sequencerruns</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -4771,17 +4610,16 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET /sequencerruns</h1>
+	<p>Retrieves a list of sequencer runs.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/sequencerruns</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>name</dt>
+  <dd>Returns the sequencer run with the given name</dd>
 </dl>
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
@@ -4862,18 +4700,17 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
-show
-: 
-id
-:
+name
+: Returns the sequencer run with the given name
 
 Example Requests
 --------------
@@ -4884,176 +4721,15 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"í<p>Retrieves a list of sequencer runs.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/sequencerruns</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl><h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>;T;@I"'/v1/metadata/db/sequencerruns_get/;T{;{	;I"r<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta http-equiv="Content-Language" content="en-us">
-<meta http-equiv="imagetoolbar" content="false">
-<meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
-<link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
-<link href="../../../../css/960.css" rel="stylesheet" type="text/css">
-<link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
-<link href="../../../../shared/css/documentation.css" media="screen" rel="stylesheet" type="text/css">
-<link href="../../../../shared/css/pygments.css" media="screen" rel="stylesheet" type="text/css">
-<script src="../../../../shared/js/jquery.js" type="text/javascript"></script><script src="../../../../shared/js/documentation.js" type="text/javascript"></script>
-</head>
-<body class="api">
-    <div id="header-wrapper">
-      <div id="header">
-        <div>
-          <a class="logo" href="http://oicr.on.ca/"><img src="../../../../images/OICR2logo.png" height="45"></a>
-          <ul class="nav">
-<li><a href="../../../">SeqWare Web Service API</a></li>
-          </ul>
-</div>
-      </div>
-<!-- #header -->
-    </div>
-<!-- #header-wrapper -->
-
-    <div id="wrapper">
-      <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
-    <div id="js-sidebar" class="sidebar-shell">
-      <div class="js-toggle-list sidebar-module expandable">
-	<ul>
-<li class="js-topic">
-            <h3>
-<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../">SeqWare Webservice RESTful API</a>
-</h3>
-            <ul class="js-guides">
-<li><a href="../../">Metadata</a></li>
-              <li><a href="../../../pipeline/">Pipeline</a></li>
-            </ul>
-</li>
-          <li class="js-topic">
-            <h3>
-<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../">Metadata Resources</a>
-</h3>
-            <ul class="js-guides">
-<li><a href="../">Data</a></li>
-              <li><a href="../../report/">Reports</a></li>
-              <li><a href="../../job/">Jobs</a></li>
-              <li><a href="../../x/">Experimental</a></li>
-            </ul>
-</li>
-          <li class="js-topic">
-            <h3>
-<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../pipeline/">Pipeline Resources</a>
-</h3>
-            <ul class="js-guides">
-<li><a href="../../../pipeline/job/">Jobs</a></li>
-            </ul>
-</li>
-        </ul>
-</div> <!-- /sidebar-module -->
-    </div>
-<!-- /sidebar-shell -->
-
-    </div>
-<!-- #wrapper -->
-
-    <div id="footer">
-      <div class="lower_footer">
-        <div class="footer_inner clearfix">
-            <div id="legal"> 
-              <!--[if IE]><a class="home_ie" href="http://oicr.on.ca">Home</a><![endif]-->
-              <a class="home" href="http://oicr.on.ca">Home</a>
-
-              <p>¬© <span id="year">year</span> Ontario Institute for Cancer Research. All rights reserved.</p>
-            </div>
-<!-- /#legal or /#legal_ie-->
-        </div>
-<!-- /.site -->
-      </div>
-<!-- /.lower_footer -->
-    </div>
-<!-- /#footer -->
-    <script type="text/javascript">
-      var _gauges = _gauges || [];
-      (function() {
-        var t   = document.createElement('script');
-        t.type  = 'text/javascript';
-        t.async = true;
-        t.id    = 'gauges-tracker';
-        t.setAttribute('data-site-id', '4f2038e0cb25bc1b55000003');
-        t.src = '//secure.gaug.es/track.js';
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(t, s);
-      })();
-    </script>
-</body>
-</html>
-;T;	I"∂Lorem ipsum
-
-Resource URL
---------------
-GET <%= server_name %>/
-
-Parameters
---------------
-show
-: 
-id
-:
-
-Example Requests
---------------
-<%= server_name %>
-
-~~~~~
-
-Code Block
-
-~~~~~;T;
-I"D<p>Lorem ipsum</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>name</dt>
+  <dd>Returns the sequencer run with the given name</dd>
 </dl><h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 
@@ -5061,14 +4737,14 @@ I"D<p>Lorem ipsum</p>
 Code Block
 
 </code></pre>;T;@
-I"&/v1/metadata/db/sequencerrun_get/;T{;{	;I"r<!DOCTYPE html>
+I"&/v1/metadata/db/sequencerrun_get/;T{;{	;I"„<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET a sequencer run</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -5092,17 +4768,16 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET a sequencer run</h1>
+	<p>Retrieves a sequencer run by SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/sequencerrun/(sequencerRunSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt>show</dt>
-  <dd>id
-:</dd>
+  <dd>lanes - returns a sequencer run with its lanes </dd>
 </dl>
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
@@ -5183,18 +4858,17 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
 show
-: 
-id
-:
+: lanes - returns a sequencer run with its lanes 
 
 Example Requests
 --------------
@@ -5205,30 +4879,29 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"•<p>Retrieves a sequencer run by SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/sequencerrun/(sequencerRunSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt>show</dt>
-  <dd>id
-:</dd>
+  <dd>lanes - returns a sequencer run with its lanes </dd>
 </dl><h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 
 <pre><code>
 Code Block
 
-</code></pre>;T;@I"!/v1/metadata/db/studies_get/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@I"!/v1/metadata/db/studies_get/;T{;{	;I"Æ<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET /studies</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -5252,17 +4925,16 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET /studies</h1>
+	<p>Retrieves a list of studies</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/studies</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>title</dt>
+  <dd>Returns the study with the given title</dd>
 </dl>
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
@@ -5343,18 +5015,17 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
-show
-: 
-id
-:
+title
+: Returns the study with the given title
 
 Example Requests
 --------------
@@ -5365,16 +5036,15 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"~<p>Retrieves a list of studies</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/studies</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>title</dt>
+  <dd>Returns the study with the given title</dd>
 </dl><h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 
@@ -5541,14 +5211,14 @@ I"D<p>Lorem ipsum</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@I"/v1/metadata/db/study_get/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@I"/v1/metadata/db/study_get/;T{;{	;I"õ<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET a study</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -5572,11 +5242,11 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET a study</h1>
+	<p>Retrieves a study using its SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/studies/(studySWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -5663,11 +5333,12 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"Â<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
@@ -5685,10 +5356,10 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"m<p>Retrieves a study using its SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/studies/(studySWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -5701,14 +5372,14 @@ I"D<p>Lorem ipsum</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@"I"#/v1/metadata/db/workflows_get/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@"I"#/v1/metadata/db/workflows_get/;T{;{	;I"â<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET /workflows</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -5732,17 +5403,20 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET /workflows</h1>
+	<p>Retrieves a list of workflows.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/workflows</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>id</dt>
+  <dd>Returns the Workflow with the given id (primary key, not SWID)
+name</dd>
+  <dd>Returns the Workflow(s) with the given name
+version</dd>
+  <dd>Must be used in combination with the ‚Äúname‚Äù parameter. Returns the named workflow with the given version.</dd>
 </dl>
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
@@ -5823,18 +5497,21 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"ƒ<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
---------------
-show
-: 
+-------------- 
 id
-:
+: Returns the Workflow with the given id (primary key, not SWID)
+name
+: Returns the Workflow(s) with the given name
+version
+: Must be used in combination with the "name" parameter. Returns the named workflow with the given version.
 
 Example Requests
 --------------
@@ -5845,30 +5522,33 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"U<p>Retrieves a list of workflows.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/workflows</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>id</dt>
+  <dd>Returns the Workflow with the given id (primary key, not SWID)
+name</dd>
+  <dd>Returns the Workflow(s) with the given name
+version</dd>
+  <dd>Must be used in combination with the ‚Äúname‚Äù parameter. Returns the named workflow with the given version.</dd>
 </dl><h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 
 <pre><code>
 Code Block
 
-</code></pre>;T;@(I""/v1/metadata/db/workflow_get/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@(I""/v1/metadata/db/workflow_get/;T{;{	;I"ﬂ<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET a workflow</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -5892,17 +5572,16 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET a workflow</h1>
+	<p>Retrieves a workflow using its SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/workflows/(workflowSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt>show</dt>
-  <dd>id
-:</dd>
+  <dd>params - Returns the Workflow with its possible parameters</dd>
 </dl>
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
@@ -5983,18 +5662,16 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
 
 Parameters
 --------------
 show
-: 
-id
-:
+: params - Returns the Workflow with its possible parameters
 
 Example Requests
 --------------
@@ -6005,30 +5682,29 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"´<p>Retrieves a workflow using its SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/workflows/(workflowSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt>show</dt>
-  <dd>id
-:</dd>
+  <dd>params - Returns the Workflow with its possible parameters</dd>
 </dl><h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 
 <pre><code>
 Code Block
 
-</code></pre>;T;@.I"(/v1/metadata/db/workflowparams_get/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@.I"(/v1/metadata/db/workflowparams_get/;T{;{	;I"<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET workflowparams</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -6052,17 +5728,16 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET workflowparams</h1>
+	<p>Retrieves a list of workflow parameters.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/workflowparams</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>id</dt>
+  <dd>Returns the WorkflowParam with the given id (primary key, not SWID, since workflow parameters do not have SWIDs).</dd>
 </dl>
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
@@ -6143,18 +5818,17 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"O<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
-show
-: 
 id
-:
+: Returns the WorkflowParam with the given id (primary key, not SWID, since workflow parameters do not have SWIDs).
 
 Example Requests
 --------------
@@ -6165,30 +5839,29 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"⁄<p>Retrieves a list of workflow parameters.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/workflowparams</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>id</dt>
+  <dd>Returns the WorkflowParam with the given id (primary key, not SWID, since workflow parameters do not have SWIDs).</dd>
 </dl><h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 
 <pre><code>
 Code Block
 
-</code></pre>;T;@4I"-/v1/metadata/db/workflowparamvalues_get/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@4I"-/v1/metadata/db/workflowparamvalues_get/;T{;{	;I"8<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET /workflowparamvalues</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -6212,17 +5885,16 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET /workflowparamvalues</h1>
+	<p>Retrieves a list of workflow parameter values.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/workflowparamvalues</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>id</dt>
+  <dd>Returns the WorkflowParamValue with the given id (primary key, not SWID, since workflow parameter values do not have SWIDs).</dd>
 </dl>
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
@@ -6303,18 +5975,17 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"Z<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
-show
-: 
 id
-:
+: Returns the WorkflowParamValue with the given id (primary key, not SWID, since workflow parameter values do not have SWIDs).
 
 Example Requests
 --------------
@@ -6325,30 +5996,29 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"<p>Retrieves a list of workflow parameter values.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/workflowparamvalues</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
+<dt>id</dt>
+  <dd>Returns the WorkflowParamValue with the given id (primary key, not SWID, since workflow parameter values do not have SWIDs).</dd>
 </dl><h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 
 <pre><code>
 Code Block
 
-</code></pre>;T;@:I"%/v1/metadata/db/workflowrun_get/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@:I"%/v1/metadata/db/workflowrun_get/;T{;{	;I"t<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET a workflow run</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -6372,17 +6042,18 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET a workflow run</h1>
+	<p>Retrieves a workflow run by SWID</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/workflowruns/(workflowRunSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt>show</dt>
-  <dd>id
-:</dd>
+  <dd>lanes - return the workflow run with all of its lanes</dd>
+  <dd>ius - return the workflow run with all of its IUSes</dd>
+  <dd>processes - return the workflow run with all of its processing events</dd>
 </dl>
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
@@ -6463,18 +6134,19 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"ì<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
 show
-: 
-id
-:
+: lanes - return the workflow run with all of its lanes
+: ius - return the workflow run with all of its IUSes
+: processes - return the workflow run with all of its processing events
 
 Example Requests
 --------------
@@ -6485,30 +6157,31 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"8<p>Retrieves a workflow run by SWID</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/workflowruns/(workflowRunSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt>show</dt>
-  <dd>id
-:</dd>
+  <dd>lanes - return the workflow run with all of its lanes</dd>
+  <dd>ius - return the workflow run with all of its IUSes</dd>
+  <dd>processes - return the workflow run with all of its processing events</dd>
 </dl><h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 
 <pre><code>
 Code Block
 
-</code></pre>;T;@@I"&/v1/metadata/db/workflowruns_get/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@@I"&/v1/metadata/db/workflowruns_get/;T{;{	;I"Ì<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: GET workflow runs</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -6532,17 +6205,17 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>GET workflow runs</h1>
+	<p>Retrieves a list of workflow runs.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/workflowruns</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt>show</dt>
-  <dd>id
-:</dd>
+  <dd>id</dd>
+  <dd>Returns the WorkflowRun with the given id (primary key, not SWID).</dd>
 </dl>
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
@@ -6623,18 +6296,19 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"(<%= @item[:summary] %>
 
 Resource URL
 --------------
-GET <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
 show
 : 
 id
-:
+: Returns the WorkflowRun with the given id (primary key, not SWID).
 
 Example Requests
 --------------
@@ -6645,16 +6319,16 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"≥<p>Retrieves a list of workflow runs.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/</p>
+<p>GET http://localhost:8888/seqware-webservice/workflowruns</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt>show</dt>
-  <dd>id
-:</dd>
+  <dd>id</dd>
+  <dd>Returns the WorkflowRun with the given id (primary key, not SWID).</dd>
 </dl><h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 
@@ -6982,14 +6656,14 @@ I"l<p>Updates a file with the given SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@RI"/v1/metadata/db/ius_put/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@RI"/v1/metadata/db/ius_put/;T{;{	;I"é<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: PUT ius</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -7013,11 +6687,11 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>PUT ius</h1>
+	<p>Update an ius with the given SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>PUT http://localhost:8888/seqware-webservice/</p>
+<p>PUT http://localhost:8888/seqware-webservice/ius/(iusSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -7104,11 +6778,12 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"Â<%= @item[:summary] %>
 
 Resource URL
 --------------
-PUT <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
@@ -7126,10 +6801,10 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"h<p>Update an ius with the given SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>PUT http://localhost:8888/seqware-webservice/</p>
+<p>PUT http://localhost:8888/seqware-webservice/ius/(iusSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -7142,14 +6817,14 @@ I"D<p>Lorem ipsum</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@XI"/v1/metadata/db/lane_put/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@XI"/v1/metadata/db/lane_put/;T{;{	;I"É<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: </title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -7173,11 +6848,11 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1></h1>
+	<p>Updates a lane with the given SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>PUT http://localhost:8888/seqware-webservice/</p>
+<p>PUT http://localhost:8888/seqware-webservice/lane/(laneSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -7264,11 +6939,11 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"‰<%= @item[:summary] %>
 
 Resource URL
 --------------
-PUT <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
 
 Parameters
 --------------
@@ -7286,10 +6961,10 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"k<p>Updates a lane with the given SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>PUT http://localhost:8888/seqware-webservice/</p>
+<p>PUT http://localhost:8888/seqware-webservice/lane/(laneSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -7302,14 +6977,14 @@ I"D<p>Lorem ipsum</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@^I"$/v1/metadata/db/processing_put/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@^I"$/v1/metadata/db/processing_put/;T{;{	;I"¥<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: PUT processing</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -7333,11 +7008,11 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>PUT processing</h1>
+	<p>Updates a processing object with the given SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>PUT http://localhost:8888/seqware-webservice/</p>
+<p>PUT http://localhost:8888/seqware-webservice/processes/(processSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -7424,11 +7099,12 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"Â<%= @item[:summary] %>
 
 Resource URL
 --------------
-PUT <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
@@ -7446,10 +7122,10 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"Ä<p>Updates a processing object with the given SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>PUT http://localhost:8888/seqware-webservice/</p>
+<p>PUT http://localhost:8888/seqware-webservice/processes/(processSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -7462,14 +7138,14 @@ I"D<p>Lorem ipsum</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@dI"%/v1/metadata/db/workflowrun_put/;T{;{	;I"r<!DOCTYPE html>
+</code></pre>;T;@dI"%/v1/metadata/db/workflowrun_put/;T{;{	;I"æ<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: PUT a workflow run</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -7493,11 +7169,11 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>PUT a workflow run</h1>
+	<p>Updates a workflow run with the given SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>PUT http://localhost:8888/seqware-webservice/</p>
+<p>PUT http://localhost:8888/seqware-webservice/workflowruns/(workflowRunSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -7584,11 +7260,12 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∂Lorem ipsum
+;T;	I"Â<%= @item[:summary] %>
 
 Resource URL
 --------------
-PUT <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
@@ -7606,10 +7283,10 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"D<p>Lorem ipsum</p>
+I"Ç<p>Updates a workflow run with the given SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>PUT http://localhost:8888/seqware-webservice/</p>
+<p>PUT http://localhost:8888/seqware-webservice/workflowruns/(workflowRunSWID)</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -7944,14 +7621,14 @@ I"s<p>Adds a new experiment to the experiment table.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@vI" /v1/metadata/db/files_post/;T{;{	;I"s<!DOCTYPE html>
+</code></pre>;T;@vI" /v1/metadata/db/files_post/;T{;{	;I"û<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: POST /files</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -7975,11 +7652,11 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>POST /files</h1>
+	<p>Adds metadata about a file to the database.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/</p>
+<p>POST http://localhost:8888/seqware-webservice/experiments</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -8066,11 +7743,12 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∑Lorem ipsum
+;T;	I"Â<%= @item[:summary] %>
 
 Resource URL
 --------------
-POST <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
@@ -8088,10 +7766,10 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"E<p>Lorem ipsum</p>
+I"p<p>Adds metadata about a file to the database.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/</p>
+<p>POST http://localhost:8888/seqware-webservice/experiments</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -8104,14 +7782,14 @@ I"E<p>Lorem ipsum</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@|I"&/v1/metadata/db/processings_post/;T{;{	;I"s<!DOCTYPE html>
+</code></pre>;T;@|I"&/v1/metadata/db/processings_post/;T{;{	;I"•<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: POST processing</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -8135,11 +7813,11 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>POST processing</h1>
+	<p>Add a new processing object to the database.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/</p>
+<p>POST http://localhost:8888/seqware-webservice/processes</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -8226,11 +7904,12 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∑Lorem ipsum
+;T;	I"Â<%= @item[:summary] %>
 
 Resource URL
 --------------
-POST <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
@@ -8248,10 +7927,10 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"E<p>Lorem ipsum</p>
+I"o<p>Add a new processing object to the database.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/</p>
+<p>POST http://localhost:8888/seqware-webservice/processes</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -8264,14 +7943,14 @@ I"E<p>Lorem ipsum</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@ÇI""/v1/metadata/db/samples_post/;T{;{	;I"s<!DOCTYPE html>
+</code></pre>;T;@ÇI""/v1/metadata/db/samples_post/;T{;{	;I"î<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: POST a sample</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -8295,11 +7974,11 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>POST a sample</h1>
+	<p>Add a new sample to the database.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/</p>
+<p>POST http://localhost:8888/seqware-webservice/samples</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -8386,11 +8065,12 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∑Lorem ipsum
+;T;	I"Â<%= @item[:summary] %>
 
 Resource URL
 --------------
-POST <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
@@ -8408,10 +8088,10 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"E<p>Lorem ipsum</p>
+I"b<p>Add a new sample to the database.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/</p>
+<p>POST http://localhost:8888/seqware-webservice/samples</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -8424,14 +8104,14 @@ I"E<p>Lorem ipsum</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@àI""/v1/metadata/db/studies_post/;T{;{	;I"s<!DOCTYPE html>
+</code></pre>;T;@àI""/v1/metadata/db/studies_post/;T{;{	;I"ì<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: POST /studies</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -8455,11 +8135,11 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>POST /studies</h1>
+	<p>Adds a new study to the database</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/</p>
+<p>POST http://localhost:8888/seqware-webservice/studies</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -8546,11 +8226,12 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∑Lorem ipsum
+;T;	I"Â<%= @item[:summary] %>
 
 Resource URL
 --------------
-POST <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
@@ -8568,10 +8249,10 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"E<p>Lorem ipsum</p>
+I"a<p>Adds a new study to the database</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/</p>
+<p>POST http://localhost:8888/seqware-webservice/studies</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -8584,14 +8265,14 @@ I"E<p>Lorem ipsum</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@éI"$/v1/metadata/db/workflows_post/;T{;{	;I"s<!DOCTYPE html>
+</code></pre>;T;@éI"$/v1/metadata/db/workflows_post/;T{;{	;I"ù<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: POST a workflow</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -8615,11 +8296,11 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>POST a workflow</h1>
+	<p>Adds a new workflow to the database.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/</p>
+<p>POST http://localhost:8888/seqware-webservice/workflows</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -8706,11 +8387,12 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∑Lorem ipsum
+;T;	I"Â<%= @item[:summary] %>
 
 Resource URL
 --------------
-POST <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
@@ -8728,10 +8410,10 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"E<p>Lorem ipsum</p>
+I"g<p>Adds a new workflow to the database.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/</p>
+<p>POST http://localhost:8888/seqware-webservice/workflows</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -8744,14 +8426,14 @@ I"E<p>Lorem ipsum</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@îI")/v1/metadata/db/workflowparams_post/;T{;{	;I"s<!DOCTYPE html>
+</code></pre>;T;@îI")/v1/metadata/db/workflowparams_post/;T{;{	;I"≥<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: POST workflow param</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -8775,11 +8457,11 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>POST workflow param</h1>
+	<p>Add a new workflow parameter to the database.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/</p>
+<p>POST http://localhost:8888/seqware-webservice/workflowparams</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -8866,11 +8548,12 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∑Lorem ipsum
+;T;	I"Â<%= @item[:summary] %>
 
 Resource URL
 --------------
-POST <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
@@ -8888,10 +8571,10 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"E<p>Lorem ipsum</p>
+I"u<p>Add a new workflow parameter to the database.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/</p>
+<p>POST http://localhost:8888/seqware-webservice/workflowparams</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -8904,14 +8587,14 @@ I"E<p>Lorem ipsum</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@öI"./v1/metadata/db/workflowparamvalues_post/;T{;{	;I"s<!DOCTYPE html>
+</code></pre>;T;@öI"./v1/metadata/db/workflowparamvalues_post/;T{;{	;I"î<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: </title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -8935,11 +8618,11 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1></h1>
+	<p>Adds a workflow parameter value to the database</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/</p>
+<p>POST http://localhost:8888/seqware-webservice/workflowparamvalues</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -9026,11 +8709,11 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∑Lorem ipsum
+;T;	I"‰<%= @item[:summary] %>
 
 Resource URL
 --------------
-POST <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
 
 Parameters
 --------------
@@ -9048,10 +8731,10 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"E<p>Lorem ipsum</p>
+I"|<p>Adds a workflow parameter value to the database</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/</p>
+<p>POST http://localhost:8888/seqware-webservice/workflowparamvalues</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -9064,14 +8747,14 @@ I"E<p>Lorem ipsum</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@†I"'/v1/metadata/db/workflowruns_post/;T{;{	;I"s<!DOCTYPE html>
+</code></pre>;T;@†I"'/v1/metadata/db/workflowruns_post/;T{;{	;I"Ø<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: Metadata DB</title>
+<title>SeqWare Web Service API: POST /workflowruns</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -9095,11 +8778,11 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB</h1>
-	<p>Lorem ipsum</p>
+	<h1>POST /workflowruns</h1>
+	<p>Inserts a new workflow run into the database.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/</p>
+<p>POST http://localhost:8888/seqware-webservice/workflowruns</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -9186,11 +8869,12 @@ Code Block
     </script>
 </body>
 </html>
-;T;	I"∑Lorem ipsum
+;T;	I"Â<%= @item[:summary] %>
 
 Resource URL
 --------------
-POST <%= server_name %>/
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
 
 Parameters
 --------------
@@ -9208,10 +8892,10 @@ Example Requests
 Code Block
 
 ~~~~~;T;
-I"E<p>Lorem ipsum</p>
+I"s<p>Inserts a new workflow run into the database.</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/</p>
+<p>POST http://localhost:8888/seqware-webservice/workflowruns</p>
 
 <h2 id="parameters">Parameters</h2>
 <dl>
