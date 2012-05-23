@@ -1,7 +1,5 @@
 package com.github.seqware.model;
 
-import java.lang.SecurityException;
-
 /**
  * Interface for object under access control.
  *

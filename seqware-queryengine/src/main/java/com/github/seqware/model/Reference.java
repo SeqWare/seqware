@@ -6,45 +6,20 @@ import java.util.UUID;
 /**
  * A reference is a particular build version such as "hg19" or "hg18".
  *
+ * Note: Every reference needs to be part of a ReferenceSet.
+ *
  * @author dyuen
  * @author jbaran
  */
 public abstract class Reference extends Molecule {
 
     /**
-     * Internally used unique identifier of this feature.
-     */
-    private UUID uuid;
-
-    /**
-     * parent set
-     */
-    private ReferenceSet set;
-
-    /**
-     * Create a new reference
-     */
-    private Reference() {
-        // TODO This will have to be replaced with a stronger UUID generation method.
-        this.uuid = UUID.randomUUID();
-    }
-
-    /**
-     * References are always created in association with an existing reference
-     * set
+     * Create a new reference.
      *
-     * @param set the parent set for this reference
+     * Note: the created object needs to be part of a ReferenceSet.
      */
-    public Reference(ReferenceSet set) {
-        this();
-        this.set = set;
-    }
-
-    /**
-     * Get the universally unique identifier of this feature.
-     */
-    public UUID getUUID() {
-        return this.uuid;
+    public Reference() {
+        super();
     }
 
     /**

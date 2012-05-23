@@ -1,33 +1,18 @@
 package com.github.seqware.model;
 
-import java.util.UUID;
-
 /**
+ * An Analysis object represents analysis components, most of which will be
+ * implemented as an analysis plugin on the backend. An example would be a 
+ * coding consequence plugin. 
  *
  * @author dyuen
  */
-public abstract class Analysis {
-    
-    /**
-     * Internally used unique identifier of this feature.
-     */
-    private UUID uuid;  
-    
+public abstract class Analysis extends Particle {
+
     /**
      * Create a new reference
      */
     public Analysis() {
-        // TODO This will have to be replaced with a stronger UUID generation method.
-        this.uuid = UUID.randomUUID();
+        super();
     }
-    
-    /**
-     * Get the universally unique identifier of this feature.
-     */
-    public UUID getUUID() {
-        return this.uuid;
-    }
-
-    
-    
 }

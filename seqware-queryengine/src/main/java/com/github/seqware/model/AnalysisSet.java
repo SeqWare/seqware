@@ -2,17 +2,13 @@ package com.github.seqware.model;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 /**
- * 
+ * An AnalysisSet object represents analysis events that are created by software 
+ * suites or related tools. 
+ * @author dyuen
  */
-public abstract class AnalysisSet {
-
-    /**
-     * Internally used unique identifier of this feature.
-     */
-    private UUID uuid;
+public abstract class AnalysisSet extends Particle {
 
     /**
      * The set of features this instance represents.
@@ -23,7 +19,6 @@ public abstract class AnalysisSet {
      * Creates an instance of an anonymous feature set.
      */
     public AnalysisSet() {
-        // TODO This will have to be replaced with a stronger UUID generation method.
-        this.uuid = UUID.randomUUID();
+        super();
     }
 }

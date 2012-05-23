@@ -1,6 +1,7 @@
 package com.github.seqware.model;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A Group of users that may share ACL permissions
@@ -8,24 +9,38 @@ import java.util.UUID;
  */
 public abstract class Group extends Molecule{
     
-    /**
-     * Internally used unique identifier of this group.
-     */
-    private UUID uuid;  
+    private String name;
+    private String description;
+    private List<User> users;
     
     /**
      * Create a new user group
      */
-    public Group() {
-        // TODO This will have to be replaced with a stronger UUID generation method.
-        this.uuid = UUID.randomUUID();
+    private Group() {
+        super();
+        users = new ArrayList();
     }
     
+    public Group(String name, String description){
+        this();
+        this.name = name;
+        this.description = description;
+    }
+
     /**
-     * Get the universally unique identifier of this feature.
+     * Get a description of the organization
+     * @return String description of the organization
      */
-    public UUID getUUID() {
-        return this.uuid;
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Get name of the organization
+     * @return String of the organization's name 
+     */
+    public String getName() {
+        return name;
     }
 
     
