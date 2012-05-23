@@ -1,0 +1,29 @@
+---
+title: GET samples
+uri: /samples
+method: GET
+summary: Retrieves a list of samples
+---
+<%= @item[:summary] %>
+
+Resource URL
+--------------
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
+
+Parameters
+--------------
+title
+: Returns the Sample with the given title (most samples have names, all samples have titles)
+name
+: Returns the Sample with the given name (most samples have names, all samples have titles)
+
+Example Requests
+--------------
+<%= server_name %>
+
+~~~~~
+
+Code Block
+
+~~~~~

@@ -1,0 +1,27 @@
+---
+title: GET iuses
+uri: /ius
+method: GET 
+summary: Retrieves a list of IUSes.
+---
+<%= @item[:summary] %>
+
+Resource URL
+--------------
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
+
+Parameters
+--------------
+id
+: Returns the IUS with the given id (primary key, not SWID)
+
+Example Requests
+--------------
+<%= server_name %>
+
+~~~~~
+
+Code Block
+
+~~~~~

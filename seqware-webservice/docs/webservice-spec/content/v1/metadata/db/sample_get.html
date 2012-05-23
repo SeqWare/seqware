@@ -1,0 +1,29 @@
+---
+title: GET a sample
+uri: /samples/(sampleSWID)
+method: GET
+summary: Retrieves a sample using its SWID.
+---
+<%= @item[:summary] %>
+
+Resource URL
+--------------
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
+
+
+Parameters
+--------------
+show
+: lanes - Returns the sample with its lanes
+: ius - Returns the sample with its IUSes
+
+Example Requests
+--------------
+<%= server_name %>
+
+~~~~~
+
+Code Block
+
+~~~~~
