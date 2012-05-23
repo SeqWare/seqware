@@ -36,25 +36,25 @@
       <div class="js-toggle-list sidebar-module expandable">
 	<ul>
           <li class="js-topic">
-            <h3><a href="#" class="js-expand-btn collapsed">&nbsp;</a><a href="/v1/">SeqWare Webservice RESTful API</a></h3>
+            <h3><a href="#" class="js-expand-btn collapsed">&nbsp;</a><%= link_to_unless_current("SeqWare Webservice RESTful API", "/v1/") %></h3>
             <ul class="js-guides">
-              <li><a href="/v1/metadata/">Metadata</a></li>
-              <li><a href="/v1/pipeline/">Pipeline</a></li>
+              <li><%= link_to_unless_current("Metadata", "/v1/metadata/") %></li>
+              <li><%= link_to_unless_current("Pipeline", "/v1/pipeline/") %></li>
             </ul>
           </li>
           <li class="js-topic">
-            <h3><a href="#" class="js-expand-btn collapsed">&nbsp;</a><a href="/v1/metadata/">Metadata Resources</a></h3>
+            <h3><a href="#" class="js-expand-btn collapsed">&nbsp;</a><%= link_to_unless_current("Metadata Resources", "/v1/metadata/") %></h3>
             <ul class="js-guides">
-              <li><a href="/v1/metadata/db/">Data</a></li>
-              <li><a href="/v1/metadata/report/">Reports</a></li>
-              <li><a href="/v1/metadata/job/">Jobs</a></li>
-              <li><a href="/v1/metadata/x/">Experimental</a></li>
+              <li><%= link_to_unless_current("Data", "/v1/metadata/db/") %></li>
+              <li><%= link_to_unless_current("Reports", "/v1/metadata/report/") %></li>
+              <li><%= link_to_unless_current("Jobs", "/v1/metadata/job/") %></li>
+              <li><%= link_to_unless_current("Experimental", "/v1/metadata/x/") %></li>
             </ul>
           </li>
           <li class="js-topic">
-            <h3><a href="#" class="js-expand-btn collapsed">&nbsp;</a><a href="/v1/pipeline/">Pipeline Resources</a></h3>
+            <h3><a href="#" class="js-expand-btn collapsed">&nbsp;</a><%= link_to_unless_current("Pipeline Resources", "/v1/pipeline/") %></h3>
             <ul class="js-guides">
-              <li><a href="/v1/pipeline/job/">Jobs</a></li>
+              <li><%= link_to_unless_current("Jobs", "/v1/pipeline/job/") %></li>
             </ul>
           </li>
         </ul>

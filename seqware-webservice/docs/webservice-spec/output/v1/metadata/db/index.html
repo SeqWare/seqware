@@ -53,34 +53,244 @@
 <p>Additional fields can be shown by adding ?show to the query parameters, e.g. /metadata/db/lanes/1234?show=workflowRun shows the workflow run associated with this lane. </p>
 
 <h2 id="resources">Resources</h2>
-<p>/experiments 	/metadata/db/experiments
-/experiments/{experimentSWID} 	/metadata/db/experiment/{experimentSWID}
-/files 	/metadata/db/files
-/files/{fileSWID} 	/metadata/db/file/{fileSWID}
-/ius/{SWID} 	/metadata/db/ius/{iusSWID}
-/lanes 	/metadata/db/lanes
-/lanes/{laneSWID} 	/metadata/db/lane/{laneSWID}
-/processes/{processSWID} 	/metadata/db/processing/{processingSWID}
-/processes 	/metadata/db/processings
-/samples/ 	/metadata/db/samples/
-/samples/{sampleSWID} 	/metadata/db/sample/{sampleSWID}
-/sequencerruns/ 	/metadata/db/sequencerruns/
-/sequencerruns/{sequencerRunSWID} 	/metadata/db/sequencerrun/{sequencerRunSWID}
-/studies/ 	/metadata/db/studies/
-/workflows/ 	/metadata/db/workflows/
-/workflows/{workflowSWID} 	/metadata/db/workflow/{workflowSWID}
-/workflowparams 	/metadata/db/workflowparams
-/workflowparamvalues 	/metadata/db/workflowparamvalues
-/workflowruns/ 	/metadata/db/workflowruns/
-/workflowruns/{workflowRunSWID} 	/metadata/db/workflowrun/{workflowRunSWID}
-/studies/{studySWID}/files 	/metadata/report/study/{studySWID}/files
-/samples/{sampleSWID}/files 	/metadata/report/sample/{sampleSWID}/files
-/sequencerruns/{sequencerRunSWID}/files 	/metadata/report/sequencerrun/{sequencerRunSWID}/files
-/reports/workflows/{workflowId} 	/metadata/report/workflow/{workflowId}
-/reports/studies/{studyId} 	/metadata/report/study/{studyId}
-/reports/sequencerruns 	/metadata/report/sequencerruns
-/workflows/{workflowId}/runs 	/pipeline/job/workflows/{workflowId}/runs</p>
-      </div>
+
+<table>
+<tr>
+<th><b>Resource</b></th>
+    <th><b>Description</b></th>
+  </tr>
+<tr>
+<td>GET /experiments</td>
+    <td>Lists</td>
+  </tr>
+<tr>
+<td>POST /experiments</td>
+    <td> </td>
+  </tr>
+<tr>
+<td>GET /experiments/(experimentSWID)</td>
+    <td></td>
+  </tr>
+<tr>
+<td>GET /files</td>
+    <td>parameters: id</td>
+  </tr>
+<tr>
+<td>POST /files</td>
+    <td>|
+  </td>
+</tr>
+<tr>
+<td>GET /files/(fileSWID)</td>
+    <td></td>
+  </tr>
+<tr>
+<td>PUT /files/(fileSWID)</td>
+    <td>|
+  </td>
+</tr>
+<tr>
+<td>GET /ius</td>
+    <td>parameters: id</td>
+  </tr>
+<tr>
+<td>GET /ius/(SWID)</td>
+    <td></td>
+  </tr>
+<tr>
+<td>PUT /ius/(SWID)</td>
+    <td>|
+  </td>
+</tr>
+<tr>
+<td>GET /lanes</td>
+    <td>params: id</td>
+  </tr>
+<tr>
+<td>GET /lanes/(laneSWID)</td>
+    <td>fields: sequencerRun</td>
+  </tr>
+<tr>
+<td>PUT /lanes/(laneSWID)</td>
+    <td>|
+  </td>
+</tr>
+<tr>
+<td>GET /processes/(processSWID)</td>
+    <td>fields: workflowRun</td>
+  </tr>
+<tr>
+<td>PUT /processes/(processSWID)</td>
+    <td></td>
+  </tr>
+<tr>
+<td>GET /processes</td>
+    <td>params: id, fields: files</td>
+  </tr>
+<tr>
+<td>POST /processes</td>
+    <td></td>
+  </tr>
+<tr>
+<td>GET /samples/</td>
+    <td>params: title, name</td>
+  </tr>
+<tr>
+<td>POST /samples/</td>
+    <td></td>
+  </tr>
+<tr>
+<td>GET /samples/(sampleSWID)</td>
+    <td>fields: lanes, ius</td>
+  </tr>
+<tr>
+<td>GET /sequencerruns</td>
+    <td>params: name</td>
+  </tr>
+<tr>
+<td>GET /sequencerruns/(sequencerRunSWID)</td>
+    <td>fields: lanes</td>
+  </tr>
+<tr>
+<td>PUT /sequencerruns/(sequencerRunSWID)</td>
+    <td></td>
+  </tr>
+<tr>
+<td>GET /studies/</td>
+    <td>params: title</td>
+  </tr>
+<tr>
+<td>POST /studies/</td>
+    <td></td>
+  </tr>
+<tr>
+<td>GET /studies/(studySWID)</td>
+    <td>|
+  </td>
+</tr>
+<tr>
+<td>GET /workflows/</td>
+    <td>params: id, name, version</td>
+  </tr>
+<tr>
+<td>POST /workflows/</td>
+    <td></td>
+  </tr>
+<tr>
+<td>GET /workflows/(workflowSWID)</td>
+    <td>params: params</td>
+  </tr>
+<tr>
+<td>PUT /workflows/(workflowSWID)</td>
+    <td></td>
+  </tr>
+<tr>
+<td>GET /workflowparams</td>
+    <td>params: id</td>
+  </tr>
+<tr>
+<td>POST /workflowparams</td>
+    <td></td>
+  </tr>
+<tr>
+<td>GET /workflowparamvalues</td>
+    <td>params: id</td>
+  </tr>
+<tr>
+<td>POST /workflowparamvalues</td>
+    <td></td>
+  </tr>
+<tr>
+<td>GET /workflowruns/</td>
+    <td>params: id</td>
+  </tr>
+<tr>
+<td>POST /workflowruns/</td>
+    <td></td>
+  </tr>
+<tr>
+<td>GET /workflowruns/(workflowRunSWID)</td>
+    <td>fields: lanes, ius, processes</td>
+  </tr>
+<tr>
+<td>PUT /workflowruns/(workflowRunSWID)</td>
+    <td></td>
+  </tr>
+<p>GET /experiments/(experimentSWID)</p>
+
+  <p>Metadata DB Experiments</p>
+
+  <p>POST experiment</p>
+
+  <p>GET file</p>
+
+  <p>PUT file</p>
+
+  <p>GET files</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+
+  <p>Metadata DB</p>
+</table>
+</div>
 
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
@@ -99,7 +309,7 @@
 <a href="#" class="js-expand-btn collapsed"> </a><a href="../">Metadata Resources</a>
 </h3>
             <ul class="js-guides">
-<li><a href="./">Data</a></li>
+<li><span class="active" title="You're here.">Data</span></li>
               <li><a href="../report/">Reports</a></li>
               <li><a href="../job/">Jobs</a></li>
               <li><a href="../x/">Experimental</a></li>
