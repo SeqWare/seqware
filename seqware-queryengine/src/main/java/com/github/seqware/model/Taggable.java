@@ -1,7 +1,5 @@
 package com.github.seqware.model;
 
-import java.util.Iterator;
-
 /**
  * Interface for all classes that can be tagged. Associating or dissociating 
  * tags does not create a copy-on-write operation
@@ -42,8 +40,8 @@ public interface Taggable<T> {
     
     /**
      * Get tags that the implementing class has been tagged with
-     * @return iterator of tags
+     * @return Iterable of tags
      */
-    public Iterator<Tag> getTags();
+    public Iterable<Tag> getTags();
     
 }

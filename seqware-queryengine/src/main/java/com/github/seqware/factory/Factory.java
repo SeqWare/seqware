@@ -17,6 +17,7 @@
 package com.github.seqware.factory;
 
 import com.github.seqware.impl.DumbBackEnd;
+import com.github.seqware.model.FeatureStoreInterface;
 import com.github.seqware.model.QueryInterface;
 
 /**
@@ -38,10 +39,25 @@ public class Factory {
         return instance;
     }
     
+    /**
+     * Get a reference to the currently operating Query Interface
+     * @return 
+     */
     public static QueryInterface getQueryInterface(){
         if (instance == null){
             instance = new DumbBackEnd();
         }
         return (QueryInterface)instance; 
+    }
+    
+     /**
+     * Get a reference to the currently operating Query Interface
+     * @return 
+     */
+    public static FeatureStoreInterface getFeatureStoreInterface(){
+        if (instance == null){
+            instance = new DumbBackEnd();
+        }
+        return (FeatureStoreInterface)instance; 
     }
 }

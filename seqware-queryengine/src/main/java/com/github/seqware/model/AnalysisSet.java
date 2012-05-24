@@ -8,7 +8,7 @@ import java.util.Set;
  * suites or related tools. 
  * @author dyuen
  */
-public abstract class AnalysisSet extends Particle {
+public abstract class AnalysisSet extends Particle implements Iterable<Analysis>{
 
     /**
      * The set of features this instance represents.

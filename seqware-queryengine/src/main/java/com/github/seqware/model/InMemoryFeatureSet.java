@@ -1,7 +1,6 @@
 package com.github.seqware.model;
 
 import com.github.seqware.util.InMemoryIterator;
-
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -39,4 +38,10 @@ public class InMemoryFeatureSet extends FeatureSet {
     public Iterator<Feature> getFeatures() {
         return new InMemoryIterator<Feature>(features.iterator());
     }
+
+    public Iterator<Feature> iterator() {
+        return getFeatures();
+    }
+
+
 }

@@ -53,11 +53,7 @@ public abstract class FeatureSet extends Molecule implements Iterable<Feature>{
     /**
      * Get the list of features associated with this feature set.
      *
-     * @return Iterator of features.
+     * @return iterator over features.
      */
     public abstract Iterator<Feature> getFeatures();
-    
-    public Iterator<Feature> iterator(){
-        return this.getFeatures();
-    }
 }

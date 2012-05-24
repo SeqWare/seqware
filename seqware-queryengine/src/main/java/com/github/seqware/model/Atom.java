@@ -28,7 +28,7 @@ public abstract class Atom extends Particle implements Taggable {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    public SeqWareIterator<Tag> getTags(){
+    public Iterable<Tag> getTags(){
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

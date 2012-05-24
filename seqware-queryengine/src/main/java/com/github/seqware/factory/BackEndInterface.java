@@ -16,6 +16,7 @@
  */
 package com.github.seqware.factory;
 
+import com.github.seqware.model.Particle;
 import java.security.AccessControlException;
 
 /**
@@ -31,7 +32,7 @@ public interface BackEndInterface {
      * parent object (i.e. create a Reference in a ReferenceSet without write 
      * permission to that ReferenceSet)
      */
-    public void store(Object obj) throws AccessControlException;
+    public void store(Particle obj) throws AccessControlException;
     
     
     /**
@@ -42,7 +43,7 @@ public interface BackEndInterface {
      * @return Due to copy-on-write, this can result in a new object that the 
      * user may wish to subsequently work on
      */
-    public Object update(Object obj) throws AccessControlException;
+    public Particle update(Particle obj) throws AccessControlException;
     
     /**
      * Update the obj using the latest information from the back-end
@@ -52,7 +53,7 @@ public interface BackEndInterface {
      * @return Due to copy-on-write, this may return a new object with 
      * updated information
      */
-    public Object refresh(Object obj) throws AccessControlException;
+    public Particle refresh(Particle obj) throws AccessControlException;
     
     /**
      * Delete obj (will cascade in the case of sets to their 
@@ -61,5 +62,5 @@ public interface BackEndInterface {
      * @throws AccessControlException  if the user does not have permission to
      * delete this (or children) objects
      */
-    public void delete(Object obj) throws AccessControlException;
+    public void delete(Particle obj) throws AccessControlException;
 }

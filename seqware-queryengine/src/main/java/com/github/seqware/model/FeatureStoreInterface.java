@@ -47,18 +47,18 @@ public interface FeatureStoreInterface {
 
     /**
      * Gets all users in all groups
-     * @return an iterator that iterates through all users in all groups
+     * @return something iterable that iterates through all users in all groups
      */
-    public Iterator<User> getUsers();
+    public Iterable<User> getUsers();
 
 //    public void addUser(User newUser);
 //    public void updateUser(User user);
 
     /**
      * Get all groups
-     * @return an iterator that iterates through all groups 
+     * @return something iterable that iterates through all groups 
      */
-    public Iterator<Group> getGroups();
+    public Iterable<Group> getGroups();
 //    public void addGroup(Group newGroup);
 //    public void updateGroup(Group group);
 //    public void addUserToGroup(User user, Group group);
@@ -71,9 +71,9 @@ public interface FeatureStoreInterface {
 
     /**
      * 
-     * @return an iterator that iterates through all reference sets 
+     * @return something iterable that iterates through all reference sets 
      */
-    public Iterator<ReferenceSet> getReferenceSets();
+    public Iterable<ReferenceSet> getReferenceSets();
 //    public void addReferenceSet(ReferenceSet newReferenceSet);
 //    public void updateReferenceSet(ReferenceSet referenceSet);
 //    public void setReferenceSetACL(ACL acl, ReferenceSet referenceSet);
@@ -88,9 +88,9 @@ public interface FeatureStoreInterface {
 
     /**
      * 
-     * @return an iterator that iterates through all FeatureSets 
+     * @return something iterable that iterates through all FeatureSets 
      */
-    public Iterator<FeatureSet> getFeatureSets();
+    public Iterable<FeatureSet> getFeatureSets();
 //    public void addFeatureSet(FeatureSet newFeatureSet);
 //    public void updateFeatureSet(FeatureSet featureSet);
 //    public void setFeatureSetACL(ACL acl, Reference reference);
@@ -112,9 +112,9 @@ public interface FeatureStoreInterface {
 //    // TAG/CV SET METHODS
     /**
      * 
-     * @return an iterator that iterates through all TagSets 
+     * @return something iterable that iterates through all TagSets 
      */
-    public Iterator<TagSet> getTagSets();
+    public Iterable<TagSet> getTagSets();
 //    public void addTagSet(TagSet newTagSet);
 //    public void updateTagSet(TagSet TagSet);
 //    public void setTagSetACL(ACL acl, TagSet tagSet);
@@ -122,9 +122,9 @@ public interface FeatureStoreInterface {
 //    // TAG/CV METHODS
     /**
      * 
-     * @return an iterator that that iterates through all Tags  
+     * @return something iterable that that iterates through all Tags  
      */
-    public Iterator<Tag> getTags();
+    public Iterable<Tag> getTags();
 //    public SeqWareIterator getTag(Integer tagID);
 //    public SeqWareIterator getTags(Integer tagSetID);
 //    public SeqWareIterator getTags(String key);
@@ -135,9 +135,9 @@ public interface FeatureStoreInterface {
 //    // ANALYSIS SET
     /**
      * 
-     * @return an iterator that iterates through all AnalysisSets 
+     * @return something iterable that iterates through all AnalysisSets 
      */
-    public Iterator<AnalysisSet> getAnalysisSets();
+    public Iterable<AnalysisSet> getAnalysisSets();
 //    public void addAnalysisSet(AnalysisSet newAnalysisSet);
 //    public void updateAnalysisSet(AnalysisSet AnalysisSet);
 //    public void setAnalysisSetACL(ACL acl, AnalysisSet analysisSet);
@@ -145,9 +145,9 @@ public interface FeatureStoreInterface {
 //    // ANALYSIS PLUGIN METHODS
     /**
      * 
-     * @return an Iterator that iterates through all AnalysisPlugins 
+     * @return something iterable through all AnalysisPlugins 
      */
-    public Iterator<AnalysisPluginInterface> getAnalysisPlugins();
+    public Iterable<AnalysisPluginInterface> getAnalysisPlugins();
 //    public void addAnalysisPlugin(AnalysisPlugin plugin);
 //    public void updateAnalysisPlugin(AnalysisPlugin plugin);
 //    public void setAnalysisPluginACL(ACL acl, AnalysisPlugin analysisPlugin);

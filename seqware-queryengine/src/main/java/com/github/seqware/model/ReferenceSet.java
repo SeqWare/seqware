@@ -1,9 +1,7 @@
 package com.github.seqware.model;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * A ReferenceSet is a collection of references which are a collection of
@@ -12,7 +10,7 @@ import java.util.UUID;
  * @author dyuen
  * @author jbaran
  */
-public abstract class ReferenceSet extends Molecule {
+public abstract class ReferenceSet extends Molecule implements Iterable<Reference>{
     /**
      * Creates an instance of an anonymous feature set.
      */

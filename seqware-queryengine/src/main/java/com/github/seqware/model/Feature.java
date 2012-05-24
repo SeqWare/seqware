@@ -115,6 +115,28 @@ public class Feature extends Atom {
         }
     }
 
+    /**
+     * Create a new location based feature with full information
+     * @param featureSet parent featureSet, enforces the requirement that
+     * features be contained by the contigs/coordinates represented by the
+     * Reference.
+     * @param start Start coordinate.
+     * @param stop Stop coordinate.
+     * @param strand Strand of the feature.
+     * @param type 
+     * @param score
+     * @param source
+     * @param pragma 
+     */
+    public Feature(FeatureSet featureSet, long start, long stop, Strand strand, String type, Double score, String source, String pragma) {
+        this(featureSet, start, stop, strand);
+        this.type = type;
+        this.score = score;
+        this.source = source;
+        this.pragma = pragma;
+
+    }
+
     public String getId() {
         return id;
     }
@@ -146,12 +168,12 @@ public class Feature extends Atom {
     public String getPragma() {
         return pragma;
     }
-    
+
     @Override
-    public boolean equals(Object obj){
+    public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
-    
+
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);

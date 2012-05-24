@@ -32,73 +32,89 @@ import java.util.UUID;
  */
 public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, QueryInterface {
 
-    private List<Object> listOfEverything = new ArrayList<Object>();
+    private List<Particle> listOfEverything = new ArrayList<Particle>();
 
-    public void store(Object obj) throws AccessControlException {
+    public void store(Particle obj) throws AccessControlException {
         if (!listOfEverything.contains(obj)) {
             listOfEverything.add(obj);
         }
     }
 
-    public Object update(Object obj) throws AccessControlException {
+    public Particle update(Particle obj) throws AccessControlException {
         return obj;
     }
 
-    public Object refresh(Object obj) throws AccessControlException {
+    public Particle refresh(Particle obj) throws AccessControlException {
         return obj;
     }
 
-    public void delete(Object obj) throws AccessControlException {
+    public void delete(Particle obj) throws AccessControlException {
         listOfEverything.remove(obj);
     }
 
     public String getVersion() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return "In-memory back-end 0.1";
     }
 
     public Particle getParticleByUUID(UUID uuid) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        for(Particle p : listOfEverything){
+            if (p.getUUID().equals(uuid)){
+                return p;
+            }
+        }
+        return null;
     }
 
-    public Iterator<User> getUsers() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Iterable<User> getUsers() {
+        return getAllOfClass(User.class);
     }
 
-    public Iterator<Group> getGroups() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Iterable<Group> getGroups() {
+        return getAllOfClass(Group.class);
     }
 
-    public Iterator<ReferenceSet> getReferenceSets() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Iterable<ReferenceSet> getReferenceSets() {
+        return getAllOfClass(ReferenceSet.class);
     }
 
-    public Iterator<FeatureSet> getFeatureSets() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Iterable<FeatureSet> getFeatureSets() {
+        return getAllOfClass(FeatureSet.class);
     }
 
-    public Iterator<TagSet> getTagSets() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Iterable<TagSet> getTagSets() {
+        return getAllOfClass(TagSet.class);
     }
 
-    public Iterator<Tag> getTags() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Iterable<Tag> getTags() {
+        return getAllOfClass(Tag.class);
     }
 
-    public Iterator<AnalysisSet> getAnalysisSets() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Iterable<AnalysisSet> getAnalysisSets() {
+        return getAllOfClass(AnalysisSet.class);
     }
 
-    public Iterator<AnalysisPluginInterface> getAnalysisPlugins() {
+    public Iterable<AnalysisPluginInterface> getAnalysisPlugins() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public QueryFuture getFeaturesByType(FeatureSet set, String type, int hours) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Iterable<Feature> allFeatures = getAllOfClass(Feature.class);
+        InMemoryFeatureSet fSet = new InMemoryFeatureSet(new Reference() {
+            @Override
+            public Iterator<FeatureSet> featureSets() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
+        for (Feature f : allFeatures){
+            if (f.getType().equals(type)){
+                fSet.add(f);
+            }
+        }
+        return new QueryFutureImpl(fSet);
     }
 
     public QueryFuture getFeatures(FeatureSet set, int hours) {
         InMemoryFeatureSet fSet = new InMemoryFeatureSet(new Reference() {
-
             @Override
             public Iterator<FeatureSet> featureSets() {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -123,6 +139,16 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
 
     public QueryFuture getFeaturesByTag(FeatureSet set, int hours, String... tag) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private Iterable getAllOfClass(Class aClass) {
+        List list = new ArrayList();
+        for(Particle p : listOfEverything){
+            if (aClass.isInstance(p)){
+                list.add(p);
+            }
+        }
+        return list;
     }
 
     public class QueryFutureImpl implements QueryInterface.QueryFuture {

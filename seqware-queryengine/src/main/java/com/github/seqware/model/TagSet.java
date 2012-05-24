@@ -6,7 +6,7 @@ package com.github.seqware.model;
  * it along with tagging of tags?
  * @author dyuen
  */
-public abstract class TagSet extends Molecule{
+public abstract class TagSet extends Molecule implements Iterable<Tag>{
     
     /**
      * Create a new TagSet
