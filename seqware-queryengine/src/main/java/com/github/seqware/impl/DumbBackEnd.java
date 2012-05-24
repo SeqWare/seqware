@@ -18,6 +18,7 @@ package com.github.seqware.impl;
 
 import com.github.seqware.factory.BackEndInterface;
 import com.github.seqware.model.*;
+import com.github.seqware.model.impl.inMemory.InMemoryFeatureSet;
 import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -98,14 +99,13 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
     }
 
     public QueryFuture getFeaturesByType(FeatureSet set, String type, int hours) {
-        Iterable<Feature> allFeatures = getAllOfClass(Feature.class);
         InMemoryFeatureSet fSet = new InMemoryFeatureSet(new Reference() {
             @Override
             public Iterator<FeatureSet> featureSets() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         });
-        for (Feature f : allFeatures){
+        for (Feature f : set){
             if (f.getType().equals(type)){
                 fSet.add(f);
             }
@@ -121,7 +121,7 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
             }
         });
 
-        for (Object obj : listOfEverything) {
+        for (Object obj : set) {
             if (obj instanceof Feature) {
                 fSet.add((Feature) obj);
             }
@@ -130,7 +130,19 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
     }
 
     public QueryFuture getFeaturesByReference(FeatureSet set, Reference reference, int hours) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        InMemoryFeatureSet fSet = new InMemoryFeatureSet(new Reference() {
+            @Override
+            public Iterator<FeatureSet> featureSets() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
+
+        for (Object obj : set) {
+            if (obj instanceof Feature) {
+                fSet.add((Feature) obj);
+            }
+        }
+        return new QueryFutureImpl(fSet);
     }
 
     public QueryFuture getFeaturesByRange(FeatureSet set, LOCATION location, long start, long stop, int hours) {
