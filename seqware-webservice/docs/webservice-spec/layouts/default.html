@@ -28,13 +28,9 @@
 
     <div id="wrapper">
       <div class="content">
-	<h1><%= @item[:title] %></h1>
-	<%= yield %>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
           <li class="js-topic">
             <h3><a href="#" class="js-expand-btn collapsed">&nbsp;</a><%= link_to_unless_current("SeqWare Webservice RESTful API", "/") %></h3>
             <ul class="js-guides">
@@ -62,7 +58,10 @@
           </li>
         </ul>
       </div> <!-- /sidebar-module -->
-    </div><!-- /sidebar-shell -->
+    	</div><!-- /sidebar-shell -->
+	<h1><%= @item[:title] %></h1>
+	<%= yield %>
+      </div>
 
     </div><!-- #wrapper -->
 

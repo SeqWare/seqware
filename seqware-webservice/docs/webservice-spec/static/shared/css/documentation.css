@@ -174,7 +174,7 @@ a img {
 div.sidebar-shell {
   position: relative;
   float: right;
-  margin: 35px 0 0;
+  margin: 35px 35px 35px;
 }
 
 div.sidebar-module {
@@ -465,7 +465,7 @@ div.sidebar-module ul ul li span {
 }
 
 .content {
-  width: 560px;
+  /*width: 560px;*/
   position: relative;
   float: left;
   color: #393939;

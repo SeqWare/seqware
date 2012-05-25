@@ -1,4 +1,4 @@
-{:	data{óI"/:ET{:default{	:	lastI"t<!DOCTYPE html>
+{:	data{óI"/:ET{:default{	:	lastI"{<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -29,21 +29,9 @@
 
     <div id="wrapper">
       <div class="content">
-	<h1>Home</h1>
-	<h2 id="the-seqware-restful-web-service">The SeqWare RESTful Web Service</h2>
-
-<p>This API describes the resources that make up the SeqWare RESTful Web service. </p>
-
-<p>The SeqWare Web service has two primary functions. First, it is the primary mechanism by which users can query the SeqWare MetaDB. The Web service prevents the user from having to make SQL queries and facilitates building services on top of the MetaDB. Secondly, it allows privileged users to launch and monitor next-generation sequencing workflows and pipelines remotely without having any local SeqWare dependencies. These two functions are split into ‚ÄòMetadata‚Äô and ‚ÄòPipeline‚Äô functions.</p>
-
-<p>To explore the API, start browsing the resources on the right¬†¬ª</p>
-
-<p>For any questions, please contact the <a href="mailto:seqware-users@lists.sourceforge.net">SeqWare mailing list</a>.</p>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><span class="active" title="You're here.">SeqWare Webservice RESTful API</span>
@@ -74,8 +62,19 @@
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>Home</h1>
+	<h2 id="the-seqware-restful-web-service">The SeqWare RESTful Web Service</h2>
+
+<p>This API describes the resources that make up the SeqWare RESTful Web service. </p>
+
+<p>The SeqWare Web service has two primary functions. First, it is the primary mechanism by which users can query the SeqWare MetaDB. The Web service prevents the user from having to make SQL queries and facilitates building services on top of the MetaDB. Secondly, it allows privileged users to launch and monitor next-generation sequencing workflows and pipelines remotely without having any local SeqWare dependencies. These two functions are split into ‚ÄòMetadata‚Äô and ‚ÄòPipeline‚Äô functions.</p>
+
+<p>To explore the API, start browsing the resources on the right¬†¬ª</p>
+
+<p>For any questions, please contact the <a href="mailto:seqware-users@lists.sourceforge.net">SeqWare mailing list</a>.</p>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -8910,7 +8909,7 @@ I"s<p>Inserts a new workflow run into the database.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@¶I"/0.11.4/pipeline/job/;T{;{	;I"V<!DOCTYPE html>
+</code></pre>;T;@¶I"/0.11.4/pipeline/job/;T{;{	;I"]<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -8941,28 +8940,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Pipeline - Job Resources</h1>
-	<h2 id="overview">Overview</h2>
-<p>These jobs loosely correspond with tasks performed by SeqWare Pipeline, for example, launching workflows, modules, and plugins. Pipeline tasks are distinguished from Metadata tasks because they trigger more advanced processing of the data by systems other than those associated with the Metadata DB. For example, jobs triggered on the pipeline may cause a job to be run on a server, or a ZIP file to be uploaded and installed as a workflow. </p>
-
-<h2 id="resources">Resources</h2>
-<p>The Web service that this API refers to is http://localhost:8888/seqware-webservice. For more information about each resource and the correct complete URI, please follow the link to the resource-specific page.</p>
-
-<table>
-<tr>
-<th><strong>URI</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-<tr>
-<td><a href="workflowrun_post/" alt="POST and launch a workflow through the web service">POST<br>/workflows/{workflowId}/runs</a></td>
-<td>Launches a workflow to run on the cluster.</td>
-</tr>
-</table>
-</div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../">SeqWare Webservice RESTful API</a>
@@ -8993,8 +8973,26 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>Pipeline - Job Resources</h1>
+	<h2 id="overview">Overview</h2>
+<p>These jobs loosely correspond with tasks performed by SeqWare Pipeline, for example, launching workflows, modules, and plugins. Pipeline tasks are distinguished from Metadata tasks because they trigger more advanced processing of the data by systems other than those associated with the Metadata DB. For example, jobs triggered on the pipeline may cause a job to be run on a server, or a ZIP file to be uploaded and installed as a workflow. </p>
+
+<h2 id="resources">Resources</h2>
+<p>The Web service that this API refers to is http://localhost:8888/seqware-webservice. For more information about each resource and the correct complete URI, please follow the link to the resource-specific page.</p>
+
+<table>
+<tr>
+<th><strong>URI</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+<tr>
+<td><a href="workflowrun_post/" alt="POST and launch a workflow through the web service">POST<br>/workflows/{workflowId}/runs</a></td>
+<td>Launches a workflow to run on the cluster.</td>
+</tr>
+</table>
+</div>
 
     </div>
 <!-- #wrapper -->
@@ -9059,7 +9057,7 @@ I"<h2 id="overview">Overview</h2>
 <td><a href="/0.11.4/pipeline/job/workflowrun_post/" alt="POST and launch a workflow through the web service">POST<br>/workflows/{workflowId}/runs</a></td>
 <td>Launches a workflow to run on the cluster.</td>
 </tr>
-</table>;T;@¨I"/0.11.4/pipeline/;T{;{	;I"Y<!DOCTYPE html>
+</table>;T;@¨I"/0.11.4/pipeline/;T{;{	;I"`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -9090,15 +9088,9 @@ I"<h2 id="overview">Overview</h2>
 
     <div id="wrapper">
       <div class="content">
-	<h1>Pipeline Resources</h1>
-	<p>These jobs loosely correspond with tasks performed by SeqWare Pipeline, for example, launching workflows, modules, and plugins. Pipeline tasks are distinguished from Metadata tasks because they trigger more advanced processing of the data by systems other than those associated with the Metadata DB. For example, jobs triggered on the pipeline may cause a job to be run on a server, or a ZIP file to be uploaded and installed as a workflow.</p>
-
-<p>At the moment, a workflow can be launched through a <a href="job/">job</a> resource.</p>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../">SeqWare Webservice RESTful API</a>
@@ -9129,8 +9121,13 @@ I"<h2 id="overview">Overview</h2>
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>Pipeline Resources</h1>
+	<p>These jobs loosely correspond with tasks performed by SeqWare Pipeline, for example, launching workflows, modules, and plugins. Pipeline tasks are distinguished from Metadata tasks because they trigger more advanced processing of the data by systems other than those associated with the Metadata DB. For example, jobs triggered on the pipeline may cause a job to be run on a server, or a ZIP file to be uploaded and installed as a workflow.</p>
+
+<p>At the moment, a workflow can be launched through a <a href="job/">job</a> resource.</p>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -9171,7 +9168,7 @@ I"<h2 id="overview">Overview</h2>
 At the moment, a workflow can be launched through a [job](/0.11.4/pipeline/job/) resource.;T;
 I"-<p>These jobs loosely correspond with tasks performed by SeqWare Pipeline, for example, launching workflows, modules, and plugins. Pipeline tasks are distinguished from Metadata tasks because they trigger more advanced processing of the data by systems other than those associated with the Metadata DB. For example, jobs triggered on the pipeline may cause a job to be run on a server, or a ZIP file to be uploaded and installed as a workflow.</p>
 
-<p>At the moment, a workflow can be launched through a <a href="/0.11.4/pipeline/job/">job</a> resource.</p>;T;@≤I"/0.11.4/metadata/report/;T{;{	;I"ö<!DOCTYPE html>
+<p>At the moment, a workflow can be launched through a <a href="/0.11.4/pipeline/job/">job</a> resource.</p>;T;@≤I"/0.11.4/metadata/report/;T{;{	;I"°<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -9202,6 +9199,41 @@ I"-<p>These jobs loosely correspond with tasks performed by SeqWare Pipeline, 
 
     <div id="wrapper">
       <div class="content">
+    <div id="js-sidebar" class="sidebar-shell">
+      <div class="js-toggle-list sidebar-module expandable">
+        <ul>
+<li class="js-topic">
+            <h3>
+<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../">SeqWare Webservice RESTful API</a>
+</h3>
+            <ul class="js-guides">
+<li><a href="../">Metadata</a></li>
+              <li><a href="../../pipeline/">Pipeline</a></li>
+            </ul>
+</li>
+          <li class="js-topic">
+            <h3>
+<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../">Metadata Resources</a>
+</h3>
+            <ul class="js-guides">
+<li><a href="../db/">Data</a></li>
+              <li><span class="active" title="You're here.">Reports</span></li>
+              <li><a href="../job/">Jobs</a></li>
+              <li><a href="../x/">Experimental</a></li>
+            </ul>
+</li>
+          <li class="js-topic">
+            <h3>
+<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../pipeline/">Pipeline Resources</a>
+</h3>
+            <ul class="js-guides">
+<li><a href="../../pipeline/job/">Jobs</a></li>
+            </ul>
+</li>
+        </ul>
+</div> <!-- /sidebar-module -->
+    	</div>
+<!-- /sidebar-shell -->
 	<h1>Metadata - Report Resources</h1>
 	<h2 id="overview">Overview</h2>
 <p>Reports are exclusively GET operations that query the state of the Metadata DB and amalgamate information from multiple sources within the MetadataDB and elsewhere (e.g. Server information). They are distinguished from /metadata/db resources when:</p>
@@ -9256,42 +9288,6 @@ I"-<p>These jobs loosely correspond with tasks performed by SeqWare Pipeline, 
 </tr>
 </table>
 </div>
-
-    <div id="js-sidebar" class="sidebar-shell">
-      <div class="js-toggle-list sidebar-module expandable">
-	<ul>
-<li class="js-topic">
-            <h3>
-<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../">SeqWare Webservice RESTful API</a>
-</h3>
-            <ul class="js-guides">
-<li><a href="../">Metadata</a></li>
-              <li><a href="../../pipeline/">Pipeline</a></li>
-            </ul>
-</li>
-          <li class="js-topic">
-            <h3>
-<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../">Metadata Resources</a>
-</h3>
-            <ul class="js-guides">
-<li><a href="../db/">Data</a></li>
-              <li><span class="active" title="You're here.">Reports</span></li>
-              <li><a href="../job/">Jobs</a></li>
-              <li><a href="../x/">Experimental</a></li>
-            </ul>
-</li>
-          <li class="js-topic">
-            <h3>
-<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../pipeline/">Pipeline Resources</a>
-</h3>
-            <ul class="js-guides">
-<li><a href="../../pipeline/job/">Jobs</a></li>
-            </ul>
-</li>
-        </ul>
-</div> <!-- /sidebar-module -->
-    </div>
-<!-- /sidebar-shell -->
 
     </div>
 <!-- #wrapper -->
@@ -9394,7 +9390,7 @@ I"?<h2 id="overview">Overview</h2>
 <td><a href="/0.11.4/metadata/report/workflowworkflowruns_get/" alt="GET the workflow run reports for a particular workflow.">GET<br>/reports/workflows/{workflowId}/runs</a></td>
 <td>Retrieves the workflow run reports for a particular workflow using its SeqWare accession, including input and output files.</td>
 </tr>
-</table>;T;@∏I"*/0.11.4/metadata/db/processings_post/;T{;{	;I"´<!DOCTYPE html>
+</table>;T;@∏I"*/0.11.4/metadata/db/processings_post/;T{;{	;I"≤<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -9425,30 +9421,9 @@ I"?<h2 id="overview">Overview</h2>
 
     <div id="wrapper">
       <div class="content">
-	<h1>POST processing</h1>
-	<p>Add a new processing object to the database.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/processes</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -9479,8 +9454,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>POST processing</h1>
+	<p>Add a new processing object to the database.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>POST http://localhost:8888/seqware-webservice/processes</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -9555,7 +9550,7 @@ I"o<p>Add a new processing object to the database.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@æI"-/0.11.4/metadata/db/workflowparams_post/;T{;{	;I"π<!DOCTYPE html>
+</code></pre>;T;@æI"-/0.11.4/metadata/db/workflowparams_post/;T{;{	;I"¿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -9586,30 +9581,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>POST workflow param</h1>
-	<p>Add a new workflow parameter to the database.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/workflowparams</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -9640,8 +9614,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>POST workflow param</h1>
+	<p>Add a new workflow parameter to the database.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>POST http://localhost:8888/seqware-webservice/workflowparams</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -9716,7 +9710,7 @@ I"u<p>Add a new workflow parameter to the database.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@ƒI"*/0.11.4/metadata/db/experiments_post/;T{;{	;I"Ø<!DOCTYPE html>
+</code></pre>;T;@ƒI"*/0.11.4/metadata/db/experiments_post/;T{;{	;I"∂<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -9747,30 +9741,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>POST experiment</h1>
-	<p>Adds a new experiment to the experiment table.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/experiments</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -9801,8 +9774,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>POST experiment</h1>
+	<p>Adds a new experiment to the experiment table.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>POST http://localhost:8888/seqware-webservice/experiments</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -9878,7 +9871,7 @@ I"s<p>Adds a new experiment to the experiment table.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@ I""/0.11.4/metadata/db/lane_get/;T{;{	;I"Ω<!DOCTYPE html>
+</code></pre>;T;@ I""/0.11.4/metadata/db/lane_get/;T{;{	;I"ƒ<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -9909,28 +9902,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET a lane</h1>
-	<p>Retrieves a lane with a particular SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/lane/(laneSWID)</p>
-
-<h2 id="parameters">Parameters</h2>
-<p>show
-:sequencerRun - shows the lane with its sequencer run </p>
-
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -9961,8 +9935,26 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET a lane</h1>
+	<p>Retrieves a lane with a particular SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/lane/(laneSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<p>show
+:sequencerRun - shows the lane with its sequencer run </p>
+
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -10034,7 +10026,7 @@ I"å<p>Retrieves a lane with a particular SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@–I"'/0.11.4/metadata/db/workflows_get/;T{;{	;I"è<!DOCTYPE html>
+</code></pre>;T;@–I"'/0.11.4/metadata/db/workflows_get/;T{;{	;I"ñ<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -10065,33 +10057,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET /workflows</h1>
-	<p>Retrieves a list of workflows.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/workflows</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>id</dt>
-  <dd>Returns the Workflow with the given id (primary key, not SWID)
-name</dd>
-  <dd>Returns the Workflow(s) with the given name
-version</dd>
-  <dd>Must be used in combination with the ‚Äúname‚Äù parameter. Returns the named workflow with the given version.</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -10122,8 +10090,31 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET /workflows</h1>
+	<p>Retrieves a list of workflows.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/workflows</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>id</dt>
+  <dd>Returns the Workflow with the given id (primary key, not SWID)
+name</dd>
+  <dd>Returns the Workflow(s) with the given name
+version</dd>
+  <dd>Must be used in combination with the ‚Äúname‚Äù parameter. Returns the named workflow with the given version.</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -10203,7 +10194,7 @@ version</dd>
 <pre><code>
 Code Block
 
-</code></pre>;T;@÷I"+/0.11.4/metadata/db/sequencerruns_get/;T{;{	;I"‘<!DOCTYPE html>
+</code></pre>;T;@÷I"+/0.11.4/metadata/db/sequencerruns_get/;T{;{	;I"€<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -10234,29 +10225,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET /sequencerruns</h1>
-	<p>Retrieves a list of sequencer runs.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/sequencerruns</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>name</dt>
-  <dd>Returns the sequencer run with the given name</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -10287,8 +10258,27 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET /sequencerruns</h1>
+	<p>Retrieves a list of sequencer runs.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/sequencerruns</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>name</dt>
+  <dd>Returns the sequencer run with the given name</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -10520,7 +10510,7 @@ I"E<p>Lorem ipsum</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@‚I"(/0.11.4/metadata/db/processing_get/;T{;{	;I"È<!DOCTYPE html>
+</code></pre>;T;@‚I"(/0.11.4/metadata/db/processing_get/;T{;{	;I"<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -10551,29 +10541,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET processing</h1>
-	<p>Retrieves a processing object by its SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/processes/(processSWID)</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>workflowRun - shows the processing with its workflow run </dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -10604,8 +10574,27 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET processing</h1>
+	<p>Retrieves a processing object by its SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/processes/(processSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>workflowRun - shows the processing with its workflow run </dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -10677,7 +10666,7 @@ I"Ø<p>Retrieves a processing object by its SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@ËI"*/0.11.4/metadata/db/workflowruns_get/;T{;{	;I"Û<!DOCTYPE html>
+</code></pre>;T;@ËI"*/0.11.4/metadata/db/workflowruns_get/;T{;{	;I"˙<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -10708,30 +10697,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET workflow runs</h1>
-	<p>Retrieves a list of workflow runs.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/workflowruns</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id</dd>
-  <dd>Returns the WorkflowRun with the given id (primary key, not SWID).</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -10762,8 +10730,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET workflow runs</h1>
+	<p>Retrieves a list of workflow runs.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/workflowruns</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id</dd>
+  <dd>Returns the WorkflowRun with the given id (primary key, not SWID).</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -10838,7 +10826,7 @@ I"≥<p>Retrieves a list of workflow runs.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@ÓI""/0.11.4/metadata/db/file_put/;T{;{	;I"ö<!DOCTYPE html>
+</code></pre>;T;@ÓI""/0.11.4/metadata/db/file_put/;T{;{	;I"°<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -10869,30 +10857,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>PUT file</h1>
-	<p>Updates a file with the given SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>PUT http://localhost:8888/seqware-webservice/files/(fileSWID)</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -10923,8 +10890,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>PUT file</h1>
+	<p>Updates a file with the given SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>PUT http://localhost:8888/seqware-webservice/files/(fileSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -10999,7 +10986,7 @@ I"l<p>Updates a file with the given SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@ÙI"+/0.11.4/metadata/db/workflowruns_post/;T{;{	;I"µ<!DOCTYPE html>
+</code></pre>;T;@ÙI"+/0.11.4/metadata/db/workflowruns_post/;T{;{	;I"º<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11030,30 +11017,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>POST /workflowruns</h1>
-	<p>Inserts a new workflow run into the database.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/workflowruns</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -11084,8 +11050,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>POST /workflowruns</h1>
+	<p>Inserts a new workflow run into the database.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>POST http://localhost:8888/seqware-webservice/workflowruns</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -11160,7 +11146,7 @@ I"s<p>Inserts a new workflow run into the database.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@˙I"%/0.11.4/metadata/db/studies_get/;T{;{	;I"¥<!DOCTYPE html>
+</code></pre>;T;@˙I"%/0.11.4/metadata/db/studies_get/;T{;{	;I"ª<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11191,29 +11177,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET /studies</h1>
-	<p>Retrieves a list of studies</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/studies</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>title</dt>
-  <dd>Returns the study with the given title</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -11244,8 +11210,27 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET /studies</h1>
+	<p>Retrieves a list of studies</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/studies</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>title</dt>
+  <dd>Returns the study with the given title</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -11317,7 +11302,7 @@ I"~<p>Retrieves a list of studies</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@ I"$/0.11.4/metadata/db/files_post/;T{;{	;I"§<!DOCTYPE html>
+</code></pre>;T;@ I"$/0.11.4/metadata/db/files_post/;T{;{	;I"´<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11348,30 +11333,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>POST /files</h1>
-	<p>Adds metadata about a file to the database.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/experiments</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -11402,8 +11366,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>POST /files</h1>
+	<p>Adds metadata about a file to the database.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>POST http://localhost:8888/seqware-webservice/experiments</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -11478,7 +11462,7 @@ I"p<p>Adds metadata about a file to the database.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@I"&/0.11.4/metadata/db/studies_post/;T{;{	;I"ô<!DOCTYPE html>
+</code></pre>;T;@I"&/0.11.4/metadata/db/studies_post/;T{;{	;I"†<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11509,30 +11493,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>POST /studies</h1>
-	<p>Adds a new study to the database</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/studies</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -11563,8 +11526,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>POST /studies</h1>
+	<p>Adds a new study to the database</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>POST http://localhost:8888/seqware-webservice/studies</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -11639,7 +11622,7 @@ I"a<p>Adds a new study to the database</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@I"$/0.11.4/metadata/db/sample_get/;T{;{	;I"˝<!DOCTYPE html>
+</code></pre>;T;@I"$/0.11.4/metadata/db/sample_get/;T{;{	;I"<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11670,30 +11653,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET a sample</h1>
-	<p>Retrieves a sample using its SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/samples/(sampleSWID)</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>lanes - Returns the sample with its lanes</dd>
-  <dd>ius - Returns the sample with its IUSes</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -11724,8 +11686,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET a sample</h1>
+	<p>Retrieves a sample using its SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/samples/(sampleSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>lanes - Returns the sample with its lanes</dd>
+  <dd>ius - Returns the sample with its IUSes</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -11800,7 +11782,7 @@ I"«<p>Retrieves a sample using its SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@I")/0.11.4/metadata/db/processings_get/;T{;{	;I"<!DOCTYPE html>
+</code></pre>;T;@I")/0.11.4/metadata/db/processings_get/;T{;{	;I"%<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11831,31 +11813,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET processings</h1>
-	<p>Retrieves a list of processings.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/processes</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>files - shows the processing with its attached files 
-id</dd>
-  <dd>Returns the Processing with the given id (primary key, not SWID)</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -11886,8 +11846,29 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET processings</h1>
+	<p>Retrieves a list of processings.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/processes</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>files - shows the processing with its attached files 
+id</dd>
+  <dd>Returns the Processing with the given id (primary key, not SWID)</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -11963,7 +11944,7 @@ id</dd>
 <pre><code>
 Code Block
 
-</code></pre>;T;@I"#/0.11.4/metadata/db/files_get/;T{;{	;I"≤<!DOCTYPE html>
+</code></pre>;T;@I"#/0.11.4/metadata/db/files_get/;T{;{	;I"π<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11994,29 +11975,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET files</h1>
-	<p>Retrieves a list of files.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/files</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>id</dt>
-  <dd>Returns the file with the given id (primary key)</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -12047,8 +12008,27 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET files</h1>
+	<p>Retrieves a list of files.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/files</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>id</dt>
+  <dd>Returns the file with the given id (primary key)</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -12120,7 +12100,7 @@ I"Ç<p>Retrieves a list of files.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@I"(/0.11.4/metadata/db/experiment_get/;T{;{	;I"’<!DOCTYPE html>
+</code></pre>;T;@I"(/0.11.4/metadata/db/experiment_get/;T{;{	;I"‹<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -12151,30 +12131,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET /experiments/(experimentSWID)</h1>
-	<p>Retrieves a list of experiments.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/experiments/(experimentSWID)</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -12205,8 +12164,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET /experiments/(experimentSWID)</h1>
+	<p>Retrieves a list of experiments.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/experiments/(experimentSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -12280,7 +12259,7 @@ I"u<p>Retrieves a list of experiments.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@$I")/0.11.4/metadata/db/experiments_get/;T{;{	;I"À<!DOCTYPE html>
+</code></pre>;T;@$I")/0.11.4/metadata/db/experiments_get/;T{;{	;I"“<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -12311,30 +12290,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata DB Experiments</h1>
-	<p>Retrieves one or more experiments, depending on parameters.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/experiments</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -12365,8 +12323,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>Metadata DB Experiments</h1>
+	<p>Retrieves one or more experiments, depending on parameters.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/experiments</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -12440,7 +12418,7 @@ I"<p>Retrieves one or more experiments, depending on parameters.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@*I"#/0.11.4/metadata/db/iuses_get/;T{;{	;I"π<!DOCTYPE html>
+</code></pre>;T;@*I"#/0.11.4/metadata/db/iuses_get/;T{;{	;I"¿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -12471,29 +12449,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET iuses</h1>
-	<p>Retrieves a list of IUSes.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/ius</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>id</dt>
-  <dd>Returns the IUS with the given id (primary key, not SWID)</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -12524,8 +12482,27 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET iuses</h1>
+	<p>Retrieves a list of IUSes.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/ius</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>id</dt>
+  <dd>Returns the IUS with the given id (primary key, not SWID)</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -12597,7 +12574,7 @@ I"â<p>Retrieves a list of IUSes.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@0I"!/0.11.4/metadata/db/ius_put/;T{;{	;I"î<!DOCTYPE html>
+</code></pre>;T;@0I"!/0.11.4/metadata/db/ius_put/;T{;{	;I"õ<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -12628,30 +12605,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>PUT ius</h1>
-	<p>Update an ius with the given SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>PUT http://localhost:8888/seqware-webservice/ius/(iusSWID)</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -12682,8 +12638,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>PUT ius</h1>
+	<p>Update an ius with the given SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>PUT http://localhost:8888/seqware-webservice/ius/(iusSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -12758,7 +12734,7 @@ I"h<p>Update an ius with the given SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@6I"1/0.11.4/metadata/db/workflowparamvalues_get/;T{;{	;I"><!DOCTYPE html>
+</code></pre>;T;@6I"1/0.11.4/metadata/db/workflowparamvalues_get/;T{;{	;I"E<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -12789,29 +12765,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET /workflowparamvalues</h1>
-	<p>Retrieves a list of workflow parameter values.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/workflowparamvalues</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>id</dt>
-  <dd>Returns the WorkflowParamValue with the given id (primary key, not SWID, since workflow parameter values do not have SWIDs).</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -12842,8 +12798,27 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET /workflowparamvalues</h1>
+	<p>Retrieves a list of workflow parameter values.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/workflowparamvalues</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>id</dt>
+  <dd>Returns the WorkflowParamValue with the given id (primary key, not SWID, since workflow parameter values do not have SWIDs).</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -12915,7 +12890,7 @@ I"<p>Retrieves a list of workflow parameter values.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@<I")/0.11.4/metadata/db/workflowrun_get/;T{;{	;I"z<!DOCTYPE html>
+</code></pre>;T;@<I")/0.11.4/metadata/db/workflowrun_get/;T{;{	;I"Å<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -12946,31 +12921,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET a workflow run</h1>
-	<p>Retrieves a workflow run by SWID</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/workflowruns/(workflowRunSWID)</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>lanes - return the workflow run with all of its lanes</dd>
-  <dd>ius - return the workflow run with all of its IUSes</dd>
-  <dd>processes - return the workflow run with all of its processing events</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -13001,8 +12954,29 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET a workflow run</h1>
+	<p>Retrieves a workflow run by SWID</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/workflowruns/(workflowRunSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>lanes - return the workflow run with all of its lanes</dd>
+  <dd>ius - return the workflow run with all of its IUSes</dd>
+  <dd>processes - return the workflow run with all of its processing events</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -13078,7 +13052,7 @@ I"8<p>Retrieves a workflow run by SWID</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@BI""/0.11.4/metadata/db/file_get/;T{;{	;I"ó<!DOCTYPE html>
+</code></pre>;T;@BI""/0.11.4/metadata/db/file_get/;T{;{	;I"û<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -13109,30 +13083,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET file</h1>
-	<p>Retrieves a file using its SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/files/(fileSWID)</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -13163,8 +13116,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET file</h1>
+	<p>Retrieves a file using its SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/files/(fileSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -13238,7 +13211,7 @@ I"i<p>Retrieves a file using its SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@HI""/0.11.4/metadata/db/lane_put/;T{;{	;I"â<!DOCTYPE html>
+</code></pre>;T;@HI""/0.11.4/metadata/db/lane_put/;T{;{	;I"ê<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -13269,30 +13242,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1></h1>
-	<p>Updates a lane with the given SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>PUT http://localhost:8888/seqware-webservice/lane/(laneSWID)</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -13323,8 +13275,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1></h1>
+	<p>Updates a lane with the given SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>PUT http://localhost:8888/seqware-webservice/lane/(laneSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -13398,7 +13370,7 @@ I"k<p>Updates a lane with the given SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@NI"(/0.11.4/metadata/db/processing_put/;T{;{	;I"∫<!DOCTYPE html>
+</code></pre>;T;@NI"(/0.11.4/metadata/db/processing_put/;T{;{	;I"¡<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -13429,30 +13401,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>PUT processing</h1>
-	<p>Updates a processing object with the given SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>PUT http://localhost:8888/seqware-webservice/processes/(processSWID)</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -13483,8 +13434,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>PUT processing</h1>
+	<p>Updates a processing object with the given SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>PUT http://localhost:8888/seqware-webservice/processes/(processSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -13559,7 +13530,7 @@ I"Ä<p>Updates a processing object with the given SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@TI"*/0.11.4/metadata/db/sequencerrun_get/;T{;{	;I"È<!DOCTYPE html>
+</code></pre>;T;@TI"*/0.11.4/metadata/db/sequencerrun_get/;T{;{	;I"<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -13590,29 +13561,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET a sequencer run</h1>
-	<p>Retrieves a sequencer run by SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/sequencerrun/(sequencerRunSWID)</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>lanes - returns a sequencer run with its lanes </dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -13643,8 +13594,27 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET a sequencer run</h1>
+	<p>Retrieves a sequencer run by SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/sequencerrun/(sequencerRunSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>lanes - returns a sequencer run with its lanes </dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -13716,7 +13686,7 @@ I"•<p>Retrieves a sequencer run by SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@ZI"&/0.11.4/metadata/db/workflow_get/;T{;{	;I"Â<!DOCTYPE html>
+</code></pre>;T;@ZI"&/0.11.4/metadata/db/workflow_get/;T{;{	;I"Ï<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -13747,29 +13717,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET a workflow</h1>
-	<p>Retrieves a workflow using its SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/workflows/(workflowSWID)</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>params - Returns the Workflow with its possible parameters</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -13800,8 +13750,27 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET a workflow</h1>
+	<p>Retrieves a workflow using its SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/workflows/(workflowSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>params - Returns the Workflow with its possible parameters</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -13872,7 +13841,7 @@ I"´<p>Retrieves a workflow using its SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@`I"#/0.11.4/metadata/db/lanes_get/;T{;{	;I"º<!DOCTYPE html>
+</code></pre>;T;@`I"#/0.11.4/metadata/db/lanes_get/;T{;{	;I"√<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -13903,29 +13872,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET lanes</h1>
-	<p>Retrieves a list of lanes.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/lanes</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>id</dt>
-  <dd>Returns the Lane with the given id (primary key, not SWID)</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -13956,8 +13905,27 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET lanes</h1>
+	<p>Retrieves a list of lanes.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/lanes</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>id</dt>
+  <dd>Returns the Lane with the given id (primary key, not SWID)</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -14029,7 +13997,7 @@ I"å<p>Retrieves a list of lanes.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@fI"&/0.11.4/metadata/db/samples_post/;T{;{	;I"ö<!DOCTYPE html>
+</code></pre>;T;@fI"&/0.11.4/metadata/db/samples_post/;T{;{	;I"°<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -14060,30 +14028,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>POST a sample</h1>
-	<p>Add a new sample to the database.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/samples</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -14114,8 +14061,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>POST a sample</h1>
+	<p>Add a new sample to the database.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>POST http://localhost:8888/seqware-webservice/samples</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -14190,7 +14157,7 @@ I"b<p>Add a new sample to the database.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@lI"!/0.11.4/metadata/db/ius_get/;T{;{	;I"≤<!DOCTYPE html>
+</code></pre>;T;@lI"!/0.11.4/metadata/db/ius_get/;T{;{	;I"π<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -14221,30 +14188,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET /ius/(iusSWID)</h1>
-	<p>Retrieves an experiment based on the SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/ius/(iusSWID)</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -14275,8 +14221,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET /ius/(iusSWID)</h1>
+	<p>Retrieves an experiment based on the SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/ius/(iusSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -14351,7 +14317,7 @@ I"p<p>Retrieves an experiment based on the SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@rI"#/0.11.4/metadata/db/study_get/;T{;{	;I"°<!DOCTYPE html>
+</code></pre>;T;@rI"#/0.11.4/metadata/db/study_get/;T{;{	;I"®<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -14382,30 +14348,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET a study</h1>
-	<p>Retrieves a study using its SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/studies/(studySWID)</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -14436,8 +14381,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET a study</h1>
+	<p>Retrieves a study using its SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/studies/(studySWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -14512,7 +14477,7 @@ I"m<p>Retrieves a study using its SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@xI"2/0.11.4/metadata/db/workflowparamvalues_post/;T{;{	;I"ö<!DOCTYPE html>
+</code></pre>;T;@xI"2/0.11.4/metadata/db/workflowparamvalues_post/;T{;{	;I"°<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -14543,30 +14508,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1></h1>
-	<p>Adds a workflow parameter value to the database</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/workflowparamvalues</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -14597,8 +14541,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1></h1>
+	<p>Adds a workflow parameter value to the database</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>POST http://localhost:8888/seqware-webservice/workflowparamvalues</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -14672,7 +14636,7 @@ I"|<p>Adds a workflow parameter value to the database</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@~I"%/0.11.4/metadata/db/samples_get/;T{;{	;I"P<!DOCTYPE html>
+</code></pre>;T;@~I"%/0.11.4/metadata/db/samples_get/;T{;{	;I"W<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -14703,31 +14667,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET samples</h1>
-	<p>Retrieves a list of samples</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/samples</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>title</dt>
-  <dd>Returns the Sample with the given title (most samples have names, all samples have titles)
-name</dd>
-  <dd>Returns the Sample with the given name (most samples have names, all samples have titles)</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -14758,8 +14700,29 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET samples</h1>
+	<p>Retrieves a list of samples</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/samples</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>title</dt>
+  <dd>Returns the Sample with the given title (most samples have names, all samples have titles)
+name</dd>
+  <dd>Returns the Sample with the given name (most samples have names, all samples have titles)</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -14835,7 +14798,7 @@ name</dd>
 <pre><code>
 Code Block
 
-</code></pre>;T;@ÑI")/0.11.4/metadata/db/workflowrun_put/;T{;{	;I"ƒ<!DOCTYPE html>
+</code></pre>;T;@ÑI")/0.11.4/metadata/db/workflowrun_put/;T{;{	;I"À<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -14866,30 +14829,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>PUT a workflow run</h1>
-	<p>Updates a workflow run with the given SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>PUT http://localhost:8888/seqware-webservice/workflowruns/(workflowRunSWID)</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -14920,8 +14862,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>PUT a workflow run</h1>
+	<p>Updates a workflow run with the given SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>PUT http://localhost:8888/seqware-webservice/workflowruns/(workflowRunSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -14996,7 +14958,7 @@ I"Ç<p>Updates a workflow run with the given SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@äI"(/0.11.4/metadata/db/workflows_post/;T{;{	;I"£<!DOCTYPE html>
+</code></pre>;T;@äI"(/0.11.4/metadata/db/workflows_post/;T{;{	;I"™<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -15027,30 +14989,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>POST a workflow</h1>
-	<p>Adds a new workflow to the database.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/workflows</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -15081,8 +15022,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>POST a workflow</h1>
+	<p>Adds a new workflow to the database.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>POST http://localhost:8888/seqware-webservice/workflows</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -15157,7 +15118,7 @@ I"g<p>Adds a new workflow to the database.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@êI",/0.11.4/metadata/db/workflowparams_get/;T{;{	;I"<!DOCTYPE html>
+</code></pre>;T;@êI",/0.11.4/metadata/db/workflowparams_get/;T{;{	;I"#<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -15188,29 +15149,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET workflowparams</h1>
-	<p>Retrieves a list of workflow parameters.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/workflowparams</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>id</dt>
-  <dd>Returns the WorkflowParam with the given id (primary key, not SWID, since workflow parameters do not have SWIDs).</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -15241,8 +15182,27 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET workflowparams</h1>
+	<p>Retrieves a list of workflow parameters.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/workflowparams</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>id</dt>
+  <dd>Returns the WorkflowParam with the given id (primary key, not SWID, since workflow parameters do not have SWIDs).</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -15314,7 +15274,7 @@ I"⁄<p>Retrieves a list of workflow parameters.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@ñI"/0.11.4/metadata/db/;T{;{	;I"œ+<!DOCTYPE html>
+</code></pre>;T;@ñI"/0.11.4/metadata/db/;T{;{	;I"÷+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -15345,6 +15305,41 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
+    <div id="js-sidebar" class="sidebar-shell">
+      <div class="js-toggle-list sidebar-module expandable">
+        <ul>
+<li class="js-topic">
+            <h3>
+<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../">SeqWare Webservice RESTful API</a>
+</h3>
+            <ul class="js-guides">
+<li><a href="../">Metadata</a></li>
+              <li><a href="../../pipeline/">Pipeline</a></li>
+            </ul>
+</li>
+          <li class="js-topic">
+            <h3>
+<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../">Metadata Resources</a>
+</h3>
+            <ul class="js-guides">
+<li><span class="active" title="You're here.">Data</span></li>
+              <li><a href="../report/">Reports</a></li>
+              <li><a href="../job/">Jobs</a></li>
+              <li><a href="../x/">Experimental</a></li>
+            </ul>
+</li>
+          <li class="js-topic">
+            <h3>
+<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../pipeline/">Pipeline Resources</a>
+</h3>
+            <ul class="js-guides">
+<li><a href="../../pipeline/job/">Jobs</a></li>
+            </ul>
+</li>
+        </ul>
+</div> <!-- /sidebar-module -->
+    	</div>
+<!-- /sidebar-shell -->
 	<h1>Metadata - Data Resources</h1>
 	<h2 id="overview">Overview</h2>
 
@@ -15538,42 +15533,6 @@ Code Block
 </tr>
 </table>
 </div>
-
-    <div id="js-sidebar" class="sidebar-shell">
-      <div class="js-toggle-list sidebar-module expandable">
-	<ul>
-<li class="js-topic">
-            <h3>
-<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../">SeqWare Webservice RESTful API</a>
-</h3>
-            <ul class="js-guides">
-<li><a href="../">Metadata</a></li>
-              <li><a href="../../pipeline/">Pipeline</a></li>
-            </ul>
-</li>
-          <li class="js-topic">
-            <h3>
-<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../">Metadata Resources</a>
-</h3>
-            <ul class="js-guides">
-<li><span class="active" title="You're here.">Data</span></li>
-              <li><a href="../report/">Reports</a></li>
-              <li><a href="../job/">Jobs</a></li>
-              <li><a href="../x/">Experimental</a></li>
-            </ul>
-</li>
-          <li class="js-topic">
-            <h3>
-<a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../pipeline/">Pipeline Resources</a>
-</h3>
-            <ul class="js-guides">
-<li><a href="../../pipeline/job/">Jobs</a></li>
-            </ul>
-</li>
-        </ul>
-</div> <!-- /sidebar-module -->
-    </div>
-<!-- /sidebar-shell -->
 
     </div>
 <!-- #wrapper -->
@@ -15828,7 +15787,7 @@ I"ª <h2 id="overview">Overview</h2>
 <td><a href="/0.11.4/metadata/db/workflowworkflowruns_get/" alt="GET all workflow runs for a particular workflow through the web service">GET<br>/workflows/{workflowId}/runs</a></td>
 <td>Retrieves all of the workflow runs for a particular workflow using the workflow's SWID.</td>
 </tr>
-</table>;T;@úI"/0.11.4/metadata/job/;T{;{	;I"»<!DOCTYPE html>
+</table>;T;@úI"/0.11.4/metadata/job/;T{;{	;I"œ<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -15859,19 +15818,9 @@ I"ª <h2 id="overview">Overview</h2>
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata - Job Resources</h1>
-	<h1 id="metadata--job-resources">Metadata &gt; Job Resources</h1>
-
-<h2 id="overview">Overview</h2>
-<p>Jobs are processes that cause considerable processing on the server side and include PUT and POST operations. Some are asynchronous and will immediately return a status ID and indication of a different URI to monitor the progress of the job. </p>
-
-<h2 id="resources">Resources</h2>
-<p>None so far!</p>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../">SeqWare Webservice RESTful API</a>
@@ -15902,8 +15851,17 @@ I"ª <h2 id="overview">Overview</h2>
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>Metadata - Job Resources</h1>
+	<h1 id="metadata--job-resources">Metadata &gt; Job Resources</h1>
+
+<h2 id="overview">Overview</h2>
+<p>Jobs are processes that cause considerable processing on the server side and include PUT and POST operations. Some are asynchronous and will immediately return a status ID and indication of a different URI to monitor the progress of the job. </p>
+
+<h2 id="resources">Resources</h2>
+<p>None so far!</p>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -15955,7 +15913,7 @@ I"ì<h1 id="metadata--job-resources">Metadata &gt; Job Resources</h1>
 <p>Jobs are processes that cause considerable processing on the server side and include PUT and POST operations. Some are asynchronous and will immediately return a status ID and indication of a different URI to monitor the progress of the job. </p>
 
 <h2 id="resources">Resources</h2>
-<p>None so far!</p>;T;@¢I"/0.11.4/metadata/x/;T{;{	;I"/<!DOCTYPE html>
+<p>None so far!</p>;T;@¢I"/0.11.4/metadata/x/;T{;{	;I"6<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -15986,18 +15944,9 @@ I"ì<h1 id="metadata--job-resources">Metadata &gt; Job Resources</h1>
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata - Experimental Resources</h1>
-	<h2 id="overview">Overview</h2>
-
-<p>These resources are for those under development or in a testing phase. They can be turned off at runtime to prohibit risky operations. </p>
-
-<h2 id="resources">Resources</h2>
-<p>None so far!</p>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../">SeqWare Webservice RESTful API</a>
@@ -16028,8 +15977,16 @@ I"ì<h1 id="metadata--job-resources">Metadata &gt; Job Resources</h1>
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>Metadata - Experimental Resources</h1>
+	<h2 id="overview">Overview</h2>
+
+<p>These resources are for those under development or in a testing phase. They can be turned off at runtime to prohibit risky operations. </p>
+
+<h2 id="resources">Resources</h2>
+<p>None so far!</p>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -16079,7 +16036,7 @@ I"Ê<h2 id="overview">Overview</h2>
 <p>These resources are for those under development or in a testing phase. They can be turned off at runtime to prohibit risky operations. </p>
 
 <h2 id="resources">Resources</h2>
-<p>None so far!</p>;T;@®I"/0.11.4/metadata/;T{;{	;I"\<!DOCTYPE html>
+<p>None so far!</p>;T;@®I"/0.11.4/metadata/;T{;{	;I"c<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16110,24 +16067,9 @@ I"Ê<h2 id="overview">Overview</h2>
 
     <div id="wrapper">
       <div class="content">
-	<h1>Metadata Resources</h1>
-	<p>Operations on the metadata resources are primarily for read-only access of the SeqWare metadata database. Any PUT or POST operations add only one row to one table in the SeqWare Metadata database. There are four classifications of resources:</p>
-
-<ul>
-<li>
-<a href="db/">Data</a> - Resources that adds, retrieves or updates one or more rows from a database table.</li>
-  <li>
-<a href="report/">Reports</a> - Resources that query the state of the Metadata DB and amalgamate information from multiple database tables in order to report on the state of a study, sequencer run, sample, etc. </li>
-  <li>
-<a href="job/">Jobs</a> - Resources that cause considerable processing on the server side and include PUT and POST operations.</li>
-  <li>
-<a href="x/">Experimental</a> - Resources that are in development or in a testing phase.</li>
-</ul>
-</div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../">SeqWare Webservice RESTful API</a>
@@ -16158,8 +16100,22 @@ I"Ê<h2 id="overview">Overview</h2>
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>Metadata Resources</h1>
+	<p>Operations on the metadata resources are primarily for read-only access of the SeqWare metadata database. Any PUT or POST operations add only one row to one table in the SeqWare Metadata database. There are four classifications of resources:</p>
+
+<ul>
+<li>
+<a href="db/">Data</a> - Resources that adds, retrieves or updates one or more rows from a database table.</li>
+  <li>
+<a href="report/">Reports</a> - Resources that query the state of the Metadata DB and amalgamate information from multiple database tables in order to report on the state of a study, sequencer run, sample, etc. </li>
+  <li>
+<a href="job/">Jobs</a> - Resources that cause considerable processing on the server side and include PUT and POST operations.</li>
+  <li>
+<a href="x/">Experimental</a> - Resources that are in development or in a testing phase.</li>
+</ul>
+</div>
 
     </div>
 <!-- #wrapper -->
@@ -16794,7 +16750,7 @@ I"u<p>Retrieves a list of experiments.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@∆I"*/0.11.4/metadata/report/workflow_get/;T{;{	;I"Ô<!DOCTYPE html>
+</code></pre>;T;@∆I"*/0.11.4/metadata/report/workflow_get/;T{;{	;I"ˆ<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16825,30 +16781,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET a summary of all runs of a workflow</h1>
-	<p>Retrieves a summary of all runs of a workflow.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/reports/workflows/{workflowSWID}</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -16879,8 +16814,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET a summary of all runs of a workflow</h1>
+	<p>Retrieves a summary of all runs of a workflow.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/reports/workflows/{workflowSWID}</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -16954,7 +16909,7 @@ I"á<p>Retrieves a summary of all runs of a workflow.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@ÃI"./0.11.4/metadata/report/sequencerrun_get/;T{;{	;I"µ<!DOCTYPE html>
+</code></pre>;T;@ÃI"./0.11.4/metadata/report/sequencerrun_get/;T{;{	;I"º<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16985,30 +16940,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET the sequencer run report</h1>
-	<p>Retrieves a tab-delimited overview of all sequencer runs, lanes, barcodes, and associated analysis events. For more information, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Sequencer_Run_Reporter">Sequencer Run Reporter</a> on the SeqWare wiki.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/reports/sequencerruns </p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -17039,8 +16973,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET the sequencer run report</h1>
+	<p>Retrieves a tab-delimited overview of all sequencer runs, lanes, barcodes, and associated analysis events. For more information, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Sequencer_Run_Reporter">Sequencer Run Reporter</a> on the SeqWare wiki.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/reports/sequencerruns </p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -17114,7 +17068,7 @@ I"c<p>Retrieves a tab-delimited overview of all sequencer runs, lanes, barcode
 <pre><code>
 Code Block
 
-</code></pre>;T;@“I"-/0.11.4/metadata/report/workflowrun_get/;T{;{	;I" <!DOCTYPE html>
+</code></pre>;T;@“I"-/0.11.4/metadata/report/workflowrun_get/;T{;{	;I"—<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -17145,30 +17099,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET a workflow run report</h1>
-	<p>Retrieves a single workflow run report, including input and output files, using its SeqWare accession. For more information on this resource, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Workflow_Run_Reporter">Workflow Run Reporter</a> on the SeqWare wiki.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/reports/workflowruns/{workflowRunSWID}</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -17199,8 +17132,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET a workflow run report</h1>
+	<p>Retrieves a single workflow run report, including input and output files, using its SeqWare accession. For more information on this resource, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Workflow_Run_Reporter">Workflow Run Reporter</a> on the SeqWare wiki.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/reports/workflowruns/{workflowRunSWID}</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -17274,7 +17227,7 @@ I"~<p>Retrieves a single workflow run report, including input and output files
 <pre><code>
 Code Block
 
-</code></pre>;T;@ÿI"1/0.11.4/metadata/report/workflowruntime_get/;T{;{	;I"—<!DOCTYPE html>
+</code></pre>;T;@ÿI"1/0.11.4/metadata/report/workflowruntime_get/;T{;{	;I"ÿ<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -17305,30 +17258,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET /experiments/(experimentSWID)</h1>
-	<p>Retrieves a list of experiments.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/experiments/(experimentSWID)</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -17359,8 +17291,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET /experiments/(experimentSWID)</h1>
+	<p>Retrieves a list of experiments.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/experiments/(experimentSWID)</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -17434,7 +17386,7 @@ I"u<p>Retrieves a list of experiments.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@ﬁI"-/0.11.4/metadata/report/study_files_get/;T{;{	;I"¶<!DOCTYPE html>
+</code></pre>;T;@ﬁI"-/0.11.4/metadata/report/study_files_get/;T{;{	;I"≠<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -17465,30 +17417,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET the files associated with a study.</h1>
-	<p>Retrieves the files that are associated with processing the study. For more information on this resource, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=SymLink_Reporter">StudyReporter</a> on the SeqWare wiki.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/studies/{studySWID}/files</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -17519,8 +17450,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET the files associated with a study.</h1>
+	<p>Retrieves the files that are associated with processing the study. For more information on this resource, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=SymLink_Reporter">StudyReporter</a> on the SeqWare wiki.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/studies/{studySWID}/files</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -17594,7 +17545,7 @@ I"@<p>Retrieves the files that are associated with processing the study. For m
 <pre><code>
 Code Block
 
-</code></pre>;T;@‰I"./0.11.4/metadata/report/sample_files_get/;T{;{	;I"™<!DOCTYPE html>
+</code></pre>;T;@‰I"./0.11.4/metadata/report/sample_files_get/;T{;{	;I"±<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -17625,30 +17576,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET the files associated with a sample.</h1>
-	<p>Retrieves the files that are associated with processing the sample. For more information on this resource, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=SymLink_Reporter">StudyReporter</a> on the SeqWare wiki.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/samples/{sampleSWID}/files</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -17679,8 +17609,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET the files associated with a sample.</h1>
+	<p>Retrieves the files that are associated with processing the sample. For more information on this resource, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=SymLink_Reporter">StudyReporter</a> on the SeqWare wiki.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/samples/{sampleSWID}/files</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -17754,7 +17704,7 @@ I"B<p>Retrieves the files that are associated with processing the sample. For 
 <pre><code>
 Code Block
 
-</code></pre>;T;@ÍI"4/0.11.4/metadata/report/sequencerrun_files_get/;T{;{	;I"Ã<!DOCTYPE html>
+</code></pre>;T;@ÍI"4/0.11.4/metadata/report/sequencerrun_files_get/;T{;{	;I"”<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -17785,30 +17735,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET the files associated with a sequencer run.</h1>
-	<p>Retrieves the files that are associated with processing the sequencer run. For more information on this resource, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=SymLink_Reporter">StudyReporter</a> on the SeqWare wiki. </p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/sequencerruns/{sequencerRunSWID}/files</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -17839,8 +17768,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET the files associated with a sequencer run.</h1>
+	<p>Retrieves the files that are associated with processing the sequencer run. For more information on this resource, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=SymLink_Reporter">StudyReporter</a> on the SeqWare wiki. </p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/sequencerruns/{sequencerRunSWID}/files</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -17914,7 +17863,7 @@ I"V<p>Retrieves the files that are associated with processing the sequencer ru
 <pre><code>
 Code Block
 
-</code></pre>;T;@I"./0.11.4/metadata/report/workflowruns_get/;T{;{	;I"∑<!DOCTYPE html>
+</code></pre>;T;@I"./0.11.4/metadata/report/workflowruns_get/;T{;{	;I"æ<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -17945,30 +17894,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET workflow run reports for all runs</h1>
-	<p>Retrieves workflow run report for all runs, including input and output files. For more information on this resource, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Workflow_Run_Reporter">Workflow Run Reporter</a> on the SeqWare wiki.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/reports/workflowruns</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -17999,8 +17927,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET workflow run reports for all runs</h1>
+	<p>Retrieves workflow run report for all runs, including input and output files. For more information on this resource, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Workflow_Run_Reporter">Workflow Run Reporter</a> on the SeqWare wiki.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/reports/workflowruns</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -18074,7 +18022,7 @@ I"S<p>Retrieves workflow run report for all runs, including input and output f
 <pre><code>
 Code Block
 
-</code></pre>;T;@ˆI"6/0.11.4/metadata/report/workflowworkflowruns_get/;T{;{	;I"<!DOCTYPE html>
+</code></pre>;T;@ˆI"6/0.11.4/metadata/report/workflowworkflowruns_get/;T{;{	;I"<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -18105,30 +18053,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET the workflow run reports for a particular workflow.</h1>
-	<p>Retrieves the workflow run reports for a particular workflow using its SeqWare accession, including input and output files. For more information on this resource, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Workflow_Run_Reporter">Workflow Run Reporter</a> on the SeqWare wiki.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/reports/workflows/{workflowId}/runs</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -18159,8 +18086,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET the workflow run reports for a particular workflow.</h1>
+	<p>Retrieves the workflow run reports for a particular workflow using its SeqWare accession, including input and output files. For more information on this resource, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Workflow_Run_Reporter">Workflow Run Reporter</a> on the SeqWare wiki.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/reports/workflows/{workflowId}/runs</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -18394,7 +18341,7 @@ I"á<p>Retrieves a summary of all runs of a workflow.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@I"+/0.11.4/pipeline/job/workflowrun_post/;T{;{	;I"<!DOCTYPE html>
+</code></pre>;T;@I"+/0.11.4/pipeline/job/workflowrun_post/;T{;{	;I"<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -18425,30 +18372,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>POST and launch a workflow through the web service</h1>
-	<p>Launches a workflow to run on the cluster. For more information about using this resource, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Running_workflows_through_the_Web_service">Launching workflows through the Web service</a> on the SeqWare wiki.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>POST http://localhost:8888/seqware-webservice/workflows/{workflowId}/runs</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -18479,8 +18405,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>POST and launch a workflow through the web service</h1>
+	<p>Launches a workflow to run on the cluster. For more information about using this resource, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Running_workflows_through_the_Web_service">Launching workflows through the Web service</a> on the SeqWare wiki.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>POST http://localhost:8888/seqware-webservice/workflows/{workflowId}/runs</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -18554,7 +18500,7 @@ I"k<p>Launches a workflow to run on the cluster. For more information about us
 <pre><code>
 Code Block
 
-</code></pre>;T;@I"2/0.11.4/metadata/db/workflowworkflowruns_get/;T{;{	;I"Y<!DOCTYPE html>
+</code></pre>;T;@I"2/0.11.4/metadata/db/workflowworkflowruns_get/;T{;{	;I"`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -18585,30 +18531,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET all workflow runs for a particular workflow through the web service</h1>
-	<p>Retrieves all of the workflow runs for a particular workflow using the workflow‚Äôs SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/workflows/{workflowId}/runs</p>
-
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -18639,8 +18564,28 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET all workflow runs for a particular workflow through the web service</h1>
+	<p>Retrieves all of the workflow runs for a particular workflow using the workflow‚Äôs SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/workflows/{workflowId}/runs</p>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>show</dt>
+  <dd>id
+:</dd>
+</dl>
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -18714,7 +18659,7 @@ I"≠<p>Retrieves all of the workflow runs for a particular workflow using the w
 <pre><code>
 Code Block
 
-</code></pre>;T;@I"//0.11.4/metadata/db/processingparents_get/;T{;{	;I"Ô<!DOCTYPE html>
+</code></pre>;T;@I"//0.11.4/metadata/db/processingparents_get/;T{;{	;I"ˆ<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -18745,26 +18690,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET the parents of the given processing</h1>
-	<p>Retrieves the parent processing events of the processing event with the given SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/processes/{processSWID}/parents</p>
-
-<h2 id="parameters">Parameters</h2>
-
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -18795,8 +18723,24 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET the parents of the given processing</h1>
+	<p>Retrieves the parent processing events of the processing event with the given SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/processes/{processSWID}/parents</p>
+
+<h2 id="parameters">Parameters</h2>
+
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -18864,7 +18808,7 @@ I"Ñ<p>Retrieves the parent processing events of the processing event with the 
 <pre><code>
 Code Block
 
-</code></pre>;T;@I"./0.11.4/metadata/db/workflowrunfiles_get/;T{;{	;I"ˆ<!DOCTYPE html>
+</code></pre>;T;@I"./0.11.4/metadata/db/workflowrunfiles_get/;T{;{	;I"˝<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -18895,26 +18839,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET the files produced by the given workflow run</h1>
-	<p>Retrieves the files produced by the workflow run with the given SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/workflowruns/{workflowRunId}/files</p>
-
-<h2 id="parameters">Parameters</h2>
-
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -18945,8 +18872,24 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET the files produced by the given workflow run</h1>
+	<p>Retrieves the files produced by the workflow run with the given SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/workflowruns/{workflowRunId}/files</p>
+
+<h2 id="parameters">Parameters</h2>
+
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
@@ -19014,7 +18957,7 @@ I"y<p>Retrieves the files produced by the workflow run with the given SWID.</p
 <pre><code>
 Code Block
 
-</code></pre>;T;@I"4/0.11.4/metadata/db/workflowrunprocessings_get/;T{;{	;I" <!DOCTYPE html>
+</code></pre>;T;@I"4/0.11.4/metadata/db/workflowrunprocessings_get/;T{;{	;I"'<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -19045,26 +18988,9 @@ Code Block
 
     <div id="wrapper">
       <div class="content">
-	<h1>GET the processing events produced by the given workflow run</h1>
-	<p>Retrieves the processing events produced by the workflow run with the given SWID.</p>
-
-<h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/workflowruns/{workflowRunId}/processings</p>
-
-<h2 id="parameters">Parameters</h2>
-
-<h2 id="example-requests">Example Requests</h2>
-<p>http://localhost:8888/seqware-webservice</p>
-
-<pre><code>
-Code Block
-
-</code></pre>
-      </div>
-
     <div id="js-sidebar" class="sidebar-shell">
       <div class="js-toggle-list sidebar-module expandable">
-	<ul>
+        <ul>
 <li class="js-topic">
             <h3>
 <a href="#" class="js-expand-btn collapsed">¬†</a><a href="../../../../">SeqWare Webservice RESTful API</a>
@@ -19095,8 +19021,24 @@ Code Block
 </li>
         </ul>
 </div> <!-- /sidebar-module -->
-    </div>
+    	</div>
 <!-- /sidebar-shell -->
+	<h1>GET the processing events produced by the given workflow run</h1>
+	<p>Retrieves the processing events produced by the workflow run with the given SWID.</p>
+
+<h2 id="resource-url">Resource URL</h2>
+<p>GET http://localhost:8888/seqware-webservice/workflowruns/{workflowRunId}/processings</p>
+
+<h2 id="parameters">Parameters</h2>
+
+<h2 id="example-requests">Example Requests</h2>
+<p>http://localhost:8888/seqware-webservice</p>
+
+<pre><code>
+Code Block
+
+</code></pre>
+      </div>
 
     </div>
 <!-- #wrapper -->
