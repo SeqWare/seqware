@@ -18,11 +18,13 @@ package com.github.seqware.impl;
 
 import com.github.seqware.factory.BackEndInterface;
 import com.github.seqware.model.*;
-import com.github.seqware.model.impl.inMemory.InMemoryFeatureSet;
+import com.github.seqware.model.impl.inMemory.InMemoryFeaturesAllPlugin;
+import com.github.seqware.model.impl.inMemory.InMemoryFeaturesByReferencePlugin;
+import com.github.seqware.model.impl.inMemory.InMemoryFeaturesByTypePlugin;
 import java.security.AccessControlException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -99,53 +101,43 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
     }
 
     public QueryFuture getFeaturesByType(FeatureSet set, String type, int hours) {
-        InMemoryFeatureSet fSet = new InMemoryFeatureSet(new Reference() {
-            @Override
-            public Iterator<FeatureSet> featureSets() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
-        for (Feature f : set){
-            if (f.getType().equals(type)){
-                fSet.add(f);
-            }
-        }
-        return new QueryFutureImpl(fSet);
+//        InMemoryFeatureSet fSet = new InMemoryFeatureSet(set.getReference());
+//        for (Feature f : set){
+//            if (f.getType().equals(type)){
+//                fSet.add(f);
+//            }
+//        }
+        AnalysisPluginInterface plugin = new InMemoryFeaturesByTypePlugin();
+        plugin.init(set, type);
+        return new QueryFutureImpl(plugin);
     }
 
     public QueryFuture getFeatures(FeatureSet set, int hours) {
-        InMemoryFeatureSet fSet = new InMemoryFeatureSet(new Reference() {
-            @Override
-            public Iterator<FeatureSet> featureSets() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
+ //       InMemoryFeatureSet fSet = new InMemoryFeatureSet(set.getReference());
 
-        for (Object obj : set) {
-            if (obj instanceof Feature) {
-                fSet.add((Feature) obj);
-            }
-        }
-        return new QueryFutureImpl(fSet);
+//        for (Object obj : set) {
+//            if (obj instanceof Feature) {
+//                fSet.add((Feature) obj);
+//            }
+//        }
+        AnalysisPluginInterface plugin = new InMemoryFeaturesAllPlugin();
+        plugin.init(set);
+        return new QueryFutureImpl(plugin);
     }
 
     public QueryFuture getFeaturesByReference(FeatureSet set, Reference reference, int hours) {
-        InMemoryFeatureSet fSet = new InMemoryFeatureSet(new Reference() {
-            @Override
-            public Iterator<FeatureSet> featureSets() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
-
-        for (Object obj : set) {
-            if (obj instanceof Feature) {
-                fSet.add((Feature) obj);
-            }
-        }
-        return new QueryFutureImpl(fSet);
+//       InMemoryFeatureSet fSet = new InMemoryFeatureSet(set.getReference());
+//        for (Object obj : set) {
+//            if (obj instanceof Feature) {
+//                fSet.add((Feature) obj);
+//            }
+//        }
+        AnalysisPluginInterface plugin = new InMemoryFeaturesByReferencePlugin();
+        plugin.init(set);
+        return new QueryFutureImpl(plugin);
     }
 
-    public QueryFuture getFeaturesByRange(FeatureSet set, LOCATION location, long start, long stop, int hours) {
+    public QueryFuture getFeaturesByRange(FeatureSet set, Location location, long start, long stop, int hours) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -163,20 +155,30 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
         return list;
     }
 
-    public class QueryFutureImpl implements QueryInterface.QueryFuture {
+    public class QueryFutureImpl extends Analysis {
 
-        private FeatureSet featureSet;
-
-        public QueryFutureImpl(FeatureSet featureSet) {
-            this.featureSet = featureSet;
+        public QueryFutureImpl(AnalysisPluginInterface plugin) {
+            super(plugin);
         }
 
         public FeatureSet get() {
-            return featureSet;
+            getPlugin().map();
+            getPlugin().reduce();
+            return super.getPlugin().getFinalResult();
         }
 
         public boolean isDone() {
             return true;
+        }
+
+        @Override
+        public Analysis getParentAnalysis() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public Set<Analysis> getSuccessorAnalysisSet() {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 }

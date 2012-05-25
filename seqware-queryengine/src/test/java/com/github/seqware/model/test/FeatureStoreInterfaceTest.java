@@ -19,7 +19,7 @@ public class FeatureStoreInterfaceTest {
 
     @Test
     public void testFeatureCreationAndIterate() {
-        InMemoryFeatureSet aSet = new InMemoryFeatureSet(new Reference() {
+        InMemoryFeatureSet aSet = new InMemoryFeatureSet(new Reference("testing dummy reference") {
             @Override
             public Iterator<FeatureSet> featureSets() {
                 return null;

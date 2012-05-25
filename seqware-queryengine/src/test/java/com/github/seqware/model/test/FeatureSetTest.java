@@ -1,13 +1,14 @@
 package com.github.seqware.model.test;
 
+import com.github.seqware.model.Feature;
+import com.github.seqware.model.FeatureSet;
+import com.github.seqware.model.Reference;
 import com.github.seqware.model.impl.inMemory.InMemoryFeatureSet;
-import com.github.seqware.model.*;
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Unit tests of FeatureSet.
@@ -18,7 +19,7 @@ public class FeatureSetTest {
 
     @Test
     public void testConsistentStorageSingleFeatures() {
-        FeatureSet aSet = new InMemoryFeatureSet(new Reference() {
+        FeatureSet aSet = new InMemoryFeatureSet(new Reference("testing dummy reference") {
             @Override
             public Iterator<FeatureSet> featureSets() {
                 return null;

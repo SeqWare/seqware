@@ -11,11 +11,21 @@ import java.util.Set;
  * @author jbaran
  */
 public abstract class ReferenceSet extends Molecule implements Iterable<Reference>{
+    
+    private String name;
+    private String organism;
+    
     /**
      * Creates an instance of an anonymous feature set.
      */
-    public ReferenceSet() {
+    private ReferenceSet() {
         super();
+    }
+    
+    public ReferenceSet(String name, String organism){
+        this();
+        this.name = name;
+        this.organism = organism;
     }
 
     /**
@@ -38,4 +48,20 @@ public abstract class ReferenceSet extends Molecule implements Iterable<Referenc
      * @return Iterator of features.
      */
     public abstract Iterator<Reference> getReferences();
+    
+    /**
+     * Get the name of the reference set (ex: "Human")
+     * @return the name of this reference set
+     */
+    public String getName(){
+        return name;
+    }
+    
+    /**
+     * Get the name of the organism (ex: "Homo Sapiens")
+     * @return the organism that this reference set is associated with
+     */
+    public String getOrganism(){
+        return organism;
+    }
 }

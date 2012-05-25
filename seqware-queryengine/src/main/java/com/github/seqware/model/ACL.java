@@ -83,7 +83,7 @@ public class ACL extends Particle implements ACLable {
      * Get whether 0) owner can read, 1) owner can write, 2) group can read, 3)
      * group can write, 4) other users can read 5) other users can write
      *
-     * @return
+     * @return array access to RW rights for owner, group, and others
      */
     public boolean[] getAccess() {
         throw new UnsupportedOperationException("Not supported yet");

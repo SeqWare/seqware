@@ -18,7 +18,7 @@ public class ReferenceSetTest {
 
     @Test
     public void testConsistentStorageSingleFeatures() {
-        ReferenceSet aSet = new InMemoryReferenceSet();
+        ReferenceSet aSet = new InMemoryReferenceSet("Human", "Homo Sapiens");
 
         Set<Reference> testReferences = new HashSet<Reference>();
 

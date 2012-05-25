@@ -20,7 +20,8 @@ import com.github.seqware.model.Particle;
 import java.security.AccessControlException;
 
 /**
- * 
+ * This interface specifies operations to persist, update, and add objects to 
+ * the back-end without knowing about the specific database back-end.
  * @author dyuen
  */
 public interface BackEndInterface {

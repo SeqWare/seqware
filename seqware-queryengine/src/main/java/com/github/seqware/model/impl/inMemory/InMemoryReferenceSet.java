@@ -3,7 +3,6 @@ package com.github.seqware.model.impl.inMemory;
 import com.github.seqware.model.Reference;
 import com.github.seqware.model.ReferenceSet;
 import com.github.seqware.util.InMemoryIterator;
-
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -23,8 +22,8 @@ public class InMemoryReferenceSet extends ReferenceSet {
     /**
      * Creates an in-memory feature set.
      */
-    public InMemoryReferenceSet() {
-        super();
+    public InMemoryReferenceSet(String name, String organism) {
+        super(name, organism);
     }
 
     @Override

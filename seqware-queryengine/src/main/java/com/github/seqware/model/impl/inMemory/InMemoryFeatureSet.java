@@ -34,7 +34,7 @@ public class InMemoryFeatureSet extends FeatureSet {
 
     @Override
     public void add(Set<Feature> features) {
-        features.addAll(features);
+        this.features.addAll(features);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package com.github.seqware.model;
 
-import com.github.seqware.util.SeqWareIterator;
-
 /**
  * Implements core functionality that is shared by all classes that require tags.
  *

@@ -30,7 +30,7 @@ public class Factory {
         
     /**
      * Get a reference to the currently operating back-end
-     * @return 
+     * @return backEnd reference to access underlying DB operations
      */
     public static BackEndInterface getBackEnd(){
         if (instance == null){
@@ -41,7 +41,7 @@ public class Factory {
     
     /**
      * Get a reference to the currently operating Query Interface
-     * @return 
+     * @return query interface to do analysis and queries over FeatureSets
      */
     public static QueryInterface getQueryInterface(){
         if (instance == null){
@@ -52,7 +52,8 @@ public class Factory {
     
      /**
      * Get a reference to the currently operating Query Interface
-     * @return 
+     * @return feature store interface in order to do simple queries over all
+     * objects in the feature store
      */
     public static FeatureStoreInterface getFeatureStoreInterface(){
         if (instance == null){

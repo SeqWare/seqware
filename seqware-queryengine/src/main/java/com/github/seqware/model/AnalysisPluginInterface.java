@@ -16,6 +16,9 @@
  */
 package com.github.seqware.model;
 
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * This will describe the interface custom plugins must conform to. Details are
  * backend specific of course. I think we should try to make these plugins
@@ -31,10 +34,10 @@ package com.github.seqware.model;
  *
  * @author boconnor
  */
-public interface AnalysisPluginInterface {
+public interface AnalysisPluginInterface<T> {
 
     // need to think about settings, logger, and other util objects
-    public ReturnValue init();
+    public ReturnValue init(FeatureSet set, Object ... parameters);
 
     public ReturnValue test();
 
@@ -57,6 +60,8 @@ public interface AnalysisPluginInterface {
     public ReturnValue verifyOutput();
 
     public ReturnValue cleanup();
+    
+    public FeatureSet getFinalResult();
     
     public class ReturnValue{
         

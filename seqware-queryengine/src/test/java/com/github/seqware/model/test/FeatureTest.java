@@ -1,10 +1,8 @@
 package com.github.seqware.model.test;
 
-import com.github.seqware.factory.Factory;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import com.github.seqware.model.impl.inMemory.InMemoryFeatureSet;
-import com.github.seqware.model.QueryInterface.QueryFuture;
 import com.github.seqware.model.Reference;
 import java.util.Iterator;
 import org.junit.Assert;
@@ -22,7 +20,7 @@ public class FeatureTest {
 
     @BeforeClass
     public static void setupTests() {
-        aSet = new InMemoryFeatureSet(new Reference() {
+        aSet = new InMemoryFeatureSet(new Reference("testing dummy reference") {
 
             @Override
             public Iterator<FeatureSet> featureSets() {
