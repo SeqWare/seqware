@@ -1,0 +1,22 @@
+--- 
+title: Metadata - Report Resources 
+---
+
+Overview
+-------------
+Reports are exclusively GET operations that query the state of the Metadata DB and amalgamate information from multiple sources within the MetadataDB and elsewhere (e.g. Server information). They are distinguished from /metadata/db resources when:
+
+* they involve multiple database joins. Populating the values of a particular row would not qualify. For example, displaying an IUS with its lane, processing events and samples would not be a report because all of the information can be acquired with single joins, but reporting all of the samples in a study would be a join of at least 3 tables so would qualify as a report.
+* the output format is intended to be more human readable and scriptable than JAXB's XML, e.g. CSV, JSON, or XML with an XSD. 
+
+Resources
+--------------
+The Web service that this API refers to is <%= server_name %>. For more information about each resource and the correct complete URI, please follow the link to the resource-specific page.
+
+<table>
+<tr><th><strong>URI</strong></th><th><strong>Description</strong></th></tr>
+<% @item.children.each do |img| %>
+  <tr><td><a href="<%= img.path %>" alt="<%= img[:title] %>"><%= img[:method] %><br/><%= img[:uri] %></a></td><td><%= img[:summary] %></td></tr>
+<% end %>
+</table>
+

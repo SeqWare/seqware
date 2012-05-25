@@ -76,15 +76,10 @@ strong,
 sub,
 summary,
 sup,
-table,
 tbody,
-td,
 tfoot,
-th,
 thead,
 time,
-tr,
-tt,
 u,
 ul,
 var,
@@ -100,6 +95,29 @@ html,
 body {
   height: 100%;
 }
+
+table
+{
+  width:100%;
+  border-collapse:collapse;
+}
+td
+{
+  text-align:left;
+  padding:15px;
+  border-bottom-style: solid;
+  border-bottom-color: gray;
+  border-bottom-width: 1px;
+
+}
+
+th
+{
+  text-align:left;
+  border-bottom-style: solid;
+  border-bottom-color: green;
+}
+
 
 article,
 aside,
