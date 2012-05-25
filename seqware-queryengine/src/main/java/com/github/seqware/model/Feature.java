@@ -1,6 +1,5 @@
 package com.github.seqware.model;
 
-import java.util.UUID;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -28,52 +27,15 @@ public class Feature extends Atom {
 
         POSITIVE, NEGATIVE, NOT_STRANDED, UNKNOWN
     }
-    /**
-     * GVF provides pragmas that are file-wide
-     *
-     * Not sure if they affect us, but I guess we'll need to store them for a
-     * round-trip import and export
-     */
+    
     private String pragma;
-    /**
-     * (GVF: The source is a free text qualifier intended to describe the
-     * algorithm or operating procedure that generated this feature.)
-     */
     private String source;
-    /**
-     * (GVF: The type of the feature. This is constrained to be either: (a) the
-     * SO term sequence_alteration (SO:0001059), (b) a child term of
-     * sequence_alteration, (c) the SO term gap (SO:0000730), or (d) the SO
-     * accession number for any of the previous terms.)
-     */
     private String type;
-    /**
-     * (GVF: The score of the feature, an integer or floating point number.)
-     */
     private Double score;
-    /**
-     * (GVF: The phase column is not used in GVF, but is maintained with the
-     * placeholder '.' (period) for compatibility with GFF3 and tools that
-     * conform to the GFF3 specification.)
-     */
-    private static final String phase = ".";
-    /**
-     * User provided ID for the feature (optional).
-     */
+    private String phase = ".";
     private String id;
-    /**
-     * Start coordinate, 0-based. (GVF: 1-based integer for the beginning of the
-     * sequence_alteration locus on the plus strand (integer))
-     */
     private long start;
-    /**
-     * Stop coordinate, 0-based. (GVF: 1-based integer of the end of the
-     * sequence_alteration on plus strand (integer).)
-     */
     private long stop;
-    /**
-     * Strand of the feature. (GVF: The strand of the feature (+/-))
-     */
     private Strand strand;
 
     private Feature() {
@@ -128,43 +90,93 @@ public class Feature extends Atom {
      * @param source
      * @param pragma 
      */
-    public Feature(FeatureSet featureSet, long start, long stop, Strand strand, String type, Double score, String source, String pragma) {
+    public Feature(FeatureSet featureSet, long start, long stop, Strand strand, String type, Double score, String source, String pragma, String phase) {
         this(featureSet, start, stop, strand);
         this.type = type;
         this.score = score;
         this.source = source;
         this.pragma = pragma;
-
+        this.phase = phase;
     }
 
+    /**
+     * User provided ID for the feature (optional).
+     * @return user provided ID
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * (GVF: The score of the feature, an integer or floating point number.)
+     * @return score for the feature
+     */
     public Double getScore() {
         return score;
     }
+    
+    /**
+     * (GVF: The phase column is not used in GVF, but is maintained with the
+     * placeholder '.' (period) for compatibility with GFF3 and tools that
+     * conform to the GFF3 specification (and do change it))
+     * @return phase for the feature
+     */
+    public String getPhase(){
+        return phase;
+    }
 
+    /**
+     * (GVF: The source is a free text qualifier intended to describe the
+     * algorithm or operating procedure that generated this feature.)
+     * @return a String description of the source for this feature
+     */
     public String getSource() {
         return source;
     }
 
+    /**
+     * Start coordinate, 0-based (GVF: 1-based integer for the beginning of the
+     * sequence_alteration locus on the plus strand (integer))
+     * @return Start coordinate, 0-based
+     */
     public long getStart() {
         return start;
     }
 
+    /**
+     * Stop coordinate, 0-based (GVF: 1-based integer of the end of the
+     * sequence_alteration on plus strand (integer).)
+     * @return Stop coordinate, 0-based
+     */
     public long getStop() {
         return stop;
     }
 
+    /**
+     * Strand of the feature. (GVF: The strand of the feature (+/-))
+     * @return the strand of the feature
+     */
     public Strand getStrand() {
         return strand;
     }
 
+    /**
+     * (From GVF: The type of the feature, this is constrained to be either: (a) the
+     * SO term sequence_alteration (SO:0001059), (b) a child term of
+     * sequence_alteration, (c) the SO term gap (SO:0000730), or (d) the SO
+     * accession number for any of the previous terms.)
+     * @return the type of feature
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * GVF provides pragmas that are file-wide.
+     * Not sure if they affect us, but I guess we'll need to store them for a
+     * round-trip import and export
+     * @return a simple String pragma from the original GVF file
+     */
     public String getPragma() {
         return pragma;
     }

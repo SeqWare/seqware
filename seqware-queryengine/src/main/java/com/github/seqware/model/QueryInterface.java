@@ -6,7 +6,8 @@ package com.github.seqware.model;
  *
  * One idea is that FeatureSet results are guaranteed to last a minimum number
  * of hours after which we make no guarantees. Parameter can be set to less than
- * or equal to zero for permanent creation
+ * zero for permanent creation 
+ * 
  *
  * @author dyuen
  */
@@ -41,7 +42,7 @@ public interface QueryInterface {
     /**
      * filter features by their "type"
      *
-     * @param set parent FeatureSet
+     * @param set parent FeatureSet, can be null if we want to query over the entire back-end
      * @param type type of feature
      * @param hours minimum time to live
      * @return

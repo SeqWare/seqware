@@ -1,5 +1,7 @@
-package com.github.seqware.model;
+package com.github.seqware.model.impl.inMemory;
 
+import com.github.seqware.model.Reference;
+import com.github.seqware.model.ReferenceSet;
 import com.github.seqware.util.InMemoryIterator;
 
 import java.util.HashSet;
