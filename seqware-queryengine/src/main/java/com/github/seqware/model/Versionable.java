@@ -11,7 +11,7 @@ import java.security.AccessControlException;
  *
  * @author dyuen
  */
-public interface Versionable<T> {
+public interface Versionable<T extends Versionable> {
 
     /**
      * Get version for the subject
@@ -31,13 +31,14 @@ public interface Versionable<T> {
      * @return Previous (preceding) subject that represents an earlier version
      * of the subject.
      */
-    public Versionable<T> getPrecedingVersion();
+    public T getPrecedingVersion();
 
     /**
      * Sets the relationship to an earlier version of the subject.
+     * TODO: The back-end should handle this automatically, no?
      *
      * @param predecessor Preceding subject that represents an earlier version
      * of this subject.
      */
-    public void setPrecedingVersion(Versionable<T> predecessor);
+    public void setPrecedingVersion(T predecessor);
 }

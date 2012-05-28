@@ -1,6 +1,8 @@
 package com.github.seqware.model;
 
 import com.github.seqware.factory.Factory;
+import com.github.seqware.impl.DumbBackEnd;
+import java.io.Serializable;
 import java.security.AccessControlException;
 import java.util.Date;
 import java.util.UUID;
@@ -12,7 +14,7 @@ import java.util.UUID;
  *
  * @author dyuen
  */
-public abstract class Particle {
+public abstract class Particle<T> implements Serializable{
 
     /**
      * Internally used unique identifier of this feature.
@@ -45,8 +47,8 @@ public abstract class Particle {
      * @return Due to copy-on-write, this can result in a new object that the
      * user may wish to subsequently work on
      */
-    public Object update() throws AccessControlException {
-        return Factory.getBackEnd().update(this);
+    public T update() throws AccessControlException {
+        return (T)Factory.getBackEnd().update(this);
     }
 
     /**
@@ -58,8 +60,8 @@ public abstract class Particle {
      * @return Due to copy-on-write, this may return a new object with updated
      * information
      */
-    public Object refresh() throws AccessControlException {
-        return Factory.getBackEnd().refresh(this);
+    public T refresh() throws AccessControlException {
+        return (T)Factory.getBackEnd().refresh(this);
     }
 
     /**
@@ -79,6 +81,14 @@ public abstract class Particle {
      */
     public UUID getUUID() {
         return this.uuid;
+    }
+    
+    /**
+     * For testing purposes, should NOT be called normally
+     */
+    public void regenerateUUID() {
+        assert(Factory.getBackEnd() instanceof DumbBackEnd);
+        this.uuid = UUID.randomUUID();
     }
 
     /**

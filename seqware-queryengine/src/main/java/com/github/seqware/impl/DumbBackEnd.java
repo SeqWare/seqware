@@ -22,10 +22,10 @@ import com.github.seqware.model.impl.inMemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.model.impl.inMemory.InMemoryFeaturesByReferencePlugin;
 import com.github.seqware.model.impl.inMemory.InMemoryFeaturesByTypePlugin;
 import java.security.AccessControlException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.lang.SerializationUtils;
 
 /**
  *
@@ -36,15 +36,25 @@ import java.util.UUID;
 public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, QueryInterface {
 
     private List<Particle> listOfEverything = new ArrayList<Particle>();
+    private Map<UUID, List<UUID>> versionsOfEverything = new HashMap<UUID, List<UUID>>(); 
 
     public void store(Particle obj) throws AccessControlException {
         if (!listOfEverything.contains(obj)) {
             listOfEverything.add(obj);
+            versionsOfEverything.put(obj.getUUID(), new ArrayList<UUID>());
         }
     }
 
     public Particle update(Particle obj) throws AccessControlException {
-        return obj;
+        List<UUID> oldList = versionsOfEverything.get(obj.getUUID());
+        oldList.add(obj.getUUID());
+        versionsOfEverything.remove(obj.getUUID());
+        // create new particle
+        Particle newParticle = (Particle)SerializationUtils.clone(obj);
+        // we need a new UUID for the particle
+        newParticle.regenerateUUID();
+        versionsOfEverything.put(newParticle.getUUID(), oldList);
+        return newParticle;
     }
 
     public Particle refresh(Particle obj) throws AccessControlException {

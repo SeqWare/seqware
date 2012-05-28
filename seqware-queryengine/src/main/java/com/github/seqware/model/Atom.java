@@ -8,7 +8,7 @@ package com.github.seqware.model;
  *
  * @author jbaran
  */
-public abstract class Atom extends Particle implements Taggable {
+public abstract class Atom<T> extends Particle<T> implements Taggable {
        
     public boolean associateTag(String subject) {
         throw new UnsupportedOperationException("Not supported yet.");

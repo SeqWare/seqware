@@ -9,7 +9,7 @@ package com.github.seqware.model;
  *
  * @author dyuen
  */
-public abstract class Molecule<T> extends Atom implements ACLable, Versionable<T> {
+public abstract class Molecule<T extends Versionable> extends Atom<T> implements ACLable, Versionable<T> {
     
     public ACL getPermissions() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -27,11 +27,11 @@ public abstract class Molecule<T> extends Atom implements ACLable, Versionable<T
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public Versionable<T> getPrecedingVersion() {
+    public T getPrecedingVersion() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void setPrecedingVersion(Versionable<T> predecessor) {
+    public void setPrecedingVersion(T predecessor) {
         throw new UnsupportedOperationException("Not supported yet.");
     }    
 }

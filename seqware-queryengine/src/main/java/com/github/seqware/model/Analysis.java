@@ -41,7 +41,7 @@ public abstract class Analysis extends Atom implements QueryFuture {
     
     /**
      * Get the parameters for this particular creation of an analysis plug-in
-     * @return paramaters for the plugin
+     * @return parameters for the plugin
      */
     public Object[] getParameters(){
         return parameters;
