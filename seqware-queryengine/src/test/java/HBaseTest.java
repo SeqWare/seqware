@@ -1,17 +1,15 @@
 
 import java.io.IOException;
-
-import junit.framework.Assert;
-import org.junit.Test;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.junit.Test;
 
 public class HBaseTest {
+    public static final boolean TEST_REMOTELY = false;
     public static final String MY_LITTLE_H_BASE_TABLE = "myLittleHBaseTable";
 
     @Test
@@ -24,7 +22,13 @@ public class HBaseTest {
         // into your hbase-site.xml and in hbase-default.xml, as long as these can
         // be found on the CLASSPATH
         Configuration config = HBaseConfiguration.create();
-        //config.set("hbase.zookeeper.quorum", "sqwdev.res");
+        if (true){
+            config.clear();
+            config.set("hbase.zookeeper.quorum", "sqwdev.res");
+            config.set("hbase.zookeeper.property.clientPort","2181");
+            config.set("hbase.master", "sqwdev.res:60000");
+        }
+        
 
         // added code to create table and clean up after test 
         HTableDescriptor ht = new HTableDescriptor( MY_LITTLE_H_BASE_TABLE);

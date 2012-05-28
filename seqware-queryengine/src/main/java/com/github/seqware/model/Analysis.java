@@ -17,7 +17,7 @@ public abstract class Analysis extends Atom implements QueryFuture {
     /**
      * Create a new analysis
      *
-     * @param aPlugin an analysis must have an associated plugin that created/is
+     * @param plugin an analysis must have an associated plugin that created/is
      * creating its results
      */
     public Analysis(AnalysisPluginInterface plugin) {
@@ -41,7 +41,7 @@ public abstract class Analysis extends Atom implements QueryFuture {
     
     /**
      * Get the parameters for this particular creation of an analysis plug-in
-     * @return 
+     * @return paramaters for the plugin
      */
     public Object[] getParameters(){
         return parameters;

@@ -27,7 +27,7 @@ public abstract class AnalysisSet extends Molecule implements Iterable<Analysis>
     }
 
     /**
-     * The set of features this instance represents.
+     * The set of analysis this instance represents.
      *
      * @return get the set of Analysis events
      */
