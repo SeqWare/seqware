@@ -60,18 +60,20 @@ public class User extends Molecule<User> {
 
     /**
      * Change a User's password
+     *
      * @param password new password
      */
     public void setPassword(String password) {
         this.password = hashedPassword(password);
     }
-    
+
     /**
      * Check a user's password
+     *
      * @param password password login
      * @return true iff password is correct
      */
-    public boolean checkPassword(String password){
+    public boolean checkPassword(String password) {
         return this.password.equals(hashedPassword(password));
     }
 
@@ -104,7 +106,14 @@ public class User extends Molecule<User> {
 
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
+        // will cause recursion
+        //return EqualsBuilder.reflectionEquals(this, obj);
+        if (obj instanceof User) {
+            User other = (User) obj;
+            return this.firstName.equals(other.firstName) && this.lastName.equals(other.lastName)
+                    && this.emailAddress.equals(other.emailAddress);
+        }
+        return false;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.github.seqware.model.test;
 
 import com.github.seqware.factory.Factory;
 import com.github.seqware.model.*;
+import java.util.UUID;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -65,13 +66,21 @@ public class UserGroupTest {
 
     @Test
     public void testUserPasswordChanging(){
-        User n1 = new User(g1, "Cheung", "Man-Yuk", "cmy@googly.com", "ITMfL" );
+        String password1 = "ITMfL";
+        User n1 = new User(g1, "Cheung", "Man-Yuk", "cmy@googly.com", password1);
         n1.add();
+        UUID oldUUID = n1.getUUID();
         // check current User's password
-        Assert.assertTrue(n1.checkPassword("ITMfL"));  
-        n1.setPassword("2046");
+        Assert.assertTrue(n1.checkPassword(password1));  
+        String password2 = "2046";
+        n1.setPassword(password2);
         User n1_v1 = n1.update();
-        // check current User's password
-        Assert.assertTrue(n1_v1.checkPassword("2046"));  
+        // check new current User's password
+        Assert.assertTrue(n1_v1.checkPassword(password2));  
+        // check old User's password via Versionable interface
+        Assert.assertTrue(n1_v1.getPrecedingVersion().checkPassword(password1));  
+        // check old User's password by re-retrieving it
+        User oldN1 = (User) Factory.getFeatureStoreInterface().getParticleByUUID(oldUUID);
+        Assert.assertTrue(oldN1.checkPassword(password1));  
     }
 }
