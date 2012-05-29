@@ -82,20 +82,15 @@ public interface QueryInterface {
      */
     public QueryFuture getFeaturesByRange(FeatureSet set, Location location, long start, long stop, int hours);
 
+   
     /**
-     * filter features with tags. Specify the subject to get all Features that
-     * are tagged with a specific subject (and any values for the other two).
-     * Specify the subject and the predicate to get all Features that are tagged
-     * with the subject and predicate (and any values for the object). Specify
-     * the the subject, predicate, and object to get only Features tagged with
-     * all three.
-     *
-     * @param set parent FeatureSet
+     * filter features with tags.
+     * @param set parent feature set
      * @param hours minimum time to live
-     * @param tag subject or subject and predicate or subject and predicate and
-     * object
-     * @return featureSet with features filtered by tag subject, tag (subject
-     * and predicate), or tag (all parts)
+     * @param subject tag subject (always required)
+     * @param predicate may be null to get Tags with all predicates
+     * @param object may be null to get Tags with all (or no) objects 
+     * @return 
      */
-    public QueryFuture getFeaturesByTag(FeatureSet set, int hours, String... tag);
+    public QueryFuture getFeaturesByTag(FeatureSet set, int hours, String subject, String predicate, String object);
 }

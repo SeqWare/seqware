@@ -16,7 +16,10 @@
  */
 package com.github.seqware.factory;
 
+import com.github.seqware.model.Atom;
 import com.github.seqware.model.Particle;
+import com.github.seqware.model.Tag;
+import com.github.seqware.util.SeqWareIterable;
 import java.security.AccessControlException;
 
 /**
@@ -66,15 +69,49 @@ public interface BackEndInterface {
     public void delete(Particle obj) throws AccessControlException;
     
     /**
+     * Get the version of the particle
+     * @param obj current particle
+     * @return version (starts with version 1)
+     * @throws AccessControlException  if the user does not have permission to read this
+     */
+    public long getVersion(Particle obj) throws AccessControlException;
+    
+    /**
      * Get the preceding Version of a particle
      * @param obj current particle
      * @return current particle's parent
+     * @throws AccessControlException  if the user does not have permission to read this
      */
-    public Particle getPrecedingVersion(Particle obj);
+    public Particle getPrecedingVersion(Particle obj) throws AccessControlException;
 
     /**
      * Set the succeeding Version of a particle
      * @param predecessor  set current particle's parent
+     * @throws AccessControlException  if the user does not have permission to write to this
      */
-    public void setPrecedingVersion(Particle predecessor);  
+    public void setPrecedingVersion(Particle predecessor) throws AccessControlException;  
+    
+    /**
+     * Associate tag with object
+     * @param object object to be tagged
+     * @param tag tag to associate
+     * @throws AccessControlException  if the user does not have permission to write to this
+     */
+    public void associateTag(Atom object, Tag tag) throws AccessControlException;
+    
+    /**
+     * Dissociate tag with object
+     * @param object object to remove tags
+     * @param tag tag to dissociate
+     * @throws AccessControlException  if the user does not have permission to write to this
+     */
+    public void dissociateTag(Atom object, Tag tag) throws AccessControlException;
+    
+    /**
+     * Get iterable of tags for this atom
+     * @return iterable of tags
+     * @throws AccessControlException, if the user does not have read permission to the 
+     * object
+     */
+    public SeqWareIterable<Tag> getTags(Atom atom) throws AccessControlException;
 }

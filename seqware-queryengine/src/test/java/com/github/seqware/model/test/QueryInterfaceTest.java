@@ -66,11 +66,9 @@ public class QueryInterfaceTest {
         QueryFuture future = Factory.getQueryInterface().getFeaturesByType(aSet, "type1", 0);
         // check that Features are present match
         FeatureSet result = future.get();
-        int sum = 0;
         for (Feature f : result) {
-            sum++;
             Assert.assertTrue(f.getType().equals("type1"));
         }
-        Assert.assertTrue(sum == 1);
+        Assert.assertTrue(result.getCount() == 1);
     }
 }

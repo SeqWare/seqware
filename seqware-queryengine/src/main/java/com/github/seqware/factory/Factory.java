@@ -18,9 +18,7 @@ package com.github.seqware.factory;
 
 import com.github.seqware.impl.DumbBackEnd;
 import com.github.seqware.model.*;
-import com.github.seqware.model.impl.inMemory.InMemoryFeatureSet;
-import com.github.seqware.model.impl.inMemory.InMemoryReference;
-import com.github.seqware.model.impl.inMemory.InMemoryReferenceSet;
+import com.github.seqware.model.impl.inMemory.*;
 
 /**
  *
@@ -86,6 +84,30 @@ public class Factory {
     public static ReferenceSet buildReferenceSet(String name, String organism){
         if (BACKEND.equals(BACKEND_TYPE.IN_MEMORY)){
             return new InMemoryReferenceSet(name, organism);
+        } 
+        assert(false);
+        return null;
+    }
+    
+    public static TagSet buildTagSet(String name){
+        if (BACKEND.equals(BACKEND_TYPE.IN_MEMORY)){
+            return new InMemoryTagSet(name);
+        } 
+        assert(false);
+        return null;
+    }
+    
+    public static AnalysisSet buildAnalysisSet(String name, String desc) {
+        if (BACKEND.equals(BACKEND_TYPE.IN_MEMORY)){
+            return new InMemoryAnalysisSet(name, desc);
+        } 
+        assert(false);
+        return null;
+    }
+    
+    public static Analysis buildAnalysis(AnalysisPluginInterface api) {
+        if (BACKEND.equals(BACKEND_TYPE.IN_MEMORY)){
+            return new InMemoryAnalysis(api);
         } 
         assert(false);
         return null;

@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import com.github.seqware.util.SeqWareIterable;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -12,7 +13,7 @@ import java.util.Set;
  *
  * @author jbaran
  */
-public abstract class FeatureSet extends Molecule implements Iterable<Feature>{
+public abstract class FeatureSet extends Molecule implements SeqWareIterable<Feature>{
 
     /**
      * Associated reference.

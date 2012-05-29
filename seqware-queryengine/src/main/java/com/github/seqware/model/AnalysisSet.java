@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import com.github.seqware.util.SeqWareIterable;
 import java.util.Set;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Set;
  *
  * @author dyuen
  */
-public abstract class AnalysisSet extends Molecule implements Iterable<Analysis> {
+public abstract class AnalysisSet extends Molecule implements SeqWareIterable<Analysis> {
 
     private String name = "AnalysisSet name place-holder";
     private String description = "AnalysisSet descripion placeholder";

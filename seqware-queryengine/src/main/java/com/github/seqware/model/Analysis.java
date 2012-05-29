@@ -9,7 +9,7 @@ import java.util.Set;
  *
  * @author dyuen
  */
-public abstract class Analysis extends Atom implements QueryFuture {
+public abstract class Analysis extends Particle implements QueryFuture {
 
     private Object[] parameters;
     private AnalysisPluginInterface plugin;

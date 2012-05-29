@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import com.github.seqware.util.SeqWareIterable;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -10,7 +11,7 @@ import java.util.Set;
  * @author dyuen
  * @author jbaran
  */
-public abstract class ReferenceSet extends Molecule implements Iterable<Reference>{
+public abstract class ReferenceSet extends Molecule implements SeqWareIterable<Reference>{
     
     private String name;
     private String organism;

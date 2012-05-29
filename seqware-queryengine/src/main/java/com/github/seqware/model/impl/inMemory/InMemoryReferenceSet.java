@@ -41,7 +41,13 @@ public class InMemoryReferenceSet extends ReferenceSet {
         return new InMemoryIterator<Reference>(references.iterator());
     }
 
+    @Override
     public Iterator<Reference> iterator() {
         return this.getReferences();
+    }
+
+    @Override
+    public long getCount() {
+        return references.size();
     }
 }

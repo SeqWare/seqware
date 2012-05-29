@@ -20,7 +20,10 @@ import com.github.seqware.factory.BackEndInterface;
 import com.github.seqware.model.*;
 import com.github.seqware.model.impl.inMemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.model.impl.inMemory.InMemoryFeaturesByReferencePlugin;
+import com.github.seqware.model.impl.inMemory.InMemoryFeaturesByTagPlugin;
 import com.github.seqware.model.impl.inMemory.InMemoryFeaturesByTypePlugin;
+import com.github.seqware.util.InMemoryIterable;
+import com.github.seqware.util.SeqWareIterable;
 import java.security.AccessControlException;
 import java.util.*;
 import org.apache.commons.lang.SerializationUtils;
@@ -35,6 +38,14 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
 
     private List<Particle> listOfEverything = new ArrayList<Particle>();
     private Map<UUID, UUID> versionsOfEverything = new HashMap<UUID, UUID>();
+    private Map<UUID, Set<UUID>> taggedWith = new HashMap<UUID, Set<UUID>>();
+    private List<AnalysisPluginInterface> apis = new ArrayList<AnalysisPluginInterface>();
+
+    public DumbBackEnd() {
+        apis.add(new InMemoryFeaturesAllPlugin());
+        apis.add(new InMemoryFeaturesByReferencePlugin());
+        apis.add(new InMemoryFeaturesByTypePlugin());
+    }
 
     @Override
     public void store(Particle obj) throws AccessControlException {
@@ -81,53 +92,47 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
     }
 
     @Override
-    public Iterable<User> getUsers() {
+    public SeqWareIterable<User> getUsers() {
         return getAllOfClass(User.class);
     }
 
     @Override
-    public Iterable<Group> getGroups() {
+    public SeqWareIterable<Group> getGroups() {
         return getAllOfClass(Group.class);
     }
 
     @Override
-    public Iterable<ReferenceSet> getReferenceSets() {
+    public SeqWareIterable<ReferenceSet> getReferenceSets() {
         return getAllOfClass(ReferenceSet.class);
     }
 
     @Override
-    public Iterable<FeatureSet> getFeatureSets() {
+    public SeqWareIterable<FeatureSet> getFeatureSets() {
         return getAllOfClass(FeatureSet.class);
     }
 
     @Override
-    public Iterable<TagSet> getTagSets() {
+    public SeqWareIterable<TagSet> getTagSets() {
         return getAllOfClass(TagSet.class);
     }
 
     @Override
-    public Iterable<Tag> getTags() {
+    public SeqWareIterable<Tag> getTags() {
         return getAllOfClass(Tag.class);
     }
 
     @Override
-    public Iterable<AnalysisSet> getAnalysisSets() {
+    public SeqWareIterable<AnalysisSet> getAnalysisSets() {
         return getAllOfClass(AnalysisSet.class);
     }
 
     @Override
-    public Iterable<AnalysisPluginInterface> getAnalysisPlugins() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public SeqWareIterable<AnalysisPluginInterface> getAnalysisPlugins() {
+        return new InMemoryIterable(this.apis);
     }
 
     @Override
     public QueryFuture getFeaturesByType(FeatureSet set, String type, int hours) {
-//        InMemoryFeatureSet fSet = new InMemoryFeatureSet(set.getReference());
-//        for (Feature f : set){
-//            if (f.getType().equals(type)){
-//                fSet.add(f);
-//            }
-//        }
         AnalysisPluginInterface plugin = new InMemoryFeaturesByTypePlugin();
         plugin.init(set, type);
         return new QueryFutureImpl(plugin);
@@ -135,13 +140,6 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
 
     @Override
     public QueryFuture getFeatures(FeatureSet set, int hours) {
-        //       InMemoryFeatureSet fSet = new InMemoryFeatureSet(set.getReference());
-
-//        for (Object obj : set) {
-//            if (obj instanceof Feature) {
-//                fSet.add((Feature) obj);
-//            }
-//        }
         AnalysisPluginInterface plugin = new InMemoryFeaturesAllPlugin();
         plugin.init(set);
         return new QueryFutureImpl(plugin);
@@ -149,12 +147,6 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
 
     @Override
     public QueryFuture getFeaturesByReference(FeatureSet set, Reference reference, int hours) {
-//       InMemoryFeatureSet fSet = new InMemoryFeatureSet(set.getReference());
-//        for (Object obj : set) {
-//            if (obj instanceof Feature) {
-//                fSet.add((Feature) obj);
-//            }
-//        }
         AnalysisPluginInterface plugin = new InMemoryFeaturesByReferencePlugin();
         plugin.init(set);
         return new QueryFutureImpl(plugin);
@@ -164,20 +156,22 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
     public QueryFuture getFeaturesByRange(FeatureSet set, Location location, long start, long stop, int hours) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
+    
     @Override
-    public QueryFuture getFeaturesByTag(FeatureSet set, int hours, String... tag) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public QueryFuture getFeaturesByTag(FeatureSet set, int hours, String subject, String predicate, String object) {
+        AnalysisPluginInterface plugin = new InMemoryFeaturesByTagPlugin();
+        plugin.init(set, subject, predicate, object);
+        return new QueryFutureImpl(plugin);
     }
 
-    private Iterable getAllOfClass(Class aClass) {
+    private SeqWareIterable getAllOfClass(Class aClass) {
         List list = new ArrayList();
         for (Particle p : listOfEverything) {
             if (aClass.isInstance(p)) {
                 list.add(p);
             }
         }
-        return list;
+        return new InMemoryIterable(list);
     }
 
     @Override
@@ -188,6 +182,45 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
     @Override
     public void setPrecedingVersion(Particle predecessor) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void associateTag(Atom object, Tag tag) {
+        if (!taggedWith.containsKey(object.getUUID())) {
+            taggedWith.put(object.getUUID(), new HashSet<UUID>());
+        }
+        taggedWith.get(object.getUUID()).add(tag.getUUID());
+    }
+
+    @Override
+    public void dissociateTag(Atom object, Tag tag) {
+        if (taggedWith.containsKey(object.getUUID())) {
+            Set<UUID> set = taggedWith.get(object.getUUID());
+            set.remove(tag.getUUID());
+        }
+
+    }
+
+    @Override
+    public SeqWareIterable<Tag> getTags(Atom atom) throws AccessControlException {
+        List<Tag> tags = new ArrayList<Tag>();
+        Set<UUID> set = taggedWith.get(atom.getUUID());
+        if (set == null) {
+            return new InMemoryIterable(tags);
+        }
+        for (UUID uid : set) {
+            tags.add((Tag) this.getParticleByUUID(uid));
+        }
+        return  new InMemoryIterable(tags);
+    }
+
+    @Override
+    public long getVersion(Particle obj) throws AccessControlException {
+        Particle parent = this.getPrecedingVersion(obj);
+        if (parent != null) {
+            return 1 + this.getVersion(obj);
+        }
+        return 1;
     }
 
     /**

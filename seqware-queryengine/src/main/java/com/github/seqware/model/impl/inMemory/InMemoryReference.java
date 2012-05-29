@@ -7,7 +7,7 @@ import java.util.Iterator;
 /**
  * An in-memory representation of a reference.
  *
- * @author jbaran
+ * @author dyuen
  */
 public class InMemoryReference extends Reference {
     

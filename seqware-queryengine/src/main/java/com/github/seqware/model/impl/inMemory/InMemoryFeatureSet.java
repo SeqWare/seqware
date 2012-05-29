@@ -42,8 +42,14 @@ public class InMemoryFeatureSet extends FeatureSet {
         return new InMemoryIterator<Feature>(features.iterator());
     }
 
+    @Override
     public Iterator<Feature> iterator() {
         return getFeatures();
+    }
+
+    @Override
+    public long getCount() {
+        return features.size();
     }
 
 

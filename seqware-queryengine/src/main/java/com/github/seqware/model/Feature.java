@@ -16,7 +16,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @author dyuen
  * @author jbaran
  */
-public class Feature extends Atom {
+public class Feature extends Atom<Feature> {
 
     /**
      * Strand locations of features.

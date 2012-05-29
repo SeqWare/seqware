@@ -31,14 +31,16 @@ public class ACL extends Particle implements ACLable {
      * @throws SecurityException Thrown when the current ACL context does not
      * permit getting a new ACL instance.
      */
-    public ACL getInstance() throws SecurityException {
+    public static ACL getInstance() throws SecurityException {
         return new ACL();
     }
 
+    @Override
     public ACL getPermissions() {
         return this;
     }
 
+    @Override
     public void setPermissions(ACL acl) {
         throw new SecurityException("No one has currently access to set permissions.");
     }
