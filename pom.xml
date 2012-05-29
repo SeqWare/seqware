@@ -24,6 +24,7 @@
         </plugins>
     </build>
     
+<!-- uncomment and set an appropriate path if you have the yworks uml doclet
     <reporting> 
         <plugins>
             <plugin>
@@ -38,6 +39,7 @@
             </plugin>
         </plugins>
     </reporting> 
+-->
 
     <modules>
         <module>seqware-queryengine</module>
