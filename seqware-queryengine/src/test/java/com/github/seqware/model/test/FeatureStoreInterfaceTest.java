@@ -4,8 +4,7 @@ import com.github.seqware.factory.Factory;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import com.github.seqware.model.impl.inMemory.InMemoryFeatureSet;
-import com.github.seqware.model.Reference;
-import java.util.Iterator;
+import com.github.seqware.model.impl.inMemory.InMemoryReference;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,12 +18,7 @@ public class FeatureStoreInterfaceTest {
 
     @Test
     public void testFeatureCreationAndIterate() {
-        InMemoryFeatureSet aSet = new InMemoryFeatureSet(new Reference("testing dummy reference") {
-            @Override
-            public Iterator<FeatureSet> featureSets() {
-                return null;
-            }
-        });
+        InMemoryFeatureSet aSet = new InMemoryFeatureSet(new InMemoryReference());
         aSet.add();
         // create and store some features
         Feature a1 = new Feature(aSet, 1000000, 1000100);
@@ -36,6 +30,7 @@ public class FeatureStoreInterfaceTest {
         a1.add();
         a2.add();
         a3.add();
+        aSet.update();
         // get FeatureSets from the back-end
         boolean b1 = false;
         boolean b2 = false;

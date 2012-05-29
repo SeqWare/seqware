@@ -1,11 +1,11 @@
 package com.github.seqware.model;
 
 import com.github.seqware.factory.Factory;
-import com.github.seqware.impl.DumbBackEnd;
 import java.io.Serializable;
 import java.security.AccessControlException;
 import java.util.Date;
 import java.util.UUID;
+import org.apache.commons.lang.SerializationUtils;
 
 /**
  * Core functionality for all objects that will need to be tracked within the
@@ -14,7 +14,7 @@ import java.util.UUID;
  *
  * @author dyuen
  */
-public abstract class Particle<T> implements Serializable{
+public abstract class Particle<T extends Particle> implements Serializable {
 
     /**
      * Internally used unique identifier of this feature.
@@ -24,6 +24,23 @@ public abstract class Particle<T> implements Serializable{
     protected Particle() {
         // TODO This will have to be replaced with a stronger UUID generation method.
         this.uuid = UUID.randomUUID();
+    }
+
+    /**
+     * Copy constructor, used to generate a shallow copy of a particle with a
+     * new UUID
+     *
+     * @param particle
+     */
+    public T copy(boolean newUUID) {
+        UUID oldUUID = this.uuid;
+        // TODO This will have to be replaced with a stronger UUID generation method.
+        if (newUUID){
+            this.uuid = UUID.randomUUID();
+        }
+        T newParticle = (T)SerializationUtils.clone(this);
+        this.uuid = oldUUID;
+        return newParticle;
     }
 
     /**
@@ -48,7 +65,7 @@ public abstract class Particle<T> implements Serializable{
      * user may wish to subsequently work on
      */
     public T update() throws AccessControlException {
-        return (T)Factory.getBackEnd().update(this);
+        return (T) Factory.getBackEnd().update(this);
     }
 
     /**
@@ -61,7 +78,7 @@ public abstract class Particle<T> implements Serializable{
      * information
      */
     public T refresh() throws AccessControlException {
-        return (T)Factory.getBackEnd().refresh(this);
+        return (T) Factory.getBackEnd().refresh(this);
     }
 
     /**
@@ -81,14 +98,6 @@ public abstract class Particle<T> implements Serializable{
      */
     public UUID getUUID() {
         return this.uuid;
-    }
-    
-    /**
-     * For testing purposes, should NOT be called normally
-     */
-    public void regenerateUUID() {
-        assert(Factory.getBackEnd() instanceof DumbBackEnd);
-        this.uuid = UUID.randomUUID();
     }
 
     /**

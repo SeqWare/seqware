@@ -23,8 +23,6 @@ import com.github.seqware.model.impl.inMemory.InMemoryFeaturesByReferencePlugin;
 import com.github.seqware.model.impl.inMemory.InMemoryFeaturesByTypePlugin;
 import java.security.AccessControlException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.lang.SerializationUtils;
 
 /**
@@ -36,24 +34,22 @@ import org.apache.commons.lang.SerializationUtils;
 public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, QueryInterface {
 
     private List<Particle> listOfEverything = new ArrayList<Particle>();
-    private Map<UUID, List<UUID>> versionsOfEverything = new HashMap<UUID, List<UUID>>(); 
+    private Map<UUID, UUID> versionsOfEverything = new HashMap<UUID, UUID>(); 
 
     public void store(Particle obj) throws AccessControlException {
         if (!listOfEverything.contains(obj)) {
-            listOfEverything.add(obj);
-            versionsOfEverything.put(obj.getUUID(), new ArrayList<UUID>());
+            // let's just clone everything on store to simulate hbase
+            Particle storeObj = (Particle)SerializationUtils.clone(obj);
+            listOfEverything.add(storeObj);
+            versionsOfEverything.put(storeObj.getUUID(), null);
         }
     }
 
     public Particle update(Particle obj) throws AccessControlException {
-        List<UUID> oldList = versionsOfEverything.get(obj.getUUID());
-        oldList.add(obj.getUUID());
-        versionsOfEverything.remove(obj.getUUID());
         // create new particle
-        Particle newParticle = (Particle)SerializationUtils.clone(obj);
-        // we need a new UUID for the particle
-        newParticle.regenerateUUID();
-        versionsOfEverything.put(newParticle.getUUID(), oldList);
+        Particle newParticle = obj.copy(true);
+        this.store(newParticle);
+        versionsOfEverything.put(newParticle.getUUID(), obj.getUUID());
         return newParticle;
     }
 
@@ -163,6 +159,14 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
             }
         }
         return list;
+    }
+
+    public Particle getPrecedingVersion(Particle obj) {
+        return this.getParticleByUUID(this.versionsOfEverything.get(obj.getUUID()));
+    }
+
+    public void setPrecedingVersion(Particle predecessor) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public class QueryFutureImpl extends Analysis {

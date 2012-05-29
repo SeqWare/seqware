@@ -1,5 +1,7 @@
 package com.github.seqware.model;
 
+import com.github.seqware.factory.Factory;
+
 /**
  * Implements core functionality that is shared by classes that are
  * controlled by permissions and versionable (as well as Taggable)
@@ -9,7 +11,7 @@ package com.github.seqware.model;
  *
  * @author dyuen
  */
-public abstract class Molecule<T extends Versionable> extends Atom<T> implements ACLable, Versionable<T> {
+public abstract class Molecule<T extends Molecule> extends Atom<T> implements ACLable, Versionable<T> {
     
     public ACL getPermissions() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -28,7 +30,7 @@ public abstract class Molecule<T extends Versionable> extends Atom<T> implements
     }
 
     public T getPrecedingVersion() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return (T) Factory.getBackEnd().getPrecedingVersion(this);
     }
 
     public void setPrecedingVersion(T predecessor) {

@@ -22,7 +22,7 @@ public class HBaseTest {
         // into your hbase-site.xml and in hbase-default.xml, as long as these can
         // be found on the CLASSPATH
         Configuration config = HBaseConfiguration.create();
-        if (true){
+        if (TEST_REMOTELY){
             config.clear();
             config.set("hbase.zookeeper.quorum", "sqwdev.res");
             config.set("hbase.zookeeper.property.clientPort","2181");
@@ -108,8 +108,8 @@ public class HBaseTest {
         }
         
         // clean-up
-        //hba.disableTable(MY_LITTLE_H_BASE_TABLE);
-        //hba.deleteTable(MY_LITTLE_H_BASE_TABLE);
+        hba.disableTable(MY_LITTLE_H_BASE_TABLE);
+        hba.deleteTable(MY_LITTLE_H_BASE_TABLE);
 
     }
 }
