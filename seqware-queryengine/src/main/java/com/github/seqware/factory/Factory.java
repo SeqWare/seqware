@@ -17,8 +17,10 @@
 package com.github.seqware.factory;
 
 import com.github.seqware.impl.DumbBackEnd;
-import com.github.seqware.model.FeatureStoreInterface;
-import com.github.seqware.model.QueryInterface;
+import com.github.seqware.model.*;
+import com.github.seqware.model.impl.inMemory.InMemoryFeatureSet;
+import com.github.seqware.model.impl.inMemory.InMemoryReference;
+import com.github.seqware.model.impl.inMemory.InMemoryReferenceSet;
 
 /**
  *
@@ -26,6 +28,9 @@ import com.github.seqware.model.QueryInterface;
  */
 public class Factory {
     
+    public enum BACKEND_TYPE {IN_MEMORY, HBASE};
+    
+    public static BACKEND_TYPE BACKEND = BACKEND_TYPE.IN_MEMORY;
     private static BackEndInterface instance = null;
         
     /**
@@ -60,5 +65,29 @@ public class Factory {
             instance = new DumbBackEnd();
         }
         return (FeatureStoreInterface)instance; 
+    }
+    
+    public static FeatureSet buildFeatureSet(Reference ref){
+        if (BACKEND.equals(BACKEND_TYPE.IN_MEMORY)){
+            return new InMemoryFeatureSet(ref);
+        } 
+        assert(false);
+        return null;
+    }
+    
+    public static Reference buildReference(String name){
+        if (BACKEND.equals(BACKEND_TYPE.IN_MEMORY)){
+            return new InMemoryReference(name);
+        } 
+        assert(false);
+        return null;
+    }
+    
+    public static ReferenceSet buildReferenceSet(String name, String organism){
+        if (BACKEND.equals(BACKEND_TYPE.IN_MEMORY)){
+            return new InMemoryReferenceSet(name, organism);
+        } 
+        assert(false);
+        return null;
     }
 }

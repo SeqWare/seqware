@@ -18,7 +18,7 @@ public class FeatureStoreInterfaceTest {
 
     @Test
     public void testFeatureCreationAndIterate() {
-        InMemoryFeatureSet aSet = new InMemoryFeatureSet(new InMemoryReference());
+        FeatureSet aSet = Factory.buildFeatureSet(Factory.buildReference("Dummy ref"));
         aSet.add();
         // create and store some features
         Feature a1 = new Feature(aSet, 1000000, 1000100);

@@ -30,15 +30,15 @@ public abstract class Particle<T extends Particle> implements Serializable {
      * Copy constructor, used to generate a shallow copy of a particle with a
      * new UUID
      *
-     * @param particle
+     * @param newUUID whether or not to generate a new UUID for the new copy
      */
     public T copy(boolean newUUID) {
         UUID oldUUID = this.uuid;
         // TODO This will have to be replaced with a stronger UUID generation method.
-        if (newUUID){
+        if (newUUID) {
             this.uuid = UUID.randomUUID();
         }
-        T newParticle = (T)SerializationUtils.clone(this);
+        T newParticle = (T) SerializationUtils.clone(this);
         this.uuid = oldUUID;
         return newParticle;
     }

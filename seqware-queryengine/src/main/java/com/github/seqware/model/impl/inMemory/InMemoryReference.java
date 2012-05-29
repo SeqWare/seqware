@@ -10,6 +10,14 @@ import java.util.Iterator;
  * @author jbaran
  */
 public class InMemoryReference extends Reference {
+    
+    /**
+     * Construct reference with a name
+     * @param name reference with a name
+     */
+    public InMemoryReference(String name){
+        super(name);
+    }
 
     @Override
     public Iterator<FeatureSet> featureSets() {

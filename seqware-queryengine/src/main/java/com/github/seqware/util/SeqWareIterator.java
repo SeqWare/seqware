@@ -7,10 +7,6 @@ import java.util.Iterator;
  *
  * Uses a Delegation Pattern to call implementation (*Impl) methods for specific database implementations.
  *
- * TODO:
- * - need to make this support generics
- * - need to hide anything from BerkeleyDB
- *
  * @author boconnor
  * @author jbaran
  */
@@ -54,6 +50,7 @@ public abstract class SeqWareIterator<T> implements Iterator<T> {
      *
      * @return Returns true if more items are available, otherwise returns false.
      */
+    @Override
     public final boolean hasNext() {
         if (!this.hasNextImpl() && !this.closed) {
             this.closed = true;
@@ -68,6 +65,7 @@ public abstract class SeqWareIterator<T> implements Iterator<T> {
      *
      * @return Next item.
      */
+    @Override
     public final T next() {
         this.hasNext(); // Ensures that the iterator is closed -- if no more elements are present.
 
@@ -77,6 +75,7 @@ public abstract class SeqWareIterator<T> implements Iterator<T> {
     /**
      * Removal of subjects cannot be done implicitly from an iterator -- this method is not supported.
      */
+    @Override
     public final void remove() {
         throw new UnsupportedOperationException("Removal is not supported through iterators.");
     }

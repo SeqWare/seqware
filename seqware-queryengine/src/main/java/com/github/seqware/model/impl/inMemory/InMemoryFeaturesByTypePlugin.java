@@ -20,7 +20,9 @@ import com.github.seqware.model.AnalysisPluginInterface;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import com.github.seqware.model.Reference;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  *
@@ -32,36 +34,44 @@ public class InMemoryFeaturesByTypePlugin implements AnalysisPluginInterface {
     private String type;
     private Set<Feature> accumulator = new HashSet<Feature>();
 
+    @Override
     public ReturnValue init(FeatureSet set, Object ... parameters) {
         this.set = set;
         this.type = (String)parameters[0];
         return new ReturnValue();
     }
 
+    @Override
     public ReturnValue test() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public ReturnValue verifyParameters() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public ReturnValue verifyInput() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public ReturnValue filterInit() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public ReturnValue filter() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public ReturnValue mapInit() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public ReturnValue map() {
         for (Feature f : set) {
             if (f.getType().equals(type)) {
@@ -71,23 +81,28 @@ public class InMemoryFeaturesByTypePlugin implements AnalysisPluginInterface {
         return new ReturnValue();
     }
 
+    @Override
     public ReturnValue reduceInit() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public ReturnValue reduce() {
         // doesn't really do anything
         return new ReturnValue();
     }
 
+    @Override
     public ReturnValue verifyOutput() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public ReturnValue cleanup() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public FeatureSet getFinalResult() {
         InMemoryFeatureSet fSet = new InMemoryFeatureSet(new Reference(){
             @Override

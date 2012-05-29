@@ -1,7 +1,8 @@
 package com.github.seqware.model.test;
 
 import com.github.seqware.factory.Factory;
-import com.github.seqware.model.*;
+import com.github.seqware.model.Group;
+import com.github.seqware.model.User;
 import java.util.UUID;
 import org.junit.Assert;
 import org.junit.BeforeClass;

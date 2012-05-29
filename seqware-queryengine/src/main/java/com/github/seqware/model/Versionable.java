@@ -1,7 +1,5 @@
 package com.github.seqware.model;
 
-import java.security.AccessControlException;
-
 /**
  * Interface for versioning, versions are automatically generated and iterated
  * when a new entity is derived from a parent entity. 

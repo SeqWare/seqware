@@ -1,5 +1,6 @@
 package com.github.seqware.model.test;
 
+import com.github.seqware.factory.Factory;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import com.github.seqware.model.Reference;
@@ -19,12 +20,7 @@ public class FeatureSetTest {
 
     @Test
     public void testConsistentStorageSingleFeatures() {
-        FeatureSet aSet = new InMemoryFeatureSet(new Reference("testing dummy reference") {
-            @Override
-            public Iterator<FeatureSet> featureSets() {
-                return null;
-            }
-        });
+        FeatureSet aSet = Factory.buildFeatureSet(Factory.buildReference("Dummy ref"));
 
         Set<Feature> testFeatures = new HashSet<Feature>();
 

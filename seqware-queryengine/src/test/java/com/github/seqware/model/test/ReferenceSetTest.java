@@ -1,5 +1,6 @@
 package com.github.seqware.model.test;
 
+import com.github.seqware.factory.Factory;
 import com.github.seqware.model.impl.inMemory.InMemoryReferenceSet;
 import com.github.seqware.model.*;
 import org.junit.Assert;
@@ -18,25 +19,13 @@ public class ReferenceSetTest {
 
     @Test
     public void testConsistentStorageSingleFeatures() {
-        ReferenceSet aSet = new InMemoryReferenceSet("Human", "Homo Sapiens");
+        ReferenceSet aSet = Factory.buildReferenceSet("Human", "Homo Sapiens");
 
         Set<Reference> testReferences = new HashSet<Reference>();
 
-        testReferences.add(new Reference() {
-            public Iterator<FeatureSet> featureSets() {
-                return null;
-            }
-        });
-        testReferences.add(new Reference() {
-            public Iterator<FeatureSet> featureSets() {
-                return null;
-            }
-        });
-        testReferences.add(new Reference() {
-            public Iterator<FeatureSet> featureSets() {
-                return null;
-            }
-        });
+        testReferences.add(Factory.buildReference("Dummy reference1"));
+        testReferences.add(Factory.buildReference("Dummy reference2"));
+        testReferences.add(Factory.buildReference("Dummy reference3"));
 
         for (Reference testReference : testReferences)
             aSet.add(testReference);

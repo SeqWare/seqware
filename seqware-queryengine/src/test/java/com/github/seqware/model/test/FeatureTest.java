@@ -1,5 +1,6 @@
 package com.github.seqware.model.test;
 
+import com.github.seqware.factory.Factory;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import com.github.seqware.model.impl.inMemory.InMemoryFeatureSet;
@@ -16,17 +17,11 @@ import org.junit.Test;
  */
 public class FeatureTest {
 
-    private static InMemoryFeatureSet aSet;
+    private static FeatureSet aSet;
 
     @BeforeClass
     public static void setupTests() {
-        aSet = new InMemoryFeatureSet(new Reference("testing dummy reference") {
-
-            @Override
-            public Iterator<FeatureSet> featureSets() {
-                return null;
-            }
-        });
+        aSet = Factory.buildFeatureSet(Factory.buildReference("Dummy ref"));
     }
 
     @Test

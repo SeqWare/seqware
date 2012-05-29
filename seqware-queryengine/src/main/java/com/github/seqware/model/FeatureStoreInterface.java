@@ -1,6 +1,5 @@
 package com.github.seqware.model;
 
-import java.util.Iterator;
 import java.util.UUID;
 
 /**
@@ -8,10 +7,6 @@ import java.util.UUID;
  * Update (and add) methods moved to Particle,
  * Query methods are in QueryInterface,
  * ACL Methods are in ACLable.
- * 
- * TODO: For queries and iteration classes, should we allows users to either
- * specify all X or just current (i.e. last) X due to copy-on-write's ability to
- * create many many objects 
  * 
  * @author dyuen
  */

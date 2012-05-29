@@ -18,17 +18,12 @@ import org.junit.Test;
  */
 public class QueryInterfaceTest {
 
-    private static InMemoryFeatureSet aSet;
+    private static FeatureSet aSet;
     private static Feature a1, a2, a3, a4;
 
     @BeforeClass
     public static void setupTests() {
-        aSet = new InMemoryFeatureSet(new Reference("testing dummy reference") {
-            @Override
-            public Iterator<FeatureSet> featureSets() {
-                return null;
-            }
-        });
+        aSet = Factory.buildFeatureSet(Factory.buildReference("Dummy ref"));
         // create and store some features
         a1 = new Feature(aSet, 1000000, 1000100, Feature.Strand.NEGATIVE, "type1", 100.0, "Program A", "pragma", ".");
         a2 = new Feature(aSet, 1000001, 1000101, Feature.Strand.POSITIVE, "type2", 80.0, "Program A", "pragma", ".");

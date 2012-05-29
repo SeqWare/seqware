@@ -66,15 +66,15 @@ public interface BackEndInterface {
     public void delete(Particle obj) throws AccessControlException;
     
     /**
-     * 
-     * @param obj
-     * @return 
+     * Get the preceding Version of a particle
+     * @param obj current particle
+     * @return current particle's parent
      */
     public Particle getPrecedingVersion(Particle obj);
 
     /**
-     * 
-     * @param predecessor 
+     * Set the succeeding Version of a particle
+     * @param predecessor  set current particle's parent
      */
     public void setPrecedingVersion(Particle predecessor);  
 }

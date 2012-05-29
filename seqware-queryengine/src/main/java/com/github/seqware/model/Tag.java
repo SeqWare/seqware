@@ -5,7 +5,7 @@ package com.github.seqware.model;
  * in a GVF (ex: ID=ID_1 or Variant_seq=A,G or Reference_seq=G ).
  * 
  * Tags themselves are immutable (and thus do not
- * need Versionable) but adding and removing tags on objects is 
+ * need {@link Versionable} but adding and removing tags on objects is 
  * of course possible given the right permissions
  * @author dyuen
  */
