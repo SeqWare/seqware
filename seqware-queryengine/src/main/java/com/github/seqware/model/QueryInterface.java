@@ -90,7 +90,7 @@ public interface QueryInterface {
      * @param subject tag subject (always required)
      * @param predicate may be null to get Tags with all predicates
      * @param object may be null to get Tags with all (or no) objects 
-     * @return 
+     * @return featureSet with features filtered by tags
      */
     public QueryFuture getFeaturesByTag(FeatureSet set, int hours, String subject, String predicate, String object);
 }
