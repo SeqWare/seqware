@@ -19,8 +19,11 @@
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase</artifactId>
-            <version>0.92.1</version>
-            <!-- In-house version: <version>0.90.6-cdh3u4</version> -->
+            <!-- current public version 
+		<version>0.92.1</version> 
+            -->
+            <!-- current Cloudera stable -->
+            <version>0.90.6-cdh3u4</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.xml.bind</groupId>
@@ -35,14 +38,20 @@
         <dependency>
             <artifactId>hadoop-core</artifactId>
             <groupId>org.apache.hadoop</groupId>
-            <version>1.0.3</version>
-            <!-- In-house version: <version>0.20.2-cdh3u4</version> -->
+            <!-- current public version 
+		<version>1.0.3</version> 
+   		-->
+            <!-- current Cloudera stable -->
+            <version>0.20.2-cdh3u4</version>
         </dependency>
         <dependency>
             <artifactId>hadoop-tools</artifactId>
             <groupId>org.apache.hadoop</groupId>
-            <version>1.0.3</version>
-            <!-- In-house version: <version>0.20.2-cdh3u4</version> -->
+            <!-- current public version 
+		<version>1.0.3</version>
+	    -->
+            <!-- current Cloudera stable -->
+            <version>0.20.2-cdh3u4</version>
         </dependency>
 
         <dependency>

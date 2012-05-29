@@ -17,12 +17,27 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
-            <source>1.5</source>
-            <target>1.5</target>
+            <source>1.6</source>
+            <target>1.6</target>
             </configuration>
             </plugin>
         </plugins>
     </build>
+    
+    <reporting> 
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                <doclet>ydoc.doclets.YStandard</doclet>
+                <docletPath>/home/dyuen/Downloads/yworks-uml-doclet-3.0_02-jdk1.5/lib/ydoc.jar:/home/dyuen/Downloads/yworks-uml-doclet-3.0_02-jdk1.5/resources</docletPath>
+                <additionalparam>-umlautogen</additionalparam>
+                </configuration>
+                <version>3.0</version>
+            </plugin>
+        </plugins>
+    </reporting> 
 
     <modules>
         <module>seqware-queryengine</module>
