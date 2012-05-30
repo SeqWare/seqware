@@ -1,6 +1,6 @@
 AUTHOR:       boconnor@gmail.com
 PROJECT:      SeqWare Query Engine
-LAST UPDATED: 20120407
+LAST UPDATED: 20120530
 
 REQUIREMENTS
 
@@ -32,6 +32,9 @@ above.
 
 DESCRIPTION
 
+This project is the legacy seqware query engine, which is currently being used 
+as a guide to and an inspiration for the current seqware query engine. 
+
 Everything beyond this point is fairly dated, probably quite out of date and
 not helpful (we're not using ant anymore for example). It was originally
 written in 2009 and a lot has changed since then...
@@ -51,25 +54,25 @@ The first goal of this project is to model the "pileup" output from the SAM
 toolchain as binary files (BBED/BWIG).  Overall, what feeds into the query
 engine looks like:
 
-sequencing of sample
+    sequencing of sample
         |
         V
-sequence in SRF format
+    sequence in SRF format
         |
         V
-alignment
+    alignment
         |
         V
-alignment output in binary SAM (BAM) format
+    alignment output in binary SAM (BAM) format
         |
         V
-SNP/indel calls using SAM Tools pileup command
+    SNP/indel calls using SAM Tools pileup command
         |
         V
-pileup to BBED/BWIG format
+    pileup to BBED/BWIG format
         |
         V
-loading files into "query engine"
+    loading files into "query engine"
 
 These BBED/BWIG files are built using Berkeley DB but could also use a real
 database.  They represent an efficient way of storing and querying the
