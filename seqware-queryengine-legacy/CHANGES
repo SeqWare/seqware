@@ -1,0 +1,4 @@
+0.5.0
+* For the BerkeleyDB backend a new index is created (incremented) upon insert of a new model into one of the databases (tables).  However, for the HBase backend I'm using contig + start position as a text string for the ID.  This seems a little odd but HBase (as far as I can tell) doesn't let you generate IDs and by using location as ID all the "close" variants will be stored on the same datanode. Also, the HBase backend stores multiple genomes in the same database so this isn't really a unique ID, just the location to store this variant.
+
+

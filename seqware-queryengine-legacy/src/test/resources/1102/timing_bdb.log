@@ -1,0 +1,469 @@
+
+
+Timing chr22
+ +loading database...
+
+real	3m22.018s
+user	2m19.283s
+sys	0m7.953s
+ +dumping database...
+
+real	0m6.809s
+user	0m8.339s
+sys	0m0.419s
+ +counting lines...
+178653 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+791M	/tmp/bdb_test
+
+
+Timing chr21
+ +loading database...
+
+real	4m3.092s
+user	2m30.262s
+sys	0m6.706s
+ +dumping database...
+
+real	0m12.737s
+user	0m13.064s
+sys	0m0.676s
+ +counting lines...
+365093 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+1.6G	/tmp/bdb_test
+
+
+Timing chr20
+ +loading database...
+
+real	6m51.467s
+user	4m17.861s
+sys	0m11.535s
+ +dumping database...
+
+real	0m22.166s
+user	0m22.790s
+sys	0m1.232s
+ +counting lines...
+668629 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+3.5G	/tmp/bdb_test
+
+
+Timing chr19
+ +loading database...
+
+real	6m56.252s
+user	4m27.522s
+sys	0m12.896s
+ +dumping database...
+
+real	1m0.475s
+user	0m34.321s
+sys	0m1.856s
+ +counting lines...
+1006433 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+5.3G	/tmp/bdb_test
+
+
+Timing chr18
+ +loading database...
+
+real	10m40.038s
+user	5m25.621s
+sys	0m14.605s
+ +dumping database...
+
+real	0m46.670s
+user	0m45.196s
+sys	0m2.291s
+ +counting lines...
+1392179 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+7.6G	/tmp/bdb_test
+
+
+Timing chr17
+ +loading database...
+
+real	11m18.809s
+user	5m50.320s
+sys	0m16.158s
+ +dumping database...
+Exception in thread "main" java.lang.NoClassDefFoundError: com/sleepycat/db/CheckpointConfig
+	at net.sourceforge.seqware.queryengine.backend.store.impl.BerkeleyDBStore.close(BerkeleyDBStore.java:935)
+	at net.sourceforge.seqware.queryengine.tools.exporters.BEDExporter.main(BEDExporter.java:325)
+Caused by: java.lang.ClassNotFoundException: com.sleepycat.db.CheckpointConfig
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:214)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:205)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:319)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:294)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:264)
+	at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:332)
+	... 2 more
+Caused by: java.util.zip.ZipException: invalid LOC header (bad signature)
+	at java.util.zip.ZipFile.read(Native Method)
+	at java.util.zip.ZipFile.access$1200(ZipFile.java:46)
+	at java.util.zip.ZipFile$ZipFileInputStream.read(ZipFile.java:464)
+	at sun.misc.Resource.getBytes(Resource.java:124)
+	at java.net.URLClassLoader.defineClass(URLClassLoader.java:273)
+	at java.net.URLClassLoader.access$000(URLClassLoader.java:73)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:212)
+	... 8 more
+
+real	1m11.399s
+user	0m58.984s
+sys	0m3.163s
+ +counting lines...
+1804239 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+9.7G	/tmp/bdb_test
+
+
+Timing chr16
+ +loading database...
+
+real	10m48.853s
+user	5m53.727s
+sys	0m21.122s
+ +dumping database...
+
+real	2m35.270s
+user	1m13.732s
+sys	0m5.563s
+ +counting lines...
+2224905 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+13G	/tmp/bdb_test
+
+
+Timing chr15
+ +loading database...
+Exception in thread "main" java.lang.NoClassDefFoundError: com/sleepycat/db/CheckpointConfig
+	at net.sourceforge.seqware.queryengine.backend.store.impl.BerkeleyDBStore.close(BerkeleyDBStore.java:935)
+	at net.sourceforge.seqware.queryengine.tools.importers.VariantImporter.main(VariantImporter.java:159)
+Caused by: java.lang.ClassNotFoundException: com.sleepycat.db.CheckpointConfig
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:214)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:205)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:319)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:294)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:264)
+	at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:332)
+	... 2 more
+Caused by: java.util.zip.ZipException: invalid LOC header (bad signature)
+	at java.util.zip.ZipFile.read(Native Method)
+	at java.util.zip.ZipFile.access$1200(ZipFile.java:46)
+	at java.util.zip.ZipFile$ZipFileInputStream.read(ZipFile.java:464)
+	at sun.misc.Resource.getBytes(Resource.java:124)
+	at java.net.URLClassLoader.defineClass(URLClassLoader.java:273)
+	at java.net.URLClassLoader.access$000(URLClassLoader.java:73)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:212)
+	... 8 more
+
+real	9m12.704s
+user	5m55.536s
+sys	0m15.991s
+ +dumping database...
+Exception in thread "main" java.lang.NoClassDefFoundError: com/sleepycat/db/CheckpointConfig
+	at net.sourceforge.seqware.queryengine.backend.store.impl.BerkeleyDBStore.close(BerkeleyDBStore.java:935)
+	at net.sourceforge.seqware.queryengine.tools.exporters.BEDExporter.main(BEDExporter.java:325)
+Caused by: java.lang.ClassNotFoundException: com.sleepycat.db.CheckpointConfig
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:214)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:205)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:319)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:294)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:264)
+	at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:332)
+	... 2 more
+Caused by: java.util.zip.ZipException: invalid LOC header (bad signature)
+	at java.util.zip.ZipFile.read(Native Method)
+	at java.util.zip.ZipFile.access$1200(ZipFile.java:46)
+	at java.util.zip.ZipFile$ZipFileInputStream.read(ZipFile.java:464)
+	at sun.misc.Resource.getBytes(Resource.java:124)
+	at java.net.URLClassLoader.defineClass(URLClassLoader.java:273)
+	at java.net.URLClassLoader.access$000(URLClassLoader.java:73)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:212)
+	... 8 more
+
+real	6m18.766s
+user	1m47.302s
+sys	0m12.153s
+ +counting lines...
+2632068 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+12G	/tmp/bdb_test
+
+
+Timing chr14
+ +loading database...
+Exception in thread "main" java.lang.NoClassDefFoundError: com/sleepycat/db/CheckpointConfig
+	at net.sourceforge.seqware.queryengine.backend.store.impl.BerkeleyDBStore.close(BerkeleyDBStore.java:935)
+	at net.sourceforge.seqware.queryengine.tools.importers.VariantImporter.main(VariantImporter.java:163)
+Caused by: java.lang.ClassNotFoundException: com.sleepycat.db.CheckpointConfig
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:214)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:205)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:319)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:294)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:264)
+	at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:332)
+	... 2 more
+Caused by: java.util.zip.ZipException: invalid LOC header (bad signature)
+	at java.util.zip.ZipFile.read(Native Method)
+	at java.util.zip.ZipFile.access$1200(ZipFile.java:46)
+	at java.util.zip.ZipFile$ZipFileInputStream.read(ZipFile.java:464)
+	at sun.misc.Resource.getBytes(Resource.java:124)
+	at java.net.URLClassLoader.defineClass(URLClassLoader.java:273)
+	at java.net.URLClassLoader.access$000(URLClassLoader.java:73)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:212)
+	... 8 more
+
+real	9m52.243s
+user	6m34.226s
+sys	0m22.061s
+ +dumping database...
+Exception in thread "main" java.lang.NoClassDefFoundError: com/sleepycat/db/DatabaseConfig
+	at net.sourceforge.seqware.queryengine.backend.store.impl.BerkeleyDBStore.setup(BerkeleyDBStore.java:178)
+	at net.sourceforge.seqware.queryengine.backend.factory.impl.BerkeleyDBFactory.getStore(BerkeleyDBFactory.java:24)
+	at net.sourceforge.seqware.queryengine.tools.exporters.BEDExporter.main(BEDExporter.java:130)
+Caused by: java.lang.ClassNotFoundException: com.sleepycat.db.DatabaseConfig
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:214)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:205)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:319)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:294)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:264)
+	at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:332)
+	... 3 more
+Caused by: java.util.zip.ZipException: invalid LOC header (bad signature)
+	at java.util.zip.ZipFile.read(Native Method)
+	at java.util.zip.ZipFile.access$1200(ZipFile.java:46)
+	at java.util.zip.ZipFile$ZipFileInputStream.read(ZipFile.java:464)
+	at sun.misc.Resource.getBytes(Resource.java:124)
+	at java.net.URLClassLoader.defineClass(URLClassLoader.java:273)
+	at java.net.URLClassLoader.access$000(URLClassLoader.java:73)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:212)
+	... 9 more
+
+real	0m41.841s
+user	0m26.048s
+sys	0m4.569s
+ +counting lines...
+2632068 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+13G	/tmp/bdb_test
+
+
+Timing chr13
+ +loading database...
+Exception in thread "main" java.lang.NoClassDefFoundError: com/sleepycat/db/CheckpointConfig
+	at net.sourceforge.seqware.queryengine.backend.store.impl.BerkeleyDBStore.close(BerkeleyDBStore.java:935)
+	at net.sourceforge.seqware.queryengine.tools.importers.VariantImporter.main(VariantImporter.java:163)
+Caused by: java.lang.ClassNotFoundException: com.sleepycat.db.CheckpointConfig
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:214)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:205)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:319)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:294)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:264)
+	at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:332)
+	... 2 more
+Caused by: java.util.zip.ZipException: invalid LOC header (bad signature)
+	at java.util.zip.ZipFile.read(Native Method)
+	at java.util.zip.ZipFile.access$1200(ZipFile.java:46)
+	at java.util.zip.ZipFile$ZipFileInputStream.read(ZipFile.java:464)
+	at sun.misc.Resource.getBytes(Resource.java:124)
+	at java.net.URLClassLoader.defineClass(URLClassLoader.java:273)
+	at java.net.URLClassLoader.access$000(URLClassLoader.java:73)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:212)
+	... 8 more
+
+real	10m19.982s
+user	6m38.149s
+sys	0m24.144s
+ +dumping database...
+Exception in thread "main" java.lang.NoClassDefFoundError: com/sleepycat/db/CheckpointConfig
+	at net.sourceforge.seqware.queryengine.backend.store.impl.BerkeleyDBStore.close(BerkeleyDBStore.java:935)
+	at net.sourceforge.seqware.queryengine.tools.exporters.BEDExporter.main(BEDExporter.java:325)
+Caused by: java.lang.ClassNotFoundException: com.sleepycat.db.CheckpointConfig
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:214)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:205)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:319)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:294)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:264)
+	at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:332)
+	... 2 more
+Caused by: java.util.zip.ZipException: invalid LOC header (bad signature)
+	at java.util.zip.ZipFile.read(Native Method)
+	at java.util.zip.ZipFile.access$1200(ZipFile.java:46)
+	at java.util.zip.ZipFile$ZipFileInputStream.read(ZipFile.java:464)
+	at sun.misc.Resource.getBytes(Resource.java:124)
+	at java.net.URLClassLoader.defineClass(URLClassLoader.java:273)
+	at java.net.URLClassLoader.access$000(URLClassLoader.java:73)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:212)
+	... 8 more
+
+real	11m11.783s
+user	2m23.906s
+sys	0m17.164s
+ +counting lines...
+3604027 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+18G	/tmp/bdb_test
+
+
+Timing chr12
+ +loading database...
+
+real	16m37.626s
+user	9m54.320s
+sys	0m36.707s
+ +dumping database...
+
+real	13m44.034s
+user	2m20.179s
+sys	0m13.190s
+ +counting lines...
+4292225 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+23G	/tmp/bdb_test
+
+
+Timing chr11
+ +loading database...
+
+real	28m57.839s
+user	9m21.729s
+sys	0m29.994s
+ +dumping database...
+
+real	44m27.334s
+user	2m43.140s
+sys	0m21.329s
+ +counting lines...
+4966023 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+26G	/tmp/bdb_test
+
+
+Timing chr10
+ +loading database...
+
+real	47m54.186s
+user	9m45.303s
+sys	0m33.815s
+ +dumping database...
+
+real	94m51.990s
+user	3m7.854s
+sys	0m27.267s
+ +counting lines...
+5641419 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+29G	/tmp/bdb_test
+
+
+Timing chr9
+ +loading database...
+
+real	38m45.491s
+user	8m0.859s
+sys	0m30.609s
+ +dumping database...
+
+real	83m33.599s
+user	3m32.459s
+sys	0m35.005s
+ +counting lines...
+6222532 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+31G	/tmp/bdb_test
+
+
+Timing chr8
+ +loading database...
+
+real	63m20.037s
+user	10m37.479s
+sys	0m38.218s
+ +dumping database...
+
+real	104m41.449s
+user	3m59.393s
+sys	0m39.958s
+ +counting lines...
+6949483 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+34G	/tmp/bdb_test
+
+
+Timing chr7
+ +loading database...
+
+real	31m8.515s
+user	5m50.094s
+sys	0m24.555s
+ +dumping database...
+ +counting lines...
+ +database size...
+35G	/tmp/bdb_test
+
+
+Timing chr6
+ +loading database...
+ +dumping database...
+ +counting lines...
+ +database size...
+35G	/tmp/bdb_test
+
+
+Timing chr5
+ +loading database...
+ +dumping database...
+
+real	0m0.221s
+user	0m0.108s
+sys	0m0.023s
+ +counting lines...
+ +database size...
+35G	/tmp/bdb_test
+
+
+Timing chr4
+ +loading database...
+
+real	0m0.214s
+user	0m0.110s
+sys	0m0.015s
+ +dumping database...
+
+real	0m0.197s
+user	0m0.107s
+sys	0m0.014s
+ +counting lines...
+6949483 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+35G	/tmp/bdb_test
+
+
+Timing chr3
+ +loading database...
+
+real	14m23.642s
+user	0m29.783s
+sys	0m20.510s
+ +dumping database...
+
+real	0m3.637s
+user	0m0.456s
+sys	0m1.707s
+ +counting lines...
+0 /tmp/bdb_test_bed/bdb_test.all.bed
+ +database size...
+29G	/tmp/bdb_test
