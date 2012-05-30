@@ -18,7 +18,8 @@ public class InMemoryAnalysisSet extends AnalysisSet {
     
     /**
      * Construct AnalysisSet with a name
-     * @param name AnalysisSet with a name
+     * @param name analysis name
+     * @param description description of analysis
      */
     public InMemoryAnalysisSet(String name, String description){
         super(name, description);

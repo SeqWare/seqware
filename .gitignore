@@ -1,7 +1,22 @@
 *.class
+.svn
 
 # Package Files #
 *.jar
-*.war
 *.ear
-/seqware-queryengine-legacy/target/
+*.war
+
+# /seqware-queryengine-legacy/
+.classpath
+.project
+.settings
+target
+
+/seqware-queryengine-legacy/.classpath
+/seqware-queryengine-legacy/.project
+/seqware-queryengine-legacy/.settings
+/seqware-queryengine-legacy/target
+
+# /seqware-queryengine/.settings/
+/.settings/org.eclipse.m2e.core.prefs
+/.settings/org.eclipse.core.resources.prefs
