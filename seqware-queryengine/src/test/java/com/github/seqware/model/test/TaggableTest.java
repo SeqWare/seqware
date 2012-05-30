@@ -24,6 +24,7 @@ public class TaggableTest {
     private static Group group;
     private static User u1;
     private static AnalysisSet aSet;
+    private static Analysis a;
 
     @BeforeClass
     public static void setupTests() {
@@ -42,6 +43,7 @@ public class TaggableTest {
         tSet2 = Factory.buildTagSet("Unfunky tags");
         rSet = Factory.buildReferenceSet("Minbar", "Minbari");
         aSet = Factory.buildAnalysisSet("FP", "Funky program");
+        a = Factory.buildAnalysis(null);
         r1 = Factory.buildReference("ref1");
         rSet.add(r1);
         group = new Group("Developers", "Users that are working on new stuff");
@@ -56,18 +58,19 @@ public class TaggableTest {
         Tag t2c = new Tag(tSet1, "AS", "=", "T800");
         Tag t3a = new Tag(tSet2, "JC");
         // 7 new tags added
-        t1a.add();
-        t1b.add();
-        t1c.add();
-        t2a.add();
-        t2b.add();
-        t2c.add();
-        t3a.add();
+        t1a.store();
+        t1b.store();
+        t1c.store();
+        t2a.store();
+        t2b.store();
+        t2c.store();
+        t3a.store();
 
-        // 11 calls to associate 
+        // 12 calls to associate 
         fSet.associateTag(t2a);
         fSet.associateTag(t2b);
         fSet.associateTag(t2c);
+        a.associateTag(t3a);
         f1.associateTag(t1a);
         f2.associateTag(t1b);
         f3.associateTag(t1c);
@@ -79,17 +82,17 @@ public class TaggableTest {
         u1.associateTag(t2b);
 
         // persist everything
-        fSet.add();
-        f1.add();
-        f2.add();
-        f3.add();
-        tSet1.add();
-        tSet2.add();
-        rSet.add();
-        aSet.add();
-        r1.add();
-        group.add();
-        u1.add();
+        fSet.store();
+        f1.store();
+        f2.store();
+        f3.store();
+        tSet1.store();
+        tSet2.store();
+        rSet.store();
+        aSet.store();
+        r1.store();
+        group.store();
+        u1.store();
     }
 
     @Test
@@ -103,17 +106,14 @@ public class TaggableTest {
         SeqWareIterable<Tag> tags1 = fSet.getTags();
         // 3 tags were associated with the featureSet
         Assert.assertTrue(tags1.getCount() == 3);
+        Assert.assertTrue(a.getTags().getCount() == 1);
     }
 
     @Test
     public void testClassesThatCannotBeTagged() {
-        // practically everything can be tagged, but certain classes cannot be tagged
-        Analysis a = Factory.buildAnalysis(null);
-        Assert.assertTrue(!(a instanceof Taggable));
+        // practically everything can be tagged, except for plugins and tags
         Tag t1a = new Tag(tSet1, "KR");
         Assert.assertTrue(!(t1a instanceof Taggable));
-        ACL instance = ACL.getInstance();
-        Assert.assertTrue(!(instance instanceof Taggable));
         for (AnalysisPluginInterface api : Factory.getFeatureStoreInterface().getAnalysisPlugins()) {
             Assert.assertTrue(!(api instanceof Taggable));
         }
@@ -126,8 +126,8 @@ public class TaggableTest {
         // tags should be added and removed without changing version numbers 
         Tag t1a = new Tag(tSet1, "KR");
         User u = new User(group, "John", "Smith", "john.smith@googly.com", "password");
-        t1a.add();
-        u.add();
+        t1a.store();
+        u.store();
         u.associateTag(t1a);
         long version1 = u.getVersion();
         Assert.assertTrue(u.getTags().getCount() == 1);

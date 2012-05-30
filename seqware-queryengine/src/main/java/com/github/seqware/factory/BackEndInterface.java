@@ -20,7 +20,6 @@ import com.github.seqware.model.Atom;
 import com.github.seqware.model.Particle;
 import com.github.seqware.model.Tag;
 import com.github.seqware.util.SeqWareIterable;
-import java.security.AccessControlException;
 
 /**
  * This interface specifies operations to persist, update, and add objects to 
@@ -32,86 +31,68 @@ public interface BackEndInterface {
     /**
      * Store obj in the back-end.
      * @param obj Object to be created
-     * @throws AccessControlException if the user is not allowed to write to the 
-     * parent object (i.e. create a Reference in a ReferenceSet without write 
-     * permission to that ReferenceSet)
      */
-    public void store(Particle obj) throws AccessControlException;
+    public void store(Particle obj);
     
     
     /**
      * Crawl through obj and update changes in the back-end.
      * @param obj Object to be updated in the back-end
-     * @throws AccessControlException if the user does not have permission to
-     * change this object
-     * @return Due to copy-on-write, this can result in a new object that the 
-     * user may wish to subsequently work on
      */
-    public Particle update(Particle obj) throws AccessControlException;
+    public void update(Particle obj);
     
     /**
      * Update the obj using the latest information from the back-end
      * @param obj Object to be refreshed from the back-end
-     * @throws AccessControlException if the user has lost permission to 
-     * read the object 
      * @return Due to copy-on-write, this may return a new object with 
      * updated information
      */
-    public Particle refresh(Particle obj) throws AccessControlException;
+    public Particle refresh(Particle obj) ;
     
     /**
      * Delete obj (will cascade in the case of sets to their 
      * children)
      * @param obj Object to be deleted from the back-end
-     * @throws AccessControlException  if the user does not have permission to
-     * delete this (or children) objects
      */
-    public void delete(Particle obj) throws AccessControlException;
+    public void delete(Particle obj);
     
     /**
      * Get the version of the particle
      * @param obj current particle
      * @return version (starts with version 1)
-     * @throws AccessControlException  if the user does not have permission to read this
      */
-    public long getVersion(Particle obj) throws AccessControlException;
+    public long getVersion(Particle obj);
     
     /**
      * Get the preceding Version of a particle
      * @param obj current particle
      * @return current particle's parent
-     * @throws AccessControlException  if the user does not have permission to read this
      */
-    public Particle getPrecedingVersion(Particle obj) throws AccessControlException;
+    public Particle getPrecedingVersion(Particle obj);
 
     /**
      * Set the succeeding Version of a particle
      * @param predecessor  set current particle's parent
-     * @throws AccessControlException  if the user does not have permission to write to this
      */
-    public void setPrecedingVersion(Particle predecessor) throws AccessControlException;  
+    public void setPrecedingVersion(Particle predecessor);  
     
     /**
      * Associate tag with object
      * @param object object to be tagged
      * @param tag tag to associate
-     * @throws AccessControlException  if the user does not have permission to write to this
      */
-    public void associateTag(Atom object, Tag tag) throws AccessControlException;
+    public void associateTag(Atom object, Tag tag) ;
     
     /**
      * Dissociate tag with object
      * @param object object to remove tags
      * @param tag tag to dissociate
-     * @throws AccessControlException  if the user does not have permission to write to this
      */
-    public void dissociateTag(Atom object, Tag tag) throws AccessControlException;
+    public void dissociateTag(Atom object, Tag tag) ;
     
     /**
      * Get iterable of tags for this atom
      * @return iterable of tags
-     * @throws AccessControlException, if the user does not have read permission to the 
-     * object
      */
-    public SeqWareIterable<Tag> getTags(Atom atom) throws AccessControlException;
+    public SeqWareIterable<Tag> getTags(Atom atom) ;
 }

@@ -58,12 +58,14 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
     }
 
     @Override
-    public Particle update(Particle obj) throws AccessControlException {
+    public void update(Particle obj) throws AccessControlException {
         // create new particle
         Particle newParticle = obj.copy(true);
         this.store(newParticle);
         versionsOfEverything.put(newParticle.getUUID(), obj.getUUID());
-        return newParticle;
+        // update this to point at the new particle as represented by a UUID and a timestamp
+        obj.setUUID(newParticle.getUUID());
+        obj.setTimestamp(newParticle.getCreationTimeStamp());
     }
 
     @Override
@@ -218,7 +220,7 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
     public long getVersion(Particle obj) throws AccessControlException {
         Particle parent = this.getPrecedingVersion(obj);
         if (parent != null) {
-            return 1 + this.getVersion(obj);
+            return 1 + this.getVersion(parent);
         }
         return 1;
     }

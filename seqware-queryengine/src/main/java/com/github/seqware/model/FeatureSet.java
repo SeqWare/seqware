@@ -9,11 +9,13 @@ import java.util.Set;
  * cannot exist without a reference even if the reference is ad hoc and/or
  * user-created.
  *
- * Immutable (but tags are not).
+ * Immutable (but tags are not). TODO: Should we consider deleting Features from
+ * FeatureSets as well as adding them or can that be implicit when a Feature
+ * itself is deleted?
  *
  * @author jbaran
  */
-public abstract class FeatureSet extends Molecule implements SeqWareIterable<Feature>{
+public abstract class FeatureSet extends Molecule<FeatureSet> implements SeqWareIterable<Feature> {
 
     /**
      * Associated reference.
@@ -60,11 +62,10 @@ public abstract class FeatureSet extends Molecule implements SeqWareIterable<Fea
 
     /**
      * Get the reference for this featureSet
+     *
      * @return reference for the feature set
      */
     public Reference getReference() {
         return reference;
     }
-    
-    
 }

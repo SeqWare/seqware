@@ -11,7 +11,7 @@ import java.util.Set;
  * @author dyuen
  * @author jbaran
  */
-public abstract class ReferenceSet extends Molecule implements SeqWareIterable<Reference>{
+public abstract class ReferenceSet extends Molecule<ReferenceSet> implements SeqWareIterable<Reference>{
     
     private String name;
     private String organism;

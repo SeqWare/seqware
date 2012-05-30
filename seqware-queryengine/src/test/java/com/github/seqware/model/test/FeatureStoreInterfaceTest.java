@@ -19,7 +19,7 @@ public class FeatureStoreInterfaceTest {
     @Test
     public void testFeatureCreationAndIterate() {
         FeatureSet aSet = Factory.buildFeatureSet(Factory.buildReference("Dummy ref"));
-        aSet.add();
+        aSet.store();
         // create and store some features
         Feature a1 = new Feature(aSet, 1000000, 1000100);
         Feature a2 = new Feature(aSet, 1000001, 1000101);
@@ -27,9 +27,9 @@ public class FeatureStoreInterfaceTest {
         aSet.add(a1);         
         aSet.add(a2);         
         aSet.add(a3);
-        a1.add();
-        a2.add();
-        a3.add();
+        a1.store();
+        a2.store();
+        a3.store();
         aSet.update();
         // get FeatureSets from the back-end
         boolean b1 = false;

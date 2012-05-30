@@ -29,10 +29,10 @@ public class QueryInterfaceTest {
         a2 = new Feature(aSet, 1000001, 1000101, Feature.Strand.POSITIVE, "type2", 80.0, "Program A", "pragma", ".");
         a3 = new Feature(aSet, 1000002, 1000102, Feature.Strand.NOT_STRANDED, "type2", 80.0, "Program B", "pragma", ".");
         a4 = new Feature(aSet, 1000003, 1000103, Feature.Strand.UNKNOWN, "type3", 50.0, "Program B", "pragma", ".");
-        a1.add();
-        a2.add();
-        a3.add();
-        a4.add();
+        a1.store();
+        a2.store();
+        a3.store();
+        a4.store();
         aSet.add(a1);
         aSet.add(a2);
         aSet.add(a3);

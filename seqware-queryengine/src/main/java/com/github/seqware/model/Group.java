@@ -12,7 +12,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * A Group of users that may share ACL permissions
  * @author dyuen
  */
-public class Group extends Molecule implements SeqWareIterable<User>{
+public class Group extends Molecule<Group> implements SeqWareIterable<User>{
     
     private String name;
     private String description;
@@ -64,7 +64,11 @@ public class Group extends Molecule implements SeqWareIterable<User>{
     
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
+         if (obj instanceof Group) {
+            Group other = (Group) obj;
+            return this.name.equals(other.name) && this.description.equals(other.description) && this.users.equals(other.users);
+        }
+        return false;
     }
 
     @Override

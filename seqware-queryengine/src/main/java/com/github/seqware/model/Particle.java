@@ -17,26 +17,32 @@ import org.apache.commons.lang.SerializationUtils;
 public abstract class Particle<T extends Particle> implements Serializable {
 
     /**
-     * Internally used unique identifier of this feature.
+     * Internally used unique identifier of this particle
      */
     private UUID uuid;
+    /**
+     * Exposed timestamp of this particle
+     */
+    private Date timestamp;
 
     protected Particle() {
         // TODO This will have to be replaced with a stronger UUID generation method.
         this.uuid = UUID.randomUUID();
+        this.timestamp = new Date();
     }
 
     /**
-     * Copy constructor, used to generate a shallow copy of a particle with a
-     * new UUID
+     * Copy constructor, used to generate a shallow copy of a particle ith 
+     * potentially a new timestamp and UUID
      *
-     * @param newUUID whether or not to generate a new UUID for the new copy
+     * @param newUUID whether or not to generate a new UUID and timestamp for the new copy
      */
     public T copy(boolean newUUID) {
         UUID oldUUID = this.uuid;
         // TODO This will have to be replaced with a stronger UUID generation method.
         if (newUUID) {
             this.uuid = UUID.randomUUID();
+            this.timestamp = new Date();
         }
         T newParticle = (T) SerializationUtils.clone(this);
         this.uuid = oldUUID;
@@ -50,7 +56,7 @@ public abstract class Particle<T extends Particle> implements Serializable {
      * parent object (i.e. create a Reference in a ReferenceSet without write
      * permission to that ReferenceSet)
      */
-    public void add() throws AccessControlException {
+    public void store() throws AccessControlException {
         Factory.getBackEnd().store(this);
     }
 
@@ -58,14 +64,14 @@ public abstract class Particle<T extends Particle> implements Serializable {
      * Notify the back-end that it should record the changes made to the current
      * object. Updates cascade downward (i.e. changing a ReferenceSet will
      * result in a copy-on-write that copies all children References as well)
+     * Note that the UUID of this may change due to copy-on-write as this may now 
+     * be a reference to a new entity in the database due to copy-on-write
      *
      * @throws AccessControlException if the user does not have permission to
      * change this object
-     * @return Due to copy-on-write, this can result in a new object that the
-     * user may wish to subsequently work on
      */
-    public T update() throws AccessControlException {
-        return (T) Factory.getBackEnd().update(this);
+    public void update() throws AccessControlException {
+        Factory.getBackEnd().update(this);
     }
 
     /**
@@ -74,11 +80,9 @@ public abstract class Particle<T extends Particle> implements Serializable {
      *
      * @throws AccessControlException if the user has lost permission to read
      * the object
-     * @return Due to copy-on-write, this may return a new object with updated
-     * information
      */
-    public T refresh() throws AccessControlException {
-        return (T) Factory.getBackEnd().refresh(this);
+    public void refresh() throws AccessControlException {
+        Factory.getBackEnd().refresh(this);
     }
 
     /**
@@ -109,6 +113,30 @@ public abstract class Particle<T extends Particle> implements Serializable {
      * resource
      */
     public Date getCreationTimeStamp() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return timestamp;
     }
+    
+    /**
+     * Set the timestamp, this should never be called outside of the backend
+     * @param timestamp new time stamp
+     */
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    /**
+     * Set the UUID, very dangerous, this should never be called outside of the
+     * backend
+     * @param uuid new UUID 
+     */
+    public void setUUID(UUID uuid) {
+        this.uuid = uuid;
+    }
+    
+    @Override
+    public String toString(){
+        return this.uuid.toString() + " " + super.toString();
+    }
+    
+    
 }

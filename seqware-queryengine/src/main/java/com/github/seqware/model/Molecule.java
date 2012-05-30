@@ -10,14 +10,11 @@ import com.github.seqware.factory.Factory;
  */
 public abstract class Molecule<T extends Molecule> extends Atom<T> implements ACLable, Versionable<T> {
     
+    private ACL permissions = new ACL();
+    
     @Override
     public ACL getPermissions() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setPermissions(ACL acl) throws SecurityException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return permissions;
     }
 
     @Override
@@ -26,17 +23,7 @@ public abstract class Molecule<T extends Molecule> extends Atom<T> implements AC
     }
 
     @Override
-    public void setVersion(String version) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public T getPrecedingVersion() {
         return (T) Factory.getBackEnd().getPrecedingVersion(this);
-    }
-
-    @Override
-    public void setPrecedingVersion(T predecessor) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }    
+    } 
 }
