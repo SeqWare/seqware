@@ -35,7 +35,7 @@
                     <!-- NOTE: you can change groups to "berkeleydb" (default), "hbase", or 
                     "postgresql" (or a comma-delimited, no space list of multiple) to test 
                     those, just make sure you setup hbase/postgresql first -->
-                    <groups>hbase</groups>
+                    <groups>berkeleydb</groups>
                     <systemPropertyVariables>
                        <QE_BERKELEYDB_PATH>/tmp/seqware_qe_berkeleydb_test</QE_BERKELEYDB_PATH>
                        <QE_BERKELEYDB_COVERAGE_BIN_SIZE>5</QE_BERKELEYDB_COVERAGE_BIN_SIZE>
