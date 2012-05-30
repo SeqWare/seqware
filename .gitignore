@@ -4,3 +4,4 @@
 *.jar
 *.war
 *.ear
+/seqware-queryengine-legacy/target/
