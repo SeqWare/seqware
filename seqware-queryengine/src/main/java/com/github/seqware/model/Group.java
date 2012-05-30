@@ -1,6 +1,8 @@
 package com.github.seqware.model;
 
+import com.github.seqware.util.SeqWareIterable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -10,7 +12,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * A Group of users that may share ACL permissions
  * @author dyuen
  */
-public class Group extends Molecule{
+public class Group extends Molecule implements SeqWareIterable<User>{
     
     private String name;
     private String description;
@@ -68,6 +70,16 @@ public class Group extends Molecule{
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public long getCount() {
+        return users.size();
+    }
+
+    @Override
+    public Iterator<User> iterator() {
+        return users.iterator();
     }
     
 }
