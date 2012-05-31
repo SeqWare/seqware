@@ -1,4 +1,4 @@
 /**
- * Provides the classes that simply implement model classes quickly in memory
+ * Provides utility classes for accessing this API via the model
  */
 package com.github.seqware.util;

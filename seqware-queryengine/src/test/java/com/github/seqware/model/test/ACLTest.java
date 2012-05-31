@@ -88,6 +88,8 @@ public class ACLTest {
         userpermissions = targetSet.getPrecedingVersion().getPermissions().getAccess();
         Assert.assertTrue("permissions", userpermissions[0] == false && userpermissions [1] == false &&  userpermissions[2] == false && userpermissions [3] == false && userpermissions[4] == false && userpermissions [5] == false );
     }
+    
+    
 
 
 }

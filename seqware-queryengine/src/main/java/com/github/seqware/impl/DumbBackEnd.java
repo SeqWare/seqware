@@ -73,10 +73,10 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
         return obj;
     }
 
-    @Override
-    public void delete(Particle obj) throws AccessControlException {
-        listOfEverything.remove(obj);
-    }
+//    @Override
+//    public void delete(Particle obj) throws AccessControlException {
+//        listOfEverything.remove(obj);
+//    }
 
     @Override
     public String getVersion() {

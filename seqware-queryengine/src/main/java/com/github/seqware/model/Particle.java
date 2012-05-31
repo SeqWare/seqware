@@ -2,7 +2,6 @@ package com.github.seqware.model;
 
 import com.github.seqware.factory.Factory;
 import java.io.Serializable;
-import java.security.AccessControlException;
 import java.util.Date;
 import java.util.UUID;
 import org.apache.commons.lang.SerializationUtils;
@@ -51,12 +50,11 @@ public abstract class Particle<T extends Particle> implements Serializable {
 
     /**
      * Notify the back-end that it should keep track of the current object.
-     *
-     * @throws AccessControlException if the user is not allowed to write to the
-     * parent object (i.e. create a Reference in a ReferenceSet without write
-     * permission to that ReferenceSet)
+     * A store operation cascades downward (i.e. storing a ReferenceSet will
+     * store all children References as well) 
+     * 
      */
-    public void store() throws AccessControlException {
+    public void store() {
         Factory.getBackEnd().store(this);
     }
 
@@ -66,11 +64,8 @@ public abstract class Particle<T extends Particle> implements Serializable {
      * result in a copy-on-write that copies all children References as well)
      * Note that the UUID of this may change due to copy-on-write as this may now 
      * be a reference to a new entity in the database due to copy-on-write
-     *
-     * @throws AccessControlException if the user does not have permission to
-     * change this object
      */
-    public void update() throws AccessControlException {
+    public void update()  {
         Factory.getBackEnd().update(this);
     }
 
@@ -78,27 +73,24 @@ public abstract class Particle<T extends Particle> implements Serializable {
      * Update the current object with any changes that may have been made to the
      * current object
      *
-     * @throws AccessControlException if the user has lost permission to read
-     * the object
      */
-    public void refresh() throws AccessControlException {
+    public void refresh()  {
         Factory.getBackEnd().refresh(this);
     }
 
-    /**
-     * Delete the current object (will cascade in the case of sets to their
-     * children)
-     *
-     * @throws AccessControlException if the user does not have permission to
-     * delete this (or children) objects
-     */
-    public void delete() throws AccessControlException {
-        Factory.getBackEnd().delete(this);
-    }
+//    /**
+//     * Delete the current object (will cascade in the case of sets to their
+//     * children)
+//     *
+//     */
+//    public void delete()  {
+//        Factory.getBackEnd().delete(this);
+//    }
 
     /**
      * Get the universally unique identifier of this object. This should be
      * unique across the whole backend and not just this resource
+     * @return unique identifier for this (version of) resource 
      */
     public UUID getUUID() {
         return this.uuid;

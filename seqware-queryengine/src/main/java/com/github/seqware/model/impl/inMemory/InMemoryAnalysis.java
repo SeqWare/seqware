@@ -13,8 +13,8 @@ import java.util.Set;
 public class InMemoryAnalysis extends Analysis {
     
     /**
-     * Construct reference with a name
-     * @param name reference with a name
+     * Construct an In-Memory analysis with a specific plugin 
+     * @param api 
      */
     public InMemoryAnalysis(AnalysisPluginInterface api){
         super(api);

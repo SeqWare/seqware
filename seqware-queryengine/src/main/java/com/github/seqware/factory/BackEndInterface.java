@@ -49,12 +49,12 @@ public interface BackEndInterface {
      */
     public Particle refresh(Particle obj) ;
     
-    /**
-     * Delete obj (will cascade in the case of sets to their 
-     * children)
-     * @param obj Object to be deleted from the back-end
-     */
-    public void delete(Particle obj);
+//    /**
+//     * Delete obj (will cascade in the case of sets to their 
+//     * children)
+//     * @param obj Object to be deleted from the back-end
+//     */
+//    public void delete(Particle obj);
     
     /**
      * Get the version of the particle

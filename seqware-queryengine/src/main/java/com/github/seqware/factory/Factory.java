@@ -26,9 +26,9 @@ import com.github.seqware.model.impl.inMemory.*;
  */
 public class Factory {
     
-    public enum BACKEND_TYPE {IN_MEMORY, HBASE};
+    public enum Backend_Type {IN_MEMORY, HBASE};
     
-    public static BACKEND_TYPE BACKEND = BACKEND_TYPE.IN_MEMORY;
+    public static Backend_Type BACKEND = Backend_Type.IN_MEMORY;
     private static BackEndInterface instance = null;
         
     /**
@@ -71,7 +71,7 @@ public class Factory {
      * @return feature set
      */
     public static FeatureSet buildFeatureSet(Reference ref){
-        if (BACKEND.equals(BACKEND_TYPE.IN_MEMORY)){
+        if (BACKEND.equals(Backend_Type.IN_MEMORY)){
             return new InMemoryFeatureSet(ref);
         } 
         assert(false);
@@ -84,7 +84,7 @@ public class Factory {
      * @return reference
      */
     public static Reference buildReference(String name){
-        if (BACKEND.equals(BACKEND_TYPE.IN_MEMORY)){
+        if (BACKEND.equals(Backend_Type.IN_MEMORY)){
             return new InMemoryReference(name);
         } 
         assert(false);
@@ -98,7 +98,7 @@ public class Factory {
      * @return reference set
      */
     public static ReferenceSet buildReferenceSet(String name, String organism){
-        if (BACKEND.equals(BACKEND_TYPE.IN_MEMORY)){
+        if (BACKEND.equals(Backend_Type.IN_MEMORY)){
             return new InMemoryReferenceSet(name, organism);
         } 
         assert(false);
@@ -111,7 +111,7 @@ public class Factory {
      * @return tag set
      */
     public static TagSet buildTagSet(String name){
-        if (BACKEND.equals(BACKEND_TYPE.IN_MEMORY)){
+        if (BACKEND.equals(Backend_Type.IN_MEMORY)){
             return new InMemoryTagSet(name);
         } 
         assert(false);
@@ -125,7 +125,7 @@ public class Factory {
      * @return an analysis set with name and description
      */
     public static AnalysisSet buildAnalysisSet(String name, String desc) {
-        if (BACKEND.equals(BACKEND_TYPE.IN_MEMORY)){
+        if (BACKEND.equals(Backend_Type.IN_MEMORY)){
             return new InMemoryAnalysisSet(name, desc);
         } 
         assert(false);
@@ -138,7 +138,7 @@ public class Factory {
      * @return Build an analysis that was created using a plugin
      */
     public static Analysis buildAnalysis(AnalysisPluginInterface api) {
-        if (BACKEND.equals(BACKEND_TYPE.IN_MEMORY)){
+        if (BACKEND.equals(Backend_Type.IN_MEMORY)){
             return new InMemoryAnalysis(api);
         } 
         assert(false);
