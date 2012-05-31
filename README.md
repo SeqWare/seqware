@@ -16,6 +16,7 @@ follow and are currently hosted at sourceforge:
 * seqware-portal
 * seqware-pipeline
 * seqware-queryengine
+
 In addition the seqware-common sub-project provides a location for common code
 and most of the other sub-projects have this as a dependency.
 
