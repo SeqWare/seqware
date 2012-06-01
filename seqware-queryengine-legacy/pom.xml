@@ -9,9 +9,9 @@
     <url>http://seqware.sf.net</url>
 
     <parent>
-        <groupId>net.sourceforge.seqware</groupId>
+        <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
-        <version>0.11.4-SNAPSHOT</version>
+        <version>0.12.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <build>
@@ -37,15 +37,15 @@
                     those, just make sure you setup hbase/postgresql first -->
                     <groups>berkeleydb</groups>
                     <systemPropertyVariables>
-                       <QE_BERKELEYDB_PATH>/tmp/seqware_qe_berkeleydb_test</QE_BERKELEYDB_PATH>
-                       <QE_BERKELEYDB_COVERAGE_BIN_SIZE>5</QE_BERKELEYDB_COVERAGE_BIN_SIZE>
-                       <QE_BERKELEYDB_CACHE_SIZE>10000</QE_BERKELEYDB_CACHE_SIZE>
-                       <QE_POSTGRESQL_HOST>localhost</QE_POSTGRESQL_HOST>
-                       <QE_POSTGRESQL_PORT>5432</QE_POSTGRESQL_PORT>
-                       <QE_POSTGRESQL_USER>seqware</QE_POSTGRESQL_USER>
-                       <QE_POSTGRESQL_PASS>seqware7420</QE_POSTGRESQL_PASS>
-                       <QE_POSTGRESQL_DB>seqware_qe_db</QE_POSTGRESQL_DB>
-                       <QE_HBASE_FEATUREID>GO:12323121hg18.chr22:000000000001234.feature.Genome032399.v1337266516375</QE_HBASE_FEATUREID>
+                        <QE_BERKELEYDB_PATH>/tmp/seqware_qe_berkeleydb_test</QE_BERKELEYDB_PATH>
+                        <QE_BERKELEYDB_COVERAGE_BIN_SIZE>5</QE_BERKELEYDB_COVERAGE_BIN_SIZE>
+                        <QE_BERKELEYDB_CACHE_SIZE>10000</QE_BERKELEYDB_CACHE_SIZE>
+                        <QE_POSTGRESQL_HOST>localhost</QE_POSTGRESQL_HOST>
+                        <QE_POSTGRESQL_PORT>5432</QE_POSTGRESQL_PORT>
+                        <QE_POSTGRESQL_USER>seqware</QE_POSTGRESQL_USER>
+                        <QE_POSTGRESQL_PASS>seqware7420</QE_POSTGRESQL_PASS>
+                        <QE_POSTGRESQL_DB>seqware_qe_db</QE_POSTGRESQL_DB>
+                        <QE_HBASE_FEATUREID>GO:12323121hg18.chr22:000000000001234.feature.Genome032399.v1337266516375</QE_HBASE_FEATUREID>
                     </systemPropertyVariables>
                     <!--<excludes>
                         <exclude>**/*Test.java</exclude>
@@ -85,18 +85,6 @@
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase</artifactId>
             <version>0.90.6-cdh3u4</version>
-        </dependency>
-	<!-- 
-        <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>cloudera-transactional</artifactId>
-            <version>0.20.3-1</version>
-        </dependency>
-	-->
-        <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase</artifactId>
-            <version>0.90.6-cdh3u4</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.xml.bind</groupId>
@@ -121,6 +109,7 @@
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
+            <version>8.4-702.jdbc4</version>
         </dependency>
         <dependency>
             <groupId>berkeley-db</groupId>
@@ -145,30 +134,30 @@
             <version>6.1.1</version>
             <scope>test</scope>
         </dependency>
-<dependency>
-  <groupId>log4j</groupId>
-  <artifactId>log4j</artifactId>
-  <version>1.2.15</version>
-  <scope>provided</scope>
-  <exclusions>
-    <exclusion>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-    </exclusion>
-    <exclusion>
-      <groupId>javax.jms</groupId>
-      <artifactId>jms</artifactId>
-    </exclusion>
-    <exclusion>
-      <groupId>com.sun.jdmk</groupId>
-      <artifactId>jmxtools</artifactId>
-    </exclusion>
-    <exclusion>
-      <groupId>com.sun.jmx</groupId>
-      <artifactId>jmxri</artifactId>
-    </exclusion>
-  </exclusions>
-</dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.15</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.mail</groupId>
+                    <artifactId>mail</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.jms</groupId>
+                    <artifactId>jms</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jdmk</groupId>
+                    <artifactId>jmxtools</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jmx</groupId>
+                    <artifactId>jmxri</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
     </dependencies>
 </project>
