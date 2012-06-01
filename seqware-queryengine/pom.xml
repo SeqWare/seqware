@@ -22,6 +22,32 @@
         </repository>
     </repositories>
 
+    <build>
+	<plugins>
+		<plugin>
+			<artifactId>maven-antrun-plugin</artifactId>
+			<executions>
+				<execution>
+					<id>generate-sources</id>
+					<phase>generate-sources</phase>
+					<configuration>
+						<tasks>
+							<exec executable="protoc">
+								<arg value="--java_out=src/main/java" />
+								<arg value="src/main/resources/protobuf/todo_provider.proto" />
+							</exec>
+						</tasks>
+						<sourceRoot>src/main/java</sourceRoot>
+					</configuration>
+					<goals>
+						<goal>run</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
+	</plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.hbase</groupId>
@@ -73,5 +99,10 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
+	<dependency>
+		<groupId>com.google.protobuf</groupId>
+		<artifactId>protobuf-java</artifactId>
+		<version>2.4.1</version>
+	</dependency>
     </dependencies>
 </project>
