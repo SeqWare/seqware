@@ -26,17 +26,32 @@ BUILDING
 We're moving to Maven (2.2.x or greater) for our builds, this is currently how
 you do it in the trunk directory:
 
-  mvn clean install
+    mvn clean install
 
 You can also skip the tests for a faster build with:
 
-  mvn clean install -Dmaven.test.skip=true
+    mvn clean install -Dmaven.test.skip=true
   
 You can also build individual components such as the new query engine with: 
 
-  cd seqware-queryengine
-  mvn clean install
-  
+    cd seqware-queryengine
+    mvn clean install
+
+In order to build the query-engine-legacy project, one specific dependency seems to be missing from the Maven repositories that I can find. You will need to download the Berkeley DB 4.7.25NC.tar.gz from http://www.oracle.com/technetwork/database/berkeleydb/downloads/index-082944.html (While Oracle has a Maven repository, it does not currently look functional). Enter the following:
+
+    tar xvfz db-4.7.25.tar.gz
+    cd db-4.7.25
+    cd build_unix
+    ./dist/configure --enable-java
+    make
+    sudo make install
+
+Then update your .bashrc with 
+
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/BerkeleyDB.4.7/lib
+
+This should work with maven testing on the command line, I think I'm missing a step for NetBeans.
+
 LOCAL UNIT TESTING SETUP
 ---------------------
 
