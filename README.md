@@ -47,6 +47,7 @@ In order to build the query-engine-legacy project, one specific dependency seems
     sudo make install
 
 Then update your .bashrc with 
+
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/BerkeleyDB.4.7/lib
 
 This should work with maven testing on the command line, I think I'm missing a step for NetBeans.
