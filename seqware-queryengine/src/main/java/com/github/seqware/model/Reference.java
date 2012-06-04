@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import com.github.seqware.impl.SimpleModelManager;
 import java.util.Iterator;
 
 /**
@@ -17,18 +18,8 @@ public abstract class Reference extends Molecule {
     /**
      * Create a anonymous new reference
      */
-    public Reference(){
+    protected Reference(){
         super();
-    }
-    
-    /**
-     * Create a new reference.
-     *
-     * Note: the created object needs to be part of a ReferenceSet.
-     */
-    public Reference(String name) {
-        this();
-        this.name = name;
     }
 
     /**
@@ -44,5 +35,33 @@ public abstract class Reference extends Molecule {
      */
     public String getName(){
         return name;
+    }
+    
+    
+    /**
+     * Create an ACL builder started with a copy of this
+     * @return 
+     */
+    public abstract Reference.Builder toBuilder();
+
+    public abstract static class Builder {
+
+        public Reference reference;
+
+        public Reference.Builder setName(String name) {
+            reference.name = name;
+            return this;
+        }
+        
+        public Reference build() {
+           return build(true);
+        }
+
+        public abstract Reference build(boolean newObject);
+
+        public Builder setManager(SimpleModelManager aThis) {
+            reference.setManager(aThis);
+            return this;
+        }
     }
 }

@@ -1,10 +1,9 @@
 package com.github.seqware.model.test;
 
 import com.github.seqware.factory.Factory;
+import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
-import com.github.seqware.model.impl.inMemory.InMemoryFeatureSet;
-import com.github.seqware.model.impl.inMemory.InMemoryReference;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,19 +17,16 @@ public class FeatureStoreInterfaceTest {
 
     @Test
     public void testFeatureCreationAndIterate() {
-        FeatureSet aSet = Factory.buildFeatureSet(Factory.buildReference("Dummy ref"));
-        aSet.store();
+        ModelManager mManager = Factory.getModelManager();
+        FeatureSet aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy ref").build()).build();
         // create and store some features
-        Feature a1 = new Feature(aSet, 1000000, 1000100);
-        Feature a2 = new Feature(aSet, 1000001, 1000101);
-        Feature a3 = new Feature(aSet, 1000002, 1000102);
+        Feature a1 = mManager.buildFeature().setStart(1000000).setStop(1000100).build();
+        Feature a2 = mManager.buildFeature().setStart(1000200).setStop(1000300).build();
+        Feature a3 = mManager.buildFeature().setStart(1000400).setStop(1000500).build();
         aSet.add(a1);         
         aSet.add(a2);         
         aSet.add(a3);
-        a1.store();
-        a2.store();
-        a3.store();
-        aSet.update();
+        mManager.flush();
         // get FeatureSets from the back-end
         boolean b1 = false;
         boolean b2 = false;

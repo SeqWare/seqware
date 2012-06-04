@@ -18,10 +18,7 @@ package com.github.seqware.impl;
 
 import com.github.seqware.factory.BackEndInterface;
 import com.github.seqware.model.*;
-import com.github.seqware.model.impl.inMemory.InMemoryFeaturesAllPlugin;
-import com.github.seqware.model.impl.inMemory.InMemoryFeaturesByReferencePlugin;
-import com.github.seqware.model.impl.inMemory.InMemoryFeaturesByTagPlugin;
-import com.github.seqware.model.impl.inMemory.InMemoryFeaturesByTypePlugin;
+import com.github.seqware.model.impl.inMemory.*;
 import com.github.seqware.util.InMemoryIterable;
 import com.github.seqware.util.SeqWareIterable;
 import java.security.AccessControlException;
@@ -48,7 +45,7 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
     }
 
     @Override
-    public void store(Particle obj) throws AccessControlException {
+    public void store(Particle obj) {
         if (!listOfEverything.contains(obj)) {
             // let's just clone everything on store to simulate hbase
             Particle storeObj = (Particle) SerializationUtils.clone(obj);
@@ -58,7 +55,7 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
     }
 
     @Override
-    public void update(Particle obj) throws AccessControlException {
+    public void update(Particle obj) {
         // create new particle
         Particle newParticle = obj.copy(true);
         this.store(newParticle);
@@ -69,7 +66,7 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
     }
 
     @Override
-    public Particle refresh(Particle obj) throws AccessControlException {
+    public Particle refresh(Particle obj)  {
         return obj;
     }
 
@@ -137,21 +134,21 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
     public QueryFuture getFeaturesByType(FeatureSet set, String type, int hours) {
         AnalysisPluginInterface plugin = new InMemoryFeaturesByTypePlugin();
         plugin.init(set, type);
-        return new QueryFutureImpl(plugin);
+        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
     @Override
     public QueryFuture getFeatures(FeatureSet set, int hours) {
         AnalysisPluginInterface plugin = new InMemoryFeaturesAllPlugin();
         plugin.init(set);
-        return new QueryFutureImpl(plugin);
+        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
     @Override
     public QueryFuture getFeaturesByReference(FeatureSet set, Reference reference, int hours) {
         AnalysisPluginInterface plugin = new InMemoryFeaturesByReferencePlugin();
         plugin.init(set);
-        return new QueryFutureImpl(plugin);
+        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
     @Override
@@ -163,7 +160,7 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
     public QueryFuture getFeaturesByTag(FeatureSet set, int hours, String subject, String predicate, String object) {
         AnalysisPluginInterface plugin = new InMemoryFeaturesByTagPlugin();
         plugin.init(set, subject, predicate, object);
-        return new QueryFutureImpl(plugin);
+        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
     private SeqWareIterable getAllOfClass(Class aClass) {
@@ -223,37 +220,5 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
             return 1 + this.getVersion(parent);
         }
         return 1;
-    }
-
-    /**
-     * Simple result class that doesn't really do blocking
-     */
-    public class QueryFutureImpl extends Analysis {
-
-        public QueryFutureImpl(AnalysisPluginInterface plugin) {
-            super(plugin);
-        }
-
-        @Override
-        public FeatureSet get() {
-            getPlugin().map();
-            getPlugin().reduce();
-            return super.getPlugin().getFinalResult();
-        }
-
-        @Override
-        public boolean isDone() {
-            return true;
-        }
-
-        @Override
-        public Analysis getParentAnalysis() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public Set<Analysis> getSuccessorAnalysisSet() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
     }
 }

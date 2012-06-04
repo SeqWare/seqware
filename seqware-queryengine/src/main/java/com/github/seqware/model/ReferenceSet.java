@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import com.github.seqware.impl.SimpleModelManager;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.Iterator;
 import java.util.Set;
@@ -19,14 +20,8 @@ public abstract class ReferenceSet extends Molecule<ReferenceSet> implements Seq
     /**
      * Creates an instance of an anonymous feature set.
      */
-    private ReferenceSet() {
+    protected ReferenceSet() {
         super();
-    }
-    
-    public ReferenceSet(String name, String organism){
-        this();
-        this.name = name;
-        this.organism = organism;
     }
 
     /**
@@ -64,5 +59,37 @@ public abstract class ReferenceSet extends Molecule<ReferenceSet> implements Seq
      */
     public String getOrganism(){
         return organism;
+    }
+    
+    /**
+     * Create an FeatureSet builder started with a copy of this
+     * @return 
+     */
+    public abstract ReferenceSet.Builder toBuilder();
+
+    public abstract static class Builder {
+
+        public ReferenceSet aSet;
+
+        public ReferenceSet.Builder setName(String name) {
+            aSet.name = name;
+            return this;
+        }
+        
+        public ReferenceSet.Builder setOrganism(String organism) {
+            aSet.organism = organism;
+            return this;
+        }
+        
+        public ReferenceSet build() {
+           return build(true);
+        }
+
+        public abstract ReferenceSet build(boolean newObject);
+
+        public Builder setManager(SimpleModelManager aThis) {
+            aSet.setManager(aThis);
+            return this;
+        }
     }
 }

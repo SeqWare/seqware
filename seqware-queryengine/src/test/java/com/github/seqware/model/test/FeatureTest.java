@@ -1,6 +1,7 @@
 package com.github.seqware.model.test;
 
 import com.github.seqware.factory.Factory;
+import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import org.junit.Assert;
@@ -18,16 +19,19 @@ public class FeatureTest {
 
     @BeforeClass
     public static void setupTests() {
-        aSet = Factory.buildFeatureSet(Factory.buildReference("Dummy ref"));
+        ModelManager mManager = Factory.getModelManager();
+        aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy ref").build()).build();
     }
 
     @Test
     public void testUUIDGenerationNonStrandedFeature() {
-        Assert.assertNotNull("Feature UUID is null, which means that no UUID was generated for the feature.", new Feature(aSet, 1000000, 1000100).getUUID());
+        ModelManager mManager = Factory.getModelManager();
+        Assert.assertNotNull("Feature UUID is null, which means that no UUID was generated for the feature.", mManager.buildFeature().setStart(1000000).setStop(1000100).build().getUUID());
     }
 
     @Test
     public void testUUIDGenerationStrandedFeature() {
-        Assert.assertNotNull("Feature UUID is null, which means that no UUID was generated for the feature.", new Feature(aSet, 1000000, 1000100, Feature.Strand.POSITIVE).getUUID());
+        ModelManager mManager = Factory.getModelManager();
+        Assert.assertNotNull("Feature UUID is null, which means that no UUID was generated for the feature.", mManager.buildFeature().setStart(1000000).setStop(1000100).setStrand(Feature.Strand.POSITIVE).build().getUUID());
     }
 }

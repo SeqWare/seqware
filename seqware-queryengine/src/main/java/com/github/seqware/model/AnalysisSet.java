@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import com.github.seqware.impl.SimpleModelManager;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.Set;
 
@@ -17,14 +18,8 @@ public abstract class AnalysisSet extends Molecule implements SeqWareIterable<An
     /**
      * Creates an instance of an anonymous feature set.
      */
-    public AnalysisSet() {
+    protected AnalysisSet() {
         super();
-    }
-
-    public AnalysisSet(String name, String description) {
-        this();
-        this.name = name;
-        this.description = description;
     }
 
     /**
@@ -57,5 +52,37 @@ public abstract class AnalysisSet extends Molecule implements SeqWareIterable<An
      */
     public String getName() {
         return name;
+    }
+    
+     /**
+     * Create an ACL builder started with a copy of this
+     * @return 
+     */
+    public abstract AnalysisSet.Builder toBuilder();
+
+    public abstract static class Builder {
+
+        public AnalysisSet aSet;
+
+        public AnalysisSet.Builder setName(String name) {
+            aSet.name = name;
+            return this;
+        }
+
+        public AnalysisSet.Builder setDescription(String description) {
+            aSet.description = description;
+            return this;
+        }
+        
+        public AnalysisSet build() {
+           return build(true);
+        }
+
+        public abstract AnalysisSet build(boolean newObject);
+
+        public Builder setManager(SimpleModelManager aThis) {
+            aSet.setManager(aThis);
+            return this;
+        }
     }
 }

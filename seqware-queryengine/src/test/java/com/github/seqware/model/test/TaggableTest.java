@@ -1,8 +1,12 @@
 package com.github.seqware.model.test;
 
 import com.github.seqware.factory.Factory;
+import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.*;
+import com.github.seqware.model.impl.inMemory.InMemoryFeaturesAllPlugin;
+import com.github.seqware.model.impl.inMemory.InMemoryQueryFutureImpl;
 import com.github.seqware.util.SeqWareIterable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import junit.framework.Assert;
@@ -28,43 +32,38 @@ public class TaggableTest {
 
     @BeforeClass
     public static void setupTests() {
+        ModelManager mManager = Factory.getModelManager();
         // test tagging every possible class that can be tagged
         // create a few instances of everything that can be tagged
-        fSet = Factory.buildFeatureSet(Factory.buildReference("testing dummy reference"));
+        fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing dummy reference").build()).build();
         Set<Feature> testFeatures = new HashSet<Feature>();
-        f1 = new Feature(fSet, 1000000, 1000100);
-        f2 = new Feature(fSet, 1000200, 1000300);
-        f3 = new Feature(fSet, 1000400, 1000500);
+        f1 = mManager.buildFeature().setStart(1000000).setStop(1000100).build();
+        f2 = mManager.buildFeature().setStart(1000200).setStop(1000300).build();
+        f3 = mManager.buildFeature().setStart(1000400).setStop(1000500).build();
         testFeatures.add(f1);      
         testFeatures.add(f2);
         testFeatures.add(f3);
         fSet.add(testFeatures);
-        tSet1 = Factory.buildTagSet("Funky tags");
-        tSet2 = Factory.buildTagSet("Unfunky tags");
-        rSet = Factory.buildReferenceSet("Minbar", "Minbari");
-        aSet = Factory.buildAnalysisSet("FP", "Funky program");
-        a = Factory.buildAnalysis(null);
-        r1 = Factory.buildReference("ref1");
+        tSet1 = mManager.buildTagSet().setName("Funky tags").build();
+        tSet2 = mManager.buildTagSet().setName("Unfunky tags").build();
+        rSet = mManager.buildReferenceSet().setName("Minbar").setOrganism("Minbari").build();
+        aSet = mManager.buildAnalysisSet().setName("FP").setDescription("Funky program").build();
+        // only for testing, Analysis classes 
+        a = InMemoryQueryFutureImpl.newBuilder().setParameters(new ArrayList<Object>()).setPlugin(new InMemoryFeaturesAllPlugin()).build();
+        r1 = mManager.buildReference().setName("ref1").build();
         rSet.add(r1);
-        group = new Group("Developers", "Users that are working on new stuff");
-        u1 = new User(group, "Joe", "Smith", "joe.smith@googly.com", "password");
+        group = mManager.buildGroup().setName("Developers").setDescription("Users that are working on new stuff").build();
+        u1 = mManager.buildUser().setFirstName("Joe").setLastName("Smith").setEmailAddress("joe.smith@googly.com").setPassword("password").build();
         group.add(u1);
         // tag stuff
-        Tag t1a = new Tag(tSet1, "KR");
-        Tag t1b = new Tag(tSet1, "KR", "=");
-        Tag t1c = new Tag(tSet1, "KR", "=", "F");
-        Tag t2a = new Tag(tSet1, "AS");
-        Tag t2b = new Tag(tSet1, "AS", "=");
-        Tag t2c = new Tag(tSet1, "AS", "=", "T800");
-        Tag t3a = new Tag(tSet2, "JC");
+        Tag t1a = mManager.buildTag().setKey("KR").build();
+        Tag t1b = mManager.buildTag().setKey("KR").setPredicate("=").build();
+        Tag t1c = mManager.buildTag().setKey("KR").setPredicate("=").setValue("F").build();
+        Tag t2a = mManager.buildTag().setKey("AS").build();
+        Tag t2b = mManager.buildTag().setKey("AS").setPredicate("=").build();
+        Tag t2c = mManager.buildTag().setKey("AS").setPredicate("=").setValue("T800").build();
+        Tag t3a = mManager.buildTag().setKey("JC").build();
         // 7 new tags added
-        t1a.store();
-        t1b.store();
-        t1c.store();
-        t2a.store();
-        t2b.store();
-        t2c.store();
-        t3a.store();
 
         // 12 calls to associate 
         fSet.associateTag(t2a);
@@ -81,18 +80,7 @@ public class TaggableTest {
         group.associateTag(t2b);
         u1.associateTag(t2b);
 
-        // persist everything
-        fSet.store();
-        f1.store();
-        f2.store();
-        f3.store();
-        tSet1.store();
-        tSet2.store();
-        rSet.store();
-        aSet.store();
-        r1.store();
-        group.store();
-        u1.store();
+        mManager.flush();
     }
 
     @Test
@@ -113,7 +101,8 @@ public class TaggableTest {
     @Test
     public void testClassesThatCannotBeTagged() {
         // practically everything can be tagged, except for plugins and tags
-        Tag t1a = new Tag(tSet1, "KR");
+        ModelManager mManager = Factory.getModelManager();
+        Tag t1a = mManager.buildTag().setKey("KR").build();
         Assert.assertTrue(!(t1a instanceof Taggable));
         for (AnalysisPluginInterface api : Factory.getFeatureStoreInterface().getAnalysisPlugins()) {
             Assert.assertTrue(!(api instanceof Taggable));
@@ -123,12 +112,11 @@ public class TaggableTest {
 
     @Test
     public void testTagAddingAndRemoval() {
+        ModelManager mManager = Factory.getModelManager();
         // tags should be both addable and removable
         // tags should be added and removed without changing version numbers 
-        Tag t1a = new Tag(tSet1, "KR");
-        User u = new User(group, "John", "Smith", "john.smith@googly.com", "password");
-        t1a.store();
-        u.store();
+        Tag t1a = mManager.buildTag().setKey("KR").build();
+        User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
         u.associateTag(t1a);
         long version1 = u.getVersion();
         Assert.assertTrue(u.getTags().getCount() == 1);

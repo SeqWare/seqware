@@ -1,9 +1,11 @@
 package com.github.seqware.model;
 
+import com.github.seqware.impl.SimpleModelManager;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -33,38 +35,12 @@ public class User extends Molecule<User> {
     }
 
     /**
-     * Create a user (input will probably need to be cleaned and checked for
-     * hazards at some point)
-     *
-     * @param firstName
-     * @param lastName
-     * @param emailAddress
-     */
-    public User(Group group, String firstName, String lastName, String emailAddress, String password) {
-        this();
-        this.groups.add(group);
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.emailAddress = emailAddress;
-        this.password = hashedPassword(password);
-    }
-
-    /**
      * Get email address
      *
      * @return email address as a String
      */
     public String getEmailAddress() {
         return emailAddress;
-    }
-
-    /**
-     * Change a User's password
-     *
-     * @param password new password
-     */
-    public void setPassword(String password) {
-        this.password = hashedPassword(password);
     }
 
     /**
@@ -101,13 +77,13 @@ public class User extends Molecule<User> {
      * @return list of groups
      */
     public List<Group> getGroups() {
-        return groups;
+        return Collections.unmodifiableList(groups);
     }
 
     @Override
     public boolean equals(Object obj) {
         // will cause recursion
-        //return EqualsBuilder.reflectionEquals(this, obj);
+//        return EqualsBuilder.reflectionEquals(this, obj);
         if (obj instanceof User) {
             User other = (User) obj;
             return this.firstName.equals(other.firstName) && this.lastName.equals(other.lastName)
@@ -128,7 +104,7 @@ public class User extends Molecule<User> {
      * @param password
      * @return
      */
-    private String hashedPassword(String password) {
+    private static String hashedPassword(String password) {
         String hashword = null;
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
@@ -141,11 +117,69 @@ public class User extends Molecule<User> {
         return pad(hashword, 32, '0');
     }
 
-    private String pad(String s, int length, char pad) {
+    private static String pad(String s, int length, char pad) {
         StringBuilder buffer = new StringBuilder(s);
         while (buffer.length() < length) {
             buffer.insert(0, pad);
         }
         return buffer.toString();
+    }
+    
+    /**
+     * Create a new ACL builder
+     * @return 
+     */
+    public static User.Builder newBuilder() {
+        return new User.Builder();
+    }
+    
+    /**
+     * Create an ACL builder started with a copy of this
+     * @return 
+     */
+    public User.Builder toBuilder(){
+        User.Builder b = new User.Builder();
+        b.user = this.copy(true);
+        b.user.setManager(this.getManager());
+        return b;
+    }
+
+    public static class Builder {
+
+        private User user = new User();
+
+        public User.Builder setFirstName(String firstName) {
+            user.firstName = firstName;
+            return this;
+        }
+
+        public User.Builder setLastName(String lastName) {
+            user.lastName = lastName;
+            return this;
+        }
+
+        public User.Builder setPassword(String password) {
+            user.password = hashedPassword(password);
+            return this;
+        }
+        
+        public User.Builder setEmailAddress(String emailAddress) {
+            user.emailAddress = emailAddress;
+            return this;
+        }
+        
+        public User build() {
+           return build(true);
+        }
+
+        public User build(boolean newObject) {
+            user.getManager().objectCreated(user, newObject);
+            return user;
+        }
+
+        public Builder setManager(SimpleModelManager aThis) {
+            user.setManager(aThis);
+            return this;
+        }
     }
 }

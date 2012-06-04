@@ -1,6 +1,8 @@
 package com.github.seqware.model;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * An Analysis object represents specific calls to analysis components, most of
@@ -11,7 +13,7 @@ import java.util.Set;
  */
 public abstract class Analysis extends Atom<Analysis> implements QueryFuture {
 
-    private Object[] parameters;
+    private List<Object> parameters = new ArrayList<Object>();
     private AnalysisPluginInterface plugin;
     
     /**
@@ -20,40 +22,56 @@ public abstract class Analysis extends Atom<Analysis> implements QueryFuture {
      * @param plugin an analysis must have an associated plugin that created/is
      * creating its results
      */
-    public Analysis(AnalysisPluginInterface plugin) {
+    protected Analysis() {
         super();
-        this.plugin = plugin;
     }
-
-    /**
-     * Get the analysis event that this analysis was derived from
-     *
-     * @return parental analysis event, null if n/a
-     */
-    public abstract Analysis getParentAnalysis();
-
-    /**
-     * Get the analysis events that are derived from this one
-     *
-     * @return a set of analysis events that derive from this one
-     */
-    public abstract Set<Analysis> getSuccessorAnalysisSet();
     
     /**
      * Get the parameters for this particular creation of an analysis plug-in
      * @return parameters for the plugin
      */
-    public Object[] getParameters(){
-        return parameters;
+    public List<Object> getParameters(){
+        return Collections.unmodifiableList(parameters);
     }
 
     /**
-     * Get the plugin that created this analysis
-     * @return plugin for this analysis
+     * Get analysis plugin
+     * @return 
      */
     public AnalysisPluginInterface getPlugin() {
         return plugin;
     }
     
+    
+
+    @Override
+    public abstract FeatureSet get();
+
+    @Override
+    public abstract boolean isDone();
+    
+    public abstract Analysis.Builder toBuilder();
+
+    public abstract static class Builder {
+
+        public Analysis analysis;
+
+        /**
+         * Set the group for the current particle
+         *
+         * @param group
+         */
+        public Analysis.Builder setParameters(List<Object> parameters) {
+            analysis.parameters = parameters;
+            return this;
+        }
+        
+        public Analysis.Builder setPlugin(AnalysisPluginInterface plugin){
+            analysis.plugin = plugin;
+            return this;
+        }
+
+        public abstract Analysis build();
+    }
     
 }

@@ -8,6 +8,13 @@ package com.github.seqware.model;
  */
 public interface ACLable {
     
+    
+    /**
+     * Set permissions for this
+     * @param permissions new set of permissions
+     */
+    public void setPermissions(ACL permissions);
+    
     /**
      * Get permissions for the subject.
      * @return Access control list object.

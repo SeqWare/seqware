@@ -1,6 +1,7 @@
 package com.github.seqware.model.test;
 
 import com.github.seqware.factory.Factory;
+import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import java.util.HashSet;
@@ -19,16 +20,16 @@ public class FeatureSetTest {
 
     @Test
     public void testConsistentStorageSingleFeatures() {
-        FeatureSet aSet = Factory.buildFeatureSet(Factory.buildReference("Dummy ref"));
-
+        ModelManager mManager = Factory.getModelManager();
+        FeatureSet aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy ref").build()).build();
         Set<Feature> testFeatures = new HashSet<Feature>();
+        testFeatures.add(mManager.buildFeature().setStart(1000000).setStop(1000100).build());
+        testFeatures.add(mManager.buildFeature().setStart(1000200).setStop(1000300).build());
+        testFeatures.add(mManager.buildFeature().setStart(1000400).setStop(1000500).build());
 
-        testFeatures.add(new Feature(aSet, 1000000, 1000100));
-        testFeatures.add(new Feature(aSet, 1000200, 1000300));
-        testFeatures.add(new Feature(aSet, 1000400, 1000500));
-
-        for (Feature testFeature : testFeatures)
+        for (Feature testFeature : testFeatures){
             aSet.add(testFeature);
+        }
 
         // NOTE Misses test case where all added features are being dropped and nothing is stored.
         for (Iterator<Feature> i = aSet.getFeatures(); i.hasNext();) {
@@ -44,28 +45,30 @@ public class FeatureSetTest {
     
     @Test
     public void testVersioningAndFeatureSets(){
-        FeatureSet aSet = Factory.buildFeatureSet(Factory.buildReference("Dummy ref"));
-        aSet.store(); // this should persist a version with no features
-        aSet.add(new Feature(aSet, 1000000, 1000100));
-        aSet.add(new Feature(aSet, 1000200, 1000300));
-        aSet.add(new Feature(aSet, 1000400, 1000500));
-        aSet.update(); // this should persist a version with three features
-        aSet.add(new Feature(aSet, 1000600, 1000610));
-        aSet.add(new Feature(aSet, 1000700, 1000710));
-        aSet.add(new Feature(aSet, 1000800, 1000810));
-        aSet.update(); // this should persist a version with six features
+        ModelManager mManager = Factory.getModelManager();
+        FeatureSet aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy ref").build()).build();
+        mManager.flush(); // this should persist a version with no features
+        aSet.add(mManager.buildFeature().setStart(1000000).setStop(1000100).build());
+        aSet.add(mManager.buildFeature().setStart(1000200).setStop(1000300).build());
+        aSet.add(mManager.buildFeature().setStart(1000400).setStop(1000500).build());
+        mManager.flush(); // this should persist a version with three features
+        aSet.add(mManager.buildFeature().setStart(1000600).setStop(1000610).build());
+        aSet.add(mManager.buildFeature().setStart(1000700).setStop(1000710).build());
+        aSet.add(mManager.buildFeature().setStart(1000800).setStop(1000810).build());
+ 
+        mManager.flush(); // this should persist a version with six features
                
         FeatureSet testSet = (FeatureSet) Factory.getFeatureStoreInterface().getParticleByUUID(aSet.getUUID());
-        Assert.assertTrue("FeatureSet size wrong", testSet.getVersion() == 3);
-        Assert.assertTrue("old FeatureSet size wrong", testSet.getPrecedingVersion().getVersion() == 2);
-        Assert.assertTrue("very old FeatureSet size wrong", testSet.getPrecedingVersion().getPrecedingVersion().getVersion() == 1);
+        Assert.assertTrue("FeatureSet version wrong", testSet.getVersion() == 3);
+        Assert.assertTrue("old FeatureSet version wrong", testSet.getPrecedingVersion().getVersion() == 2);
+        Assert.assertTrue("very old FeatureSet version wrong", testSet.getPrecedingVersion().getPrecedingVersion().getVersion() == 1);
         Assert.assertTrue("FeatureSet size wrong", testSet.getCount() == 6);
         Assert.assertTrue("old FeatureSet size wrong", testSet.getPrecedingVersion().getCount() == 3);
         Assert.assertTrue("very old FeatureSet size wrong", testSet.getPrecedingVersion().getPrecedingVersion().getCount() == 0);
         // assert the same properties with the one in memory already
-        Assert.assertTrue("referenceSet size wrong", aSet.getVersion() == 3);
-        Assert.assertTrue("old referenceSet size wrong", aSet.getPrecedingVersion().getVersion() == 2);
-        Assert.assertTrue("very old referenceSet size wrong", aSet.getPrecedingVersion().getPrecedingVersion().getVersion() == 1);
+        Assert.assertTrue("referenceSet version wrong", aSet.getVersion() == 3);
+        Assert.assertTrue("old referenceSet version wrong", aSet.getPrecedingVersion().getVersion() == 2);
+        Assert.assertTrue("very old referenceSet version wrong", aSet.getPrecedingVersion().getPrecedingVersion().getVersion() == 1);
         Assert.assertTrue("referenceSet size wrong", aSet.getCount() == 6);
         Assert.assertTrue("old referenceSet size wrong", aSet.getPrecedingVersion().getCount() == 3);
         Assert.assertTrue("very old referenceSet size wrong", aSet.getPrecedingVersion().getPrecedingVersion().getCount() == 0);

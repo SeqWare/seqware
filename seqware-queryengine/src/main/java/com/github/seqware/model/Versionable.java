@@ -22,4 +22,12 @@ public interface Versionable<T extends Versionable> {
      * of the subject.
      */
     public T getPrecedingVersion();
+    
+    /**
+     * Explicitly set the previous version of a particle
+     * @param particle previous version
+     */
+    public void setPrecedingVersion(T particle);
+    
+    
 }

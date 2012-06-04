@@ -1,11 +1,11 @@
 package com.github.seqware.model;
 
+import com.github.seqware.impl.SimpleModelManager;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -24,12 +24,6 @@ public class Group extends Molecule<Group> implements SeqWareIterable<User>{
     private Group() {
         super();
         users = new ArrayList();
-    }
-    
-    public Group(String name, String description){
-        this();
-        this.name = name;
-        this.description = description;
     }
 
     /**
@@ -86,4 +80,50 @@ public class Group extends Molecule<Group> implements SeqWareIterable<User>{
         return users.iterator();
     }
     
+     /**
+     * Create a new ACL builder
+     * @return 
+     */
+    public static Group.Builder newBuilder() {
+        return new Group.Builder();
+    }
+    
+    /**
+     * Create an ACL builder started with a copy of this
+     * @return 
+     */
+    public Group.Builder toBuilder(){
+        Group.Builder b = new Group.Builder();
+        b.group = this.copy(true);
+        return b;
+    }
+
+    public static class Builder {
+
+        private Group group = new Group();
+
+        public Group.Builder setName(String name) {
+            group.name = name;
+            return this;
+        }
+
+        public Group.Builder setDescription(String description) {
+            group.description = description;
+            return this;
+        }
+
+        public Group build() {
+           return build(true);
+        }
+
+        public Group build(boolean newObject) {
+            group.getManager().objectCreated(group, newObject);
+            return group;
+        }
+
+        public Builder setManager(SimpleModelManager aThis) {
+            group.setManager(aThis);
+            return this;
+        }
+    }
 }

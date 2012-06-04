@@ -17,6 +17,7 @@
 package com.github.seqware.factory;
 
 import com.github.seqware.impl.DumbBackEnd;
+import com.github.seqware.impl.SimpleModelManager;
 import com.github.seqware.model.*;
 import com.github.seqware.model.impl.inMemory.*;
 
@@ -66,82 +67,10 @@ public class Factory {
     }
     
     /**
-     * Build a featureSet with a reference
-     * @param ref reference ancestor
-     * @return feature set
+     * Return a new model manager to create and keep track of entities
+     * @return 
      */
-    public static FeatureSet buildFeatureSet(Reference ref){
-        if (BACKEND.equals(Backend_Type.IN_MEMORY)){
-            return new InMemoryFeatureSet(ref);
-        } 
-        assert(false);
-        return null;
-    }
-    
-    /**
-     * Build a Reference with a given name
-     * @param name name for the reference
-     * @return reference
-     */
-    public static Reference buildReference(String name){
-        if (BACKEND.equals(Backend_Type.IN_MEMORY)){
-            return new InMemoryReference(name);
-        } 
-        assert(false);
-        return null;
-    }
-    
-    /**
-     * Build a new reference set with a name and organism
-     * @param name organism name
-     * @param organism organism (ex: Latin name)
-     * @return reference set
-     */
-    public static ReferenceSet buildReferenceSet(String name, String organism){
-        if (BACKEND.equals(Backend_Type.IN_MEMORY)){
-            return new InMemoryReferenceSet(name, organism);
-        } 
-        assert(false);
-        return null;
-    }
-    
-    /**
-     * Build a set of tags
-     * @param name a name for the tag set
-     * @return tag set
-     */
-    public static TagSet buildTagSet(String name){
-        if (BACKEND.equals(Backend_Type.IN_MEMORY)){
-            return new InMemoryTagSet(name);
-        } 
-        assert(false);
-        return null;
-    }
-    
-    /**
-     * Build an analysis set
-     * @param name 
-     * @param desc
-     * @return an analysis set with name and description
-     */
-    public static AnalysisSet buildAnalysisSet(String name, String desc) {
-        if (BACKEND.equals(Backend_Type.IN_MEMORY)){
-            return new InMemoryAnalysisSet(name, desc);
-        } 
-        assert(false);
-        return null;
-    }
-    
-    /**
-     * Build an analysis
-     * @param api plugin used
-     * @return Build an analysis that was created using a plugin
-     */
-    public static Analysis buildAnalysis(AnalysisPluginInterface api) {
-        if (BACKEND.equals(Backend_Type.IN_MEMORY)){
-            return new InMemoryAnalysis(api);
-        } 
-        assert(false);
-        return null;
+    public static ModelManager getModelManager(){
+        return new SimpleModelManager();
     }
 }

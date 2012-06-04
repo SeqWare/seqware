@@ -1,6 +1,10 @@
 package com.github.seqware.model;
 
-import java.util.Arrays;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import org.apache.commons.lang.SerializationUtils;
 
 /**
  * Access control list that determines permissions and access rights to features
@@ -17,18 +21,18 @@ import java.util.Arrays;
  * @author dyuen
  * @author jbaran
  */
-public class ACL extends Particle<ACL> {
+public class ACL implements Serializable {
 
     private User owner = null;
     private Group group = null;
-    private boolean[] rights = new boolean[6];
+    private List<Boolean> rights = new ArrayList<Boolean>();
 
     /**
      * Creates a new access control list.
      */
-    public ACL() {
+    private ACL() {
         super();
-        Arrays.fill(rights, true);
+        for(int i = 1; i <= 6; i ++){ rights.add(true);}
     }
 
     /**
@@ -55,25 +59,66 @@ public class ACL extends Particle<ACL> {
      *
      * @return array access to RW rights for owner, group, and others
      */
-    public boolean[] getAccess() {
-        return rights;
+    public List<Boolean> getAccess() {
+        return Collections.unmodifiableList(rights);
     }
 
     /**
-     * Set the group for the current particle
-     *
-     * @param group
+     * Create a new ACL builder
+     * @return 
      */
-    public void setGroup(Group group) throws SecurityException {
-        this.group = group;
+    protected static Builder newBuilder() {
+        return new Builder();
+    }
+    
+    /**
+     * Create an ACL builder started with a copy of this
+     * @return 
+     */
+    public Builder toBuilder(){
+        Builder b = new Builder();
+        b.acl = (ACL) SerializationUtils.clone(this);
+        return b;
     }
 
-    /**
-     * Set the owner for the current particle
-     *
-     * @param owner
-     */
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public static class Builder {
+
+        private ACL acl = new ACL();
+
+        /**
+         * Set the group for the current particle
+         *
+         * @param group
+         */
+        public Builder setGroup(Group group) {
+            acl.group = group;
+            return this;
+        }
+
+        /**
+         * Set the owner for the current particle
+         *
+         * @param owner
+         */
+        public Builder setOwner(User owner) {
+            acl.owner = owner;
+            return this;
+        }
+
+        public Builder setRights(boolean[] rights) {
+            assert (rights.length == 6); 
+            acl.rights.clear();
+            for(boolean b : rights){
+                acl.rights.add(b);
+            }
+            return this;
+        }
+
+        public ACL build() {
+            if (acl.rights.size() != 6) {
+                throw new RuntimeException("Invalid build of ACL"); 
+            }
+            return acl;
+        }
     }
 }

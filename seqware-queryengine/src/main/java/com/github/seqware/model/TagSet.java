@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import com.github.seqware.impl.SimpleModelManager;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.Set;
 
@@ -13,11 +14,9 @@ public abstract class TagSet extends Molecule implements SeqWareIterable<Tag>{
     
     /**
      * Create a new TagSet
-     * @param name name of the new tag set
      */
-    public TagSet(String name) {
+    protected TagSet() {
         super();
-        this.name = name;
     }
 
     /**
@@ -39,5 +38,32 @@ public abstract class TagSet extends Molecule implements SeqWareIterable<Tag>{
      * @param tags tags to add
      */
     public abstract void add(Set<Tag> tags);
+    
+         /**
+     * Create an ACL builder started with a copy of this
+     * @return 
+     */
+    public abstract TagSet.Builder toBuilder();
+
+    public abstract static class Builder {
+
+        public TagSet aSet;
+
+        public TagSet.Builder setName(String name) {
+            aSet.name = name;
+            return this;
+        }
+        
+        public TagSet build() {
+           return build(true);
+        }
+
+        public abstract TagSet build(boolean newObject);
+
+        public Builder setManager(SimpleModelManager aThis) {
+            aSet.setManager(aThis);
+            return this;
+        }
+    }
     
 }

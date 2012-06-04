@@ -16,6 +16,8 @@
  */
 package com.github.seqware.model.impl.inMemory;
 
+import com.github.seqware.factory.Factory;
+import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.*;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -82,13 +84,13 @@ public class InMemoryFeaturesByTagPlugin implements AnalysisPluginInterface {
             Arrays.fill(b, false);
             for (Tag t : f.getTags()) {
                 // three cases
-                if (subject == null || subject.equals(t.getSubject())) {
+                if (subject == null || subject.equals(t.getKey())) {
                     b[0] = true;
                 }
                 if (predicate == null || predicate.equals(t.getPredicate())) {
                     b[1] = true;
                 }
-                if (object == null || object.equals(t.getObject())) {
+                if (object == null || object.equals(t.getValue())) {
                     b[2] = true;
                 }
 
@@ -123,15 +125,10 @@ public class InMemoryFeaturesByTagPlugin implements AnalysisPluginInterface {
 
     @Override
     public FeatureSet getFinalResult() {
-        InMemoryFeatureSet fSet = new InMemoryFeatureSet(new Reference() {
-
-            @Override
-            public Iterator<FeatureSet> featureSets() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
-
+       ModelManager mManager = Factory.getModelManager();
+        FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("").build(true)).build(true);
         fSet.add(accumulator);
+        mManager.close();
         return fSet;
     }
 }

@@ -1,6 +1,6 @@
 package com.github.seqware.model;
 
-import com.github.seqware.factory.Factory;
+import com.github.seqware.factory.ModelManager;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
@@ -23,6 +23,11 @@ public abstract class Particle<T extends Particle> implements Serializable {
      * Exposed timestamp of this particle
      */
     private Date timestamp;
+    
+    /**
+     * Current manager
+     */
+    private transient ModelManager manager = null;
 
     protected Particle() {
         // TODO This will have to be replaced with a stronger UUID generation method.
@@ -48,35 +53,36 @@ public abstract class Particle<T extends Particle> implements Serializable {
         return newParticle;
     }
 
-    /**
-     * Notify the back-end that it should keep track of the current object.
-     * A store operation cascades downward (i.e. storing a ReferenceSet will
-     * store all children References as well) 
-     * 
-     */
-    public void store() {
-        Factory.getBackEnd().store(this);
-    }
 
-    /**
-     * Notify the back-end that it should record the changes made to the current
-     * object. Updates cascade downward (i.e. changing a ReferenceSet will
-     * result in a copy-on-write that copies all children References as well)
-     * Note that the UUID of this may change due to copy-on-write as this may now 
-     * be a reference to a new entity in the database due to copy-on-write
-     */
-    public void update()  {
-        Factory.getBackEnd().update(this);
-    }
-
-    /**
-     * Update the current object with any changes that may have been made to the
-     * current object
-     *
-     */
-    public void refresh()  {
-        Factory.getBackEnd().refresh(this);
-    }
+//    /**
+//     * Notify the back-end that it should keep track of the current object.
+//     * A store operation cascades downward (i.e. storing a ReferenceSet will
+//     * store all children References as well) 
+//     * 
+//     */
+//    public void store() {
+//        Factory.getBackEnd().store(this);
+//    }
+//
+//    /**
+//     * Notify the back-end that it should record the changes made to the current
+//     * object. Updates cascade downward (i.e. changing a ReferenceSet will
+//     * result in a copy-on-write that copies all children References as well)
+//     * Note that the UUID of this may change due to copy-on-write as this may now 
+//     * be a reference to a new entity in the database due to copy-on-write
+//     */
+//    public void update()  {
+//        Factory.getBackEnd().update(this);
+//    }
+//
+//    /**
+//     * Update the current object with any changes that may have been made to the
+//     * current object
+//     *
+//     */
+//    public void refresh()  {
+//        Factory.getBackEnd().refresh(this);
+//    }
 
 //    /**
 //     * Delete the current object (will cascade in the case of sets to their
@@ -129,6 +135,20 @@ public abstract class Particle<T extends Particle> implements Serializable {
     public String toString(){
         return this.uuid.toString() + " " + super.toString();
     }
-    
-    
+
+    /**
+     * Get the model manager for this particle
+     * @return 
+     */
+    public ModelManager getManager() {
+        return manager;
+    }
+
+    /**
+     * Set the model manager for this particle
+     * @param manager 
+     */
+    public void setManager(ModelManager manager) {
+        this.manager = manager;
+    }
 }

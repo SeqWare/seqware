@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import com.github.seqware.impl.SimpleModelManager;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.Iterator;
 import java.util.Set;
@@ -25,18 +26,8 @@ public abstract class FeatureSet extends Molecule<FeatureSet> implements SeqWare
     /**
      * Creates an instance of an anonymous feature set.
      */
-    private FeatureSet() {
+    protected FeatureSet() {
         super();
-    }
-
-    /**
-     * Creates a FeatureSet with an associated reference.
-     *
-     * @param reference associated reference
-     */
-    public FeatureSet(Reference reference) {
-        this();
-        this.reference = reference;
     }
 
     /**
@@ -67,5 +58,32 @@ public abstract class FeatureSet extends Molecule<FeatureSet> implements SeqWare
      */
     public Reference getReference() {
         return reference;
+    }
+    
+     /**
+     * Create an FeatureSet builder started with a copy of this
+     * @return 
+     */
+    public abstract FeatureSet.Builder toBuilder();
+
+    public abstract static class Builder {
+
+        public FeatureSet aSet;
+
+        public Builder setReference(Reference reference) {
+            aSet.reference = reference;
+            return this;
+        }
+        
+        public FeatureSet build() {
+           return build(true);
+        }
+
+        public abstract FeatureSet build(boolean newObject);
+
+        public Builder setManager(SimpleModelManager aThis) {
+            aSet.setManager(aThis);
+            return this;
+        }
     }
 }
