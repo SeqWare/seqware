@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import com.github.seqware.factory.ModelManager;
 import com.github.seqware.impl.SimpleModelManager;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.Iterator;
@@ -64,9 +65,10 @@ public abstract class FeatureSet extends Molecule<FeatureSet> implements SeqWare
      * Create an FeatureSet builder started with a copy of this
      * @return 
      */
+    @Override
     public abstract FeatureSet.Builder toBuilder();
 
-    public abstract static class Builder {
+    public abstract static class Builder implements BaseBuilder {
 
         public FeatureSet aSet;
 
@@ -75,13 +77,15 @@ public abstract class FeatureSet extends Molecule<FeatureSet> implements SeqWare
             return this;
         }
         
+        @Override
         public FeatureSet build() {
            return build(true);
         }
 
         public abstract FeatureSet build(boolean newObject);
 
-        public Builder setManager(SimpleModelManager aThis) {
+        @Override
+        public Builder setManager(ModelManager aThis) {
             aSet.setManager(aThis);
             return this;
         }

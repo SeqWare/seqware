@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import com.github.seqware.factory.ModelManager;
 import com.github.seqware.impl.SimpleModelManager;
 import java.util.Iterator;
 
@@ -14,11 +15,11 @@ import java.util.Iterator;
 public abstract class Reference extends Molecule {
 
     private String name = "Reference name place-holder";
-    
+
     /**
      * Create a anonymous new reference
      */
-    protected Reference(){
+    protected Reference() {
         super();
     }
 
@@ -28,23 +29,25 @@ public abstract class Reference extends Molecule {
      * @return Iterator of feature sets associated with this reference.
      */
     public abstract Iterator<FeatureSet> featureSets();
-    
+
     /**
      * The name of this reference (ex: "hg 19")
+     *
      * @return return the name of this reference.
      */
-    public String getName(){
+    public String getName() {
         return name;
     }
-    
-    
+
     /**
      * Create an ACL builder started with a copy of this
-     * @return 
+     *
+     * @return
      */
+    @Override
     public abstract Reference.Builder toBuilder();
 
-    public abstract static class Builder {
+    public abstract static class Builder implements BaseBuilder {
 
         public Reference reference;
 
@@ -52,14 +55,12 @@ public abstract class Reference extends Molecule {
             reference.name = name;
             return this;
         }
-        
-        public Reference build() {
-           return build(true);
-        }
 
-        public abstract Reference build(boolean newObject);
+        @Override
+        public abstract Reference build();
 
-        public Builder setManager(SimpleModelManager aThis) {
+        @Override
+        public Builder setManager(ModelManager aThis) {
             reference.setManager(aThis);
             return this;
         }

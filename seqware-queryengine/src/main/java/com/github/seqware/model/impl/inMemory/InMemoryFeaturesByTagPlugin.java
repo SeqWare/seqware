@@ -126,7 +126,7 @@ public class InMemoryFeaturesByTagPlugin implements AnalysisPluginInterface {
     @Override
     public FeatureSet getFinalResult() {
        ModelManager mManager = Factory.getModelManager();
-        FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("").build(true)).build(true);
+        FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("").build()).build();
         fSet.add(accumulator);
         mManager.close();
         return fSet;

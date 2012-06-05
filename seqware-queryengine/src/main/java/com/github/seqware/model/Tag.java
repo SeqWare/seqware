@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import com.github.seqware.factory.ModelManager;
 import com.github.seqware.impl.SimpleModelManager;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -68,11 +69,14 @@ public class Tag extends Particle {
         //return EqualsBuilder.reflectionEquals(this, obj);
         if (obj instanceof Tag) {
             Tag other = (Tag) obj;
+            // check for nulls
             if (this.value == null && other.value != null || this.value != null && other.value == null) {
                 return false;
             }
-            return this.getUUID().equals(other.getUUID()) && this.key.equals(other.key) 
-                    && this.predicate.equals(other.predicate)&& (this.value != null && this.value.equals(other.value));
+            // check parts guaranteed not to be null
+            boolean eqFirstPart = this.getUUID().equals(other.getUUID()) && this.key.equals(other.key) && this.predicate.equals(other.predicate);
+            boolean eqValue = (this.value == null && other.value == null) || this.value.equals(other.value);
+            return eqFirstPart && eqValue;
         }
         return false;
     }
@@ -94,13 +98,14 @@ public class Tag extends Particle {
      * Create an ACL builder started with a copy of this
      * @return 
      */
+    @Override
     public Tag.Builder toBuilder(){
         Tag.Builder b = new Tag.Builder();
-        b.tag = (Tag) this.copy(true);
+        b.tag = (Tag) this.copy(false);
         return b;
     }
 
-    public static class Builder {
+    public static class Builder implements BaseBuilder {
 
         private Tag tag = new Tag();
 
@@ -118,20 +123,18 @@ public class Tag extends Particle {
             tag.value = value;
             return this;
         }
-        
-        public Tag build() {
-           return build(true);
-        }
 
-        public Tag build(boolean newObject) {
+        @Override
+        public Tag build() {
             if (tag.key == null){
                 throw new RuntimeException("Invalid build of Tag"); 
             }
-            tag.getManager().objectCreated(tag, newObject);
+            tag.getManager().objectCreated(tag);
             return tag;
         }
 
-        public Builder setManager(SimpleModelManager aThis) {
+        @Override
+        public Builder setManager(ModelManager aThis) {
             tag.setManager(aThis);
             return this;
         }

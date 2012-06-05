@@ -57,7 +57,7 @@ public class InMemoryAnalysisSet extends AnalysisSet {
     @Override
     public Builder toBuilder() {
         Builder b = new Builder();
-        b.aSet = (InMemoryAnalysisSet) this.copy(true);
+        b.aSet = (InMemoryAnalysisSet) this.copy(false);
         return b;
     }
 
@@ -68,11 +68,11 @@ public class InMemoryAnalysisSet extends AnalysisSet {
         }
 
         @Override
-        public AnalysisSet build(boolean newObject) {
+        public AnalysisSet build() {
             if (aSet.getName() == null || aSet.getDescription() == null) {
                 throw new RuntimeException("Invalid build of AnalysisSet");
             }
-            aSet.getManager().objectCreated(aSet, newObject);
+            aSet.getManager().objectCreated(aSet);
             return aSet;
         }
     }

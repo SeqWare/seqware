@@ -19,13 +19,14 @@ package com.github.seqware.model.impl.inMemory;
 import com.github.seqware.model.Analysis;
 import com.github.seqware.model.AnalysisPluginInterface;
 import com.github.seqware.model.FeatureSet;
-import com.github.seqware.model.Reference;
 
 /**
  *
  * @author dyuen
  */
 public class InMemoryQueryFutureImpl extends Analysis {
+    
+    private transient AnalysisPluginInterface plugin;
 
     public InMemoryQueryFutureImpl() {
         super();
@@ -33,9 +34,9 @@ public class InMemoryQueryFutureImpl extends Analysis {
 
     @Override
     public FeatureSet get() {
-        super.getPlugin().map();
+        getPlugin().map();
         getPlugin().reduce();
-        return super.getPlugin().getFinalResult();
+        return getPlugin().getFinalResult();
     }
 
     @Override
@@ -55,9 +56,19 @@ public class InMemoryQueryFutureImpl extends Analysis {
     @Override
     public Analysis.Builder toBuilder() {
         InMemoryQueryFutureImpl.Builder b = new InMemoryQueryFutureImpl.Builder();
-        b.analysis = (InMemoryQueryFutureImpl) this.copy(true);
+        b.analysis = (InMemoryQueryFutureImpl) this.copy(false);
         b.setParameters(this.getParameters());
         return b;
+    }
+
+    @Override
+    public AnalysisPluginInterface getPlugin() {
+        return plugin;
+    }
+
+    @Override
+    protected void setPlugin(AnalysisPluginInterface plugin) {
+        this.plugin = plugin;
     }
 
     public static class Builder extends Analysis.Builder {

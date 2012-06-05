@@ -49,7 +49,7 @@ public class TaggableTest {
         rSet = mManager.buildReferenceSet().setName("Minbar").setOrganism("Minbari").build();
         aSet = mManager.buildAnalysisSet().setName("FP").setDescription("Funky program").build();
         // only for testing, Analysis classes 
-        a = InMemoryQueryFutureImpl.newBuilder().setParameters(new ArrayList<Object>()).setPlugin(new InMemoryFeaturesAllPlugin()).build();
+        a = mManager.buildAnalysis().setParameters(new ArrayList<Object>()).setPlugin(new InMemoryFeaturesAllPlugin()).build();
         r1 = mManager.buildReference().setName("ref1").build();
         rSet.add(r1);
         group = mManager.buildGroup().setName("Developers").setDescription("Users that are working on new stuff").build();
@@ -115,6 +115,7 @@ public class TaggableTest {
         ModelManager mManager = Factory.getModelManager();
         // tags should be both addable and removable
         // tags should be added and removed without changing version numbers 
+        // TODO: (not for now though)
         Tag t1a = mManager.buildTag().setKey("KR").build();
         User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
         u.associateTag(t1a);

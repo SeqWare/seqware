@@ -1,6 +1,6 @@
 package com.github.seqware.model.impl.inMemory;
 
-import com.github.seqware.model.AnalysisSet;
+import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.Reference;
 import com.github.seqware.model.ReferenceSet;
 import com.github.seqware.util.InMemoryIterator;
@@ -30,13 +30,13 @@ public class InMemoryReferenceSet extends ReferenceSet {
     @Override
     public void add(Reference reference) {
         references.add(reference);
-        this.setPrecedingVersion(this);
+        this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);  
     }
 
     @Override
     public void add(Set<Reference> references) {
         references.addAll(references);
-        this.setPrecedingVersion(this);
+        this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);  
     }
 
     @Override
@@ -66,7 +66,7 @@ public class InMemoryReferenceSet extends ReferenceSet {
     @Override
     public ReferenceSet.Builder toBuilder() {
         InMemoryReferenceSet.Builder b = new InMemoryReferenceSet.Builder();
-        b.aSet = (InMemoryReferenceSet) this.copy(true);
+        b.aSet = (InMemoryReferenceSet) this.copy(false);
         return b;
     }
 
@@ -81,7 +81,7 @@ public class InMemoryReferenceSet extends ReferenceSet {
             if (aSet.getName() == null || aSet.getManager() == null) {
                 throw new RuntimeException("Invalid build of ReferenceSet");
             }
-            aSet.getManager().objectCreated(aSet, newObject);
+            aSet.getManager().objectCreated(aSet);
             return aSet;
         }
     }

@@ -76,23 +76,23 @@ public interface BackEndInterface {
      */
     public void setPrecedingVersion(Particle predecessor);  
     
-    /**
-     * Associate tag with object
-     * @param object object to be tagged
-     * @param tag tag to associate
-     */
-    public void associateTag(Atom object, Tag tag) ;
-    
-    /**
-     * Dissociate tag with object
-     * @param object object to remove tags
-     * @param tag tag to dissociate
-     */
-    public void dissociateTag(Atom object, Tag tag) ;
-    
-    /**
-     * Get iterable of tags for this atom
-     * @return iterable of tags
-     */
-    public SeqWareIterable<Tag> getTags(Atom atom) ;
+//    /**
+//     * Associate tag with object
+//     * @param object object to be tagged
+//     * @param tag tag to associate
+//     */
+//    public void associateTag(Atom object, Tag tag) ;
+//    
+//    /**
+//     * Dissociate tag with object
+//     * @param object object to remove tags
+//     * @param tag tag to dissociate
+//     */
+//    public void dissociateTag(Atom object, Tag tag) ;
+//    
+//    /**
+//     * Get iterable of tags for this atom
+//     * @return iterable of tags
+//     */
+//    public SeqWareIterable<Tag> getTags(Atom atom) ;
 }

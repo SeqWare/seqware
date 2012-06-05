@@ -1,27 +1,26 @@
 package com.github.seqware.model;
 
 import com.github.seqware.factory.Factory;
+import com.github.seqware.factory.ModelManager;
 
 /**
- * Implements core functionality that is shared by classes that are
- * controlled by permissions and {@link Versionable} (as well as {@link Taggable})
+ * Implements core functionality that is shared by classes that are controlled
+ * by permissions and {@link Versionable} (as well as {@link Taggable})
  *
  * @author dyuen
  */
 public abstract class Molecule<T extends Molecule> extends Atom<T> implements ACLable, Versionable<T> {
-    
+
     private ACL permissions = ACL.newBuilder().build();
-    private transient boolean precedingChecked = false; 
-    private transient T precedingVersion = null;
-    
+    private boolean precedingChecked = false;
+    private T precedingVersion = null;
+
     @Override
-    public void setPermissions(ACL permissions){
+    public void setPermissions(ACL permissions) {
         this.permissions = permissions;
-        precedingChecked = true;
-        precedingVersion = (T) this;
-        super.getManager().objectCreated(this, false);
+        this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);  
     }
-    
+
     @Override
     public ACL getPermissions() {
         return permissions;
@@ -34,16 +33,22 @@ public abstract class Molecule<T extends Molecule> extends Atom<T> implements AC
 
     @Override
     public T getPrecedingVersion() {
-        if (!precedingChecked){
+        if (!precedingChecked) {
             this.precedingVersion = (T) Factory.getBackEnd().getPrecedingVersion(this);
         }
         precedingChecked = true;
         return this.precedingVersion;
-    } 
-    
+    }
+
     @Override
     public void setPrecedingVersion(T precedingVersion) {
+        this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);
         this.precedingChecked = true;
-        this.precedingVersion = precedingVersion;
+        if(precedingVersion != null){
+            this.precedingVersion = precedingVersion;
+        } else{
+            this.precedingVersion = null;
+        }
     } 
+    
 }

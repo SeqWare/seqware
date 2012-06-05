@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import com.github.seqware.factory.ModelManager;
 import com.github.seqware.impl.SimpleModelManager;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -137,14 +138,14 @@ public class User extends Molecule<User> {
      * Create an ACL builder started with a copy of this
      * @return 
      */
+    @Override
     public User.Builder toBuilder(){
         User.Builder b = new User.Builder();
-        b.user = this.copy(true);
-        b.user.setManager(this.getManager());
+        b.user = this.copy(false);
         return b;
     }
 
-    public static class Builder {
+    public static class Builder implements BaseBuilder {
 
         private User user = new User();
 
@@ -167,17 +168,15 @@ public class User extends Molecule<User> {
             user.emailAddress = emailAddress;
             return this;
         }
-        
-        public User build() {
-           return build(true);
-        }
 
-        public User build(boolean newObject) {
-            user.getManager().objectCreated(user, newObject);
+        @Override
+        public User build() {
+            user.getManager().objectCreated(user);
             return user;
         }
 
-        public Builder setManager(SimpleModelManager aThis) {
+        @Override
+        public Builder setManager(ModelManager aThis) {
             user.setManager(aThis);
             return this;
         }

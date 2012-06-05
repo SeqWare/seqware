@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import com.github.seqware.factory.ModelManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +15,6 @@ import java.util.List;
 public abstract class Analysis extends Atom<Analysis> implements QueryFuture {
 
     private List<Object> parameters = new ArrayList<Object>();
-    private AnalysisPluginInterface plugin;
     
     /**
      * Create a new analysis
@@ -38,9 +38,7 @@ public abstract class Analysis extends Atom<Analysis> implements QueryFuture {
      * Get analysis plugin
      * @return 
      */
-    public AnalysisPluginInterface getPlugin() {
-        return plugin;
-    }
+    public abstract AnalysisPluginInterface getPlugin();
     
     
 
@@ -50,9 +48,17 @@ public abstract class Analysis extends Atom<Analysis> implements QueryFuture {
     @Override
     public abstract boolean isDone();
     
+    @Override
     public abstract Analysis.Builder toBuilder();
 
-    public abstract static class Builder {
+    /**
+     * Set up the analysis plugin 
+     * @param plugin
+     * @return 
+     */
+    protected abstract void setPlugin(AnalysisPluginInterface plugin);
+
+    public abstract static class Builder implements BaseBuilder {
 
         public Analysis analysis;
 
@@ -67,11 +73,18 @@ public abstract class Analysis extends Atom<Analysis> implements QueryFuture {
         }
         
         public Analysis.Builder setPlugin(AnalysisPluginInterface plugin){
-            analysis.plugin = plugin;
+            analysis.setPlugin(plugin);
             return this;
         }
 
+        @Override
         public abstract Analysis build();
+        
+        @Override
+        public Analysis.Builder setManager(ModelManager aThis) {
+            analysis.setManager(aThis);
+            return this;
+        }
     }
     
 }

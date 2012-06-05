@@ -19,9 +19,11 @@ package com.github.seqware.impl;
 import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.*;
+import com.github.seqware.model.Analysis.Builder;
 import com.github.seqware.model.impl.inMemory.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.*;
 
 /**
  * A Simple implementation of the ModelManager interface. We can make this more
@@ -34,11 +36,11 @@ import java.util.*;
  */
 public class SimpleModelManager implements ModelManager {
 
-    private Map<Particle, Boolean> dirtySet = new HashMap<Particle, Boolean>();
+    private Map<Particle, State> dirtySet = new HashMap<Particle, State>();
 
     @Override
     public void persist(Particle p) {
-        this.dirtySet.put(p, true);
+        this.dirtySet.put(p, State.MANAGED);
     }
 
     @Override
@@ -55,16 +57,16 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public void flush() {
         // update dirty objects
-        for (Entry<Particle, Boolean> p : dirtySet.entrySet()) {
-            if (p.getValue()){
-                if (p.getKey() instanceof Versionable && ((Versionable)p.getKey()).getPrecedingVersion() != null){
+        for (Entry<Particle, State> p : dirtySet.entrySet()) {
+            if (p.getValue() == State.NEW_CREATION || p.getValue() == State.NEW_VERSION){
+                if (p.getValue() == State.NEW_VERSION){
                     // if they have preceding versions do an update, otherwise store
                     Factory.getBackEnd().update(p.getKey());
                 } else {
                     Factory.getBackEnd().store(p.getKey());
                 }
             }
-            p.setValue(false);
+            p.setValue(State.MANAGED);
         }
         
     }
@@ -160,7 +162,22 @@ public class SimpleModelManager implements ModelManager {
   
     
     @Override
-    public void objectCreated(Particle source, boolean newObject) {
-        this.dirtySet.put(source, true);
+    public void objectCreated(Particle source) {
+        particleStateChange(source, State.NEW_CREATION);
+    }
+
+    @Override
+    public void particleStateChange(Particle source, State state) {
+        this.dirtySet.put(source, state);
+    }
+
+    @Override
+    public Builder buildAnalysis() {
+        Analysis.Builder aSet = null;
+        if (Factory.BACKEND.equals(Factory.Backend_Type.IN_MEMORY)) {
+            return InMemoryQueryFutureImpl.newBuilder().setManager(this);
+        }
+        assert (aSet != null);
+        return aSet;
     }
 }

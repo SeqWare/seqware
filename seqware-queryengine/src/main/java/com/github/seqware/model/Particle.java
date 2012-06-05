@@ -13,8 +13,8 @@ import org.apache.commons.lang.SerializationUtils;
  *
  * @author dyuen
  */
-public abstract class Particle<T extends Particle> implements Serializable {
-
+public abstract class Particle<T extends Particle> implements Serializable, Buildable {
+    
     /**
      * Internally used unique identifier of this particle
      */
@@ -23,12 +23,12 @@ public abstract class Particle<T extends Particle> implements Serializable {
      * Exposed timestamp of this particle
      */
     private Date timestamp;
-    
     /**
      * Current manager
      */
     private transient ModelManager manager = null;
 
+    
     protected Particle() {
         // TODO This will have to be replaced with a stronger UUID generation method.
         this.uuid = UUID.randomUUID();
@@ -36,10 +36,11 @@ public abstract class Particle<T extends Particle> implements Serializable {
     }
 
     /**
-     * Copy constructor, used to generate a shallow copy of a particle ith 
+     * Copy constructor, used to generate a shallow copy of a particle ith
      * potentially a new timestamp and UUID
      *
-     * @param newUUID whether or not to generate a new UUID and timestamp for the new copy
+     * @param newUUID whether or not to generate a new UUID and timestamp for
+     * the new copy
      */
     public T copy(boolean newUUID) {
         UUID oldUUID = this.uuid;
@@ -49,54 +50,17 @@ public abstract class Particle<T extends Particle> implements Serializable {
             this.timestamp = new Date();
         }
         T newParticle = (T) SerializationUtils.clone(this);
+        // copy over the transient properties for now
+        newParticle.setManager(this.manager);
         this.uuid = oldUUID;
         return newParticle;
     }
 
-
-//    /**
-//     * Notify the back-end that it should keep track of the current object.
-//     * A store operation cascades downward (i.e. storing a ReferenceSet will
-//     * store all children References as well) 
-//     * 
-//     */
-//    public void store() {
-//        Factory.getBackEnd().store(this);
-//    }
-//
-//    /**
-//     * Notify the back-end that it should record the changes made to the current
-//     * object. Updates cascade downward (i.e. changing a ReferenceSet will
-//     * result in a copy-on-write that copies all children References as well)
-//     * Note that the UUID of this may change due to copy-on-write as this may now 
-//     * be a reference to a new entity in the database due to copy-on-write
-//     */
-//    public void update()  {
-//        Factory.getBackEnd().update(this);
-//    }
-//
-//    /**
-//     * Update the current object with any changes that may have been made to the
-//     * current object
-//     *
-//     */
-//    public void refresh()  {
-//        Factory.getBackEnd().refresh(this);
-//    }
-
-//    /**
-//     * Delete the current object (will cascade in the case of sets to their
-//     * children)
-//     *
-//     */
-//    public void delete()  {
-//        Factory.getBackEnd().delete(this);
-//    }
-
     /**
      * Get the universally unique identifier of this object. This should be
      * unique across the whole backend and not just this resource
-     * @return unique identifier for this (version of) resource 
+     *
+     * @return unique identifier for this (version of) resource
      */
     public UUID getUUID() {
         return this.uuid;
@@ -113,9 +77,10 @@ public abstract class Particle<T extends Particle> implements Serializable {
     public Date getCreationTimeStamp() {
         return timestamp;
     }
-    
+
     /**
      * Set the timestamp, this should never be called outside of the backend
+     *
      * @param timestamp new time stamp
      */
     public void setTimestamp(Date timestamp) {
@@ -125,20 +90,22 @@ public abstract class Particle<T extends Particle> implements Serializable {
     /**
      * Set the UUID, very dangerous, this should never be called outside of the
      * backend
-     * @param uuid new UUID 
+     *
+     * @param uuid new UUID
      */
     public void setUUID(UUID uuid) {
         this.uuid = uuid;
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         return this.uuid.toString() + " " + super.toString();
     }
 
     /**
      * Get the model manager for this particle
-     * @return 
+     *
+     * @return
      */
     public ModelManager getManager() {
         return manager;
@@ -146,9 +113,11 @@ public abstract class Particle<T extends Particle> implements Serializable {
 
     /**
      * Set the model manager for this particle
-     * @param manager 
+     *
+     * @param manager
      */
     public void setManager(ModelManager manager) {
         this.manager = manager;
     }
+    
 }

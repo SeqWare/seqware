@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import com.github.seqware.factory.ModelManager;
 import com.github.seqware.impl.SimpleModelManager;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.Set;
@@ -58,9 +59,10 @@ public abstract class AnalysisSet extends Molecule implements SeqWareIterable<An
      * Create an ACL builder started with a copy of this
      * @return 
      */
+    @Override
     public abstract AnalysisSet.Builder toBuilder();
 
-    public abstract static class Builder {
+    public abstract static class Builder implements BaseBuilder{
 
         public AnalysisSet aSet;
 
@@ -74,13 +76,11 @@ public abstract class AnalysisSet extends Molecule implements SeqWareIterable<An
             return this;
         }
         
-        public AnalysisSet build() {
-           return build(true);
-        }
+        @Override
+        public abstract AnalysisSet build();
 
-        public abstract AnalysisSet build(boolean newObject);
-
-        public Builder setManager(SimpleModelManager aThis) {
+        @Override
+        public Builder setManager(ModelManager aThis) {
             aSet.setManager(aThis);
             return this;
         }

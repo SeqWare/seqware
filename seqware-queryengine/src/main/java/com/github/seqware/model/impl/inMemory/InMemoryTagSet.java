@@ -1,7 +1,6 @@
 package com.github.seqware.model.impl.inMemory;
 
-import com.github.seqware.model.AnalysisSet;
-import com.github.seqware.model.Feature;
+import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.Tag;
 import com.github.seqware.model.TagSet;
 import java.util.HashSet;
@@ -33,11 +32,13 @@ public class InMemoryTagSet extends TagSet {
     @Override
     public void add(Tag tag) {
         tagSet.add(tag);
+        this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);  
     }
 
     @Override
     public void add(Set<Tag> tags) {
         this.tagSet.addAll(tags);
+        this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);  
     }
 
     @Override
@@ -57,7 +58,7 @@ public class InMemoryTagSet extends TagSet {
     @Override
     public TagSet.Builder toBuilder() {
         TagSet.Builder b = new InMemoryTagSet.Builder();
-        b.aSet = (InMemoryTagSet) this.copy(true);
+        b.aSet = (InMemoryTagSet) this.copy(false);
         return b;
     }
 
@@ -68,11 +69,11 @@ public class InMemoryTagSet extends TagSet {
         }
 
         @Override
-        public TagSet build(boolean newObject) {
+        public TagSet build() {
             if (aSet.getName() == null || aSet.getManager() == null) {
                 throw new RuntimeException("Invalid build of tag set");
             }
-            aSet.getManager().objectCreated(aSet, newObject);
+            aSet.getManager().objectCreated(aSet);
             return aSet;
         }
     }

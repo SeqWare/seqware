@@ -33,7 +33,7 @@ public class InMemoryReference extends Reference {
     @Override
     public Reference.Builder toBuilder() {
         InMemoryReference.Builder b = new InMemoryReference.Builder();
-        b.reference = (Reference) this.copy(true);
+        b.reference = (Reference) this.copy(false);
         return b;
     }
 
@@ -44,8 +44,8 @@ public class InMemoryReference extends Reference {
         }
 
         @Override
-        public Reference build(boolean newObject) {
-            reference.getManager().objectCreated(reference, newObject);
+        public Reference build() {
+            reference.getManager().objectCreated(reference);
             return reference;
         }
     }

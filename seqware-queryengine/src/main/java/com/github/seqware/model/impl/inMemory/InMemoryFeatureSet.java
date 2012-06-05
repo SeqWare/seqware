@@ -1,5 +1,6 @@
 package com.github.seqware.model.impl.inMemory;
 
+import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.AnalysisSet;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
@@ -31,13 +32,13 @@ public class InMemoryFeatureSet extends FeatureSet {
     @Override
     public void add(Feature feature) {
         features.add(feature);
-        this.setPrecedingVersion(this);
+        this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);  
     }
 
     @Override
     public void add(Set<Feature> features) {
         this.features.addAll(features);
-        this.setPrecedingVersion(this);
+        this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);  
     }
 
     @Override
@@ -62,7 +63,7 @@ public class InMemoryFeatureSet extends FeatureSet {
     @Override
     public InMemoryFeatureSet.Builder toBuilder() {
         InMemoryFeatureSet.Builder b = new InMemoryFeatureSet.Builder();
-        b.aSet = (InMemoryFeatureSet) this.copy(true);
+        b.aSet = (InMemoryFeatureSet) this.copy(false);
         return b;
     }
 
@@ -77,7 +78,7 @@ public class InMemoryFeatureSet extends FeatureSet {
             if (aSet.getReference() == null && aSet.getManager() != null) {
                 throw new RuntimeException("Invalid build of AnalysisSet");
             }
-            aSet.getManager().objectCreated(aSet, newObject);
+            aSet.getManager().objectCreated(aSet);
             return aSet;
         }
     }

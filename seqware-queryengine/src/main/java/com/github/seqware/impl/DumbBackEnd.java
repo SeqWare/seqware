@@ -33,9 +33,8 @@ import org.apache.commons.lang.SerializationUtils;
  */
 public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, QueryInterface {
 
-    private List<Particle> listOfEverything = new ArrayList<Particle>();
+    private Map<UUID, Particle> listOfEverything = new HashMap<UUID, Particle>();
     private Map<UUID, UUID> versionsOfEverything = new HashMap<UUID, UUID>();
-    private Map<UUID, Set<UUID>> taggedWith = new HashMap<UUID, Set<UUID>>();
     private List<AnalysisPluginInterface> apis = new ArrayList<AnalysisPluginInterface>();
 
     public DumbBackEnd() {
@@ -46,21 +45,26 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
 
     @Override
     public void store(Particle obj) {
-        if (!listOfEverything.contains(obj)) {
+        if (!listOfEverything.containsKey(obj.getUUID())) {
             // let's just clone everything on store to simulate hbase
             Particle storeObj = (Particle) SerializationUtils.clone(obj);
-            listOfEverything.add(storeObj);
+            assert(storeObj.getUUID().equals(obj.getUUID()));
+            listOfEverything.put(storeObj.getUUID(), storeObj);
             versionsOfEverything.put(storeObj.getUUID(), null);
         }
     }
 
     @Override
     public void update(Particle obj) {
-        // create new particle
+        // create a copy of the new particle and store it
         Particle newParticle = obj.copy(true);
-        this.store(newParticle);
-        versionsOfEverything.put(newParticle.getUUID(), obj.getUUID());
-        // update this to point at the new particle as represented by a UUID and a timestamp
+        store(newParticle);
+        // update the backend
+        listOfEverything.put(newParticle.getUUID(), newParticle);
+        if (obj instanceof Molecule){
+            versionsOfEverything.put(newParticle.getUUID(), obj.getUUID());
+        }
+        // change the obj we have a reference to look like a new object
         obj.setUUID(newParticle.getUUID());
         obj.setTimestamp(newParticle.getCreationTimeStamp());
     }
@@ -82,7 +86,7 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
 
     @Override
     public Particle getParticleByUUID(UUID uuid) {
-        for (Particle p : listOfEverything) {
+        for (Particle p : listOfEverything.values()) {
             if (p.getUUID().equals(uuid)) {
                 return p;
             }
@@ -165,7 +169,7 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
 
     private SeqWareIterable getAllOfClass(Class aClass) {
         List list = new ArrayList();
-        for (Particle p : listOfEverything) {
+        for (Particle p : listOfEverything.values()) {
             if (aClass.isInstance(p)) {
                 list.add(p);
             }
@@ -183,38 +187,38 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
-    public void associateTag(Atom object, Tag tag) {
-        if (!taggedWith.containsKey(object.getUUID())) {
-            taggedWith.put(object.getUUID(), new HashSet<UUID>());
-        }
-        taggedWith.get(object.getUUID()).add(tag.getUUID());
-    }
+//    @Override
+//    public void associateTag(Atom object, Tag tag) {
+//        if (!taggedWith.containsKey(object.getUUID())) {
+//            taggedWith.put(object.getUUID(), new HashSet<UUID>());
+//        }
+//        taggedWith.get(object.getUUID()).add(tag.getUUID());
+//    }
+//
+//    @Override
+//    public void dissociateTag(Atom object, Tag tag) {
+//        if (taggedWith.containsKey(object.getUUID())) {
+//            Set<UUID> set = taggedWith.get(object.getUUID());
+//            set.remove(tag.getUUID());
+//        }
+//
+//    }
+//
+//    @Override
+//    public SeqWareIterable<Tag> getTags(Atom atom)  {
+//        List<Tag> tags = new ArrayList<Tag>();
+//        Set<UUID> set = taggedWith.get(atom.getUUID());
+//        if (set == null) {
+//            return new InMemoryIterable(tags);
+//        }
+//        for (UUID uid : set) {
+//            tags.add((Tag) this.getParticleByUUID(uid));
+//        }
+//        return  new InMemoryIterable(tags);
+//    }
 
     @Override
-    public void dissociateTag(Atom object, Tag tag) {
-        if (taggedWith.containsKey(object.getUUID())) {
-            Set<UUID> set = taggedWith.get(object.getUUID());
-            set.remove(tag.getUUID());
-        }
-
-    }
-
-    @Override
-    public SeqWareIterable<Tag> getTags(Atom atom) throws AccessControlException {
-        List<Tag> tags = new ArrayList<Tag>();
-        Set<UUID> set = taggedWith.get(atom.getUUID());
-        if (set == null) {
-            return new InMemoryIterable(tags);
-        }
-        for (UUID uid : set) {
-            tags.add((Tag) this.getParticleByUUID(uid));
-        }
-        return  new InMemoryIterable(tags);
-    }
-
-    @Override
-    public long getVersion(Particle obj) throws AccessControlException {
+    public long getVersion(Particle obj)  {
         Particle parent = this.getPrecedingVersion(obj);
         if (parent != null) {
             return 1 + this.getVersion(parent);
