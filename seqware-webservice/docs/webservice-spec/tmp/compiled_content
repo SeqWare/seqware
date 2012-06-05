@@ -13211,14 +13211,14 @@ I"i<p>Retrieves a file using its SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@HI""/0.11.4/metadata/db/lane_put/;T{;{	;I"ê<!DOCTYPE html>
+</code></pre>;T;@HI""/0.11.4/metadata/db/lane_put/;T{;{	;I"†<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: </title>
+<title>SeqWare Web Service API: PUT lane</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -13277,7 +13277,7 @@ Code Block
 </div> <!-- /sidebar-module -->
     	</div>
 <!-- /sidebar-shell -->
-	<h1></h1>
+	<h1>PUT lane</h1>
 	<p>Updates a lane with the given SWID.</p>
 
 <h2 id="resource-url">Resource URL</h2>
@@ -14477,14 +14477,14 @@ I"m<p>Retrieves a study using its SWID.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@xI"2/0.11.4/metadata/db/workflowparamvalues_post/;T{;{	;I"°<!DOCTYPE html>
+</code></pre>;T;@xI"2/0.11.4/metadata/db/workflowparamvalues_post/;T{;{	;I"”<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: </title>
+<title>SeqWare Web Service API: POST /workflowparamvalues</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -14543,7 +14543,7 @@ Code Block
 </div> <!-- /sidebar-module -->
     	</div>
 <!-- /sidebar-shell -->
-	<h1></h1>
+	<h1>POST /workflowparamvalues</h1>
 	<p>Adds a workflow parameter value to the database</p>
 
 <h2 id="resource-url">Resource URL</h2>
@@ -15274,7 +15274,7 @@ I"⁄<p>Retrieves a list of workflow parameters.</p>
 <pre><code>
 Code Block
 
-</code></pre>;T;@ñI"/0.11.4/metadata/db/;T{;{	;I"÷+<!DOCTYPE html>
+</code></pre>;T;@ñI"/0.11.4/metadata/db/;T{;{	;I"˜+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -15416,7 +15416,7 @@ Code Block
 <td>Retrieves a lane with a particular SWID.</td>
 </tr>
 <tr>
-<td><a href="lane_put/" alt="">PUT<br>/lane/(laneSWID)</a></td>
+<td><a href="lane_put/" alt="PUT lane">PUT<br>/lane/(laneSWID)</a></td>
 <td>Updates a lane with the given SWID.</td>
 </tr>
 <tr>
@@ -15492,7 +15492,7 @@ Code Block
 <td>Retrieves a list of workflow parameter values.</td>
 </tr>
 <tr>
-<td><a href="workflowparamvalues_post/" alt="">POST<br>/workflowparamvalues</a></td>
+<td><a href="workflowparamvalues_post/" alt="POST /workflowparamvalues">POST<br>/workflowparamvalues</a></td>
 <td>Adds a workflow parameter value to the database</td>
 </tr>
 <tr>
@@ -15599,7 +15599,7 @@ The Web service that this API refers to is <%= server_name %>. For more informat
   <tr><td><a href="<%= img.path %>" alt="<%= img[:title] %>"><%= img[:method] %><br/><%= img[:uri] %></a></td><td><%= img[:summary] %></td></tr>
 <% end %>
 </table>;T;
-I"ª <h2 id="overview">Overview</h2>
+I"‹ <h2 id="overview">Overview</h2>
 
 <p>This sub-domain is exclusively for low-level access of database tables. Each URI actually retrieves one or more rows from a database table. The output format is exclusively XML produced by JAXB.</p>
 
@@ -15672,7 +15672,7 @@ I"ª <h2 id="overview">Overview</h2>
 <td>Retrieves a lane with a particular SWID.</td>
 </tr>
 <tr>
-<td><a href="/0.11.4/metadata/db/lane_put/" alt="">PUT<br>/lane/(laneSWID)</a></td>
+<td><a href="/0.11.4/metadata/db/lane_put/" alt="PUT lane">PUT<br>/lane/(laneSWID)</a></td>
 <td>Updates a lane with the given SWID.</td>
 </tr>
 <tr>
@@ -15748,7 +15748,7 @@ I"ª <h2 id="overview">Overview</h2>
 <td>Retrieves a list of workflow parameter values.</td>
 </tr>
 <tr>
-<td><a href="/0.11.4/metadata/db/workflowparamvalues_post/" alt="">POST<br>/workflowparamvalues</a></td>
+<td><a href="/0.11.4/metadata/db/workflowparamvalues_post/" alt="POST /workflowparamvalues">POST<br>/workflowparamvalues</a></td>
 <td>Adds a workflow parameter value to the database</td>
 </tr>
 <tr>
