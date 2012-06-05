@@ -16,10 +16,11 @@
  */
 package com.github.seqware.factory;
 
-import com.github.seqware.impl.DumbBackEnd;
+import com.github.seqware.impl.ApacheUtilsPersistentSerialization;
 import com.github.seqware.impl.SimpleModelManager;
-import com.github.seqware.model.*;
-import com.github.seqware.model.impl.inMemory.*;
+import com.github.seqware.impl.SimplePersistentBackEnd;
+import com.github.seqware.model.FeatureStoreInterface;
+import com.github.seqware.model.QueryInterface;
 
 /**
  *
@@ -38,7 +39,7 @@ public class Factory {
      */
     public static BackEndInterface getBackEnd(){
         if (instance == null){
-            instance = new DumbBackEnd();
+            instance = new SimplePersistentBackEnd(new ApacheUtilsPersistentSerialization());
         }
         return instance;
     }
@@ -49,7 +50,7 @@ public class Factory {
      */
     public static QueryInterface getQueryInterface(){
         if (instance == null){
-            instance = new DumbBackEnd();
+            instance = new SimplePersistentBackEnd(new ApacheUtilsPersistentSerialization());
         }
         return (QueryInterface)instance; 
     }
@@ -61,7 +62,7 @@ public class Factory {
      */
     public static FeatureStoreInterface getFeatureStoreInterface(){
         if (instance == null){
-            instance = new DumbBackEnd();
+            instance = new SimplePersistentBackEnd(new ApacheUtilsPersistentSerialization());
         }
         return (FeatureStoreInterface)instance; 
     }

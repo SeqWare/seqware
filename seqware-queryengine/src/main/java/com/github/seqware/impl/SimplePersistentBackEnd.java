@@ -21,23 +21,31 @@ import com.github.seqware.model.*;
 import com.github.seqware.model.impl.inMemory.*;
 import com.github.seqware.util.InMemoryIterable;
 import com.github.seqware.util.SeqWareIterable;
-import java.security.AccessControlException;
+import com.google.common.io.Files;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.lang.SerializationUtils;
+import org.apache.commons.io.*;
 
 /**
  *
- * A toy backend implementation that stores everything in memory.
+ * A toy backend implementation that writes all stores objects to disk using
+ * Java persistence.
  *
  * @author dyuen
  */
-public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, QueryInterface {
+public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreInterface, QueryInterface {
 
-    private Map<UUID, Particle> listOfEverything = new HashMap<UUID, Particle>();
+    private Set<UUID> listOfEverything = new HashSet<UUID>();
     private Map<UUID, UUID> versionsOfEverything = new HashMap<UUID, UUID>();
     private List<AnalysisPluginInterface> apis = new ArrayList<AnalysisPluginInterface>();
+    private FileSerializationInterface fsi;
 
-    public DumbBackEnd() {
+    public SimplePersistentBackEnd(FileSerializationInterface fsi) {
+        this.fsi = fsi;
         apis.add(new InMemoryFeaturesAllPlugin());
         apis.add(new InMemoryFeaturesByReferencePlugin());
         apis.add(new InMemoryFeaturesByTypePlugin());
@@ -45,12 +53,10 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
 
     @Override
     public void store(Particle obj) {
-        if (!listOfEverything.containsKey(obj.getUUID())) {
-            // let's just clone everything on store to simulate hbase
-            Particle storeObj = (Particle) SerializationUtils.clone(obj);
-            assert(storeObj.getUUID().equals(obj.getUUID()));
-            listOfEverything.put(storeObj.getUUID(), storeObj);
-            versionsOfEverything.put(storeObj.getUUID(), null);
+        if (!listOfEverything.contains(obj.getUUID())) {
+            fsi.serializeParticleToTarget(obj);
+            listOfEverything.add(obj.getUUID());
+            versionsOfEverything.put(obj.getUUID(), null);
         }
     }
 
@@ -60,8 +66,9 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
         Particle newParticle = obj.copy(true);
         store(newParticle);
         // update the backend
-        listOfEverything.put(newParticle.getUUID(), newParticle);
-        if (obj instanceof Molecule){
+        fsi.serializeParticleToTarget(newParticle);
+        listOfEverything.add(newParticle.getUUID());
+        if (obj instanceof Molecule) {
             versionsOfEverything.put(newParticle.getUUID(), obj.getUUID());
         }
         // change the obj we have a reference to look like a new object
@@ -70,7 +77,7 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
     }
 
     @Override
-    public Particle refresh(Particle obj)  {
+    public Particle refresh(Particle obj) {
         return obj;
     }
 
@@ -78,7 +85,6 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
 //    public void delete(Particle obj) throws AccessControlException {
 //        listOfEverything.remove(obj);
 //    }
-
     @Override
     public String getVersion() {
         return "In-memory back-end 0.1";
@@ -86,7 +92,8 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
 
     @Override
     public Particle getParticleByUUID(UUID uuid) {
-        for (Particle p : listOfEverything.values()) {
+        for (UUID u : listOfEverything) {
+            Particle p = fsi.deserializeTargetToParticle(u);
             if (p.getUUID().equals(uuid)) {
                 return p;
             }
@@ -159,7 +166,7 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
     public QueryFuture getFeaturesByRange(FeatureSet set, Location location, long start, long stop, int hours) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     @Override
     public QueryFuture getFeaturesByTag(FeatureSet set, int hours, String subject, String predicate, String object) {
         AnalysisPluginInterface plugin = new InMemoryFeaturesByTagPlugin();
@@ -169,7 +176,8 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
 
     private SeqWareIterable getAllOfClass(Class aClass) {
         List list = new ArrayList();
-        for (Particle p : listOfEverything.values()) {
+        for (UUID u : listOfEverything) {
+            Particle p = fsi.deserializeTargetToParticle(u);
             if (aClass.isInstance(p)) {
                 list.add(p);
             }
@@ -216,9 +224,8 @@ public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, Que
 //        }
 //        return  new InMemoryIterable(tags);
 //    }
-
     @Override
-    public long getVersion(Particle obj)  {
+    public long getVersion(Particle obj) {
         Particle parent = this.getPrecedingVersion(obj);
         if (parent != null) {
             return 1 + this.getVersion(parent);

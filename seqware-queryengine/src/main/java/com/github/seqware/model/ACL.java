@@ -64,8 +64,8 @@ public class ACL implements Serializable {
     }
 
     /**
-     * Create a new ACL builder
-     * @return 
+     * Create a new ACL builder, this is needed to add ne
+     * @return a new builder for new ACL instances
      */
     protected static Builder newBuilder() {
         return new Builder();
