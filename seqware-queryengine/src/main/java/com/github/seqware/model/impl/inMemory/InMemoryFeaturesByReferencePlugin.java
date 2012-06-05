@@ -16,6 +16,8 @@
  */
 package com.github.seqware.model.impl.inMemory;
 
+import com.github.seqware.factory.Factory;
+import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.AnalysisPluginInterface;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
@@ -89,15 +91,10 @@ public class InMemoryFeaturesByReferencePlugin implements AnalysisPluginInterfac
     }
 
     public FeatureSet getFinalResult() {
-        InMemoryFeatureSet fSet = new InMemoryFeatureSet(new Reference(){
-            @Override
-            public Iterator<FeatureSet> featureSets() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-            
-        });
-        
+        ModelManager mManager = Factory.getModelManager();
+        FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("").build(true)).build(true);
         fSet.add(accumulator);
+        mManager.close();
         return fSet;
     }
 }

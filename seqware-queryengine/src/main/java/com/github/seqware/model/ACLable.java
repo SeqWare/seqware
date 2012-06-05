@@ -8,16 +8,16 @@ package com.github.seqware.model;
  */
 public interface ACLable {
     
+    
+    /**
+     * Set permissions for this
+     * @param permissions new set of permissions
+     */
+    public void setPermissions(ACL permissions);
+    
     /**
      * Get permissions for the subject.
      * @return Access control list object.
      */
     public ACL getPermissions();
-    
-    /**
-     * Set permissions for a subject
-     * @param acl new permissions to set on the subject
-     * @throws SecurityException Thrown if the permissions cannot be set under the current ACL rules.
-     */
-    public void setPermissions(ACL acl) throws SecurityException;
 }

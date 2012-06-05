@@ -1,0 +1,79 @@
+mismatch_id	ref_qual_call	cons_qual_call	max_mapping_qual	ref_max_seq_qual	ref_ave_seq_qual	cons_max_seq_qual	cons_ave_seq_qual	zygosity	base_count_forward	base_count_reverse	base_count	contig	start	stop	ref_base	cons_base	called_base	read_count	type	read_bases	base_qual	call_one	call_two	reads_support_call_one	reads_support_call_two	reads_support_call_three
+Variant: 12	10.0	10.0	45.0	62.0	37.714287	58.0	58.0	2	1	1	2	chr10	193470	193471	A	R	G	16	1	.gG.,.,,,...,+1g,+2cg,^~,	&[[?XNCW_Q[_6A"6			0	0	0
+	tags:
+		chr10
+		chr22
+		SNV
+		heterozygous
+Variant: 1	155.0	196.0	127.0	63.0	25.4	63.0	53.4375	2	12	4	16	chr22	14430932	14430933	G	R	A	31	1	.AA,aAA,aA,.,AAA,Aa,a^~A^~A^~A^~,^~,^~,^~,^~,^~,^~,	`_TYQR`<M`W=U\`_G`?#FI[`%/9(&$%			0	0	0
+	tags:
+		chr22
+		SNV
+		heterozygous
+		intron-splice-site-mutation
+		is_dbSNP:rs2306737
+Variant: 2	28.0	0.0	127.0	63.0	49.75862	52.0	44.0	1	0	0	0	chr22	14432166	14432167	A	A	A	32	1	..,,,.,...,.........,..CC.+1C,+1c...c^~.	NFWWU``D^YQAO]\X@X8]WYELUOM`JTF`			0	0	0
+	tags:
+		chr22
+		homozygous
+		not_dbSNP
+		SNV
+Variant: 3	100.0	100.0	255.0	0.0	0.0	0.0	0.0	2	1	1	2	chr22	14432167	14432168	*	*/+C	C	32	2	..,,,.,...,.........,..CC.+1C,+1c...c^~.	NFWWU``D^YQAO]\X@X8]WYELUOM`JTF`	*	+C	30	2	0
+	tags:
+		utr-mutation
+		indel
+		chr22
+		not_dbSNP
+		heterozygous
+Variant: 4	152.0	0.0	127.0	63.0	34.580647	0.0	NaN	1	0	0	0	chr22	14644664	14644665	T	T	T	34	1	,-5aaata,-5aaata..,,,,-5aaata**.,,,*.-5AAATA,,,,,...,,,,,,,,^~,^~,	OZMZM5HG""MQJDR2C17H"D`JHIB2IBG"/-			0	0	0
+	tags:
+		chr22
+		homozygous
+		not_dbSNP
+		SNV
+Variant: 5	140.0	140.0	255.0	0.0	0.0	0.0	0.0	2	1	3	4	chr22	14644665	14644670	*/-AAATA	*	AAATA	34	3	,-5aaata,-5aaata..,,,,-5aaata**.,,,*.-5AAATA,,,,,...,,,,,,,,^~,^~,	OZMZM5HG""MQJDR2C17H"D`JHIB2IBG"/-	*	-AAATA	30	4	0
+	tags:
+		early-termination
+		chr22
+		indel
+		not_dbSNP
+		frameshift
+		heterozygous
+		intron-splice-site-mutation
+Variant: 6	92.0	0.0	127.0	63.0	50.0	0.0	NaN	1	0	0	0	chr22	14895652	14895653	G	G	G	12	1	,$,-1t.+4CCTT*,+4cctt..+4CCTT.+4CCTT.,,^~,	``CX`@UV@RY)			0	0	0
+	tags:
+		chr22
+		homozygous
+		SNV
+		is_dbSNP:rs6567645
+Variant: 7	18.0	218.0	255.0	0.0	0.0	0.0	0.0	2	3	1	4	chr22	14895653	14895654	*	+CCTT/*	CCTT	12	2	,$,-1t.+4CCTT*,+4cctt..+4CCTT.+4CCTT.,,^~,	``CX`@UV@RY)	+CCTT	*	4	7	1
+	tags:
+		chr22
+		indel
+		not_dbSNP
+		heterozygous
+Variant: 8	255.0	0.0	127.0	63.0	39.52222	22.0	19.5	1	0	0	0	chr22	15230980	15230981	T	T	T	93	1	.$.$.,..,,,.A-1G,,,,,,,,,.+2AGC....-1G.,,.,,,,,....,-1g,,,.,,,,,.,,-1g.,,,...,,,,.-1G..-1G..,,..,*,,,,,,+3atc,,...,,,^~.^~.^~,^~,^~,	57S;S<;_`E7`[``\``K`H2`_*&4`S`7^`^HPZ`"Z"'ZK=`UPV`=$S2"^WSZ@[VI5[JNQO"@_">Y"G"9CD"Z`O""5^Q%'%			0	0	0
+	tags:
+		homozygous
+		chr22
+		SNV
+Variant: 9	827.0	827.0	255.0	0.0	0.0	0.0	0.0	2	4	2	6	chr22	15230981	15230982	*/-G	*	G	93	3	.$.$.,..,,,.A-1G,,,,,,,,,.+2AGC....-1G.,,.,,,,,....,-1g,,,.,,,,,.,,-1g.,,,...,,,,.-1G..-1G..,,..,*,,,,,,+3atc,,...,,,^~.^~.^~,^~,^~,	57S;S<;_`E7`[``\``K`H2`_*&4`S`7^`^HPZ`"Z"'ZK=`UPV`=$S2"^WSZ@[VI5[JNQO"@_">Y"G"9CD"Z`O""5^Q%'%	*	-G	85	6	2
+	tags:
+		early-termination
+		chr22
+		indel
+		abnormal-ref-gene-model-lacking-stop-codon
+		frameshift
+		heterozygous
+Variant: 10	61.0	104.0	127.0	26.0	4.090909	63.0	41.266666	1	4	11	15	chr22	15490401	15490402	C	G	G	27	1	.$.$.......ggGGGGggggg,.ggg*g	(%";"""""S`>=>CBWQ[F""UJG:M			0	0	0
+	tags:
+		homozygous
+		chr22
+		SNV
+		coding-nonsynonymous
+		is_dbSNP:r192100102
+Variant: 11	196.0	196.0	127.0	63.0	47.142857	63.0	53.5625	2	14	1	15	chr22	16990797	16990798	A	R	G	37	1	gGG.G,,.,,GG,..GGG.....G,GGG.,GG,,.,t	`KNHV]XJUVQVW[QY\S5C`S^`^^```O\\E"`A5			0	0	0
+	tags:
+		chr22
+		SNV
+		heterozygous

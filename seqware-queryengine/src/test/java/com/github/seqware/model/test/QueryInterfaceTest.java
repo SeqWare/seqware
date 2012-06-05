@@ -1,12 +1,10 @@
 package com.github.seqware.model.test;
 
 import com.github.seqware.factory.Factory;
+import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import com.github.seqware.model.QueryFuture;
-import com.github.seqware.model.Reference;
-import com.github.seqware.model.impl.inMemory.InMemoryFeatureSet;
-import java.util.Iterator;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -18,26 +16,18 @@ import org.junit.Test;
  */
 public class QueryInterfaceTest {
 
-    private static InMemoryFeatureSet aSet;
+    private static FeatureSet aSet;
     private static Feature a1, a2, a3, a4;
 
     @BeforeClass
     public static void setupTests() {
-        aSet = new InMemoryFeatureSet(new Reference("testing dummy reference") {
-            @Override
-            public Iterator<FeatureSet> featureSets() {
-                return null;
-            }
-        });
+        ModelManager mManager = Factory.getModelManager();
+        aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy ref").build()).build();
         // create and store some features
-        a1 = new Feature(aSet, 1000000, 1000100, Feature.Strand.NEGATIVE, "type1", 100.0, "Program A", "pragma", ".");
-        a2 = new Feature(aSet, 1000001, 1000101, Feature.Strand.POSITIVE, "type2", 80.0, "Program A", "pragma", ".");
-        a3 = new Feature(aSet, 1000002, 1000102, Feature.Strand.NOT_STRANDED, "type2", 80.0, "Program B", "pragma", ".");
-        a4 = new Feature(aSet, 1000003, 1000103, Feature.Strand.UNKNOWN, "type3", 50.0, "Program B", "pragma", ".");
-        a1.add();
-        a2.add();
-        a3.add();
-        a4.add();
+        a1 = mManager.buildFeature().setStart(1000000).setStop(1000100).setStrand(Feature.Strand.NEGATIVE).setType("type1").setScore(100.0).setSource("Program A").setPragma("pragma").setPhase(".").build();
+        a2 = mManager.buildFeature().setStart(1000001).setStop(1000101).setStrand(Feature.Strand.POSITIVE).setType("type2").setScore(80.0).setSource("Program A").setPragma("pragma").setPhase(".").build();
+        a3 = mManager.buildFeature().setStart(1000002).setStop(1000102).setStrand(Feature.Strand.NOT_STRANDED).setType("type2").setScore(80.0).setSource("Program B").setPragma("pragma").setPhase(".").build();
+        a4 = mManager.buildFeature().setStart(1000003).setStop(1000103).setStrand(Feature.Strand.UNKNOWN).setType("type3").setScore(50.0).setSource("Program B").setPragma("pragma").setPhase(".").build();
         aSet.add(a1);
         aSet.add(a2);
         aSet.add(a3);
@@ -71,11 +61,9 @@ public class QueryInterfaceTest {
         QueryFuture future = Factory.getQueryInterface().getFeaturesByType(aSet, "type1", 0);
         // check that Features are present match
         FeatureSet result = future.get();
-        int sum = 0;
         for (Feature f : result) {
-            sum++;
             Assert.assertTrue(f.getType().equals("type1"));
         }
-        Assert.assertTrue(sum == 1);
+        Assert.assertTrue(result.getCount() == 1);
     }
 }

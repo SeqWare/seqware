@@ -11,21 +11,71 @@
     <groupId>com.github.seqware</groupId>
     <version>0.12.0</version>
 
+    <repositories>
+        <repository>
+            <id>seqware.sourceforge.net</id>
+            <name>SeqWare Maven Repository</name>
+            <url>http://206.108.121.137/artifactory/seqware-release</url>
+        </repository>
+        <repository>
+            <id>snapshot.seqware.sourceforge.net</id>
+            <name>SeqWare Snapshot Maven Repository</name>
+            <url>http://206.108.121.137/artifactory/seqware-snapshot</url>
+        </repository>
+        <repository>
+            <id>dependencies.seqware.sourceforge.net</id>
+            <name>SeqWare Dependencies Maven Repository</name>
+            <url>http://206.108.121.137/artifactory/seqware-dependencies</url>
+        </repository>
+        <repository>
+            <id>org.codehaus.plexus</id>
+            <name>Plexus</name>
+            <url>http://repo1.maven.org/maven2/org/codehaus/plexus/</url>
+        </repository>
+        <repository>
+            <id>maven-restlet</id>
+            <name>Public online Restlet repository</name>
+            <url>http://maven.restlet.org/</url>
+        </repository>
+        <repository>
+            <id>apache-releases</id>
+            <name>Apache Releases repository</name>
+            <url>https://repository.apache.org/content/repositories/releases/</url>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
+            <version>2.4</version>
             <configuration>
-            <source>1.5</source>
-            <target>1.5</target>
+            <source>1.6</source>
+            <target>1.6</target>
             </configuration>
             </plugin>
         </plugins>
     </build>
 
+    <reporting> 
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                <doclet>ydoc.doclets.YStandard</doclet>
+                <docletPath>/home/dyuen/Downloads/yworks-uml-doclet-3.0_02-jdk1.5/lib/ydoc.jar:/home/dyuen/Downloads/yworks-uml-doclet-3.0_02-jdk1.5/resources</docletPath>
+                <additionalparam>-umlautogen</additionalparam>
+                </configuration>
+                <version>3.0</version>
+            </plugin>
+        </plugins>
+    </reporting> 
+
     <modules>
         <module>seqware-queryengine</module>
+        <module>seqware-queryengine-legacy</module>
     </modules>
 
     <licenses>

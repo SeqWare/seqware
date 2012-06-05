@@ -1,0 +1,8 @@
+Welcome to bfast.
+
+Please refer to the man pages for documentation:
+doc/bfast.1
+doc/bpreprocess.1
+doc/bmatches.1
+doc/balign.1
+doc/bpostprocess.1

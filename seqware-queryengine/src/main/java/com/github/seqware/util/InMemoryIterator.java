@@ -20,7 +20,6 @@ public class InMemoryIterator<T> extends SeqWareIterator<T> {
 
     @Override
     public void closeImpl() {
-        return;
     }
 
     @Override

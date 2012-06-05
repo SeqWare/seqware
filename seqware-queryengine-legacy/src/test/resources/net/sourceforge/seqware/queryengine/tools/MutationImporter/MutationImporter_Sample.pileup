@@ -1,0 +1,21 @@
+# PILEUP TEST FILE
+# simple SNV
+chr22	14430933	g	R	155	196	127	31	.AA,aAA,aA,.,AAA,Aa,a^~A^~A^~A^~,^~,^~,^~,^~,^~,^~,	`_TYQR`<M`W=U\`_G`?#FI[`%/9(&$%
+# this region is flanked by poly-A so not good for testing
+chr22	14432167	a	A	28	0	127	32	..,,,.,...,.........,..CC.+1C,+1c...c^~.	NFWWU``D^YQAO]\X@X8]WYELUOM`JTF`
+chr22	14432167	*	*/+C	100	100	255	32	*	+C	30	2	0
+# another deletion but this time removing more than one base, genomic context is GATT-AAATA-
+chr22	14644665	t	T	152	0	127	34	,-5aaata,-5aaata..,,,,-5aaata**.,,,*.-5AAATA,,,,,...,,,,,,,,^~,^~,	OZMZM5HG""MQJDR2C17H"D`JHIB2IBG"/-
+chr22	14644665	*	*/-aaata	140	140	255	34	*	-aaata	30	4	0
+# better for testing since the G is located in CA-G-TC making it obvious where the indel should be
+chr22	14895653	g	G	92	0	127	12	,$,-1t.+4CCTT*,+4cctt..+4CCTT.+4CCTT.,,^~,	``CX`@UV@RY)
+chr22	14895653	*	+CCTT/*	18	218	255	12	+CCTT	*	4	7	1
+# deletion AA-T-GGA in the genome, the G downstream of T is removed
+chr22	15230981	t	T	255	0	127	93	.$.$.,..,,,.A-1G,,,,,,,,,.+2AGC....-1G.,,.,,,,,....,-1g,,,.,,,,,.,,-1g.,,,...,,,,.-1G..-1G..,,..,*,,,,,,+3atc,,...,,,^~.^~.^~,^~,^~,	57S;S<;_`E7`[``\``K`H2`_*&4`S`7^`^HPZ`"Z"'ZK=`UPV`=$S2"^WSZ@[VI5[JNQO"@_">Y"G"9CD"Z`O""5^Q%'%
+chr22	15230981	*	*/-g	827	827	255	93	*	-g	85	6	2
+# homozygous
+chr22	15490402	c	G	61	104	127	27	.$.$.......ggGGGGggggg,.ggg*g	(%";"""""S`>=>CBWQ[F""UJG:M
+# heterozygous
+chr22	16990798	A	R	196	196	127	37	gGG.G,,.,,GG,..GGG.....G,GGG.,GG,,.,t	`KNHV]XJUVQVW[QY\S5C`S^`^^```O\\E"`A5
+# having trouble with these
+chr10	193471	A	R	10	10	45	16	.gG.,.,,,...,+1g,+2cg,^~,	&[[?XNCW_Q[_6A"6

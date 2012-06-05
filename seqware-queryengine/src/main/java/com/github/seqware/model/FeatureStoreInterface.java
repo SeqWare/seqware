@@ -1,6 +1,6 @@
 package com.github.seqware.model;
 
-import java.util.Iterator;
+import com.github.seqware.util.SeqWareIterable;
 import java.util.UUID;
 
 /**
@@ -8,10 +8,6 @@ import java.util.UUID;
  * Update (and add) methods moved to Particle,
  * Query methods are in QueryInterface,
  * ACL Methods are in ACLable.
- * 
- * TODO: For queries and iteration classes, should we allows users to either
- * specify all X or just current (i.e. last) X due to copy-on-write's ability to
- * create many many objects 
  * 
  * @author dyuen
  */
@@ -49,7 +45,7 @@ public interface FeatureStoreInterface {
      * Gets all users in all groups
      * @return something iterable that iterates through all users in all groups
      */
-    public Iterable<User> getUsers();
+    public SeqWareIterable<User> getUsers();
 
 //    public void addUser(User newUser);
 //    public void updateUser(User user);
@@ -58,7 +54,7 @@ public interface FeatureStoreInterface {
      * Get all groups
      * @return something iterable that iterates through all groups 
      */
-    public Iterable<Group> getGroups();
+    public SeqWareIterable<Group> getGroups();
 //    public void addGroup(Group newGroup);
 //    public void updateGroup(Group group);
 //    public void addUserToGroup(User user, Group group);
@@ -73,7 +69,7 @@ public interface FeatureStoreInterface {
      * 
      * @return something iterable that iterates through all reference sets 
      */
-    public Iterable<ReferenceSet> getReferenceSets();
+    public SeqWareIterable<ReferenceSet> getReferenceSets();
 //    public void addReferenceSet(ReferenceSet newReferenceSet);
 //    public void updateReferenceSet(ReferenceSet referenceSet);
 //    public void setReferenceSetACL(ACL acl, ReferenceSet referenceSet);
@@ -90,7 +86,7 @@ public interface FeatureStoreInterface {
      * 
      * @return something iterable that iterates through all FeatureSets 
      */
-    public Iterable<FeatureSet> getFeatureSets();
+    public SeqWareIterable<FeatureSet> getFeatureSets();
 //    public void addFeatureSet(FeatureSet newFeatureSet);
 //    public void updateFeatureSet(FeatureSet featureSet);
 //    public void setFeatureSetACL(ACL acl, Reference reference);
@@ -114,7 +110,7 @@ public interface FeatureStoreInterface {
      * 
      * @return something iterable that iterates through all TagSets 
      */
-    public Iterable<TagSet> getTagSets();
+    public SeqWareIterable<TagSet> getTagSets();
 //    public void addTagSet(TagSet newTagSet);
 //    public void updateTagSet(TagSet TagSet);
 //    public void setTagSetACL(ACL acl, TagSet tagSet);
@@ -124,7 +120,7 @@ public interface FeatureStoreInterface {
      * 
      * @return something iterable that that iterates through all Tags  
      */
-    public Iterable<Tag> getTags();
+    public SeqWareIterable<Tag> getTags();
 //    public SeqWareIterator getTag(Integer tagID);
 //    public SeqWareIterator getTags(Integer tagSetID);
 //    public SeqWareIterator getTags(String key);
@@ -137,7 +133,7 @@ public interface FeatureStoreInterface {
      * 
      * @return something iterable that iterates through all AnalysisSets 
      */
-    public Iterable<AnalysisSet> getAnalysisSets();
+    public SeqWareIterable<AnalysisSet> getAnalysisSets();
 //    public void addAnalysisSet(AnalysisSet newAnalysisSet);
 //    public void updateAnalysisSet(AnalysisSet AnalysisSet);
 //    public void setAnalysisSetACL(ACL acl, AnalysisSet analysisSet);
@@ -147,7 +143,7 @@ public interface FeatureStoreInterface {
      * 
      * @return something iterable through all AnalysisPlugins 
      */
-    public Iterable<AnalysisPluginInterface> getAnalysisPlugins();
+    public SeqWareIterable<AnalysisPluginInterface> getAnalysisPlugins();
 //    public void addAnalysisPlugin(AnalysisPlugin plugin);
 //    public void updateAnalysisPlugin(AnalysisPlugin plugin);
 //    public void setAnalysisPluginACL(ACL acl, AnalysisPlugin analysisPlugin);

@@ -17,8 +17,9 @@
 package com.github.seqware.factory;
 
 import com.github.seqware.impl.DumbBackEnd;
-import com.github.seqware.model.FeatureStoreInterface;
-import com.github.seqware.model.QueryInterface;
+import com.github.seqware.impl.SimpleModelManager;
+import com.github.seqware.model.*;
+import com.github.seqware.model.impl.inMemory.*;
 
 /**
  *
@@ -26,6 +27,9 @@ import com.github.seqware.model.QueryInterface;
  */
 public class Factory {
     
+    public enum Backend_Type {IN_MEMORY, HBASE};
+    
+    public static Backend_Type BACKEND = Backend_Type.IN_MEMORY;
     private static BackEndInterface instance = null;
         
     /**
@@ -60,5 +64,13 @@ public class Factory {
             instance = new DumbBackEnd();
         }
         return (FeatureStoreInterface)instance; 
+    }
+    
+    /**
+     * Return a new model manager to create and keep track of entities
+     * @return 
+     */
+    public static ModelManager getModelManager(){
+        return new SimpleModelManager();
     }
 }

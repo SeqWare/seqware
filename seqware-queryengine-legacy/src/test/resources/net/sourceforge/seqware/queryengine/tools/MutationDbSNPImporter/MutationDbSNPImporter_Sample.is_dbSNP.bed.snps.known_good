@@ -1,0 +1,5 @@
+# should add a wiggle example and also indels
+# this is a fake file, the dbSNP IDs don't actually map to these locations
+# so this affect the ability to validate
+chr22:14430932-14430933	G->A(31:16:51.6%[F:12:38.7%|R:4:12.9%]call=heterozygous:genome_phred=155.0:snp_phred=196.0:max_mapping_qual=127.0:genome_max_qual=63.0:genome_ave_qual=25.4:snp_max_qual=63.0:snp_ave_qual=53.4:mismatch_id=1)	rs2306737	chr22:14430932-14430933
+chr22:15490401-15490402	C->G(27:15:55.6%[F:4:14.8%|R:11:40.7%]call=homozygous:genome_phred=61.0:snp_phred=104.0:max_mapping_qual=127.0:genome_max_qual=26.0:genome_ave_qual=4.1:snp_max_qual=63.0:snp_ave_qual=41.3:mismatch_id=6)	rs6567645	chr22:15490401-15490402

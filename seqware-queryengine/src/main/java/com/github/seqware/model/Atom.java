@@ -1,5 +1,8 @@
 package com.github.seqware.model;
 
+import com.github.seqware.factory.Factory;
+import com.github.seqware.util.SeqWareIterable;
+
 /**
  * Implements core functionality that is shared by all classes that require tags.
  *
@@ -7,27 +10,25 @@ package com.github.seqware.model;
  * for interface implementations that are shared by those classes.
  *
  * @author jbaran
+ * @author dyuen
  */
-public abstract class Atom extends Particle implements Taggable {
+public abstract class Atom<T extends Atom> extends Particle<T> implements Taggable {
        
-    public boolean associateTag(String subject) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public boolean associateTag(String subject, String value) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public boolean associateTag(String subject, String value, String predicate) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Override
+    public boolean associateTag(Tag tag) {
+        Factory.getBackEnd().associateTag(this, tag);
+        return true;
     }
     
+    @Override
     public boolean dissociateTag(Tag tag){
-        throw new UnsupportedOperationException("Not supported yet.");
+        Factory.getBackEnd().dissociateTag(this, tag);
+        return true;
     }
     
-    public Iterable<Tag> getTags(){
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Override
+    public SeqWareIterable<Tag> getTags(){
+        return Factory.getBackEnd().getTags(this);
     }
     
     

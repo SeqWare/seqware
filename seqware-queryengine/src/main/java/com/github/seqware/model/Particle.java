@@ -1,9 +1,10 @@
 package com.github.seqware.model;
 
-import com.github.seqware.factory.Factory;
-import java.security.AccessControlException;
+import com.github.seqware.factory.ModelManager;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
+import org.apache.commons.lang.SerializationUtils;
 
 /**
  * Core functionality for all objects that will need to be tracked within the
@@ -12,70 +13,90 @@ import java.util.UUID;
  *
  * @author dyuen
  */
-public abstract class Particle {
+public abstract class Particle<T extends Particle> implements Serializable {
 
     /**
-     * Internally used unique identifier of this feature.
+     * Internally used unique identifier of this particle
      */
     private UUID uuid;
+    /**
+     * Exposed timestamp of this particle
+     */
+    private Date timestamp;
+    
+    /**
+     * Current manager
+     */
+    private transient ModelManager manager = null;
 
     protected Particle() {
         // TODO This will have to be replaced with a stronger UUID generation method.
         this.uuid = UUID.randomUUID();
+        this.timestamp = new Date();
     }
 
     /**
-     * Notify the back-end that it should keep track of the current object.
+     * Copy constructor, used to generate a shallow copy of a particle ith 
+     * potentially a new timestamp and UUID
      *
-     * @throws AccessControlException if the user is not allowed to write to the
-     * parent object (i.e. create a Reference in a ReferenceSet without write
-     * permission to that ReferenceSet)
+     * @param newUUID whether or not to generate a new UUID and timestamp for the new copy
      */
-    public void add() throws AccessControlException {
-        Factory.getBackEnd().store(this);
+    public T copy(boolean newUUID) {
+        UUID oldUUID = this.uuid;
+        // TODO This will have to be replaced with a stronger UUID generation method.
+        if (newUUID) {
+            this.uuid = UUID.randomUUID();
+            this.timestamp = new Date();
+        }
+        T newParticle = (T) SerializationUtils.clone(this);
+        this.uuid = oldUUID;
+        return newParticle;
     }
 
-    /**
-     * Notify the back-end that it should record the changes made to the current
-     * object. Updates cascade downward (i.e. changing a ReferenceSet will
-     * result in a copy-on-write that copies all children References as well)
-     *
-     * @throws AccessControlException if the user does not have permission to
-     * change this object
-     * @return Due to copy-on-write, this can result in a new object that the
-     * user may wish to subsequently work on
-     */
-    public Object update() throws AccessControlException {
-        return Factory.getBackEnd().update(this);
-    }
 
-    /**
-     * Update the current object with any changes that may have been made to the
-     * current object
-     *
-     * @throws AccessControlException if the user has lost permission to read
-     * the object
-     * @return Due to copy-on-write, this may return a new object with updated
-     * information
-     */
-    public Object refresh() throws AccessControlException {
-        return Factory.getBackEnd().refresh(this);
-    }
+//    /**
+//     * Notify the back-end that it should keep track of the current object.
+//     * A store operation cascades downward (i.e. storing a ReferenceSet will
+//     * store all children References as well) 
+//     * 
+//     */
+//    public void store() {
+//        Factory.getBackEnd().store(this);
+//    }
+//
+//    /**
+//     * Notify the back-end that it should record the changes made to the current
+//     * object. Updates cascade downward (i.e. changing a ReferenceSet will
+//     * result in a copy-on-write that copies all children References as well)
+//     * Note that the UUID of this may change due to copy-on-write as this may now 
+//     * be a reference to a new entity in the database due to copy-on-write
+//     */
+//    public void update()  {
+//        Factory.getBackEnd().update(this);
+//    }
+//
+//    /**
+//     * Update the current object with any changes that may have been made to the
+//     * current object
+//     *
+//     */
+//    public void refresh()  {
+//        Factory.getBackEnd().refresh(this);
+//    }
 
-    /**
-     * Delete the current object (will cascade in the case of sets to their
-     * children)
-     *
-     * @throws AccessControlException if the user does not have permission to
-     * delete this (or children) objects
-     */
-    public void delete() throws AccessControlException {
-        Factory.getBackEnd().delete(this);
-    }
+//    /**
+//     * Delete the current object (will cascade in the case of sets to their
+//     * children)
+//     *
+//     */
+//    public void delete()  {
+//        Factory.getBackEnd().delete(this);
+//    }
 
     /**
      * Get the universally unique identifier of this object. This should be
      * unique across the whole backend and not just this resource
+     * @return unique identifier for this (version of) resource 
      */
     public UUID getUUID() {
         return this.uuid;
@@ -90,6 +111,44 @@ public abstract class Particle {
      * resource
      */
     public Date getCreationTimeStamp() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return timestamp;
+    }
+    
+    /**
+     * Set the timestamp, this should never be called outside of the backend
+     * @param timestamp new time stamp
+     */
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    /**
+     * Set the UUID, very dangerous, this should never be called outside of the
+     * backend
+     * @param uuid new UUID 
+     */
+    public void setUUID(UUID uuid) {
+        this.uuid = uuid;
+    }
+    
+    @Override
+    public String toString(){
+        return this.uuid.toString() + " " + super.toString();
+    }
+
+    /**
+     * Get the model manager for this particle
+     * @return 
+     */
+    public ModelManager getManager() {
+        return manager;
+    }
+
+    /**
+     * Set the model manager for this particle
+     * @param manager 
+     */
+    public void setManager(ModelManager manager) {
+        this.manager = manager;
     }
 }

@@ -1,5 +1,7 @@
 package com.github.seqware.model;
 
+import com.github.seqware.impl.SimpleModelManager;
+import com.github.seqware.util.SeqWareIterable;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -8,11 +10,13 @@ import java.util.Set;
  * cannot exist without a reference even if the reference is ad hoc and/or
  * user-created.
  *
- * Immutable (but tags are not).
+ * Immutable (but tags are not). TODO: Should we consider deleting Features from
+ * FeatureSets as well as adding them or can that be implicit when a Feature
+ * itself is deleted?
  *
  * @author jbaran
  */
-public abstract class FeatureSet extends Molecule implements Iterable<Feature>{
+public abstract class FeatureSet extends Molecule<FeatureSet> implements SeqWareIterable<Feature> {
 
     /**
      * Associated reference.
@@ -22,18 +26,8 @@ public abstract class FeatureSet extends Molecule implements Iterable<Feature>{
     /**
      * Creates an instance of an anonymous feature set.
      */
-    private FeatureSet() {
+    protected FeatureSet() {
         super();
-    }
-
-    /**
-     * Creates a FeatureSet with an associated reference.
-     *
-     * @param reference associated reference
-     */
-    public FeatureSet(Reference reference) {
-        this();
-        this.reference = reference;
     }
 
     /**
@@ -59,11 +53,37 @@ public abstract class FeatureSet extends Molecule implements Iterable<Feature>{
 
     /**
      * Get the reference for this featureSet
+     *
      * @return reference for the feature set
      */
     public Reference getReference() {
         return reference;
     }
     
-    
+     /**
+     * Create an FeatureSet builder started with a copy of this
+     * @return 
+     */
+    public abstract FeatureSet.Builder toBuilder();
+
+    public abstract static class Builder {
+
+        public FeatureSet aSet;
+
+        public Builder setReference(Reference reference) {
+            aSet.reference = reference;
+            return this;
+        }
+        
+        public FeatureSet build() {
+           return build(true);
+        }
+
+        public abstract FeatureSet build(boolean newObject);
+
+        public Builder setManager(SimpleModelManager aThis) {
+            aSet.setManager(aThis);
+            return this;
+        }
+    }
 }

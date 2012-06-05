@@ -18,14 +18,12 @@ package com.github.seqware.impl;
 
 import com.github.seqware.factory.BackEndInterface;
 import com.github.seqware.model.*;
-import com.github.seqware.model.impl.inMemory.InMemoryFeaturesAllPlugin;
-import com.github.seqware.model.impl.inMemory.InMemoryFeaturesByReferencePlugin;
-import com.github.seqware.model.impl.inMemory.InMemoryFeaturesByTypePlugin;
+import com.github.seqware.model.impl.inMemory.*;
+import com.github.seqware.util.InMemoryIterable;
+import com.github.seqware.util.SeqWareIterable;
 import java.security.AccessControlException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import org.apache.commons.lang.SerializationUtils;
 
 /**
  *
@@ -36,149 +34,191 @@ import java.util.UUID;
 public class DumbBackEnd implements BackEndInterface, FeatureStoreInterface, QueryInterface {
 
     private List<Particle> listOfEverything = new ArrayList<Particle>();
+    private Map<UUID, UUID> versionsOfEverything = new HashMap<UUID, UUID>();
+    private Map<UUID, Set<UUID>> taggedWith = new HashMap<UUID, Set<UUID>>();
+    private List<AnalysisPluginInterface> apis = new ArrayList<AnalysisPluginInterface>();
 
-    public void store(Particle obj) throws AccessControlException {
+    public DumbBackEnd() {
+        apis.add(new InMemoryFeaturesAllPlugin());
+        apis.add(new InMemoryFeaturesByReferencePlugin());
+        apis.add(new InMemoryFeaturesByTypePlugin());
+    }
+
+    @Override
+    public void store(Particle obj) {
         if (!listOfEverything.contains(obj)) {
-            listOfEverything.add(obj);
+            // let's just clone everything on store to simulate hbase
+            Particle storeObj = (Particle) SerializationUtils.clone(obj);
+            listOfEverything.add(storeObj);
+            versionsOfEverything.put(storeObj.getUUID(), null);
         }
     }
 
-    public Particle update(Particle obj) throws AccessControlException {
+    @Override
+    public void update(Particle obj) {
+        // create new particle
+        Particle newParticle = obj.copy(true);
+        this.store(newParticle);
+        versionsOfEverything.put(newParticle.getUUID(), obj.getUUID());
+        // update this to point at the new particle as represented by a UUID and a timestamp
+        obj.setUUID(newParticle.getUUID());
+        obj.setTimestamp(newParticle.getCreationTimeStamp());
+    }
+
+    @Override
+    public Particle refresh(Particle obj)  {
         return obj;
     }
 
-    public Particle refresh(Particle obj) throws AccessControlException {
-        return obj;
-    }
+//    @Override
+//    public void delete(Particle obj) throws AccessControlException {
+//        listOfEverything.remove(obj);
+//    }
 
-    public void delete(Particle obj) throws AccessControlException {
-        listOfEverything.remove(obj);
-    }
-
+    @Override
     public String getVersion() {
         return "In-memory back-end 0.1";
     }
 
+    @Override
     public Particle getParticleByUUID(UUID uuid) {
-        for(Particle p : listOfEverything){
-            if (p.getUUID().equals(uuid)){
+        for (Particle p : listOfEverything) {
+            if (p.getUUID().equals(uuid)) {
                 return p;
             }
         }
         return null;
     }
 
-    public Iterable<User> getUsers() {
+    @Override
+    public SeqWareIterable<User> getUsers() {
         return getAllOfClass(User.class);
     }
 
-    public Iterable<Group> getGroups() {
+    @Override
+    public SeqWareIterable<Group> getGroups() {
         return getAllOfClass(Group.class);
     }
 
-    public Iterable<ReferenceSet> getReferenceSets() {
+    @Override
+    public SeqWareIterable<ReferenceSet> getReferenceSets() {
         return getAllOfClass(ReferenceSet.class);
     }
 
-    public Iterable<FeatureSet> getFeatureSets() {
+    @Override
+    public SeqWareIterable<FeatureSet> getFeatureSets() {
         return getAllOfClass(FeatureSet.class);
     }
 
-    public Iterable<TagSet> getTagSets() {
+    @Override
+    public SeqWareIterable<TagSet> getTagSets() {
         return getAllOfClass(TagSet.class);
     }
 
-    public Iterable<Tag> getTags() {
+    @Override
+    public SeqWareIterable<Tag> getTags() {
         return getAllOfClass(Tag.class);
     }
 
-    public Iterable<AnalysisSet> getAnalysisSets() {
+    @Override
+    public SeqWareIterable<AnalysisSet> getAnalysisSets() {
         return getAllOfClass(AnalysisSet.class);
     }
 
-    public Iterable<AnalysisPluginInterface> getAnalysisPlugins() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Override
+    public SeqWareIterable<AnalysisPluginInterface> getAnalysisPlugins() {
+        return new InMemoryIterable(this.apis);
     }
 
+    @Override
     public QueryFuture getFeaturesByType(FeatureSet set, String type, int hours) {
-//        InMemoryFeatureSet fSet = new InMemoryFeatureSet(set.getReference());
-//        for (Feature f : set){
-//            if (f.getType().equals(type)){
-//                fSet.add(f);
-//            }
-//        }
         AnalysisPluginInterface plugin = new InMemoryFeaturesByTypePlugin();
         plugin.init(set, type);
-        return new QueryFutureImpl(plugin);
+        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
+    @Override
     public QueryFuture getFeatures(FeatureSet set, int hours) {
- //       InMemoryFeatureSet fSet = new InMemoryFeatureSet(set.getReference());
-
-//        for (Object obj : set) {
-//            if (obj instanceof Feature) {
-//                fSet.add((Feature) obj);
-//            }
-//        }
         AnalysisPluginInterface plugin = new InMemoryFeaturesAllPlugin();
         plugin.init(set);
-        return new QueryFutureImpl(plugin);
+        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
+    @Override
     public QueryFuture getFeaturesByReference(FeatureSet set, Reference reference, int hours) {
-//       InMemoryFeatureSet fSet = new InMemoryFeatureSet(set.getReference());
-//        for (Object obj : set) {
-//            if (obj instanceof Feature) {
-//                fSet.add((Feature) obj);
-//            }
-//        }
         AnalysisPluginInterface plugin = new InMemoryFeaturesByReferencePlugin();
         plugin.init(set);
-        return new QueryFutureImpl(plugin);
+        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
+    @Override
     public QueryFuture getFeaturesByRange(FeatureSet set, Location location, long start, long stop, int hours) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
-    public QueryFuture getFeaturesByTag(FeatureSet set, int hours, String... tag) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    
+    @Override
+    public QueryFuture getFeaturesByTag(FeatureSet set, int hours, String subject, String predicate, String object) {
+        AnalysisPluginInterface plugin = new InMemoryFeaturesByTagPlugin();
+        plugin.init(set, subject, predicate, object);
+        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
-    private Iterable getAllOfClass(Class aClass) {
+    private SeqWareIterable getAllOfClass(Class aClass) {
         List list = new ArrayList();
-        for(Particle p : listOfEverything){
-            if (aClass.isInstance(p)){
+        for (Particle p : listOfEverything) {
+            if (aClass.isInstance(p)) {
                 list.add(p);
             }
         }
-        return list;
+        return new InMemoryIterable(list);
     }
 
-    public class QueryFutureImpl extends Analysis {
+    @Override
+    public Particle getPrecedingVersion(Particle obj) {
+        return this.getParticleByUUID(this.versionsOfEverything.get(obj.getUUID()));
+    }
 
-        public QueryFutureImpl(AnalysisPluginInterface plugin) {
-            super(plugin);
+    @Override
+    public void setPrecedingVersion(Particle predecessor) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void associateTag(Atom object, Tag tag) {
+        if (!taggedWith.containsKey(object.getUUID())) {
+            taggedWith.put(object.getUUID(), new HashSet<UUID>());
+        }
+        taggedWith.get(object.getUUID()).add(tag.getUUID());
+    }
+
+    @Override
+    public void dissociateTag(Atom object, Tag tag) {
+        if (taggedWith.containsKey(object.getUUID())) {
+            Set<UUID> set = taggedWith.get(object.getUUID());
+            set.remove(tag.getUUID());
         }
 
-        public FeatureSet get() {
-            getPlugin().map();
-            getPlugin().reduce();
-            return super.getPlugin().getFinalResult();
-        }
+    }
 
-        public boolean isDone() {
-            return true;
+    @Override
+    public SeqWareIterable<Tag> getTags(Atom atom) throws AccessControlException {
+        List<Tag> tags = new ArrayList<Tag>();
+        Set<UUID> set = taggedWith.get(atom.getUUID());
+        if (set == null) {
+            return new InMemoryIterable(tags);
         }
+        for (UUID uid : set) {
+            tags.add((Tag) this.getParticleByUUID(uid));
+        }
+        return  new InMemoryIterable(tags);
+    }
 
-        @Override
-        public Analysis getParentAnalysis() {
-            throw new UnsupportedOperationException("Not supported yet.");
+    @Override
+    public long getVersion(Particle obj) throws AccessControlException {
+        Particle parent = this.getPrecedingVersion(obj);
+        if (parent != null) {
+            return 1 + this.getVersion(parent);
         }
-
-        @Override
-        public Set<Analysis> getSuccessorAnalysisSet() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+        return 1;
     }
 }
