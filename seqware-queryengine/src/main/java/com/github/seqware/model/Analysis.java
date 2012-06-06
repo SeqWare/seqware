@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author dyuen
  */
-public abstract class Analysis extends Atom<Analysis> implements QueryFuture {
+public abstract class Analysis extends Molecule<Analysis> implements QueryFuture {
 
     private List<Object> parameters = new ArrayList<Object>();
     

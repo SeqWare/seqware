@@ -24,6 +24,8 @@ import com.github.seqware.model.impl.inMemory.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A Simple implementation of the ModelManager interface. We can make this more
@@ -61,7 +63,8 @@ public class SimpleModelManager implements ModelManager {
             if (p.getValue() == State.NEW_CREATION || p.getValue() == State.NEW_VERSION){
                 if (p.getValue() == State.NEW_VERSION){
                     // if they have preceding versions do an update, otherwise store
-                    Factory.getBackEnd().update(p.getKey());
+                    // only molecules should have preceding states
+                    Factory.getBackEnd().update((Atom)p.getKey());
                 } else {
                     Factory.getBackEnd().store(p.getKey());
                 }
@@ -74,7 +77,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public FeatureSet.Builder buildFeatureSet() {
         FeatureSet.Builder fSet = null;
-        if (Factory.BACKEND.equals(Factory.Backend_Type.IN_MEMORY)) {
+        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
             fSet = InMemoryFeatureSet.newBuilder().setManager(this);
         }
         return fSet;
@@ -83,7 +86,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public Reference.Builder buildReference() {
         Reference.Builder ref = null;
-        if (Factory.BACKEND.equals(Factory.Backend_Type.IN_MEMORY)) {
+        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
             ref = InMemoryReference.newBuilder().setManager(this);
         }
         assert (ref != null);
@@ -93,7 +96,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public ReferenceSet.Builder buildReferenceSet() {
         ReferenceSet.Builder rSet = null;
-        if (Factory.BACKEND.equals(Factory.Backend_Type.IN_MEMORY)) {
+        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
             rSet = InMemoryReferenceSet.newBuilder().setManager(this);
         }
         assert (rSet != null);
@@ -103,7 +106,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public TagSet.Builder buildTagSet() {
         TagSet.Builder tSet = null;
-        if (Factory.BACKEND.equals(Factory.Backend_Type.IN_MEMORY)) {
+        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
             tSet = InMemoryTagSet.newBuilder().setManager(this);
         }
         assert (tSet != null);
@@ -113,7 +116,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public AnalysisSet.Builder buildAnalysisSet() {
         AnalysisSet.Builder aSet = null;
-        if (Factory.BACKEND.equals(Factory.Backend_Type.IN_MEMORY)) {
+        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
             return InMemoryAnalysisSet.newBuilder().setManager(this);
         }
         assert (aSet != null);
@@ -123,7 +126,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public User.Builder buildUser() {
         User.Builder aSet = null;
-        if (Factory.BACKEND.equals(Factory.Backend_Type.IN_MEMORY)) {
+        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
             return User.newBuilder().setManager(this);
         }
         assert (aSet != null);
@@ -133,7 +136,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public Group.Builder buildGroup() {
         Group.Builder aSet = null;
-        if (Factory.BACKEND.equals(Factory.Backend_Type.IN_MEMORY)) {
+        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
             return Group.newBuilder().setManager(this);
         }
         assert (aSet != null);
@@ -143,7 +146,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public Tag.Builder buildTag() {
         Tag.Builder aSet = null;
-        if (Factory.BACKEND.equals(Factory.Backend_Type.IN_MEMORY)) {
+        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
             return Tag.newBuilder().setManager(this);
         }
         assert (aSet != null);
@@ -153,7 +156,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public Feature.Builder buildFeature() {
         Feature.Builder aSet = null;
-        if (Factory.BACKEND.equals(Factory.Backend_Type.IN_MEMORY)) {
+        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
             return Feature.newBuilder().setManager(this);
         }
         assert (aSet != null);
@@ -168,13 +171,34 @@ public class SimpleModelManager implements ModelManager {
 
     @Override
     public void particleStateChange(Particle source, State state) {
-        this.dirtySet.put(source, state);
+        // check for valid state transitions
+        boolean validTransition = false;
+        if (this.dirtySet.containsKey(source)){
+            State current = this.dirtySet.get(source);
+            if (current == State.MANAGED && state == State.NEW_VERSION){
+                validTransition = true;
+            } else if (current == State.MANAGED && state == State.NEW_CREATION){
+                validTransition = true;
+            } else if (current == State.UNMANAGED && state == State.MANAGED){
+                validTransition = true;
+            } else if (current == State.NEW_CREATION && state == State.MANAGED){
+                validTransition = true;
+            } else if (current == State.NEW_VERSION && state == State.MANAGED){
+                validTransition = true;
+            }
+        } else{
+            // assume all other transitions are valid for now
+            validTransition = true;
+        }
+        if (validTransition){
+            this.dirtySet.put(source, state);
+        }
     }
 
     @Override
     public Builder buildAnalysis() {
         Analysis.Builder aSet = null;
-        if (Factory.BACKEND.equals(Factory.Backend_Type.IN_MEMORY)) {
+        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
             return InMemoryQueryFutureImpl.newBuilder().setManager(this);
         }
         assert (aSet != null);

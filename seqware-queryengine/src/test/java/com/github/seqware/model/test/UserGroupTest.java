@@ -5,6 +5,8 @@ import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.Group;
 import com.github.seqware.model.User;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,6 +23,7 @@ public class UserGroupTest {
 
     @BeforeClass
     public static void setupTests() {
+//        Logger.getLogger(UserGroupTest.class.getName()).log(Level.INFO, "@BeforeClass");
         ModelManager mManager = Factory.getModelManager();
         g1 = mManager.buildGroup().setName("Developers").setDescription("Group for Developers").build();
         g2 = mManager.buildGroup().setName("Variant-Developers").setDescription("Group for Developers").build();
@@ -35,6 +38,7 @@ public class UserGroupTest {
 
     @Test
     public void testUserCreation() {
+//        Logger.getLogger(UserGroupTest.class.getName()).log(Level.INFO, "@Test");
         // check that Users are present match
         boolean b1 = false;
         boolean b2 = false;
@@ -53,6 +57,7 @@ public class UserGroupTest {
     
     @Test
     public void testGroupCreation() {
+//       Logger.getLogger(UserGroupTest.class.getName()).log(Level.INFO, "@Test");
         // check that Group are present match
         boolean b1 = false;
         for (Group u : Factory.getFeatureStoreInterface().getGroups()) {
@@ -65,6 +70,7 @@ public class UserGroupTest {
 
     @Test
     public void testUserPasswordChanging(){
+//        Logger.getLogger(UserGroupTest.class.getName()).log(Level.INFO, "@Test");
         ModelManager mManager = Factory.getModelManager();
         String password1 = "ITMfL";
         User n1 = mManager.buildUser().setFirstName("Cheung").setLastName("Man-Yuk").setEmailAddress("cmy@googly.com").setPassword(password1).build();

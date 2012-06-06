@@ -92,8 +92,8 @@ public abstract class Particle<T extends Particle> implements Serializable, Buil
      * backend
      *
      * @param uuid new UUID
-     */
-    public void setUUID(UUID uuid) {
+     */ 
+    protected void impersonate(UUID uuid) {
         this.uuid = uuid;
     }
 

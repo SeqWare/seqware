@@ -40,5 +40,15 @@ public class NonPersistentSerialization implements FileSerializationInterface {
     public Particle deserializeTargetToParticle(UUID uuid) {
         return map.get(uuid);
     }
+
+    @Override
+    public void clearSerialization() {
+        map.clear();
+    }
+
+    @Override
+    public Iterable<UUID> getAllParticles() {
+        return map.keySet();
+    }
     
 }

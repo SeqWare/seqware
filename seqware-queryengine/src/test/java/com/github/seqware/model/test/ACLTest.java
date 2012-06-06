@@ -3,7 +3,6 @@ package com.github.seqware.model.test;
 import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.*;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,7 +27,8 @@ public class ACLTest {
     private static AnalysisSet aSet;
 
     @BeforeClass
-    public static void setupTests() {
+    public static void setupTests() {        
+//        Logger.getLogger(ACLTest.class.getName()).log(Level.INFO, "@BeforeClass");
         ModelManager mManager = Factory.getModelManager();
         // test ACL on every possible class that can be ACLed
         fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing dummy reference").build()).build();
@@ -63,6 +63,7 @@ public class ACLTest {
 
     @Test
     public void testACL() {
+//        Logger.getLogger(ACLTest.class.getName()).log(Level.INFO, "@Test");
         // check that everything looks ok
         FeatureSet targetSet = (FeatureSet) Factory.getFeatureStoreInterface().getParticleByUUID(fSet.getUUID());
         // check some versioning while we are at it

@@ -1,5 +1,7 @@
 package com.github.seqware.model;
 
+import java.util.UUID;
+
 /**
  * Interface for versioning, versions are automatically generated and iterated
  * when a new entity is derived from a parent entity. 
@@ -28,7 +30,6 @@ public interface Versionable<T extends Versionable> {
      * will make this a completely new object in the back-end.
      * @param particle previous version
      */
-    public void setPrecedingVersion(T particle);
-    
+    public void setPrecedingVersion(T particle); 
     
 }

@@ -16,9 +16,7 @@
  */
 package com.github.seqware.factory;
 
-import com.github.seqware.model.Atom;
-import com.github.seqware.model.Particle;
-import com.github.seqware.model.Tag;
+import com.github.seqware.model.*;
 import com.github.seqware.util.SeqWareIterable;
 
 /**
@@ -39,7 +37,7 @@ public interface BackEndInterface {
      * Crawl through obj and update changes in the back-end.
      * @param obj Object to be updated in the back-end
      */
-    public void update(Particle obj);
+    public void update(Atom obj);
     
     /**
      * Update the obj using the latest information from the back-end
@@ -57,24 +55,17 @@ public interface BackEndInterface {
 //    public void delete(Particle obj);
     
     /**
-     * Get the version of the particle
-     * @param obj current particle
-     * @return version (starts with version 1)
-     */
-    public long getVersion(Particle obj);
-    
-    /**
      * Get the preceding Version of a particle
      * @param obj current particle
-     * @return current particle's parent
+     * @return current particle's parent, will return null if the particle does not exist
      */
-    public Particle getPrecedingVersion(Particle obj);
+    public Atom getPrecedingVersion(Atom obj);
 
     /**
      * Set the succeeding Version of a particle
      * @param predecessor  set current particle's parent
      */
-    public void setPrecedingVersion(Particle predecessor);  
+    public void setPrecedingVersion(Atom predecessor);  
     
 //    /**
 //     * Associate tag with object

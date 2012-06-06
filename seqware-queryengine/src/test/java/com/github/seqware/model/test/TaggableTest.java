@@ -103,7 +103,13 @@ public class TaggableTest {
         // practically everything can be tagged, except for plugins and tags
         ModelManager mManager = Factory.getModelManager();
         Tag t1a = mManager.buildTag().setKey("KR").build();
-        Assert.assertTrue(!(t1a instanceof Taggable));
+        boolean tagException = false;
+        try{
+            t1a.associateTag(t1a);
+        }catch(UnsupportedOperationException e){
+            tagException = true;
+        }
+        Assert.assertTrue(tagException);
         for (AnalysisPluginInterface api : Factory.getFeatureStoreInterface().getAnalysisPlugins()) {
             Assert.assertTrue(!(api instanceof Taggable));
         }
