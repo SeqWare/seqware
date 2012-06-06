@@ -17,8 +17,8 @@ db is correct.
     GET /x/report/reversehierarchy/{file-swa}
 
 Produces a text representation of a reverse hierarchy tree starting at a
-file (indicated by the provided file-swa). The tree included all the
-processing nodes that led to the creation of the file as will as all the
+file (indicated by the provided file-swa). The tree includes all the
+processing nodes that led to the creation of the file as well as all the
 links (sequencer_run, lane, ius, sample, experiment, study) to those
 processing nodes.
  
@@ -59,12 +59,12 @@ Every file must be associated with at least one processing node and this
 node in turn must be linked (either directly or through a parent) to one of
  the following: sequencer_run, lane, ius, sample, experiment or study.
  
-This report includes all files included in the given list of file-swas (File
+This report includes all files included in the given list of file-swas (file
 SeqWare accesssions) and notes the number of links that exist for that
 file. An orphaned files is inidicated when the total number of links for the
 file is zero (0). Most files will have 1 or 2 links. Files with more than
 2 links are not necessarily incorrectly linked, but are worthy of investigation to
-ensure they are correctly linked.
+ensure they are correctness.
 
 ### Input
 
@@ -74,7 +74,7 @@ You can provide a list of file-swas to report on.
 182467,186014,25877
 </code></pre>
 
-If no file-swa is provided the report will be generated for all the files in the seqware meta db. 
+If no file-swa is provided the report will be generated for all the files in the seqware meta db. A report that includes all the files will take a long time to produce.
 
 
 ### Response
@@ -83,4 +83,5 @@ If no file-swa is provided the report will be generated for all the files in the
 <pre class="highlight">
 total_links #SRL SeqRunSWAs #LL LaneSWAs #IL IusSWAs #SaL SampleSWAs #EL ExpSWAs #StL StudySWAs file_SWA          file_name 
           1    0              0            1   15687    0              0            0              25877 s_7_2_sequence.txt
+          2    0              1    24648   1   15687    0              0            0             186014 s_5_1_sequence.txt
 </code></pre>
