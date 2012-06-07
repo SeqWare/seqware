@@ -16,14 +16,8 @@
  */
 package com.github.seqware.model.test.util;
 
-import com.github.seqware.model.test.ACLTest;
-import com.github.seqware.model.test.FeatureSetTest;
-import com.github.seqware.model.test.FeatureStoreInterfaceTest;
-import com.github.seqware.model.test.FeatureTest;
-import com.github.seqware.model.test.QueryInterfaceTest;
-import com.github.seqware.model.test.ReferenceSetTest;
-import com.github.seqware.model.test.TaggableTest;
-import com.github.seqware.model.test.UserGroupTest;
+import com.github.seqware.impl.test.SimplePersistentBackEndTest;
+import com.github.seqware.model.test.*;
 import org.junit.runner.RunWith;
 
 /**
@@ -34,7 +28,9 @@ import org.junit.runner.RunWith;
 @RunWith(DynamicSuite.class)
 public class DynamicSuiteBuilder {
     
-    private static Class<?>[] ArrayAllTests = {ACLTest.class, FeatureSetTest.class, FeatureStoreInterfaceTest.class, FeatureTest.class, QueryInterfaceTest.class, ReferenceSetTest.class, TaggableTest.class, UserGroupTest.class};
+    private static Class<?>[] ArrayAllTests = {ACLTest.class, FeatureSetTest.class, FeatureStoreInterfaceTest.class, 
+        FeatureTest.class, QueryInterfaceTest.class, ReferenceSetTest.class, TaggableTest.class, 
+        UserGroupTest.class, SimplePersistentBackEndTest.class};
     
     public static Class[] suite() {
          return DynamicSuiteBuilder.ArrayAllTests;
