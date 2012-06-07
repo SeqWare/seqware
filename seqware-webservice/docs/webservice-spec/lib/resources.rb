@@ -704,6 +704,27 @@ module GitHub
       :org => USER,
       :created_at => "2011-09-06T17:26:27Z",
     }
+    OWNER = {
+      :email => "john.hurt@oicr.on.ca",
+      :first_name => "John",
+      :last_name => "Hurt",
+      :institution => "Ontario Institute for Cancer Research"
+    }
+    ORGANISM = {
+      :name => "Homo sapiens",
+      :code => "Homo_sapiens",
+      :ncbi_taxonomy_id => 9606
+    }
+    LIBRARY = {
+      :url => "http://localhost:8888/seqware-webservice/x/library/234",
+      :name => "FPS_0014_Pa_P_PE_300_EX",
+      :description => "Sample ID: RT-28734",
+      :create_time_stamp => "2010-12-07T13:18:30-05:00",
+      :update_time_stamp => "2011-03-18T16:56:44-04:00",
+      :owner => OWNER,
+      :organism => ORGANISM,
+      :parent_urls => ["http://localhost:8888/seqware-webservice/samples/1549"]
+    }
   end
 end
 
