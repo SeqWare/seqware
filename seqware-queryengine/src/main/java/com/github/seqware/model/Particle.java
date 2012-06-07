@@ -21,9 +21,7 @@ public abstract class Particle<T extends Particle> implements Serializable, Buil
      * Unique identifier of this particle
      */
     private SGID sgid = new SGID();
-    
-    private String newField = "gioerjhgilsdfjhil";
-    
+        
     /**
      * Exposed timestamp of this particle
      */

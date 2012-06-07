@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A Simple implementation of the ModelManager interface. We can make this more
@@ -42,6 +44,12 @@ public class SimpleModelManager implements ModelManager {
 
     @Override
     public void persist(Particle p) {
+        if (this.dirtySet.containsKey(p.getSGID())){
+            Logger.getLogger(SimpleModelManager.class.getName()).log(Level.INFO, "Attempted to persist a managed object, ignored it");
+            return;
+        }
+        // we also have to make sure that the correct manager is associated with this particle
+        p.setManager(this);
         this.dirtySet.put(p.getSGID(), new ParticleStatePair(p, State.MANAGED));
     }
 
@@ -52,6 +60,10 @@ public class SimpleModelManager implements ModelManager {
 
     @Override
     public void close() {
+        // close connection with all objects
+        for(ParticleStatePair p : dirtySet.values()){
+            p.p.setManager(null);
+        }
         this.flush();
         this.clear();
     }
@@ -239,6 +251,11 @@ public class SimpleModelManager implements ModelManager {
          */
         protected void setState(State state) {
             this.state = state;
+        }
+        
+        @Override
+        public String toString(){
+            return state.toString() + " " + p.toString();
         }
     }
 }
