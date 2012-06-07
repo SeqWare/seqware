@@ -65,7 +65,7 @@ public class ACLTest {
     public void testACL() {
 //        Logger.getLogger(ACLTest.class.getName()).log(Level.INFO, "@Test");
         // check that everything looks ok
-        FeatureSet targetSet = (FeatureSet) Factory.getFeatureStoreInterface().getParticleByUUID(fSet.getUUID());
+        FeatureSet targetSet = (FeatureSet) Factory.getFeatureStoreInterface().getParticleBySGID(fSet.getSGID());
         // check some versioning while we are at it
         Assert.assertTrue("wrong owner", targetSet.getPermissions().getOwner().equals(marshmallowUser));
         Assert.assertTrue("wrong owner for old version", targetSet.getPrecedingVersion().getPermissions().getOwner().equals(titanicUser));

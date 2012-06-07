@@ -30,7 +30,7 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
 
         Particle particle = null;
         try {
-            particle = backend.getParticleByUUID(this.aSet.getUUID());
+            particle = backend.getParticleBySGID(this.aSet.getSGID());
         }
         catch(Exception e) {
             Assert.assertTrue("Could not retrieve the previously stored FeatureSet.", false);

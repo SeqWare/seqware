@@ -52,7 +52,7 @@ public class ReferenceSetTest {
         aSet.add(mManager.buildReference().setName("t2").build());
         mManager.flush(); // this should persist a version with 2 references
         
-        ReferenceSet testSet = (ReferenceSet) Factory.getFeatureStoreInterface().getParticleByUUID(aSet.getUUID());
+        ReferenceSet testSet = (ReferenceSet) Factory.getFeatureStoreInterface().getParticleBySGID(aSet.getSGID());
         Assert.assertTrue("referenceSet version wrong", testSet.getVersion() == 3);
         Assert.assertTrue("old referenceSet version wrong", testSet.getPrecedingVersion().getVersion() == 2);
         Assert.assertTrue("very old referenceSet version wrong", testSet.getPrecedingVersion().getPrecedingVersion().getVersion() == 1);

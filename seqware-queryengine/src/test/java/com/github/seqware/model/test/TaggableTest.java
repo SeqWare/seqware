@@ -79,7 +79,6 @@ public class TaggableTest {
         r1.associateTag(t2a);
         group.associateTag(t2b);
         u1.associateTag(t2b);
-
         mManager.flush();
     }
 

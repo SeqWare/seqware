@@ -1,6 +1,8 @@
 package com.github.seqware.model;
 
+import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
+import com.github.seqware.util.SGID;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
@@ -16,9 +18,12 @@ import org.apache.commons.lang.SerializationUtils;
 public abstract class Particle<T extends Particle> implements Serializable, Buildable {
     
     /**
-     * Internally used unique identifier of this particle
+     * Unique identifier of this particle
      */
-    private UUID uuid;
+    private SGID sgid = new SGID();
+    
+    private String newField = "gioerjhgilsdfjhil";
+    
     /**
      * Exposed timestamp of this particle
      */
@@ -30,8 +35,6 @@ public abstract class Particle<T extends Particle> implements Serializable, Buil
 
     
     protected Particle() {
-        // TODO This will have to be replaced with a stronger UUID generation method.
-        this.uuid = UUID.randomUUID();
         this.timestamp = new Date();
     }
 
@@ -39,20 +42,20 @@ public abstract class Particle<T extends Particle> implements Serializable, Buil
      * Copy constructor, used to generate a shallow copy of a particle ith
      * potentially a new timestamp and UUID
      *
-     * @param newUUID whether or not to generate a new UUID and timestamp for
+     * @param newSGID whether or not to generate a new UUID and timestamp for
      * the new copy
      */
-    public T copy(boolean newUUID) {
-        UUID oldUUID = this.uuid;
+    public T copy(boolean newSGID) {
+        SGID oldUUID = this.sgid;
         // TODO This will have to be replaced with a stronger UUID generation method.
-        if (newUUID) {
-            this.uuid = UUID.randomUUID();
+        if (newSGID) {
+            this.sgid = new SGID();
             this.timestamp = new Date();
         }
         T newParticle = (T) SerializationUtils.clone(this);
         // copy over the transient properties for now
         newParticle.setManager(this.manager);
-        this.uuid = oldUUID;
+        this.sgid = oldUUID;
         return newParticle;
     }
 
@@ -62,9 +65,10 @@ public abstract class Particle<T extends Particle> implements Serializable, Buil
      *
      * @return unique identifier for this (version of) resource
      */
-    public UUID getUUID() {
-        return this.uuid;
-    }
+    public SGID getSGID() {
+        return this.sgid;
+    } 
+    
 
     /**
      * Get a creation time for this resource. Associated resource timestamps for
@@ -91,15 +95,15 @@ public abstract class Particle<T extends Particle> implements Serializable, Buil
      * Set the UUID, very dangerous, this should never be called outside of the
      * backend
      *
-     * @param uuid new UUID
+     * @param sgid new SGID
      */ 
-    protected void impersonate(UUID uuid) {
-        this.uuid = uuid;
+    protected void impersonate(SGID sgid) {
+        this.sgid = sgid;
     }
 
     @Override
     public String toString() {
-        return this.uuid.toString() + " " + super.toString();
+        return this.sgid.toString() + " " + super.toString();
     }
 
     /**
@@ -118,6 +122,5 @@ public abstract class Particle<T extends Particle> implements Serializable, Buil
      */
     public void setManager(ModelManager manager) {
         this.manager = manager;
-    }
-    
+    }  
 }

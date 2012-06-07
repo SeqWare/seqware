@@ -20,10 +20,10 @@ import com.github.seqware.factory.BackEndInterface;
 import com.github.seqware.model.*;
 import com.github.seqware.model.impl.inMemory.*;
 import com.github.seqware.util.InMemoryIterable;
+import com.github.seqware.util.SGID;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,30 +48,25 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
 
     @Override
     public void store(Particle obj) {
-        if (fsi.deserializeTargetToParticle(obj.getUUID()) == null) {
+        if (fsi.deserializeTargetToParticle(obj.getSGID()) == null) {
             fsi.serializeParticleToTarget(obj);
         }
-//        if (!listOfEverything.contains(obj.getUUID())) {
-//            fsi.serializeParticleToTarget(obj);
-//            listOfEverything.add(obj.getUUID());
-//            versionsOfEverything.put(obj.getUUID(), null);
-//        }
     }
 
     @Override
     public void update(Atom obj) {
         // create a copy of the new particle and store it
-        UUID oldUUID = obj.getUUID();
+        SGID oldSGID = obj.getSGID();
         Atom newParticle = (Atom)obj.copy(true);
         store(newParticle);
         // update the backend
         fsi.serializeParticleToTarget(newParticle);
-//        listOfEverything.add(newParticle.getUUID());
+//        listOfEverything.add(newParticle.getSGID());
 //        if (obj instanceof Molecule) {
-//            versionsOfEverything.put(newParticle.getUUID(), obj.getUUID());
+//            versionsOfEverything.put(newParticle.getSGID(), obj.getSGID());
 //        }
         // change the obj we have a reference to look like the new object that was created
-        obj.impersonate(newParticle.getUUID(), newParticle.getCreationTimeStamp(), oldUUID);
+        obj.impersonate(newParticle.getSGID(), newParticle.getCreationTimeStamp(), oldSGID);
     }
 
     @Override
@@ -89,13 +84,13 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
     }
 
     @Override
-    public Particle getParticleByUUID(UUID uuid) {
-        Particle p = fsi.deserializeTargetToParticle(uuid);
-        assert(p == null || p.getUUID().equals(uuid));
+    public Particle getParticleBySGID(SGID sgid) {
+        Particle p = fsi.deserializeTargetToParticle(sgid);
+        assert(p == null || p.getSGID().equals(sgid));
         return p;
 //        for (UUID u : listOfEverything) {
 //            Particle p = fsi.deserializeTargetToParticle(u);
-//            if (p.getUUID().equals(uuid)) {
+//            if (p.getSGID().equals(uuid)) {
 //                return p;
 //            }
 //        }
@@ -177,7 +172,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
 
     private SeqWareIterable getAllOfClass(Class aClass) {
         List list = new ArrayList();
-        for (UUID u : fsi.getAllParticles()){ //listOfEverything) {
+        for (SGID u : fsi.getAllParticles()){ //listOfEverything) {
             Particle p = fsi.deserializeTargetToParticle(u);
             if (aClass.isInstance(p)) {
                 list.add(p);
@@ -188,13 +183,13 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
 
     @Override
     public Atom getPrecedingVersion(Atom obj) {
-        Atom target = (Atom)fsi.deserializeTargetToParticle(obj.getUUID());
+        Atom target = (Atom)fsi.deserializeTargetToParticle(obj.getSGID());
         if (target == null){
-            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "{0} had no parent, this may signal an error", obj.getUUID());
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "{0} had no parent, this may signal an error", obj.getSGID());
             return null;
         }
         return target.getPrecedingVersion();
-        //return this.getParticleByUUID(this.versionsOfEverything.get(obj.getUUID()));
+        //return this.getParticleBySGID(this.versionsOfEverything.get(obj.getSGID()));
     }
 
     @Override

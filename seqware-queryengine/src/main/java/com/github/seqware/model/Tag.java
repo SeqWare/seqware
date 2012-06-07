@@ -2,6 +2,7 @@ package com.github.seqware.model;
 
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.util.SeqWareIterable;
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -70,19 +71,19 @@ public class Tag extends Atom {
     @Override
     public boolean equals(Object obj) {
         // will cause recursion
-        //return EqualsBuilder.reflectionEquals(this, obj);
-        if (obj instanceof Tag) {
-            Tag other = (Tag) obj;
-            // check for nulls
-            if (this.value == null && other.value != null || this.value != null && other.value == null) {
-                return false;
-            }
-            // check parts guaranteed not to be null
-            boolean eqFirstPart = this.getUUID().equals(other.getUUID()) && this.key.equals(other.key) && this.predicate.equals(other.predicate);
-            boolean eqValue = (this.value == null && other.value == null) || this.value.equals(other.value);
-            return eqFirstPart && eqValue;
-        }
-        return false;
+        return EqualsBuilder.reflectionEquals(this, obj);
+//        if (obj instanceof Tag) {
+//            Tag other = (Tag) obj;
+//            // check for nulls
+//            if (this.value == null && other.value != null || this.value != null && other.value == null) {
+//                return false;
+//            }
+//            // check parts guaranteed not to be null
+//            boolean eqFirstPart = this.getSGID().equals(other.getSGID()) && this.key.equals(other.key) && this.predicate.equals(other.predicate);
+//            boolean eqValue = (this.value == null && other.value == null) || this.value.equals(other.value);
+//            return eqFirstPart && eqValue;
+//        }
+//        return false;
     }
 
     @Override

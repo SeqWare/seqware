@@ -58,7 +58,7 @@ public class FeatureSetTest {
  
         mManager.flush(); // this should persist a version with six features
                
-        FeatureSet testSet = (FeatureSet) Factory.getFeatureStoreInterface().getParticleByUUID(aSet.getUUID());
+        FeatureSet testSet = (FeatureSet) Factory.getFeatureStoreInterface().getParticleBySGID(aSet.getSGID());
         Assert.assertTrue("FeatureSet version wrong", testSet.getVersion() == 3);
         Assert.assertTrue("old FeatureSet version wrong", testSet.getPrecedingVersion().getVersion() == 2);
         Assert.assertTrue("very old FeatureSet version wrong", testSet.getPrecedingVersion().getPrecedingVersion().getVersion() == 1);

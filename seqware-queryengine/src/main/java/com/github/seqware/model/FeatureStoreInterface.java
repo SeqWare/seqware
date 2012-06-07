@@ -1,5 +1,6 @@
 package com.github.seqware.model;
 
+import com.github.seqware.util.SGID;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.UUID;
 
@@ -35,11 +36,11 @@ public interface FeatureStoreInterface {
 //    // ACL operations TBD
     
     /**
-     * Find a object in the back-end by a  globally unique UUID
-     * @param uuid
+     * Find a object in the back-end by a globally unique SGID
+     * @param sgid globally unique id
      * @return a object from the back-end
      */
-    public Particle getParticleByUUID(UUID uuid);
+    public Particle getParticleBySGID(SGID uuid);
 
     /**
      * Gets all users in all groups

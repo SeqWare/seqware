@@ -26,12 +26,12 @@ public class FeatureTest {
     @Test
     public void testUUIDGenerationNonStrandedFeature() {
         ModelManager mManager = Factory.getModelManager();
-        Assert.assertNotNull("Feature UUID is null, which means that no UUID was generated for the feature.", mManager.buildFeature().setStart(1000000).setStop(1000100).build().getUUID());
+        Assert.assertNotNull("Feature UUID is null, which means that no UUID was generated for the feature.", mManager.buildFeature().setStart(1000000).setStop(1000100).build().getSGID());
     }
 
     @Test
     public void testUUIDGenerationStrandedFeature() {
         ModelManager mManager = Factory.getModelManager();
-        Assert.assertNotNull("Feature UUID is null, which means that no UUID was generated for the feature.", mManager.buildFeature().setStart(1000000).setStop(1000100).setStrand(Feature.Strand.POSITIVE).build().getUUID());
+        Assert.assertNotNull("Feature UUID is null, which means that no UUID was generated for the feature.", mManager.buildFeature().setStart(1000000).setStop(1000100).setStrand(Feature.Strand.POSITIVE).build().getSGID());
     }
 }

@@ -17,7 +17,7 @@
 package com.github.seqware.impl;
 
 import com.github.seqware.model.Particle;
-import java.util.UUID;
+import com.github.seqware.util.SGID;
 
 /**
  * Defines a very basic interface that allows serialization to the filesystem
@@ -31,16 +31,16 @@ public interface FileSerializationInterface {
     public void serializeParticleToTarget(Particle obj);
 
     /**
-     * Generically get back a particle from the store using a uuid 
-     * @param uuid
-     * @return null if no particle is present with this uuid
+     * Generically get back a particle from the store using a sgid 
+     * @param sgid
+     * @return null if no particle is present with this sgid
      */
-    public Particle deserializeTargetToParticle(UUID uuid);
+    public Particle deserializeTargetToParticle(SGID sgid);
     
     /**
      * For debugging or very non-optimal implementations
      */
-    public Iterable<UUID> getAllParticles();
+    public Iterable<SGID> getAllParticles();
     
     
     /**

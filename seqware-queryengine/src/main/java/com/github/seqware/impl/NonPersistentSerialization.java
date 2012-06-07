@@ -17,6 +17,7 @@
 package com.github.seqware.impl;
 
 import com.github.seqware.model.Particle;
+import com.github.seqware.util.SGID;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -28,17 +29,17 @@ import org.apache.commons.lang.SerializationUtils;
  */
 public class NonPersistentSerialization implements FileSerializationInterface {
 
-    private Map<UUID, Particle> map = new HashMap<UUID, Particle>();
+    private Map<SGID, Particle> map = new HashMap<SGID, Particle>();
     
     @Override
     public void serializeParticleToTarget(Particle obj) {
         Particle storeObj = (Particle) SerializationUtils.clone(obj);
-        map.put(storeObj.getUUID(), storeObj);
+        map.put(storeObj.getSGID(), storeObj);
     }
 
     @Override
-    public Particle deserializeTargetToParticle(UUID uuid) {
-        return map.get(uuid);
+    public Particle deserializeTargetToParticle(SGID sgid) {
+        return map.get(sgid);
     }
 
     @Override
@@ -47,7 +48,7 @@ public class NonPersistentSerialization implements FileSerializationInterface {
     }
 
     @Override
-    public Iterable<UUID> getAllParticles() {
+    public Iterable<SGID> getAllParticles() {
         return map.keySet();
     }
     

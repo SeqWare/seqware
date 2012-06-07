@@ -18,8 +18,10 @@ package com.github.seqware.impl;
 
 import com.github.seqware.model.Molecule;
 import com.github.seqware.model.Particle;
+import com.github.seqware.util.SGID;
 import java.io.File;
 import java.io.IOException;
+import java.io.InvalidClassException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -27,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.lang.SerializationException;
 import org.apache.commons.lang.SerializationUtils;
 
 /**
@@ -37,7 +40,7 @@ public class ApacheUtilsPersistentSerialization implements FileSerializationInte
 
     private static final boolean PERSIST = true;
     private File tempDir = new File(FileUtils.getTempDirectory(), this.getClass().getCanonicalName());
-    private Map<UUID, File> map = new HashMap<UUID, File>();
+    private Map<SGID, File> map = new HashMap<SGID, File>();
 
     public ApacheUtilsPersistentSerialization() {
         Logger.getLogger(ApacheUtilsPersistentSerialization.class.getName()).log(Level.INFO, "Starting with JavaPersistentBackEnd in: {0}", tempDir.getAbsolutePath());
@@ -47,10 +50,19 @@ public class ApacheUtilsPersistentSerialization implements FileSerializationInte
                 FileUtils.forceMkdir(tempDir);
             } else {
                 if (PERSIST) {
+                    boolean oldClassesFound = false;
                     for (File f : FileUtils.listFiles(tempDir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE)) {
                         byte[] objData = FileUtils.readFileToByteArray(f);
-                        Particle suspect = (Particle) SerializationUtils.deserialize(objData);
-                        map.put(suspect.getUUID(), f);
+                        try{
+                            Particle suspect = (Particle) SerializationUtils.deserialize(objData);
+                            map.put(suspect.getSGID(), f);
+                        } catch(SerializationException e){
+                            if (!oldClassesFound){
+                                oldClassesFound = true;
+                                //TODO: we'll probably want something cooler, but for now, if we run into an old version, just warn about it
+                                Logger.getLogger(ApacheUtilsPersistentSerialization.class.getName()).log(Level.INFO, "Obselete classes detected in {0} you may want to clean it", tempDir.getAbsolutePath());
+                            }
+                        }
                     }
                     Logger.getLogger(ApacheUtilsPersistentSerialization.class.getName()).log(Level.INFO, "Recovered {0} objects from store directory", map.size());
                 } else {
@@ -66,11 +78,11 @@ public class ApacheUtilsPersistentSerialization implements FileSerializationInte
     @Override
     public void serializeParticleToTarget(Particle obj) {
         // let's just clone everything on store to simulate hbase
-        File target = new File(tempDir, obj.getUUID().toString());
+        File target = new File(tempDir, obj.getSGID().toString());
         byte[] serialRep = SerializationUtils.serialize(obj);
         try {
             FileUtils.writeByteArrayToFile(target, serialRep);
-            map.put(obj.getUUID(), target);
+            map.put(obj.getSGID(), target);
         } catch (IOException ex) {
             Logger.getLogger(ApacheUtilsPersistentSerialization.class.getName()).log(Level.SEVERE, "Failiure to serialize", ex);
             System.exit(-1);
@@ -78,11 +90,14 @@ public class ApacheUtilsPersistentSerialization implements FileSerializationInte
     }
 
     @Override
-    public Particle deserializeTargetToParticle(UUID uuid) {
+    public Particle deserializeTargetToParticle(SGID sgid) {
         // let's just clone everything on store to simulate hbase
         byte[] objData;
         try {
-            File target = map.get(uuid);
+            if (sgid == null){
+                return null;
+            }
+            File target = map.get(sgid);
             if (target == null) {
                 return null;
             }
@@ -106,7 +121,7 @@ public class ApacheUtilsPersistentSerialization implements FileSerializationInte
     }
 
     @Override
-    public Iterable<UUID> getAllParticles() {
+    public Iterable<SGID> getAllParticles() {
         return map.keySet();
     }
 }

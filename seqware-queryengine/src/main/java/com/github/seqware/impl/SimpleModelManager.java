@@ -21,11 +21,11 @@ import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.*;
 import com.github.seqware.model.Analysis.Builder;
 import com.github.seqware.model.impl.inMemory.*;
+import com.github.seqware.util.SGID;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.UUID;
 
 /**
  * A Simple implementation of the ModelManager interface. We can make this more
@@ -38,11 +38,11 @@ import java.util.logging.Logger;
  */
 public class SimpleModelManager implements ModelManager {
 
-    private Map<Particle, State> dirtySet = new HashMap<Particle, State>();
+    private Map<SGID, ParticleStatePair> dirtySet = new HashMap<SGID, ParticleStatePair>();
 
     @Override
     public void persist(Particle p) {
-        this.dirtySet.put(p, State.MANAGED);
+        this.dirtySet.put(p.getSGID(), new ParticleStatePair(p, State.MANAGED));
     }
 
     @Override
@@ -59,17 +59,17 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public void flush() {
         // update dirty objects
-        for (Entry<Particle, State> p : dirtySet.entrySet()) {
-            if (p.getValue() == State.NEW_CREATION || p.getValue() == State.NEW_VERSION){
-                if (p.getValue() == State.NEW_VERSION){
+        for (Entry<SGID, ParticleStatePair> p : dirtySet.entrySet()) {
+            if (p.getValue().getState() == State.NEW_CREATION || p.getValue().getState() == State.NEW_VERSION){
+                if (p.getValue().getState() == State.NEW_VERSION){
                     // if they have preceding versions do an update, otherwise store
                     // only molecules should have preceding states
-                    Factory.getBackEnd().update((Atom)p.getKey());
+                    Factory.getBackEnd().update((Atom)dirtySet.get(p.getKey()).getP());
                 } else {
-                    Factory.getBackEnd().store(p.getKey());
+                    Factory.getBackEnd().store(dirtySet.get(p.getKey()).getP());
                 }
             }
-            p.setValue(State.MANAGED);
+            p.getValue().setState(State.MANAGED);
         }
         
     }
@@ -173,8 +173,8 @@ public class SimpleModelManager implements ModelManager {
     public void particleStateChange(Particle source, State state) {
         // check for valid state transitions
         boolean validTransition = false;
-        if (this.dirtySet.containsKey(source)){
-            State current = this.dirtySet.get(source);
+        if (this.dirtySet.containsKey(source.getSGID())){
+            State current = this.dirtySet.get(source.getSGID()).getState();
             if (current == State.MANAGED && state == State.NEW_VERSION){
                 validTransition = true;
             } else if (current == State.MANAGED && state == State.NEW_CREATION){
@@ -191,7 +191,7 @@ public class SimpleModelManager implements ModelManager {
             validTransition = true;
         }
         if (validTransition){
-            this.dirtySet.put(source, state);
+            this.dirtySet.put(source.getSGID(), new ParticleStatePair(source, state));
         }
     }
 
@@ -203,5 +203,42 @@ public class SimpleModelManager implements ModelManager {
         }
         assert (aSet != null);
         return aSet;
+    }
+    
+    protected class ParticleStatePair{
+        protected ParticleStatePair(Particle p, State state){
+            this.p = p;
+            this.state = state;
+        }
+        private Particle p;
+        private State state;
+
+        /**
+         * @return the p
+         */
+        protected Particle getP() {
+            return p;
+        }
+
+        /**
+         * @param p the p to set
+         */
+        protected void setP(Particle p) {
+            this.p = p;
+        }
+
+        /**
+         * @return the state
+         */
+        protected State getState() {
+            return state;
+        }
+
+        /**
+         * @param state the state to set
+         */
+        protected void setState(State state) {
+            this.state = state;
+        }
     }
 }

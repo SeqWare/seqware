@@ -3,6 +3,7 @@ package com.github.seqware.model;
 import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.util.InMemoryIterable;
+import com.github.seqware.util.SGID;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,18 +25,18 @@ public abstract class Atom<T extends Atom> extends Particle<T> implements Taggab
     private List<Tag> tags = new ArrayList<Tag>();
     private boolean precedingChecked = false;
     private transient T precedingVersion = null;
-    private UUID precedingID = null;    
+    private SGID precedingID = null;    
     
     /**
      * Set the UUID, very dangerous, this should never be called outside of the
      * backend
      *
-     * @param uuid new UUID
+     * @param sgid new UUID
      */ 
-    public void impersonate(UUID uuid, Date creationTimeStamp, UUID oldUUID) {
-        super.impersonate(uuid);
+    public void impersonate(SGID sgid, Date creationTimeStamp, SGID oldSGID) {
+        super.impersonate(sgid);
         this.setTimestamp(creationTimeStamp);
-        this.precedingID = oldUUID;
+        this.precedingID = oldSGID;
     }
     
     @Override
@@ -47,10 +48,10 @@ public abstract class Atom<T extends Atom> extends Particle<T> implements Taggab
     }
     
     @Override
-    public T copy(boolean newUUID) {
-        T  newParticle = super.copy(newUUID);
-        if (newUUID){
-            newParticle.setPrecedingID(this.getUUID());
+    public T copy(boolean newSGID) {
+        T  newParticle = super.copy(newSGID);
+        if (newSGID){
+            newParticle.setPrecedingID(this.getSGID());
         }
         return newParticle;
     }
@@ -80,7 +81,7 @@ public abstract class Atom<T extends Atom> extends Particle<T> implements Taggab
     @Override
     public T getPrecedingVersion() {
         if (!precedingChecked) {
-            this.precedingVersion = (T) Factory.getFeatureStoreInterface().getParticleByUUID(precedingID);
+            this.precedingVersion = (T) Factory.getFeatureStoreInterface().getParticleBySGID(precedingID);
         }
         precedingChecked = true;
         return this.precedingVersion;
@@ -92,7 +93,7 @@ public abstract class Atom<T extends Atom> extends Particle<T> implements Taggab
         this.precedingChecked = true;
         if (precedingVersion != null) {
             this.precedingVersion = precedingVersion;
-            this.precedingID = precedingVersion.getUUID();
+            this.precedingID = precedingVersion.getSGID();
         } else {
             this.precedingVersion = null;
             this.precedingID = null;
@@ -103,7 +104,7 @@ public abstract class Atom<T extends Atom> extends Particle<T> implements Taggab
      * Used in back-end to set previous version without side-effects
      * @param precedingID 
      */
-    protected void setPrecedingID(UUID precedingID) {
+    protected void setPrecedingID(SGID precedingID) {
         this.precedingID = precedingID;
     }
 }

@@ -45,6 +45,7 @@ public class Group extends Molecule<Group> implements SeqWareIterable<User>{
 
     public void add(User user) {
         users.add(user);
+        this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);  
     }
 
     public void add(Set<User> users) {
