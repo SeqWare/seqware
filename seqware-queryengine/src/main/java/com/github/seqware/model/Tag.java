@@ -18,7 +18,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  *
  * @author dyuen
  */
-public class Tag extends Atom {
+public class Tag extends Atom  {
 
     private TagSet tagSet;
     private String key;
@@ -172,13 +172,13 @@ public class Tag extends Atom {
             if (tag.key == null) {
                 throw new RuntimeException("Invalid build of Tag");
             }
-            //tag.getManager().objectCreated(tag);
+            tag.getManager().objectCreated(tag);
             return tag;
         }
 
         @Override
         public Builder setManager(ModelManager aThis) {
-            //tag.setManager(aThis);
+            tag.setManager(aThis);
             return this;
         }
     }

@@ -7,6 +7,7 @@ import com.github.seqware.model.impl.inMemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.model.impl.inMemory.InMemoryQueryFutureImpl;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import junit.framework.Assert;
@@ -29,6 +30,7 @@ public class TaggableTest {
     private static User u1;
     private static AnalysisSet aSet;
     private static Analysis a;
+    private static Tag t1a,t1b,t1c,t2a,t2b,t2c,t3a;
 
     @BeforeClass
     public static void setupTests() {
@@ -56,13 +58,13 @@ public class TaggableTest {
         u1 = mManager.buildUser().setFirstName("Joe").setLastName("Smith").setEmailAddress("joe.smith@googly.com").setPassword("password").build();
         group.add(u1);
         // tag stuff
-        Tag t1a = mManager.buildTag().setKey("KR").build();
-        Tag t1b = mManager.buildTag().setKey("KR").setPredicate("=").build();
-        Tag t1c = mManager.buildTag().setKey("KR").setPredicate("=").setValue("F").build();
-        Tag t2a = mManager.buildTag().setKey("AS").build();
-        Tag t2b = mManager.buildTag().setKey("AS").setPredicate("=").build();
-        Tag t2c = mManager.buildTag().setKey("AS").setPredicate("=").setValue("T800").build();
-        Tag t3a = mManager.buildTag().setKey("JC").build();
+        t1a = mManager.buildTag().setKey("KR").build();
+        t1b = mManager.buildTag().setKey("KR").setPredicate("=").build();
+        t1c = mManager.buildTag().setKey("KR").setPredicate("=").setValue("F").build();
+        t2a = mManager.buildTag().setKey("AS").build();
+        t2b = mManager.buildTag().setKey("AS").setPredicate("=").build();
+        t2c = mManager.buildTag().setKey("AS").setPredicate("=").setValue("T800").build();
+        t3a = mManager.buildTag().setKey("JC").build();
         // 7 new tags added
 
         // 12 calls to associate 
@@ -84,13 +86,35 @@ public class TaggableTest {
 
     @Test
     public void testTaggingOnEverything() {
-// Some of these global tests are no longer working because the back-end persists between test classes
+// Some of these global tests are no longer working because the back-end persists between test classes, we need a search API
         SeqWareIterable<TagSet> tagSets = Factory.getFeatureStoreInterface().getTagSets();
         // we have two tag sets
-//        Assert.assertTrue(tagSets.getCount() == 2);
-//        SeqWareIterable<Tag> tags = Factory.getFeatureStoreInterface().getTags();
-        // 7 tags were added to the back-end
-//        Assert.assertTrue(tags.getCount() == 7);
+        boolean t1found = false;
+        boolean t2found = false;
+        for(TagSet t : tagSets){
+            if (t.equals(tSet1)){
+                t1found = true;
+            } else if (t.equals(tSet2)){
+                t2found = true;
+            }
+        }
+        Assert.assertTrue(t1found == true && t2found == true);
+        SeqWareIterable<Tag> tags = Factory.getFeatureStoreInterface().getTags();
+        Tag[] tagsCheck = {t1a,t1b,t1c,t2a,t2b,t2c,t3a};
+        boolean[] tagsCheckFound = new boolean[tagsCheck.length];
+        Arrays.fill(tagsCheckFound, false);
+//        for(TagSet t : tagSets){
+            for(Tag ta : tags){
+                for(int i = 0; i < tagsCheckFound.length; i++){
+                    if (tagsCheck[i].equals(ta)){
+                        tagsCheckFound[i] = true;
+                    }
+                }
+            }
+//        }
+        for(boolean b : tagsCheckFound){
+            Assert.assertTrue(b);
+        }
         SeqWareIterable<Tag> tags1 = fSet.getTags();
         // 3 tags were associated with the featureSet
         Assert.assertTrue(tags1.getCount() == 3);

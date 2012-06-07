@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 import org.apache.commons.lang.SerializationUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * Core functionality for all objects that will need to be tracked within the
@@ -16,12 +18,11 @@ import org.apache.commons.lang.SerializationUtils;
  * @author dyuen
  */
 public abstract class Particle<T extends Particle> implements Serializable, Buildable {
-    
+
     /**
      * Unique identifier of this particle
      */
     private SGID sgid = new SGID();
-        
     /**
      * Exposed timestamp of this particle
      */
@@ -31,7 +32,6 @@ public abstract class Particle<T extends Particle> implements Serializable, Buil
      */
     private transient ModelManager manager = null;
 
-    
     protected Particle() {
         this.timestamp = new Date();
     }
@@ -65,8 +65,7 @@ public abstract class Particle<T extends Particle> implements Serializable, Buil
      */
     public SGID getSGID() {
         return this.sgid;
-    } 
-    
+    }
 
     /**
      * Get a creation time for this resource. Associated resource timestamps for
@@ -94,7 +93,7 @@ public abstract class Particle<T extends Particle> implements Serializable, Buil
      * backend
      *
      * @param sgid new SGID
-     */ 
+     */
     protected void impersonate(SGID sgid) {
         this.sgid = sgid;
     }
@@ -120,5 +119,18 @@ public abstract class Particle<T extends Particle> implements Serializable, Buil
      */
     public void setManager(ModelManager manager) {
         this.manager = manager;
-    }  
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Particle) {
+            return EqualsBuilder.reflectionEquals(this.sgid, ((Particle) obj).sgid);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return sgid.hashCode();
+    }
 }

@@ -112,5 +112,6 @@ public class ACLTest {
             Assert.assertTrue(((Molecule)molFromBackEnd.getPrecedingVersion()).getPermissions().getOwner().equals(newUser));
             Assert.assertTrue(molFromBackEnd.getPermissions().getGroup().equals(newGroup));
         }
+        mManager.close();
     }
 }
