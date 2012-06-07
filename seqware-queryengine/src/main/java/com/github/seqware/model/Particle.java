@@ -2,10 +2,13 @@ package com.github.seqware.model;
 
 import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
+import com.github.seqware.impl.ApacheUtilsPersistentSerialization;
 import com.github.seqware.util.SGID;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -109,6 +112,9 @@ public abstract class Particle<T extends Particle> implements Serializable, Buil
      * @return
      */
     public ModelManager getManager() {
+        if (manager == null){
+            Logger.getLogger(Particle.class.getName()).log(Level.WARNING, "Tried to get the ModelManager for a particle, but it was unmanaged.");
+        }
         return manager;
     }
 

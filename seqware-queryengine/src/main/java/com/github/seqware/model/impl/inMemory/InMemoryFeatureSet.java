@@ -30,9 +30,17 @@ public class InMemoryFeatureSet extends FeatureSet {
     }
 
     @Override
-    public void add(Feature feature) {
+    public FeatureSet add(Feature feature) {
         features.add(feature);
         this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);  
+        return this;
+    }
+    
+    @Override
+    public FeatureSet remove(Feature feature) {
+        features.remove(feature);
+        this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);  
+        return this;
     }
 
     @Override

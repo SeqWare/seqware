@@ -109,6 +109,7 @@ public class ACLTest {
         for(Molecule mol : mols){
             Molecule molFromBackEnd = (Molecule) Factory.getFeatureStoreInterface().getParticleBySGID(mol.getSGID());
             Assert.assertTrue(molFromBackEnd.getPermissions().getOwner().equals(newUser2));
+            // TODO: not sure why we need the cast here when it works for other classes, something has gone awry in template classes land
             Assert.assertTrue(((Molecule)molFromBackEnd.getPrecedingVersion()).getPermissions().getOwner().equals(newUser));
             Assert.assertTrue(molFromBackEnd.getPermissions().getGroup().equals(newGroup));
         }

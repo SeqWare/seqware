@@ -4,9 +4,7 @@ import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -55,22 +53,34 @@ public class FeatureSetTest {
         aSet.add(mManager.buildFeature().setStart(1000600).setStop(1000610).build());
         aSet.add(mManager.buildFeature().setStart(1000700).setStop(1000710).build());
         aSet.add(mManager.buildFeature().setStart(1000800).setStop(1000810).build());
- 
         mManager.flush(); // this should persist a version with six features
+        List<Feature> killList = new ArrayList<Feature>();
+        for(Feature f : aSet){
+            killList.add(f);
+        }
+        //TODO: kind of awkward, but there might be a reason iterator remove() support was removed in the prototype
+        for(Feature f : killList){
+            aSet.remove(f);
+        }
+        mManager.flush(); // kill all the features
                
         FeatureSet testSet = (FeatureSet) Factory.getFeatureStoreInterface().getParticleBySGID(aSet.getSGID());
-        Assert.assertTrue("FeatureSet version wrong", testSet.getVersion() == 3);
-        Assert.assertTrue("old FeatureSet version wrong", testSet.getPrecedingVersion().getVersion() == 2);
-        Assert.assertTrue("very old FeatureSet version wrong", testSet.getPrecedingVersion().getPrecedingVersion().getVersion() == 1);
-        Assert.assertTrue("FeatureSet size wrong", testSet.getCount() == 6);
-        Assert.assertTrue("old FeatureSet size wrong", testSet.getPrecedingVersion().getCount() == 3);
-        Assert.assertTrue("very old FeatureSet size wrong", testSet.getPrecedingVersion().getPrecedingVersion().getCount() == 0);
+        Assert.assertTrue("FeatureSet version wrong", testSet.getVersion() == 4);
+        Assert.assertTrue("old FeatureSet version wrong", testSet.getPrecedingVersion().getVersion() == 3);
+        Assert.assertTrue("very old FeatureSet version wrong", testSet.getPrecedingVersion().getPrecedingVersion().getVersion() == 2);
+        Assert.assertTrue("first FeatureSet version wrong", testSet.getPrecedingVersion().getPrecedingVersion().getPrecedingVersion().getVersion() == 1);
+        Assert.assertTrue("FeatureSet size wrong", testSet.getCount() == 0);
+        Assert.assertTrue("old FeatureSet size wrong", testSet.getPrecedingVersion().getCount() == 6);
+        Assert.assertTrue("very old FeatureSet size wrong", testSet.getPrecedingVersion().getPrecedingVersion().getCount() == 3);
+        Assert.assertTrue("first FeatureSet size wrong", testSet.getPrecedingVersion().getPrecedingVersion().getPrecedingVersion().getCount() == 0);
         // assert the same properties with the one in memory already
-        Assert.assertTrue("referenceSet version wrong", aSet.getVersion() == 3);
-        Assert.assertTrue("old referenceSet version wrong", aSet.getPrecedingVersion().getVersion() == 2);
-        Assert.assertTrue("very old referenceSet version wrong", aSet.getPrecedingVersion().getPrecedingVersion().getVersion() == 1);
-        Assert.assertTrue("referenceSet size wrong", aSet.getCount() == 6);
-        Assert.assertTrue("old referenceSet size wrong", aSet.getPrecedingVersion().getCount() == 3);
-        Assert.assertTrue("very old referenceSet size wrong", aSet.getPrecedingVersion().getPrecedingVersion().getCount() == 0);
+        Assert.assertTrue("FeatureSet version wrong", aSet.getVersion() == 4);
+        Assert.assertTrue("old FeatureSet version wrong", aSet.getPrecedingVersion().getVersion() == 3);
+        Assert.assertTrue("very old FeatureSet version wrong", aSet.getPrecedingVersion().getPrecedingVersion().getVersion() == 2);
+        Assert.assertTrue("first FeatureSet version wrong", aSet.getPrecedingVersion().getPrecedingVersion().getPrecedingVersion().getVersion() == 1);
+        Assert.assertTrue("FeatureSet size wrong", aSet.getCount() == 0);
+        Assert.assertTrue("old FeatureSet size wrong", aSet.getPrecedingVersion().getCount() == 6);
+        Assert.assertTrue("very old FeatureSet size wrong", aSet.getPrecedingVersion().getPrecedingVersion().getCount() == 3);
+        Assert.assertTrue("first FeatureSet size wrong", aSet.getPrecedingVersion().getPrecedingVersion().getPrecedingVersion().getCount() == 0);
     }
 }

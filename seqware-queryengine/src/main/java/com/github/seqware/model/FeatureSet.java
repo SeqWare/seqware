@@ -36,7 +36,7 @@ public abstract class FeatureSet extends Molecule<FeatureSet> implements SeqWare
      *
      * @param feature The feature that is to be added to the feature set.
      */
-    public abstract void add(Feature feature);
+    public abstract FeatureSet add(Feature feature);
 
     /**
      * Adds a collection of new Feature to the set.
@@ -44,6 +44,8 @@ public abstract class FeatureSet extends Molecule<FeatureSet> implements SeqWare
      * @param features The features that are to be added to the feature set.
      */
     public abstract void add(Set<Feature> features);
+    
+    public abstract FeatureSet remove(Feature feature);
 
     /**
      * Get the list of features associated with this feature set.

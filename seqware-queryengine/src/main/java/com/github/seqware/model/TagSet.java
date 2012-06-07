@@ -1,18 +1,15 @@
 package com.github.seqware.model;
 
 import com.github.seqware.factory.ModelManager;
-import com.github.seqware.impl.SimpleModelManager;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.Set;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * A set of Tags
  *
  * @author dyuen
  */
-public abstract class TagSet extends Molecule implements SeqWareIterable<Tag> {
+public abstract class TagSet extends Molecule<TagSet> implements SeqWareIterable<Tag> {
 
     private String name;
 
@@ -37,10 +34,10 @@ public abstract class TagSet extends Molecule implements SeqWareIterable<Tag> {
      *
      * @param tag tag to add
      */
-    public abstract void add(Tag tag);
+    public abstract TagSet add(Tag tag);
 
     /**
-     * Ass a set of tags to this tag set
+     * Add a set of tags to this tag set
      *
      * @param tags tags to add
      */
@@ -53,6 +50,8 @@ public abstract class TagSet extends Molecule implements SeqWareIterable<Tag> {
      */
     @Override
     public abstract TagSet.Builder toBuilder();
+
+    public abstract TagSet remove(Tag tag);
 
     public abstract static class Builder implements BaseBuilder {
 

@@ -1,8 +1,6 @@
 package com.github.seqware.model;
 
-import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
-import java.util.UUID;
 
 /**
  * Implements core functionality that is shared by classes that are controlled

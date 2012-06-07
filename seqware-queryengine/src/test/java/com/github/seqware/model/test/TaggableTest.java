@@ -81,7 +81,7 @@ public class TaggableTest {
         r1.associateTag(t2a);
         group.associateTag(t2b);
         u1.associateTag(t2b);
-        mManager.flush();
+        mManager.close();
     }
 
     @Test
@@ -119,6 +119,46 @@ public class TaggableTest {
         // 3 tags were associated with the featureSet
         Assert.assertTrue(tags1.getCount() == 3);
         Assert.assertTrue(a.getTags().getCount() == 1);
+    }
+    
+    @Test 
+    public void testAddingAndRemovingTagsFromTagSets(){
+        ModelManager mManager = Factory.getModelManager();
+        // tags are not initially in a key set
+        SeqWareIterable<TagSet> tagSets = Factory.getFeatureStoreInterface().getTagSets();
+        Tag[] tagsCheck = {t1a,t1b,t1c,t2a,t2b,t2c,t3a};
+        boolean[] tagsCheckFound = new boolean[tagsCheck.length];
+        Arrays.fill(tagsCheckFound, false);
+        // there should be nothing here
+        for(TagSet t : tagSets){
+            for(Tag ta : t){
+                for(int i = 0; i < tagsCheckFound.length; i++){
+                    if (tagsCheck[i].equals(ta)){
+                        tagsCheckFound[i] = true;
+                    }
+                }
+            }
+        }
+        for(boolean b : tagsCheckFound){
+            Assert.assertTrue(!b);
+        }
+        // let's add them 
+        mManager.persist(tSet1);
+        tSet1.add(t1a).add(t1b).add(t1c);
+        mManager.flush();
+        TagSet testSet = (TagSet) Factory.getFeatureStoreInterface().getParticleBySGID(tSet1.getSGID());
+        Assert.assertTrue(testSet.getCount() == 3);
+        tSet1.add(t3a);
+        mManager.flush();
+        testSet = (TagSet) Factory.getFeatureStoreInterface().getParticleBySGID(tSet1.getSGID());
+        Assert.assertTrue(testSet.getCount() == 4);
+        Assert.assertTrue(testSet.getPrecedingVersion().getCount() == 3);
+        // and then remove them
+        tSet1.remove(t3a).remove(t1a);
+        mManager.flush();
+        testSet = (TagSet) Factory.getFeatureStoreInterface().getParticleBySGID(tSet1.getSGID());
+        Assert.assertTrue(testSet.getCount() == 2);
+        Assert.assertTrue(testSet.getPrecedingVersion().getCount() == 4);
     }
 
     @Test
