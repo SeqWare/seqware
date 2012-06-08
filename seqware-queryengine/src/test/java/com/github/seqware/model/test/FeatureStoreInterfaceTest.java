@@ -4,6 +4,7 @@ import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Assert;
@@ -21,6 +22,8 @@ public class FeatureStoreInterfaceTest {
     protected static Feature a1, a2, a3;
 
     static {
+        UUID testID = UUID.randomUUID();
+        System.out.println("starting static init in testID: " + testID.toString());
         ModelManager mManager = Factory.getModelManager();
         aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy ref").build()).build();
         // create and store some features
@@ -31,10 +34,13 @@ public class FeatureStoreInterfaceTest {
         aSet.add(a2);
         aSet.add(a3);
         mManager.flush();
+        System.out.println("ending static init in testID: " + testID.toString());
     }
 
     @Test
     public void testFeatureCreationAndIterate() {
+        UUID testID = UUID.randomUUID();
+        System.out.println("running base test in testID: " + testID.toString());
         // get FeatureSets from the back-end
         boolean b1 = false;
         boolean b2 = false;
@@ -52,5 +58,6 @@ public class FeatureStoreInterfaceTest {
         }
 
         Assert.assertTrue(b1 && b2 && b3);
+        System.out.println("ending base test in testID: " + testID.toString());
     }
 }

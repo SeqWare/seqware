@@ -8,6 +8,7 @@ import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import com.github.seqware.model.Particle;
 import com.github.seqware.model.test.FeatureStoreInterfaceTest;
+import java.util.UUID;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -19,6 +20,9 @@ import org.junit.Test;
 public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
     @Test
     public void storageAndRetrievalTest() {
+        UUID testID = UUID.randomUUID();
+        System.out.println("running subclass test in testID: " + testID.toString());
+        
         SimplePersistentBackEnd backend = new SimplePersistentBackEnd(new ApacheUtilsPersistentSerialization());
 
         try {
@@ -42,5 +46,6 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
         FeatureSet returnedSet = (FeatureSet)particle;
 
         Assert.assertTrue("Returned feature set does not contain the same amount of features as were stored.", this.aSet.getCount() == returnedSet.getCount());
+        System.out.println("ending subclass test in testID: " + testID.toString());
     }
 }
