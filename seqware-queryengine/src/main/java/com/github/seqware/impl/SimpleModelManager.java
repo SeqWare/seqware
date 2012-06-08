@@ -16,16 +16,16 @@
  */
 package com.github.seqware.impl;
 
+import com.github.seqware.factory.BackEndInterface;
 import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
-import com.github.seqware.model.*;
 import com.github.seqware.model.Analysis.Builder;
+import com.github.seqware.model.*;
 import com.github.seqware.model.impl.inMemory.*;
 import com.github.seqware.util.SGID;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,6 +41,7 @@ import java.util.logging.Logger;
 public class SimpleModelManager implements ModelManager {
 
     private Map<SGID, ParticleStatePair> dirtySet = new HashMap<SGID, ParticleStatePair>();
+    private BackEndInterface backend = Factory.getBackEnd();
 
     @Override
     public void persist(Particle p) {
@@ -76,9 +77,9 @@ public class SimpleModelManager implements ModelManager {
                 if (p.getValue().getState() == State.NEW_VERSION){
                     // if they have preceding versions do an update, otherwise store
                     // only molecules should have preceding states
-                    Factory.getBackEnd().update((Atom)dirtySet.get(p.getKey()).getP());
+                    backend.update((Atom)dirtySet.get(p.getKey()).getP());
                 } else {
-                    Factory.getBackEnd().store(dirtySet.get(p.getKey()).getP());
+                    backend.store(dirtySet.get(p.getKey()).getP());
                 }
             }
             p.getValue().setState(State.MANAGED);
@@ -89,7 +90,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public FeatureSet.Builder buildFeatureSet() {
         FeatureSet.Builder fSet = null;
-        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
+        if (backend instanceof SimplePersistentBackEnd) {
             fSet = InMemoryFeatureSet.newBuilder().setManager(this);
         }
         return fSet;
@@ -98,7 +99,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public Reference.Builder buildReference() {
         Reference.Builder ref = null;
-        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
+        if (backend instanceof SimplePersistentBackEnd) {
             ref = InMemoryReference.newBuilder().setManager(this);
         }
         assert (ref != null);
@@ -108,7 +109,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public ReferenceSet.Builder buildReferenceSet() {
         ReferenceSet.Builder rSet = null;
-        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
+        if (backend instanceof SimplePersistentBackEnd) {
             rSet = InMemoryReferenceSet.newBuilder().setManager(this);
         }
         assert (rSet != null);
@@ -118,7 +119,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public TagSet.Builder buildTagSet() {
         TagSet.Builder tSet = null;
-        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
+        if (backend instanceof SimplePersistentBackEnd) {
             tSet = InMemoryTagSet.newBuilder().setManager(this);
         }
         assert (tSet != null);
@@ -128,7 +129,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public AnalysisSet.Builder buildAnalysisSet() {
         AnalysisSet.Builder aSet = null;
-        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
+        if (backend instanceof SimplePersistentBackEnd) {
             return InMemoryAnalysisSet.newBuilder().setManager(this);
         }
         assert (aSet != null);
@@ -138,7 +139,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public User.Builder buildUser() {
         User.Builder aSet = null;
-        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
+        if (backend instanceof SimplePersistentBackEnd) {
             return User.newBuilder().setManager(this);
         }
         assert (aSet != null);
@@ -148,7 +149,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public Group.Builder buildGroup() {
         Group.Builder aSet = null;
-        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
+        if (backend instanceof SimplePersistentBackEnd) {
             return Group.newBuilder().setManager(this);
         }
         assert (aSet != null);
@@ -158,7 +159,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public Tag.Builder buildTag() {
         Tag.Builder aSet = null;
-        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
+        if (backend instanceof SimplePersistentBackEnd) {
             return Tag.newBuilder().setManager(this);
         }
         assert (aSet != null);
@@ -168,7 +169,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public Feature.Builder buildFeature() {
         Feature.Builder aSet = null;
-        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
+        if (backend instanceof SimplePersistentBackEnd) {
             return Feature.newBuilder().setManager(this);
         }
         assert (aSet != null);
@@ -210,7 +211,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public Builder buildAnalysis() {
         Analysis.Builder aSet = null;
-        if (Factory.getBackEnd() instanceof SimplePersistentBackEnd) {
+        if (backend instanceof SimplePersistentBackEnd) {
             return InMemoryQueryFutureImpl.newBuilder().setManager(this);
         }
         assert (aSet != null);
@@ -257,5 +258,13 @@ public class SimpleModelManager implements ModelManager {
         public String toString(){
             return state.toString() + " " + p.toString();
         }
+    }
+    
+    /**
+     * Used for testing only, override the backend choice when testing implementations
+     * @param backend 
+     */
+    public void overrideBackEnd(BackEndInterface backend){
+        this.backend = backend;
     }
 }

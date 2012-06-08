@@ -14,25 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.model.test.util;
+package com.github.seqware.impl.test.util;
 
-import com.github.seqware.impl.test.SimplePersistentBackEndTest;
-import com.github.seqware.model.test.*;
-import org.junit.runner.RunWith;
+import com.github.seqware.model.test.util.*;
+import org.junit.runners.Suite;
+import org.junit.runners.model.InitializationError;
 
 /**
- * Builds test suites
+ * Allows us to dynamically build test suites
  * Taken from {@link http://stackoverflow.com/questions/1070202/junit-suiteclasses-with-a-static-list-of-classes }
  * @author dyuen
  */
-@RunWith(DynamicSuite.class)
-public class DynamicSuiteBuilder {
-    
-    private static Class<?>[] ModelTests = {ACLTest.class, FeatureSetTest.class, FeatureStoreInterfaceTest.class, 
-        FeatureTest.class, QueryInterfaceTest.class, ReferenceSetTest.class, TaggableTest.class, 
-        UserGroupTest.class};
-    
-    public static Class[] modelSuite() {
-         return DynamicSuiteBuilder.ModelTests;
-   }
+public class DynamicSuite extends Suite {
+
+    public DynamicSuite(Class<?> setupClass) throws InitializationError {
+        super(setupClass, DynamicSuiteBuilder.implSuite());
+    }
 }

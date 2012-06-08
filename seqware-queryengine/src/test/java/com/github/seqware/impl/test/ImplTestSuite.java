@@ -14,25 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.model.test.util;
+package com.github.seqware.impl.test;
 
-import com.github.seqware.impl.test.SimplePersistentBackEndTest;
-import com.github.seqware.model.test.*;
+import com.github.seqware.factory.Factory;
+import com.github.seqware.impl.test.util.DynamicSuite;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
- * Builds test suites
- * Taken from {@link http://stackoverflow.com/questions/1070202/junit-suiteclasses-with-a-static-list-of-classes }
+ *
  * @author dyuen
  */
 @RunWith(DynamicSuite.class)
-public class DynamicSuiteBuilder {
+public class ImplTestSuite {
+
+    @BeforeClass
+    public static void setupSuite() {
+        Logger.getLogger(ImplTestSuite.class.getName()).log(Level.INFO, "Running test suite for implementation-specific tests");
+    }
     
-    private static Class<?>[] ModelTests = {ACLTest.class, FeatureSetTest.class, FeatureStoreInterfaceTest.class, 
-        FeatureTest.class, QueryInterfaceTest.class, ReferenceSetTest.class, TaggableTest.class, 
-        UserGroupTest.class};
-    
-    public static Class[] modelSuite() {
-         return DynamicSuiteBuilder.ModelTests;
-   }
+    @AfterClass
+    public static void tearDownSuite(){
+        Logger.getLogger(ImplTestSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
+        Factory.setFactoryBackendType(null, null);
+    }
 }

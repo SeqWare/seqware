@@ -27,6 +27,6 @@ import org.junit.runners.model.InitializationError;
 public class DynamicSuite extends Suite {
 
     public DynamicSuite(Class<?> setupClass) throws InitializationError {
-        super(setupClass, DynamicSuiteBuilder.suite());
+        super(setupClass, DynamicSuiteBuilder.modelSuite());
     }
 }

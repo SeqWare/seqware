@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.model.test.util;
+package com.github.seqware.impl.test.util;
 
-import com.github.seqware.impl.test.SimplePersistentBackEndTest;
+import com.github.seqware.impl.test.*;
 import com.github.seqware.model.test.*;
 import org.junit.runner.RunWith;
 
@@ -28,11 +28,10 @@ import org.junit.runner.RunWith;
 @RunWith(DynamicSuite.class)
 public class DynamicSuiteBuilder {
     
-    private static Class<?>[] ModelTests = {ACLTest.class, FeatureSetTest.class, FeatureStoreInterfaceTest.class, 
-        FeatureTest.class, QueryInterfaceTest.class, ReferenceSetTest.class, TaggableTest.class, 
-        UserGroupTest.class};
+    private static Class[] ImplTests = {SimplePersistentBackEndTest.class, FactoryStaticInitializerTest.class, FactoryConstructorTest.class
+        , ApacheConstructorTest.class, ApacheStaticInitializerTest.class};
     
-    public static Class[] modelSuite() {
-         return DynamicSuiteBuilder.ModelTests;
-   }
+    public static Class[] implSuite(){
+        return DynamicSuiteBuilder.ImplTests;
+    }
 }
