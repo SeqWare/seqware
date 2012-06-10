@@ -41,8 +41,8 @@
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase</artifactId>
-            <!-- current public version 
-		<version>0.92.1</version> 
+            <!-- current public version
+		    <version>0.92.1</version>
             -->
             <!-- current Cloudera stable -->
             <version>0.90.6-cdh3u4</version>
@@ -60,18 +60,18 @@
         <dependency>
             <artifactId>hadoop-core</artifactId>
             <groupId>org.apache.hadoop</groupId>
-            <!-- current public version 
-		<version>1.0.3</version> 
-   		-->
+            <!-- current public version
+		    <version>1.0.3</version>
+   		    -->
             <!-- current Cloudera stable -->
-            <version>0.20.2-cdh3u4</version> 
+            <version>0.20.2-cdh3u4</version>
         </dependency>
         <dependency>
             <artifactId>hadoop-tools</artifactId>
             <groupId>org.apache.hadoop</groupId>
-            <!-- current public version 
-		<version>1.0.3</version>
-	    -->
+            <!-- current public version
+		    <version>1.0.3</version>
+	        -->
             <!-- current Cloudera stable -->
             <version>0.20.2-cdh3u4</version>
         </dependency>
@@ -94,10 +94,20 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
-	<dependency>
-		<groupId>com.google.protobuf</groupId>
-		<artifactId>protobuf-java</artifactId>
-		<version>2.4.1</version>
-	</dependency>
+	    <dependency>
+		    <groupId>com.google.protobuf</groupId>
+		    <artifactId>protobuf-java</artifactId>
+		    <version>2.4.1</version>
+	    </dependency>
+        <dependency>
+            <groupId>com.esotericsoftware.kryo</groupId>
+            <artifactId>kryo</artifactId>
+            <version>2.12</version>
+        </dependency>
+        <dependency>
+            <artifactId>asm</artifactId>
+            <groupId>asm</groupId>
+            <version>3.3.1</version>
+        </dependency>
     </dependencies>
 </project>
