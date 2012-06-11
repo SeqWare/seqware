@@ -40,7 +40,13 @@ You can also build individual components such as the new query engine with:
 LOCAL UNIT TESTING SETUP
 ---------------------
 
-Get HBase. Prepare a local directory for the HBase database by populating the file `conf/hbase-site.xml` with (adjust the file path to your needs):
+Get HBase. Either versions 0.92.1 and 0.94.0 are fine:
+
+    wget http://apache.raffsoftware.com/hbase/hbase-0.94.0/hbase-0.94.0.tar.gz
+    tar xzf hbase-0.94.0.tar.gz
+    cd hbase-0.94.0
+
+Prepare a local directory for the HBase database by populating the file `conf/hbase-site.xml` with (adjust the file path `/opt/local/var/db/hbase` to your needs):
 
     <?xml version="1.0"?>
     <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
@@ -53,11 +59,11 @@ Get HBase. Prepare a local directory for the HBase database by populating the fi
 
 Start the HBase server:
 
-    start-hbase.sh
+    ./bin/start-hbase.sh
 
 Stopping the HBase server is similarly simple:
 
-    stop-hbase.sh
+    ./bin/stop-hbase.sh
 
 Some libraries make use of HBase's Stargate interface (a REST interface), which can be started via:
 
