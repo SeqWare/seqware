@@ -1,15 +1,15 @@
 package com.github.seqware.impl.test;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.JavaSerializer;
-import com.github.seqware.factory.Factory;
-import com.github.seqware.model.Feature;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.UUID;
+
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+import com.github.seqware.dto.QueryEngine.FeaturePB;
+import com.github.seqware.factory.Factory;
+import com.github.seqware.impl.protobufIO.FeatureIO;
+import com.github.seqware.model.Feature;
 import junit.framework.Assert;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -19,16 +19,15 @@ import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.junit.Test;
-import org.objenesis.strategy.SerializingInstantiatorStrategy;
 
 /**
- * Simple serialization/deserialization test using HBase.
+ * Simple serialization/deserialization test using HBase with Proto Buffers
  *
  * @author jbaran
  */
-public class HBaseTest {
-    private static final String TEST_TABLE = "seqwareTestTable";
-    private static final String TEST_COLUMN = "fauxColumn";
+public class HBaseTestPB {
+    private static final String TEST_TABLE = "seqwareTestTablePB";
+    private static final String TEST_COLUMN = "fauxColumnPB";
 
     /**
      * Create a fresh HBase table (drop existing one) and serialize/deserialize
@@ -37,7 +36,7 @@ public class HBaseTest {
      * @throws IOException
      */
     @Test
-    public void testHBaseTable() throws IOException {
+    public void testHBaseTablePB() throws IOException {
 
         // Code from http://hbase.apache.org/apidocs/org/apache/hadoop/hbase/client/package-summary.html
 
@@ -59,24 +58,16 @@ public class HBaseTest {
 
         // Get one feature to serialize/deserialize:
         Feature testFeature = Factory.getModelManager().buildFeature().setStart(1000000).setStop(1000100).build();
-
-        // Alternative to protobuf: Kryo
-        // Speed comparison can be found here: http://code.google.com/p/thrift-protobuf-compare/wiki/Benchmarking
-        Kryo serializer = new Kryo();
-
-        // Some magic to make serialization work with private default constructors:
-        serializer.setInstantiatorStrategy(new SerializingInstantiatorStrategy());
-        //serializer.setDefaultSerializer(JavaSerializer.class);
-        serializer.register(UUID.class, new JavaSerializer());
+        FeaturePB fpb = FeatureIO.m2pb(testFeature);
         
         ByteArrayOutputStream sgidBytes = new ByteArrayOutputStream();
         Output o = new Output(sgidBytes);
-        serializer.writeObject(o, testFeature.getSGID());
+        fpb.getSgid().writeTo(o);
         o.close();
 
         ByteArrayOutputStream featureBytes = new ByteArrayOutputStream();
         o = new Output(featureBytes);
-        serializer.writeObject(o, testFeature);
+        fpb.writeTo(o);
         o.close();
 
         Put p = new Put(sgidBytes.toByteArray());
@@ -92,7 +83,7 @@ public class HBaseTest {
 
         // We should get back a Feature object:
         Input result = new Input(new ByteArrayInputStream(value));
-        Feature deserializedFeature = serializer.readObject(result, Feature.class);
+        Feature deserializedFeature = FeatureIO.pb2m(FeaturePB.parseFrom(result));
 
         // NOTE This test fails right now, which is due to the equals() implementation
         //      in Feature. When inspecting the features in debugging mode, then they
@@ -109,8 +100,7 @@ public class HBaseTest {
                 KeyValue[] kvArray = rr.raw();
                 for (KeyValue kv : kvArray) {
                     result = new Input(new ByteArrayInputStream(kv.getValue()));
-                    deserializedFeature = serializer.readObject(result, Feature.class);
-
+                    deserializedFeature = FeatureIO.pb2m(FeaturePB.parseFrom(result));
                     // NOTE Same as above: fails due to equals() implementation.
                     Assert.assertEquals(testFeature, deserializedFeature);
                     //testFeature.equals(deserializedFeature);

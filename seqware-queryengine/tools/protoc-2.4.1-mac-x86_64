@@ -1,0 +1,24 @@
+#/bin/sh
+
+# It's not possible to create a static binary of protoc for Mac.
+# Prompt user to install correct version of protoc.
+
+PROTOC_VERSION="libprotoc 2.4.1"
+
+`/usr/bin/command -v protoc >/dev/null 2>&1`
+ERROR_CODE=$?
+
+if [ "$ERROR_CODE" != 0 ]
+then
+  echo "protoc $PROTOC_VERSION required. http://code.google.com/p/protobuf/"
+  exit 3;
+fi
+
+ACTUAL_VERSION="`protoc --version`"
+if [ "$ACTUAL_VERSION" != "$PROTOC_VERSION" ]
+then
+  echo "protoc $ACTUAL_VERSION installed. protoc $PROTOC_VERSION required. http://code.google.com/p/protobuf/"
+  exit 4;
+fi
+
+protoc $@

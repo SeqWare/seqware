@@ -1,0 +1,32 @@
+package QueryEngine;
+
+option java_package = "com.github.seqware.dto";
+
+message SGIDPB {
+    // just store the fields to create a UUID
+    optional int64 mostSigBits = 1;
+    optional int64 leastSigBits = 2;
+}
+
+message TagPB {
+    // atom/particle stuff
+    optional SGIDPB sgid = 1;
+    optional SGIDPB precedingID = 2;
+    optional int64 date = 3;
+    // Tag-specific
+    optional string key = 4;
+    optional string predicate = 5;
+    optional string value = 6;
+    optional SGIDPB tagset = 7;
+}
+
+//message ClientErrorDto {
+//  required int32 code = 1; // Holds the HTTP status code (4xx).
+//  required string status = 2; // Holds a one-word error descriptor. This should be usable as a key in localisation bundles.
+//  repeated string arguments = 3; // Arguments to be passed during localisation.
+//  extensions 1000 to max; // Extensions can be registered to provide additional error data on a case-by-case basis.
+//}
+
+
+
+
