@@ -98,8 +98,8 @@ public class HBaseTest {
         // NOTE This test fails right now, which is due to the equals() implementation
         //      in Feature. When inspecting the features in debugging mode, then they
         //      are clearly equal in terms of UUID and values.
-        //Assert.assertEquals(testFeature, deserializedFeature);
-        testFeature.equals(deserializedFeature);
+        Assert.assertEquals(testFeature, deserializedFeature);
+        //testFeature.equals(deserializedFeature);
 
         // Check if the only object in the HBase table is the feature we put there:
         Scan s = new Scan();
@@ -113,8 +113,8 @@ public class HBaseTest {
                     deserializedFeature = serializer.readObject(result, Feature.class);
 
                     // NOTE Same as above: fails due to equals() implementation.
-                    // Assert.assertEquals(testFeature, deserializedFeature);
-                    testFeature.equals(deserializedFeature);
+                    Assert.assertEquals(testFeature, deserializedFeature);
+                    //testFeature.equals(deserializedFeature);
                 }
             }
         }
