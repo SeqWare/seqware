@@ -5,10 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.Registration;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.esotericsoftware.kryo.serializers.JavaSerializer;
 import com.github.seqware.factory.Factory;
 import com.github.seqware.model.Feature;
@@ -22,9 +20,7 @@ import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.junit.Test;
-import org.objenesis.instantiator.sun.SunReflectionFactorySerializationInstantiator;
 import org.objenesis.strategy.SerializingInstantiatorStrategy;
-import org.objenesis.strategy.StdInstantiatorStrategy;
 
 /**
  * Simple serialization/deserialization test using HBase.
@@ -71,7 +67,8 @@ public class HBaseTest {
 
         // Some magic to make serialization work with private default constructors:
         serializer.setInstantiatorStrategy(new SerializingInstantiatorStrategy());
-        serializer.setDefaultSerializer(JavaSerializer.class);
+        //serializer.setDefaultSerializer(JavaSerializer.class);
+        serializer.register(UUID.class, new JavaSerializer());
         
         ByteArrayOutputStream sgidBytes = new ByteArrayOutputStream();
         Output o = new Output(sgidBytes);
