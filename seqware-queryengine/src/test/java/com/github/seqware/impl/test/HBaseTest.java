@@ -1,15 +1,14 @@
 package com.github.seqware.impl.test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.JavaSerializer;
 import com.github.seqware.factory.Factory;
 import com.github.seqware.model.Feature;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.UUID;
 import junit.framework.Assert;
 import org.apache.hadoop.conf.Configuration;

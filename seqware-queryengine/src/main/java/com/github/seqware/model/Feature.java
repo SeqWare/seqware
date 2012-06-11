@@ -28,15 +28,15 @@ public class Feature extends Atom<Feature> {
 
         POSITIVE, NEGATIVE, NOT_STRANDED, UNKNOWN
     }
-    private String pragma;
-    private String source;
-    private String type;
-    private Double score;
+    private String pragma = null;
+    private String source = null;
+    private String type = null;
+    private Double score = null;
     private String phase = ".";
-    private String id;
-    private long start;
-    private long stop;
-    private Strand strand;
+    private String id = null;
+    private long start = 0;
+    private long stop = 0;
+    private Strand strand = null;
 
     private Feature() {
         super();
@@ -206,7 +206,9 @@ public class Feature extends Atom<Feature> {
             if (feature.strand == null) {
                 feature.strand = Strand.NOT_STRANDED;
             }
-            feature.getManager().objectCreated(feature);
+            if(feature.getManager() != null){
+                feature.getManager().objectCreated(feature);
+            }
             return feature;
         }
 

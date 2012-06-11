@@ -1,0 +1,69 @@
+import "QE_Supporting.proto";
+package QueryEngine;
+
+option java_package = "com.github.seqware.dto";
+
+message FeaturePB {
+    // atom/particle stuff
+    optional SGIDPB sgid = 1;
+    optional SGIDPB precedingID = 2;
+    optional int64 date = 3;
+
+    // feature specific
+    optional string pragma = 4;
+    optional string source = 5;
+    optional string type = 6;
+    optional double score = 7;
+    optional string phase = 8;
+    optional string id = 9;
+    optional int64 start = 10;
+    optional int64 stop = 11;
+    optional StrandPB strand = 12;
+    repeated TagPB tags = 13;
+
+    enum StrandPB{
+        POSITIVE = 1;
+        NEGATIVE = 2;
+        NOT_STRANDED = 3;
+        UNKNOWN = 4;
+    }
+}
+
+//message LibraryDto {
+//  optional string url = 1;
+//  optional string name = 2;
+//  optional string description = 3;
+//  optional string create_time_stamp = 4;
+//  optional string update_time_stamp = 5;
+//  optional OwnerDto owner = 6;
+//  optional OrganismDto organism = 7;
+//  repeated AttributeDto attributes = 8; 
+//  repeated string parent_urls = 9;
+//  repeated string children_urls = 10;
+//}
+//
+//message OwnerDto {
+//  optional string email = 1;
+//  optional string first_name = 2;
+//  optional string last_name = 3;
+//  optional string institution = 4;
+//}
+//
+//message OrganismDto {
+//  optional string name = 1;
+//  optional string code = 2;
+//  optional int32 ncbi_taxonomy_id = 3;
+//}
+//
+//message AttributeDto {
+//  optional string entity_url = 1;
+//  optional string name = 2;
+//  optional string value = 3;
+//  optional string unit = 4;
+//}
+//
+//message LibraryIdentityDto {
+//  optional string sample_id = 1;
+//  optional string library_id = 2;
+//}
+

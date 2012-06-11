@@ -47,4 +47,17 @@ public class SGID implements Serializable {
     public String toString() {
         return uuid.toString();
     }
+
+    /**
+     * Get underlying UUID implementation, should only be called within the back-end
+     */
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+    
+    
 }
