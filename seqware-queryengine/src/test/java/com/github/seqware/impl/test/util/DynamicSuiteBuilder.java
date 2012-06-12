@@ -29,7 +29,7 @@ import org.junit.runner.RunWith;
 public class DynamicSuiteBuilder {
     
     private static Class[] ImplTests = {SimplePersistentBackEndTest.class, FactoryStaticInitializerTest.class, FactoryConstructorTest.class
-        , ApacheConstructorTest.class, ApacheStaticInitializerTest.class, HBaseTest.class, HBaseTestPB.class};
+        , ApacheConstructorTest.class, ApacheStaticInitializerTest.class, /** HBaseTest.class,**/ HBaseTestPB.class};
     
     public static Class[] implSuite(){
         return DynamicSuiteBuilder.ImplTests;

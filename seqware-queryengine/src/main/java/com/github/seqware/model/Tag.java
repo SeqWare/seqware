@@ -1,6 +1,7 @@
 package com.github.seqware.model;
 
 import com.github.seqware.factory.ModelManager;
+import com.github.seqware.util.SGID;
 import com.github.seqware.util.SeqWareIterable;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -23,13 +24,17 @@ public class Tag extends Atom  {
     private TagSet tagSet;
     private String key;
     private String predicate = "=";
-    private String value = null;
+    private Object value = null;
+    private ValueType vType;
+    
+    public enum ValueType {STRING, BYTEARR, SGID, FLOAT, DOUBLE, LONG, INTEGER };
 
     /**
      * Create a new tag
      */
     private Tag() {
         super();
+        vType = ValueType.STRING;
     }
 
     /**
@@ -55,7 +60,7 @@ public class Tag extends Atom  {
      *
      * @return String value
      */
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
@@ -67,6 +72,16 @@ public class Tag extends Atom  {
     public String getPredicate() {
         return predicate;
     }
+
+    /**
+     * Get the type of value for the tag value
+     * @return 
+     */
+    public ValueType getvType() {
+        return vType;
+    }
+    
+    
 
     @Override
     public boolean equals(Object obj) {
@@ -162,8 +177,28 @@ public class Tag extends Atom  {
             return this;
         }
 
-        public Tag.Builder setValue(String value) {
+        /**
+         * Set the value to one of ValueType
+         * @param value
+         * @return 
+         */
+        public Tag.Builder setValue(Object value) {
             tag.value = value;
+            if (value instanceof byte[]){
+                tag.vType = ValueType.BYTEARR;
+            } else if (value instanceof Double){
+                tag.vType = ValueType.DOUBLE;
+            } else if (value instanceof Float){
+                tag.vType = ValueType.FLOAT;
+            } else if (value instanceof Integer){
+                tag.vType = ValueType.INTEGER;
+            } else if (value instanceof Long){
+                tag.vType = ValueType.LONG;
+            } else if (value instanceof SGID){
+                tag.vType = ValueType.SGID;
+            } else if (value instanceof String){
+                tag.vType = ValueType.STRING;
+            }
             return this;
         }
 
