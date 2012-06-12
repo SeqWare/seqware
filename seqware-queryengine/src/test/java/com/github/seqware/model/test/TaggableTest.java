@@ -30,7 +30,7 @@ public class TaggableTest {
     private static User u1;
     private static AnalysisSet aSet;
     private static Analysis a;
-    private static Tag t1a,t1b,t1c,t2a,t2b,t2c,t3a;
+    private static Tag t1a, t1b, t1c, t2a, t2b, t2c, t3a;
 
     @BeforeClass
     public static void setupTests() {
@@ -42,7 +42,7 @@ public class TaggableTest {
         f1 = mManager.buildFeature().setStart(1000000).setStop(1000100).build();
         f2 = mManager.buildFeature().setStart(1000200).setStop(1000300).build();
         f3 = mManager.buildFeature().setStart(1000400).setStop(1000500).build();
-        testFeatures.add(f1);      
+        testFeatures.add(f1);
         testFeatures.add(f2);
         testFeatures.add(f3);
         fSet.add(testFeatures);
@@ -91,28 +91,28 @@ public class TaggableTest {
         // we have two tag sets
         boolean t1found = false;
         boolean t2found = false;
-        for(TagSet t : tagSets){
-            if (t.equals(tSet1)){
+        for (TagSet t : tagSets) {
+            if (t.equals(tSet1)) {
                 t1found = true;
-            } else if (t.equals(tSet2)){
+            } else if (t.equals(tSet2)) {
                 t2found = true;
             }
         }
         Assert.assertTrue(t1found == true && t2found == true);
         SeqWareIterable<Tag> tags = Factory.getFeatureStoreInterface().getTags();
-        Tag[] tagsCheck = {t1a,t1b,t1c,t2a,t2b,t2c,t3a};
+        Tag[] tagsCheck = {t1a, t1b, t1c, t2a, t2b, t2c, t3a};
         boolean[] tagsCheckFound = new boolean[tagsCheck.length];
         Arrays.fill(tagsCheckFound, false);
 //        for(TagSet t : tagSets){
-            for(Tag ta : tags){
-                for(int i = 0; i < tagsCheckFound.length; i++){
-                    if (tagsCheck[i].equals(ta)){
-                        tagsCheckFound[i] = true;
-                    }
+        for (Tag ta : tags) {
+            for (int i = 0; i < tagsCheckFound.length; i++) {
+                if (tagsCheck[i].equals(ta)) {
+                    tagsCheckFound[i] = true;
                 }
             }
+        }
 //        }
-        for(boolean b : tagsCheckFound){
+        for (boolean b : tagsCheckFound) {
             Assert.assertTrue(b);
         }
         SeqWareIterable<Tag> tags1 = fSet.getTags();
@@ -120,26 +120,26 @@ public class TaggableTest {
         Assert.assertTrue(tags1.getCount() == 3);
         Assert.assertTrue(a.getTags().getCount() == 1);
     }
-    
-    @Test 
-    public void testAddingAndRemovingTagsFromTagSets(){
+
+    @Test
+    public void testAddingAndRemovingTagsFromTagSets() {
         ModelManager mManager = Factory.getModelManager();
         // tags are not initially in a key set
         SeqWareIterable<TagSet> tagSets = Factory.getFeatureStoreInterface().getTagSets();
-        Tag[] tagsCheck = {t1a,t1b,t1c,t2a,t2b,t2c,t3a};
+        Tag[] tagsCheck = {t1a, t1b, t1c, t2a, t2b, t2c, t3a};
         boolean[] tagsCheckFound = new boolean[tagsCheck.length];
         Arrays.fill(tagsCheckFound, false);
         // there should be nothing here
-        for(TagSet t : tagSets){
-            for(Tag ta : t){
-                for(int i = 0; i < tagsCheckFound.length; i++){
-                    if (tagsCheck[i].equals(ta)){
+        for (TagSet t : tagSets) {
+            for (Tag ta : t) {
+                for (int i = 0; i < tagsCheckFound.length; i++) {
+                    if (tagsCheck[i].equals(ta)) {
                         tagsCheckFound[i] = true;
                     }
                 }
             }
         }
-        for(boolean b : tagsCheckFound){
+        for (boolean b : tagsCheckFound) {
             Assert.assertTrue(!b);
         }
         // let's add them 
@@ -167,9 +167,9 @@ public class TaggableTest {
         ModelManager mManager = Factory.getModelManager();
         Tag t1a = mManager.buildTag().setKey("KR").build();
         boolean tagException = false;
-        try{
+        try {
             t1a.associateTag(t1a);
-        }catch(UnsupportedOperationException e){
+        } catch (UnsupportedOperationException e) {
             tagException = true;
         }
         Assert.assertTrue(tagException);
@@ -221,5 +221,42 @@ public class TaggableTest {
         QueryFuture featuresByTag5 = Factory.getQueryInterface().getFeaturesByTag(fSet, 0, "KR", null, "F");
         Assert.assertTrue(featuresByTag5.get().getCount() == 1);
 
+    }
+
+    @Test
+    public void tagWithDifferentTypes() {
+        ModelManager mManager = Factory.getModelManager();
+        Tag ta = mManager.buildTag().setKey("KR").setValue("Test_String").build();
+        Tag tb = mManager.buildTag().setKey("KR").setValue("Test_String".getBytes()).build();
+        Tag tc = mManager.buildTag().setKey("KR").setValue(new Float(0.1f)).build();
+        Tag td = mManager.buildTag().setKey("KR").setValue(new Double(0.1)).build();
+        Tag te = mManager.buildTag().setKey("KR").setValue(new Long(1)).build();
+        Tag tf = mManager.buildTag().setKey("KR").setValue(new Integer(10)).build();
+        Tag tg = mManager.buildTag().setKey("KR").setValue(fSet.getSGID()).build();
+        User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
+        u.associateTag(ta);
+        u.associateTag(tb);
+        u.associateTag(tc);
+        u.associateTag(td);
+        u.associateTag(te);
+        u.associateTag(tf);
+        u.associateTag(tg);
+        mManager.flush();
+        // check that the tags are present
+        User user = (User) Factory.getFeatureStoreInterface().getParticleBySGID(u.getSGID());
+        Tag[] tagsCheck = {t1a, t1b, t1c, t2a, t2b, t2c, t3a};
+        boolean[] tagsCheckFound = new boolean[tagsCheck.length];
+        Arrays.fill(tagsCheckFound, false);
+        // there should be nothing here
+        for (Tag t : user.getTags()) {
+            for (int i = 0; i < tagsCheckFound.length; i++) {
+                if (tagsCheck[i].equals(ta)) {
+                    tagsCheckFound[i] = true;
+                }
+            }
+        }
+        for (boolean b : tagsCheckFound) {
+            Assert.assertTrue(!b);
+        }
     }
 }
