@@ -16,11 +16,10 @@
  */
 package com.github.seqware.impl;
 
-import com.github.seqware.model.Particle;
+import com.github.seqware.model.Atom;
 import com.github.seqware.util.SGID;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import org.apache.commons.lang.SerializationUtils;
 
 /**
@@ -29,16 +28,16 @@ import org.apache.commons.lang.SerializationUtils;
  */
 public class NonPersistentSerialization implements FileSerializationInterface {
 
-    private Map<SGID, Particle> map = new HashMap<SGID, Particle>();
+    private Map<SGID, Atom> map = new HashMap<SGID, Atom>();
     
     @Override
-    public void serializeParticleToTarget(Particle obj) {
-        Particle storeObj = (Particle) SerializationUtils.clone(obj);
+    public void serializeAtomToTarget(Atom obj) {
+        Atom storeObj = (Atom) SerializationUtils.clone(obj);
         map.put(storeObj.getSGID(), storeObj);
     }
 
     @Override
-    public Particle deserializeTargetToParticle(SGID sgid) {
+    public Atom deserializeTargetToAtom(SGID sgid) {
         return map.get(sgid);
     }
 
@@ -48,7 +47,7 @@ public class NonPersistentSerialization implements FileSerializationInterface {
     }
 
     @Override
-    public Iterable<SGID> getAllParticles() {
+    public Iterable<SGID> getAllAtoms() {
         return map.keySet();
     }
     

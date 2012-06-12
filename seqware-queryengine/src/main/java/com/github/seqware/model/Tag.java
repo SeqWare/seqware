@@ -19,7 +19,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  *
  * @author dyuen
  */
-public class Tag extends Atom  {
+public class Tag extends Atom<Tag>  {
 
     private TagSet tagSet;
     private String key;

@@ -40,18 +40,18 @@ import java.util.logging.Logger;
  */
 public class SimpleModelManager implements ModelManager {
 
-    private Map<SGID, ParticleStatePair> dirtySet = new HashMap<SGID, ParticleStatePair>();
+    private Map<SGID, AtomStatePair> dirtySet = new HashMap<SGID, AtomStatePair>();
     private BackEndInterface backend = Factory.getBackEnd();
 
     @Override
-    public void persist(Particle p) {
+    public void persist(Atom p) {
         if (this.dirtySet.containsKey(p.getSGID())){
             Logger.getLogger(SimpleModelManager.class.getName()).log(Level.INFO, "Attempted to persist a managed object, ignored it");
             return;
         }
-        // we also have to make sure that the correct manager is associated with this particle
+        // we also have to make sure that the correct manager is associated with this Atom
         p.setManager(this);
-        this.dirtySet.put(p.getSGID(), new ParticleStatePair(p, State.MANAGED));
+        this.dirtySet.put(p.getSGID(), new AtomStatePair(p, State.MANAGED));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public void close() {
         // close connection with all objects
-        for(ParticleStatePair p : dirtySet.values()){
+        for(AtomStatePair p : dirtySet.values()){
             p.p.setManager(null);
         }
         this.flush();
@@ -72,7 +72,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public void flush() {
         // update dirty objects
-        for (Entry<SGID, ParticleStatePair> p : dirtySet.entrySet()) {
+        for (Entry<SGID, AtomStatePair> p : dirtySet.entrySet()) {
             if (p.getValue().getState() == State.NEW_CREATION || p.getValue().getState() == State.NEW_VERSION){
                 if (p.getValue().getState() == State.NEW_VERSION){
                     // if they have preceding versions do an update, otherwise store
@@ -178,12 +178,12 @@ public class SimpleModelManager implements ModelManager {
   
     
     @Override
-    public void objectCreated(Particle source) {
-        particleStateChange(source, State.NEW_CREATION);
+    public void objectCreated(Atom source) {
+        AtomStateChange(source, State.NEW_CREATION);
     }
 
     @Override
-    public void particleStateChange(Particle source, State state) {
+    public void AtomStateChange(Atom source, State state) {
         // check for valid state transitions
         boolean validTransition = false;
         if (this.dirtySet.containsKey(source.getSGID())){
@@ -204,7 +204,7 @@ public class SimpleModelManager implements ModelManager {
             validTransition = true;
         }
         if (validTransition){
-            this.dirtySet.put(source.getSGID(), new ParticleStatePair(source, state));
+            this.dirtySet.put(source.getSGID(), new AtomStatePair(source, state));
         }
     }
 
@@ -218,25 +218,25 @@ public class SimpleModelManager implements ModelManager {
         return aSet;
     }
     
-    protected class ParticleStatePair{
-        protected ParticleStatePair(Particle p, State state){
+    protected class AtomStatePair{
+        protected AtomStatePair(Atom p, State state){
             this.p = p;
             this.state = state;
         }
-        private Particle p;
+        private Atom p;
         private State state;
 
         /**
          * @return the p
          */
-        protected Particle getP() {
+        protected Atom getP() {
             return p;
         }
 
         /**
          * @param p the p to set
          */
-        protected void setP(Particle p) {
+        protected void setP(Atom p) {
             this.p = p;
         }
 

@@ -69,7 +69,7 @@ public class ACLTest {
     public void testACLWithVersions() {
 //        Logger.getLogger(ACLTest.class.getName()).log(Level.INFO, "@Test");
         // check that everything looks ok
-        FeatureSet targetSet = (FeatureSet) Factory.getFeatureStoreInterface().getParticleBySGID(fSet.getSGID());
+        FeatureSet targetSet = (FeatureSet) Factory.getFeatureStoreInterface().getAtomBySGID(fSet.getSGID());
         // check some versioning while we are at it
         Assert.assertTrue("wrong owner", targetSet.getPermissions().getOwner().equals(marshmallowUser));
         Assert.assertTrue("wrong owner for old version", targetSet.getPrecedingVersion().getPermissions().getOwner().equals(titanicUser));
@@ -96,7 +96,7 @@ public class ACLTest {
         }
         mManager.flush();
         for(Molecule mol : mols){
-            Molecule molFromBackEnd = (Molecule) Factory.getFeatureStoreInterface().getParticleBySGID(mol.getSGID());
+            Molecule molFromBackEnd = (Molecule) Factory.getFeatureStoreInterface().getAtomBySGID(mol.getSGID());
             Assert.assertTrue(molFromBackEnd.getPermissions().getOwner().equals(newUser));
             Assert.assertTrue(molFromBackEnd.getPermissions().getGroup().equals(newGroup));
         }
@@ -107,7 +107,7 @@ public class ACLTest {
         }
         mManager.flush();
         for(Molecule mol : mols){
-            Molecule molFromBackEnd = (Molecule) Factory.getFeatureStoreInterface().getParticleBySGID(mol.getSGID());
+            Molecule molFromBackEnd = (Molecule) Factory.getFeatureStoreInterface().getAtomBySGID(mol.getSGID());
             Assert.assertTrue(molFromBackEnd.getPermissions().getOwner().equals(newUser2));
             // TODO: not sure why we need the cast here when it works for other classes, something has gone awry in template classes land
             Assert.assertTrue(((Molecule)molFromBackEnd.getPrecedingVersion()).getPermissions().getOwner().equals(newUser));

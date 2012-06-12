@@ -47,35 +47,35 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
     }
 
     @Override
-    public void store(Particle obj) {
-        if (fsi.deserializeTargetToParticle(obj.getSGID()) == null) {
-            fsi.serializeParticleToTarget(obj);
+    public void store(Atom obj) {
+        if (fsi.deserializeTargetToAtom(obj.getSGID()) == null) {
+            fsi.serializeAtomToTarget(obj);
         }
     }
 
     @Override
     public void update(Atom obj) {
-        // create a copy of the new particle and store it
+        // create a copy of the new Atom and store it
         SGID oldSGID = obj.getSGID();
-        Atom newParticle = (Atom)obj.copy(true);
-        store(newParticle);
+        Atom newAtom = (Atom)obj.copy(true);
+        store(newAtom);
         // update the backend
-        fsi.serializeParticleToTarget(newParticle);
-//        listOfEverything.add(newParticle.getSGID());
+        fsi.serializeAtomToTarget(newAtom);
+//        listOfEverything.add(newAtom.getSGID());
 //        if (obj instanceof Molecule) {
-//            versionsOfEverything.put(newParticle.getSGID(), obj.getSGID());
+//            versionsOfEverything.put(newAtom.getSGID(), obj.getSGID());
 //        }
         // change the obj we have a reference to look like the new object that was created
-        obj.impersonate(newParticle.getSGID(), newParticle.getCreationTimeStamp(), oldSGID);
+        obj.impersonate(newAtom.getSGID(), newAtom.getCreationTimeStamp(), oldSGID);
     }
 
     @Override
-    public Particle refresh(Particle obj) {
+    public Atom refresh(Atom obj) {
         return obj;
     }
 
 //    @Override
-//    public void delete(Particle obj) throws AccessControlException {
+//    public void delete(Atom obj) throws AccessControlException {
 //        listOfEverything.remove(obj);
 //    }
     @Override
@@ -84,12 +84,12 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
     }
 
     @Override
-    public Particle getParticleBySGID(SGID sgid) {
-        Particle p = fsi.deserializeTargetToParticle(sgid);
+    public Atom getAtomBySGID(SGID sgid) {
+        Atom p = fsi.deserializeTargetToAtom(sgid);
         assert(p == null || p.getSGID().equals(sgid));
         return p;
 //        for (UUID u : listOfEverything) {
-//            Particle p = fsi.deserializeTargetToParticle(u);
+//            Atom p = fsi.deserializeTargetToAtom(u);
 //            if (p.getSGID().equals(uuid)) {
 //                return p;
 //            }
@@ -172,8 +172,8 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
 
     private SeqWareIterable getAllOfClass(Class aClass) {
         List list = new ArrayList();
-        for (SGID u : fsi.getAllParticles()){ //listOfEverything) {
-            Particle p = fsi.deserializeTargetToParticle(u);
+        for (SGID u : fsi.getAllAtoms()){ //listOfEverything) {
+            Atom p = fsi.deserializeTargetToAtom(u);
             if (aClass.isInstance(p)) {
                 list.add(p);
             }
@@ -183,13 +183,13 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
 
     @Override
     public Atom getPrecedingVersion(Atom obj) {
-        Atom target = (Atom)fsi.deserializeTargetToParticle(obj.getSGID());
+        Atom target = (Atom)fsi.deserializeTargetToAtom(obj.getSGID());
         if (target == null){
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "{0} had no parent, this may signal an error", obj.getSGID());
             return null;
         }
         return target.getPrecedingVersion();
-        //return this.getParticleBySGID(this.versionsOfEverything.get(obj.getSGID()));
+        //return this.getAtomBySGID(this.versionsOfEverything.get(obj.getSGID()));
     }
 
     @Override

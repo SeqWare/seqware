@@ -6,7 +6,7 @@ import java.util.UUID;
 
 /**
  * Leaving this here just to provoke thought:
- * Update (and add) methods moved to Particle,
+ * Update (and add) methods moved to Atom,
  * Query methods are in QueryInterface,
  * ACL Methods are in ACLable.
  * 
@@ -40,7 +40,7 @@ public interface FeatureStoreInterface {
      * @param sgid globally unique id
      * @return a object from the back-end
      */
-    public Particle getParticleBySGID(SGID uuid);
+    public Atom getAtomBySGID(SGID uuid);
 
     /**
      * Gets all users in all groups

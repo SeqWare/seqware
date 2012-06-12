@@ -15,7 +15,7 @@ public abstract class Molecule<T extends Molecule> extends Atom<T> implements AC
     @Override
     public void setPermissions(ACL permissions) {
         this.permissions = permissions;
-        this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);  
+        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
     }
 
     @Override

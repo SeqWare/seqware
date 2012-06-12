@@ -16,8 +16,7 @@
  */
 package com.github.seqware.factory;
 
-import com.github.seqware.model.*;
-import com.github.seqware.util.SeqWareIterable;
+import com.github.seqware.model.Atom;
 
 /**
  * This interface specifies operations to persist, update, and add objects to 
@@ -30,7 +29,7 @@ public interface BackEndInterface {
      * Store obj in the back-end.
      * @param obj Object to be created
      */
-    public void store(Particle obj);
+    public void store(Atom obj);
     
     
     /**
@@ -45,25 +44,25 @@ public interface BackEndInterface {
      * @return Due to copy-on-write, this may return a new object with 
      * updated information
      */
-    public Particle refresh(Particle obj) ;
+    public Atom refresh(Atom obj) ;
     
 //    /**
 //     * Delete obj (will cascade in the case of sets to their 
 //     * children)
 //     * @param obj Object to be deleted from the back-end
 //     */
-//    public void delete(Particle obj);
+//    public void delete(Atom obj);
     
     /**
-     * Get the preceding Version of a particle
-     * @param obj current particle
-     * @return current particle's parent, will return null if the particle does not exist
+     * Get the preceding Version of a Atom
+     * @param obj current Atom
+     * @return current Atom's parent, will return null if the Atom does not exist
      */
     public Atom getPrecedingVersion(Atom obj);
 
     /**
-     * Set the succeeding Version of a particle
-     * @param predecessor  set current particle's parent
+     * Set the succeeding Version of a Atom
+     * @param predecessor  set current Atom's parent
      */
     public void setPrecedingVersion(Atom predecessor);  
     

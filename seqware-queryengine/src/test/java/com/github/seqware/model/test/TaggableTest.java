@@ -146,17 +146,17 @@ public class TaggableTest {
         mManager.persist(tSet1);
         tSet1.add(t1a).add(t1b).add(t1c);
         mManager.flush();
-        TagSet testSet = (TagSet) Factory.getFeatureStoreInterface().getParticleBySGID(tSet1.getSGID());
+        TagSet testSet = (TagSet) Factory.getFeatureStoreInterface().getAtomBySGID(tSet1.getSGID());
         Assert.assertTrue(testSet.getCount() == 3);
         tSet1.add(t3a);
         mManager.flush();
-        testSet = (TagSet) Factory.getFeatureStoreInterface().getParticleBySGID(tSet1.getSGID());
+        testSet = (TagSet) Factory.getFeatureStoreInterface().getAtomBySGID(tSet1.getSGID());
         Assert.assertTrue(testSet.getCount() == 4);
         Assert.assertTrue(testSet.getPrecedingVersion().getCount() == 3);
         // and then remove them
         tSet1.remove(t3a).remove(t1a);
         mManager.flush();
-        testSet = (TagSet) Factory.getFeatureStoreInterface().getParticleBySGID(tSet1.getSGID());
+        testSet = (TagSet) Factory.getFeatureStoreInterface().getAtomBySGID(tSet1.getSGID());
         Assert.assertTrue(testSet.getCount() == 2);
         Assert.assertTrue(testSet.getPrecedingVersion().getCount() == 4);
     }
@@ -243,7 +243,7 @@ public class TaggableTest {
         u.associateTag(tg);
         mManager.flush();
         // check that the tags are present
-        User user = (User) Factory.getFeatureStoreInterface().getParticleBySGID(u.getSGID());
+        User user = (User) Factory.getFeatureStoreInterface().getAtomBySGID(u.getSGID());
         Tag[] tagsCheck = {t1a, t1b, t1c, t2a, t2b, t2c, t3a};
         boolean[] tagsCheckFound = new boolean[tagsCheck.length];
         Arrays.fill(tagsCheckFound, false);
