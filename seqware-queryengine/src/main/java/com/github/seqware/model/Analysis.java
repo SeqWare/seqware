@@ -63,7 +63,7 @@ public abstract class Analysis extends Molecule<Analysis> implements QueryFuture
         public Analysis analysis;
 
         /**
-         * Set the group for the current particle
+         * Set the group for the current Atom
          *
          * @param group
          */

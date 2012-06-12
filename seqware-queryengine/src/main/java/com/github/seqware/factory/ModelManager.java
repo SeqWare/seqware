@@ -36,27 +36,27 @@ import com.github.seqware.model.*;
 public interface ModelManager {
 
     /**
-     * This manager defines particles to be in the following states
+     * This manager defines Atoms to be in the following states
      */
     public enum State {
 
         /**
-         * Unmanaged particles, this is implicit since the Model Manager should
-         * have no records of unmanaged particles
+         * Unmanaged Atoms, this is implicit since the Model Manager should
+         * have no records of unmanaged Atoms
          */
         UNMANAGED,
         /**
-         * Totally new particles, these particles should be stored without
+         * Totally new Atoms, these Atoms should be stored without
          * checking for old versions
          */
         NEW_CREATION,
         /**
-         * New versions of particles, these particles should take into account a
+         * New versions of Atoms, these Atoms should take into account a
          * predecessor when storing/updating
          */
         NEW_VERSION,
         /**
-         * Managed particles that have not otherwise changed
+         * Managed Atoms that have not otherwise changed
          */
         MANAGED
     };
@@ -68,12 +68,12 @@ public interface ModelManager {
     public void clear();
 
     /**
-     * Start managing a Particle that has been dirtied, for example, a particle
+     * Start managing a Atom that has been dirtied, for example, a Atom
      * returned from a query
      *
      * @param p
      */
-    public void persist(Particle p);
+    public void persist(Atom p);
 
     /**
      * Convenience method to flush() all entities and clear()
@@ -155,19 +155,19 @@ public interface ModelManager {
     public Feature.Builder buildFeature();
 
     /**
-     * Called by Particles when they are successfully created thus becoming
+     * Called by Atoms when they are successfully created thus becoming
      * dirty, and needing to be written to the database.
      *
      * @param source new object to be created in the backend
      */
-    public void objectCreated(Particle source);
+    public void objectCreated(Atom source);
 
     /**
-     * Called by particles when they need to change state (for example, to
+     * Called by Atoms when they need to change state (for example, to
      * notify that they have become a dirty new version)
      *
      * @param source
      * @param state
      */
-    public void particleStateChange(Particle source, State state);
+    public void AtomStateChange(Atom source, State state);
 }

@@ -86,7 +86,7 @@ public class ACL implements Serializable {
         private ACL acl = new ACL();
 
         /**
-         * Set the group for the current particle
+         * Set the group for the current Atom
          *
          * @param group
          */
@@ -96,7 +96,7 @@ public class ACL implements Serializable {
         }
 
         /**
-         * Set the owner for the current particle
+         * Set the owner for the current Atom
          *
          * @param owner
          */

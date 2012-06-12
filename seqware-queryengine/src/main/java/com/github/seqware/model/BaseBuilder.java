@@ -20,17 +20,17 @@ import com.github.seqware.factory.ModelManager;
 import com.github.seqware.impl.SimpleModelManager;
 
 /**
- * Builders are used to construct Particle. 
+ * Builders are used to construct Atom. 
  * @author dyuen
  */
 public interface BaseBuilder<S, T extends BaseBuilder> {
     /**
-     * Build a particle
-     * @return constructed particle
+     * Build a Atom
+     * @return constructed Atom
      */
     public S build();
     /**
-     * Set a manager for this particle
+     * Set a manager for this Atom
      * @param aThis
      * @return the base-builder itself
      */

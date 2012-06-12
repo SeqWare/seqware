@@ -16,7 +16,7 @@
  */
 package com.github.seqware.impl;
 
-import com.github.seqware.model.Particle;
+import com.github.seqware.model.Atom;
 import com.github.seqware.util.SGID;
 
 /**
@@ -25,22 +25,22 @@ import com.github.seqware.util.SGID;
  */
 public interface FileSerializationInterface {
     /**
-     * Generically serialize a particle into the interface
+     * Generically serialize a Atom into the interface
      * @param obj 
      */
-    public void serializeParticleToTarget(Particle obj);
+    public void serializeAtomToTarget(Atom obj);
 
     /**
-     * Generically get back a particle from the store using a sgid 
+     * Generically get back a Atom from the store using a sgid 
      * @param sgid
-     * @return null if no particle is present with this sgid
+     * @return null if no Atom is present with this sgid
      */
-    public Particle deserializeTargetToParticle(SGID sgid);
+    public Atom deserializeTargetToAtom(SGID sgid);
     
     /**
      * For debugging or very non-optimal implementations
      */
-    public Iterable<SGID> getAllParticles();
+    public Iterable<SGID> getAllAtoms();
     
     
     /**

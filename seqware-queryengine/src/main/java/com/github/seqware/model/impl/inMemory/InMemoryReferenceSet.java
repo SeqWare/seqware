@@ -30,13 +30,13 @@ public class InMemoryReferenceSet extends ReferenceSet {
     @Override
     public void add(Reference reference) {
         references.add(reference);
-        this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);  
+        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
     }
 
     @Override
     public void add(Set<Reference> references) {
         references.addAll(references);
-        this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);  
+        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
     }
 
     @Override

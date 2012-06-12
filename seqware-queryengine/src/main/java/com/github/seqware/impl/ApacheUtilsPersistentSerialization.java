@@ -16,15 +16,12 @@
  */
 package com.github.seqware.impl;
 
-import com.github.seqware.model.Molecule;
-import com.github.seqware.model.Particle;
+import com.github.seqware.model.Atom;
 import com.github.seqware.util.SGID;
 import java.io.File;
 import java.io.IOException;
-import java.io.InvalidClassException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -54,7 +51,7 @@ public class ApacheUtilsPersistentSerialization implements FileSerializationInte
                     for (File f : FileUtils.listFiles(tempDir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE)) {
                         byte[] objData = FileUtils.readFileToByteArray(f);
                         try{
-                            Particle suspect = (Particle) SerializationUtils.deserialize(objData);
+                            Atom suspect = (Atom) SerializationUtils.deserialize(objData);
                             map.put(suspect.getSGID(), f);
                         } catch(SerializationException e){
                             if (!oldClassesFound){
@@ -76,7 +73,7 @@ public class ApacheUtilsPersistentSerialization implements FileSerializationInte
     }
 
     @Override
-    public void serializeParticleToTarget(Particle obj) {
+    public void serializeAtomToTarget(Atom obj) {
         // let's just clone everything on store to simulate hbase
         File target = new File(tempDir, obj.getSGID().toString());
         byte[] serialRep = SerializationUtils.serialize(obj);
@@ -90,7 +87,7 @@ public class ApacheUtilsPersistentSerialization implements FileSerializationInte
     }
 
     @Override
-    public Particle deserializeTargetToParticle(SGID sgid) {
+    public Atom deserializeTargetToAtom(SGID sgid) {
         // let's just clone everything on store to simulate hbase
         byte[] objData;
         try {
@@ -102,7 +99,7 @@ public class ApacheUtilsPersistentSerialization implements FileSerializationInte
                 return null;
             }
             objData = FileUtils.readFileToByteArray(target);
-            Particle suspect = (Particle) SerializationUtils.deserialize(objData);
+            Atom suspect = (Atom) SerializationUtils.deserialize(objData);
             return suspect;
         } catch (IOException ex) {
             Logger.getLogger(ApacheUtilsPersistentSerialization.class.getName()).log(Level.SEVERE, "Failure to deserialize", ex);
@@ -121,7 +118,7 @@ public class ApacheUtilsPersistentSerialization implements FileSerializationInte
     }
 
     @Override
-    public Iterable<SGID> getAllParticles() {
+    public Iterable<SGID> getAllAtoms() {
         return map.keySet();
     }
 }

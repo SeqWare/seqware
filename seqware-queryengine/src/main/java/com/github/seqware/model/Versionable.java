@@ -26,10 +26,10 @@ public interface Versionable<T extends Versionable> {
     public T getPrecedingVersion();
     
     /**
-     * Explicitly set the previous version of a particle. Setting this to null
+     * Explicitly set the previous version of a Atom. Setting this to null
      * will make this a completely new object in the back-end.
-     * @param particle previous version
+     * @param Atom previous version
      */
-    public void setPrecedingVersion(T particle); 
+    public void setPrecedingVersion(T Atom); 
     
 }

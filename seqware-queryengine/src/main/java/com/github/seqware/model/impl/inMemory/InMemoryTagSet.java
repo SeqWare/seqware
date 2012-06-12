@@ -32,20 +32,20 @@ public class InMemoryTagSet extends TagSet {
     @Override
     public TagSet add(Tag tag) {
         tagSet.add(tag);
-        this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);
+        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
         return this;
     }
 
     @Override
     public void add(Set<Tag> tags) {
         this.tagSet.addAll(tags);
-        this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);  
+        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
     }
     
     @Override
     public TagSet remove(Tag tag) {
         this.tagSet.remove(tag);
-        this.getManager().particleStateChange(this, ModelManager.State.NEW_VERSION);
+        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
         return this;
     }
 
