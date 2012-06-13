@@ -16,6 +16,8 @@
  */
 package com.github.seqware.model;
 
+import com.github.seqware.model.FeatureSet;
+
 /**
  * This will describe the interface custom plugins must conform to. Details are
  * backend specific of course. I think we should try to make these plugins

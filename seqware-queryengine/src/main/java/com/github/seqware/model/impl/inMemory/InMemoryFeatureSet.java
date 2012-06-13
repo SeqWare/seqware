@@ -6,6 +6,7 @@ import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import com.github.seqware.model.Reference;
 import com.github.seqware.util.InMemoryIterator;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -37,6 +38,13 @@ public class InMemoryFeatureSet extends FeatureSet {
     }
     
     @Override
+    public FeatureSet add(Feature... elements) {
+       this.features.addAll(Arrays.asList(elements));
+       this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+       return this;
+    }
+    
+    @Override
     public FeatureSet remove(Feature feature) {
         features.remove(feature);
         this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
@@ -44,9 +52,10 @@ public class InMemoryFeatureSet extends FeatureSet {
     }
 
     @Override
-    public void add(Set<Feature> features) {
+    public FeatureSet add(Set<Feature> features) {
         this.features.addAll(features);
         this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+        return this;
     }
 
     @Override

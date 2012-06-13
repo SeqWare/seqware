@@ -16,6 +16,7 @@
  */
 package com.github.seqware.model.impl.inMemory;
 
+import com.github.seqware.model.AnalysisPluginInterface;
 import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.*;

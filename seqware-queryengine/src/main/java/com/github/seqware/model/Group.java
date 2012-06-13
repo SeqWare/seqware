@@ -1,8 +1,9 @@
 package com.github.seqware.model;
 
+import com.github.seqware.model.interfaces.BaseBuilder;
+import com.github.seqware.model.interfaces.AbstractSet;
 import com.github.seqware.factory.ModelManager;
-import com.github.seqware.impl.SimpleModelManager;
-import com.github.seqware.util.SeqWareIterable;
+import com.github.seqware.model.impl.MoleculeImpl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +14,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * A Group of users that may share ACL permissions
  * @author dyuen
  */
-public class Group extends Molecule<Group> implements SeqWareIterable<User>{
+public class Group extends MoleculeImpl<Group> implements AbstractSet<Group, User>{
     
     private String name;
     private String description;
@@ -43,19 +44,25 @@ public class Group extends Molecule<Group> implements SeqWareIterable<User>{
         return name;
     }
 
-    public void add(User user) {
+    @Override
+    public Group add(User user) {
         users.add(user);
         this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+        return this;
     }
 
-    public void add(Set<User> users) {
+    @Override
+    public Group add(Set<User> users) {
         users.addAll(users);
+        return this;
     }
     
-    public void add(User ... users) {
+    @Override
+    public Group add(User ... users) {
         for (User user : users){
             this.add(user);
         }
+        return this;
     }
     
     @Override
@@ -99,6 +106,12 @@ public class Group extends Molecule<Group> implements SeqWareIterable<User>{
         Group.Builder b = new Group.Builder();
         b.group = this.copy(false);
         return b;
+    }
+
+    @Override
+    public Group remove(User element) {
+        users.remove(element);
+        return this;
     }
 
     public static class Builder implements BaseBuilder {

@@ -1,7 +1,9 @@
 package com.github.seqware.model;
 
+import com.github.seqware.model.interfaces.BaseBuilder;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.impl.SimpleModelManager;
+import com.github.seqware.model.impl.MoleculeImpl;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -19,7 +21,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  *
  * @author dyuen
  */
-public class User extends Molecule<User> {
+public class User extends MoleculeImpl<User> {
 
     private String firstName;
     private String lastName;

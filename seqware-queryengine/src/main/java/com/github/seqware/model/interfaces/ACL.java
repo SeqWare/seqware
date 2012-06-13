@@ -1,5 +1,7 @@
-package com.github.seqware.model;
+package com.github.seqware.model.interfaces;
 
+import com.github.seqware.model.Group;
+import com.github.seqware.model.User;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,7 +69,7 @@ public class ACL implements Serializable {
      * Create a new ACL builder, this is needed to add ne
      * @return a new builder for new ACL instances
      */
-    protected static Builder newBuilder() {
+    public static Builder newBuilder() {
         return new Builder();
     }
     

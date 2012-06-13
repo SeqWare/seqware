@@ -1,6 +1,8 @@
 package com.github.seqware.model;
 
+import com.github.seqware.model.interfaces.BaseBuilder;
 import com.github.seqware.factory.ModelManager;
+import com.github.seqware.model.impl.MoleculeImpl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.List;
  *
  * @author dyuen
  */
-public abstract class Analysis extends Molecule<Analysis> implements QueryFuture {
+public abstract class Analysis extends MoleculeImpl<Analysis> implements QueryFuture {
 
     private List<Object> parameters = new ArrayList<Object>();
     

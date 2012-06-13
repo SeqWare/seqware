@@ -9,14 +9,15 @@ message SGIDPB {
 }
 
 message TagPB {
-    // atom/particle stuff
+    // atom/Atom stuff
     optional SGIDPB sgid = 1;
     optional SGIDPB precedingID = 2;
-    optional int64 date = 3;
+    optional TagPB precedingVersion = 3;
+    optional int64 date = 4;
     // Tag-specific
-    optional string key = 4;
-    optional string predicate = 5;
-    optional SGIDPB tagset = 6;
+    optional string key = 5;
+    optional string predicate = 6;
+    optional SGIDPB tagset = 7;
 
     // value-specific, specifically one of these should be populated (maybe less)
     optional string vString = 10;

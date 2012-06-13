@@ -1,5 +1,7 @@
 package com.github.seqware.model.test;
 
+import com.github.seqware.model.interfaces.ACL;
+import com.github.seqware.model.interfaces.ACLable;
 import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.*;
@@ -36,7 +38,7 @@ public class ACLTest {
         // test ACL on every possible class that can be ACLed
         fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing dummy reference").build()).build();
         Set<Feature> testFeatures = new HashSet<Feature>();
-        f1 = mManager.buildFeature().setStart(1000000).setStop(1000100).build();
+        f1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
         testFeatures.add(f1);
         fSet.add(testFeatures);
         tSet1 = mManager.buildTagSet().setName("Funky tags").build();
