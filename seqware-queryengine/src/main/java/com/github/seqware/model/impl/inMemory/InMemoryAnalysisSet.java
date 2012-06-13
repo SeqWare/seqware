@@ -1,99 +1,65 @@
 package com.github.seqware.model.impl.inMemory;
 
 import com.github.seqware.model.Analysis;
-import com.github.seqware.model.AnalysisPluginInterface;
 import com.github.seqware.model.AnalysisSet;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import com.github.seqware.model.Atom;
+import com.github.seqware.model.impl.AtomImpl;
 
 /**
  * An in-memory representation of a AnalysisSet.
  *
  * @author dyuen
  */
-public class InMemoryAnalysisSet extends AnalysisSet {
-
-    private Set<Analysis> analysisSet = new HashSet<Analysis>();
-
-    /**
-     * Construct AnalysisSet
-     *
-     */
-    protected InMemoryAnalysisSet(){
-        super();
-    }
-
+public class InMemoryAnalysisSet extends AbstractInMemorySet<AnalysisSet, Analysis> implements AnalysisSet{
+    
+    private String name = null;
+    private String description = null;
+    
     @Override
-    public Set<Analysis> getAnalysisSet() {
-        return (Set<Analysis>) Collections.unmodifiableCollection(analysisSet);
+    public String getName() {
+        return name;
+    }
+    
+    @Override 
+    public String getDescription(){
+        return description;
     }
 
-    @Override
-    public Set<AnalysisPluginInterface> getPlugins() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Iterator<Analysis> iterator() {
-        return analysisSet.iterator();
-    }
-
-    @Override
-    public long getCount() {
-        return analysisSet.size();
-    }
-
-    /**
-     * Create a new AnalysisSet builder
-     *
-     * @return
-     */
+    
     public static AnalysisSet.Builder newBuilder() {
         return new InMemoryAnalysisSet.Builder();
     }
 
     @Override
-    public Builder toBuilder() {
-        Builder b = new Builder();
+    public AnalysisSet.Builder toBuilder() {
+        InMemoryAnalysisSet.Builder b = new InMemoryAnalysisSet.Builder();
         b.aSet = (InMemoryAnalysisSet) this.copy(false);
         return b;
     }
 
-    @Override
-    public AnalysisSet add(Analysis element) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public AnalysisSet add(Set<Analysis> elements) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public AnalysisSet add(Analysis... elements) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public AnalysisSet remove(Analysis element) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     public static class Builder extends AnalysisSet.Builder {
-
+        
         public Builder(){
             aSet = new InMemoryAnalysisSet();
         }
 
         @Override
-        public AnalysisSet build() {
-            if (aSet.getName() == null || aSet.getDescription() == null) {
-                throw new RuntimeException("Invalid build of AnalysisSet");
-            }
-            aSet.getManager().objectCreated(aSet);
+        public AnalysisSet build(boolean newObject) {
+            ((AtomImpl)aSet).getManager().objectCreated((Atom)aSet);
             return aSet;
         }
+
+        @Override
+        public InMemoryAnalysisSet.Builder setName(String name) {
+            ((InMemoryAnalysisSet)aSet).name = name;
+            return this;
+        }
+        
+        @Override
+        public InMemoryAnalysisSet.Builder setDescription(String description) {
+            ((InMemoryAnalysisSet)aSet).description = description;
+            return this;
+        }
     }
+
 }

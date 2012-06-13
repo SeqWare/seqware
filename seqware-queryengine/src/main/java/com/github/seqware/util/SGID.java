@@ -16,6 +16,7 @@
  */
 package com.github.seqware.util;
 
+import com.github.seqware.model.Feature;
 import java.io.Serializable;
 import java.util.UUID;
 

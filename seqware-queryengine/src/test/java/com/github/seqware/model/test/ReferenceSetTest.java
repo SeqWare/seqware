@@ -30,9 +30,7 @@ public class ReferenceSetTest {
             aSet.add(testReference);
 
         // NOTE Misses test case where all added features are being dropped and nothing is stored.
-        for (Iterator<Reference> i = aSet.getReferences(); i.hasNext();) {
-            Reference resultReference = i.next();
-
+        for (Reference resultReference : aSet) {
             Assert.assertTrue("Seeing a reference that is either not in the original test set, or is being returned more than once.", testReferences.contains(resultReference));
 
             testReferences.remove(resultReference);

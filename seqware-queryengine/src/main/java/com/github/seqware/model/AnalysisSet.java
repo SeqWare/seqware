@@ -1,10 +1,9 @@
 package com.github.seqware.model;
 
-import com.github.seqware.model.interfaces.BaseBuilder;
-import com.github.seqware.model.interfaces.AbstractSet;
 import com.github.seqware.factory.ModelManager;
-import com.github.seqware.model.impl.MoleculeImpl;
-import java.util.Set;
+import com.github.seqware.model.impl.AtomImpl;
+import com.github.seqware.model.interfaces.AbstractSet;
+import com.github.seqware.model.interfaces.BaseBuilder;
 
 /**
  * An AnalysisSet object groups analysis events that are created by software
@@ -12,78 +11,49 @@ import java.util.Set;
  *
  * @author dyuen
  */
-public abstract class AnalysisSet extends MoleculeImpl<AnalysisSet> implements AbstractSet<AnalysisSet, Analysis> {
-
-    private String name = "AnalysisSet name place-holder";
-    private String description = "AnalysisSet descripion placeholder";
+public interface AnalysisSet extends AbstractSet<AnalysisSet, Analysis> {
 
     /**
-     * Creates an instance of an anonymous feature set.
-     */
-    protected AnalysisSet() {
-        super();
-    }
-
-    /**
-     * The set of analysis this instance represents.
+     * Get the name of the analysisSet
      *
-     * @return get the set of Analysis events
+     * @return the name of the analysisSet
      */
-    public abstract Set<Analysis> getAnalysisSet();
-
-    /**
-     * The set of plug-ins that this AnalysisSet uses
-     *
-     * @return get the set of relevant plug-ins for this AnalysisSet
-     */
-    public abstract Set<AnalysisPluginInterface> getPlugins();
-
-    /**
-     * Description of this analysis set (ex: funky software suite that really
-     * rocks)
-     *
-     * @return description of this analysis set
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Name of this analysis set (ex: Funky Suite v1)
-     * @return name of the analysis set
-     */
-    public String getName() {
-        return name;
-    }
+    public String getName();
     
-     /**
-     * Create an ACL builder started with a copy of this
+    /**
+     * Get the description associated with this analysisSet
+     * @return the description associated with this analysisSet
+     */
+    public String getDescription();
+
+    /**
+     * Create a AnalysisSet builder started with a copy of this
      * @return 
      */
     @Override
     public abstract AnalysisSet.Builder toBuilder();
 
-    public abstract static class Builder implements BaseBuilder{
+    public abstract static class Builder implements BaseBuilder {
 
         public AnalysisSet aSet;
-
-        public AnalysisSet.Builder setName(String name) {
-            aSet.name = name;
-            return this;
-        }
-
-        public AnalysisSet.Builder setDescription(String description) {
-            aSet.description = description;
-            return this;
-        }
         
         @Override
-        public abstract AnalysisSet build();
+        public AnalysisSet build() {
+           return build(true);
+        }
+
+        public abstract AnalysisSet build(boolean newObject);
 
         @Override
-        public Builder setManager(ModelManager aThis) {
-            aSet.setManager(aThis);
+        public AnalysisSet.Builder setManager(ModelManager aThis) {
+            ((AtomImpl)aSet).setManager(aThis);
             return this;
         }
+
+        public abstract AnalysisSet.Builder setName(String name);
+        
+        public abstract AnalysisSet.Builder setDescription(String description);
     }
+
+
 }
