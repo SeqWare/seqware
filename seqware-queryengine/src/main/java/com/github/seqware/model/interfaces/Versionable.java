@@ -1,6 +1,4 @@
-package com.github.seqware.model;
-
-import java.util.UUID;
+package com.github.seqware.model.interfaces;
 
 /**
  * Interface for versioning, versions are automatically generated and iterated

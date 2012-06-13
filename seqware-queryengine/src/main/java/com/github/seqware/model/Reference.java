@@ -1,7 +1,9 @@
 package com.github.seqware.model;
 
+import com.github.seqware.model.interfaces.BaseBuilder;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.impl.SimpleModelManager;
+import com.github.seqware.model.impl.MoleculeImpl;
 import java.util.Iterator;
 
 /**
@@ -12,7 +14,7 @@ import java.util.Iterator;
  * @author dyuen
  * @author jbaran
  */
-public abstract class Reference extends Molecule {
+public abstract class Reference extends MoleculeImpl {
 
     private String name = "Reference name place-holder";
 

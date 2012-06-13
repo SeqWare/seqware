@@ -29,9 +29,9 @@ public class FeatureStoreInterfaceTest {
         ModelManager mManager = Factory.getModelManager();
         aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy ref").build()).build();
         // create and store some features
-        a1 = mManager.buildFeature().setStart(1000000).setStop(1000100).build();
-        a2 = mManager.buildFeature().setStart(1000200).setStop(1000300).build();
-        a3 = mManager.buildFeature().setStart(1000400).setStop(1000500).build();
+        a1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
+        a2 = mManager.buildFeature().setId("chr16").setStart(1000200).setStop(1000300).build();
+        a3 = mManager.buildFeature().setId("chr16").setStart(1000400).setStop(1000500).build();
         aSet.add(a1);
         aSet.add(a2);
         aSet.add(a3);

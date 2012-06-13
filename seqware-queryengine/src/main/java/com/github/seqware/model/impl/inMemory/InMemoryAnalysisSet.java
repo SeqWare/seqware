@@ -61,6 +61,26 @@ public class InMemoryAnalysisSet extends AnalysisSet {
         return b;
     }
 
+    @Override
+    public AnalysisSet add(Analysis element) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public AnalysisSet add(Set<Analysis> elements) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public AnalysisSet add(Analysis... elements) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public AnalysisSet remove(Analysis element) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     public static class Builder extends AnalysisSet.Builder {
 
         public Builder(){

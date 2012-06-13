@@ -1,8 +1,9 @@
 package com.github.seqware.model;
 
+import com.github.seqware.model.interfaces.BaseBuilder;
+import com.github.seqware.model.interfaces.AbstractSet;
 import com.github.seqware.factory.ModelManager;
-import com.github.seqware.impl.SimpleModelManager;
-import com.github.seqware.util.SeqWareIterable;
+import com.github.seqware.model.impl.MoleculeImpl;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ import java.util.Set;
  *
  * @author jbaran
  */
-public abstract class FeatureSet extends Molecule<FeatureSet> implements SeqWareIterable<Feature> {
+public abstract class FeatureSet extends MoleculeImpl<FeatureSet> implements AbstractSet<FeatureSet, Feature> {
 
     /**
      * Associated reference.
@@ -36,6 +37,7 @@ public abstract class FeatureSet extends Molecule<FeatureSet> implements SeqWare
      *
      * @param feature The feature that is to be added to the feature set.
      */
+    @Override
     public abstract FeatureSet add(Feature feature);
 
     /**
@@ -43,7 +45,8 @@ public abstract class FeatureSet extends Molecule<FeatureSet> implements SeqWare
      *
      * @param features The features that are to be added to the feature set.
      */
-    public abstract void add(Set<Feature> features);
+    @Override
+    public abstract FeatureSet add(Set<Feature> features);
     
     public abstract FeatureSet remove(Feature feature);
 

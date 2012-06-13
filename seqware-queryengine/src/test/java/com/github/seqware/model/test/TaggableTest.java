@@ -1,5 +1,7 @@
 package com.github.seqware.model.test;
 
+import com.github.seqware.model.interfaces.Taggable;
+import com.github.seqware.model.AnalysisPluginInterface;
 import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.*;
@@ -39,9 +41,9 @@ public class TaggableTest {
         // create a few instances of everything that can be tagged
         fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing dummy reference").build()).build();
         Set<Feature> testFeatures = new HashSet<Feature>();
-        f1 = mManager.buildFeature().setStart(1000000).setStop(1000100).build();
-        f2 = mManager.buildFeature().setStart(1000200).setStop(1000300).build();
-        f3 = mManager.buildFeature().setStart(1000400).setStop(1000500).build();
+        f1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
+        f2 = mManager.buildFeature().setId("chr16").setStart(1000200).setStop(1000300).build();
+        f3 = mManager.buildFeature().setId("chr16").setStart(1000400).setStop(1000500).build();
         testFeatures.add(f1);
         testFeatures.add(f2);
         testFeatures.add(f3);

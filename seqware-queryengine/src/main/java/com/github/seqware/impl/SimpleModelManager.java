@@ -21,6 +21,7 @@ import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.Analysis.Builder;
 import com.github.seqware.model.*;
+import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.model.impl.inMemory.*;
 import com.github.seqware.util.SGID;
 import java.util.HashMap;
@@ -50,7 +51,7 @@ public class SimpleModelManager implements ModelManager {
             return;
         }
         // we also have to make sure that the correct manager is associated with this Atom
-        p.setManager(this);
+        ((AtomImpl)p).setManager(this);
         this.dirtySet.put(p.getSGID(), new AtomStatePair(p, State.MANAGED));
     }
 
@@ -63,7 +64,7 @@ public class SimpleModelManager implements ModelManager {
     public void close() {
         // close connection with all objects
         for(AtomStatePair p : dirtySet.values()){
-            p.p.setManager(null);
+            ((AtomImpl)p.p).setManager(null);
         }
         this.flush();
         this.clear();

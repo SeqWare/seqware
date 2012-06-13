@@ -2,7 +2,6 @@ package com.github.seqware.model;
 
 import com.github.seqware.util.SGID;
 import com.github.seqware.util.SeqWareIterable;
-import java.util.UUID;
 
 /**
  * Leaving this here just to provoke thought:

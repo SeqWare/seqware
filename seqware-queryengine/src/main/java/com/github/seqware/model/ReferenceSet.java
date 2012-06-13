@@ -1,7 +1,9 @@
 package com.github.seqware.model;
 
+import com.github.seqware.model.interfaces.BaseBuilder;
+import com.github.seqware.model.interfaces.AbstractSet;
 import com.github.seqware.factory.ModelManager;
-import com.github.seqware.impl.SimpleModelManager;
+import com.github.seqware.model.impl.MoleculeImpl;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.Iterator;
 import java.util.Set;
@@ -13,7 +15,7 @@ import java.util.Set;
  * @author dyuen
  * @author jbaran
  */
-public abstract class ReferenceSet extends Molecule<ReferenceSet> implements SeqWareIterable<Reference>{
+public abstract class ReferenceSet extends MoleculeImpl<ReferenceSet> implements AbstractSet<ReferenceSet, Reference>{
     
     private String name;
     private String organism;
@@ -30,14 +32,16 @@ public abstract class ReferenceSet extends Molecule<ReferenceSet> implements Seq
      *
      * @param reference The reference that is to be added to the reference set.
      */
-    public abstract void add(Reference reference);
+    @Override
+    public abstract ReferenceSet add(Reference reference);
 
     /**
      * Adds a collection of new Feature to the set.
      *
      * @param references The references that are to be added to the reference set.
      */
-    public abstract void add(Set<Reference> references);
+    @Override
+    public abstract ReferenceSet add(Set<Reference> references);
 
     /**
      * Get the list of features associated with this feature set.

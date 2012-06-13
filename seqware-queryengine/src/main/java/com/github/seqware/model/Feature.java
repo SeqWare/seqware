@@ -1,6 +1,8 @@
 package com.github.seqware.model;
 
+import com.github.seqware.model.interfaces.BaseBuilder;
 import com.github.seqware.factory.ModelManager;
+import com.github.seqware.model.impl.AtomImpl;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -17,7 +19,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @author dyuen
  * @author jbaran
  */
-public class Feature extends Atom<Feature> {
+public class Feature extends AtomImpl<Feature> {
 
     /**
      * Strand locations of features.
@@ -43,7 +45,8 @@ public class Feature extends Atom<Feature> {
     }
 
     /**
-     * User provided ID for the feature (optional).
+     * User provided ID for the feature (GVF: The chromosome or contig on which
+     * the sequence_alteration is located (text).)
      *
      * @return user provided ID
      */
@@ -199,14 +202,19 @@ public class Feature extends Atom<Feature> {
         public Feature.Builder setType(String type) {
             feature.type = type;
             return this;
-        }    
+        }
 
         @Override
         public Feature build() {
             if (feature.strand == null) {
                 feature.strand = Strand.NOT_STRANDED;
             }
-            if(feature.getManager() != null){
+            // let's mandate an id for rowKey purposes 
+            if (feature.id == null) {
+                throw new RuntimeException("Ensure that Feature is built with an id for rowKey purposes");
+            }
+
+            if (feature.getManager() != null) {
                 feature.getManager().objectCreated(feature);
             }
             return feature;

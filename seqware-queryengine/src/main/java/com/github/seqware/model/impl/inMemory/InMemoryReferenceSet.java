@@ -28,15 +28,24 @@ public class InMemoryReferenceSet extends ReferenceSet {
     }
 
     @Override
-    public void add(Reference reference) {
+    public ReferenceSet add(Reference reference) {
         references.add(reference);
         this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+        return this;
     }
 
     @Override
-    public void add(Set<Reference> references) {
+    public ReferenceSet add(Set<Reference> references) {
         references.addAll(references);
         this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+        return this;
+    }
+    
+    @Override
+    public ReferenceSet add(Reference... elements) {
+        references.addAll(references);
+        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+        return this;
     }
 
     @Override
@@ -68,6 +77,13 @@ public class InMemoryReferenceSet extends ReferenceSet {
         InMemoryReferenceSet.Builder b = new InMemoryReferenceSet.Builder();
         b.aSet = (InMemoryReferenceSet) this.copy(false);
         return b;
+    }
+
+    @Override
+    public ReferenceSet remove(Reference element) {
+        references.remove(element);
+        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+        return this;
     }
 
     public static class Builder extends ReferenceSet.Builder {

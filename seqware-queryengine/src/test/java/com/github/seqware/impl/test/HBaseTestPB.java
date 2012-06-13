@@ -57,7 +57,7 @@ public class HBaseTestPB {
         HTable table = new HTable(config, TEST_TABLE);
 
         // Get one feature to serialize/deserialize:
-        Feature testFeature = Factory.getModelManager().buildFeature().setStart(1000000).setStop(1000100).build();
+        Feature testFeature = Factory.getModelManager().buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
         FeaturePB fpb = FeatureIO.m2pb(testFeature);
         
         ByteArrayOutputStream sgidBytes = new ByteArrayOutputStream();

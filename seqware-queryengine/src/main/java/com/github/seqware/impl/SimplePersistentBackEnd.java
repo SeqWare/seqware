@@ -16,8 +16,10 @@
  */
 package com.github.seqware.impl;
 
+import com.github.seqware.model.AnalysisPluginInterface;
 import com.github.seqware.factory.BackEndInterface;
 import com.github.seqware.model.*;
+import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.model.impl.inMemory.*;
 import com.github.seqware.util.InMemoryIterable;
 import com.github.seqware.util.SGID;
@@ -66,7 +68,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
 //            versionsOfEverything.put(newAtom.getSGID(), obj.getSGID());
 //        }
         // change the obj we have a reference to look like the new object that was created
-        obj.impersonate(newAtom.getSGID(), newAtom.getCreationTimeStamp(), oldSGID);
+        ((AtomImpl)obj).impersonate(newAtom.getSGID(), newAtom.getCreationTimeStamp(), oldSGID);
     }
 
     @Override
@@ -188,7 +190,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "{0} had no parent, this may signal an error", obj.getSGID());
             return null;
         }
-        return target.getPrecedingVersion();
+        return (Atom)target.getPrecedingVersion();
         //return this.getAtomBySGID(this.versionsOfEverything.get(obj.getSGID()));
     }
 

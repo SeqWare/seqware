@@ -1,5 +1,6 @@
-package com.github.seqware.model;
+package com.github.seqware.model.interfaces;
 
+import com.github.seqware.model.Tag;
 import com.github.seqware.util.SeqWareIterable;
 
 /**

@@ -1,4 +1,4 @@
-package com.github.seqware.model;
+package com.github.seqware.model.interfaces;
 
 /**
  * Interface for object under access control.

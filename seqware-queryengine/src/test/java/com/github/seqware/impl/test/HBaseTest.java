@@ -58,7 +58,7 @@ public class HBaseTest {
         HTable table = new HTable(config, TEST_TABLE);
 
         // Get one feature to serialize/deserialize:
-        Feature testFeature = Factory.getModelManager().buildFeature().setStart(1000000).setStop(1000100).build();
+        Feature testFeature = Factory.getModelManager().buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
 
         // Alternative to protobuf: Kryo
         // Speed comparison can be found here: http://code.google.com/p/thrift-protobuf-compare/wiki/Benchmarking

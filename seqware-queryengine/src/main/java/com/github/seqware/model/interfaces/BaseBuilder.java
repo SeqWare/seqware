@@ -14,18 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.model;
+package com.github.seqware.model.interfaces;
+
+import com.github.seqware.factory.ModelManager;
+import com.github.seqware.impl.SimpleModelManager;
 
 /**
- * An interface for the various builders that we will use to construct
- * models for managed objects
+ * Builders are used to construct Atom. 
  * @author dyuen
  */
-public interface Buildable<T extends BaseBuilder> {
-    
+public interface BaseBuilder<S, T extends BaseBuilder> {
     /**
-     * Creates a new builder initialized with the fields of an existing object
-     * @return A builder initialized with this
+     * Build a Atom
+     * @return constructed Atom
      */
-    public T toBuilder();
+    public S build();
+    /**
+     * Set a manager for this Atom
+     * @param aThis
+     * @return the base-builder itself
+     */
+    public T setManager(ModelManager aThis);
 }
