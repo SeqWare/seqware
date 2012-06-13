@@ -31,6 +31,13 @@ public abstract class FeatureSet extends MoleculeImpl<FeatureSet> implements Abs
     protected FeatureSet() {
         super();
     }
+    
+        
+    /**
+     * Get the description associated with this FeatureSet
+     * @return the description associated with this FeatureSet
+     */
+    public abstract String getDescription();
 
     /**
      * Adds a single new Feature to the set.
@@ -48,6 +55,7 @@ public abstract class FeatureSet extends MoleculeImpl<FeatureSet> implements Abs
     @Override
     public abstract FeatureSet add(Set<Feature> features);
     
+    @Override
     public abstract FeatureSet remove(Feature feature);
 
     /**
@@ -94,5 +102,7 @@ public abstract class FeatureSet extends MoleculeImpl<FeatureSet> implements Abs
             aSet.setManager(aThis);
             return this;
         }
+        
+        public abstract FeatureSet.Builder setDescription(String description);
     }
 }

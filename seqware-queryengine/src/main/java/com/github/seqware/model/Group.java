@@ -1,143 +1,57 @@
 package com.github.seqware.model;
 
-import com.github.seqware.model.interfaces.BaseBuilder;
-import com.github.seqware.model.interfaces.AbstractSet;
 import com.github.seqware.factory.ModelManager;
-import com.github.seqware.model.impl.MoleculeImpl;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import com.github.seqware.model.impl.AtomImpl;
+import com.github.seqware.model.interfaces.AbstractSet;
+import com.github.seqware.model.interfaces.BaseBuilder;
 
 /**
  * A Group of users that may share ACL permissions
  * @author dyuen
  */
-public class Group extends MoleculeImpl<Group> implements AbstractSet<Group, User>{
-    
-    private String name;
-    private String description;
-    private List<User> users;
-    
-    /**
-     * Create a new user group
-     */
-    private Group() {
-        super();
-        users = new ArrayList();
-    }
+public interface Group extends AbstractSet<Group, User> {
 
     /**
-     * Get a description of the organization
-     * @return String description of the organization
+     * Get the name of the group
+     *
+     * @return the name of the group
      */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Get name of the organization
-     * @return String of the organization's name 
-     */
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public Group add(User user) {
-        users.add(user);
-        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
-        return this;
-    }
-
-    @Override
-    public Group add(Set<User> users) {
-        users.addAll(users);
-        return this;
-    }
-    
-    @Override
-    public Group add(User ... users) {
-        for (User user : users){
-            this.add(user);
-        }
-        return this;
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-         if (obj instanceof Group) {
-            Group other = (Group) obj;
-            return this.name.equals(other.name) && this.description.equals(other.description) && this.users.equals(other.users);
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
-
-    @Override
-    public long getCount() {
-        return users.size();
-    }
-
-    @Override
-    public Iterator<User> iterator() {
-        return users.iterator();
-    }
-    
-     /**
-     * Create a new ACL builder
-     * @return 
-     */
-    public static Group.Builder newBuilder() {
-        return new Group.Builder();
-    }
+    public String getName();
     
     /**
-     * Create an ACL builder started with a copy of this
+     * Get the description associated with this group
+     * @return the description associated with this group
+     */
+    public String getDescription();
+
+    /**
+     * Create a Group builder started with a copy of this
      * @return 
      */
     @Override
-    public Group.Builder toBuilder(){
-        Group.Builder b = new Group.Builder();
-        b.group = this.copy(false);
-        return b;
-    }
+    public abstract Group.Builder toBuilder();
 
-    @Override
-    public Group remove(User element) {
-        users.remove(element);
-        return this;
-    }
+    public abstract static class Builder implements BaseBuilder {
 
-    public static class Builder implements BaseBuilder {
-
-        private Group group = new Group();
-
-        public Group.Builder setName(String name) {
-            group.name = name;
-            return this;
-        }
-
-        public Group.Builder setDescription(String description) {
-            group.description = description;
-            return this;
-        }
-
+        public Group aSet;
+        
         @Override
         public Group build() {
-            group.getManager().objectCreated(group);
-            return group;
+           return build(true);
         }
 
+        public abstract Group build(boolean newObject);
+
         @Override
-        public Builder setManager(ModelManager aThis) {
-            group.setManager(aThis);
+        public Group.Builder setManager(ModelManager aThis) {
+            ((AtomImpl)aSet).setManager(aThis);
             return this;
         }
+
+        public abstract Group.Builder setName(String name);
+        
+        public abstract Group.Builder setDescription(String description);
     }
+
+
 }

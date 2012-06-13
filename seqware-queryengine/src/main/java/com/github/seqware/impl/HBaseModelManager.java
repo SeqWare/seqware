@@ -23,8 +23,11 @@ import com.github.seqware.model.Analysis.Builder;
 import com.github.seqware.model.*;
 import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.model.impl.inMemory.*;
+import com.github.seqware.util.FSGID;
 import com.github.seqware.util.SGID;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -39,7 +42,7 @@ import java.util.logging.Logger;
  *
  * @author dyuen
  */
-public class SimpleModelManager implements ModelManager {
+public class HBaseModelManager implements ModelManager {
 
     private Map<SGID, AtomStatePair> dirtySet = new HashMap<SGID, AtomStatePair>();
     private BackEndInterface backend = Factory.getBackEnd();
@@ -47,7 +50,7 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public void persist(Atom p) {
         if (this.dirtySet.containsKey(p.getSGID())){
-            Logger.getLogger(SimpleModelManager.class.getName()).log(Level.INFO, "Attempted to persist a managed object, ignored it");
+            Logger.getLogger(HBaseModelManager.class.getName()).log(Level.INFO, "Attempted to persist a managed object, ignored it");
             return;
         }
         // we also have to make sure that the correct manager is associated with this Atom
@@ -72,6 +75,31 @@ public class SimpleModelManager implements ModelManager {
 
     @Override
     public void flush() {
+        // upgrade SGID for newly created Features
+        List<FeatureSet> fSets = new ArrayList<FeatureSet>(); 
+        for (Entry<SGID, AtomStatePair> p : dirtySet.entrySet()) {
+            if (p.getValue().p instanceof FeatureSet){
+                fSets.add((FeatureSet)p.getValue().p);
+            }
+        }
+        // upgrade and check for orphaned Features
+        for (Entry<SGID, AtomStatePair> p : dirtySet.entrySet()) {
+            if (p.getValue().getState() == State.NEW_CREATION && p.getValue().p instanceof Feature){
+                Feature f = (Feature) p.getValue().p;
+                // try to upgrade
+                for(FeatureSet fS : fSets){
+                    FSGID fsgid = new FSGID(f.getSGID(),f, fS);
+                    f.impersonate(fsgid, f.getCreationTimeStamp(), f.getPrecedingSGID());
+                }
+                // should be upgraded now, if not
+                if (!(f.getSGID() instanceof FSGID)){
+                    // this should not happen
+                    Logger.getLogger(FSGID.class.getName()).log(Level.WARNING, "Orphaned features, please add them to a FeatureSet, aborting flush()");
+                    return;
+                }
+            }
+        }
+        
         // update dirty objects
         for (Entry<SGID, AtomStatePair> p : dirtySet.entrySet()) {
             if (p.getValue().getState() == State.NEW_CREATION || p.getValue().getState() == State.NEW_VERSION){

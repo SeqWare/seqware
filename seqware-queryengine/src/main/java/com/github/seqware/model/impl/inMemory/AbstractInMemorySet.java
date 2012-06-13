@@ -1,6 +1,7 @@
 package com.github.seqware.model.impl.inMemory;
 
 import com.github.seqware.factory.ModelManager;
+import com.github.seqware.model.Feature;
 import com.github.seqware.model.interfaces.AbstractSet;
 import com.github.seqware.model.Molecule;
 import com.github.seqware.model.interfaces.Taggable;
@@ -17,7 +18,7 @@ import java.util.Set;
  */
 public abstract class AbstractInMemorySet<S extends AbstractSet, T> extends MoleculeImpl<S> implements AbstractSet<S, T>, Taggable{
     
-    private Set<T> set = new HashSet<T>();
+    protected Set<T> set = new HashSet<T>();
     
     protected AbstractInMemorySet(){
         super();

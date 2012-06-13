@@ -29,7 +29,7 @@ import org.junit.runner.RunWith;
 public class DynamicSuiteBuilder {
     
     private static Class<?>[] ModelTests = {ACLTest.class, FeatureSetTest.class, FeatureStoreInterfaceTest.class, 
-        FeatureTest.class, QueryInterfaceTest.class, ReferenceSetTest.class, TaggableTest.class, 
+        FeatureTest.class, QueryInterfaceTest.class, ReferenceSetTest.class, TaggableTest.class, GVFFormatTest.class, 
         UserGroupTest.class};
     
     public static Class[] modelSuite() {

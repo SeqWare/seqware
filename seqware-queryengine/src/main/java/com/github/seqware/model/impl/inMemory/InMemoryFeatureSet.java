@@ -1,10 +1,8 @@
 package com.github.seqware.model.impl.inMemory;
 
 import com.github.seqware.factory.ModelManager;
-import com.github.seqware.model.AnalysisSet;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
-import com.github.seqware.model.Reference;
 import com.github.seqware.util.InMemoryIterator;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -22,12 +20,22 @@ public class InMemoryFeatureSet extends FeatureSet {
      * The set of features this instance represents when an in-memory storage model is used.
      */
     private Set<Feature> features = new HashSet<Feature>();
+    
+    /**
+     * User defined description of this feature set, can be used to store pragma information 
+     * for a set of features.
+     */
+    private String description = null;
 
     /**
      * Creates an in-memory feature set.
      */
     protected InMemoryFeatureSet() {
         super();
+    }
+    
+    public boolean contains(Feature f){
+        return features.contains(f);
     }
 
     @Override
@@ -84,6 +92,11 @@ public class InMemoryFeatureSet extends FeatureSet {
         return b;
     }
 
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
     public static class Builder extends FeatureSet.Builder {
         
         public Builder(){
@@ -97,6 +110,12 @@ public class InMemoryFeatureSet extends FeatureSet {
             }
             aSet.getManager().objectCreated(aSet);
             return aSet;
+        }
+        
+        @Override
+        public InMemoryFeatureSet.Builder setDescription(String description) {
+            ((InMemoryFeatureSet)aSet).description = description;
+            return this;
         }
     }
 
