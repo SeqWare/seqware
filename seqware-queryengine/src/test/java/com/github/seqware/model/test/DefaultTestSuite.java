@@ -18,6 +18,7 @@ package com.github.seqware.model.test;
 
 import com.github.seqware.model.test.util.DynamicSuite;
 import com.github.seqware.factory.Factory;
+import com.github.seqware.impl.ApacheUtilsPersistentSerialization;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.AfterClass;
@@ -34,11 +35,16 @@ public class DefaultTestSuite {
     @BeforeClass
     public static void setupSuite() {
         Logger.getLogger(DefaultTestSuite.class.getName()).log(Level.INFO, "Running test suite with default Factory settings");
+        Factory.setFactoryBackendType(Factory.Backend_Type.IN_MEMORY, Factory.Serialization_Type.APACHE_SERIALIZATION);
+        // back-end specific call
+        ApacheUtilsPersistentSerialization serial = new ApacheUtilsPersistentSerialization();
+        serial.clearSerialization();
     }
     
     @AfterClass
     public static void tearDownSuite(){
         Logger.getLogger(DefaultTestSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
         Factory.setFactoryBackendType(null, null);
+        
     }
 }
