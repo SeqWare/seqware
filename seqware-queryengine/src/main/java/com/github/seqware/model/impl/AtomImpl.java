@@ -41,8 +41,8 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      */
     private transient ModelManager manager = null;
     private List<Tag> tags = new ArrayList<Tag>();
-    private transient boolean precedingChecked = false;
-    private transient T precedingVersion = null;
+    private boolean precedingChecked = false;
+    private T precedingVersion = null;
     private SGID precedingSGID = null;    
     
     protected AtomImpl() {

@@ -26,21 +26,22 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.apache.commons.lang.SerializationException;
-import org.apache.commons.lang.SerializationUtils;
 
 /**
- *
+ * Stores objects in the temporary directory of the disk
+ * 
  * @author dyuen
  */
-public class ApacheUtilsPersistentSerialization implements FileSerializationInterface {
+public class TmpFileStorage implements StorageInterface {
 
     private static final boolean PERSIST = true;
     private File tempDir = new File(FileUtils.getTempDirectory(), this.getClass().getCanonicalName());
     private Map<SGID, File> map = new HashMap<SGID, File>();
+    private final SerializationInterface serializer;
 
-    public ApacheUtilsPersistentSerialization() {
-        Logger.getLogger(ApacheUtilsPersistentSerialization.class.getName()).log(Level.INFO, "Starting with JavaPersistentBackEnd in: {0}", tempDir.getAbsolutePath());
+    public TmpFileStorage(SerializationInterface i) {
+        this.serializer = i;
+        Logger.getLogger(TmpFileStorage.class.getName()).log(Level.INFO, "Starting with JavaPersistentBackEnd in: {0}", tempDir.getAbsolutePath());
         // make a persistent store exists already, otherwise try to retrieve existing items
         try {
             if (!tempDir.exists()) {
@@ -51,19 +52,19 @@ public class ApacheUtilsPersistentSerialization implements FileSerializationInte
                     for (File f : FileUtils.listFiles(tempDir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE)) {
                         byte[] objData = FileUtils.readFileToByteArray(f);
                         try{
-                            Atom suspect = (Atom) SerializationUtils.deserialize(objData);
+                            Atom suspect = serializer.deserialize(objData, Atom.class);
                             map.put(suspect.getSGID(), f);
-                        } catch(SerializationException e){
+                        } catch(Exception e){
                             if (!oldClassesFound){
                                 oldClassesFound = true;
                                 //TODO: we'll probably want something cooler, but for now, if we run into an old version, just warn about it
-                                Logger.getLogger(ApacheUtilsPersistentSerialization.class.getName()).log(Level.INFO, "Obselete classes detected in {0} you may want to clean it", tempDir.getAbsolutePath());
+                                Logger.getLogger(TmpFileStorage.class.getName()).log(Level.INFO, "Obselete classes detected in {0} you may want to clean it", tempDir.getAbsolutePath());
                             }
                         }
                     }
-                    Logger.getLogger(ApacheUtilsPersistentSerialization.class.getName()).log(Level.INFO, "Recovered {0} objects from store directory", map.size());
+                    Logger.getLogger(TmpFileStorage.class.getName()).log(Level.INFO, "Recovered {0} objects from store directory", map.size());
                 } else {
-                    this.clearSerialization();
+                    this.clearStorage();
                 }
             }
         } catch (IOException ex) {
@@ -76,12 +77,12 @@ public class ApacheUtilsPersistentSerialization implements FileSerializationInte
     public void serializeAtomToTarget(Atom obj) {
         // let's just clone everything on store to simulate hbase
         File target = new File(tempDir, obj.getSGID().toString());
-        byte[] serialRep = SerializationUtils.serialize(obj);
+        byte[] serialRep = serializer.serialize(obj);
         try {
             FileUtils.writeByteArrayToFile(target, serialRep);
             map.put(obj.getSGID(), target);
         } catch (IOException ex) {
-            Logger.getLogger(ApacheUtilsPersistentSerialization.class.getName()).log(Level.SEVERE, "Failiure to serialize", ex);
+            Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, "Failiure to serialize", ex);
             System.exit(-1);
         }
     }
@@ -99,21 +100,21 @@ public class ApacheUtilsPersistentSerialization implements FileSerializationInte
                 return null;
             }
             objData = FileUtils.readFileToByteArray(target);
-            Atom suspect = (Atom) SerializationUtils.deserialize(objData);
+            Atom suspect = serializer.deserialize(objData, Atom.class);
             return suspect;
         } catch (IOException ex) {
-            Logger.getLogger(ApacheUtilsPersistentSerialization.class.getName()).log(Level.SEVERE, "Failure to deserialize", ex);
+            Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, "Failure to deserialize", ex);
         }
         System.exit(-1);
         return null;
     }
 
     @Override
-    public void clearSerialization() {
+    public final void clearStorage() {
         try {
             FileUtils.cleanDirectory(tempDir);
         } catch (IOException ex) {
-            Logger.getLogger(ApacheUtilsPersistentSerialization.class.getName()).log(Level.SEVERE, "failed to clear serialization store", ex);
+            Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, "failed to clear serialization store", ex);
         }
     }
 

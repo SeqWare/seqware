@@ -18,7 +18,7 @@ package com.github.seqware.model.test;
 
 import com.github.seqware.model.test.util.DynamicSuite;
 import com.github.seqware.factory.Factory;
-import com.github.seqware.impl.ApacheUtilsPersistentSerialization;
+import com.github.seqware.impl.TmpFileStorage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.AfterClass;
@@ -26,25 +26,23 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
- *
  * @author dyuen
  */
 @RunWith(DynamicSuite.class)
-public class DefaultTestSuite {
+public class InMemoryApacheFileSerializationSuite {
 
     @BeforeClass
     public static void setupSuite() {
-        Logger.getLogger(DefaultTestSuite.class.getName()).log(Level.INFO, "Running test suite with default Factory settings");
-        Factory.setFactoryBackendType(Factory.Backend_Type.IN_MEMORY, Factory.Serialization_Type.APACHE_SERIALIZATION);
+        Logger.getLogger(InMemoryApacheFileSerializationSuite.class.getName()).log(Level.INFO, "Running test suite with in-memory objects and apache serialization to the filesystem");
+        Factory.setFactoryBackendType(Factory.Model_Type.IN_MEMORY, Factory.Storage_Type.FILE_STORAGE, Factory.Serialization_Type.APACHE);
         // back-end specific call
-        ApacheUtilsPersistentSerialization serial = new ApacheUtilsPersistentSerialization();
-        serial.clearSerialization();
+        //TmpFileStorage serial = new TmpFileStorage();
+        //serial.clearStorage();
     }
     
     @AfterClass
     public static void tearDownSuite(){
-        Logger.getLogger(DefaultTestSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
-        Factory.setFactoryBackendType(null, null);
-        
+        Logger.getLogger(InMemoryApacheFileSerializationSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
+        Factory.setFactoryBackendType(null, null, null);
     }
 }

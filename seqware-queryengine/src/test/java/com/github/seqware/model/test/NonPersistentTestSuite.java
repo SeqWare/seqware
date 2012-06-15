@@ -33,13 +33,13 @@ public class NonPersistentTestSuite {
 
     @BeforeClass
     public static void setupSuite() {
-        Logger.getLogger(NonPersistentTestSuite.class.getName()).log(Level.INFO, "Running test suite with non-persistent back-end");
-        Factory.setFactoryBackendType(Factory.Backend_Type.IN_MEMORY, Factory.Serialization_Type.IN_MEMORY_CLONE);
+        Logger.getLogger(NonPersistentTestSuite.class.getName()).log(Level.INFO, "Running test suite with Apache serialization to a non-persistent back-end");
+        Factory.setFactoryBackendType(Factory.Model_Type.IN_MEMORY, Factory.Storage_Type.IN_MEMORY, Factory.Serialization_Type.APACHE);
     }
     
     @AfterClass
     public static void tearDownSuite(){
         Logger.getLogger(NonPersistentTestSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
-        Factory.setFactoryBackendType(null, null);
+        Factory.setFactoryBackendType(null, null, null);
     }
 }
