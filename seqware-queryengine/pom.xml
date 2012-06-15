@@ -130,7 +130,7 @@
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase</artifactId>
             <!-- current public version
-		    <version>0.92.1</version>
+		    <version>0.94.0</version>
             -->
             <!-- current Cloudera stable -->
             <version>0.90.6-cdh3u4</version>
