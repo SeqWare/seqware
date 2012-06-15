@@ -1,6 +1,7 @@
 package com.github.seqware.impl.test;
 
-import com.github.seqware.impl.ApacheUtilsPersistentSerialization;
+import com.github.seqware.impl.ApacheSerialization;
+import com.github.seqware.impl.TmpFileStorage;
 import com.github.seqware.impl.SimplePersistentBackEnd;
 import com.github.seqware.model.Atom;
 import com.github.seqware.model.FeatureSet;
@@ -20,7 +21,7 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
         UUID testID = UUID.randomUUID();
         System.out.println("running subclass test in testID: " + testID.toString());
         
-        SimplePersistentBackEnd backend = new SimplePersistentBackEnd(new ApacheUtilsPersistentSerialization());
+        SimplePersistentBackEnd backend = new SimplePersistentBackEnd(new TmpFileStorage(new ApacheSerialization()));
 
         try {
             backend.store(this.aSet);

@@ -16,9 +16,14 @@
  */
 package com.github.seqware.util;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.KryoSerializable;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 import com.github.seqware.impl.HBaseStore;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,9 +33,14 @@ import java.util.logging.Logger;
  * @author dyuen
  * @author boconnor
  */
-public class FSGID extends SGID{
+public class FSGID extends SGID implements KryoSerializable{
    private String rowKey = null;
    private SGID featureSetID = null;
+   
+    @Override
+   public String toString(){
+       return super.toString() +"."+ featureSetID.toString() +"."+ rowKey;
+   }
    
    public FSGID(SGID sgid, Feature f, FeatureSet fSet){
         try {
@@ -74,6 +84,25 @@ public class FSGID extends SGID{
         return rowKey;
     }
    
-   
+   @Override
+    public void write(Kryo kryo, Output output) {
+       // doesn't seem to inherit properly?
+        output.writeLong(this.getUuid().getLeastSignificantBits());
+        output.writeLong(this.getUuid().getMostSignificantBits());
+        output.writeLong(this.featureSetID.getUuid().getLeastSignificantBits());
+        output.writeLong(this.featureSetID.getUuid().getMostSignificantBits());
+        output.writeString(rowKey);
+    }
+
+    @Override
+    public void read(Kryo kryo, Input input) {
+        long leastSig = input.readLong();
+        long mostSig = input.readLong();
+        this.setUuid(new UUID(mostSig, leastSig));
+        leastSig = input.readLong();
+        mostSig = input.readLong();
+        this.featureSetID.setUuid(new UUID(mostSig, leastSig));
+        this.rowKey = input.readString();
+    }
 
 }

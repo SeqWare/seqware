@@ -20,29 +20,35 @@ import com.github.seqware.model.Atom;
 import com.github.seqware.util.SGID;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.lang.SerializationUtils;
 
 /**
- *
+ * Doesn't really store things anywhere, just keeps it in memory
  * @author dyuen
  */
-public class NonPersistentSerialization implements FileSerializationInterface {
+public class NonPersistentStorage implements StorageInterface {
 
-    private Map<SGID, Atom> map = new HashMap<SGID, Atom>();
+    private Map<SGID, byte[]> map = new HashMap<SGID, byte[]>();
+    private final SerializationInterface serializer;
+
+    public NonPersistentStorage(SerializationInterface i) {
+        this.serializer = i;
+    }
     
     @Override
     public void serializeAtomToTarget(Atom obj) {
-        Atom storeObj = (Atom) SerializationUtils.clone(obj);
-        map.put(storeObj.getSGID(), storeObj);
+        map.put(obj.getSGID(), serializer.serialize(obj));
     }
 
     @Override
     public Atom deserializeTargetToAtom(SGID sgid) {
-        return map.get(sgid);
+        if (!map.containsKey(sgid)){
+            return null;
+        }
+        return serializer.deserialize(map.get(sgid),Atom.class);
     }
 
     @Override
-    public void clearSerialization() {
+    public void clearStorage() {
         map.clear();
     }
 

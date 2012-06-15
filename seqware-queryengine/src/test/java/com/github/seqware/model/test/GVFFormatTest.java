@@ -52,9 +52,12 @@ public class GVFFormatTest {
     public void testOutputAndStore() {
         FeatureSet targetSet = (FeatureSet) Factory.getFeatureStoreInterface().getAtomBySGID(fSet.getSGID());
         Assert.assertTrue(targetSet.equals(fSet));
-        String matchTarget = "##gvf-version 1.06 ##genome-build NCBI B36.3 ##sequence-region chr16 1 88827254 chr16 samtools SNV 49291141 49291141 . + . ID=ID_1;Variant_seq=A,G;Reference_seq=G; chr16 samtools SNV 49291360 49291360 . + . ID=ID_2;Variant_seq=G;Reference_seq=C; chr16 samtools SNV 49302125 49302125 . + . ID=ID_3;Variant_seq=T,C;Reference_seq=C;";
+        String matchTarget = "##gvf-version 1.06 ##genome-build NCBI B36.3 ##sequence-region chr16 1 88827254\n" +
+        "chr16 samtools SNV 49291360 49291360 . + . ID=ID_2;Variant_seq=G;Reference_seq=C;\n" +
+        "chr16 samtools SNV 49302125 49302125 . + . ID=ID_3;Variant_seq=T,C;Reference_seq=C;\n" +
+        "chr16 samtools SNV 49291141 49291141 . + . ID=ID_1;Variant_seq=A,G;Reference_seq=G;";
         StringBuilder buff = new StringBuilder();
-        buff.append(targetSet.getDescription());
+        buff.append(targetSet.getDescription());    
         for (Feature f : targetSet) {
             buff.append('\n');
             buff.append(f.getId());
@@ -70,15 +73,16 @@ public class GVFFormatTest {
             Assert.assertTrue(f.getScore() == null);
             buff.append(".");
             buff.append(' ');
-            buff.append(f.getStrand().name());
+            if (f.getStrand().name().equals(Feature.Strand.POSITIVE.name())) {
+                buff.append("+");
+            }
             buff.append(' ');
             buff.append(f.getPhase());
             buff.append(' ');
-            for(Tag t : f.getTags()){
+            for (Tag t : f.getTags()) {
                 buff.append(t.getKey()).append(t.getPredicate()).append(t.getValue()).append(";");
             }
         }
         System.out.println(buff);
-
     }
 }
