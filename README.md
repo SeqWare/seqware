@@ -21,7 +21,23 @@ In addition the seqware-common sub-project provides a location for common code
 and most of the other sub-projects have this as a dependency.
 
 BUILDING
-====================
+========
+
+PREREQUISITES
+-------------
+
+Currently we are evaluating two serialization frameworks: [Kryo](http://code.google.com/p/kryo/) and [protobuf](http://code.google.com/p/protobuf/)
+
+Protobuf requires the following installation steps:
+
+    wget http://protobuf.googlecode.com/files/protobuf-2.4.1.tar.gz
+    cd protobuf-2.4.1
+    ./configure
+    make
+    make install
+
+BUILDING THE PROJECT
+--------------------
 
 We're moving to Maven (2.2.x or greater) for our builds, this is currently how
 you do it in the trunk directory:
@@ -38,7 +54,7 @@ You can also build individual components such as the new query engine with:
     mvn clean install
 
 LOCAL UNIT TESTING SETUP
----------------------
+------------------------
 
 Get HBase. Either versions 0.92.1 and 0.94.0 are fine:
 
