@@ -44,6 +44,16 @@ public class SimpleModelManager implements ModelManager {
     private Map<SGID, AtomStatePair> dirtySet = new HashMap<SGID, AtomStatePair>();
     private BackEndInterface backend = Factory.getBackEnd();
 
+    protected BackEndInterface getBackend() {
+        return backend;
+    }
+
+    protected Map<SGID, AtomStatePair> getDirtySet() {
+        return dirtySet;
+    }
+    
+    
+
     @Override
     public void persist(Atom p) {
         if (this.dirtySet.containsKey(p.getSGID())){

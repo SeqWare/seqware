@@ -20,10 +20,11 @@ import com.github.seqware.model.Atom;
 import com.github.seqware.util.SGID;
 
 /**
- * Defines a very basic interface that allows serialization to the filesystem
+ * Defines a very basic interface that allows us to abstract whether we write to 
+ * files or to databases or just keep things in memory
  * @author dyuen
  */
-public interface FileSerializationInterface {
+public interface StorageInterface {
     /**
      * Generically serialize a Atom into the interface
      * @param obj 
@@ -47,5 +48,5 @@ public interface FileSerializationInterface {
      * For debugging or testing purposes, this will wipe out all objects in the 
      * serialization store
      */
-    public void clearSerialization();
+    public void clearStorage();
 }
