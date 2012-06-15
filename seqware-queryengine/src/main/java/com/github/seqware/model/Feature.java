@@ -6,6 +6,9 @@ import com.github.seqware.model.impl.AtomImpl;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Features represent a GVF (which is a more generic version of a VCF). See
  * http://genomebiology.com/2010/11/8/R88 or better
@@ -39,6 +42,11 @@ public class Feature extends AtomImpl<Feature> {
     private long start = 0;
     private long stop = 0;
     private Strand strand = null;
+
+    /**
+     * Additional attributes can be freely added via a map.
+     */
+    private HashMap<String, Object> additionalAttributes = null;
 
     private Feature() {
         super();
@@ -133,6 +141,15 @@ public class Feature extends AtomImpl<Feature> {
      */
     public String getPragma() {
         return pragma;
+    }
+
+    /**
+     * Additional attributes not covered by GVF.
+     *
+     * @return A map of additional attributes.
+     */
+    public Map<String, Object> getAdditionalAttributes() {
+        return this.additionalAttributes;
     }
 
     @Override

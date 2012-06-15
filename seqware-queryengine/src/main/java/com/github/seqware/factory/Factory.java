@@ -74,7 +74,7 @@ public class Factory {
 
             @Override
             StorageInterface buildStorage(SerializationInterface i) {
-                return new HBaseKyroSerialization(i);
+                return new HBaseKryoSerialization(i);
             }
         };
 
