@@ -16,40 +16,30 @@
  */
 package com.github.seqware.impl;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
-import com.esotericsoftware.kryo.serializers.JavaSerializer;
 import com.github.seqware.model.Atom;
 import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.util.SGID;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
-import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.filter.KeyOnlyFilter;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.apache.hadoop.thirdparty.guava.common.collect.Table.Cell;
-import org.objenesis.strategy.SerializingInstantiatorStrategy;
 
 
 /**
  *
  * @author dyuen
  */
-public class HBaseKyroSerialization implements StorageInterface {
+public class HBaseKryoSerialization implements StorageInterface {
 
-    private static final String TEST_TABLE = "hbaseKyroTestTable";
+    private static final String TEST_TABLE = "hbaseKryoTestTable";
     private static final String TEST_COLUMN = "allData";
     private static final String TEST_QUALIFIER = "qualifier";
     private static final boolean PERSIST = false;
@@ -57,12 +47,12 @@ public class HBaseKyroSerialization implements StorageInterface {
     private SerializationInterface serializer;
     private HTable table;
 
-    public HBaseKyroSerialization(SerializationInterface i) {
+    public HBaseKryoSerialization(SerializationInterface i) {
         this.serializer = i;
         // The HBaseConfiguration reads in hbase-site.xml and hbase-default.xml,
         // as long as these can be found in the CLASSPATH.
         this.config = HBaseConfiguration.create();
-        Logger.getLogger(HBaseKyroSerialization.class.getName()).log(Level.INFO, "Starting with HBaseKyroSerialization");
+        Logger.getLogger(HBaseKryoSerialization.class.getName()).log(Level.INFO, "Starting with HBaseKryoSerialization");
         // Create a fresh table, i.e. delete an existing table if it exists:
         HTableDescriptor ht = new HTableDescriptor(TEST_TABLE);
         ht.addFamily(new HColumnDescriptor(TEST_COLUMN));
@@ -80,7 +70,7 @@ public class HBaseKyroSerialization implements StorageInterface {
             }
             this.table = new HTable(config, TEST_TABLE);
         } catch (IOException ex) {
-            Logger.getLogger(HBaseKyroSerialization.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", ex);
+            Logger.getLogger(HBaseKryoSerialization.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", ex);
             System.exit(-1);
         }
     }
@@ -94,7 +84,7 @@ public class HBaseKyroSerialization implements StorageInterface {
             p.add(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes(TEST_QUALIFIER), featureBytes);
             table.put(p);
         } catch (IOException ex) {
-            Logger.getLogger(HBaseKyroSerialization.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HBaseKryoSerialization.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -112,7 +102,7 @@ public class HBaseKyroSerialization implements StorageInterface {
             AtomImpl deserializedAtom = (AtomImpl) serializer.deserialize(columnLatest, Atom.class);
             return deserializedAtom;
         } catch (IOException ex) {
-            Logger.getLogger(HBaseKyroSerialization.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HBaseKryoSerialization.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
@@ -130,7 +120,7 @@ public class HBaseKyroSerialization implements StorageInterface {
             hba.createTable(ht);
             this.table = new HTable(config, TEST_TABLE);
         } catch (IOException ex) {
-            Logger.getLogger(HBaseKyroSerialization.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", ex);
+            Logger.getLogger(HBaseKryoSerialization.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", ex);
             System.exit(-1);
         }
     }
@@ -143,7 +133,7 @@ public class HBaseKyroSerialization implements StorageInterface {
             ResultScanner scanner = table.getScanner(s);
             return new ScanIterable(scanner);
         } catch (IOException iOException) {
-            Logger.getLogger(HBaseKyroSerialization.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", iOException);
+            Logger.getLogger(HBaseKryoSerialization.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", iOException);
             return null;
         }
     }
