@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.impl.test;
+package com.github.seqware.model.test;
 
 import com.github.seqware.factory.Factory;
-import com.github.seqware.impl.test.util.DynamicSuite;
+import com.github.seqware.model.test.util.DynamicSuite;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.AfterClass;
@@ -25,20 +25,20 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
- *
  * @author dyuen
  */
 @RunWith(DynamicSuite.class)
-public class ImplTestSuite {
+public class InMemoryHBaseKyroSerializationSuite {
 
     @BeforeClass
     public static void setupSuite() {
-        Logger.getLogger(ImplTestSuite.class.getName()).log(Level.INFO, "Running test suite for implementation-specific tests");
+        Logger.getLogger(InMemoryHBaseKyroSerializationSuite.class.getName()).log(Level.INFO, "Running test suite with in-memory objects using Kyro serialization to HBase");
+        Factory.setFactoryBackendType(Factory.Model_Type.IN_MEMORY, Factory.Storage_Type.HBASE_STORAGE, Factory.Serialization_Type.KYRO);
     }
     
     @AfterClass
     public static void tearDownSuite(){
-        Logger.getLogger(ImplTestSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
+        Logger.getLogger(InMemoryHBaseKyroSerializationSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
         Factory.setFactoryBackendType(null, null, null);
     }
 }

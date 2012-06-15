@@ -26,55 +26,95 @@ import com.github.seqware.model.QueryInterface;
  */
 public class Factory {
 
-    public enum Backend_Type {
+    /**'
+     * These types describe different types of our model objects, for example the 
+     * in memory objects load everything into memory. An HBase backend might load only
+     * a database cursor or rowKeys for relevant objects.
+     */
+    public enum Model_Type {
 
         IN_MEMORY {
 
             @Override
-            BackEndInterface buildBackEnd(FileSerializationInterface i) {
+            BackEndInterface buildBackEnd(StorageInterface i) {
                 return new SimplePersistentBackEnd(i);
             }
         },
         HBASE {
 
             @Override
-            BackEndInterface buildBackEnd(FileSerializationInterface i) {
+            BackEndInterface buildBackEnd(StorageInterface i) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         };
 
-        abstract BackEndInterface buildBackEnd(FileSerializationInterface i);
+        abstract BackEndInterface buildBackEnd(StorageInterface i);
     };
 
-    public enum Serialization_Type {
+    /**
+     * These describe different types of our back-end, whether we store to files, 
+     * to a database, or simply keep things in memory
+     */
+    public enum Storage_Type {
 
-        IN_MEMORY_CLONE {
-
+        IN_MEMORY {
             @Override
-            FileSerializationInterface buildSerialization() {
-                return new NonPersistentSerialization();
+            StorageInterface buildStorage(SerializationInterface i) {
+                return new NonPersistentStorage(i);
             }
         },
-        APACHE_SERIALIZATION {
+        FILE_STORAGE {
 
             @Override
-            FileSerializationInterface buildSerialization() {
-                return new ApacheUtilsPersistentSerialization();
+            StorageInterface buildStorage(SerializationInterface i) {
+                return new TmpFileStorage(i);
+            }
+        },
+        HBASE_STORAGE {
+
+            @Override
+            StorageInterface buildStorage(SerializationInterface i) {
+                return new HBaseKyroSerialization(i);
+            }
+        };
+
+        abstract StorageInterface buildStorage(SerializationInterface i);
+    };
+    
+    /**
+     * These describe different types of serialization only
+     */
+    public enum Serialization_Type {
+
+        APACHE {
+            @Override
+            SerializationInterface buildSerialization() {
+                return new ApacheSerialization();
+            }
+        },
+        KYRO {
+            @Override
+            SerializationInterface buildSerialization() {
+                return new KyroSerialization();
             }
         },
         PROTOBUF {
 
             @Override
-            FileSerializationInterface buildSerialization() {
+            SerializationInterface buildSerialization() {
+                //return new ProtobufSerialization();
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         };
 
-        abstract FileSerializationInterface buildSerialization();
+        abstract SerializationInterface buildSerialization();
     };
-    private static final Backend_Type DEFAULT_BACKEND = Backend_Type.IN_MEMORY;
-    private static Backend_Type current_backend = DEFAULT_BACKEND;
-    private static final Serialization_Type DEFAULT_SERIALIZATION = Serialization_Type.APACHE_SERIALIZATION;
+    
+    private static final Model_Type DEFAULT_BACKEND = Model_Type.IN_MEMORY;
+    private static Model_Type current_backend = DEFAULT_BACKEND;
+    private static final Storage_Type DEFAULT_STORAGE = Storage_Type.FILE_STORAGE;
+    private static Storage_Type current_storage = DEFAULT_STORAGE;
+    private static final Serialization_Type DEFAULT_SERIALIZATION = Serialization_Type.APACHE;
     private static Serialization_Type current_serialization = DEFAULT_SERIALIZATION;
     private static BackEndInterface instance = null;
 
@@ -85,7 +125,7 @@ public class Factory {
      */
     public static BackEndInterface getBackEnd() {
         if (instance == null) {
-            instance = current_backend.buildBackEnd(current_serialization.buildSerialization());
+            instance = current_backend.buildBackEnd(current_storage.buildStorage(current_serialization.buildSerialization()));
         }
         return instance;
     }
@@ -97,7 +137,7 @@ public class Factory {
      */
     public static QueryInterface getQueryInterface() {
         if (instance == null) {
-            instance = current_backend.buildBackEnd(current_serialization.buildSerialization());
+            instance = current_backend.buildBackEnd(current_storage.buildStorage(current_serialization.buildSerialization()));
         }
         return (QueryInterface) instance;
     }
@@ -110,7 +150,7 @@ public class Factory {
      */
     public static FeatureStoreInterface getFeatureStoreInterface() {
         if (instance == null) {
-            instance = current_backend.buildBackEnd(current_serialization.buildSerialization());
+            instance = current_backend.buildBackEnd(current_storage.buildStorage(current_serialization.buildSerialization()));
         }
         return (FeatureStoreInterface) instance;
     }
@@ -121,28 +161,34 @@ public class Factory {
      * @return
      */
     public static ModelManager getModelManager() {
-        return new SimpleModelManager();
+        return new HBaseModelManager();
     }
 
     /**
      * Used only by testing to override the back-end type
      *
-     * @param btype setup backend with a specific type, if either parameter is
+     * @param bType setup backend with a specific type, if either parameter is
      * null, we deallocate the back-end
-     * @param stype setup serialization with a specific type, if either
-     * parameter is null, we deallocate the back-end
+     * @param storageType setup storage with a specific type, if either parameter is null, we deallocate the back-end
+     * @param serialType setup serialization with a specific type, if either parameter is null, we deallocate the back-end
+     * 
      */
-    public static void setFactoryBackendType(Backend_Type btype, Serialization_Type stype) {
+    public static void setFactoryBackendType(Model_Type bType, Storage_Type storageType, Serialization_Type serializationType) {
         instance = null;
-        if (btype == null) {
+        if (bType == null) {
             current_backend = DEFAULT_BACKEND;
         } else {
-            current_backend = btype;
+            current_backend = bType;
         }
-        if (stype == null) {
+        if (storageType == null) {
+            current_storage = DEFAULT_STORAGE;
+        } else {
+            current_storage = storageType;
+        }
+        if (serializationType == null) {
             current_serialization = DEFAULT_SERIALIZATION;
         } else {
-            current_serialization = stype;
+            current_serialization = serializationType;
         }
     }
 }

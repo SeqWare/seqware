@@ -2,7 +2,8 @@ package com.github.seqware.impl.test;
 
 import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
-import com.github.seqware.impl.ApacheUtilsPersistentSerialization;
+import com.github.seqware.impl.ApacheSerialization;
+import com.github.seqware.impl.TmpFileStorage;
 import com.github.seqware.impl.SimpleModelManager;
 import com.github.seqware.impl.SimplePersistentBackEnd;
 import com.github.seqware.model.Feature;
@@ -25,7 +26,7 @@ public class ApacheStaticInitializerTest {
      static {
         ApacheStaticInitializerTest.testID = UUID.randomUUID();
         //System.out.println("starting static init in testID: " + testID.toString());
-        backend = new SimplePersistentBackEnd(new ApacheUtilsPersistentSerialization());
+        backend = new SimplePersistentBackEnd(new TmpFileStorage(new ApacheSerialization()));
         SimpleModelManager mManager = new SimpleModelManager();
         mManager.overrideBackEnd(backend);
         aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy ref").build()).build();

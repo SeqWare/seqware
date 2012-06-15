@@ -39,9 +39,9 @@ import java.util.logging.Logger;
 public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreInterface, QueryInterface {
 
     private List<AnalysisPluginInterface> apis = new ArrayList<AnalysisPluginInterface>();
-    private FileSerializationInterface fsi;
+    private StorageInterface fsi;
 
-    public SimplePersistentBackEnd(FileSerializationInterface fsi) {
+    public SimplePersistentBackEnd(StorageInterface fsi) {
         this.fsi = fsi;
         apis.add(new InMemoryFeaturesAllPlugin());
         apis.add(new InMemoryFeaturesByReferencePlugin());
