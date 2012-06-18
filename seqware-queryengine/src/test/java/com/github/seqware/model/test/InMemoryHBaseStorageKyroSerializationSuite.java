@@ -16,9 +16,8 @@
  */
 package com.github.seqware.model.test;
 
-import com.github.seqware.model.test.util.DynamicSuite;
 import com.github.seqware.factory.Factory;
-import com.github.seqware.impl.TmpFileStorage;
+import com.github.seqware.model.test.util.DynamicSuite;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.AfterClass;
@@ -26,23 +25,21 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
+ * Not working yet
  * @author dyuen
  */
-@RunWith(DynamicSuite.class)
-public class InMemoryApacheFileSerializationSuite {
+//@RunWith(DynamicSuite.class)
+//public class InMemoryHBaseStorageKyroSerializationSuite {
 
-    @BeforeClass
-    public static void setupSuite() {
-        Logger.getLogger(InMemoryApacheFileSerializationSuite.class.getName()).log(Level.INFO, "Running test suite with in-memory objects and apache serialization to the filesystem");
-        Factory.setFactoryBackendType(Factory.Model_Type.IN_MEMORY, Factory.Storage_Type.FILE_STORAGE, Factory.Serialization_Type.APACHE);
-        // back-end specific call
-        //TmpFileStorage serial = new TmpFileStorage();
-        //serial.clearStorage();
-    }
-    
-    @AfterClass
-    public static void tearDownSuite(){
-        Logger.getLogger(InMemoryApacheFileSerializationSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
-        Factory.setFactoryBackendType(null, null, null);
-    }
-}
+//    @BeforeClass
+//    public static void setupSuite() {
+//        Logger.getLogger(InMemoryHBaseStorageKyroSerializationSuite.class.getName()).log(Level.INFO, "Running test suite with in-memory objects using Kyro serialization to HBase");
+//        Factory.setFactoryBackendType(Factory.Model_Type.IN_MEMORY, Factory.Storage_Type.HBASE_STORAGE, Factory.Serialization_Type.KRYO);
+//    }
+//    
+//    @AfterClass
+//    public static void tearDownSuite(){
+//        Logger.getLogger(InMemoryHBaseStorageKyroSerializationSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
+//        Factory.setFactoryBackendType(null, null, null);
+//    }
+//}

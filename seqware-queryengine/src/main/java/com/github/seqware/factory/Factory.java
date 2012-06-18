@@ -74,7 +74,7 @@ public class Factory {
 
             @Override
             StorageInterface buildStorage(SerializationInterface i) {
-                return new HBaseKryoSerialization(i);
+                return new HBaseStorage(i);
             }
         };
 
@@ -92,10 +92,10 @@ public class Factory {
                 return new ApacheSerialization();
             }
         },
-        KYRO {
+        KRYO {
             @Override
             SerializationInterface buildSerialization() {
-                return new KyroSerialization();
+                return new KryoSerialization();
             }
         },
         PROTOBUF {

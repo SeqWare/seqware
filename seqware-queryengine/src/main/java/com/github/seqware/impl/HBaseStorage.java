@@ -19,7 +19,6 @@ package com.github.seqware.impl;
 import com.github.seqware.model.Atom;
 import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.util.SGID;
-
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -37,9 +36,11 @@ import org.apache.hadoop.hbase.util.Bytes;
  *
  * @author dyuen
  */
-public class HBaseKryoSerialization implements StorageInterface {
+public class HBaseStorage implements StorageInterface {
+    
+    public static final int PAD = 15;
 
-    private static final String TEST_TABLE = "hbaseKryoTestTable";
+    private static final String TEST_TABLE = "hbaseTestTable";
     private static final String TEST_COLUMN = "allData";
     private static final String TEST_QUALIFIER = "qualifier";
     private static final boolean PERSIST = false;
@@ -47,12 +48,12 @@ public class HBaseKryoSerialization implements StorageInterface {
     private SerializationInterface serializer;
     private HTable table;
 
-    public HBaseKryoSerialization(SerializationInterface i) {
+    public HBaseStorage(SerializationInterface i) {
         this.serializer = i;
         // The HBaseConfiguration reads in hbase-site.xml and hbase-default.xml,
         // as long as these can be found in the CLASSPATH.
         this.config = HBaseConfiguration.create();
-        Logger.getLogger(HBaseKryoSerialization.class.getName()).log(Level.INFO, "Starting with HBaseKryoSerialization");
+        Logger.getLogger(TmpFileStorage.class.getName()).log(Level.INFO, "Starting with {0} using {1}", new Object[]{HBaseStorage.class.getSimpleName(), serializer.getClass().getSimpleName()});
         // Create a fresh table, i.e. delete an existing table if it exists:
         HTableDescriptor ht = new HTableDescriptor(TEST_TABLE);
         ht.addFamily(new HColumnDescriptor(TEST_COLUMN));
@@ -70,8 +71,7 @@ public class HBaseKryoSerialization implements StorageInterface {
             }
             this.table = new HTable(config, TEST_TABLE);
         } catch (IOException ex) {
-            Logger.getLogger(HBaseKryoSerialization.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", ex);
-            System.exit(-1);
+            Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", ex);
         }
     }
 
@@ -79,12 +79,13 @@ public class HBaseKryoSerialization implements StorageInterface {
     public void serializeAtomToTarget(Atom obj) {
         try {
             byte[] featureBytes = serializer.serialize(obj);
-            Put p = new Put(Bytes.toBytes(obj.toString()));
+            // as a test, let's try readable rowKeys
+            Put p = new Put(Bytes.toBytes(obj.getSGID().toString()));
             // Serialize:
             p.add(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes(TEST_QUALIFIER), featureBytes);
             table.put(p);
         } catch (IOException ex) {
-            Logger.getLogger(HBaseKryoSerialization.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -93,16 +94,16 @@ public class HBaseKryoSerialization implements StorageInterface {
         try {
             Get g = new Get(Bytes.toBytes(sgid.toString()));
             Result result = table.get(g);
-            byte[] columnLatest = result.getColumnLatest(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes(TEST_QUALIFIER)).getValue();
             // handle null case
-            if (columnLatest == null){
+            if (result.isEmpty()){
                 return null;
             }
+            byte[] columnLatest = result.getColumnLatest(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes(TEST_QUALIFIER)).getValue();
             // I wonder if this handles subclassing properly ... turns out no
             AtomImpl deserializedAtom = (AtomImpl) serializer.deserialize(columnLatest, Atom.class);
             return deserializedAtom;
         } catch (IOException ex) {
-            Logger.getLogger(HBaseKryoSerialization.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
@@ -120,7 +121,7 @@ public class HBaseKryoSerialization implements StorageInterface {
             hba.createTable(ht);
             this.table = new HTable(config, TEST_TABLE);
         } catch (IOException ex) {
-            Logger.getLogger(HBaseKryoSerialization.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", ex);
+            Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", ex);
             System.exit(-1);
         }
     }
@@ -129,11 +130,12 @@ public class HBaseKryoSerialization implements StorageInterface {
     public Iterable<SGID> getAllAtoms() {
         try {
             Scan s = new Scan();
-            s.setFilter(new KeyOnlyFilter());
+            // we need the actual values if we do not store SGID in row key for debugging
+            //s.setFilter(new KeyOnlyFilter());
             ResultScanner scanner = table.getScanner(s);
             return new ScanIterable(scanner);
         } catch (IOException iOException) {
-            Logger.getLogger(HBaseKryoSerialization.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", iOException);
+            Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", iOException);
             return null;
         }
     }
@@ -167,9 +169,9 @@ public class HBaseKryoSerialization implements StorageInterface {
 
         @Override
         public SGID next() {
-            byte[] bytes = sIter.next().getRow();
-            SGID sAtom = serializer.deserialize(bytes, SGID.class);
-            return sAtom;
+            byte[] bytes = sIter.next().getColumnLatest(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes(TEST_QUALIFIER)).getValue();
+            Atom sAtom = serializer.deserialize(bytes, AtomImpl.class);
+            return sAtom.getSGID();
         }
 
         @Override
