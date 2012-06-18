@@ -23,11 +23,11 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 public class Tag extends AtomImpl<Tag>  {
 
-    private TagSet tagSet;
-    private String key;
+    private TagSet tagSet = null;
+    private String key = null;
     private String predicate = "=";
     private Object value = null;
-    private ValueType vType;
+    private ValueType vType = null;
     
     public enum ValueType {STRING, BYTEARR, SGID, FLOAT, DOUBLE, LONG, INTEGER };
 

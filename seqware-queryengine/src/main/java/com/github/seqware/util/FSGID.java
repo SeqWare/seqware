@@ -20,7 +20,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.KryoSerializable;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.github.seqware.impl.HBaseStore;
+import com.github.seqware.impl.HBaseStorage;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import java.util.UUID;
@@ -48,7 +48,7 @@ public class FSGID extends SGID implements KryoSerializable{
             this.featureSetID = fSet.getSGID(); 
             // generate row key
             StringBuilder builder = new StringBuilder();
-            builder.append(fSet.getReference().getName()).append(".").append(f.getId()).append(":").append(padZeros(f.getStart(),HBaseStore.PAD)).append(".feature.").append(f.getVersion());
+            builder.append(fSet.getReference().getName()).append(".").append(f.getId()).append(":").append(padZeros(f.getStart(),HBaseStorage.PAD)).append(".feature.").append(f.getVersion());
             rowKey = builder.toString();
         } catch (Exception ex) {
             Logger.getLogger(FSGID.class.getName()).log(Level.SEVERE, null, ex);
@@ -101,6 +101,7 @@ public class FSGID extends SGID implements KryoSerializable{
         this.setUuid(new UUID(mostSig, leastSig));
         leastSig = input.readLong();
         mostSig = input.readLong();
+        this.featureSetID = new SGID();
         this.featureSetID.setUuid(new UUID(mostSig, leastSig));
         this.rowKey = input.readString();
     }

@@ -41,7 +41,7 @@ public class TmpFileStorage implements StorageInterface {
 
     public TmpFileStorage(SerializationInterface i) {
         this.serializer = i;
-        Logger.getLogger(TmpFileStorage.class.getName()).log(Level.INFO, "Starting with JavaPersistentBackEnd in: {0}", tempDir.getAbsolutePath());
+        Logger.getLogger(TmpFileStorage.class.getName()).log(Level.INFO, "Starting with {0} in {1} using {2}", new Object[]{TmpFileStorage.class.getSimpleName(), tempDir.getAbsolutePath(), serializer.getClass().getSimpleName()});
         // make a persistent store exists already, otherwise try to retrieve existing items
         try {
             if (!tempDir.exists()) {

@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -78,18 +76,12 @@ public class ACLTest {
         Assert.assertTrue("wrong owner", targetSet.getPermissions().getOwner().equals(marshmallowUser));
         Assert.assertTrue("wrong owner for old version", targetSet.getPrecedingVersion().getPermissions().getOwner().equals(titanicUser));
         Assert.assertTrue("wrong owner for old old version", targetSet.getPrecedingVersion().getPrecedingVersion().getPermissions().getOwner().equals(marshmallowUser));
-        List<Boolean> userpermissions = null;
-        try{
-            userpermissions = targetSet.getPermissions().getAccess();
-        
+        List<Boolean> userpermissions = targetSet.getPermissions().getAccess();
         // why oh why doesn't JUnit assertArrayEquals support boolean?
         Assert.assertTrue("permissions", userpermissions.get(0) == true && userpermissions.get(1) == true && userpermissions.get(2) == true && userpermissions.get(3) == true && userpermissions.get(4) == true && userpermissions.get(5) == true);
         userpermissions = targetSet.getPrecedingVersion().getPermissions().getAccess();
         Assert.assertTrue("permissions", userpermissions.get(0) == false && userpermissions.get(1) == false && userpermissions.get(2) == false && userpermissions.get(3) == false && userpermissions.get(4) == false && userpermissions.get(5) == false);
-        } catch (Exception e){
-            Logger.getLogger(ACLTest.class.getName()).log(Level.INFO, "Exception in ACLTest", e);
-            System.out.println();
-        }
+        
     }
 
     @Test

@@ -20,27 +20,58 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
-import com.github.seqware.model.Atom;
-import com.github.seqware.model.impl.AtomImpl;
+import com.esotericsoftware.kryo.serializers.JavaSerializer;
+import com.github.seqware.model.*;
+import com.github.seqware.model.impl.inMemory.*;
+import com.github.seqware.model.interfaces.ACL;
+import com.github.seqware.util.FSGID;
+import com.github.seqware.util.SGID;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import org.apache.hadoop.hbase.util.Bytes;
+import java.lang.ref.Reference;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import org.objenesis.strategy.SerializingInstantiatorStrategy;
 
 /**
  *
  * @author dyuen
  */
-public class KyroSerialization implements SerializationInterface {
+public class KryoSerialization implements SerializationInterface {
 
     private Kryo serializer;
 
-    public KyroSerialization() {
+    public KryoSerialization() {
         this.serializer = new Kryo();
         // Some magic to make serialization work with private default constructors:
         serializer.setInstantiatorStrategy(new SerializingInstantiatorStrategy());
         serializer.setDefaultSerializer(CompatibleFieldSerializer.class);
-        // serializer.register(UUID.class, new JavaSerializer());
+        serializer.register(ACL.class, new JavaSerializer(), 0);
+        serializer.register(SGID.class, 1);
+        serializer.register(FSGID.class, 2);
+        serializer.register(User.class, 3);
+        serializer.register(Group.class, 4);
+        serializer.register(Reference.class, 5);
+        serializer.register(Tag.class, 6);
+        serializer.register(InMemoryTagSet.class, 7);
+        serializer.register(InMemoryAnalysisSet.class, 8);
+        serializer.register(InMemoryGroup.class, 9);
+        serializer.register(InMemoryQueryFutureImpl.class, 10);
+        serializer.register(InMemoryFeatureSet.class, 11);
+        serializer.register(Analysis.class, 12);
+        serializer.register(InMemoryQueryFutureImpl.class, 13);
+        serializer.register(InMemoryReference.class, 14);
+        serializer.register(HashSet.class, 15);
+        serializer.register(Feature.class, 16);
+        serializer.register(ArrayList.class, 17);
+        serializer.register(Feature.Strand.class, 18);
+        serializer.register(Date.class, 19);
+        serializer.register(InMemoryReferenceSet.class, 20);
+        serializer.register(Tag.ValueType.class, 21);
+        serializer.register(byte[].class, 22);
+        // let's track down this "Encountered unregistered class ID"
+        serializer.setRegistrationRequired(true);
     }
 
     @Override
@@ -48,7 +79,8 @@ public class KyroSerialization implements SerializationInterface {
         ByteArrayOutputStream featureBytes = new ByteArrayOutputStream();
         Output o = new Output(featureBytes);
         serializer.writeClassAndObject(o, atom);
-        return o.toBytes();
+        o.close();
+        return featureBytes.toByteArray();
     
     }
 
@@ -56,6 +88,7 @@ public class KyroSerialization implements SerializationInterface {
     public <T> T deserialize(byte[] bytes, Class<T> type) {
         Input input = new Input(new ByteArrayInputStream(bytes));
         T deserializedAtom = (T) serializer.readClassAndObject(input);
+        input.close();
         return deserializedAtom;
     }
 }
