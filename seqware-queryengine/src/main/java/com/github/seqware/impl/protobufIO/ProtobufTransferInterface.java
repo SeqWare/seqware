@@ -14,24 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.model.interfaces;
-
-import com.github.seqware.factory.ModelManager;
+package com.github.seqware.impl.protobufIO;
 
 /**
- * Builders are used to construct Atom. 
+ * Interface for conversion from protein buffer auto-generated objects 
+ * to model and vice versa
  * @author dyuen
  */
-public interface BaseBuilder<S, T extends BaseBuilder> {
+public interface ProtobufTransferInterface<S,T> {
+    
     /**
-     * Build a Atom
-     * @return constructed Atom
+     * Convert from protein buffer object to model
+     * @param protbuf
+     * @return 
      */
-    public S build();
+    public abstract T pb2m(S protbuf);
+    
     /**
-     * Set a manager for this Atom
-     * @param aThis
-     * @return the base-builder itself
+     * Convert from model to protein buffer object
+     * @param atom
+     * @return 
      */
-    public T setManager(ModelManager aThis);
+    public abstract S m2pb(T atom);
+    
 }

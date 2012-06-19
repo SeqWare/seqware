@@ -25,16 +25,16 @@ import com.github.seqware.model.Atom;
 public interface SerializationInterface {
     
     /**
-     * 
-     * @param atom
+     * Given an atom, get back an array of bytes
+     * @param atom 
      * @return 
      */
     public byte[] serialize(Atom atom);
     
     /**
-     * Given an array of bytes, get back a
-     * @param <T>
-     * @param bytes
+     * Given an array of bytes, get back an atom
+     * @param <T> class type, behaviour is undefined if the class is incorrect
+     * @param bytes byte representation of the desired object
      * @return 
      */
     public <T> T deserialize(byte[] bytes, Class<T> type);

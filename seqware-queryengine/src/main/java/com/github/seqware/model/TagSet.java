@@ -11,6 +11,7 @@ import com.github.seqware.model.interfaces.BaseBuilder;
  * @author dyuen
  */
 public interface TagSet extends AbstractSet<TagSet, Tag> {
+    public final static String prefix = "TagSet";
 
     /**
      * Get the name of the tag set

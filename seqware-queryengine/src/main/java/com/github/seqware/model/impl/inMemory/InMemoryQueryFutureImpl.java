@@ -71,6 +71,16 @@ public class InMemoryQueryFutureImpl extends Analysis {
         this.plugin = plugin;
     }
 
+    @Override
+    public Class getHBaseClass() {
+        return Analysis.class;
+    }
+
+    @Override
+    public String getHBasePrefix() {
+        return Analysis.prefix;
+    }
+
     public static class Builder extends Analysis.Builder {
 
         public Builder() {

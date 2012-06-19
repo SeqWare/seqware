@@ -41,7 +41,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      */
     private transient ModelManager manager = null;
     private List<Tag> tags = new ArrayList<Tag>();
-    private boolean precedingChecked = false;
+    private transient boolean precedingChecked = false;
     private T precedingVersion = null;
     private SGID precedingSGID = null;    
     
@@ -51,7 +51,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     
     
     /**
-     * Copy constructor, used to generate a shallow copy of a Atom ith
+     * Copy constructor, used to generate a shallow copy of a Atom with
      * potentially a new timestamp and UUID
      *
      * @param newSGID whether or not to generate a new UUID and timestamp for
@@ -203,7 +203,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
 
     @Override
     public T getPrecedingVersion() {
-        if (!precedingChecked) {
+        if (!precedingChecked && precedingSGID != null) {
             this.precedingVersion = (T) Factory.getFeatureStoreInterface().getAtomBySGID(precedingSGID);
         }
         precedingChecked = true;
@@ -238,4 +238,19 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     public SGID getPrecedingSGID() {
         return precedingSGID;
     }
+    
+    /**
+     * Get the model class for the HBase where this obj should be stored
+     * @param obj
+     * @return 
+     */
+    public abstract Class getHBaseClass();
+        
+
+    /**
+     * Get the HBase table prefix where this obj should be stored
+     * @param obj
+     * @return 
+     */
+    public abstract String getHBasePrefix();
 }

@@ -17,6 +17,7 @@
 package com.github.seqware.impl;
 
 import com.github.seqware.model.Atom;
+import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.util.SGID;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,9 +26,9 @@ import java.util.Map;
  * Doesn't really store things anywhere, just keeps it in memory
  * @author dyuen
  */
-public class NonPersistentStorage implements StorageInterface {
+public class NonPersistentStorage extends StorageInterface {
 
-    private Map<SGID, byte[]> map = new HashMap<SGID, byte[]>();
+    private Map<SGID, ByteTypePair> map = new HashMap<SGID, ByteTypePair>();
     private final SerializationInterface serializer;
 
     public NonPersistentStorage(SerializationInterface i) {
@@ -36,7 +37,9 @@ public class NonPersistentStorage implements StorageInterface {
     
     @Override
     public void serializeAtomToTarget(Atom obj) {
-        map.put(obj.getSGID(), serializer.serialize(obj));
+        Class cl = ((AtomImpl)obj).getHBaseClass();
+        ByteTypePair pair = new ByteTypePair(serializer.serialize(obj), cl);
+        map.put(obj.getSGID(), pair);
     }
 
     @Override
@@ -44,7 +47,7 @@ public class NonPersistentStorage implements StorageInterface {
         if (!map.containsKey(sgid)){
             return null;
         }
-        return serializer.deserialize(map.get(sgid),Atom.class);
+        return (Atom) serializer.deserialize(map.get(sgid).bArr, map.get(sgid).cl);
     }
 
     @Override
@@ -56,5 +59,19 @@ public class NonPersistentStorage implements StorageInterface {
     public Iterable<SGID> getAllAtoms() {
         return map.keySet();
     }
+
+    @Override
+    public <T extends Atom> T deserializeTargetToAtom(SGID sgid, Class<T> t) {
+        return (T) this.deserializeTargetToAtom(sgid);
+    }
     
+    public class ByteTypePair {
+        private byte[] bArr;
+        private Class cl;
+
+        public ByteTypePair(byte[] bArr, Class cl) {
+            this.bArr = bArr;
+            this.cl = cl;
+        }
+    }
 }

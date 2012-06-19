@@ -13,6 +13,7 @@ import com.github.seqware.model.interfaces.BaseBuilder;
  * @author jbaran
  */
 public interface ReferenceSet extends AbstractSet<ReferenceSet, Reference> {
+    public final static String prefix = "ReferenceSet";
 
     /**
      * Get the name of the reference set

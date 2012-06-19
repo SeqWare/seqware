@@ -11,7 +11,6 @@ import com.github.seqware.model.impl.AtomImpl;
  * @author dyuen
  */
 public class InMemoryAnalysisSet extends AbstractInMemorySet<AnalysisSet, Analysis> implements AnalysisSet{
-    
     private String name = null;
     private String description = null;
     
@@ -35,6 +34,16 @@ public class InMemoryAnalysisSet extends AbstractInMemorySet<AnalysisSet, Analys
         InMemoryAnalysisSet.Builder b = new InMemoryAnalysisSet.Builder();
         b.aSet = (InMemoryAnalysisSet) this.copy(false);
         return b;
+    }
+
+    @Override
+    public Class getHBaseClass() {
+        return AnalysisSet.class;
+    }
+
+    @Override
+    public String getHBasePrefix() {
+        return AnalysisSet.prefix;
     }
 
     public static class Builder extends AnalysisSet.Builder {

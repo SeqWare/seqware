@@ -4,7 +4,6 @@ import com.github.seqware.model.interfaces.Versionable;
 import com.github.seqware.model.interfaces.Taggable;
 import com.github.seqware.model.interfaces.Buildable;
 import com.github.seqware.util.SGID;
-import com.github.seqware.util.SeqWareIterable;
 import java.io.Serializable;
 import java.util.Date;
 

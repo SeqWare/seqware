@@ -12,6 +12,7 @@ import com.github.seqware.model.interfaces.BaseBuilder;
  * @author dyuen
  */
 public interface AnalysisSet extends AbstractSet<AnalysisSet, Analysis> {
+    public final static String prefix = "AnalysisSet";
 
     /**
      * Get the name of the analysisSet

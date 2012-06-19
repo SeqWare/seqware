@@ -31,6 +31,16 @@ public class InMemoryTagSet extends AbstractInMemorySet<TagSet, Tag> implements 
         return b;
     }
 
+    @Override
+    public Class getHBaseClass() {
+        return TagSet.class;
+    }
+
+    @Override
+    public String getHBasePrefix() {
+        return TagSet.prefix;
+    }
+
     public static class Builder extends TagSet.Builder {
         
         public Builder(){

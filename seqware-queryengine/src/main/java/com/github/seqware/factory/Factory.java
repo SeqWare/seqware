@@ -44,7 +44,7 @@ public class Factory {
 
             @Override
             BackEndInterface buildBackEnd(StorageInterface i) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return new HBasePersistentBackEnd(i);
             }
         };
 

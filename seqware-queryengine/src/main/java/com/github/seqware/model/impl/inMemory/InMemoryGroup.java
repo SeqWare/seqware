@@ -55,6 +55,16 @@ public class InMemoryGroup extends AbstractInMemorySet<Group, User> implements G
         return b;
     }
 
+    @Override
+    public Class getHBaseClass() {
+        return Group.class;
+    }
+
+    @Override
+    public String getHBasePrefix() {
+        return Group.prefix;
+    }
+
     public static class Builder extends Group.Builder {
         
         public Builder(){

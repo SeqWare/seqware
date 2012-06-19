@@ -16,9 +16,8 @@
  */
 package com.github.seqware.model.test;
 
-import com.github.seqware.model.test.util.DynamicSuite;
 import com.github.seqware.factory.Factory;
-import com.github.seqware.impl.TmpFileStorage;
+import com.github.seqware.model.test.util.DynamicSuite;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.AfterClass;

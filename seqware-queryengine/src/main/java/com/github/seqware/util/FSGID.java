@@ -29,64 +29,75 @@ import java.util.logging.Logger;
 
 /**
  * Special class for Features which also stores the row key for features
- * 
+ *
  * @author dyuen
  * @author boconnor
  */
-public class FSGID extends SGID implements KryoSerializable{
-   private String rowKey = null;
-   private SGID featureSetID = null;
-   
+public class FSGID extends SGID implements KryoSerializable {
+
+    private String rowKey = null;
+    private SGID featureSetID = null;
+
     @Override
-   public String toString(){
-       return super.toString() +"."+ featureSetID.toString() +"."+ rowKey;
-   }
-   
-   public FSGID(SGID sgid, Feature f, FeatureSet fSet){
+    public String toString() {
+        return rowKey + "." + super.toString() /** + "." + featureSetID.toString() */;
+    }
+
+    /**
+     * Anonymous constructor, leaves the object in an unusable state
+     */
+    public FSGID() {
+    }
+
+    public FSGID(SGID sgid, Feature f, FeatureSet fSet) {
         try {
             this.setUuid(sgid.getUuid());
-            this.featureSetID = fSet.getSGID(); 
+            this.featureSetID = fSet.getSGID();
             // generate row key
             StringBuilder builder = new StringBuilder();
-            builder.append(fSet.getReference().getName()).append(".").append(f.getId()).append(":").append(padZeros(f.getStart(),HBaseStorage.PAD)).append(".feature.").append(f.getVersion());
+            builder.append(fSet.getReference().getName()).append(".").append(f.getId()).append(":").append(padZeros(f.getStart(), HBaseStorage.PAD)).append(".feature.").append(f.getVersion());
             rowKey = builder.toString();
         } catch (Exception ex) {
             Logger.getLogger(FSGID.class.getName()).log(Level.SEVERE, null, ex);
             System.err.println("Could not upgrade SGID on Feature " + f.getSGID() + " due to location out of bounds");
         }
-   }
-   
-   private String padZeros(long input, int totalPlaces) throws Exception {
-    String strInput = new Long(input).toString();
-    if (strInput.length() > totalPlaces) { throw new Exception("Integer "+input+" is larger than total places of "+totalPlaces+" so padding this string failed."); }
-    int diff = totalPlaces - strInput.length();
-    StringBuilder buffer = new StringBuilder();
-    for (int i=0; i<diff; i++) {
-      buffer.append("0");
     }
-    buffer.append(strInput);
-    return(buffer.toString());
-  }
 
-   /**
-    * Get the ID for the associated feature set
-    * @return 
-    */
+    private String padZeros(long input, int totalPlaces) throws Exception {
+        String strInput = new Long(input).toString();
+        if (strInput.length() > totalPlaces) {
+            throw new Exception("Integer " + input + " is larger than total places of " + totalPlaces + " so padding this string failed.");
+        }
+        int diff = totalPlaces - strInput.length();
+        StringBuilder buffer = new StringBuilder();
+        for (int i = 0; i < diff; i++) {
+            buffer.append("0");
+        }
+        buffer.append(strInput);
+        return (buffer.toString());
+    }
+
+    /**
+     * Get the ID for the associated feature set
+     *
+     * @return
+     */
     public SGID getFeatureSetID() {
         return featureSetID;
     }
 
     /**
      * Get the HBase-style row-key for this Feature
-     * @return 
+     *
+     * @return
      */
     public String getRowKey() {
         return rowKey;
     }
-   
-   @Override
+
+    @Override
     public void write(Kryo kryo, Output output) {
-       // doesn't seem to inherit properly?
+        // doesn't seem to inherit properly?
         output.writeLong(this.getUuid().getLeastSignificantBits());
         output.writeLong(this.getUuid().getMostSignificantBits());
         output.writeLong(this.featureSetID.getUuid().getLeastSignificantBits());
@@ -106,4 +117,13 @@ public class FSGID extends SGID implements KryoSerializable{
         this.rowKey = input.readString();
     }
 
+    public void setFeatureSetID(SGID featureSetID) {
+        this.featureSetID = featureSetID;
+    }
+
+    public void setRowKey(String rowKey) {
+        this.rowKey = rowKey;
+    }
+    
+    
 }

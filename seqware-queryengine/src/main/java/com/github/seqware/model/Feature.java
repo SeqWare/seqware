@@ -23,6 +23,7 @@ import java.util.Map;
  * @author jbaran
  */
 public class Feature extends AtomImpl<Feature> {
+    public final static String prefix = "Feature";
 
     /**
      * Strand locations of features.
@@ -50,6 +51,16 @@ public class Feature extends AtomImpl<Feature> {
 
     private Feature() {
         super();
+    }
+    
+    @Override
+    public Class getHBaseClass() {
+        return Feature.class;
+    }
+
+    @Override
+    public String getHBasePrefix() {
+        return Feature.prefix;
     }
 
     /**
