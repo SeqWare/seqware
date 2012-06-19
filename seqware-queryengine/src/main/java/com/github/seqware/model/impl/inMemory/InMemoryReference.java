@@ -1,6 +1,5 @@
 package com.github.seqware.model.impl.inMemory;
 
-import com.github.seqware.model.AnalysisSet;
 import com.github.seqware.model.FeatureSet;
 import com.github.seqware.model.Reference;
 import java.util.Iterator;
@@ -10,8 +9,13 @@ import java.util.Iterator;
  *
  * @author dyuen
  */
-public class InMemoryReference extends Reference {
+public class InMemoryReference extends AbstractInMemorySet<Reference, FeatureSet> implements Reference {
     
+    private String name;
+    
+    /**
+     * Anonymous constructor
+     */
     protected InMemoryReference(){
         super();
     }
@@ -37,15 +41,38 @@ public class InMemoryReference extends Reference {
         return b;
     }
 
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public Class getHBaseClass() {
+        return Reference.class;
+    }
+
+    @Override
+    public String getHBasePrefix() {
+        return Reference.prefix;
+    }
+
     public static class Builder extends Reference.Builder {
         
         public Builder(){
             reference = new InMemoryReference();
         }
+        
+        @Override
+        public Reference.Builder setName(String name) {
+            ((InMemoryReference)reference).name = name;
+            return this;
+        }
 
         @Override
         public Reference build() {
-            reference.getManager().objectCreated(reference);
+            if (((InMemoryReference)reference).getManager() != null) {
+                ((InMemoryReference)reference).getManager().objectCreated(reference);
+            }
             return reference;
         }
     }

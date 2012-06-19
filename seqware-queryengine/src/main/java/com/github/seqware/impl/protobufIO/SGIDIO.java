@@ -19,18 +19,15 @@ package com.github.seqware.impl.protobufIO;
 import com.github.seqware.dto.QESupporting;
 import com.github.seqware.dto.QESupporting.SGIDPB;
 import com.github.seqware.util.SGID;
-import java.util.UUID;
 
 /**
  *
  * @author dyuen
  */
-public class SGIDIO extends SGID {
+public class SGIDIO {
 
     public static SGID pb2m(SGIDPB sgidpg) {
-        SGID sgid = new SGID();
-        sgid.setUuid(new UUID(sgidpg.getMostSigBits(), sgidpg.getLeastSigBits()));
-        return sgid;
+        return new SGID(sgidpg.getMostSigBits(), sgidpg.getLeastSigBits());
     }
 
     public static SGIDPB m2pb(SGID sgid) {

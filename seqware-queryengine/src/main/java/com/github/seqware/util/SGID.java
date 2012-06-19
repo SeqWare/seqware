@@ -20,7 +20,6 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.KryoSerializable;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.github.seqware.model.Feature;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -36,6 +35,13 @@ public class SGID implements Serializable, KryoSerializable {
 
     public SGID() {
         uuid = UUID.randomUUID();
+    }
+    
+    /**
+     * Back-end constructor
+     */
+    public SGID(long mostSig, long leastSig) {
+        uuid = new UUID(mostSig, leastSig);
     }
 
     @Override

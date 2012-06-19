@@ -1,8 +1,8 @@
 package com.github.seqware.model;
 
-import com.github.seqware.model.interfaces.BaseBuilder;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.impl.AtomImpl;
+import com.github.seqware.model.interfaces.BaseBuilder;
 import com.github.seqware.util.SGID;
 import com.github.seqware.util.SeqWareIterable;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -22,6 +22,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @author dyuen
  */
 public class Tag extends AtomImpl<Tag>  {
+    public final static String prefix = "Tag";
 
     private TagSet tagSet = null;
     private String key = null;
@@ -83,7 +84,15 @@ public class Tag extends AtomImpl<Tag>  {
         return vType;
     }
     
-    
+    @Override
+    public Class getHBaseClass() {
+        return Tag.class;
+    }
+
+    @Override
+    public String getHBasePrefix() {
+        return Tag.prefix;
+    }
 
     @Override
     public boolean equals(Object obj) {

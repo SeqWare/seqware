@@ -17,6 +17,7 @@
 package com.github.seqware.impl;
 
 import com.github.seqware.model.Atom;
+import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.util.SGID;
 import java.io.File;
 import java.io.IOException;
@@ -29,14 +30,14 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 
 /**
  * Stores objects in the temporary directory of the disk
- * 
+ *
  * @author dyuen
  */
-public class TmpFileStorage implements StorageInterface {
+public class TmpFileStorage extends StorageInterface {
 
     private static final boolean PERSIST = true;
     private File tempDir = new File(FileUtils.getTempDirectory(), this.getClass().getCanonicalName());
-    private Map<SGID, File> map = new HashMap<SGID, File>();
+    private Map<SGID, FileTypePair> map = new HashMap<SGID, FileTypePair>();
     private final SerializationInterface serializer;
 
     public TmpFileStorage(SerializationInterface i) {
@@ -51,11 +52,13 @@ public class TmpFileStorage implements StorageInterface {
                     boolean oldClassesFound = false;
                     for (File f : FileUtils.listFiles(tempDir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE)) {
                         byte[] objData = FileUtils.readFileToByteArray(f);
-                        try{
-                            Atom suspect = serializer.deserialize(objData, Atom.class);
-                            map.put(suspect.getSGID(), f);
-                        } catch(Exception e){
-                            if (!oldClassesFound){
+                        try {
+                            String[] names = f.getName().split("\\.");
+                            Class cl = biMap.inverse().get(names[0]);
+                            Atom suspect = (Atom) serializer.deserialize(objData, cl);
+                            map.put(suspect.getSGID(), new FileTypePair(f,cl));
+                        } catch (Exception e) {
+                            if (!oldClassesFound) {
                                 oldClassesFound = true;
                                 //TODO: we'll probably want something cooler, but for now, if we run into an old version, just warn about it
                                 Logger.getLogger(TmpFileStorage.class.getName()).log(Level.INFO, "Obselete classes detected in {0} you may want to clean it", tempDir.getAbsolutePath());
@@ -75,12 +78,13 @@ public class TmpFileStorage implements StorageInterface {
 
     @Override
     public void serializeAtomToTarget(Atom obj) {
+        String prefix = ((AtomImpl)obj).getHBasePrefix();
         // let's just clone everything on store to simulate hbase
-        File target = new File(tempDir, obj.getSGID().toString());
+        File target = new File(tempDir, prefix + separator + obj.getSGID().toString());
         byte[] serialRep = serializer.serialize(obj);
         try {
             FileUtils.writeByteArrayToFile(target, serialRep);
-            map.put(obj.getSGID(), target);
+            map.put(obj.getSGID(), new FileTypePair(target, ((AtomImpl)obj).getHBaseClass()));
         } catch (IOException ex) {
             Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, "Failiure to serialize", ex);
             System.exit(-1);
@@ -92,15 +96,15 @@ public class TmpFileStorage implements StorageInterface {
         // let's just clone everything on store to simulate hbase
         byte[] objData;
         try {
-            if (sgid == null){
+            if (sgid == null) {
                 return null;
             }
-            File target = map.get(sgid);
+            FileTypePair target = map.get(sgid);
             if (target == null) {
                 return null;
             }
-            objData = FileUtils.readFileToByteArray(target);
-            Atom suspect = serializer.deserialize(objData, Atom.class);
+            objData = FileUtils.readFileToByteArray(target.file);
+            Atom suspect = (Atom) serializer.deserialize(objData, target.cl);
             return suspect;
         } catch (IOException ex) {
             Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, "Failure to deserialize", ex);
@@ -121,5 +125,20 @@ public class TmpFileStorage implements StorageInterface {
     @Override
     public Iterable<SGID> getAllAtoms() {
         return map.keySet();
+    }
+
+    @Override
+    public <T extends Atom> T deserializeTargetToAtom(SGID sgid, Class<T> t) {
+        return (T) this.deserializeTargetToAtom(sgid);
+    }
+
+    public class FileTypePair {
+        private File file;
+        private Class cl;
+
+        public FileTypePair(File file, Class cl) {
+            this.file = file;
+            this.cl = cl;
+        }
     }
 }

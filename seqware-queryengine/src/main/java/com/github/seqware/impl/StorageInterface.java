@@ -16,37 +16,53 @@
  */
 package com.github.seqware.impl;
 
-import com.github.seqware.model.Atom;
+import com.github.seqware.model.*;
 import com.github.seqware.util.SGID;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
 
 /**
  * Defines a very basic interface that allows us to abstract whether we write to 
  * files or to databases or just keep things in memory
  * @author dyuen
  */
-public interface StorageInterface {
+public abstract class StorageInterface {
+    protected BiMap<Class, String> biMap = new ImmutableBiMap.Builder<Class, String>().put(Feature.class, Feature.prefix)
+            .put(FeatureSet.class, FeatureSet.prefix).put(Analysis.class, Analysis.prefix).put(AnalysisSet.class, AnalysisSet.prefix)
+            .put(Reference.class, Reference.prefix).put(ReferenceSet.class, ReferenceSet.prefix).put(Tag.class, Tag.prefix)
+            .put(TagSet.class, TagSet.prefix).put(User.class, User.prefix).put(Group.class, Group.prefix).build();
+    protected static final String separator = ".";
     /**
      * Generically serialize a Atom into the interface
      * @param obj 
      */
-    public void serializeAtomToTarget(Atom obj);
+    public abstract void serializeAtomToTarget(Atom obj);
 
     /**
      * Generically get back a Atom from the store using a sgid 
      * @param sgid
      * @return null if no Atom is present with this sgid
      */
-    public Atom deserializeTargetToAtom(SGID sgid);
+    public abstract Atom deserializeTargetToAtom(SGID sgid);
+    
+    /**
+     * Generically get back a specific class of Atom from the store using a sgid 
+     * @param <T>
+     * @param sgid
+     * @param t
+     * @return 
+     */
+    public abstract <T extends Atom> T deserializeTargetToAtom(SGID sgid, Class<T> t);
     
     /**
      * For debugging or very non-optimal implementations
      */
-    public Iterable<SGID> getAllAtoms();
+    public abstract Iterable<SGID> getAllAtoms();
     
     
     /**
      * For debugging or testing purposes, this will wipe out all objects in the 
      * serialization store
      */
-    public void clearStorage();
+    public abstract void clearStorage();
 }

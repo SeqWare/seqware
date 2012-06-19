@@ -2,18 +2,36 @@ package QueryEngine;
 
 option java_package = "com.github.seqware.dto";
 
+message AtomPB {
+    optional SGIDPB sgid = 1;
+    optional SGIDPB precedingID = 2;
+    optional int64 date = 3;
+    repeated TagPB tags = 4;
+}
+
+message FeatureAtomPB{
+    optional FSGIDPB sgid = 1;
+    optional FSGIDPB precedingID = 2;
+    optional int64 date = 3;
+    repeated TagPB tags = 4;
+}
+
 message SGIDPB {
     // just store the fields to create a UUID
     optional int64 mostSigBits = 1;
     optional int64 leastSigBits = 2;
 }
 
-message TagPB {
-    // atom/Atom stuff
+message FSGIDPB {
     optional SGIDPB sgid = 1;
-    optional SGIDPB precedingID = 2;
-    optional TagPB precedingVersion = 3;
-    optional int64 date = 4;
+    optional string rowKey = 2;
+    optional SGIDPB featureSetID = 3; 
+}
+
+message TagPB {
+    // atom/molecule stuff
+    optional AtomPB atom = 1;
+    optional TagPB precedingVersion = 2;
     // Tag-specific
     optional string key = 5;
     optional string predicate = 6;
@@ -28,7 +46,3 @@ message TagPB {
     optional sint64 vLong = 15;
     optional sint32 vInteger = 16; 
 }
-
-
-
-

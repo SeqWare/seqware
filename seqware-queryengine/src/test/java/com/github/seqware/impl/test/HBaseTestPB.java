@@ -10,6 +10,10 @@ import com.github.seqware.dto.QueryEngine.FeaturePB;
 import com.github.seqware.factory.Factory;
 import com.github.seqware.impl.protobufIO.FeatureIO;
 import com.github.seqware.model.Feature;
+import com.github.seqware.model.FeatureSet;
+import com.github.seqware.model.impl.inMemory.InMemoryFeatureSet;
+import com.github.seqware.model.impl.inMemory.InMemoryReference;
+import com.github.seqware.util.FSGID;
 import junit.framework.Assert;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -57,12 +61,18 @@ public class HBaseTestPB {
         HTable table = new HTable(config, TEST_TABLE);
 
         // Get one feature to serialize/deserialize:
-        Feature testFeature = Factory.getModelManager().buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
-        FeaturePB fpb = FeatureIO.m2pb(testFeature);
+        Feature testFeature = Feature.newBuilder().setId("chr16").setStart(1000000).setStop(1000100).build();
+        FeatureSet set = InMemoryFeatureSet.newBuilder().setReference(InMemoryReference.newBuilder().setName("testRef").build()).build();
+        // we need to upgrade the feature with a link to an enforced FeatureSet like in the real back-end
+        FSGID fsgid = new FSGID(testFeature.getSGID(),testFeature, set);
+        testFeature.impersonate(fsgid, testFeature.getCreationTimeStamp(), testFeature.getPrecedingSGID());
+        
+        FeatureIO fIO = new FeatureIO();
+        FeaturePB fpb = fIO.m2pb(testFeature);
         
         ByteArrayOutputStream sgidBytes = new ByteArrayOutputStream();
         Output o = new Output(sgidBytes);
-        fpb.getSgid().writeTo(o);
+        fpb.getAtom().getSgid().writeTo(o);
         o.close();
 
         ByteArrayOutputStream featureBytes = new ByteArrayOutputStream();
@@ -83,7 +93,8 @@ public class HBaseTestPB {
 
         // We should get back a Feature object:
         Input result = new Input(new ByteArrayInputStream(value));
-        Feature deserializedFeature = FeatureIO.pb2m(FeaturePB.parseFrom(result));
+        Feature deserializedFeature = fIO.pb2m(FeaturePB.parseFrom(result));
+        
 
         // NOTE This test fails right now, which is due to the equals() implementation
         //      in Feature. When inspecting the features in debugging mode, then they
@@ -100,7 +111,7 @@ public class HBaseTestPB {
                 KeyValue[] kvArray = rr.raw();
                 for (KeyValue kv : kvArray) {
                     result = new Input(new ByteArrayInputStream(kv.getValue()));
-                    deserializedFeature = FeatureIO.pb2m(FeaturePB.parseFrom(result));
+                    deserializedFeature = fIO.pb2m(FeaturePB.parseFrom(result));
                     // NOTE Same as above: fails due to equals() implementation.
                     Assert.assertEquals(testFeature, deserializedFeature);
                     //testFeature.equals(deserializedFeature);

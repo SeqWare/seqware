@@ -115,6 +115,13 @@ public class ACL implements Serializable {
             }
             return this;
         }
+        
+        public Builder setRights(List<Boolean> rights) {
+            assert (rights.size() == 6); 
+            acl.rights.clear();
+            acl.rights.addAll(rights);
+            return this;
+        }
 
         public ACL build() {
             if (acl.rights.size() != 6) {

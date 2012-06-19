@@ -39,7 +39,16 @@ public interface FeatureStoreInterface {
      * @param sgid globally unique id
      * @return a object from the back-end
      */
-    public Atom getAtomBySGID(SGID uuid);
+    public Atom getAtomBySGID(SGID sgid);
+    
+    /**
+     * Find an object in the back-end when a specific class is known
+     * @param <T>
+     * @param sgid globally unique id
+     * @param t type of class to retrieve (used as a filter)
+     * @return 
+     */
+    public <T extends Atom> T getAtomBySGID(SGID sgid, Class<T> t);
 
     /**
      * Gets all users in all groups

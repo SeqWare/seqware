@@ -16,7 +16,9 @@
  */
 package com.github.seqware.impl;
 
-import com.github.seqware.model.*;
+import com.github.seqware.model.Atom;
+import com.github.seqware.model.Feature;
+import com.github.seqware.model.FeatureSet;
 import com.github.seqware.util.FSGID;
 import com.github.seqware.util.SGID;
 import java.util.ArrayList;

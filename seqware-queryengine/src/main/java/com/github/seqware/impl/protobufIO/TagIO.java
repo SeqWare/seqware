@@ -21,15 +21,15 @@ import com.github.seqware.dto.QESupporting.TagPB;
 import com.github.seqware.model.Tag;
 import com.github.seqware.util.SGID;
 import com.google.protobuf.ByteString;
-import java.util.Date;
 
 /**
  *
  * @author dyuen
  */
-public class TagIO {
+public class TagIO implements ProtobufTransferInterface<TagPB, Tag>{
 
-    public static Tag pb2m(TagPB tag) {
+    @Override
+    public Tag pb2m(TagPB tag) {
         Tag.Builder builder = Tag.newBuilder().setKey(tag.getKey());
         builder = tag.hasPredicate() ? builder.setPredicate(tag.getPredicate()) : builder;
         // tag value
@@ -50,12 +50,15 @@ public class TagIO {
         }
         
         Tag rTag = builder.build();
-        SGID pID = tag.hasPrecedingID() ? SGIDIO.pb2m(tag.getPrecedingID()) : null;
-        rTag.impersonate(SGIDIO.pb2m(tag.getSgid()), new Date(tag.getDate()), pID);
+        UtilIO.handlePB2Atom(tag.getAtom(), rTag);
+        if (tag.hasPrecedingVersion()){
+           rTag.setPrecedingVersion(pb2m(tag.getPrecedingVersion()));
+        }
         return rTag;
     }
 
-    public static TagPB m2pb(Tag tag) {
+    @Override
+    public TagPB m2pb(Tag tag) {
         QESupporting.TagPB.Builder builder = QESupporting.TagPB.newBuilder().setKey(tag.getKey());
         builder = tag.getPredicate() != null ? builder.setPredicate(tag.getPredicate()) : builder;
         // tag value
@@ -75,9 +78,10 @@ public class TagIO {
             builder.setVString((String)tag.getValue());
         }
         // TODO: TagSet not ready
-        builder.setSgid(SGIDIO.m2pb(tag.getSGID()));
-        builder = tag.getPrecedingSGID() != null ? builder.setPrecedingID(SGIDIO.m2pb(tag.getPrecedingSGID()))  : builder;
-        builder.setDate(tag.getCreationTimeStamp().getTime());
+         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), tag));
+        if (tag.getPrecedingVersion() != null){
+            builder.setPrecedingVersion(m2pb(tag.getPrecedingVersion()));
+        }
         TagPB fMesg = builder.build();
         return fMesg;
     }

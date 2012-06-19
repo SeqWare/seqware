@@ -1,9 +1,10 @@
 package com.github.seqware.model;
 
-import com.github.seqware.model.interfaces.BaseBuilder;
-import com.github.seqware.model.interfaces.AbstractSet;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.impl.MoleculeImpl;
+import com.github.seqware.model.interfaces.AbstractSet;
+import com.github.seqware.model.interfaces.BaseBuilder;
+import com.github.seqware.util.SGID;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -19,11 +20,7 @@ import java.util.Set;
  * @author jbaran
  */
 public abstract class FeatureSet extends MoleculeImpl<FeatureSet> implements AbstractSet<FeatureSet, Feature> {
-
-    /**
-     * Associated reference.
-     */
-    private Reference reference;
+    public final static String prefix = "FeatureSet";
 
     /**
      * Creates an instance of an anonymous feature set.
@@ -31,7 +28,6 @@ public abstract class FeatureSet extends MoleculeImpl<FeatureSet> implements Abs
     protected FeatureSet() {
         super();
     }
-    
         
     /**
      * Get the description associated with this FeatureSet
@@ -70,9 +66,13 @@ public abstract class FeatureSet extends MoleculeImpl<FeatureSet> implements Abs
      *
      * @return reference for the feature set
      */
-    public Reference getReference() {
-        return reference;
-    }
+    public abstract Reference getReference();
+    
+    /**
+     * Get the referenceID for the associated reference
+     * @return 
+     */
+    public abstract SGID getReferenceID();
     
      /**
      * Create an FeatureSet builder started with a copy of this
@@ -85,10 +85,7 @@ public abstract class FeatureSet extends MoleculeImpl<FeatureSet> implements Abs
 
         public FeatureSet aSet;
 
-        public Builder setReference(Reference reference) {
-            aSet.reference = reference;
-            return this;
-        }
+        public abstract Builder setReference(Reference reference);
         
         @Override
         public FeatureSet build() {
@@ -104,5 +101,6 @@ public abstract class FeatureSet extends MoleculeImpl<FeatureSet> implements Abs
         }
         
         public abstract FeatureSet.Builder setDescription(String description);
+        public abstract FeatureSet.Builder setReferenceID(SGID referenceSGID);
     }
 }

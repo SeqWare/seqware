@@ -38,6 +38,16 @@ public class InMemoryReferenceSet extends AbstractInMemorySet<ReferenceSet, Refe
         return b;
     }
 
+    @Override
+    public Class getHBaseClass() {
+        return ReferenceSet.class;
+    }
+
+    @Override
+    public String getHBasePrefix() {
+        return ReferenceSet.prefix;
+    }
+
     public static class Builder extends ReferenceSet.Builder {
         
         public Builder(){

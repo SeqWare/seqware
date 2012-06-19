@@ -63,10 +63,6 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
         store(newAtom);
         // update the backend
         fsi.serializeAtomToTarget(newAtom);
-//        listOfEverything.add(newAtom.getSGID());
-//        if (obj instanceof Molecule) {
-//            versionsOfEverything.put(newAtom.getSGID(), obj.getSGID());
-//        }
         // change the obj we have a reference to look like the new object that was created
         ((AtomImpl)obj).impersonate(newAtom.getSGID(), newAtom.getCreationTimeStamp(), oldSGID);
     }
@@ -90,13 +86,13 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
         Atom p = fsi.deserializeTargetToAtom(sgid);
         assert(p == null || p.getSGID().equals(sgid));
         return p;
-//        for (UUID u : listOfEverything) {
-//            Atom p = fsi.deserializeTargetToAtom(u);
-//            if (p.getSGID().equals(uuid)) {
-//                return p;
-//            }
-//        }
-//        return null;
+    }
+    
+    @Override
+    public <T extends Atom> T getAtomBySGID(SGID sgid, Class<T> t) {
+        T p = fsi.deserializeTargetToAtom(sgid, t);
+        assert(p == null || p.getSGID().equals(sgid));
+        return p;
     }
 
     @Override

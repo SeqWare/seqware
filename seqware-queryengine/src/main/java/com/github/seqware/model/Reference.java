@@ -1,9 +1,9 @@
 package com.github.seqware.model;
 
-import com.github.seqware.model.interfaces.BaseBuilder;
 import com.github.seqware.factory.ModelManager;
-import com.github.seqware.impl.SimpleModelManager;
-import com.github.seqware.model.impl.MoleculeImpl;
+import com.github.seqware.model.impl.AtomImpl;
+import com.github.seqware.model.interfaces.AbstractSet;
+import com.github.seqware.model.interfaces.BaseBuilder;
 import java.util.Iterator;
 
 /**
@@ -14,16 +14,8 @@ import java.util.Iterator;
  * @author dyuen
  * @author jbaran
  */
-public abstract class Reference extends MoleculeImpl {
-
-    private String name = "Reference name place-holder";
-
-    /**
-     * Create a anonymous new reference
-     */
-    protected Reference() {
-        super();
-    }
+public interface Reference extends AbstractSet<Reference, FeatureSet> {
+    public final static String prefix = "Reference";
 
     /**
      * Get the list of feature sets associated with this reference.
@@ -37,9 +29,7 @@ public abstract class Reference extends MoleculeImpl {
      *
      * @return return the name of this reference.
      */
-    public String getName() {
-        return name;
-    }
+    public String getName();
 
     /**
      * Create an ACL builder started with a copy of this
@@ -53,17 +43,14 @@ public abstract class Reference extends MoleculeImpl {
 
         public Reference reference;
 
-        public Reference.Builder setName(String name) {
-            reference.name = name;
-            return this;
-        }
+        public abstract Reference.Builder setName(String name);
 
         @Override
         public abstract Reference build();
 
         @Override
         public Builder setManager(ModelManager aThis) {
-            reference.setManager(aThis);
+            ((AtomImpl)reference).setManager(aThis);
             return this;
         }
     }

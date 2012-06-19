@@ -10,6 +10,7 @@ import com.github.seqware.model.interfaces.BaseBuilder;
  * @author dyuen
  */
 public interface Group extends AbstractSet<Group, User> {
+    public final static String prefix = "Group";
 
     /**
      * Get the name of the group

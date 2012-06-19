@@ -1,16 +1,14 @@
 package com.github.seqware.model;
 
-import com.github.seqware.model.interfaces.BaseBuilder;
 import com.github.seqware.factory.ModelManager;
-import com.github.seqware.impl.SimpleModelManager;
 import com.github.seqware.model.impl.MoleculeImpl;
+import com.github.seqware.model.interfaces.BaseBuilder;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -22,6 +20,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @author dyuen
  */
 public class User extends MoleculeImpl<User> {
+    public final static String prefix = "User";
 
     private String firstName;
     private String lastName;
@@ -135,6 +134,14 @@ public class User extends MoleculeImpl<User> {
     public static User.Builder newBuilder() {
         return new User.Builder();
     }
+
+    /**
+     * A hashed password for the user
+     * @return 
+     */
+    public String getPassword() {
+        return password;
+    }
     
     /**
      * Create an ACL builder started with a copy of this
@@ -145,6 +152,16 @@ public class User extends MoleculeImpl<User> {
         User.Builder b = new User.Builder();
         b.user = this.copy(false);
         return b;
+    }
+
+    @Override
+    public Class getHBaseClass() {
+        return User.class;
+    }
+
+    @Override
+    public String getHBasePrefix() {
+        return User.prefix;
     }
 
     public static class Builder implements BaseBuilder {

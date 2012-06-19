@@ -16,21 +16,18 @@
  */
 package com.github.seqware.impl.protobufIO;
 
-import com.github.seqware.dto.QESupporting.TagPB;
 import com.github.seqware.dto.QueryEngine;
 import com.github.seqware.dto.QueryEngine.FeaturePB;
 import com.github.seqware.model.Feature;
-import com.github.seqware.model.Tag;
-import com.github.seqware.util.SGID;
-import java.util.Date;
 
 /**
  *
  * @author dyuen
  */
-public class FeatureIO {
+public class FeatureIO implements ProtobufTransferInterface<FeaturePB, Feature> {
 
-    public static Feature pb2m(FeaturePB feature) {
+    @Override
+    public Feature pb2m(FeaturePB feature) {
         Feature.Builder builder = Feature.newBuilder();
         builder = feature.hasPragma() ? builder.setPragma(feature.getPragma()) : builder;
         builder = feature.hasSource() ? builder.setSource(feature.getSource()) : builder;
@@ -41,15 +38,15 @@ public class FeatureIO {
         builder.setStart(feature.getStart()).setStop(feature.getStop());
         builder.setStrand(Feature.Strand.valueOf(feature.getStrand().name()));
         Feature fMesg = builder.build();
-        for (TagPB t : feature.getTagsList()) {
-            fMesg.associateTag(TagIO.pb2m(t));
+        UtilIO.handlePB2Atom(feature.getAtom(), fMesg);
+        if (feature.hasPrecedingVersion()){
+           fMesg.setPrecedingVersion(pb2m(feature.getPrecedingVersion()));
         }
-        SGID pID = feature.hasPrecedingID() ? SGIDIO.pb2m(feature.getPrecedingID()) : null;
-        fMesg.impersonate(SGIDIO.pb2m(feature.getSgid()), new Date(feature.getDate()), pID);
         return fMesg;
     }
 
-    public static FeaturePB m2pb(Feature feature) {
+    @Override
+    public FeaturePB m2pb(Feature feature) {
         QueryEngine.FeaturePB.Builder builder = QueryEngine.FeaturePB.newBuilder();
         builder = feature.getPragma() != null ? builder.setPragma(feature.getPragma()) : builder;
         builder = feature.getSource() != null ? builder.setSource(feature.getSource()) : builder;
@@ -59,11 +56,9 @@ public class FeatureIO {
         builder = feature.getId() != null ? builder.setId(feature.getId()) : builder;
         builder.setStart(feature.getStart()).setStop(feature.getStop());
         builder.setStrand(FeaturePB.StrandPB.valueOf(feature.getStrand().name()));
-        builder.setSgid(SGIDIO.m2pb(feature.getSGID()));
-        builder = feature.getPrecedingSGID() != null ?  builder.setPrecedingID(SGIDIO.m2pb(feature.getPrecedingSGID())) : builder;
-        builder.setDate(feature.getCreationTimeStamp().getTime());
-        for (Tag t : feature.getTags()) {
-            builder.addTags(TagIO.m2pb(t));
+        builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), feature));
+        if (feature.getPrecedingVersion() != null){
+            builder.setPrecedingVersion(m2pb(feature.getPrecedingVersion()));
         }
         FeaturePB fMesg = builder.build();
         return fMesg;
