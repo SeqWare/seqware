@@ -44,10 +44,12 @@ public class Feature extends AtomImpl<Feature> {
     private long stop = 0;
     private Strand strand = null;
 
+    public enum AdditionalAttributeType {STRING, FLOAT, DOUBLE, LONG, INTEGER };
+
     /**
      * Additional attributes can be freely added via a map.
      */
-    private HashMap<String, Object> additionalAttributes = null;
+    private HashMap<String, AdditionalAttributeType> additionalAttributes = null;
 
     private Feature() {
         super();
@@ -159,7 +161,7 @@ public class Feature extends AtomImpl<Feature> {
      *
      * @return A map of additional attributes.
      */
-    public Map<String, Object> getAdditionalAttributes() {
+    public Map<String, AdditionalAttributeType> getAdditionalAttributes() {
         return this.additionalAttributes;
     }
 
