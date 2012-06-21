@@ -2,6 +2,8 @@ package com.github.seqware.model.interfaces;
 
 import com.github.seqware.model.Group;
 import com.github.seqware.model.User;
+import com.github.seqware.util.LazyReference;
+import com.github.seqware.util.SGID;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,8 +27,10 @@ import org.apache.commons.lang.SerializationUtils;
  */
 public class ACL implements Serializable {
 
-    private User owner = null;
-    private Group group = null;
+    private LazyReference<User> owner = new LazyReference<User>();
+    private LazyReference<Group> group = new LazyReference<Group>();
+    //private User owner = null;
+    //private Group group = null;
     private List<Boolean> rights = new ArrayList<Boolean>();
 
     /**
@@ -43,7 +47,7 @@ public class ACL implements Serializable {
      * @return User that owns the object
      */
     public User getOwner() {
-        return owner;
+        return owner.get();
     }
 
     /**
@@ -52,7 +56,25 @@ public class ACL implements Serializable {
      * @return Group that the object belongs to
      */
     public Group getGroup() {
-        return group;
+        return group.get();
+    }
+    
+        /**
+     * Get the owner for the object
+     *
+     * @return User that owns the object
+     */
+    public SGID getOwnerSGID() {
+        return owner.getSGID();
+    }
+
+    /**
+     * Get the group for the object
+     *
+     * @return Group that the object belongs to
+     */
+    public SGID getGroupSGID() {
+        return group.getSGID();
     }
 
     /**
@@ -88,22 +110,42 @@ public class ACL implements Serializable {
         private ACL acl = new ACL();
 
         /**
-         * Set the group for the current Atom
+         * Set the group permissions
          *
          * @param group
          */
         public Builder setGroup(Group group) {
-            acl.group = group;
+            acl.group.set(group);
+            return this;
+        }
+        
+        /**
+         * Set the SGID for the group permissions
+         *
+         * @param group
+         */
+        public Builder setGroup(SGID group) {
+            acl.group.setSGID(group);
             return this;
         }
 
         /**
-         * Set the owner for the current Atom
+         * Set the SGID for the owner permissions
+         *
+         * @param owner
+         */
+        public Builder setOwner(SGID owner) {
+            acl.owner.setSGID(owner);
+            return this;
+        }
+
+        /**
+         * Set the user permissions
          *
          * @param owner
          */
         public Builder setOwner(User owner) {
-            acl.owner = owner;
+            acl.owner.set(owner);
             return this;
         }
 

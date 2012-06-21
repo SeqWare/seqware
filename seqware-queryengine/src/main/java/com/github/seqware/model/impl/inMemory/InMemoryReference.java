@@ -37,7 +37,7 @@ public class InMemoryReference extends AbstractInMemorySet<Reference, FeatureSet
     @Override
     public Reference.Builder toBuilder() {
         InMemoryReference.Builder b = new InMemoryReference.Builder();
-        b.reference = (Reference) this.copy(false);
+        b.reference = (Reference) this.copy(true);
         return b;
     }
 

@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 public class FSGID extends SGID implements KryoSerializable {
 
     private String rowKey = null;
-    private SGID featureSetID = null;
+    //private SGID featureSetID = null;
 
     @Override
     public String toString() {
@@ -52,7 +52,7 @@ public class FSGID extends SGID implements KryoSerializable {
     public FSGID(SGID sgid, Feature f, FeatureSet fSet) {
         try {
             this.setUuid(sgid.getUuid());
-            this.featureSetID = fSet.getSGID();
+     //       this.featureSetID = fSet.getSGID();
             // generate row key
             StringBuilder builder = new StringBuilder();
             builder.append(fSet.getReference().getName()).append(".").append(f.getId()).append(":").append(padZeros(f.getStart(), HBaseStorage.PAD)).append(".feature.").append(f.getVersion());
@@ -77,14 +77,14 @@ public class FSGID extends SGID implements KryoSerializable {
         return (buffer.toString());
     }
 
-    /**
-     * Get the ID for the associated feature set
-     *
-     * @return
-     */
-    public SGID getFeatureSetID() {
-        return featureSetID;
-    }
+//    /**
+//     * Get the ID for the associated feature set
+//     *
+//     * @return
+//     */
+//    public SGID getFeatureSetID() {
+//        return featureSetID;
+//    }
 
     /**
      * Get the HBase-style row-key for this Feature
@@ -100,8 +100,8 @@ public class FSGID extends SGID implements KryoSerializable {
         // doesn't seem to inherit properly?
         output.writeLong(this.getUuid().getLeastSignificantBits());
         output.writeLong(this.getUuid().getMostSignificantBits());
-        output.writeLong(this.featureSetID.getUuid().getLeastSignificantBits());
-        output.writeLong(this.featureSetID.getUuid().getMostSignificantBits());
+//        output.writeLong(this.featureSetID.getUuid().getLeastSignificantBits());
+//        output.writeLong(this.featureSetID.getUuid().getMostSignificantBits());
         output.writeString(rowKey);
     }
 
@@ -112,14 +112,14 @@ public class FSGID extends SGID implements KryoSerializable {
         this.setUuid(new UUID(mostSig, leastSig));
         leastSig = input.readLong();
         mostSig = input.readLong();
-        this.featureSetID = new SGID();
-        this.featureSetID.setUuid(new UUID(mostSig, leastSig));
+//        this.featureSetID = new SGID();
+//        this.featureSetID.setUuid(new UUID(mostSig, leastSig));
         this.rowKey = input.readString();
     }
 
-    public void setFeatureSetID(SGID featureSetID) {
-        this.featureSetID = featureSetID;
-    }
+//    public void setFeatureSetID(SGID featureSetID) {
+//        this.featureSetID = featureSetID;
+//    }
 
     public void setRowKey(String rowKey) {
         this.rowKey = rowKey;

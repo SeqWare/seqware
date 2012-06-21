@@ -18,12 +18,8 @@ package com.github.seqware.impl.protobufIO;
 
 import com.github.seqware.dto.QESupporting;
 import com.github.seqware.dto.QESupporting.FSGIDPB;
-import com.github.seqware.impl.HBaseStorage;
 import com.github.seqware.util.FSGID;
-import com.github.seqware.util.SGID;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -35,7 +31,7 @@ public class FSGIDIO {
         FSGID sgid = new FSGID();
         sgid.setUuid(new UUID(pb.getSgid().getMostSigBits(), pb.getSgid().getLeastSigBits()));
         sgid.setRowKey(pb.getRowKey());
-        sgid.setFeatureSetID(new SGID(pb.getFeatureSetID().getMostSigBits(), pb.getFeatureSetID().getLeastSigBits()));
+//        sgid.setFeatureSetID(new SGID(pb.getFeatureSetID().getMostSigBits(), pb.getFeatureSetID().getLeastSigBits()));
         return sgid;
     }
 
@@ -43,7 +39,7 @@ public class FSGIDIO {
         QESupporting.FSGIDPB.Builder builder = QESupporting.FSGIDPB.newBuilder();
         builder.setSgid(SGIDIO.m2pb(sgid));
         builder.setRowKey((sgid).getRowKey());
-        builder.setFeatureSetID(SGIDIO.m2pb((sgid).getFeatureSetID()));
+//        builder.setFeatureSetID(SGIDIO.m2pb((sgid).getFeatureSetID()));
         FSGIDPB fMesg = builder.build();
         return fMesg;
     }

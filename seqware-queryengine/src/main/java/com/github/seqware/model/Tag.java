@@ -3,8 +3,10 @@ package com.github.seqware.model;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.model.interfaces.BaseBuilder;
+import com.github.seqware.util.InMemoryIterable;
 import com.github.seqware.util.SGID;
 import com.github.seqware.util.SeqWareIterable;
+import java.util.ArrayList;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -171,7 +173,7 @@ public class Tag extends AtomImpl<Tag>  {
      */
     @Override
     public SeqWareIterable<Tag> getTags() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new InMemoryIterable(new ArrayList<Tag>());
     }
 
     public static class Builder implements BaseBuilder {
@@ -218,7 +220,9 @@ public class Tag extends AtomImpl<Tag>  {
             if (tag.key == null) {
                 throw new RuntimeException("Invalid build of Tag");
             }
-            tag.getManager().objectCreated(tag);
+            if (tag.getManager() != null){
+                tag.getManager().objectCreated(tag);
+            }
             return tag;
         }
 

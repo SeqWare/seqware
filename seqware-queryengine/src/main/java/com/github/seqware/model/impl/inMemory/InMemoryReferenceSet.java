@@ -34,7 +34,7 @@ public class InMemoryReferenceSet extends AbstractInMemorySet<ReferenceSet, Refe
     @Override
     public InMemoryReferenceSet.Builder toBuilder() {
         InMemoryReferenceSet.Builder b = new InMemoryReferenceSet.Builder();
-        b.aSet = (InMemoryReferenceSet) this.copy(false);
+        b.aSet = (InMemoryReferenceSet) this.copy(true);
         return b;
     }
 
@@ -56,7 +56,9 @@ public class InMemoryReferenceSet extends AbstractInMemorySet<ReferenceSet, Refe
 
         @Override
         public ReferenceSet build(boolean newObject) {
-            ((AtomImpl)aSet).getManager().objectCreated((Atom)aSet);
+            if (((AtomImpl)aSet).getManager() != null){
+                ((AtomImpl)aSet).getManager().objectCreated((Atom)aSet);
+            }
             return aSet;
         }
 

@@ -39,9 +39,15 @@ import java.util.Iterator;
  * @author dyuen
  */
 public class UtilIO {
-    
+
     private static final TagIO tagIO = new TagIO();
 
+    /**
+     * Handle deserialization of the core atom
+     *
+     * @param atompb
+     * @param atomImpl
+     */
     public static void handlePB2Atom(QESupporting.AtomPB atompb, AtomImpl atomImpl) {
         for (QESupporting.TagPB t : atompb.getTagsList()) {
             atomImpl.associateTag(tagIO.pb2m(t));
@@ -50,6 +56,13 @@ public class UtilIO {
         atomImpl.impersonate(SGIDIO.pb2m(atompb.getSgid()), new Date(atompb.getDate()), pID);
     }
 
+    /**
+     * Handle serialization of the core atom
+     *
+     * @param atompb
+     * @param atomImpl
+     * @return
+     */
     public static AtomPB handleAtom2PB(QESupporting.AtomPB atompb, AtomImpl atomImpl) {
         QESupporting.AtomPB.Builder builder = atompb.newBuilderForType();
         for (Iterator it = atomImpl.getTags().iterator(); it.hasNext();) {
@@ -59,12 +72,19 @@ public class UtilIO {
         }
         builder.setSgid(SGIDIO.m2pb(atomImpl.getSGID()));
         builder.setDate(atomImpl.getCreationTimeStamp().getTime());
-        if (atomImpl.getPrecedingSGID() != null){
+        if (atomImpl.getPrecedingSGID() != null) {
             builder.setPrecedingID(SGIDIO.m2pb(atomImpl.getPrecedingSGID()));
         }
         return builder.build();
     }
-    
+
+    /**
+     * Handle deserialization of the core atom just for Features FIXME: this
+     * should be collapsible with normal atom
+     *
+     * @param atompb
+     * @param feature
+     */
     public static void handlePB2Atom(QESupporting.FeatureAtomPB atompb, Feature feature) {
         for (QESupporting.TagPB t : atompb.getTagsList()) {
             feature.associateTag(tagIO.pb2m(t));
@@ -73,6 +93,14 @@ public class UtilIO {
         feature.impersonate(FSGIDIO.pb2m(atompb.getSgid()), new Date(atompb.getDate()), pID);
     }
 
+    /**
+     * Handle serialization of the core atom just for Features FIXME: this
+     * should be collapsible with normal atom
+     *
+     * @param atompb
+     * @param feature
+     * @return
+     */
     public static FeatureAtomPB handleAtom2PB(QESupporting.FeatureAtomPB atompb, Feature feature) {
         QESupporting.FeatureAtomPB.Builder builder = atompb.newBuilderForType();
         for (Iterator it = feature.getTags().iterator(); it.hasNext();) {
@@ -80,29 +108,50 @@ public class UtilIO {
             Tag t = (Tag) it.next();
             builder.addTags(tagIO.m2pb(t));
         }
-        builder.setSgid(FSGIDIO.m2pb((FSGID)feature.getSGID())); 
+        builder.setSgid(FSGIDIO.m2pb((FSGID) feature.getSGID()));
         builder.setDate(feature.getCreationTimeStamp().getTime());
-        if (feature.getPrecedingSGID() != null){
-            builder.setPrecedingID(FSGIDIO.m2pb((FSGID)feature.getPrecedingSGID()));
+        if (feature.getPrecedingSGID() != null) {
+            builder.setPrecedingID(FSGIDIO.m2pb((FSGID) feature.getPrecedingSGID()));
         }
         return builder.build();
     }
 
+    /**
+     * This should handle deserialization of ACL
+     *
+     * @param aclpb
+     * @param molImpl
+     */
     public static void handlePB2ACL(QueryEngine.ACLPB aclpb, MoleculeImpl molImpl) {
         ACL.Builder builder = ACL.newBuilder();
         builder.setRights(aclpb.getRightsList());
-        SGID sgid = SGIDIO.pb2m(aclpb.getUser());
-        builder.setOwner((User) Factory.getFeatureStoreInterface().getAtomBySGID(sgid));
-        sgid = SGIDIO.pb2m(aclpb.getGrp());
-        builder.setGroup((Group) Factory.getFeatureStoreInterface().getAtomBySGID(sgid));
+        if (aclpb.hasUser()) {
+            SGID sgid = SGIDIO.pb2m(aclpb.getUser());
+            builder.setOwner(sgid);
+        }
+        if (aclpb.hasGrp()) {
+            SGID sgid = SGIDIO.pb2m(aclpb.getGrp());
+            builder.setGroup(sgid);
+        }
         molImpl.setPermissions(builder.build());
     }
 
+    /**
+     * This should handle serialization of ACL
+     *
+     * @param aclpb
+     * @param molImpl
+     * @return
+     */
     public static ACLPB handleACL2PB(QueryEngine.ACLPB aclpb, MoleculeImpl molImpl) {
         ACLPB.Builder builder = aclpb.newBuilderForType();
         builder.addAllRights(molImpl.getPermissions().getAccess());
-        builder.setUser(SGIDIO.m2pb(molImpl.getPermissions().getOwner().getSGID()));
-        builder.setGrp(SGIDIO.m2pb(molImpl.getPermissions().getGroup().getSGID()));
+        if (molImpl.getPermissions().getOwnerSGID() != null) {
+            builder.setUser(SGIDIO.m2pb(molImpl.getPermissions().getOwnerSGID()));
+        }
+        if (molImpl.getPermissions().getGroupSGID() != null) {
+            builder.setGrp(SGIDIO.m2pb(molImpl.getPermissions().getGroupSGID()));
+        }
         return builder.build();
     }
 }

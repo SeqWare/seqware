@@ -32,28 +32,36 @@ public abstract class AbstractInMemorySet<S extends AbstractSet, T> extends Mole
     @Override
     public S add(T tag) {
         set.add(tag);
-        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+        if (this.getManager() != null){
+            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+        }
         return (S) this;
     }
 
     @Override
     public S add(Set<T> tags) {
         this.set.addAll(tags);
-        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+        if (this.getManager() != null){
+            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+        }
         return (S) this;
     }
     
     @Override
     public S add(T ... tags) {
         this.set.addAll(Arrays.asList(tags));
-        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+        if (this.getManager() != null){
+            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION); 
+        }
         return (S) this;
     }
     
     @Override
     public S remove(T tag) {
         this.set.remove(tag);
-        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+        if (this.getManager() != null){
+            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+        }
         return (S) this;
     }
 

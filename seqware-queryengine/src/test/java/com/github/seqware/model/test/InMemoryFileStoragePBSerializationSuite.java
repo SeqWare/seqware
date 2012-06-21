@@ -25,21 +25,21 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
- *
  * @author dyuen
  */
 @RunWith(DynamicSuite.class)
-public class NonPersistentTestSuite {
+public class InMemoryFileStoragePBSerializationSuite {
 
     @BeforeClass
     public static void setupSuite() {
-        Logger.getLogger(NonPersistentTestSuite.class.getName()).log(Level.INFO, "Running test suite with Apache serialization to a non-persistent back-end");
-        Factory.setFactoryBackendType(Factory.Model_Type.IN_MEMORY, Factory.Storage_Type.IN_MEMORY, Factory.Serialization_Type.APACHE);
+        Logger.getLogger(InMemoryFileStoragePBSerializationSuite.class.getName()).log(Level.INFO, "Running test suite with in-memory objects and PB serialization to the filesystem");
+        Factory.setFactoryBackendType(Factory.Model_Type.IN_MEMORY, Factory.Storage_Type.FILE_STORAGE, Factory.Serialization_Type.PROTOBUF);
+        Factory.getStorage().clearStorage();
     }
     
     @AfterClass
     public static void tearDownSuite(){
-        Logger.getLogger(NonPersistentTestSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
+        Logger.getLogger(InMemoryFileStoragePBSerializationSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
         Factory.setFactoryBackendType(null, null, null);
     }
 }

@@ -5,8 +5,6 @@ import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,7 +23,7 @@ public class FeatureStoreInterfaceTest {
     @BeforeClass
     public static void setupTests(){
         UUID testID = UUID.randomUUID();
-        System.out.println("starting beforeClass in testID: " + testID.toString());
+        //System.out.println("starting beforeClass in testID: " + testID.toString());
         ModelManager mManager = Factory.getModelManager();
         aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy ref").build()).build();
         // create and store some features
@@ -36,7 +34,7 @@ public class FeatureStoreInterfaceTest {
         aSet.add(a2);
         aSet.add(a3);
         mManager.flush();
-        System.out.println("ending beforeClass in testID: " + testID.toString());
+        //System.out.println("ending beforeClass in testID: " + testID.toString());
     }
 
     @Test

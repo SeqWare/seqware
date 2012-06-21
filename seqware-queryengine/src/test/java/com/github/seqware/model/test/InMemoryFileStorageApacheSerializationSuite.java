@@ -34,9 +34,7 @@ public class InMemoryFileStorageApacheSerializationSuite {
     public static void setupSuite() {
         Logger.getLogger(InMemoryFileStorageApacheSerializationSuite.class.getName()).log(Level.INFO, "Running test suite with in-memory objects and apache serialization to the filesystem");
         Factory.setFactoryBackendType(Factory.Model_Type.IN_MEMORY, Factory.Storage_Type.FILE_STORAGE, Factory.Serialization_Type.APACHE);
-        // back-end specific call
-        //TmpFileStorage serial = new TmpFileStorage();
-        //serial.clearStorage();
+        Factory.getStorage().clearStorage();
     }
     
     @AfterClass

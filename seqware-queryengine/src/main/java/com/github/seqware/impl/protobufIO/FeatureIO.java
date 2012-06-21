@@ -19,6 +19,9 @@ package com.github.seqware.impl.protobufIO;
 import com.github.seqware.dto.QueryEngine;
 import com.github.seqware.dto.QueryEngine.FeaturePB;
 import com.github.seqware.model.Feature;
+import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -39,7 +42,7 @@ public class FeatureIO implements ProtobufTransferInterface<FeaturePB, Feature> 
         builder.setStrand(Feature.Strand.valueOf(feature.getStrand().name()));
         Feature fMesg = builder.build();
         UtilIO.handlePB2Atom(feature.getAtom(), fMesg);
-        if (feature.hasPrecedingVersion()){
+        if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && feature.hasPrecedingVersion()){
            fMesg.setPrecedingVersion(pb2m(feature.getPrecedingVersion()));
         }
         return fMesg;
@@ -57,10 +60,23 @@ public class FeatureIO implements ProtobufTransferInterface<FeaturePB, Feature> 
         builder.setStart(feature.getStart()).setStop(feature.getStop());
         builder.setStrand(FeaturePB.StrandPB.valueOf(feature.getStrand().name()));
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), feature));
-        if (feature.getPrecedingVersion() != null){
+        if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && feature.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(feature.getPrecedingVersion()));
         }
         FeaturePB fMesg = builder.build();
         return fMesg;
     }
+
+    @Override
+    public Feature byteArr2m(byte[] arr) {
+        try {
+            FeaturePB userpb = FeaturePB.parseFrom(arr);
+            return pb2m(userpb);
+        } catch (InvalidProtocolBufferException ex) {
+            Logger.getLogger(FeatureSetIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    
 }

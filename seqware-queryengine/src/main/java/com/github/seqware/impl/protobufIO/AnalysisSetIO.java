@@ -27,6 +27,9 @@ import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.model.impl.MoleculeImpl;
 import com.github.seqware.model.impl.inMemory.InMemoryAnalysisSet;
 import com.github.seqware.util.SGID;
+import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -42,7 +45,7 @@ public class AnalysisSetIO implements ProtobufTransferInterface<AnalysisSetPB, A
         AnalysisSet user = builder.build();
         UtilIO.handlePB2Atom(pb.getAtom(), (AtomImpl)user);
         UtilIO.handlePB2ACL(pb.getAcl(), (MoleculeImpl)user);
-        if (pb.hasPrecedingVersion()){
+        if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && pb.hasPrecedingVersion()){
            user.setPrecedingVersion(pb2m(pb.getPrecedingVersion()));
         }
         for(SGIDPB refID : pb.getAnalysisIDsList()){
@@ -61,7 +64,7 @@ public class AnalysisSetIO implements ProtobufTransferInterface<AnalysisSetPB, A
         builder = aSet.getDescription() != null ? builder.setDescription(aSet.getDescription()) : builder;
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), (AtomImpl)aSet));
         builder.setAcl(UtilIO.handleACL2PB(builder.getAcl(), (MoleculeImpl)aSet));
-        if (aSet.getPrecedingVersion() != null){
+        if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && aSet.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(aSet.getPrecedingVersion()));
         }
         for(Analysis ref : aSet){
@@ -69,5 +72,16 @@ public class AnalysisSetIO implements ProtobufTransferInterface<AnalysisSetPB, A
         }
         AnalysisSetPB userpb = builder.build();
         return userpb;
+    }
+
+    @Override
+    public AnalysisSet byteArr2m(byte[] arr) {
+        try {
+            QueryEngine.AnalysisSetPB userpb = QueryEngine.AnalysisSetPB.parseFrom(arr);
+            return pb2m(userpb);
+        } catch (InvalidProtocolBufferException ex) {
+            Logger.getLogger(FeatureSetIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

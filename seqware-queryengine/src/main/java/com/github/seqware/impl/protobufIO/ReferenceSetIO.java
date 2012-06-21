@@ -26,6 +26,9 @@ import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.model.impl.MoleculeImpl;
 import com.github.seqware.model.impl.inMemory.InMemoryReferenceSet;
 import com.github.seqware.util.SGID;
+import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -41,7 +44,7 @@ public class ReferenceSetIO implements ProtobufTransferInterface<ReferenceSetPB,
         ReferenceSet user = builder.build();
         UtilIO.handlePB2Atom(userpb.getAtom(), (AtomImpl)user);
         UtilIO.handlePB2ACL(userpb.getAcl(), (MoleculeImpl)user);
-        if (userpb.hasPrecedingVersion()){
+        if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && userpb.hasPrecedingVersion()){
            user.setPrecedingVersion(pb2m(userpb.getPrecedingVersion()));
         }
         for(SGIDPB refID : userpb.getReferenceIDsList()){
@@ -60,7 +63,7 @@ public class ReferenceSetIO implements ProtobufTransferInterface<ReferenceSetPB,
         builder = sgid.getOrganism() != null ? builder.setOrganism(sgid.getOrganism()) : builder;
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), (AtomImpl)sgid));
         builder.setAcl(UtilIO.handleACL2PB(builder.getAcl(), (MoleculeImpl)sgid));
-        if (sgid.getPrecedingVersion() != null){
+        if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && sgid.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(sgid.getPrecedingVersion()));
         }
         for(Reference ref : sgid){
@@ -68,5 +71,16 @@ public class ReferenceSetIO implements ProtobufTransferInterface<ReferenceSetPB,
         }
         ReferenceSetPB userpb = builder.build();
         return userpb;
+    }
+
+    @Override
+    public ReferenceSet byteArr2m(byte[] arr) {
+        try {
+            QueryEngine.ReferenceSetPB userpb = QueryEngine.ReferenceSetPB.parseFrom(arr);
+            return pb2m(userpb);
+        } catch (InvalidProtocolBufferException ex) {
+            Logger.getLogger(FeatureSetIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

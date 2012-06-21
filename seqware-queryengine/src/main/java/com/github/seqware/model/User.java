@@ -107,6 +107,7 @@ public class User extends MoleculeImpl<User> {
      * @return
      */
     private static String hashedPassword(String password) {
+//        return password;
         String hashword = null;
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
@@ -144,13 +145,13 @@ public class User extends MoleculeImpl<User> {
     }
     
     /**
-     * Create an ACL builder started with a copy of this
+     * Create an User builder started with a copy of this
      * @return 
      */
     @Override
     public User.Builder toBuilder(){
         User.Builder b = new User.Builder();
-        b.user = this.copy(false);
+        b.user = this.copy(true);
         return b;
     }
 
@@ -177,6 +178,11 @@ public class User extends MoleculeImpl<User> {
             user.lastName = lastName;
             return this;
         }
+        
+        public User.Builder setPasswordWithoutHash(String password) {
+            user.password = password;
+            return this;
+        }
 
         public User.Builder setPassword(String password) {
             user.password = hashedPassword(password);
@@ -190,7 +196,9 @@ public class User extends MoleculeImpl<User> {
 
         @Override
         public User build() {
-            user.getManager().objectCreated(user);
+            if (user.getManager() != null){
+                user.getManager().objectCreated(user);
+            }
             return user;
         }
 

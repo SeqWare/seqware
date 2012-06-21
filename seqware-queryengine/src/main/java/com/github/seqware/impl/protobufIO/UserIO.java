@@ -19,6 +19,9 @@ package com.github.seqware.impl.protobufIO;
 import com.github.seqware.dto.QueryEngine;
 import com.github.seqware.dto.QueryEngine.UserPB;
 import com.github.seqware.model.User;
+import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -30,13 +33,13 @@ public class UserIO implements ProtobufTransferInterface<UserPB, User>{
     public User pb2m(UserPB userpb) {
         User.Builder builder = User.newBuilder();
         builder = userpb.hasFirstName() ? builder.setFirstName(userpb.getFirstName()) : builder;
-        builder = userpb.hasLastName()  ? builder.setLastName(userpb.getFirstName()) : builder;
+        builder = userpb.hasLastName()  ? builder.setLastName(userpb.getLastName()) : builder;
         builder = userpb.hasEmailAddress() ? builder.setEmailAddress(userpb.getEmailAddress()) : builder;
-        builder = userpb.hasPassword() ? builder.setPassword(userpb.getPassword()) : builder;
+        builder = userpb.hasPassword() ? builder.setPasswordWithoutHash(userpb.getPassword()) : builder;
         User user = builder.build();
         UtilIO.handlePB2Atom(userpb.getAtom(), user);
         UtilIO.handlePB2ACL(userpb.getAcl(), user);
-        if (userpb.hasPrecedingVersion()){
+        if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && userpb.hasPrecedingVersion()){
            user.setPrecedingVersion(pb2m(userpb.getPrecedingVersion()));
         }
         return user;
@@ -47,15 +50,26 @@ public class UserIO implements ProtobufTransferInterface<UserPB, User>{
     public UserPB m2pb(User sgid) {
         QueryEngine.UserPB.Builder builder = QueryEngine.UserPB.newBuilder();
         builder = sgid.getFirstName() != null ? builder.setFirstName(sgid.getFirstName()) : builder;
-        builder = sgid.getLastName() != null ? builder.setLastName(sgid.getFirstName()) : builder;
+        builder = sgid.getLastName() != null ? builder.setLastName(sgid.getLastName()) : builder;
         builder = sgid.getEmailAddress() != null ? builder.setEmailAddress(sgid.getEmailAddress()) : builder;
         builder = sgid.getPassword() != null ? builder.setPassword(sgid.getPassword()) : builder;
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), sgid));
         builder.setAcl(UtilIO.handleACL2PB(builder.getAcl(), sgid));
-        if (sgid.getPrecedingVersion() != null){
+        if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && sgid.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(sgid.getPrecedingVersion()));
         }
         UserPB userpb = builder.build();
         return userpb;
+    }
+
+    @Override
+    public User byteArr2m(byte[] arr) {
+        try {
+            UserPB userpb = UserPB.parseFrom(arr);
+            return pb2m(userpb);
+        } catch (InvalidProtocolBufferException ex) {
+            Logger.getLogger(FeatureSetIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

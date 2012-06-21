@@ -32,6 +32,8 @@ public class QueryInterfaceTest {
         aSet.add(a2);
         aSet.add(a3);
         aSet.add(a4);
+        //TODO: this test was somewhat invalid, no flush ... causes error ... we may want a new test case with a nice clean error message
+        mManager.flush();
     }
 
     @Test

@@ -26,6 +26,9 @@ import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.model.impl.MoleculeImpl;
 import com.github.seqware.model.impl.inMemory.InMemoryTagSet;
 import com.github.seqware.util.SGID;
+import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -40,7 +43,7 @@ public class TagSetIO implements ProtobufTransferInterface<TagSetPB, TagSet>{
         TagSet user = builder.build();
         UtilIO.handlePB2Atom(userpb.getAtom(), (AtomImpl)user);
         UtilIO.handlePB2ACL(userpb.getAcl(), (MoleculeImpl)user);
-        if (userpb.hasPrecedingVersion()){
+        if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && userpb.hasPrecedingVersion()){
            user.setPrecedingVersion(pb2m(userpb.getPrecedingVersion()));
         }
         for(SGIDPB refID : userpb.getTagIDsList()){
@@ -58,7 +61,7 @@ public class TagSetIO implements ProtobufTransferInterface<TagSetPB, TagSet>{
         builder = sgid.getName() != null ? builder.setName(sgid.getName()) : builder;
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), (AtomImpl)sgid));
         builder.setAcl(UtilIO.handleACL2PB(builder.getAcl(), (MoleculeImpl)sgid));
-        if (sgid.getPrecedingVersion() != null){
+        if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && sgid.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(sgid.getPrecedingVersion()));
         }
         for(Tag ref : sgid){
@@ -66,5 +69,16 @@ public class TagSetIO implements ProtobufTransferInterface<TagSetPB, TagSet>{
         }
         TagSetPB userpb = builder.build();
         return userpb;
+    }
+
+    @Override
+    public TagSet byteArr2m(byte[] arr) {
+        try {
+            QueryEngine.TagSetPB userpb = QueryEngine.TagSetPB.parseFrom(arr);
+            return pb2m(userpb);
+        } catch (InvalidProtocolBufferException ex) {
+            Logger.getLogger(FeatureSetIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }
