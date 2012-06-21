@@ -26,6 +26,9 @@ import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.model.impl.MoleculeImpl;
 import com.github.seqware.model.impl.inMemory.InMemoryGroup;
 import com.github.seqware.util.SGID;
+import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -41,7 +44,7 @@ public class GroupIO implements ProtobufTransferInterface<GroupPB, Group>{
         Group user = builder.build();
         UtilIO.handlePB2Atom(pb.getAtom(), (AtomImpl)user);
         UtilIO.handlePB2ACL(pb.getAcl(), (MoleculeImpl)user);
-        if (pb.hasPrecedingVersion()){
+        if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && pb.hasPrecedingVersion()){
            user.setPrecedingVersion(pb2m(pb.getPrecedingVersion()));
         }
         for(SGIDPB refID : pb.getUsersList()){
@@ -60,7 +63,7 @@ public class GroupIO implements ProtobufTransferInterface<GroupPB, Group>{
         builder = atom.getDescription() != null ? builder.setDescription(atom.getDescription()) : builder;
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), (AtomImpl)atom));
         builder.setAcl(UtilIO.handleACL2PB(builder.getAcl(), (MoleculeImpl)atom));
-        if (atom.getPrecedingVersion() != null){
+        if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && atom.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(atom.getPrecedingVersion()));
         }
         for(User ref : atom){
@@ -68,5 +71,16 @@ public class GroupIO implements ProtobufTransferInterface<GroupPB, Group>{
         }
         GroupPB userpb = builder.build();
         return userpb;
+    }
+
+    @Override
+    public Group byteArr2m(byte[] arr) {
+        try {
+            QueryEngine.GroupPB userpb = QueryEngine.GroupPB.parseFrom(arr);
+            return pb2m(userpb);
+        } catch (InvalidProtocolBufferException ex) {
+            Logger.getLogger(FeatureSetIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

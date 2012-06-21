@@ -25,7 +25,6 @@ message SGIDPB {
 message FSGIDPB {
     optional SGIDPB sgid = 1;
     optional string rowKey = 2;
-    optional SGIDPB featureSetID = 3; 
 }
 
 message TagPB {

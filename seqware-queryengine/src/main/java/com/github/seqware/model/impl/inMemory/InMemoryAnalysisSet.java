@@ -32,7 +32,7 @@ public class InMemoryAnalysisSet extends AbstractInMemorySet<AnalysisSet, Analys
     @Override
     public AnalysisSet.Builder toBuilder() {
         InMemoryAnalysisSet.Builder b = new InMemoryAnalysisSet.Builder();
-        b.aSet = (InMemoryAnalysisSet) this.copy(false);
+        b.aSet = (InMemoryAnalysisSet) this.copy(true);
         return b;
     }
 
@@ -54,7 +54,9 @@ public class InMemoryAnalysisSet extends AbstractInMemorySet<AnalysisSet, Analys
 
         @Override
         public AnalysisSet build(boolean newObject) {
-            ((AtomImpl)aSet).getManager().objectCreated((Atom)aSet);
+            if(((AtomImpl)aSet).getManager() != null){
+                ((AtomImpl)aSet).getManager().objectCreated((Atom)aSet);
+            }
             return aSet;
         }
 

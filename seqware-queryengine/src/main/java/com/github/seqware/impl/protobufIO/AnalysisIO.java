@@ -17,26 +17,30 @@
 package com.github.seqware.impl.protobufIO;
 
 import com.github.seqware.dto.QueryEngine;
-import com.github.seqware.dto.QueryEngine.UserPB;
-import com.github.seqware.model.User;
+import com.github.seqware.dto.QueryEngine.AnalysisPB;
+import com.github.seqware.model.Analysis;
+import com.github.seqware.model.impl.inMemory.InMemoryQueryFutureImpl;
+import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- *
+ * Place-holder
  * @author dyuen
  */
-public class AnalysisIO implements ProtobufTransferInterface<UserPB, User>{
+public class AnalysisIO implements ProtobufTransferInterface<AnalysisPB, Analysis>{
 
     @Override
-    public User pb2m(UserPB pb) {
-        User.Builder builder = User.newBuilder();
-        builder = pb.hasFirstName() ? builder.setFirstName(pb.getFirstName()) : builder;
-        builder = pb.hasLastName()  ? builder.setLastName(pb.getFirstName()) : builder;
-        builder = pb.hasEmailAddress() ? builder.setEmailAddress(pb.getEmailAddress()) : builder;
-        builder = pb.hasPassword() ? builder.setPassword(pb.getPassword()) : builder;
-        User user = builder.build();
+    public Analysis pb2m(AnalysisPB pb) {
+        Analysis.Builder builder = InMemoryQueryFutureImpl.newBuilder();
+//        builder = pb.hasFirstName() ? builder.setFirstName(pb.getFirstName()) : builder;
+//        builder = pb.hasLastName()  ? builder.setLastName(pb.getFirstName()) : builder;
+//        builder = pb.hasEmailAddress() ? builder.setEmailAddress(pb.getEmailAddress()) : builder;
+//        builder = pb.hasPassword() ? builder.setPassword(pb.getPassword()) : builder;
+        Analysis user = builder.build();
         UtilIO.handlePB2Atom(pb.getAtom(), user);
         UtilIO.handlePB2ACL(pb.getAcl(), user);
-        if (pb.hasPrecedingVersion()){
+        if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && pb.hasPrecedingVersion()){
            user.setPrecedingVersion(pb2m(pb.getPrecedingVersion()));
         }
         return user;
@@ -44,18 +48,29 @@ public class AnalysisIO implements ProtobufTransferInterface<UserPB, User>{
     
 
     @Override
-    public UserPB m2pb(User atom) {
-        QueryEngine.UserPB.Builder builder = QueryEngine.UserPB.newBuilder();
-        builder = atom.getFirstName() != null ? builder.setFirstName(atom.getFirstName()) : builder;
-        builder = atom.getLastName() != null ? builder.setLastName(atom.getFirstName()) : builder;
-        builder = atom.getEmailAddress() != null ? builder.setEmailAddress(atom.getEmailAddress()) : builder;
-        builder = atom.getPassword() != null ? builder.setPassword(atom.getPassword()) : builder;
+    public AnalysisPB m2pb(Analysis atom) {
+        QueryEngine.AnalysisPB.Builder builder = QueryEngine.AnalysisPB.newBuilder();
+//        builder = atom.getFirstName() != null ? builder.setFirstName(atom.getFirstName()) : builder;
+//        builder = atom.getLastName() != null ? builder.setLastName(atom.getFirstName()) : builder;
+//        builder = atom.getEmailAddress() != null ? builder.setEmailAddress(atom.getEmailAddress()) : builder;
+//        builder = atom.getPassword() != null ? builder.setPassword(atom.getPassword()) : builder;
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), atom));
         builder.setAcl(UtilIO.handleACL2PB(builder.getAcl(), atom));
-        if (atom.getPrecedingVersion() != null){
+        if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && atom.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(atom.getPrecedingVersion()));
         }
-        UserPB userpb = builder.build();
+        AnalysisPB userpb = builder.build();
         return userpb;
+    }
+    
+    @Override
+    public Analysis byteArr2m(byte[] arr) {
+        try {
+            QueryEngine.AnalysisPB userpb = QueryEngine.AnalysisPB.parseFrom(arr);
+            return pb2m(userpb);
+        } catch (InvalidProtocolBufferException ex) {
+            Logger.getLogger(FeatureSetIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

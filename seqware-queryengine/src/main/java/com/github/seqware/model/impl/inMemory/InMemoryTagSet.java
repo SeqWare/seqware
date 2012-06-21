@@ -27,7 +27,7 @@ public class InMemoryTagSet extends AbstractInMemorySet<TagSet, Tag> implements 
     @Override
     public InMemoryTagSet.Builder toBuilder() {
         InMemoryTagSet.Builder b = new InMemoryTagSet.Builder();
-        b.aSet = (InMemoryTagSet) this.copy(false);
+        b.aSet = (InMemoryTagSet) this.copy(true);
         return b;
     }
 
@@ -49,7 +49,9 @@ public class InMemoryTagSet extends AbstractInMemorySet<TagSet, Tag> implements 
 
         @Override
         public TagSet build(boolean newObject) {
-            ((AtomImpl)aSet).getManager().objectCreated((Atom)aSet);
+            if (((AtomImpl)aSet).getManager() != null){
+                ((AtomImpl)aSet).getManager().objectCreated((Atom)aSet);
+            }
             return aSet;
         }
 

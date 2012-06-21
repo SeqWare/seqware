@@ -22,6 +22,9 @@ import com.github.seqware.model.Reference;
 import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.model.impl.MoleculeImpl;
 import com.github.seqware.model.impl.inMemory.InMemoryReference;
+import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -36,7 +39,7 @@ public class ReferenceIO implements ProtobufTransferInterface<ReferencePB, Refer
         Reference ref = builder.build();
         UtilIO.handlePB2Atom(userpb.getAtom(), (AtomImpl)ref);
         UtilIO.handlePB2ACL(userpb.getAcl(), (MoleculeImpl)ref);
-        if (userpb.hasPrecedingVersion()){
+        if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && userpb.hasPrecedingVersion()){
            ref.setPrecedingVersion(pb2m(userpb.getPrecedingVersion()));
         }
         return ref;
@@ -49,10 +52,21 @@ public class ReferenceIO implements ProtobufTransferInterface<ReferencePB, Refer
         builder = sgid.getName() != null ? builder.setName(sgid.getName()) : builder;
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), (AtomImpl)sgid));
         builder.setAcl(UtilIO.handleACL2PB(builder.getAcl(), (MoleculeImpl)sgid));
-        if (sgid.getPrecedingVersion() != null){
+        if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && sgid.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(sgid.getPrecedingVersion()));
         }
         ReferencePB refpb = builder.build();
         return refpb;
+    }
+
+    @Override
+    public Reference byteArr2m(byte[] arr) {
+        try {
+            QueryEngine.ReferencePB userpb = QueryEngine.ReferencePB.parseFrom(arr);
+            return pb2m(userpb);
+        } catch (InvalidProtocolBufferException ex) {
+            Logger.getLogger(FeatureSetIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

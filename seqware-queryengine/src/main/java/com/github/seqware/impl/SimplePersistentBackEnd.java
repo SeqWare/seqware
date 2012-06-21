@@ -16,7 +16,6 @@
  */
 package com.github.seqware.impl;
 
-import com.github.seqware.model.AnalysisPluginInterface;
 import com.github.seqware.factory.BackEndInterface;
 import com.github.seqware.model.*;
 import com.github.seqware.model.impl.AtomImpl;

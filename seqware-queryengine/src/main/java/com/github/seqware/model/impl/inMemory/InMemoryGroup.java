@@ -51,7 +51,7 @@ public class InMemoryGroup extends AbstractInMemorySet<Group, User> implements G
     @Override
     public InMemoryGroup.Builder toBuilder() {
         InMemoryGroup.Builder b = new InMemoryGroup.Builder();
-        b.aSet = (InMemoryGroup) this.copy(false);
+        b.aSet = (InMemoryGroup) this.copy(true);
         return b;
     }
 
@@ -73,7 +73,9 @@ public class InMemoryGroup extends AbstractInMemorySet<Group, User> implements G
 
         @Override
         public Group build(boolean newObject) {
+            if(((AtomImpl)aSet).getManager() != null){
             ((AtomImpl)aSet).getManager().objectCreated((Atom)aSet);
+            }
             return aSet;
         }
 

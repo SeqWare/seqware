@@ -102,8 +102,7 @@ public class Factory {
 
             @Override
             SerializationInterface buildSerialization() {
-                //return new ProtobufSerialization();
-                throw new UnsupportedOperationException("Not supported yet.");
+                return new ProtobufSerialization();
             }
         };
 
@@ -112,12 +111,37 @@ public class Factory {
     
     private static final Model_Type DEFAULT_BACKEND = Model_Type.IN_MEMORY;
     private static Model_Type current_backend = DEFAULT_BACKEND;
-    private static final Storage_Type DEFAULT_STORAGE = Storage_Type.FILE_STORAGE;
+    private static final Storage_Type DEFAULT_STORAGE = Storage_Type.IN_MEMORY;
     private static Storage_Type current_storage = DEFAULT_STORAGE;
-    private static final Serialization_Type DEFAULT_SERIALIZATION = Serialization_Type.APACHE;
+    private static final Serialization_Type DEFAULT_SERIALIZATION = Serialization_Type.PROTOBUF;
     private static Serialization_Type current_serialization = DEFAULT_SERIALIZATION;
+    
+    private static SerializationInterface serialInstance = null;
+    private static StorageInterface storeInstance = null;
     private static BackEndInterface instance = null;
 
+    /**
+     * Get a reference to the current operating serialization method
+     * @return 
+     */
+    public static SerializationInterface getSerialization(){
+        if (serialInstance == null){
+             serialInstance = current_serialization.buildSerialization();
+        }
+        return serialInstance;
+    }
+    
+    /**
+     * Get a reference to the currently operating storage method
+     * @return 
+     */
+    public static StorageInterface getStorage(){
+        if(storeInstance == null){
+            storeInstance = current_storage.buildStorage(getSerialization());
+        }
+        return storeInstance;
+    }
+    
     /**
      * Get a reference to the currently operating back-end
      *
@@ -125,7 +149,7 @@ public class Factory {
      */
     public static BackEndInterface getBackEnd() {
         if (instance == null) {
-            instance = current_backend.buildBackEnd(current_storage.buildStorage(current_serialization.buildSerialization()));
+            instance = current_backend.buildBackEnd(getStorage());
         }
         return instance;
     }
@@ -137,7 +161,7 @@ public class Factory {
      */
     public static QueryInterface getQueryInterface() {
         if (instance == null) {
-            instance = current_backend.buildBackEnd(current_storage.buildStorage(current_serialization.buildSerialization()));
+            instance = current_backend.buildBackEnd(getStorage());
         }
         return (QueryInterface) instance;
     }
@@ -150,7 +174,7 @@ public class Factory {
      */
     public static FeatureStoreInterface getFeatureStoreInterface() {
         if (instance == null) {
-            instance = current_backend.buildBackEnd(current_storage.buildStorage(current_serialization.buildSerialization()));
+            instance = current_backend.buildBackEnd(getStorage());
         }
         return (FeatureStoreInterface) instance;
     }

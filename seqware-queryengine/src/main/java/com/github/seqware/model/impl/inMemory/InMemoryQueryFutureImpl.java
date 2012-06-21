@@ -56,7 +56,7 @@ public class InMemoryQueryFutureImpl extends Analysis {
     @Override
     public Analysis.Builder toBuilder() {
         InMemoryQueryFutureImpl.Builder b = new InMemoryQueryFutureImpl.Builder();
-        b.analysis = (InMemoryQueryFutureImpl) this.copy(false);
+        b.analysis = (InMemoryQueryFutureImpl) this.copy(true);
         b.setParameters(this.getParameters());
         return b;
     }
@@ -89,7 +89,7 @@ public class InMemoryQueryFutureImpl extends Analysis {
 
         @Override
         public Analysis build() {
-            if (analysis.getParameters() == null || analysis.getPlugin() == null) {
+            if (analysis.getParameters() == null /**|| analysis.getPlugin() == null**/) {
                 throw new RuntimeException("Invalid build of Analysis");
             }
             return analysis;

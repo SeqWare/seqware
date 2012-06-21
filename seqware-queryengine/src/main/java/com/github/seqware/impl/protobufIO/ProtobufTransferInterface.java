@@ -16,19 +16,33 @@
  */
 package com.github.seqware.impl.protobufIO;
 
+import com.github.seqware.model.Atom;
+import com.google.protobuf.Message;
+
 /**
  * Interface for conversion from protein buffer auto-generated objects 
  * to model and vice versa
  * @author dyuen
  */
-public interface ProtobufTransferInterface<S,T> {
+public interface ProtobufTransferInterface<S extends Message,T extends Atom> {
+    
+    public static final boolean PERSIST_VERSION_CHAINS = false;
+    
+    /**
+     * Convert from protein buffer object in byte array to model.
+     * Implementations of this method are kinda stupid, we should be able to template/generic this but
+     * Java dislikes it for some reason.
+     * @param protbuf in byte form
+     * @return 
+     */
+    public abstract T byteArr2m(byte[] arr);
     
     /**
      * Convert from protein buffer object to model
-     * @param protbuf
+     * @param protbuf in byte form
      * @return 
      */
-    public abstract T pb2m(S protbuf);
+    public abstract T pb2m(S protBuff);
     
     /**
      * Convert from model to protein buffer object

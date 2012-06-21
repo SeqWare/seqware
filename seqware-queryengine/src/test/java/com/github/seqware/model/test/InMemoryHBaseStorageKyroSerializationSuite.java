@@ -24,13 +24,13 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
-/**
- * Not working yet
- * @author dyuen
- */
+///**
+// * Not working yet
+// * @author dyuen
+// */
 //@RunWith(DynamicSuite.class)
 //public class InMemoryHBaseStorageKyroSerializationSuite {
-
+//
 //    @BeforeClass
 //    public static void setupSuite() {
 //        Logger.getLogger(InMemoryHBaseStorageKyroSerializationSuite.class.getName()).log(Level.INFO, "Running test suite with in-memory objects using Kyro serialization to HBase");

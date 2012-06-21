@@ -6,13 +6,12 @@ import com.github.seqware.model.Atom;
 import com.github.seqware.model.Tag;
 import com.github.seqware.model.interfaces.Versionable;
 import com.github.seqware.util.InMemoryIterable;
+import com.github.seqware.util.LazyReference;
 import com.github.seqware.util.SGID;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 
@@ -41,15 +40,13 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      */
     private transient ModelManager manager = null;
     private List<Tag> tags = new ArrayList<Tag>();
-    private transient boolean precedingChecked = false;
-    private T precedingVersion = null;
-    private SGID precedingSGID = null;    
     
+    private LazyReference<T> precedingVersion = new LazyReference<T>();
+
     protected AtomImpl() {
         this.timestamp = new Date();
     }
-    
-    
+
     /**
      * Copy constructor, used to generate a shallow copy of a Atom with
      * potentially a new timestamp and UUID
@@ -67,13 +64,13 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
         }
         T newAtom = (T) SerializationUtils.clone(this);
         // copy over the transient properties for now
-        ((AtomImpl)newAtom).setManager(this.manager);
+        ((AtomImpl) newAtom).setManager(this.manager);
         this.sgid = oldUUID;
-        
-        if (newSGID){
-            ((AtomImpl)newAtom).setPrecedingSGID(this.sgid);
+
+        if (newSGID) {
+            ((AtomImpl) newAtom).setPrecedingSGID(this.sgid);
         }
-        
+
         return newAtom;
     }
 
@@ -131,9 +128,10 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      * @return
      */
     public ModelManager getManager() {
-        if (manager == null){
-            Logger.getLogger(Atom.class.getName()).log(Level.WARNING, "Tried to get the ModelManager for an atom, but it was unmanaged.");
-        }
+        // happens pretty often now when building model objects
+//        if (manager == null){
+//            Logger.getLogger(Atom.class.getName()).log(Level.WARNING, "Tried to get the ModelManager for an atom, but it was unmanaged.");
+//        }
         return manager;
     }
 
@@ -158,23 +156,25 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     public int hashCode() {
         return sgid.hashCode();
     }
-    
+
     /**
      * Set the UUID, very dangerous, this should never be called outside of the
      * backend
      *
      * @param sgid new UUID
-     */ 
+     */
     public void impersonate(SGID sgid, Date creationTimeStamp, SGID oldSGID) {
         this.impersonate(sgid);
         this.setTimestamp(creationTimeStamp);
-        this.precedingSGID = oldSGID;
+        this.precedingVersion.setSGID(oldSGID);
     }
-    
+
     @Override
     public boolean associateTag(Tag tag) {
         tags.add(tag);
-        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+        if (this.getManager() != null) {
+            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+        }
         //Factory.getBackEnd().associateTag(this, tag);
         return true;
     }
@@ -182,7 +182,9 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     @Override
     public boolean dissociateTag(Tag tag) {
         tags.remove(tag);
-        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+        if (this.getManager() != null) {
+            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+        }
         //Factory.getBackEnd().dissociateTag(this, tag);
         return true;
     }
@@ -194,63 +196,60 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
 
     @Override
     public long getVersion() {
-        if (this.precedingSGID == null){
+        if (this.precedingVersion.get() == null) {
             return 1;
-        } else{
+        } else {
             return 1 + Factory.getBackEnd().getPrecedingVersion(this).getVersion();
         }
     }
 
     @Override
     public T getPrecedingVersion() {
-        if (!precedingChecked && precedingSGID != null) {
-            this.precedingVersion = (T) Factory.getFeatureStoreInterface().getAtomBySGID(precedingSGID);
-        }
-        precedingChecked = true;
-        return this.precedingVersion;
+        return this.precedingVersion.get();
     }
 
     @Override
     public void setPrecedingVersion(T precedingVersion) {
-        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
-        this.precedingChecked = true;
-        if (precedingVersion != null) {
-            this.precedingVersion = precedingVersion;
-            this.precedingSGID = precedingVersion.getSGID();
-        } else {
-            this.precedingVersion = null;
-            this.precedingSGID = null;
+        // inform the model manager that this is a new version of an object now
+        if (this.getManager() != null) {
+            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
         }
+        this.precedingVersion.set(precedingVersion);
     }
-    
+
     /**
      * Used in back-end to set previous version without side-effects
-     * @param precedingSGID 
+     *
+     * @param precedingSGID
      */
     protected void setPrecedingSGID(SGID precedingSGID) {
-        this.precedingSGID = precedingSGID;
+        this.precedingVersion.setSGID(precedingSGID);
+        //this.precedingSGID = precedingSGID;
     }
 
     /**
      * Used in back-end to get previous version ID
-     * @param precedingSGID 
+     *
+     * @param precedingSGID
      */
     public SGID getPrecedingSGID() {
-        return precedingSGID;
+        return this.precedingVersion.getSGID();
+        //return precedingSGID;
     }
-    
+
     /**
      * Get the model class for the HBase where this obj should be stored
+     *
      * @param obj
-     * @return 
+     * @return
      */
     public abstract Class getHBaseClass();
-        
 
     /**
      * Get the HBase table prefix where this obj should be stored
+     *
      * @param obj
-     * @return 
+     * @return
      */
     public abstract String getHBasePrefix();
 }

@@ -67,28 +67,36 @@ public class InMemoryFeatureSet extends FeatureSet {
     @Override
     public FeatureSet add(Feature feature) {
         features.add(feature);
-        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+        if (this.getManager() != null){
+            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION); 
+        }
         return this;
     }
     
     @Override
     public FeatureSet add(Feature... elements) {
        this.features.addAll(Arrays.asList(elements));
-       this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+       if (this.getManager() != null){
+            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+       }
        return this;
     }
     
     @Override
     public FeatureSet remove(Feature feature) {
         features.remove(feature);
-        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+        if (this.getManager() != null){
+            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+        }
         return this;
     }
 
     @Override
     public FeatureSet add(Set<Feature> features) {
         this.features.addAll(features);
-        this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+        if (this.getManager() != null){
+            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+        }
         return this;
     }
 
@@ -114,7 +122,7 @@ public class InMemoryFeatureSet extends FeatureSet {
     @Override
     public InMemoryFeatureSet.Builder toBuilder() {
         InMemoryFeatureSet.Builder b = new InMemoryFeatureSet.Builder();
-        b.aSet = (InMemoryFeatureSet) this.copy(false);
+        b.aSet = (InMemoryFeatureSet) this.copy(true);
         return b;
     }
 
