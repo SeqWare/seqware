@@ -199,6 +199,8 @@ public class Factory {
      */
     public static void setFactoryBackendType(Model_Type bType, Storage_Type storageType, Serialization_Type serializationType) {
         instance = null;
+        storeInstance = null;
+        serialInstance = null;
         if (bType == null) {
             current_backend = DEFAULT_BACKEND;
         } else {

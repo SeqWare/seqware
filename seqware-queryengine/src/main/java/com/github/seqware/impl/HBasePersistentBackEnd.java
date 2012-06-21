@@ -63,7 +63,7 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
     @Override
     public SeqWareIterable<Group> getGroups() {
         if (storage instanceof HBaseStorage) {
-            return handleTableScan(User.class, Group.prefix);
+            return handleTableScan(Group.class, Group.prefix);
         }
         return super.getGroups();
     }
@@ -71,7 +71,7 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
     @Override
     public SeqWareIterable<ReferenceSet> getReferenceSets() {
         if (storage instanceof HBaseStorage) {
-            return handleTableScan(User.class, ReferenceSet.prefix);
+            return handleTableScan(ReferenceSet.class, ReferenceSet.prefix);
         }
         return super.getReferenceSets();
     }
@@ -79,7 +79,7 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
     @Override
     public SeqWareIterable<FeatureSet> getFeatureSets() {
         if (storage instanceof HBaseStorage) {
-            return handleTableScan(User.class, FeatureSet.prefix);
+            return handleTableScan(FeatureSet.class, FeatureSet.prefix);
         }
         return super.getFeatureSets();
     }
@@ -87,7 +87,7 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
     @Override
     public SeqWareIterable<TagSet> getTagSets() {
         if (storage instanceof HBaseStorage) {
-            return handleTableScan(User.class, TagSet.prefix);
+            return handleTableScan(TagSet.class, TagSet.prefix);
         }
         return super.getTagSets();
     }
@@ -95,7 +95,7 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
     @Override
     public SeqWareIterable<Tag> getTags() {
         if (storage instanceof HBaseStorage) {
-            return handleTableScan(User.class, Tag.prefix);
+            return handleTableScan(Tag.class, Tag.prefix);
         }
         return super.getTags();
     }
@@ -103,7 +103,7 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
     @Override
     public SeqWareIterable<AnalysisSet> getAnalysisSets() {
         if (storage instanceof HBaseStorage) {
-            return handleTableScan(User.class, AnalysisSet.prefix);
+            return handleTableScan(AnalysisSet.class, AnalysisSet.prefix);
         }
         return super.getAnalysisSets();
     }

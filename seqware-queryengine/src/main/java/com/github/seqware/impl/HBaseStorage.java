@@ -21,6 +21,7 @@ import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.util.SGID;
 import java.io.IOException;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.hadoop.conf.Configuration;
@@ -93,8 +94,9 @@ public class HBaseStorage extends StorageInterface {
     @Override
     public Atom deserializeTargetToAtom(SGID sgid) {
         // inefficient, try to favour methods where the class is known
-        for (HTable table : tableMap.values()) {
-            Atom a = deserializeAtom(sgid, table);
+        for (Entry<String, HTable> entry : tableMap.entrySet()) {
+            Class properClass = super.biMap.inverse().get(entry.getKey());
+            Atom a = deserializeAtom(sgid, properClass, entry.getValue());
             if (a != null){
                 return a;
             }
@@ -102,7 +104,7 @@ public class HBaseStorage extends StorageInterface {
         return null;
     }
 
-    private Atom deserializeAtom(SGID sgid, HTable table) {
+    private Atom deserializeAtom(SGID sgid, Class properClass, HTable table) {
         try {
             Get g = new Get(Bytes.toBytes(sgid.toString()));
             Result result = table.get(g);
@@ -112,7 +114,7 @@ public class HBaseStorage extends StorageInterface {
             }
             byte[] columnLatest = result.getColumnLatest(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes(TEST_QUALIFIER)).getValue();
             // I wonder if this handles subclassing properly ... turns out no
-            AtomImpl deserializedAtom = (AtomImpl) serializer.deserialize(columnLatest, Atom.class);
+            AtomImpl deserializedAtom = (AtomImpl) serializer.deserialize(columnLatest, properClass);
             return deserializedAtom;
         } catch (IOException ex) {
             Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, null, ex);
@@ -155,12 +157,13 @@ public class HBaseStorage extends StorageInterface {
     
     public Iterable<SGID> getAllAtomsForTable(String prefix) {
         HTable table = tableMap.get(prefix);
+        Class cl = super.biMap.inverse().get(prefix);
         try {
             Scan s = new Scan();
             // we need the actual values if we do not store SGID in row key for debugging
             //s.setFilter(new KeyOnlyFilter());
             ResultScanner scanner = table.getScanner(s);
-            return new ScanIterable(scanner);
+            return new ScanIterable(scanner, cl);
         } catch (IOException iOException) {
             Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", iOException);
             return null;
@@ -171,29 +174,33 @@ public class HBaseStorage extends StorageInterface {
     public <T extends Atom> T deserializeTargetToAtom(SGID sgid, Class<T> t) {
         String prefix = super.biMap.get(t);
         HTable table = tableMap.get(prefix);
-        return (T) deserializeAtom(sgid, table);
+        return (T) deserializeAtom(sgid, t, table);
     }
 
-    public class ScanIterable implements Iterable<SGID> {
+    public class ScanIterable implements Iterable {
 
         private final ResultScanner scanner;
+        private final Class cl;
 
-        public ScanIterable(ResultScanner scanner) {
+        public ScanIterable(ResultScanner scanner, Class cl) {
             this.scanner = scanner;
+            this.cl = cl;
         }
 
         @Override
         public Iterator<SGID> iterator() {
-            return new ScanIterator(scanner);
+            return new ScanIterator(scanner, cl);
         }
     }
 
     public class ScanIterator implements Iterator<SGID> {
 
         private final Iterator<Result> sIter;
+        private final Class cl;
 
-        protected ScanIterator(ResultScanner scanner) {
+        protected ScanIterator(ResultScanner scanner, Class cl) {
             this.sIter = scanner.iterator();
+            this.cl = cl;
         }
 
         @Override
@@ -204,8 +211,8 @@ public class HBaseStorage extends StorageInterface {
         @Override
         public SGID next() {
             byte[] bytes = sIter.next().getColumnLatest(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes(TEST_QUALIFIER)).getValue();
-            Atom sAtom = serializer.deserialize(bytes, AtomImpl.class);
-            return sAtom.getSGID();
+            SGID sgid = (SGID)((AtomImpl)serializer.deserialize(bytes, cl)).getSGID();
+            return sgid;
         }
 
         @Override
