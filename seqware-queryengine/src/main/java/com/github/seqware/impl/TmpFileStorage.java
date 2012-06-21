@@ -35,7 +35,7 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
  */
 public class TmpFileStorage extends StorageInterface {
 
-    private static final boolean PERSIST = true;
+    private static final boolean PERSIST = false;
     private File tempDir = new File(FileUtils.getTempDirectory(), this.getClass().getCanonicalName());
     private Map<SGID, FileTypePair> map = new HashMap<SGID, FileTypePair>();
     private final SerializationInterface serializer;

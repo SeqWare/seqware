@@ -6,6 +6,7 @@ import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import com.github.seqware.model.Reference;
 import com.github.seqware.util.InMemoryIterator;
+import com.github.seqware.util.LazyReference;
 import com.github.seqware.util.SGID;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -22,12 +23,7 @@ public class InMemoryFeatureSet extends FeatureSet {
     /**
      * Associated reference.
      */
-    private transient Reference reference = null;
-    
-    /**
-     * SGID used for lazy initialization for reference
-     */
-    private SGID referenceSGID = null;
+    private LazyReference<Reference> reference = new LazyReference<Reference>();
 
     /**
      * The set of features this instance represents when an in-memory storage model is used.
@@ -58,10 +54,7 @@ public class InMemoryFeatureSet extends FeatureSet {
      */
     @Override
     public Reference getReference() {
-        if (reference == null){
-            reference = (Reference)Factory.getFeatureStoreInterface().getAtomBySGID(referenceSGID);
-        }
-        return reference;
+        return this.reference.get();
     }
 
     @Override
@@ -133,7 +126,7 @@ public class InMemoryFeatureSet extends FeatureSet {
 
     @Override
     public SGID getReferenceID() {
-        return this.referenceSGID;
+        return this.reference.getSGID();
     }
 
     @Override
@@ -171,13 +164,13 @@ public class InMemoryFeatureSet extends FeatureSet {
         
         @Override
         public Builder setReference(Reference reference) {
-            ((InMemoryFeatureSet)aSet).reference = reference;
+            ((InMemoryFeatureSet)aSet).reference.set(reference);
             return this;
         }
         
         @Override
         public Builder setReferenceID(SGID referenceSGID){
-            ((InMemoryFeatureSet)aSet).referenceSGID = referenceSGID;
+            ((InMemoryFeatureSet)aSet).reference.setSGID(referenceSGID);
             return this;
         }
     }

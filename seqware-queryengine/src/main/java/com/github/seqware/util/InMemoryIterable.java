@@ -23,7 +23,7 @@ import java.util.Iterator;
  * A bit of a hack class, allows us to have getCount as well as iterable
  * @author dyuen
  */
-public class InMemoryIterable implements SeqWareIterable{
+public class InMemoryIterable<T> implements SeqWareIterable<T>{
     private Collection col;      
     
     public InMemoryIterable(Collection col){
@@ -36,7 +36,7 @@ public class InMemoryIterable implements SeqWareIterable{
     }
 
     @Override
-    public Iterator iterator() {
+    public Iterator<T> iterator() {
         return col.iterator();
     }
     
