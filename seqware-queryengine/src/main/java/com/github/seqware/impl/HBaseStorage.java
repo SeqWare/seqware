@@ -37,8 +37,10 @@ import org.apache.hadoop.hbase.util.Bytes;
  */
 public class HBaseStorage extends StorageInterface {
 
+    public static final boolean TEST_REMOTELY = false;
+    
     public static final int PAD = 15;
-    private static final String TEST_TABLE_PREFIX = "hbaseTestTable";
+    private static final String TEST_TABLE_PREFIX = System.getProperty("user.name") + StorageInterface.separator + "hbaseTestTable";
     private static final String TEST_COLUMN = "allData";
     private static final String TEST_QUALIFIER = "qualifier";
     private static final boolean PERSIST = false;
@@ -51,6 +53,14 @@ public class HBaseStorage extends StorageInterface {
         // The HBaseConfiguration reads in hbase-site.xml and hbase-default.xml,
         // as long as these can be found in the CLASSPATH.
         this.config = HBaseConfiguration.create();
+        
+        if (TEST_REMOTELY){  	
+            config.clear();
+            config.set("hbase.zookeeper.quorum", "sqwdev.res");
+            config.set("hbase.zookeeper.property.clientPort","2181");
+            config.set("hbase.master", "sqwdev.res:60000");
+        }
+        
         Logger.getLogger(HBaseStorage.class.getName()).log(Level.INFO, "Starting with {0} using {1}", new Object[]{HBaseStorage.class.getSimpleName(), serializer.getClass().getSimpleName()});
         for (String s : super.biMap.values()) {
             String tableName = TEST_TABLE_PREFIX + StorageInterface.separator + s;

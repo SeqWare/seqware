@@ -133,7 +133,7 @@
 		    <version>0.94.0</version>
             -->
             <!-- current Cloudera stable -->
-            <version>0.90.6-cdh3u4</version>
+            <version>0.92.1-cdh4.0.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.xml.bind</groupId>
@@ -152,7 +152,12 @@
 		    <version>1.0.3</version>
    		    -->
             <!-- current Cloudera stable -->
-            <version>0.20.2-cdh3u4</version>
+            <version>2.0.0-mr1-cdh4.0.0 </version>
+        </dependency>
+        <dependency>
+            <artifactId>hadoop-client</artifactId>
+            <groupId>org.apache.hadoop</groupId>
+            <version>2.0.0-cdh4.0.0</version>
         </dependency>
         <dependency>
             <artifactId>hadoop-tools</artifactId>
@@ -161,7 +166,7 @@
 		    <version>1.0.3</version>
 	        -->
             <!-- current Cloudera stable -->
-            <version>0.20.2-cdh3u4</version>
+            <version>2.0.0-mr1-cdh4.0.0</version>
         </dependency>
 
         <dependency>
