@@ -45,6 +45,9 @@
                     <includes>
                         <include>**/*Suite.java</include>
                     </includes>
+                    <forkMode>
+                        never
+                    </forkMode>
                 </configuration>
             </plugin>
             
