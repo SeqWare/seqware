@@ -99,13 +99,11 @@ public class Factory {
             }
         },
         PROTOBUF {
-
             @Override
             SerializationInterface buildSerialization() {
                 return new ProtobufSerialization();
             }
         };
-
         abstract SerializationInterface buildSerialization();
     };
     

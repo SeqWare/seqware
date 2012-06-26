@@ -19,24 +19,42 @@ package com.github.seqware.impl;
 import com.github.seqware.model.Atom;
 
 /**
- * This simply extracts the serialization of bytes[] to atoms and vice versa
+ * This simply extracts the serialization of bytes[] to atoms and vice versa.
+ *
+ * The serializationConstant is a value that is stored as the header of each
+ * serialization type in order so that they can record information for
+ * compatibility and to quickly detect incompatible serialization types
+ *
  * @author dyuen
  */
 public interface SerializationInterface {
-    
+
     /**
      * Given an atom, get back an array of bytes
-     * @param atom 
-     * @return 
+     *
+     * @param atom element to be serialized
+     * @return serialized version of the atom with an integer header
      */
     public byte[] serialize(Atom atom);
-    
+
     /**
      * Given an array of bytes, get back an atom
+     *
      * @param <T> class type, behaviour is undefined if the class is incorrect
      * @param bytes byte representation of the desired object
-     * @return 
+     * @return de-serialized object, or null if the serialization type does not match 
      */
     public <T> T deserialize(byte[] bytes, Class<T> type);
-    
+
+    /**
+     * Stored as the first four bytes of serialization so that serialization
+     * types can pre-emptively handle their own forward/backward compatibility.
+     * 
+     * 0 has been reserved for ApacheSerialization
+     * 10,000-19,999 has been reserved for ProtocolBuffers
+     * 20,000-29,999 has been reserved for Kryo
+     * 
+     * @return
+     */
+    public abstract int getSerializationConstant();
 }

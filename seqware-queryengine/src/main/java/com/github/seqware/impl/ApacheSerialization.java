@@ -18,6 +18,7 @@ package com.github.seqware.impl;
 
 import com.github.seqware.model.Atom;
 import org.apache.commons.lang.SerializationUtils;
+import org.apache.hadoop.hbase.util.Bytes;
 
 /**
  *
@@ -27,12 +28,22 @@ public class ApacheSerialization implements SerializationInterface {
 
     @Override
     public byte[] serialize(Atom atom) {
-        return SerializationUtils.serialize(atom);
+        return Bytes.add(Bytes.toBytes(getSerializationConstant()), SerializationUtils.serialize(atom));
+        //return SerializationUtils.serialize(atom);
     }
 
     @Override
     public <T> T deserialize(byte[] bytes, Class<T> type) {
-        return (T)SerializationUtils.deserialize(bytes);
+        int serialConstant = Bytes.toInt(Bytes.head(bytes, 4));
+        if (serialConstant == getSerializationConstant()){
+            return (T)SerializationUtils.deserialize(Bytes.tail(bytes, bytes.length-4));
+        }
+        return null;
+    }
+
+    @Override
+    public int getSerializationConstant() {
+        return 0;
     }
     
     

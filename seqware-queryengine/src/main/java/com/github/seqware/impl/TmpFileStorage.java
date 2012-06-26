@@ -35,7 +35,7 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
  */
 public class TmpFileStorage extends StorageInterface {
 
-    private static final boolean PERSIST = false;
+    private static final boolean PERSIST = true;
     private File tempDir = new File(FileUtils.getTempDirectory(), this.getClass().getCanonicalName());
     private Map<SGID, FileTypePair> map = new HashMap<SGID, FileTypePair>();
     private final SerializationInterface serializer;
@@ -56,7 +56,9 @@ public class TmpFileStorage extends StorageInterface {
                             String[] names = f.getName().split("\\.");
                             Class cl = biMap.inverse().get(names[0]);
                             Atom suspect = (Atom) serializer.deserialize(objData, cl);
-                            map.put(suspect.getSGID(), new FileTypePair(f,cl));
+                            if (suspect != null){
+                                map.put(suspect.getSGID(), new FileTypePair(f,cl));
+                            }
                         } catch (Exception e) {
                             if (!oldClassesFound) {
                                 oldClassesFound = true;

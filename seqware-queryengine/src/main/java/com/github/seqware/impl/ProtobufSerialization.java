@@ -22,6 +22,8 @@ import com.github.seqware.model.impl.AtomImpl;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.protobuf.Message;
+import org.apache.commons.lang.SerializationUtils;
+import org.apache.hadoop.hbase.util.Bytes;
 
 /**
  *
@@ -39,12 +41,21 @@ public class ProtobufSerialization implements SerializationInterface {
         Class cl = ((AtomImpl)atom).getHBaseClass();
         ProtobufTransferInterface pb = biMap.get(cl);
         Message m2pb = pb.m2pb((AtomImpl)atom);
-        return m2pb.toByteArray();
+        return Bytes.add(Bytes.toBytes(getSerializationConstant()),m2pb.toByteArray());
     }
 
     @Override
     public <T> T deserialize(byte[] bytes, Class<T> type) {
-        ProtobufTransferInterface pb = biMap.get(type);
-        return (T)pb.byteArr2m(bytes);
+        int serialConstant = Bytes.toInt(Bytes.head(bytes, 4));
+        if (serialConstant == getSerializationConstant()){
+            ProtobufTransferInterface pb = biMap.get(type);
+            return (T)pb.byteArr2m(Bytes.tail(bytes, bytes.length-4));
+        }
+        return null;
+    }
+
+    @Override
+    public int getSerializationConstant() {
+        return 10000;
     }
 }
