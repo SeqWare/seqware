@@ -32,6 +32,7 @@ import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.objenesis.strategy.SerializingInstantiatorStrategy;
 
 /**
@@ -78,6 +79,7 @@ public class KryoSerialization implements SerializationInterface {
     public byte[] serialize(Atom atom) {
         ByteArrayOutputStream featureBytes = new ByteArrayOutputStream();
         Output o = new Output(featureBytes);
+        o.write(Bytes.toBytes(getSerializationConstant()));
         serializer.writeClassAndObject(o, atom);
         o.close();
         return featureBytes.toByteArray();
@@ -86,9 +88,19 @@ public class KryoSerialization implements SerializationInterface {
 
     @Override
     public <T> T deserialize(byte[] bytes, Class<T> type) {
-        Input input = new Input(new ByteArrayInputStream(bytes));
-        T deserializedAtom = (T) serializer.readClassAndObject(input);
-        input.close();
-        return deserializedAtom;
+        int serialConstant = Bytes.toInt(Bytes.head(bytes, 4));
+        if (serialConstant == getSerializationConstant()){
+            byte[] byteArr = (Bytes.tail(bytes, bytes.length-4));
+            Input input = new Input(new ByteArrayInputStream(byteArr));
+            T deserializedAtom = (T) serializer.readClassAndObject(input);
+            input.close();
+            return deserializedAtom;
+        }
+        return null;
+    }
+
+    @Override
+    public int getSerializationConstant() {
+        return 20000;
     }
 }

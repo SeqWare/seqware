@@ -43,7 +43,7 @@ public class HBaseStorage extends StorageInterface {
     private static final String TEST_TABLE_PREFIX = System.getProperty("user.name") + StorageInterface.separator + "hbaseTestTable";
     private static final String TEST_COLUMN = "allData";
     private static final String TEST_QUALIFIER = "qualifier";
-    private static final boolean PERSIST = false;
+    private static final boolean PERSIST = true;
     private Configuration config;
     private SerializationInterface serializer;
     private Map<String, HTable> tableMap = new HashMap<String, HTable>();
@@ -207,6 +207,7 @@ public class HBaseStorage extends StorageInterface {
 
         private final Iterator<Result> sIter;
         private final Class cl;
+        private SGID payload = null;
 
         protected ScanIterator(ResultScanner scanner, Class cl) {
             this.sIter = scanner.iterator();
@@ -215,14 +216,24 @@ public class HBaseStorage extends StorageInterface {
 
         @Override
         public boolean hasNext() {
-            return sIter.hasNext();
+            // we actually need to check for nulls due to different serialization formats
+            while(payload == null && sIter.hasNext()){
+                // check
+                byte[] bytes = sIter.next().getColumnLatest(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes(TEST_QUALIFIER)).getValue();
+                Object obj = serializer.deserialize(bytes, cl);
+                if (obj != null){
+                    payload = (SGID)((AtomImpl)obj).getSGID();
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Override
         public SGID next() {
-            byte[] bytes = sIter.next().getColumnLatest(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes(TEST_QUALIFIER)).getValue();
-            SGID sgid = (SGID)((AtomImpl)serializer.deserialize(bytes, cl)).getSGID();
-            return sgid;
+            SGID load = payload;
+            payload = null;
+            return load;
         }
 
         @Override
