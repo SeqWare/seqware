@@ -7,6 +7,7 @@ import com.esotericsoftware.kryo.serializers.FieldSerializer;
 import com.esotericsoftware.kryo.serializers.JavaSerializer;
 import com.github.seqware.dto.QueryEngine.FeaturePB;
 import com.github.seqware.factory.Factory;
+import com.github.seqware.impl.ApacheSerialization;
 import com.github.seqware.impl.protobufIO.FeatureIO;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 import com.github.seqware.util.SGID;
 import junit.framework.Assert;
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
@@ -57,7 +59,7 @@ public class HBaseTest {
     /**
      * Determines which framework should be used for serializing/deserializing objects.
      */
-    private enum SerializationFramework { KRYO, PROTOBUF };
+    private enum SerializationFramework { KRYO, PROTOBUF, APACHE };
 
     /**
      * If Kryo is used, then this reference points to the Feature class serializer/deserializer:
@@ -115,9 +117,14 @@ public class HBaseTest {
 
         testHBaseTable(SerializationFramework.PROTOBUF);
     }
+    
+    @Test 
+    public void testHBaseTableWithApache() throws IOException{
+        testHBaseTable(SerializationFramework.APACHE);
+    }
 
     /**
-     * Createsa fresh HBase table (drop existing one) and serialize/deserialize
+     * Creates a fresh HBase table (drop existing one) and serialize/deserialize
      * some Feature objects.
      *
      * @throws IOException
@@ -206,6 +213,23 @@ public class HBaseTest {
         serializer.writeObject(o, testFeature);
         o.close();
     }
+    
+    /**
+     * Serializes a features unique ID and content using Apache (really Java) serialization.
+     *
+     * @param testFeature The feature that should be serialized.
+     * @param sgidBytes Stream that is populated with the features unique ID.
+     * @param featureBytes Stream that holds the serialized contents of the feature.
+     */
+    private void serializeFeatureWithApache(Feature testFeature, ByteArrayOutputStream sgidBytes, ByteArrayOutputStream featureBytes) {
+        Output o = new Output(sgidBytes);
+        o.write(SerializationUtils.serialize(testFeature.getSGID()));
+        o.close();
+
+        o = new Output(featureBytes);
+        o.write(SerializationUtils.serialize(testFeature));
+        o.close();
+    }
 
     /**
      * Serializes a features unique ID and content using Protobuf.
@@ -239,6 +263,8 @@ public class HBaseTest {
             return deserializeFeatureWithKryo(serializedFeature);
         case PROTOBUF:
             return deserializeFeatureWithProtobuf(serializedFeature);
+        case APACHE:
+            return deserializeFeatureWithApache(serializedFeature);
         default:
             throw new UnsupportedOperationException("Deserialization is not supported for the given method.");
         }
@@ -251,6 +277,15 @@ public class HBaseTest {
      */
     private Feature deserializeFeatureWithKryo(Input serializedFeature) {
         return serializer.readObject(serializedFeature, Feature.class);
+    }
+    
+    /**
+     * Deserialize a previously serialized feature using Apache.
+     *
+     * @return A deserialized feature.
+     */
+    private Feature deserializeFeatureWithApache(Input serializedFeature) {
+        return (Feature) SerializationUtils.deserialize(serializedFeature);
     }
 
     /**
@@ -280,6 +315,9 @@ public class HBaseTest {
                 break;
             case PROTOBUF:
                 this.serializeFeatureWithProtobuf(testFeature, sgidBytes, featureBytes);
+                break;
+            case APACHE:
+                this.serializeFeatureWithApache(testFeature, sgidBytes, featureBytes);
                 break;
             default:
                 throw new UnsupportedOperationException("The given serialization method is not supported.");
