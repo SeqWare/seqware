@@ -3,6 +3,7 @@ package com.github.seqware.impl.test;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.FieldSerializer;
 import com.esotericsoftware.kryo.serializers.JavaSerializer;
 import com.github.seqware.dto.QueryEngine.FeaturePB;
 import com.github.seqware.factory.Factory;
@@ -15,7 +16,12 @@ import com.github.seqware.util.FSGID;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
+
+import com.github.seqware.util.SGID;
 import junit.framework.Assert;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -38,9 +44,19 @@ public class HBaseTest {
     private static final String TEST_TABLE = "seqwareTestTable";
     private static final String TEST_COLUMN = "fauxColumn";
 
-    private static final String KRYO_POSTFIX = "Kryo";
-    private static final String PROTOBUF_POSTFIX = "Protobuf";
+    /**
+     * Number of runs to execute to determine average serialization/deserialization times.
+     */
+    private static final int BENCHMARK_RUNS = 10;
 
+    /**
+     * Number of features that should be used for benchmarking serialization/deserialization.
+     */
+    private static final int BENCHMARK_FEATURES = 10000;
+
+    /**
+     * Determines which framework should be used for serializing/deserializing objects.
+     */
     private enum SerializationFramework { KRYO, PROTOBUF };
 
     /**
@@ -52,6 +68,19 @@ public class HBaseTest {
      * If Protobuf is used, then this reference points to the Feature class serializer/deserializer:
      */
     private FeatureIO fIO;
+
+    /**
+     * Represents a feature and its HBase row identifier.
+     */
+    private static class IdentifiedFeature {
+        byte[] id;
+        Feature feature;
+
+        public IdentifiedFeature(byte[] id, Feature feature) {
+            this.id = id;
+            this.feature = feature;
+        }
+    }
 
     /**
      * Create a fresh HBase table (drop existing one) and serialize/deserialize
@@ -67,8 +96,9 @@ public class HBaseTest {
 
         // Some magic to make serialization work with private default constructors:
         serializer.setInstantiatorStrategy(new SerializingInstantiatorStrategy());
-        //serializer.setDefaultSerializer(JavaSerializer.class);
-        serializer.register(UUID.class, new JavaSerializer());
+
+        // Super slow: do not use the JavaSerializer:
+        //serializer.register(UUID.class, new JavaSerializer());
 
         testHBaseTable(SerializationFramework.KRYO);
     }
@@ -99,89 +129,65 @@ public class HBaseTest {
         // as long as these can be found in the CLASSPATH.
         Configuration config = HBaseConfiguration.create();
 
+        String tableName = TEST_TABLE + framework;
+
         // Create a fresh table, i.e. delete an existing table if it exists:
-        HTableDescriptor ht = new HTableDescriptor(TEST_TABLE);
+        HTableDescriptor ht = new HTableDescriptor(tableName);
 	    ht.addFamily(new HColumnDescriptor(TEST_COLUMN));
 	    HBaseAdmin hba = new HBaseAdmin(config);
-        if(hba.isTableAvailable(TEST_TABLE)){
-            hba.disableTable(TEST_TABLE);
-            hba.deleteTable(TEST_TABLE);
+        if(hba.isTableAvailable(tableName)){
+            hba.disableTable(tableName);
+            hba.deleteTable(tableName);
         }
 	    hba.createTable( ht );
 
-        HTable table = new HTable(config, TEST_TABLE);
+        HTable table = new HTable(config, tableName);
 
-        // Get one feature to serialize/deserialize:
-        // Feature testFeature = Factory.getModelManager().buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
-        Feature testFeature = Feature.newBuilder().setId("chr16").setStart(1000000).setStop(1000100).build();
-        FeatureSet set = InMemoryFeatureSet.newBuilder().setReference(InMemoryReference.newBuilder().setName("testRef").build()).build();
-        // we need to upgrade the feature with a link to an enforced FeatureSet like in the real back-end
-        FSGID fsgid = new FSGID(testFeature.getSGID(),testFeature, set);
-        testFeature.impersonate(fsgid, testFeature.getCreationTimeStamp(), testFeature.getPrecedingSGID());
+        // Variables that track times for individual benchmark runs:
+        long[] serializationTimes = new long[BENCHMARK_RUNS];
+        long[] deserializationTimes = new long[BENCHMARK_RUNS];
 
-        // Streams that will hold the serialized objects:
-        ByteArrayOutputStream sgidBytes = new ByteArrayOutputStream();
-        ByteArrayOutputStream featureBytes = new ByteArrayOutputStream();
-
-        switch (framework) {
-        case KRYO:
-            this.serializeFeatureWithKryo(testFeature, sgidBytes, featureBytes);
-            break;
-        case PROTOBUF:
-            this.serializeFeatureWithProtobuf(testFeature, sgidBytes, featureBytes);
-            break;
-        default:
-            throw new UnsupportedOperationException("The given serialization method is not supported.");
-        }
-
-        Put p = new Put(sgidBytes.toByteArray());
-
-        // Serialize:
-        p.add(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes("feature"), featureBytes.toByteArray());
-        table.put(p);
-
-        // Deserialize:
-        Get g = new Get(sgidBytes.toByteArray());
-        Result r = table.get(g);
-        byte[] value = r.getValue(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes("feature"));
-
-        // We should get back a Feature object:
-        Input result = new Input(new ByteArrayInputStream(value));
-        Feature deserializedFeature = deserializeFeature(framework, result);
-
-        // NOTE This test fails right now, which is due to the equals() implementation
-        //      in Feature. When inspecting the features in debugging mode, then they
-        //      are clearly equal in terms of UUID and values.
-        Assert.assertEquals(testFeature, deserializedFeature);
-        //testFeature.equals(deserializedFeature);
-
-        // Check if the only object in the HBase table is the feature we put there:
-        Scan s = new Scan();
-        s.addColumn(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes("feature"));
-        ResultScanner scanner = table.getScanner(s);
-        try {
-            for (Result rr : scanner) {
-                KeyValue[] kvArray = rr.raw();
-                for (KeyValue kv : kvArray) {
-                    result = new Input(new ByteArrayInputStream(kv.getValue()));
-                    deserializedFeature = deserializeFeature(framework, result);
-
-                    // NOTE Same as above: fails due to equals() implementation.
-                    Assert.assertEquals(testFeature, deserializedFeature);
-                    //testFeature.equals(deserializedFeature);
-                }
+        // Create and store a feature/features:
+        List<IdentifiedFeature> testFeatures = new LinkedList<IdentifiedFeature>();
+        if (System.getProperty("com.github.seqware.benchmark", "false").equals("true")) {
+            for (int run = 0; run < BENCHMARK_RUNS; run++) {
+                serializationTimes[run] = System.currentTimeMillis();
+                for (int i = 0; i < BENCHMARK_FEATURES; i++)
+                    testFeatures.add(this.storeFauxFeature(framework, table));
+                serializationTimes[run] = System.currentTimeMillis() - serializationTimes[run];
             }
-        }
-        catch (Exception e) {
-            Assert.assertTrue("An exception occurred whilst scanning the HBase table.", false);
-        }
-        finally {
-            scanner.close();
-        }
+        } else
+            testFeatures.add(this.storeFauxFeature(framework, table));
+
+        // Retrieve a feature/features:
+        if (System.getProperty("com.github.seqware.benchmark", "false").equals("true")) {
+            for (int run = 0; run < BENCHMARK_RUNS; run++) {
+                deserializationTimes[run] = System.currentTimeMillis();
+                for (int i = 0; i < BENCHMARK_FEATURES; i++)
+                    this.retrieveFauxFeature(framework, table, testFeatures, true);
+                deserializationTimes[run] = System.currentTimeMillis() - deserializationTimes[run];
+            }
+        } else
+            this.retrieveFauxFeature(framework, table, testFeatures, false);
 
         // Clean-up:
-        hba.disableTable(TEST_TABLE);
-        hba.deleteTable(TEST_TABLE);
+        hba.disableTable(tableName);
+        hba.deleteTable(tableName);
+
+        // If this is a benchmarking run, then output the benchmarking data now:
+        if (System.getProperty("com.github.seqware.benchmark", "false").equals("true")) {
+            System.out.println("Benchmarking results (" + framework + "):");
+            System.out.println(" objects serialized/deserialized per run:\t" + BENCHMARK_FEATURES);
+
+            long serializationSum = 0, deserializationSum = 0;
+            for (int run = 0; run < BENCHMARK_RUNS; run++) {
+                System.out.println(" run " + (run + 1) + ":\t" + serializationTimes[run] + "\t" + deserializationTimes[run] + "\t(serialization/deserialization in ms)");
+                serializationSum += serializationTimes[run];
+                deserializationSum += deserializationTimes[run];
+            }
+
+            System.out.println(" average:\t" + (1. * serializationSum / serializationTimes.length) + "\t" + (1. * deserializationSum / deserializationTimes.length) + "\t(serialization/deserialization in ms)");
+        }
     }
 
     /**
@@ -254,5 +260,82 @@ public class HBaseTest {
      */
     private Feature deserializeFeatureWithProtobuf(Input serializedFeature) throws IOException {
         return fIO.pb2m(FeaturePB.parseFrom(serializedFeature));
+    }
+
+    private IdentifiedFeature storeFauxFeature(SerializationFramework framework, HTable table) throws IOException {
+        // Get one feature to serialize/deserialize:
+        Feature testFeature = Feature.newBuilder().setId("chr16").setStart(1000000).setStop(1000100).build();
+        FeatureSet set = InMemoryFeatureSet.newBuilder().setReference(InMemoryReference.newBuilder().setName("testRef").build()).build();
+        // we need to upgrade the feature with a link to an enforced FeatureSet like in the real back-end
+        FSGID fsgid = new FSGID(testFeature.getSGID(),testFeature, set);
+        testFeature.impersonate(fsgid, testFeature.getCreationTimeStamp(), testFeature.getPrecedingSGID());
+
+        // Streams that will hold the serialized objects:
+        ByteArrayOutputStream sgidBytes = new ByteArrayOutputStream();
+        ByteArrayOutputStream featureBytes = new ByteArrayOutputStream();
+
+        switch (framework) {
+            case KRYO:
+                this.serializeFeatureWithKryo(testFeature, sgidBytes, featureBytes);
+                break;
+            case PROTOBUF:
+                this.serializeFeatureWithProtobuf(testFeature, sgidBytes, featureBytes);
+                break;
+            default:
+                throw new UnsupportedOperationException("The given serialization method is not supported.");
+        }
+
+        Put p = new Put(sgidBytes.toByteArray());
+
+        // Serialize:
+        p.add(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes("feature"), featureBytes.toByteArray());
+        table.put(p);
+
+        return new IdentifiedFeature(sgidBytes.toByteArray(), testFeature);
+    }
+
+    private void retrieveFauxFeature(SerializationFramework framework, HTable table, List<IdentifiedFeature> testFeatures, boolean benchmarking) throws IOException {
+        for (IdentifiedFeature identifiedFeature : testFeatures) {
+            // Deserialize:
+            Get g = new Get(identifiedFeature.id);
+            Result r = table.get(g);
+            byte[] value = r.getValue(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes("feature"));
+
+            // We should get back a Feature object:
+            Input result = new Input(new ByteArrayInputStream(value));
+            Feature deserializedFeature = deserializeFeature(framework, result);
+
+            if (benchmarking)
+                return;
+
+            Assert.assertEquals("The deserialized feature does not match its expected contents.", identifiedFeature.feature, deserializedFeature);
+
+            // Check if the only object in the HBase table is the feature we put there:
+            Scan s = new Scan();
+            s.addColumn(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes("feature"));
+            ResultScanner scanner = table.getScanner(s);
+            try {
+                for (Result rr : scanner) {
+                    KeyValue[] kvArray = rr.raw();
+                    for (KeyValue kv : kvArray) {
+                        result = new Input(new ByteArrayInputStream(kv.getValue()));
+                        deserializedFeature = deserializeFeature(framework, result);
+
+                        boolean someKnownFeature = false;
+                        for (IdentifiedFeature identifiedFeatureIter : testFeatures)
+                            if (identifiedFeatureIter.feature.equals(deserializedFeature))
+                                someKnownFeature = true;
+
+                        Assert.assertTrue("A feature has been deserialized that has not been previously put in the table.", someKnownFeature);
+                    }
+                }
+            }
+            catch (Exception e) {
+                Assert.assertTrue("An exception occurred whilst scanning the HBase table.", false);
+            }
+            finally {
+                scanner.close();
+            }
+        }
     }
 }
