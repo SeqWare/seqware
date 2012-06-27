@@ -205,5 +205,10 @@
             <artifactId>protobuf-java</artifactId>
             <version>${protobuf.version}</version>
         </dependency>
+        <dependency>
+            <groupId>berkeley-db</groupId>
+            <artifactId>c-lib-with-java</artifactId>
+            <version>4.7.25</version>
+        </dependency>
     </dependencies>
 </project>

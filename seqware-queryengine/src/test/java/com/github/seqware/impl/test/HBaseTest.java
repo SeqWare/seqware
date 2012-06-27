@@ -3,26 +3,25 @@ package com.github.seqware.impl.test;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.FieldSerializer;
-import com.esotericsoftware.kryo.serializers.JavaSerializer;
 import com.github.seqware.dto.QueryEngine.FeaturePB;
-import com.github.seqware.factory.Factory;
-import com.github.seqware.impl.ApacheSerialization;
 import com.github.seqware.impl.protobufIO.FeatureIO;
+import com.github.seqware.impl.tuplebinderIO.FeatureTB;
+import com.github.seqware.impl.tuplebinderIO.SGIDTB;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import com.github.seqware.model.impl.inMemory.InMemoryFeatureSet;
 import com.github.seqware.model.impl.inMemory.InMemoryReference;
 import com.github.seqware.util.FSGID;
+import com.sleepycat.bind.tuple.TupleInput;
+import com.sleepycat.bind.tuple.TupleOutput;
+import com.sleepycat.db.DatabaseEntry;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
-
-import com.github.seqware.util.SGID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import junit.framework.Assert;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -43,31 +42,41 @@ import org.objenesis.strategy.SerializingInstantiatorStrategy;
  * @author jbaran
  */
 public class HBaseTest {
+
     private static final String TEST_TABLE = "seqwareTestTable";
     private static final String TEST_COLUMN = "fauxColumn";
-
     /**
-     * Number of runs to execute to determine average serialization/deserialization times.
+     * Number of runs to execute to determine average
+     * serialization/deserialization times.
      */
     private static final int BENCHMARK_RUNS = 10;
-
     /**
-     * Number of features that should be used for benchmarking serialization/deserialization.
+     * Number of features that should be used for benchmarking
+     * serialization/deserialization.
      */
     private static final int BENCHMARK_FEATURES = 10000;
 
     /**
-     * Determines which framework should be used for serializing/deserializing objects.
+     * Determines which framework should be used for serializing/deserializing
+     * objects.
      */
-    private enum SerializationFramework { KRYO, PROTOBUF, APACHE };
+    private enum SerializationFramework {
 
+        KRYO, PROTOBUF, APACHE //, TUPLEBINDER
+    };
     /**
-     * If Kryo is used, then this reference points to the Feature class serializer/deserializer:
+     * If Kryo is used, then this reference points to the Feature class
+     * serializer/deserializer:
      */
     private Kryo serializer;
-
     /**
-     * If Protobuf is used, then this reference points to the Feature class serializer/deserializer:
+     * If BerkeleyDB tuple binders are used, then these point to tuple binders
+     */
+    private FeatureTB featureTB;
+    private SGIDTB sgidTB;
+    /**
+     * If Protobuf is used, then this reference points to the Feature class
+     * serializer/deserializer:
      */
     private FeatureIO fIO;
 
@@ -75,6 +84,7 @@ public class HBaseTest {
      * Represents a feature and its HBase row identifier.
      */
     private static class IdentifiedFeature {
+
         byte[] id;
         Feature feature;
 
@@ -114,13 +124,31 @@ public class HBaseTest {
     @Test
     public void testHBaseTableWithProtobuf() throws IOException {
         fIO = new FeatureIO();
-
         testHBaseTable(SerializationFramework.PROTOBUF);
     }
-    
-    @Test 
-    public void testHBaseTableWithApache() throws IOException{
+
+    /**
+     * Create a fresh HBase table (drop existing one) and serialize/deserialize
+     * a Feature objects using Apache Serialization.
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testHBaseTableWithApache() throws IOException {
         testHBaseTable(SerializationFramework.APACHE);
+    }
+
+    /**
+     * Create a fresh HBase table (drop existing one) and serialize/deserialize
+     * a Feature objects using BerkeleyDB tuple binders.
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testHBaseTableWithTuple() throws IOException {
+        this.featureTB = new FeatureTB();
+        this.sgidTB = new SGIDTB();
+        //testHBaseTable(SerializationFramework.TUPLEBINDER);
     }
 
     /**
@@ -140,13 +168,13 @@ public class HBaseTest {
 
         // Create a fresh table, i.e. delete an existing table if it exists:
         HTableDescriptor ht = new HTableDescriptor(tableName);
-	    ht.addFamily(new HColumnDescriptor(TEST_COLUMN));
-	    HBaseAdmin hba = new HBaseAdmin(config);
-        if(hba.isTableAvailable(tableName)){
+        ht.addFamily(new HColumnDescriptor(TEST_COLUMN));
+        HBaseAdmin hba = new HBaseAdmin(config);
+        if (hba.isTableAvailable(tableName)) {
             hba.disableTable(tableName);
             hba.deleteTable(tableName);
         }
-	    hba.createTable( ht );
+        hba.createTable(ht);
 
         HTable table = new HTable(config, tableName);
 
@@ -159,23 +187,27 @@ public class HBaseTest {
         if (System.getProperty("com.github.seqware.benchmark", "false").equals("true")) {
             for (int run = 0; run < BENCHMARK_RUNS; run++) {
                 serializationTimes[run] = System.currentTimeMillis();
-                for (int i = 0; i < BENCHMARK_FEATURES; i++)
+                for (int i = 0; i < BENCHMARK_FEATURES; i++) {
                     testFeatures.add(this.storeFauxFeature(framework, table));
+                }
                 serializationTimes[run] = System.currentTimeMillis() - serializationTimes[run];
             }
-        } else
+        } else {
             testFeatures.add(this.storeFauxFeature(framework, table));
+        }
 
         // Retrieve a feature/features:
         if (System.getProperty("com.github.seqware.benchmark", "false").equals("true")) {
             for (int run = 0; run < BENCHMARK_RUNS; run++) {
                 deserializationTimes[run] = System.currentTimeMillis();
-                for (int i = 0; i < BENCHMARK_FEATURES; i++)
+                for (int i = 0; i < BENCHMARK_FEATURES; i++) {
                     this.retrieveFauxFeature(framework, table, testFeatures, true);
+                }
                 deserializationTimes[run] = System.currentTimeMillis() - deserializationTimes[run];
             }
-        } else
+        } else {
             this.retrieveFauxFeature(framework, table, testFeatures, false);
+        }
 
         // Clean-up:
         hba.disableTable(tableName);
@@ -202,7 +234,8 @@ public class HBaseTest {
      *
      * @param testFeature The feature that should be serialized.
      * @param sgidBytes Stream that is populated with the features unique ID.
-     * @param featureBytes Stream that holds the serialized contents of the feature.
+     * @param featureBytes Stream that holds the serialized contents of the
+     * feature.
      */
     private void serializeFeatureWithKryo(Feature testFeature, ByteArrayOutputStream sgidBytes, ByteArrayOutputStream featureBytes) {
         Output o = new Output(sgidBytes);
@@ -213,13 +246,15 @@ public class HBaseTest {
         serializer.writeObject(o, testFeature);
         o.close();
     }
-    
+
     /**
-     * Serializes a features unique ID and content using Apache (really Java) serialization.
+     * Serializes a features unique ID and content using Apache (really Java)
+     * serialization.
      *
      * @param testFeature The feature that should be serialized.
      * @param sgidBytes Stream that is populated with the features unique ID.
-     * @param featureBytes Stream that holds the serialized contents of the feature.
+     * @param featureBytes Stream that holds the serialized contents of the
+     * feature.
      */
     private void serializeFeatureWithApache(Feature testFeature, ByteArrayOutputStream sgidBytes, ByteArrayOutputStream featureBytes) {
         Output o = new Output(sgidBytes);
@@ -232,11 +267,38 @@ public class HBaseTest {
     }
 
     /**
+     * Serializes a features unique ID and content using TupleBinders.
+     *
+     * @param testFeature The feature that should be serialized.
+     * @param sgidBytes Stream that is populated with the features unique ID.
+     * @param featureBytes Stream that holds the serialized contents of the
+     * feature.
+     */
+    private void serializeFeatureWithBinders(Feature testFeature, ByteArrayOutputStream sgidBytes, ByteArrayOutputStream featureBytes) throws IOException {
+        Output o = new Output(sgidBytes);
+        TupleOutput value = new TupleOutput();
+        this.sgidTB.objectToEntry(testFeature.getSGID(), value);
+        byte[] data = value.toByteArray();
+        o.write(data);
+        value.close();
+        o.close();
+
+        o = new Output(featureBytes);
+        value = new TupleOutput();
+        this.featureTB.objectToEntry(testFeature, value);
+        data = value.toByteArray();
+        o.write(data);
+        value.close();
+        o.close();
+    }
+
+    /**
      * Serializes a features unique ID and content using Protobuf.
      *
      * @param testFeature The feature that should be serialized.
      * @param sgidBytes Stream that is populated with the features unique ID.
-     * @param featureBytes Stream that holds the serialized contents of the feature.
+     * @param featureBytes Stream that holds the serialized contents of the
+     * feature.
      */
     private void serializeFeatureWithProtobuf(Feature testFeature, ByteArrayOutputStream sgidBytes, ByteArrayOutputStream featureBytes) throws IOException {
         FeaturePB fpb = fIO.m2pb(testFeature);
@@ -253,20 +315,24 @@ public class HBaseTest {
     /**
      * Generic method for deserializing a feature.
      *
-     * @param framework Determines the framework that should be used for the deserialization.
-     * @param serializedFeature Input from which the serialized feature will be read.
+     * @param framework Determines the framework that should be used for the
+     * deserialization.
+     * @param serializedFeature Input from which the serialized feature will be
+     * read.
      * @return A deserialized feature.
      */
     private Feature deserializeFeature(SerializationFramework framework, Input serializedFeature) throws IOException {
         switch (framework) {
-        case KRYO:
-            return deserializeFeatureWithKryo(serializedFeature);
-        case PROTOBUF:
-            return deserializeFeatureWithProtobuf(serializedFeature);
-        case APACHE:
-            return deserializeFeatureWithApache(serializedFeature);
-        default:
-            throw new UnsupportedOperationException("Deserialization is not supported for the given method.");
+            case KRYO:
+                return deserializeFeatureWithKryo(serializedFeature);
+            case PROTOBUF:
+                return deserializeFeatureWithProtobuf(serializedFeature);
+            case APACHE:
+                return deserializeFeatureWithApache(serializedFeature);
+            //case TUPLEBINDER:
+            //    return deserializeFeatureWithBinders(serializedFeature);
+            default:
+                throw new UnsupportedOperationException("Deserialization is not supported for the given method.");
         }
     }
 
@@ -278,7 +344,7 @@ public class HBaseTest {
     private Feature deserializeFeatureWithKryo(Input serializedFeature) {
         return serializer.readObject(serializedFeature, Feature.class);
     }
-    
+
     /**
      * Deserialize a previously serialized feature using Apache.
      *
@@ -286,6 +352,26 @@ public class HBaseTest {
      */
     private Feature deserializeFeatureWithApache(Input serializedFeature) {
         return (Feature) SerializationUtils.deserialize(serializedFeature);
+    }
+
+    /**
+     * Deserialize a previously serialized feature using Apache.
+     *
+     * @return A deserialized feature.
+     */
+    private Feature deserializeFeatureWithBinders(Input serializedFeature) {
+        // not the most efficient, but good enough?
+        long length;
+        try {
+            length = serializedFeature.available();
+            byte[] bytes = new byte[(int) length];
+            serializedFeature.read(bytes);
+            TupleInput input = new TupleInput(bytes);
+            return (Feature) this.featureTB.entryToObject(new DatabaseEntry(bytes));
+        } catch (IOException ex) {
+            Logger.getLogger(HBaseTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     /**
@@ -302,7 +388,7 @@ public class HBaseTest {
         Feature testFeature = Feature.newBuilder().setId("chr16").setStart(1000000).setStop(1000100).build();
         FeatureSet set = InMemoryFeatureSet.newBuilder().setReference(InMemoryReference.newBuilder().setName("testRef").build()).build();
         // we need to upgrade the feature with a link to an enforced FeatureSet like in the real back-end
-        FSGID fsgid = new FSGID(testFeature.getSGID(),testFeature, set);
+        FSGID fsgid = new FSGID(testFeature.getSGID(), testFeature, set);
         testFeature.impersonate(fsgid, testFeature.getCreationTimeStamp(), testFeature.getPrecedingSGID());
 
         // Streams that will hold the serialized objects:
@@ -319,6 +405,9 @@ public class HBaseTest {
             case APACHE:
                 this.serializeFeatureWithApache(testFeature, sgidBytes, featureBytes);
                 break;
+            //case TUPLEBINDER:
+            //    this.serializeFeatureWithBinders(testFeature, sgidBytes, featureBytes);
+            //    break;
             default:
                 throw new UnsupportedOperationException("The given serialization method is not supported.");
         }
@@ -343,8 +432,9 @@ public class HBaseTest {
             Input result = new Input(new ByteArrayInputStream(value));
             Feature deserializedFeature = deserializeFeature(framework, result);
 
-            if (benchmarking)
+            if (benchmarking) {
                 return;
+            }
 
             Assert.assertEquals("The deserialized feature does not match its expected contents.", identifiedFeature.feature, deserializedFeature);
 
@@ -360,18 +450,18 @@ public class HBaseTest {
                         deserializedFeature = deserializeFeature(framework, result);
 
                         boolean someKnownFeature = false;
-                        for (IdentifiedFeature identifiedFeatureIter : testFeatures)
-                            if (identifiedFeatureIter.feature.equals(deserializedFeature))
+                        for (IdentifiedFeature identifiedFeatureIter : testFeatures) {
+                            if (identifiedFeatureIter.feature.equals(deserializedFeature)) {
                                 someKnownFeature = true;
+                            }
+                        }
 
                         Assert.assertTrue("A feature has been deserialized that has not been previously put in the table.", someKnownFeature);
                     }
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Assert.assertTrue("An exception occurred whilst scanning the HBase table.", false);
-            }
-            finally {
+            } finally {
                 scanner.close();
             }
         }
