@@ -3,6 +3,7 @@ package com.github.seqware.model.test;
 import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.*;
+import com.github.seqware.model.impl.MoleculeImpl;
 import com.github.seqware.model.impl.inMemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.model.interfaces.ACL;
 import com.github.seqware.model.interfaces.ACLable;
@@ -71,7 +72,7 @@ public class ACLTest {
     public void testACLWithVersions() {
 //        Logger.getLogger(ACLTest.class.getName()).log(Level.INFO, "@Test");
         // check that everything looks ok
-        FeatureSet targetSet = (FeatureSet) Factory.getFeatureStoreInterface().getAtomBySGID(fSet.getSGID());
+        FeatureSet targetSet = (FeatureSet) Factory.getFeatureStoreInterface().getAtomBySGID(fSet.getSGID(), FeatureSet.class);
         // check some versioning while we are at it
         Assert.assertTrue("wrong owner", targetSet.getPermissions().getOwner().equals(marshmallowUser));
         Assert.assertTrue("wrong owner for old version", targetSet.getPrecedingVersion().getPermissions().getOwner().equals(titanicUser));
@@ -99,7 +100,7 @@ public class ACLTest {
         }
         mManager.flush();
         for(Molecule mol : mols){
-            Molecule molFromBackEnd = (Molecule) Factory.getFeatureStoreInterface().getAtomBySGID(mol.getSGID());
+            Molecule molFromBackEnd = (Molecule) Factory.getFeatureStoreInterface().getAtomBySGID(mol.getSGID(), ((MoleculeImpl)mol).getHBaseClass());
             try{
                 Assert.assertTrue(molFromBackEnd.getPermissions().getOwner().equals(newUser));
                 Assert.assertTrue(molFromBackEnd.getPermissions().getGroup().equals(newGroup));
@@ -114,7 +115,7 @@ public class ACLTest {
         }
         mManager.flush();
         for(Molecule mol : mols){
-            Molecule molFromBackEnd = (Molecule) Factory.getFeatureStoreInterface().getAtomBySGID(mol.getSGID());
+            Molecule molFromBackEnd = (Molecule) Factory.getFeatureStoreInterface().getAtomBySGID(mol.getSGID(), ((MoleculeImpl)mol).getHBaseClass());
             Assert.assertTrue(molFromBackEnd.getPermissions().getOwner().equals(newUser2));
             // TODO: not sure why we need the cast here when it works for the subclasses, something has gone awry in template classes land?
             Assert.assertTrue(((Molecule)molFromBackEnd.getPrecedingVersion()).getPermissions().getOwner().equals(newUser));

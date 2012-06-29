@@ -1,11 +1,9 @@
 package com.github.seqware.model.impl.inMemory;
 
 import com.github.seqware.factory.ModelManager;
-import com.github.seqware.model.Feature;
-import com.github.seqware.model.interfaces.AbstractMolSet;
-import com.github.seqware.model.Molecule;
-import com.github.seqware.model.interfaces.Taggable;
 import com.github.seqware.model.impl.MoleculeImpl;
+import com.github.seqware.model.interfaces.AbstractMolSet;
+import com.github.seqware.model.interfaces.Taggable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;

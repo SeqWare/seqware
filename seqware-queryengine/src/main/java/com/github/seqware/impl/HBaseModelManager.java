@@ -17,10 +17,8 @@
 package com.github.seqware.impl;
 
 import com.github.seqware.model.Feature;
-import com.github.seqware.model.FeatureSet;
 import com.github.seqware.util.FSGID;
 import com.github.seqware.util.SGID;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -47,23 +45,10 @@ public class HBaseModelManager extends SimpleModelManager {
     @Override
     protected void flush(boolean maintainState) {
         List<Entry<SGID, AtomStatePair>> workingList = grabObjectsToBeFlushed();
-
-        // upgrade SGID for newly created Features
-        List<FeatureSet> fSets = new ArrayList<FeatureSet>();
-        for (Entry<SGID, AtomStatePair> p : workingList) {
-            if (p.getValue().getP() instanceof FeatureSet) {
-                fSets.add((FeatureSet) p.getValue().getP());
-            }
-        }
-        // upgrade and check for orphaned Features
+        // check for orphaned Features
         for (Entry<SGID, AtomStatePair> p : workingList) {
             if (p.getValue().getState() == State.NEW_CREATION && p.getValue().getP() instanceof Feature) {
                 Feature f = (Feature) p.getValue().getP();
-                // try to upgrade
-                for (FeatureSet fS : fSets) {
-                    FSGID fsgid = new FSGID(f.getSGID(), f, fS);
-                    f.impersonate(fsgid, f.getTimestamp(), f.getPrecedingSGID());
-                }
                 // should be upgraded now, if not
                 if (!(f.getSGID() instanceof FSGID)) {
                     // this should not happen

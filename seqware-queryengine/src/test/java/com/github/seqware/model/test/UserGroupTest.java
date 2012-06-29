@@ -87,7 +87,7 @@ public class UserGroupTest {
         // check old User's password via Versionable interface
         Assert.assertTrue(n1.getPrecedingVersion().checkPassword(password1));  
         // check old User's password by re-retrieving it
-        User oldN1 = (User) Factory.getFeatureStoreInterface().getAtomBySGID(oldUser.getSGID());
+        User oldN1 = Factory.getFeatureStoreInterface().getAtomBySGID(oldUser.getSGID(), User.class);
         Assert.assertTrue(oldN1.checkPassword(password1));  
     }
 }

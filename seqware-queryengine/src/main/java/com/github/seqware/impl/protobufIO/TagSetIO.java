@@ -48,7 +48,7 @@ public class TagSetIO implements ProtobufTransferInterface<TagSetPB, TagSet>{
         }
         for(SGIDPB refID : userpb.getTagIDsList()){
             SGID sgid = SGIDIO.pb2m(refID);
-            Tag ref = (Tag)Factory.getFeatureStoreInterface().getAtomBySGID(sgid);
+            Tag ref = (Tag)Factory.getFeatureStoreInterface().getAtomBySGID(sgid, Tag.class);
             user.add(ref);
         }
         return user;

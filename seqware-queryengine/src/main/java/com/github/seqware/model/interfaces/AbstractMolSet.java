@@ -16,6 +16,7 @@
  */
 package com.github.seqware.model.interfaces;
 
+import com.github.seqware.model.Feature;
 import com.github.seqware.model.Molecule;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.Set;
@@ -60,7 +61,7 @@ public interface AbstractMolSet<S extends AbstractMolSet, T> extends SeqWareIter
      * @return
      */
     public abstract S remove(T element);
-
+    
     /**
      * Rebuild the underlying set architecture. This is only intended to be a
      * back-end method since sets may become inconsistent after a flush.

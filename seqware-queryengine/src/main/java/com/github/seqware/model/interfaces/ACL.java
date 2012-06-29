@@ -28,8 +28,8 @@ import org.apache.commons.lang.SerializationUtils;
  */
 public class ACL implements Serializable {
 
-    private LazyReference<User> owner = new LazyLatestReference<User>();
-    private LazyReference<Group> group = new LazyLatestReference<Group>();
+    private LazyReference<User> owner = new LazyLatestReference<User>(User.class);
+    private LazyReference<Group> group = new LazyLatestReference<Group>(Group.class);
     //private User owner = null;
     //private Group group = null;
     private List<Boolean> rights = new ArrayList<Boolean>();

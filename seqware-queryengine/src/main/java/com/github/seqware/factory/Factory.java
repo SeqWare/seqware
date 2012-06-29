@@ -111,7 +111,7 @@ public class Factory {
     private static Model_Type current_backend = DEFAULT_BACKEND;
     private static final Storage_Type DEFAULT_STORAGE = Storage_Type.IN_MEMORY;
     private static Storage_Type current_storage = DEFAULT_STORAGE;
-    private static final Serialization_Type DEFAULT_SERIALIZATION = Serialization_Type.APACHE;
+    private static final Serialization_Type DEFAULT_SERIALIZATION = Serialization_Type.PROTOBUF;
     private static Serialization_Type current_serialization = DEFAULT_SERIALIZATION;
     
     private static SerializationInterface serialInstance = null;
