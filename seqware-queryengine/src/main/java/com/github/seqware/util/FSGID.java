@@ -23,6 +23,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.github.seqware.impl.HBaseStorage;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
+import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,16 +43,22 @@ public class FSGID extends SGID implements KryoSerializable {
     public String toString() {
         return rowKey + "." + super.toString() /** + "." + featureSetID.toString() */;
     }
-
-    /**
-     * Anonymous constructor, leaves the object in an unusable state
-     */
-    public FSGID() {
+    
+    public FSGID(long mostSig, long leastSig, String rowKey) {
+        super(mostSig, leastSig);
+        this.rowKey = rowKey;
     }
 
+
+    /**
+     * Create a fully functional FSGID
+     * @param sgid
+     * @param f
+     * @param fSet 
+     */
     public FSGID(SGID sgid, Feature f, FeatureSet fSet) {
+        super(sgid.getUuid().getMostSignificantBits(), sgid.getUuid().getLeastSignificantBits());
         try {
-            this.setUuid(sgid.getUuid());
      //       this.featureSetID = fSet.getSGID();
             // generate row key
             StringBuilder builder = new StringBuilder();
@@ -98,10 +105,12 @@ public class FSGID extends SGID implements KryoSerializable {
     @Override
     public void write(Kryo kryo, Output output) {
         // doesn't seem to inherit properly?
-        output.writeLong(this.getUuid().getLeastSignificantBits());
-        output.writeLong(this.getUuid().getMostSignificantBits());
-//        output.writeLong(this.featureSetID.getUuid().getLeastSignificantBits());
-//        output.writeLong(this.featureSetID.getUuid().getMostSignificantBits());
+        output.writeLong(super.getUuid().getLeastSignificantBits());
+        output.writeLong(super.getUuid().getMostSignificantBits());
+        output.writeBoolean(super.getBackendTimestamp() != null);
+        if (super.getBackendTimestamp() != null){
+            output.writeLong(super.getBackendTimestamp().getTime());
+        }
         output.writeString(rowKey);
     }
 
@@ -110,20 +119,10 @@ public class FSGID extends SGID implements KryoSerializable {
         long leastSig = input.readLong();
         long mostSig = input.readLong();
         this.setUuid(new UUID(mostSig, leastSig));
-        leastSig = input.readLong();
-        mostSig = input.readLong();
-//        this.featureSetID = new SGID();
-//        this.featureSetID.setUuid(new UUID(mostSig, leastSig));
+        boolean hasTimestamp = input.readBoolean();
+        if (hasTimestamp){
+            super.setBackendTimestamp(new Date(input.readLong()));
+        }
         this.rowKey = input.readString();
-    }
-
-//    public void setFeatureSetID(SGID featureSetID) {
-//        this.featureSetID = featureSetID;
-//    }
-
-    public void setRowKey(String rowKey) {
-        this.rowKey = rowKey;
-    }
-    
-    
+    }  
 }

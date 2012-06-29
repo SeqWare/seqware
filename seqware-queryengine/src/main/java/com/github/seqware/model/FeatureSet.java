@@ -2,7 +2,7 @@ package com.github.seqware.model;
 
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.impl.MoleculeImpl;
-import com.github.seqware.model.interfaces.AbstractSet;
+import com.github.seqware.model.interfaces.AbstractMolSet;
 import com.github.seqware.model.interfaces.BaseBuilder;
 import com.github.seqware.util.SGID;
 import java.util.Iterator;
@@ -19,7 +19,7 @@ import java.util.Set;
  *
  * @author jbaran
  */
-public abstract class FeatureSet extends MoleculeImpl<FeatureSet> implements AbstractSet<FeatureSet, Feature> {
+public abstract class FeatureSet extends MoleculeImpl<FeatureSet> implements AbstractMolSet<FeatureSet, Feature> {
     public final static String prefix = "FeatureSet";
 
     /**

@@ -2,7 +2,7 @@ package com.github.seqware.model.impl.inMemory;
 
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.Feature;
-import com.github.seqware.model.interfaces.AbstractSet;
+import com.github.seqware.model.interfaces.AbstractMolSet;
 import com.github.seqware.model.Molecule;
 import com.github.seqware.model.interfaces.Taggable;
 import com.github.seqware.model.impl.MoleculeImpl;
@@ -12,11 +12,11 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * An in-memory representation of a AbstractSet.
+ * An in-memory representation of a AbstractMolSet.
  *
  * @author dyuen
  */
-public abstract class AbstractInMemorySet<S extends AbstractSet, T> extends MoleculeImpl<S> implements AbstractSet<S, T>, Taggable{
+public abstract class AbstractInMemorySet<S extends AbstractMolSet, T> extends MoleculeImpl<S> implements AbstractMolSet<S, T>, Taggable{
     
     protected Set<T> set = new HashSet<T>();
     
@@ -63,6 +63,15 @@ public abstract class AbstractInMemorySet<S extends AbstractSet, T> extends Mole
             this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
         }
         return (S) this;
+    }
+    
+    @Override
+    public void rebuild() {
+        Set<T> newSet = new HashSet<T>();
+        for(T f : this.set){
+            newSet.add(f);
+        }
+        this.set = newSet;
     }
 
     @Override

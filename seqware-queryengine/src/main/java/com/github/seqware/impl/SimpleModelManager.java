@@ -23,10 +23,10 @@ import com.github.seqware.model.Analysis.Builder;
 import com.github.seqware.model.*;
 import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.model.impl.inMemory.*;
+import com.github.seqware.model.interfaces.AbstractMolSet;
 import com.github.seqware.util.SGID;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  * efficient later.
  *
  * The current idea is that we try to minimize the interaction with the user by
- * using Hibernate/JPA-like semantics
+ * using Hibernate/JPA-like semantics.
  *
  * @author dyuen
  */
@@ -44,6 +44,42 @@ public class SimpleModelManager implements ModelManager {
     private Map<SGID, AtomStatePair> dirtySet = new HashMap<SGID, AtomStatePair>();
     private BackEndInterface backend = Factory.getBackEnd();
 
+    protected void flushObjects(List<Entry<SGID, AtomStatePair>> workingList) {
+        // this is ugly, but if do end up using phased flushing, we should have one map per class type
+        Set<Class> classesToFlush = new HashSet<Class>();
+        classesToFlush.add(Tag.class);
+        flushObjectsOfClass(workingList, classesToFlush);
+        classesToFlush.clear();
+        classesToFlush.add(Feature.class);
+        classesToFlush.add(User.class);
+        classesToFlush.add(Reference.class);
+        classesToFlush.add(Analysis.class);
+        flushObjectsOfClass(workingList, classesToFlush);
+        classesToFlush.clear();
+        classesToFlush.add(FeatureSet.class);
+        classesToFlush.add(Group.class);
+        classesToFlush.add(TagSet.class);
+        classesToFlush.add(ReferenceSet.class);
+        classesToFlush.add(AnalysisSet.class);
+        flushObjectsOfClass(workingList, classesToFlush);
+    }
+
+    protected void flushObjectsOfClass(List<Entry<SGID, AtomStatePair>> workingList, Set<Class> classes) {
+        // we'll need to flush members of sets first before flushing sets
+        for (Entry<SGID, AtomStatePair> p : workingList) {
+            AtomImpl p1 = (AtomImpl) p.getValue().getP();
+            if (classes.contains(p1.getHBaseClass())) {
+                if (p.getValue().getState() == State.NEW_VERSION) {
+                    // if they have preceding versions do an update, otherwise store
+                    // only molecules should have preceding states
+                    backend.update(p.getValue().getP());
+                } else {
+                    backend.store(p.getValue().getP());
+                }
+            }
+        }
+    }
+
     protected BackEndInterface getBackend() {
         return backend;
     }
@@ -51,17 +87,15 @@ public class SimpleModelManager implements ModelManager {
     protected Map<SGID, AtomStatePair> getDirtySet() {
         return dirtySet;
     }
-    
-    
 
     @Override
     public void persist(Atom p) {
-        if (this.dirtySet.containsKey(p.getSGID())){
+        if (this.dirtySet.containsKey(p.getSGID())) {
             Logger.getLogger(SimpleModelManager.class.getName()).log(Level.INFO, "Attempted to persist a managed object, ignored it");
             return;
         }
         // we also have to make sure that the correct manager is associated with this Atom
-        ((AtomImpl)p).setManager(this);
+        ((AtomImpl) p).setManager(this);
         this.dirtySet.put(p.getSGID(), new AtomStatePair(p, State.MANAGED));
     }
 
@@ -73,29 +107,61 @@ public class SimpleModelManager implements ModelManager {
     @Override
     public void close() {
         // close connection with all objects
-        for(AtomStatePair p : dirtySet.values()){
-            ((AtomImpl)p.p).setManager(null);
+        for (AtomStatePair p : dirtySet.values()) {
+            ((AtomImpl) p.p).setManager(null);
         }
-        this.flush();
+        this.flush(false);
         this.clear();
     }
 
     @Override
     public void flush() {
-        // update dirty objects
-        for (Entry<SGID, AtomStatePair> p : dirtySet.entrySet()) {
-            if (p.getValue().getState() == State.NEW_CREATION || p.getValue().getState() == State.NEW_VERSION){
-                if (p.getValue().getState() == State.NEW_VERSION){
-                    // if they have preceding versions do an update, otherwise store
-                    // only molecules should have preceding states
-                    backend.update((Atom)dirtySet.get(p.getKey()).getP());
-                } else {
-                    backend.store(dirtySet.get(p.getKey()).getP());
-                }
-            }
-            p.getValue().setState(State.MANAGED);
+        this.flush(true);
+    }
+
+    /**
+     * Normally, when doing a flush, we want to maintain the state of objects
+     * that
+     *
+     * @param maintainState update flushed objects with the current state of
+     * things
+     */
+    protected void flush(boolean maintainState) {
+        List<Entry<SGID, AtomStatePair>> workingList = grabObjectsToBeFlushed();
+        flushObjects(workingList);
+        if (maintainState) {
+            manageFlushedObjects(workingList);
         }
-        
+    }
+
+    protected void manageFlushedObjects(List<Entry<SGID, AtomStatePair>> workingList) {
+        // reset dirty map and put back the objects from the working list
+        for (Entry<SGID, AtomStatePair> e : workingList) {
+// looks redundant
+//            dirtySet.remove(e.getKey());
+//            e.getValue().setState(State.MANAGED);
+            if (e.getValue().getP() instanceof AbstractMolSet) {
+                ((AbstractMolSet) e.getValue().getP()).rebuild();
+            }
+            e.getValue().setState(State.MANAGED);
+            dirtySet.put(e.getKey(), e.getValue());
+        }
+    }
+
+    protected List<Entry<SGID, AtomStatePair>> grabObjectsToBeFlushed() {
+        // update dirty objects
+        // TODO: to deal with the possible semantics of the back-end timestamp, we need to
+        // remove objects from a map before they change and then put them back afterwards
+        List<Entry<SGID, AtomStatePair>> workingList = new ArrayList<Entry<SGID, AtomStatePair>>();
+        for (Entry<SGID, AtomStatePair> p : dirtySet.entrySet()) {
+            if (p.getValue().getState() == State.NEW_CREATION || p.getValue().getState() == State.NEW_VERSION) {
+                workingList.add(p);
+            }
+        }
+        for (Entry<SGID, AtomStatePair> e : workingList) {
+            dirtySet.remove(e.getKey());
+        }
+        return workingList;
     }
 
     @Override
@@ -186,8 +252,7 @@ public class SimpleModelManager implements ModelManager {
         assert (aSet != null);
         return aSet;
     }
-  
-    
+
     @Override
     public void objectCreated(Atom source) {
         AtomStateChange(source, State.NEW_CREATION);
@@ -197,24 +262,24 @@ public class SimpleModelManager implements ModelManager {
     public void AtomStateChange(Atom source, State state) {
         // check for valid state transitions
         boolean validTransition = false;
-        if (this.dirtySet.containsKey(source.getSGID())){
+        if (this.dirtySet.containsKey(source.getSGID())) {
             State current = this.dirtySet.get(source.getSGID()).getState();
-            if (current == State.MANAGED && state == State.NEW_VERSION){
+            if (current == State.MANAGED && state == State.NEW_VERSION) {
                 validTransition = true;
-            } else if (current == State.MANAGED && state == State.NEW_CREATION){
+            } else if (current == State.MANAGED && state == State.NEW_CREATION) {
                 validTransition = true;
-            } else if (current == State.UNMANAGED && state == State.MANAGED){
+            } else if (current == State.UNMANAGED && state == State.MANAGED) {
                 validTransition = true;
-            } else if (current == State.NEW_CREATION && state == State.MANAGED){
+            } else if (current == State.NEW_CREATION && state == State.MANAGED) {
                 validTransition = true;
-            } else if (current == State.NEW_VERSION && state == State.MANAGED){
+            } else if (current == State.NEW_VERSION && state == State.MANAGED) {
                 validTransition = true;
             }
-        } else{
+        } else {
             // assume all other transitions are valid for now
             validTransition = true;
         }
-        if (validTransition){
+        if (validTransition) {
             this.dirtySet.put(source.getSGID(), new AtomStatePair(source, state));
         }
     }
@@ -228,9 +293,10 @@ public class SimpleModelManager implements ModelManager {
         assert (aSet != null);
         return aSet;
     }
-    
-    protected class AtomStatePair{
-        protected AtomStatePair(Atom p, State state){
+
+    protected class AtomStatePair {
+
+        protected AtomStatePair(Atom p, State state) {
             this.p = p;
             this.state = state;
         }
@@ -264,18 +330,20 @@ public class SimpleModelManager implements ModelManager {
         protected void setState(State state) {
             this.state = state;
         }
-        
+
         @Override
-        public String toString(){
+        public String toString() {
             return state.toString() + " " + p.toString();
         }
     }
-    
+
     /**
-     * Used for testing only, override the backend choice when testing implementations
-     * @param backend 
+     * Used for testing only, override the backend choice when testing
+     * implementations
+     *
+     * @param backend
      */
-    public void overrideBackEnd(BackEndInterface backend){
+    public void overrideBackEnd(BackEndInterface backend) {
         this.backend = backend;
     }
 }

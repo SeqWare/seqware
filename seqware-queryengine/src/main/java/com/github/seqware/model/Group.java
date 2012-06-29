@@ -2,14 +2,14 @@ package com.github.seqware.model;
 
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.impl.AtomImpl;
-import com.github.seqware.model.interfaces.AbstractSet;
+import com.github.seqware.model.interfaces.AbstractMolSet;
 import com.github.seqware.model.interfaces.BaseBuilder;
 
 /**
  * A Group of users that may share ACL permissions
  * @author dyuen
  */
-public interface Group extends AbstractSet<Group, User> {
+public interface Group extends AbstractMolSet<Group, User> {
     public final static String prefix = "Group";
 
     /**

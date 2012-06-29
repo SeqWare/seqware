@@ -20,6 +20,7 @@ message SGIDPB {
     // just store the fields to create a UUID
     optional int64 mostSigBits = 1;
     optional int64 leastSigBits = 2;
+    optional int64 timestamp = 3;
 }
 
 message FSGIDPB {

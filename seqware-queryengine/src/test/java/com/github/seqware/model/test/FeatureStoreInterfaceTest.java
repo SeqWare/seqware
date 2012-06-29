@@ -40,7 +40,7 @@ public class FeatureStoreInterfaceTest {
     @Test
     public void testFeatureCreationAndIterate() {
         UUID testID = UUID.randomUUID();
-        System.out.println("running base test in testID: " + testID.toString());
+        //System.out.println("running base test in testID: " + testID.toString());
         // get FeatureSets from the back-end
         boolean b1 = false;
         boolean b2 = false;
@@ -58,6 +58,6 @@ public class FeatureStoreInterfaceTest {
         }
 
         Assert.assertTrue(b1 && b2 && b3);
-        System.out.println("ending base test in testID: " + testID.toString());
+        // System.out.println("ending base test in testID: " + testID.toString());
     }
 }

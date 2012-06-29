@@ -25,7 +25,7 @@ public class FeatureTB extends TupleBinding {
     Feature f = (Feature)object;
     to.writeLong(f.getSGID().getUuid().getMostSignificantBits());
     to.writeLong(f.getSGID().getUuid().getLeastSignificantBits());
-    to.writeLong(f.getCreationTimeStamp().getTime());
+    to.writeLong(f.getTimestamp().getTime());
     //to.writeLong(f.getPrecedingSGID().getUuid().getMostSignificantBits());
     //to.writeLong(f.getPrecedingSGID().getUuid().getLeastSignificantBits());
     to.writeString(f.getPragma());

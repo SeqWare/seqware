@@ -54,7 +54,7 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
         List<T> list = new ArrayList<T>();
         Iterable<SGID> allAtomsForTable = ((HBaseStorage) storage).getAllAtomsForTable(prefix);
         for (SGID u : allAtomsForTable) { //listOfEverything) {
-            T p = storage.deserializeTargetToAtom(u, t);
+            T p = storage.deserializeTargetToLatestAtom(u, t);
             list.add(p);
         }
         return new InMemoryIterable(list);

@@ -49,7 +49,7 @@ public class GroupIO implements ProtobufTransferInterface<GroupPB, Group>{
         }
         for(SGIDPB refID : pb.getUsersList()){
             SGID sgid = SGIDIO.pb2m(refID);
-            User ref = (User)Factory.getFeatureStoreInterface().getAtomBySGID(sgid);
+            User ref = (User)Factory.getFeatureStoreInterface().getLatestAtomBySGID(sgid);
             user.add(ref);
         }
         return user;

@@ -32,9 +32,9 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      */
     private SGID sgid = new SGID();
     /**
-     * Exposed timestamp of this Atom
+     * Exposed clientTimestamp of this Atom
      */
-    private Date timestamp;
+    private Date clientTimestamp;
     /**
      * Current manager
      */
@@ -44,14 +44,14 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     private LazyReference<T> precedingVersion = new LazyReference<T>();
 
     protected AtomImpl() {
-        this.timestamp = new Date();
+        this.clientTimestamp = new Date();
     }
 
     /**
      * Copy constructor, used to generate a shallow copy of a Atom with
-     * potentially a new timestamp and UUID
+     * potentially a new clientTimestamp and UUID
      *
-     * @param newSGID whether or not to generate a new UUID and timestamp for
+     * @param newSGID whether or not to generate a new UUID and clientTimestamp for
      * the new copy
      */
     @Override
@@ -60,7 +60,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
         // TODO This will have to be replaced with a stronger UUID generation method.
         if (newSGID) {
             this.sgid = new SGID();
-            this.timestamp = new Date();
+            this.clientTimestamp = new Date();
         }
         T newAtom = (T) SerializationUtils.clone(this);
         // copy over the transient properties for now
@@ -94,17 +94,17 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      * resource
      */
     @Override
-    public Date getCreationTimeStamp() {
-        return timestamp;
+    public Date getTimestamp() {
+        return clientTimestamp;
     }
 
     /**
-     * Set the timestamp, this should never be called outside of the backend
+     * Set the clientTimestamp, this should never be called outside of the backend
      *
-     * @param timestamp new time stamp
+     * @param clientTimestamp new time stamp
      */
     public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
+        this.clientTimestamp = timestamp;
     }
 
     /**

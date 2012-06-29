@@ -2,7 +2,7 @@ package com.github.seqware.model;
 
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.impl.AtomImpl;
-import com.github.seqware.model.interfaces.AbstractSet;
+import com.github.seqware.model.interfaces.AbstractMolSet;
 import com.github.seqware.model.interfaces.BaseBuilder;
 import java.util.Iterator;
 
@@ -14,7 +14,7 @@ import java.util.Iterator;
  * @author dyuen
  * @author jbaran
  */
-public interface Reference extends AbstractSet<Reference, FeatureSet> {
+public interface Reference extends AbstractMolSet<Reference, FeatureSet> {
     public final static String prefix = "Reference";
 
     /**

@@ -17,6 +17,9 @@
 package com.github.seqware.impl;
 
 import com.github.seqware.model.Atom;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.lang.SerializationException;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.hadoop.hbase.util.Bytes;
 
@@ -25,6 +28,8 @@ import org.apache.hadoop.hbase.util.Bytes;
  * @author dyuen
  */
 public class ApacheSerialization implements SerializationInterface {
+    
+    private boolean corruptClassesDetected = false;
 
     @Override
     public byte[] serialize(Atom atom) {
@@ -34,9 +39,16 @@ public class ApacheSerialization implements SerializationInterface {
 
     @Override
     public <T> T deserialize(byte[] bytes, Class<T> type) {
-        int serialConstant = Bytes.toInt(Bytes.head(bytes, 4));
-        if (serialConstant == getSerializationConstant()){
-            return (T)SerializationUtils.deserialize(Bytes.tail(bytes, bytes.length-4));
+        try {
+            int serialConstant = Bytes.toInt(Bytes.head(bytes, 4));
+            if (serialConstant == getSerializationConstant()) {
+                return (T) SerializationUtils.deserialize(Bytes.tail(bytes, bytes.length - 4));
+            }
+        } catch (SerializationException e) {
+            if (!corruptClassesDetected){
+                corruptClassesDetected = true;
+                Logger.getLogger(ApacheSerialization.class.getName()).log(Level.INFO, "ApacheSerialization hit an invalid byte array, ignore if this is expected");
+            }
         }
         return null;
     }
@@ -45,6 +57,4 @@ public class ApacheSerialization implements SerializationInterface {
     public int getSerializationConstant() {
         return 0;
     }
-    
-    
 }

@@ -1,12 +1,10 @@
 package com.github.seqware.model.test;
 
-import com.github.seqware.model.interfaces.Taggable;
-import com.github.seqware.model.AnalysisPluginInterface;
 import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.*;
 import com.github.seqware.model.impl.inMemory.InMemoryFeaturesAllPlugin;
-import com.github.seqware.model.impl.inMemory.InMemoryQueryFutureImpl;
+import com.github.seqware.model.interfaces.Taggable;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -19,7 +19,7 @@ package com.github.seqware.impl.protobufIO;
 import com.github.seqware.dto.QESupporting;
 import com.github.seqware.dto.QESupporting.FSGIDPB;
 import com.github.seqware.util.FSGID;
-import java.util.UUID;
+import java.util.Date;
 
 /**
  *
@@ -27,11 +27,12 @@ import java.util.UUID;
  */
 public class FSGIDIO {
 
-    public static FSGID pb2m(FSGIDPB pb) {
-        FSGID sgid = new FSGID();
-        sgid.setUuid(new UUID(pb.getSgid().getMostSigBits(), pb.getSgid().getLeastSigBits()));
-        sgid.setRowKey(pb.getRowKey());
-//        sgid.setFeatureSetID(new SGID(pb.getFeatureSetID().getMostSigBits(), pb.getFeatureSetID().getLeastSigBits()));
+    public static FSGID pb2m(FSGIDPB pb) {  
+        FSGID sgid = new FSGID(pb.getSgid().getMostSigBits(), pb.getSgid().getLeastSigBits(), pb.getRowKey());
+        if (pb.getSgid().hasTimestamp()){
+            sgid.setBackendTimestamp(new Date(pb.getSgid().getTimestamp()));
+        }
+//        sgid.setFeatureSetID(new SGID(pb.getFeatMureSetID().getMostSigBits(), pb.getFeatureSetID().getLeastSigBits()));
         return sgid;
     }
 

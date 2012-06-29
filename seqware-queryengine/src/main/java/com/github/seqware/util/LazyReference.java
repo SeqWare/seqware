@@ -28,9 +28,9 @@ import java.io.Serializable;
  */
 public class LazyReference<T extends Atom> implements Serializable {
 
-    private transient boolean referenceChecked = false;
-    private transient T referenceCache = null;
-    private SGID referenceSGID = null;
+    protected transient boolean referenceChecked = false;
+    protected transient T referenceCache = null;
+    protected SGID referenceSGID = null;
 
     @Override
     public boolean equals(Object ref){

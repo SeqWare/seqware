@@ -31,9 +31,11 @@ public abstract class StorageInterface {
             .put(FeatureSet.class, FeatureSet.prefix).put(Analysis.class, Analysis.prefix).put(AnalysisSet.class, AnalysisSet.prefix)
             .put(Reference.class, Reference.prefix).put(ReferenceSet.class, ReferenceSet.prefix).put(Tag.class, Tag.prefix)
             .put(TagSet.class, TagSet.prefix).put(User.class, User.prefix).put(Group.class, Group.prefix).build();
-    protected static final String separator = ".";
+    public static final String separator = ".";
+    
     /**
      * Generically serialize a Atom into the interface
+     * This method is also responsible for ensuring that the atom's backendTimestamp is populated
      * @param obj 
      */
     public abstract void serializeAtomToTarget(Atom obj);
@@ -46,6 +48,14 @@ public abstract class StorageInterface {
     public abstract Atom deserializeTargetToAtom(SGID sgid);
     
     /**
+     * Generically get back the latest Atom in a chain from the store using a sgid
+     * while ignoring the timestamp
+     * @param sgid
+     * @return null if no Atom is present with this sgid
+     */
+    public abstract Atom deserializeTargetToLatestAtom(SGID sgid);
+    
+    /**
      * Generically get back a specific class of Atom from the store using a sgid 
      * @param <T>
      * @param sgid
@@ -53,6 +63,16 @@ public abstract class StorageInterface {
      * @return 
      */
     public abstract <T extends Atom> T deserializeTargetToAtom(SGID sgid, Class<T> t);
+    
+    /**
+     * Generically get back a specific class of Atom from the store using a sgid 
+     * while ignoring the timestamp to get the latest one
+     * @param <T>
+     * @param sgid
+     * @param t
+     * @return 
+     */
+    public abstract <T extends Atom> T deserializeTargetToLatestAtom(SGID sgid, Class<T> t);
     
     /**
      * For debugging or very non-optimal implementations
