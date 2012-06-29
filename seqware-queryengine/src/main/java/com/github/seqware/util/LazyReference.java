@@ -31,6 +31,11 @@ public class LazyReference<T extends Atom> implements Serializable {
     protected transient boolean referenceChecked = false;
     protected transient T referenceCache = null;
     protected SGID referenceSGID = null;
+    protected Class<T> type;
+    
+    public LazyReference(Class<T> type){
+        this.type = type;
+    }
 
     @Override
     public boolean equals(Object ref){
@@ -69,7 +74,7 @@ public class LazyReference<T extends Atom> implements Serializable {
      */
     public T get() {
         if (!referenceChecked && referenceSGID != null) {
-            this.referenceCache = (T) Factory.getFeatureStoreInterface().getAtomBySGID(referenceSGID);
+            this.referenceCache = (T) Factory.getFeatureStoreInterface().getAtomBySGID(referenceSGID, type);
         }
         referenceChecked = true;
         return this.referenceCache;

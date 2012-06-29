@@ -50,7 +50,7 @@ public class GVFFormatTest {
 
     @Test
     public void testOutputAndStore() {
-        FeatureSet targetSet = (FeatureSet) Factory.getFeatureStoreInterface().getAtomBySGID(fSet.getSGID());
+        FeatureSet targetSet = (FeatureSet) Factory.getFeatureStoreInterface().getAtomBySGID(fSet.getSGID(), FeatureSet.class);
         Assert.assertTrue(targetSet.equals(fSet));
         String matchTarget = "##gvf-version 1.06 ##genome-build NCBI B36.3 ##sequence-region chr16 1 88827254\n" +
         "chr16 samtools SNV 49291360 49291360 . + . ID=ID_2;Variant_seq=G;Reference_seq=C;\n" +

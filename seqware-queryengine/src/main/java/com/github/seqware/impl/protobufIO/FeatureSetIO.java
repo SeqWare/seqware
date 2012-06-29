@@ -49,7 +49,7 @@ public class FeatureSetIO implements ProtobufTransferInterface<FeatureSetPB, Fea
         }
         for (FSGIDPB refID : userpb.getFeaturesList()) {
             FSGID sgid = FSGIDIO.pb2m(refID);
-            Feature ref = (Feature) Factory.getFeatureStoreInterface().getAtomBySGID(sgid);
+            Feature ref = (Feature) Factory.getFeatureStoreInterface().getAtomBySGID(sgid, Feature.class);
             user.add(ref);
         }
         return user;

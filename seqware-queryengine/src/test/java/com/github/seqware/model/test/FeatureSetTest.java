@@ -64,7 +64,7 @@ public class FeatureSetTest {
         }
         mManager.flush(); // kill all the features
                
-        FeatureSet testSet = (FeatureSet) Factory.getFeatureStoreInterface().getAtomBySGID(aSet.getSGID());
+        FeatureSet testSet = (FeatureSet) Factory.getFeatureStoreInterface().getAtomBySGID(aSet.getSGID(), FeatureSet.class);
         Assert.assertTrue("FeatureSet version wrong", testSet.getVersion() == 4);
         Assert.assertTrue("old FeatureSet version wrong", testSet.getPrecedingVersion().getVersion() == 3);
         Assert.assertTrue("very old FeatureSet version wrong", testSet.getPrecedingVersion().getPrecedingVersion().getVersion() == 2);

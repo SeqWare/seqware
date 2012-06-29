@@ -49,7 +49,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
 
     @Override
     public void store(Atom obj) {
-        if (fsi.deserializeTargetToAtom(obj.getSGID()) == null) {
+        if (fsi.deserializeTargetToAtom(obj.getSGID(), ((AtomImpl)obj).getHBaseClass()) == null) {
             fsi.serializeAtomToTarget(obj);
         }
     }
@@ -194,7 +194,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
 
     @Override
     public Atom getPrecedingVersion(Atom obj) {
-        Atom target = (Atom)fsi.deserializeTargetToAtom(obj.getSGID());
+        Atom target = (Atom)fsi.deserializeTargetToAtom(obj.getSGID(), ((AtomImpl)obj).getHBaseClass());
         if (target == null){
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "{0} had no parent, this may signal an error", obj.getSGID());
             return null;

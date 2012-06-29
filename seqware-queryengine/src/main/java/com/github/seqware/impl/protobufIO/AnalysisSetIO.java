@@ -50,7 +50,7 @@ public class AnalysisSetIO implements ProtobufTransferInterface<AnalysisSetPB, A
         }
         for(SGIDPB refID : pb.getAnalysisIDsList()){
             SGID sgid = SGIDIO.pb2m(refID);
-            Analysis ref = (Analysis)Factory.getFeatureStoreInterface().getAtomBySGID(sgid);
+            Analysis ref = (Analysis)Factory.getFeatureStoreInterface().getAtomBySGID(sgid, Analysis.class);
             user.add(ref);
         }
         return user;

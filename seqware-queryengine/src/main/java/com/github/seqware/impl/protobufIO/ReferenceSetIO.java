@@ -49,7 +49,7 @@ public class ReferenceSetIO implements ProtobufTransferInterface<ReferenceSetPB,
         }
         for(SGIDPB refID : userpb.getReferenceIDsList()){
             SGID sgid = SGIDIO.pb2m(refID);
-            Reference ref = (Reference)Factory.getFeatureStoreInterface().getAtomBySGID(sgid);
+            Reference ref = (Reference)Factory.getFeatureStoreInterface().getAtomBySGID(sgid, Reference.class);
             user.add(ref);
         }
         return user;

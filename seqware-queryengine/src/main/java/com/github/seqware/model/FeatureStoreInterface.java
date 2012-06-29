@@ -38,11 +38,12 @@ public interface FeatureStoreInterface {
      * Find a object in the back-end by a globally unique SGID
      * @param sgid globally unique id
      * @return a object from the back-end
+     * @deprecated It is much more efficient to retrieve an Atom when you know the class
      */
     public Atom getAtomBySGID(SGID sgid);
     
     /**
-     * Find an object in the back-end when a specific class is known
+     * Find an object in the back-end when a specific class is known using a globally unique SGID
      * @param <T>
      * @param sgid globally unique id
      * @param t type of class to retrieve (used as a filter)
@@ -55,6 +56,7 @@ public interface FeatureStoreInterface {
      * while ignoring the timestamp
      * @param sgid globally unique id
      * @return a object from the back-end
+     * @deprecated It is much more efficient to retrieve an Atom when you know the class
      */
     public Atom getLatestAtomBySGID(SGID sgid);
     

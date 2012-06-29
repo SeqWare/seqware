@@ -31,7 +31,11 @@ import com.github.seqware.model.Atom;
  * @author dyuen
  */
 public class LazyLatestReference<T extends Atom> extends LazyReference<T> {
-
+    
+    public LazyLatestReference(Class<T> type){
+       super(type);
+    }
+    
     /**
      * Retrieve the lazy referenced object if possible and return it
      * @return 
@@ -39,7 +43,7 @@ public class LazyLatestReference<T extends Atom> extends LazyReference<T> {
     @Override
     public T get() {
         if (!referenceChecked && referenceSGID != null) {
-            this.referenceCache = (T) Factory.getFeatureStoreInterface().getLatestAtomBySGID(referenceSGID);
+            this.referenceCache = (T) Factory.getFeatureStoreInterface().getLatestAtomBySGID(referenceSGID, type);
         }
         referenceChecked = true;
         return this.referenceCache;

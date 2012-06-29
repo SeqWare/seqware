@@ -41,7 +41,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     private transient ModelManager manager = null;
     private List<Tag> tags = new ArrayList<Tag>();
     
-    private LazyReference<T> precedingVersion = new LazyReference<T>();
+    private LazyReference<T> precedingVersion = new LazyReference<T>(this.getHBaseClass());
 
     protected AtomImpl() {
         this.clientTimestamp = new Date();

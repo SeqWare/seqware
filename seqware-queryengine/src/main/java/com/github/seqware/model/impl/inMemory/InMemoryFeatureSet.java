@@ -4,6 +4,7 @@ import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import com.github.seqware.model.Reference;
+import com.github.seqware.util.FSGID;
 import com.github.seqware.util.InMemoryIterator;
 import com.github.seqware.util.LazyReference;
 import com.github.seqware.util.SGID;
@@ -18,20 +19,19 @@ import java.util.Set;
  * @author jbaran
  */
 public class InMemoryFeatureSet extends FeatureSet {
-    
+
     /**
      * Associated reference.
      */
-    private LazyReference<Reference> reference = new LazyReference<Reference>();
-
+    private LazyReference<Reference> reference = new LazyReference<Reference>(Reference.class);
     /**
-     * The set of features this instance represents when an in-memory storage model is used.
+     * The set of features this instance represents when an in-memory storage
+     * model is used.
      */
     private Set<Feature> features = new HashSet<Feature>();
-    
     /**
-     * User defined description of this feature set, can be used to store pragma information 
-     * for a set of features.
+     * User defined description of this feature set, can be used to store pragma
+     * information for a set of features.
      */
     private String description = null;
 
@@ -41,11 +41,11 @@ public class InMemoryFeatureSet extends FeatureSet {
     protected InMemoryFeatureSet() {
         super();
     }
-    
-    public boolean contains(Feature f){
+
+    public boolean contains(Feature f) {
         return features.contains(f);
     }
-    
+
     /**
      * Get the reference for this featureSet
      *
@@ -58,36 +58,51 @@ public class InMemoryFeatureSet extends FeatureSet {
 
     @Override
     public FeatureSet add(Feature feature) {
+        upgradeFeatureSGID(feature);
         features.add(feature);
-        if (this.getManager() != null){
-            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION); 
+        if (this.getManager() != null) {
+            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
         }
         return this;
     }
-    
+
+    protected void upgradeFeatureSGID(Feature feature) {
+        // try upgrading Feature IDs here, faster than in model manager and FeatureSets should be guaranteed to have references
+        if (!(feature.getSGID() instanceof FSGID)){
+            FSGID fsgid = new FSGID(feature.getSGID(), feature, this);
+            feature.impersonate(fsgid, feature.getTimestamp(), feature.getPrecedingSGID());
+        }
+    }
+
     @Override
     public FeatureSet add(Feature... elements) {
-       this.features.addAll(Arrays.asList(elements));
-       if (this.getManager() != null){
-            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
-       }
-       return this;
+        for (Feature f : elements) {
+            upgradeFeatureSGID(f);
+        }
+        this.features.addAll(Arrays.asList(elements));
+        if (this.getManager() != null) {
+            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+        }
+        return this;
     }
-    
+
     @Override
     public FeatureSet remove(Feature feature) {
         features.remove(feature);
-        if (this.getManager() != null){
-            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+        if (this.getManager() != null) {
+            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
         }
         return this;
     }
 
     @Override
     public FeatureSet add(Set<Feature> features) {
+        for (Feature f : features) {
+            upgradeFeatureSGID(f);
+        }
         this.features.addAll(features);
-        if (this.getManager() != null){
-            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+        if (this.getManager() != null) {
+            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
         }
         return this;
     }
@@ -141,15 +156,15 @@ public class InMemoryFeatureSet extends FeatureSet {
     @Override
     public void rebuild() {
         Set<Feature> newSet = new HashSet<Feature>();
-        for(Feature f : this.features){
+        for (Feature f : this.features) {
             newSet.add(f);
         }
         this.features = newSet;
     }
 
     public static class Builder extends FeatureSet.Builder {
-        
-        public Builder(){
+
+        public Builder() {
             aSet = new InMemoryFeatureSet();
         }
 
@@ -158,29 +173,28 @@ public class InMemoryFeatureSet extends FeatureSet {
             if (aSet.getReferenceID() == null && aSet.getManager() != null) {
                 throw new RuntimeException("Invalid build of AnalysisSet");
             }
-            if (aSet.getManager() != null){
+            if (aSet.getManager() != null) {
                 aSet.getManager().objectCreated(aSet);
             }
             return aSet;
         }
-        
+
         @Override
         public InMemoryFeatureSet.Builder setDescription(String description) {
-            ((InMemoryFeatureSet)aSet).description = description;
+            ((InMemoryFeatureSet) aSet).description = description;
             return this;
         }
-        
+
         @Override
         public Builder setReference(Reference reference) {
-            ((InMemoryFeatureSet)aSet).reference.set(reference);
+            ((InMemoryFeatureSet) aSet).reference.set(reference);
             return this;
         }
-        
+
         @Override
-        public Builder setReferenceID(SGID referenceSGID){
-            ((InMemoryFeatureSet)aSet).reference.setSGID(referenceSGID);
+        public Builder setReferenceID(SGID referenceSGID) {
+            ((InMemoryFeatureSet) aSet).reference.setSGID(referenceSGID);
             return this;
         }
     }
-
 }
