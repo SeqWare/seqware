@@ -2,6 +2,7 @@ package com.github.seqware.model.interfaces;
 
 import com.github.seqware.model.Group;
 import com.github.seqware.model.User;
+import com.github.seqware.util.LazyLatestReference;
 import com.github.seqware.util.LazyReference;
 import com.github.seqware.util.SGID;
 import java.io.Serializable;
@@ -27,8 +28,8 @@ import org.apache.commons.lang.SerializationUtils;
  */
 public class ACL implements Serializable {
 
-    private LazyReference<User> owner = new LazyReference<User>();
-    private LazyReference<Group> group = new LazyReference<Group>();
+    private LazyReference<User> owner = new LazyLatestReference<User>();
+    private LazyReference<Group> group = new LazyLatestReference<Group>();
     //private User owner = null;
     //private Group group = null;
     private List<Boolean> rights = new ArrayList<Boolean>();

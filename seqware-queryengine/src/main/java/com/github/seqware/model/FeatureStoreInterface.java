@@ -49,6 +49,24 @@ public interface FeatureStoreInterface {
      * @return 
      */
     public <T extends Atom> T getAtomBySGID(SGID sgid, Class<T> t);
+    
+    /**
+     * Find the latest object in the back-end by a globally unique SGID
+     * while ignoring the timestamp
+     * @param sgid globally unique id
+     * @return a object from the back-end
+     */
+    public Atom getLatestAtomBySGID(SGID sgid);
+    
+    /**
+     * Find an object in the back-end when a specific class is known
+     * while ignoring the timestamp
+     * @param <T>
+     * @param sgid globally unique id
+     * @param t type of class to retrieve (used as a filter)
+     * @return 
+     */
+    public <T extends Atom> T getLatestAtomBySGID(SGID sgid, Class<T> t);
 
     /**
      * Gets all users in all groups

@@ -21,12 +21,14 @@ import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.util.SGID;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 /**
  * Stores objects in the temporary directory of the disk
@@ -35,9 +37,11 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
  */
 public class TmpFileStorage extends StorageInterface {
 
+    boolean oldClassesFound = false;
     private static final boolean PERSIST = true;
     private File tempDir = new File(FileUtils.getTempDirectory(), this.getClass().getCanonicalName());
-    private Map<SGID, FileTypePair> map = new HashMap<SGID, FileTypePair>();
+    // I think we can get away without the map to get of weird cycles in the init
+    //private Map<SGID, FileTypePair> map = new HashMap<SGID, FileTypePair>();
     private final SerializationInterface serializer;
 
     public TmpFileStorage(SerializationInterface i) {
@@ -49,25 +53,25 @@ public class TmpFileStorage extends StorageInterface {
                 FileUtils.forceMkdir(tempDir);
             } else {
                 if (PERSIST) {
-                    boolean oldClassesFound = false;
-                    for (File f : FileUtils.listFiles(tempDir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE)) {
-                        byte[] objData = FileUtils.readFileToByteArray(f);
-                        try {
-                            String[] names = f.getName().split("\\.");
-                            Class cl = biMap.inverse().get(names[0]);
-                            Atom suspect = (Atom) serializer.deserialize(objData, cl);
-                            if (suspect != null){
-                                map.put(suspect.getSGID(), new FileTypePair(f,cl));
-                            }
-                        } catch (Exception e) {
-                            if (!oldClassesFound) {
-                                oldClassesFound = true;
-                                //TODO: we'll probably want something cooler, but for now, if we run into an old version, just warn about it
-                                Logger.getLogger(TmpFileStorage.class.getName()).log(Level.INFO, "Obselete classes detected in {0} you may want to clean it", tempDir.getAbsolutePath());
-                            }
-                        }
-                    }
-                    Logger.getLogger(TmpFileStorage.class.getName()).log(Level.INFO, "Recovered {0} objects from store directory", map.size());
+//                    boolean oldClassesFound = false;
+//                    for (File f : FileUtils.listFiles(tempDir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE)) {
+//                        byte[] objData = FileUtils.readFileToByteArray(f);
+//                        try {
+//                            String[] names = f.getName().split("\\.");
+//                            Class cl = biMap.inverse().get(names[0]);
+//                            Atom suspect = (Atom) serializer.deserialize(objData, cl);
+//                            if (suspect != null){
+//                                map.put(suspect.getSGID(), new FileTypePair(f,cl));
+//                            }
+//                        } catch (Exception e) {
+//                            if (!oldClassesFound) {
+//                                oldClassesFound = true;
+//                                //TODO: we'll probably want something cooler, but for now, if we run into an old version, just warn about it
+//                                Logger.getLogger(TmpFileStorage.class.getName()).log(Level.INFO, "Obselete classes detected in {0} you may want to clean it", tempDir.getAbsolutePath());
+//                            }
+//                        }
+//                    }
+//                    Logger.getLogger(TmpFileStorage.class.getName()).log(Level.INFO, "Recovered {0} objects from store directory", map.size());
                 } else {
                     this.clearStorage();
                 }
@@ -80,13 +84,14 @@ public class TmpFileStorage extends StorageInterface {
 
     @Override
     public void serializeAtomToTarget(Atom obj) {
-        String prefix = ((AtomImpl)obj).getHBasePrefix();
+        String prefix = ((AtomImpl) obj).getHBasePrefix();
+        obj.getSGID().setBackendTimestamp(new Date(System.currentTimeMillis()));
         // let's just clone everything on store to simulate hbase
         File target = new File(tempDir, prefix + separator + obj.getSGID().toString());
         byte[] serialRep = serializer.serialize(obj);
         try {
             FileUtils.writeByteArrayToFile(target, serialRep);
-            map.put(obj.getSGID(), new FileTypePair(target, ((AtomImpl)obj).getHBaseClass()));
+//            map.put(obj.getSGID(), new FileTypePair(target, ((AtomImpl)obj).getHBaseClass()));
         } catch (IOException ex) {
             Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, "Failiure to serialize", ex);
             System.exit(-1);
@@ -101,13 +106,15 @@ public class TmpFileStorage extends StorageInterface {
             if (sgid == null) {
                 return null;
             }
-            FileTypePair target = map.get(sgid);
-            if (target == null) {
-                return null;
+            //FileTypePair target = map.get(sgid);
+            for (File file : FileUtils.listFiles(tempDir, new SuffixFileFilter(sgid.toString()), null)) {
+                String[] names = file.getName().split("\\.");
+                Class cl = biMap.inverse().get(names[0]);
+                objData = FileUtils.readFileToByteArray(file);
+                Atom suspect = (Atom) serializer.deserialize(objData, cl);
+                return suspect;
             }
-            objData = FileUtils.readFileToByteArray(target.file);
-            Atom suspect = (Atom) serializer.deserialize(objData, target.cl);
-            return suspect;
+            return null;
         } catch (IOException ex) {
             Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, "Failure to deserialize", ex);
         }
@@ -126,7 +133,25 @@ public class TmpFileStorage extends StorageInterface {
 
     @Override
     public Iterable<SGID> getAllAtoms() {
-        return map.keySet();
+        List<SGID> list = new ArrayList<SGID>();
+        for (File f : FileUtils.listFiles(tempDir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE)) {
+            try {
+                byte[] objData = FileUtils.readFileToByteArray(f);
+                String[] names = f.getName().split("\\.");
+                Class cl = biMap.inverse().get(names[0]);
+                Atom suspect = (Atom) serializer.deserialize(objData, cl);
+                if (suspect != null) {
+                    list.add(suspect.getSGID());
+                }
+            } catch (Exception e) {
+                if (!oldClassesFound) {
+                    oldClassesFound = true;
+                    //TODO: we'll probably want something cooler, but for now, if we run into an old version, just warn about it
+                    Logger.getLogger(TmpFileStorage.class.getName()).log(Level.INFO, "Obselete classes detected in {0} you may want to clean it", tempDir.getAbsolutePath());
+                }
+            }
+        }
+        return list;
     }
 
     @Override
@@ -134,13 +159,43 @@ public class TmpFileStorage extends StorageInterface {
         return (T) this.deserializeTargetToAtom(sgid);
     }
 
-    public class FileTypePair {
-        private File file;
-        private Class cl;
-
-        public FileTypePair(File file, Class cl) {
-            this.file = file;
-            this.cl = cl;
+    @Override
+    public Atom deserializeTargetToLatestAtom(SGID sgid) {
+        List<Atom> aList = new ArrayList<Atom>();
+        for (File file : FileUtils.listFiles(tempDir, new WildcardFileFilter("*" + sgid.getChainID() + "*"), null)) {
+            String[] names = file.getName().split("\\.");
+            long time = Long.valueOf(names[names.length-1]);
+            SGID newSGID = new SGID(sgid.getUuid().getMostSignificantBits(), sgid.getUuid().getLeastSignificantBits(), time);
+            Atom atomCandidate = deserializeTargetToAtom(newSGID);
+            if (atomCandidate != null){
+                aList.add(atomCandidate);
+            }
         }
+        // check for latest one, HBase will do this much more efficiently
+        if (aList.isEmpty()) {
+            return null;
+        }
+        Atom latest = aList.get(0);
+        for (Atom a : aList) {
+            if (a.getTimestamp().after(latest.getTimestamp())) {
+                latest = a;
+            }
+        }
+        return latest;
     }
+
+    @Override
+    public <T extends Atom> T deserializeTargetToLatestAtom(SGID sgid, Class<T> t) {
+        return (T) this.deserializeTargetToLatestAtom(sgid);
+    }
+//    public class FileTypePair {
+//
+//        private File file;
+//        private Class cl;
+//
+//        public FileTypePair(File file, Class cl) {
+//            this.file = file;
+//            this.cl = cl;
+//        }
+//    }
 }

@@ -44,5 +44,5 @@ public interface Atom<T extends Atom> extends Taggable, Versionable<T>, Serializ
      * @return the creation time stamp for this particular instance of the
      * resource
      */
-    public Date getCreationTimeStamp();
+    public Date getTimestamp();
 }

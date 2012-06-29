@@ -75,6 +75,7 @@ message ReferencePB {
     optional ACLPB acl = 5;
     // Reference-specific
     optional string name = 10;
+    // Let's not use this directly, circular problem since References refer to FeatureSets and FeatureSets refer to References 
     repeated SGIDPB featureSetIDs = 11;
 }
 

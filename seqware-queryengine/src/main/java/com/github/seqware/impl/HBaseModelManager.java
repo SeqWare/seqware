@@ -16,7 +16,6 @@
  */
 package com.github.seqware.impl;
 
-import com.github.seqware.model.Atom;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import com.github.seqware.util.FSGID;
@@ -38,47 +37,46 @@ import java.util.logging.Logger;
  */
 public class HBaseModelManager extends SimpleModelManager {
 
-
+    /**
+     * Normally, when doing a flush, we want to maintain the state of objects
+     * that
+     *
+     * @param maintainState update flushed objects with the current state of
+     * things
+     */
     @Override
-    public void flush() {
+    protected void flush(boolean maintainState) {
+        List<Entry<SGID, AtomStatePair>> workingList = grabObjectsToBeFlushed();
+
         // upgrade SGID for newly created Features
-        List<FeatureSet> fSets = new ArrayList<FeatureSet>(); 
-        for (Entry<SGID, AtomStatePair> p : getDirtySet().entrySet()) {
-            if (p.getValue().getP() instanceof FeatureSet){
-                fSets.add((FeatureSet)p.getValue().getP());
+        List<FeatureSet> fSets = new ArrayList<FeatureSet>();
+        for (Entry<SGID, AtomStatePair> p : workingList) {
+            if (p.getValue().getP() instanceof FeatureSet) {
+                fSets.add((FeatureSet) p.getValue().getP());
             }
         }
         // upgrade and check for orphaned Features
-        for (Entry<SGID, AtomStatePair> p : getDirtySet().entrySet()) {
-            if (p.getValue().getState() == State.NEW_CREATION && p.getValue().getP() instanceof Feature){
+        for (Entry<SGID, AtomStatePair> p : workingList) {
+            if (p.getValue().getState() == State.NEW_CREATION && p.getValue().getP() instanceof Feature) {
                 Feature f = (Feature) p.getValue().getP();
                 // try to upgrade
-                for(FeatureSet fS : fSets){
-                    FSGID fsgid = new FSGID(f.getSGID(),f, fS);
-                    f.impersonate(fsgid, f.getCreationTimeStamp(), f.getPrecedingSGID());
+                for (FeatureSet fS : fSets) {
+                    FSGID fsgid = new FSGID(f.getSGID(), f, fS);
+                    f.impersonate(fsgid, f.getTimestamp(), f.getPrecedingSGID());
                 }
                 // should be upgraded now, if not
-                if (!(f.getSGID() instanceof FSGID)){
+                if (!(f.getSGID() instanceof FSGID)) {
                     // this should not happen
                     Logger.getLogger(FSGID.class.getName()).log(Level.WARNING, "Orphaned features, please add them to a FeatureSet, aborting flush()");
                     return;
                 }
             }
         }
-        
+
         // update dirty objects
-        for (Entry<SGID, AtomStatePair> p : getDirtySet().entrySet()) {
-            if (p.getValue().getState() == State.NEW_CREATION || p.getValue().getState() == State.NEW_VERSION){
-                if (p.getValue().getState() == State.NEW_VERSION){
-                    // if they have preceding versions do an update, otherwise store
-                    // only molecules should have preceding states
-                    getBackend().update((Atom)getDirtySet().get(p.getKey()).getP());
-                } else {
-                    getBackend().store(getDirtySet().get(p.getKey()).getP());
-                }
-            }
-            p.getValue().setState(State.MANAGED);
+        super.flushObjects(workingList);
+        if (maintainState) {
+            manageFlushedObjects(workingList);
         }
-        
     }
 }

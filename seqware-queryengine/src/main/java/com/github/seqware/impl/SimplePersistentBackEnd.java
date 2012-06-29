@@ -60,10 +60,10 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
         SGID oldSGID = obj.getSGID();
         Atom newAtom = (Atom)obj.copy(true);
         store(newAtom);
-        // update the backend
-        fsi.serializeAtomToTarget(newAtom);
+        // update the backend, looks duplicated
+        // fsi.serializeAtomToTarget(newAtom);
         // change the obj we have a reference to look like the new object that was created
-        ((AtomImpl)obj).impersonate(newAtom.getSGID(), newAtom.getCreationTimeStamp(), oldSGID);
+        ((AtomImpl)obj).impersonate(newAtom.getSGID(), newAtom.getTimestamp(), oldSGID);
     }
 
     @Override
@@ -91,6 +91,20 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
     public <T extends Atom> T getAtomBySGID(SGID sgid, Class<T> t) {
         T p = fsi.deserializeTargetToAtom(sgid, t);
         assert(p == null || p.getSGID().equals(sgid));
+        return p;
+    }
+    
+    @Override
+    public Atom getLatestAtomBySGID(SGID sgid) {
+        Atom p = fsi.deserializeTargetToLatestAtom(sgid);
+        assert(p == null || p.getSGID().getChainID().equals(sgid.getChainID()));
+        return p;
+    }
+
+    @Override
+    public <T extends Atom> T getLatestAtomBySGID(SGID sgid, Class<T> t) {
+        T p = fsi.deserializeTargetToLatestAtom(sgid, t);
+        assert(p == null || p.getSGID().getChainID().equals(sgid.getChainID()));
         return p;
     }
 
@@ -170,7 +184,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
     private SeqWareIterable getAllOfClass(Class aClass) {
         List list = new ArrayList();
         for (SGID u : fsi.getAllAtoms()){ //listOfEverything) {
-            Atom p = fsi.deserializeTargetToAtom(u);
+            Atom p = fsi.deserializeTargetToLatestAtom(u);
             if (aClass.isInstance(p)) {
                 list.add(p);
             }

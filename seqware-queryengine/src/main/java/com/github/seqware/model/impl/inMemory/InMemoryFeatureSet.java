@@ -1,6 +1,5 @@
 package com.github.seqware.model.impl.inMemory;
 
-import com.github.seqware.factory.Factory;
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
@@ -139,6 +138,15 @@ public class InMemoryFeatureSet extends FeatureSet {
         return FeatureSet.prefix;
     }
 
+    @Override
+    public void rebuild() {
+        Set<Feature> newSet = new HashSet<Feature>();
+        for(Feature f : this.features){
+            newSet.add(f);
+        }
+        this.features = newSet;
+    }
+
     public static class Builder extends FeatureSet.Builder {
         
         public Builder(){
@@ -147,7 +155,7 @@ public class InMemoryFeatureSet extends FeatureSet {
 
         @Override
         public FeatureSet build(boolean newObject) {
-            if (aSet.getReference() == null && aSet.getManager() != null) {
+            if (aSet.getReferenceID() == null && aSet.getManager() != null) {
                 throw new RuntimeException("Invalid build of AnalysisSet");
             }
             if (aSet.getManager() != null){

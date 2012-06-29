@@ -25,7 +25,7 @@ public class GVFFormatTest {
     public static void setupTests() {
         ModelManager mManager = Factory.getModelManager();
         String pragma = "##gvf-version 1.06 ##genome-build NCBI B36.3 ##sequence-region chr16 1 88827254";
-        fSet = mManager.buildFeatureSet().setDescription(pragma).setReference(mManager.buildReference().setName(" source for http://www.sequenceontology.org/resources/gvf.html").build()).build();
+        fSet = mManager.buildFeatureSet().setDescription(pragma).setReference(mManager.buildReference().setName("source").build()).build();
         Set<Feature> testFeatures = new HashSet<Feature>();
         // have to make up scores, not present in example
         Feature f1 = mManager.buildFeature().setId("chr16").setSource("samtools").setType("SNV").setStart(49291141).setStop(49291141).setStrand(Feature.Strand.POSITIVE).build();

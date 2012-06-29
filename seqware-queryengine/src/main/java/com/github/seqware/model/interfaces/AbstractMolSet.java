@@ -22,18 +22,48 @@ import java.util.Set;
 
 /**
  * Abstracts out some of the semantics for interacting with each of our Set
- * classes 
- * 
+ * classes. Name was originally AbstractSet, but a name clash with Java's own
+ * AbstractSet lead to some hard to notice errors.
+ *
  * @author dyuen
  */
-public interface AbstractSet<S extends AbstractSet, T> extends SeqWareIterable<T>, Molecule<S> {
+public interface AbstractMolSet<S extends AbstractMolSet, T> extends SeqWareIterable<T>, Molecule<S> {
 
+    /**
+     * Add one element to the set
+     *
+     * @param element
+     * @return
+     */
     public abstract S add(T element);
 
+    /**
+     * Add numerous elements from within a set
+     *
+     * @param elements
+     * @return
+     */
     public abstract S add(Set<T> elements);
-    
-    public abstract S add(T ... elements);
-    
+
+    /**
+     * Add an array of elements
+     *
+     * @param elements
+     * @return
+     */
+    public abstract S add(T... elements);
+
+    /**
+     * Remove one element
+     *
+     * @param element
+     * @return
+     */
     public abstract S remove(T element);
-    
+
+    /**
+     * Rebuild the underlying set architecture. This is only intended to be a
+     * back-end method since sets may become inconsistent after a flush.
+     */
+    public void rebuild();
 }

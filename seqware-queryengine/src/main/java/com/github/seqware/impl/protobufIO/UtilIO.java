@@ -71,7 +71,7 @@ public class UtilIO {
             builder.addTags(tagIO.m2pb(t));
         }
         builder.setSgid(SGIDIO.m2pb(atomImpl.getSGID()));
-        builder.setDate(atomImpl.getCreationTimeStamp().getTime());
+        builder.setDate(atomImpl.getTimestamp().getTime());
         if (atomImpl.getPrecedingSGID() != null) {
             builder.setPrecedingID(SGIDIO.m2pb(atomImpl.getPrecedingSGID()));
         }
@@ -109,7 +109,7 @@ public class UtilIO {
             builder.addTags(tagIO.m2pb(t));
         }
         builder.setSgid(FSGIDIO.m2pb((FSGID) feature.getSGID()));
-        builder.setDate(feature.getCreationTimeStamp().getTime());
+        builder.setDate(feature.getTimestamp().getTime());
         if (feature.getPrecedingSGID() != null) {
             builder.setPrecedingID(FSGIDIO.m2pb((FSGID) feature.getPrecedingSGID()));
         }

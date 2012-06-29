@@ -19,11 +19,12 @@ package com.github.seqware.impl;
 import com.github.seqware.model.Atom;
 import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.util.SGID;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
- * Doesn't really store things anywhere, just keeps it in memory
+ * Doesn't really store things anywhere, just keeps it in memory.
+ * This is totally inefficient and is meant only for testing and prototyping purposes
  * @author dyuen
  */
 public class NonPersistentStorage extends StorageInterface {
@@ -38,6 +39,7 @@ public class NonPersistentStorage extends StorageInterface {
     @Override
     public void serializeAtomToTarget(Atom obj) {
         Class cl = ((AtomImpl)obj).getHBaseClass();
+        obj.getSGID().setBackendTimestamp(new Date(System.currentTimeMillis()));
         ByteTypePair pair = new ByteTypePair(serializer.serialize(obj), cl);
         map.put(obj.getSGID(), pair);
     }
@@ -47,7 +49,8 @@ public class NonPersistentStorage extends StorageInterface {
         if (!map.containsKey(sgid)){
             return null;
         }
-        return (Atom) serializer.deserialize(map.get(sgid).bArr, map.get(sgid).cl);
+        Atom a =  (Atom) serializer.deserialize(map.get(sgid).bArr, map.get(sgid).cl);
+        return a;
     }
 
     @Override
@@ -63,6 +66,30 @@ public class NonPersistentStorage extends StorageInterface {
     @Override
     public <T extends Atom> T deserializeTargetToAtom(SGID sgid, Class<T> t) {
         return (T) this.deserializeTargetToAtom(sgid);
+    }
+
+    @Override
+    public Atom deserializeTargetToLatestAtom(SGID sgid) {
+        List<Atom> aList = new ArrayList<Atom>();
+        for(Entry<SGID, ByteTypePair> e : map.entrySet()){
+            if (e.getKey().getChainID().equals(sgid.getChainID())){
+                aList.add((Atom)serializer.deserialize(e.getValue().bArr, e.getValue().cl));
+            }
+        }
+        // check for latest one, HBase will do this much more efficiently
+        if (aList.isEmpty()) {return null;}
+        Atom latest = aList.get(0);
+        for(Atom a : aList){
+            if (a.getTimestamp().after(latest.getTimestamp())){
+                latest = a;
+            }
+        }
+        return latest;
+    }
+
+    @Override
+    public <T extends Atom> T deserializeTargetToLatestAtom(SGID sgid, Class<T> t) {
+        return (T) this.deserializeTargetToLatestAtom(sgid);
     }
     
     public class ByteTypePair {

@@ -2,7 +2,7 @@ package com.github.seqware.model;
 
 import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.impl.AtomImpl;
-import com.github.seqware.model.interfaces.AbstractSet;
+import com.github.seqware.model.interfaces.AbstractMolSet;
 import com.github.seqware.model.interfaces.BaseBuilder;
 
 /**
@@ -11,7 +11,7 @@ import com.github.seqware.model.interfaces.BaseBuilder;
  *
  * @author dyuen
  */
-public interface AnalysisSet extends AbstractSet<AnalysisSet, Analysis> {
+public interface AnalysisSet extends AbstractMolSet<AnalysisSet, Analysis> {
     public final static String prefix = "AnalysisSet";
 
     /**

@@ -76,7 +76,9 @@ public interface ModelManager {
     public void persist(Atom p);
 
     /**
-     * Convenience method to flush() all entities and clear()
+     * Convenience method to flush() all entities and clear().
+     * Currently managed objects will be left in an inconsistent state. 
+     * However, this should be more efficient for bulk operations.
      */
     public void close();
 
