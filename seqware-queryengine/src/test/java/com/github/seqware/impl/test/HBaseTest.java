@@ -18,6 +18,7 @@ import com.sleepycat.db.DatabaseEntry;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -55,6 +56,10 @@ public class HBaseTest {
      * serialization/deserialization.
      */
     private static final int BENCHMARK_FEATURES = 10000;
+    /**
+     * Run benchmarks
+     */
+    private boolean BENCHMARK;
 
     /**
      * Determines which framework should be used for serializing/deserializing
@@ -101,7 +106,7 @@ public class HBaseTest {
      * @throws IOException
      */
     @Test
-    public void testHBaseTableWithKryo() throws IOException {
+    public void testHBaseTableWithKryo() throws IOException, InterruptedException {
         // Alternative to protobuf: Kryo
         // Speed comparison can be found here: http://code.google.com/p/thrift-protobuf-compare/wiki/Benchmarking
         serializer = new Kryo();
@@ -111,8 +116,9 @@ public class HBaseTest {
 
         // Super slow: do not use the JavaSerializer:
         //serializer.register(UUID.class, new JavaSerializer());
-
-        testHBaseTable(SerializationFramework.KRYO);
+        testHBaseTable(SerializationFramework.KRYO, false);
+        if (!BENCHMARK){return;}
+        testHBaseTable(SerializationFramework.KRYO, true);
     }
 
     /**
@@ -122,9 +128,11 @@ public class HBaseTest {
      * @throws IOException
      */
     @Test
-    public void testHBaseTableWithProtobuf() throws IOException {
+    public void testHBaseTableWithProtobuf() throws IOException, InterruptedException {
         fIO = new FeatureIO();
-        testHBaseTable(SerializationFramework.PROTOBUF);
+        testHBaseTable(SerializationFramework.PROTOBUF, false);
+        if (!BENCHMARK){return;}
+        testHBaseTable(SerializationFramework.PROTOBUF, true);
     }
 
     /**
@@ -134,8 +142,10 @@ public class HBaseTest {
      * @throws IOException
      */
     @Test
-    public void testHBaseTableWithApache() throws IOException {
-        testHBaseTable(SerializationFramework.APACHE);
+    public void testHBaseTableWithApache() throws IOException, InterruptedException {
+        //testHBaseTable(SerializationFramework.APACHE, false);
+        //if (!BENCHMARK){return;}
+        //testHBaseTable(SerializationFramework.APACHE, true);
     }
 
     /**
@@ -157,7 +167,7 @@ public class HBaseTest {
      *
      * @throws IOException
      */
-    private void testHBaseTable(SerializationFramework framework) throws IOException {
+    private void testHBaseTable(SerializationFramework framework, boolean batchMode) throws IOException, InterruptedException {
         // Code from http://hbase.apache.org/apidocs/org/apache/hadoop/hbase/client/package-summary.html
 
         // The HBaseConfiguration reads in hbase-site.xml and hbase-default.xml,
@@ -177,55 +187,81 @@ public class HBaseTest {
         hba.createTable(ht);
 
         HTable table = new HTable(config, tableName);
+        table.setAutoFlush(false);
+
+        // run benchmarks in batched mode
+        this.BENCHMARK = System.getProperty("com.github.seqware.benchmark", "false").equals("true");
 
         // Variables that track times for individual benchmark runs:
         long[] serializationTimes = new long[BENCHMARK_RUNS];
         long[] deserializationTimes = new long[BENCHMARK_RUNS];
+        long[] totalPutTimes = new long[BENCHMARK_RUNS];
+        long[] totalGetTimes = new long[BENCHMARK_RUNS];
 
         // Create and store a feature/features:
         List<IdentifiedFeature> testFeatures = new LinkedList<IdentifiedFeature>();
-        if (System.getProperty("com.github.seqware.benchmark", "false").equals("true")) {
+        List<Row> putBatch = new ArrayList<Row>();
+
+        if (BENCHMARK) {
             for (int run = 0; run < BENCHMARK_RUNS; run++) {
+                totalPutTimes[run] = System.currentTimeMillis();
                 serializationTimes[run] = System.currentTimeMillis();
                 for (int i = 0; i < BENCHMARK_FEATURES; i++) {
-                    testFeatures.add(this.storeFauxFeature(framework, table));
+                    testFeatures.add(this.storeFauxFeature(framework, table, putBatch, batchMode));
                 }
                 serializationTimes[run] = System.currentTimeMillis() - serializationTimes[run];
+                if (batchMode) {
+                    table.batch(putBatch);
+                }
+                table.flushCommits();
+                totalPutTimes[run] = System.currentTimeMillis() - totalPutTimes[run];
             }
         } else {
-            testFeatures.add(this.storeFauxFeature(framework, table));
+            testFeatures.add(this.storeFauxFeature(framework, table, putBatch, false));
         }
 
         // Retrieve a feature/features:
-        if (System.getProperty("com.github.seqware.benchmark", "false").equals("true")) {
+        if (BENCHMARK) {
             for (int run = 0; run < BENCHMARK_RUNS; run++) {
+                totalGetTimes[run] = System.currentTimeMillis();
+                Object[] get = null;
+                if (batchMode) {
+                    List<Row> batchList = this.getBatchList(testFeatures);
+                    get = table.batch(batchList);
+                }
                 deserializationTimes[run] = System.currentTimeMillis();
                 for (int i = 0; i < BENCHMARK_FEATURES; i++) {
-                    this.retrieveFauxFeature(framework, table, testFeatures, true);
+                    this.retrieveFauxFeature(framework, table, testFeatures, true, get, batchMode);
                 }
                 deserializationTimes[run] = System.currentTimeMillis() - deserializationTimes[run];
+                totalGetTimes[run] = System.currentTimeMillis() - totalGetTimes[run];
             }
         } else {
-            this.retrieveFauxFeature(framework, table, testFeatures, false);
+            this.retrieveFauxFeature(framework, table, testFeatures, false, null, false);
         }
 
         // Clean-up:
+        table.close();
         hba.disableTable(tableName);
         hba.deleteTable(tableName);
 
         // If this is a benchmarking run, then output the benchmarking data now:
-        if (System.getProperty("com.github.seqware.benchmark", "false").equals("true")) {
+        if (BENCHMARK) {
             System.out.println("Benchmarking results (" + framework + "):");
             System.out.println(" objects serialized/deserialized per run:\t" + BENCHMARK_FEATURES);
 
-            long serializationSum = 0, deserializationSum = 0;
+            long serializationSum = 0, deserializationSum = 0, putSum = 0, getSum = 0; 
             for (int run = 0; run < BENCHMARK_RUNS; run++) {
-                System.out.println(" run " + (run + 1) + ":\t" + serializationTimes[run] + "\t" + deserializationTimes[run] + "\t(serialization/deserialization in ms)");
+                System.out.println(" run " + (run + 1) + ":\t" + serializationTimes[run] + "\t" + deserializationTimes[run] + "\t(serialization/deserialization in ms)"
+                        + "\t" + totalPutTimes[run] + "\t" + totalGetTimes[run] + "\t(Put/Get in ms)" );
                 serializationSum += serializationTimes[run];
                 deserializationSum += deserializationTimes[run];
+                putSum += totalPutTimes[run];
+                getSum += totalGetTimes[run];
             }
 
-            System.out.println(" average:\t" + (1. * serializationSum / serializationTimes.length) + "\t" + (1. * deserializationSum / deserializationTimes.length) + "\t(serialization/deserialization in ms)");
+            System.out.println(" average:\t" + (1. * serializationSum / serializationTimes.length) + "\t" + (1. * deserializationSum / deserializationTimes.length) + "\t(serialization/deserialization in ms)"
+                    + "\t" + (1. * putSum / totalPutTimes.length) + "\t" + (1. * getSum / totalGetTimes.length)  + "\t(Put/Get in ms)" );
         }
     }
 
@@ -383,7 +419,7 @@ public class HBaseTest {
         return fIO.pb2m(FeaturePB.parseFrom(serializedFeature));
     }
 
-    private IdentifiedFeature storeFauxFeature(SerializationFramework framework, HTable table) throws IOException {
+    private IdentifiedFeature storeFauxFeature(SerializationFramework framework, HTable table, List<Row> rowList, boolean batchMode) throws IOException {
         // Get one feature to serialize/deserialize:
         Feature testFeature = Feature.newBuilder().setId("chr16").setStart(1000000).setStop(1000100).build();
         FeatureSet set = InMemoryFeatureSet.newBuilder().setReference(InMemoryReference.newBuilder().setName("testRef").build()).build();
@@ -416,28 +452,37 @@ public class HBaseTest {
 
         // Serialize:
         p.add(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes("feature"), featureBytes.toByteArray());
-        table.put(p);
+        if (batchMode) {
+            rowList.add(p);
+        } else {
+            table.put(p);
+        }
 
         return new IdentifiedFeature(sgidBytes.toByteArray(), testFeature);
     }
 
-    private void retrieveFauxFeature(SerializationFramework framework, HTable table, List<IdentifiedFeature> testFeatures, boolean benchmarking) throws IOException {
+    private void retrieveFauxFeature(SerializationFramework framework, HTable table, List<IdentifiedFeature> testFeatures, boolean benchmarking, Object[] batchedResults, boolean batchMode) throws IOException {
+        int counter = 0;
         for (IdentifiedFeature identifiedFeature : testFeatures) {
             // Deserialize:
-            Get g = new Get(identifiedFeature.id);
-            Result r = table.get(g);
+            Result r;
+            if (batchMode) {
+                r = (Result)batchedResults[counter++];
+            } else {
+                Get g = new Get(identifiedFeature.id);
+                r = table.get(g);
+            }
             byte[] value = r.getValue(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes("feature"));
 
             // We should get back a Feature object:
             Input result = new Input(new ByteArrayInputStream(value));
             Feature deserializedFeature = deserializeFeature(framework, result);
 
+            Assert.assertEquals("The deserialized feature does not match its expected contents.", identifiedFeature.feature, deserializedFeature);
             if (benchmarking) {
                 return;
             }
-
-            Assert.assertEquals("The deserialized feature does not match its expected contents.", identifiedFeature.feature, deserializedFeature);
-
+            
             // Check if the only object in the HBase table is the feature we put there:
             Scan s = new Scan();
             s.addColumn(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes("feature"));
@@ -465,5 +510,15 @@ public class HBaseTest {
                 scanner.close();
             }
         }
+    }
+
+    private List<Row> getBatchList(List<IdentifiedFeature> testFeatures) throws IOException {
+        List<Row> batchList = new ArrayList<Row>();
+        for (IdentifiedFeature identifiedFeature : testFeatures) {
+            // Deserialize:
+            Get g = new Get(identifiedFeature.id);
+            batchList.add(g);
+        }
+        return batchList;
     }
 }

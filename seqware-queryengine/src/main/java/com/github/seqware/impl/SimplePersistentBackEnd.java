@@ -49,9 +49,10 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
 
     @Override
     public void store(Atom obj) {
-        if (fsi.deserializeTargetToAtom(obj.getSGID(), ((AtomImpl)obj).getHBaseClass()) == null) {
+        // we don't really need to make sure that nothing is present before we do this
+        //if (fsi.deserializeTargetToAtom(obj.getSGID(), ((AtomImpl)obj).getHBaseClass()) == null) {
             fsi.serializeAtomToTarget(obj);
-        }
+        //}
     }
 
     @Override
@@ -60,8 +61,6 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
         SGID oldSGID = obj.getSGID();
         Atom newAtom = (Atom)obj.copy(true);
         store(newAtom);
-        // update the backend, looks duplicated
-        // fsi.serializeAtomToTarget(newAtom);
         // change the obj we have a reference to look like the new object that was created
         ((AtomImpl)obj).impersonate(newAtom.getSGID(), newAtom.getTimestamp(), oldSGID);
     }
