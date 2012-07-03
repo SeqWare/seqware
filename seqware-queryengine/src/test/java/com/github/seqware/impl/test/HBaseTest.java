@@ -19,7 +19,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -143,9 +142,9 @@ public class HBaseTest {
      */
     @Test
     public void testHBaseTableWithApache() throws IOException, InterruptedException {
-        //testHBaseTable(SerializationFramework.APACHE, false);
-        //if (!BENCHMARK){return;}
-        //testHBaseTable(SerializationFramework.APACHE, true);
+        testHBaseTable(SerializationFramework.APACHE, false);
+        if (!BENCHMARK){return;}
+        testHBaseTable(SerializationFramework.APACHE, true);
     }
 
     /**
@@ -187,7 +186,7 @@ public class HBaseTest {
         hba.createTable(ht);
 
         HTable table = new HTable(config, tableName);
-        table.setAutoFlush(false);
+        table.setAutoFlush(true);
 
         // run benchmarks in batched mode
         this.BENCHMARK = System.getProperty("com.github.seqware.benchmark", "false").equals("true");
@@ -197,14 +196,17 @@ public class HBaseTest {
         long[] deserializationTimes = new long[BENCHMARK_RUNS];
         long[] totalPutTimes = new long[BENCHMARK_RUNS];
         long[] totalGetTimes = new long[BENCHMARK_RUNS];
+        long totalRunTime = System.currentTimeMillis();
 
         // Create and store a feature/features:
-        List<IdentifiedFeature> testFeatures = new LinkedList<IdentifiedFeature>();
-        List<Row> putBatch = new ArrayList<Row>();
+        List<List<IdentifiedFeature>> testFeaturesList = new ArrayList<List<IdentifiedFeature>>();
 
         if (BENCHMARK) {
             for (int run = 0; run < BENCHMARK_RUNS; run++) {
                 totalPutTimes[run] = System.currentTimeMillis();
+                List<Row> putBatch = new ArrayList<Row>();
+                List<IdentifiedFeature> testFeatures = new ArrayList<IdentifiedFeature>();
+                testFeaturesList.add(testFeatures);                
                 serializationTimes[run] = System.currentTimeMillis();
                 for (int i = 0; i < BENCHMARK_FEATURES; i++) {
                     testFeatures.add(this.storeFauxFeature(framework, table, putBatch, batchMode));
@@ -217,12 +219,15 @@ public class HBaseTest {
                 totalPutTimes[run] = System.currentTimeMillis() - totalPutTimes[run];
             }
         } else {
-            testFeatures.add(this.storeFauxFeature(framework, table, putBatch, false));
+            List<IdentifiedFeature> testFeatures = new ArrayList<IdentifiedFeature>();
+            testFeaturesList.add(testFeatures);    
+            testFeatures.add(this.storeFauxFeature(framework, table, null, false));
         }
 
         // Retrieve a feature/features:
         if (BENCHMARK) {
             for (int run = 0; run < BENCHMARK_RUNS; run++) {
+                List<IdentifiedFeature> testFeatures = testFeaturesList.get(run);
                 totalGetTimes[run] = System.currentTimeMillis();
                 Object[] get = null;
                 if (batchMode) {
@@ -237,11 +242,15 @@ public class HBaseTest {
                 totalGetTimes[run] = System.currentTimeMillis() - totalGetTimes[run];
             }
         } else {
+            List<IdentifiedFeature> testFeatures = testFeaturesList.get(0);
             this.retrieveFauxFeature(framework, table, testFeatures, false, null, false);
         }
 
         // Clean-up:
         table.close();
+        
+        totalRunTime = System.currentTimeMillis() - totalRunTime;
+        
         hba.disableTable(tableName);
         hba.deleteTable(tableName);
 
@@ -262,6 +271,7 @@ public class HBaseTest {
 
             System.out.println(" average:\t" + (1. * serializationSum / serializationTimes.length) + "\t" + (1. * deserializationSum / deserializationTimes.length) + "\t(serialization/deserialization in ms)"
                     + "\t" + (1. * putSum / totalPutTimes.length) + "\t" + (1. * getSum / totalGetTimes.length)  + "\t(Put/Get in ms)" );
+            System.out.println(" total runtime: " + totalRunTime);
         }
     }
 
