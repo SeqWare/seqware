@@ -37,13 +37,13 @@ import org.apache.hadoop.hbase.util.Bytes;
  * @author dyuen
  */
 public class HBaseStorage extends StorageInterface {
-
+    private static final String TEST_COLUMN = "allData";
+    private static final byte[] TEST_COLUMN_INBYTES = Bytes.toBytes("allData");
+    private static final byte[] TEST_QUALIFIER_INBYTES = Bytes.toBytes("qualifier");
     private boolean inefficiencyWarning = false;
     public static final boolean TEST_REMOTELY = false;
     public static final int PAD = 15;
     private static final String TEST_TABLE_PREFIX = System.getProperty("user.name") + StorageInterface.separator + "hbaseTestTable";
-    private static final String TEST_COLUMN = "allData";
-    private static final String TEST_QUALIFIER = "qualifier";
     private static final boolean PERSIST = true;
     private Configuration config;
     private SerializationInterface serializer;
@@ -95,12 +95,12 @@ public class HBaseStorage extends StorageInterface {
             // as a test, let's try readable rowKeys
             Put p = new Put(Bytes.toBytes(obj.getSGID().getChainID().toString()));
             // Serialize:
-            p.add(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes(TEST_QUALIFIER), featureBytes);
+            p.add(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES, featureBytes);
             tableMap.get(prefix).put(p);
             // try to get back timestamp for now
             Get g = new Get(Bytes.toBytes(obj.getSGID().getChainID().toString()));
             Result result = tableMap.get(prefix).get(g);
-            long timestamp = result.getColumnLatest(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes(TEST_QUALIFIER)).getTimestamp();
+            long timestamp = result.getColumnLatest(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES).getTimestamp();
             obj.getSGID().setBackendTimestamp(new Date(timestamp));
         } catch (IOException ex) {
             Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, null, ex);
@@ -138,9 +138,9 @@ public class HBaseStorage extends StorageInterface {
             byte[] value;
             long getTimeStamp = Long.MIN_VALUE;
             if (useTimestamp) {
-                value = result.getMap().get(Bytes.toBytes(TEST_COLUMN)).get(Bytes.toBytes(TEST_QUALIFIER)).get(sgid.getBackendTimestamp().getTime());
+                value = result.getMap().get(TEST_COLUMN_INBYTES).get(TEST_QUALIFIER_INBYTES).get(sgid.getBackendTimestamp().getTime());
             } else {
-                KeyValue columnLatest = result.getColumnLatest(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes(TEST_QUALIFIER));
+                KeyValue columnLatest = result.getColumnLatest(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES);
                 value = columnLatest.getValue();
                 getTimeStamp = columnLatest.getTimestamp();
             }
@@ -263,7 +263,7 @@ public class HBaseStorage extends StorageInterface {
             // we actually need to check for nulls due to different serialization formats
             while (payload == null && sIter.hasNext()) {
                 // check
-                byte[] bytes = sIter.next().getColumnLatest(Bytes.toBytes(TEST_COLUMN), Bytes.toBytes(TEST_QUALIFIER)).getValue();
+                byte[] bytes = sIter.next().getColumnLatest(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES).getValue();
                 Object obj = serializer.deserialize(bytes, cl);
                 if (obj != null) {
                     payload = (SGID) ((AtomImpl) obj).getSGID();
