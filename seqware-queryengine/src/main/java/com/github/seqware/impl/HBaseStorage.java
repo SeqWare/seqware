@@ -37,6 +37,7 @@ import org.apache.hadoop.hbase.util.Bytes;
  * @author dyuen
  */
 public class HBaseStorage extends StorageInterface {
+
     private static final String TEST_COLUMN = "allData";
     private static final byte[] TEST_COLUMN_INBYTES = Bytes.toBytes("allData");
     private static final byte[] TEST_QUALIFIER_INBYTES = Bytes.toBytes("qualifier");
@@ -67,7 +68,9 @@ public class HBaseStorage extends StorageInterface {
             String tableName = TEST_TABLE_PREFIX + StorageInterface.separator + s;
             // Create a fresh table, i.e. delete an existing table if it exists:
             HTableDescriptor ht = new HTableDescriptor(tableName);
-            ht.addFamily(new HColumnDescriptor(TEST_COLUMN));
+            HColumnDescriptor hColumnDescriptor = new HColumnDescriptor(TEST_COLUMN);
+            hColumnDescriptor.setMaxVersions(Integer.MAX_VALUE);
+            ht.addFamily(hColumnDescriptor);
             // make a persistent store exists already, otherwise try to retrieve existing items
             try {
                 HBaseAdmin hba = new HBaseAdmin(config);
@@ -88,23 +91,53 @@ public class HBaseStorage extends StorageInterface {
     }
 
     @Override
-    public void serializeAtomToTarget(Atom obj) {
-        String prefix = ((AtomImpl) obj).getHBasePrefix();
+    public <T extends Atom> void serializeAtomsToTarget(T... objArr) {
+        if (objArr.length == 0) {
+            return;
+        }
         try {
-            byte[] featureBytes = serializer.serialize(obj);
-            // as a test, let's try readable rowKeys
-            Put p = new Put(Bytes.toBytes(obj.getSGID().getChainID().toString()));
-            // Serialize:
-            p.add(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES, featureBytes);
-            tableMap.get(prefix).put(p);
-            // try to get back timestamp for now
-            Get g = new Get(Bytes.toBytes(obj.getSGID().getChainID().toString()));
-            Result result = tableMap.get(prefix).get(g);
-            long timestamp = result.getColumnLatest(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES).getTimestamp();
-            obj.getSGID().setBackendTimestamp(new Date(timestamp));
+            String prefix = ((AtomImpl) objArr[0]).getHBasePrefix();
+            HTable table = tableMap.get(prefix);
+            List<Row> putList = new ArrayList<Row>();
+            List<Row> getList = new ArrayList<Row>();
+            // queue up HBase calls for the batch interface
+            for (T obj : objArr) {
+                assert (prefix.equals(((AtomImpl) objArr[0]).getHBasePrefix()));
+                byte[] featureBytes = serializer.serialize(obj);
+                // as a test, let's try readable rowKeys
+                Put p = new Put(Bytes.toBytes(obj.getSGID().getChainID().toString()));
+                // Serialize:
+                p.add(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES, featureBytes);
+                putList.add(p);
+
+                Get g = new Get(Bytes.toBytes(obj.getSGID().getChainID().toString()));
+                getList.add(g);
+            }
+            // establish put
+            Object[] putBatch = table.batch(putList);
+            // get back putList and record timestamps
+            assert (getList.size() == putList.size());
+            assert (getList.size() == objArr.length);
+            Object[] getBatch = table.batch(getList);
+            assert (getBatch.length == putBatch.length);
+            assert (getBatch.length == objArr.length);
+            // go through the get and update the timestamps for our objects on the way out
+            for (int i = 0; i < objArr.length; i++) {
+                T obj = objArr[i];
+                Result result = (Result) getBatch[i];
+                long timestamp = result.getColumnLatest(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES).getTimestamp();
+                obj.getSGID().setBackendTimestamp(new Date(timestamp));
+            }
         } catch (IOException ex) {
             Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public void serializeAtomToTarget(Atom obj) {
+        serializeAtomsToTarget(obj);
     }
 
     @Override
@@ -113,13 +146,17 @@ public class HBaseStorage extends StorageInterface {
     }
 
     private Atom deserializeTargetToAtom(SGID sgid, boolean useTimestamp) {
-        if (!inefficiencyWarning){
+        if (!inefficiencyWarning) {
             inefficiencyWarning = true;
             Logger.getLogger(HBaseStorage.class.getName()).log(Level.WARNING, "Why you use deserializeTargetToAtom(SGID sgid) in HBase?");
         }
         for (Entry<String, HTable> entry : tableMap.entrySet()) {
             Class properClass = super.biMap.inverse().get(entry.getKey());
-            Atom a = deserializeAtom(sgid, properClass, entry.getValue(), useTimestamp);
+            List<Atom> list = deserializeAtom(properClass, entry.getValue(), useTimestamp, sgid);
+            if (list == null || list.isEmpty()){
+                continue;
+            }
+            Atom a = list.get(0);
             if (a != null) {
                 return a;
             }
@@ -127,33 +164,49 @@ public class HBaseStorage extends StorageInterface {
         return null;
     }
 
-    private Atom deserializeAtom(SGID sgid, Class properClass, HTable table, boolean useTimestamp) {
+    private List<Atom> deserializeAtom(Class properClass, HTable table, boolean useTimestamp, SGID ... sgidArr) {
+        List<Row> getList = new ArrayList<Row>();
+        for (SGID sID : sgidArr) {
+            Get g = new Get(Bytes.toBytes(sID.getChainID().toString()));
+            g.setMaxVersions();
+            getList.add(g);
+        }
+
         try {
-            Get g = new Get(Bytes.toBytes(sgid.getChainID().toString()));
-            Result result = table.get(g);
-            // handle null case
-            if (result.isEmpty()) {
-                return null;
+            Object[] batch = table.batch(getList);
+            assert (batch.length == sgidArr.length);
+            List<Atom> atomList = new ArrayList<Atom>();
+            for (int i = 0; i < sgidArr.length; i++) {
+                SGID sgid = sgidArr[i];
+                Result result = (Result) batch[i];
+                // handle null case
+                if (result.isEmpty()) {
+                    return null;
+                }
+                byte[] value;
+                long getTimeStamp = Long.MIN_VALUE;
+                if (useTimestamp) {
+                    value = result.getMap().get(TEST_COLUMN_INBYTES).get(TEST_QUALIFIER_INBYTES).get(sgid.getBackendTimestamp().getTime());
+                } else {
+                    KeyValue columnLatest = result.getColumnLatest(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES);
+                    value = columnLatest.getValue();
+                    getTimeStamp = columnLatest.getTimestamp();
+                }
+                // I wonder if this handles subclassing properly ... turns out no
+                AtomImpl deserializedAtom = (AtomImpl) serializer.deserialize(value, properClass);
+                // populate the timestamp field on the way out
+                if (useTimestamp) {
+                    deserializedAtom.getSGID().setBackendTimestamp(sgid.getBackendTimestamp());
+                } else {
+                    deserializedAtom.getSGID().setBackendTimestamp(new Date(getTimeStamp));
+                }
+                atomList.add(deserializedAtom);
             }
-            byte[] value;
-            long getTimeStamp = Long.MIN_VALUE;
-            if (useTimestamp) {
-                value = result.getMap().get(TEST_COLUMN_INBYTES).get(TEST_QUALIFIER_INBYTES).get(sgid.getBackendTimestamp().getTime());
-            } else {
-                KeyValue columnLatest = result.getColumnLatest(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES);
-                value = columnLatest.getValue();
-                getTimeStamp = columnLatest.getTimestamp();
-            }
-            // I wonder if this handles subclassing properly ... turns out no
-            AtomImpl deserializedAtom = (AtomImpl) serializer.deserialize(value, properClass);
-            // populate the timestamp field on the way out
-            if (useTimestamp) {
-                deserializedAtom.getSGID().setBackendTimestamp(sgid.getBackendTimestamp());
-            } else {
-                deserializedAtom.getSGID().setBackendTimestamp(new Date(getTimeStamp));
-            }
-            return deserializedAtom;
+            return atomList;
         } catch (IOException ex) {
+            Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } catch (InterruptedException ex) {
             Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
@@ -182,7 +235,7 @@ public class HBaseStorage extends StorageInterface {
 
     @Override
     public Iterable<SGID> getAllAtoms() {
-        if (!inefficiencyWarning){
+        if (!inefficiencyWarning) {
             inefficiencyWarning = true;
             Logger.getLogger(HBaseStorage.class.getName()).log(Level.WARNING, "Why you use getAllAtoms() in HBase?");
         }
@@ -210,15 +263,14 @@ public class HBaseStorage extends StorageInterface {
         }
     }
 
-    @Override
-    public <T extends Atom> T deserializeTargetToAtom(SGID sgid, Class<T> t) {
-        return (T) deserializeTargetToAtom(sgid, t, true);
-    }
-
     private <T extends Atom> T deserializeTargetToAtom(SGID sgid, Class<T> t, boolean useTimestamp) {
         String prefix = super.biMap.get(t);
         HTable table = tableMap.get(prefix);
-        return (T) deserializeAtom(sgid, t, table, useTimestamp);
+        List<Atom> deserializeAtom = deserializeAtom(t, table, useTimestamp, sgid);
+        if (deserializeAtom != null && deserializeAtom.size() > 0){
+            return (T)deserializeAtom.get(0);
+        }
+        return null;
     }
 
     @Override
@@ -229,6 +281,18 @@ public class HBaseStorage extends StorageInterface {
     @Override
     public <T extends Atom> T deserializeTargetToLatestAtom(SGID sgid, Class<T> t) {
         return (T) deserializeTargetToAtom(sgid, t, false);
+    }
+
+    @Override
+    public <T extends Atom> T deserializeTargetToAtom(Class<T> t, SGID sgid) {
+        return (T) deserializeTargetToAtom(sgid, t, true);
+    }
+
+    @Override
+    public <T extends Atom> List<T> deserializeTargetToAtoms(Class<T> t, SGID... sgid) {
+        String prefix = super.biMap.get(t);
+        HTable table = tableMap.get(prefix);
+        return (List<T>) deserializeAtom(t, table, true, sgid);
     }
 
     public class ScanIterable implements Iterable {

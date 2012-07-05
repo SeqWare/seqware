@@ -17,6 +17,7 @@
 package com.github.seqware.factory;
 
 import com.github.seqware.model.Atom;
+import java.util.List;
 
 /**
  * This interface specifies operations to persist, update, and add objects to 
@@ -24,19 +25,19 @@ import com.github.seqware.model.Atom;
  * @author dyuen
  */
 public interface BackEndInterface {
-    
+         
     /**
      * Store obj in the back-end.
      * @param obj Object to be created
      */
-    public void store(Atom obj);
+    public void store(Atom ... obj);
     
     
     /**
      * Crawl through obj and update changes in the back-end.
      * @param obj Object to be updated in the back-end
      */
-    public void update(Atom obj);
+    public void update(Atom ... obj);
     
     /**
      * Update the obj using the latest information from the back-end

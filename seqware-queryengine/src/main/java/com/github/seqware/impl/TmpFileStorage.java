@@ -21,11 +21,12 @@ import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.util.SGID;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
@@ -81,20 +82,27 @@ public class TmpFileStorage extends StorageInterface {
             System.exit(-1);
         }
     }
-
+    
     @Override
     public void serializeAtomToTarget(Atom obj) {
         String prefix = ((AtomImpl) obj).getHBasePrefix();
-        obj.getSGID().setBackendTimestamp(new Date(System.currentTimeMillis()));
-        // let's just clone everything on store to simulate hbase
-        File target = new File(tempDir, prefix + separator + obj.getSGID().toString());
-        byte[] serialRep = serializer.serialize(obj);
-        try {
-            FileUtils.writeByteArrayToFile(target, serialRep);
+            obj.getSGID().setBackendTimestamp(new Date(System.currentTimeMillis()));
+            // let's just clone everything on store to simulate hbase
+            File target = new File(tempDir, prefix + separator + obj.getSGID().toString());
+            byte[] serialRep = serializer.serialize(obj);
+            try {
+                FileUtils.writeByteArrayToFile(target, serialRep);
 //            map.put(obj.getSGID(), new FileTypePair(target, ((AtomImpl)obj).getHBaseClass()));
-        } catch (IOException ex) {
-            Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, "Failiure to serialize", ex);
-            System.exit(-1);
+            } catch (IOException ex) {
+                Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, "Failiure to serialize", ex);
+                System.exit(-1);
+            }
+    }
+
+    @Override
+    public void serializeAtomsToTarget(Atom... atomArr) {
+        for (Atom obj : atomArr) {
+            serializeAtomToTarget(obj);
         }
     }
 
@@ -155,7 +163,16 @@ public class TmpFileStorage extends StorageInterface {
     }
 
     @Override
-    public <T extends Atom> T deserializeTargetToAtom(SGID sgid, Class<T> t) {
+    public <T extends Atom> List deserializeTargetToAtoms(Class<T> t, SGID... sgidArr) {
+        List<T> list = new ArrayList<T>();
+        for (SGID sgid : sgidArr) {
+            list.add((T) this.deserializeTargetToAtom(sgid));
+        }
+        return list;
+    }
+
+    @Override
+    public <T extends Atom> T deserializeTargetToAtom(Class<T> t, SGID sgid) {
         return (T) this.deserializeTargetToAtom(sgid);
     }
 
@@ -164,10 +181,10 @@ public class TmpFileStorage extends StorageInterface {
         List<Atom> aList = new ArrayList<Atom>();
         for (File file : FileUtils.listFiles(tempDir, new WildcardFileFilter("*" + sgid.getChainID() + "*"), null)) {
             String[] names = file.getName().split("\\.");
-            long time = Long.valueOf(names[names.length-1]);
+            long time = Long.valueOf(names[names.length - 1]);
             SGID newSGID = new SGID(sgid.getUuid().getMostSignificantBits(), sgid.getUuid().getLeastSignificantBits(), time);
             Atom atomCandidate = deserializeTargetToAtom(newSGID);
-            if (atomCandidate != null){
+            if (atomCandidate != null) {
                 aList.add(atomCandidate);
             }
         }
@@ -188,14 +205,4 @@ public class TmpFileStorage extends StorageInterface {
     public <T extends Atom> T deserializeTargetToLatestAtom(SGID sgid, Class<T> t) {
         return (T) this.deserializeTargetToLatestAtom(sgid);
     }
-//    public class FileTypePair {
-//
-//        private File file;
-//        private Class cl;
-//
-//        public FileTypePair(File file, Class cl) {
-//            this.file = file;
-//            this.cl = cl;
-//        }
-//    }
 }

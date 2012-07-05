@@ -173,7 +173,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     public boolean associateTag(Tag tag) {
         tags.add(tag);
         if (this.getManager() != null) {
-            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
         }
         //Factory.getBackEnd().associateTag(this, tag);
         return true;
@@ -183,7 +183,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     public boolean dissociateTag(Tag tag) {
         tags.remove(tag);
         if (this.getManager() != null) {
-            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
         }
         //Factory.getBackEnd().dissociateTag(this, tag);
         return true;
@@ -212,7 +212,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     public void setPrecedingVersion(T precedingVersion) {
         // inform the model manager that this is a new version of an object now
         if (this.getManager() != null) {
-            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
         }
         this.precedingVersion.set(precedingVersion);
     }

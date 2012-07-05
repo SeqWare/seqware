@@ -2,6 +2,7 @@ package com.github.seqware.model;
 
 import com.github.seqware.util.SGID;
 import com.github.seqware.util.SeqWareIterable;
+import java.util.List;
 
 /**
  * Leaving this here just to provoke thought:
@@ -42,14 +43,26 @@ public interface FeatureStoreInterface {
      */
     public Atom getAtomBySGID(SGID sgid);
     
+
+    /**
+     * Find a batch of objects in the back-end when a specific class is known using a globally unique SGID
+     * while taking into account the timestamp
+     * @param <T>
+     * @param t type of class to retrieve (used as a filter)
+     * @param sgid globally unique id
+     * @return 
+     */
+    public <T extends Atom> List getAtomsBySGID(Class<T> t, SGID... sgid);
+    
     /**
      * Find an object in the back-end when a specific class is known using a globally unique SGID
+     * while taking into account the timestamp
      * @param <T>
      * @param sgid globally unique id
      * @param t type of class to retrieve (used as a filter)
      * @return 
      */
-    public <T extends Atom> T getAtomBySGID(SGID sgid, Class<T> t);
+    public <T extends Atom> T getAtomBySGID(Class<T> t, SGID sgid);
     
     /**
      * Find the latest object in the back-end by a globally unique SGID

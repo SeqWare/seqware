@@ -44,11 +44,11 @@ public class HBaseModelManager extends SimpleModelManager {
      */
     @Override
     protected void flush(boolean maintainState) {
-        List<Entry<SGID, AtomStatePair>> workingList = grabObjectsToBeFlushed();
+        List<Entry<String, AtomStatePair>> workingList = grabObjectsToBeFlushed();
         // check for orphaned Features
-        for (Entry<SGID, AtomStatePair> p : workingList) {
-            if (p.getValue().getState() == State.NEW_CREATION && p.getValue().getP() instanceof Feature) {
-                Feature f = (Feature) p.getValue().getP();
+        for (Entry<String, AtomStatePair> p : workingList) {
+            if (p.getValue().getState() == State.NEW_CREATION && p.getValue().getAtom() instanceof Feature) {
+                Feature f = (Feature) p.getValue().getAtom();
                 // should be upgraded now, if not
                 if (!(f.getSGID() instanceof FSGID)) {
                     // this should not happen

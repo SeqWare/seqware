@@ -16,7 +16,6 @@
  */
 package com.github.seqware.impl.protobufIO;
 
-import com.github.seqware.dto.QESupporting.SGIDPB;
 import com.github.seqware.dto.QueryEngine;
 import com.github.seqware.dto.QueryEngine.ReferenceSetPB;
 import com.github.seqware.factory.Factory;
@@ -27,6 +26,7 @@ import com.github.seqware.model.impl.MoleculeImpl;
 import com.github.seqware.model.impl.inMemory.InMemoryReferenceSet;
 import com.github.seqware.util.SGID;
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,11 +47,12 @@ public class ReferenceSetIO implements ProtobufTransferInterface<ReferenceSetPB,
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && userpb.hasPrecedingVersion()){
            user.setPrecedingVersion(pb2m(userpb.getPrecedingVersion()));
         }
-        for(SGIDPB refID : userpb.getReferenceIDsList()){
-            SGID sgid = SGIDIO.pb2m(refID);
-            Reference ref = (Reference)Factory.getFeatureStoreInterface().getAtomBySGID(sgid, Reference.class);
-            user.add(ref);
+        SGID[] sgidArr = new SGID[userpb.getReferenceIDsCount()];
+        for(int i = 0; i < sgidArr.length; i++){
+            sgidArr[i] = (SGIDIO.pb2m(userpb.getReferenceIDs(i)));
         }
+        List<Reference> atomsBySGID = Factory.getFeatureStoreInterface().getAtomsBySGID(Reference.class, sgidArr);
+        if (atomsBySGID != null && atomsBySGID.size() > 0) {user.add(atomsBySGID);}
         return user;
     }
     

@@ -46,23 +46,34 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
         apis.add(new InMemoryFeaturesByReferencePlugin());
         apis.add(new InMemoryFeaturesByTypePlugin());
     }
-
+    
     @Override
-    public void store(Atom obj) {
-        // we don't really need to make sure that nothing is present before we do this
-        //if (fsi.deserializeTargetToAtom(obj.getSGID(), ((AtomImpl)obj).getHBaseClass()) == null) {
-            fsi.serializeAtomToTarget(obj);
-        //}
+    public void store(Atom ... objArr) {
+//        Atom[] storeAtom = new Atom[objArr.length];
+//        for(int i = 0; i < objArr.length; i++){
+//           storeAtom[i] = (Atom)objArr[i].copy(false);
+//        }
+        fsi.serializeAtomsToTarget(objArr);
     }
 
     @Override
-    public void update(Atom obj) {
-        // create a copy of the new Atom and store it
-        SGID oldSGID = obj.getSGID();
-        Atom newAtom = (Atom)obj.copy(true);
-        store(newAtom);
+    public void update(Atom ... objList) {
+        Atom[] storeAtom = new Atom[objList.length];
+//        SGID[] oldSGID = new SGID[objList.length];
+        for(int i = 0; i < objList.length; i++){
+           Atom obj = objList[i];
+//           oldSGID[i] = obj.getSGID();
+           storeAtom[i] = (Atom)obj.copy(false);
+           // need to set preceding ID for new copy
+           storeAtom[i].setPrecedingVersion(obj);
+        }
+        store(storeAtom);
         // change the obj we have a reference to look like the new object that was created
-        ((AtomImpl)obj).impersonate(newAtom.getSGID(), newAtom.getTimestamp(), oldSGID);
+        // doesn't seem applicable anymore?
+        for(int i = 0; i < objList.length; i++){
+          Atom obj = objList[i];
+          ((AtomImpl)obj).impersonate(storeAtom[i].getSGID(), obj.getTimestamp(), obj.getSGID());
+        }     
     }
 
     @Override
@@ -87,8 +98,13 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
     }
     
     @Override
-    public <T extends Atom> T getAtomBySGID(SGID sgid, Class<T> t) {
-        T p = fsi.deserializeTargetToAtom(sgid, t);
+    public <T extends Atom> List getAtomsBySGID(Class<T> t, SGID... sgid){
+        return fsi.deserializeTargetToAtoms(t, sgid);
+    }
+    
+    @Override
+    public <T extends Atom> T getAtomBySGID(Class<T> t, SGID sgid) {
+        T p = fsi.deserializeTargetToAtom(t, sgid);
         assert(p == null || p.getSGID().equals(sgid));
         return p;
     }
@@ -193,7 +209,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
 
     @Override
     public Atom getPrecedingVersion(Atom obj) {
-        Atom target = (Atom)fsi.deserializeTargetToAtom(obj.getSGID(), ((AtomImpl)obj).getHBaseClass());
+        Atom target = (Atom)fsi.deserializeTargetToAtom(((AtomImpl)obj).getHBaseClass(), obj.getSGID());
         if (target == null){
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "{0} had no parent, this may signal an error", obj.getSGID());
             return null;

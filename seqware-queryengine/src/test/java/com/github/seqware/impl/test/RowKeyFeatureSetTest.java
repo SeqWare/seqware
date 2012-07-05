@@ -63,7 +63,7 @@ public class RowKeyFeatureSetTest {
         
         // test in back-end
         actKeys.clear();
-        FeatureSet targetSet = (FeatureSet) Factory.getFeatureStoreInterface().getAtomBySGID(fSet.getSGID(), FeatureSet.class);
+        FeatureSet targetSet = (FeatureSet) Factory.getFeatureStoreInterface().getAtomBySGID(FeatureSet.class, fSet.getSGID());
         for(Feature f : targetSet){
             FSGID sgid = (FSGID) f.getSGID();
             actKeys.add(sgid.getRowKey());

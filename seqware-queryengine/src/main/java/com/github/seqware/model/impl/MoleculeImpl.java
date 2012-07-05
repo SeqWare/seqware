@@ -19,7 +19,7 @@ public abstract class MoleculeImpl<T extends Molecule> extends AtomImpl<T> imple
     public void setPermissions(ACL permissions) {
         this.permissions = permissions;
         if (this.getManager() != null){
-            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);  
         }
     }
 

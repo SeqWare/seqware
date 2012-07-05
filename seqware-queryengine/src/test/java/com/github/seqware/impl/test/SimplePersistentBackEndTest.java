@@ -32,7 +32,7 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
 
         Atom atom = null;
         try {
-            atom = backend.getAtomBySGID(this.aSet.getSGID(), FeatureSet.class);
+            atom = backend.getAtomBySGID(FeatureSet.class, this.aSet.getSGID());
         }
         catch(Exception e) {
             Assert.assertTrue("Could not retrieve the previously stored FeatureSet.", false);

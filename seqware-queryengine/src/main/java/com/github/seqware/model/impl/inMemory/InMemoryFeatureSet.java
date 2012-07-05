@@ -8,10 +8,7 @@ import com.github.seqware.util.FSGID;
 import com.github.seqware.util.InMemoryIterator;
 import com.github.seqware.util.LazyReference;
 import com.github.seqware.util.SGID;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * An in-memory representation of a feature set.
@@ -61,7 +58,7 @@ public class InMemoryFeatureSet extends FeatureSet {
         upgradeFeatureSGID(feature);
         features.add(feature);
         if (this.getManager() != null) {
-            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
         }
         return this;
     }
@@ -81,7 +78,7 @@ public class InMemoryFeatureSet extends FeatureSet {
         }
         this.features.addAll(Arrays.asList(elements));
         if (this.getManager() != null) {
-            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
         }
         return this;
     }
@@ -90,19 +87,19 @@ public class InMemoryFeatureSet extends FeatureSet {
     public FeatureSet remove(Feature feature) {
         features.remove(feature);
         if (this.getManager() != null) {
-            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
         }
         return this;
     }
 
     @Override
-    public FeatureSet add(Set<Feature> features) {
+    public FeatureSet add(Collection<Feature> features) {
         for (Feature f : features) {
             upgradeFeatureSGID(f);
         }
         this.features.addAll(features);
         if (this.getManager() != null) {
-            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
         }
         return this;
     }
