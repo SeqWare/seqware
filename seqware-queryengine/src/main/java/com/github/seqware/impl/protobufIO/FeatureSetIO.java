@@ -16,11 +16,9 @@
  */
 package com.github.seqware.impl.protobufIO;
 
-import com.github.seqware.dto.QESupporting.FSGIDPB;
 import com.github.seqware.dto.QueryEngine;
 import com.github.seqware.dto.QueryEngine.FeatureSetPB;
 import com.github.seqware.factory.Factory;
-import com.github.seqware.model.Analysis;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import com.github.seqware.model.impl.AtomImpl;

@@ -21,7 +21,7 @@ import com.github.seqware.model.*;
 /**
  * A very simple Manager that is somewhat like a very stripped down
  * EntityManager from JPA allowing us to create Models, persist them, and
- * retrieve them. See {@link http://docs.oracle.com/javaee/5/api/javax/persistence/EntityManager.html}
+ * retrieve them. See {@linktourl http://docs.oracle.com/javaee/5/api/javax/persistence/EntityManager.html}
  * If this gets too complex, maybe we should consider JPA as an option?
  *
  * Some differences to keep our implementation KISS, models are created through

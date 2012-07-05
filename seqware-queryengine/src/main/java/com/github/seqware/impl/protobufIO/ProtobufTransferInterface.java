@@ -32,14 +32,14 @@ public interface ProtobufTransferInterface<S extends Message,T extends Atom> {
      * Convert from protein buffer object in byte array to model.
      * Implementations of this method are kinda stupid, we should be able to template/generic this but
      * Java dislikes it for some reason.
-     * @param protbuf in byte form
+     * @param arr in byte form
      * @return 
      */
     public abstract T byteArr2m(byte[] arr);
     
     /**
      * Convert from protein buffer object to model
-     * @param protbuf in byte form
+     * @param protBuff in byte form
      * @return 
      */
     public abstract T pb2m(S protBuff);
