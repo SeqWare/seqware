@@ -1,10 +1,10 @@
 package com.github.seqware.impl.test;
 
-import com.github.seqware.impl.ApacheSerialization;
-import com.github.seqware.impl.TmpFileStorage;
-import com.github.seqware.impl.SimplePersistentBackEnd;
-import com.github.seqware.model.Atom;
-import com.github.seqware.model.FeatureSet;
+import com.github.seqware.queryengine.impl.ApacheSerialization;
+import com.github.seqware.queryengine.impl.TmpFileStorage;
+import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
+import com.github.seqware.queryengine.model.Atom;
+import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.model.test.FeatureStoreInterfaceTest;
 import java.util.UUID;
 import junit.framework.Assert;

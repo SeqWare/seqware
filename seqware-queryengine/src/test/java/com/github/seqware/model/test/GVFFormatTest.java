@@ -1,11 +1,13 @@
 package com.github.seqware.model.test;
 
-import com.github.seqware.factory.Factory;
-import com.github.seqware.factory.ModelManager;
-import com.github.seqware.model.*;
-import com.github.seqware.model.impl.inMemory.InMemoryFeaturesAllPlugin;
-import com.github.seqware.model.interfaces.Taggable;
-import com.github.seqware.util.SeqWareIterable;
+import com.github.seqware.queryengine.model.Feature;
+import com.github.seqware.queryengine.model.Tag;
+import com.github.seqware.queryengine.model.FeatureSet;
+import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.model.impl.inMemory.InMemoryFeaturesAllPlugin;
+import com.github.seqware.queryengine.model.interfaces.Taggable;
+import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.*;
 import org.junit.Assert;
 import org.junit.BeforeClass;

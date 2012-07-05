@@ -1,13 +1,13 @@
 package com.github.seqware.impl.test;
 
-import com.github.seqware.factory.Factory;
-import com.github.seqware.factory.ModelManager;
-import com.github.seqware.impl.ApacheSerialization;
-import com.github.seqware.impl.TmpFileStorage;
-import com.github.seqware.impl.SimpleModelManager;
-import com.github.seqware.impl.SimplePersistentBackEnd;
-import com.github.seqware.model.Feature;
-import com.github.seqware.model.FeatureSet;
+import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.impl.ApacheSerialization;
+import com.github.seqware.queryengine.impl.TmpFileStorage;
+import com.github.seqware.queryengine.impl.SimpleModelManager;
+import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
+import com.github.seqware.queryengine.model.Feature;
+import com.github.seqware.queryengine.model.FeatureSet;
 import java.util.UUID;
 import org.junit.Test;
 

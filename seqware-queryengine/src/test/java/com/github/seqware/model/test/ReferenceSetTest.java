@@ -1,9 +1,9 @@
 package com.github.seqware.model.test;
 
-import com.github.seqware.factory.Factory;
-import com.github.seqware.factory.ModelManager;
-import com.github.seqware.model.Reference;
-import com.github.seqware.model.ReferenceSet;
+import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.model.Reference;
+import com.github.seqware.queryengine.model.ReferenceSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;

@@ -1,9 +1,9 @@
 package com.github.seqware.model.test;
 
-import com.github.seqware.factory.Factory;
-import com.github.seqware.factory.ModelManager;
-import com.github.seqware.model.Group;
-import com.github.seqware.model.User;
+import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.model.Group;
+import com.github.seqware.queryengine.model.User;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
