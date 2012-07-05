@@ -74,7 +74,7 @@ public class LazyReference<T extends Atom> implements Serializable {
      */
     public T get() {
         if (!referenceChecked && referenceSGID != null) {
-            this.referenceCache = (T) Factory.getFeatureStoreInterface().getAtomBySGID(referenceSGID, type);
+            this.referenceCache = (T) Factory.getFeatureStoreInterface().getAtomBySGID(type, referenceSGID);
         }
         referenceChecked = true;
         return this.referenceCache;

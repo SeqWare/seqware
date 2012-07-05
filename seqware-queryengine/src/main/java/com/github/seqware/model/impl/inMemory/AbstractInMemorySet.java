@@ -4,10 +4,7 @@ import com.github.seqware.factory.ModelManager;
 import com.github.seqware.model.impl.MoleculeImpl;
 import com.github.seqware.model.interfaces.AbstractMolSet;
 import com.github.seqware.model.interfaces.Taggable;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * An in-memory representation of a AbstractMolSet.
@@ -31,16 +28,16 @@ public abstract class AbstractInMemorySet<S extends AbstractMolSet, T> extends M
     public S add(T tag) {
         set.add(tag);
         if (this.getManager() != null){
-            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
         }
         return (S) this;
     }
 
     @Override
-    public S add(Set<T> tags) {
+    public S add(Collection<T> tags) {
         this.set.addAll(tags);
         if (this.getManager() != null){
-            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);  
+            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);  
         }
         return (S) this;
     }
@@ -49,7 +46,7 @@ public abstract class AbstractInMemorySet<S extends AbstractMolSet, T> extends M
     public S add(T ... tags) {
         this.set.addAll(Arrays.asList(tags));
         if (this.getManager() != null){
-            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION); 
+            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION); 
         }
         return (S) this;
     }
@@ -58,7 +55,7 @@ public abstract class AbstractInMemorySet<S extends AbstractMolSet, T> extends M
     public S remove(T tag) {
         this.set.remove(tag);
         if (this.getManager() != null){
-            this.getManager().AtomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
         }
         return (S) this;
     }

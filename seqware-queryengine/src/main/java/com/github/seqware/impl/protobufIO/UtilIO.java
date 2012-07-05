@@ -21,11 +21,8 @@ import com.github.seqware.dto.QESupporting.AtomPB;
 import com.github.seqware.dto.QESupporting.FeatureAtomPB;
 import com.github.seqware.dto.QueryEngine;
 import com.github.seqware.dto.QueryEngine.ACLPB;
-import com.github.seqware.factory.Factory;
 import com.github.seqware.model.Feature;
-import com.github.seqware.model.Group;
 import com.github.seqware.model.Tag;
-import com.github.seqware.model.User;
 import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.model.impl.MoleculeImpl;
 import com.github.seqware.model.interfaces.ACL;
@@ -79,7 +76,7 @@ public class UtilIO {
     }
 
     /**
-     * Handle deserialization of the core atom just for Features FIXME: this
+     * Handle de-serialization of the core atom just for Features FIXME: this
      * should be collapsible with normal atom
      *
      * @param atompb

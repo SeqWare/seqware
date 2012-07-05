@@ -5,8 +5,8 @@ import com.github.seqware.model.impl.MoleculeImpl;
 import com.github.seqware.model.interfaces.AbstractMolSet;
 import com.github.seqware.model.interfaces.BaseBuilder;
 import com.github.seqware.util.SGID;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 
 /**
  * A feature set is a set (ex: collection, bag) of features. A feature set
@@ -49,7 +49,7 @@ public abstract class FeatureSet extends MoleculeImpl<FeatureSet> implements Abs
      * @param features The features that are to be added to the feature set.
      */
     @Override
-    public abstract FeatureSet add(Set<Feature> features);
+    public abstract FeatureSet add(Collection<Feature> features);
     
     @Override
     public abstract FeatureSet remove(Feature feature);

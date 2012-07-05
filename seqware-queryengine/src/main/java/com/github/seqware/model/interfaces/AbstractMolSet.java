@@ -19,6 +19,8 @@ package com.github.seqware.model.interfaces;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.Molecule;
 import com.github.seqware.util.SeqWareIterable;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -44,7 +46,7 @@ public interface AbstractMolSet<S extends AbstractMolSet, T> extends SeqWareIter
      * @param elements
      * @return
      */
-    public abstract S add(Set<T> elements);
+    public abstract S add(Collection<T> elements);
 
     /**
      * Add an array of elements

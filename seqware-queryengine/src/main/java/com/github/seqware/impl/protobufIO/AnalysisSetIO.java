@@ -28,6 +28,8 @@ import com.github.seqware.model.impl.MoleculeImpl;
 import com.github.seqware.model.impl.inMemory.InMemoryAnalysisSet;
 import com.github.seqware.util.SGID;
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,11 +50,12 @@ public class AnalysisSetIO implements ProtobufTransferInterface<AnalysisSetPB, A
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && pb.hasPrecedingVersion()){
            user.setPrecedingVersion(pb2m(pb.getPrecedingVersion()));
         }
-        for(SGIDPB refID : pb.getAnalysisIDsList()){
-            SGID sgid = SGIDIO.pb2m(refID);
-            Analysis ref = (Analysis)Factory.getFeatureStoreInterface().getAtomBySGID(sgid, Analysis.class);
-            user.add(ref);
+        SGID[] sgidArr = new SGID[pb.getAnalysisIDsCount()];
+        for(int i = 0; i < sgidArr.length; i++){
+            sgidArr[i] = (SGIDIO.pb2m(pb.getAnalysisIDs(i)));
         }
+        List<Analysis> atomsBySGID = Factory.getFeatureStoreInterface().getAtomsBySGID(Analysis.class, sgidArr);
+        if (atomsBySGID != null && atomsBySGID.size() > 0) {user.add(atomsBySGID);}
         return user;
     }
     

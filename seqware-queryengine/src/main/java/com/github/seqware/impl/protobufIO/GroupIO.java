@@ -20,6 +20,7 @@ import com.github.seqware.dto.QESupporting.SGIDPB;
 import com.github.seqware.dto.QueryEngine;
 import com.github.seqware.dto.QueryEngine.GroupPB;
 import com.github.seqware.factory.Factory;
+import com.github.seqware.model.Feature;
 import com.github.seqware.model.Group;
 import com.github.seqware.model.User;
 import com.github.seqware.model.impl.AtomImpl;
@@ -27,6 +28,7 @@ import com.github.seqware.model.impl.MoleculeImpl;
 import com.github.seqware.model.impl.inMemory.InMemoryGroup;
 import com.github.seqware.util.SGID;
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,11 +49,12 @@ public class GroupIO implements ProtobufTransferInterface<GroupPB, Group>{
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && pb.hasPrecedingVersion()){
            user.setPrecedingVersion(pb2m(pb.getPrecedingVersion()));
         }
-        for(SGIDPB refID : pb.getUsersList()){
-            SGID sgid = SGIDIO.pb2m(refID);
-            User ref = (User)Factory.getFeatureStoreInterface().getLatestAtomBySGID(sgid, User.class);
-            user.add(ref);
+        SGID[] sgidArr = new SGID[pb.getUsersCount()];
+        for(int i = 0; i < sgidArr.length; i++){
+            sgidArr[i] = (SGIDIO.pb2m(pb.getUsers(i)));
         }
+        List<User> atomsBySGID = Factory.getFeatureStoreInterface().getAtomsBySGID(User.class, sgidArr);
+        if (atomsBySGID != null && atomsBySGID.size() > 0) {user.add(atomsBySGID);}
         return user;
     }
     

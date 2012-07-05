@@ -22,11 +22,13 @@ import com.github.seqware.dto.QueryEngine.TagSetPB;
 import com.github.seqware.factory.Factory;
 import com.github.seqware.model.Tag;
 import com.github.seqware.model.TagSet;
+import com.github.seqware.model.User;
 import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.model.impl.MoleculeImpl;
 import com.github.seqware.model.impl.inMemory.InMemoryTagSet;
 import com.github.seqware.util.SGID;
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,11 +48,12 @@ public class TagSetIO implements ProtobufTransferInterface<TagSetPB, TagSet>{
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && userpb.hasPrecedingVersion()){
            user.setPrecedingVersion(pb2m(userpb.getPrecedingVersion()));
         }
-        for(SGIDPB refID : userpb.getTagIDsList()){
-            SGID sgid = SGIDIO.pb2m(refID);
-            Tag ref = (Tag)Factory.getFeatureStoreInterface().getAtomBySGID(sgid, Tag.class);
-            user.add(ref);
+        SGID[] sgidArr = new SGID[userpb.getTagIDsCount()];
+        for(int i = 0; i < sgidArr.length; i++){
+            sgidArr[i] = (SGIDIO.pb2m(userpb.getTagIDs(i)));
         }
+        List<Tag> atomsBySGID = Factory.getFeatureStoreInterface().getAtomsBySGID(Tag.class, sgidArr);
+        if (atomsBySGID != null && atomsBySGID.size() > 0) {user.add(atomsBySGID);}
         return user;
     }
     

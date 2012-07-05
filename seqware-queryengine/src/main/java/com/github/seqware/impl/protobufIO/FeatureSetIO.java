@@ -20,13 +20,16 @@ import com.github.seqware.dto.QESupporting.FSGIDPB;
 import com.github.seqware.dto.QueryEngine;
 import com.github.seqware.dto.QueryEngine.FeatureSetPB;
 import com.github.seqware.factory.Factory;
+import com.github.seqware.model.Analysis;
 import com.github.seqware.model.Feature;
 import com.github.seqware.model.FeatureSet;
 import com.github.seqware.model.impl.AtomImpl;
 import com.github.seqware.model.impl.MoleculeImpl;
 import com.github.seqware.model.impl.inMemory.InMemoryFeatureSet;
 import com.github.seqware.util.FSGID;
+import com.github.seqware.util.SGID;
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,11 +50,12 @@ public class FeatureSetIO implements ProtobufTransferInterface<FeatureSetPB, Fea
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && userpb.hasPrecedingVersion()) {
             user.setPrecedingVersion(pb2m(userpb.getPrecedingVersion()));
         }
-        for (FSGIDPB refID : userpb.getFeaturesList()) {
-            FSGID sgid = FSGIDIO.pb2m(refID);
-            Feature ref = (Feature) Factory.getFeatureStoreInterface().getAtomBySGID(sgid, Feature.class);
-            user.add(ref);
+        SGID[] sgidArr = new SGID[userpb.getFeaturesCount()];
+        for(int i = 0; i < sgidArr.length; i++){
+            sgidArr[i] = (FSGIDIO.pb2m(userpb.getFeatures(i)));
         }
+        List<Feature> atomsBySGID = Factory.getFeatureStoreInterface().getAtomsBySGID(Feature.class, sgidArr);
+        if (atomsBySGID != null && atomsBySGID.size() > 0) {user.add(atomsBySGID);}
         return user;
     }
 

@@ -171,5 +171,5 @@ public interface ModelManager {
      * @param source
      * @param state
      */
-    public void AtomStateChange(Atom source, State state);
+    public void atomStateChange(Atom source, State state);
 }
