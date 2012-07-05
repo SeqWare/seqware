@@ -16,7 +16,7 @@
  */
 package com.github.seqware.impl.test;
 
-import com.github.seqware.factory.Factory;
+import com.github.seqware.queryengine.factory.Factory;
 import com.github.seqware.impl.test.util.DynamicSuite;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -16,7 +16,7 @@
  */
 package com.github.seqware.queryengine.tutorial;
 
-import com.github.seqware.impl.HBaseStorage;
+import com.github.seqware.queryengine.impl.HBaseStorage;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.HTable;

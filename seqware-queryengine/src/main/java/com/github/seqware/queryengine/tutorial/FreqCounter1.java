@@ -1,6 +1,6 @@
 package com.github.seqware.queryengine.tutorial;
 
-import com.github.seqware.impl.HBaseStorage;
+import com.github.seqware.queryengine.impl.HBaseStorage;
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;

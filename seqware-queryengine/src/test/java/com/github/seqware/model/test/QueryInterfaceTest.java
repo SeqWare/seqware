@@ -1,10 +1,10 @@
 package com.github.seqware.model.test;
 
-import com.github.seqware.factory.Factory;
-import com.github.seqware.factory.ModelManager;
-import com.github.seqware.model.Feature;
-import com.github.seqware.model.FeatureSet;
-import com.github.seqware.model.QueryFuture;
+import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.model.Feature;
+import com.github.seqware.queryengine.model.FeatureSet;
+import com.github.seqware.queryengine.model.QueryFuture;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

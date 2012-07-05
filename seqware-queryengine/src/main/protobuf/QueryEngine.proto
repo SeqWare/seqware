@@ -1,7 +1,7 @@
 import "QE_Supporting.proto";
 package QueryEngine;
 
-option java_package = "com.github.seqware.dto";
+option java_package = "com.github.seqware.queryengine.dto";
 
 message ACLPB{
     optional SGIDPB user = 1;
