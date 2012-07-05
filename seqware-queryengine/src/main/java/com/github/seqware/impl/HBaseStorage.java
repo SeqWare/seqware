@@ -42,7 +42,7 @@ public class HBaseStorage extends StorageInterface {
     private static final byte[] TEST_COLUMN_INBYTES = Bytes.toBytes("allData");
     private static final byte[] TEST_QUALIFIER_INBYTES = Bytes.toBytes("qualifier");
     private boolean inefficiencyWarning = false;
-    public static final boolean TEST_REMOTELY = false;
+    public static final boolean TEST_REMOTELY = true;
     public static final int PAD = 15;
     private static final String TEST_TABLE_PREFIX = System.getProperty("user.name") + StorageInterface.separator + "hbaseTestTable";
     private static final boolean PERSIST = true;
@@ -56,12 +56,7 @@ public class HBaseStorage extends StorageInterface {
         // as long as these can be found in the CLASSPATH.
         this.config = HBaseConfiguration.create();
 
-        if (TEST_REMOTELY) {
-            config.clear();
-            config.set("hbase.zookeeper.quorum", "sqwdev.res");
-            config.set("hbase.zookeeper.property.clientPort", "2181");
-            config.set("hbase.master", "sqwdev.res:60000");
-        }
+        configureHBaseConfig(config);
 
         Logger.getLogger(HBaseStorage.class.getName()).log(Level.INFO, "Starting with {0} using {1}", new Object[]{HBaseStorage.class.getSimpleName(), serializer.getClass().getSimpleName()});
         for (String s : super.biMap.values()) {
@@ -76,7 +71,9 @@ public class HBaseStorage extends StorageInterface {
                 HBaseAdmin hba = new HBaseAdmin(config);
                 if (!PERSIST && hba.isTableAvailable(tableName)) {
                     // clear tables if needed
-                    hba.disableTable(tableName);
+                    if (hba.isTableEnabled(tableName)) {
+                        hba.disableTable(tableName);
+                    }
                     hba.deleteTable(tableName);
                 }
                 if (!hba.isTableAvailable(tableName)) {
@@ -87,6 +84,18 @@ public class HBaseStorage extends StorageInterface {
             } catch (IOException ex) {
                 Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", ex);
             }
+        }
+    }
+
+    public static void configureHBaseConfig(Configuration config) {
+        if (TEST_REMOTELY) {
+            config.clear();
+            //config.set("hbase.zookeeper.quorum", "hboot.res");
+            //config.set("hbase.zookeeper.property.clientPort", "2181");
+            //config.set("hbase.master", "hboot.res:60000");
+            config.set("hbase.zookeeper.quorum", "sqwdev.res");
+            config.set("hbase.zookeeper.property.clientPort", "2181");
+            config.set("hbase.master", "sqwdev.res:60000");
         }
     }
 
@@ -153,7 +162,7 @@ public class HBaseStorage extends StorageInterface {
         for (Entry<String, HTable> entry : tableMap.entrySet()) {
             Class properClass = super.biMap.inverse().get(entry.getKey());
             List<Atom> list = deserializeAtom(properClass, entry.getValue(), useTimestamp, sgid);
-            if (list == null || list.isEmpty()){
+            if (list == null || list.isEmpty()) {
                 continue;
             }
             Atom a = list.get(0);
@@ -164,7 +173,7 @@ public class HBaseStorage extends StorageInterface {
         return null;
     }
 
-    private List<Atom> deserializeAtom(Class properClass, HTable table, boolean useTimestamp, SGID ... sgidArr) {
+    private List<Atom> deserializeAtom(Class properClass, HTable table, boolean useTimestamp, SGID... sgidArr) {
         List<Row> getList = new ArrayList<Row>();
         for (SGID sID : sgidArr) {
             Get g = new Get(Bytes.toBytes(sID.getChainID().toString()));
@@ -267,8 +276,8 @@ public class HBaseStorage extends StorageInterface {
         String prefix = super.biMap.get(t);
         HTable table = tableMap.get(prefix);
         List<Atom> deserializeAtom = deserializeAtom(t, table, useTimestamp, sgid);
-        if (deserializeAtom != null && deserializeAtom.size() > 0){
-            return (T)deserializeAtom.get(0);
+        if (deserializeAtom != null && deserializeAtom.size() > 0) {
+            return (T) deserializeAtom.get(0);
         }
         return null;
     }

@@ -1,19 +1,22 @@
 package com.github.seqware.model.impl;
 
+import com.github.seqware.factory.ModelManager;
+import com.github.seqware.model.Molecule;
 import com.github.seqware.model.interfaces.ACL;
 import com.github.seqware.model.interfaces.ACLable;
-import com.github.seqware.factory.ModelManager;
-import com.github.seqware.model.*;
+import com.github.seqware.model.interfaces.TTLable;
+import java.util.Date;
 
 /**
  * Implements core functionality that is shared by classes that are controlled
- * by permissions and {@link Versionable} (as well as {@link Taggable})
+ * by permissions and Versionable, Taggable, TTLable via {@link AtomImpl})
  *
  * @author dyuen
  */
-public abstract class MoleculeImpl<T extends Molecule> extends AtomImpl<T> implements Molecule<T>, ACLable {
+public abstract class MoleculeImpl<T extends Molecule> extends AtomImpl<T> implements Molecule<T>, ACLable, TTLable {
 
     private ACL permissions = ACL.newBuilder().build();
+    private long expiryTime = TTLable.FOREVER;
 
     @Override
     public void setPermissions(ACL permissions) {
@@ -28,5 +31,29 @@ public abstract class MoleculeImpl<T extends Molecule> extends AtomImpl<T> imple
         return permissions;
     }
 
+    @Override
+    public void setTTL(Date time, boolean cascade) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
+    @Override
+    public void setTTL(int hours, boolean cascade) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Date getExpiryDate() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int getTTL() {
+        return 0;
+    }
+
+    @Override
+    public boolean getCascade() {
+        // molecules in general do not contain anything to cascade to
+        return false;
+    }
 }

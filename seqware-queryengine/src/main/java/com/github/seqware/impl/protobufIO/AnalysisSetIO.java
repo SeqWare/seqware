@@ -17,7 +17,6 @@
 package com.github.seqware.impl.protobufIO;
 
 
-import com.github.seqware.dto.QESupporting.SGIDPB;
 import com.github.seqware.dto.QueryEngine;
 import com.github.seqware.dto.QueryEngine.AnalysisSetPB;
 import com.github.seqware.factory.Factory;
@@ -28,7 +27,6 @@ import com.github.seqware.model.impl.MoleculeImpl;
 import com.github.seqware.model.impl.inMemory.InMemoryAnalysisSet;
 import com.github.seqware.util.SGID;
 import com.google.protobuf.InvalidProtocolBufferException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;

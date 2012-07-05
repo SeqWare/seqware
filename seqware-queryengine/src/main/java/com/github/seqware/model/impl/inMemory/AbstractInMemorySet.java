@@ -14,9 +14,28 @@ import java.util.*;
 public abstract class AbstractInMemorySet<S extends AbstractMolSet, T> extends MoleculeImpl<S> implements AbstractMolSet<S, T>, Taggable{
     
     protected Set<T> set = new HashSet<T>();
+    /**
+     * Record whether deletes should cascade
+     */
+    private boolean cascade = false;
     
     protected AbstractInMemorySet(){
         super();
+    }
+    
+    @Override
+    public void setTTL(Date time, boolean cascade) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setTTL(int hours, boolean cascade) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    @Override
+    public boolean getCascade() {
+        return cascade;
     }
 
     @Override

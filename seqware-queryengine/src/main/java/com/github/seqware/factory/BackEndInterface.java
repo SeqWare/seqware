@@ -17,7 +17,6 @@
 package com.github.seqware.factory;
 
 import com.github.seqware.model.Atom;
-import java.util.List;
 
 /**
  * This interface specifies operations to persist, update, and add objects to 

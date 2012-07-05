@@ -16,12 +16,9 @@
  */
 package com.github.seqware.model.interfaces;
 
-import com.github.seqware.model.Feature;
 import com.github.seqware.model.Molecule;
 import com.github.seqware.util.SeqWareIterable;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Abstracts out some of the semantics for interacting with each of our Set
