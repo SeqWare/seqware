@@ -27,7 +27,7 @@ import java.util.Collection;
  *
  * @author dyuen
  */
-public interface AbstractMolSet<S extends AbstractMolSet, T> extends SeqWareIterable<T>, Molecule<S> {
+public interface MolSetInterface<S extends MolSetInterface, T> extends SeqWareIterable<T>, Molecule<S> {
 
     /**
      * Add one element to the set

@@ -2,8 +2,8 @@ package com.github.seqware.queryengine.model;
 
 import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
-import com.github.seqware.queryengine.model.interfaces.AbstractMolSet;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
+import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 
 /**
  * A ReferenceSet is a collection of references which are a collection of
@@ -12,7 +12,7 @@ import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
  * @author dyuen
  * @author jbaran
  */
-public interface ReferenceSet extends AbstractMolSet<ReferenceSet, Reference> {
+public interface ReferenceSet extends MolSetInterface<ReferenceSet, Reference> {
     public final static String prefix = "ReferenceSet";
 
     /**

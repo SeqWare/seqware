@@ -44,7 +44,7 @@ public class TagSetIO implements ProtobufTransferInterface<TagSetPB, TagSet>{
         builder = userpb.hasName() ? builder.setName(userpb.getName()) : builder;
         TagSet user = builder.build();
         UtilIO.handlePB2Atom(userpb.getAtom(), (AtomImpl)user);
-        UtilIO.handlePB2ACL(userpb.getAcl(), (MoleculeImpl)user);
+        UtilIO.handlePB2Mol(userpb.getMol(), (MoleculeImpl)user);
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && userpb.hasPrecedingVersion()){
            user.setPrecedingVersion(pb2m(userpb.getPrecedingVersion()));
         }
@@ -63,7 +63,7 @@ public class TagSetIO implements ProtobufTransferInterface<TagSetPB, TagSet>{
         QueryEngine.TagSetPB.Builder builder = QueryEngine.TagSetPB.newBuilder();
         builder = sgid.getName() != null ? builder.setName(sgid.getName()) : builder;
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), (AtomImpl)sgid));
-        builder.setAcl(UtilIO.handleACL2PB(builder.getAcl(), (MoleculeImpl)sgid));
+        builder.setMol(UtilIO.handleMol2PB(builder.getMol(), (MoleculeImpl)sgid));
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && sgid.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(sgid.getPrecedingVersion()));
         }

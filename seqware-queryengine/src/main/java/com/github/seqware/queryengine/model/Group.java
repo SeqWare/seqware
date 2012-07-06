@@ -2,14 +2,14 @@ package com.github.seqware.queryengine.model;
 
 import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
-import com.github.seqware.queryengine.model.interfaces.AbstractMolSet;
+import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 
 /**
  * A Group of users that may share ACL permissions
  * @author dyuen
  */
-public interface Group extends AbstractMolSet<Group, User> {
+public interface Group extends MolSetInterface<Group, User> {
     public final static String prefix = "Group";
 
     /**

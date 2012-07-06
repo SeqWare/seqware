@@ -19,6 +19,7 @@ package com.github.seqware.queryengine.impl.protobufIO;
 import com.github.seqware.queryengine.dto.QueryEngine;
 import com.github.seqware.queryengine.dto.QueryEngine.UserPB;
 import com.github.seqware.queryengine.model.User;
+import com.github.seqware.queryengine.model.impl.MoleculeImpl;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +39,7 @@ public class UserIO implements ProtobufTransferInterface<UserPB, User>{
         builder = userpb.hasPassword() ? builder.setPasswordWithoutHash(userpb.getPassword()) : builder;
         User user = builder.build();
         UtilIO.handlePB2Atom(userpb.getAtom(), user);
-        UtilIO.handlePB2ACL(userpb.getAcl(), user);
+        UtilIO.handlePB2Mol(userpb.getMol(), user);
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && userpb.hasPrecedingVersion()){
            user.setPrecedingVersion(pb2m(userpb.getPrecedingVersion()));
         }
@@ -54,7 +55,7 @@ public class UserIO implements ProtobufTransferInterface<UserPB, User>{
         builder = sgid.getEmailAddress() != null ? builder.setEmailAddress(sgid.getEmailAddress()) : builder;
         builder = sgid.getPassword() != null ? builder.setPassword(sgid.getPassword()) : builder;
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), sgid));
-        builder.setAcl(UtilIO.handleACL2PB(builder.getAcl(), sgid));
+        builder.setMol(UtilIO.handleMol2PB(builder.getMol(), (MoleculeImpl)sgid));
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && sgid.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(sgid.getPrecedingVersion()));
         }

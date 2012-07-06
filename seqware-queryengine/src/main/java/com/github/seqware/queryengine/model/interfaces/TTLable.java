@@ -32,15 +32,15 @@ public interface TTLable {
      * A time to set that means that the associated object should never expire
      */
     public long FOREVER = -1;
-
+    
     /**
-     * Set a specific expiry time (should be in the future)
+     * Convenience method to set the expiry time
      *
-     * @param time a specific time in the future
+     * @param expiryTime a rough time in the future to set expiry
      * @param cascade whether the expiry should cascade down to children in the
-     * case of sets (ignored when the target is not a set)
+     * case of sets (ignored) when the target is not a set
      */
-    public void setTTL(Date time, boolean cascade);
+    public void setTTL(long expiryTime, boolean cascade);
 
     /**
      * Convenience method to set the expiry time for roughly hours ahead
@@ -59,9 +59,22 @@ public interface TTLable {
     
     /**
      * Return the expiry date in terms of hours in the future
+     * (may fail if the time difference is too large)
      * @return 
      */
     public int getTTL();
+    
+    /**
+     * Return true iff this expires
+     * @return 
+     */
+    public boolean isExpires();
+    
+    /**
+     * Return raw expiry time
+     * @return 
+     */
+    public long getExpiryTime();
     
     /**
      * Return whether cascade should occur on deletion

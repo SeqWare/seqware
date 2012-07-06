@@ -2,7 +2,7 @@ package com.github.seqware.queryengine.model;
 
 import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
-import com.github.seqware.queryengine.model.interfaces.AbstractMolSet;
+import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 
 /**
@@ -11,7 +11,7 @@ import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
  *
  * @author dyuen
  */
-public interface AnalysisSet extends AbstractMolSet<AnalysisSet, Analysis> {
+public interface AnalysisSet extends MolSetInterface<AnalysisSet, Analysis> {
     public final static String prefix = "AnalysisSet";
 
     /**

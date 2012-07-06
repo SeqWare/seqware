@@ -24,7 +24,7 @@ import com.github.seqware.queryengine.model.Analysis.Builder;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.inMemory.*;
-import com.github.seqware.queryengine.model.interfaces.AbstractMolSet;
+import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -146,8 +146,8 @@ public class SimpleModelManager implements ModelManager {
             // looks redundant
             // dirtySet.remove(e.getKey());
             // e.getValue().setState(State.MANAGED);
-            if (e.getValue().getAtom() instanceof AbstractMolSet) {
-                ((AbstractMolSet) e.getValue().getAtom()).rebuild();
+            if (e.getValue().getAtom() instanceof MolSetInterface) {
+                ((MolSetInterface) e.getValue().getAtom()).rebuild();
             }
             e.getValue().setState(State.MANAGED);
             dirtySet.put(e.getKey().toString(), e.getValue());

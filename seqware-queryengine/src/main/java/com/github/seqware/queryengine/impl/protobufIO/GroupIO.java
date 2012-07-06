@@ -45,7 +45,7 @@ public class GroupIO implements ProtobufTransferInterface<GroupPB, Group>{
         builder = pb.hasDescription()  ? builder.setDescription(pb.getDescription()) : builder;
         Group user = builder.build();
         UtilIO.handlePB2Atom(pb.getAtom(), (AtomImpl)user);
-        UtilIO.handlePB2ACL(pb.getAcl(), (MoleculeImpl)user);
+        UtilIO.handlePB2Mol(pb.getMol(), (MoleculeImpl)user);
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && pb.hasPrecedingVersion()){
            user.setPrecedingVersion(pb2m(pb.getPrecedingVersion()));
         }
@@ -65,7 +65,7 @@ public class GroupIO implements ProtobufTransferInterface<GroupPB, Group>{
         builder = atom.getName() != null ? builder.setName(atom.getName()) : builder;
         builder = atom.getDescription() != null ? builder.setDescription(atom.getDescription()) : builder;
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), (AtomImpl)atom));
-        builder.setAcl(UtilIO.handleACL2PB(builder.getAcl(), (MoleculeImpl)atom));
+        builder.setMol(UtilIO.handleMol2PB(builder.getMol(), (MoleculeImpl)atom));
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && atom.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(atom.getPrecedingVersion()));
         }

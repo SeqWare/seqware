@@ -2,7 +2,7 @@ package com.github.seqware.queryengine.model;
 
 import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
-import com.github.seqware.queryengine.model.interfaces.AbstractMolSet;
+import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 import java.util.Iterator;
 
@@ -14,7 +14,7 @@ import java.util.Iterator;
  * @author dyuen
  * @author jbaran
  */
-public interface Reference extends AbstractMolSet<Reference, FeatureSet> {
+public interface Reference extends MolSetInterface<Reference, FeatureSet> {
     public final static String prefix = "Reference";
 
     /**

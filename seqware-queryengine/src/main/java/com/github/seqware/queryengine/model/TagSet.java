@@ -2,15 +2,15 @@ package com.github.seqware.queryengine.model;
 
 import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
-import com.github.seqware.queryengine.model.interfaces.AbstractMolSet;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
+import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 
 /**
  * A set of Tags
  *
  * @author dyuen
  */
-public interface TagSet extends AbstractMolSet<TagSet, Tag> {
+public interface TagSet extends MolSetInterface<TagSet, Tag> {
     public final static String prefix = "TagSet";
 
     /**
