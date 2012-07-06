@@ -1,41 +1,23 @@
 package com.github.seqware.queryengine.model.impl.inMemory;
 
+import com.github.seqware.queryengine.model.impl.AbstractMolSet;
 import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
-import com.github.seqware.queryengine.model.interfaces.AbstractMolSet;
+import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 import com.github.seqware.queryengine.model.interfaces.Taggable;
 import java.util.*;
 
 /**
- * An in-memory representation of a AbstractMolSet.
+ * An in-memory representation of a MolSetInterface.
  *
  * @author dyuen
  */
-public abstract class AbstractInMemorySet<S extends AbstractMolSet, T> extends MoleculeImpl<S> implements AbstractMolSet<S, T>, Taggable{
+public abstract class AbstractInMemorySet<S extends MolSetInterface, T> extends AbstractMolSet<S> implements MolSetInterface<S, T>, Taggable{
     
     protected Set<T> set = new HashSet<T>();
-    /**
-     * Record whether deletes should cascade
-     */
-    private boolean cascade = false;
     
     protected AbstractInMemorySet(){
         super();
-    }
-    
-    @Override
-    public void setTTL(Date time, boolean cascade) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setTTL(int hours, boolean cascade) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
-    @Override
-    public boolean getCascade() {
-        return cascade;
     }
 
     @Override

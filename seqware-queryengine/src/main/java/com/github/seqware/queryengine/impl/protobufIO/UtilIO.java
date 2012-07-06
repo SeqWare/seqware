@@ -21,6 +21,7 @@ import com.github.seqware.queryengine.dto.QESupporting.AtomPB;
 import com.github.seqware.queryengine.dto.QESupporting.FeatureAtomPB;
 import com.github.seqware.queryengine.dto.QueryEngine;
 import com.github.seqware.queryengine.dto.QueryEngine.ACLPB;
+import com.github.seqware.queryengine.dto.QueryEngine.MoleculePB;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
@@ -40,7 +41,7 @@ public class UtilIO {
     private static final TagIO tagIO = new TagIO();
 
     /**
-     * Handle deserialization of the core atom
+     * Handle de-serialization of the core atom
      *
      * @param atompb
      * @param atomImpl
@@ -114,41 +115,52 @@ public class UtilIO {
     }
 
     /**
-     * This should handle deserialization of ACL
+     * This should handle de-serialization of molecule
      *
      * @param aclpb
      * @param molImpl
      */
-    public static void handlePB2ACL(QueryEngine.ACLPB aclpb, MoleculeImpl molImpl) {
+    public static void handlePB2Mol(QueryEngine.MoleculePB molpb, MoleculeImpl molImpl) {
         ACL.Builder builder = ACL.newBuilder();
-        builder.setRights(aclpb.getRightsList());
-        if (aclpb.hasUser()) {
-            SGID sgid = SGIDIO.pb2m(aclpb.getUser());
-            builder.setOwner(sgid);
+        if (molpb.hasAcl()) {
+            builder.setRights(molpb.getAcl().getRightsList());
+            if (molpb.getAcl().hasUser()) {
+                SGID sgid = SGIDIO.pb2m(molpb.getAcl().getUser());
+                builder.setOwner(sgid);
+            }
+            if (molpb.getAcl().hasGrp()) {
+                SGID sgid = SGIDIO.pb2m(molpb.getAcl().getGrp());
+                builder.setGroup(sgid);
+            }
+            molImpl.setPermissions(builder.build());
         }
-        if (aclpb.hasGrp()) {
-            SGID sgid = SGIDIO.pb2m(aclpb.getGrp());
-            builder.setGroup(sgid);
-        }
-        molImpl.setPermissions(builder.build());
+        // handle TTLable
+        molImpl.setTTL(molpb.getExpiryTime(), molpb.getCascade());
     }
 
     /**
-     * This should handle serialization of ACL
+     * This should handle serialization of molecule
      *
      * @param aclpb
      * @param molImpl
      * @return
      */
-    public static ACLPB handleACL2PB(QueryEngine.ACLPB aclpb, MoleculeImpl molImpl) {
-        ACLPB.Builder builder = aclpb.newBuilderForType();
-        builder.addAllRights(molImpl.getPermissions().getAccess());
+    public static MoleculePB handleMol2PB(QueryEngine.MoleculePB molpb, MoleculeImpl molImpl) {
+        MoleculePB.Builder builder = molpb.newBuilderForType();
+
+        // handle ACLable
+        ACLPB.Builder aclBuilder = molpb.getAcl().newBuilderForType();
+        aclBuilder.addAllRights(molImpl.getPermissions().getAccess());
         if (molImpl.getPermissions().getOwnerSGID() != null) {
-            builder.setUser(SGIDIO.m2pb(molImpl.getPermissions().getOwnerSGID()));
+            aclBuilder.setUser(SGIDIO.m2pb(molImpl.getPermissions().getOwnerSGID()));
         }
         if (molImpl.getPermissions().getGroupSGID() != null) {
-            builder.setGrp(SGIDIO.m2pb(molImpl.getPermissions().getGroupSGID()));
+            aclBuilder.setGrp(SGIDIO.m2pb(molImpl.getPermissions().getGroupSGID()));
         }
+        builder.setAcl(aclBuilder);
+        // handle TTLable
+        builder.setCascade(molImpl.getCascade());
+        builder.setExpiryTime(molImpl.getExpiryTime());
         return builder.build();
     }
 }

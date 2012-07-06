@@ -44,7 +44,7 @@ public class AnalysisSetIO implements ProtobufTransferInterface<AnalysisSetPB, A
         builder = pb.hasDescription() ? builder.setDescription(pb.getDescription()) : builder;
         AnalysisSet user = builder.build();
         UtilIO.handlePB2Atom(pb.getAtom(), (AtomImpl)user);
-        UtilIO.handlePB2ACL(pb.getAcl(), (MoleculeImpl)user);
+        UtilIO.handlePB2Mol(pb.getMol(), (MoleculeImpl)user);
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && pb.hasPrecedingVersion()){
            user.setPrecedingVersion(pb2m(pb.getPrecedingVersion()));
         }
@@ -64,7 +64,7 @@ public class AnalysisSetIO implements ProtobufTransferInterface<AnalysisSetPB, A
         builder = aSet.getName() != null ? builder.setName(aSet.getName()) : builder;
         builder = aSet.getDescription() != null ? builder.setDescription(aSet.getDescription()) : builder;
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), (AtomImpl)aSet));
-        builder.setAcl(UtilIO.handleACL2PB(builder.getAcl(), (MoleculeImpl)aSet));
+        builder.setMol(UtilIO.handleMol2PB(builder.getMol(), (MoleculeImpl)aSet));
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && aSet.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(aSet.getPrecedingVersion()));
         }

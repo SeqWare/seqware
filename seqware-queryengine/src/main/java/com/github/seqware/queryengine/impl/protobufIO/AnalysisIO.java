@@ -16,10 +16,10 @@
  */
 package com.github.seqware.queryengine.impl.protobufIO;
 
-import com.github.seqware.queryengine.model.Analysis;
-import com.github.seqware.queryengine.model.impl.inMemory.InMemoryQueryFutureImpl;
 import com.github.seqware.queryengine.dto.QueryEngine;
 import com.github.seqware.queryengine.dto.QueryEngine.AnalysisPB;
+import com.github.seqware.queryengine.model.Analysis;
+import com.github.seqware.queryengine.model.impl.inMemory.InMemoryQueryFutureImpl;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,7 +39,7 @@ public class AnalysisIO implements ProtobufTransferInterface<AnalysisPB, Analysi
 //        builder = pb.hasPassword() ? builder.setPassword(pb.getPassword()) : builder;
         Analysis user = builder.build();
         UtilIO.handlePB2Atom(pb.getAtom(), user);
-        UtilIO.handlePB2ACL(pb.getAcl(), user);
+        UtilIO.handlePB2Mol(pb.getMol(), user);
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && pb.hasPrecedingVersion()){
            user.setPrecedingVersion(pb2m(pb.getPrecedingVersion()));
         }
@@ -55,7 +55,7 @@ public class AnalysisIO implements ProtobufTransferInterface<AnalysisPB, Analysi
 //        builder = atom.getEmailAddress() != null ? builder.setEmailAddress(atom.getEmailAddress()) : builder;
 //        builder = atom.getPassword() != null ? builder.setPassword(atom.getPassword()) : builder;
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), atom));
-        builder.setAcl(UtilIO.handleACL2PB(builder.getAcl(), atom));
+        builder.setMol(UtilIO.handleMol2PB(builder.getMol(), atom));
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && atom.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(atom.getPrecedingVersion()));
         }

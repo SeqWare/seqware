@@ -1,9 +1,9 @@
 package com.github.seqware.queryengine.model;
 
 import com.github.seqware.queryengine.factory.ModelManager;
-import com.github.seqware.queryengine.model.impl.MoleculeImpl;
-import com.github.seqware.queryengine.model.interfaces.AbstractMolSet;
+import com.github.seqware.queryengine.model.impl.AbstractMolSet;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
+import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 import com.github.seqware.queryengine.util.SGID;
 import java.util.Collection;
 import java.util.Iterator;
@@ -19,7 +19,7 @@ import java.util.Iterator;
  *
  * @author jbaran
  */
-public abstract class FeatureSet extends MoleculeImpl<FeatureSet> implements AbstractMolSet<FeatureSet, Feature> {
+public abstract class FeatureSet extends AbstractMolSet<FeatureSet> implements MolSetInterface<FeatureSet, Feature> {
     public final static String prefix = "FeatureSet";
 
     /**

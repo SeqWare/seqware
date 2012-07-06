@@ -1,17 +1,8 @@
 package com.github.seqware.model.test;
 
-import com.github.seqware.queryengine.model.Molecule;
-import com.github.seqware.queryengine.model.Reference;
-import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.Analysis;
-import com.github.seqware.queryengine.model.ReferenceSet;
-import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.User;
-import com.github.seqware.queryengine.model.TagSet;
-import com.github.seqware.queryengine.model.Group;
-import com.github.seqware.queryengine.model.AnalysisSet;
 import com.github.seqware.queryengine.factory.Factory;
 import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
 import com.github.seqware.queryengine.model.impl.inMemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.queryengine.model.interfaces.ACL;
@@ -25,7 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Unit tests of {@link ACL} and {@link ACLable}.
+ * Unit tests of {@link ACLable}.
  *
  * @author dyuen
  */

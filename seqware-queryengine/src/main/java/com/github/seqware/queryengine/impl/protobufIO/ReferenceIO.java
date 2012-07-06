@@ -38,7 +38,7 @@ public class ReferenceIO implements ProtobufTransferInterface<ReferencePB, Refer
         builder = userpb.hasName() ? builder.setName(userpb.getName()) : builder;
         Reference ref = builder.build();
         UtilIO.handlePB2Atom(userpb.getAtom(), (AtomImpl)ref);
-        UtilIO.handlePB2ACL(userpb.getAcl(), (MoleculeImpl)ref);
+        UtilIO.handlePB2Mol(userpb.getMol(), (MoleculeImpl)ref);
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && userpb.hasPrecedingVersion()){
            ref.setPrecedingVersion(pb2m(userpb.getPrecedingVersion()));
         }
@@ -51,7 +51,7 @@ public class ReferenceIO implements ProtobufTransferInterface<ReferencePB, Refer
         QueryEngine.ReferencePB.Builder builder = QueryEngine.ReferencePB.newBuilder();
         builder = sgid.getName() != null ? builder.setName(sgid.getName()) : builder;
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), (AtomImpl)sgid));
-        builder.setAcl(UtilIO.handleACL2PB(builder.getAcl(), (MoleculeImpl)sgid));
+        builder.setMol(UtilIO.handleMol2PB(builder.getMol(), (MoleculeImpl)sgid));
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && sgid.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(sgid.getPrecedingVersion()));
         }
