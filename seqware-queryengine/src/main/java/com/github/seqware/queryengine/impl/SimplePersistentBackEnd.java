@@ -112,14 +112,14 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
     @Override
     public Atom getLatestAtomBySGID(SGID sgid) {
         Atom p = fsi.deserializeTargetToLatestAtom(sgid);
-        assert(p == null || p.getSGID().getChainID().equals(sgid.getChainID()));
+        assert(p == null || p.getSGID().getRowKey().equals(sgid.getRowKey()));
         return p;
     }
 
     @Override
     public <T extends Atom> T getLatestAtomBySGID(SGID sgid, Class<T> t) {
         T p = fsi.deserializeTargetToLatestAtom(sgid, t);
-        assert(p == null || p.getSGID().getChainID().equals(sgid.getChainID()));
+        assert(p == null || p.getSGID().getRowKey().equals(sgid.getRowKey()));
         return p;
     }
 

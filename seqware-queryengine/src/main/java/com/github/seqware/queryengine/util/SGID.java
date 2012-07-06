@@ -107,7 +107,11 @@ public class SGID implements Serializable, KryoSerializable {
         return uuid;
     }
     
-    public String getChainID(){
+    /**
+     * Output the portion of the SGID that is used as a rowKey
+     * @return 
+     */
+    public String getRowKey(){
         return uuid.toString();
     }
 

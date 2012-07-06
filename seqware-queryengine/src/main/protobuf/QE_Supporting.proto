@@ -26,6 +26,7 @@ message SGIDPB {
 message FSGIDPB {
     optional SGIDPB sgid = 1;
     optional string rowKey = 2;
+    optional string refName = 3;
 }
 
 message TagPB {

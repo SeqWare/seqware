@@ -179,9 +179,10 @@ public class Feature extends AtomImpl<Feature> {
         return new Feature.Builder();
     }
 
+    @Override
     public Feature.Builder toBuilder() {
         Feature.Builder b = new Feature.Builder();
-        b.feature = this;
+        b.feature = (Feature) this.copy(true);
         return b;
     }
 

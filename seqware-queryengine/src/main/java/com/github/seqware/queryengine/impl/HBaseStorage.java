@@ -42,7 +42,7 @@ public class HBaseStorage extends StorageInterface {
     private static final byte[] TEST_COLUMN_INBYTES = Bytes.toBytes("allData");
     private static final byte[] TEST_QUALIFIER_INBYTES = Bytes.toBytes("qualifier");
     private boolean inefficiencyWarning = false;
-    public static final boolean TEST_REMOTELY = true;
+    public static final boolean TEST_REMOTELY = false;
     public static final int PAD = 15;
     private static final String TEST_TABLE_PREFIX = System.getProperty("user.name") + StorageInterface.separator + "hbaseTestTable";
     private static final boolean PERSIST = true;
@@ -55,35 +55,34 @@ public class HBaseStorage extends StorageInterface {
         // The HBaseConfiguration reads in hbase-site.xml and hbase-default.xml,
         // as long as these can be found in the CLASSPATH.
         this.config = HBaseConfiguration.create();
-
         configureHBaseConfig(config);
-
         Logger.getLogger(HBaseStorage.class.getName()).log(Level.INFO, "Starting with {0} using {1}", new Object[]{HBaseStorage.class.getSimpleName(), serializer.getClass().getSimpleName()});
-        for (String s : super.biMap.values()) {
-            String tableName = TEST_TABLE_PREFIX + StorageInterface.separator + s;
-            // Create a fresh table, i.e. delete an existing table if it exists:
-            HTableDescriptor ht = new HTableDescriptor(tableName);
-            HColumnDescriptor hColumnDescriptor = new HColumnDescriptor(TEST_COLUMN);
-            hColumnDescriptor.setMaxVersions(Integer.MAX_VALUE);
-            ht.addFamily(hColumnDescriptor);
-            // make a persistent store exists already, otherwise try to retrieve existing items
-            try {
-                HBaseAdmin hba = new HBaseAdmin(config);
-                if (!PERSIST && hba.isTableAvailable(tableName)) {
-                    // clear tables if needed
-                    if (hba.isTableEnabled(tableName)) {
-                        hba.disableTable(tableName);
-                    }
-                    hba.deleteTable(tableName);
-                }
+        try {
+            HBaseAdmin hba = new HBaseAdmin(config);
+            // kick out existing tables if thats what we want
+            if (!PERSIST) {
+                Logger.getLogger(HBaseStorage.class.getName()).log(Level.INFO, "Clearing existing tables");
+                HTableDescriptor[] listTables = hba.listTables(TEST_TABLE_PREFIX + ".*");
+                hba.disableTables(TEST_TABLE_PREFIX + ".*");
+                hba.deleteTables(TEST_TABLE_PREFIX + ".*");
+            }
+
+            for (String s : super.biMap.values()) {
+                String tableName = TEST_TABLE_PREFIX + StorageInterface.separator + s;
+                // Create a fresh table, i.e. delete an existing table if it exists:
+                HTableDescriptor ht = new HTableDescriptor(tableName);
+                HColumnDescriptor hColumnDescriptor = new HColumnDescriptor(TEST_COLUMN);
+                hColumnDescriptor.setMaxVersions(Integer.MAX_VALUE);
+                ht.addFamily(hColumnDescriptor);
+                // make a persistent store exists already, otherwise try to retrieve existing items
                 if (!hba.isTableAvailable(tableName)) {
                     hba.createTable(ht);
                 }
                 HTable table = new HTable(config, tableName);
                 tableMap.put(s, table);
-            } catch (IOException ex) {
-                Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", ex);
             }
+        } catch (IOException ex) {
+            Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", ex);
         }
     }
 
@@ -114,12 +113,12 @@ public class HBaseStorage extends StorageInterface {
                 assert (prefix.equals(((AtomImpl) objArr[0]).getHBasePrefix()));
                 byte[] featureBytes = serializer.serialize(obj);
                 // as a test, let's try readable rowKeys
-                Put p = new Put(Bytes.toBytes(obj.getSGID().getChainID().toString()));
+                Put p = new Put(Bytes.toBytes(obj.getSGID().getRowKey().toString()));
                 // Serialize:
                 p.add(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES, featureBytes);
                 putList.add(p);
 
-                Get g = new Get(Bytes.toBytes(obj.getSGID().getChainID().toString()));
+                Get g = new Get(Bytes.toBytes(obj.getSGID().getRowKey().toString()));
                 getList.add(g);
             }
             // establish put
@@ -176,7 +175,7 @@ public class HBaseStorage extends StorageInterface {
     private List<Atom> deserializeAtom(Class properClass, HTable table, boolean useTimestamp, SGID... sgidArr) {
         List<Row> getList = new ArrayList<Row>();
         for (SGID sID : sgidArr) {
-            Get g = new Get(Bytes.toBytes(sID.getChainID().toString()));
+            Get g = new Get(Bytes.toBytes(sID.getRowKey().toString()));
             g.setMaxVersions();
             getList.add(g);
         }
