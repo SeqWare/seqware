@@ -2,6 +2,7 @@ package com.github.seqware.impl.test;
 
 import com.github.seqware.queryengine.factory.Factory;
 import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.impl.StorageInterface;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.util.FSGID;
@@ -48,7 +49,7 @@ public class RowKeyFeatureSetTest {
     
     @Test
     public void testRowKeyGeneration() {
-        String[] expKeys = {"funky_ref.chr16:000000049291141.feature.1", "funky_ref.chr16:000000049291360.feature.1" , "funky_ref.chr16:000000049302125.feature.1"};
+        String[] expKeys = {"funky_ref"+StorageInterface.separator+"chr16:000000049291141", "funky_ref"+StorageInterface.separator+"chr16:000000049291360" , "funky_ref"+StorageInterface.separator+"chr16:000000049302125"};
         List<String> actKeys = new ArrayList<String>();
      
         // test in memory 

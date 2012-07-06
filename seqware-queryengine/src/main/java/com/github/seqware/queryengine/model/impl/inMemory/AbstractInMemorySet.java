@@ -2,7 +2,6 @@ package com.github.seqware.queryengine.model.impl.inMemory;
 
 import com.github.seqware.queryengine.model.impl.AbstractMolSet;
 import com.github.seqware.queryengine.factory.ModelManager;
-import com.github.seqware.queryengine.model.impl.MoleculeImpl;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 import com.github.seqware.queryengine.model.interfaces.Taggable;
 import java.util.*;
@@ -26,8 +25,8 @@ public abstract class AbstractInMemorySet<S extends MolSetInterface, T> extends 
     }
 
     @Override
-    public S add(T tag) {
-        set.add(tag);
+    public S add(T element) {
+        set.add(element);
         if (this.getManager() != null){
             this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
         }
@@ -35,8 +34,8 @@ public abstract class AbstractInMemorySet<S extends MolSetInterface, T> extends 
     }
 
     @Override
-    public S add(Collection<T> tags) {
-        this.set.addAll(tags);
+    public S add(Collection<T> elements) {
+        this.set.addAll(elements);
         if (this.getManager() != null){
             this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);  
         }
@@ -44,8 +43,8 @@ public abstract class AbstractInMemorySet<S extends MolSetInterface, T> extends 
     }
     
     @Override
-    public S add(T ... tags) {
-        this.set.addAll(Arrays.asList(tags));
+    public S add(T ... elements) {
+        this.set.addAll(Arrays.asList(elements));
         if (this.getManager() != null){
             this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION); 
         }
@@ -53,8 +52,8 @@ public abstract class AbstractInMemorySet<S extends MolSetInterface, T> extends 
     }
     
     @Override
-    public S remove(T tag) {
-        this.set.remove(tag);
+    public S remove(T element) {
+        this.set.remove(element);
         if (this.getManager() != null){
             this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
         }

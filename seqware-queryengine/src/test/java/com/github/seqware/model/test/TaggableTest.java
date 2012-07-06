@@ -176,10 +176,10 @@ public class TaggableTest {
     public void testClassesThatCannotBeTagged() {
         // practically everything can be tagged, except for plugins and tags
         ModelManager mManager = Factory.getModelManager();
-        Tag t1a = mManager.buildTag().setKey("KR").build();
+        Tag tag1a = mManager.buildTag().setKey("KR").build();
         boolean tagException = false;
         try {
-            t1a.associateTag(t1a);
+            tag1a.associateTag(tag1a);
         } catch (UnsupportedOperationException e) {
             tagException = true;
         }
@@ -196,12 +196,12 @@ public class TaggableTest {
         // tags should be both addable and removable
         // tags should be added and removed without changing version numbers 
         // TODO: (not for now though)
-        Tag t1a = mManager.buildTag().setKey("KR").build();
+        Tag tag1a = mManager.buildTag().setKey("KR").build();
         User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
-        u.associateTag(t1a);
+        u.associateTag(tag1a);
         long version1 = u.getVersion();
         Assert.assertTrue(u.getTags().getCount() == 1);
-        u.dissociateTag(t1a);
+        u.dissociateTag(tag1a);
         Assert.assertTrue(u.getTags().getCount() == 0);
         long version2 = u.getVersion();
         Assert.assertTrue(version1 == version2);

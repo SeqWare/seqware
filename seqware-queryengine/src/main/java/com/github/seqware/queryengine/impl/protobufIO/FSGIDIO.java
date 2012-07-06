@@ -28,7 +28,7 @@ import java.util.Date;
 public class FSGIDIO {
 
     public static FSGID pb2m(FSGIDPB pb) {  
-        FSGID sgid = new FSGID(pb.getSgid().getMostSigBits(), pb.getSgid().getLeastSigBits(), pb.getRowKey());
+        FSGID sgid = new FSGID(pb.getSgid().getMostSigBits(), pb.getSgid().getLeastSigBits(), pb.getRowKey(), pb.getRefName());
         if (pb.getSgid().hasTimestamp()){
             sgid.setBackendTimestamp(new Date(pb.getSgid().getTimestamp()));
         }
@@ -40,7 +40,7 @@ public class FSGIDIO {
         QESupporting.FSGIDPB.Builder builder = QESupporting.FSGIDPB.newBuilder();
         builder.setSgid(SGIDIO.m2pb(sgid));
         builder.setRowKey((sgid).getRowKey());
-//        builder.setFeatureSetID(SGIDIO.m2pb((sgid).getFeatureSetID()));
+        builder.setRefName(sgid.getReferenceName());
         FSGIDPB fMesg = builder.build();
         return fMesg;
     }

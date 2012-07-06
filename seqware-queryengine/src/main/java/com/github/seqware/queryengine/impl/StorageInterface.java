@@ -16,17 +16,7 @@
  */
 package com.github.seqware.queryengine.impl;
 
-import com.github.seqware.queryengine.model.AnalysisSet;
-import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.ReferenceSet;
-import com.github.seqware.queryengine.model.TagSet;
-import com.github.seqware.queryengine.model.Analysis;
-import com.github.seqware.queryengine.model.Group;
-import com.github.seqware.queryengine.model.Reference;
-import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.User;
-import com.github.seqware.queryengine.model.Atom;
-import com.github.seqware.queryengine.model.Tag;
+import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.util.SGID;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
@@ -42,7 +32,7 @@ public abstract class StorageInterface {
             .put(FeatureSet.class, FeatureSet.prefix).put(Analysis.class, Analysis.prefix).put(AnalysisSet.class, AnalysisSet.prefix)
             .put(Reference.class, Reference.prefix).put(ReferenceSet.class, ReferenceSet.prefix).put(Tag.class, Tag.prefix)
             .put(TagSet.class, TagSet.prefix).put(User.class, User.prefix).put(Group.class, Group.prefix).build();
-    public static final String separator = ".";
+    public static final String separator = "_";
     
     /**
      * Generically serialize an Atom into the interface

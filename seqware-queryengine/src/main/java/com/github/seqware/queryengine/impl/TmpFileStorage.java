@@ -116,7 +116,7 @@ public class TmpFileStorage extends StorageInterface {
             }
             //FileTypePair target = map.get(sgid);
             for (File file : FileUtils.listFiles(tempDir, new SuffixFileFilter(sgid.toString()), null)) {
-                String[] names = file.getName().split("\\.");
+                String[] names = file.getName().split(StorageInterface.separator);
                 Class cl = biMap.inverse().get(names[0]);
                 objData = FileUtils.readFileToByteArray(file);
                 Atom suspect = (Atom) serializer.deserialize(objData, cl);
@@ -145,7 +145,7 @@ public class TmpFileStorage extends StorageInterface {
         for (File f : FileUtils.listFiles(tempDir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE)) {
             try {
                 byte[] objData = FileUtils.readFileToByteArray(f);
-                String[] names = f.getName().split("\\.");
+                String[] names = f.getName().split(StorageInterface.separator);
                 Class cl = biMap.inverse().get(names[0]);
                 Atom suspect = (Atom) serializer.deserialize(objData, cl);
                 if (suspect != null) {
@@ -179,8 +179,8 @@ public class TmpFileStorage extends StorageInterface {
     @Override
     public Atom deserializeTargetToLatestAtom(SGID sgid) {
         List<Atom> aList = new ArrayList<Atom>();
-        for (File file : FileUtils.listFiles(tempDir, new WildcardFileFilter("*" + sgid.getChainID() + "*"), null)) {
-            String[] names = file.getName().split("\\.");
+        for (File file : FileUtils.listFiles(tempDir, new WildcardFileFilter("*" + sgid.getRowKey() + "*"), null)) {
+            String[] names = file.getName().split(StorageInterface.separator);
             long time = Long.valueOf(names[names.length - 1]);
             SGID newSGID = new SGID(sgid.getUuid().getMostSignificantBits(), sgid.getUuid().getLeastSignificantBits(), time);
             Atom atomCandidate = deserializeTargetToAtom(newSGID);

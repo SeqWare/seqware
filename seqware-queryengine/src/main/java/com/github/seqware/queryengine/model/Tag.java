@@ -136,8 +136,7 @@ public class Tag extends AtomImpl<Tag>  {
     @Override
     public Tag.Builder toBuilder() {
         Tag.Builder b = new Tag.Builder();
-        //b.tag = (Tag) this.copy(false);
-        b.tag = this;
+        b.tag = (Tag) this.copy(true);
         return b;
     }
 

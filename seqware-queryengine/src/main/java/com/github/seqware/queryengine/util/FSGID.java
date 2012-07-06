@@ -21,6 +21,7 @@ import com.esotericsoftware.kryo.KryoSerializable;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.github.seqware.queryengine.impl.HBaseStorage;
+import com.github.seqware.queryengine.impl.StorageInterface;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import java.util.Date;
@@ -35,16 +36,17 @@ import java.util.logging.Logger;
  * @author boconnor
  */
 public class FSGID extends SGID implements KryoSerializable {
-
+    public static final String PositionSeparator = ":";
     private String rowKey = null;
+    private String referenceName = null;
     //private SGID featureSetID = null;
 
     @Override
     public String toString() {
-        return rowKey + "." + super.toString() /** + "." + featureSetID.toString() */;
+        return rowKey + StorageInterface.separator + super.toString();
     }
     
-    public FSGID(long mostSig, long leastSig, String rowKey) {
+    public FSGID(long mostSig, long leastSig, String rowKey, String referenceName) {
         super(mostSig, leastSig);
         this.rowKey = rowKey;
     }
@@ -62,8 +64,9 @@ public class FSGID extends SGID implements KryoSerializable {
      //       this.featureSetID = fSet.getSGID();
             // generate row key
             StringBuilder builder = new StringBuilder();
-            builder.append(fSet.getReference().getName()).append(".").append(f.getId()).append(":").append(padZeros(f.getStart(), HBaseStorage.PAD)).append(".feature.").append(f.getVersion());
+            builder.append(fSet.getReference().getName()).append(StorageInterface.separator).append(f.getId()).append(PositionSeparator).append(padZeros(f.getStart(), HBaseStorage.PAD))/** unnecessary .append(".feature.").append(f.getVersion())*/;
             rowKey = builder.toString();
+            referenceName = fSet.getReference().getName();
         } catch (Exception ex) {
             Logger.getLogger(FSGID.class.getName()).log(Level.SEVERE, null, ex);
             System.err.println("Could not upgrade SGID on Feature " + f.getSGID() + " due to location out of bounds");
@@ -98,8 +101,13 @@ public class FSGID extends SGID implements KryoSerializable {
      *
      * @return
      */
+    @Override
     public String getRowKey() {
         return rowKey;
+    }
+
+    public String getReferenceName() {
+        return referenceName;
     }
 
     @Override
@@ -112,6 +120,7 @@ public class FSGID extends SGID implements KryoSerializable {
             output.writeLong(super.getBackendTimestamp().getTime());
         }
         output.writeString(rowKey);
+        output.writeString(referenceName);
     }
 
     @Override
@@ -124,5 +133,6 @@ public class FSGID extends SGID implements KryoSerializable {
             super.setBackendTimestamp(new Date(input.readLong()));
         }
         this.rowKey = input.readString();
+        this.referenceName = input.readString();
     }  
 }
