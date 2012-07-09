@@ -73,7 +73,7 @@ public class SimpleModelManager implements ModelManager {
         }
         // order in order to avoid problems when sets are flushed before their elements (leading to unpopulated 
         // timestamp values)
-        Class[] classOrder = {Feature.class, Tag.class, User.class, Reference.class, Analysis.class, FeatureSet.class, Group.class, TagSet.class, ReferenceSet.class, AnalysisSet.class};
+        Class[] classOrder = {TagSpec.class, Feature.class, Tag.class, User.class, Reference.class, Analysis.class, FeatureSet.class, Group.class, TagSpecSet.class, ReferenceSet.class, AnalysisSet.class};
         for(Class cl : classOrder){
             List<Atom> s1 = sortedStore.get(cl);
             if (s1 != null && !s1.isEmpty()){
@@ -200,10 +200,10 @@ public class SimpleModelManager implements ModelManager {
     }
 
     @Override
-    public TagSet.Builder buildTagSet() {
-        TagSet.Builder tSet = null;
+    public TagSpecSet.Builder buildTagSpecSet() {
+        TagSpecSet.Builder tSet = null;
         if (backend instanceof SimplePersistentBackEnd) {
-            tSet = InMemoryTagSet.newBuilder().setManager(this);
+            tSet = InMemoryTagSpecSet.newBuilder().setManager(this);
         }
         assert (tSet != null);
         return tSet;
@@ -240,10 +240,10 @@ public class SimpleModelManager implements ModelManager {
     }
 
     @Override
-    public Tag.Builder buildTag() {
-        Tag.Builder aSet = null;
+    public TagSpec.Builder buildTagSpec() {
+        TagSpec.Builder aSet = null;
         if (backend instanceof SimplePersistentBackEnd) {
-            return Tag.newBuilder().setManager(this);
+            return TagSpec.newBuilder().setManager(this);
         }
         assert (aSet != null);
         return aSet;

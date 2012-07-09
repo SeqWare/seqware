@@ -16,17 +16,7 @@
  */
 package com.github.seqware.queryengine.factory;
 
-import com.github.seqware.queryengine.model.AnalysisSet;
-import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.ReferenceSet;
-import com.github.seqware.queryengine.model.TagSet;
-import com.github.seqware.queryengine.model.Analysis;
-import com.github.seqware.queryengine.model.Group;
-import com.github.seqware.queryengine.model.Reference;
-import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.User;
-import com.github.seqware.queryengine.model.Atom;
-import com.github.seqware.queryengine.model.Tag;
+import com.github.seqware.queryengine.model.*;
 
 /**
  * A very simple Manager that is somewhat like a very stripped down
@@ -129,7 +119,7 @@ public interface ModelManager {
      *
      * @return tag set
      */
-    public TagSet.Builder buildTagSet();
+    public TagSpecSet.Builder buildTagSpecSet();
 
     /**
      * Build an analysis set
@@ -153,11 +143,17 @@ public interface ModelManager {
     public Group.Builder buildGroup();
 
     /**
-     * Build a tag
-     *
-     * @return
+     * Build a TagSpecification
+     * @return 
      */
-    public Tag.Builder buildTag();
+    public TagSpec.Builder buildTagSpec();
+    
+//    /**
+//     * Build a tag
+//     *
+//     * @return
+//     */
+//    public Tag.Builder buildTag();
 
     /**
      * Build a feature

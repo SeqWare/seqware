@@ -1,16 +1,16 @@
 package com.github.seqware.queryengine.model.impl.inMemory;
 
 import com.github.seqware.queryengine.model.Atom;
-import com.github.seqware.queryengine.model.Tag;
-import com.github.seqware.queryengine.model.TagSet;
+import com.github.seqware.queryengine.model.TagSpec;
+import com.github.seqware.queryengine.model.TagSpecSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 
 /**
- * An in-memory representation of a TagSet.
+ * An in-memory representation of a TagSpecSet.
  *
  * @author dyuen
  */
-public class InMemoryTagSet extends AbstractInMemorySet<TagSet, Tag> implements TagSet{
+public class InMemoryTagSpecSet extends AbstractInMemorySet<TagSpecSet, TagSpec> implements TagSpecSet{
     
     private String name = null;
     
@@ -20,35 +20,35 @@ public class InMemoryTagSet extends AbstractInMemorySet<TagSet, Tag> implements 
     }
 
     
-    public static TagSet.Builder newBuilder() {
-        return new InMemoryTagSet.Builder();
+    public static TagSpecSet.Builder newBuilder() {
+        return new InMemoryTagSpecSet.Builder();
     }
 
     @Override
-    public InMemoryTagSet.Builder toBuilder() {
-        InMemoryTagSet.Builder b = new InMemoryTagSet.Builder();
-        b.aSet = (InMemoryTagSet) this.copy(true);
+    public InMemoryTagSpecSet.Builder toBuilder() {
+        InMemoryTagSpecSet.Builder b = new InMemoryTagSpecSet.Builder();
+        b.aSet = (InMemoryTagSpecSet) this.copy(true);
         return b;
     }
 
     @Override
     public Class getHBaseClass() {
-        return TagSet.class;
+        return TagSpecSet.class;
     }
 
     @Override
     public String getHBasePrefix() {
-        return TagSet.prefix;
+        return TagSpecSet.prefix;
     }
 
-    public static class Builder extends TagSet.Builder {
+    public static class Builder extends TagSpecSet.Builder {
         
         public Builder(){
-            aSet = new InMemoryTagSet();
+            aSet = new InMemoryTagSpecSet();
         }
 
         @Override
-        public TagSet build(boolean newObject) {
+        public TagSpecSet build(boolean newObject) {
             if (((AtomImpl)aSet).getManager() != null){
                 ((AtomImpl)aSet).getManager().objectCreated((Atom)aSet);
             }
@@ -57,7 +57,7 @@ public class InMemoryTagSet extends AbstractInMemorySet<TagSet, Tag> implements 
 
         @Override
         public Builder setName(String name) {
-            ((InMemoryTagSet)aSet).name = name;
+            ((InMemoryTagSpecSet)aSet).name = name;
             return this;
         }
     }
