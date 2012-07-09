@@ -31,7 +31,8 @@ public abstract class StorageInterface {
     protected BiMap<Class, String> biMap = new ImmutableBiMap.Builder<Class, String>().put(Feature.class, Feature.prefix)
             .put(FeatureSet.class, FeatureSet.prefix).put(Analysis.class, Analysis.prefix).put(AnalysisSet.class, AnalysisSet.prefix)
             .put(Reference.class, Reference.prefix).put(ReferenceSet.class, ReferenceSet.prefix).put(Tag.class, Tag.prefix)
-            .put(TagSet.class, TagSet.prefix).put(User.class, User.prefix).put(Group.class, Group.prefix).build();
+            .put(TagSpecSet.class, TagSpecSet.prefix).put(User.class, User.prefix).put(Group.class, Group.prefix)
+            .put(TagSpec.class, TagSpec.prefix).build();
     public static final String separator = "_";
     
     /**

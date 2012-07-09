@@ -22,7 +22,7 @@ import java.io.Serializable;
 
 /**
  * Lazy reference class, needed if we wish to reduce the number of random accesses
- * when deserializing objects or creating HBase specific model implementations. 
+ * when de-serializing objects or creating HBase specific model implementations. 
  * 
  * @author dyuen
  */
@@ -63,7 +63,7 @@ public class LazyReference<T extends Atom> implements Serializable {
      * Set the SGID of the object to be lazy referenced
      * @param sgid 
      */
-    public void setSGID(SGID sgid) {
+    public void setSGID(SGID sgid) {       
         this.referenceSGID = sgid;
         this.referenceChecked = false;
     }
@@ -85,7 +85,7 @@ public class LazyReference<T extends Atom> implements Serializable {
      * Can also clear the reference if set to null
      * @param reference 
      */
-    public void set(T reference) {
+    public void set(T reference) {     
         this.referenceChecked = true;
         if (reference != null) {
             this.referenceCache = reference;

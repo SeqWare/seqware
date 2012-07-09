@@ -4,16 +4,14 @@ import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 import com.github.seqware.queryengine.util.InMemoryIterable;
-import com.github.seqware.queryengine.util.LazyReference;
-import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.ArrayList;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * A Tag an instance of a TagSpex which contains all three of the values
- * necessary for a GVF (ex: ID=ID_1 or Variant_seq=A,G or Reference_seq=G ).
+ * A TagSpec represents the first part of a tuple that can describe an attribute
+ * in a GVF (ex: ID=ID_1 or Variant_seq=A,G or Reference_seq=G ).
  *
  * Tags always have subjects, they have a default predicate "=" and they may or
  * may not have objects. A non-specified value is represented as null
@@ -24,23 +22,16 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  *
  * @author dyuen
  */
-public class Tag extends AtomImpl<Tag>  {
-    public final static String prefix = "Tag";
+public class TagSpec extends AtomImpl<TagSpec> {
 
-    private LazyReference<TagSpecSet> tagSet = null;
+    public final static String prefix = "TagSpec";
     private String key = null;
-    private String predicate = "=";
-    private Object value = null;
-    private ValueType vType = null;
-    
-    public enum ValueType {STRING, BYTEARR, SGID, FLOAT, DOUBLE, LONG, INTEGER };
 
     /**
      * Create a new tag
      */
-    private Tag() {
+    private TagSpec() {
         super();
-        vType = ValueType.STRING;
     }
 
     /**
@@ -52,49 +43,14 @@ public class Tag extends AtomImpl<Tag>  {
         return key;
     }
 
-    /**
-     * Get a reference to the parent TagSpecSet
-     *
-     * @return parent TagSpecSet
-     */
-    public TagSpecSet getTagSet() {
-        return tagSet.get();
-    }
-
-    /**
-     * Get the value. Examples include ID_1, A, or G
-     *
-     * @return String value
-     */
-    public Object getValue() {
-        return value;
-    }
-
-    /**
-     * Get the predicate. Examples include "="
-     *
-     * @return String predicate
-     */
-    public String getPredicate() {
-        return predicate;
-    }
-
-    /**
-     * Get the type of value for the tag value
-     * @return 
-     */
-    public ValueType getvType() {
-        return vType;
-    }
-    
     @Override
     public Class getHBaseClass() {
-        return Tag.class;
+        return TagSpec.class;
     }
 
     @Override
     public String getHBasePrefix() {
-        return Tag.prefix;
+        return TagSpec.prefix;
     }
 
     @Override
@@ -109,12 +65,26 @@ public class Tag extends AtomImpl<Tag>  {
     }
 
     /**
+     * Return a TagBuilder initialized with the key represented by this
+     *
+     * @return
+     */
+    public Tag.Builder newTagBuilder() {
+        Tag.Builder newBuilder = Tag.newBuilder();
+        newBuilder.setKey(key);
+        if (this.getManager() != null) {
+            newBuilder.setManager(this.getManager());
+        }
+        return newBuilder;
+    }
+
+    /**
      * Create a new ACL builder
      *
      * @return
      */
-    public static Tag.Builder newBuilder() {
-        return new Tag.Builder();
+    public static TagSpec.Builder newBuilder() {
+        return new TagSpec.Builder();
     }
 
     /**
@@ -123,9 +93,9 @@ public class Tag extends AtomImpl<Tag>  {
      * @return
      */
     @Override
-    public Tag.Builder toBuilder() {
-        Tag.Builder b = new Tag.Builder();
-        b.tag = (Tag) this.copy(true);
+    public TagSpec.Builder toBuilder() {
+        TagSpec.Builder b = new TagSpec.Builder();
+        b.tag = (TagSpec) this.copy(true);
         return b;
     }
 
@@ -166,60 +136,23 @@ public class Tag extends AtomImpl<Tag>  {
 
     public static class Builder implements BaseBuilder {
 
-        private Tag tag = new Tag();
+        private TagSpec tag = new TagSpec();
 
-        /**'
-         * Should not be called outside of the back-end
-         * @param key
-         * @return 
-         */
-        public Tag.Builder setKey(String key) {
-            assert(tag.key == null);
+        public TagSpec.Builder setKey(String key) {
             tag.key = key;
             return this;
         }
 
-        public Tag.Builder setPredicate(String predicate) {
-            tag.predicate = predicate;
-            return this;
-        }
-        
-        public Tag.Builder setTagSpecSet(TagSpecSet set){
-            this.tag.tagSet.set(set);
-            return this;
-        }
-
-        /**
-         * Set the value to one of ValueType
-         * @param value
-         * @return 
-         */
-        public Tag.Builder setValue(Object value) {
-            tag.value = value;
-            if (value instanceof byte[]){
-                tag.vType = ValueType.BYTEARR;
-            } else if (value instanceof Double){
-                tag.vType = ValueType.DOUBLE;
-            } else if (value instanceof Float){
-                tag.vType = ValueType.FLOAT;
-            } else if (value instanceof Integer){
-                tag.vType = ValueType.INTEGER;
-            } else if (value instanceof Long){
-                tag.vType = ValueType.LONG;
-            } else if (value instanceof SGID){
-                tag.vType = ValueType.SGID;
-            } else if (value instanceof String){
-                tag.vType = ValueType.STRING;
-            }
+        public TagSpec.Builder setPredicate(String predicate) {
             return this;
         }
 
         @Override
-        public Tag build() {
+        public TagSpec build() {
             if (tag.key == null) {
                 throw new RuntimeException("Invalid build of Tag");
             }
-            if (tag.getManager() != null){
+            if (tag.getManager() != null) {
                 tag.getManager().objectCreated(tag);
             }
             return tag;

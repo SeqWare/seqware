@@ -144,8 +144,8 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
     }
 
     @Override
-    public SeqWareIterable<TagSet> getTagSets() {
-        return getAllOfClass(TagSet.class);
+    public SeqWareIterable<TagSpecSet> getTagSpecSets() {
+        return getAllOfClass(TagSpecSet.class);
     }
 
     @Override

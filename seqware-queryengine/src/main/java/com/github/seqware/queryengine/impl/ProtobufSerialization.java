@@ -16,28 +16,8 @@
  */
 package com.github.seqware.queryengine.impl;
 
-import com.github.seqware.queryengine.impl.protobufIO.AnalysisSetIO;
-import com.github.seqware.queryengine.impl.protobufIO.ReferenceIO;
-import com.github.seqware.queryengine.impl.protobufIO.TagSetIO;
-import com.github.seqware.queryengine.impl.protobufIO.FeatureSetIO;
-import com.github.seqware.queryengine.impl.protobufIO.UserIO;
-import com.github.seqware.queryengine.impl.protobufIO.ProtobufTransferInterface;
-import com.github.seqware.queryengine.impl.protobufIO.AnalysisIO;
-import com.github.seqware.queryengine.impl.protobufIO.ReferenceSetIO;
-import com.github.seqware.queryengine.impl.protobufIO.TagIO;
-import com.github.seqware.queryengine.impl.protobufIO.GroupIO;
-import com.github.seqware.queryengine.impl.protobufIO.FeatureIO;
-import com.github.seqware.queryengine.model.AnalysisSet;
-import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.ReferenceSet;
-import com.github.seqware.queryengine.model.TagSet;
-import com.github.seqware.queryengine.model.Analysis;
-import com.github.seqware.queryengine.model.Group;
-import com.github.seqware.queryengine.model.Reference;
-import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.User;
-import com.github.seqware.queryengine.model.Atom;
-import com.github.seqware.queryengine.model.Tag;
+import com.github.seqware.queryengine.impl.protobufIO.*;
+import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
@@ -54,7 +34,8 @@ public class ProtobufSerialization implements SerializationInterface {
     protected BiMap<Class, ProtobufTransferInterface> biMap = new ImmutableBiMap.Builder<Class, ProtobufTransferInterface>().put(Feature.class, new FeatureIO())
             .put(FeatureSet.class, new FeatureSetIO()).put(Analysis.class, new AnalysisIO()).put(AnalysisSet.class, new AnalysisSetIO())
             .put(Reference.class, new ReferenceIO()).put(ReferenceSet.class, new ReferenceSetIO()).put(Tag.class, new TagIO())
-            .put(TagSet.class, new TagSetIO()).put(User.class, new UserIO()).put(Group.class, new GroupIO()).build();
+            .put(TagSpecSet.class, new TagSpecSetIO()).put(User.class, new UserIO()).put(Group.class, new GroupIO())
+            .put(TagSpec.class, new TagSpecIO()).build();
 
     @Override
     public byte[] serialize(Atom atom) {

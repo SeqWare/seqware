@@ -24,7 +24,7 @@ public class ACLTest {
 
     private static FeatureSet fSet;
     private static Feature f1;
-    private static TagSet tSet1;
+    private static TagSpecSet tSet1;
     private static ReferenceSet rSet;
     private static Reference r1;
     private static Group group, viewerGroup;
@@ -42,7 +42,7 @@ public class ACLTest {
         f1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
         testFeatures.add(f1);
         fSet.add(testFeatures);
-        tSet1 = mManager.buildTagSet().setName("Funky tags").build();
+        tSet1 = mManager.buildTagSpecSet().setName("Funky tags").build();
         rSet = mManager.buildReferenceSet().setName("Minbar").setOrganism("Minbari").build();
         aSet = mManager.buildAnalysisSet().setName("FP").setDescription("Funky program").build();
         r1 = mManager.buildReference().setName("ref1").build();

@@ -1,19 +1,8 @@
 package com.github.seqware.model.test;
 
-import com.github.seqware.queryengine.model.Reference;
-import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.Tag;
-import com.github.seqware.queryengine.model.AnalysisPluginInterface;
-import com.github.seqware.queryengine.model.Analysis;
-import com.github.seqware.queryengine.model.ReferenceSet;
-import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.QueryFuture;
-import com.github.seqware.queryengine.model.User;
-import com.github.seqware.queryengine.model.TagSet;
-import com.github.seqware.queryengine.model.Group;
-import com.github.seqware.queryengine.model.AnalysisSet;
 import com.github.seqware.queryengine.factory.Factory;
 import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.inMemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.queryengine.model.interfaces.Taggable;
 import com.github.seqware.queryengine.util.SeqWareIterable;
@@ -34,13 +23,14 @@ public class TaggableTest {
 
     private static FeatureSet fSet;
     private static Feature f1, f2, f3;
-    private static TagSet tSet1, tSet2;
+    private static TagSpecSet tSet1, tSet2;
     private static ReferenceSet rSet;
     private static Reference r1;
     private static Group group;
     private static User u1;
     private static AnalysisSet aSet;
     private static Analysis a;
+    private static TagSpec ts1, ts2, ts3;
     private static Tag t1a, t1b, t1c, t2a, t2b, t2c, t3a;
 
     @BeforeClass
@@ -57,8 +47,8 @@ public class TaggableTest {
         testFeatures.add(f2);
         testFeatures.add(f3);
         fSet.add(testFeatures);
-        tSet1 = mManager.buildTagSet().setName("Funky tags").build();
-        tSet2 = mManager.buildTagSet().setName("Unfunky tags").build();
+        tSet1 = mManager.buildTagSpecSet().setName("Funky tags").build();
+        tSet2 = mManager.buildTagSpecSet().setName("Unfunky tags").build();
         rSet = mManager.buildReferenceSet().setName("Minbar").setOrganism("Minbari").build();
         aSet = mManager.buildAnalysisSet().setName("FP").setDescription("Funky program").build();
         // only for testing, Analysis classes 
@@ -68,14 +58,21 @@ public class TaggableTest {
         group = mManager.buildGroup().setName("Developers").setDescription("Users that are working on new stuff").build();
         u1 = mManager.buildUser().setFirstName("Joe").setLastName("Smith").setEmailAddress("joe.smith@googly.com").setPassword("password").build();
         group.add(u1);
+
+        // create tag specifications
+        ts1 = mManager.buildTagSpec().setKey("KR").build();
+        ts2 = mManager.buildTagSpec().setKey("AS").build();
+        ts3 = mManager.buildTagSpec().setKey("JC").build();
+        tSet1.add(ts1, ts2, ts3);
+
         // tag stuff
-        t1a = mManager.buildTag().setKey("KR").build();
-        t1b = mManager.buildTag().setKey("KR").setPredicate("=").build();
-        t1c = mManager.buildTag().setKey("KR").setPredicate("=").setValue("F").build();
-        t2a = mManager.buildTag().setKey("AS").build();
-        t2b = mManager.buildTag().setKey("AS").setPredicate("=").build();
-        t2c = mManager.buildTag().setKey("AS").setPredicate("=").setValue("T800").build();
-        t3a = mManager.buildTag().setKey("JC").build();
+        t1a = ts1.newTagBuilder().build();
+        t1b = ts1.newTagBuilder().setPredicate("=").build();
+        t1c = ts1.newTagBuilder().setPredicate("=").setValue("F").build();
+        t2a = ts2.newTagBuilder().build();
+        t2b = ts2.newTagBuilder().setPredicate("=").build();
+        t2c = ts2.newTagBuilder().setPredicate("=").setValue("T800").build();
+        t3a = ts3.newTagBuilder().build();
         // 7 new tags added
 
         // 12 calls to associate 
@@ -98,11 +95,11 @@ public class TaggableTest {
     @Test
     public void testTaggingOnEverything() {
 // Some of these global tests are no longer working because the back-end persists between test classes, we need a search API
-        SeqWareIterable<TagSet> tagSets = Factory.getFeatureStoreInterface().getTagSets();
+        SeqWareIterable<TagSpecSet> tagSets = Factory.getFeatureStoreInterface().getTagSpecSets();
         // we have two tag sets
         boolean t1found = false;
         boolean t2found = false;
-        for (TagSet t : tagSets) {
+        for (TagSpecSet t : tagSets) {
             if (t.equals(tSet1)) {
                 t1found = true;
             } else if (t.equals(tSet2)) {
@@ -110,22 +107,22 @@ public class TaggableTest {
             }
         }
         Assert.assertTrue(t1found == true && t2found == true);
-        SeqWareIterable<Tag> tags = Factory.getFeatureStoreInterface().getTags();
-        Tag[] tagsCheck = {t1a, t1b, t1c, t2a, t2b, t2c, t3a};
-        boolean[] tagsCheckFound = new boolean[tagsCheck.length];
-        Arrays.fill(tagsCheckFound, false);
-//        for(TagSet t : tagSets){
-        for (Tag ta : tags) {
-            for (int i = 0; i < tagsCheckFound.length; i++) {
-                if (tagsCheck[i].equals(ta)) {
-                    tagsCheckFound[i] = true;
-                }
-            }
-        }
+//        SeqWareIterable<Tag> tags = Factory.getFeatureStoreInterface().getTags();
+//        Tag[] tagsCheck = {t1a, t1b, t1c, t2a, t2b, t2c, t3a};
+//        boolean[] tagsCheckFound = new boolean[tagsCheck.length];
+//        Arrays.fill(tagsCheckFound, false);
+////        for(TagSpecSet t : tagSets){
+//        for (Tag ta : tags) {
+//            for (int i = 0; i < tagsCheckFound.length; i++) {
+//                if (tagsCheck[i].equals(ta)) {
+//                    tagsCheckFound[i] = true;
+//                }
+//            }
 //        }
-        for (boolean b : tagsCheckFound) {
-            Assert.assertTrue(b);
-        }
+////        }
+//        for (boolean b : tagsCheckFound) {
+//            Assert.assertTrue(b);
+//        }
         SeqWareIterable<Tag> tags1 = fSet.getTags();
         // 3 tags were associated with the featureSet
         Assert.assertTrue(tags1.getCount() == 3);
@@ -133,50 +130,49 @@ public class TaggableTest {
     }
 
     @Test
-    public void testAddingAndRemovingTagsFromTagSets() {
+    public void testAddingAndRemovingTagSpecsFromTagSpecSets() {
         ModelManager mManager = Factory.getModelManager();
         // tags are not initially in a key set
-        SeqWareIterable<TagSet> tagSets = Factory.getFeatureStoreInterface().getTagSets();
-        Tag[] tagsCheck = {t1a, t1b, t1c, t2a, t2b, t2c, t3a};
+        TagSpecSet initialTestSet = (TagSpecSet) Factory.getFeatureStoreInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
+        TagSpec[] tagsCheck = {ts1, ts2, ts3};
         boolean[] tagsCheckFound = new boolean[tagsCheck.length];
         Arrays.fill(tagsCheckFound, false);
         // there should be nothing here
-        for (TagSet t : tagSets) {
-            for (Tag ta : t) {
-                for (int i = 0; i < tagsCheckFound.length; i++) {
-                    if (tagsCheck[i].equals(ta)) {
-                        tagsCheckFound[i] = true;
-                    }
+        for (TagSpec ta : initialTestSet) {
+            for (int i = 0; i < tagsCheckFound.length; i++) {
+                if (tagsCheck[i].equals(ta)) {
+                    tagsCheckFound[i] = true;
                 }
             }
         }
         for (boolean b : tagsCheckFound) {
             Assert.assertTrue(!b);
         }
-        // let's add them 
+        // we need to persist these sets so that the new model manager is aware of them
         mManager.persist(tSet1);
-        tSet1.add(t1a).add(t1b).add(t1c);
+        mManager.persist(tSet2);
+        tSet2.add(ts1).add(ts2);
         mManager.flush();
-        TagSet testSet = (TagSet) Factory.getFeatureStoreInterface().getAtomBySGID(TagSet.class, tSet1.getSGID());
-        Assert.assertTrue(testSet.getCount() == 3);
-        tSet1.add(t3a);
-        mManager.flush();
-        testSet = (TagSet) Factory.getFeatureStoreInterface().getAtomBySGID(TagSet.class, tSet1.getSGID());
-        Assert.assertTrue(testSet.getCount() == 4);
-        Assert.assertTrue(testSet.getPrecedingVersion().getCount() == 3);
-        // and then remove them
-        tSet1.remove(t3a).remove(t1a);
-        mManager.flush();
-        testSet = (TagSet) Factory.getFeatureStoreInterface().getAtomBySGID(TagSet.class, tSet1.getSGID());
+        TagSpecSet testSet = (TagSpecSet) Factory.getFeatureStoreInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
         Assert.assertTrue(testSet.getCount() == 2);
-        Assert.assertTrue(testSet.getPrecedingVersion().getCount() == 4);
+        tSet2.add(ts3);
+        mManager.flush();
+        testSet = (TagSpecSet) Factory.getFeatureStoreInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
+        Assert.assertTrue(testSet.getCount() == 3);
+        Assert.assertTrue(testSet.getPrecedingVersion().getCount() == 2);
+        // and then remove them
+        tSet2.remove(ts3).remove(ts2);
+        mManager.flush();
+        testSet = (TagSpecSet) Factory.getFeatureStoreInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
+        Assert.assertTrue(testSet.getCount() == 1);
+        Assert.assertTrue(testSet.getPrecedingVersion().getCount() == 3);
     }
 
     @Test
     public void testClassesThatCannotBeTagged() {
         // practically everything can be tagged, except for plugins and tags
         ModelManager mManager = Factory.getModelManager();
-        Tag tag1a = mManager.buildTag().setKey("KR").build();
+        Tag tag1a = ts1.newTagBuilder().build();
         boolean tagException = false;
         try {
             tag1a.associateTag(tag1a);
@@ -196,7 +192,7 @@ public class TaggableTest {
         // tags should be both addable and removable
         // tags should be added and removed without changing version numbers 
         // TODO: (not for now though)
-        Tag tag1a = mManager.buildTag().setKey("KR").build();
+        Tag tag1a = ts1.newTagBuilder().build();
         User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
         u.associateTag(tag1a);
         long version1 = u.getVersion();
@@ -237,13 +233,13 @@ public class TaggableTest {
     @Test
     public void tagWithDifferentTypes() {
         ModelManager mManager = Factory.getModelManager();
-        Tag ta = mManager.buildTag().setKey("KR").setValue("Test_String").build();
-        Tag tb = mManager.buildTag().setKey("KR").setValue("Test_String".getBytes()).build();
-        Tag tc = mManager.buildTag().setKey("KR").setValue(new Float(0.1f)).build();
-        Tag td = mManager.buildTag().setKey("KR").setValue(new Double(0.1)).build();
-        Tag te = mManager.buildTag().setKey("KR").setValue(new Long(1)).build();
-        Tag tf = mManager.buildTag().setKey("KR").setValue(new Integer(10)).build();
-        Tag tg = mManager.buildTag().setKey("KR").setValue(fSet.getSGID()).build();
+        Tag ta = ts1.newTagBuilder().setValue("Test_String").build();
+        Tag tb = ts1.newTagBuilder().setValue("Test_String".getBytes()).build();
+        Tag tc = ts1.newTagBuilder().setValue(new Float(0.1f)).build();
+        Tag td = ts1.newTagBuilder().setValue(new Double(0.1)).build();
+        Tag te = ts1.newTagBuilder().setValue(new Long(1)).build();
+        Tag tf = ts1.newTagBuilder().setValue(new Integer(10)).build();
+        Tag tg = ts1.newTagBuilder().setValue(fSet.getSGID()).build();
         User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
         u.associateTag(ta);
         u.associateTag(tb);

@@ -123,15 +123,15 @@ message AnalysisSetPB {
     repeated SGIDPB analysisIDs = 12;
 }
 
-message TagSetPB {
+message TagSpecSetPB {
     // atom/molecule stuff
     optional AtomPB atom = 1;
-    optional TagSetPB precedingVersion = 3;
+    optional TagSpecSetPB precedingVersion = 3;
     //optional ACLPB acl = 5; // deprecated
     optional MoleculePB mol = 4;
     // Reference-specific
     optional string name = 10;
-    repeated SGIDPB tagIDs = 11;
+    repeated SGIDPB tagSpecIDs = 11;
 }
 
 

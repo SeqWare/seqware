@@ -6,12 +6,12 @@ import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 
 /**
- * A set of Tags
+ * A set of Tag specifications
  *
  * @author dyuen
  */
-public interface TagSet extends MolSetInterface<TagSet, Tag> {
-    public final static String prefix = "TagSet";
+public interface TagSpecSet extends MolSetInterface<TagSpecSet, TagSpec> {
+    public final static String prefix = "TagSpecSet";
 
     /**
      * Get the name of the tag set
@@ -25,18 +25,18 @@ public interface TagSet extends MolSetInterface<TagSet, Tag> {
      * @return 
      */
     @Override
-    public abstract TagSet.Builder toBuilder();
+    public abstract TagSpecSet.Builder toBuilder();
 
     public abstract static class Builder implements BaseBuilder {
 
-        public TagSet aSet;
+        public TagSpecSet aSet;
         
         @Override
-        public TagSet build() {
+        public TagSpecSet build() {
            return build(true);
         }
 
-        public abstract TagSet build(boolean newObject);
+        public abstract TagSpecSet build(boolean newObject);
 
         @Override
         public Builder setManager(ModelManager aThis) {

@@ -152,10 +152,10 @@ public interface FeatureStoreInterface {
      * 
      * @return something iterable that iterates through all TagSets 
      */
-    public SeqWareIterable<TagSet> getTagSets();
-//    public void addTagSet(TagSet newTagSet);
-//    public void updateTagSet(TagSet TagSet);
-//    public void setTagSetACL(ACL acl, TagSet tagSet);
+    public SeqWareIterable<TagSpecSet> getTagSpecSets();
+//    public void addTagSet(TagSpecSet newTagSet);
+//    public void updateTagSet(TagSpecSet TagSpecSet);
+//    public void setTagSetACL(ACL acl, TagSpecSet tagSet);
 // 
 //    // TAG/CV METHODS
     /**

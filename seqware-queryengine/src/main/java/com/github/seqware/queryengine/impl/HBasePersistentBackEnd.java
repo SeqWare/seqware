@@ -19,7 +19,7 @@ package com.github.seqware.queryengine.impl;
 import com.github.seqware.queryengine.model.AnalysisSet;
 import com.github.seqware.queryengine.model.ReferenceSet;
 import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.TagSet;
+import com.github.seqware.queryengine.model.TagSpecSet;
 import com.github.seqware.queryengine.model.Group;
 import com.github.seqware.queryengine.model.User;
 import com.github.seqware.queryengine.model.Atom;
@@ -92,11 +92,11 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
     }
 
     @Override
-    public SeqWareIterable<TagSet> getTagSets() {
+    public SeqWareIterable<TagSpecSet> getTagSpecSets() {
         if (storage instanceof HBaseStorage) {
-            return handleTableScan(TagSet.class, TagSet.prefix);
+            return handleTableScan(TagSpecSet.class, TagSpecSet.prefix);
         }
-        return super.getTagSets();
+        return super.getTagSpecSets();
     }
 
     @Override
