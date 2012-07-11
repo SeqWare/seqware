@@ -51,7 +51,7 @@ public class UtilIO {
             atomImpl.associateTag(tagIO.pb2m(t));
         }
         SGID pID = atompb.hasPrecedingID() ? SGIDIO.pb2m(atompb.getPrecedingID()) : null;
-        atomImpl.impersonate(SGIDIO.pb2m(atompb.getSgid()), /**new Date(atompb.getDate())*/ new Date(atompb.getSgid().getTimestamp()), pID);
+        atomImpl.impersonate(SGIDIO.pb2m(atompb.getSgid()), pID);
     }
 
     /**
@@ -88,7 +88,7 @@ public class UtilIO {
             feature.associateTag(tagIO.pb2m(t));
         }
         SGID pID = atompb.hasPrecedingID() ? FSGIDIO.pb2m(atompb.getPrecedingID()) : null;
-        feature.impersonate(FSGIDIO.pb2m(atompb.getSgid()), /**new Date(atompb.getDate())*/ new Date(atompb.getSgid().getSgid().getTimestamp()) , pID);
+        feature.impersonate(FSGIDIO.pb2m(atompb.getSgid()), pID);
     }
 
     /**

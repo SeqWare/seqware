@@ -67,7 +67,7 @@ public class InMemoryFeatureSet extends FeatureSet {
         // try upgrading Feature IDs here, faster than in model manager and FeatureSets should be guaranteed to have references
         if (!(feature.getSGID() instanceof FSGID)){
             FSGID fsgid = new FSGID(feature.getSGID(), feature, this);
-            feature.impersonate(fsgid, feature.getTimestamp(), feature.getPrecedingSGID());
+            feature.impersonate(fsgid, feature.getPrecedingSGID());
         }
     }
 

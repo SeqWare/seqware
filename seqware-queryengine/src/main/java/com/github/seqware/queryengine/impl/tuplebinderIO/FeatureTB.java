@@ -63,7 +63,7 @@ public class FeatureTB extends TupleBinding {
       for(int i = 0; i < ti.readLong(); i++){
           f.associateTag(Tag.newBuilder().setKey(ti.readString()).build());
       }
-      f.impersonate(sgid, newDate, oldSgid);
+      f.impersonate(sgid, oldSgid);
       return f;
   }
 

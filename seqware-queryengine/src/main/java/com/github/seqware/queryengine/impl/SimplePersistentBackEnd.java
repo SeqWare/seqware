@@ -72,7 +72,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
         // doesn't seem applicable anymore?
         for(int i = 0; i < objList.length; i++){
           Atom obj = objList[i];
-          ((AtomImpl)obj).impersonate(storeAtom[i].getSGID(), storeAtom[i].getTimestamp(), obj.getSGID());
+          ((AtomImpl)obj).impersonate(storeAtom[i].getSGID(), obj.getSGID());
         }     
     }
 
