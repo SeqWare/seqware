@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -435,7 +436,7 @@ public class HBaseTest {
         FeatureSet set = InMemoryFeatureSet.newBuilder().setReference(InMemoryReference.newBuilder().setName("testRef").build()).build();
         // we need to upgrade the feature with a link to an enforced FeatureSet like in the real back-end
         FSGID fsgid = new FSGID(testFeature.getSGID(), testFeature, set);
-        testFeature.impersonate(fsgid, testFeature.getTimestamp(), testFeature.getPrecedingSGID());
+        testFeature.impersonate(fsgid, new Date(), testFeature.getPrecedingSGID());
 
         // Streams that will hold the serialized objects:
         ByteArrayOutputStream sgidBytes = new ByteArrayOutputStream();

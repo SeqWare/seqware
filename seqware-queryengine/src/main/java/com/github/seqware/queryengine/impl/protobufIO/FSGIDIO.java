@@ -32,6 +32,7 @@ public class FSGIDIO {
         if (pb.getSgid().hasTimestamp()){
             sgid.setBackendTimestamp(new Date(pb.getSgid().getTimestamp()));
         }
+        
 //        sgid.setFeatureSetID(new SGID(pb.getFeatMureSetID().getMostSigBits(), pb.getFeatureSetID().getLeastSigBits()));
         return sgid;
     }

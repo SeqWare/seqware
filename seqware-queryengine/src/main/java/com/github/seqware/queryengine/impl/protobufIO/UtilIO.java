@@ -51,7 +51,7 @@ public class UtilIO {
             atomImpl.associateTag(tagIO.pb2m(t));
         }
         SGID pID = atompb.hasPrecedingID() ? SGIDIO.pb2m(atompb.getPrecedingID()) : null;
-        atomImpl.impersonate(SGIDIO.pb2m(atompb.getSgid()), new Date(atompb.getDate()), pID);
+        atomImpl.impersonate(SGIDIO.pb2m(atompb.getSgid()), /**new Date(atompb.getDate())*/ new Date(atompb.getSgid().getTimestamp()), pID);
     }
 
     /**
@@ -69,7 +69,7 @@ public class UtilIO {
             builder.addTags(tagIO.m2pb(t));
         }
         builder.setSgid(SGIDIO.m2pb(atomImpl.getSGID()));
-        builder.setDate(atomImpl.getTimestamp().getTime());
+        //builder.setDate(atomImpl.getTimestamp().getTime());
         if (atomImpl.getPrecedingSGID() != null) {
             builder.setPrecedingID(SGIDIO.m2pb(atomImpl.getPrecedingSGID()));
         }
@@ -88,12 +88,11 @@ public class UtilIO {
             feature.associateTag(tagIO.pb2m(t));
         }
         SGID pID = atompb.hasPrecedingID() ? FSGIDIO.pb2m(atompb.getPrecedingID()) : null;
-        feature.impersonate(FSGIDIO.pb2m(atompb.getSgid()), new Date(atompb.getDate()), pID);
+        feature.impersonate(FSGIDIO.pb2m(atompb.getSgid()), /**new Date(atompb.getDate())*/ new Date(atompb.getSgid().getSgid().getTimestamp()) , pID);
     }
 
     /**
-     * Handle serialization of the core atom just for Features FIXME: this
-     * should be collapsible with normal atom
+     * Handle serialization of the core atom just for Features 
      *
      * @param atompb
      * @param feature
@@ -107,7 +106,7 @@ public class UtilIO {
             builder.addTags(tagIO.m2pb(t));
         }
         builder.setSgid(FSGIDIO.m2pb((FSGID) feature.getSGID()));
-        builder.setDate(feature.getTimestamp().getTime());
+        //builder.setDate(feature.getTimestamp().getTime());
         if (feature.getPrecedingSGID() != null) {
             builder.setPrecedingID(FSGIDIO.m2pb((FSGID) feature.getPrecedingSGID()));
         }

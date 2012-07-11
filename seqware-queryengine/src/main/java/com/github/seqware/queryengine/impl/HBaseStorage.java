@@ -107,9 +107,8 @@ public class HBaseStorage extends StorageInterface {
             // List<Row> getList = new ArrayList<Row>();
             // queue up HBase calls for the batch interface
             for (T obj : objArr) {
-                // create timestamps
+                // create timestamps, since this API will run on the server, we don't need to do anything complicated
                 obj.getSGID().setBackendTimestamp(new Date());
-                
                 assert (prefix.equals(((AtomImpl) objArr[0]).getHBasePrefix()));
                 byte[] featureBytes = serializer.serialize(obj);
                 // as a test, let's try readable rowKeys
@@ -117,25 +116,9 @@ public class HBaseStorage extends StorageInterface {
                 // Serialize:
                 p.add(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES, featureBytes);
                 putList.add(p);
-
-                //    Get g = new Get(Bytes.toBytes(obj.getSGID().getRowKey().toString()));
-                //    getList.add(g);
             }
             // establish put
             Object[] putBatch = table.batch(putList);
-            // get back putList and record timestamps
-            // assert (getList.size() == putList.size());
-            // assert (getList.size() == objArr.length);
-            // Object[] getBatch = table.batch(getList);
-            // assert (getBatch.length == putBatch.length);
-            // assert (getBatch.length == objArr.length);
-            // go through the get and update the timestamps for our objects on the way out
-//            for (int i = 0; i < objArr.length; i++) {
-//                T obj = objArr[i];
-//                // Result result = (Result) getBatch[i];
-//                // long timestamp = result.getColumnLatest(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES).getTimestamp();
-//                obj.getSGID().setBackendTimestamp(new Date(timestamp));
-//            }
         } catch (IOException ex) {
             Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
