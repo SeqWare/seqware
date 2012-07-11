@@ -10,7 +10,7 @@ import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
  *
  * @author dyuen
  */
-public interface TagSpecSet extends MolSetInterface<TagSpecSet, TagSpec> {
+public interface TagSpecSet extends MolSetInterface<TagSpecSet, Tag> {
     public final static String prefix = "TagSpecSet";
 
     /**

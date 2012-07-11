@@ -12,7 +12,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * A Tag an instance of a TagSpex which contains all three of the values
+ * A Tag an instance of a TagSpec which contains all three of the values
  * necessary for a GVF (ex: ID=ID_1 or Variant_seq=A,G or Reference_seq=G ).
  *
  * Tags always have subjects, they have a default predicate "=" and they may or

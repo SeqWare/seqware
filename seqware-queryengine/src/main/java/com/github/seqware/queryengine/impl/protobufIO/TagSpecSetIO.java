@@ -19,7 +19,7 @@ package com.github.seqware.queryengine.impl.protobufIO;
 import com.github.seqware.queryengine.dto.QueryEngine;
 import com.github.seqware.queryengine.dto.QueryEngine.TagSpecSetPB;
 import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.model.TagSpec;
+import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.model.TagSpecSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
@@ -50,7 +50,7 @@ public class TagSpecSetIO implements ProtobufTransferInterface<TagSpecSetPB, Tag
         for(int i = 0; i < sgidArr.length; i++){
             sgidArr[i] = (SGIDIO.pb2m(userpb.getTagSpecIDs(i)));
         }
-        List<TagSpec> atomsBySGID = Factory.getFeatureStoreInterface().getAtomsBySGID(TagSpec.class, sgidArr);
+        List<Tag> atomsBySGID = Factory.getFeatureStoreInterface().getAtomsBySGID(Tag.class, sgidArr);
         if (atomsBySGID != null && atomsBySGID.size() > 0) {user.add(atomsBySGID);}
         return user;
     }
@@ -65,7 +65,7 @@ public class TagSpecSetIO implements ProtobufTransferInterface<TagSpecSetPB, Tag
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && sgid.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(sgid.getPrecedingVersion()));
         }
-        for(TagSpec ref : sgid){
+        for(Tag ref : sgid){
             builder.addTagSpecIDs(SGIDIO.m2pb(ref.getSGID()));
         }
         TagSpecSetPB userpb = builder.build();

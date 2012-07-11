@@ -3,6 +3,7 @@ package com.github.seqware.impl.test;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.github.seqware.queryengine.dto.QueryEngine.FeaturePB;
 import com.github.seqware.queryengine.impl.protobufIO.FeatureIO;
 import com.github.seqware.queryengine.impl.tuplebinderIO.FeatureTB;
 import com.github.seqware.queryengine.impl.tuplebinderIO.SGIDTB;
@@ -10,7 +11,6 @@ import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.inMemory.InMemoryFeatureSet;
 import com.github.seqware.queryengine.model.impl.inMemory.InMemoryReference;
-import com.github.seqware.queryengine.dto.QueryEngine.FeaturePB;
 import com.github.seqware.queryengine.util.FSGID;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
@@ -47,12 +47,12 @@ public class HBaseTest {
     private static final String TEST_COLUMN = "fauxColumn";
     /**
      * Number of runs to execute to determine average
-     * serialization/deserialization times.
+     * serialization/de-serialization times.
      */
     private static final int BENCHMARK_RUNS = 10;
     /**
      * Number of features that should be used for benchmarking
-     * serialization/deserialization.
+     * serialization/de-serialization.
      */
     private static final int BENCHMARK_FEATURES = 10000;
     /**
@@ -61,7 +61,7 @@ public class HBaseTest {
     private boolean BENCHMARK;
 
     /**
-     * Determines which framework should be used for serializing/deserializing
+     * Determines which framework should be used for serializing/de-serializing
      * objects.
      */
     private enum SerializationFramework {
@@ -70,7 +70,7 @@ public class HBaseTest {
     };
     /**
      * If Kryo is used, then this reference points to the Feature class
-     * serializer/deserializer:
+     * serializer/de-serializer:
      */
     private Kryo serializer;
     /**
@@ -80,7 +80,7 @@ public class HBaseTest {
     private SGIDTB sgidTB;
     /**
      * If Protobuf is used, then this reference points to the Feature class
-     * serializer/deserializer:
+     * serializer/de-serializer:
      */
     private FeatureIO fIO;
 

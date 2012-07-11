@@ -22,7 +22,6 @@ import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.protobuf.Message;
-import org.apache.commons.lang.SerializationUtils;
 import org.apache.hadoop.hbase.util.Bytes;
 
 /**
@@ -35,7 +34,7 @@ public class ProtobufSerialization implements SerializationInterface {
             .put(FeatureSet.class, new FeatureSetIO()).put(Analysis.class, new AnalysisIO()).put(AnalysisSet.class, new AnalysisSetIO())
             .put(Reference.class, new ReferenceIO()).put(ReferenceSet.class, new ReferenceSetIO()).put(Tag.class, new TagIO())
             .put(TagSpecSet.class, new TagSpecSetIO()).put(User.class, new UserIO()).put(Group.class, new GroupIO())
-            .put(TagSpec.class, new TagSpecIO()).build();
+            .build();
 
     @Override
     public byte[] serialize(Atom atom) {

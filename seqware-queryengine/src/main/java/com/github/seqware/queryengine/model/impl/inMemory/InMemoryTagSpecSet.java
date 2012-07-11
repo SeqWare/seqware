@@ -1,7 +1,7 @@
 package com.github.seqware.queryengine.model.impl.inMemory;
 
 import com.github.seqware.queryengine.model.Atom;
-import com.github.seqware.queryengine.model.TagSpec;
+import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.model.TagSpecSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 
@@ -10,7 +10,7 @@ import com.github.seqware.queryengine.model.impl.AtomImpl;
  *
  * @author dyuen
  */
-public class InMemoryTagSpecSet extends AbstractInMemorySet<TagSpecSet, TagSpec> implements TagSpecSet{
+public class InMemoryTagSpecSet extends AbstractInMemorySet<TagSpecSet, Tag> implements TagSpecSet{
     
     private String name = null;
     

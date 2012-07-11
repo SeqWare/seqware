@@ -17,8 +17,8 @@
 package com.github.seqware.queryengine.impl.protobufIO;
 
 import com.github.seqware.queryengine.dto.QESupporting;
-import com.github.seqware.queryengine.dto.QESupporting.TagSpecPB;
-import com.github.seqware.queryengine.model.TagSpec;
+import com.github.seqware.queryengine.dto.QESupporting.TagPB;
+import com.github.seqware.queryengine.model.Tag;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,12 +27,14 @@ import java.util.logging.Logger;
  *
  * @author dyuen
  */
-public class TagSpecIO implements ProtobufTransferInterface<TagSpecPB, TagSpec> {
+public class TagSpecIO implements ProtobufTransferInterface<TagPB, Tag> {
 
     @Override
-    public TagSpec pb2m(TagSpecPB tag) {
-        TagSpec.Builder builder = TagSpec.newBuilder().setKey(tag.getKey());
-        TagSpec rTag = builder.build();
+    public Tag pb2m(TagPB tag) {
+        Tag.Builder builder = Tag.newBuilder().setKey(tag.getKey())
+                .setPredicate(tag.getPredicate());
+        
+        Tag rTag = builder.build();
         UtilIO.handlePB2Atom(tag.getAtom(), rTag);
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && tag.hasPrecedingVersion()) {
             rTag.setPrecedingVersion(pb2m(tag.getPrecedingVersion()));
@@ -41,21 +43,22 @@ public class TagSpecIO implements ProtobufTransferInterface<TagSpecPB, TagSpec> 
     }
 
     @Override
-    public TagSpecPB m2pb(TagSpec tag) {
-        QESupporting.TagSpecPB.Builder builder = QESupporting.TagSpecPB.newBuilder().setKey(tag.getKey());
+    public TagPB m2pb(Tag tag) {
+        QESupporting.TagPB.Builder builder = QESupporting.TagPB.newBuilder().setKey(tag.getKey());
+        builder.setPredicate(tag.getPredicate());
         // TODO: TagSet not ready
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), tag));
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && tag.getPrecedingVersion() != null) {
             builder.setPrecedingVersion(m2pb(tag.getPrecedingVersion()));
         }
-        TagSpecPB fMesg = builder.build();
+        TagPB fMesg = builder.build();
         return fMesg;
     }
 
     @Override
-    public TagSpec byteArr2m(byte[] arr) {
+    public Tag byteArr2m(byte[] arr) {
         try {
-            TagSpecPB userpb = TagSpecPB.parseFrom(arr);
+            TagPB userpb = TagPB.parseFrom(arr);
             return pb2m(userpb);
         } catch (InvalidProtocolBufferException ex) {
             Logger.getLogger(FeatureSetIO.class.getName()).log(Level.SEVERE, null, ex);
