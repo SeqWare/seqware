@@ -16,6 +16,7 @@
  */
 package com.github.seqware.queryengine.impl;
 
+import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.util.SGID;
@@ -42,10 +43,9 @@ public class HBaseStorage extends StorageInterface {
     private static final byte[] TEST_COLUMN_INBYTES = Bytes.toBytes("allData");
     private static final byte[] TEST_QUALIFIER_INBYTES = Bytes.toBytes("qualifier");
     private boolean inefficiencyWarning = false;
-    public static final boolean TEST_REMOTELY = false;
     public static final int PAD = 15;
     private static final String TEST_TABLE_PREFIX = System.getProperty("user.name") + StorageInterface.separator + "hbaseTestTable";
-    private static final boolean PERSIST = true;
+    private static final boolean PERSIST = Constants.PERSIST;
     private Configuration config;
     private SerializationInterface serializer;
     private Map<String, HTable> tableMap = new HashMap<String, HTable>();
@@ -87,14 +87,11 @@ public class HBaseStorage extends StorageInterface {
     }
 
     public static void configureHBaseConfig(Configuration config) {
-        if (TEST_REMOTELY) {
+        if (Constants.HBASE_REMOTE_TESTING) {
             config.clear();
-            //config.set("hbase.zookeeper.quorum", "hboot.res");
-            //config.set("hbase.zookeeper.property.clientPort", "2181");
-            //config.set("hbase.master", "hboot.res:60000");
-            config.set("hbase.zookeeper.quorum", "sqwdev.res");
-            config.set("hbase.zookeeper.property.clientPort", "2181");
-            config.set("hbase.master", "sqwdev.res:60000");
+            for (Entry<String, String> e : Constants.HBASE_PROPERTIES.entrySet()) {
+                config.set(e.getKey(), e.getValue());
+            }
         }
     }
 

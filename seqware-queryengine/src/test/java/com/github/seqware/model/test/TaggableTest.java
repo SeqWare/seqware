@@ -30,7 +30,7 @@ public class TaggableTest {
     private static User u1;
     private static AnalysisSet aSet;
     private static Analysis a;
-    private static TagSpec ts1, ts2, ts3;
+    private static Tag ts1, ts2, ts3;
     private static Tag t1a, t1b, t1c, t2a, t2b, t2c, t3a;
 
     @BeforeClass
@@ -66,13 +66,13 @@ public class TaggableTest {
         tSet1.add(ts1, ts2, ts3);
 
         // tag stuff
-        t1a = ts1.newTagBuilder().build();
-        t1b = ts1.newTagBuilder().setPredicate("=").build();
-        t1c = ts1.newTagBuilder().setPredicate("=").setValue("F").build();
-        t2a = ts2.newTagBuilder().build();
-        t2b = ts2.newTagBuilder().setPredicate("=").build();
-        t2c = ts2.newTagBuilder().setPredicate("=").setValue("T800").build();
-        t3a = ts3.newTagBuilder().build();
+        t1a = ts1.toBuilder().build();
+        t1b = ts1.toBuilder().setPredicate("=").build();
+        t1c = ts1.toBuilder().setPredicate("=").setValue("F").build();
+        t2a = ts2.toBuilder().build();
+        t2b = ts2.toBuilder().setPredicate("=").build();
+        t2c = ts2.toBuilder().setPredicate("=").setValue("T800").build();
+        t3a = ts3.toBuilder().build();
         // 7 new tags added
 
         // 12 calls to associate 
@@ -134,11 +134,11 @@ public class TaggableTest {
         ModelManager mManager = Factory.getModelManager();
         // tags are not initially in a key set
         TagSpecSet initialTestSet = (TagSpecSet) Factory.getFeatureStoreInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
-        TagSpec[] tagsCheck = {ts1, ts2, ts3};
+        Tag[] tagsCheck = {ts1, ts2, ts3};
         boolean[] tagsCheckFound = new boolean[tagsCheck.length];
         Arrays.fill(tagsCheckFound, false);
         // there should be nothing here
-        for (TagSpec ta : initialTestSet) {
+        for (Tag ta : initialTestSet) {
             for (int i = 0; i < tagsCheckFound.length; i++) {
                 if (tagsCheck[i].equals(ta)) {
                     tagsCheckFound[i] = true;
@@ -172,7 +172,7 @@ public class TaggableTest {
     public void testClassesThatCannotBeTagged() {
         // practically everything can be tagged, except for plugins and tags
         ModelManager mManager = Factory.getModelManager();
-        Tag tag1a = ts1.newTagBuilder().build();
+        Tag tag1a = ts1.toBuilder().build();
         boolean tagException = false;
         try {
             tag1a.associateTag(tag1a);
@@ -192,7 +192,7 @@ public class TaggableTest {
         // tags should be both addable and removable
         // tags should be added and removed without changing version numbers 
         // TODO: (not for now though)
-        Tag tag1a = ts1.newTagBuilder().build();
+        Tag tag1a = ts1.toBuilder().build();
         User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
         u.associateTag(tag1a);
         long version1 = u.getVersion();
@@ -233,13 +233,13 @@ public class TaggableTest {
     @Test
     public void tagWithDifferentTypes() {
         ModelManager mManager = Factory.getModelManager();
-        Tag ta = ts1.newTagBuilder().setValue("Test_String").build();
-        Tag tb = ts1.newTagBuilder().setValue("Test_String".getBytes()).build();
-        Tag tc = ts1.newTagBuilder().setValue(new Float(0.1f)).build();
-        Tag td = ts1.newTagBuilder().setValue(new Double(0.1)).build();
-        Tag te = ts1.newTagBuilder().setValue(new Long(1)).build();
-        Tag tf = ts1.newTagBuilder().setValue(new Integer(10)).build();
-        Tag tg = ts1.newTagBuilder().setValue(fSet.getSGID()).build();
+        Tag ta = ts1.toBuilder().setValue("Test_String").build();
+        Tag tb = ts1.toBuilder().setValue("Test_String".getBytes()).build();
+        Tag tc = ts1.toBuilder().setValue(new Float(0.1f)).build();
+        Tag td = ts1.toBuilder().setValue(new Double(0.1)).build();
+        Tag te = ts1.toBuilder().setValue(new Long(1)).build();
+        Tag tf = ts1.toBuilder().setValue(new Integer(10)).build();
+        Tag tg = ts1.toBuilder().setValue(fSet.getSGID()).build();
         User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
         u.associateTag(ta);
         u.associateTag(tb);

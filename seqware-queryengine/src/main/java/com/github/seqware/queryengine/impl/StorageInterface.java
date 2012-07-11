@@ -32,7 +32,7 @@ public abstract class StorageInterface {
             .put(FeatureSet.class, FeatureSet.prefix).put(Analysis.class, Analysis.prefix).put(AnalysisSet.class, AnalysisSet.prefix)
             .put(Reference.class, Reference.prefix).put(ReferenceSet.class, ReferenceSet.prefix).put(Tag.class, Tag.prefix)
             .put(TagSpecSet.class, TagSpecSet.prefix).put(User.class, User.prefix).put(Group.class, Group.prefix)
-            .put(TagSpec.class, TagSpec.prefix).build();
+            .build();
     public static final String separator = "_";
     
     /**

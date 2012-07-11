@@ -16,6 +16,7 @@
  */
 package com.github.seqware.queryengine.impl;
 
+import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.util.SGID;
@@ -39,7 +40,7 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 public class TmpFileStorage extends StorageInterface {
 
     boolean oldClassesFound = false;
-    private static final boolean PERSIST = true;
+    private static final boolean PERSIST = Constants.PERSIST;
     private File tempDir = new File(FileUtils.getTempDirectory(), this.getClass().getCanonicalName());
     // I think we can get away without the map to get of weird cycles in the init
     //private Map<SGID, FileTypePair> map = new HashMap<SGID, FileTypePair>();
@@ -53,27 +54,7 @@ public class TmpFileStorage extends StorageInterface {
             if (!tempDir.exists()) {
                 FileUtils.forceMkdir(tempDir);
             } else {
-                if (PERSIST) {
-//                    boolean oldClassesFound = false;
-//                    for (File f : FileUtils.listFiles(tempDir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE)) {
-//                        byte[] objData = FileUtils.readFileToByteArray(f);
-//                        try {
-//                            String[] names = f.getName().split("\\.");
-//                            Class cl = biMap.inverse().get(names[0]);
-//                            Atom suspect = (Atom) serializer.deserialize(objData, cl);
-//                            if (suspect != null){
-//                                map.put(suspect.getSGID(), new FileTypePair(f,cl));
-//                            }
-//                        } catch (Exception e) {
-//                            if (!oldClassesFound) {
-//                                oldClassesFound = true;
-//                                //TODO: we'll probably want something cooler, but for now, if we run into an old version, just warn about it
-//                                Logger.getLogger(TmpFileStorage.class.getName()).log(Level.INFO, "Obselete classes detected in {0} you may want to clean it", tempDir.getAbsolutePath());
-//                            }
-//                        }
-//                    }
-//                    Logger.getLogger(TmpFileStorage.class.getName()).log(Level.INFO, "Recovered {0} objects from store directory", map.size());
-                } else {
+                if (!PERSIST) {
                     this.clearStorage();
                 }
             }
@@ -82,21 +63,21 @@ public class TmpFileStorage extends StorageInterface {
             System.exit(-1);
         }
     }
-    
+
     @Override
     public void serializeAtomToTarget(Atom obj) {
         String prefix = ((AtomImpl) obj).getHBasePrefix();
             obj.getSGID().setBackendTimestamp(new Date(System.currentTimeMillis()));
-            // let's just clone everything on store to simulate hbase
-            File target = new File(tempDir, prefix + separator + obj.getSGID().toString());
-            byte[] serialRep = serializer.serialize(obj);
-            try {
-                FileUtils.writeByteArrayToFile(target, serialRep);
+        // let's just clone everything on store to simulate hbase
+        File target = new File(tempDir, prefix + separator + obj.getSGID().toString());
+        byte[] serialRep = serializer.serialize(obj);
+        try {
+            FileUtils.writeByteArrayToFile(target, serialRep);
 //            map.put(obj.getSGID(), new FileTypePair(target, ((AtomImpl)obj).getHBaseClass()));
-            } catch (IOException ex) {
-                Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, "Failiure to serialize", ex);
-                System.exit(-1);
-            }
+        } catch (IOException ex) {
+            Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, "Failiure to serialize", ex);
+            System.exit(-1);
+        }
     }
 
     @Override

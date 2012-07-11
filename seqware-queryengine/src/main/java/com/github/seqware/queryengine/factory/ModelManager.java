@@ -143,10 +143,10 @@ public interface ModelManager {
     public Group.Builder buildGroup();
 
     /**
-     * Build a TagSpecification
+     * Build a Tag
      * @return 
      */
-    public TagSpec.Builder buildTagSpec();
+    public Tag.Builder buildTagSpec();
     
 //    /**
 //     * Build a tag
