@@ -436,7 +436,7 @@ public class HBaseTest {
         FeatureSet set = InMemoryFeatureSet.newBuilder().setReference(InMemoryReference.newBuilder().setName("testRef").build()).build();
         // we need to upgrade the feature with a link to an enforced FeatureSet like in the real back-end
         FSGID fsgid = new FSGID(testFeature.getSGID(), testFeature, set);
-        testFeature.impersonate(fsgid, new Date(), testFeature.getPrecedingSGID());
+        testFeature.impersonate(fsgid, testFeature.getPrecedingSGID());
 
         // Streams that will hold the serialized objects:
         ByteArrayOutputStream sgidBytes = new ByteArrayOutputStream();

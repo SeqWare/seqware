@@ -165,9 +165,9 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      *
      * @param sgid new UUID
      */
-    public void impersonate(SGID sgid, Date creationTimeStamp, SGID oldSGID) {
+    public void impersonate(SGID sgid, SGID oldSGID) {
         this.impersonate(sgid);
-        this.setTimestamp(creationTimeStamp);
+        //this.setTimestamp(creationTimeStamp);
         this.precedingVersion.setSGID(oldSGID);
     }
 
