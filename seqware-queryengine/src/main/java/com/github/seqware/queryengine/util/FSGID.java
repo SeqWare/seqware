@@ -49,6 +49,7 @@ public class FSGID extends SGID implements KryoSerializable {
     public FSGID(long mostSig, long leastSig, String rowKey, String referenceName) {
         super(mostSig, leastSig);
         this.rowKey = rowKey;
+        this.referenceName = referenceName;
     }
 
 

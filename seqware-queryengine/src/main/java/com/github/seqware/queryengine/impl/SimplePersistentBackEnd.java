@@ -72,7 +72,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
         // doesn't seem applicable anymore?
         for(int i = 0; i < objList.length; i++){
           Atom obj = objList[i];
-          ((AtomImpl)obj).impersonate(storeAtom[i].getSGID(), obj.getTimestamp(), obj.getSGID());
+          ((AtomImpl)obj).impersonate(storeAtom[i].getSGID(), storeAtom[i].getTimestamp(), obj.getSGID());
         }     
     }
 
@@ -205,21 +205,5 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
             }
         }
         return new InMemoryIterable(list);
-    }
-
-    @Override
-    public Atom getPrecedingVersion(Atom obj) {
-        Atom target = (Atom)fsi.deserializeTargetToAtom(((AtomImpl)obj).getHBaseClass(), obj.getSGID());
-        if (target == null){
-            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "{0} had no parent, this may signal an error", obj.getSGID());
-            return null;
-        }
-        return (Atom)target.getPrecedingVersion();
-        //return this.getAtomBySGID(this.versionsOfEverything.get(obj.getSGID()));
-    }
-
-    @Override
-    public void setPrecedingVersion(Atom predecessor) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

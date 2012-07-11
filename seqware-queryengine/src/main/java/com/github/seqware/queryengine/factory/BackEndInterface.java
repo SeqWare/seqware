@@ -51,19 +51,6 @@ public interface BackEndInterface {
 //     * children)
 //     * @param obj Object to be deleted from the back-end
 //     */
-//    public void delete(Atom obj);
-    
-    /**
-     * Get the preceding Version of a Atom
-     * @param obj current Atom
-     * @return current Atom's parent, will return null if the Atom does not exist
-     */
-    public Atom getPrecedingVersion(Atom obj);
-
-    /**
-     * Set the succeeding Version of a Atom
-     * @param predecessor  set current Atom's parent
-     */
-    public void setPrecedingVersion(Atom predecessor);  
+//    public void delete(Atom obj); 
     
 }

@@ -1,6 +1,5 @@
 package com.github.seqware.queryengine.model.impl;
 
-import com.github.seqware.queryengine.factory.Factory;
 import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Tag;
@@ -32,9 +31,10 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      */
     private SGID sgid = new SGID();
     /**
-     * Exposed clientTimestamp of this Atom
+     * Exposed timestamp of this Atom
      */
-    private Date clientTimestamp;
+    //private Date clientTimestamp;
+    
     /**
      * Current manager
      */
@@ -44,7 +44,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     private LazyReference<T> precedingVersion = new LazyReference<T>(this.getHBaseClass());
 
     protected AtomImpl() {
-        this.clientTimestamp = new Date();
+        //this.clientTimestamp = new Date();
     }
 
     /**
@@ -60,7 +60,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
         // TODO This will have to be replaced with a stronger UUID generation method.
         if (newSGID) {
             this.sgid = new SGID();
-            this.clientTimestamp = new Date();
+            //this.clientTimestamp = new Date();
         }
         T newAtom = (T) SerializationUtils.clone(this);
         // copy over the transient properties for now
@@ -95,7 +95,8 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      */
     @Override
     public Date getTimestamp() {
-        return clientTimestamp;
+        return this.getSGID().getBackendTimestamp();
+        //return clientTimestamp;
     }
 
     /**
@@ -104,7 +105,8 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      * @param clientTimestamp new time stamp
      */
     public void setTimestamp(Date timestamp) {
-        this.clientTimestamp = timestamp;
+        this.getSGID().setBackendTimestamp(timestamp);
+        //this.clientTimestamp = timestamp;
     }
 
     /**
@@ -199,7 +201,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
         if (this.precedingVersion.get() == null) {
             return 1;
         } else {
-            return 1 + Factory.getBackEnd().getPrecedingVersion(this).getVersion();
+            return 1 + this.precedingVersion.get().getVersion();
         }
     }
 
