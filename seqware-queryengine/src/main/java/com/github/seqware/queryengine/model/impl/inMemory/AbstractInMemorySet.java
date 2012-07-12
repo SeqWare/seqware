@@ -62,6 +62,7 @@ public abstract class AbstractInMemorySet<S extends MolSetInterface, T> extends 
     
     @Override
     public void rebuild() {
+        //TODO: this kind of sucks and will tank our benchmarks, fix this
         Set<T> newSet = new HashSet<T>();
         for(T f : this.set){
             newSet.add(f);

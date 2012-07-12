@@ -266,4 +266,62 @@ public class TaggableTest {
             Assert.assertTrue(!b);
         }
     }
+
+    @Test
+    public void testTagSetParentReferences() {
+        ModelManager mManager = Factory.getModelManager();
+        // create an "ontology" tag set
+        TagSpecSet tagset = mManager.buildTagSpecSet().setName("one tag set to bind them all").build();
+        // add a few tag "specifications" to the tag set
+        Tag dwarfTag = mManager.buildTagSpec().setKey("dwarf").build();
+        Tag elvenTag = mManager.buildTagSpec().setKey("elven").build();
+        Tag humanTag = mManager.buildTagSpec().setKey("human").build();
+        tagset.add(dwarfTag, elvenTag, humanTag);
+        mManager.flush();
+                
+        // build a FeatureSet, add features to it
+        FeatureSet fset = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing dummy reference").build()).build();
+        Feature fe1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
+        Feature fe2 = mManager.buildFeature().setId("chr16").setStart(1000200).setStop(1000300).build();
+        Feature fe3 = mManager.buildFeature().setId("chr16").setStart(1000400).setStop(1000500).build();
+        fset.add(fe1, fe2, fe3);
+        // tag the feature set 
+        fset.associateTag(dwarfTag.toBuilder().setValue("digs").build());
+        fset.associateTag(elvenTag.toBuilder().setValue("immigrates").build());
+        fset.associateTag(humanTag.toBuilder().setValue("fights").build());
+        fe1.associateTag(dwarfTag.toBuilder().setValue("gimli").build());
+        fe1.associateTag(elvenTag.toBuilder().setValue("legolas").build());
+        fe1.associateTag(humanTag.toBuilder().setValue("boromir").build());
+        
+        Assert.assertTrue("feature set does not have proper number of tags", fset.getTags().getCount() == 3);
+        Assert.assertTrue("fe2 count", fe2.getTags().getCount() == 0);
+        Assert.assertTrue("fe1 tag count", fe1.getTags().getCount() == 3);
+        // check parents
+        boolean correctParent = true;
+        for(Tag t : fset.getTags()){
+            correctParent = t.getTagSet().getSGID().equals(tagset.getSGID());
+        }
+        for(Tag t : fe1.getTags()){
+            correctParent = t.getTagSet().getSGID().equals(tagset.getSGID());
+        }
+        Assert.assertTrue("tags do not have proper parents", correctParent);
+        mManager.flush();
+        
+        // try it again for persisted tags
+        fset = Factory.getFeatureStoreInterface().getAtomBySGID(FeatureSet.class, fset.getSGID());
+        fe2 = Factory.getFeatureStoreInterface().getAtomBySGID(Feature.class, fe2.getSGID());
+        fe1 = Factory.getFeatureStoreInterface().getAtomBySGID(Feature.class, fe1.getSGID());
+        Assert.assertTrue("persisted feature set does not have proper number of tags", fset.getTags().getCount() == 3);
+        Assert.assertTrue("persisted fe2 count", fe2.getTags().getCount() == 0);
+        Assert.assertTrue("persisted fe1 tag count", fe1.getTags().getCount() == 3);
+        // check parents
+        correctParent = true;
+        for(Tag t : fset.getTags()){
+            correctParent = t.getTagSet().getSGID().equals(tagset.getSGID());
+        }
+        for(Tag t : fe1.getTags()){
+            correctParent = t.getTagSet().getSGID().equals(tagset.getSGID());
+        }
+        Assert.assertTrue("persisted tags do not have proper parents", correctParent);
+    }
 }

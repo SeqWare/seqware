@@ -24,16 +24,19 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  *
  * @author dyuen
  */
-public class Tag extends AtomImpl<Tag>  {
-    public final static String prefix = "Tag";
+public class Tag extends AtomImpl<Tag> {
 
-    private LazyReference<TagSpecSet> tagSet = null;
+    public final static String prefix = "Tag";
+    private LazyReference<TagSpecSet> tagSet = new LazyReference<TagSpecSet>(TagSpecSet.class);
     private String key = null;
     private String predicate = "=";
     private Object value = null;
     private ValueType vType = null;
-    
-    public enum ValueType {STRING, BYTEARR, SGID, FLOAT, DOUBLE, LONG, INTEGER };
+
+    public enum ValueType {
+
+        STRING, BYTEARR, SGID, FLOAT, DOUBLE, LONG, INTEGER
+    };
 
     /**
      * Create a new tag
@@ -60,6 +63,15 @@ public class Tag extends AtomImpl<Tag>  {
     public TagSpecSet getTagSet() {
         return tagSet.get();
     }
+    
+    /**
+     * Get a reference to the parent TagSpecSet
+     *
+     * @return parent TagSpecSet
+     */
+    public SGID getTagSetSGID() {
+        return tagSet.getSGID();
+    }
 
     /**
      * Get the value. Examples include ID_1, A, or G
@@ -80,13 +92,38 @@ public class Tag extends AtomImpl<Tag>  {
     }
 
     /**
-     * Get the type of value for the tag value
+     * Set the TagSpecSet for this particular tag, should not be called outside
+     * of the back-end. This is used primary to keep track of which TagSet a tag 
+     * came from. 
+     * @param sgid
      * @return 
+     */
+    public Tag setTagSpecSet(SGID sgid) {
+        this.tagSet.setSGID(sgid);
+        return this;
+    }
+    
+    /**
+     * Set the TagSpecSet for this particular tag, should not be called outside
+     * of the back-end. This is used primary to keep track of which TagSet a tag 
+     * came from. 
+     * @param sgid
+     * @return 
+     */
+    public Tag setTagSpecSet(TagSpecSet set) {
+        this.tagSet.set(set);
+        return this;
+    }
+
+    /**
+     * Get the type of value for the tag value
+     *
+     * @return
      */
     public ValueType getvType() {
         return vType;
     }
-    
+
     @Override
     public Class getHBaseClass() {
         return Tag.class;
@@ -168,13 +205,15 @@ public class Tag extends AtomImpl<Tag>  {
 
         private Tag tag = new Tag();
 
-        /**'
+        /**
+         * '
          * Should not be called outside of the back-end
+         *
          * @param key
-         * @return 
+         * @return
          */
         public Tag.Builder setKey(String key) {
-            assert(tag.key == null);
+            assert (tag.key == null);
             tag.key = key;
             return this;
         }
@@ -183,32 +222,38 @@ public class Tag extends AtomImpl<Tag>  {
             tag.predicate = predicate;
             return this;
         }
-        
-        public Tag.Builder setTagSpecSet(TagSpecSet set){
+
+        public Tag.Builder setTagSpecSet(TagSpecSet set) {
             this.tag.tagSet.set(set);
+            return this;
+        }
+
+        public Tag.Builder setTagSpecSet(SGID sgid) {
+            this.tag.tagSet.setSGID(sgid);
             return this;
         }
 
         /**
          * Set the value to one of ValueType
+         *
          * @param value
-         * @return 
+         * @return
          */
         public Tag.Builder setValue(Object value) {
             tag.value = value;
-            if (value instanceof byte[]){
+            if (value instanceof byte[]) {
                 tag.vType = ValueType.BYTEARR;
-            } else if (value instanceof Double){
+            } else if (value instanceof Double) {
                 tag.vType = ValueType.DOUBLE;
-            } else if (value instanceof Float){
+            } else if (value instanceof Float) {
                 tag.vType = ValueType.FLOAT;
-            } else if (value instanceof Integer){
+            } else if (value instanceof Integer) {
                 tag.vType = ValueType.INTEGER;
-            } else if (value instanceof Long){
+            } else if (value instanceof Long) {
                 tag.vType = ValueType.LONG;
-            } else if (value instanceof SGID){
+            } else if (value instanceof SGID) {
                 tag.vType = ValueType.SGID;
-            } else if (value instanceof String){
+            } else if (value instanceof String) {
                 tag.vType = ValueType.STRING;
             }
             return this;
@@ -219,7 +264,7 @@ public class Tag extends AtomImpl<Tag>  {
             if (tag.key == null) {
                 throw new RuntimeException("Invalid build of Tag");
             }
-            if (tag.getManager() != null){
+            if (tag.getManager() != null) {
                 tag.getManager().objectCreated(tag);
             }
             return tag;
