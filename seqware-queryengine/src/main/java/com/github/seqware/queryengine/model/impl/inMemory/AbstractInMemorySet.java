@@ -1,7 +1,7 @@
 package com.github.seqware.queryengine.model.impl.inMemory;
 
-import com.github.seqware.queryengine.model.impl.AbstractMolSet;
 import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.model.impl.AbstractMolSet;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 import com.github.seqware.queryengine.model.interfaces.Taggable;
 import java.util.*;

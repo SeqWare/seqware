@@ -53,6 +53,14 @@ public class SimpleModelManager implements ModelManager {
      * @param workingList
      */
     protected void flushObjects(List<Entry<String, AtomStatePair>> workingList) {
+        // stupid workaround, if someone really leans on the flush() command after doing very little, 
+        // they can come back fast enough to start duplicating timestamp values, which leads to really bizarre behaviour
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SimpleModelManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         // create separate working lists for types of classes 
         Map<Class, List<Atom>> sortedStore = new HashMap<Class, List<Atom>>();
         Map<Class, List<Atom>> sortedUpdate = new HashMap<Class, List<Atom>>();
@@ -134,13 +142,6 @@ public class SimpleModelManager implements ModelManager {
     }
 
     protected void manageFlushedObjects(List<Entry<String, AtomStatePair>> workingList) {
-        // stupid workaround, if someone really leans on the flush() command after doing very little, 
-        // they can come back fast enough to start duplicating timestamp values, which leads to really bizarre behaviour
-        try {
-            Thread.sleep(1);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(SimpleModelManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
         // reset dirty map and put back the objects from the working list
         for (Entry<String, AtomStatePair> e : workingList) {
             // looks redundant

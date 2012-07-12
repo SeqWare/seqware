@@ -56,22 +56,36 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      */
     @Override
     public T copy(boolean newSGID) {
-        SGID oldUUID = this.sgid;
-        // TODO This will have to be replaced with a stronger UUID generation method.
-        if (newSGID) {
-            this.sgid = new SGID();
-            //this.clientTimestamp = new Date();
-        }
-        T newAtom = (T) SerializationUtils.clone(this);
+        AtomImpl newAtom = (AtomImpl) SerializationUtils.clone(this);
         // copy over the transient properties for now
-        ((AtomImpl) newAtom).setManager(this.manager);
-        this.sgid = oldUUID;
-
+        newAtom.setManager(this.manager);
+        if (newSGID){
+            newAtom.impersonate(new SGID());
+        } else{
+            newAtom.getSGID().setBackendTimestamp(new Date());
+            assert(!newAtom.getSGID().equals(this.sgid));
+        }
+        
+//        SGID oldUUID = this.sgid;
+//        // TODO This will have to be replaced with a stronger UUID generation method.
+//        if (newSGID) {
+//            this.sgid = new SGID();
+//            //this.clientTimestamp = new Date();
+//        } else{
+//            this.sgid = new SGID(this.sgid);
+//            this.sgid.setBackendTimestamp(new Date());
+//            assert(!oldUUID.equals(this.sgid));
+//        }
+//        T newAtom = (T) SerializationUtils.clone(this);
+//        // copy over the transient properties for now
+//        ((AtomImpl) newAtom).setManager(this.manager);
+//        this.sgid = oldUUID;
+//
         if (newSGID) {
             ((AtomImpl) newAtom).setPrecedingSGID(this.sgid);
         }
 
-        return newAtom;
+        return (T)newAtom;
     }
 
     /**
@@ -224,7 +238,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      *
      * @param precedingSGID
      */
-    protected void setPrecedingSGID(SGID precedingSGID) {
+    public void setPrecedingSGID(SGID precedingSGID) {
         this.precedingVersion.setSGID(precedingSGID);
         //this.precedingSGID = precedingSGID;
     }

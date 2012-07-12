@@ -36,7 +36,7 @@ public class Constants {
      * Use the properties defined for HBase to connect to a remote HBase
      * instance
      */
-    public final static boolean HBASE_REMOTE_TESTING = false;
+    public final static boolean HBASE_REMOTE_TESTING = true;
     private final static Map<String, String> SQWDEV = Maps.newHashMap(
             ImmutableMap.<String, String>builder().
             put("hbase.zookeeper.quorum", "sqwdev.res").

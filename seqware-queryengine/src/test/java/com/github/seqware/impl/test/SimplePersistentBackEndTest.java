@@ -6,7 +6,12 @@ import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.model.test.FeatureStoreInterfaceTest;
+import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.impl.HBaseStorage;
+import com.github.seqware.queryengine.model.Feature;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -16,17 +21,20 @@ import org.junit.Test;
  * @author jbaran
  */
 public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
+    
     @Test
     public void storageAndRetrievalTest() {
         UUID testID = UUID.randomUUID();
         System.out.println("running subclass test in testID: " + testID.toString());
         
-        SimplePersistentBackEnd backend = new SimplePersistentBackEnd(new TmpFileStorage(new ApacheSerialization()));
+        // storage type needs to match the default set in the base class of the test otherwise bad things happen
+        SimplePersistentBackEnd backend = new SimplePersistentBackEnd(Factory.getStorage());
 
         try {
             backend.store(this.aSet);
         }
         catch(Exception e) {
+            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).log(Level.SEVERE, "Exception",  e);
             Assert.assertTrue("Backend could not store the given FeatureSet.", false);
         }
 
@@ -35,11 +43,13 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
             atom = backend.getAtomBySGID(FeatureSet.class, this.aSet.getSGID());
         }
         catch(Exception e) {
+            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).log(Level.SEVERE, "Exception",  e);
             Assert.assertTrue("Could not retrieve the previously stored FeatureSet.", false);
         }
 
-        if (!(atom instanceof FeatureSet))
+        if (!(atom instanceof FeatureSet)){
             Assert.assertTrue("Returned result does not match the previously stored object by type.", false);
+        }
 
         FeatureSet returnedSet = (FeatureSet)atom;
 

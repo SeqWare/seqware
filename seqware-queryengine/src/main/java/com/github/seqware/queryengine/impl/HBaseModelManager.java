@@ -47,7 +47,7 @@ public class HBaseModelManager extends SimpleModelManager {
         List<Entry<String, AtomStatePair>> workingList = grabObjectsToBeFlushed();
         // check for orphaned Features
         for (Entry<String, AtomStatePair> p : workingList) {
-            if (p.getValue().getState() == State.NEW_CREATION && p.getValue().getAtom() instanceof Feature) {
+            if ((p.getValue().getState() == State.NEW_CREATION || p.getValue().getState() == State.NEW_VERSION) && p.getValue().getAtom() instanceof Feature) {
                 Feature f = (Feature) p.getValue().getAtom();
                 // should be upgraded now, if not
                 if (!(f.getSGID() instanceof FSGID)) {
