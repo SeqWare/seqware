@@ -53,8 +53,7 @@ public class FeatureTB extends TupleBinding {
       Builder newBuilder = Feature.newBuilder();
       // reset because this InputStream may have been sniffed before this tuple binder was called
       ti.reset();
-      SGID sgid = new SGID(ti.readLong(), ti.readLong());
-      Date newDate = new Date(ti.readLong());
+      SGID sgid = new SGID(ti.readLong(), ti.readLong(), ti.readLong());
       SGID oldSgid = null; //new SGID(ti.readLong(), ti.readLong());
       newBuilder.setPragma(ti.readString()).setSource(ti.readString()).setType(ti.readString()).setScore(ti.readDouble());
       newBuilder.setPhase(ti.readString()).setId(ti.readString()).setStart(ti.readLong()).setStop(ti.readLong());

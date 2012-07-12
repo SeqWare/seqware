@@ -40,27 +40,39 @@ public class FSGID extends SGID implements KryoSerializable {
     private String rowKey = null;
     private String referenceName = null;
     //private SGID featureSetID = null;
+    
+    public FSGID(FSGID fsgid){
+        super(fsgid);
+        this.rowKey = fsgid.rowKey;
+        this.referenceName = fsgid.referenceName;
+    }
 
     @Override
     public String toString() {
         return rowKey + StorageInterface.separator + super.toString();
     }
     
-    public FSGID(long mostSig, long leastSig, String rowKey, String referenceName) {
-        super(mostSig, leastSig);
+    /**
+     * Create a fully functional FSGID given raw data
+     * @param mostSig
+     * @param leastSig
+     * @param timestamp 
+     */
+    public FSGID(long mostSig, long leastSig, long timestamp, String rowKey, String referenceName) {
+        super(mostSig, leastSig, timestamp);
         this.rowKey = rowKey;
         this.referenceName = referenceName;
     }
 
 
     /**
-     * Create a fully functional FSGID
+     * Create a fully functional FSGID given models from the front-end
      * @param sgid
      * @param f
      * @param fSet 
      */
     public FSGID(SGID sgid, Feature f, FeatureSet fSet) {
-        super(sgid.getUuid().getMostSignificantBits(), sgid.getUuid().getLeastSignificantBits());
+        super(sgid);
         try {
      //       this.featureSetID = fSet.getSGID();
             // generate row key

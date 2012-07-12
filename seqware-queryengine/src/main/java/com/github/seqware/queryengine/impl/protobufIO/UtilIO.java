@@ -105,6 +105,7 @@ public class UtilIO {
             Tag t = (Tag) it.next();
             builder.addTags(tagIO.m2pb(t));
         }
+        assert(feature.getSGID() instanceof FSGID);
         builder.setSgid(FSGIDIO.m2pb((FSGID) feature.getSGID()));
         //builder.setDate(feature.getTimestamp().getTime());
         if (feature.getPrecedingSGID() != null) {

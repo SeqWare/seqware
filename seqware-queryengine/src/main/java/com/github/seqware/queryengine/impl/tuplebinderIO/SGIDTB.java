@@ -26,7 +26,7 @@ public class SGIDTB extends TupleBinding {
   public Object entryToObject(TupleInput ti) {
       // reset because this InputStream may have been sniffed before this tuple binder was called
       ti.reset();
-      SGID sgid = new SGID(ti.readLong(), ti.readLong());
+      SGID sgid = new SGID(ti.readLong(), ti.readLong(), ti.readLong());
       return sgid;
   }
 

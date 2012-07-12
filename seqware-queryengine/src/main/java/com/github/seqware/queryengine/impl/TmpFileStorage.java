@@ -67,7 +67,7 @@ public class TmpFileStorage extends StorageInterface {
     @Override
     public void serializeAtomToTarget(Atom obj) {
         String prefix = ((AtomImpl) obj).getHBasePrefix();
-        obj.getSGID().setBackendTimestamp(new Date(System.currentTimeMillis()));
+//        obj.getSGID().setBackendTimestamp(new Date(System.currentTimeMillis()));
         // let's just clone everything on store to simulate hbase
         File target = new File(tempDir, prefix + separator + obj.getSGID().toString());
         byte[] serialRep = serializer.serialize(obj);

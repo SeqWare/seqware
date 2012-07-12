@@ -108,7 +108,7 @@ public class HBaseStorage extends StorageInterface {
             // queue up HBase calls for the batch interface
             for (T obj : objArr) {
                 // create timestamps, since this API will run on the server, we don't need to do anything complicated
-                obj.getSGID().setBackendTimestamp(new Date());
+//                obj.getSGID().setBackendTimestamp(new Date());
                 assert (prefix.equals(((AtomImpl) objArr[0]).getHBasePrefix()));
                 byte[] featureBytes = serializer.serialize(obj);
                 // as a test, let's try readable rowKeys

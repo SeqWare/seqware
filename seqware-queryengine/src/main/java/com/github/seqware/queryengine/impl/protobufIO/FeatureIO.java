@@ -19,6 +19,7 @@ package com.github.seqware.queryengine.impl.protobufIO;
 import com.github.seqware.queryengine.dto.QueryEngine;
 import com.github.seqware.queryengine.dto.QueryEngine.FeaturePB;
 import com.github.seqware.queryengine.model.Feature;
+import com.github.seqware.queryengine.util.FSGID;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,11 +46,13 @@ public class FeatureIO implements ProtobufTransferInterface<FeaturePB, Feature> 
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && feature.hasPrecedingVersion()){
            fMesg.setPrecedingVersion(pb2m(feature.getPrecedingVersion()));
         }
+        assert(fMesg.getSGID() instanceof FSGID);
         return fMesg;
     }
 
     @Override
     public FeaturePB m2pb(Feature feature) {
+        assert(feature.getSGID() instanceof FSGID);
         QueryEngine.FeaturePB.Builder builder = QueryEngine.FeaturePB.newBuilder();
         builder = feature.getPragma() != null ? builder.setPragma(feature.getPragma()) : builder;
         builder = feature.getSource() != null ? builder.setSource(feature.getSource()) : builder;

@@ -65,7 +65,8 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
 //           oldSGID[i] = obj.getSGID();
            storeAtom[i] = (Atom)obj.copy(false);
            // need to set preceding ID for new copy
-           storeAtom[i].setPrecedingVersion(obj);
+           assert(!storeAtom[i].getSGID().equals(obj.getSGID()));
+           ((AtomImpl)storeAtom[i]).setPrecedingSGID(obj.getSGID());
         }
         store(storeAtom);
         // change the obj we have a reference to look like the new object that was created

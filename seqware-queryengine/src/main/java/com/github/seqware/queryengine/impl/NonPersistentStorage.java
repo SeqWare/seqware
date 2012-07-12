@@ -39,8 +39,12 @@ public class NonPersistentStorage extends StorageInterface {
 
     @Override
     public void serializeAtomToTarget(Atom obj) {
-        Class cl = ((AtomImpl) obj).getHBaseClass();
-        obj.getSGID().setBackendTimestamp(new Date(System.currentTimeMillis()));
+        AtomImpl objImpl = (AtomImpl) obj;
+        Class cl = objImpl.getHBaseClass();
+        if (objImpl.getPrecedingSGID() != null){
+            assert(!(objImpl.getPrecedingSGID().equals(objImpl.getSGID())));
+        }
+//        obj.getSGID().setBackendTimestamp(new Date(System.currentTimeMillis()));
         ByteTypePair pair = new ByteTypePair(serializer.serialize(obj), cl);
         map.put(obj.getSGID(), pair);
     }

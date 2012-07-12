@@ -27,16 +27,13 @@ import com.github.seqware.queryengine.util.SGID;
 public class SGIDIO {
 
     public static SGID pb2m(SGIDPB sgidpg) {
-        if (sgidpg.hasTimestamp()){
-            return new SGID(sgidpg.getMostSigBits(), sgidpg.getLeastSigBits(), sgidpg.getTimestamp());
-        }
-        return new SGID(sgidpg.getMostSigBits(), sgidpg.getLeastSigBits());
+        return new SGID(sgidpg.getMostSigBits(), sgidpg.getLeastSigBits(), sgidpg.getTimestamp());
     }
 
     public static SGIDPB m2pb(SGID sgid) {
         QESupporting.SGIDPB.Builder builder = QESupporting.SGIDPB.newBuilder().setLeastSigBits(sgid.getUuid().getLeastSignificantBits());
         builder.setMostSigBits(sgid.getUuid().getMostSignificantBits());
-        if (sgid.getBackendTimestamp() != null){
+        if (sgid.getBackendTimestamp() != null) {
             builder.setTimestamp(sgid.getBackendTimestamp().getTime());
         }
         SGIDPB fMesg = builder.build();

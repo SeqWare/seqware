@@ -1,9 +1,12 @@
 package com.github.seqware.queryengine.model.impl.inMemory;
 
+import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.model.TagSpecSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * An in-memory representation of a TagSpecSet.
@@ -13,6 +16,24 @@ import com.github.seqware.queryengine.model.impl.AtomImpl;
 public class InMemoryTagSpecSet extends AbstractInMemorySet<TagSpecSet, Tag> implements TagSpecSet{
     
     private String name = null;
+    
+    @Override
+    public InMemoryTagSpecSet add(Tag element) {
+        super.add(element);
+        return this;
+    }
+
+    @Override
+    public InMemoryTagSpecSet add(Collection<Tag> elements) {
+        super.add(elements);
+        return this;
+    }
+    
+    @Override
+    public InMemoryTagSpecSet add(Tag ... elements) {
+        super.add(elements);
+        return this;
+    }
     
     @Override
     public String getName() {

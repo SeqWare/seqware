@@ -19,7 +19,6 @@ package com.github.seqware.queryengine.impl.protobufIO;
 import com.github.seqware.queryengine.dto.QESupporting;
 import com.github.seqware.queryengine.dto.QESupporting.FSGIDPB;
 import com.github.seqware.queryengine.util.FSGID;
-import java.util.Date;
 
 /**
  *
@@ -28,12 +27,7 @@ import java.util.Date;
 public class FSGIDIO {
 
     public static FSGID pb2m(FSGIDPB pb) {  
-        FSGID sgid = new FSGID(pb.getSgid().getMostSigBits(), pb.getSgid().getLeastSigBits(), pb.getRowKey(), pb.getRefName());
-        if (pb.getSgid().hasTimestamp()){
-            sgid.setBackendTimestamp(new Date(pb.getSgid().getTimestamp()));
-        }
-        
-//        sgid.setFeatureSetID(new SGID(pb.getFeatMureSetID().getMostSigBits(), pb.getFeatureSetID().getLeastSigBits()));
+        FSGID sgid = new FSGID(pb.getSgid().getMostSigBits(), pb.getSgid().getLeastSigBits(), pb.getSgid().getTimestamp(), pb.getRowKey(), pb.getRefName());
         return sgid;
     }
 
