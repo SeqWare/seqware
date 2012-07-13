@@ -2,6 +2,9 @@ package com.github.seqware.model.test;
 
 import com.github.seqware.queryengine.factory.Factory;
 import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.kernel.RPNStack;
+import com.github.seqware.queryengine.kernel.RPNStack.Constant;
+import com.github.seqware.queryengine.kernel.RPNStack.Operation;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
@@ -39,7 +42,7 @@ public class QueryInterfaceTest {
     @Test
     public void testFeatureCreationAndIterate() {
         // get a FeatureSet from the back-end
-        QueryFuture future = Factory.getQueryInterface().getFeatures(aSet, 0);
+        QueryFuture future = Factory.getQueryInterface().getFeatures(0, aSet);
         // check that Features are present match
         FeatureSet result = future.get();
         boolean b1 = false;
@@ -60,7 +63,9 @@ public class QueryInterfaceTest {
     @Test
     public void testTypeQuery() {
         // get a FeatureSet from the back-end
-        QueryFuture future = Factory.getQueryInterface().getFeaturesByType(aSet, "type1", 0);
+        QueryFuture future = Factory.getQueryInterface().getFeaturesByAttributes(0, aSet, new RPNStack(
+                new Constant("type1"), "type", Operation.EQUAL
+        ));
         // check that Features are present match
         FeatureSet result = future.get();
         for (Feature f : result) {

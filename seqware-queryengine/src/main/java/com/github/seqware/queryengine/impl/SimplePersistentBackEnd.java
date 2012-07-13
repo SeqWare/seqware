@@ -17,6 +17,7 @@
 package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.factory.BackEndInterface;
+import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.inMemory.*;
@@ -32,6 +33,7 @@ import java.util.List;
  * Java persistence.
  *
  * @author dyuen
+ * @author jbaran
  */
 public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreInterface, QueryInterface {
 
@@ -42,7 +44,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
         this.fsi = fsi;
         apis.add(new InMemoryFeaturesAllPlugin());
         apis.add(new InMemoryFeaturesByReferencePlugin());
-        apis.add(new InMemoryFeaturesByTypePlugin());
+        apis.add(new InMemoryFeaturesByAttributesPlugin());
     }
     
     @Override
@@ -163,33 +165,33 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
     }
 
     @Override
-    public QueryFuture getFeaturesByType(FeatureSet set, String type, int hours) {
-        AnalysisPluginInterface plugin = new InMemoryFeaturesByTypePlugin();
-        plugin.init(set, type);
+    public QueryFuture getFeaturesByAttributes(int hours, FeatureSet set, RPNStack constraints) {
+        AnalysisPluginInterface plugin = new InMemoryFeaturesByAttributesPlugin();
+        plugin.init(set, constraints);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
     @Override
-    public QueryFuture getFeatures(FeatureSet set, int hours) {
+    public QueryFuture getFeatures(int hours, FeatureSet set) {
         AnalysisPluginInterface plugin = new InMemoryFeaturesAllPlugin();
         plugin.init(set);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
     @Override
-    public QueryFuture getFeaturesByReference(FeatureSet set, Reference reference, int hours) {
+    public QueryFuture getFeaturesByReference(int hours, FeatureSet set, Reference reference) {
         AnalysisPluginInterface plugin = new InMemoryFeaturesByReferencePlugin();
         plugin.init(set);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
     @Override
-    public QueryFuture getFeaturesByRange(FeatureSet set, Location location, long start, long stop, int hours) {
+    public QueryFuture getFeaturesByRange(int hours, FeatureSet set, Location location, long start, long stop) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public QueryFuture getFeaturesByTag(FeatureSet set, int hours, String subject, String predicate, String object) {
+    public QueryFuture getFeaturesByTag(int hours, FeatureSet set, String subject, String predicate, String object) {
         AnalysisPluginInterface plugin = new InMemoryFeaturesByTagPlugin();
         plugin.init(set, subject, predicate, object);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
