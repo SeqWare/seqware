@@ -1,13 +1,12 @@
 package com.github.seqware.queryengine.model;
 
-import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-
+import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * Features represent a GVF (which is a more generic version of a VCF). See
@@ -23,6 +22,7 @@ import java.util.Map;
  * @author jbaran
  */
 public class Feature extends AtomImpl<Feature> {
+
     public final static String prefix = "Feature";
 
     /**
@@ -44,8 +44,9 @@ public class Feature extends AtomImpl<Feature> {
     private long stop = 0;
     private Strand strand = null;
 
-    public enum AdditionalAttributeType {STRING, FLOAT, DOUBLE, LONG, INTEGER };
-
+    public enum AdditionalAttributeType {
+        STRING, FLOAT, DOUBLE, LONG, INTEGER
+    };
     /**
      * Additional attributes can be freely added via a map.
      */
@@ -54,7 +55,7 @@ public class Feature extends AtomImpl<Feature> {
     private Feature() {
         super();
     }
-    
+
     @Override
     public Class getHBaseClass() {
         return Feature.class;

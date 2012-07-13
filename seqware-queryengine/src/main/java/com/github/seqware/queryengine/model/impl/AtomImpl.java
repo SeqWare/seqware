@@ -8,9 +8,7 @@ import com.github.seqware.queryengine.util.InMemoryIterable;
 import com.github.seqware.queryengine.util.LazyReference;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 
@@ -39,7 +37,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      * Current manager
      */
     private transient ModelManager manager = null;
-    private List<Tag> tags = new ArrayList<Tag>();
+    private Map<String, Tag> tags = new HashMap<String, Tag>();
     
     private LazyReference<T> precedingVersion = new LazyReference<T>(this.getHBaseClass());
 
@@ -187,7 +185,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
 
     @Override
     public boolean associateTag(Tag tag) {
-        tags.add(tag);
+        tags.put(tag.getKey(), tag);
         if (this.getManager() != null) {
             this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
         }
@@ -197,7 +195,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
 
     @Override
     public boolean dissociateTag(Tag tag) {
-        tags.remove(tag);
+        tags.remove(tag.getKey());
         if (this.getManager() != null) {
             this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
         }
@@ -207,7 +205,12 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
 
     @Override
     public SeqWareIterable<Tag> getTags() {
-        return new InMemoryIterable(tags);//Factory.getBackEnd().getTags(this);
+        return new InMemoryIterable(tags.values());//Factory.getBackEnd().getTags(this);
+    }
+    
+    @Override
+    public Object getTagValue(String key){
+        return tags.get(key);
     }
 
     @Override
