@@ -17,6 +17,7 @@
 package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.factory.BackEndInterface;
+import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.inMemory.*;
@@ -43,7 +44,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
         this.fsi = fsi;
         apis.add(new InMemoryFeaturesAllPlugin());
         apis.add(new InMemoryFeaturesByReferencePlugin());
-        apis.add(new InMemoryFeaturesByTypePlugin());
+        apis.add(new InMemoryFeaturesByAttributesPlugin());
     }
     
     @Override
@@ -164,9 +165,9 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
     }
 
     @Override
-    public QueryFuture getFeaturesByType(int hours, FeatureSet set, String type) {
-        AnalysisPluginInterface plugin = new InMemoryFeaturesByTypePlugin();
-        plugin.init(set, type);
+    public QueryFuture getFeaturesByAttributes(int hours, FeatureSet set, RPNStack constraints) {
+        AnalysisPluginInterface plugin = new InMemoryFeaturesByAttributesPlugin();
+        plugin.init(set, constraints);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 

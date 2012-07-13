@@ -1,5 +1,7 @@
 package com.github.seqware.queryengine.model;
 
+import com.github.seqware.queryengine.kernel.RPNStack;
+
 /**
  * This interface specifies the semantics and types of things we need to
  * consider when creating an API to support asynchronous queries and TTL.
@@ -15,7 +17,7 @@ package com.github.seqware.queryengine.model;
 public interface QueryInterface {
 
     /**
-     * Type of location query
+     * Type of location query.
      */
     public enum Location {
 
@@ -41,15 +43,14 @@ public interface QueryInterface {
     }
 
     /**
-     * filter features by their "type"
+     * Filter features by a range of attributes.
      *
      * @param hours minimum time to live
-     * @param set parent FeatureSet, can be null if we want to query over the
-     * entire back-end
-     * @param type type of feature
+     * @param set parent FeatureSet, can be null if we want to query over the entire back-end
+     * @param constraints A stack of concrete values (constants), parameters and operations that are used to set query constraints.
      * @return featureSet with features filtered by type
      */
-    public QueryFuture getFeaturesByType(int hours, FeatureSet set, String type);
+    public QueryFuture getFeaturesByAttributes(int hours, FeatureSet set, RPNStack constraints);
 
     /**
      * (Do not) filter features TODO: Do we need this?
