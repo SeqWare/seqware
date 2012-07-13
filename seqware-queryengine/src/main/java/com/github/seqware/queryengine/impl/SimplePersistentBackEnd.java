@@ -32,6 +32,7 @@ import java.util.List;
  * Java persistence.
  *
  * @author dyuen
+ * @author jbaran
  */
 public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreInterface, QueryInterface {
 
@@ -163,33 +164,33 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
     }
 
     @Override
-    public QueryFuture getFeaturesByType(FeatureSet set, String type, int hours) {
+    public QueryFuture getFeaturesByType(int hours, FeatureSet set, String type) {
         AnalysisPluginInterface plugin = new InMemoryFeaturesByTypePlugin();
         plugin.init(set, type);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
     @Override
-    public QueryFuture getFeatures(FeatureSet set, int hours) {
+    public QueryFuture getFeatures(int hours, FeatureSet set) {
         AnalysisPluginInterface plugin = new InMemoryFeaturesAllPlugin();
         plugin.init(set);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
     @Override
-    public QueryFuture getFeaturesByReference(FeatureSet set, Reference reference, int hours) {
+    public QueryFuture getFeaturesByReference(int hours, FeatureSet set, Reference reference) {
         AnalysisPluginInterface plugin = new InMemoryFeaturesByReferencePlugin();
         plugin.init(set);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
     @Override
-    public QueryFuture getFeaturesByRange(FeatureSet set, Location location, long start, long stop, int hours) {
+    public QueryFuture getFeaturesByRange(int hours, FeatureSet set, Location location, long start, long stop) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public QueryFuture getFeaturesByTag(FeatureSet set, int hours, String subject, String predicate, String object) {
+    public QueryFuture getFeaturesByTag(int hours, FeatureSet set, String subject, String predicate, String object) {
         AnalysisPluginInterface plugin = new InMemoryFeaturesByTagPlugin();
         plugin.init(set, subject, predicate, object);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
