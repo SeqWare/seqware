@@ -212,22 +212,22 @@ public class TaggableTest {
         // test queries that filter based on all three possibilities for tags 
         // subject only, subject and predicate, or all three
         // should get any features tagged with anything
-        QueryFuture featuresByTag = Factory.getQueryInterface().getFeaturesByTag(fSet, 0, null, null, null);
+        QueryFuture featuresByTag = Factory.getQueryInterface().getFeaturesByTag(0, fSet, null, null, null);
         Assert.assertTrue(featuresByTag.get().getCount() == 3);
         // should get nothing
-        QueryFuture featuresByTag1 = Factory.getQueryInterface().getFeaturesByTag(fSet, 0, "impossible", "impossible", "impossible");
+        QueryFuture featuresByTag1 = Factory.getQueryInterface().getFeaturesByTag(0, fSet, "impossible", "impossible", "impossible");
         Assert.assertTrue(featuresByTag1.get().getCount() == 0);
         // should get all three
-        QueryFuture featuresByTag2 = Factory.getQueryInterface().getFeaturesByTag(fSet, 0, "KR", null, null);
+        QueryFuture featuresByTag2 = Factory.getQueryInterface().getFeaturesByTag(0, fSet, "KR", null, null);
         Assert.assertTrue(featuresByTag2.get().getCount() == 3);
         // should get all three
-        QueryFuture featuresByTag3 = Factory.getQueryInterface().getFeaturesByTag(fSet, 0, "KR", "=", null);
+        QueryFuture featuresByTag3 = Factory.getQueryInterface().getFeaturesByTag(0, fSet, "KR", "=", null);
         Assert.assertTrue(featuresByTag3.get().getCount() == 3);
         // should get one
-        QueryFuture featuresByTag4 = Factory.getQueryInterface().getFeaturesByTag(fSet, 0, "KR", "=", "F");
+        QueryFuture featuresByTag4 = Factory.getQueryInterface().getFeaturesByTag(0, fSet, "KR", "=", "F");
         Assert.assertTrue(featuresByTag4.get().getCount() == 1);
         // should get one
-        QueryFuture featuresByTag5 = Factory.getQueryInterface().getFeaturesByTag(fSet, 0, "KR", null, "F");
+        QueryFuture featuresByTag5 = Factory.getQueryInterface().getFeaturesByTag(0, fSet, "KR", null, "F");
         Assert.assertTrue(featuresByTag5.get().getCount() == 1);
 
     }

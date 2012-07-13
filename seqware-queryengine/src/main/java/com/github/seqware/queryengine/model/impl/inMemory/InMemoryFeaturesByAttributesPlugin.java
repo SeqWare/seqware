@@ -18,6 +18,7 @@ package com.github.seqware.queryengine.model.impl.inMemory;
 
 import com.github.seqware.queryengine.factory.Factory;
 import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.AnalysisPluginInterface;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
@@ -27,19 +28,22 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
+ * Generic query implementation over all attributes of a Feature (including additional attributes).
  *
  * @author dyuen
+ * @author jbaran
  */
-public class InMemoryFeaturesByTypePlugin implements AnalysisPluginInterface {
+public class InMemoryFeaturesByAttributesPlugin implements AnalysisPluginInterface {
 
     private FeatureSet set;
-    private String type;
+    private RPNStack rpnStack;
     private Set<Feature> accumulator = new HashSet<Feature>();
 
     @Override
     public ReturnValue init(FeatureSet set, Object ... parameters) {
         this.set = set;
-        this.type = (String)parameters[0];
+        this.rpnStack = (RPNStack)parameters[0];
+
         return new ReturnValue();
     }
 
@@ -76,10 +80,15 @@ public class InMemoryFeaturesByTypePlugin implements AnalysisPluginInterface {
     @Override
     public ReturnValue map() {
         for (Feature f : set) {
-            if (f.getType().equals(type)) {
+            // Get the parameters from the RPN stack and replace them with concrete values:
+            for (Object parameter : rpnStack.getParameters())
+                rpnStack.setParameter(parameter, f.getAttribute((String)parameter));
+
+            // Now carry out the actual evaluation that determines whether f is relevant:
+            if ((Boolean)rpnStack.evaluate() == true)
                 accumulator.add(f);
-            }
         }
+
         return new ReturnValue();
     }
 
@@ -107,9 +116,12 @@ public class InMemoryFeaturesByTypePlugin implements AnalysisPluginInterface {
     @Override
     public FeatureSet getFinalResult() {
         ModelManager mManager = Factory.getModelManager();
+
         FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("").build()).build();
         fSet.add(accumulator);
+
         mManager.close();
+
         return fSet;
     }
 }

@@ -3,6 +3,7 @@ package com.github.seqware.impl.test;
 import com.github.seqware.queryengine.impl.ApacheSerialization;
 import com.github.seqware.queryengine.impl.TmpFileStorage;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
+import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.model.test.FeatureStoreInterfaceTest;
@@ -12,8 +13,13 @@ import com.github.seqware.queryengine.model.Feature;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.github.seqware.queryengine.model.QueryFuture;
+import com.sun.xml.internal.xsom.impl.Const;
 import junit.framework.Assert;
 import org.junit.Test;
+
+import static com.github.seqware.queryengine.kernel.RPNStack.*;
 
 /**
  * Tests for the {@link SimplePersistentBackEnd}.
@@ -31,7 +37,7 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
         SimplePersistentBackEnd backend = new SimplePersistentBackEnd(Factory.getStorage());
 
         try {
-            backend.store(this.aSet);
+            backend.store(aSet);
         }
         catch(Exception e) {
             Logger.getLogger(SimplePersistentBackEndTest.class.getName()).log(Level.SEVERE, "Exception",  e);
@@ -40,7 +46,7 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
 
         Atom atom = null;
         try {
-            atom = backend.getAtomBySGID(FeatureSet.class, this.aSet.getSGID());
+            atom = backend.getAtomBySGID(FeatureSet.class, aSet.getSGID());
         }
         catch(Exception e) {
             Logger.getLogger(SimplePersistentBackEndTest.class.getName()).log(Level.SEVERE, "Exception",  e);
@@ -53,7 +59,48 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
 
         FeatureSet returnedSet = (FeatureSet)atom;
 
-        Assert.assertTrue("Returned feature set does not contain the same amount of features as were stored.", this.aSet.getCount() == returnedSet.getCount());
+        Assert.assertTrue("Returned feature set does not contain the same amount of features as were stored.", aSet.getCount() == returnedSet.getCount());
         System.out.println("ending subclass test in testID: " + testID.toString());
+    }
+
+    @Test
+    public void complexQueryTest() {
+        SimplePersistentBackEnd backend = new SimplePersistentBackEnd(Factory.getStorage());
+
+        try {
+            backend.store(bSet);
+        }
+        catch(Exception e) {
+            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).log(Level.SEVERE, "Exception",  e);
+            Assert.assertTrue("Backend could not store the given FeatureSet.", false);
+        }
+
+        QueryFuture queryFuture = backend.getFeaturesByAttributes(1, bSet, new RPNStack(
+                new Constant("chr16"),
+                "id",
+                Operation.EQUAL
+        ));
+        FeatureSet resultSet = queryFuture.get();
+        Assert.assertTrue("Setting a query constraints with 1 operation on 'id' failed.", resultSet.getCount() == 10);
+
+        queryFuture = backend.getFeaturesByAttributes(1, bSet, new RPNStack(
+                new Constant(Feature.Strand.NEGATIVE),
+                "strand",
+                Operation.EQUAL
+        ));
+        resultSet = queryFuture.get();
+        Assert.assertTrue("Setting a query constraints with 1 operation on 'strand' failed.", resultSet.getCount() == 3);
+
+        queryFuture = backend.getFeaturesByAttributes(1, bSet, new RPNStack(
+                new Constant(Feature.Strand.NEGATIVE),
+                "strand",
+                Operation.EQUAL,
+                new Constant("chr16"),
+                "id",
+                Operation.EQUAL,
+                Operation.AND
+        ));
+        resultSet = queryFuture.get();
+        Assert.assertTrue("Setting a query constraints with 3 operations failed.", resultSet.getCount() == 2);
     }
 }

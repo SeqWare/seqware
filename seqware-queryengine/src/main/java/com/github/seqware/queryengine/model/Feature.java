@@ -3,10 +3,14 @@ package com.github.seqware.queryengine.model;
 import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+
 
 /**
  * Features represent a GVF (which is a more generic version of a VCF). See
@@ -31,9 +35,15 @@ public class Feature extends AtomImpl<Feature> {
      * Positive/negative strand are relative to the landmark.
      */
     public enum Strand {
-
         POSITIVE, NEGATIVE, NOT_STRANDED, UNKNOWN
     }
+
+    /**
+     * Names that cannot be used for additional attributes, since they
+     * are already covered by instance variables.
+     */
+    private final static String[] reservedAttributeNames = new String[] { "pragma", "source", "type", "score", "phase", "id", "start", "stop", "strand" };
+
     private String pragma = null;
     private String source = null;
     private String type = null;
@@ -44,9 +54,13 @@ public class Feature extends AtomImpl<Feature> {
     private long stop = 0;
     private Strand strand = null;
 
-    public enum AdditionalAttributeType {
-        STRING, FLOAT, DOUBLE, LONG, INTEGER
-    };
+    public enum AdditionalAttributeType { STRING, FLOAT, DOUBLE, LONG, INTEGER };
+
+    static {
+        // Array has to be sorted, so that it is possible to use a binary search on it:
+        Arrays.sort(reservedAttributeNames);
+    }
+
     /**
      * Additional attributes can be freely added via a map.
      */
@@ -158,12 +172,76 @@ public class Feature extends AtomImpl<Feature> {
     }
 
     /**
-     * Additional attributes not covered by GVF.
+     * Sets an additional attribute not covered by GVF. It is not permitted to have an additional
+     * attribute with the same name as the instance variables (case insensitive).
      *
-     * @return A map of additional attributes.
+     * @param name Attribute name, which cannot be a GVF attribute (start, stop, pragma, etc).
+     * @param value Value of the variable to be set.
      */
-    public Map<String, AdditionalAttributeType> getAdditionalAttributes() {
-        return this.additionalAttributes;
+    public void setAdditionalAttribute(String name, AdditionalAttributeType value) {
+        if (this.additionalAttributes == null)
+            this.additionalAttributes = new HashMap<String, AdditionalAttributeType>();
+
+        if (Arrays.binarySearch(reservedAttributeNames, name.toLowerCase()) >= 0)
+            throw new IllegalArgumentException("Invalid name for an additional attribute. Reserved names are: " + StringUtils.join(reservedAttributeNames, ", "));
+
+        this.additionalAttributes.put(name, value);
+    }
+
+    /**
+     * Returns the value of an additional attribute or null of the attribute does not exist.
+     *
+     * @param attribute The name of the attribute whose value should be returned.
+     * @return Value of the attribute or null.
+     */
+    public AdditionalAttributeType getAdditionalAttribute(String attribute) {
+        if (this.additionalAttributes == null)
+            return null;
+
+        return this.additionalAttributes.get(attribute);
+    }
+
+    /**
+     * Returns the names of the additional attributes stored.
+     *
+     * @return Set of additional attribute names.
+     */
+    public Set<String> getAdditionalAttributeNames() {
+        if (this.additionalAttributes == null)
+            return new HashSet<String>();
+
+        return this.additionalAttributes.keySet();
+    }
+
+    /**
+     * Generic implementation for retrieving the value of a GVF or additional attribute.
+     *
+     * @param name Name of the attribute to be retrieved, which can be either "start", "stop", etc, or an additional attribute name.
+     * @return The value of the attribute, or null if the attribute is not present in this feature.
+     */
+    public Object getAttribute(String name) {
+        String nameLowerCase = name.toLowerCase();
+
+        if (nameLowerCase.equals("pragma"))
+            return this.getPragma();
+        else if (nameLowerCase.equals("source"))
+            return this.getSource();
+        else if (nameLowerCase.equals("type"))
+            return this.getType();
+        else if (nameLowerCase.equals("score"))
+            return this.getScore();
+        else if (nameLowerCase.equals("phase"))
+            return this.getPhase();
+        else if (nameLowerCase.equals("id"))
+            return this.getId();
+        else if (nameLowerCase.equals("start"))
+            return this.getStart();
+        else if (nameLowerCase.equals("stop"))
+            return this.getStop();
+        else if (nameLowerCase.equals("strand"))
+            return this.getStrand();
+        else
+            return this.getAdditionalAttribute(name);
     }
 
     @Override
