@@ -24,6 +24,11 @@
             <id>Cloudera repository</id>
             <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
         </repository>
+        <repository>
+            <id>biojava3-repository</id>
+            <name>BioJava Repository</name>
+            <url>http://biojava.org/download/maven</url>
+        </repository>
     </repositories>
 
     <build>
@@ -209,6 +214,11 @@
             <groupId>berkeley-db</groupId>
             <artifactId>c-lib-with-java</artifactId>
             <version>4.7.25</version>
+        </dependency>
+         <dependency>
+            <groupId>org.biojava</groupId>
+            <artifactId>biojava3-genome</artifactId>
+            <version>3.0.4</version>
         </dependency>
     </dependencies>
 </project>

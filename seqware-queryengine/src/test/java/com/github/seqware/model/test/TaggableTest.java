@@ -125,7 +125,9 @@ public class TaggableTest {
 //        }
         SeqWareIterable<Tag> tags1 = fSet.getTags();
         // 3 tags were associated with the featureSet
-        Assert.assertTrue(tags1.getCount() == 3);
+        // behaviour here has changed, but looking at the old prototype, I don't think we meant to allow tagging something with the same
+        // key multiple times, albeit with different predicates or values
+        Assert.assertTrue(tags1.getCount() == 1);
         Assert.assertTrue(a.getTags().getCount() == 1);
     }
 
