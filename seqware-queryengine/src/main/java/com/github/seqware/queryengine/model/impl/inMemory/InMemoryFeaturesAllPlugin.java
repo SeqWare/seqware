@@ -21,14 +21,15 @@ import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.model.AnalysisPluginInterface;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.Reference;
-import java.util.*;
+import com.github.seqware.queryengine.plugins.MapReducePlugin;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  * @author dyuen
  */
-public class InMemoryFeaturesAllPlugin implements AnalysisPluginInterface {
+public class InMemoryFeaturesAllPlugin implements MapReducePlugin<Feature, FeatureSet> {
 
     private FeatureSet set;
     private Set<Feature> accumulator = new HashSet<Feature>();
@@ -62,20 +63,10 @@ public class InMemoryFeaturesAllPlugin implements AnalysisPluginInterface {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public AnalysisPluginInterface.ReturnValue map() {
-        for (Feature f : set) {
-            accumulator.add(f);
-        }
-        return new AnalysisPluginInterface.ReturnValue();
-    }
+
 
     public AnalysisPluginInterface.ReturnValue reduceInit() {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public AnalysisPluginInterface.ReturnValue reduce() {
-        // doesn't really do anything
-        return new AnalysisPluginInterface.ReturnValue();
     }
 
     public AnalysisPluginInterface.ReturnValue verifyOutput() {
@@ -93,5 +84,19 @@ public class InMemoryFeaturesAllPlugin implements AnalysisPluginInterface {
         fSet.add(accumulator);
         mManager.close();
         return fSet;
+    }
+
+    @Override
+    public ReturnValue map(Feature atom, FeatureSet mappedSet) {
+        for (Feature f : set) {
+            accumulator.add(f);
+        }
+        return new AnalysisPluginInterface.ReturnValue();
+    }
+
+    @Override
+    public ReturnValue reduce(FeatureSet mappedSet, FeatureSet resultSet) {
+        // doesn't really do anything
+        return new AnalysisPluginInterface.ReturnValue();
     }
 }

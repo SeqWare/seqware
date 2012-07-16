@@ -1,5 +1,6 @@
 package com.github.seqware.queryengine.plugins;
 
+import com.github.seqware.queryengine.model.AnalysisPluginInterface;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 
@@ -10,14 +11,16 @@ import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
  *
  * @author jbaran
  */
-public interface MapReducePlugin<T extends Atom, S extends MolSetInterface> {
+public interface MapReducePlugin<T extends Atom, S extends MolSetInterface> extends AnalysisPluginInterface {
+
     /**
      * Mapping implementation that singles out desired atoms into a mapped set.
      *
      * @param atom Atom that is to be either dropped, or added to mappedSet.
-     * @param mappedSet Set of atoms that are passed to the reduce implementation.
+     * @param mappedSet Set of atoms that are passed to the reduce
+     * implementation.
      */
-    public void map(Atom<T> atom, MolSetInterface<S, T> mappedSet);
+    public ReturnValue map(T atom, S mappedSet);
 
     /**
      * Reduce implementation that takes mapped atoms and processes them.
@@ -25,5 +28,9 @@ public interface MapReducePlugin<T extends Atom, S extends MolSetInterface> {
      * @param mappedSet Atoms that were selected during the mapping step.
      * @param resultSet Atoms that are created as a result of the reduce step.
      */
-    public void reduce(MolSetInterface<S, T> mappedSet, MolSetInterface<S, T> resultSet);
+    public ReturnValue reduce(S mappedSet, S resultSet);
+
+    public ReturnValue reduceInit();
+
+    public ReturnValue mapInit();
 }

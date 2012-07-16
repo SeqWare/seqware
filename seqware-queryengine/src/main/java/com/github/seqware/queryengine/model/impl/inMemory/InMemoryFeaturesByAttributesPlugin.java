@@ -19,12 +19,10 @@ package com.github.seqware.queryengine.model.impl.inMemory;
 import com.github.seqware.queryengine.factory.Factory;
 import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.kernel.RPNStack;
-import com.github.seqware.queryengine.model.AnalysisPluginInterface;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.Reference;
+import com.github.seqware.queryengine.plugins.MapReducePlugin;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -33,7 +31,7 @@ import java.util.Set;
  * @author dyuen
  * @author jbaran
  */
-public class InMemoryFeaturesByAttributesPlugin implements AnalysisPluginInterface {
+public class InMemoryFeaturesByAttributesPlugin implements MapReducePlugin<Feature, FeatureSet> {
 
     private FeatureSet set;
     private RPNStack rpnStack;
@@ -78,7 +76,7 @@ public class InMemoryFeaturesByAttributesPlugin implements AnalysisPluginInterfa
     }
 
     @Override
-    public ReturnValue map() {
+    public ReturnValue map(Feature feature, FeatureSet mappedSet) {
         for (Feature f : set) {
             // Get the parameters from the RPN stack and replace them with concrete values:
             for (Object parameter : rpnStack.getParameters())
@@ -98,7 +96,7 @@ public class InMemoryFeaturesByAttributesPlugin implements AnalysisPluginInterfa
     }
 
     @Override
-    public ReturnValue reduce() {
+    public ReturnValue reduce(FeatureSet mappedSet, FeatureSet resultSet) {
         // doesn't really do anything
         return new ReturnValue();
     }
