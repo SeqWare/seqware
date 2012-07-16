@@ -1,13 +1,17 @@
 package com.github.seqware.model.test;
 
+import com.github.seqware.impl.test.SimplePersistentBackEndTest;
 import com.github.seqware.queryengine.factory.Factory;
 import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.Constant;
 import com.github.seqware.queryengine.kernel.RPNStack.Operation;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,7 +23,7 @@ import org.junit.Test;
  */
 public class QueryInterfaceTest {
 
-    private static FeatureSet aSet;
+    private static FeatureSet aSet, bSet;
     private static Feature a1, a2, a3, a4;
 
     @BeforeClass
@@ -35,6 +39,7 @@ public class QueryInterfaceTest {
         aSet.add(a2);
         aSet.add(a3);
         aSet.add(a4);
+        bSet = FeatureStoreInterfaceTest.diverseBSet(mManager);
         //TODO: this test was somewhat invalid, no flush ... causes error ... we may want a new test case with a nice clean error message
         mManager.flush();
     }
@@ -59,18 +64,54 @@ public class QueryInterfaceTest {
         }
         Assert.assertTrue(b1 && b2 && b3);
     }
-    
+
     @Test
     public void testTypeQuery() {
         // get a FeatureSet from the back-end
         QueryFuture future = Factory.getQueryInterface().getFeaturesByAttributes(0, aSet, new RPNStack(
-                new Constant("type1"), "type", Operation.EQUAL
-        ));
+                new Constant("type1"), "type", Operation.EQUAL));
         // check that Features are present match
         FeatureSet result = future.get();
         for (Feature f : result) {
             Assert.assertTrue(f.getType().equals("type1"));
         }
         Assert.assertTrue(result.getCount() == 1);
+    }
+
+    @Test
+    public void complexQueryTest() {
+        // this version of complexQueryTest is model-agnostic and will run on all back-ends
+        ModelManager mManager = Factory.getModelManager();
+        try {
+            mManager.persist(bSet);
+        } catch (Exception e) {
+            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).log(Level.SEVERE, "Exception", e);
+            junit.framework.Assert.assertTrue("Backend could not store the given FeatureSet.", false);
+        }
+
+        QueryFuture queryFuture = Factory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
+                new Constant("chr16"),
+                "id",
+                Operation.EQUAL));
+        FeatureSet resultSet = queryFuture.get();
+        junit.framework.Assert.assertTrue("Setting a query constraints with 1 operation on 'id' failed.", resultSet.getCount() == 10);
+
+        queryFuture = Factory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
+                new Constant(Feature.Strand.NEGATIVE),
+                "strand",
+                Operation.EQUAL));
+        resultSet = queryFuture.get();
+        junit.framework.Assert.assertTrue("Setting a query constraints with 1 operation on 'strand' failed.", resultSet.getCount() == 3);
+
+        queryFuture = Factory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
+                new Constant(Feature.Strand.NEGATIVE),
+                "strand",
+                Operation.EQUAL,
+                new Constant("chr16"),
+                "id",
+                Operation.EQUAL,
+                Operation.AND));
+        resultSet = queryFuture.get();
+        junit.framework.Assert.assertTrue("Setting a query constraints with 3 operations failed.", resultSet.getCount() == 2);
     }
 }

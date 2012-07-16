@@ -16,8 +16,6 @@
  */
 package com.github.seqware.queryengine.model;
 
-import com.github.seqware.queryengine.model.FeatureSet;
-
 /**
  * This will describe the interface custom plugins must conform to. Details are
  * backend specific of course. I think we should try to make these plugins
@@ -47,14 +45,6 @@ public interface AnalysisPluginInterface {
     public ReturnValue filterInit();
 
     public ReturnValue filter();
-
-    public ReturnValue mapInit();
-
-    public ReturnValue map();
-
-    public ReturnValue reduceInit();
-
-    public ReturnValue reduce();
 
     public ReturnValue verifyOutput();
 

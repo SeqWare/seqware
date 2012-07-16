@@ -19,6 +19,8 @@ package com.github.seqware.queryengine.model.impl.inMemory;
 import com.github.seqware.queryengine.model.Analysis;
 import com.github.seqware.queryengine.model.AnalysisPluginInterface;
 import com.github.seqware.queryengine.model.FeatureSet;
+import com.github.seqware.queryengine.plugins.MapReducePlugin;
+import com.github.seqware.queryengine.plugins.ScanPlugin;
 
 /**
  *
@@ -34,8 +36,19 @@ public class InMemoryQueryFutureImpl extends Analysis {
 
     @Override
     public FeatureSet get() {
-        getPlugin().map();
-        getPlugin().reduce();
+        // these implementations actually make no sense, we are just filling 
+        // something in for now 
+        if (plugin instanceof MapReducePlugin){
+            MapReducePlugin mrp = (MapReducePlugin)plugin;
+            mrp.map(null, null);
+            mrp.reduce(null, null);
+        } else if (plugin instanceof ScanPlugin){
+            ScanPlugin sp = (ScanPlugin)plugin;
+            sp.scan(this, null);
+        } else{
+            // we have no other types of plugins yet(?)
+            assert(false);
+        }
         return getPlugin().getFinalResult();
     }
 

@@ -1,5 +1,6 @@
 package com.github.seqware.queryengine.plugins;
 
+import com.github.seqware.queryengine.model.AnalysisPluginInterface;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 
@@ -10,12 +11,12 @@ import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
  *
  * @author jbaran
  */
-public interface ScanPlugin<T extends Atom, S extends MolSetInterface> {
+public interface ScanPlugin<T extends Atom, S extends MolSetInterface> extends AnalysisPluginInterface{
     /**
      * Scanner implementation that processes atoms and aggregates results in a new set.
      *
      * @param atom Atom that falls within the scan range.
      * @param resultSet Set of atoms that are the result of the scanning process.
      */
-    public void scan(Atom<T> atom, MolSetInterface<S, T> resultSet);
+    public void scan(T atom, S resultSet);
 }

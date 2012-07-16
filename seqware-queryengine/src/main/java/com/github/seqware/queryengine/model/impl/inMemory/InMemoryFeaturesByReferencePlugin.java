@@ -22,49 +22,83 @@ import com.github.seqware.queryengine.model.AnalysisPluginInterface;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Reference;
-import java.util.*;
+import com.github.seqware.queryengine.plugins.MapReducePlugin;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  * @author dyuen
  */
-public class InMemoryFeaturesByReferencePlugin implements AnalysisPluginInterface {
+public class InMemoryFeaturesByReferencePlugin implements MapReducePlugin<Feature, FeatureSet> {
 
     private FeatureSet set;
     private Reference reference;
     private Set<Feature> accumulator = new HashSet<Feature>();
 
+    @Override
     public AnalysisPluginInterface.ReturnValue init(FeatureSet set, Object... parameters) {
         this.set = set;
         this.reference = (Reference) parameters[0];
         return new AnalysisPluginInterface.ReturnValue();
     }
 
+    @Override
     public AnalysisPluginInterface.ReturnValue test() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public AnalysisPluginInterface.ReturnValue verifyParameters() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public AnalysisPluginInterface.ReturnValue verifyInput() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public AnalysisPluginInterface.ReturnValue filterInit() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public AnalysisPluginInterface.ReturnValue filter() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public AnalysisPluginInterface.ReturnValue mapInit() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public AnalysisPluginInterface.ReturnValue map() {
+    @Override
+    public AnalysisPluginInterface.ReturnValue reduceInit() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public AnalysisPluginInterface.ReturnValue verifyOutput() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public AnalysisPluginInterface.ReturnValue cleanup() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public FeatureSet getFinalResult() {
+        ModelManager mManager = Factory.getModelManager();
+        FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("").build()).build();
+        fSet.add(accumulator);
+        mManager.close();
+        return fSet;
+    }
+
+    @Override
+    public ReturnValue map(Feature atom, FeatureSet mappedSet) {
         if (set.getReference().equals(reference)){
             for (Feature f : set) {
                 accumulator.add(f);
@@ -73,28 +107,9 @@ public class InMemoryFeaturesByReferencePlugin implements AnalysisPluginInterfac
         return new AnalysisPluginInterface.ReturnValue();
     }
 
-    public AnalysisPluginInterface.ReturnValue reduceInit() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public AnalysisPluginInterface.ReturnValue reduce() {
+    @Override
+    public ReturnValue reduce(FeatureSet mappedSet, FeatureSet resultSet) {
         // doesn't really do anything
         return new AnalysisPluginInterface.ReturnValue();
-    }
-
-    public AnalysisPluginInterface.ReturnValue verifyOutput() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public AnalysisPluginInterface.ReturnValue cleanup() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public FeatureSet getFinalResult() {
-        ModelManager mManager = Factory.getModelManager();
-        FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("").build()).build();
-        fSet.add(accumulator);
-        mManager.close();
-        return fSet;
     }
 }
