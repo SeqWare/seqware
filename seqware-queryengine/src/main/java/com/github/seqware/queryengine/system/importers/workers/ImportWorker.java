@@ -3,12 +3,15 @@
  */
 package com.github.seqware.queryengine.system.importers.workers;
 
+import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.system.importers.Importer;
+import com.github.seqware.queryengine.util.SGID;
 
 /**
  * Base Worker class, looks like a Bean for storing settings about the file to
- * be converted
+ * be converted.
  *
+ * @author dyuen
  * @author boconnor
  *
  */
@@ -16,6 +19,9 @@ public class ImportWorker extends Thread {
 
     String workerName = null;
     Importer pmi = null;
+    // Actually, on second thought. I think a shared ModelManager would be a bad idea. 
+    // We don't really want all threads to freeze
+    //    ModelManager mManager = null;
     //Store store = null;
     String input = null;
     boolean compressed = false;
@@ -27,18 +33,18 @@ public class ImportWorker extends Thread {
     boolean includeIndels;
     boolean includeCoverage = false;
     int binSize = 0;
+    SGID referenceID = null;
 
     public ImportWorker() {
     }
 
-    public ImportWorker(String workerName, Importer pmi, /*
-             * Store store,
-             */ String input,
-            boolean compressed, int minCoverage, int maxCoverage, float minSnpQuality, boolean includeSNV,
-            int fastqConvNum, boolean includeIndels, boolean includeCoverage, int binSize) {
+    public ImportWorker(String workerName, Importer pmi, // ModelManager store,
+             String input, boolean compressed, int minCoverage, int maxCoverage, 
+             float minSnpQuality, boolean includeSNV, int fastqConvNum, 
+             boolean includeIndels, boolean includeCoverage, int binSize) {
         this.workerName = workerName;
         this.pmi = pmi;
-//    this.store = store;
+//        this.mManager = store;
         this.input = input;
         this.compressed = compressed;
         this.minCoverage = minCoverage;
@@ -51,6 +57,7 @@ public class ImportWorker extends Thread {
         this.binSize = binSize;
     }
 
+    @Override
     public void run() {
     }
 
@@ -71,13 +78,16 @@ public class ImportWorker extends Thread {
         this.pmi = pmi;
     }
 
-//  public Store getStore() {
-//    return store;
-//  }
+//    public ModelManager getStore() {
+//        return mManager;
+//        // return this.store
+//    }
 //
-//  public void setStore(Store store) {
-//    this.store = store;
-//  }
+//    public void setStore(ModelManager mManager) {
+//        //this.store = store
+//        this.mManager = mManager;
+//    }
+
     public String getInput() {
         return input;
     }
@@ -157,4 +167,14 @@ public class ImportWorker extends Thread {
     public void setBinSize(int binSize) {
         this.binSize = binSize;
     }
+
+    public SGID getReferenceID() {
+        return referenceID;
+    }
+
+    public void setReferenceID(SGID referenceID) {
+        this.referenceID = referenceID;
+    }
+    
+    
 }

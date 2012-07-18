@@ -21,6 +21,11 @@ import org.biojava3.genome.parsers.gff.GFF3Reader;
  * documentation refers to the previous prototype and has not been verified on
  * the current one. It seems that GVF is backwards compatible with GFF3 parsers
  * so let's hope this works.
+ * 
+ * This does not support multi-individual files yet.
+ * 
+ * The other issue is that the old converter only picked up specific tags. Other datasets like the 
+ * 10Gen Data set seem to use pretty different tags. Maybe we should automatically load tags on the fly?
  *
  * @author boconnor
  * @author dyuen
@@ -152,12 +157,9 @@ public class GFF3VariantImportWorker extends ImportWorker {
 
     @Override
     public void run() {
-        // We may want to push this down
-        ModelManager modelManager = Factory.getModelManager();
 
-
+        ModelManager mManager = Factory.getModelManager();
         try {
-
             // first ask for a token from semaphore
             pmi.getLock();
 
@@ -170,9 +172,9 @@ public class GFF3VariantImportWorker extends ImportWorker {
             String l = null;
             //Variant m = new Variant();
             //Coverage c = null;
-            Feature.Builder fBuilder = modelManager.buildFeature();
+            Feature.Builder fBuilder = mManager.buildFeature();
             // FeatureSets are totally new, hope this doesn't slow things too much
-            FeatureSet fSet = modelManager.buildFeatureSet().setDescription("from file: " + input).build();
+            FeatureSet fSet = mManager.buildFeatureSet().setDescription("from file: " + input).setReferenceID(referenceID).build();
 
             int count = 0;
 
@@ -181,11 +183,11 @@ public class GFF3VariantImportWorker extends ImportWorker {
 
             for (FeatureI f : fl) {
                 // implementation of FeatureI is always Feature in GFF3Reader and it has more info
-                Feature fI = (Feature) f;
+                org.biojava3.genome.parsers.gff.Feature fI = (org.biojava3.genome.parsers.gff.Feature) f;
                 Set<Tag> tagSet = new HashSet<Tag>();
                 // display progress
                 count++;
-                if (count % 1000 == 0) {
+                if (count % 10000 == 0) {
                     System.out.print(count + "\r");
                 }
 
@@ -196,16 +198,16 @@ public class GFF3VariantImportWorker extends ImportWorker {
                     fBuilder.setType(ImportConstants.GFF3_SNV);
                     //m.setType(m.SNV);
                 } else if ("insertion".equals(f.type())) {
-                    fBuilder.setType(ImportConstants.INSERTION);
+                    fBuilder.setType(ImportConstants.GFF3_INSERTION);
                     insertionOrDeletion = true;
-                    //m.setType(m.INSERTION);
+                    //m.setType(m.GFF3_INSERTION);
                 } else if ("deletion".equals(f.type())) {
-                    fBuilder.setType(ImportConstants.DELETION);
+                    fBuilder.setType(ImportConstants.GFF3_DELETION);
                     insertionOrDeletion = true;
-                    //m.setType(m.DELETION);
+                    //m.setType(m.GFF3_DELETION);
                 } else {
-                    fBuilder.setType(ImportConstants.UNKNOWN_TYPE);
-                    //m.setType(m.UNKNOWN_TYPE);
+                    fBuilder.setType(ImportConstants.GFF3_UNKNOWN_TYPE);
+                    //m.setType(m.GFF3_UNKNOWN_TYPE);
                 }
                 tagSet.add(Tag.newBuilder().setKey(f.type()).build());
                 //m.addTag(f.type(), null);
@@ -217,7 +219,7 @@ public class GFF3VariantImportWorker extends ImportWorker {
                 //m.setStartPosition(f.location().getBegin());
                 //m.setStopPosition(f.location().getEnd());
                 // FIXME
-                fBuilder.setScore(fI.getScore());
+                fBuilder.setScore(fI.score());
                 //m.setConsensusCallQuality(0);
                 // dbSNP
                 if (f.hasAttribute("isDbSNP")) {
@@ -231,30 +233,59 @@ public class GFF3VariantImportWorker extends ImportWorker {
                 }
                 // zygosity
                 String zygosity;
-                if ("heterozygous".equals(f.getAttribute("zygosity"))) {
-                    zygosity = ImportConstants.HETEROZYGOUS;
-                    tagSet.add(Tag.newBuilder().setKey(f.getAttribute(zygosity)).build());
-//                    m.setZygosity(m.HETEROZYGOUS);
-                } else if ("homozygous".equals(f.getAttribute("zygosity"))) {
-                    zygosity = ImportConstants.HOMOZYGOUS;
-                    tagSet.add(Tag.newBuilder().setKey(f.getAttribute(zygosity)).build());
-//                    m.setZygosity(m.HOMOZYGOUS);
+                if (ImportConstants.VCF_HETEROZYGOUS.equals(f.getAttribute("zygosity"))) {
+                    zygosity = ImportConstants.VCF_HETEROZYGOUS;
+                    tagSet.add(Tag.newBuilder().setKey(zygosity).build());
+//                    m.setZygosity(m.VCF_HETEROZYGOUS);
+                } else if (ImportConstants.VCF_HOMOZYGOUS.equals(f.getAttribute("zygosity"))) {
+                    zygosity = ImportConstants.VCF_HOMOZYGOUS;
+                    tagSet.add(Tag.newBuilder().setKey(zygosity).build());
+//                    m.setZygosity(m.VCF_HOMOZYGOUS);
                 } else {
-                    zygosity = ImportConstants.UNKNOWN_TYPE;
-                    tagSet.add(Tag.newBuilder().setKey(f.getAttribute(zygosity)).build());
+                    zygosity = ImportConstants.GFF3_UNKNOWN_TYPE;
+                    tagSet.add(Tag.newBuilder().setKey(zygosity).build());
 //                    m.setZygosity(m.UNKNOWN_ZYGOSITY);
                 }
+                // GVF compatbility has been added by the following bunch of additions
+                // As tested on the 10Gen DataSet
+                // According to the doc, they should be backwards compatible
+                /** GVF additions start */
+                if(f.hasAttribute(ImportConstants.GVF_ALIAS)){
+                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.GVF_DBXREF).setValue(f.getAttribute(ImportConstants.GVF_DBXREF)).build());
+                }
+                for(String attr : ImportConstants.UNPROCESSED_ATTRIBUTES){
+                    if (f.hasAttribute(attr)){
+                        tagSet.add(Tag.newBuilder().setKey(attr).setValue(f.getAttribute(attr)).build());
+                    }
+                }
+                if(f.hasAttribute(ImportConstants.GVF_ZYGOSITY)){
+                    if (f.getAttribute(ImportConstants.GVF_ZYGOSITY).equals(ImportConstants.GVF_HETEROZYGOUS)){
+                        zygosity = ImportConstants.GVF_HETEROZYGOUS;
+                        tagSet.add(Tag.newBuilder().setKey(zygosity).build());
+                    } else if (f.getAttribute(ImportConstants.GVF_ZYGOSITY).equals(ImportConstants.GVF_HOMOZYGOUS)){
+                        zygosity = ImportConstants.GVF_HOMOZYGOUS;
+                        tagSet.add(Tag.newBuilder().setKey(zygosity).build());
+                    } else if(f.getAttribute(ImportConstants.GVF_ZYGOSITY).equals(ImportConstants.GVF_HEMIZYGOUS)){
+                        zygosity = ImportConstants.GVF_HEMIZYGOUS;
+                        tagSet.add(Tag.newBuilder().setKey(zygosity).build());
+                    }
+                }
+                /** GVF additions end */
+                
                 // variant
-                String variant = f.getAttribute("variant");
-                String[] varArray = variant.split("->");
-                tagSet.add(Tag.newBuilder().setKey(ImportConstants.REFERENCE_BASE).setValue(varArray[0]).build());
-                tagSet.add(Tag.newBuilder().setKey(ImportConstants.CONSENSUS_BASE).setValue(varArray[1]).build());
-                tagSet.add(Tag.newBuilder().setKey(ImportConstants.CALLED_BASE).setValue(varArray[1]).build());
+                // this is newly added during the port. It doesn't look the 10Gen dataset files have a "variant" attribute
+                if (f.hasAttribute("variant")) {
+                    String variant = f.getAttribute("variant");
+                    String[] varArray = variant.split("->");
+                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_REFERENCE_BASE).setValue(varArray[0]).build());
+                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_CONSENSUS_BASE).setValue(varArray[1]).build());
+                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_CALLED_BASE).setValue(varArray[1]).build());
 //                m.setReferenceBase(varArray[0]);
 //                m.setCalledBase(varArray[1]);
 //                m.setConsensusBase(varArray[1]);
-                // relative location called by Annovar
-                // TODO: this is from the old prototype, but would this not just overwrite the same key many times?
+                    // relative location called by Annovar
+                    // TODO: this is from the old prototype, but would this not just overwrite the same key many times?
+                }
 
                 Tag location = null;
                 if (f.hasAttribute("location")) {
@@ -318,7 +349,7 @@ public class GFF3VariantImportWorker extends ImportWorker {
                 // severity
                 // this is calculated here based on a few factors
                 int severity = 0;
-                if (zygosity.equals(ImportConstants.HOMOZYGOUS)) {
+                if (zygosity.equals(ImportConstants.VCF_HOMOZYGOUS) || zygosity.equals(ImportConstants.GVF_HOMOZYGOUS)) {
                     severity++;
                 }
                 if (insertionOrDeletion) {
@@ -327,10 +358,10 @@ public class GFF3VariantImportWorker extends ImportWorker {
                 if (!f.hasAttribute("isDbSNP")) {
                     severity++;
                 }
-//                if (m.getZygosity() == m.HOMOZYGOUS) {
+//                if (m.getZygosity() == m.VCF_HOMOZYGOUS) {
 //                    severity++;
 //                }
-//                if (m.getType() == m.INSERTION || m.getType() == m.DELETION) {
+//                if (m.getType() == m.GFF3_INSERTION || m.getType() == m.GFF3_DELETION) {
 //                    severity++;
 //                }
 //                if (m.getTagValue("is_dbSNP") == null) {
@@ -377,7 +408,7 @@ public class GFF3VariantImportWorker extends ImportWorker {
                 fSet.add(build);
 
                 //store.putMismatch(m);
-                fBuilder = modelManager.buildFeature();
+                fBuilder = mManager.buildFeature();
                 //m = new Variant();
             }
             System.out.print("\n");
@@ -387,8 +418,10 @@ public class GFF3VariantImportWorker extends ImportWorker {
             //e.printStackTrace();
         } finally {
             // new, this is needed to have the model manager write results to the DB in one big batch
-            modelManager.flush();
+            System.out.println("Closing in thread: " + Thread.currentThread().getName());
+            mManager.close();
             pmi.releaseLock();
+            System.out.println("Releasing lock in thread: " + Thread.currentThread().getName());
         }
     }
 

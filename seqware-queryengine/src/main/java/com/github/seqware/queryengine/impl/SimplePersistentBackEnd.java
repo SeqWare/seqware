@@ -138,6 +138,11 @@ public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreIn
     public SeqWareIterable<ReferenceSet> getReferenceSets() {
         return getAllOfClass(ReferenceSet.class);
     }
+    
+    @Override
+    public SeqWareIterable<Reference> getReferences() {
+        return getAllOfClass(Reference.class);
+    }
 
     @Override
     public SeqWareIterable<FeatureSet> getFeatureSets() {

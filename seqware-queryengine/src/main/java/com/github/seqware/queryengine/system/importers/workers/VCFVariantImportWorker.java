@@ -6,6 +6,7 @@ import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
 import java.io.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -63,7 +64,7 @@ public class VCFVariantImportWorker extends ImportWorker {
             //Variant m = new Variant();
             Feature.Builder fBuilder = modelManager.buildFeature();
             // FeatureSets are totally new, hope this doesn't slow things too much
-            FeatureSet fSet = modelManager.buildFeatureSet().setDescription("from file: " + input).build();
+            FeatureSet fSet = modelManager.buildFeatureSet().setDescription("from file: " + input).setReferenceID(referenceID).build();
 
 //      Coverage c = null;
             int currBin = 0;
@@ -75,8 +76,14 @@ public class VCFVariantImportWorker extends ImportWorker {
 
                 // display progress
                 count++;
-                if (count % 1000 == 0) {
+                if (count % 10000 == 0) {
                     //System.out.print(count+"\r");
+                }
+                // we need to flush and restart a new FeatureSet roughly every 300,000 lines
+                if (count % 100000 == 0){
+                    modelManager.flush();
+                    modelManager.clear();
+                    fSet = modelManager.buildFeatureSet().setDescription("from file: " + input).setReferenceID(referenceID).build();
                 }
 
                 // ignore commented lines
@@ -100,9 +107,9 @@ public class VCFVariantImportWorker extends ImportWorker {
                     tagSet.add(Tag.newBuilder().setKey(t[0]).build());
                     //m.addTag(t[0], null);
                     // referenceBase, consensusBase, and calledBase can be ad hoc tags for now
-                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.REFERENCE_BASE).setValue(t[3].toUpperCase()).build());
-                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.CONSENSUS_BASE).setValue(t[4].toUpperCase()).build());
-                    Tag calledTag = Tag.newBuilder().setKey(ImportConstants.CALLED_BASE).setValue(t[4].toUpperCase()).build();
+                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_REFERENCE_BASE).setValue(t[3].toUpperCase()).build());
+                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_CONSENSUS_BASE).setValue(t[4].toUpperCase()).build());
+                    Tag calledTag = Tag.newBuilder().setKey(ImportConstants.VCF_CALLED_BASE).setValue(t[4].toUpperCase()).build();
                     tagSet.add(calledTag);
                     //m.setReferenceBase(t[3].toUpperCase());
                     //m.setConsensusBase(t[4].toUpperCase());
@@ -114,7 +121,7 @@ public class VCFVariantImportWorker extends ImportWorker {
 
                     // parse ID
                     if (!".".equals(t[2])) {
-                        tagSet.add(Tag.newBuilder().setKey(ImportConstants.SECOND_ID).setValue(t[2]).build());
+                        tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_SECOND_ID).setValue(t[2]).build());
                         //m.addTag("ID", t[2]);
                     }
                     if (!".".equals(t[2])) {
@@ -147,7 +154,7 @@ public class VCFVariantImportWorker extends ImportWorker {
                             // TGCACGTCA,TAA 
                             //throw new Exception("Don't know what "+m.getReferenceBase()+"->"+m.getConsensusBase()+" is!!!");
                         }
-                        calledTag = Tag.newBuilder().setKey(ImportConstants.CALLED_BASE).setValue(calledBase).build();
+                        calledTag = Tag.newBuilder().setKey(ImportConstants.VCF_CALLED_BASE).setValue(calledBase).build();
                         tagSet.add(calledTag);
                         //m.setCalledBase(calledBase);
                         // leave the consensus base as the original call syntax from the VCF file
@@ -215,20 +222,20 @@ public class VCFVariantImportWorker extends ImportWorker {
                             tagSet.add(Tag.newBuilder().setKey(kv[0]).setValue(kv[1]).build());
                             //m.addTag(kv[0], kv[1]);
                             if ("DP".equals(kv[0])) {
-                                tagSet.add(Tag.newBuilder().setKey(ImportConstants.READ_COUNTS).setValue(kv[1]).build());
+                                tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_READ_COUNTS).setValue(kv[1]).build());
                                 //m.setReadCount(Integer.parseInt(kv[1]));
                             }
                             // see above
                             if ("FQ".equals(kv[0])) {
                                 float fq = Float.parseFloat(kv[1]);
                                 if (fq < 0) {
-                                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.HOMOZYGOUS).build());
-                                    //m.setZygosity(m.HOMOZYGOUS);
+                                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_HOMOZYGOUS).build());
+                                    //m.setZygosity(m.VCF_HOMOZYGOUS);
                                     //m.getTags().put("homozygous", null);
                                     fqLt0 = true;
                                 } else {
-                                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.HETEROZYGOUS).build());
-                                    //m.setZygosity(m.HETEROZYGOUS);
+                                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_HETEROZYGOUS).build());
+                                    //m.setZygosity(m.VCF_HETEROZYGOUS);
                                     //m.getTags().put("heterozygous", null);
                                 }
                             }
@@ -247,12 +254,12 @@ public class VCFVariantImportWorker extends ImportWorker {
                     // yet another way to encode hom/het
                     // FIXME: this doesn't conform to the standard
                     if (t.length > 9 && t[8].contains("GT") && t[9].contains("het")) {
-                        tagSet.add(Tag.newBuilder().setKey(ImportConstants.HETEROZYGOUS).build());
-                        //m.setZygosity(m.HETEROZYGOUS);
+                        tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_HETEROZYGOUS).build());
+                        //m.setZygosity(m.VCF_HETEROZYGOUS);
                         //m.getTags().put("heterozygous", null);
                     } else if (t.length > 9 && t[8].contains("GT") && t[9].contains("hom")) {
-                        tagSet.add(Tag.newBuilder().setKey(ImportConstants.HOMOZYGOUS).build());
-                        //m.setZygosity(m.HOMOZYGOUS);
+                        tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_HOMOZYGOUS).build());
+                        //m.setZygosity(m.VCF_HOMOZYGOUS);
                         //m.getTags().put("homozygous", null);
                     }
 
@@ -269,9 +276,8 @@ public class VCFVariantImportWorker extends ImportWorker {
                         // this is new, add it to a featureSet
                         fSet.add(build);
 
-                        if (count % 10000 == 0) {
-                            System.out.println(workerName + ": adding mismatch to db: " + build.getId() + ":" + build.getStart() + "-" + build.getStop()
-                                    + " total records added: " + build.getId() + " total lines so far: " + count);
+                        if (count % 200000 == 0) {
+                            Logger.getLogger(VCFVariantImportWorker.class.getName()).log(Level.INFO, "{0} {1}: adding mismatch to db: {2}:{3}-{4} total records added: {5} total lines so far: {6}", new Object[]{(new Date()).toString(), workerName, build.getId(), build.getStart(), build.getStop(), build.getId(), count});
                         }
                     }
 
@@ -296,7 +302,7 @@ public class VCFVariantImportWorker extends ImportWorker {
             //e.printStackTrace();
         } finally {
             // new, this is needed to have the model manager write results to the DB in one big batch
-            modelManager.flush();
+            modelManager.close();
             pmi.releaseLock();
         }
     }
