@@ -16,14 +16,7 @@
  */
 package com.github.seqware.queryengine.impl;
 
-import com.github.seqware.queryengine.model.AnalysisSet;
-import com.github.seqware.queryengine.model.ReferenceSet;
-import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.TagSpecSet;
-import com.github.seqware.queryengine.model.Group;
-import com.github.seqware.queryengine.model.User;
-import com.github.seqware.queryengine.model.Atom;
-import com.github.seqware.queryengine.model.Tag;
+import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.util.InMemoryIterable;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
@@ -89,6 +82,14 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
             return handleTableScan(FeatureSet.class, FeatureSet.prefix);
         }
         return super.getFeatureSets();
+    }
+    
+    @Override
+    public SeqWareIterable<Reference> getReferences(){
+        if (storage instanceof HBaseStorage) {
+            return handleTableScan(Reference.class, Reference.prefix);
+        }
+        return super.getReferences();
     }
 
     @Override

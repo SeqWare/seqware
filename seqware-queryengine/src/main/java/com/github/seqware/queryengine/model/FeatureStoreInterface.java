@@ -115,7 +115,12 @@ public interface FeatureStoreInterface {
 //    public void addReferenceSet(ReferenceSet newReferenceSet);
 //    public void updateReferenceSet(ReferenceSet referenceSet);
 //    public void setReferenceSetACL(ACL acl, ReferenceSet referenceSet);
-    
+  
+    /**
+     * 
+     * @return SeqWareIterable that iterates through all references 
+     */
+    public SeqWareIterable<Reference> getReferences();
 //    public SeqWareIterator getReferences(ReferenceSet referenceSet);
 //    public void addReference(Reference newReference);
 //    public void updateReference(Reference reference);
