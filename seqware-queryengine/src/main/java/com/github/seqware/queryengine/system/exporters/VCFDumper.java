@@ -21,15 +21,9 @@ import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Reference;
-import com.github.seqware.queryengine.model.Tag;
-import com.github.seqware.queryengine.system.importers.FeatureImporter;
-import com.github.seqware.queryengine.system.importers.workers.GFF3VariantImportWorker;
 import com.github.seqware.queryengine.system.importers.workers.ImportConstants;
-import com.github.seqware.queryengine.system.importers.workers.ImportWorker;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -107,6 +101,7 @@ public class VCFDumper {
             try {
                 outputStream.flush();
                 outputStream.close();
+                Factory.getStorage().closeStorage();
             } catch (IOException ex) {
                 Logger.getLogger(VCFDumper.class.getName()).log(Level.SEVERE, "Exception thrown flushing to file: \n", ex);
             }

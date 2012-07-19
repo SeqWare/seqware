@@ -17,6 +17,7 @@
 package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.Constants;
+import com.github.seqware.queryengine.factory.Factory;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.util.SGID;
@@ -49,8 +50,16 @@ public class HBaseStorage extends StorageInterface {
     private Configuration config;
     private SerializationInterface serializer;
     private Map<String, HTable> tableMap = new HashMap<String, HTable>();
+    public final static boolean DEBUG = true;
+    private Map<String, Integer> minMap = null;
+    private Map<String, Integer> maxMap = null;
 
     public HBaseStorage(SerializationInterface i) {
+        if (DEBUG) {
+            minMap = new HashMap<String, Integer>();
+            maxMap = new HashMap<String, Integer>();
+        }
+
         this.serializer = i;
         // The HBaseConfiguration reads in hbase-site.xml and hbase-default.xml,
         // as long as these can be found in the CLASSPATH.
@@ -101,6 +110,9 @@ public class HBaseStorage extends StorageInterface {
             return;
         }
         try {
+            int maxSize = Integer.MIN_VALUE;
+            int minSize = Integer.MAX_VALUE;
+
             String prefix = ((AtomImpl) objArr[0]).getHBasePrefix();
             HTable table = tableMap.get(prefix);
             List<Row> putList = new ArrayList<Row>();
@@ -111,12 +123,29 @@ public class HBaseStorage extends StorageInterface {
 //                obj.getSGID().setBackendTimestamp(new Date());
                 assert (prefix.equals(((AtomImpl) objArr[0]).getHBasePrefix()));
                 byte[] featureBytes = serializer.serialize(obj);
+
+                if (DEBUG) {
+                    maxSize = Math.max(maxSize, featureBytes.length);
+                    minSize = Math.min(minSize, featureBytes.length);
+                }
+
                 // as a test, let's try readable rowKeys
                 Put p = new Put(Bytes.toBytes(obj.getSGID().getRowKey().toString()), obj.getSGID().getBackendTimestamp().getTime());
                 // Serialize:
                 p.add(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES, featureBytes);
                 putList.add(p);
             }
+            if (DEBUG) {
+                if (!this.minMap.containsKey(prefix)) {
+                    this.minMap.put(prefix, Integer.MAX_VALUE);
+                }
+                if (!this.maxMap.containsKey(prefix)) {
+                    this.maxMap.put(prefix, Integer.MIN_VALUE);
+                }
+                this.minMap.put(prefix, Math.min(minSize, this.minMap.get(prefix)));
+                this.maxMap.put(prefix, Math.max(maxSize, this.maxMap.get(prefix)));
+            }
+
             // establish put
             Object[] putBatch = table.batch(putList);
         } catch (IOException ex) {
@@ -284,6 +313,30 @@ public class HBaseStorage extends StorageInterface {
         String prefix = super.biMap.get(t);
         HTable table = tableMap.get(prefix);
         return (List<T>) deserializeAtom(t, table, true, sgid);
+    }
+
+    @Override
+    public void closeStorage() {
+        for (HTable table : tableMap.values()) {
+            try {
+                table.close();
+            } catch (IOException ex) {
+                Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, "exception on HTable closing", ex);
+            }
+        }
+        Logger.getLogger(HBaseStorage.class.getName()).log(Level.INFO, "closing HBaseStorage tables");
+        tableMap.clear();
+        if (DEBUG) {
+            for (Entry<String, Integer> e : maxMap.entrySet()) {
+                int maxValue = e.getValue();
+                int minValue = minMap.get(e.getKey());
+                Logger.getLogger(HBaseStorage.class.getName()).log(Level.INFO, "Serialized sizes for {0} are max: {1} and min: {2}", new Object[]{e.getKey(), maxValue, minValue});
+            }
+        }
+        maxMap.clear();
+        minMap.clear();
+        // ensure that the factory references are also closed, just in case
+        Factory.closeStorage();
     }
 
     public class ScanIterable implements Iterable {

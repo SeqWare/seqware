@@ -186,4 +186,9 @@ public class TmpFileStorage extends StorageInterface {
     public <T extends Atom> T deserializeTargetToLatestAtom(SGID sgid, Class<T> t) {
         return (T) this.deserializeTargetToLatestAtom(sgid);
     }
+
+    @Override
+    public void closeStorage() {
+        /** we do not have to do anything particularly specific here */
+    }
 }

@@ -115,6 +115,11 @@ public class NonPersistentStorage extends StorageInterface {
         return (T) this.deserializeTargetToLatestAtom(sgid);
     }
 
+    @Override
+    public void closeStorage() {
+        /** ignore this, we don't need to do anything in particular */
+    }
+
     public class ByteTypePair {
 
         private byte[] bArr;

@@ -141,6 +141,19 @@ public class Factory {
     }
     
     /**
+     * Close the currently operating storage method
+     * @return 
+     */
+    public static void closeStorage(){
+        if(storeInstance != null){
+            StorageInterface ref = storeInstance;
+            storeInstance = null;
+            instance = null;
+            ref.closeStorage();
+        }
+    }
+    
+    /**
      * Get a reference to the currently operating back-end
      *
      * @return backEnd reference to access underlying DB operations
