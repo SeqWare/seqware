@@ -38,15 +38,15 @@ public class VCFDumper {
     private String[] args;
 
     public static void main(String[] args) {
-        VCFDumper dumper = new VCFDumper(new String[]{"hg_101"});
+        VCFDumper dumper = new VCFDumper(args);
         dumper.export();
     }
 
     public void export() {
 
-        if (args.length < 1 || args.length > 1) {
+        if (args.length < 1 || args.length > 2) {
             System.err.println(args.length + " arguments found");
-            System.out.println("VCFDumper <referenceID>");
+            System.out.println("VCFDumper <referenceID> [outputFile]");
             System.exit(-1);
         }
 
@@ -72,38 +72,53 @@ public class VCFDumper {
 
         BufferedWriter outputStream = null;
         try {
-            outputStream = new BufferedWriter(new OutputStreamWriter(System.out));
+
+            if (args.length == 2) {
+                outputStream = new BufferedWriter(new FileWriter(args[1]));
+            } else {
+                outputStream = new BufferedWriter(new OutputStreamWriter(System.out));
+            }
             outputStream.append("#CHROM	POS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\n");
             SeqWareIterable<FeatureSet> featureSets = Factory.getFeatureStoreInterface().getFeatureSets();
-            for(FeatureSet fSet : featureSets){
-                if(fSet.getReferenceID().equals(ref.getSGID())){
-                    for(Feature feature : fSet){
-                        outputStream.append(feature.getId() + "\t" + (feature.getStart()+1) + "\t");
-                        if (feature.getTagByKey(ImportConstants.VCF_SECOND_ID) == null){
+            boolean caughtNonVCF = false;
+            for (FeatureSet fSet : featureSets) {
+                if (fSet.getReferenceID().equals(ref.getSGID())) {
+                    for (Feature feature : fSet) {
+                        outputStream.append(feature.getId() + "\t" + (feature.getStart() + 1) + "\t");
+                        if (feature.getTagByKey(ImportConstants.VCF_SECOND_ID) == null) {
                             outputStream.append(".\t");
-                        } else{
+                        } else {
                             outputStream.append(feature.getTagByKey(ImportConstants.VCF_SECOND_ID).getValue().toString() + "\t");
                         }
-                        outputStream.append(feature.getTagByKey(ImportConstants.VCF_REFERENCE_BASE).getValue().toString() + "\t");
-                        outputStream.append(feature.getTagByKey(ImportConstants.VCF_CALLED_BASE).getValue().toString() + "\t");
-                        outputStream.append(feature.getScore() + "\t");
-                        outputStream.append(feature.getTagByKey(ImportConstants.VCF_FILTER).getValue().toString() + "\t");
-                        outputStream.append(feature.getTagByKey(ImportConstants.VCF_INFO).getValue().toString() + "\t");
+                        try {
+                            outputStream.append(feature.getTagByKey(ImportConstants.VCF_REFERENCE_BASE).getValue().toString() + "\t");
+                            outputStream.append(feature.getTagByKey(ImportConstants.VCF_CALLED_BASE).getValue().toString() + "\t");
+                            outputStream.append(feature.getScore() + "\t");
+                            outputStream.append(feature.getTagByKey(ImportConstants.VCF_FILTER).getValue().toString() + "\t");
+                            outputStream.append(feature.getTagByKey(ImportConstants.VCF_INFO).getValue().toString());
+                        } catch (NullPointerException npe) {
+                            if (!caughtNonVCF) {
+                                Logger.getLogger(VCFDumper.class.getName()).log(Level.INFO, "VCF exporting non-VCF feature");
+
+                            }
+                            // this may occur when exporting Features that were not originally VCF files
+                            caughtNonVCF = true;
+                        }
                         outputStream.newLine();
                     }
                 }
             }
         } // TODO: clearly this should be expanded to include closing database etc 
         catch (Exception e) {
-            Logger.getLogger(VCFDumper.class.getName()).log(Level.SEVERE, "Exception thrown exporting to file: \n", e);
+            Logger.getLogger(VCFDumper.class.getName()).log(Level.SEVERE, "Exception thrown exporting to file:", e);
             System.exit(-1);
-        } finally{
+        } finally {
             try {
                 outputStream.flush();
                 outputStream.close();
                 Factory.getStorage().closeStorage();
             } catch (IOException ex) {
-                Logger.getLogger(VCFDumper.class.getName()).log(Level.SEVERE, "Exception thrown flushing to file: \n", ex);
+                Logger.getLogger(VCFDumper.class.getName()).log(Level.SEVERE, "Exception thrown flushing to file:", ex);
             }
         }
     }
