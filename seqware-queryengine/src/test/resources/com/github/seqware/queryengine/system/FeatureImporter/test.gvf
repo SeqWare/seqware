@@ -1,0 +1,12 @@
+##gvf-version 1.06 
+##genome-build NCBI B36.3 
+##sequence-region chr16 1 88827254 
+chr16	samtools	SNV	49291141	49291141	.	+	.	ID=ID_1;Variant_seq=A,G;Reference_seq=G; 
+chr16	samtools	SNV	49291360	49291360	.	+	.	ID=ID_2;Variant_seq=G;Reference_seq=C; 
+chr16	samtools	SNV	49302125	49302125	.	+	.	ID=ID_3;Variant_seq=T,C;Reference_seq=C; 
+chr16	samtools	SNV	49302365	49302365	.	+	.	ID=ID_4;Variant_seq=G,C;Reference_seq=C; 
+chr16	samtools	SNV	49302700	49302700	.	+	.	ID=ID_5;Variant_seq=T;Reference_seq=C; 
+chr16	samtools	SNV	49303084	49303084	.	+	.	ID=ID_6;Variant_seq=G,T;Reference_seq=T; 
+chr16	samtools	SNV	49303156	49303156	.	+	.	ID=ID_7;Variant_seq=T,C;Reference_seq=C; 
+chr16	samtools	SNV	49303427	49303427	.	+	.	ID=ID_8;Variant_seq=T,C;Reference_seq=C; 
+chr16	samtools	SNV	49303596	49303596	.	+	.	ID=ID_9;Variant_seq=T,C;Reference_seq=C;
