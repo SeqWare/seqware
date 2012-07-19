@@ -19,6 +19,7 @@ package com.github.seqware.queryengine.impl;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.util.InMemoryIterable;
 import com.github.seqware.queryengine.util.SGID;
+import com.github.seqware.queryengine.util.SGIDIterable;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,13 +52,13 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
      * @return
      */
     private <T extends Atom> SeqWareIterable handleTableScan(Class<T> t, String prefix) {
-        List<T> list = new ArrayList<T>();
+//        List<T> list = new ArrayList<T>();
         Iterable<SGID> allAtomsForTable = ((HBaseStorage) storage).getAllAtomsForTable(prefix);
-        for (SGID u : allAtomsForTable) { //listOfEverything) {
-            T p = storage.deserializeTargetToLatestAtom(u, t);
-            list.add(p);
-        }
-        return new InMemoryIterable(list);
+//        for (SGID u : allAtomsForTable) { //listOfEverything) {
+//            T p = storage.deserializeTargetToLatestAtom(u, t);
+//            list.add(p);
+//        }
+        return new SGIDIterable(allAtomsForTable, t);
     }
 
     @Override

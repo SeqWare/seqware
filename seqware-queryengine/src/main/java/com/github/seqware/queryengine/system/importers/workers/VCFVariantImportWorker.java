@@ -207,9 +207,11 @@ public class VCFVariantImportWorker extends ImportWorker {
                     //m.setStartPosition(pos - 1);
                     //m.setStopPosition(pos);
 
-                    // now parse field 8
-                    tagSet.add(Tag.newBuilder().setKey(t[6]).build());
+                    // now parse field 6
+                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_FILTER).setValue(t[6]).build());
                     //m.addTag(t[6], null);
+                    // added to prototype, record the into field
+                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_INFO).setValue(t[7]).build());
 
                     // if FQ is < 0 and AF1 < 0.5 then the algorithm is calling homozygous reference so skip
                     boolean af1LtHalf = false;

@@ -364,25 +364,25 @@ public class GFF3VariantImportWorker extends ImportWorker {
 //                if (m.getType() == m.GFF3_INSERTION || m.getType() == m.GFF3_DELETION) {
 //                    severity++;
 //                }
-//                if (m.getTagValue("is_dbSNP") == null) {
+//                if (m.getTagByKey("is_dbSNP") == null) {
 //                    severity++;
 //                }
-                if (location != null && "exonic".equals(location.getTagValue("location"))) {
+                if (location != null && "exonic".equals(location.getTagByKey("location"))) {
                     severity++;
                 }
-                if (location != null && "exonic,splicing".equals(location.getTagValue("location"))) {
+                if (location != null && "exonic,splicing".equals(location.getTagByKey("location"))) {
                     severity++;
                 }
-                if (location != null && !"intergenic".equals(location.getTagValue("location"))) {
+                if (location != null && !"intergenic".equals(location.getTagByKey("location"))) {
                     severity++;
                 }
-//                if ("exonic".equals(m.getTagValue("location"))) {
+//                if ("exonic".equals(m.getTagByKey("location"))) {
 //                    severity++;
 //                }
-//                if ("exonic,splicing".equals(m.getTagValue("location"))) {
+//                if ("exonic,splicing".equals(m.getTagByKey("location"))) {
 //                    severity++;
 //                }
-//                if (!"intergenic".equals(m.getTagValue("location"))) {
+//                if (!"intergenic".equals(m.getTagByKey("location"))) {
 //                    severity++;
 //                }
                 if (f.hasAttribute("omim")) {

@@ -33,6 +33,10 @@ public class ImportConstants {
     public static final String VCF_HETEROZYGOUS = "heterozygous";
     public static final String VCF_HOMOZYGOUS = "homozygous";
     public static final String VCF_READ_COUNTS = "read_count";
+    
+    public static final String VCF_FILTER = "filter";
+    public static final String VCF_INFO = "info";
+        
     // the following are all keys for Tags in GFF3
     public static final String GFF3_SNV = VCF_SNV;
     public static final String GFF3_INSERTION = "insertion";

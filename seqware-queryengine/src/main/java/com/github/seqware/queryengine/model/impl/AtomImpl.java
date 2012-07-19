@@ -209,7 +209,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     }
     
     @Override
-    public Object getTagValue(String key){
+    public Tag getTagByKey(String key){
         return tags.get(key);
     }
 
