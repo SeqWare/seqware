@@ -180,7 +180,9 @@ public class HBaseTest {
         ht.addFamily(new HColumnDescriptor(TEST_COLUMN));
         HBaseAdmin hba = new HBaseAdmin(config);
         if (hba.isTableAvailable(tableName)) {
-            hba.disableTable(tableName);
+            if (hba.isTableEnabled(tableName)){
+                hba.disableTable(tableName);
+            }
             hba.deleteTable(tableName);
         }
         hba.createTable(ht);

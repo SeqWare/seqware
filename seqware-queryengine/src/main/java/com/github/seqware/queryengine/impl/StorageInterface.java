@@ -98,6 +98,11 @@ public abstract class StorageInterface {
      */
     public abstract Iterable<SGID> getAllAtoms();
     
+    /**
+     * Some storage types should be explicitly told when shutting down to release resources.
+     * This should be called by the back-end
+     */
+    public abstract void closeStorage();
     
     /**
      * For debugging or testing purposes, this will wipe out all objects in the 

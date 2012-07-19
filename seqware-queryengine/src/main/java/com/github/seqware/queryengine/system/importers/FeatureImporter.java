@@ -148,6 +148,8 @@ public class FeatureImporter extends Importer {
             Logger.getLogger(GFF3VariantImportWorker.class.getName()).log(Level.SEVERE, "Exception thrown with file: \n", e);
             System.exit(-1);
         }
+        // clean-up
+        Factory.getStorage().closeStorage();
     }
 
     public FeatureImporter(int threadCount) {
