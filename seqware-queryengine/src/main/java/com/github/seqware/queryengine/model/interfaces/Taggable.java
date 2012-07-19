@@ -35,6 +35,6 @@ public interface Taggable<T> {
      * @param key
      * @return 
      */
-    public Object getTagValue(String key);
+    public Tag getTagByKey(String key);
     
 }
