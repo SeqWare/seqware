@@ -26,7 +26,7 @@ public class FeatureStoreInterfaceTest {
         UUID testID = UUID.randomUUID();
         //System.out.println("starting beforeClass in testID: " + testID.toString());
         ModelManager mManager = Factory.getModelManager();
-        aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy ref").build()).build();
+        aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
         // create and store some features
         a1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
         a2 = mManager.buildFeature().setId("chr16").setStart(1000200).setStop(1000300).build();
@@ -42,7 +42,7 @@ public class FeatureStoreInterfaceTest {
 
     public static FeatureSet diverseBSet(ModelManager mManager) {
         // Build another test set that is a bit more diverse in its data values:
-        FeatureSet set = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Diverse Set").build()).build();
+        FeatureSet set = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Diverse_Set").build()).build();
         set.add(mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).setStrand(Feature.Strand.POSITIVE).build());
         set.add(mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000101).setStrand(Feature.Strand.POSITIVE).build());
         set.add(mManager.buildFeature().setId("chr16").setStart(2000000).setStop(2000102).setStrand(Feature.Strand.POSITIVE).build());

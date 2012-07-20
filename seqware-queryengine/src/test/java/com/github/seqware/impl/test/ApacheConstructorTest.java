@@ -29,7 +29,7 @@ public class ApacheConstructorTest  {
         backend = new SimplePersistentBackEnd(new TmpFileStorage(new ApacheSerialization()));
         SimpleModelManager mManager = new SimpleModelManager();
         mManager.overrideBackEnd(backend);
-        aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy ref").build()).build();
+        aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
         // create and store some features
         a1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
         a2 = mManager.buildFeature().setId("chr16").setStart(1000200).setStop(1000300).build();

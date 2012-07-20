@@ -19,7 +19,10 @@ package com.github.seqware.queryengine.impl;
 import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.factory.Factory;
 import com.github.seqware.queryengine.model.Atom;
+import com.github.seqware.queryengine.model.Feature;
+import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
+import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.IOException;
 import java.util.*;
@@ -27,10 +30,7 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.HColumnDescriptor;
-import org.apache.hadoop.hbase.HTableDescriptor;
-import org.apache.hadoop.hbase.KeyValue;
+import org.apache.hadoop.hbase.*;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 
@@ -41,8 +41,8 @@ import org.apache.hadoop.hbase.util.Bytes;
 public class HBaseStorage extends StorageInterface {
 
     private static final String TEST_COLUMN = "allData";
-    private static final byte[] TEST_COLUMN_INBYTES = Bytes.toBytes("allData");
-    private static final byte[] TEST_QUALIFIER_INBYTES = Bytes.toBytes("qualifier");
+    public static final byte[] TEST_COLUMN_INBYTES = Bytes.toBytes("allData");
+    public static final byte[] TEST_QUALIFIER_INBYTES = Bytes.toBytes("qualifier");
     private boolean inefficiencyWarning = false;
     public static final int PAD = 15;
     private static final String TEST_TABLE_PREFIX = System.getProperty("user.name") + StorageInterface.separator + "hbaseTestTable";
@@ -71,30 +71,55 @@ public class HBaseStorage extends StorageInterface {
             // kick out existing tables if thats what we want
             if (!PERSIST) {
                 Logger.getLogger(HBaseStorage.class.getName()).log(Level.INFO, "Clearing existing tables");
-                HTableDescriptor[] listTables = hba.listTables(TEST_TABLE_PREFIX + ".*");
+//                HTableDescriptor[] listTables = hba.listTables(TEST_TABLE_PREFIX + ".*");
                 hba.disableTables(TEST_TABLE_PREFIX + ".*");
                 hba.deleteTables(TEST_TABLE_PREFIX + ".*");
+
+            }
+            for (String s : super.directBIMap.values()) {
+                createTable(s, hba);
+            }
+            // attach all tables with variable names as well
+            HTableDescriptor[] listTables = hba.listTables(TEST_TABLE_PREFIX + ".");
+            for (HTableDescriptor des : listTables) {
+                String nameAsString = des.getNameAsString();
+                if (!tableMap.containsKey(nameAsString)) {
+                    tableMap.put(nameAsString, new HTable(config, nameAsString));
+                }
             }
 
-            for (String s : super.biMap.values()) {
-                String tableName = TEST_TABLE_PREFIX + StorageInterface.separator + s;
-                // Create a fresh table, i.e. delete an existing table if it exists:
-                HTableDescriptor ht = new HTableDescriptor(tableName);
-                HColumnDescriptor hColumnDescriptor = new HColumnDescriptor(TEST_COLUMN);
-                hColumnDescriptor.setMaxVersions(Integer.MAX_VALUE);
-                ht.addFamily(hColumnDescriptor);
-                // make a persistent store exists already, otherwise try to retrieve existing items
-                if (!hba.isTableAvailable(tableName)) {
-                    hba.createTable(ht);
-                }
-                HTable table = new HTable(config, tableName);
-                tableMap.put(s, table);
-            }
         } catch (IOException ex) {
             Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", ex);
         }
     }
 
+    /**
+     * Create a table with the given String name
+     *
+     * @param s
+     * @param hba
+     * @throws IOException
+     */
+    private void createTable(String s, HBaseAdmin hba) throws IOException {
+        String tableName = TEST_TABLE_PREFIX + StorageInterface.separator + s;
+        // Create a fresh table, i.e. delete an existing table if it exists:
+        HTableDescriptor ht = new HTableDescriptor(tableName);
+        HColumnDescriptor hColumnDescriptor = new HColumnDescriptor(TEST_COLUMN);
+        hColumnDescriptor.setMaxVersions(Integer.MAX_VALUE);
+        ht.addFamily(hColumnDescriptor);
+        // make a persistent store exists already, otherwise try to retrieve existing items
+        if (!hba.isTableAvailable(tableName)) {
+            hba.createTable(ht);
+        }
+        HTable table = new HTable(config, tableName);
+        tableMap.put(s, table);
+    }
+
+    /**
+     * Configure a HBaseConfiguration with a given set of properties
+     *
+     * @param config
+     */
     public static void configureHBaseConfig(Configuration config) {
         if (Constants.HBASE_REMOTE_TESTING) {
             config.clear();
@@ -115,6 +140,13 @@ public class HBaseStorage extends StorageInterface {
 
             String prefix = ((AtomImpl) objArr[0]).getHBasePrefix();
             HTable table = tableMap.get(prefix);
+            if (table == null) {
+                // create table if it does not already exist
+                HBaseAdmin hba = new HBaseAdmin(config);
+                this.createTable(prefix, hba);
+                table = tableMap.get(prefix);
+                assert (table != null);
+            }
             List<Row> putList = new ArrayList<Row>();
             // List<Row> getList = new ArrayList<Row>();
             // queue up HBase calls for the batch interface
@@ -171,7 +203,8 @@ public class HBaseStorage extends StorageInterface {
             Logger.getLogger(HBaseStorage.class.getName()).log(Level.WARNING, "Why you use deserializeTargetToAtom(SGID sgid) in HBase?");
         }
         for (Entry<String, HTable> entry : tableMap.entrySet()) {
-            Class properClass = super.biMap.inverse().get(entry.getKey());
+            Class properClass = super.directBIMap.inverse().get(entry.getKey());
+            properClass = handleNullClass(properClass, entry.getKey());
             List<Atom> list = deserializeAtom(properClass, entry.getValue(), useTimestamp, sgid);
             if (list == null || list.isEmpty()) {
                 continue;
@@ -234,7 +267,7 @@ public class HBaseStorage extends StorageInterface {
 
     @Override
     public final void clearStorage() {
-        for (String s : super.biMap.values()) {
+        for (String s : tableMap.keySet()) {
             String tableName = TEST_TABLE_PREFIX + StorageInterface.separator + s;
             // Create a fresh table, i.e. delete an existing table if it exists:
             HTableDescriptor ht = new HTableDescriptor(tableName);
@@ -260,7 +293,8 @@ public class HBaseStorage extends StorageInterface {
             Logger.getLogger(HBaseStorage.class.getName()).log(Level.WARNING, "Why you use getAllAtoms() in HBase?");
         }
         List<SGID> list = new ArrayList<SGID>();
-        for (String prefix : tableMap.keySet()) {
+        Set<String> keys = new HashSet<String>(tableMap.keySet());
+        for (String prefix : keys) {
             for (SGID id : this.getAllAtomsForTable(prefix)) {
                 list.add(id);
             }
@@ -270,7 +304,8 @@ public class HBaseStorage extends StorageInterface {
 
     public Iterable<SGID> getAllAtomsForTable(String prefix) {
         HTable table = tableMap.get(prefix);
-        Class cl = super.biMap.inverse().get(prefix);
+        Class cl = super.directBIMap.inverse().get(prefix);
+        cl = handleNullClass(cl, prefix);
         try {
             Scan s = new Scan();
             // we need the actual values if we do not store SGID in row key for debugging
@@ -283,8 +318,24 @@ public class HBaseStorage extends StorageInterface {
         }
     }
 
+    private Class handleNullClass(Class cl, String prefix) {
+        if (cl == null) {
+            if (prefix.startsWith(Feature.prefix)) {
+                cl = Feature.class;
+            } else {
+                assert (false);
+            }
+        }
+        return cl;
+    }
+
     private <T extends Atom> T deserializeTargetToAtom(SGID sgid, Class<T> t, boolean useTimestamp) {
-        String prefix = super.biMap.get(t);
+        String prefix = super.directBIMap.get(t);
+        if (prefix == null) {
+            // for now, we separate only the Feature table by Reference
+            assert (sgid instanceof FSGID);
+            prefix = ((FSGID) sgid).getTablename();
+        }
         HTable table = tableMap.get(prefix);
         List<Atom> deserializeAtom = deserializeAtom(t, table, useTimestamp, sgid);
         if (deserializeAtom != null && deserializeAtom.size() > 0) {
@@ -310,9 +361,41 @@ public class HBaseStorage extends StorageInterface {
 
     @Override
     public <T extends Atom> List<T> deserializeTargetToAtoms(Class<T> t, SGID... sgid) {
-        String prefix = super.biMap.get(t);
-        HTable table = tableMap.get(prefix);
-        return (List<T>) deserializeAtom(t, table, true, sgid);
+        if (t == Feature.class) {
+            // Features may be from a multiple number of tables
+            Map<String, List<SGID>> map = new HashMap<String, List<SGID>>();
+            for (SGID sid : sgid) {
+                FSGID fID = (FSGID) sid;
+                // sort by tables
+                String tablename = fID.getTablename();
+                if (!map.containsKey(tablename)) {
+                    // create reference to HTable
+                    map.put(tablename, new ArrayList<SGID>());
+                }
+                map.get(tablename).add(sid);
+            }
+            // go through sorted tables
+            List<T> results = new ArrayList<T>();
+            for (Entry<String, List<SGID>> e : map.entrySet()) {
+                String tableName = e.getKey();
+                if (!tableMap.containsKey(tableName)) {
+                    try {
+                        // attach table
+                        HBaseAdmin hba = new HBaseAdmin(this.config);
+                        this.createTable(tableName, hba);
+                    } catch (Exception ex) {
+                        Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", ex);
+                    }
+                }
+                HTable table = tableMap.get(tableName);
+                results.addAll((List<T>) deserializeAtom(t, table, true, e.getValue().toArray(new SGID[e.getValue().size()])));
+            }
+            return results;
+        } else {
+            String prefix = super.directBIMap.get(t);
+            HTable table = tableMap.get(prefix);
+            return (List<T>) deserializeAtom(t, table, true, sgid);
+        }
     }
 
     @Override
@@ -353,15 +436,27 @@ public class HBaseStorage extends StorageInterface {
         public Iterator<SGID> iterator() {
             return new ScanIterator(scanner, cl);
         }
+
+        @Override
+        protected void finalize() throws Throwable {
+            // make sure that we close the scanner if the using aborts the iteration and garbage collects this 
+            super.finalize();
+            scanner.close();
+        }
     }
 
+    /**
+     * Presents an interface for iterating through SGIDs
+     */
     public class ScanIterator implements Iterator<SGID> {
 
         private final Iterator<Result> sIter;
         private final Class cl;
         private SGID payload = null;
+        private final ResultScanner scanner;
 
         protected ScanIterator(ResultScanner scanner, Class cl) {
+            this.scanner = scanner;
             this.sIter = scanner.iterator();
             this.cl = cl;
         }
@@ -378,6 +473,8 @@ public class HBaseStorage extends StorageInterface {
                     return true;
                 }
             }
+            // if there are no more, close the scanner
+            scanner.close();
             return false;
         }
 

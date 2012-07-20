@@ -37,7 +37,7 @@ public class ACLTest {
 //        Logger.getLogger(ACLTest.class.getName()).log(Level.INFO, "@BeforeClass");
         ModelManager mManager = Factory.getModelManager();
         // test ACL on every possible class that can be ACLed
-        fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing dummy reference").build()).build();
+        fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing_dummy_reference").build()).build();
         Set<Feature> testFeatures = new HashSet<Feature>();
         f1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
         testFeatures.add(f1);

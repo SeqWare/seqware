@@ -61,12 +61,12 @@ public class SimpleModelManager implements ModelManager {
             Logger.getLogger(SimpleModelManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        // create separate working lists for types of classes 
-        Map<Class, List<Atom>> sortedStore = new HashMap<Class, List<Atom>>();
-        Map<Class, List<Atom>> sortedUpdate = new HashMap<Class, List<Atom>>();
+        // create separate working lists for objects destined for different tables
+        Map<String, List<Atom>> sortedStore = new HashMap<String, List<Atom>>();
+        Map<String, List<Atom>> sortedUpdate = new HashMap<String, List<Atom>>();
         for (Entry<String, AtomStatePair> e : workingList) {
             AtomImpl atom = (AtomImpl) e.getValue().atom;
-            Class cl = atom.getHBaseClass();
+            String cl = atom.getHBasePrefix();
             if (e.getValue().getState() == State.NEW_VERSION){
                 if (!sortedUpdate.containsKey(cl)) {
                     sortedUpdate.put(cl, new ArrayList<Atom>());
@@ -80,13 +80,15 @@ public class SimpleModelManager implements ModelManager {
             }
         }
         // order in order to avoid problems when sets are flushed before their elements (leading to unpopulated 
-        // timestamp values)
-        Class[] classOrder = {Feature.class, Tag.class, User.class, Reference.class, Analysis.class, FeatureSet.class, Group.class, TagSpecSet.class, ReferenceSet.class, AnalysisSet.class};
-        for(Class cl : classOrder){
+        // timestamp values) (order is now irrelevant since timestamps are generated locally)
+        //Class[] classOrder = {Feature.class, Tag.class, User.class, Reference.class, Analysis.class, FeatureSet.class, Group.class, TagSpecSet.class, ReferenceSet.class, AnalysisSet.class};
+        for(String cl : sortedStore.keySet()){
             List<Atom> s1 = sortedStore.get(cl);
             if (s1 != null && !s1.isEmpty()){
                 backend.store(s1.toArray(new Atom[s1.size()]));
             }
+        }
+        for(String cl : sortedUpdate.keySet()){
             List<Atom> s2 = sortedUpdate.get(cl);
             if (s2 != null && !s2.isEmpty()){
                 backend.update(s2.toArray(new Atom[s2.size()]));

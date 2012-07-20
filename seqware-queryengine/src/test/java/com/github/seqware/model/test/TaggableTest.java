@@ -38,7 +38,7 @@ public class TaggableTest {
         ModelManager mManager = Factory.getModelManager();
         // test tagging every possible class that can be tagged
         // create a few instances of everything that can be tagged
-        fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing dummy reference").build()).build();
+        fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing_Dummy_reference").build()).build();
         Set<Feature> testFeatures = new HashSet<Feature>();
         f1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
         f2 = mManager.buildFeature().setId("chr16").setStart(1000200).setStop(1000300).build();
@@ -282,7 +282,7 @@ public class TaggableTest {
         mManager.flush();
                 
         // build a FeatureSet, add features to it
-        FeatureSet fset = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing dummy reference").build()).build();
+        FeatureSet fset = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing_Dummy_reference").build()).build();
         Feature fe1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
         Feature fe2 = mManager.buildFeature().setId("chr16").setStart(1000200).setStop(1000300).build();
         Feature fe3 = mManager.buildFeature().setId("chr16").setStart(1000400).setStop(1000500).build();

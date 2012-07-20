@@ -84,7 +84,7 @@ public class TagIO implements ProtobufTransferInterface<TagPB, Tag> {
                 builder.setVString((String) tag.getValue());
             }
         }
-        if (tag.getTagSet() != null){
+        if (tag.getTagSetSGID() != null){
             builder.setTagSpecSet(SGIDIO.m2pb(tag.getTagSetSGID()));
         }
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), tag));

@@ -22,7 +22,7 @@ public class FactoryStaticInitializerTest {
         testID = UUID.randomUUID();
         //System.out.println("starting static init in testID: " + testID.toString());
         ModelManager mManager = Factory.getModelManager();
-        aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy ref").build()).build();
+        aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
         // create and store some features
         a1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
         a2 = mManager.buildFeature().setId("chr16").setStart(1000200).setStop(1000300).build();
