@@ -28,12 +28,19 @@ import java.util.List;
  * @author dyuen
  */
 public abstract class StorageInterface {
-    protected BiMap<Class, String> biMap = new ImmutableBiMap.Builder<Class, String>().put(Feature.class, Feature.prefix)
-            .put(FeatureSet.class, FeatureSet.prefix).put(Analysis.class, Analysis.prefix).put(AnalysisSet.class, AnalysisSet.prefix)
-            .put(Reference.class, Reference.prefix).put(ReferenceSet.class, ReferenceSet.prefix).put(Tag.class, Tag.prefix)
-            .put(TagSpecSet.class, TagSpecSet.prefix).put(User.class, User.prefix).put(Group.class, Group.prefix)
+    /**
+     * These tables are created on-the-fly with a referenceID appended in order to separate out Features by Reference
+     */
+    public final BiMap<Class, String> indirectBIMap = new ImmutableBiMap.Builder<Class, String>().put(Feature.class, Feature.prefix)
             .build();
-    public static final String separator = "_";
+    /**
+     * These tables are always created with the same names
+     */
+    public final BiMap<Class, String> directBIMap = new ImmutableBiMap.Builder<Class, String>().put(Analysis.class, Analysis.prefix)
+            .put(AnalysisSet.class, AnalysisSet.prefix).put(Reference.class, Reference.prefix).put(ReferenceSet.class, ReferenceSet.prefix)
+            .put(Tag.class, Tag.prefix).put(TagSpecSet.class, TagSpecSet.prefix).put(User.class, User.prefix).put(Group.class, Group.prefix)
+            .put(FeatureSet.class, FeatureSet.prefix).build();
+    public static final String separator = ".";
     
     /**
      * Generically serialize an Atom into the interface

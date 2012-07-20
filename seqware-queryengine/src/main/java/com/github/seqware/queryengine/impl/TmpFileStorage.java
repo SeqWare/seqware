@@ -23,7 +23,6 @@ import com.github.seqware.queryengine.util.SGID;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,7 +68,7 @@ public class TmpFileStorage extends StorageInterface {
         String prefix = ((AtomImpl) obj).getHBasePrefix();
 //        obj.getSGID().setBackendTimestamp(new Date(System.currentTimeMillis()));
         // let's just clone everything on store to simulate hbase
-        File target = new File(tempDir, prefix + separator + obj.getSGID().toString());
+        File target = new File(tempDir, prefix + separator + obj.getSGID().getRowKey() + separator + obj.getSGID().getBackendTimestamp().getTime());
         byte[] serialRep = serializer.serialize(obj);
         try {
             FileUtils.writeByteArrayToFile(target, serialRep);
@@ -96,10 +95,15 @@ public class TmpFileStorage extends StorageInterface {
                 return null;
             }
             //FileTypePair target = map.get(sgid);
-            for (File file : FileUtils.listFiles(tempDir, new SuffixFileFilter(sgid.toString()), null)) {
-                String[] names = file.getName().split(StorageInterface.separator);
-                Class cl = biMap.inverse().get(names[0]);
+            String suffix = sgid.getRowKey() + StorageInterface.separator + sgid.getBackendTimestamp().getTime();
+            for (File file : FileUtils.listFiles(tempDir, new SuffixFileFilter(suffix), null)) {
+                String[] names = file.getName().split("\\"+StorageInterface.separator);
+                Class cl = directBIMap.inverse().get(names[0]);
+                if (cl == null){
+                    cl = indirectBIMap.inverse().get(names[0]);
+                }
                 objData = FileUtils.readFileToByteArray(file);
+                assert(cl != null && objData != null);
                 Atom suspect = (Atom) serializer.deserialize(objData, cl);
                 return suspect;
             }
@@ -126,8 +130,8 @@ public class TmpFileStorage extends StorageInterface {
         for (File f : FileUtils.listFiles(tempDir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE)) {
             try {
                 byte[] objData = FileUtils.readFileToByteArray(f);
-                String[] names = f.getName().split(StorageInterface.separator);
-                Class cl = biMap.inverse().get(names[0]);
+                String[] names = f.getName().split("\\"+StorageInterface.separator);
+                Class cl = directBIMap.inverse().get(names[0]);
                 Atom suspect = (Atom) serializer.deserialize(objData, cl);
                 if (suspect != null) {
                     list.add(suspect.getSGID());
@@ -161,7 +165,7 @@ public class TmpFileStorage extends StorageInterface {
     public Atom deserializeTargetToLatestAtom(SGID sgid) {
         List<Atom> aList = new ArrayList<Atom>();
         for (File file : FileUtils.listFiles(tempDir, new WildcardFileFilter("*" + sgid.getRowKey() + "*"), null)) {
-            String[] names = file.getName().split(StorageInterface.separator);
+            String[] names = file.getName().split("\\"+StorageInterface.separator);
             long time = Long.valueOf(names[names.length - 1]);
             SGID newSGID = new SGID(sgid.getUuid().getMostSignificantBits(), sgid.getUuid().getLeastSignificantBits(), time);
             Atom atomCandidate = deserializeTargetToAtom(newSGID);

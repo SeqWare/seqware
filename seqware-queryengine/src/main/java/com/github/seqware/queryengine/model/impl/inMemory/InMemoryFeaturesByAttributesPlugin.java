@@ -115,7 +115,7 @@ public class InMemoryFeaturesByAttributesPlugin implements MapReducePlugin<Featu
     public FeatureSet getFinalResult() {
         ModelManager mManager = Factory.getModelManager();
 
-        FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("").build()).build();
+        FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("ad_hoc_analysis").build()).build();
         fSet.add(accumulator);
 
         mManager.close();

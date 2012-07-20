@@ -19,7 +19,7 @@ public class FeatureSetTest {
     @Test
     public void testConsistentStorageSingleFeatures() {
         ModelManager mManager = Factory.getModelManager();
-        FeatureSet aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy ref").build()).build();
+        FeatureSet aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
         Set<Feature> testFeatures = new HashSet<Feature>();
         testFeatures.add(mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build());
         testFeatures.add(mManager.buildFeature().setId("chr16").setStart(1000200).setStop(1000300).build());
@@ -44,7 +44,7 @@ public class FeatureSetTest {
     @Test
     public void testVersioningAndFeatureSets(){
         ModelManager mManager = Factory.getModelManager();
-        FeatureSet aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy ref").build()).build();
+        FeatureSet aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
         mManager.flush(); // this should persist a version with no features
         aSet.add(mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build());
         aSet.add(mManager.buildFeature().setId("chr16").setStart(1000200).setStop(1000300).build());

@@ -1,8 +1,10 @@
 package com.github.seqware.queryengine.model;
 
 import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.impl.StorageInterface;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
+import com.github.seqware.queryengine.util.FSGID;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -77,7 +79,9 @@ public class Feature extends AtomImpl<Feature> {
 
     @Override
     public String getHBasePrefix() {
-        return Feature.prefix;
+        assert(this.getSGID() instanceof FSGID);
+        FSGID fsgid = (FSGID) this.getSGID();
+        return fsgid.getTablename();
     }
 
     /**

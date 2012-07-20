@@ -22,9 +22,9 @@ public class ReferenceSetTest {
         ModelManager mManager = Factory.getModelManager();
         ReferenceSet aSet = mManager.buildReferenceSet().setName("Human").setOrganism("Homo Sapiens").build();
         Set<Reference> testReferences = new HashSet<Reference>();
-        testReferences.add(mManager.buildReference().setName("Dummy reference1").build());
-        testReferences.add(mManager.buildReference().setName("Dummy reference2").build());
-        testReferences.add(mManager.buildReference().setName("Dummy reference3").build());
+        testReferences.add(mManager.buildReference().setName("Dummy_reference1").build());
+        testReferences.add(mManager.buildReference().setName("Dummy_reference2").build());
+        testReferences.add(mManager.buildReference().setName("Dummy_reference3").build());
 
         for (Reference testReference : testReferences) {
             aSet.add(testReference);

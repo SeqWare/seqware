@@ -147,5 +147,9 @@ public class FSGID extends SGID implements KryoSerializable {
         }
         this.rowKey = input.readString();
         this.referenceName = input.readString();
-    }  
+    } 
+    
+    public String getTablename(){
+        return Feature.prefix + StorageInterface.separator + this.getReferenceName();
+    }
 }

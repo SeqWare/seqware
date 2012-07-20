@@ -127,8 +127,8 @@ public class InMemoryFeaturesByTagPlugin implements MapReducePlugin<Feature, Fea
 
     @Override
     public FeatureSet getFinalResult() {
-       ModelManager mManager = Factory.getModelManager();
-        FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("").build()).build();
+        ModelManager mManager = Factory.getModelManager();
+        FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("ad_hoc_analysis").build()).build();
         fSet.add(accumulator);
         mManager.close();
         return fSet;

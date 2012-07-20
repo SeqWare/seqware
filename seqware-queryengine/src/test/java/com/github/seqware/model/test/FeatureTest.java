@@ -20,7 +20,7 @@ public class FeatureTest {
     @BeforeClass
     public static void setupTests() {
         ModelManager mManager = Factory.getModelManager();
-        aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy ref").build()).build();
+        aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
     }
 
     @Test
