@@ -6,6 +6,10 @@
     <description>SeqWare Parent POM</description>
     <url>https://github.com/SeqWare/seqware</url>
 
+    <properties>
+        <maven-assembly-plugin.version>2.3</maven-assembly-plugin.version> 
+    </properties>
+
     <artifactId>seqware</artifactId>
     <packaging>pom</packaging>
     <groupId>com.github.seqware</groupId>
@@ -45,8 +49,20 @@
     </repositories>
 
     <build>
+         <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${maven-assembly-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
-            <plugin>
+	    <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven-assembly-plugin.version}</version>
+            </plugin>
+	    <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.4</version>
@@ -58,23 +74,9 @@
         </plugins>
     </build>
 
-    <reporting> 
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <doclet>ydoc.doclets.YStandard</doclet>
-                    <docletPath>/home/dyuen/Downloads/yworks-uml-doclet-3.0_02-jdk1.5/lib/ydoc.jar:/home/dyuen/Downloads/yworks-uml-doclet-3.0_02-jdk1.5/resources</docletPath>
-                    <additionalparam>-umlautogen</additionalparam>
-                </configuration>
-                <version>3.0</version>
-            </plugin>
-        </plugins>
-    </reporting> 
-
     <modules>
         <module>seqware-queryengine</module>
+        <module>seqware-distribution</module>
         <module>seqware-queryengine-legacy</module>
     </modules>
 
