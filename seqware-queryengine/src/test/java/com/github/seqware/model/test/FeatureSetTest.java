@@ -1,7 +1,7 @@
 package com.github.seqware.model.test;
 
-import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import java.util.*;
@@ -18,7 +18,7 @@ public class FeatureSetTest {
 
     @Test
     public void testConsistentStorageSingleFeatures() {
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         FeatureSet aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
         Set<Feature> testFeatures = new HashSet<Feature>();
         testFeatures.add(mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build());
@@ -43,7 +43,7 @@ public class FeatureSetTest {
     
     @Test
     public void testVersioningAndFeatureSets(){
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         FeatureSet aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
         mManager.flush(); // this should persist a version with no features
         aSet.add(mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build());
@@ -64,7 +64,7 @@ public class FeatureSetTest {
         }
         mManager.flush(); // kill all the features
                
-        FeatureSet testSet = (FeatureSet) Factory.getFeatureStoreInterface().getAtomBySGID(FeatureSet.class, aSet.getSGID());
+        FeatureSet testSet = (FeatureSet) SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, aSet.getSGID());
         Assert.assertTrue("FeatureSet version wrong, expected 4 and found " + testSet.getVersion(), testSet.getVersion() == 4);
         Assert.assertTrue("old FeatureSet version wrong", testSet.getPrecedingVersion().getVersion() == 3);
         Assert.assertTrue("very old FeatureSet version wrong", testSet.getPrecedingVersion().getPrecedingVersion().getVersion() == 2);

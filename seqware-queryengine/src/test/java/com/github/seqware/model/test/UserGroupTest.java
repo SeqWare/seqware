@@ -1,7 +1,7 @@
 package com.github.seqware.model.test;
 
-import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.Group;
 import com.github.seqware.queryengine.model.User;
 import org.junit.Assert;
@@ -21,7 +21,7 @@ public class UserGroupTest {
     @BeforeClass
     public static void setupTests() {
 //        Logger.getLogger(UserGroupTest.class.getName()).log(Level.INFO, "@BeforeClass");
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         g1 = mManager.buildGroup().setName("Developers").setDescription("Group for Developers").build();
         g2 = mManager.buildGroup().setName("Variant-Developers").setDescription("Group for Developers").build();
         a1 = mManager.buildUser().setFirstName("Joe").setLastName("Smith").setEmailAddress("smith@googly.com").setPassword("password").build();
@@ -40,7 +40,7 @@ public class UserGroupTest {
         boolean b1 = false;
         boolean b2 = false;
         boolean b3 = false;
-        for (User u : Factory.getFeatureStoreInterface().getUsers()) {
+        for (User u : SWQEFactory.getQueryInterface().getUsers()) {
             if (u.equals(a1)) {
                 b1 = true;
             } else if (u.equals(a2)) {
@@ -57,7 +57,7 @@ public class UserGroupTest {
 //       Logger.getLogger(UserGroupTest.class.getName()).log(Level.INFO, "@Test");
         // check that Group are present match
         boolean b1 = false;
-        for (Group u : Factory.getFeatureStoreInterface().getGroups()) {
+        for (Group u : SWQEFactory.getQueryInterface().getGroups()) {
             if (u.equals(g1)) {
                 b1 = true;
             } 
@@ -68,7 +68,7 @@ public class UserGroupTest {
     @Test
     public void testUserPasswordChanging(){
 //        Logger.getLogger(UserGroupTest.class.getName()).log(Level.INFO, "@Test");
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         String password1 = "ITMfL";
         User n1 = mManager.buildUser().setFirstName("Cheung").setLastName("Man-Yuk").setEmailAddress("cmy@googly.com").setPassword(password1).build();
         mManager.flush();
@@ -84,7 +84,7 @@ public class UserGroupTest {
         // check old User's password via Versionable interface
         Assert.assertTrue(n1.getPrecedingVersion().checkPassword(password1));  
         // check old User's password by re-retrieving it
-        User oldN1 = Factory.getFeatureStoreInterface().getAtomBySGID(User.class, oldUser.getSGID());
+        User oldN1 = SWQEFactory.getQueryInterface().getAtomBySGID(User.class, oldUser.getSGID());
         Assert.assertTrue(oldN1.checkPassword(password1));  
     }
 }

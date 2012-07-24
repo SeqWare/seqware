@@ -1,6 +1,6 @@
 package com.github.seqware.queryengine.model;
 
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 import com.github.seqware.queryengine.util.InMemoryIterable;
@@ -271,7 +271,7 @@ public class Tag extends AtomImpl<Tag> {
         }
 
         @Override
-        public Builder setManager(ModelManager aThis) {
+        public Builder setManager(CreateUpdateManager aThis) {
             tag.setManager(aThis);
             return this;
         }

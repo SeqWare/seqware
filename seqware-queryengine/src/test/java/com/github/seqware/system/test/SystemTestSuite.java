@@ -16,7 +16,7 @@
  */
 package com.github.seqware.system.test;
 
-import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.system.test.util.DynamicSuite;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,6 +39,6 @@ public class SystemTestSuite {
     @AfterClass
     public static void tearDownSuite(){
         Logger.getLogger(SystemTestSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
-        Factory.setFactoryBackendType(null, null, null);
+        SWQEFactory.setFactoryBackendType(null, null, null);
     }
 }

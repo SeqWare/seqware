@@ -19,7 +19,7 @@ package com.github.seqware.queryengine.impl.protobufIO;
 
 import com.github.seqware.queryengine.dto.QueryEngine;
 import com.github.seqware.queryengine.dto.QueryEngine.AnalysisSetPB;
-import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Analysis;
 import com.github.seqware.queryengine.model.AnalysisSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
@@ -52,7 +52,7 @@ public class AnalysisSetIO implements ProtobufTransferInterface<AnalysisSetPB, A
         for(int i = 0; i < sgidArr.length; i++){
             sgidArr[i] = (SGIDIO.pb2m(pb.getAnalysisIDs(i)));
         }
-        List<Analysis> atomsBySGID = Factory.getFeatureStoreInterface().getAtomsBySGID(Analysis.class, sgidArr);
+        List<Analysis> atomsBySGID = SWQEFactory.getQueryInterface().getAtomsBySGID(Analysis.class, sgidArr);
         if (atomsBySGID != null && atomsBySGID.size() > 0) {user.add(atomsBySGID);}
         return user;
     }

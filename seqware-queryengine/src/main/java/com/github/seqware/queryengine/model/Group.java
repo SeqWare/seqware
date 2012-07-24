@@ -1,6 +1,6 @@
 package com.github.seqware.queryengine.model;
 
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
@@ -44,7 +44,7 @@ public interface Group extends MolSetInterface<Group, User> {
         public abstract Group build(boolean newObject);
 
         @Override
-        public Group.Builder setManager(ModelManager aThis) {
+        public Group.Builder setManager(CreateUpdateManager aThis) {
             ((AtomImpl)aSet).setManager(aThis);
             return this;
         }

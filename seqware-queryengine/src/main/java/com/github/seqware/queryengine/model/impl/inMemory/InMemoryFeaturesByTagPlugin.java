@@ -16,8 +16,8 @@
  */
 package com.github.seqware.queryengine.model.impl.inMemory;
 
-import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
@@ -127,7 +127,7 @@ public class InMemoryFeaturesByTagPlugin implements MapReducePlugin<Feature, Fea
 
     @Override
     public FeatureSet getFinalResult() {
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("ad_hoc_analysis").build()).build();
         fSet.add(accumulator);
         mManager.close();

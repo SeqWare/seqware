@@ -16,6 +16,7 @@
  */
 package com.github.seqware.queryengine.impl;
 
+import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.factory.BackEndInterface;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.*;
@@ -35,7 +36,7 @@ import java.util.List;
  * @author dyuen
  * @author jbaran
  */
-public class SimplePersistentBackEnd implements BackEndInterface, FeatureStoreInterface, QueryInterface {
+public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface {
 
     private List<AnalysisPluginInterface> apis = new ArrayList<AnalysisPluginInterface>();
     private StorageInterface fsi;

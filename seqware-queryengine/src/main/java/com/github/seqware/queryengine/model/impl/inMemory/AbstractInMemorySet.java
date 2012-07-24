@@ -1,6 +1,6 @@
 package com.github.seqware.queryengine.model.impl.inMemory;
 
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.impl.AbstractMolSet;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 import com.github.seqware.queryengine.model.interfaces.Taggable;
@@ -28,7 +28,7 @@ public abstract class AbstractInMemorySet<S extends MolSetInterface, T> extends 
     public S add(T element) {
         set.add(element);
         if (this.getManager() != null){
-            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);
         }
         return (S) this;
     }
@@ -37,7 +37,7 @@ public abstract class AbstractInMemorySet<S extends MolSetInterface, T> extends 
     public S add(Collection<T> elements) {
         this.set.addAll(elements);
         if (this.getManager() != null){
-            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);  
+            this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);  
         }
         return (S) this;
     }
@@ -46,7 +46,7 @@ public abstract class AbstractInMemorySet<S extends MolSetInterface, T> extends 
     public S add(T ... elements) {
         this.set.addAll(Arrays.asList(elements));
         if (this.getManager() != null){
-            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION); 
+            this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION); 
         }
         return (S) this;
     }
@@ -55,7 +55,7 @@ public abstract class AbstractInMemorySet<S extends MolSetInterface, T> extends 
     public S remove(T element) {
         this.set.remove(element);
         if (this.getManager() != null){
-            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);
         }
         return (S) this;
     }

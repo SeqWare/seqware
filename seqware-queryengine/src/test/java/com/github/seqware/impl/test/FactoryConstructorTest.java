@@ -1,7 +1,7 @@
 package com.github.seqware.impl.test;
 
-import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import java.util.UUID;
@@ -21,7 +21,7 @@ public class FactoryConstructorTest  {
     public FactoryConstructorTest() {
         FactoryConstructorTest.testID = UUID.randomUUID();
         //System.out.println("starting static init in testID: " + testID.toString());
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
         // create and store some features
         a1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
@@ -41,7 +41,7 @@ public class FactoryConstructorTest  {
         boolean b1 = false;
         boolean b2 = false;
         boolean b3 = false;
-        for (FeatureSet fSet : Factory.getFeatureStoreInterface().getFeatureSets()) {
+        for (FeatureSet fSet : SWQEFactory.getQueryInterface().getFeatureSets()) {
             for (Feature f : fSet) {
                 if (f.equals(a1)) {
                     b1 = true;

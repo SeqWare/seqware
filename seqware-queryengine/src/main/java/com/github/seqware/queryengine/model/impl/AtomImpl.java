@@ -1,6 +1,6 @@
 package com.github.seqware.queryengine.model.impl;
 
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.model.interfaces.Versionable;
@@ -36,7 +36,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     /**
      * Current manager
      */
-    private transient ModelManager manager = null;
+    private transient CreateUpdateManager manager = null;
     private Map<String, Tag> tags = new HashMap<String, Tag>();
     
     private LazyReference<T> precedingVersion = new LazyReference<T>(this.getHBaseClass());
@@ -141,10 +141,10 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      *
      * @return
      */
-    public ModelManager getManager() {
+    public CreateUpdateManager getManager() {
         // happens pretty often now when building model objects
 //        if (manager == null){
-//            Logger.getLogger(Atom.class.getName()).log(Level.WARNING, "Tried to get the ModelManager for an atom, but it was unmanaged.");
+//            Logger.getLogger(Atom.class.getName()).log(Level.WARNING, "Tried to get the CreateUpdateManager for an atom, but it was unmanaged.");
 //        }
         return manager;
     }
@@ -154,7 +154,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      *
      * @param manager
      */
-    public void setManager(ModelManager manager) {
+    public void setManager(CreateUpdateManager manager) {
         this.manager = manager;
     }
 
@@ -187,7 +187,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     public boolean associateTag(Tag tag) {
         tags.put(tag.getKey(), tag);
         if (this.getManager() != null) {
-            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);
         }
         //Factory.getBackEnd().associateTag(this, tag);
         return true;
@@ -197,7 +197,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     public boolean dissociateTag(Tag tag) {
         tags.remove(tag.getKey());
         if (this.getManager() != null) {
-            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);
         }
         //Factory.getBackEnd().dissociateTag(this, tag);
         return true;
@@ -231,7 +231,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     public void setPrecedingVersion(T precedingVersion) {
         // inform the model manager that this is a new version of an object now
         if (this.getManager() != null) {
-            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);
         }
         this.precedingVersion.set(precedingVersion);
     }

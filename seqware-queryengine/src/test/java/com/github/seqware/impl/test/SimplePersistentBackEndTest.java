@@ -5,7 +5,7 @@ import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.model.test.FeatureStoreInterfaceTest;
-import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -31,7 +31,7 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
         System.out.println("running subclass test in testID: " + testID.toString());
         
         // storage type needs to match the default set in the base class of the test otherwise bad things happen
-        SimplePersistentBackEnd backend = new SimplePersistentBackEnd(Factory.getStorage());
+        SimplePersistentBackEnd backend = new SimplePersistentBackEnd(SWQEFactory.getStorage());
 
         try {
             backend.store(aSet);
@@ -62,7 +62,7 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
 
     @Test
     public void complexQueryTest() {
-        SimplePersistentBackEnd backend = new SimplePersistentBackEnd(Factory.getStorage());
+        SimplePersistentBackEnd backend = new SimplePersistentBackEnd(SWQEFactory.getStorage());
 
         try {
             backend.store(bSet);

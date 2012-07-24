@@ -16,7 +16,7 @@
  */
 package com.github.seqware.queryengine.model.interfaces;
 
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 
 /**
  * Builders are used to construct Atom. 
@@ -33,5 +33,5 @@ public interface BaseBuilder<S, T extends BaseBuilder> {
      * @param aThis
      * @return the base-builder itself
      */
-    public T setManager(ModelManager aThis);
+    public T setManager(CreateUpdateManager aThis);
 }

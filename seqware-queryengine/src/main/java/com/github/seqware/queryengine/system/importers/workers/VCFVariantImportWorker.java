@@ -1,7 +1,7 @@
 package com.github.seqware.queryengine.system.importers.workers;
 
-import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
@@ -38,7 +38,7 @@ public class VCFVariantImportWorker extends ImportWorker {
     @Override
     public void run() {
         // We may want to push this down
-        ModelManager modelManager = Factory.getModelManager();
+        CreateUpdateManager modelManager = SWQEFactory.getModelManager();
 
         // open the file
         BufferedReader inputStream = null;

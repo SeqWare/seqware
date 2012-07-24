@@ -1,6 +1,6 @@
 package com.github.seqware.queryengine.model.impl;
 
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.Molecule;
 import com.github.seqware.queryengine.model.interfaces.ACL;
 import com.github.seqware.queryengine.model.interfaces.ACLable;
@@ -24,7 +24,7 @@ public abstract class MoleculeImpl<T extends Molecule> extends AtomImpl<T> imple
     public void setPermissions(ACL permissions) {
         this.permissions = permissions;
         if (this.getManager() != null){
-            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);  
+            this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);  
         }
     }
 
@@ -38,7 +38,7 @@ public abstract class MoleculeImpl<T extends Molecule> extends AtomImpl<T> imple
         this.expiryTime = time;
         // in general molecules ignore cascading
         if (this.getManager() != null){
-            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);  
+            this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);  
         }
     }
 
@@ -49,7 +49,7 @@ public abstract class MoleculeImpl<T extends Molecule> extends AtomImpl<T> imple
         this.expiryTime = calendar.getTimeInMillis();
         // in general molecules ignore cascading
         if (this.getManager() != null){
-            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);  
+            this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);  
         }
     }
 

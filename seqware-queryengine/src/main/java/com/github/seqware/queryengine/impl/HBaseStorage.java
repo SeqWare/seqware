@@ -17,7 +17,7 @@
 package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.Constants;
-import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
@@ -419,7 +419,7 @@ public class HBaseStorage extends StorageInterface {
         maxMap.clear();
         minMap.clear();
         // ensure that the factory references are also closed, just in case
-        Factory.closeStorage();
+        SWQEFactory.closeStorage();
     }
 
     public class ScanIterable implements Iterable {

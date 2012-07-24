@@ -1,7 +1,7 @@
 package com.github.seqware.model.test;
 
-import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
@@ -25,7 +25,7 @@ public class GVFFormatTest {
 
     @BeforeClass
     public static void setupTests() {
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         String pragma = "##gvf-version 1.06 ##genome-build NCBI B36.3 ##sequence-region chr16 1 88827254";
         fSet = mManager.buildFeatureSet().setDescription(pragma).setReference(mManager.buildReference().setName("source").build()).build();
         Set<Feature> testFeatures = new HashSet<Feature>();
@@ -57,7 +57,7 @@ public class GVFFormatTest {
 
     @Test
     public void testOutputAndStore() {
-        FeatureSet targetSet = (FeatureSet) Factory.getFeatureStoreInterface().getAtomBySGID(FeatureSet.class, fSet.getSGID());
+        FeatureSet targetSet = (FeatureSet) SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, fSet.getSGID());
         Assert.assertTrue(targetSet.equals(fSet));
         String matchTarget = "##gvf-version 1.06 ##genome-build NCBI B36.3 ##sequence-region chr16 1 88827254\n"
                 + "chr16 samtools SNV 49291360 49291360 . + . ID=ID_2;Variant_seq=G;Reference_seq=C;\n"
@@ -97,6 +97,6 @@ public class GVFFormatTest {
     public static void sampleCleanup() {
         // strictly speaking, this probably is not necessary but it is good form
         //Factory.closeStorage();
-        Factory.getStorage().closeStorage();
+        SWQEFactory.getStorage().closeStorage();
     }
 }

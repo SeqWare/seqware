@@ -14,7 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.queryengine.model;
+package com.github.seqware.queryengine.plugins;
+
+import com.github.seqware.queryengine.model.FeatureSet;
 
 /**
  * This will describe the interface custom plugins must conform to. Details are

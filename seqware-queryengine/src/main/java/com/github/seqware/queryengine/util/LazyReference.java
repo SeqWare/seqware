@@ -16,7 +16,7 @@
  */
 package com.github.seqware.queryengine.util;
 
-import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Atom;
 import java.io.Serializable;
 
@@ -74,7 +74,7 @@ public class LazyReference<T extends Atom> implements Serializable {
      */
     public T get() {
         if (!referenceChecked && referenceSGID != null) {
-            this.referenceCache = (T) Factory.getFeatureStoreInterface().getAtomBySGID(type, referenceSGID);
+            this.referenceCache = (T) SWQEFactory.getQueryInterface().getAtomBySGID(type, referenceSGID);
         }
         referenceChecked = true;
         return this.referenceCache;

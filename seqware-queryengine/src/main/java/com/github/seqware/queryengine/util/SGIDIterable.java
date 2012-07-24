@@ -16,7 +16,7 @@
  */
 package com.github.seqware.queryengine.util;
 
-import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Atom;
 import java.util.Iterator;
 
@@ -59,7 +59,7 @@ public class SGIDIterable<T extends Atom> implements SeqWareIterable<T>{
         @Override
         public T next() {
             SGID next = iter.next();
-            T p = Factory.getFeatureStoreInterface().getAtomBySGID(t, next);
+            T p = SWQEFactory.getQueryInterface().getAtomBySGID(t, next);
             return p;
         }
 

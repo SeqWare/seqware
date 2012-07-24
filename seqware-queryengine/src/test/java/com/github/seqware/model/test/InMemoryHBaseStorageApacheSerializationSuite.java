@@ -17,7 +17,7 @@
 package com.github.seqware.model.test;
 
 import com.github.seqware.model.test.util.DynamicSuite;
-import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.AfterClass;
@@ -36,12 +36,12 @@ public class InMemoryHBaseStorageApacheSerializationSuite {
     @BeforeClass
     public static void setupSuite() {
         Logger.getLogger(InMemoryHBaseStorageApacheSerializationSuite.class.getName()).log(Level.INFO, "Running test suite with in-memory objects using Apache serialization to HBase");
-        Factory.setFactoryBackendType(Factory.Model_Type.IN_MEMORY, Factory.Storage_Type.HBASE_STORAGE, Factory.Serialization_Type.APACHE);
+        SWQEFactory.setFactoryBackendType(SWQEFactory.Model_Type.IN_MEMORY, SWQEFactory.Storage_Type.HBASE_STORAGE, SWQEFactory.Serialization_Type.APACHE);
     }
 
     @AfterClass
     public static void tearDownSuite() {
         Logger.getLogger(InMemoryHBaseStorageApacheSerializationSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
-        Factory.setFactoryBackendType(null, null, null);
+        SWQEFactory.setFactoryBackendType(null, null, null);
     }
 }

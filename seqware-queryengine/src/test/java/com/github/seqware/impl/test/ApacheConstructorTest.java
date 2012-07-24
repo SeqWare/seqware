@@ -1,7 +1,7 @@
 package com.github.seqware.impl.test;
 
-import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.impl.ApacheSerialization;
 import com.github.seqware.queryengine.impl.TmpFileStorage;
 import com.github.seqware.queryengine.impl.SimpleModelManager;

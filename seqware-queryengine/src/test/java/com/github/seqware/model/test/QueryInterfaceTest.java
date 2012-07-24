@@ -1,8 +1,8 @@
 package com.github.seqware.model.test;
 
 import com.github.seqware.impl.test.SimplePersistentBackEndTest;
-import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.Constant;
 import com.github.seqware.queryengine.kernel.RPNStack.Operation;
@@ -27,7 +27,7 @@ public class QueryInterfaceTest {
 
     @BeforeClass
     public static void setupTests() {
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
         // create and store some features
         a1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).setStrand(Feature.Strand.NEGATIVE).setType("type1").setScore(100.0).setSource("Program A").setPragma("pragma").setPhase(".").build();
@@ -46,7 +46,7 @@ public class QueryInterfaceTest {
     @Test
     public void testFeatureCreationAndIterate() {
         // get a FeatureSet from the back-end
-        QueryFuture future = Factory.getQueryInterface().getFeatures(0, aSet);
+        QueryFuture future = SWQEFactory.getQueryInterface().getFeatures(0, aSet);
         // check that Features are present match
         FeatureSet result = future.get();
         boolean b1 = false;
@@ -67,7 +67,7 @@ public class QueryInterfaceTest {
     @Test
     public void testTypeQuery() {
         // get a FeatureSet from the back-end
-        QueryFuture future = Factory.getQueryInterface().getFeaturesByAttributes(0, aSet, new RPNStack(
+        QueryFuture future = SWQEFactory.getQueryInterface().getFeaturesByAttributes(0, aSet, new RPNStack(
                 new Constant("type1"), "type", Operation.EQUAL));
         // check that Features are present match
         FeatureSet result = future.get();
@@ -80,7 +80,7 @@ public class QueryInterfaceTest {
     @Test
     public void complexQueryTest() {
         // this version of complexQueryTest is model-agnostic and will run on all back-ends
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         try {
             mManager.persist(bSet);
         } catch (Exception e) {
@@ -88,21 +88,21 @@ public class QueryInterfaceTest {
             junit.framework.Assert.assertTrue("Backend could not store the given FeatureSet.", false);
         }
 
-        QueryFuture queryFuture = Factory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
+        QueryFuture queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant("chr16"),
                 "id",
                 Operation.EQUAL));
         FeatureSet resultSet = queryFuture.get();
         junit.framework.Assert.assertTrue("Setting a query constraints with 1 operation on 'id' failed.", resultSet.getCount() == 10);
 
-        queryFuture = Factory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant(Feature.Strand.NEGATIVE),
                 "strand",
                 Operation.EQUAL));
         resultSet = queryFuture.get();
         junit.framework.Assert.assertTrue("Setting a query constraints with 1 operation on 'strand' failed.", resultSet.getCount() == 3);
 
-        queryFuture = Factory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant(Feature.Strand.NEGATIVE),
                 "strand",
                 Operation.EQUAL,

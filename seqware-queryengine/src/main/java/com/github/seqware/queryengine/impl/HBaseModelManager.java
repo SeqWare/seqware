@@ -16,7 +16,7 @@
  */
 package com.github.seqware.queryengine.impl;
 
-import com.github.seqware.queryengine.factory.ModelManager.State;
+import com.github.seqware.queryengine.factory.CreateUpdateManager.State;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.util.FSGID;
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * A Simple implementation of the ModelManager interface. We can make this more
+ * A Simple implementation of the CreateUpdateManager interface. We can make this more
  * efficient later.
  *
  * The current idea is that we try to minimize the interaction with the user by

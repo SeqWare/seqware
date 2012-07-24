@@ -29,7 +29,6 @@ import com.github.seqware.queryengine.model.impl.MoleculeImpl;
 import com.github.seqware.queryengine.model.interfaces.ACL;
 import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.SGID;
-import java.util.Date;
 import java.util.Iterator;
 
 /**

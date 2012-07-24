@@ -1,6 +1,6 @@
 package com.github.seqware.queryengine.model;
 
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 import java.math.BigInteger;
@@ -203,7 +203,7 @@ public class User extends MoleculeImpl<User> {
         }
 
         @Override
-        public Builder setManager(ModelManager aThis) {
+        public Builder setManager(CreateUpdateManager aThis) {
             user.setManager(aThis);
             return this;
         }

@@ -3,7 +3,7 @@
  */
 package com.github.seqware.queryengine.system.importers.workers;
 
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.system.importers.Importer;
 import com.github.seqware.queryengine.util.SGID;
 
@@ -19,9 +19,9 @@ public class ImportWorker extends Thread {
 
     String workerName = null;
     Importer pmi = null;
-    // Actually, on second thought. I think a shared ModelManager would be a bad idea. 
+    // Actually, on second thought. I think a shared CreateUpdateManager would be a bad idea. 
     // We don't really want all threads to freeze
-    //    ModelManager mManager = null;
+    //    CreateUpdateManager mManager = null;
     //Store store = null;
     String input = null;
     boolean compressed = false;
@@ -38,7 +38,7 @@ public class ImportWorker extends Thread {
     public ImportWorker() {
     }
 
-    public ImportWorker(String workerName, Importer pmi, // ModelManager store,
+    public ImportWorker(String workerName, Importer pmi, // CreateUpdateManager store,
              String input, boolean compressed, int minCoverage, int maxCoverage, 
              float minSnpQuality, boolean includeSNV, int fastqConvNum, 
              boolean includeIndels, boolean includeCoverage, int binSize) {
@@ -78,12 +78,12 @@ public class ImportWorker extends Thread {
         this.pmi = pmi;
     }
 
-//    public ModelManager getStore() {
+//    public CreateUpdateManager getStore() {
 //        return mManager;
 //        // return this.store
 //    }
 //
-//    public void setStore(ModelManager mManager) {
+//    public void setStore(CreateUpdateManager mManager) {
 //        //this.store = store
 //        this.mManager = mManager;
 //    }

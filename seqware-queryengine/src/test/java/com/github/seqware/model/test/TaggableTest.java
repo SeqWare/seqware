@@ -1,7 +1,8 @@
 package com.github.seqware.model.test;
 
-import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.inMemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.queryengine.model.interfaces.Taggable;
@@ -35,7 +36,7 @@ public class TaggableTest {
 
     @BeforeClass
     public static void setupTests() {
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         // test tagging every possible class that can be tagged
         // create a few instances of everything that can be tagged
         fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing_Dummy_reference").build()).build();
@@ -95,7 +96,7 @@ public class TaggableTest {
     @Test
     public void testTaggingOnEverything() {
 // Some of these global tests are no longer working because the back-end persists between test classes, we need a search API
-        SeqWareIterable<TagSpecSet> tagSets = Factory.getFeatureStoreInterface().getTagSpecSets();
+        SeqWareIterable<TagSpecSet> tagSets = SWQEFactory.getQueryInterface().getTagSpecSets();
         // we have two tag sets
         boolean t1found = false;
         boolean t2found = false;
@@ -107,7 +108,7 @@ public class TaggableTest {
             }
         }
         Assert.assertTrue(t1found == true && t2found == true);
-//        SeqWareIterable<Tag> tags = Factory.getFeatureStoreInterface().getTags();
+//        SeqWareIterable<Tag> tags = SWQEFactory.getQueryInterface().getTags();
 //        Tag[] tagsCheck = {t1a, t1b, t1c, t2a, t2b, t2c, t3a};
 //        boolean[] tagsCheckFound = new boolean[tagsCheck.length];
 //        Arrays.fill(tagsCheckFound, false);
@@ -133,9 +134,9 @@ public class TaggableTest {
 
     @Test
     public void testAddingAndRemovingTagSpecsFromTagSpecSets() {
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         // tags are not initially in a key set
-        TagSpecSet initialTestSet = (TagSpecSet) Factory.getFeatureStoreInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
+        TagSpecSet initialTestSet = (TagSpecSet) SWQEFactory.getQueryInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
         Tag[] tagsCheck = {ts1, ts2, ts3};
         boolean[] tagsCheckFound = new boolean[tagsCheck.length];
         Arrays.fill(tagsCheckFound, false);
@@ -155,17 +156,17 @@ public class TaggableTest {
         mManager.persist(tSet2);
         tSet2.add(ts1).add(ts2);
         mManager.flush();
-        TagSpecSet testSet = (TagSpecSet) Factory.getFeatureStoreInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
+        TagSpecSet testSet = (TagSpecSet) SWQEFactory.getQueryInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
         Assert.assertTrue(testSet.getCount() == 2);
         tSet2.add(ts3);
         mManager.flush();
-        testSet = (TagSpecSet) Factory.getFeatureStoreInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
+        testSet = (TagSpecSet) SWQEFactory.getQueryInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
         Assert.assertTrue(testSet.getCount() == 3);
         Assert.assertTrue(testSet.getPrecedingVersion().getCount() == 2);
         // and then remove them
         tSet2.remove(ts3).remove(ts2);
         mManager.flush();
-        testSet = (TagSpecSet) Factory.getFeatureStoreInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
+        testSet = (TagSpecSet) SWQEFactory.getQueryInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
         Assert.assertTrue(testSet.getCount() == 1);
         Assert.assertTrue(testSet.getPrecedingVersion().getCount() == 3);
     }
@@ -173,7 +174,7 @@ public class TaggableTest {
     @Test
     public void testClassesThatCannotBeTagged() {
         // practically everything can be tagged, except for plugins and tags
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         Tag tag1a = ts1.toBuilder().build();
         boolean tagException = false;
         try {
@@ -182,15 +183,15 @@ public class TaggableTest {
             tagException = true;
         }
         Assert.assertTrue(tagException);
-        for (AnalysisPluginInterface api : Factory.getFeatureStoreInterface().getAnalysisPlugins()) {
+        for (AnalysisPluginInterface api : SWQEFactory.getQueryInterface().getAnalysisPlugins()) {
             Assert.assertTrue(!(api instanceof Taggable));
         }
-        Assert.assertTrue(Factory.getFeatureStoreInterface().getAnalysisPlugins().getCount() > 0);
+        Assert.assertTrue(SWQEFactory.getQueryInterface().getAnalysisPlugins().getCount() > 0);
     }
 
     @Test
     public void testTagAddingAndRemoval() {
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         // tags should be both addable and removable
         // tags should be added and removed without changing version numbers 
         // TODO: (not for now though)
@@ -212,29 +213,29 @@ public class TaggableTest {
         // test queries that filter based on all three possibilities for tags 
         // subject only, subject and predicate, or all three
         // should get any features tagged with anything
-        QueryFuture featuresByTag = Factory.getQueryInterface().getFeaturesByTag(0, fSet, null, null, null);
+        QueryFuture featuresByTag = SWQEFactory.getQueryInterface().getFeaturesByTag(0, fSet, null, null, null);
         Assert.assertTrue(featuresByTag.get().getCount() == 3);
         // should get nothing
-        QueryFuture featuresByTag1 = Factory.getQueryInterface().getFeaturesByTag(0, fSet, "impossible", "impossible", "impossible");
+        QueryFuture featuresByTag1 = SWQEFactory.getQueryInterface().getFeaturesByTag(0, fSet, "impossible", "impossible", "impossible");
         Assert.assertTrue(featuresByTag1.get().getCount() == 0);
         // should get all three
-        QueryFuture featuresByTag2 = Factory.getQueryInterface().getFeaturesByTag(0, fSet, "KR", null, null);
+        QueryFuture featuresByTag2 = SWQEFactory.getQueryInterface().getFeaturesByTag(0, fSet, "KR", null, null);
         Assert.assertTrue(featuresByTag2.get().getCount() == 3);
         // should get all three
-        QueryFuture featuresByTag3 = Factory.getQueryInterface().getFeaturesByTag(0, fSet, "KR", "=", null);
+        QueryFuture featuresByTag3 = SWQEFactory.getQueryInterface().getFeaturesByTag(0, fSet, "KR", "=", null);
         Assert.assertTrue(featuresByTag3.get().getCount() == 3);
         // should get one
-        QueryFuture featuresByTag4 = Factory.getQueryInterface().getFeaturesByTag(0, fSet, "KR", "=", "F");
+        QueryFuture featuresByTag4 = SWQEFactory.getQueryInterface().getFeaturesByTag(0, fSet, "KR", "=", "F");
         Assert.assertTrue(featuresByTag4.get().getCount() == 1);
         // should get one
-        QueryFuture featuresByTag5 = Factory.getQueryInterface().getFeaturesByTag(0, fSet, "KR", null, "F");
+        QueryFuture featuresByTag5 = SWQEFactory.getQueryInterface().getFeaturesByTag(0, fSet, "KR", null, "F");
         Assert.assertTrue(featuresByTag5.get().getCount() == 1);
 
     }
 
     @Test
     public void tagWithDifferentTypes() {
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         Tag ta = ts1.toBuilder().setValue("Test_String").build();
         Tag tb = ts1.toBuilder().setValue("Test_String".getBytes()).build();
         Tag tc = ts1.toBuilder().setValue(new Float(0.1f)).build();
@@ -252,7 +253,7 @@ public class TaggableTest {
         u.associateTag(tg);
         mManager.flush();
         // check that the tags are present
-        User user = (User) Factory.getFeatureStoreInterface().getAtomBySGID(User.class, u.getSGID());
+        User user = (User) SWQEFactory.getQueryInterface().getAtomBySGID(User.class, u.getSGID());
         Tag[] tagsCheck = {t1a, t1b, t1c, t2a, t2b, t2c, t3a};
         boolean[] tagsCheckFound = new boolean[tagsCheck.length];
         Arrays.fill(tagsCheckFound, false);
@@ -271,7 +272,7 @@ public class TaggableTest {
 
     @Test
     public void testTagSetParentReferences() {
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         // create an "ontology" tag set
         TagSpecSet tagset = mManager.buildTagSpecSet().setName("one tag set to bind them all").build();
         // add a few tag "specifications" to the tag set
@@ -310,9 +311,9 @@ public class TaggableTest {
         mManager.flush();
         
         // try it again for persisted tags
-        fset = Factory.getFeatureStoreInterface().getAtomBySGID(FeatureSet.class, fset.getSGID());
-        fe2 = Factory.getFeatureStoreInterface().getAtomBySGID(Feature.class, fe2.getSGID());
-        fe1 = Factory.getFeatureStoreInterface().getAtomBySGID(Feature.class, fe1.getSGID());
+        fset = SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, fset.getSGID());
+        fe2 = SWQEFactory.getQueryInterface().getAtomBySGID(Feature.class, fe2.getSGID());
+        fe1 = SWQEFactory.getQueryInterface().getAtomBySGID(Feature.class, fe1.getSGID());
         Assert.assertTrue("persisted feature set does not have proper number of tags", fset.getTags().getCount() == 3);
         Assert.assertTrue("persisted fe2 count", fe2.getTags().getCount() == 0);
         Assert.assertTrue("persisted fe1 tag count", fe1.getTags().getCount() == 3);
