@@ -1,6 +1,6 @@
 package com.github.seqware.queryengine.model;
 
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.impl.StorageInterface;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
@@ -335,7 +335,7 @@ public class Feature extends AtomImpl<Feature> {
         }
 
         @Override
-        public Builder setManager(ModelManager aThis) {
+        public Builder setManager(CreateUpdateManager aThis) {
             feature.setManager(aThis);
             return this;
         }

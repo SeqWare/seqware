@@ -18,7 +18,7 @@ package com.github.seqware.queryengine.impl.protobufIO;
 
 import com.github.seqware.queryengine.dto.QueryEngine;
 import com.github.seqware.queryengine.dto.QueryEngine.FeatureSetPB;
-import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
@@ -52,7 +52,7 @@ public class FeatureSetIO implements ProtobufTransferInterface<FeatureSetPB, Fea
         for(int i = 0; i < sgidArr.length; i++){
             sgidArr[i] = (FSGIDIO.pb2m(userpb.getFeatures(i)));
         }
-        List<Feature> atomsBySGID = Factory.getFeatureStoreInterface().getAtomsBySGID(Feature.class, sgidArr);
+        List<Feature> atomsBySGID = SWQEFactory.getQueryInterface().getAtomsBySGID(Feature.class, sgidArr);
         if (atomsBySGID != null && atomsBySGID.size() > 0) {user.add(atomsBySGID);}
         return user;
     }

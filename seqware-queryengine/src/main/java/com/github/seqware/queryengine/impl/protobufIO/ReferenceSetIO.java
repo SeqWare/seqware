@@ -18,7 +18,7 @@ package com.github.seqware.queryengine.impl.protobufIO;
 
 import com.github.seqware.queryengine.dto.QueryEngine;
 import com.github.seqware.queryengine.dto.QueryEngine.ReferenceSetPB;
-import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Reference;
 import com.github.seqware.queryengine.model.ReferenceSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
@@ -51,7 +51,7 @@ public class ReferenceSetIO implements ProtobufTransferInterface<ReferenceSetPB,
         for(int i = 0; i < sgidArr.length; i++){
             sgidArr[i] = (SGIDIO.pb2m(userpb.getReferenceIDs(i)));
         }
-        List<Reference> atomsBySGID = Factory.getFeatureStoreInterface().getAtomsBySGID(Reference.class, sgidArr);
+        List<Reference> atomsBySGID = SWQEFactory.getQueryInterface().getAtomsBySGID(Reference.class, sgidArr);
         if (atomsBySGID != null && atomsBySGID.size() > 0) {user.add(atomsBySGID);}
         return user;
     }

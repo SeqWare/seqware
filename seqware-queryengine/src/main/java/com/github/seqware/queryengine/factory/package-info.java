@@ -1,5 +1,5 @@
 /**
- * Provides the classes that the restful interface will use to construct
- * interfaces to the back-end without reference to the specific back-end
+ * Provides the classes that the RESTful interface will use to construct
+ * interfaces that use the back-end without reference to the specific back-end.
  */
 package com.github.seqware.queryengine.factory;

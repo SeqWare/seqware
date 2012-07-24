@@ -17,7 +17,7 @@
 package com.github.seqware.model.test;
 
 import com.github.seqware.model.test.util.DynamicSuite;
-import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.AfterClass;
@@ -36,13 +36,13 @@ public class InMemoryNonPersistentPBSerializationSuite {
     @BeforeClass
     public static void setupSuite() {
         Logger.getLogger(InMemoryNonPersistentPBSerializationSuite.class.getName()).log(Level.INFO, "Running test suite with in-memory objects and PB serialization non-persistently");
-        Factory.setFactoryBackendType(Factory.Model_Type.IN_MEMORY, Factory.Storage_Type.IN_MEMORY, Factory.Serialization_Type.PROTOBUF);
-        Factory.getStorage().clearStorage();
+        SWQEFactory.setFactoryBackendType(SWQEFactory.Model_Type.IN_MEMORY, SWQEFactory.Storage_Type.IN_MEMORY, SWQEFactory.Serialization_Type.PROTOBUF);
+        SWQEFactory.getStorage().clearStorage();
     }
 
     @AfterClass
     public static void tearDownSuite() {
         Logger.getLogger(InMemoryNonPersistentPBSerializationSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
-        Factory.setFactoryBackendType(null, null, null);
+        SWQEFactory.setFactoryBackendType(null, null, null);
     }
 }

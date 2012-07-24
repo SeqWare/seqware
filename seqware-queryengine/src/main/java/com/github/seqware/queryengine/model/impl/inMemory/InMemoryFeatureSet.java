@@ -1,6 +1,6 @@
 package com.github.seqware.queryengine.model.impl.inMemory;
 
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Reference;
@@ -58,7 +58,7 @@ public class InMemoryFeatureSet extends FeatureSet {
         upgradeFeatureSGID(feature);
         features.add(feature);
         if (this.getManager() != null) {
-            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);
         }
         return this;
     }
@@ -78,7 +78,7 @@ public class InMemoryFeatureSet extends FeatureSet {
         }
         this.features.addAll(Arrays.asList(elements));
         if (this.getManager() != null) {
-            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);
         }
         return this;
     }
@@ -87,7 +87,7 @@ public class InMemoryFeatureSet extends FeatureSet {
     public FeatureSet remove(Feature feature) {
         features.remove(feature);
         if (this.getManager() != null) {
-            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);
         }
         return this;
     }
@@ -99,7 +99,7 @@ public class InMemoryFeatureSet extends FeatureSet {
         }
         this.features.addAll(features);
         if (this.getManager() != null) {
-            this.getManager().atomStateChange(this, ModelManager.State.NEW_VERSION);
+            this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);
         }
         return this;
     }

@@ -1,7 +1,7 @@
 package com.github.seqware.model.test;
 
-import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.inMemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.queryengine.model.interfaces.TTLable;
@@ -29,7 +29,7 @@ public class TTLTest {
 
     @BeforeClass
     public static void setupTests() {
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         // test TTL on every possible class that can be TTLed
         fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing_Dummy_reference").build()).build();
         fSet.setTTL(1, true);
@@ -63,7 +63,7 @@ public class TTLTest {
     @Test
     public void testTTLOnSets() {
         // do complete tests on FeatureSet
-        FeatureSet testSet = Factory.getFeatureStoreInterface().getAtomBySGID(FeatureSet.class, fSet.getSGID());
+        FeatureSet testSet = SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, fSet.getSGID());
         Assert.assertTrue("featureSet cascade wrong", testSet.getCascade() == true);
         Assert.assertTrue("featureSet time (in hours) wrong", testSet.getTTL() == 1);
         Date fSetExpiryTime = new Date(testSet.getExpiryTime());
@@ -72,7 +72,7 @@ public class TTLTest {
         Assert.assertTrue("featureSet time (as long) wrong", fSetExpiryTime.after(new Date()) && fSetExpiryTime.before(twoHoursAhead.getTime()));
         Assert.assertTrue("featureSet time (as Date) wrong", testSet.getExpiryDate().after(new Date()) && testSet.getExpiryDate().before(twoHoursAhead.getTime()));
         // handle time two hours in future
-        TagSpecSet tagSet = Factory.getFeatureStoreInterface().getAtomBySGID(TagSpecSet.class, tSet1.getSGID());
+        TagSpecSet tagSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSpecSet.class, tSet1.getSGID());
         Assert.assertTrue("tagSet cascade wrong", tagSet.getCascade() == false);
         Assert.assertTrue("tagSet time (in hours) wrong", tagSet.getTTL() == 2);
         Date tSetExpiryTime = new Date(tagSet.getExpiryTime());
@@ -82,19 +82,19 @@ public class TTLTest {
         Assert.assertTrue("tagSet time (as Date) wrong", tagSet.getExpiryDate().after(new Date()) && tagSet.getExpiryDate().before(threeHoursAhead.getTime()));
         Assert.assertTrue("tagSet isExpires wrong", tagSet.isExpires() == true);
         // handle third set
-        ReferenceSet refSet = Factory.getFeatureStoreInterface().getAtomBySGID(ReferenceSet.class, rSet.getSGID());
+        ReferenceSet refSet = SWQEFactory.getQueryInterface().getAtomBySGID(ReferenceSet.class, rSet.getSGID());
         Assert.assertTrue("refSet cascade wrong", refSet.getCascade() == true);
         Assert.assertTrue("refSet time (in hours) wrong", refSet.getTTL() == 10);
         Assert.assertTrue("refSet isExpires wrong", refSet.isExpires() == true);
         // handle unmodified set
-        Group g1 = Factory.getFeatureStoreInterface().getAtomBySGID(Group.class, viewerGroup.getSGID());
+        Group g1 = SWQEFactory.getQueryInterface().getAtomBySGID(Group.class, viewerGroup.getSGID());
         Assert.assertTrue("group isExpires wrong", g1.isExpires() == false);
     }
 
     @Test
     public void testTTLOnElements() {
-        User mUser = Factory.getFeatureStoreInterface().getAtomBySGID(User.class, marshmallowUser.getSGID());
-        User tUser = Factory.getFeatureStoreInterface().getAtomBySGID(User.class, titanicUser.getSGID());
+        User mUser = SWQEFactory.getQueryInterface().getAtomBySGID(User.class, marshmallowUser.getSGID());
+        User tUser = SWQEFactory.getQueryInterface().getAtomBySGID(User.class, titanicUser.getSGID());
         // note: individual elements will just ignore cascading
         Assert.assertTrue("mUser cascade wrong", mUser.getCascade() == false);
         Assert.assertTrue("mUser time (in hours) wrong", mUser.getTTL() == 10);

@@ -1,7 +1,7 @@
 package com.github.seqware.model.test;
 
-import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
 import com.github.seqware.queryengine.model.impl.inMemory.InMemoryFeaturesAllPlugin;
@@ -35,7 +35,7 @@ public class ACLTest {
     @BeforeClass
     public static void setupTests() {
 //        Logger.getLogger(ACLTest.class.getName()).log(Level.INFO, "@BeforeClass");
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         // test ACL on every possible class that can be ACLed
         fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing_dummy_reference").build()).build();
         Set<Feature> testFeatures = new HashSet<Feature>();
@@ -72,7 +72,7 @@ public class ACLTest {
     public void testACLWithVersions() {
 //        Logger.getLogger(ACLTest.class.getName()).log(Level.INFO, "@Test");
         // check that everything looks ok
-        FeatureSet targetSet = (FeatureSet) Factory.getFeatureStoreInterface().getAtomBySGID(FeatureSet.class, fSet.getSGID());
+        FeatureSet targetSet = (FeatureSet) SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, fSet.getSGID());
         // check some versioning while we are at it
         Assert.assertTrue("wrong owner", targetSet.getPermissions().getOwner().equals(marshmallowUser));
         Assert.assertTrue("wrong owner for old version", targetSet.getPrecedingVersion().getPermissions().getOwner().equals(titanicUser));
@@ -87,7 +87,7 @@ public class ACLTest {
 
     @Test
     public void testACLWithAllObjects() {
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         Group newGroup = mManager.buildGroup().setName("Oversight").setDescription("Users that are monitoring everyone").build();
         User newUser = mManager.buildUser().setFirstName("Madeline").setLastName("Pierce").setEmailAddress("madeline.pierce@googly.com").setPassword("password").build();
         
@@ -100,7 +100,7 @@ public class ACLTest {
         }
         mManager.flush();
         for(Molecule mol : mols){
-            Molecule molFromBackEnd = (Molecule) Factory.getFeatureStoreInterface().getAtomBySGID(((MoleculeImpl)mol).getHBaseClass(), mol.getSGID());
+            Molecule molFromBackEnd = (Molecule) SWQEFactory.getQueryInterface().getAtomBySGID(((MoleculeImpl)mol).getHBaseClass(), mol.getSGID());
             try{
                 Assert.assertTrue(molFromBackEnd.getPermissions().getOwner().equals(newUser));
                 Assert.assertTrue(molFromBackEnd.getPermissions().getGroup().equals(newGroup));
@@ -115,7 +115,7 @@ public class ACLTest {
         }
         mManager.flush();
         for(Molecule mol : mols){
-            Molecule molFromBackEnd = (Molecule) Factory.getFeatureStoreInterface().getAtomBySGID(((MoleculeImpl)mol).getHBaseClass(), mol.getSGID());
+            Molecule molFromBackEnd = (Molecule) SWQEFactory.getQueryInterface().getAtomBySGID(((MoleculeImpl)mol).getHBaseClass(), mol.getSGID());
             Assert.assertTrue(molFromBackEnd.getPermissions().getOwner().equals(newUser2));
             // TODO: not sure why we need the cast here when it works for the subclasses, something has gone awry in template classes land?
             Assert.assertTrue(((Molecule)molFromBackEnd.getPrecedingVersion()).getPermissions().getOwner().equals(newUser));

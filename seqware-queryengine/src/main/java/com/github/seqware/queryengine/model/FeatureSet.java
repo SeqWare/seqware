@@ -1,6 +1,6 @@
 package com.github.seqware.queryengine.model;
 
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.impl.AbstractMolSet;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
@@ -95,7 +95,7 @@ public abstract class FeatureSet extends AbstractMolSet<FeatureSet> implements M
         public abstract FeatureSet build(boolean newObject);
 
         @Override
-        public Builder setManager(ModelManager aThis) {
+        public Builder setManager(CreateUpdateManager aThis) {
             aSet.setManager(aThis);
             return this;
         }

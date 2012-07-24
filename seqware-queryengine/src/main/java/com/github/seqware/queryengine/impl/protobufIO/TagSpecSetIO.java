@@ -18,7 +18,7 @@ package com.github.seqware.queryengine.impl.protobufIO;
 
 import com.github.seqware.queryengine.dto.QueryEngine;
 import com.github.seqware.queryengine.dto.QueryEngine.TagSpecSetPB;
-import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.model.TagSpecSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
@@ -50,7 +50,7 @@ public class TagSpecSetIO implements ProtobufTransferInterface<TagSpecSetPB, Tag
         for(int i = 0; i < sgidArr.length; i++){
             sgidArr[i] = (SGIDIO.pb2m(userpb.getTagSpecIDs(i)));
         }
-        List<Tag> atomsBySGID = Factory.getFeatureStoreInterface().getAtomsBySGID(Tag.class, sgidArr);
+        List<Tag> atomsBySGID = SWQEFactory.getQueryInterface().getAtomsBySGID(Tag.class, sgidArr);
         if (atomsBySGID != null && atomsBySGID.size() > 0) {user.add(atomsBySGID);}
         return user;
     }

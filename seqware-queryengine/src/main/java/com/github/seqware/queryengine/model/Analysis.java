@@ -1,6 +1,7 @@
 package com.github.seqware.queryengine.model;
 
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 import java.util.ArrayList;
@@ -15,49 +16,47 @@ import java.util.List;
  * @author dyuen
  */
 public abstract class Analysis extends MoleculeImpl<Analysis> implements QueryFuture {
+
     public final static String prefix = "Analysis";
-    
     private List<Object> parameters = new ArrayList<Object>();
-    
+
     /**
      * Create a new analysis
-     *
-     * @param plugin an analysis must have an associated plugin that created/is
-     * creating its results
      */
     protected Analysis() {
         super();
     }
-    
+
     /**
      * Get the parameters for this particular creation of an analysis plug-in
+     *
      * @return parameters for the plugin
      */
-    public List<Object> getParameters(){
+    public List<Object> getParameters() {
         return Collections.unmodifiableList(parameters);
     }
 
     /**
      * Get analysis plugin
-     * @return 
+     *
+     * @return This returns the actual plugin that was used to create this
+     * instance of an analysis.
      */
     public abstract AnalysisPluginInterface getPlugin();
-    
-    
 
     @Override
     public abstract FeatureSet get();
 
     @Override
     public abstract boolean isDone();
-    
+
     @Override
     public abstract Analysis.Builder toBuilder();
 
     /**
-     * Set up the analysis plugin 
-     * @param plugin
-     * @return 
+     * Set up the analysis plugin
+     *
+     * @param plugin Set the plugin used to create this plugin (should be in the builder)
      */
     protected abstract void setPlugin(AnalysisPluginInterface plugin);
 
@@ -74,20 +73,19 @@ public abstract class Analysis extends MoleculeImpl<Analysis> implements QueryFu
             analysis.parameters = parameters;
             return this;
         }
-        
-        public Analysis.Builder setPlugin(AnalysisPluginInterface plugin){
+
+        public Analysis.Builder setPlugin(AnalysisPluginInterface plugin) {
             analysis.setPlugin(plugin);
             return this;
         }
 
         @Override
         public abstract Analysis build();
-        
+
         @Override
-        public Analysis.Builder setManager(ModelManager aThis) {
+        public Analysis.Builder setManager(CreateUpdateManager aThis) {
             analysis.setManager(aThis);
             return this;
         }
     }
-    
 }

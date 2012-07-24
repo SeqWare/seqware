@@ -20,20 +20,21 @@ import com.github.seqware.queryengine.model.*;
 
 /**
  * A very simple Manager that is somewhat like a very stripped down
- * EntityManager from JPA allowing us to create Models, persist them, and
- * retrieve them. See {@linktourl http://docs.oracle.com/javaee/5/api/javax/persistence/EntityManager.html}
- * If this gets too complex, maybe we should consider JPA as an option?
+ * EntityManager from JPA allowing us to create Models and persist them, in
+ * other words this handles Create and Update operations out of the basic CRUD
+ * operations. See {@linktourl
+ * http://docs.oracle.com/javaee/5/api/javax/persistence/EntityManager.html}
  *
  * Some differences to keep our implementation KISS, models are created through
- * this and are automatically managed. We do not have support for refresh,
+ * this and are automatically managed. We do not have support yet for refresh,
  * remove, lock, etc. We also do not have explicit support for transactions.
  *
  * Models are created directly through this so that we can keep track of them
- * regardless of underlying implementation
+ * regardless of underlying implementation.
  *
  * @author dyuen
  */
-public interface ModelManager {
+public interface CreateUpdateManager {
 
     /**
      * This manager defines Atoms to be in the following states
@@ -41,13 +42,13 @@ public interface ModelManager {
     public enum State {
 
         /**
-         * Unmanaged Atoms, this is implicit since the Model Manager should
-         * have no records of unmanaged Atoms
+         * Unmanaged Atoms, this is implicit since the Model Manager should have
+         * no records of unmanaged Atoms
          */
         UNMANAGED,
         /**
-         * Totally new Atoms, these Atoms should be stored without
-         * checking for old versions
+         * Totally new Atoms, these Atoms should be stored without checking for
+         * old versions
          */
         NEW_CREATION,
         /**
@@ -68,17 +69,17 @@ public interface ModelManager {
     public void clear();
 
     /**
-     * Start managing a Atom that has been dirtied, for example, a Atom
-     * returned from a query
+     * Start managing a Atom that has been dirtied, for example, a Atom returned
+     * from a query
      *
      * @param p
      */
     public void persist(Atom p);
 
     /**
-     * Convenience method to flush() all entities and clear().
-     * Currently managed objects will be left in an inconsistent state. 
-     * However, this should be more efficient for bulk operations.
+     * Convenience method to flush() all entities and clear(). Currently managed
+     * objects will be left in an inconsistent state. However, this should be
+     * more efficient for bulk operations.
      */
     public void close();
 
@@ -110,10 +111,11 @@ public interface ModelManager {
 
     /**
      * Build a new analysis
-     * @return  analysis
+     *
+     * @return analysis
      */
     public Analysis.Builder buildAnalysis();
-    
+
     /**
      * Build a set of tags
      *
@@ -144,17 +146,17 @@ public interface ModelManager {
 
     /**
      * Build a Tag
-     * @return 
+     *
+     * @return
      */
     public Tag.Builder buildTagSpec();
-    
+
 //    /**
 //     * Build a tag
 //     *
 //     * @return
 //     */
 //    public Tag.Builder buildTag();
-
     /**
      * Build a feature
      *
@@ -163,16 +165,16 @@ public interface ModelManager {
     public Feature.Builder buildFeature();
 
     /**
-     * Called by Atoms when they are successfully created thus becoming
-     * dirty, and needing to be written to the database.
+     * Called by Atoms when they are successfully created thus becoming dirty,
+     * and needing to be written to the database.
      *
      * @param source new object to be created in the backend
      */
     public void objectCreated(Atom source);
 
     /**
-     * Called by Atoms when they need to change state (for example, to
-     * notify that they have become a dirty new version)
+     * Called by Atoms when they need to change state (for example, to notify
+     * that they have become a dirty new version)
      *
      * @param source
      * @param state

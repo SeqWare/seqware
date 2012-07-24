@@ -3,8 +3,8 @@
  */
 package com.github.seqware.queryengine.system.importers;
 
-import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.Reference;
 import com.github.seqware.queryengine.system.importers.workers.GFF3VariantImportWorker;
 import com.github.seqware.queryengine.system.importers.workers.ImportWorker;
@@ -18,8 +18,8 @@ import java.util.logging.Logger;
  * Port of the class from the original prototype, adapted to use the new classes
  * in the new API. In the old API, there was very little "management" code so
  * all of the workers shared a reference to the same Store class with a small dab of 
- * synchronization. In the new API, we have to contend with the ModelManager, so
- * I think it makes more sense to have one ModelManager per thread rather than freeze 
+ * synchronization. In the new API, we have to contend with the CreateUpdateManager, so
+ * I think it makes more sense to have one CreateUpdateManager per thread rather than freeze 
  * all threads when one wants to synchronize for example. 
  *
  * @author boconnor
@@ -56,8 +56,8 @@ public class FeatureImporter extends Importer {
         // objects to access the mutation datastore
         //      BerkeleyDBFactory factory = new BerkeleyDBFactory();
         //      BerkeleyDBStore store = null;
-        ModelManager modelManager = Factory.getModelManager();
-        SeqWareIterable<Reference> references = Factory.getFeatureStoreInterface().getReferences();
+        CreateUpdateManager modelManager = SWQEFactory.getModelManager();
+        SeqWareIterable<Reference> references = SWQEFactory.getQueryInterface().getReferences();
         Reference ref = null;
         for(Reference reference : references){
             if (reference.getName().equals(referenceID)){
@@ -149,7 +149,7 @@ public class FeatureImporter extends Importer {
             System.exit(-1);
         }
         // clean-up
-        Factory.getStorage().closeStorage();
+        SWQEFactory.getStorage().closeStorage();
     }
 
     public FeatureImporter(int threadCount) {

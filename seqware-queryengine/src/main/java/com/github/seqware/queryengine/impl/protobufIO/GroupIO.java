@@ -19,7 +19,7 @@ package com.github.seqware.queryengine.impl.protobufIO;
 import com.github.seqware.queryengine.dto.QESupporting.SGIDPB;
 import com.github.seqware.queryengine.dto.QueryEngine;
 import com.github.seqware.queryengine.dto.QueryEngine.GroupPB;
-import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.Group;
 import com.github.seqware.queryengine.model.User;
@@ -53,7 +53,7 @@ public class GroupIO implements ProtobufTransferInterface<GroupPB, Group>{
         for(int i = 0; i < sgidArr.length; i++){
             sgidArr[i] = (SGIDIO.pb2m(pb.getUsers(i)));
         }
-        List<User> atomsBySGID = Factory.getFeatureStoreInterface().getAtomsBySGID(User.class, sgidArr);
+        List<User> atomsBySGID = SWQEFactory.getQueryInterface().getAtomsBySGID(User.class, sgidArr);
         if (atomsBySGID != null && atomsBySGID.size() > 0) {user.add(atomsBySGID);}
         return user;
     }

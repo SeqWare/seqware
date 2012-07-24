@@ -1,7 +1,7 @@
 package com.github.seqware.system.test;
 
-import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.Group;
 import com.github.seqware.queryengine.model.User;
 import com.github.seqware.queryengine.system.exporters.VCFDumper;

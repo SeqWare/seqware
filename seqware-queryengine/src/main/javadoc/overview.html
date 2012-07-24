@@ -1,11 +1,25 @@
 <HTML>
     <HEAD>
-      <TITLE>API Overview</TITLE>
+        <TITLE>API Overview</TITLE>
     </HEAD>
     <BODY>
-        This set of tests and test suites should be used for a quick understanding of 
-        how to interact with the SeqWare Query Engine. 
-        <p>
-            The tests are all run from test suites in each of the testing directories. Multiple test suites in the model directory allow the tests to run against multiple serialization types, different back-ends, and optimizations in the model layer. Suites are built with (and new tests have to be added) to the DynamicSuiteBuilder in each of the testing directories.   
+        These classes define the interfaces and implementations behind the SeqWare Query Engine. 
+        If the test javadoc documents have been compiled, you can also jump 
+        <a href="../testapidocs/index.html"  target="_blank">here</a> in order to see demonstrations 
+        of how external developers should largely interact with our software.         
+     <p>
+        A back-end developer may wish to start with the <b>impl</b> directories. 
+        This directory contains the implementations of the various interfaces. 
+        In particular, looking at {@link com.github.seqware.queryengine.impl.HBaseStorage} will demonstrate how
+        tables are created and how Get/Pull operations are handled.
+     <p>
+        A front-end developer may wish to concentrate on the classes that are
+        accessed via <b>factory</b> and the {@link com.github.seqware.queryengine.factory.SWQEFactory}. This gives access to 
+        the classes that allow CRU operations in a generic fashion. They should
+        also look at the classes in <b>model</b> which are how users interact 
+        with the SeqWare Query Engine back-end. 
+     <p> 
+        Finally, a plugin-developer should additionally look at the interfaces in
+        <b>plugins</b>. New plugins should conform to these interfaces.   
     </BODY>
 </HTML>

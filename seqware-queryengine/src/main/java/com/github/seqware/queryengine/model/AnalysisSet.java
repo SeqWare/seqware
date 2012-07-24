@@ -1,6 +1,6 @@
 package com.github.seqware.queryengine.model;
 
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
@@ -46,7 +46,7 @@ public interface AnalysisSet extends MolSetInterface<AnalysisSet, Analysis> {
         public abstract AnalysisSet build(boolean newObject);
 
         @Override
-        public AnalysisSet.Builder setManager(ModelManager aThis) {
+        public AnalysisSet.Builder setManager(CreateUpdateManager aThis) {
             ((AtomImpl)aSet).setManager(aThis);
             return this;
         }

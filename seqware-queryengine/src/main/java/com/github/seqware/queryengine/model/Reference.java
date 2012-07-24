@@ -1,6 +1,6 @@
 package com.github.seqware.queryengine.model;
 
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
@@ -49,7 +49,7 @@ public interface Reference extends MolSetInterface<Reference, FeatureSet> {
         public abstract Reference build();
 
         @Override
-        public Builder setManager(ModelManager aThis) {
+        public Builder setManager(CreateUpdateManager aThis) {
             ((AtomImpl)reference).setManager(aThis);
             return this;
         }

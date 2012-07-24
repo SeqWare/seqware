@@ -16,7 +16,7 @@
  */
 package com.github.seqware.queryengine.util;
 
-import com.github.seqware.queryengine.factory.Factory;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Atom;
 
 /**
@@ -43,7 +43,7 @@ public class LazyLatestReference<T extends Atom> extends LazyReference<T> {
     @Override
     public T get() {
         if (!referenceChecked && referenceSGID != null) {
-            this.referenceCache = (T) Factory.getFeatureStoreInterface().getLatestAtomBySGID(referenceSGID, type);
+            this.referenceCache = (T) SWQEFactory.getQueryInterface().getLatestAtomBySGID(referenceSGID, type);
         }
         referenceChecked = true;
         return this.referenceCache;

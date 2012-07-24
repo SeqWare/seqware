@@ -1,7 +1,7 @@
 package com.github.seqware.queryengine.system.importers.workers;
 
-import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
@@ -158,7 +158,7 @@ public class GFF3VariantImportWorker extends ImportWorker {
     @Override
     public void run() {
 
-        ModelManager mManager = Factory.getModelManager();
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
         try {
             // first ask for a token from semaphore
             pmi.getLock();

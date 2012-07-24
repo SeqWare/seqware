@@ -16,8 +16,8 @@
  */
 package com.github.seqware.queryengine.system.exporters;
 
-import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.factory.ModelManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Reference;
@@ -53,8 +53,8 @@ public class VCFDumper {
         String referenceID = args[0];
 
         // objects to access the mutation datastore
-        ModelManager modelManager = Factory.getModelManager();
-        SeqWareIterable<Reference> references = Factory.getFeatureStoreInterface().getReferences();
+        CreateUpdateManager modelManager = SWQEFactory.getModelManager();
+        SeqWareIterable<Reference> references = SWQEFactory.getQueryInterface().getReferences();
         Reference ref = null;
         for (Reference reference : references) {
             if (reference.getName().equals(referenceID)) {
@@ -79,7 +79,7 @@ public class VCFDumper {
                 outputStream = new BufferedWriter(new OutputStreamWriter(System.out));
             }
             outputStream.append("#CHROM	POS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\n");
-            SeqWareIterable<FeatureSet> featureSets = Factory.getFeatureStoreInterface().getFeatureSets();
+            SeqWareIterable<FeatureSet> featureSets = SWQEFactory.getQueryInterface().getFeatureSets();
             boolean caughtNonVCF = false;
             for (FeatureSet fSet : featureSets) {
                 if (fSet.getReferenceID().equals(ref.getSGID())) {
@@ -116,7 +116,7 @@ public class VCFDumper {
             try {
                 outputStream.flush();
                 outputStream.close();
-                Factory.getStorage().closeStorage();
+                SWQEFactory.getStorage().closeStorage();
             } catch (IOException ex) {
                 Logger.getLogger(VCFDumper.class.getName()).log(Level.SEVERE, "Exception thrown flushing to file:", ex);
             }
