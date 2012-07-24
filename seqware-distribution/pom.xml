@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+
+  <parent>
+    <artifactId>seqware</artifactId>
+    <groupId>com.github.seqware</groupId>
+    <version>0.12.0</version>
+  </parent>
+
+  <artifactId>seqware-distribution</artifactId>
+
+  <name>seqware-distribution</name>
+  <url>http://seqware.sf.net</url>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.github.seqware</groupId>
+      <artifactId>seqware-queryengine</artifactId>
+      <version>0.12.0</version>
+    </dependency>
+  </dependencies>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+
+  <build>
+        <plugins>
+    <plugin>
+      <artifactId>maven-assembly-plugin</artifactId>
+      <executions>
+        <execution>
+          <id>executable-jar-assembly</id>
+          <phase>package</phase>
+          <goals>
+            <goal>single</goal>
+          </goals>
+          <configuration>
+            <archive>
+              <manifest>
+                <mainClass>com.github.seqware.queryengine.system.importers.FeatureImporter</mainClass>
+              </manifest>
+            </archive>
+            <descriptors>
+              <descriptor>src/assemble/seqware-queryengine-full.xml</descriptor>
+            </descriptors>
+            <finalName>seqware-queryengine-${version}</finalName>
+          </configuration>
+        </execution>
+      </executions>
+    </plugin>
+    </plugins>
+  </build>
+</project>
+
