@@ -37,7 +37,8 @@ import org.objenesis.strategy.SerializingInstantiatorStrategy;
 /**
  * Simple serialization/deserialization test using HBase.
  *
- * Serialization is done through Kryo and Protobuf.
+ * Serialization is done through Kryo and Protobuf. This class also demonstrated
+ * the effect of batching on performance. (i.e. a large performance improvement)
  *
  * @author jbaran
  */

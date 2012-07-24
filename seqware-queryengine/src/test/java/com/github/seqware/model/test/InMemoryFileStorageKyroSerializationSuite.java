@@ -25,7 +25,9 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
- * Not working yet
+ * Not currently working. We do not have a full Kyro serialization
+ * implementation.
+ *
  * @author dyuen
  */
 //@RunWith(DynamicSuite.class)

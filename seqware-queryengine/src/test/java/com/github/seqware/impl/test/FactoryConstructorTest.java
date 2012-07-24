@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.junit.Test;
 
 /**
- * Tests with a static initializer block started via factory
+ * Tests with a static initializer block started via factory.
  *
  * @author dyuen
  */

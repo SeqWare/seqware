@@ -2,7 +2,10 @@ package com.github.seqware.model.test;
 
 import com.github.seqware.queryengine.factory.Factory;
 import com.github.seqware.queryengine.factory.ModelManager;
-import com.github.seqware.queryengine.model.*;
+import com.github.seqware.queryengine.model.Feature;
+import com.github.seqware.queryengine.model.FeatureSet;
+import com.github.seqware.queryengine.model.Tag;
+import com.github.seqware.queryengine.model.TagSpecSet;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.AfterClass;
@@ -12,7 +15,7 @@ import org.junit.Test;
 
 /**
  * Let's create some features directly out of
- * http://www.sequenceontology.org/resources/gvf.html
+ * <a href="http://www.sequenceontology.org/resources/gvf.html"> the specification</a>.
  *
  * @author dyuen
  */

@@ -1,28 +1,25 @@
 package com.github.seqware.impl.test;
 
-import com.github.seqware.queryengine.impl.ApacheSerialization;
-import com.github.seqware.queryengine.impl.TmpFileStorage;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.model.test.FeatureStoreInterfaceTest;
 import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.github.seqware.queryengine.model.Feature;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.github.seqware.queryengine.model.QueryFuture;
-import com.sun.xml.internal.xsom.impl.Const;
 import junit.framework.Assert;
 import org.junit.Test;
 
 import static com.github.seqware.queryengine.kernel.RPNStack.*;
 
 /**
- * Tests for the {@link SimplePersistentBackEnd}.
+ * Tests for the {@link SimplePersistentBackEnd}. This also tests the complex 
+ * attribute query.
  *
  * @author jbaran
  */

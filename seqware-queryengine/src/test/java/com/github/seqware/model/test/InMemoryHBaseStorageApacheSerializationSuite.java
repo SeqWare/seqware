@@ -16,8 +16,8 @@
  */
 package com.github.seqware.model.test;
 
-import com.github.seqware.queryengine.factory.Factory;
 import com.github.seqware.model.test.util.DynamicSuite;
+import com.github.seqware.queryengine.factory.Factory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.AfterClass;
@@ -25,6 +25,9 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
+ * This tests non-optimized in-memory objects against a HBase back-end using
+ * Apache serialization.
+ *
  * @author dyuen
  */
 @RunWith(DynamicSuite.class)
@@ -35,9 +38,9 @@ public class InMemoryHBaseStorageApacheSerializationSuite {
         Logger.getLogger(InMemoryHBaseStorageApacheSerializationSuite.class.getName()).log(Level.INFO, "Running test suite with in-memory objects using Apache serialization to HBase");
         Factory.setFactoryBackendType(Factory.Model_Type.IN_MEMORY, Factory.Storage_Type.HBASE_STORAGE, Factory.Serialization_Type.APACHE);
     }
-    
+
     @AfterClass
-    public static void tearDownSuite(){
+    public static void tearDownSuite() {
         Logger.getLogger(InMemoryHBaseStorageApacheSerializationSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
         Factory.setFactoryBackendType(null, null, null);
     }

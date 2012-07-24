@@ -12,7 +12,7 @@ import java.util.UUID;
 import org.junit.Test;
 
 /**
- * Tests with a static initializer block started via factory
+ * Tests specifically using Apache serialization.
  *
  * @author dyuen
  */

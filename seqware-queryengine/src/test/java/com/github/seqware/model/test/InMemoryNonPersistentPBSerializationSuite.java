@@ -25,6 +25,9 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
+ * This tests non-optimized in-memory objects against a non-peristent
+ * (in-memory) back-end using ProtoBuffer serialization.
+ *
  * @author dyuen
  */
 @RunWith(DynamicSuite.class)
@@ -36,9 +39,9 @@ public class InMemoryNonPersistentPBSerializationSuite {
         Factory.setFactoryBackendType(Factory.Model_Type.IN_MEMORY, Factory.Storage_Type.IN_MEMORY, Factory.Serialization_Type.PROTOBUF);
         Factory.getStorage().clearStorage();
     }
-    
+
     @AfterClass
-    public static void tearDownSuite(){
+    public static void tearDownSuite() {
         Logger.getLogger(InMemoryNonPersistentPBSerializationSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
         Factory.setFactoryBackendType(null, null, null);
     }

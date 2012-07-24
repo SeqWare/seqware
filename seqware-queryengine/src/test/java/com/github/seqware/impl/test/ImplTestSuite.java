@@ -16,8 +16,8 @@
  */
 package com.github.seqware.impl.test;
 
-import com.github.seqware.queryengine.factory.Factory;
 import com.github.seqware.impl.test.util.DynamicSuite;
+import com.github.seqware.queryengine.factory.Factory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.AfterClass;
@@ -25,7 +25,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
- *
+ * Run all the tests in this directory which are implementation-specific. 
  * @author dyuen
  */
 @RunWith(DynamicSuite.class)

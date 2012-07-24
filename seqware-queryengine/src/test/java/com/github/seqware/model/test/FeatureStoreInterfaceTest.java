@@ -10,7 +10,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Unit tests of BackEndInterface.
+ * Tests that storing FeatureSets and retrieving FeatureSets results in 
+ * consistent results.
  *
  * @author dyuen
  * @author jbaran

@@ -16,7 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * System tests for importing and exporting VCF files
+ * System tests for importing and exporting VCF files.
  *
  * @author dyuen
  */
