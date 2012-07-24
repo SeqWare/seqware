@@ -25,6 +25,9 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
+ * This test suite tests non-optimized in-memory model objects against Apache
+ * serialization to a File Storage back-end.
+ *
  * @author dyuen
  */
 @RunWith(DynamicSuite.class)
@@ -36,9 +39,9 @@ public class InMemoryFileStorageApacheSerializationSuite {
         Factory.setFactoryBackendType(Factory.Model_Type.IN_MEMORY, Factory.Storage_Type.FILE_STORAGE, Factory.Serialization_Type.APACHE);
         Factory.getStorage().clearStorage();
     }
-    
+
     @AfterClass
-    public static void tearDownSuite(){
+    public static void tearDownSuite() {
         Logger.getLogger(InMemoryFileStorageApacheSerializationSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
         Factory.setFactoryBackendType(null, null, null);
     }

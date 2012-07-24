@@ -19,7 +19,7 @@ package com.github.seqware.model.test;
 import org.junit.runner.JUnitCore;
 
 /**
- * Small hack, allows us to profile test suites
+ * Small hack, allows us to profile test suites for performance.
  * @author dyuen
  */
 public class ProfilingStub {

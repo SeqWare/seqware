@@ -9,7 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Unit tests of Feature.
+ * Unit tests of {@link Feature}.
  *
  * @author jbaran
  */

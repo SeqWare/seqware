@@ -25,7 +25,9 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
- * 
+ * Tests non-optimized model objects against a HBase back-end using ProtoBuffer
+ * serialization.
+ *
  * @author dyuen
  */
 @RunWith(DynamicSuite.class)
@@ -36,9 +38,9 @@ public class InMemoryHBaseStoragePBSerializationSuite {
         Logger.getLogger(InMemoryHBaseStoragePBSerializationSuite.class.getName()).log(Level.INFO, "Running test suite with in-memory objects using Protobuf serialization to HBase");
         Factory.setFactoryBackendType(Factory.Model_Type.IN_MEMORY, Factory.Storage_Type.HBASE_STORAGE, Factory.Serialization_Type.PROTOBUF);
     }
-    
+
     @AfterClass
-    public static void tearDownSuite(){
+    public static void tearDownSuite() {
         Logger.getLogger(InMemoryHBaseStoragePBSerializationSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
         Factory.setFactoryBackendType(null, null, null);
     }

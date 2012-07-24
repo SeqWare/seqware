@@ -22,7 +22,7 @@ import org.junit.runners.model.InitializationError;
 
 /**
  * Allows us to dynamically build test suites
- * Taken from {@link http://stackoverflow.com/questions/1070202/junit-suiteclasses-with-a-static-list-of-classes }
+ * Taken from <a href="http://stackoverflow.com/questions/1070202/junit-suiteclasses-with-a-static-list-of-classes">here</a>
  * @author dyuen
  */
 public class DynamicSuite extends Suite {

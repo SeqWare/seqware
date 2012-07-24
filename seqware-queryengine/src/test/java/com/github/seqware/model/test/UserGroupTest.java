@@ -4,15 +4,12 @@ import com.github.seqware.queryengine.factory.Factory;
 import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.model.Group;
 import com.github.seqware.queryengine.model.User;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Unit tests of User.
+ * Unit tests of {@link User} and {@link Group}.
  *
  * @author dyuen
  */

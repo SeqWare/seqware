@@ -25,7 +25,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
- *
+ * Test using the simplest version of everything.
  * @author dyuen
  */
 @RunWith(DynamicSuite.class)

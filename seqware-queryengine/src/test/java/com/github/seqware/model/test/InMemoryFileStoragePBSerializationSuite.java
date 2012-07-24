@@ -25,6 +25,9 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
+ * This tests non-optimized model objects against a file storage back-end using
+ * ProtoBuffer serialization.
+ *
  * @author dyuen
  */
 @RunWith(DynamicSuite.class)
@@ -36,9 +39,9 @@ public class InMemoryFileStoragePBSerializationSuite {
         Factory.setFactoryBackendType(Factory.Model_Type.IN_MEMORY, Factory.Storage_Type.FILE_STORAGE, Factory.Serialization_Type.PROTOBUF);
         Factory.getStorage().clearStorage();
     }
-    
+
     @AfterClass
-    public static void tearDownSuite(){
+    public static void tearDownSuite() {
         Logger.getLogger(InMemoryFileStoragePBSerializationSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
         Factory.setFactoryBackendType(null, null, null);
     }

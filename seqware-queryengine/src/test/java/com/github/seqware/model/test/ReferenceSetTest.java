@@ -5,13 +5,12 @@ import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.model.Reference;
 import com.github.seqware.queryengine.model.ReferenceSet;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Unit tests of ReferenceSet.
+ * Unit tests of {@link ReferenceSet}.
  *
  * @author jbaran
  */

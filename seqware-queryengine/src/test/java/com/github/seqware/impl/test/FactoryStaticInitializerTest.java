@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.junit.Test;
 
 /**
- * Tests with a static initializer block
+ * Tests with a static initializer block.
  *
  * @author dyuen
  */

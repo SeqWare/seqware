@@ -3,7 +3,6 @@ package com.github.seqware.model.test;
 import com.github.seqware.impl.test.SimplePersistentBackEndTest;
 import com.github.seqware.queryengine.factory.Factory;
 import com.github.seqware.queryengine.factory.ModelManager;
-import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.Constant;
 import com.github.seqware.queryengine.kernel.RPNStack.Operation;
@@ -17,7 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Unit tests of QueryInterface.
+ * Unit tests of {@link com.github.seqware.queryengine.model.QueryInterface}
  *
  * @author dyuen
  */

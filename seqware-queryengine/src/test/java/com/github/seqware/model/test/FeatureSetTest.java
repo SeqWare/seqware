@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Unit tests of FeatureSet.
+ * Unit tests of {@link FeatureSet}.
  *
  * @author jbaran
  * @author dyuen

@@ -1,18 +1,16 @@
 package com.github.seqware.impl.test;
 
-import com.github.seqware.queryengine.factory.Factory;
-import com.github.seqware.queryengine.factory.ModelManager;
 import com.github.seqware.queryengine.impl.ApacheSerialization;
-import com.github.seqware.queryengine.impl.TmpFileStorage;
 import com.github.seqware.queryengine.impl.SimpleModelManager;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
+import com.github.seqware.queryengine.impl.TmpFileStorage;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import java.util.UUID;
 import org.junit.Test;
 
 /**
- * Tests with a static initializer block
+ * Tests with a static initializer block using ApacheSerialization.
  *
  * @author dyuen
  */

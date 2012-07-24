@@ -21,8 +21,7 @@ import com.github.seqware.system.test.VCFImportExportTest;
 import org.junit.runner.RunWith;
 
 /**
- * Builds test suites
- * Taken from {@link http://stackoverflow.com/questions/1070202/junit-suiteclasses-with-a-static-list-of-classes }
+ * Add tests here to have them run against the command-line tools
  * @author dyuen
  */
 @RunWith(DynamicSuite.class)

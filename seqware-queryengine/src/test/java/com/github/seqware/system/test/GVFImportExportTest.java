@@ -20,7 +20,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * System tests for importing and exporting GVF files.
+ * This test demonstrates how one would import a GVF file and then export to a VCF file. 
  *
  * @author dyuen
  */

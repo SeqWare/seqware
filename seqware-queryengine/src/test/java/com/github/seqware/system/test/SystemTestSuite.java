@@ -25,6 +25,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
+ * Run all the tests that are for our command-line utilities.
  * @author dyuen
  */
 @RunWith(DynamicSuite.class)

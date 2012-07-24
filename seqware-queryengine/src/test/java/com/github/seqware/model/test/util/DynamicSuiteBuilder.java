@@ -16,13 +16,11 @@
  */
 package com.github.seqware.model.test.util;
 
-import com.github.seqware.impl.test.SimplePersistentBackEndTest;
 import com.github.seqware.model.test.*;
 import org.junit.runner.RunWith;
 
 /**
- * Builds test suites
- * Taken from {@link http://stackoverflow.com/questions/1070202/junit-suiteclasses-with-a-static-list-of-classes }
+ * Add tests here to have them run in the tests suites for the model directory.
  * @author dyuen
  */
 @RunWith(DynamicSuite.class)
