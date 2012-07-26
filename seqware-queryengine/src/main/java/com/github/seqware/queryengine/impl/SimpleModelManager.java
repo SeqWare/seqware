@@ -17,25 +17,25 @@
 package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.factory.BackEndInterface;
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.CreateUpdateManager.State;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Analysis.Builder;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
+import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.model.impl.inMemory.*;
+import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.github.seqware.queryengine.util.FSGID;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * A Simple implementation of the CreateUpdateManager interface. We can make this more
- * efficient later.
+ * A Simple implementation of the CreateUpdateManager interface. We can make
+ * this more efficient later.
  *
  * The current idea is that we try to minimize the interaction with the user by
  * using Hibernate/JPA-like semantics.
@@ -60,39 +60,119 @@ public class SimpleModelManager implements CreateUpdateManager {
         } catch (InterruptedException ex) {
             Logger.getLogger(SimpleModelManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         // create separate working lists for objects destined for different tables
         Map<String, List<Atom>> sortedStore = new HashMap<String, List<Atom>>();
         Map<String, List<Atom>> sortedUpdate = new HashMap<String, List<Atom>>();
         for (Entry<String, AtomStatePair> e : workingList) {
             AtomImpl atom = (AtomImpl) e.getValue().atom;
             String cl = atom.getHBasePrefix();
-            if (e.getValue().getState() == State.NEW_VERSION){
+            if (e.getValue().getState() == State.NEW_VERSION) {
                 if (!sortedUpdate.containsKey(cl)) {
                     sortedUpdate.put(cl, new ArrayList<Atom>());
                 }
                 sortedUpdate.get(cl).add(e.getValue().getAtom());
-            } else{
+            } else {
                 if (!sortedStore.containsKey(cl)) {
                     sortedStore.put(cl, new ArrayList<Atom>());
                 }
                 sortedStore.get(cl).add(e.getValue().getAtom());
             }
         }
+        // we need to transparently go through the tables of individual features and place them within FeatureLists
+        // and then extract them back-out when we are done. This should be transparent to the user
+        for (Entry<String, List<Atom>> e : sortedStore.entrySet()) {
+            createBuckets(e);
+        }
+        for (Entry<String, List<Atom>> e : sortedUpdate.entrySet()) {
+            createBuckets(e);
+        }
+
+
         // order in order to avoid problems when sets are flushed before their elements (leading to unpopulated 
         // timestamp values) (order is now irrelevant since timestamps are generated locally)
         //Class[] classOrder = {Feature.class, Tag.class, User.class, Reference.class, Analysis.class, FeatureSet.class, Group.class, TagSpecSet.class, ReferenceSet.class, AnalysisSet.class};
-        for(String cl : sortedStore.keySet()){
+        for (String cl : sortedStore.keySet()) {
             List<Atom> s1 = sortedStore.get(cl);
-            if (s1 != null && !s1.isEmpty()){
+            if (s1 != null && !s1.isEmpty()) {
                 backend.store(s1.toArray(new Atom[s1.size()]));
             }
         }
-        for(String cl : sortedUpdate.keySet()){
+        for (String cl : sortedUpdate.keySet()) {
             List<Atom> s2 = sortedUpdate.get(cl);
-            if (s2 != null && !s2.isEmpty()){
+            if (s2 != null && !s2.isEmpty()) {
                 backend.update(s2.toArray(new Atom[s2.size()]));
             }
+        }
+
+        // we need to get rid of the buckets
+        for (Entry<String, List<Atom>> e : sortedStore.entrySet()) {
+            removeBuckets(e);
+        }
+        for (Entry<String, List<Atom>> e : sortedUpdate.entrySet()) {
+            removeBuckets(e);
+        }
+    }
+
+    private void createBuckets(Entry<String, List<Atom>> e) {
+        if (e.getKey().startsWith(FeatureList.prefix + StorageInterface.separator)) {
+            // sort Features and place them within buckets
+            List<Atom> features = e.getValue();
+            // sort based on the row key, this should place features with the same start position next to each other
+            Collections.sort(features, new Comparator() {
+
+                @Override
+                public int compare(Object t, Object t1) {
+                    assert (t instanceof Feature);
+                    assert (t1 instanceof Feature);
+                    Feature f0 = (Feature) t;
+                    Feature f1 = (Feature) t1;
+                    // first separate by featureset
+                    if (!((FSGID)f0.getSGID()).getFeatureSetID().equals(((FSGID)f1.getSGID()).getFeatureSetID())){
+                        return ((FSGID)f0.getSGID()).getFeatureSetID().getRowKey().compareTo(((FSGID)f1.getSGID()).getFeatureSetID().getRowKey());
+                    }
+                    // then by rowkey
+                    return f0.getSGID().getRowKey().compareTo(f1.getSGID().getRowKey());
+                }
+            });
+            // go through and upgrade to buckets
+            List<Atom> bucketList = new ArrayList<Atom>(features.size());
+            FeatureList featureList = null;
+            String lastRowKey = "";
+            for (Atom a : features) {
+                Feature f = (Feature) a;
+                // start a new bucket if this is a new rowkey
+                if (!f.getSGID().getRowKey().equals(lastRowKey)) {
+                    if (featureList != null) {
+                        bucketList.add(featureList);
+                    }
+                    featureList = new FeatureList();
+                    lastRowKey = f.getSGID().getRowKey();
+                }
+                assert (featureList.getFeatures().isEmpty() || featureList.getSGID().getRowKey().equals(f.getSGID().getRowKey()));
+                featureList.add(f);
+                // upgrade the featureList with this redundant information on the way in
+                featureList.impersonate(new FSGID(featureList.getSGID(), (FSGID) f.getSGID()), featureList.getPrecedingSGID());
+            }
+            if (featureList.getFeatures().size() > 0) {
+                bucketList.add(featureList);
+            }
+            e.setValue(bucketList);
+        }
+    }
+
+    private void removeBuckets(Entry<String, List<Atom>> e) {
+        if (e.getKey().startsWith(FeatureList.prefix + StorageInterface.separator)) {
+            List<Atom> bucketList = e.getValue();
+            // go through and upgrade to buckets
+            List<Atom> features = new ArrayList<Atom>(bucketList.size());
+            for (Atom bucket : bucketList) {
+                FeatureList list = (FeatureList) bucket;
+                for (Feature f : list.getFeatures()) {
+                    features.add(f);
+                }
+            }
+            e.setValue(features);
         }
     }
 
@@ -177,7 +257,11 @@ public class SimpleModelManager implements CreateUpdateManager {
     public FeatureSet.Builder buildFeatureSet() {
         FeatureSet.Builder fSet = null;
         if (backend instanceof SimplePersistentBackEnd) {
-            fSet = InMemoryFeatureSet.newBuilder().setManager(this);
+            if (SWQEFactory.getStorage() instanceof HBaseStorage) {
+                fSet = LazyFeatureSet.newBuilder().setManager(this);
+            } else {
+                fSet = InMemoryFeatureSet.newBuilder().setManager(this);
+            }
         }
         return fSet;
     }

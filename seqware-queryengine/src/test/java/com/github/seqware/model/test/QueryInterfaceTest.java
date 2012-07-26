@@ -53,11 +53,12 @@ public class QueryInterfaceTest {
         boolean b2 = false;
         boolean b3 = false;
         for (Feature f : result) {
-            if (f.equals(a1)) {
+            // sadly, Features no longer will be exactly the same after a query, we need a "contents" equals
+            if (f.getStart() == a1.getStart() && f.getStart() == a1.getStart()) {
                 b1 = true;
-            } else if (f.equals(a2)) {
+            } else if (f.getStart() == a2.getStart() && f.getStart() == a2.getStart()) {
                 b2 = true;
-            } else if (f.equals(a3)) {
+            } else if (f.getStart() == a3.getStart() && f.getStart() == a3.getStart()) {
                 b3 = true;
             }
         }
@@ -74,7 +75,7 @@ public class QueryInterfaceTest {
         for (Feature f : result) {
             Assert.assertTrue(f.getType().equals("type1"));
         }
-        Assert.assertTrue(result.getCount() == 1);
+        Assert.assertTrue("Query results wrong, expected 1 and found " + result.getCount(), result.getCount() == 1);
     }
 
     @Test
@@ -93,7 +94,7 @@ public class QueryInterfaceTest {
                 "id",
                 Operation.EQUAL));
         FeatureSet resultSet = queryFuture.get();
-        junit.framework.Assert.assertTrue("Setting a query constraints with 1 operation on 'id' failed.", resultSet.getCount() == 10);
+        junit.framework.Assert.assertTrue("Setting a query constraints with 1 operation on 'id' failed, expected 10 and found " + resultSet.getCount(), resultSet.getCount() == 10);
 
         queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant(Feature.Strand.NEGATIVE),

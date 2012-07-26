@@ -17,6 +17,7 @@
 package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.model.*;
+import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.util.SGID;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
@@ -31,7 +32,7 @@ public abstract class StorageInterface {
     /**
      * These tables are created on-the-fly with a referenceID appended in order to separate out Features by Reference
      */
-    public final BiMap<Class, String> indirectBIMap = new ImmutableBiMap.Builder<Class, String>().put(Feature.class, Feature.prefix)
+    public final BiMap<Class, String> indirectBIMap = new ImmutableBiMap.Builder<Class, String>().put(FeatureList.class, FeatureList.prefix)
             .build();
     /**
      * These tables are always created with the same names

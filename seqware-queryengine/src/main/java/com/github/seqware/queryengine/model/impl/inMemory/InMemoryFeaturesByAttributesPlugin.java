@@ -16,8 +16,8 @@
  */
 package com.github.seqware.queryengine.model.impl.inMemory;
 
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
@@ -83,8 +83,10 @@ public class InMemoryFeaturesByAttributesPlugin implements MapReducePlugin<Featu
                 rpnStack.setParameter(parameter, f.getAttribute((String)parameter));
 
             // Now carry out the actual evaluation that determines whether f is relevant:
-            if ((Boolean)rpnStack.evaluate() == true)
-                accumulator.add(f);
+            if ((Boolean)rpnStack.evaluate() == true){
+                Feature build = f.toBuilder().build();
+                accumulator.add(build);
+            }
         }
 
         return new ReturnValue();
@@ -116,8 +118,10 @@ public class InMemoryFeaturesByAttributesPlugin implements MapReducePlugin<Featu
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
 
         FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("ad_hoc_analysis").build()).build();
+        for(Feature f : accumulator){
+            mManager.objectCreated(f);
+        }
         fSet.add(accumulator);
-
         mManager.close();
 
         return fSet;

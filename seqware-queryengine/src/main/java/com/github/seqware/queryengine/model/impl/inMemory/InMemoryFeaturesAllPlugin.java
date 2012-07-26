@@ -81,6 +81,9 @@ public class InMemoryFeaturesAllPlugin implements MapReducePlugin<Feature, Featu
     public FeatureSet getFinalResult() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("ad_hoc_analysis").build()).build();
+        for(Feature f : accumulator){
+            mManager.objectCreated(f);
+        }
         fSet.add(accumulator);
         mManager.close();
         return fSet;
@@ -89,7 +92,8 @@ public class InMemoryFeaturesAllPlugin implements MapReducePlugin<Feature, Featu
     @Override
     public ReturnValue map(Feature atom, FeatureSet mappedSet) {
         for (Feature f : set) {
-            accumulator.add(f);
+            Feature build = f.toBuilder().build();
+            accumulator.add(build);
         }
         return new AnalysisPluginInterface.ReturnValue();
     }

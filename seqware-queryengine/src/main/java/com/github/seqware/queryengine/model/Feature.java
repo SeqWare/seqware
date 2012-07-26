@@ -29,8 +29,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 public class Feature extends AtomImpl<Feature> {
 
-    public final static String prefix = "Feature";
-
     /**
      * Strand locations of features.
      *

@@ -18,7 +18,9 @@ package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.model.Atom;
+import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
+import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.File;
 import java.io.IOException;
@@ -94,6 +96,8 @@ public class TmpFileStorage extends StorageInterface {
             if (sgid == null) {
                 return null;
             }
+            // if this is a Feature in a FeatureList, we do not have granularity of 
+            
             //FileTypePair target = map.get(sgid);
             String suffix = sgid.getRowKey() + StorageInterface.separator + sgid.getBackendTimestamp().getTime();
             for (File file : FileUtils.listFiles(tempDir, new SuffixFileFilter(suffix), null)) {
@@ -105,6 +109,14 @@ public class TmpFileStorage extends StorageInterface {
                 objData = FileUtils.readFileToByteArray(file);
                 assert(cl != null && objData != null);
                 Atom suspect = (Atom) serializer.deserialize(objData, cl);
+                if (suspect instanceof FeatureList){
+                    // dig deeper if this is a list of Features
+                    for(Feature f : ((FeatureList)suspect).getFeatures()){
+                        if (f.getSGID().equals(sgid)){
+                            return f;
+                        }
+                    }
+                }
                 return suspect;
             }
             return null;

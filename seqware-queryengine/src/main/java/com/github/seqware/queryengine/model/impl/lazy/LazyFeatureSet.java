@@ -1,31 +1,36 @@
-package com.github.seqware.queryengine.model.impl.inMemory;
+package com.github.seqware.queryengine.model.impl.lazy;
 
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.impl.HBaseStorage;
+import com.github.seqware.queryengine.impl.StorageInterface;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Reference;
+import com.github.seqware.queryengine.model.impl.FeatureList;
+import com.github.seqware.queryengine.model.impl.LazyMolSet;
 import com.github.seqware.queryengine.util.FSGID;
-import com.github.seqware.queryengine.util.InMemoryIterator;
 import com.github.seqware.queryengine.util.LazyReference;
 import com.github.seqware.queryengine.util.SGID;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * An in-memory representation of a feature set.
+ * An "lazy" representation of a feature set. This forces individual members to
+ * persist and manage their own membership.
  *
- * @author jbaran
+ * @author dyuen
  */
-public class InMemoryFeatureSet extends FeatureSet {
+public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet, Feature> {
 
     /**
      * Associated reference.
      */
     private LazyReference<Reference> reference = new LazyReference<Reference>(Reference.class);
-    /**
-     * The set of features this instance represents when an in-memory storage
-     * model is used.
-     */
-    private Set<Feature> features = new HashSet<Feature>();
     /**
      * User defined description of this feature set, can be used to store pragma
      * information for a set of features.
@@ -35,7 +40,7 @@ public class InMemoryFeatureSet extends FeatureSet {
     /**
      * Creates an in-memory feature set.
      */
-    protected InMemoryFeatureSet() {
+    protected LazyFeatureSet() {
         super();
     }
 
@@ -52,21 +57,32 @@ public class InMemoryFeatureSet extends FeatureSet {
     @Override
     public FeatureSet add(Feature feature) {
         upgradeFeatureSGID(feature);
-        features.add(feature);
         if (this.getManager() != null) {
             this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);
         }
         return this;
     }
 
-    protected void upgradeFeatureSGID(Feature feature) {
+    private void upgradeFeatureSGID(Feature feature) {
         // try upgrading Feature IDs here, faster than in model manager and FeatureSets should be guaranteed to have references
-        if (!(feature.getSGID() instanceof FSGID)){
+//        if (!(feature.getSGID() instanceof FSGID)) {
             FSGID fsgid = new FSGID(feature.getSGID(), feature, this);
             // as a convenience, we should have Features in a FeatureSet and the associated FeatureLists take on the time
             // of the FeatureSet
             fsgid.setBackendTimestamp(this.getTimestamp());
             feature.impersonate(fsgid, feature.getPrecedingSGID());
+            if (getManager() != null) {
+                getManager().atomStateChange(feature, CreateUpdateManager.State.NEW_VERSION);
+            }
+//        }
+    }
+
+    private void entombFeatureSGID(Feature feature) {
+        assert (feature.getSGID() instanceof FSGID);
+        FSGID fsgid = (FSGID) feature.getSGID();
+        fsgid.setTombstone(true);
+        if (getManager() != null) {
+            getManager().atomStateChange(feature, CreateUpdateManager.State.NEW_VERSION);
         }
     }
 
@@ -75,7 +91,6 @@ public class InMemoryFeatureSet extends FeatureSet {
         for (Feature f : elements) {
             upgradeFeatureSGID(f);
         }
-        this.features.addAll(Arrays.asList(elements));
         if (this.getManager() != null) {
             this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);
         }
@@ -84,7 +99,7 @@ public class InMemoryFeatureSet extends FeatureSet {
 
     @Override
     public FeatureSet remove(Feature feature) {
-        features.remove(feature);
+        entombFeatureSGID(feature);
         if (this.getManager() != null) {
             this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);
         }
@@ -96,7 +111,6 @@ public class InMemoryFeatureSet extends FeatureSet {
         for (Feature f : features) {
             upgradeFeatureSGID(f);
         }
-        this.features.addAll(features);
         if (this.getManager() != null) {
             this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);
         }
@@ -105,7 +119,13 @@ public class InMemoryFeatureSet extends FeatureSet {
 
     @Override
     public Iterator<Feature> getFeatures() {
-        return new InMemoryIterator<Feature>(features.iterator());
+        // for now, this only makes sense for HBase
+        assert (SWQEFactory.getStorage() instanceof HBaseStorage);
+        return ((HBaseStorage) SWQEFactory.getStorage()).getAllFeaturesForFeatureSet(this).iterator();
+    }
+
+    public String getTablename() {
+        return FeatureList.prefix + StorageInterface.separator + this.reference.get().getName();
     }
 
     @Override
@@ -115,17 +135,28 @@ public class InMemoryFeatureSet extends FeatureSet {
 
     @Override
     public long getCount() {
-        return features.size();
+        Logger.getLogger(HBaseStorage.class.getName()).log(Level.WARNING, "Iterating through a LazyFeatureSet is expensive, avoid this");
+        // expensive, we need to iterate and count
+        Iterator<Feature> features = this.getFeatures();
+        long count = 0;
+        while (features.hasNext()) {
+            Feature next = features.next();
+            if (((FSGID) next.getSGID()).isTombstone()) {
+                continue;
+            }
+            count++;
+        }
+        return count;
     }
 
     public static FeatureSet.Builder newBuilder() {
-        return new InMemoryFeatureSet.Builder();
+        return new LazyFeatureSet.Builder();
     }
 
     @Override
-    public InMemoryFeatureSet.Builder toBuilder() {
-        InMemoryFeatureSet.Builder b = new InMemoryFeatureSet.Builder();
-        b.aSet = (InMemoryFeatureSet) this.copy(true);
+    public LazyFeatureSet.Builder toBuilder() {
+        LazyFeatureSet.Builder b = new LazyFeatureSet.Builder();
+        b.aSet = (LazyFeatureSet) this.copy(true);
         return b;
     }
 
@@ -151,17 +182,15 @@ public class InMemoryFeatureSet extends FeatureSet {
 
     @Override
     public void rebuild() {
-        Set<Feature> newSet = new HashSet<Feature>();
-        for (Feature f : this.features) {
-            newSet.add(f);
-        }
-        this.features = newSet;
+        /**
+         * do nothing
+         */
     }
 
     public static class Builder extends FeatureSet.Builder {
 
         public Builder() {
-            aSet = new InMemoryFeatureSet();
+            aSet = new LazyFeatureSet();
         }
 
         @Override
@@ -176,20 +205,20 @@ public class InMemoryFeatureSet extends FeatureSet {
         }
 
         @Override
-        public InMemoryFeatureSet.Builder setDescription(String description) {
-            ((InMemoryFeatureSet) aSet).description = description;
+        public LazyFeatureSet.Builder setDescription(String description) {
+            ((LazyFeatureSet) aSet).description = description;
             return this;
         }
 
         @Override
         public Builder setReference(Reference reference) {
-            ((InMemoryFeatureSet) aSet).reference.set(reference);
+            ((LazyFeatureSet) aSet).reference.set(reference);
             return this;
         }
 
         @Override
         public Builder setReferenceID(SGID referenceSGID) {
-            ((InMemoryFeatureSet) aSet).reference.setSGID(referenceSGID);
+            ((LazyFeatureSet) aSet).reference.setSGID(referenceSGID);
             return this;
         }
     }

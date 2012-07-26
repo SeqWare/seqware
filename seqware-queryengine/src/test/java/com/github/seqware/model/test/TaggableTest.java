@@ -209,7 +209,7 @@ public class TaggableTest {
     @Test
     public void testTagQueries() {
         // three features in the set
-        Assert.assertTrue(fSet.getCount() == 3);
+        Assert.assertTrue("expected 3 and found " + fSet.getCount(), fSet.getCount() == 3);
         // test queries that filter based on all three possibilities for tags 
         // subject only, subject and predicate, or all three
         // should get any features tagged with anything

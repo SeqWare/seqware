@@ -10,7 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Tests that storing FeatureSets and retrieving FeatureSets results in 
+ * Tests that storing FeatureSets and retrieving FeatureSets results in
  * consistent results.
  *
  * @author dyuen
@@ -23,7 +23,7 @@ public class FeatureStoreInterfaceTest {
     protected static Feature a1, a2, a3;
 
     @BeforeClass
-    public static void setupTests(){
+    public static void setupTests() {
         UUID testID = UUID.randomUUID();
         //System.out.println("starting beforeClass in testID: " + testID.toString());
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -74,11 +74,12 @@ public class FeatureStoreInterfaceTest {
         boolean b3 = false;
         for (FeatureSet fSet : SWQEFactory.getQueryInterface().getFeatureSets()) {
             for (Feature f : fSet) {
-                if (f.equals(a1)) {
+                // sadly, Features no longer will be exactly the same after a query, we need a "contents" equals
+                if (f.getStart() == a1.getStart() && f.getStart() == a1.getStart()) {
                     b1 = true;
-                } else if (f.equals(a2)) {
+                } else if (f.getStart() == a2.getStart() && f.getStart() == a2.getStart()) {
                     b2 = true;
-                } else if (f.equals(a3)) {
+                } else if (f.getStart() == a3.getStart() && f.getStart() == a3.getStart()) {
                     b3 = true;
                 }
             }
