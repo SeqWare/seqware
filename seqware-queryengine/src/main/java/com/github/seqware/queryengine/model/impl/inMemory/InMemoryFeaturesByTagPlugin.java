@@ -98,7 +98,8 @@ public class InMemoryFeaturesByTagPlugin implements MapReducePlugin<Feature, Fea
 
             }
             if (!ArrayUtils.contains(b, false)) {
-                accumulator.add(f);
+                Feature build = f.toBuilder().build();
+                accumulator.add(build);
             }
         }
         return new ReturnValue();
@@ -129,6 +130,9 @@ public class InMemoryFeaturesByTagPlugin implements MapReducePlugin<Feature, Fea
     public FeatureSet getFinalResult() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("ad_hoc_analysis").build()).build();
+        for(Feature f : accumulator){
+            mManager.objectCreated(f);
+        }
         fSet.add(accumulator);
         mManager.close();
         return fSet;

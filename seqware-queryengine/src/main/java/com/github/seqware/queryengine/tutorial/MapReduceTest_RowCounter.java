@@ -86,7 +86,7 @@ public class MapReduceTest_RowCounter {
         scan.setCacheBlocks(false);  // don't set to true for MR jobs
 
         TableMapReduceUtil.initTableMapperJob(
-                "dyuen_hbaseTestTable_Feature", // input HBase table name
+                "dyuen.hbaseTestTable.Feature.dummy_ref", // input HBase table name
                 scan, // Scan instance to control CF and attribute selection
                 MapReduceTest_RowCounter.RowCounterMapper.class, // mapper
                 null, // mapper output key 

@@ -17,12 +17,9 @@
 package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.model.*;
-import com.github.seqware.queryengine.util.InMemoryIterable;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SGIDIterable;
 import com.github.seqware.queryengine.util.SeqWareIterable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Implement HBase optimizations for the back-end

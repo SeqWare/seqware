@@ -8,7 +8,9 @@ import com.github.seqware.queryengine.util.InMemoryIterable;
 import com.github.seqware.queryengine.util.LazyReference;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 

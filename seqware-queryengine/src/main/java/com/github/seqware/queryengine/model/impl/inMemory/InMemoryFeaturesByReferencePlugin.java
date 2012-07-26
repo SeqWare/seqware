@@ -92,6 +92,9 @@ public class InMemoryFeaturesByReferencePlugin implements MapReducePlugin<Featur
     public FeatureSet getFinalResult() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("").build()).build();
+        for(Feature f : accumulator){
+            mManager.objectCreated(f);
+        }
         fSet.add(accumulator);
         mManager.close();
         return fSet;
@@ -101,7 +104,8 @@ public class InMemoryFeaturesByReferencePlugin implements MapReducePlugin<Featur
     public ReturnValue map(Feature atom, FeatureSet mappedSet) {
         if (set.getReference().equals(reference)){
             for (Feature f : set) {
-                accumulator.add(f);
+                Feature build = f.toBuilder().build();
+                accumulator.add(build);
             }
         }
         return new AnalysisPluginInterface.ReturnValue();
