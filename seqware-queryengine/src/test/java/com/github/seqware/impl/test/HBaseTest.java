@@ -53,7 +53,6 @@ public class HBaseTest implements Benchmarking {
      * objects.
      */
     private enum SerializationFramework {
-
         KRYO, PROTOBUF, APACHE //, TUPLEBINDER
     };
     /**
