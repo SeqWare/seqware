@@ -1,5 +1,6 @@
 package com.github.seqware.model.test;
 
+import com.github.seqware.Benchmarking;
 import com.github.seqware.impl.test.SimplePersistentBackEndTest;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
@@ -19,8 +20,9 @@ import org.junit.Test;
  * Unit tests of {@link com.github.seqware.queryengine.model.QueryInterface}
  *
  * @author dyuen
+ * @author jbaran
  */
-public class QueryInterfaceTest {
+public class QueryInterfaceTest implements Benchmarking {
 
     private static FeatureSet aSet, bSet;
     private static Feature a1, a2, a3, a4;
