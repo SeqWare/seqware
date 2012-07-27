@@ -35,7 +35,7 @@ public class InMemoryFeatureSet extends FeatureSet {
     /**
      * Creates an in-memory feature set.
      */
-    protected InMemoryFeatureSet() {
+    private InMemoryFeatureSet() {
         super();
     }
 

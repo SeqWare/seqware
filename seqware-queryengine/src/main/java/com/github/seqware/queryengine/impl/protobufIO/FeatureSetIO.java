@@ -19,14 +19,12 @@ package com.github.seqware.queryengine.impl.protobufIO;
 import com.github.seqware.queryengine.dto.QueryEngine;
 import com.github.seqware.queryengine.dto.QueryEngine.FeatureSetPB;
 import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.impl.HBaseStorage;
+import com.github.seqware.queryengine.impl.SimpleModelManager;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.LazyMolSet;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
-import com.github.seqware.queryengine.model.impl.inMemory.InMemoryFeatureSet;
-import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
 import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.SGID;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -42,7 +40,7 @@ public class FeatureSetIO implements ProtobufTransferInterface<FeatureSetPB, Fea
 
     @Override
     public FeatureSet pb2m(FeatureSetPB userpb) {
-        FeatureSet.Builder builder = (SWQEFactory.getStorage() instanceof HBaseStorage ? LazyFeatureSet.newBuilder() : InMemoryFeatureSet.newBuilder());
+        FeatureSet.Builder builder = SimpleModelManager.buildFeatureSetInternal();
         builder = userpb.hasDescription() ? builder.setDescription(userpb.getDescription()) : builder;
         builder = userpb.hasReferenceID() ? builder.setReferenceID(SGIDIO.pb2m(userpb.getReferenceID())) : builder;
         FeatureSet user = builder.build();

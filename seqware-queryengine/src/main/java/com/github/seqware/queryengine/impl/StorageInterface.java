@@ -41,7 +41,8 @@ public abstract class StorageInterface {
             .put(AnalysisSet.class, AnalysisSet.prefix).put(Reference.class, Reference.prefix).put(ReferenceSet.class, ReferenceSet.prefix)
             .put(Tag.class, Tag.prefix).put(TagSpecSet.class, TagSpecSet.prefix).put(User.class, User.prefix).put(Group.class, Group.prefix)
             .put(FeatureSet.class, FeatureSet.prefix).build();
-    public static final String separator = ".";
+    
+    public static final String SEPARATOR = ".";
     
     /**
      * Generically serialize an Atom into the interface
@@ -117,4 +118,13 @@ public abstract class StorageInterface {
      * serialization store
      */
     public abstract void clearStorage();
+    
+    
+    /**
+     * Iterate through all the features in a featureset, this might be moved later.
+     * However, it is currently here because iterating through a FeatureSet might become non-trivial and Storage type dependent.
+     * @param fSet
+     * @return 
+     */
+    public abstract Iterable<Feature> getAllFeaturesForFeatureSet(FeatureSet fSet);
 }

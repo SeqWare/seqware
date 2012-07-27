@@ -47,6 +47,12 @@ public class SimpleModelManager implements CreateUpdateManager {
     private Map<String, AtomStatePair> dirtySet = new HashMap<String, AtomStatePair>();
     private BackEndInterface backend = SWQEFactory.getBackEnd();
 
+    public static FeatureSet.Builder buildFeatureSetInternal() {
+        FeatureSet.Builder fSet;
+            fSet = LazyFeatureSet.newBuilder();
+        return fSet;
+    }
+
     /**
      * Flush objects to the back-end giving a working list
      *
@@ -115,7 +121,7 @@ public class SimpleModelManager implements CreateUpdateManager {
     }
 
     private void createBuckets(Entry<String, List<Atom>> e) {
-        if (e.getKey().startsWith(FeatureList.prefix + StorageInterface.separator)) {
+        if (e.getKey().startsWith(FeatureList.prefix + StorageInterface.SEPARATOR)) {
             // sort Features and place them within buckets
             List<Atom> features = e.getValue();
             // sort based on the row key, this should place features with the same start position next to each other
@@ -162,7 +168,7 @@ public class SimpleModelManager implements CreateUpdateManager {
     }
 
     private void removeBuckets(Entry<String, List<Atom>> e) {
-        if (e.getKey().startsWith(FeatureList.prefix + StorageInterface.separator)) {
+        if (e.getKey().startsWith(FeatureList.prefix + StorageInterface.SEPARATOR)) {
             List<Atom> bucketList = e.getValue();
             // go through and upgrade to buckets
             List<Atom> features = new ArrayList<Atom>(bucketList.size());
@@ -257,12 +263,9 @@ public class SimpleModelManager implements CreateUpdateManager {
     public FeatureSet.Builder buildFeatureSet() {
         FeatureSet.Builder fSet = null;
         if (backend instanceof SimplePersistentBackEnd) {
-            if (SWQEFactory.getStorage() instanceof HBaseStorage) {
-                fSet = LazyFeatureSet.newBuilder().setManager(this);
-            } else {
-                fSet = InMemoryFeatureSet.newBuilder().setManager(this);
-            }
+            fSet = buildFeatureSetInternal();
         }
+        fSet.setManager(this);
         return fSet;
     }
 
@@ -428,15 +431,5 @@ public class SimpleModelManager implements CreateUpdateManager {
         public String toString() {
             return state.toString() + " " + atom.toString();
         }
-    }
-
-    /**
-     * Used for testing only, override the backend choice when testing
-     * implementations
-     *
-     * @param backend
-     */
-    public void overrideBackEnd(BackEndInterface backend) {
-        this.backend = backend;
     }
 }

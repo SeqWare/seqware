@@ -20,6 +20,7 @@ import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Feature;
+import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
@@ -49,7 +50,7 @@ public class HBaseStorage extends StorageInterface {
     public static final byte[] TEST_QUALIFIER_INBYTES = Bytes.toBytes("qualifier");
     private boolean inefficiencyWarning = false;
     public static final int PAD = 15;
-    private static final String TEST_TABLE_PREFIX = System.getProperty("user.name") + StorageInterface.separator + "hbaseTestTable_v2";
+    private static final String TEST_TABLE_PREFIX = System.getProperty("user.name") + StorageInterface.SEPARATOR + "hbaseTestTable_v2";
     private static final boolean PERSIST = Constants.PERSIST;
     private Configuration config;
     private SerializationInterface serializer;
@@ -105,7 +106,7 @@ public class HBaseStorage extends StorageInterface {
      * @throws IOException
      */
     private void createTable(String s, HBaseAdmin hba) throws IOException {
-        String tableName = TEST_TABLE_PREFIX + StorageInterface.separator + s;
+        String tableName = TEST_TABLE_PREFIX + StorageInterface.SEPARATOR + s;
         // Create a fresh table, i.e. delete an existing table if it exists:
         HTableDescriptor ht = new HTableDescriptor(tableName);
         HColumnDescriptor hColumnDescriptor = new HColumnDescriptor(TEST_COLUMN);
@@ -300,7 +301,7 @@ public class HBaseStorage extends StorageInterface {
     @Override
     public final void clearStorage() {
         for (String s : tableMap.keySet()) {
-            String tableName = TEST_TABLE_PREFIX + StorageInterface.separator + s;
+            String tableName = TEST_TABLE_PREFIX + StorageInterface.SEPARATOR + s;
             // Create a fresh table, i.e. delete an existing table if it exists:
             HTableDescriptor ht = new HTableDescriptor(tableName);
             ht.addFamily(new HColumnDescriptor(TEST_COLUMN));
@@ -351,11 +352,14 @@ public class HBaseStorage extends StorageInterface {
         }
     }
 
-    public Iterable<Feature> getAllFeaturesForFeatureSet(LazyFeatureSet fSet) {
-        String prefix = fSet.getTablename();
+    @Override
+    public Iterable<Feature> getAllFeaturesForFeatureSet(FeatureSet fSet) {
+        assert(fSet instanceof LazyFeatureSet);
+        LazyFeatureSet lfSet = (LazyFeatureSet) fSet;
+        String prefix = lfSet.getTablename();
         HTable table = tableMap.get(prefix);
         if (table == null) {
-            establishTableConnection(fSet.getTablename());
+            establishTableConnection(lfSet.getTablename());
             table = tableMap.get(prefix);
         }
 
