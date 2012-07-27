@@ -192,7 +192,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     }
 
     @Override
-    public QueryFuture getFeaturesByRange(int hours, FeatureSet set, Location location, long start, long stop) {
+    public QueryFuture getFeaturesByRange(int hours, FeatureSet set, Location location, String structure, long start, long stop) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
