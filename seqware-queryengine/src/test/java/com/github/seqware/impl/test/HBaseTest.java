@@ -3,6 +3,7 @@ package com.github.seqware.impl.test;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.github.seqware.Benchmarking;
 import com.github.seqware.queryengine.dto.QueryEngine.FeaturePB;
 import com.github.seqware.queryengine.impl.protobufIO.FeatureIO;
 import com.github.seqware.queryengine.impl.tuplebinderIO.FeatureTB;
@@ -42,31 +43,16 @@ import org.objenesis.strategy.SerializingInstantiatorStrategy;
  *
  * @author jbaran
  */
-public class HBaseTest {
+public class HBaseTest implements Benchmarking {
 
     private static final String TEST_TABLE = "seqwareTestTable";
     private static final String TEST_COLUMN = "fauxColumn";
-    /**
-     * Number of runs to execute to determine average
-     * serialization/de-serialization times.
-     */
-    private static final int BENCHMARK_RUNS = 10;
-    /**
-     * Number of features that should be used for benchmarking
-     * serialization/de-serialization.
-     */
-    private static final int BENCHMARK_FEATURES = 10000;
-    /**
-     * Run benchmarks
-     */
-    private boolean BENCHMARK;
 
     /**
      * Determines which framework should be used for serializing/de-serializing
      * objects.
      */
     private enum SerializationFramework {
-
         KRYO, PROTOBUF, APACHE //, TUPLEBINDER
     };
     /**
@@ -190,9 +176,6 @@ public class HBaseTest {
 
         HTable table = new HTable(config, tableName);
         table.setAutoFlush(true);
-
-        // run benchmarks in batched mode
-        this.BENCHMARK = System.getProperty("com.github.seqware.benchmark", "false").equals("true");
 
         // Variables that track times for individual benchmark runs:
         long[] serializationTimes = new long[BENCHMARK_RUNS];
