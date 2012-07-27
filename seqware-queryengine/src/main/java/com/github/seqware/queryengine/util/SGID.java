@@ -97,7 +97,7 @@ public class SGID implements Serializable, KryoSerializable {
 
     @Override
     public String toString() {
-        return uuid.toString() + StorageInterface.separator + backendTimestamp.getTime();
+        return uuid.toString() + StorageInterface.SEPARATOR + backendTimestamp.getTime();
     }
 
     /**

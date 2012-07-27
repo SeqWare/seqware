@@ -58,7 +58,7 @@ public class RowKeyFeatureSetTest {
 
     @Test
     public void testRowKeyGeneration() {
-        String[] expKeys = {"funky_ref" + StorageInterface.separator + "chr16:000000049291141", "funky_ref" + StorageInterface.separator + "chr16:000000049291360", "funky_ref" + StorageInterface.separator + "chr16:000000049302125"};
+        String[] expKeys = {"funky_ref" + StorageInterface.SEPARATOR + "chr16:000000049291141", "funky_ref" + StorageInterface.SEPARATOR + "chr16:000000049291360", "funky_ref" + StorageInterface.SEPARATOR + "chr16:000000049302125"};
         List<String> actKeys = new ArrayList<String>();
 
         // test in memory 

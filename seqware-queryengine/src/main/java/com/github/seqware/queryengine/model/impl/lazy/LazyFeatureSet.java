@@ -3,6 +3,7 @@ package com.github.seqware.queryengine.model.impl.lazy;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.HBaseStorage;
+import com.github.seqware.queryengine.impl.NonPersistentStorage;
 import com.github.seqware.queryengine.impl.StorageInterface;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
@@ -13,9 +14,7 @@ import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.LazyReference;
 import com.github.seqware.queryengine.util.SGID;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,7 +39,7 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
     /**
      * Creates an in-memory feature set.
      */
-    protected LazyFeatureSet() {
+    private LazyFeatureSet() {
         super();
     }
 
@@ -119,13 +118,11 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
 
     @Override
     public Iterator<Feature> getFeatures() {
-        // for now, this only makes sense for HBase
-        assert (SWQEFactory.getStorage() instanceof HBaseStorage);
-        return ((HBaseStorage) SWQEFactory.getStorage()).getAllFeaturesForFeatureSet(this).iterator();
+        return SWQEFactory.getStorage().getAllFeaturesForFeatureSet(this).iterator();
     }
 
     public String getTablename() {
-        return FeatureList.prefix + StorageInterface.separator + this.reference.get().getName();
+        return FeatureList.prefix + StorageInterface.SEPARATOR + this.reference.get().getName();
     }
 
     @Override

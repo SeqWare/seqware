@@ -1,11 +1,7 @@
 package com.github.seqware.impl.test;
 
-import com.github.seqware.queryengine.factory.BackEndInterface;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
-import com.github.seqware.queryengine.impl.ApacheSerialization;
-import com.github.seqware.queryengine.impl.TmpFileStorage;
-import com.github.seqware.queryengine.impl.SimpleModelManager;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
@@ -26,9 +22,6 @@ public class ApacheConstructorTest  {
     
     public ApacheConstructorTest() {
         ApacheConstructorTest.testID = UUID.randomUUID();
-        //System.out.println("starting static init in testID: " + testID.toString());
-        // backend = new SimplePersistentBackEnd(new TmpFileStorage(new ApacheSerialization()));
-        //mManager.overrideBackEnd(backend);
         SWQEFactory.setFactoryBackendType(SWQEFactory.Model_Type.IN_MEMORY, SWQEFactory.Storage_Type.FILE_STORAGE, SWQEFactory.Serialization_Type.APACHE);
         backend = (SimplePersistentBackEnd) SWQEFactory.getBackEnd();
         CreateUpdateManager mManager = SWQEFactory.getModelManager();

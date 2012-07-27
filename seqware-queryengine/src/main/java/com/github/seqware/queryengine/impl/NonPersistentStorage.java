@@ -18,8 +18,11 @@ package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Feature;
+import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.FeatureList;
+import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
+import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.SGID;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,9 +52,32 @@ public class NonPersistentStorage extends StorageInterface {
         if (objImpl.getPrecedingSGID() != null) {
             assert (!(objImpl.getPrecedingSGID().equals(objImpl.getSGID())));
         }
-//        obj.getSGID().setBackendTimestamp(new Date(System.currentTimeMillis()));
         ByteTypePair pair = new ByteTypePair(serializer.serialize(obj), cl);
-        map.put(obj.getSGID().getRowKey().toString() + separator + obj.getSGID().getBackendTimestamp().getTime(), pair);
+        map.put(createKey(obj), pair);
+    }
+
+    protected static String createKey(Atom obj) {
+        assert (!(obj instanceof FeatureList) && obj.getSGID() instanceof SGID || (obj instanceof FeatureList && obj.getSGID() instanceof FSGID));
+        SGID sgid = obj.getSGID();
+        return createKey(sgid);
+    }
+    
+    protected static String createKey(SGID sgid) {
+        return  createKey(sgid, true);
+    }
+
+    protected static String createKey(SGID sgid, boolean useTimestamp) {
+        StringBuilder buff = new StringBuilder();
+        if (sgid instanceof FSGID) {
+            FSGID fsgid = (FSGID) sgid;
+            buff.append(sgid.getRowKey().toString()).append(SEPARATOR).append(fsgid.getFeatureSetID().getUuid().toString());
+        } else{
+            buff.append(sgid.getRowKey().toString());
+        }
+        if (useTimestamp){
+            buff.append(SEPARATOR).append(sgid.getBackendTimestamp().getTime());
+        }
+        return buff.toString();
     }
 
     @Override
@@ -63,13 +89,13 @@ public class NonPersistentStorage extends StorageInterface {
 
     @Override
     public Atom deserializeTargetToAtom(SGID sgid) {
-        if (!map.containsKey(sgid.getRowKey().toString() + separator + sgid.getBackendTimestamp().getTime())) {
+        if (!map.containsKey(createKey(sgid))) {
             return null;
         }
-        Atom a = (Atom) serializer.deserialize(map.get(sgid.getRowKey().toString() + separator + sgid.getBackendTimestamp().getTime()).bArr, map.get(sgid.getRowKey().toString() + separator + sgid.getBackendTimestamp().getTime()).cl);
-        if (a instanceof FeatureList){
-            for(Feature f : ((FeatureList)a).getFeatures()){
-                if (f.getSGID().equals(sgid)){
+        Atom a = (Atom) serializer.deserialize(map.get(createKey(sgid)).bArr, map.get(createKey(sgid)).cl);
+        if (a instanceof FeatureList) {
+            for (Feature f : ((FeatureList) a).getFeatures()) {
+                if (f.getSGID().equals(sgid)) {
                     return f;
                 }
             }
@@ -97,8 +123,8 @@ public class NonPersistentStorage extends StorageInterface {
         // this storage type will need to look for buckets that are appropriate
         if (t == Feature.class) {
             for (SGID id : getAllAtoms()) {
-                String rowKey1 = id.getRowKey().toString() + separator + id.getBackendTimestamp().getTime();
-                String rowKey2 = sgid.getRowKey().toString() + separator + sgid.getBackendTimestamp().getTime();
+                String rowKey1 = createKey(id);
+                String rowKey2 = createKey(sgid);
                 if (rowKey1.equals(rowKey2)) {
                     FeatureList fList = (FeatureList) this.deserializeTargetToAtom(id);
                     for (Feature f : fList.getFeatures()) {
@@ -124,7 +150,7 @@ public class NonPersistentStorage extends StorageInterface {
     @Override
     public Atom deserializeTargetToLatestAtom(SGID sgid) {
         List<Atom> aList = new ArrayList<Atom>();
-        String rowKey = sgid.getRowKey().toString() + separator + sgid.getBackendTimestamp().getTime();
+        String rowKey = createKey(sgid);
         for (Entry<String, ByteTypePair> e : map.entrySet()) {
             if (e.getKey().equals(rowKey)) {
                 aList.add((Atom) serializer.deserialize(e.getValue().bArr, e.getValue().cl));
@@ -153,6 +179,20 @@ public class NonPersistentStorage extends StorageInterface {
         /**
          * ignore this, we don't need to do anything in particular
          */
+    }
+
+    @Override
+    public Iterable<Feature> getAllFeaturesForFeatureSet(FeatureSet fSet) {
+        assert (fSet instanceof LazyFeatureSet);
+        List<Feature> features = new ArrayList<Feature>();
+        String substring = fSet.getSGID().getUuid().toString() + SEPARATOR + fSet.getSGID().getBackendTimestamp().getTime();
+        for (Entry<String, ByteTypePair> e : this.map.entrySet()) {
+            if (e.getKey().contains(substring) && e.getValue().cl == FeatureList.class) {
+                FeatureList a = (FeatureList)serializer.deserialize(e.getValue().bArr, e.getValue().cl);
+                features.addAll(a.getFeatures());
+            }
+        }
+        return features;
     }
 
     public class ByteTypePair {

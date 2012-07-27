@@ -53,12 +53,13 @@ public class QueryInterfaceTest {
         boolean b2 = false;
         boolean b3 = false;
         for (Feature f : result) {
-            // sadly, Features no longer will be exactly the same after a query, we need a "contents" equals
-            if (f.getStart() == a1.getStart() && f.getStart() == a1.getStart()) {
+            // sadly, Features no longer will be exactly the same after a query, queries generate new features
+            // in new FeatureSets
+            if (f.getStart() == a1.getStart() && f.getStop() == a1.getStop()) {
                 b1 = true;
-            } else if (f.getStart() == a2.getStart() && f.getStart() == a2.getStart()) {
+            } else if (f.getStart() == a2.getStart() && f.getStop() == a2.getStop()) {
                 b2 = true;
-            } else if (f.getStart() == a3.getStart() && f.getStart() == a3.getStart()) {
+            } else if (f.getStart() == a3.getStart() && f.getStop() == a3.getStop()) {
                 b3 = true;
             }
         }

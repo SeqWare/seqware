@@ -44,17 +44,11 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
     }
 
     /**
-     * TODO: change this to wrap the scan class for speed
-     *
+     * Wraps the Scan class for low memory use
      * @return
      */
     private <T extends Atom> SeqWareIterable handleTableScan(Class<T> t, String prefix) {
-//        List<T> list = new ArrayList<T>();
         Iterable<SGID> allAtomsForTable = ((HBaseStorage) storage).getAllAtomsForTable(prefix);
-//        for (SGID u : allAtomsForTable) { //listOfEverything) {
-//            T p = storage.deserializeTargetToLatestAtom(u, t);
-//            list.add(p);
-//        }
         return new SGIDIterable(allAtomsForTable, t);
     }
 

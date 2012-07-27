@@ -47,6 +47,7 @@ public class FeatureListIO implements ProtobufTransferInterface<FeatureListPB, F
 //           fMesg.setPrecedingVersion(pb2m(feature.getPrecedingVersion()));
 //        }
         // upgrade SGID on the way out based on the first feature, this is an optimization to save space
+        // so that the FeatureList does not have to store a full FSGID, just a SGID
         FSGID fsgid = new FSGID(fMesg.getSGID(), (FSGID)fMesg.getFeatures().get(0).getSGID());
         fMesg.impersonate(fsgid, fMesg.getPrecedingSGID());
         return fMesg;

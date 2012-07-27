@@ -47,7 +47,7 @@ public class FSGID extends SGID implements KryoSerializable {
 
     @Override
     public String toString() {
-        return rowKey + StorageInterface.separator + featureSetID.toString() + StorageInterface.separator + super.toString();
+        return rowKey + StorageInterface.SEPARATOR + featureSetID.toString() + StorageInterface.SEPARATOR + super.toString();
     }
     
     /**
@@ -89,7 +89,7 @@ public class FSGID extends SGID implements KryoSerializable {
             this.featureSetID = fSet.getSGID();
             // generate row key
             StringBuilder builder = new StringBuilder();
-            builder.append(fSet.getReference().getName()).append(StorageInterface.separator).append(f.getId()).append(PositionSeparator).append(padZeros(f.getStart(), HBaseStorage.PAD))/** unnecessary .append(".feature.").append(f.getVersion())*/;
+            builder.append(fSet.getReference().getName()).append(StorageInterface.SEPARATOR).append(f.getId()).append(PositionSeparator).append(padZeros(f.getStart(), HBaseStorage.PAD))/** unnecessary .append(".feature.").append(f.getVersion())*/;
             rowKey = builder.toString();
             referenceName = fSet.getReference().getName();
         } catch (Exception ex) {
@@ -178,6 +178,6 @@ public class FSGID extends SGID implements KryoSerializable {
     } 
     
     public String getTablename(){
-        return FeatureList.prefix + StorageInterface.separator + this.getReferenceName();
+        return FeatureList.prefix + StorageInterface.SEPARATOR + this.getReferenceName();
     }
 }

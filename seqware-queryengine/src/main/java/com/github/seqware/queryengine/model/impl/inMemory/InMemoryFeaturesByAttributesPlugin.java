@@ -41,7 +41,6 @@ public class InMemoryFeaturesByAttributesPlugin implements MapReducePlugin<Featu
     public ReturnValue init(FeatureSet set, Object ... parameters) {
         this.set = set;
         this.rpnStack = (RPNStack)parameters[0];
-
         return new ReturnValue();
     }
 
@@ -88,7 +87,6 @@ public class InMemoryFeaturesByAttributesPlugin implements MapReducePlugin<Featu
                 accumulator.add(build);
             }
         }
-
         return new ReturnValue();
     }
 
@@ -116,14 +114,12 @@ public class InMemoryFeaturesByAttributesPlugin implements MapReducePlugin<Featu
     @Override
     public FeatureSet getFinalResult() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
-
         FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("ad_hoc_analysis").build()).build();
         for(Feature f : accumulator){
             mManager.objectCreated(f);
         }
         fSet.add(accumulator);
         mManager.close();
-
         return fSet;
     }
 }
