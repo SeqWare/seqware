@@ -29,13 +29,12 @@ import java.util.Set;
  *
  * @author dyuen
  */
-public class InMemoryFeaturesAllPlugin implements MapReducePlugin<Feature, FeatureSet> {
+public class InMemoryFeaturesAllPlugin extends MapReducePlugin<Feature, FeatureSet> {
 
-    private FeatureSet set;
     private Set<Feature> accumulator = new HashSet<Feature>();
 
-    public AnalysisPluginInterface.ReturnValue init(FeatureSet set, Object... parameters) {
-        this.set = set;
+    public AnalysisPluginInterface.ReturnValue init(FeatureSet inputSet, Object... parameters) {
+        this.inputSet = inputSet;
         return new AnalysisPluginInterface.ReturnValue();
     }
 
@@ -91,7 +90,7 @@ public class InMemoryFeaturesAllPlugin implements MapReducePlugin<Feature, Featu
 
     @Override
     public ReturnValue map(Feature atom, FeatureSet mappedSet) {
-        for (Feature f : set) {
+        for (Feature f : this.inputSet) {
             Feature build = f.toBuilder().build();
             accumulator.add(build);
         }

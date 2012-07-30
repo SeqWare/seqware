@@ -1,6 +1,7 @@
 package com.github.seqware.queryengine.plugins;
 
 import com.github.seqware.queryengine.model.Atom;
+import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 
 /**
@@ -10,7 +11,16 @@ import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
  *
  * @author jbaran
  */
-public interface MapReducePlugin<T extends Atom, S extends MolSetInterface> extends AnalysisPluginInterface {
+public abstract class MapReducePlugin<T extends Atom, S extends MolSetInterface> implements AnalysisPluginInterface {
+
+    protected FeatureSet inputSet;
+
+    /**
+     * Returns the feature set on which the map-reduce is carried out on.
+     */
+    public FeatureSet getInputFeatureSet() {
+        return this.inputSet;
+    }
 
     /**
      * Mapping implementation that singles out desired atoms into a mapped set.
@@ -19,7 +29,7 @@ public interface MapReducePlugin<T extends Atom, S extends MolSetInterface> exte
      * @param mappedSet Set of atoms that are passed to the reduce
      * implementation.
      */
-    public ReturnValue map(T atom, S mappedSet);
+    public abstract ReturnValue map(T atom, S mappedSet);
 
     /**
      * Reduce implementation that takes mapped atoms and processes them.
@@ -27,9 +37,9 @@ public interface MapReducePlugin<T extends Atom, S extends MolSetInterface> exte
      * @param mappedSet Atoms that were selected during the mapping step.
      * @param resultSet Atoms that are created as a result of the reduce step.
      */
-    public ReturnValue reduce(S mappedSet, S resultSet);
+    public abstract ReturnValue reduce(S mappedSet, S resultSet);
 
-    public ReturnValue reduceInit();
+    public abstract ReturnValue reduceInit();
 
-    public ReturnValue mapInit();
+    public abstract ReturnValue mapInit();
 }
