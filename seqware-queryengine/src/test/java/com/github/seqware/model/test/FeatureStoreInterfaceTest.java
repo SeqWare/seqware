@@ -31,9 +31,9 @@ public class FeatureStoreInterfaceTest {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
         // create and store some features
-        a1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
-        a2 = mManager.buildFeature().setId("chr16").setStart(1000200).setStop(1000300).build();
-        a3 = mManager.buildFeature().setId("chr16").setStart(1000400).setStop(1000500).build();
+        a1 = mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).build();
+        a2 = mManager.buildFeature().setSeqid("chr16").setStart(1000200).setStop(1000300).build();
+        a3 = mManager.buildFeature().setSeqid("chr16").setStart(1000400).setStop(1000500).build();
         aSet.add(a1);
         aSet.add(a2);
         aSet.add(a3);
@@ -52,23 +52,23 @@ public class FeatureStoreInterfaceTest {
     public static FeatureSet diverseBSet(CreateUpdateManager mManager) {
         FeatureSet set = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Diverse_Set").build()).build();
 
-        set.add(mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000101).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setId("chr16").setStart(2000000).setStop(2000102).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setId("chr16").setStart(2000000).setStop(2000101).setStrand(Feature.Strand.NEGATIVE).build());
-        set.add(mManager.buildFeature().setId("chr16").setStart(2000000).setStop(2000102).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setId("chr16").setStart(2000000).setStop(2000101).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setId("chr16").setStart(3000000).setStop(3000102).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setId("chr16").setStart(3000000).setStop(3000102).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setId("chr16").setStart(3000000).setStop(3000101).setStrand(Feature.Strand.NEGATIVE).build());
-        set.add(mManager.buildFeature().setId("chr16").setStart(3000000).setStop(3000102).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setId("chr17").setStart(3000000).setStop(3000102).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setId("chr17").setStart(3000000).setStop(3000101).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setId("chr17").setStart(4000000).setStop(4000101).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setId("chr17").setStart(4000000).setStop(4000101).setStrand(Feature.Strand.NEGATIVE).build());
-        set.add(mManager.buildFeature().setId("chr17").setStart(4000000).setStop(4000102).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setId("chr17").setStart(4000000).setStop(4000101).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setId("chr17").setStart(4000000).setStop(4000102).setStrand(Feature.Strand.POSITIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).setStrand(Feature.Strand.POSITIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000101).setStrand(Feature.Strand.POSITIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr16").setStart(2000000).setStop(2000102).setStrand(Feature.Strand.POSITIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr16").setStart(2000000).setStop(2000101).setStrand(Feature.Strand.NEGATIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr16").setStart(2000000).setStop(2000102).setStrand(Feature.Strand.POSITIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr16").setStart(2000000).setStop(2000101).setStrand(Feature.Strand.POSITIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr16").setStart(3000000).setStop(3000102).setStrand(Feature.Strand.POSITIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr16").setStart(3000000).setStop(3000102).setStrand(Feature.Strand.POSITIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr16").setStart(3000000).setStop(3000101).setStrand(Feature.Strand.NEGATIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr16").setStart(3000000).setStop(3000102).setStrand(Feature.Strand.POSITIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr17").setStart(3000000).setStop(3000102).setStrand(Feature.Strand.POSITIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr17").setStart(3000000).setStop(3000101).setStrand(Feature.Strand.POSITIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr17").setStart(4000000).setStop(4000101).setStrand(Feature.Strand.POSITIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr17").setStart(4000000).setStop(4000101).setStrand(Feature.Strand.NEGATIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr17").setStart(4000000).setStop(4000102).setStrand(Feature.Strand.POSITIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr17").setStart(4000000).setStop(4000101).setStrand(Feature.Strand.POSITIVE).build());
+        set.add(mManager.buildFeature().setSeqid("chr17").setStart(4000000).setStop(4000102).setStrand(Feature.Strand.POSITIVE).build());
 
         return set;
     }
@@ -91,7 +91,7 @@ public class FeatureStoreInterfaceTest {
             int stop = start + (generator.nextInt() % 10000);
             Feature.Strand strand = generator.nextBoolean() ? Feature.Strand.POSITIVE : Feature.Strand.NEGATIVE;
 
-            set.add(mManager.buildFeature().setId("chr" + ((generator.nextInt() % 23) + 1)).setStart(start).setStop(stop).setStrand(strand).build());
+            set.add(mManager.buildFeature().setSeqid("chr" + ((generator.nextInt() % 23) + 1)).setStart(start).setStop(stop).setStrand(strand).build());
         }
 
         return set;

@@ -36,15 +36,15 @@ public class RowKeyFeatureSetTest {
         Tag referenceSpec = mManager.buildTagSpec().setKey("ReferenceSeq").build();
         stdTagSet.add(idSpec, variantSpec, referenceSpec);
         // have to make up scores, not present in example
-        Feature f1 = mManager.buildFeature().setId("chr16").setSource("samtools").setType("SNV").setStart(49291141).setStop(49291141).setStrand(Feature.Strand.POSITIVE).build();
+        Feature f1 = mManager.buildFeature().setSeqid("chr16").setSource("samtools").setType("SNV").setStart(49291141).setStop(49291141).setStrand(Feature.Strand.POSITIVE).build();
         f1.associateTag(idSpec.toBuilder().setValue("ID_1").build());
         f1.associateTag(variantSpec.toBuilder().setValue("A,G").build());
         f1.associateTag(referenceSpec.toBuilder().setValue("G").build());
-        Feature f2 = mManager.buildFeature().setId("chr16").setSource("samtools").setType("SNV").setStart(49291360).setStop(49291360).setStrand(Feature.Strand.POSITIVE).build();
+        Feature f2 = mManager.buildFeature().setSeqid("chr16").setSource("samtools").setType("SNV").setStart(49291360).setStop(49291360).setStrand(Feature.Strand.POSITIVE).build();
         f2.associateTag(idSpec.toBuilder().setValue("ID_2").build());
         f2.associateTag(variantSpec.toBuilder().setValue("G").build());
         f2.associateTag(referenceSpec.toBuilder().setValue("C").build());
-        Feature f3 = mManager.buildFeature().setId("chr16").setSource("samtools").setType("SNV").setStart(49302125).setStop(49302125).setStrand(Feature.Strand.POSITIVE).build();
+        Feature f3 = mManager.buildFeature().setSeqid("chr16").setSource("samtools").setType("SNV").setStart(49302125).setStop(49302125).setStrand(Feature.Strand.POSITIVE).build();
         f3.associateTag(idSpec.toBuilder().setValue("ID_3").build());
         f3.associateTag(variantSpec.toBuilder().setValue("T,C").build());
         f3.associateTag(referenceSpec.toBuilder().setValue("C").build());

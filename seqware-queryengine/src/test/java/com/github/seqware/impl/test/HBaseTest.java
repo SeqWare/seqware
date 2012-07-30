@@ -417,7 +417,7 @@ public class HBaseTest implements Benchmarking {
 
     private IdentifiedFeature storeFauxFeature(SerializationFramework framework, HTable table, List<Row> rowList, boolean batchMode) throws IOException {
         // Get one feature to serialize/deserialize:
-        Feature testFeature = Feature.newBuilder().setId("chr16").setStart(1000000).setStop(1000100).build();
+        Feature testFeature = Feature.newBuilder().setSeqid("chr16").setStart(1000000).setStop(1000100).build();
         FeatureSet set = InMemoryFeatureSet.newBuilder().setReference(InMemoryReference.newBuilder().setName("testRef").build()).build();
         // we need to upgrade the feature with a link to an enforced FeatureSet like in the real back-end
         FSGID fsgid = new FSGID(testFeature.getSGID(), testFeature, set);

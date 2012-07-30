@@ -84,7 +84,7 @@ public class VCFDumper {
             for (FeatureSet fSet : featureSets) {
                 if (fSet.getReferenceID().equals(ref.getSGID())) {
                     for (Feature feature : fSet) {
-                        outputStream.append(feature.getId() + "\t" + (feature.getStart() + 1) + "\t");
+                        outputStream.append(feature.getSeqid() + "\t" + (feature.getStart() + 1) + "\t");
                         if (feature.getTagByKey(ImportConstants.VCF_SECOND_ID) == null) {
                             outputStream.append(".\t");
                         } else {

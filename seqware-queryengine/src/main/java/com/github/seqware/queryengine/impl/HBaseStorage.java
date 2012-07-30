@@ -496,9 +496,10 @@ public class HBaseStorage extends StorageInterface {
 
         @Override
         protected void finalize() throws Throwable {
-            // make sure that we close the scanner if the using aborts the iteration and garbage collects this 
-            super.finalize();
-            scanner.close();
+//            // make sure that we close the scanner if the using aborts the iteration and garbage collects this 
+//            super.finalize();
+//            scanner.close();
+            // don't think this is working properly? getting UnknownScannerExceptions
         }
     }
 
