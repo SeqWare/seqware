@@ -3,7 +3,7 @@ package com.github.seqware.queryengine.model.impl.lazy;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.HBaseStorage;
-import com.github.seqware.queryengine.impl.NonPersistentStorage;
+import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.impl.StorageInterface;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
@@ -67,14 +67,14 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
     private void upgradeFeatureSGID(Feature feature) {
         // try upgrading Feature IDs here, faster than in model manager and FeatureSets should be guaranteed to have references
 //        if (!(feature.getSGID() instanceof FSGID)) {
-            FSGID fsgid = new FSGID(feature.getSGID(), feature, this);
-            // as a convenience, we should have Features in a FeatureSet and the associated FeatureLists take on the time
-            // of the FeatureSet
-            fsgid.setBackendTimestamp(this.getTimestamp());
-            feature.impersonate(fsgid, feature.getPrecedingSGID());
-            if (getManager() != null) {
-                getManager().atomStateChange(feature, CreateUpdateManager.State.NEW_VERSION);
-            }
+        FSGID fsgid = new FSGID(feature.getSGID(), feature, this);
+        // as a convenience, we should have Features in a FeatureSet and the associated FeatureLists take on the time
+        // of the FeatureSet
+        fsgid.setBackendTimestamp(this.getTimestamp());
+        feature.impersonate(fsgid, feature.getPrecedingSGID());
+        if (getManager() != null) {
+            getManager().atomStateChange(feature, CreateUpdateManager.State.NEW_VERSION);
+        }
 //        }
     }
 
@@ -120,28 +120,75 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
 
     @Override
     public Iterator<Feature> getFeatures() {
-        final Iterator<FeatureList> iterator = SWQEFactory.getStorage().getAllFeatureListsForFeatureSet(this).iterator();
-        return new Iterator<Feature>(){
-            List<Feature> list = new ArrayList<Feature>();
-            @Override
-            public boolean hasNext() {
-                return !list.isEmpty() || iterator.hasNext();
-            }
+        return new ListedIterator();
+    }
 
-            @Override
-            public Feature next() {
-                while (list.isEmpty()){
-                    list.addAll(iterator.next().getFeatures());
+    /**
+     * Iterates through Features, taking into account
+     */
+    public class ListedIterator implements Iterator<Feature> {
+
+        private final Iterator<FeatureList> iterator;
+        private List<FeatureList> rowOfFeatureLists = new ArrayList<FeatureList>();
+        // grab out a rowKey's worth of FeatureLists
+        private String rowKey;
+        // current consolidated row of Features
+        private List<Feature> rowOfFeatures = new ArrayList<Feature>();
+
+        public ListedIterator() {
+            this.iterator = SWQEFactory.getStorage().getAllFeatureListsForFeatureSet(LazyFeatureSet.this).iterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return rowOfFeatures.size() > 0 || iterator.hasNext() || rowOfFeatureLists.size() > 0;
+        }
+
+        @Override
+        public Feature next() {
+            FeatureList peekedList = null;
+            if (rowOfFeatures.size() > 0) {
+                return rowOfFeatures.remove(rowOfFeatures.size() - 1);
+            } else {
+                while (iterator.hasNext()) {
+                    FeatureList nextL = iterator.next();
+                    // the first time, we need to set the rowkey pre-emptively
+                    if (rowKey == null){
+                        rowKey = nextL.getSGID().getRowKey();
+                    }
+                    // ensure that row keys are ascending
+                    assert (nextL.getSGID().getRowKey().compareTo(rowKey) >= 0);
+                    if (!rowKey.equals(nextL.getSGID().getRowKey())) {
+                        // we've moved onto a new row
+                        rowKey = nextL.getSGID().getRowKey();
+                        peekedList = nextL;
+                        break;
+                    } else {
+                        // we're continuing the same row
+                        rowOfFeatureLists.add(nextL);
+                    }
                 }
-                return list.remove(list.size()-1);
+                assert(rowOfFeatureLists.size() > 0 || peekedList != null);
+                if (rowOfFeatureLists.isEmpty()){
+                    rowOfFeatureLists.add(peekedList);
+                    peekedList = null;
+                }
+                // consolidate list
+                rowOfFeatures.addAll(SimplePersistentBackEnd.consolidateRow(rowOfFeatureLists));
+                assert(rowOfFeatures.size() > 0);
+                rowOfFeatureLists.clear();
+                if (peekedList != null){
+                    rowOfFeatureLists.add(peekedList);
+                    peekedList = null;
+                }
+                return rowOfFeatures.remove(rowOfFeatures.size() - 1);
             }
+        }
 
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        
-        };
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
     }
 
     public String getTablename() {

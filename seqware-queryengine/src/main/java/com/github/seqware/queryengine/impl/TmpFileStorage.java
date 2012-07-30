@@ -27,6 +27,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -226,6 +228,12 @@ public class TmpFileStorage extends StorageInterface {
                 Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        Collections.sort(features, new Comparator<FeatureList>(){
+            @Override
+            public int compare(FeatureList o1, FeatureList o2) {
+                return o1.getSGID().getRowKey().compareTo(o2.getSGID().getRowKey());
+            } 
+        });
         return features;
     }
 }

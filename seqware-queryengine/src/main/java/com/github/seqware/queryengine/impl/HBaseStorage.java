@@ -350,6 +350,7 @@ public class HBaseStorage extends StorageInterface {
         }
 
         try {
+            // I think this should return in sorted order already
             Scan s = new Scan();
             s.setMaxVersions();
             // we need the actual values if we do not store SGID in row key for debugging
@@ -523,7 +524,7 @@ public class HBaseStorage extends StorageInterface {
             byte[] qualifier = Bytes.toBytes(featureSetID.getUuid().toString());
             long timestamp = featureSetID.getBackendTimestamp().getTime();
             // we actually need to check for nulls due to different serialization formats
-            while (payload == null && (sIter.hasNext() || cachedPayloads.size() > 0)) {
+            while (sIter.hasNext() || cachedPayloads.size() > 0) {
                 while (cachedPayloads.isEmpty() && sIter.hasNext()) {
                     NavigableMap<Long, byte[]> map = sIter.next().getMap().get(TEST_FAMILY_INBYTES).get(qualifier);
                     if (map == null) {
@@ -543,19 +544,24 @@ public class HBaseStorage extends StorageInterface {
                     }
                     cachedPayloads.add(list);
                 }
-                if (cachedPayloads.isEmpty()) {
+                if (cachedPayloads.isEmpty() && payload == null) {
                     return false;
                 }
-                payload = cachedPayloads.remove(cachedPayloads.size() - 1);
+                if (payload == null){
+                    payload = cachedPayloads.remove(cachedPayloads.size() - 1);
+                }
                 return true;
             }
             // if there are no more, close the scanner
+            assert(cachedPayloads.isEmpty() && !sIter.hasNext());
             scanner.close();
-            return false;
+            return payload != null;
         }
 
         @Override
         public FeatureList next() {
+            boolean hasNext = this.hasNext();
+            assert(hasNext);
             FeatureList load = payload;
             payload = null;
             return load;
