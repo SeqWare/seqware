@@ -108,7 +108,7 @@ public class FeatureStoreInterfaceTest {
         for (FeatureSet fSet : SWQEFactory.getQueryInterface().getFeatureSets()) {
             for (Feature f : fSet) {
                 // sadly, Features no longer will be exactly the same after a query, we need a "contents" equals that does not examine the 
-                // sgid?
+                // fsgid's featureset id?
                 if (f.getStart() == a1.getStart() && f.getStop() == a1.getStop()) {
                     b1 = true;
                 } else if (f.getStart() == a2.getStart() && f.getStop() == a2.getStop()) {

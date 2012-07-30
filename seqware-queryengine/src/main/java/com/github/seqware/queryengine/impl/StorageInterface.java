@@ -121,10 +121,10 @@ public abstract class StorageInterface {
     
     
     /**
-     * Iterate through all the features in a featureset, this might be moved later.
+     * Iterate through all the feature "buckets" in a featureset, this might be moved later.
      * However, it is currently here because iterating through a FeatureSet might become non-trivial and Storage type dependent.
      * @param fSet
      * @return 
      */
-    public abstract Iterable<Feature> getAllFeaturesForFeatureSet(FeatureSet fSet);
+    public abstract Iterable<FeatureList> getAllFeatureListsForFeatureSet(FeatureSet fSet);
 }

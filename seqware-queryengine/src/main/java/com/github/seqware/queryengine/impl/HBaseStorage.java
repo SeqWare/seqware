@@ -27,8 +27,8 @@ import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
 import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.IOException;
-import java.util.Map.Entry;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.hadoop.conf.Configuration;
@@ -256,7 +256,7 @@ public class HBaseStorage extends StorageInterface {
                 }
                 byte[] value;
                 long getTimeStamp = Long.MIN_VALUE;
-                byte[] qualifier = null;
+                byte[] qualifier;
                 if (properClass == Feature.class) {
                     assert (sgid instanceof FSGID);
                     qualifier = Bytes.toBytes(((FSGID) sgid).getFeatureSetID().getUuid().toString());
@@ -272,20 +272,6 @@ public class HBaseStorage extends StorageInterface {
                 }
                 // I wonder if this handles subclassing properly ... turns out no
                 AtomImpl deserializedAtom = (AtomImpl) serializer.deserialize(value, properClass == Feature.class? FeatureList.class : properClass);
-                if (properClass == Feature.class) {
-                    FeatureList fList = (FeatureList) deserializedAtom;
-                    for (Feature f : fList.getFeatures()) {
-                        if (f.getSGID().equals(sgid)) {
-                            deserializedAtom = f;
-                        }
-                    }
-                }
-                // populate the timestamp field on the way out, not necessary any more
-//                if (useTimestamp) {
-//                    deserializedAtom.getSGID().setBackendTimestamp(sgid.getBackendTimestamp());
-//                } else {
-//                    deserializedAtom.getSGID().setBackendTimestamp(new Date(getTimeStamp));
-//                }
                 atomList.add(deserializedAtom);
             }
             return atomList;
@@ -353,7 +339,7 @@ public class HBaseStorage extends StorageInterface {
     }
 
     @Override
-    public Iterable<Feature> getAllFeaturesForFeatureSet(FeatureSet fSet) {
+    public Iterable<FeatureList> getAllFeatureListsForFeatureSet(FeatureSet fSet) {
         assert(fSet instanceof LazyFeatureSet);
         LazyFeatureSet lfSet = (LazyFeatureSet) fSet;
         String prefix = lfSet.getTablename();
@@ -492,7 +478,7 @@ public class HBaseStorage extends StorageInterface {
     /**
      * A scanner specifically for Features. Has to be FeatureList aware
      */
-    public class FeatureScanIterable implements Iterable<Feature> {
+    public class FeatureScanIterable implements Iterable<FeatureList> {
 
         private final ResultScanner scanner;
         private final SGID featureSetID;
@@ -503,7 +489,7 @@ public class HBaseStorage extends StorageInterface {
         }
 
         @Override
-        public Iterator<Feature> iterator() {
+        public Iterator<FeatureList> iterator() {
             return new FeatureScanIterator(scanner, featureSetID);
         }
 
@@ -518,11 +504,11 @@ public class HBaseStorage extends StorageInterface {
     /**
      * Presents an interface for iterating through SGIDs
      */
-    public class FeatureScanIterator implements Iterator<Feature> {
+    public class FeatureScanIterator implements Iterator<FeatureList> {
 
         private final Iterator<Result> sIter;
-        private Feature payload = null;
-        private List<Feature> cachedPayloads = new ArrayList<Feature>();
+        private FeatureList payload = null;
+        private List<FeatureList> cachedPayloads = new ArrayList<FeatureList>();
         private final ResultScanner scanner;
         private final SGID featureSetID;
 
@@ -551,16 +537,11 @@ public class HBaseStorage extends StorageInterface {
                     }
                     // go through the possible qualifiers and break them down
                     FeatureList list = serializer.deserialize(value, FeatureList.class);
-                    // not sure why this would occur
-                    if (list == null) {
+                    if (list == null){
+                        //TODO: investigate this
                         continue;
                     }
-                    for (Feature f : list.getFeatures()) {
-                        if (((FSGID) f.getSGID()).isTombstone()) {
-                            continue;
-                        }
-                        cachedPayloads.add(f);
-                    }
+                    cachedPayloads.add(list);
                 }
                 if (cachedPayloads.isEmpty()) {
                     return false;
@@ -574,8 +555,8 @@ public class HBaseStorage extends StorageInterface {
         }
 
         @Override
-        public Feature next() {
-            Feature load = payload;
+        public FeatureList next() {
+            FeatureList load = payload;
             payload = null;
             return load;
         }
@@ -647,16 +628,11 @@ public class HBaseStorage extends StorageInterface {
                         // go through the possible qualifiers and break them down
                         for (byte[] value : get.values()) {
                             FeatureList list = serializer.deserialize(value, FeatureList.class);
-                            if (list == null) {
-                                // not sure why this occurs, old FeatureLists maybe?
+                            if (list == null){
+                                // TODO: investigate these
                                 continue;
                             }
-                            for (Feature f : list.getFeatures()) {
-                                if (((FSGID) f.getSGID()).isTombstone()) {
-                                    continue;
-                                }
-                                cachedPayloads.add(f.getSGID());
-                            }
+                            cachedPayloads.add(list.getSGID());
                         }
                     }
                     if (cachedPayloads.isEmpty()) {

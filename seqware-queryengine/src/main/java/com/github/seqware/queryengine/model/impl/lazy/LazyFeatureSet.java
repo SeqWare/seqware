@@ -13,8 +13,10 @@ import com.github.seqware.queryengine.model.impl.LazyMolSet;
 import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.LazyReference;
 import com.github.seqware.queryengine.util.SGID;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -118,7 +120,28 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
 
     @Override
     public Iterator<Feature> getFeatures() {
-        return SWQEFactory.getStorage().getAllFeaturesForFeatureSet(this).iterator();
+        final Iterator<FeatureList> iterator = SWQEFactory.getStorage().getAllFeatureListsForFeatureSet(this).iterator();
+        return new Iterator<Feature>(){
+            List<Feature> list = new ArrayList<Feature>();
+            @Override
+            public boolean hasNext() {
+                return !list.isEmpty() || iterator.hasNext();
+            }
+
+            @Override
+            public Feature next() {
+                while (list.isEmpty()){
+                    list.addAll(iterator.next().getFeatures());
+                }
+                return list.remove(list.size()-1);
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        
+        };
     }
 
     public String getTablename() {
