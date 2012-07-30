@@ -17,12 +17,16 @@ module GitHub
         404 => '404 Not Found',
         409 => '409 Conflict',
         422 => '422 Unprocessable Entity',
-        500 => '500 Server Error'
+        500 => '500 Server Error',
+          0 => '' # Use this for a request header.
       }
 
       def headers(status, head = {})
         css_class = (status == 204 || status == 404) ? 'headers no-response' : 'headers'
         lines = ["Status: #{STATUSES[status]}"]
+        if status == 0
+          lines = [] # Don't want to display "Status:" for request headers.
+        end
         head.each do |key, value|
           case key
             when :pagination
