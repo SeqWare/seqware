@@ -79,7 +79,7 @@ You can post a single file attribute:
 
 ### Input
 
-You can post a single file attribute:
+You can update a single file attribute:
 
 <%= headers 0,
       :'Content-Type' =>
