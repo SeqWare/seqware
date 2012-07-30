@@ -123,8 +123,9 @@ public abstract class StorageInterface {
     /**
      * Iterate through all the feature "buckets" in a featureset, this might be moved later.
      * However, it is currently here because iterating through a FeatureSet might become non-trivial and Storage type dependent.
+     * We also need this to return the feature lists in sorted order by rowkey.
      * @param fSet
-     * @return 
+     * @return iterator that returns FeatureLists in sorted order
      */
     public abstract Iterable<FeatureList> getAllFeatureListsForFeatureSet(FeatureSet fSet);
 }

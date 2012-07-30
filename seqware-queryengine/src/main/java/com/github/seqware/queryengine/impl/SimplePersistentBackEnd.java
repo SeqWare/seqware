@@ -16,18 +16,24 @@
  */
 package com.github.seqware.queryengine.impl;
 
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.factory.BackEndInterface;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.model.impl.inMemory.*;
+import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.InMemoryIterable;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -229,5 +235,46 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
             }
         }
         return p;
+    }
+    
+    /**
+     * Given a collection of FeatureLists all with the same row key
+     * (and differing timestamps), create a consistent view of the features 
+     * in the feature set corresponding effectively to the last timestamp
+     * @param fLists
+     * @return 
+     */
+    public static Collection<Feature> consolidateRow(List<FeatureList> fLists){
+        String rowKey = null;
+        Long time = null;
+        // sort by time ascending
+        Collections.sort(fLists, new Comparator<FeatureList>(){
+            @Override
+            public int compare(FeatureList o1, FeatureList o2) {
+                return o1.getSGID().getBackendTimestamp().compareTo(o2.getSGID().getBackendTimestamp());
+            }
+        });
+        Map<String, Feature> map = new HashMap<String, Feature>();
+        for(FeatureList list : fLists){
+            if (rowKey == null){
+                rowKey = list.getSGID().getRowKey();
+                time = list.getTimestamp().getTime();
+            }
+            // might as well make sure that the rowkeys are identical 
+            assert(list.getSGID().getRowKey().equals(rowKey));
+            // make sure time is ascending
+            assert(time >= list.getTimestamp().getTime());
+            for(Feature f : list.getFeatures()){
+                FSGID fsgid = (FSGID) f.getSGID();
+                boolean tomb = fsgid.isTombstone();
+                String key = fsgid.getUuid().toString();
+                if (!tomb){
+                    map.put(key, f);
+                } else{
+                    map.remove(key);
+                }
+            }
+        }
+        return map.values();
     }
 }
