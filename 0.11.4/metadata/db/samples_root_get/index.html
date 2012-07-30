@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="imagetoolbar" content="false">
 <meta name="MSSmartTagsPreventParsing" content="true">
-<title>SeqWare Web Service API: GET the workflow run reports for a particular workflow.</title>
+<title>SeqWare Web Service API: GET samples/root</title>
 <link href="../../../../css/reset.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/960.css" rel="stylesheet" type="text/css">
 <link href="../../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
@@ -46,8 +46,8 @@
 <a href="#" class="js-expand-btn collapsed"> </a><a href="../../">Metadata Resources</a>
 </h3>
             <ul class="js-guides">
-<li><a href="../../db/">Data</a></li>
-              <li><a href="../">Reports</a></li>
+<li><a href="../">Data</a></li>
+              <li><a href="../../report/">Reports</a></li>
               <li><a href="../../job/">Jobs</a></li>
               <li><a href="../../x/">Experimental</a></li>
               <li><a href="../../libraries/">Libraries</a></li>
@@ -73,18 +73,14 @@
 </div> <!-- /sidebar-module -->
     	</div>
 <!-- /sidebar-shell -->
-	<h1>GET the workflow run reports for a particular workflow.</h1>
-	<p>Retrieves the workflow run reports for a particular workflow using its SeqWare accession, including input and output files. For more information on this resource, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Workflow_Run_Reporter">Workflow Run Reporter</a> on the SeqWare wiki.</p>
+	<h1>GET samples/root</h1>
+	<p>Retrieves a list of root samples (samples without parents in the sample hierarchy)</p>
 
 <h2 id="resource-url">Resource URL</h2>
-<p>GET http://localhost:8888/seqware-webservice/reports/workflows/{workflowId}/runs</p>
+<p>GET http://localhost:8888/seqware-webservice/samples/root</p>
 
 <h2 id="parameters">Parameters</h2>
-<dl>
-<dt>show</dt>
-  <dd>id
-:</dd>
-</dl>
+
 <h2 id="example-requests">Example Requests</h2>
 <p>http://localhost:8888/seqware-webservice</p>
 

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="imagetoolbar" content="false">
+<meta name="MSSmartTagsPreventParsing" content="true">
+<title>SeqWare Web Service API: File Attributes | SeqWare API</title>
+<link href="../../../css/reset.css" rel="stylesheet" type="text/css">
+<link href="../../../css/960.css" rel="stylesheet" type="text/css">
+<link href="../../../css/uv_active4d.css" rel="stylesheet" type="text/css">
+<link href="../../../shared/css/documentation.css" media="screen" rel="stylesheet" type="text/css">
+<link href="../../../shared/css/pygments.css" media="screen" rel="stylesheet" type="text/css">
+<script src="../../../shared/js/jquery.js" type="text/javascript"></script><script src="../../../shared/js/documentation.js" type="text/javascript"></script>
+</head>
+<body class="api">
+    <div id="header-wrapper">
+      <div id="header">
+        <div>
+          <a class="logo" href="http://oicr.on.ca/"><img src="../../../images/OICR2logo.png" height="45"></a>
+          <ul class="nav">
+<li><a href="../../../">SeqWare Web Service API</a></li>
+          </ul>
+</div>
+      </div>
+<!-- #header -->
+    </div>
+<!-- #header-wrapper -->
+
+    <div id="wrapper">
+      <div class="content">
+    <div id="js-sidebar" class="sidebar-shell">
+      <div class="js-toggle-list sidebar-module expandable">
+        <ul>
+<li class="js-topic">
+            <h3>
+<a href="#" class="js-expand-btn collapsed"> </a><a href="../../../">SeqWare Webservice RESTful API</a>
+</h3>
+            <ul class="js-guides">
+<li><a href="../../metadata/">Metadata</a></li>
+              <li><a href="../../pipeline/">Pipeline</a></li>
+            </ul>
+</li>
+          <li class="js-topic">
+            <h3>
+<a href="#" class="js-expand-btn collapsed"> </a><a href="../../metadata/">Metadata Resources</a>
+</h3>
+            <ul class="js-guides">
+<li><a href="../../metadata/db/">Data</a></li>
+              <li><a href="../../metadata/report/">Reports</a></li>
+              <li><a href="../../metadata/job/">Jobs</a></li>
+              <li><a href="../../metadata/x/">Experimental</a></li>
+              <li><a href="../../metadata/libraries/">Libraries</a></li>
+            </ul>
+</li>
+          <li class="js-topic">
+            <h3>
+<a href="#" class="js-expand-btn collapsed"> </a><a href="../">Files</a>
+</h3>
+            <ul class="js-guides">
+<li><span class="active" title="You're here.">Attributes</span></li>
+          </ul>
+</li>
+          <li class="js-topic">
+            <h3>
+<a href="#" class="js-expand-btn collapsed"> </a><a href="../../pipeline/">Pipeline Resources</a>
+</h3>
+            <ul class="js-guides">
+<li><a href="../../pipeline/job/">Jobs</a></li>
+            </ul>
+</li>
+        </ul>
+</div> <!-- /sidebar-module -->
+    	</div>
+<!-- /sidebar-shell -->
+	<h1>File Attributes | SeqWare API</h1>
+	<h1 id="file-attributes-api">File Attributes API</h1>
+
+<p>Management of file attributes via the API requires that you are
+authenticated.</p>
+
+<h2 id="list-attributes-for-a-file">List attributes for a file</h2>
+
+<pre><code>GET /file/:swa/attributes
+</code></pre>
+
+<h3 id="response">Response</h3>
+
+<pre class="headers"><code>Status: 200 OK</code></pre>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;list&gt;
+    &lt;net.sourceforge.seqware.webservice.dto.AttributeDto&gt;
+        &lt;entityUrl&gt;http://localhost:8889/seqware-webservice/files/12056&lt;/entityUrl&gt;
+        &lt;url&gt;http://localhost:8889/seqware-webservice/file/12056/attribute/11&lt;/url&gt;
+        &lt;name&gt;mime-type&lt;/name&gt;
+        &lt;value&gt;application/json&lt;/value&gt;
+    &lt;/net.sourceforge.seqware.webservice.dto.AttributeDto&gt;
+    &lt;net.sourceforge.seqware.webservice.dto.AttributeDto&gt;
+        &lt;entityUrl&gt;http://localhost:8889/seqware-webservice/files/12056&lt;/entityUrl&gt;
+        &lt;url&gt;http://localhost:8889/seqware-webservice/file/12056/attribute/6&lt;/url&gt;
+        &lt;name&gt;region&lt;/name&gt;
+        &lt;value&gt;1&lt;/value&gt;
+    &lt;/net.sourceforge.seqware.webservice.dto.AttributeDto&gt;
+&lt;/list&gt;
+</code></pre>
+
+<h2 id="add-file-attribute">Add file attribute</h2>
+
+<pre><code>POST /file/:swa/attribute
+</code></pre>
+
+<h3 id="input">Input</h3>
+
+<p>You can post a single file attribute:</p>
+
+<pre class="headers"><code>Content-Type: application/xml</code></pre>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;net.sourceforge.seqware.webservice.dto.AttributeDto&gt;
+    &lt;name&gt;mime-type&lt;/name&gt;
+    &lt;value&gt;application/xml&lt;/value&gt;
+&lt;/net.sourceforge.seqware.webservice.dto.AttributeDto&gt;
+</code></pre>
+
+<h3 id="response-1">Response</h3>
+
+<pre class="headers"><code>Status: 201 Created</code></pre>
+
+<h2 id="get-a-file-attribute">Get a file attribute</h2>
+
+<pre><code>GET /file/:swa/attribute/:id
+</code></pre>
+
+<h3 id="response-2">Response</h3>
+
+<pre class="headers"><code>Status: 200 OK</code></pre>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;net.sourceforge.seqware.webservice.dto.AttributeDto&gt;
+    &lt;entityUrl&gt;http://localhost:8889/seqware-webservice/files/12056&lt;/entityUrl&gt;
+    &lt;url&gt;http://localhost:8889/seqware-webservice/file/12056/attribute/1&lt;/url&gt;
+    &lt;name&gt;location&lt;/name&gt;
+    &lt;value&gt;/archives/&lt;/value&gt;
+&lt;/net.sourceforge.seqware.webservice.dto.AttributeDto&gt;
+</code></pre>
+
+<h2 id="update-a-file-attribute">Update a file attribute</h2>
+
+<pre><code>PUT /file/:swa/attribute/:id
+</code></pre>
+
+<h3 id="input-1">Input</h3>
+
+<p>You can post a single file attribute:</p>
+
+<pre class="headers"><code>Content-Type: application/xml</code></pre>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;net.sourceforge.seqware.webservice.dto.AttributeDto&gt;
+    &lt;name&gt;mime-type&lt;/name&gt;
+    &lt;value&gt;application/xml&lt;/value&gt;
+&lt;/net.sourceforge.seqware.webservice.dto.AttributeDto&gt;
+</code></pre>
+
+<h3 id="response-3">Response</h3>
+
+<pre class="headers"><code>Status: 200 OK
+Location: http://localhost:8889/seqware-webservice/file/12056/attribute/8</code></pre>
+
+<h2 id="delete-a-file-attribute">Delete a file attribute</h2>
+
+<pre><code>DELETE /file/:swa/attribute/:id
+</code></pre>
+
+<h3 id="response-4">Response</h3>
+
+<pre class="headers"><code>Status: 200 OK</code></pre>
+      </div>
+
+    </div>
+<!-- #wrapper -->
+
+    <div id="footer">
+      <div class="lower_footer">
+        <div class="footer_inner clearfix">
+            <div id="legal"> 
+              <!--[if IE]><a class="home_ie" href="http://oicr.on.ca">Home</a><![endif]-->
+              <a class="home" href="http://oicr.on.ca">Home</a>
+
+              <p>© <span id="year">year</span> Ontario Institute for Cancer Research. All rights reserved.</p>
+            </div>
+<!-- /#legal or /#legal_ie-->
+        </div>
+<!-- /.site -->
+      </div>
+<!-- /.lower_footer -->
+    </div>
+<!-- /#footer -->
+    <script type="text/javascript">
+      var _gauges = _gauges || [];
+      (function() {
+        var t   = document.createElement('script');
+        t.type  = 'text/javascript';
+        t.async = true;
+        t.id    = 'gauges-tracker';
+        t.setAttribute('data-site-id', '4f2038e0cb25bc1b55000003');
+        t.src = '//secure.gaug.es/track.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(t, s);
+      })();
+    </script>
+</body>
+</html>
