@@ -26,7 +26,7 @@ public class ProfilingStub {
 
     public static void main(String[] args) {
         JUnitCore runner = new JUnitCore();
-        runner.run(HBaseModelHBaseStoragePBSerializationSuite.class);
+        runner.run(InMemoryHBaseStorageApacheSerializationSuite.class);
         //runner.run(InMemoryFileStoragePBSerializationSuite.class);
     }
 }

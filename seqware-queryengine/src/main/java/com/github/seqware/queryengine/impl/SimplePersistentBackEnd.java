@@ -21,6 +21,7 @@ import com.github.seqware.queryengine.factory.BackEndInterface;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
+import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.model.impl.inMemory.*;
 import com.github.seqware.queryengine.util.InMemoryIterable;
 import com.github.seqware.queryengine.util.SGID;
@@ -47,35 +48,28 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
         apis.add(new InMemoryFeaturesByReferencePlugin());
         apis.add(new InMemoryFeaturesByAttributesPlugin());
     }
-    
+
     @Override
-    public void store(Atom ... objArr) {
-//        Atom[] storeAtom = new Atom[objArr.length];
-//        for(int i = 0; i < objArr.length; i++){
-//           storeAtom[i] = (Atom)objArr[i].copy(false);
-//        }
+    public void store(Atom... objArr) {
         fsi.serializeAtomsToTarget(objArr);
     }
 
     @Override
-    public void update(Atom ... objList) {
+    public void update(Atom... objList) {
         Atom[] storeAtom = new Atom[objList.length];
-//        SGID[] oldSGID = new SGID[objList.length];
-        for(int i = 0; i < objList.length; i++){
-           Atom obj = objList[i];
-//           oldSGID[i] = obj.getSGID();
-           storeAtom[i] = (Atom)obj.copy(false);
-           // need to set preceding ID for new copy
-           assert(!storeAtom[i].getSGID().equals(obj.getSGID()));
-           ((AtomImpl)storeAtom[i]).setPrecedingSGID(obj.getSGID());
+        for (int i = 0; i < objList.length; i++) {
+            Atom obj = objList[i];
+            storeAtom[i] = (Atom) obj.copy(false);
+            // need to set preceding ID for new copy
+            assert (!storeAtom[i].getSGID().equals(obj.getSGID()));
+            ((AtomImpl) storeAtom[i]).setPrecedingSGID(obj.getSGID());
         }
         store(storeAtom);
-        // change the obj we have a reference to look like the new object that was created
-        // doesn't seem applicable anymore?
-        for(int i = 0; i < objList.length; i++){
-          Atom obj = objList[i];
-          ((AtomImpl)obj).impersonate(storeAtom[i].getSGID(), obj.getSGID());
-        }     
+        // change the obj we are working with to look like the new object that was created
+        for (int i = 0; i < objList.length; i++) {
+            Atom obj = objList[i];
+            ((AtomImpl) obj).impersonate(storeAtom[i].getSGID(), obj.getSGID());
+        }
     }
 
     @Override
@@ -95,33 +89,36 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     @Override
     public Atom getAtomBySGID(SGID sgid) {
         Atom p = fsi.deserializeTargetToAtom(sgid);
-        assert(p == null || p.getSGID().equals(sgid));
+        p = locateWithinFeatureList(p, sgid);
+        assert (p == null || p.getSGID().equals(sgid));
         return p;
     }
-    
+
     @Override
-    public <T extends Atom> List getAtomsBySGID(Class<T> t, SGID... sgid){
+    public <T extends Atom> List getAtomsBySGID(Class<T> t, SGID... sgid) {
         return fsi.deserializeTargetToAtoms(t, sgid);
     }
-    
+
     @Override
     public <T extends Atom> T getAtomBySGID(Class<T> t, SGID sgid) {
         T p = fsi.deserializeTargetToAtom(t, sgid);
-        assert(p == null || p.getSGID().equals(sgid));
+        p = (T) locateWithinFeatureList(p, sgid);
+        assert (p == null || p.getSGID().equals(sgid));
         return p;
     }
-    
+
     @Override
     public Atom getLatestAtomBySGID(SGID sgid) {
         Atom p = fsi.deserializeTargetToLatestAtom(sgid);
-        assert(p == null || p.getSGID().getRowKey().equals(sgid.getRowKey()));
+        p = locateWithinFeatureList(p, sgid);
+        assert (p == null || p.getSGID().getRowKey().equals(sgid.getRowKey()));
         return p;
     }
 
     @Override
     public <T extends Atom> T getLatestAtomBySGID(SGID sgid, Class<T> t) {
         T p = fsi.deserializeTargetToLatestAtom(sgid, t);
-        assert(p == null || p.getSGID().getRowKey().equals(sgid.getRowKey()));
+        assert (p == null || p.getSGID().getRowKey().equals(sgid.getRowKey()));
         return p;
     }
 
@@ -139,7 +136,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     public SeqWareIterable<ReferenceSet> getReferenceSets() {
         return getAllOfClass(ReferenceSet.class);
     }
-    
+
     @Override
     public SeqWareIterable<Reference> getReferences() {
         return getAllOfClass(Reference.class);
@@ -205,12 +202,32 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
 
     private SeqWareIterable getAllOfClass(Class aClass) {
         List list = new ArrayList();
-        for (SGID u : fsi.getAllAtoms()){ //listOfEverything) {
+        for (SGID u : fsi.getAllAtoms()) { //listOfEverything) {
             Atom p = fsi.deserializeTargetToLatestAtom(u);
             if (aClass.isInstance(p)) {
                 list.add(p);
             }
         }
         return new InMemoryIterable(list);
+    }
+
+    /**
+     * If we actually got a FeatureList from the back-end, we need to dig deeper
+     * @param p
+     * @param sgid
+     * @return 
+     */
+    private Atom locateWithinFeatureList(Atom p, SGID sgid) {
+        // it would be better if we handle all List operations on the BackEnd layer
+        // rather than the Storage layer, to avoid reimplementing it
+        if (p instanceof FeatureList) {
+            for (Feature f : ((FeatureList) p).getFeatures()) {
+                if (f.getSGID().equals(sgid)) {
+                    p = f;
+                    break;
+                }
+            }
+        }
+        return p;
     }
 }

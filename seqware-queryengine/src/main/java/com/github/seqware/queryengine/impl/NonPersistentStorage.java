@@ -17,7 +17,6 @@
 package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.model.Atom;
-import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.FeatureList;
@@ -93,13 +92,6 @@ public class NonPersistentStorage extends StorageInterface {
             return null;
         }
         Atom a = (Atom) serializer.deserialize(map.get(createKey(sgid)).bArr, map.get(createKey(sgid)).cl);
-        if (a instanceof FeatureList) {
-            for (Feature f : ((FeatureList) a).getFeatures()) {
-                if (f.getSGID().equals(sgid)) {
-                    return f;
-                }
-            }
-        }
         return a;
     }
 
@@ -120,21 +112,6 @@ public class NonPersistentStorage extends StorageInterface {
 
     @Override
     public <T extends Atom> T deserializeTargetToAtom(Class<T> t, SGID sgid) {
-        // this storage type will need to look for buckets that are appropriate
-        if (t == Feature.class) {
-            for (SGID id : getAllAtoms()) {
-                String rowKey1 = createKey(id);
-                String rowKey2 = createKey(sgid);
-                if (rowKey1.equals(rowKey2)) {
-                    FeatureList fList = (FeatureList) this.deserializeTargetToAtom(id);
-                    for (Feature f : fList.getFeatures()) {
-                        if (sgid.equals(f.getSGID())) {
-                            return (T) f;
-                        }
-                    }
-                }
-            }
-        }
         return (T) this.deserializeTargetToAtom(sgid);
     }
 
@@ -182,14 +159,14 @@ public class NonPersistentStorage extends StorageInterface {
     }
 
     @Override
-    public Iterable<Feature> getAllFeaturesForFeatureSet(FeatureSet fSet) {
+    public Iterable<FeatureList> getAllFeatureListsForFeatureSet(FeatureSet fSet) {
         assert (fSet instanceof LazyFeatureSet);
-        List<Feature> features = new ArrayList<Feature>();
+        List<FeatureList> features = new ArrayList<FeatureList>();
         String substring = fSet.getSGID().getUuid().toString() + SEPARATOR + fSet.getSGID().getBackendTimestamp().getTime();
         for (Entry<String, ByteTypePair> e : this.map.entrySet()) {
             if (e.getKey().contains(substring) && e.getValue().cl == FeatureList.class) {
                 FeatureList a = (FeatureList)serializer.deserialize(e.getValue().bArr, e.getValue().cl);
-                features.addAll(a.getFeatures());
+                features.add(a);
             }
         }
         return features;

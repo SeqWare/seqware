@@ -18,7 +18,6 @@ package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.model.Atom;
-import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.FeatureList;
@@ -27,6 +26,7 @@ import com.github.seqware.queryengine.util.SGID;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,6 +43,7 @@ public class TmpFileStorage extends StorageInterface {
 
     boolean oldClassesFound = false;
     private static final boolean PERSIST = Constants.PERSIST;
+    private static final String CLASS_BREAK = "~";
     private File tempDir = new File(FileUtils.getTempDirectory(), this.getClass().getCanonicalName());
     private final SerializationInterface serializer;
 
@@ -68,7 +69,7 @@ public class TmpFileStorage extends StorageInterface {
     public void serializeAtomToTarget(Atom obj) {
         String prefix = ((AtomImpl) obj).getHBasePrefix();
         // let's just clone everything on store to simulate hbase
-        File target = new File(tempDir, prefix + SEPARATOR + NonPersistentStorage.createKey(obj.getSGID()));
+        File target = new File(tempDir, prefix + CLASS_BREAK + NonPersistentStorage.createKey(obj.getSGID()));
         byte[] serialRep = serializer.serialize(obj);
         try {
             FileUtils.writeByteArrayToFile(target, serialRep);
@@ -94,12 +95,12 @@ public class TmpFileStorage extends StorageInterface {
             }
             //FileTypePair target = map.get(sgid);
             String suffix = NonPersistentStorage.createKey(sgid);
-            String regex = "\\w+\\..*" + suffix;
-            for (File file : FileUtils.listFiles(tempDir, new RegexFileFilter(regex), null)) {
-                Atom suspect = handleFileWithoutClass(file, sgid);
-                if (suspect != null){
-                    return suspect;
-                }
+            String regex = "[a-zA-Z_0-9\\.]+~" + suffix;
+            Collection<File> listFiles = FileUtils.listFiles(tempDir, new RegexFileFilter(regex), null);
+            assert (listFiles.size() == 1);
+            Atom suspect = handleFileWithoutClass(listFiles.iterator().next());
+            if (suspect != null) {
+                return suspect;
             }
             return null;
         } catch (IOException ex) {
@@ -109,22 +110,14 @@ public class TmpFileStorage extends StorageInterface {
         return null;
     }
 
-    private Atom handleFileWithoutClass(File file, SGID sgid) throws IOException {
-        String[] names = file.getName().split("\\" + StorageInterface.SEPARATOR);
-        Class cl = directBIMap.inverse().get(names[0]);
+    private Atom handleFileWithoutClass(File file) throws IOException {
+        String[] names = file.getName().split(TmpFileStorage.CLASS_BREAK);
+        String clName = names[0].split("\\" + StorageInterface.SEPARATOR)[0];
+        Class cl = directBIMap.inverse().get(clName);
         if (cl == null) {
-            cl = indirectBIMap.inverse().get(names[0]);
+            cl = indirectBIMap.inverse().get(clName);
         }
         Atom suspect = handleFileGivenClass(file, cl);
-        if (suspect instanceof FeatureList) {
-            // dig deeper if this is a list of Features
-            for (Feature f : ((FeatureList) suspect).getFeatures()) {
-                if (f.getSGID().equals(sgid)) {
-                    return f;
-                }
-            }
-            return null;
-        }
         return suspect;
     }
 
@@ -150,18 +143,8 @@ public class TmpFileStorage extends StorageInterface {
         List<SGID> list = new ArrayList<SGID>();
         for (File f : FileUtils.listFiles(tempDir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE)) {
             try {
-                byte[] objData = FileUtils.readFileToByteArray(f);
-                String[] names = f.getName().split("\\" + StorageInterface.SEPARATOR);
-                Class cl = directBIMap.inverse().get(names[0]);
-                Atom suspect = (Atom) serializer.deserialize(objData, cl);
+                Atom suspect = this.handleFileWithoutClass(f);
                 if (suspect != null) {
-                    if (suspect instanceof FeatureList) {
-                        // dig deeper if this is a list of Features
-                        for (Feature f1 : ((FeatureList) suspect).getFeatures()) {
-                            list.add(f1.getSGID());
-                        }
-                        continue;
-                    }
                     list.add(suspect.getSGID());
                 }
             } catch (Exception e) {
@@ -193,11 +176,11 @@ public class TmpFileStorage extends StorageInterface {
     public Atom deserializeTargetToLatestAtom(SGID sgid) {
         List<Atom> aList = new ArrayList<Atom>();
         String suffix = NonPersistentStorage.createKey(sgid, false);
-        String regex = "\\w+\\..*" + suffix + "\\..*";
+        String regex = "\\w+~.*" + suffix + "\\..*";
         for (File file : FileUtils.listFiles(tempDir, new RegexFileFilter(regex), null)) {
             try {
-                Atom suspect = handleFileWithoutClass(file, sgid);
-                if (suspect != null){
+                Atom suspect = handleFileWithoutClass(file);
+                if (suspect != null) {
                     aList.add(suspect);
                 }
             } catch (IOException ex) {
@@ -230,17 +213,15 @@ public class TmpFileStorage extends StorageInterface {
     }
 
     @Override
-    public Iterable<Feature> getAllFeaturesForFeatureSet(FeatureSet fSet) {
+    public Iterable<FeatureList> getAllFeatureListsForFeatureSet(FeatureSet fSet) {
         assert (fSet instanceof LazyFeatureSet);
-        List<Feature> features = new ArrayList<Feature>();
+        List<FeatureList> features = new ArrayList<FeatureList>();
         String substring = NonPersistentStorage.createKey(fSet.getSGID());
-        String regex = "Feature\\..+" + substring;
+        String regex = "Feature\\..*~.*" + substring;
         for (File file : FileUtils.listFiles(tempDir, new RegexFileFilter(regex), null)) {
             try {
                 FeatureList suspect = (FeatureList) handleFileGivenClass(file, FeatureList.class);
-                for (Feature f : suspect.getFeatures()) {
-                    features.add(f);
-                }
+                features.add(suspect);
             } catch (IOException ex) {
                 Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, null, ex);
             }
