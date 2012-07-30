@@ -212,7 +212,7 @@ public class GFF3VariantImportWorker extends ImportWorker {
                 tagSet.add(Tag.newBuilder().setKey(f.type()).build());
                 //m.addTag(f.type(), null);
                 // coord
-                fBuilder.setId(f.seqname());
+                fBuilder.setSeqid(f.seqname());
                 // m.setContig(f.seqname());
                 fBuilder.setStart(f.location().getBegin());
                 fBuilder.setStop(f.location().getEnd());

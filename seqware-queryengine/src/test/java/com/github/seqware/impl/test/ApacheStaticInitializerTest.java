@@ -30,9 +30,9 @@ public class ApacheStaticInitializerTest {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
         // create and store some features
-        a1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
-        a2 = mManager.buildFeature().setId("chr16").setStart(1000200).setStop(1000300).build();
-        a3 = mManager.buildFeature().setId("chr16").setStart(1000400).setStop(1000500).build();
+        a1 = mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).build();
+        a2 = mManager.buildFeature().setSeqid("chr16").setStart(1000200).setStop(1000300).build();
+        a3 = mManager.buildFeature().setSeqid("chr16").setStart(1000400).setStop(1000500).build();
         aSet.add(a1);
         aSet.add(a2);
         aSet.add(a3);

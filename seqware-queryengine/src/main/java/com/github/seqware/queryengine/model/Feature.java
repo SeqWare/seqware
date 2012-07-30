@@ -1,7 +1,6 @@
 package com.github.seqware.queryengine.model;
 
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
-import com.github.seqware.queryengine.impl.StorageInterface;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 import com.github.seqware.queryengine.util.FSGID;
@@ -42,14 +41,14 @@ public class Feature extends AtomImpl<Feature> {
      * Names that cannot be used for additional attributes, since they
      * are already covered by instance variables.
      */
-    private final static String[] reservedAttributeNames = new String[] { "pragma", "source", "type", "score", "phase", "id", "start", "stop", "strand" };
+    private final static String[] reservedAttributeNames = new String[] { "pragma", "source", "type", "score", "phase", "seqid", "start", "stop", "strand" };
 
     private String pragma = null;
     private String source = null;
     private String type = null;
     private Double score = null;
     private String phase = ".";
-    private String id = null;
+    private String seqid = null;
     private long start = 0;
     private long stop = 0;
     private Strand strand = null;
@@ -88,8 +87,8 @@ public class Feature extends AtomImpl<Feature> {
      *
      * @return user provided ID
      */
-    public String getId() {
-        return id;
+    public String getSeqid() {
+        return seqid;
     }
 
     /**
@@ -234,8 +233,8 @@ public class Feature extends AtomImpl<Feature> {
             return this.getScore();
         else if (nameLowerCase.equals("phase"))
             return this.getPhase();
-        else if (nameLowerCase.equals("id"))
-            return this.getId();
+        else if (nameLowerCase.equals("seqid"))
+            return this.getSeqid();
         else if (nameLowerCase.equals("start"))
             return this.getStart();
         else if (nameLowerCase.equals("stop"))
@@ -281,8 +280,8 @@ public class Feature extends AtomImpl<Feature> {
             return this;
         }
 
-        public Feature.Builder setId(String id) {
-            feature.id = id;
+        public Feature.Builder setSeqid(String seqid) {
+            feature.seqid = seqid;
             return this;
         }
 
@@ -321,8 +320,8 @@ public class Feature extends AtomImpl<Feature> {
             if (feature.strand == null) {
                 feature.strand = Strand.NOT_STRANDED;
             }
-            // let's mandate an id for rowKey purposes 
-            if (feature.id == null) {
+            // let's mandate an seqid for rowKey purposes 
+            if (feature.seqid == null) {
                 throw new RuntimeException("Ensure that Feature is built with an id for rowKey purposes");
             }
 

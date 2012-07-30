@@ -95,10 +95,10 @@ public class VCFVariantImportWorker extends ImportWorker {
                     // load the variant object
 
                     //m.setContig(t[0]);
-                    fBuilder.setId(t[0]);
+                    fBuilder.setSeqid(t[0]);
                     if (!t[0].startsWith("chr")) {
                         //m.setContig("chr" + t[0]);
-                        fBuilder.setId("chr" + t[0]);
+                        fBuilder.setSeqid("chr" + t[0]);
                     }
 
                     // cache our tags till our message is built
@@ -279,13 +279,13 @@ public class VCFVariantImportWorker extends ImportWorker {
                         fSet.add(build);
 
                         if (count % 200000 == 0) {
-                            Logger.getLogger(VCFVariantImportWorker.class.getName()).log(Level.INFO, "{0} {1}: adding mismatch to db: {2}:{3}-{4} total records added: {5} total lines so far: {6}", new Object[]{(new Date()).toString(), workerName, build.getId(), build.getStart(), build.getStop(), build.getId(), count});
+                            Logger.getLogger(VCFVariantImportWorker.class.getName()).log(Level.INFO, "{0} {1}: adding mismatch to db: {2}:{3}-{4} total records added: {5} total lines so far: {6}", new Object[]{(new Date()).toString(), workerName, build.getSeqid(), build.getStart(), build.getStop(), build.getSeqid(), count});
                         }
                     }
 
 //                    if (count % 10000 == 0) {
 //                        System.out.println(workerName + ": adding mismatch to db: " + m.getContig() + ":" + m.getStartPosition() + "-" + m.getStopPosition()
-//                                + " total records added: " + m.getId() + " total lines so far: " + count);
+//                                + " total records added: " + m.getSeqid() + " total lines so far: " + count);
 //                    }
 
                     // now prepare for next mismatch

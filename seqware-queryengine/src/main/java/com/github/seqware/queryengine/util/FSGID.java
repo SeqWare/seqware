@@ -89,7 +89,7 @@ public class FSGID extends SGID implements KryoSerializable {
             this.featureSetID = fSet.getSGID();
             // generate row key
             StringBuilder builder = new StringBuilder();
-            builder.append(fSet.getReference().getName()).append(StorageInterface.SEPARATOR).append(f.getId()).append(PositionSeparator).append(padZeros(f.getStart(), HBaseStorage.PAD))/** unnecessary .append(".feature.").append(f.getVersion())*/;
+            builder.append(fSet.getReference().getName()).append(StorageInterface.SEPARATOR).append(f.getSeqid()).append(PositionSeparator).append(padZeros(f.getStart(), HBaseStorage.PAD))/** unnecessary .append(".feature.").append(f.getVersion())*/;
             rowKey = builder.toString();
             referenceName = fSet.getReference().getName();
         } catch (Exception ex) {

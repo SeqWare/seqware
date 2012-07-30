@@ -24,9 +24,9 @@ public class FeatureSetTest {
         // this is sort of painful, but you cannot assume that a Feature doesn't change when you add it to sets
         //Set<Feature> testFeatures = new HashSet<Feature>();
         List<Feature> testFeatures = new ArrayList<Feature>();
-        testFeatures.add(mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build());
-        testFeatures.add(mManager.buildFeature().setId("chr16").setStart(1000200).setStop(1000300).build());
-        testFeatures.add(mManager.buildFeature().setId("chr16").setStart(1000400).setStop(1000500).build());
+        testFeatures.add(mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).build());
+        testFeatures.add(mManager.buildFeature().setSeqid("chr16").setStart(1000200).setStop(1000300).build());
+        testFeatures.add(mManager.buildFeature().setSeqid("chr16").setStart(1000400).setStop(1000500).build());
 
         for (Feature testFeature : testFeatures) {
             aSet.add(testFeature);
@@ -57,13 +57,13 @@ public class FeatureSetTest {
         if (!(aSet instanceof LazyMolSet)) {
 
             mManager.flush(); // this should persist a version with no features
-            aSet.add(mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build());
-            aSet.add(mManager.buildFeature().setId("chr16").setStart(1000200).setStop(1000300).build());
-            aSet.add(mManager.buildFeature().setId("chr16").setStart(1000400).setStop(1000500).build());
+            aSet.add(mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).build());
+            aSet.add(mManager.buildFeature().setSeqid("chr16").setStart(1000200).setStop(1000300).build());
+            aSet.add(mManager.buildFeature().setSeqid("chr16").setStart(1000400).setStop(1000500).build());
             mManager.flush(); // this should persist a version with three features
-            aSet.add(mManager.buildFeature().setId("chr16").setStart(1000600).setStop(1000610).build());
-            aSet.add(mManager.buildFeature().setId("chr16").setStart(1000700).setStop(1000710).build());
-            aSet.add(mManager.buildFeature().setId("chr16").setStart(1000800).setStop(1000810).build());
+            aSet.add(mManager.buildFeature().setSeqid("chr16").setStart(1000600).setStop(1000610).build());
+            aSet.add(mManager.buildFeature().setSeqid("chr16").setStart(1000700).setStop(1000710).build());
+            aSet.add(mManager.buildFeature().setSeqid("chr16").setStart(1000800).setStop(1000810).build());
             mManager.flush(); // this should persist a version with six features
             List<Feature> killList = new ArrayList<Feature>();
             for (Feature f : aSet) {

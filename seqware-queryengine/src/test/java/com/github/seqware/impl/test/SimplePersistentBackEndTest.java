@@ -74,11 +74,11 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
 
         QueryFuture queryFuture = backend.getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant("chr16"),
-                "id",
+                "seqid",
                 Operation.EQUAL
         ));
         FeatureSet resultSet = queryFuture.get();
-        Assert.assertTrue("Setting a query constraints with 1 operation on 'id' failed.", resultSet.getCount() == 10);
+        Assert.assertTrue("Setting a query constraints with 1 operation on 'seqid' failed.", resultSet.getCount() == 10);
 
         queryFuture = backend.getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant(Feature.Strand.NEGATIVE),
@@ -93,7 +93,7 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
                 "strand",
                 Operation.EQUAL,
                 new Constant("chr16"),
-                "id",
+                "seqid",
                 Operation.EQUAL,
                 Operation.AND
         ));
