@@ -16,7 +16,7 @@
  */
 package com.github.seqware.queryengine.impl;
 
-import com.github.seqware.queryengine.factory.BackEndInterface;
+import com.github.seqware.queryengine.impl.BackEndInterface;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
@@ -196,7 +196,9 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
 
     @Override
     public QueryFuture getFeaturesByRange(int hours, FeatureSet set, Location location, String structure, long start, long stop) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        AnalysisPluginInterface plugin = new InMemoryFeaturesByRangePlugin();
+        plugin.init(set, location, structure, start, stop);
+        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
     @Override

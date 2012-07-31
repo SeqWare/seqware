@@ -120,9 +120,6 @@ public class QueryInterfaceTest implements Benchmarking {
 
     @Test
     public void testGetFeaturesByRange() {
-        /*
-            getFeaturesByRange IS NOT IMPLEMENTED YET!
-
         // get a FeatureSet from the back-end
         String structure = "chr16";
         int start = 1000000;
@@ -137,12 +134,12 @@ public class QueryInterfaceTest implements Benchmarking {
         FeatureSet result = future.get();
 
         Assert.assertTrue("Number of returned features within the given range does not match the number of features that were stored there.", result.getCount() == featuresInRange);
+
         if (BENCHMARK) {
             future = SWQEFactory.getQueryInterface().getFeaturesByRange(0, benchmarkSet, QueryInterface.Location.INCLUDES, "chr1", 10000, 100000);
 
             this.benchmark("getFeaturesByRange(...)", future);
         }
-         */
     }
 
     @Test

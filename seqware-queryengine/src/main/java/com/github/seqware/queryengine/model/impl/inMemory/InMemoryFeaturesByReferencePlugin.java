@@ -30,15 +30,14 @@ import java.util.Set;
  *
  * @author dyuen
  */
-public class InMemoryFeaturesByReferencePlugin implements MapReducePlugin<Feature, FeatureSet> {
+public class InMemoryFeaturesByReferencePlugin extends MapReducePlugin<Feature, FeatureSet> {
 
-    private FeatureSet set;
     private Reference reference;
     private Set<Feature> accumulator = new HashSet<Feature>();
 
     @Override
-    public AnalysisPluginInterface.ReturnValue init(FeatureSet set, Object... parameters) {
-        this.set = set;
+    public AnalysisPluginInterface.ReturnValue init(FeatureSet inputSet, Object... parameters) {
+        this.inputSet = inputSet;
         this.reference = (Reference) parameters[0];
         return new AnalysisPluginInterface.ReturnValue();
     }
@@ -102,11 +101,9 @@ public class InMemoryFeaturesByReferencePlugin implements MapReducePlugin<Featur
 
     @Override
     public ReturnValue map(Feature atom, FeatureSet mappedSet) {
-        if (set.getReference().equals(reference)){
-            for (Feature f : set) {
-                Feature build = f.toBuilder().build();
-                accumulator.add(build);
-            }
+        if (this.getInputFeatureSet().getReference().equals(reference)){
+            Feature build = atom.toBuilder().build();
+            accumulator.add(build);
         }
         return new AnalysisPluginInterface.ReturnValue();
     }
