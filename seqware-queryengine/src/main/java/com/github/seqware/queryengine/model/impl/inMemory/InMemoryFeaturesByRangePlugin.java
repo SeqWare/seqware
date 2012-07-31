@@ -20,6 +20,7 @@ import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
+import com.github.seqware.queryengine.model.QueryInterface;
 import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.plugins.MapReducePlugin;
 import java.util.Arrays;
@@ -28,23 +29,28 @@ import java.util.Set;
 import org.apache.commons.lang.ArrayUtils;
 
 /**
+ * Retrieves features based on their chromosomal location.
  *
- * @author dyuen
+ * @author jbaran
  */
-public class InMemoryFeaturesByTagPlugin extends MapReducePlugin<Feature, FeatureSet> {
+public class InMemoryFeaturesByRangePlugin extends MapReducePlugin<Feature, FeatureSet> {
 
-    private String subject = null;
-    private String predicate = null;
-    private String object = null;
+    private QueryInterface.Location location;
+    private String structure;
+    private long start;
+    private long stop;
     private Set<Feature> accumulator = new HashSet<Feature>();
 
     @Override
     public ReturnValue init(FeatureSet inputSet, Object... parameters) {
         this.inputSet = inputSet;
-        assert (parameters.length == 3);
-        this.subject = (String) parameters[0];
-        this.predicate = (String) parameters[1];
-        this.object = (String) parameters[2];
+
+        assert (parameters.length == 4);
+
+        this.location = (QueryInterface.Location) parameters[0];
+        this.structure = (String) parameters[1];
+        this.start = (Long) parameters[2];
+        this.stop = (Long) parameters[3];
         return new ReturnValue();
     }
 
@@ -80,22 +86,28 @@ public class InMemoryFeaturesByTagPlugin extends MapReducePlugin<Feature, Featur
 
     @Override
     public ReturnValue map(Feature atom, FeatureSet mappedSet) {
-        boolean b[] = new boolean[3];
-        Arrays.fill(b, false);
-        for (Tag t : atom.getTags()) {
-            // three cases
-            if (subject == null || subject.equals(t.getKey())) {
-                b[0] = true;
-            }
-            if (predicate == null || predicate.equals(t.getPredicate())) {
-                b[1] = true;
-            }
-            if (object == null || object.equals(t.getValue())) {
-                b[2] = true;
-            }
+        boolean match = false;
 
+        switch (this.location) {
+            case OVERLAPS:
+                match = atom.getSeqid().equals(this.structure) &&
+                        (atom.getStart() >= this.start && atom.getStart() <= this.stop || atom.getStop() >= this.start && atom.getStop() <= this.stop);
+                break;
+            case EXCLUDES:
+                match = !atom.getSeqid().equals(this.structure) ||
+                        (atom.getSeqid().equals(this.structure) && atom.getStart() <= this.start && atom.getStop() >= this.stop);
+                break;
+            case INCLUDES:
+                match = atom.getSeqid().equals(this.structure) && atom.getStart() >= this.start && atom.getStop() <= this.stop;
+                break;
+            case EXACT:
+                match = atom.getSeqid().equals(this.structure) && atom.getStart() == this.start && atom.getStop() == this.stop;
+                break;
+            default:
+                throw new UnsupportedOperationException("This range restriction on chromosomal locations has not been implemented yet.");
         }
-        if (!ArrayUtils.contains(b, false)) {
+
+        if (match) {
             Feature build = atom.toBuilder().build();
             accumulator.add(build);
         }

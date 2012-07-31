@@ -16,7 +16,7 @@
  */
 package com.github.seqware.queryengine.impl;
 
-import com.github.seqware.queryengine.factory.BackEndInterface;
+import com.github.seqware.queryengine.impl.BackEndInterface;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.CreateUpdateManager.State;
 import com.github.seqware.queryengine.factory.SWQEFactory;
