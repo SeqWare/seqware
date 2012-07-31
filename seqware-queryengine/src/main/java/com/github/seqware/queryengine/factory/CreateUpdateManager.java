@@ -61,6 +61,14 @@ public interface CreateUpdateManager {
          */
         MANAGED
     };
+    
+    /**
+     * Accessor method for the back-end. It can be useful to assert or debug what state 
+     * an atom currently is in
+     * @param a
+     * @return 
+     */
+    public State getState(Atom a);
 
     /**
      * Erase the current set of managed models without saving them to the

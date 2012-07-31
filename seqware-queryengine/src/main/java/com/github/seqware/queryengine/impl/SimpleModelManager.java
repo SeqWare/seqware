@@ -161,6 +161,10 @@ public class SimpleModelManager implements CreateUpdateManager {
                 featureList.impersonate(new FSGID(featureList.getSGID(), (FSGID) f.getSGID()), featureList.getPrecedingSGID());
             }
             if (featureList.getFeatures().size() > 0) {
+                FSGID listfsgid = (FSGID) featureList.getSGID();
+                FSGID firstElement = (FSGID) featureList.getFeatures().get(0).getSGID();
+                assert(listfsgid.getRowKey().equals(firstElement.getRowKey()) && listfsgid.getReferenceName().equals(firstElement.getReferenceName())
+                        && listfsgid.getFeatureSetID().equals(firstElement.getFeatureSetID()));
                 bucketList.add(featureList);
             }
             e.setValue(bucketList);
@@ -354,6 +358,11 @@ public class SimpleModelManager implements CreateUpdateManager {
         atomStateChange(source, State.NEW_CREATION);
     }
 
+    @Override
+    public State getState(Atom a) {
+        return this.dirtySet.get(a.getSGID().toString()).state;
+    }
+    
     @Override
     public void atomStateChange(Atom source, State state) {
         // check for valid state transitions

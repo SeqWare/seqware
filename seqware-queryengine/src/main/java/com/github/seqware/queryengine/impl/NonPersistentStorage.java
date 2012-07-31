@@ -62,9 +62,9 @@ public class NonPersistentStorage extends StorageInterface {
         SGID sgid = obj.getSGID();
         return createKey(sgid);
     }
-    
+
     protected static String createKey(SGID sgid) {
-        return  createKey(sgid, true);
+        return createKey(sgid, true);
     }
 
     protected static String createKey(SGID sgid, boolean useTimestamp) {
@@ -72,10 +72,10 @@ public class NonPersistentStorage extends StorageInterface {
         if (sgid instanceof FSGID) {
             FSGID fsgid = (FSGID) sgid;
             buff.append(sgid.getRowKey().toString()).append(SEPARATOR).append(fsgid.getFeatureSetID().getUuid().toString());
-        } else{
+        } else {
             buff.append(sgid.getRowKey().toString());
         }
-        if (useTimestamp){
+        if (useTimestamp) {
             buff.append(SEPARATOR).append(sgid.getBackendTimestamp().getTime());
         }
         return buff.toString();
@@ -164,17 +164,26 @@ public class NonPersistentStorage extends StorageInterface {
     public Iterable<FeatureList> getAllFeatureListsForFeatureSet(FeatureSet fSet) {
         assert (fSet instanceof LazyFeatureSet);
         List<FeatureList> features = new ArrayList<FeatureList>();
-        String substring = fSet.getSGID().getUuid().toString() + SEPARATOR + fSet.getSGID().getBackendTimestamp().getTime();
+        // make this time insensisitive
+        String substring = fSet.getSGID().getUuid().toString() /**
+                 * + SEPARATOR + fSet.getSGID().getBackendTimestamp().getTime()
+                 */
+                ;
         for (Entry<String, ByteTypePair> e : this.map.entrySet()) {
             if (e.getKey().contains(substring) && e.getValue().cl == FeatureList.class) {
-                FeatureList a = (FeatureList)serializer.deserialize(e.getValue().bArr, e.getValue().cl);
+                FeatureList a = (FeatureList) serializer.deserialize(e.getValue().bArr, e.getValue().cl);
+                if (a.getSGID().getBackendTimestamp().getTime() >= fSet.getSGID().getBackendTimestamp().getTime()) {
+                    continue;
+                }
                 features.add(a);
             }
         }
         Collections.sort(features, new Comparator<FeatureList>(){
             @Override
             public int compare(FeatureList o1, FeatureList o2) {
-                return o1.getSGID().getRowKey().compareTo(o2.getSGID().getRowKey());
+                String createKey1 = NonPersistentStorage.createKey(o1.getSGID(), true);
+                String createKey2 = NonPersistentStorage.createKey(o2.getSGID(), true);
+                return createKey1.compareTo(createKey2);
             } 
         });
         return features;

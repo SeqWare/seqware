@@ -324,10 +324,10 @@ public class Feature extends AtomImpl<Feature> {
             if (feature.seqid == null) {
                 throw new RuntimeException("Ensure that Feature is built with an id for rowKey purposes");
             }
-
-            if (feature.getManager() != null) {
-                feature.getManager().objectCreated(feature);
-            }
+// with lazy molecule sets, it makes less sense to notify that a feature is created on build
+//            if (feature.getManager() != null) {
+//                feature.getManager().objectCreated(feature);
+//            }
             return feature;
         }
 
