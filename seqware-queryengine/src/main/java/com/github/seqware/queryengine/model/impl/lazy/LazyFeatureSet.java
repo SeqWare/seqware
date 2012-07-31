@@ -13,10 +13,7 @@ import com.github.seqware.queryengine.model.impl.LazyMolSet;
 import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.LazyReference;
 import com.github.seqware.queryengine.util.SGID;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -68,22 +65,37 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
         // try upgrading Feature IDs here, faster than in model manager and FeatureSets should be guaranteed to have references
 //        if (!(feature.getSGID() instanceof FSGID)) {
         FSGID fsgid = new FSGID(feature.getSGID(), feature, this);
-        // as a convenience, we should have Features in a FeatureSet and the associated FeatureLists take on the time
-        // of the FeatureSet
-        fsgid.setBackendTimestamp(this.getTimestamp());
+        processTimestamp(fsgid);
         feature.impersonate(fsgid, feature.getPrecedingSGID());
         if (getManager() != null) {
-            getManager().atomStateChange(feature, CreateUpdateManager.State.NEW_VERSION);
+            getManager().atomStateChange(feature, CreateUpdateManager.State.NEW_CREATION);
         }
 //        }
+    }
+
+    private void processTimestamp(FSGID fsgid) {
+        // as a convenience, we should have Features in a FeatureSet and the associated FeatureLists take on the time
+        // of the FeatureSet
+        if (this.getPrecedingSGID() == null){
+            if (getManager() != null && getManager().getState(this) != CreateUpdateManager.State.NEW_CREATION){
+                // we want this if the set has been persisted
+                fsgid.setBackendTimestamp(new Date(this.getTimestamp().getTime()));
+            } else{
+                // we want this if this is a new creation, so features get attached to this set (kind of a hack)
+                fsgid.setBackendTimestamp(new Date(this.getTimestamp().getTime() - 1));
+            }
+        } else{
+            fsgid.setBackendTimestamp(this.getTimestamp());
+        }
     }
 
     private void entombFeatureSGID(Feature feature) {
         assert (feature.getSGID() instanceof FSGID);
         FSGID fsgid = (FSGID) feature.getSGID();
+        processTimestamp(fsgid);
         fsgid.setTombstone(true);
         if (getManager() != null) {
-            getManager().atomStateChange(feature, CreateUpdateManager.State.NEW_VERSION);
+            getManager().atomStateChange(feature, CreateUpdateManager.State.NEW_CREATION);
         }
     }
 
@@ -120,68 +132,123 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
 
     @Override
     public Iterator<Feature> getFeatures() {
-        return new ListedIterator();
+        return new ConsolidatedFeatureIterator();
     }
 
     /**
-     * Iterates through Features, taking into account
+     * Go through the raw iterator from the underlying storage type and batch up
+     * the FeatureLists and return them by rows
      */
-    public class ListedIterator implements Iterator<Feature> {
+    public class BatchedRowFeatureListsIterator implements Iterator<List<FeatureList>> {
 
+        /**
+         * Wrapped iterator that returns FeatureLists in streams sorted by
+         * rowkey then by timestamp
+         */
         private final Iterator<FeatureList> iterator;
-        private List<FeatureList> rowOfFeatureLists = new ArrayList<FeatureList>();
-        // grab out a rowKey's worth of FeatureLists
+        /**
+         * Stores one FeatureList ahead if from a different row
+         */
+        private FeatureList lookahead = null;
+        // use to verify output from wrapped iterator
         private String rowKey;
-        // current consolidated row of Features
-        private List<Feature> rowOfFeatures = new ArrayList<Feature>();
 
-        public ListedIterator() {
+        public BatchedRowFeatureListsIterator() {
             this.iterator = SWQEFactory.getStorage().getAllFeatureListsForFeatureSet(LazyFeatureSet.this).iterator();
         }
 
         @Override
         public boolean hasNext() {
-            return rowOfFeatures.size() > 0 || iterator.hasNext() || rowOfFeatureLists.size() > 0;
+            return iterator.hasNext() || lookahead != null;
+        }
+
+        @Override
+        public List<FeatureList> next() {
+            List<FeatureList> rowOfFeatureLists = new ArrayList();
+            // check the lookahead first to see if anything is cached
+            if (lookahead != null) {
+                rowOfFeatureLists.add(lookahead);
+                lookahead = null;
+            }
+            // grab anything that is in the current row
+            while (iterator.hasNext()) {
+                FeatureList nextL = iterator.next();
+                // the first time, we need to set the rowkey pre-emptively
+                if (rowKey == null) {
+                    rowKey = nextL.getSGID().getRowKey();
+                }
+                // ensure that row keys are ascending
+                assert (nextL.getSGID().getRowKey().compareTo(rowKey) >= 0);
+                if (!rowKey.equals(nextL.getSGID().getRowKey())) {
+                    // we've moved onto a new row
+                    rowKey = nextL.getSGID().getRowKey();
+                    lookahead = nextL;
+                    break;
+                } else {
+                    // we're continuing the same row
+                    rowOfFeatureLists.add(nextL);
+                }
+            }
+            return rowOfFeatureLists;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
+
+    /**
+     * Iterates through Features given FeatureLists sorted by rows
+     */
+    public class ConsolidatedFeatureIterator implements Iterator<Feature> {
+
+        /**
+         * iterates through one row's worth of FeatureLists at a time
+         */
+        private BatchedRowFeatureListsIterator iterator;
+        /**
+         * caches available features
+         */
+        private List<Feature> featureCache = new ArrayList<Feature>();
+
+        public ConsolidatedFeatureIterator() {
+            this.iterator = new BatchedRowFeatureListsIterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            // turn crank and fill up the cache
+            if (featureCache.isEmpty()) {
+                turnCrank();
+            }
+            return !featureCache.isEmpty();
         }
 
         @Override
         public Feature next() {
-            FeatureList peekedList = null;
-            if (rowOfFeatures.size() > 0) {
-                return rowOfFeatures.remove(rowOfFeatures.size() - 1);
+            if (!featureCache.isEmpty()) {
+                // if the cache is not empty
+                return featureCache.remove(featureCache.size() - 1);
             } else {
-                while (iterator.hasNext()) {
-                    FeatureList nextL = iterator.next();
-                    // the first time, we need to set the rowkey pre-emptively
-                    if (rowKey == null){
-                        rowKey = nextL.getSGID().getRowKey();
-                    }
-                    // ensure that row keys are ascending
-                    assert (nextL.getSGID().getRowKey().compareTo(rowKey) >= 0);
-                    if (!rowKey.equals(nextL.getSGID().getRowKey())) {
-                        // we've moved onto a new row
-                        rowKey = nextL.getSGID().getRowKey();
-                        peekedList = nextL;
-                        break;
-                    } else {
-                        // we're continuing the same row
-                        rowOfFeatureLists.add(nextL);
-                    }
+                if (featureCache.isEmpty()) {
+                    // if the cache is empty,  try to turn the crank
+                    turnCrank();
                 }
-                assert(rowOfFeatureLists.size() > 0 || peekedList != null);
-                if (rowOfFeatureLists.isEmpty()){
-                    rowOfFeatureLists.add(peekedList);
-                    peekedList = null;
+                // return NoSuchElementException iff there is nothing left
+                if (featureCache.isEmpty()) {
+                    throw new NoSuchElementException();
                 }
-                // consolidate list
-                rowOfFeatures.addAll(SimplePersistentBackEnd.consolidateRow(rowOfFeatureLists));
-                assert(rowOfFeatures.size() > 0);
-                rowOfFeatureLists.clear();
-                if (peekedList != null){
-                    rowOfFeatureLists.add(peekedList);
-                    peekedList = null;
-                }
-                return rowOfFeatures.remove(rowOfFeatures.size() - 1);
+                return featureCache.remove(featureCache.size() - 1);
+            }
+
+        }
+
+        private void turnCrank() {
+            while (iterator.hasNext() && featureCache.isEmpty()) {
+                List<FeatureList> next = iterator.next();
+                Collection<Feature> consolidateRow = SimplePersistentBackEnd.consolidateRow(next);
+                featureCache.addAll(consolidateRow);
             }
         }
 
@@ -202,7 +269,7 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
 
     @Override
     public long getCount() {
-        Logger.getLogger(HBaseStorage.class.getName()).log(Level.WARNING, "Iterating through a LazyFeatureSet is expensive, avoid this");
+        Logger.getLogger(LazyFeatureSet.class.getName()).log(Level.WARNING, "Iterating through a LazyFeatureSet is expensive, avoid this");
         // expensive, we need to iterate and count
         Iterator<Feature> features = this.getFeatures();
         long count = 0;

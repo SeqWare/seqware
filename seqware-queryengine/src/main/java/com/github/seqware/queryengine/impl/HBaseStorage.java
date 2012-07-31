@@ -271,7 +271,7 @@ public class HBaseStorage extends StorageInterface {
                     getTimeStamp = columnLatest.getTimestamp();
                 }
                 // I wonder if this handles subclassing properly ... turns out no
-                AtomImpl deserializedAtom = (AtomImpl) serializer.deserialize(value, properClass == Feature.class? FeatureList.class : properClass);
+                AtomImpl deserializedAtom = (AtomImpl) serializer.deserialize(value, properClass == Feature.class ? FeatureList.class : properClass);
                 atomList.add(deserializedAtom);
             }
             return atomList;
@@ -327,7 +327,7 @@ public class HBaseStorage extends StorageInterface {
         cl = handleNullClass(cl, prefix);
         try {
             Scan s = new Scan();
-             s.setMaxVersions();
+            s.setMaxVersions();
             // we need the actual values if we do not store SGID in row key for debugging
             //s.setFilter(new KeyOnlyFilter());
             ResultScanner scanner = table.getScanner(s);
@@ -340,7 +340,7 @@ public class HBaseStorage extends StorageInterface {
 
     @Override
     public Iterable<FeatureList> getAllFeatureListsForFeatureSet(FeatureSet fSet) {
-        assert(fSet instanceof LazyFeatureSet);
+        assert (fSet instanceof LazyFeatureSet);
         LazyFeatureSet lfSet = (LazyFeatureSet) fSet;
         String prefix = lfSet.getTablename();
         HTable table = tableMap.get(prefix);
@@ -504,7 +504,7 @@ public class HBaseStorage extends StorageInterface {
     }
 
     /**
-     * Presents an interface for iterating through SGIDs
+     * Presents an interface for iterating through FeatureLists
      */
     public class FeatureScanIterator implements Iterator<FeatureList> {
 
@@ -523,38 +523,41 @@ public class HBaseStorage extends StorageInterface {
         @Override
         public boolean hasNext() {
             byte[] qualifier = Bytes.toBytes(featureSetID.getUuid().toString());
-            long timestamp = featureSetID.getBackendTimestamp().getTime();
+            // make this time-insensitive
+            //            long timestamp = featureSetID.getBackendTimestamp().getTime();
             // we actually need to check for nulls due to different serialization formats
             while (sIter.hasNext() || cachedPayloads.size() > 0) {
                 while (cachedPayloads.isEmpty() && sIter.hasNext()) {
+                    // map is time -> data
                     NavigableMap<Long, byte[]> map = sIter.next().getMap().get(TEST_FAMILY_INBYTES).get(qualifier);
                     if (map == null) {
                         // column not present in this row
                         continue;
                     }
-                    byte[] value = map.get(timestamp); 
-                    if (value == null) {
-                        // timestamp not present in this row
-                        continue;
-                    }
                     // go through the possible qualifiers and break them down
-                    FeatureList list = serializer.deserialize(value, FeatureList.class);
-                    if (list == null){
-                        //TODO: investigate this
-                        continue;
+                    for (Entry<Long, byte[]> e : map.entrySet()) {
+                        long time = e.getKey();
+                        if (time >= featureSetID.getBackendTimestamp().getTime()){
+                            continue;
+                        }
+                        FeatureList list = serializer.deserialize(e.getValue(), FeatureList.class);
+                        if (list == null) {
+                            //TODO: investigate this
+                            continue;
+                        }
+                        cachedPayloads.add(list);
                     }
-                    cachedPayloads.add(list);
                 }
                 if (cachedPayloads.isEmpty() && payload == null) {
                     return false;
                 }
-                if (payload == null){
+                if (payload == null) {
                     payload = cachedPayloads.remove(cachedPayloads.size() - 1);
                 }
                 return true;
             }
             // if there are no more, close the scanner
-            assert(cachedPayloads.isEmpty() && !sIter.hasNext());
+            assert (cachedPayloads.isEmpty() && !sIter.hasNext());
             scanner.close();
             return payload != null;
         }
@@ -562,7 +565,7 @@ public class HBaseStorage extends StorageInterface {
         @Override
         public FeatureList next() {
             boolean hasNext = this.hasNext();
-            assert(hasNext);
+            assert (hasNext);
             FeatureList load = payload;
             payload = null;
             return load;
@@ -635,7 +638,7 @@ public class HBaseStorage extends StorageInterface {
                         // go through the possible qualifiers and break them down
                         for (byte[] value : get.values()) {
                             FeatureList list = serializer.deserialize(value, FeatureList.class);
-                            if (list == null){
+                            if (list == null) {
                                 // TODO: investigate these
                                 continue;
                             }

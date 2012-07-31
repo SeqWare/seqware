@@ -25,11 +25,7 @@ import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -218,11 +214,15 @@ public class TmpFileStorage extends StorageInterface {
     public Iterable<FeatureList> getAllFeatureListsForFeatureSet(FeatureSet fSet) {
         assert (fSet instanceof LazyFeatureSet);
         List<FeatureList> features = new ArrayList<FeatureList>();
-        String substring = NonPersistentStorage.createKey(fSet.getSGID());
-        String regex = "Feature\\..*~.*" + substring;
+        // ignore time
+        String substring = NonPersistentStorage.createKey(fSet.getSGID(), false);
+        String regex = "Feature\\..*~.*" + substring + ".*";
         for (File file : FileUtils.listFiles(tempDir, new RegexFileFilter(regex), null)) {
             try {
                 FeatureList suspect = (FeatureList) handleFileGivenClass(file, FeatureList.class);
+                if (suspect.getSGID().getBackendTimestamp().getTime() >= fSet.getSGID().getBackendTimestamp().getTime()){
+                    continue;
+                }
                 features.add(suspect);
             } catch (IOException ex) {
                 Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, null, ex);
@@ -231,7 +231,9 @@ public class TmpFileStorage extends StorageInterface {
         Collections.sort(features, new Comparator<FeatureList>(){
             @Override
             public int compare(FeatureList o1, FeatureList o2) {
-                return o1.getSGID().getRowKey().compareTo(o2.getSGID().getRowKey());
+                String createKey1 = NonPersistentStorage.createKey(o1.getSGID(), true);
+                String createKey2 = NonPersistentStorage.createKey(o2.getSGID(), true);
+                return createKey1.compareTo(createKey2);
             } 
         });
         return features;

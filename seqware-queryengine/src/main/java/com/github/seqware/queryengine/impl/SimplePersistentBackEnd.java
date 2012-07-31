@@ -245,8 +245,8 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
      * @return 
      */
     public static Collection<Feature> consolidateRow(List<FeatureList> fLists){
-        String rowKey = null;
-        Long time = null;
+       String rowKey = null;
+       long time = Long.MIN_VALUE;
         // sort by time ascending
         Collections.sort(fLists, new Comparator<FeatureList>(){
             @Override
@@ -263,7 +263,9 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
             // might as well make sure that the rowkeys are identical 
             assert(list.getSGID().getRowKey().equals(rowKey));
             // make sure time is ascending
-            assert(time >= list.getTimestamp().getTime());
+            assert(time <= list.getSGID().getBackendTimestamp().getTime());
+            time = list.getSGID().getBackendTimestamp().getTime();
+            
             for(Feature f : list.getFeatures()){
                 FSGID fsgid = (FSGID) f.getSGID();
                 boolean tomb = fsgid.isTombstone();
