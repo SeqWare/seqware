@@ -14,19 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.model.test;
+package com.github.seqware.queryengine.model.impl;
 
-import org.junit.runner.JUnitCore;
+import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 
 /**
- * Small hack, allows us to profile test suites for performance.
+ *
  * @author dyuen
  */
-public class ProfilingStub {
-
-    public static void main(String[] args) {
-        JUnitCore runner = new JUnitCore();
-        runner.run(InMemoryHBaseStorageApacheSerializationSuite.class);
-        //runner.run(InMemoryFileStoragePBSerializationSuite.class);
-    }
+public interface LazyMolSet<S extends MolSetInterface, T> extends MolSetInterface<S, T> {
+    
 }

@@ -38,6 +38,15 @@ message FeaturePB {
     }
 }
 
+// not really an atomic class, this explicitly handles the co-location of 
+// multiple Features in the same location 
+message FeatureListPB{
+    optional AtomPB atom = 1;
+    // hitchhike off the first Feature's rowKey to avoid even more duplication
+    // handle the co-location, Features are still distinguishable due to their internal FSGIDs
+    repeated FeaturePB features = 10;
+}
+
 message FeatureSetPB {
     // atom/molecule stuff
     optional AtomPB atom = 1;

@@ -27,6 +27,8 @@ message FSGIDPB {
     optional SGIDPB sgid = 1;
     optional string rowKey = 2;
     optional string refName = 3;
+    optional SGIDPB featureSet = 4;
+    optional bool tombstone = 5;
 }
 
 message TagPB {

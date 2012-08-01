@@ -29,13 +29,12 @@ import java.util.Set;
  *
  * @author dyuen
  */
-public class InMemoryFeaturesAllPlugin implements MapReducePlugin<Feature, FeatureSet> {
+public class InMemoryFeaturesAllPlugin extends MapReducePlugin<Feature, FeatureSet> {
 
-    private FeatureSet set;
     private Set<Feature> accumulator = new HashSet<Feature>();
 
-    public AnalysisPluginInterface.ReturnValue init(FeatureSet set, Object... parameters) {
-        this.set = set;
+    public AnalysisPluginInterface.ReturnValue init(FeatureSet inputSet, Object... parameters) {
+        this.inputSet = inputSet;
         return new AnalysisPluginInterface.ReturnValue();
     }
 
@@ -81,6 +80,9 @@ public class InMemoryFeaturesAllPlugin implements MapReducePlugin<Feature, Featu
     public FeatureSet getFinalResult() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("ad_hoc_analysis").build()).build();
+        for(Feature f : accumulator){
+            mManager.objectCreated(f);
+        }
         fSet.add(accumulator);
         mManager.close();
         return fSet;
@@ -88,8 +90,9 @@ public class InMemoryFeaturesAllPlugin implements MapReducePlugin<Feature, Featu
 
     @Override
     public ReturnValue map(Feature atom, FeatureSet mappedSet) {
-        for (Feature f : set) {
-            accumulator.add(f);
+        for (Feature f : this.inputSet) {
+            Feature build = f.toBuilder().build();
+            accumulator.add(build);
         }
         return new AnalysisPluginInterface.ReturnValue();
     }

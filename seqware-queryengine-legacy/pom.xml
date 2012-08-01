@@ -63,11 +63,13 @@
             <!-- <url>https://repository.cloudera.com/content/repositories/releases</url> -->
             <url>https://repository.cloudera.com/artifactory/cloudera-repos</url> 
         </repository>
+	<!-- looks down, added artifacts to local repo
         <repository>
             <id>biojava3-repository</id>
             <name>BioJava Repository</name>
             <url>http://biojava.org/download/maven</url>
         </repository>
+	-->
     </repositories>
 
     <dependencies>

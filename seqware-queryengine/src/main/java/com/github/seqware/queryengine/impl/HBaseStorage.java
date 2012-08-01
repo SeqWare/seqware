@@ -22,6 +22,8 @@ import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
+import com.github.seqware.queryengine.model.impl.FeatureList;
+import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
 import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.IOException;
@@ -30,7 +32,10 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.*;
+import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.HColumnDescriptor;
+import org.apache.hadoop.hbase.HTableDescriptor;
+import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 
@@ -40,12 +45,12 @@ import org.apache.hadoop.hbase.util.Bytes;
  */
 public class HBaseStorage extends StorageInterface {
 
-    private static final String TEST_COLUMN = "allData";
-    public static final byte[] TEST_COLUMN_INBYTES = Bytes.toBytes("allData");
+    private static final String TEST_COLUMN = "d";
+    public static final byte[] TEST_FAMILY_INBYTES = Bytes.toBytes(TEST_COLUMN); // Try to keep the ColumnFamily names as small as possible, preferably one character (e.g. "d" for data/default). 
     public static final byte[] TEST_QUALIFIER_INBYTES = Bytes.toBytes("qualifier");
     private boolean inefficiencyWarning = false;
     public static final int PAD = 15;
-    private static final String TEST_TABLE_PREFIX = System.getProperty("user.name") + StorageInterface.separator + "hbaseTestTable";
+    private static final String TEST_TABLE_PREFIX = System.getProperty("user.name") + StorageInterface.SEPARATOR + "hbaseTestTable_v2";
     private static final boolean PERSIST = Constants.PERSIST;
     private Configuration config;
     private SerializationInterface serializer;
@@ -101,7 +106,7 @@ public class HBaseStorage extends StorageInterface {
      * @throws IOException
      */
     private void createTable(String s, HBaseAdmin hba) throws IOException {
-        String tableName = TEST_TABLE_PREFIX + StorageInterface.separator + s;
+        String tableName = TEST_TABLE_PREFIX + StorageInterface.SEPARATOR + s;
         // Create a fresh table, i.e. delete an existing table if it exists:
         HTableDescriptor ht = new HTableDescriptor(tableName);
         HColumnDescriptor hColumnDescriptor = new HColumnDescriptor(TEST_COLUMN);
@@ -164,7 +169,12 @@ public class HBaseStorage extends StorageInterface {
                 // as a test, let's try readable rowKeys
                 Put p = new Put(Bytes.toBytes(obj.getSGID().getRowKey().toString()), obj.getSGID().getBackendTimestamp().getTime());
                 // Serialize:
-                p.add(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES, featureBytes);
+                if (obj instanceof FeatureList) {
+                    FSGID fsgid = (FSGID) obj.getSGID();
+                    p.add(TEST_FAMILY_INBYTES, Bytes.toBytes(fsgid.getFeatureSetID().getUuid().toString()), featureBytes);
+                } else {
+                    p.add(TEST_FAMILY_INBYTES, TEST_QUALIFIER_INBYTES, featureBytes);
+                }
                 putList.add(p);
             }
             if (DEBUG) {
@@ -202,6 +212,14 @@ public class HBaseStorage extends StorageInterface {
             inefficiencyWarning = true;
             Logger.getLogger(HBaseStorage.class.getName()).log(Level.WARNING, "Why you use deserializeTargetToAtom(SGID sgid) in HBase?");
         }
+        if (sgid instanceof FSGID) {
+            FSGID fsgid = (FSGID) sgid;
+            if (!tableMap.containsKey(fsgid.getTablename())) {
+                establishTableConnection(fsgid.getTablename());
+            }
+            deserializeAtom(Feature.class, tableMap.get(fsgid.getTablename()), useTimestamp, sgid);
+        }
+
         for (Entry<String, HTable> entry : tableMap.entrySet()) {
             Class properClass = super.directBIMap.inverse().get(entry.getKey());
             properClass = handleNullClass(properClass, entry.getKey());
@@ -238,21 +256,22 @@ public class HBaseStorage extends StorageInterface {
                 }
                 byte[] value;
                 long getTimeStamp = Long.MIN_VALUE;
-                if (useTimestamp) {
-                    value = result.getMap().get(TEST_COLUMN_INBYTES).get(TEST_QUALIFIER_INBYTES).get(sgid.getBackendTimestamp().getTime());
+                byte[] qualifier;
+                if (properClass == Feature.class) {
+                    assert (sgid instanceof FSGID);
+                    qualifier = Bytes.toBytes(((FSGID) sgid).getFeatureSetID().getUuid().toString());
                 } else {
-                    KeyValue columnLatest = result.getColumnLatest(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES);
+                    qualifier = TEST_QUALIFIER_INBYTES;
+                }
+                if (useTimestamp) {
+                    value = result.getMap().get(TEST_FAMILY_INBYTES).get(qualifier).get(sgid.getBackendTimestamp().getTime());
+                } else {
+                    KeyValue columnLatest = result.getColumnLatest(TEST_FAMILY_INBYTES, qualifier);
                     value = columnLatest.getValue();
                     getTimeStamp = columnLatest.getTimestamp();
                 }
                 // I wonder if this handles subclassing properly ... turns out no
-                AtomImpl deserializedAtom = (AtomImpl) serializer.deserialize(value, properClass);
-                // populate the timestamp field on the way out
-                if (useTimestamp) {
-                    deserializedAtom.getSGID().setBackendTimestamp(sgid.getBackendTimestamp());
-                } else {
-                    deserializedAtom.getSGID().setBackendTimestamp(new Date(getTimeStamp));
-                }
+                AtomImpl deserializedAtom = (AtomImpl) serializer.deserialize(value, properClass == Feature.class ? FeatureList.class : properClass);
                 atomList.add(deserializedAtom);
             }
             return atomList;
@@ -268,7 +287,7 @@ public class HBaseStorage extends StorageInterface {
     @Override
     public final void clearStorage() {
         for (String s : tableMap.keySet()) {
-            String tableName = TEST_TABLE_PREFIX + StorageInterface.separator + s;
+            String tableName = TEST_TABLE_PREFIX + StorageInterface.SEPARATOR + s;
             // Create a fresh table, i.e. delete an existing table if it exists:
             HTableDescriptor ht = new HTableDescriptor(tableName);
             ht.addFamily(new HColumnDescriptor(TEST_COLUMN));
@@ -290,7 +309,7 @@ public class HBaseStorage extends StorageInterface {
     public Iterable<SGID> getAllAtoms() {
         if (!inefficiencyWarning) {
             inefficiencyWarning = true;
-            Logger.getLogger(HBaseStorage.class.getName()).log(Level.WARNING, "Why you use getAllAtoms() in HBase?");
+            Logger.getLogger(HBaseStorage.class.getName()).log(Level.WARNING, "getAllAtoms() in HBase is extremely expensive, you probably want to avoid this");
         }
         List<SGID> list = new ArrayList<SGID>();
         Set<String> keys = new HashSet<String>(tableMap.keySet());
@@ -308,6 +327,7 @@ public class HBaseStorage extends StorageInterface {
         cl = handleNullClass(cl, prefix);
         try {
             Scan s = new Scan();
+            s.setMaxVersions();
             // we need the actual values if we do not store SGID in row key for debugging
             //s.setFilter(new KeyOnlyFilter());
             ResultScanner scanner = table.getScanner(s);
@@ -318,9 +338,49 @@ public class HBaseStorage extends StorageInterface {
         }
     }
 
+    @Override
+    public Iterable<FeatureList> getAllFeatureListsForFeatureSet(FeatureSet fSet) {
+        assert (fSet instanceof LazyFeatureSet);
+        LazyFeatureSet lfSet = (LazyFeatureSet) fSet;
+        String prefix = lfSet.getTablename();
+        HTable table = tableMap.get(prefix);
+        if (table == null) {
+            establishTableConnection(lfSet.getTablename());
+            table = tableMap.get(prefix);
+        }
+
+        try {
+            // I think this should return in sorted order already
+            Scan s = new Scan();
+            s.setMaxVersions();
+            // we need the actual values if we do not store SGID in row key for debugging
+            //s.setFilter(new KeyOnlyFilter());
+            ResultScanner scanner = table.getScanner(s);
+            return new FeatureScanIterable(scanner, fSet.getSGID());
+        } catch (IOException iOException) {
+            Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", iOException);
+            return null;
+        }
+    }
+
+    /**
+     * Establish a connection to a table that is not yet present in our map
+     *
+     * @param tableName
+     */
+    private void establishTableConnection(String tableName) {
+        try {
+            // attach table
+            HBaseAdmin hba = new HBaseAdmin(this.config);
+            this.createTable(tableName, hba);
+        } catch (Exception ex) {
+            Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", ex);
+        }
+    }
+
     private Class handleNullClass(Class cl, String prefix) {
         if (cl == null) {
-            if (prefix.startsWith(Feature.prefix)) {
+            if (prefix.startsWith(FeatureList.prefix)) {
                 cl = Feature.class;
             } else {
                 assert (false);
@@ -379,13 +439,7 @@ public class HBaseStorage extends StorageInterface {
             for (Entry<String, List<SGID>> e : map.entrySet()) {
                 String tableName = e.getKey();
                 if (!tableMap.containsKey(tableName)) {
-                    try {
-                        // attach table
-                        HBaseAdmin hba = new HBaseAdmin(this.config);
-                        this.createTable(tableName, hba);
-                    } catch (Exception ex) {
-                        Logger.getLogger(HBaseStorage.class.getName()).log(Level.SEVERE, "Big problem with HBase, abort!", ex);
-                    }
+                    establishTableConnection(tableName);
                 }
                 HTable table = tableMap.get(tableName);
                 results.addAll((List<T>) deserializeAtom(t, table, true, e.getValue().toArray(new SGID[e.getValue().size()])));
@@ -422,7 +476,111 @@ public class HBaseStorage extends StorageInterface {
         SWQEFactory.closeStorage();
     }
 
-    public class ScanIterable implements Iterable {
+    /**
+     * A scanner specifically for Features. Has to be FeatureList aware
+     */
+    public class FeatureScanIterable implements Iterable<FeatureList> {
+
+        private final ResultScanner scanner;
+        private final SGID featureSetID;
+
+        public FeatureScanIterable(ResultScanner scanner, SGID sgid) {
+            this.scanner = scanner;
+            this.featureSetID = sgid;
+        }
+
+        @Override
+        public Iterator<FeatureList> iterator() {
+            return new FeatureScanIterator(scanner, featureSetID);
+        }
+
+        @Override
+        protected void finalize() throws Throwable {
+//            // make sure that we close the scanner if the using aborts the iteration and garbage collects this 
+//            super.finalize();
+//            scanner.close();
+            // don't think this is working properly? getting UnknownScannerExceptions
+        }
+    }
+
+    /**
+     * Presents an interface for iterating through FeatureLists
+     */
+    public class FeatureScanIterator implements Iterator<FeatureList> {
+
+        private final Iterator<Result> sIter;
+        private FeatureList payload = null;
+        private List<FeatureList> cachedPayloads = new ArrayList<FeatureList>();
+        private final ResultScanner scanner;
+        private final SGID featureSetID;
+
+        protected FeatureScanIterator(ResultScanner scanner, SGID featureSetID) {
+            this.scanner = scanner;
+            this.sIter = scanner.iterator();
+            this.featureSetID = featureSetID;
+        }
+
+        @Override
+        public boolean hasNext() {
+            byte[] qualifier = Bytes.toBytes(featureSetID.getUuid().toString());
+            // make this time-insensitive
+            //            long timestamp = featureSetID.getBackendTimestamp().getTime();
+            // we actually need to check for nulls due to different serialization formats
+            while (sIter.hasNext() || cachedPayloads.size() > 0) {
+                while (cachedPayloads.isEmpty() && sIter.hasNext()) {
+                    // map is time -> data
+                    NavigableMap<Long, byte[]> map = sIter.next().getMap().get(TEST_FAMILY_INBYTES).get(qualifier);
+                    if (map == null) {
+                        // column not present in this row
+                        continue;
+                    }
+                    // go through the possible qualifiers and break them down
+                    for (Entry<Long, byte[]> e : map.entrySet()) {
+                        long time = e.getKey();
+                        if (time >= featureSetID.getBackendTimestamp().getTime()){
+                            continue;
+                        }
+                        FeatureList list = serializer.deserialize(e.getValue(), FeatureList.class);
+                        if (list == null) {
+                            //TODO: investigate this
+                            continue;
+                        }
+                        cachedPayloads.add(list);
+                    }
+                }
+                if (cachedPayloads.isEmpty() && payload == null) {
+                    return false;
+                }
+                if (payload == null) {
+                    payload = cachedPayloads.remove(cachedPayloads.size() - 1);
+                }
+                return true;
+            }
+            // if there are no more, close the scanner
+            assert (cachedPayloads.isEmpty() && !sIter.hasNext());
+            scanner.close();
+            return payload != null;
+        }
+
+        @Override
+        public FeatureList next() {
+            boolean hasNext = this.hasNext();
+            assert (hasNext);
+            FeatureList load = payload;
+            payload = null;
+            return load;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
+
+    /**
+     * A generic scanner
+     */
+    public class ScanIterable implements Iterable<SGID> {
 
         private final ResultScanner scanner;
         private final Class cl;
@@ -453,6 +611,7 @@ public class HBaseStorage extends StorageInterface {
         private final Iterator<Result> sIter;
         private final Class cl;
         private SGID payload = null;
+        private List<SGID> cachedPayloads = new ArrayList<SGID>();
         private final ResultScanner scanner;
 
         protected ScanIterator(ResultScanner scanner, Class cl) {
@@ -466,10 +625,30 @@ public class HBaseStorage extends StorageInterface {
             // we actually need to check for nulls due to different serialization formats
             while (payload == null && sIter.hasNext()) {
                 // check
-                byte[] bytes = sIter.next().getColumnLatest(TEST_COLUMN_INBYTES, TEST_QUALIFIER_INBYTES).getValue();
-                Object obj = serializer.deserialize(bytes, cl);
-                if (obj != null) {
-                    payload = (SGID) ((AtomImpl) obj).getSGID();
+                if (cl != Feature.class) {
+                    byte[] bytes = sIter.next().getColumnLatest(TEST_FAMILY_INBYTES, TEST_QUALIFIER_INBYTES).getValue();
+                    Object obj = serializer.deserialize(bytes, cl);
+                    if (obj != null) {
+                        payload = (SGID) ((AtomImpl) obj).getSGID();
+                        return true;
+                    }
+                } else {
+                    while (cachedPayloads.isEmpty() && sIter.hasNext()) {
+                        NavigableMap<byte[], byte[]> get = sIter.next().getNoVersionMap().get(TEST_FAMILY_INBYTES);
+                        // go through the possible qualifiers and break them down
+                        for (byte[] value : get.values()) {
+                            FeatureList list = serializer.deserialize(value, FeatureList.class);
+                            if (list == null) {
+                                // TODO: investigate these
+                                continue;
+                            }
+                            cachedPayloads.add(list.getSGID());
+                        }
+                    }
+                    if (cachedPayloads.isEmpty()) {
+                        return false;
+                    }
+                    payload = cachedPayloads.remove(cachedPayloads.size() - 1);
                     return true;
                 }
             }

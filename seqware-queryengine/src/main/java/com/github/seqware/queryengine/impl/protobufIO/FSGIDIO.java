@@ -27,7 +27,7 @@ import com.github.seqware.queryengine.util.FSGID;
 public class FSGIDIO {
 
     public static FSGID pb2m(FSGIDPB pb) {  
-        FSGID sgid = new FSGID(pb.getSgid().getMostSigBits(), pb.getSgid().getLeastSigBits(), pb.getSgid().getTimestamp(), pb.getRowKey(), pb.getRefName());
+        FSGID sgid = new FSGID(pb.getSgid().getMostSigBits(), pb.getSgid().getLeastSigBits(), pb.getSgid().getTimestamp(), pb.getRowKey(), pb.getRefName(), SGIDIO.pb2m(pb.getFeatureSet()), pb.getTombstone());
         return sgid;
     }
 
@@ -36,6 +36,8 @@ public class FSGIDIO {
         builder.setSgid(SGIDIO.m2pb(sgid));
         builder.setRowKey((sgid).getRowKey());
         builder.setRefName(sgid.getReferenceName());
+        builder.setFeatureSet(SGIDIO.m2pb(sgid.getFeatureSetID()));
+        builder.setTombstone(sgid.isTombstone());
         FSGIDPB fMesg = builder.build();
         return fMesg;
     }

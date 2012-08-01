@@ -34,7 +34,7 @@ public class TTLTest {
         fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing_Dummy_reference").build()).build();
         fSet.setTTL(1, true);
         Set<Feature> testFeatures = new HashSet<Feature>();
-        f1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
+        f1 = mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).build();
         testFeatures.add(f1);
         fSet.add(testFeatures);
         tSet1 = mManager.buildTagSpecSet().setName("Funky tags").build();

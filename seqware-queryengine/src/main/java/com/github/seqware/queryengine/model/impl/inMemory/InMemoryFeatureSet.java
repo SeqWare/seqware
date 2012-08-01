@@ -35,12 +35,8 @@ public class InMemoryFeatureSet extends FeatureSet {
     /**
      * Creates an in-memory feature set.
      */
-    protected InMemoryFeatureSet() {
+    private InMemoryFeatureSet() {
         super();
-    }
-
-    public boolean contains(Feature f) {
-        return features.contains(f);
     }
 
     /**
@@ -67,6 +63,9 @@ public class InMemoryFeatureSet extends FeatureSet {
         // try upgrading Feature IDs here, faster than in model manager and FeatureSets should be guaranteed to have references
         if (!(feature.getSGID() instanceof FSGID)){
             FSGID fsgid = new FSGID(feature.getSGID(), feature, this);
+            // as a convenience, we should have Features in a FeatureSet and the associated FeatureLists take on the time
+            // of the FeatureSet
+            fsgid.setBackendTimestamp(this.getTimestamp());
             feature.impersonate(fsgid, feature.getPrecedingSGID());
         }
     }
