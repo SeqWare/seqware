@@ -33,7 +33,7 @@ public class FeatureTB extends TupleBinding {
     to.writeString(f.getType());
     to.writeDouble(f.getScore());
     to.writeString(f.getPhase());
-    to.writeString(f.getId());
+    to.writeString(f.getSeqid());
     to.writeLong(f.getStart());
     to.writeLong(f.getStop());
     to.writeInt(f.getStrand().ordinal());
@@ -56,7 +56,7 @@ public class FeatureTB extends TupleBinding {
       SGID sgid = new SGID(ti.readLong(), ti.readLong(), ti.readLong());
       SGID oldSgid = null; //new SGID(ti.readLong(), ti.readLong());
       newBuilder.setPragma(ti.readString()).setSource(ti.readString()).setType(ti.readString()).setScore(ti.readDouble());
-      newBuilder.setPhase(ti.readString()).setId(ti.readString()).setStart(ti.readLong()).setStop(ti.readLong());
+      newBuilder.setPhase(ti.readString()).setSeqid(ti.readString()).setStart(ti.readLong()).setStop(ti.readLong());
       newBuilder.setStrand(Feature.Strand.values()[ti.readInt()]);
       Feature f =  newBuilder.build();
       for(int i = 0; i < ti.readLong(); i++){

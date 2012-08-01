@@ -17,6 +17,7 @@
 package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.model.*;
+import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.util.SGID;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
@@ -31,7 +32,7 @@ public abstract class StorageInterface {
     /**
      * These tables are created on-the-fly with a referenceID appended in order to separate out Features by Reference
      */
-    public final BiMap<Class, String> indirectBIMap = new ImmutableBiMap.Builder<Class, String>().put(Feature.class, Feature.prefix)
+    public final BiMap<Class, String> indirectBIMap = new ImmutableBiMap.Builder<Class, String>().put(FeatureList.class, FeatureList.prefix)
             .build();
     /**
      * These tables are always created with the same names
@@ -40,7 +41,8 @@ public abstract class StorageInterface {
             .put(AnalysisSet.class, AnalysisSet.prefix).put(Reference.class, Reference.prefix).put(ReferenceSet.class, ReferenceSet.prefix)
             .put(Tag.class, Tag.prefix).put(TagSpecSet.class, TagSpecSet.prefix).put(User.class, User.prefix).put(Group.class, Group.prefix)
             .put(FeatureSet.class, FeatureSet.prefix).build();
-    public static final String separator = ".";
+    
+    public static final String SEPARATOR = ".";
     
     /**
      * Generically serialize an Atom into the interface
@@ -116,4 +118,14 @@ public abstract class StorageInterface {
      * serialization store
      */
     public abstract void clearStorage();
+    
+    
+    /**
+     * Iterate through all the feature "buckets" in a feature set, this might be moved later.
+     * However, it is currently here because iterating through a FeatureSet might become non-trivial and Storage type dependent.
+     * We also need this to return the feature lists in sorted order by rowkey (regardless of timestamp). 
+     * @param fSet
+     * @return iterator that returns FeatureLists in sorted order
+     */
+    public abstract Iterable<FeatureList> getAllFeatureListsForFeatureSet(FeatureSet fSet);
 }

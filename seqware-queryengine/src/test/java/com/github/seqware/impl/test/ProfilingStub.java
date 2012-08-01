@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.model.test;
+package com.github.seqware.impl.test;
 
 import org.junit.runner.JUnitCore;
 
@@ -26,7 +26,7 @@ public class ProfilingStub {
 
     public static void main(String[] args) {
         JUnitCore runner = new JUnitCore();
-        runner.run(InMemoryHBaseStorageApacheSerializationSuite.class);
+        runner.run(ImplTestSuite.class);
         //runner.run(InMemoryFileStoragePBSerializationSuite.class);
     }
 }

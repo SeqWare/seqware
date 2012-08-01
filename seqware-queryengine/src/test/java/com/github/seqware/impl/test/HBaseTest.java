@@ -3,6 +3,7 @@ package com.github.seqware.impl.test;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.github.seqware.Benchmarking;
 import com.github.seqware.queryengine.dto.QueryEngine.FeaturePB;
 import com.github.seqware.queryengine.impl.protobufIO.FeatureIO;
 import com.github.seqware.queryengine.impl.tuplebinderIO.FeatureTB;
@@ -42,31 +43,16 @@ import org.objenesis.strategy.SerializingInstantiatorStrategy;
  *
  * @author jbaran
  */
-public class HBaseTest {
+public class HBaseTest implements Benchmarking {
 
     private static final String TEST_TABLE = "seqwareTestTable";
     private static final String TEST_COLUMN = "fauxColumn";
-    /**
-     * Number of runs to execute to determine average
-     * serialization/de-serialization times.
-     */
-    private static final int BENCHMARK_RUNS = 10;
-    /**
-     * Number of features that should be used for benchmarking
-     * serialization/de-serialization.
-     */
-    private static final int BENCHMARK_FEATURES = 10000;
-    /**
-     * Run benchmarks
-     */
-    private boolean BENCHMARK;
 
     /**
      * Determines which framework should be used for serializing/de-serializing
      * objects.
      */
     private enum SerializationFramework {
-
         KRYO, PROTOBUF, APACHE //, TUPLEBINDER
     };
     /**
@@ -190,9 +176,6 @@ public class HBaseTest {
 
         HTable table = new HTable(config, tableName);
         table.setAutoFlush(true);
-
-        // run benchmarks in batched mode
-        this.BENCHMARK = System.getProperty("com.github.seqware.benchmark", "false").equals("true");
 
         // Variables that track times for individual benchmark runs:
         long[] serializationTimes = new long[BENCHMARK_RUNS];
@@ -434,7 +417,7 @@ public class HBaseTest {
 
     private IdentifiedFeature storeFauxFeature(SerializationFramework framework, HTable table, List<Row> rowList, boolean batchMode) throws IOException {
         // Get one feature to serialize/deserialize:
-        Feature testFeature = Feature.newBuilder().setId("chr16").setStart(1000000).setStop(1000100).build();
+        Feature testFeature = Feature.newBuilder().setSeqid("chr16").setStart(1000000).setStop(1000100).build();
         FeatureSet set = InMemoryFeatureSet.newBuilder().setReference(InMemoryReference.newBuilder().setName("testRef").build()).build();
         // we need to upgrade the feature with a link to an enforced FeatureSet like in the real back-end
         FSGID fsgid = new FSGID(testFeature.getSGID(), testFeature, set);
