@@ -360,7 +360,9 @@ public class SimpleModelManager implements CreateUpdateManager {
 
     @Override
     public State getState(Atom a) {
-        return this.dirtySet.get(a.getSGID().toString()).state;
+        AtomStatePair get = this.dirtySet.get(a.getSGID().toString());
+        if (get == null) {return null;}
+        return get.state;
     }
     
     @Override

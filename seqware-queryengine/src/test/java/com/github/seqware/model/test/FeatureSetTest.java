@@ -72,7 +72,7 @@ public class FeatureSetTest {
         }
         mManager.flush(); // kill all the features
 
-        FeatureSet testSet = (FeatureSet) SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, aSet.getSGID());
+        FeatureSet testSet = SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, aSet.getSGID());
         Assert.assertTrue("FeatureSet version wrong, expected 4 and found " + testSet.getVersion(), testSet.getVersion() == 4);
         Assert.assertTrue("old FeatureSet version wrong", testSet.getPrecedingVersion().getVersion() == 3);
         Assert.assertTrue("very old FeatureSet version wrong", testSet.getPrecedingVersion().getPrecedingVersion().getVersion() == 2);
@@ -90,5 +90,68 @@ public class FeatureSetTest {
         Assert.assertTrue("old FeatureSet size wrong", aSet.getPrecedingVersion().getCount() == 6);
         Assert.assertTrue("very old FeatureSet size wrong", aSet.getPrecedingVersion().getPrecedingVersion().getCount() == 3);
         Assert.assertTrue("first FeatureSet size wrong", aSet.getPrecedingVersion().getPrecedingVersion().getPrecedingVersion().getCount() == 0);
+    }
+    
+    @Test
+    public void testMultipleFeaturesSameLocation(){
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
+        FeatureSet aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
+        mManager.flush(); // this should persist a version with no features
+        
+        Feature[] arr = new Feature[]{mManager.buildFeature().setSeqid("chrX").setStart(1000000).setStop(1000100).build(),
+        mManager.buildFeature().setSeqid("chrX").setStart(1000000).setStop(1000100).build(), 
+        mManager.buildFeature().setSeqid("chrX").setStart(1000000).setStop(1000100).build()};
+        aSet.add(arr);
+        
+        // start with zero features before a flush
+        Assert.assertTrue("FeatureSet size wrong, expected 0 and found " + aSet.getCount(), aSet.getCount() == 0);
+        mManager.flush();
+        // expect 3 features after a flush
+        Assert.assertTrue("FeatureSet size wrong, expected 3 and found " + aSet.getCount(), aSet.getCount() == 3);
+        Assert.assertTrue("preceding FeatureSet size wrong, expected 0 and found " + aSet.getPrecedingVersion().getCount(), aSet.getPrecedingVersion().getCount() == 0);
+        // try to delete features
+        for(Feature f : arr){
+            aSet.remove(f);
+        }
+        mManager.flush();
+        Assert.assertTrue("FeatureSet size wrong, expected 0 and found " + aSet.getCount(), aSet.getCount() == 0);
+        // add them back
+        aSet.add(arr);
+        mManager.flush();
+        Assert.assertTrue("FeatureSet size wrong, expected 3 and found " + aSet.getCount(), aSet.getCount() == 3);
+    }
+    
+    @Test 
+    public void testDetachedOperations(){
+        //unlike other sets, lazy FeatureSets should also allow you to attach even when the set itself is unmanaged
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
+        FeatureSet aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
+        Feature[] arr = new Feature[]{mManager.buildFeature().setSeqid("chrX").setStart(1000000).setStop(1000100).build(),
+        mManager.buildFeature().setSeqid("chrX").setStart(1000000).setStop(1000100).build(), 
+        mManager.buildFeature().setSeqid("chrX").setStart(1000000).setStop(1000100).build()};
+        aSet.add(arr);
+        
+        mManager.flush();
+        Assert.assertTrue("FeatureSet size wrong, expected 3 and found " + aSet.getCount(), aSet.getCount() == 3);
+        // clear manager to release memory
+        mManager.clear();
+        // aSet is no longer managed, but can be added to by reference (without changing its version)
+        
+        Feature[] arr2 = new Feature[]{mManager.buildFeature().setSeqid("chrX").setStart(1000001).setStop(1000100).build(),
+        mManager.buildFeature().setSeqid("chrX").setStart(1000001).setStop(1000100).build(), 
+        mManager.buildFeature().setSeqid("chrX").setStart(1000001).setStop(1000100).build()};
+        aSet.add(arr2);
+        mManager.flush();
+        Assert.assertTrue("FeatureSet size wrong, expected 6 and found " + aSet.getCount(), aSet.getCount() == 6);
+        
+        Feature[] arr3 = new Feature[]{mManager.buildFeature().setSeqid("chrX").setStart(1000000).setStop(1000100).build(),
+        mManager.buildFeature().setSeqid("chrX").setStart(1000000).setStop(1000100).build(), 
+        mManager.buildFeature().setSeqid("chrX").setStart(1000000).setStop(1000100).build()};
+        aSet.add(arr3);
+        mManager.flush();
+        Assert.assertTrue("FeatureSet size wrong, expected 9 and found " + aSet.getCount(), aSet.getCount() == 9);
+        // should be the same size when we go through the query interface
+        FeatureSet testSet = SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, aSet.getSGID());
+        Assert.assertTrue("FeatureSet size wrong, expected 9 and found " + testSet.getCount(), aSet.getCount() == 9);
     }
 }
