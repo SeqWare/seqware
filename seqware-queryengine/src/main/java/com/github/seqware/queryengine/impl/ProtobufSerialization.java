@@ -58,6 +58,6 @@ public class ProtobufSerialization implements SerializationInterface {
 
     @Override
     public int getSerializationConstant() {
-        return 10001;
+        return 10000;
     }
 }

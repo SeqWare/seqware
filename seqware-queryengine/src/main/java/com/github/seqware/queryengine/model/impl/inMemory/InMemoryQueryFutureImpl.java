@@ -18,9 +18,8 @@ package com.github.seqware.queryengine.model.impl.inMemory;
 
 import com.github.seqware.queryengine.model.Analysis;
 import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.model.FeatureSet;
+import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.plugins.MapReducePlugin;
 import com.github.seqware.queryengine.plugins.ScanPlugin;
 

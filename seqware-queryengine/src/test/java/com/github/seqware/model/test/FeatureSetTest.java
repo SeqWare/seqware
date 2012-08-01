@@ -124,6 +124,8 @@ public class FeatureSetTest {
     @Test 
     public void testDetachedOperations(){
         //unlike other sets, lazy FeatureSets should also allow you to attach even when the set itself is unmanaged
+        // this is very dangerous though, you need to make sure that you do not write to the same row between two different operations
+        // since there is no manager active
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         FeatureSet aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
         Feature[] arr = new Feature[]{mManager.buildFeature().setSeqid("chrX").setStart(1000000).setStop(1000100).build(),
