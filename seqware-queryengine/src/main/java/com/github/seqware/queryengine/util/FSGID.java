@@ -24,13 +24,15 @@ import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.github.seqware.queryengine.impl.StorageInterface;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
+import com.github.seqware.queryengine.model.impl.FeatureList;
 import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Special class for Features which also stores the row key for features
+ * Special class for Features which also stores the row key for features.
+ * To enable high capacity feature sets, they also have to store a featureSetID.
  *
  * @author dyuen
  * @author boconnor
@@ -39,17 +41,13 @@ public class FSGID extends SGID implements KryoSerializable {
     public static final String PositionSeparator = ":";
     private String rowKey = null;
     private String referenceName = null;
-    //private SGID featureSetID = null;
-    
-    public FSGID(FSGID fsgid){
-        super(fsgid);
-        this.rowKey = fsgid.rowKey;
-        this.referenceName = fsgid.referenceName;
-    }
+    private SGID featureSetID = null;
+    private boolean tombstone = false;
+
 
     @Override
     public String toString() {
-        return rowKey + StorageInterface.separator + super.toString();
+        return rowKey + StorageInterface.SEPARATOR + featureSetID.toString() + StorageInterface.SEPARATOR + super.toString();
     }
     
     /**
@@ -58,10 +56,24 @@ public class FSGID extends SGID implements KryoSerializable {
      * @param leastSig
      * @param timestamp 
      */
-    public FSGID(long mostSig, long leastSig, long timestamp, String rowKey, String referenceName) {
+    public FSGID(long mostSig, long leastSig, long timestamp, String rowKey, String referenceName, SGID featureSet, boolean tombstone) {
         super(mostSig, leastSig, timestamp);
         this.rowKey = rowKey;
         this.referenceName = referenceName;
+        this.featureSetID = featureSet;
+        this.tombstone = tombstone;
+    }
+    
+    /** 
+     * construct a FSGID based on all the components of a SGID while taking the 
+     * non-unique aspects on a FSGID, used when creating FeatureLists only
+     */
+    public FSGID(SGID sgid, FSGID fsgid){
+        super(sgid.getUuid().getMostSignificantBits(), sgid.getUuid().getLeastSignificantBits(), sgid.getBackendTimestamp().getTime());
+        this.rowKey = fsgid.rowKey;
+        this.referenceName = fsgid.referenceName;
+        this.featureSetID = fsgid.getFeatureSetID();
+        this.setBackendTimestamp(fsgid.getBackendTimestamp());
     }
 
 
@@ -74,16 +86,32 @@ public class FSGID extends SGID implements KryoSerializable {
     public FSGID(SGID sgid, Feature f, FeatureSet fSet) {
         super(sgid);
         try {
-     //       this.featureSetID = fSet.getSGID();
+            this.featureSetID = fSet.getSGID();
             // generate row key
             StringBuilder builder = new StringBuilder();
-            builder.append(fSet.getReference().getName()).append(StorageInterface.separator).append(f.getId()).append(PositionSeparator).append(padZeros(f.getStart(), HBaseStorage.PAD))/** unnecessary .append(".feature.").append(f.getVersion())*/;
+            builder.append(fSet.getReference().getName()).append(StorageInterface.SEPARATOR).append(f.getSeqid()).append(PositionSeparator).append(padZeros(f.getStart(), HBaseStorage.PAD))/** unnecessary .append(".feature.").append(f.getVersion())*/;
             rowKey = builder.toString();
             referenceName = fSet.getReference().getName();
         } catch (Exception ex) {
             Logger.getLogger(FSGID.class.getName()).log(Level.SEVERE, null, ex);
             System.err.println("Could not upgrade SGID on Feature " + f.getSGID() + " due to location out of bounds");
         }
+    }
+
+    /**
+     * Back-end method for Features stored within high capacity featuresets
+     * @return 
+     */
+    public boolean isTombstone() {
+        return tombstone;
+    }
+
+    /**
+     * Back-end method for Features stored within high capacity featuresets
+     * @return 
+     */
+    public void setTombstone(boolean tombstone) {
+        this.tombstone = tombstone;
     }
 
     private String padZeros(long input, int totalPlaces) throws Exception {
@@ -100,14 +128,14 @@ public class FSGID extends SGID implements KryoSerializable {
         return (buffer.toString());
     }
 
-//    /**
-//     * Get the ID for the associated feature set
-//     *
-//     * @return
-//     */
-//    public SGID getFeatureSetID() {
-//        return featureSetID;
-//    }
+    /**
+     * Get the ID for the associated feature set
+     *
+     * @return
+     */
+    public SGID getFeatureSetID() {
+        return featureSetID;
+    }
 
     /**
      * Get the HBase-style row-key for this Feature
@@ -150,6 +178,6 @@ public class FSGID extends SGID implements KryoSerializable {
     } 
     
     public String getTablename(){
-        return Feature.prefix + StorageInterface.separator + this.getReferenceName();
+        return FeatureList.prefix + StorageInterface.SEPARATOR + this.getReferenceName();
     }
 }

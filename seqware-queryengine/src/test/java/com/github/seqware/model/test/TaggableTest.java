@@ -41,9 +41,9 @@ public class TaggableTest {
         // create a few instances of everything that can be tagged
         fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing_Dummy_reference").build()).build();
         Set<Feature> testFeatures = new HashSet<Feature>();
-        f1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
-        f2 = mManager.buildFeature().setId("chr16").setStart(1000200).setStop(1000300).build();
-        f3 = mManager.buildFeature().setId("chr16").setStart(1000400).setStop(1000500).build();
+        f1 = mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).build();
+        f2 = mManager.buildFeature().setSeqid("chr16").setStart(1000200).setStop(1000300).build();
+        f3 = mManager.buildFeature().setSeqid("chr16").setStart(1000400).setStop(1000500).build();
         testFeatures.add(f1);
         testFeatures.add(f2);
         testFeatures.add(f3);
@@ -209,7 +209,7 @@ public class TaggableTest {
     @Test
     public void testTagQueries() {
         // three features in the set
-        Assert.assertTrue(fSet.getCount() == 3);
+        Assert.assertTrue("expected 3 and found " + fSet.getCount(), fSet.getCount() == 3);
         // test queries that filter based on all three possibilities for tags 
         // subject only, subject and predicate, or all three
         // should get any features tagged with anything
@@ -284,9 +284,9 @@ public class TaggableTest {
                 
         // build a FeatureSet, add features to it
         FeatureSet fset = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing_Dummy_reference").build()).build();
-        Feature fe1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
-        Feature fe2 = mManager.buildFeature().setId("chr16").setStart(1000200).setStop(1000300).build();
-        Feature fe3 = mManager.buildFeature().setId("chr16").setStart(1000400).setStop(1000500).build();
+        Feature fe1 = mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).build();
+        Feature fe2 = mManager.buildFeature().setSeqid("chr16").setStart(1000200).setStop(1000300).build();
+        Feature fe3 = mManager.buildFeature().setSeqid("chr16").setStart(1000400).setStop(1000500).build();
         fset.add(fe1, fe2, fe3);
         // tag the feature set 
         fset.associateTag(dwarfTag.toBuilder().setValue("digs").build());

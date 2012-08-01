@@ -38,7 +38,7 @@ public class FeatureIO implements ProtobufTransferInterface<FeaturePB, Feature> 
         builder = feature.hasType() ? builder.setType(feature.getType()) : builder;
         builder = feature.hasScore() ? builder.setScore(feature.getScore()) : builder;
         builder = feature.hasPhase() ? builder.setPhase(feature.getPhase()) : builder;
-        builder = feature.hasId() ? builder.setId(feature.getId()) : builder;
+        builder = feature.hasId() ? builder.setSeqid(feature.getId()) : builder;
         builder.setStart(feature.getStart()).setStop(feature.getStop());
         builder.setStrand(Feature.Strand.valueOf(feature.getStrand().name()));
         Feature fMesg = builder.build();
@@ -59,7 +59,7 @@ public class FeatureIO implements ProtobufTransferInterface<FeaturePB, Feature> 
         builder = feature.getType() != null ? builder.setType(feature.getType()) : builder;
         builder = feature.getScore() != null ? builder.setScore(feature.getScore()) : builder;
         builder = feature.getPhase() != null ? builder.setPhase(feature.getPhase()) : builder;
-        builder = feature.getId() != null ? builder.setId(feature.getId()) : builder;
+        builder = feature.getSeqid() != null ? builder.setId(feature.getSeqid()) : builder;
         builder.setStart(feature.getStart()).setStop(feature.getStop());
         builder.setStrand(FeaturePB.StrandPB.valueOf(feature.getStrand().name()));
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), feature));

@@ -39,7 +39,7 @@ public class ACLTest {
         // test ACL on every possible class that can be ACLed
         fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing_dummy_reference").build()).build();
         Set<Feature> testFeatures = new HashSet<Feature>();
-        f1 = mManager.buildFeature().setId("chr16").setStart(1000000).setStop(1000100).build();
+        f1 = mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).build();
         testFeatures.add(f1);
         fSet.add(testFeatures);
         tSet1 = mManager.buildTagSpecSet().setName("Funky tags").build();

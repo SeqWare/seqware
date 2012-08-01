@@ -16,8 +16,8 @@
  */
 package com.github.seqware.queryengine.model.impl.inMemory;
 
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
@@ -31,17 +31,15 @@ import java.util.Set;
  * @author dyuen
  * @author jbaran
  */
-public class InMemoryFeaturesByAttributesPlugin implements MapReducePlugin<Feature, FeatureSet> {
+public class InMemoryFeaturesByAttributesPlugin extends MapReducePlugin<Feature, FeatureSet> {
 
-    private FeatureSet set;
     private RPNStack rpnStack;
     private Set<Feature> accumulator = new HashSet<Feature>();
 
     @Override
-    public ReturnValue init(FeatureSet set, Object ... parameters) {
-        this.set = set;
+    public ReturnValue init(FeatureSet inputSet, Object ... parameters) {
+        this.inputSet = inputSet;
         this.rpnStack = (RPNStack)parameters[0];
-
         return new ReturnValue();
     }
 
@@ -77,14 +75,14 @@ public class InMemoryFeaturesByAttributesPlugin implements MapReducePlugin<Featu
 
     @Override
     public ReturnValue map(Feature feature, FeatureSet mappedSet) {
-        for (Feature f : set) {
-            // Get the parameters from the RPN stack and replace them with concrete values:
-            for (Object parameter : rpnStack.getParameters())
-                rpnStack.setParameter(parameter, f.getAttribute((String)parameter));
+        // Get the parameters from the RPN stack and replace them with concrete values:
+        for (Object parameter : rpnStack.getParameters())
+            rpnStack.setParameter(parameter, feature.getAttribute((String)parameter));
 
-            // Now carry out the actual evaluation that determines whether f is relevant:
-            if ((Boolean)rpnStack.evaluate() == true)
-                accumulator.add(f);
+        // Now carry out the actual evaluation that determines whether f is relevant:
+        if ((Boolean)rpnStack.evaluate() == true){
+            Feature build = feature.toBuilder().build();
+            accumulator.add(build);
         }
 
         return new ReturnValue();
@@ -114,12 +112,12 @@ public class InMemoryFeaturesByAttributesPlugin implements MapReducePlugin<Featu
     @Override
     public FeatureSet getFinalResult() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
-
         FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("ad_hoc_analysis").build()).build();
+        for(Feature f : accumulator){
+            mManager.objectCreated(f);
+        }
         fSet.add(accumulator);
-
         mManager.close();
-
         return fSet;
     }
 }

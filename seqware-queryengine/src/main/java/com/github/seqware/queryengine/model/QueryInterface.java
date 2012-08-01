@@ -224,11 +224,12 @@ public interface QueryInterface {
      * @param hours minimum time to live
      * @param set parent FeatureSet
      * @param location specify type of location query
+     * @param structure chromosome, scaffold, etc
      * @param start start co-ordinate inclusive
      * @param stop end co-ordinate inclusive
      * @return featureSet with features filtered by location/range
      */
-    public QueryFuture getFeaturesByRange(int hours, FeatureSet set, Location location, long start, long stop);
+    public QueryFuture getFeaturesByRange(int hours, FeatureSet set, Location location, String structure, long start, long stop);
 
     /**
      * filter features with tags.
