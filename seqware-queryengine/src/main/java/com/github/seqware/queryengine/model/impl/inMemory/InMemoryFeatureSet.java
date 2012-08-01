@@ -165,7 +165,7 @@ public class InMemoryFeatureSet extends FeatureSet {
         }
 
         @Override
-        public FeatureSet build(boolean newObject) {
+        public FeatureSet build() {
             if (aSet.getReferenceID() == null && aSet.getManager() != null) {
                 throw new RuntimeException("Invalid build of AnalysisSet");
             }

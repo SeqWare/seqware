@@ -42,21 +42,22 @@ public class ProtobufSerialization implements SerializationInterface {
         Class cl = ((AtomImpl)atom).getHBaseClass();
         ProtobufTransferInterface pb = biMap.get(cl);
         Message m2pb = pb.m2pb((AtomImpl)atom);
-        return Bytes.add(Bytes.toBytes(getSerializationConstant()),m2pb.toByteArray());
+        return Bytes.add(Bytes.toBytes(getSerializationConstant()), m2pb.toByteArray());
     }
 
     @Override
-    public <T> T deserialize(byte[] bytes, Class<T> type) {
+    public <T extends AtomImpl> T deserialize(byte[] bytes, Class<T> type) {
         int serialConstant = Bytes.toInt(Bytes.head(bytes, 4));
         if (serialConstant == getSerializationConstant()){
             ProtobufTransferInterface pb = biMap.get(type);
-            return (T)pb.byteArr2m(Bytes.tail(bytes, bytes.length-4));
+            T t = (T)pb.byteArr2m(Bytes.tail(bytes, bytes.length-4));
+            return t;
         }
         return null;
     }
 
     @Override
     public int getSerializationConstant() {
-        return 10000;
+        return 10001;
     }
 }

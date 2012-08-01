@@ -88,11 +88,7 @@ public abstract class FeatureSet extends AbstractMolSet<FeatureSet> implements M
         public abstract Builder setReference(Reference reference);
         
         @Override
-        public FeatureSet build() {
-           return build(true);
-        }
-
-        public abstract FeatureSet build(boolean newObject);
+        public abstract FeatureSet build();
 
         @Override
         public Builder setManager(CreateUpdateManager aThis) {

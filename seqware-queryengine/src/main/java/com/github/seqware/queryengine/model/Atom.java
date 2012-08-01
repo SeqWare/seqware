@@ -45,4 +45,12 @@ public interface Atom<T extends Atom> extends Taggable, Versionable<T>, Serializ
      * resource
      */
     public Date getTimestamp();
+    
+    /**
+     * Get the serializationVersion for this particular atom. Allows more advanced 
+     * operations for serialization-aware plug-ins.
+     * @return 
+     */
+    public int getExternalSerializationVersion();
+
 }

@@ -3,11 +3,13 @@
  */
 package com.github.seqware.queryengine.system.importers;
 
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Reference;
 import com.github.seqware.queryengine.system.importers.workers.GFF3VariantImportWorker;
 import com.github.seqware.queryengine.system.importers.workers.ImportWorker;
+import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,10 +29,17 @@ import java.util.logging.Logger;
  */
 public class FeatureImporter extends Importer {
 
+    public static void main(String[] args){
+        FeatureImporter.mainMethod(args);
+    }
+    
     /**
+     * Import a set of Features into a particular specified reference.
+     * The ID for the FeatureSet we use is returned.
      * @param args
+     * @return 
      */
-    public static void main(String[] args) {
+    public static SGID mainMethod(String[] args) {
 
         if (args.length < 5) {
             System.err.println("Only " + args.length + " arguments found");
@@ -70,6 +79,8 @@ public class FeatureImporter extends Importer {
             ref = modelManager.buildReference().setName(referenceID).build();
             modelManager.flush();
         }
+        // create a centralized FeatureSet
+        FeatureSet featureSet = modelManager.buildFeatureSet().setReference(ref).build();
         // we don't really need the central model manager past this point 
         modelManager.close();
 
@@ -115,7 +126,7 @@ public class FeatureImporter extends Importer {
                     workerArray[index].setPmi(pmi);
 //                    workerArray[index].setStore(modelManager);
                     workerArray[index].setInput(input);
-                    workerArray[index].setReferenceID(ref.getSGID());
+                    workerArray[index].setFeatureSetID(featureSet.getSGID());
                     // FIXME: most of the rest aren't used, I should consider cleaning this up
                     workerArray[index].setCompressed(compressed);
                     workerArray[index].setMinCoverage(0);
@@ -150,6 +161,9 @@ public class FeatureImporter extends Importer {
         }
         // clean-up
         SWQEFactory.getStorage().closeStorage();
+        System.out.println("Success, FeatureSet written with an ID of:");
+        System.out.println(featureSet.getSGID().getUuid().toString());
+        return featureSet.getSGID();
     }
 
     public FeatureImporter(int threadCount) {

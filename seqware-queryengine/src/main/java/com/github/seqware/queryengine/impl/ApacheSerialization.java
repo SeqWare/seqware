@@ -17,6 +17,7 @@
 package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.model.Atom;
+import com.github.seqware.queryengine.model.impl.AtomImpl;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang.SerializationException;
@@ -38,11 +39,12 @@ public class ApacheSerialization implements SerializationInterface {
     }
 
     @Override
-    public <T> T deserialize(byte[] bytes, Class<T> type) {
+    public <T extends AtomImpl> T deserialize(byte[] bytes, Class<T> type) {
         try {
             int serialConstant = Bytes.toInt(Bytes.head(bytes, 4));
             if (serialConstant == getSerializationConstant()) {
-                return (T) SerializationUtils.deserialize(Bytes.tail(bytes, bytes.length - 4));
+                T t = (T) SerializationUtils.deserialize(Bytes.tail(bytes, bytes.length - 4));
+                return t;
             }
         } catch (SerializationException e) {
             if (!corruptClassesDetected){

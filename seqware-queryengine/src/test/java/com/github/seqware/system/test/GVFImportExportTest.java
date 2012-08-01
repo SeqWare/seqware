@@ -1,11 +1,8 @@
 package com.github.seqware.system.test;
 
-import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.factory.CreateUpdateManager;
-import com.github.seqware.queryengine.model.Group;
-import com.github.seqware.queryengine.model.User;
 import com.github.seqware.queryengine.system.exporters.VCFDumper;
 import com.github.seqware.queryengine.system.importers.FeatureImporter;
+import com.github.seqware.queryengine.util.SGID;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -35,15 +32,16 @@ public class GVFImportExportTest {
         testGVFFile = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/test.gvf");
         SecureRandom random = new SecureRandom();
         randomRef = "Random_ref_" + new BigInteger(20, random).toString(32);
+        System.err.println(randomRef);
     }
     
     @Test
     public void testGVFImport() throws IOException{
         File createTempFile = File.createTempFile("output", "txt");
         Assert.assertTrue("Cannot read GVF file for test", testGVFFile.exists() && testGVFFile.canRead());
-        FeatureImporter.main(new String[]{"GFF3VariantImportWorker", "1", "false", randomRef, testGVFFile.getAbsolutePath()});       
+        SGID main = FeatureImporter.mainMethod(new String[]{"GFF3VariantImportWorker", "1", "false", randomRef, testGVFFile.getAbsolutePath()});
         // do some output comparisons, we may need to sort the results
-        VCFDumper.main(new String[]{randomRef, createTempFile.getAbsolutePath()});
+        VCFDumper.main(new String[]{main.getUuid().toString(), createTempFile.getAbsolutePath()});
         BufferedReader in = new BufferedReader(new FileReader(createTempFile));
         List<String> output = new ArrayList<String>();
         while (in.ready()){

@@ -17,6 +17,7 @@
 package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.model.Atom;
+import com.github.seqware.queryengine.model.impl.AtomImpl;
 
 /**
  * This simply extracts the serialization of bytes[] to atoms and vice versa.
@@ -44,7 +45,7 @@ public interface SerializationInterface {
      * @param bytes byte representation of the desired object
      * @return de-serialized object, or null if the serialization type does not match 
      */
-    public <T> T deserialize(byte[] bytes, Class<T> type);
+    public <T extends AtomImpl> T deserialize(byte[] bytes, Class<T> type);
 
     /**
      * Stored as the first four bytes of serialization so that serialization

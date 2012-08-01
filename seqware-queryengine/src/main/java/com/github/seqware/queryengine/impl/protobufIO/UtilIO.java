@@ -51,6 +51,7 @@ public class UtilIO {
         }
         SGID pID = atompb.hasPrecedingID() ? SGIDIO.pb2m(atompb.getPrecedingID()) : null;
         atomImpl.impersonate(SGIDIO.pb2m(atompb.getSgid()), pID);
+        atomImpl.setExternalSerializationVersion(atompb.getSerializationConstant());
     }
 
     /**
@@ -62,6 +63,7 @@ public class UtilIO {
      */
     public static AtomPB handleAtom2PB(QESupporting.AtomPB atompb, AtomImpl atomImpl) {
         QESupporting.AtomPB.Builder builder = atompb.newBuilderForType();
+        builder.setSerializationConstant(atomImpl.getExternalSerializationVersion());
         for (Iterator it = atomImpl.getTags().iterator(); it.hasNext();) {
             //TODO: weird, we shouldn't have to cast here
             Tag t = (Tag) it.next();
@@ -88,6 +90,7 @@ public class UtilIO {
         }
         SGID pID = atompb.hasPrecedingID() ? FSGIDIO.pb2m(atompb.getPrecedingID()) : null;
         feature.impersonate(FSGIDIO.pb2m(atompb.getSgid()), pID);
+        feature.setExternalSerializationVersion(atompb.getSerializationConstant());
     }
 
     /**
@@ -99,6 +102,7 @@ public class UtilIO {
      */
     public static FeatureAtomPB handleAtom2PB(QESupporting.FeatureAtomPB atompb, Feature feature) {
         QESupporting.FeatureAtomPB.Builder builder = atompb.newBuilderForType();
+        builder.setSerializationConstant(feature.getExternalSerializationVersion());
         for (Iterator it = feature.getTags().iterator(); it.hasNext();) {
             //TODO: weird, we shouldn't have to cast here
             Tag t = (Tag) it.next();

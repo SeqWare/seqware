@@ -16,19 +16,24 @@
  */
 package com.github.seqware.queryengine.system.exporters;
 
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Reference;
 import com.github.seqware.queryengine.system.importers.workers.ImportConstants;
+import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This will dump VCF files given a reference that was originally imported from
+ * This will dump VCF files given a FeatureSet that was originally imported from
  * a VCF file.
  *
  * @author dyuen
@@ -46,29 +51,21 @@ public class VCFDumper {
 
         if (args.length < 1 || args.length > 2) {
             System.err.println(args.length + " arguments found");
-            System.out.println("VCFDumper <referenceID> [outputFile]");
+            System.out.println("VCFDumper <featureSetID> [outputFile]");
             System.exit(-1);
         }
 
-        String referenceID = args[0];
+        // parse a SGID from a String representation, we need a more elegant solution here
+        String featureSetID = args[0];
+        UUID uuid = UUID.fromString(featureSetID);
+        SGID sgid = new SGID(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits(), 0);
+        FeatureSet fSet = SWQEFactory.getQueryInterface().getLatestAtomBySGID(sgid, FeatureSet.class);
 
-        // objects to access the mutation datastore
-        CreateUpdateManager modelManager = SWQEFactory.getModelManager();
-        SeqWareIterable<Reference> references = SWQEFactory.getQueryInterface().getReferences();
-        Reference ref = null;
-        for (Reference reference : references) {
-            if (reference.getName().equals(referenceID)) {
-                ref = reference;
-                System.err.println("reference found");
-                break;
-            }
-        }
-        // if this referenceID already exists
-        if (ref == null) {
+        // if this featureSet does not exist
+        if (fSet == null) {
             System.out.println("referenceID not found");
             System.exit(-2);
         }
-        modelManager.close();
 
         BufferedWriter outputStream = null;
         try {
@@ -81,32 +78,28 @@ public class VCFDumper {
             outputStream.append("#CHROM	POS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\n");
             SeqWareIterable<FeatureSet> featureSets = SWQEFactory.getQueryInterface().getFeatureSets();
             boolean caughtNonVCF = false;
-            for (FeatureSet fSet : featureSets) {
-                if (fSet.getReferenceID().equals(ref.getSGID())) {
-                    for (Feature feature : fSet) {
-                        outputStream.append(feature.getSeqid() + "\t" + (feature.getStart() + 1) + "\t");
-                        if (feature.getTagByKey(ImportConstants.VCF_SECOND_ID) == null) {
-                            outputStream.append(".\t");
-                        } else {
-                            outputStream.append(feature.getTagByKey(ImportConstants.VCF_SECOND_ID).getValue().toString() + "\t");
-                        }
-                        try {
-                            outputStream.append(feature.getTagByKey(ImportConstants.VCF_REFERENCE_BASE).getValue().toString() + "\t");
-                            outputStream.append(feature.getTagByKey(ImportConstants.VCF_CALLED_BASE).getValue().toString() + "\t");
-                            outputStream.append(feature.getScore() + "\t");
-                            outputStream.append(feature.getTagByKey(ImportConstants.VCF_FILTER).getValue().toString() + "\t");
-                            outputStream.append(feature.getTagByKey(ImportConstants.VCF_INFO).getValue().toString());
-                        } catch (NullPointerException npe) {
-                            if (!caughtNonVCF) {
-                                Logger.getLogger(VCFDumper.class.getName()).log(Level.INFO, "VCF exporting non-VCF feature");
-
-                            }
-                            // this may occur when exporting Features that were not originally VCF files
-                            caughtNonVCF = true;
-                        }
-                        outputStream.newLine();
-                    }
+            for (Feature feature : fSet) {
+                outputStream.append(feature.getSeqid() + "\t" + (feature.getStart() + 1) + "\t");
+                if (feature.getTagByKey(ImportConstants.VCF_SECOND_ID) == null) {
+                    outputStream.append(".\t");
+                } else {
+                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_SECOND_ID).getValue().toString() + "\t");
                 }
+                try {
+                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_REFERENCE_BASE).getValue().toString() + "\t");
+                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_CALLED_BASE).getValue().toString() + "\t");
+                    outputStream.append(feature.getScore() + "\t");
+                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_FILTER).getValue().toString() + "\t");
+                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_INFO).getValue().toString());
+                } catch (NullPointerException npe) {
+                    if (!caughtNonVCF) {
+                        Logger.getLogger(VCFDumper.class.getName()).log(Level.INFO, "VCF exporting non-VCF feature");
+
+                    }
+                    // this may occur when exporting Features that were not originally VCF files
+                    caughtNonVCF = true;
+                }
+                outputStream.newLine();
             }
         } // TODO: clearly this should be expanded to include closing database etc 
         catch (Exception e) {
