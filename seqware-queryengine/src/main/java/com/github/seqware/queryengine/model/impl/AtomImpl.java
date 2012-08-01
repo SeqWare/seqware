@@ -1,13 +1,11 @@
 package com.github.seqware.queryengine.model.impl;
 
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.model.interfaces.Versionable;
-import com.github.seqware.queryengine.util.InMemoryIterable;
-import com.github.seqware.queryengine.util.LazyReference;
-import com.github.seqware.queryengine.util.SGID;
-import com.github.seqware.queryengine.util.SeqWareIterable;
+import com.github.seqware.queryengine.util.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +32,17 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      * Exposed timestamp of this Atom
      */
     //private Date clientTimestamp;
+    
+    private int externalSerializationVersion = SWQEFactory.getSerialization().getSerializationConstant();
+
+    @Override
+    public int getExternalSerializationVersion() {
+        return externalSerializationVersion;
+    }
+
+    public void setExternalSerializationVersion(int externalSerializationVersion) {
+        this.externalSerializationVersion = externalSerializationVersion;
+    }
     
     /**
      * Current manager
@@ -188,7 +197,8 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     @Override
     public boolean associateTag(Tag tag) {
         tags.put(tag.getKey(), tag);
-        if (this.getManager() != null) {
+        // this only makes sense if we've attached to a FeatureSet already
+        if (this.getManager() != null && this.getSGID() instanceof FSGID) {
             this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);
         }
         //Factory.getBackEnd().associateTag(this, tag);

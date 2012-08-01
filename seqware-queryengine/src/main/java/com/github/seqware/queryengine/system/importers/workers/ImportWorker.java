@@ -3,7 +3,6 @@
  */
 package com.github.seqware.queryengine.system.importers.workers;
 
-import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.system.importers.Importer;
 import com.github.seqware.queryengine.util.SGID;
 
@@ -33,7 +32,7 @@ public class ImportWorker extends Thread {
     boolean includeIndels;
     boolean includeCoverage = false;
     int binSize = 0;
-    SGID referenceID = null;
+    SGID featureSetID = null;
 
     public ImportWorker() {
     }
@@ -168,12 +167,12 @@ public class ImportWorker extends Thread {
         this.binSize = binSize;
     }
 
-    public SGID getReferenceID() {
-        return referenceID;
+    public SGID getFeatureSetID() {
+        return featureSetID;
     }
 
-    public void setReferenceID(SGID referenceID) {
-        this.referenceID = referenceID;
+    public void setFeatureSetID(SGID featureSetID) {
+        this.featureSetID = featureSetID;
     }
     
     

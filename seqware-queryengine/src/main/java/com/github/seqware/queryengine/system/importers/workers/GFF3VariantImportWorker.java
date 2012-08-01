@@ -157,7 +157,10 @@ public class GFF3VariantImportWorker extends ImportWorker {
 
     @Override
     public void run() {
-
+        // grab FeatureSet reference
+        // FeatureSets are totally new, hope this doesn't slow things too much
+        FeatureSet fSet = SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, this.featureSetID);
+        
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         try {
             // first ask for a token from semaphore
@@ -173,8 +176,6 @@ public class GFF3VariantImportWorker extends ImportWorker {
             //Variant m = new Variant();
             //Coverage c = null;
             Feature.Builder fBuilder = mManager.buildFeature();
-            // FeatureSets are totally new, hope this doesn't slow things too much
-            FeatureSet fSet = mManager.buildFeatureSet().setDescription("from file: " + input).setReferenceID(referenceID).build();
 
             int count = 0;
 

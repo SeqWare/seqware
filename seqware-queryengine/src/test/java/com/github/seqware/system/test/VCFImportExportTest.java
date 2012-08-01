@@ -2,6 +2,7 @@ package com.github.seqware.system.test;
 
 import com.github.seqware.queryengine.system.exporters.VCFDumper;
 import com.github.seqware.queryengine.system.importers.FeatureImporter;
+import com.github.seqware.queryengine.util.SGID;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -31,15 +32,16 @@ public class VCFImportExportTest {
         testVCFFile = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/test.vcf");
         SecureRandom random = new SecureRandom();
         randomRef = "Random_ref_" + new BigInteger(20, random).toString(32);
+        System.err.println(randomRef);
     }
     
     @Test
     public void testGVFImport() throws IOException{
         File createTempFile = File.createTempFile("output", "txt");
         Assert.assertTrue("Cannot read VCF file for test", testVCFFile.exists() && testVCFFile.canRead());
-        FeatureImporter.main(new String[]{"VCFVariantImportWorker", "1", "false", randomRef, testVCFFile.getAbsolutePath()});       
+        SGID main = FeatureImporter.mainMethod(new String[]{"VCFVariantImportWorker", "1", "false", randomRef, testVCFFile.getAbsolutePath()});
         // do some output comparisons, we may need to sort the results
-        VCFDumper.main(new String[]{randomRef, createTempFile.getAbsolutePath()});
+        VCFDumper.main(new String[]{main.getUuid().toString(), createTempFile.getAbsolutePath()});
         BufferedReader in = new BufferedReader(new FileReader(createTempFile));
         List<String> output = new ArrayList<String>();
         while (in.ready()){

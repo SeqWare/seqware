@@ -16,24 +16,14 @@
  */
 package com.github.seqware.queryengine.impl;
 
-import com.github.seqware.queryengine.model.impl.inMemory.InMemoryQueryFutureImpl;
-import com.github.seqware.queryengine.model.impl.inMemory.InMemoryTagSpecSet;
-import com.github.seqware.queryengine.model.impl.inMemory.InMemoryGroup;
-import com.github.seqware.queryengine.model.impl.inMemory.InMemoryFeatureSet;
-import com.github.seqware.queryengine.model.impl.inMemory.InMemoryReference;
-import com.github.seqware.queryengine.model.impl.inMemory.InMemoryAnalysisSet;
-import com.github.seqware.queryengine.model.impl.inMemory.InMemoryReferenceSet;
-import com.github.seqware.queryengine.model.Analysis;
-import com.github.seqware.queryengine.model.Group;
-import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.User;
-import com.github.seqware.queryengine.model.Atom;
-import com.github.seqware.queryengine.model.Tag;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.esotericsoftware.kryo.serializers.JavaSerializer;
+import com.github.seqware.queryengine.model.*;
+import com.github.seqware.queryengine.model.impl.AtomImpl;
+import com.github.seqware.queryengine.model.impl.inMemory.*;
 import com.github.seqware.queryengine.model.interfaces.ACL;
 import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.SGID;
@@ -98,9 +88,9 @@ public class KryoSerialization implements SerializationInterface {
     }
 
     @Override
-    public <T> T deserialize(byte[] bytes, Class<T> type) {
+    public <T extends AtomImpl> T deserialize(byte[] bytes, Class<T> type) {
         int serialConstant = Bytes.toInt(Bytes.head(bytes, 4));
-        if (serialConstant == getSerializationConstant()){
+            if (serialConstant == getSerializationConstant()) {
             byte[] byteArr = (Bytes.tail(bytes, bytes.length-4));
             Input input = new Input(new ByteArrayInputStream(byteArr));
             T deserializedAtom = (T) serializer.readClassAndObject(input);

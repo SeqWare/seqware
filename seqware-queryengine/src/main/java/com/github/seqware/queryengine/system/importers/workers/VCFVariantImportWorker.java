@@ -1,7 +1,7 @@
 package com.github.seqware.queryengine.system.importers.workers;
 
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
@@ -37,7 +37,9 @@ public class VCFVariantImportWorker extends ImportWorker {
 
     @Override
     public void run() {
-        // We may want to push this down
+        // grab FeatureSet reference
+        // FeatureSets are totally new, hope this doesn't slow things too much
+        FeatureSet fSet = SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, this.featureSetID);   
         CreateUpdateManager modelManager = SWQEFactory.getModelManager();
 
         // open the file
@@ -63,8 +65,7 @@ public class VCFVariantImportWorker extends ImportWorker {
             String l;
             //Variant m = new Variant();
             Feature.Builder fBuilder = modelManager.buildFeature();
-            // FeatureSets are totally new, hope this doesn't slow things too much
-            FeatureSet fSet = modelManager.buildFeatureSet().setDescription("from file: " + input).setReferenceID(referenceID).build();
+
 
 //      Coverage c = null;
             int currBin = 0;
@@ -79,11 +80,10 @@ public class VCFVariantImportWorker extends ImportWorker {
                 if (count % 10000 == 0) {
                     //System.out.print(count+"\r");
                 }
-                // we need to flush and restart a new FeatureSet roughly every 300,000 lines
+                // we need to flush and clear the manager in order to release the memory consumed by the Features themselves
                 if (count % 100000 == 0){
                     modelManager.flush();
                     modelManager.clear();
-                    fSet = modelManager.buildFeatureSet().setDescription("from file: " + input).setReferenceID(referenceID).build();
                 }
 
                 // ignore commented lines

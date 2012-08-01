@@ -7,6 +7,7 @@ message AtomPB {
     optional SGIDPB precedingID = 2;
     optional int64 date = 3;
     repeated TagPB tags = 4;
+    optional int32 serializationConstant = 5;
 }
 
 message FeatureAtomPB{
@@ -14,6 +15,7 @@ message FeatureAtomPB{
     optional FSGIDPB precedingID = 2;
     optional int64 date = 3;
     repeated TagPB tags = 4;
+    optional int32 serializationConstant = 5;
 }
 
 message SGIDPB {
