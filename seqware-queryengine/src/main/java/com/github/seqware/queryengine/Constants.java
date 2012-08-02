@@ -30,7 +30,7 @@ public class Constants {
     /**
      * Show the rather verbose map/reduce messages
      */
-    public final static boolean MAP_REDUCE_LOGGING = false;
+    public final static boolean MAP_REDUCE_LOGGING = true;
     
     /**
      * Back-end storage implementations will reference this to decide whether to
@@ -41,10 +41,10 @@ public class Constants {
      * Use the properties defined for HBase to connect to a remote HBase
      * instance
      */
-    public final static boolean HBASE_REMOTE_TESTING = false;
+    public final static boolean HBASE_REMOTE_TESTING = true;
     private final static Map<String, String> SQWDEV = Maps.newHashMap(
             ImmutableMap.<String, String>builder().
-            put("hbase.zookeeper.quorum", "sqwdev.res").
+            put("hbase.zookeeper.quorum", "sqwdev.res.oicr.on.ca").
             put("hbase.zookeeper.property.clientPort", "2181").
             put("hbase.master", "sqwdev.res:60000").
             put("mapred.job.tracker", "sqwdev.res.oicr.on.ca:8021").
@@ -52,7 +52,7 @@ public class Constants {
             build());
     private final static Map<String, String> HBOOT = Maps.newHashMap(
             ImmutableMap.<String, String>builder().
-            put("hbase.zookeeper.quorum", "hboot.res").
+            put("hbase.zookeeper.quorum", "hboot.res.oicr.on.ca").
             put("hbase.zookeeper.property.clientPort", "2181").
             put("hbase.master", "hboot.res:60000").
             put("mapred.job.tracker", "hboot:8021").
@@ -61,5 +61,5 @@ public class Constants {
     /**
      * Properties used when connecting to a remote instance of HBase
      */
-    public final static Map<String, String> HBASE_PROPERTIES = SQWDEV;
+    public final static Map<String, String> HBASE_PROPERTIES = HBOOT;
 }
