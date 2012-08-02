@@ -2,6 +2,7 @@ package com.github.seqware.queryengine.model.impl.lazy;
 
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.impl.StorageInterface;
 import com.github.seqware.queryengine.model.Feature;
@@ -9,6 +10,7 @@ import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Reference;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.model.impl.LazyMolSet;
+import com.github.seqware.queryengine.tutorial.MapReduceFeatureSetCounter;
 import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.LazyReference;
 import com.github.seqware.queryengine.util.SGID;
@@ -23,6 +25,7 @@ import java.util.logging.Logger;
  * @author dyuen
  */
 public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet, Feature> {
+
     /**
      * Trigger a warning about iteration being expensive only once
      */
@@ -40,7 +43,7 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
     /**
      * Creates an in-memory feature set.
      */
-    private LazyFeatureSet() {
+    protected LazyFeatureSet() {
         super();
     }
 
@@ -79,15 +82,15 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
     private void processTimestamp(FSGID fsgid) {
         // as a convenience, we should have Features in a FeatureSet and the associated FeatureLists take on the time
         // of the FeatureSet
-        if (this.getPrecedingSGID() == null){
-            if (getManager() != null && getManager().getState(this) != null && getManager().getState(this) != CreateUpdateManager.State.NEW_CREATION){
+        if (this.getPrecedingSGID() == null) {
+            if (getManager() != null && getManager().getState(this) != null && getManager().getState(this) != CreateUpdateManager.State.NEW_CREATION) {
                 // we want this if the set has been persisted
                 fsgid.setBackendTimestamp(new Date(this.getTimestamp().getTime()));
-            } else{
+            } else {
                 // we want this if this is a new creation, so features get attached to this set (kind of a hack)
                 fsgid.setBackendTimestamp(new Date(this.getTimestamp().getTime() - 1));
             }
-        } else{
+        } else {
             fsgid.setBackendTimestamp(this.getTimestamp());
         }
     }
@@ -272,7 +275,7 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
 
     @Override
     public long getCount() {
-        if (!EXPENSIVE_ITERATION_WARNED){
+        if (!EXPENSIVE_ITERATION_WARNED) {
             Logger.getLogger(LazyFeatureSet.class.getName()).log(Level.WARNING, "Iterating through a LazyFeatureSet is expensive, avoid this");
             EXPENSIVE_ITERATION_WARNED = true;
         }

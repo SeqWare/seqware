@@ -18,6 +18,7 @@ package com.github.seqware.queryengine.impl.protobufIO;
 
 import com.github.seqware.queryengine.dto.QueryEngine;
 import com.github.seqware.queryengine.dto.QueryEngine.FeatureSetPB;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.SimpleModelManager;
 import com.github.seqware.queryengine.model.Feature;
@@ -37,10 +38,19 @@ import java.util.logging.Logger;
  * @author dyuen
  */
 public class FeatureSetIO implements ProtobufTransferInterface<FeatureSetPB, FeatureSet> {
-
+    
+    SimpleModelManager manager = null;
+    
     @Override
     public FeatureSet pb2m(FeatureSetPB userpb) {
-        FeatureSet.Builder builder = SimpleModelManager.buildFeatureSetInternal();
+        /**
+         * build here since serialization needs to init before the ModelManagers
+         */
+        if (manager == null) {
+            manager = (SimpleModelManager) SWQEFactory.getModelManager();
+        }
+        
+        FeatureSet.Builder builder = manager.buildFeatureSetInternal();
         builder = userpb.hasDescription() ? builder.setDescription(userpb.getDescription()) : builder;
         builder = userpb.hasReferenceID() ? builder.setReferenceID(SGIDIO.pb2m(userpb.getReferenceID())) : builder;
         FeatureSet user = builder.build();

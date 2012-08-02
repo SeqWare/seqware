@@ -46,9 +46,12 @@ public class SimpleModelManager implements CreateUpdateManager {
     private Map<String, AtomStatePair> dirtySet = new HashMap<String, AtomStatePair>();
     private BackEndInterface backend = SWQEFactory.getBackEnd();
 
-    public static FeatureSet.Builder buildFeatureSetInternal() {
-        FeatureSet.Builder fSet;
-            fSet = LazyFeatureSet.newBuilder();
+    /**
+     * 
+     * @return 
+     */
+    public FeatureSet.Builder buildFeatureSetInternal() {
+        FeatureSet.Builder fSet = LazyFeatureSet.newBuilder();
         return fSet;
     }
 

@@ -49,7 +49,14 @@ public class SWQEFactory {
             BackEndInterface buildBackEnd(StorageInterface i) {
                 return new HBasePersistentBackEnd(i);
             }
-        };
+        },
+        MRHBASE{
+            @Override
+            BackEndInterface buildBackEnd(StorageInterface i){
+                return new MRHBasePersistentBackEnd(i);
+            }
+        }
+        ;
 
         abstract BackEndInterface buildBackEnd(StorageInterface i);
     };
@@ -114,7 +121,7 @@ public class SWQEFactory {
 
         abstract SerializationInterface buildSerialization();
     };
-    private static final Model_Type DEFAULT_BACKEND = Model_Type.HBASE;
+    private static final Model_Type DEFAULT_BACKEND = Model_Type.MRHBASE;
     private static Model_Type current_backend = DEFAULT_BACKEND;
     private static final Storage_Type DEFAULT_STORAGE = Storage_Type.HBASE_STORAGE;
     private static Storage_Type current_storage = DEFAULT_STORAGE;
@@ -193,7 +200,12 @@ public class SWQEFactory {
      * @return
      */
     public static CreateUpdateManager getModelManager() {
-        return new HBaseModelManager();
+        if (current_backend == Model_Type.MRHBASE){
+            return new MRHBaseModelManager();
+        } else{
+            return new HBaseModelManager();
+        }
+        // we do not really have to use the base ModelManager, HBaseModelManager is fully compatible
     }
 
     /**

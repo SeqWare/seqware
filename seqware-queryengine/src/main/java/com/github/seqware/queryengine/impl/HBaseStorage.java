@@ -50,7 +50,7 @@ public class HBaseStorage extends StorageInterface {
     public static final byte[] TEST_QUALIFIER_INBYTES = Bytes.toBytes("qualifier");
     private boolean inefficiencyWarning = false;
     public static final int PAD = 15;
-    private static final String TEST_TABLE_PREFIX = System.getProperty("user.name") + StorageInterface.SEPARATOR + "hbaseTestTable_v2";
+    public static final String TEST_TABLE_PREFIX = System.getProperty("user.name") + StorageInterface.SEPARATOR + "hbaseTestTable_v2";
     private static final boolean PERSIST = Constants.PERSIST;
     private Configuration config;
     private SerializationInterface serializer;
@@ -522,31 +522,14 @@ public class HBaseStorage extends StorageInterface {
 
         @Override
         public boolean hasNext() {
-            byte[] qualifier = Bytes.toBytes(featureSetID.getUuid().toString());
             // make this time-insensitive
             //            long timestamp = featureSetID.getBackendTimestamp().getTime();
             // we actually need to check for nulls due to different serialization formats
             while (sIter.hasNext() || cachedPayloads.size() > 0) {
                 while (cachedPayloads.isEmpty() && sIter.hasNext()) {
-                    // map is time -> data
-                    NavigableMap<Long, byte[]> map = sIter.next().getMap().get(TEST_FAMILY_INBYTES).get(qualifier);
-                    if (map == null) {
-                        // column not present in this row
-                        continue;
-                    }
-                    // go through the possible qualifiers and break them down
-                    for (Entry<Long, byte[]> e : map.entrySet()) {
-                        long time = e.getKey();
-                        if (time >= featureSetID.getBackendTimestamp().getTime()){
-                            continue;
-                        }
-                        FeatureList list = serializer.deserialize(e.getValue(), FeatureList.class);
-                        if (list == null) {
-                            //TODO: investigate this
-                            continue;
-                        }
-                        cachedPayloads.add(list);
-                    }
+                    Result result = sIter.next();
+                    List<FeatureList> grabFeatureListsGivenRow = grabFeatureListsGivenRow(result, this.featureSetID, serializer);
+                    cachedPayloads.addAll(grabFeatureListsGivenRow);
                 }
                 if (cachedPayloads.isEmpty() && payload == null) {
                     return false;
@@ -668,5 +651,30 @@ public class HBaseStorage extends StorageInterface {
         public void remove() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+    }
+
+    public static List<FeatureList> grabFeatureListsGivenRow(Result result, SGID featureSetID, SerializationInterface serializer) {
+        byte[] qualifier = Bytes.toBytes(featureSetID.getUuid().toString());
+        List<FeatureList> cachedPayloads = new ArrayList<FeatureList>();
+        // map is time -> data
+        NavigableMap<Long, byte[]> map = result.getMap().get(TEST_FAMILY_INBYTES).get(qualifier);
+        if (map == null) {
+            // column not present in this row
+            return cachedPayloads;
+        }
+        // go through the possible qualifiers and break them down
+        for (Entry<Long, byte[]> e : map.entrySet()) {
+            long time = e.getKey();
+            if (time >= featureSetID.getBackendTimestamp().getTime()) {
+                continue;
+            }
+            FeatureList list = serializer.deserialize(e.getValue(), FeatureList.class);
+            if (list == null) {
+                //TODO: investigate this
+                continue;
+            }
+            cachedPayloads.add(list);
+        }
+        return cachedPayloads;
     }
 }

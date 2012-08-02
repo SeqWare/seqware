@@ -28,6 +28,11 @@ import java.util.Map;
 public class Constants {
 
     /**
+     * Show the rather verbose map/reduce messages
+     */
+    public final static boolean MAP_REDUCE_LOGGING = false;
+    
+    /**
      * Back-end storage implementations will reference this to decide whether to
      * persist objects permanently and/or wipe out existing ones
      */
@@ -42,15 +47,19 @@ public class Constants {
             put("hbase.zookeeper.quorum", "sqwdev.res").
             put("hbase.zookeeper.property.clientPort", "2181").
             put("hbase.master", "sqwdev.res:60000").
+            put("mapred.job.tracker", "sqwdev.res.oicr.on.ca:8021").
+            put("fs.default.name", "hdfs://sqwdev.res.oicr.on.ca:8020").
             build());
     private final static Map<String, String> HBOOT = Maps.newHashMap(
             ImmutableMap.<String, String>builder().
             put("hbase.zookeeper.quorum", "hboot.res").
             put("hbase.zookeeper.property.clientPort", "2181").
             put("hbase.master", "hboot.res:60000").
+            put("mapred.job.tracker", "hboot:8021").
+            put("fs.default.name", "hdfs://hboot:8020").
             build());
     /**
      * Properties used when connecting to a remote instance of HBase
      */
-    public final static Map<String, String> HBASE_PROPERTIES = HBOOT;
+    public final static Map<String, String> HBASE_PROPERTIES = SQWDEV;
 }

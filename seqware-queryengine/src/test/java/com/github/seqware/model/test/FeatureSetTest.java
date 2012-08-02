@@ -77,7 +77,7 @@ public class FeatureSetTest {
         Assert.assertTrue("old FeatureSet version wrong", testSet.getPrecedingVersion().getVersion() == 3);
         Assert.assertTrue("very old FeatureSet version wrong", testSet.getPrecedingVersion().getPrecedingVersion().getVersion() == 2);
         Assert.assertTrue("first FeatureSet version wrong", testSet.getPrecedingVersion().getPrecedingVersion().getPrecedingVersion().getVersion() == 1);
-        Assert.assertTrue("FeatureSet size wrong and found " + testSet.getCount(), testSet.getCount() == 0);
+        Assert.assertTrue("FeatureSet size wrong, expected 0 and found " + testSet.getCount(), testSet.getCount() == 0);
         Assert.assertTrue("old FeatureSet size wrong and found " + testSet.getPrecedingVersion().getCount(), testSet.getPrecedingVersion().getCount() == 6);
         Assert.assertTrue("very old FeatureSet size wrong", testSet.getPrecedingVersion().getPrecedingVersion().getCount() == 3);
         Assert.assertTrue("first FeatureSet size wrong", testSet.getPrecedingVersion().getPrecedingVersion().getPrecedingVersion().getCount() == 0);
@@ -155,5 +155,6 @@ public class FeatureSetTest {
         // should be the same size when we go through the query interface
         FeatureSet testSet = SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, aSet.getSGID());
         Assert.assertTrue("FeatureSet size wrong, expected 9 and found " + testSet.getCount(), aSet.getCount() == 9);
+        mManager.close();
     }
 }
