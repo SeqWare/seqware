@@ -17,6 +17,7 @@
 package com.github.seqware.queryengine.tutorial;
 
 import com.github.seqware.queryengine.Constants;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
@@ -24,11 +25,10 @@ import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
-import com.github.seqware.queryengine.util.SGID;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Result;
@@ -38,44 +38,48 @@ import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.lib.output.NullOutputFormat;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * Experiment with Map/Reduce in order to count the number of features in a lazy
- * feature set. 
- * 
- * TODO: This will need lots of refactoring once I figure out what is minimally needed 
- * for supporting our M/R interface. 
+ * Experiment with Map/Reduce in order to implement MapReduceFeaturesAll.
+ *
+ * TODO: This will need lots of refactoring once I figure out what is minimally
+ * needed for supporting our M/R interface.
  *
  * @author dyuen
  */
-public class MapReduceFeatureSetCounter {
-    private static final String TIMESTAMP_PARAM = "timestamp";
-    private static final String UUID_PARAM = "uuid";
-    
-    public static Long getCountForFeatureSet(FeatureSet fSet) {
+public class MapReduceFeaturesAll {
+
+    private static final String PARAMETERS = "paramaters";
+
+    /**
+     * Perform the map reduce and append results to destSet
+     *
+     * @param sourceSet
+     * @param destSet
+     */
+    public void processForFeatureSet(FeatureSet sourceSet, FeatureSet destSet) {
         try {
             Logger rootLogger = Logger.getRootLogger();
             Level previousLevel = rootLogger.getLevel();
-            if (!Constants.MAP_REDUCE_LOGGING){
+            if (!Constants.MAP_REDUCE_LOGGING) {
                 rootLogger.setLevel(Level.OFF);
             }
-            
-            LazyFeatureSet lfSet = (LazyFeatureSet) fSet;
-            String prefix = lfSet.getTablename();
-            String tableName = HBaseStorage.TEST_TABLE_PREFIX + HBaseStorage.SEPARATOR + prefix;
-        
+            String tableName = generateTableName(sourceSet);
+            String destTableName = generateTableName(destSet);
+
             Configuration conf = HBaseConfiguration.create();
             HBaseStorage.configureHBaseConfig(conf);
-            
-            // we need to pass the parameters for a featureset
-            conf.set(UUID_PARAM, fSet.getSGID().getUuid().toString());
-            conf.setLong(TIMESTAMP_PARAM, fSet.getSGID().getBackendTimestamp().getTime());
-                        
-            Job job = new Job(conf, "MapReduceFeatureSetCounter");
-            
+
+            // we need to pass the parameters for a featureset, maybe we can take advantage of our serializers
+            byte[] sSet = SWQEFactory.getSerialization().serialize(sourceSet);
+            byte[] dSet = SWQEFactory.getSerialization().serialize(destSet);
+
+            conf.setStrings(PARAMETERS, Base64.encodeBase64String(sSet), Base64.encodeBase64String(dSet));
+
+            Job job = new Job(conf, "MapReduceFeaturesAll");
+
             Scan scan = new Scan();
             scan.setMaxVersions();       // we need all version data
             scan.setCaching(500);        // 1 is the default in Scan, which will be bad for MapReduce jobs
@@ -84,47 +88,68 @@ public class MapReduceFeatureSetCounter {
             TableMapReduceUtil.initTableMapperJob(
                     tableName, // input HBase table name
                     scan, // Scan instance to control CF and attribute selection
-                    MapReduceFeatureSetCounter.RowCounterMapper.class, // mapper
+                    MapReduceFeaturesAll.FeaturesByAllMapper.class, // mapper
                     null, // mapper output key 
                     null, // mapper output value
                     job);
-            job.setOutputFormatClass(NullOutputFormat.class);   // because we aren't emitting anything from mapper
-            job.setJarByClass(MapReduceFeatureSetCounter.class);
+            TableMapReduceUtil.initTableReducerJob(
+                    destTableName, // output table
+                    null, // reducer class
+                    job);
+            job.setNumReduceTasks(0);
+
+            job.setJarByClass(MapReduceFeaturesAll.class);
             TableMapReduceUtil.addDependencyJars(job);
-                
+
             boolean b = job.waitForCompletion(true);
             if (!b) {
                 throw new IOException("error with job!");
             }
-            
-            if (!Constants.MAP_REDUCE_LOGGING){
+
+            if (!Constants.MAP_REDUCE_LOGGING) {
                 rootLogger.setLevel(previousLevel);
             }
-            
-            return job.getCounters().findCounter(MapReduceTest_RowCounter.RowCounterMapper.Counters.ROWS).getValue();
         } catch (InterruptedException ex) {
-            Logger.getLogger(MapReduceFeatureSetCounter.class.getName()).log(Level.FATAL, null, ex);
-            return Long.MIN_VALUE;
+            Logger.getLogger(MapReduceFeaturesAll.class.getName()).log(Level.FATAL, null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(MapReduceFeatureSetCounter.class.getName()).log(Level.FATAL, null, ex);
-            return Long.MIN_VALUE;
+            Logger.getLogger(MapReduceFeaturesAll.class.getName()).log(Level.FATAL, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(MapReduceFeatureSetCounter.class.getName()).log(Level.FATAL, null, ex);
-            return Long.MIN_VALUE;
+            Logger.getLogger(MapReduceFeaturesAll.class.getName()).log(Level.FATAL, null, ex);
         }
+    }
+
+    private static String generateTableName(FeatureSet sourceSet) {
+        LazyFeatureSet lfSet = (LazyFeatureSet) sourceSet;
+        String prefix = lfSet.getTablename();
+        String tableName = HBaseStorage.TEST_TABLE_PREFIX + HBaseStorage.SEPARATOR + prefix;
+        return tableName;
     }
 
     /**
      * Mapper that runs the count.
      */
-    static class RowCounterMapper
+    static class FeaturesByAllMapper
             extends TableMapper<ImmutableBytesWritable, Result> {
 
-        /**
-         * Counter enumeration to count the actual rows.
-         */
-        public static enum Counters {
-            ROWS
+        private FeatureSet sourceSet;
+        private FeatureSet destSet;
+        private CreateUpdateManager modelManager;
+
+        @Override
+        protected void setup(Mapper.Context context) {
+
+            Configuration conf = context.getConfiguration();
+            String[] strings = conf.getStrings(PARAMETERS);
+            this.sourceSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[0]), FeatureSet.class);
+            this.destSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[1]), FeatureSet.class);
+
+            this.modelManager = SWQEFactory.getModelManager();
+            this.modelManager.persist(destSet);
+        }
+
+        @Override
+        protected void cleanup(Mapper.Context context) {
+            this.modelManager.close();
         }
 
         /**
@@ -141,28 +166,12 @@ public class MapReduceFeatureSetCounter {
         public void map(ImmutableBytesWritable row, Result values,
                 Mapper.Context context)
                 throws IOException {
-            
-            Configuration conf = context.getConfiguration();
-            UUID uuid = UUID.fromString(conf.get(UUID_PARAM));
-            long time = conf.getLong(TIMESTAMP_PARAM, Integer.MIN_VALUE);
-            SGID sgid = new SGID(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits(), time);
-            
-            List<FeatureList> list = HBaseStorage.grabFeatureListsGivenRow(values, sgid, SWQEFactory.getSerialization());
+            List<FeatureList> list = HBaseStorage.grabFeatureListsGivenRow(values, sourceSet.getSGID(), SWQEFactory.getSerialization());
             Collection<Feature> consolidateRow = SimplePersistentBackEnd.consolidateRow(list);
-            context.getCounter(MapReduceTest_RowCounter.RowCounterMapper.Counters.ROWS).increment(consolidateRow.size());
+            for(Feature f : consolidateRow){
+                f.setManager(modelManager);
+            }
+            destSet.add(consolidateRow);
         }
-    }
-
-    /**
-     * Main entry point.
-     *
-     * @param args The command line parameters.
-     * @throws Exception When running the job fails.
-     */
-    public static void main(String[] args) throws Exception {
-        UUID uuid = UUID.fromString("eee09c44-d03f-4c26-9c5f-378a4f294a80");
-        SGID sgid = new SGID(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits(), 0);
-        FeatureSet fSet = SWQEFactory.getQueryInterface().getLatestAtomBySGID(sgid, FeatureSet.class);
-        System.out.println("Counted " + MapReduceFeatureSetCounter.getCountForFeatureSet(fSet)+ " features in " + uuid.toString());
     }
 }

@@ -16,6 +16,12 @@
  */
 package com.github.seqware.queryengine.impl;
 
+import com.github.seqware.queryengine.model.FeatureSet;
+import com.github.seqware.queryengine.model.QueryFuture;
+import com.github.seqware.queryengine.model.impl.inMemory.InMemoryQueryFutureImpl;
+import com.github.seqware.queryengine.model.impl.mrlazy.MRFeaturesAllPlugin;
+import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+
 /**
  * Implement HBase optimizations for the back-end. Will implement 
  * and link up actual Map/Reduce plug-ins here
@@ -29,6 +35,13 @@ public class MRHBasePersistentBackEnd extends HBasePersistentBackEnd {
     public MRHBasePersistentBackEnd(StorageInterface i) {
         super(i);
         this.storage = i;
+    }
+    
+    @Override
+    public QueryFuture getFeatures(int hours, FeatureSet set) {
+        AnalysisPluginInterface plugin = new MRFeaturesAllPlugin();
+        plugin.init(set);
+        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
 }
