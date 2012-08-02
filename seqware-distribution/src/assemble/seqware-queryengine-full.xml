@@ -6,6 +6,18 @@
     <format>jar</format>
   </formats>
   <includeBaseDirectory>false</includeBaseDirectory>
+
+  <fileSets>
+        <!-- Include test JARs if present... -->
+        <fileSet>
+            <directory>target</directory>
+            <outputDirectory>/lib</outputDirectory>
+            <includes>
+                <include>*tests.jar</include>
+            </includes>
+        </fileSet>
+  </fileSets>
+
   <moduleSets>
     <moduleSet>
 
@@ -19,6 +31,7 @@
         <!-- Includes seqware-pipeline and all it's dependencies. -->
         <include>com.github.seqware:seqware-queryengine</include>
       </includes>
+
       <binaries>
         <outputDirectory>/</outputDirectory>
         <unpack>true</unpack>

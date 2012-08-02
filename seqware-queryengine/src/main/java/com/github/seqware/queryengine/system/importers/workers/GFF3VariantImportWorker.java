@@ -162,6 +162,8 @@ public class GFF3VariantImportWorker extends ImportWorker {
         FeatureSet fSet = SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, this.featureSetID);
         
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
+        mManager.persist(fSet);
+        
         try {
             // first ask for a token from semaphore
             pmi.getLock();

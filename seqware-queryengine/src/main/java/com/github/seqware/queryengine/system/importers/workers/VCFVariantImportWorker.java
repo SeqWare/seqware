@@ -41,6 +41,8 @@ public class VCFVariantImportWorker extends ImportWorker {
         // FeatureSets are totally new, hope this doesn't slow things too much
         FeatureSet fSet = SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, this.featureSetID);   
         CreateUpdateManager modelManager = SWQEFactory.getModelManager();
+        modelManager.persist(fSet);
+
 
         // open the file
         BufferedReader inputStream = null;
@@ -81,9 +83,11 @@ public class VCFVariantImportWorker extends ImportWorker {
                     //System.out.print(count+"\r");
                 }
                 // we need to flush and clear the manager in order to release the memory consumed by the Features themselves
+                // the featureSet has to be reattached
                 if (count % 100000 == 0){
                     modelManager.flush();
                     modelManager.clear();
+                    modelManager.persist(fSet);
                 }
 
                 // ignore commented lines
