@@ -1,0 +1,48 @@
+package com.github.seqware.queryengine.model.impl.mrlazy;
+
+import com.github.seqware.queryengine.model.impl.lazy.*;
+import com.github.seqware.queryengine.model.Feature;
+import com.github.seqware.queryengine.model.FeatureSet;
+import com.github.seqware.queryengine.model.impl.LazyMolSet;
+import com.github.seqware.queryengine.tutorial.MapReduceFeatureSetCounter;
+
+/**
+ * An "lazy" representation of a feature set. This forces individual members to
+ * persist and manage their own membership. This version adds M/R for counting.
+ *
+ * @author dyuen
+ */
+public class MRLazyFeatureSet extends LazyFeatureSet implements LazyMolSet<FeatureSet, Feature> {
+
+    /**
+     * Creates an lazy M/R using feature set.
+     */
+    protected MRLazyFeatureSet() {
+        super();
+    }
+
+    @Override
+    public long getCount() {
+        // let's experiment with using Map/Reduce for counting
+        Long cnt = MapReduceFeatureSetCounter.getCountForFeatureSet(this);   
+        return cnt;
+    }
+
+    public static FeatureSet.Builder newBuilder() {
+        return new MRLazyFeatureSet.Builder();
+    }
+
+    @Override
+    public MRLazyFeatureSet.Builder toBuilder() {
+        MRLazyFeatureSet.Builder b = new MRLazyFeatureSet.Builder();
+        b.aSet = (MRLazyFeatureSet) this.copy(true);
+        return b;
+    }
+
+    public static class Builder extends LazyFeatureSet.Builder {
+
+        public Builder() {
+            aSet = new MRLazyFeatureSet();
+        }
+    }
+}
