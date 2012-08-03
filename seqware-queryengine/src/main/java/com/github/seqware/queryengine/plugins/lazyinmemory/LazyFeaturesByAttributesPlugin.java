@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.queryengine.model.impl.lazy;
+package com.github.seqware.queryengine.plugins.lazyinmemory;
 
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.impl.inMemory.AbstractMRInMemoryPlugin;
+import com.github.seqware.queryengine.plugins.inmemory.AbstractMRInMemoryPlugin;
 
 /**
  * Generic query implementation over all attributes of a Feature (including additional attributes).

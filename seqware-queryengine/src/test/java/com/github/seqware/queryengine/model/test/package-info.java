@@ -11,4 +11,4 @@
  * serialization, our storage back-end, or an optimization that we have
  * implemented.
  */
-package com.github.seqware.model.test;
+package com.github.seqware.queryengine.model.test;

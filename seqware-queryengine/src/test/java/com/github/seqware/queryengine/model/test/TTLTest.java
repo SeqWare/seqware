@@ -1,10 +1,10 @@
-package com.github.seqware.model.test;
+package com.github.seqware.queryengine.model.test;
 
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.*;
-import com.github.seqware.queryengine.model.impl.inMemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.queryengine.model.interfaces.TTLable;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
 import java.util.*;
 import junit.framework.Assert;
 import org.junit.BeforeClass;

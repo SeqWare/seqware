@@ -1,11 +1,11 @@
-package com.github.seqware.model.test;
+package com.github.seqware.queryengine.model.test;
 
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.*;
-import com.github.seqware.queryengine.model.impl.inMemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.queryengine.model.interfaces.Taggable;
+import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.ArrayList;
 import java.util.Arrays;

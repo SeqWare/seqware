@@ -1,7 +1,7 @@
-package com.github.seqware.model.test;
+package com.github.seqware.queryengine.model.test;
 
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Reference;
 import com.github.seqware.queryengine.model.ReferenceSet;
 import java.util.HashSet;
