@@ -57,7 +57,7 @@ public class AnalysisIO implements ProtobufTransferInterface<AnalysisPB, Analysi
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), atom));
         builder.setMol(UtilIO.handleMol2PB(builder.getMol(), atom));
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && atom.getPrecedingVersion() != null){
-            builder.setPrecedingVersion(m2pb(atom.getPrecedingVersion()));
+            builder.setPrecedingVersion(m2pb((Analysis)atom.getPrecedingVersion()));
         }
         AnalysisPB userpb = builder.build();
         return userpb;

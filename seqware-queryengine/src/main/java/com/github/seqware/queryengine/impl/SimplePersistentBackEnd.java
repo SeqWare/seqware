@@ -16,17 +16,18 @@
  */
 package com.github.seqware.queryengine.impl;
 
-import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByTagPlugin;
-import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByRangePlugin;
-import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByReferencePlugin;
-import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.FeatureList;
-import com.github.seqware.queryengine.model.impl.inMemory.*;
-import com.github.seqware.queryengine.plugins.lazyinmemory.LazyFeaturesByAttributesPlugin;
+import com.github.seqware.queryengine.model.impl.inMemory.InMemoryQueryFutureImpl;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.plugins.hbasemr.MRFeatureSetCountPlugin;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByRangePlugin;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByReferencePlugin;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByTagPlugin;
+import com.github.seqware.queryengine.plugins.lazyinmemory.LazyFeaturesByAttributesPlugin;
 import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.InMemoryIterable;
 import com.github.seqware.queryengine.util.SGID;
@@ -278,5 +279,10 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
             }
         }
         return map.values();
+    }
+
+    @Override
+    public QueryFuture<Long> getFeatureSetCount(int hours, FeatureSet set) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -37,6 +37,26 @@ public class InMemoryFeaturesByTagPlugin extends AbstractMRInMemoryPlugin {
     private String object = null;
     private Set<Feature> accumulator = new HashSet<Feature>();
 
+    public static boolean matchFeatureByTags(Feature atom, String subject, String predicate, String object) {
+        boolean b[] = new boolean[3];
+        Arrays.fill(b, false);
+        for (Tag t : atom.getTags()) {
+            // three cases
+            if (subject == null || subject.equals(t.getKey())) {
+                b[0] = true;
+            }
+            if (predicate == null || predicate.equals(t.getPredicate())) {
+                b[1] = true;
+            }
+            if (object == null || object.equals(t.getValue())) {
+                b[2] = true;
+            }
+
+        }
+        boolean result = !ArrayUtils.contains(b, false);
+        return result;
+    }
+
     @Override
     public ReturnValue init(FeatureSet inputSet, Object... parameters) {
         this.inputSet = inputSet;
@@ -55,22 +75,8 @@ public class InMemoryFeaturesByTagPlugin extends AbstractMRInMemoryPlugin {
 
     @Override
     public ReturnValue map(Feature atom, FeatureSet mappedSet) {
-        boolean b[] = new boolean[3];
-        Arrays.fill(b, false);
-        for (Tag t : atom.getTags()) {
-            // three cases
-            if (subject == null || subject.equals(t.getKey())) {
-                b[0] = true;
-            }
-            if (predicate == null || predicate.equals(t.getPredicate())) {
-                b[1] = true;
-            }
-            if (object == null || object.equals(t.getValue())) {
-                b[2] = true;
-            }
-
-        }
-        if (!ArrayUtils.contains(b, false)) {
+        boolean result = matchFeatureByTags(atom, subject, predicate, object);
+        if (result) {
             Feature build = atom.toBuilder().build();
             accumulator.add(build);
         }

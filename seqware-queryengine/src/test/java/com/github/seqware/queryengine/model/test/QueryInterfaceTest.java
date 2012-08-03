@@ -57,7 +57,7 @@ public class QueryInterfaceTest implements Benchmarking {
     @Test
     public void testGetFeatures() {
         // get a FeatureSet from the back-end
-        QueryFuture future = SWQEFactory.getQueryInterface().getFeatures(0, aSet);
+        QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeatures(0, aSet);
 
         // check that Features are present match
         FeatureSet result = future.get();
@@ -85,7 +85,7 @@ public class QueryInterfaceTest implements Benchmarking {
         }
     }
 
-    private void benchmark(String title, QueryFuture future) {
+    private void benchmark(String title, QueryFuture<FeatureSet> future) {
         long[] totalTimes = new long[BENCHMARK_RUNS];
 
         long totalRunTime = System.currentTimeMillis();
@@ -120,7 +120,7 @@ public class QueryInterfaceTest implements Benchmarking {
         String structure = "chr16";
         int start = 1000000;
         int stop = 1000105;
-        QueryFuture future = SWQEFactory.getQueryInterface().getFeaturesByRange(0, bSet, QueryInterface.Location.INCLUDES, structure, start, stop);
+        QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeaturesByRange(0, bSet, QueryInterface.Location.INCLUDES, structure, start, stop);
 
         int featuresInRange = 0;
         for (Feature feature : bSet)
@@ -141,7 +141,7 @@ public class QueryInterfaceTest implements Benchmarking {
     @Test
     public void testTypeQuery() {
         // get a FeatureSet from the back-end
-        QueryFuture future = SWQEFactory.getQueryInterface().getFeaturesByAttributes(0, aSet, new RPNStack(
+        QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeaturesByAttributes(0, aSet, new RPNStack(
                 new Constant("type1"), "type", Operation.EQUAL));
         // check that Features are present match
         FeatureSet result = future.get();
@@ -162,7 +162,7 @@ public class QueryInterfaceTest implements Benchmarking {
             junit.framework.Assert.assertTrue("Backend could not store the given FeatureSet.", false);
         }
 
-        QueryFuture queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
+        QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant("chr16"),
                 "seqid",
                 Operation.EQUAL));

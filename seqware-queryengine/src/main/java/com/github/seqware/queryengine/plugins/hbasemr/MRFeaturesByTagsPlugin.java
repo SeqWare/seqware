@@ -16,13 +16,20 @@
  */
 package com.github.seqware.queryengine.plugins.hbasemr;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.KryoException;
+import com.esotericsoftware.kryo.io.Output;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
+import com.github.seqware.queryengine.model.QueryInterface.Location;
 import com.github.seqware.queryengine.model.impl.FeatureList;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByRangePlugin;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByTagPlugin;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,17 +46,19 @@ import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.mapreduce.Mapper;
 
 /**
- * Implements the "get all features in a feature set" query
+ * Implements the tag queries
+ *
  * @author dyuen
  */
-public class MRFeaturesAllPlugin extends AbstractMRHBaseBatchedPlugin{
+public class MRFeaturesByTagsPlugin extends AbstractMRHBaseBatchedPlugin {
+
     @Override
     public void performVariableInit(String inputTableName, String outputTableName, Scan scan) {
         try {
             TableMapReduceUtil.initTableMapperJob(
                     inputTableName, // input HBase table name
                     scan, // Scan instance to control CF and attribute selection
-                    MRFeaturesAllPlugin.Mapper.class, // mapper
+                    MRFeaturesByTagsPlugin.Mapper.class, // mapper
                     null, // mapper output key 
                     null, // mapper output value
                     job);
@@ -59,16 +68,10 @@ public class MRFeaturesAllPlugin extends AbstractMRHBaseBatchedPlugin{
                     job);
             job.setNumReduceTasks(0);
         } catch (IOException ex) {
-            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MRFeaturesByTagsPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    @Override
-    public byte[] handleSerialization(Object... parameters) {
-        // no other parameters
-        return new byte[0];
-    }
-    
     /**
      * Mapper that runs the count.
      */
@@ -78,14 +81,22 @@ public class MRFeaturesAllPlugin extends AbstractMRHBaseBatchedPlugin{
         private FeatureSet sourceSet;
         private FeatureSet destSet;
         private CreateUpdateManager modelManager;
+        private String subject;
+        private String predicate;
+        private String object;
 
         @Override
         protected void setup(Mapper.Context context) {
 
             Configuration conf = context.getConfiguration();
             String[] strings = conf.getStrings(PARAMETERS);
-            this.sourceSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[0]), FeatureSet.class);
-            this.destSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[1]), FeatureSet.class);
+            this.sourceSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[1]), FeatureSet.class);
+            this.destSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[2]), FeatureSet.class);
+            byte[] otherParam =  Base64.decodeBase64(strings[0]);
+            Object[] parameters = AbstractMRHBaseBatchedPlugin.handleDeserialization(otherParam);
+            this.subject = (String) parameters[0];
+            this.predicate = (String) parameters[1];
+            this.object = (String) parameters[2];
 
             this.modelManager = SWQEFactory.getModelManager();
             this.modelManager.persist(destSet);
@@ -111,12 +122,14 @@ public class MRFeaturesAllPlugin extends AbstractMRHBaseBatchedPlugin{
             List<FeatureList> list = HBaseStorage.grabFeatureListsGivenRow(values, sourceSet.getSGID(), SWQEFactory.getSerialization());
             Collection<Feature> consolidateRow = SimplePersistentBackEnd.consolidateRow(list);
             Collection<Feature> results = new ArrayList<Feature>();
-            for(Feature f : consolidateRow){
+            for (Feature f : consolidateRow) {
                 f.setManager(modelManager);
+                boolean match = InMemoryFeaturesByTagPlugin.matchFeatureByTags(f, subject, predicate, object);
+                if (match) {
                     results.add(f);
+                }
             }
             destSet.add(results);
         }
     }
-
 }

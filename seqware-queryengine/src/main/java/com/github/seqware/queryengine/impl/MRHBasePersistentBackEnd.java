@@ -16,11 +16,12 @@
  */
 package com.github.seqware.queryengine.impl;
 
+import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
 import com.github.seqware.queryengine.model.impl.inMemory.InMemoryQueryFutureImpl;
-import com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesAllPlugin;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.plugins.hbasemr.*;
 
 /**
  * Implement HBase optimizations for the back-end. Will implement 
@@ -44,4 +45,39 @@ public class MRHBasePersistentBackEnd extends HBasePersistentBackEnd {
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
+     @Override
+    public QueryFuture getFeaturesByAttributes(int hours, FeatureSet set, RPNStack constraints) {
+        AnalysisPluginInterface plugin = new MRFeaturesByAttributesPlugin();
+        plugin.init(set, constraints);
+        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
+    }
+
+    //TODO: not implemented, still not sure what this was supposed to be
+//    @Override
+//    public QueryFuture getFeaturesByReference(int hours, FeatureSet set, Reference reference) {
+//        AnalysisPluginInterface plugin = new InMemoryFeaturesByReferencePlugin();
+//        plugin.init(set);
+//        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
+//    }
+
+    @Override
+    public QueryFuture getFeaturesByRange(int hours, FeatureSet set, Location location, String structure, long start, long stop) {
+        AnalysisPluginInterface plugin = new MRFeaturesByRangePlugin();
+        plugin.init(set, location, structure, start, stop);
+        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
+    }
+
+    @Override
+    public QueryFuture getFeaturesByTag(int hours, FeatureSet set, String subject, String predicate, String object) {
+        AnalysisPluginInterface plugin = new MRFeaturesByTagsPlugin();
+        plugin.init(set, subject, predicate, object);
+        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
+    }
+    
+    @Override
+    public QueryFuture<Long> getFeatureSetCount(int hours, FeatureSet set) {
+        AnalysisPluginInterface plugin = new MRFeatureSetCountPlugin();
+        plugin.init(set);
+        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
+    }
 }

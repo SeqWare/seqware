@@ -1,7 +1,7 @@
 package com.github.seqware.queryengine.model;
 
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.kernel.RPNStack;
+import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.List;
@@ -196,7 +196,7 @@ public interface QueryInterface {
      * operations that are used to set query constraints.
      * @return featureSet with features filtered by type
      */
-    public QueryFuture getFeaturesByAttributes(int hours, FeatureSet set, RPNStack constraints);
+    public QueryFuture<FeatureSet> getFeaturesByAttributes(int hours, FeatureSet set, RPNStack constraints);
 
     /**
      * (Do not) filter features
@@ -205,7 +205,7 @@ public interface QueryInterface {
      * @param set parent FeatureSet
      * @return featureSet with features not filtered
      */
-    public QueryFuture getFeatures(int hours, FeatureSet set);
+    public QueryFuture<FeatureSet> getFeatures(int hours, FeatureSet set);
 
     /**
      * filter features relative to a reference TODO: FeatureSets should only
@@ -216,7 +216,7 @@ public interface QueryInterface {
      * @param reference reference
      * @return featureSet with features filtered by reference
      */
-    public QueryFuture getFeaturesByReference(int hours, FeatureSet set, Reference reference);
+    public QueryFuture<FeatureSet> getFeaturesByReference(int hours, FeatureSet set, Reference reference);
 
     /**
      * filter features that overlap with a given range
@@ -229,7 +229,7 @@ public interface QueryInterface {
      * @param stop end co-ordinate inclusive
      * @return featureSet with features filtered by location/range
      */
-    public QueryFuture getFeaturesByRange(int hours, FeatureSet set, Location location, String structure, long start, long stop);
+    public QueryFuture<FeatureSet> getFeaturesByRange(int hours, FeatureSet set, Location location, String structure, long start, long stop);
 
     /**
      * filter features with tags.
@@ -241,5 +241,13 @@ public interface QueryInterface {
      * @param object may be null to get Tags with all (or no) objects
      * @return featureSet with features filtered by tags
      */
-    public QueryFuture getFeaturesByTag(int hours, FeatureSet set, String subject, String predicate, String object);
+    public QueryFuture<FeatureSet> getFeaturesByTag(int hours, FeatureSet set, String subject, String predicate, String object);
+    
+    /**
+     * Get the number of features in a feature set
+     * @param hours
+     * @param set
+     * @return 
+     */
+    public QueryFuture<Long> getFeatureSetCount(int hours, FeatureSet set);
 }
