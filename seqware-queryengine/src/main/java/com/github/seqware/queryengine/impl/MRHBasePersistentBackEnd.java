@@ -19,7 +19,7 @@ package com.github.seqware.queryengine.impl;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
 import com.github.seqware.queryengine.model.impl.inMemory.InMemoryQueryFutureImpl;
-import com.github.seqware.queryengine.model.impl.mrlazy.MRFeaturesAllPlugin;
+import com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesAllPlugin;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 
 /**

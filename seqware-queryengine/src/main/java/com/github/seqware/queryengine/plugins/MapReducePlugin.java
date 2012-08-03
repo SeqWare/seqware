@@ -1,7 +1,6 @@
 package com.github.seqware.queryengine.plugins;
 
 import com.github.seqware.queryengine.model.Atom;
-import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 
 /**

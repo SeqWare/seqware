@@ -1,12 +1,12 @@
-package com.github.seqware.model.test;
+package com.github.seqware.queryengine.model.test;
 
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
-import com.github.seqware.queryengine.model.impl.inMemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.queryengine.model.interfaces.ACL;
 import com.github.seqware.queryengine.model.interfaces.ACLable;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

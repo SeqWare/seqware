@@ -17,7 +17,7 @@
 package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.impl.mrlazy.MRLazyFeatureSet;
+import com.github.seqware.queryengine.model.impl.hbasemrlazy.MRLazyFeatureSet;
 
 /**
  * A Simple implementation of the CreateUpdateManager interface. We can make this more

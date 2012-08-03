@@ -1,9 +1,9 @@
-package com.github.seqware.queryengine.model.impl.mrlazy;
+package com.github.seqware.queryengine.model.impl.hbasemrlazy;
 
-import com.github.seqware.queryengine.model.impl.lazy.*;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.LazyMolSet;
+import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
 import com.github.seqware.queryengine.tutorial.MapReduceFeatureSetCounter;
 
 /**

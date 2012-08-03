@@ -14,25 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.queryengine.model.impl.inMemory;
+package com.github.seqware.queryengine.plugins.inmemory;
 
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.plugins.ScanPlugin;
-import java.util.Iterator;
+import com.github.seqware.queryengine.plugins.MapReducePlugin;
 
 /**
- * Base class for all in-memory plug-ins that do Scan
+ * Base class for all in-memory plug-ins that do MR
  *
  * @author dyuen
  */
-public abstract class AbstractScanInMemoryPlugin extends AbstractInMemoryPlugin implements ScanPlugin<Feature, FeatureSet> {
+public abstract class AbstractMRInMemoryPlugin extends AbstractInMemoryPlugin implements MapReducePlugin<Feature, FeatureSet> {
 
     @Override
     public void performInMemoryRun() {
-        for (Iterator<Feature> it = this.inputSet.iterator(); it.hasNext();) {
-            Feature f = it.next();
-            scan(f, null);
+        // TODO Set of mapped features is currently not used.
+        for (Feature f : inputSet) {
+            map(f, null);
+        }
+        for (Feature f : inputSet) {
+            reduce(null, null);
         }
     }
 }
