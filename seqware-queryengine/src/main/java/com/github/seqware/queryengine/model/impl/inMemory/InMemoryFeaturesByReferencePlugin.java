@@ -16,13 +16,12 @@
  */
 package com.github.seqware.queryengine.model.impl.inMemory;
 
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Reference;
-import com.github.seqware.queryengine.plugins.MapReducePlugin;
+import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,7 +29,7 @@ import java.util.Set;
  *
  * @author dyuen
  */
-public class InMemoryFeaturesByReferencePlugin extends MapReducePlugin<Feature, FeatureSet> {
+public class InMemoryFeaturesByReferencePlugin extends AbstractMRInMemoryPlugin {
 
     private Reference reference;
     private Set<Feature> accumulator = new HashSet<Feature>();
@@ -43,52 +42,20 @@ public class InMemoryFeaturesByReferencePlugin extends MapReducePlugin<Feature, 
     }
 
     @Override
-    public AnalysisPluginInterface.ReturnValue test() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public AnalysisPluginInterface.ReturnValue verifyParameters() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public AnalysisPluginInterface.ReturnValue verifyInput() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public AnalysisPluginInterface.ReturnValue filterInit() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public AnalysisPluginInterface.ReturnValue filter() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public AnalysisPluginInterface.ReturnValue mapInit() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        /** do nothing */
+        return null;
     }
 
     @Override
     public AnalysisPluginInterface.ReturnValue reduceInit() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public AnalysisPluginInterface.ReturnValue verifyOutput() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public AnalysisPluginInterface.ReturnValue cleanup() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        /** do nothing */
+        return null;
     }
 
     @Override
     public FeatureSet getFinalResult() {
+        super.performInMemoryRun();
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("").build()).build();
         for(Feature f : accumulator){
@@ -101,7 +68,7 @@ public class InMemoryFeaturesByReferencePlugin extends MapReducePlugin<Feature, 
 
     @Override
     public ReturnValue map(Feature atom, FeatureSet mappedSet) {
-        if (this.getInputFeatureSet().getReference().equals(reference)){
+        if (inputSet.getReference().equals(reference)){
             Feature build = atom.toBuilder().build();
             accumulator.add(build);
         }

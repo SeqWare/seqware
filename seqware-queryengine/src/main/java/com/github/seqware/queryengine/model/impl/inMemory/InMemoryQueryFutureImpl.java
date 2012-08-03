@@ -17,11 +17,8 @@
 package com.github.seqware.queryengine.model.impl.inMemory;
 
 import com.github.seqware.queryengine.model.Analysis;
-import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
-import com.github.seqware.queryengine.plugins.MapReducePlugin;
-import com.github.seqware.queryengine.plugins.ScanPlugin;
 
 /**
  *
@@ -37,32 +34,12 @@ public class InMemoryQueryFutureImpl extends Analysis {
 
     @Override
     public FeatureSet get() {
-        // these implementations actually make no sense, we are just filling 
-        // something in for now 
-        if (plugin instanceof MapReducePlugin){
-            MapReducePlugin mrp = (MapReducePlugin)plugin;
-
-            // TODO Set of mapped features is currently not used.
-            for (Feature f : ((MapReducePlugin) plugin).getInputFeatureSet())
-                mrp.map(f, null);
-            for (Feature f : ((MapReducePlugin) plugin).getInputFeatureSet())
-                mrp.reduce(null, null);
-        } else if (plugin instanceof ScanPlugin){
-            ScanPlugin sp = (ScanPlugin)plugin;
-
-            // TODO Result set of scan is null for now...
-            for (Feature f : ((MapReducePlugin) plugin).getInputFeatureSet())
-                sp.scan(f, null);
-        } else{
-            // we have no other types of plugins yet(?)
-            assert(false);
-        }
         return getPlugin().getFinalResult();
     }
 
     @Override
     public boolean isDone() {
-        return true;
+        return getPlugin().isComplete();
     }
 
     /**

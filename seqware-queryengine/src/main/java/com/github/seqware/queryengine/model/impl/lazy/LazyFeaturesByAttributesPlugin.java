@@ -21,7 +21,7 @@ import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.plugins.MapReducePlugin;
+import com.github.seqware.queryengine.model.impl.inMemory.AbstractMRInMemoryPlugin;
 
 /**
  * Generic query implementation over all attributes of a Feature (including additional attributes).
@@ -30,7 +30,7 @@ import com.github.seqware.queryengine.plugins.MapReducePlugin;
  * @author dyuen
  * @author jbaran
  */
-public class LazyFeaturesByAttributesPlugin extends MapReducePlugin<Feature, FeatureSet> {
+public class LazyFeaturesByAttributesPlugin extends AbstractMRInMemoryPlugin {
 
     private RPNStack rpnStack;
     private FeatureSet set;
@@ -48,33 +48,9 @@ public class LazyFeaturesByAttributesPlugin extends MapReducePlugin<Feature, Fea
     }
 
     @Override
-    public ReturnValue test() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ReturnValue verifyParameters() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ReturnValue verifyInput() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ReturnValue filterInit() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ReturnValue filter() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public ReturnValue mapInit() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        /** do nothing */
+        return null;
     }
 
     @Override
@@ -94,7 +70,8 @@ public class LazyFeaturesByAttributesPlugin extends MapReducePlugin<Feature, Fea
 
     @Override
     public ReturnValue reduceInit() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        /** do nothing */
+        return null;
     }
 
     @Override
@@ -104,18 +81,9 @@ public class LazyFeaturesByAttributesPlugin extends MapReducePlugin<Feature, Fea
     }
 
     @Override
-    public ReturnValue verifyOutput() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ReturnValue cleanup() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public FeatureSet getFinalResult() {
+        super.performInMemoryRun();
         manager.close();
-        return set;
+        return SWQEFactory.getQueryInterface().getLatestAtomBySGID(set.getSGID(), FeatureSet.class);
     }
 }

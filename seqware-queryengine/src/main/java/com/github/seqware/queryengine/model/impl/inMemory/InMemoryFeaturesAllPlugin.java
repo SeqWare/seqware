@@ -29,55 +29,32 @@ import java.util.Set;
  *
  * @author dyuen
  */
-public class InMemoryFeaturesAllPlugin extends MapReducePlugin<Feature, FeatureSet> {
+public class InMemoryFeaturesAllPlugin extends AbstractMRInMemoryPlugin {
 
     private Set<Feature> accumulator = new HashSet<Feature>();
 
+    @Override
     public AnalysisPluginInterface.ReturnValue init(FeatureSet inputSet, Object... parameters) {
         this.inputSet = inputSet;
         return new AnalysisPluginInterface.ReturnValue();
     }
 
-    public AnalysisPluginInterface.ReturnValue test() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public AnalysisPluginInterface.ReturnValue verifyParameters() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public AnalysisPluginInterface.ReturnValue verifyInput() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public AnalysisPluginInterface.ReturnValue filterInit() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public AnalysisPluginInterface.ReturnValue filter() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
+    @Override
     public AnalysisPluginInterface.ReturnValue mapInit() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        /** do nothing */
+        return null;
     }
 
 
-
+    @Override
     public AnalysisPluginInterface.ReturnValue reduceInit() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public AnalysisPluginInterface.ReturnValue verifyOutput() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public AnalysisPluginInterface.ReturnValue cleanup() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        /** do nothing */
+        return null;
     }
 
     @Override
     public FeatureSet getFinalResult() {
+        super.performInMemoryRun();
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("ad_hoc_analysis").build()).build();
         for(Feature f : accumulator){
