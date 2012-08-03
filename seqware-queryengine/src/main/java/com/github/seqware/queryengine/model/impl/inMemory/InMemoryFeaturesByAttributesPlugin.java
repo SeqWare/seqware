@@ -21,7 +21,6 @@ import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.plugins.MapReducePlugin;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,7 +30,7 @@ import java.util.Set;
  * @author dyuen
  * @author jbaran
  */
-public class InMemoryFeaturesByAttributesPlugin extends MapReducePlugin<Feature, FeatureSet> {
+public class InMemoryFeaturesByAttributesPlugin extends AbstractMRInMemoryPlugin {
 
     private RPNStack rpnStack;
     private Set<Feature> accumulator = new HashSet<Feature>();
@@ -41,36 +40,6 @@ public class InMemoryFeaturesByAttributesPlugin extends MapReducePlugin<Feature,
         this.inputSet = inputSet;
         this.rpnStack = (RPNStack)parameters[0];
         return new ReturnValue();
-    }
-
-    @Override
-    public ReturnValue test() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ReturnValue verifyParameters() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ReturnValue verifyInput() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ReturnValue filterInit() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ReturnValue filter() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ReturnValue mapInit() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -89,28 +58,14 @@ public class InMemoryFeaturesByAttributesPlugin extends MapReducePlugin<Feature,
     }
 
     @Override
-    public ReturnValue reduceInit() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public ReturnValue reduce(FeatureSet mappedSet, FeatureSet resultSet) {
         // doesn't really do anything
         return new ReturnValue();
     }
 
     @Override
-    public ReturnValue verifyOutput() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ReturnValue cleanup() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public FeatureSet getFinalResult() {
+        super.performInMemoryRun();
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("ad_hoc_analysis").build()).build();
         for(Feature f : accumulator){
@@ -119,5 +74,17 @@ public class InMemoryFeaturesByAttributesPlugin extends MapReducePlugin<Feature,
         fSet.add(accumulator);
         mManager.close();
         return fSet;
+    }
+
+    @Override
+    public ReturnValue reduceInit() {
+        // doesn't really do anything
+        return new ReturnValue();
+    }
+
+    @Override
+    public ReturnValue mapInit() {
+        // doesn't really do anything
+        return new ReturnValue();
     }
 }

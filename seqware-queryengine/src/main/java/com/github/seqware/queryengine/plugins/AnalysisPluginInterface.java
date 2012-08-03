@@ -35,7 +35,13 @@ import com.github.seqware.queryengine.model.FeatureSet;
  */
 public interface AnalysisPluginInterface {
 
-    // need to think about settings, logger, and other util objects
+    /**
+     * Initialize this plug-in, this is called once when the plug-in is starting
+     * a job
+     * @param set input feature set that we will be operating on
+     * @param parameters parameters that the plug-in will require
+     * @return 
+     */
     public ReturnValue init(FeatureSet set, Object ... parameters);
 
     public ReturnValue test();
@@ -52,6 +58,16 @@ public interface AnalysisPluginInterface {
 
     public ReturnValue cleanup();
     
+    /**
+     * Non-blocking call to determine whether the result is ready
+     * @return 
+     */
+    public boolean isComplete();
+    
+    /**
+     * Blocking call to get the final result of the plug-in
+     * @return feature set containing results of the analysis
+     */
     public FeatureSet getFinalResult();
     
     public class ReturnValue{

@@ -11,16 +11,7 @@ import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
  *
  * @author jbaran
  */
-public abstract class MapReducePlugin<T extends Atom, S extends MolSetInterface> implements AnalysisPluginInterface {
-
-    protected FeatureSet inputSet;
-
-    /**
-     * Returns the feature set on which the map-reduce is carried out on.
-     */
-    public FeatureSet getInputFeatureSet() {
-        return this.inputSet;
-    }
+public interface MapReducePlugin<T extends Atom, S extends MolSetInterface> extends AnalysisPluginInterface {
 
     /**
      * Mapping implementation that singles out desired atoms into a mapped set.

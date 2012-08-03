@@ -28,11 +28,12 @@ import com.github.seqware.queryengine.tutorial.MapReduceFeaturesAll;
  *
  * @author dyuen
  */
-public class MRFeaturesAllPlugin extends MapReducePlugin<Feature, FeatureSet> {
+public class MRFeaturesAllPlugin implements MapReducePlugin<Feature, FeatureSet> {
 
     private FeatureSet outputSet;
     private CreateUpdateManager manager;
-    
+    private FeatureSet inputSet;
+
     @Override
     public AnalysisPluginInterface.ReturnValue init(FeatureSet inputSet, Object... parameters) {
         this.manager = SWQEFactory.getModelManager();
@@ -45,48 +46,74 @@ public class MRFeaturesAllPlugin extends MapReducePlugin<Feature, FeatureSet> {
 
     @Override
     public AnalysisPluginInterface.ReturnValue test() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        /**
+         * do nothing
+         */
+        return null;
     }
-    
+
     @Override
     public AnalysisPluginInterface.ReturnValue verifyParameters() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        /**
+         * do nothing
+         */
+        return null;
     }
-    
-    
+
     @Override
     public AnalysisPluginInterface.ReturnValue verifyInput() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        /**
+         * do nothing
+         */
+        return null;
     }
 
-    @Override    
+    @Override
     public AnalysisPluginInterface.ReturnValue filterInit() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        /**
+         * do nothing
+         */
+        return null;
     }
 
-    @Override    
+    @Override
     public AnalysisPluginInterface.ReturnValue filter() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        /**
+         * do nothing
+         */
+        return null;
     }
-    
+
     @Override
     public AnalysisPluginInterface.ReturnValue mapInit() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        /**
+         * do nothing
+         */
+        return null;
     }
 
     @Override
     public AnalysisPluginInterface.ReturnValue reduceInit() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        /**
+         * do nothing
+         */
+        return null;
     }
 
-    @Override    
+    @Override
     public AnalysisPluginInterface.ReturnValue verifyOutput() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        /**
+         * do nothing
+         */
+        return null;
     }
 
     @Override
     public AnalysisPluginInterface.ReturnValue cleanup() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        /**
+         * do nothing
+         */
+        return null;
     }
 
     @Override
@@ -100,7 +127,7 @@ public class MRFeaturesAllPlugin extends MapReducePlugin<Feature, FeatureSet> {
 
     @Override
     public ReturnValue map(Feature atom, FeatureSet mappedSet) {
-       // doesn't really do anything
+        // doesn't really do anything
         return new AnalysisPluginInterface.ReturnValue();
     }
 
@@ -108,5 +135,10 @@ public class MRFeaturesAllPlugin extends MapReducePlugin<Feature, FeatureSet> {
     public ReturnValue reduce(FeatureSet mappedSet, FeatureSet resultSet) {
         // doesn't really do anything
         return new AnalysisPluginInterface.ReturnValue();
+    }
+
+    @Override
+    public boolean isComplete() {
+        return true;
     }
 }
