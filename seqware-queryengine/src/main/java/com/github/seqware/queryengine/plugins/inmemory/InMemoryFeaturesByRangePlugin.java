@@ -21,6 +21,7 @@ import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryInterface;
+import com.github.seqware.queryengine.model.QueryInterface.Location;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,26 +59,7 @@ public class InMemoryFeaturesByRangePlugin extends AbstractMRInMemoryPlugin {
 
     @Override
     public ReturnValue map(Feature atom, FeatureSet mappedSet) {
-        boolean match = false;
-
-        switch (this.location) {
-            case OVERLAPS:
-                match = atom.getSeqid().equals(this.structure) &&
-                        (atom.getStart() >= this.start && atom.getStart() <= this.stop || atom.getStop() >= this.start && atom.getStop() <= this.stop);
-                break;
-            case EXCLUDES:
-                match = !atom.getSeqid().equals(this.structure) ||
-                        (atom.getSeqid().equals(this.structure) && atom.getStart() <= this.start && atom.getStop() >= this.stop);
-                break;
-            case INCLUDES:
-                match = atom.getSeqid().equals(this.structure) && atom.getStart() >= this.start && atom.getStop() <= this.stop;
-                break;
-            case EXACT:
-                match = atom.getSeqid().equals(this.structure) && atom.getStart() == this.start && atom.getStop() == this.stop;
-                break;
-            default:
-                throw new UnsupportedOperationException("This range restriction on chromosomal locations has not been implemented yet.");
-        }
+        boolean match = matchRange(atom, location, structure, start, stop);
 
         if (match) {
             Feature build = atom.toBuilder().build();
@@ -85,6 +67,29 @@ public class InMemoryFeaturesByRangePlugin extends AbstractMRInMemoryPlugin {
         }
 
         return new ReturnValue();
+    }
+
+    public static boolean matchRange(Feature atom, Location location, String structure, long start, long stop) throws UnsupportedOperationException {
+        boolean match = false;
+        switch (location) {
+            case OVERLAPS:
+                match = atom.getSeqid().equals(structure) &&
+                        (atom.getStart() >= start && atom.getStart() <= stop || atom.getStop() >= start && atom.getStop() <= stop);
+                break;
+            case EXCLUDES:
+                match = !atom.getSeqid().equals(structure) ||
+                        (atom.getSeqid().equals(structure) && atom.getStart() <= start && atom.getStop() >= stop);
+                break;
+            case INCLUDES:
+                match = atom.getSeqid().equals(structure) && atom.getStart() >= start && atom.getStop() <= stop;
+                break;
+            case EXACT:
+                match = atom.getSeqid().equals(structure) && atom.getStart() == start && atom.getStop() == stop;
+                break;
+            default:
+                throw new UnsupportedOperationException("This range restriction on chromosomal locations has not been implemented yet.");
+        }
+        return match;
     }
 
     @Override

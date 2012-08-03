@@ -33,7 +33,7 @@ import com.github.seqware.queryengine.model.FeatureSet;
  *
  * @author boconnor
  */
-public interface AnalysisPluginInterface {
+public interface AnalysisPluginInterface<T> {
 
     /**
      * Initialize this plug-in, this is called once when the plug-in is starting
@@ -66,9 +66,9 @@ public interface AnalysisPluginInterface {
     
     /**
      * Blocking call to get the final result of the plug-in
-     * @return feature set containing results of the analysis
+     * @return T containing results of the analysis
      */
-    public FeatureSet getFinalResult();
+    public T getFinalResult();
     
     public class ReturnValue{
         

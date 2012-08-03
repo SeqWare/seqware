@@ -44,17 +44,24 @@ public class InMemoryFeaturesByAttributesPlugin extends AbstractMRInMemoryPlugin
 
     @Override
     public ReturnValue map(Feature feature, FeatureSet mappedSet) {
-        // Get the parameters from the RPN stack and replace them with concrete values:
-        for (Object parameter : rpnStack.getParameters())
-            rpnStack.setParameter(parameter, feature.getAttribute((String)parameter));
+        boolean result = matchFeature(feature, rpnStack);
 
         // Now carry out the actual evaluation that determines whether f is relevant:
-        if ((Boolean)rpnStack.evaluate() == true){
+        if (result){
             Feature build = feature.toBuilder().build();
             accumulator.add(build);
         }
 
         return new ReturnValue();
+    }
+
+    public static boolean matchFeature(Feature feature, RPNStack rpnStack) {
+        // Get the parameters from the RPN stack and replace them with concrete values:
+        for (Object parameter : rpnStack.getParameters()){
+            rpnStack.setParameter(parameter, feature.getAttribute((String)parameter));
+        }
+        boolean result = (Boolean)rpnStack.evaluate();
+        return result;
     }
 
     @Override

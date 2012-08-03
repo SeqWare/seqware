@@ -17,23 +17,22 @@
 package com.github.seqware.queryengine.model.impl.inMemory;
 
 import com.github.seqware.queryengine.model.Analysis;
-import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 
 /**
  *
  * @author dyuen
  */
-public class InMemoryQueryFutureImpl extends Analysis {
+public class InMemoryQueryFutureImpl<T> extends Analysis {
     
-    private transient AnalysisPluginInterface plugin;
+    private transient AnalysisPluginInterface<T> plugin;
 
     public InMemoryQueryFutureImpl() {
         super();
     }
 
     @Override
-    public FeatureSet get() {
+    public T get() {
         return getPlugin().getFinalResult();
     }
 
@@ -60,7 +59,7 @@ public class InMemoryQueryFutureImpl extends Analysis {
     }
 
     @Override
-    public AnalysisPluginInterface getPlugin() {
+    public AnalysisPluginInterface<T> getPlugin() {
         return plugin;
     }
 

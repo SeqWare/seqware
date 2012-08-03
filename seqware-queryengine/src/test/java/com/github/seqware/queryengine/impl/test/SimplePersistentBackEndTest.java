@@ -72,7 +72,7 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
             Assert.assertTrue("Backend could not store the given FeatureSet.", false);
         }
 
-        QueryFuture queryFuture = backend.getFeaturesByAttributes(1, bSet, new RPNStack(
+        QueryFuture<FeatureSet> queryFuture = backend.getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant("chr16"),
                 "seqid",
                 Operation.EQUAL

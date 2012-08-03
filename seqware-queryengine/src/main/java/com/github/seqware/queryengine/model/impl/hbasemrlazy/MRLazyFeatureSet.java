@@ -1,7 +1,9 @@
 package com.github.seqware.queryengine.model.impl.hbasemrlazy;
 
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
+import com.github.seqware.queryengine.model.QueryFuture;
 import com.github.seqware.queryengine.model.impl.LazyMolSet;
 import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
 import com.github.seqware.queryengine.tutorial.MapReduceFeatureSetCounter;
@@ -23,9 +25,8 @@ public class MRLazyFeatureSet extends LazyFeatureSet implements LazyMolSet<Featu
 
     @Override
     public long getCount() {
-        // let's experiment with using Map/Reduce for counting
-        Long cnt = MapReduceFeatureSetCounter.getCountForFeatureSet(this);   
-        return cnt;
+        QueryFuture<Long> featureSetCount = SWQEFactory.getQueryInterface().getFeatureSetCount(0, this);
+        return featureSetCount.get();
     }
 
     public static FeatureSet.Builder newBuilder() {

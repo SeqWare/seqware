@@ -1,6 +1,7 @@
 package com.github.seqware.queryengine.kernel;
 
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -8,7 +9,7 @@ import java.util.*;
  *
  * @author jbaran
  */
-public class RPNStack {
+public class RPNStack implements Serializable {
 
     private List<Object> stack;
     private Map<Object, Integer> parameters = new HashMap<Object, Integer>();

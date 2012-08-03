@@ -22,14 +22,14 @@ package com.github.seqware.queryengine.model;
  *
  * @author dyuen
  */
-public interface QueryFuture {
+public interface QueryFuture<ReturnType> {
 
     /**
      * Blocking call to retrieve results of a query
      *
-     * @return FeatureSet with desired results, null in case of failure?
+     * @return object with desired results, null in case of failure?
      */
-    public FeatureSet get();
+    public ReturnType get();
 
     /**
      * Returns true iff the query is ready with its results.

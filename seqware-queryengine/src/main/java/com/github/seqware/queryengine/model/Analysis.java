@@ -1,21 +1,21 @@
 package com.github.seqware.queryengine.model;
 
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
+import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * An Analysis object represents specific calls to analysis components, most of
- * which will be implemented as an analysis plugin on the backend. An example
- * would be a coding consequence plugin.
+ * which will be implemented as an analysis plug-in on the backend. An example
+ * would be a coding consequence plug-in.
  *
  * @author dyuen
  */
-public abstract class Analysis extends MoleculeImpl<Analysis> implements QueryFuture {
+public abstract class Analysis<ReturnType> extends MoleculeImpl<Analysis> implements QueryFuture<ReturnType> {
 
     public final static String prefix = "Analysis";
     private List<Object> parameters = new ArrayList<Object>();
@@ -45,7 +45,7 @@ public abstract class Analysis extends MoleculeImpl<Analysis> implements QueryFu
     public abstract AnalysisPluginInterface getPlugin();
 
     @Override
-    public abstract FeatureSet get();
+    public abstract ReturnType get();
 
     @Override
     public abstract boolean isDone();
@@ -54,9 +54,9 @@ public abstract class Analysis extends MoleculeImpl<Analysis> implements QueryFu
     public abstract Analysis.Builder toBuilder();
 
     /**
-     * Set up the analysis plugin
+     * Set up the analysis plug-in
      *
-     * @param plugin Set the plugin used to create this plugin (should be in the builder)
+     * @param plugin Set the plug-in used to create this plug-in (should be in the builder)
      */
     protected abstract void setPlugin(AnalysisPluginInterface plugin);
 
