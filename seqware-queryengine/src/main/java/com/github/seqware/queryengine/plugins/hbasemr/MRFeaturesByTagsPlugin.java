@@ -16,20 +16,14 @@
  */
 package com.github.seqware.queryengine.plugins.hbasemr;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.KryoException;
-import com.esotericsoftware.kryo.io.Output;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.QueryInterface.Location;
 import com.github.seqware.queryengine.model.impl.FeatureList;
-import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByRangePlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByTagPlugin;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;

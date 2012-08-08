@@ -22,7 +22,6 @@ import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.model.impl.inMemory.InMemoryQueryFutureImpl;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
-import com.github.seqware.queryengine.plugins.hbasemr.MRFeatureSetCountPlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByRangePlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByReferencePlugin;

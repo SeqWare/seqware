@@ -16,18 +16,13 @@
  */
 package com.github.seqware.queryengine.plugins.hbasemr;
 
-import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.KryoException;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.FeatureSet;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import com.github.seqware.queryengine.util.SGID;
+import java.util.Date;
 import org.apache.commons.lang.SerializationUtils;
-import org.objenesis.strategy.SerializingInstantiatorStrategy;
-import org.objenesis.strategy.StdInstantiatorStrategy;
 
 /**
  * This plug-in abstracts plug-ins that use a model manager to keep track of
@@ -71,7 +66,17 @@ public abstract class AbstractMRHBaseBatchedPlugin extends AbstractMRHBasePlugin
     public FeatureSet variableResult() {
         // after processing, outputSet will actually have been versioned several times, we need the latest one
         FeatureSet latestAtomBySGID = SWQEFactory.getQueryInterface().getLatestAtomBySGID(outputSet.getSGID(), FeatureSet.class);
-        return latestAtomBySGID;
+//        //TODO: remove the need for this hacky hack, there is some versioning issue here
+        CreateUpdateManager modelManager = SWQEFactory.getModelManager();
+        SGID sgid = latestAtomBySGID.getSGID();
+        sgid.setBackendTimestamp(new Date());
+        FeatureSet build = latestAtomBySGID.toBuilder().build();
+        build.impersonate(sgid, latestAtomBySGID.getSGID());
+        build.setPrecedingVersion(build);
+        modelManager.persist(build);
+        modelManager.close();
+        return build;
+        //return latestAtomBySGID;
     }
     
 }

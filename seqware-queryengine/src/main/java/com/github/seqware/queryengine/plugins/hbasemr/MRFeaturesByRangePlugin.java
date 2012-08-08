@@ -29,8 +29,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.client.Result;
@@ -39,6 +37,7 @@ import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.log4j.Logger;
 
 /**
  * Implements queries by range operations
@@ -63,7 +62,7 @@ public class MRFeaturesByRangePlugin extends AbstractMRHBaseBatchedPlugin {
                     job);
             job.setNumReduceTasks(0);
         } catch (IOException ex) {
-            Logger.getLogger(MRFeaturesByRangePlugin.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MRFeaturesByRangePlugin.class.getName()).fatal(null, ex);
         }
     }
 
@@ -94,6 +93,12 @@ public class MRFeaturesByRangePlugin extends AbstractMRHBaseBatchedPlugin {
             this.structure = (String) parameters[1];
             this.start = (Long) parameters[2];
             this.stop = (Long) parameters[3];
+            
+            Logger.getLogger(MRFeaturesByRangePlugin.class.getName()).info("    Value of fSet is " + destSet.toString());
+            Logger.getLogger(MRFeaturesByRangePlugin.class.getName()).info("    Value of fSet.getSGID is " + destSet.getSGID().toString());
+            Logger.getLogger(MRFeaturesByRangePlugin.class.getName()).info("    Value of fSet.getReferenceSGID is " + destSet.getReferenceID().toString());
+            Logger.getLogger(MRFeaturesByRangePlugin.class.getName()).info("    Value of fSet.getReference() is " + destSet.getReference().toString());
+            Logger.getLogger(MRFeaturesByRangePlugin.class.getName()).info("    Value of fSet.getReferenceSGID().getName() is " + destSet.getReference().getName().toString());
 
             this.modelManager = SWQEFactory.getModelManager();
             this.modelManager.persist(destSet);

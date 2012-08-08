@@ -95,6 +95,9 @@ public class FSGID extends SGID implements KryoSerializable {
         } catch (Exception ex) {
             Logger.getLogger(FSGID.class.getName()).log(Level.SEVERE, null, ex);
             System.err.println("Could not upgrade SGID on Feature " + f.getSGID() + " due to location out of bounds");
+            System.err.println("    Value of fSet is " + fSet.toString());
+            System.err.println("    Value of f is " + f.toString());
+            System.err.println("    Value of fSet.getSGID is " + fSet.getSGID().toString());
         }
     }
 

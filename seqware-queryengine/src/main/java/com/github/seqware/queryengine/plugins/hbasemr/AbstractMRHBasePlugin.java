@@ -54,9 +54,16 @@ public abstract class AbstractMRHBasePlugin<T> implements MapReducePlugin<Featur
     @Override
     public AnalysisPluginInterface.ReturnValue init(FeatureSet inputSet, Object... parameters) {
         try {
+            
+            
             this.manager = SWQEFactory.getModelManager();
             //outputSet should attach to the original reference
-            outputSet = manager.buildFeatureSet().setReferenceID(inputSet.getReferenceID()).build();
+            outputSet = manager.buildFeatureSet().setReferenceID(inputSet.getReferenceID()).build();       
+//            Logger.getLogger(AbstractMRHBasePlugin.class.getName()).info("    Value of fSet is " + outputSet.toString());
+//            Logger.getLogger(AbstractMRHBasePlugin.class.getName()).info("    Value of fSet.getSGID is " + outputSet.getSGID().toString());
+//            Logger.getLogger(AbstractMRHBasePlugin.class.getName()).info("    Value of fSet.getReferenceSGID is " + outputSet.getReferenceID().toString());
+//            Logger.getLogger(AbstractMRHBasePlugin.class.getName()).info("    Value of fSet.getReference() is " + outputSet.getReference().toString());
+//            Logger.getLogger(AbstractMRHBasePlugin.class.getName()).info("    Value of fSet.getReferenceSGID().getName() is " + outputSet.getReference().getName().toString());
             manager.close();
 
             // do setup for Map/Reduce from the HBase API
@@ -70,6 +77,7 @@ public abstract class AbstractMRHBasePlugin<T> implements MapReducePlugin<Featur
 
             Configuration conf = HBaseConfiguration.create();
             HBaseStorage.configureHBaseConfig(conf);
+            HBaseConfiguration.addHbaseResources(conf);
 
             // we need to pass the parameters for a featureset, maybe we can take advantage of our serializers
             byte[] sSet = SWQEFactory.getSerialization().serialize(inputSet);
@@ -80,12 +88,12 @@ public abstract class AbstractMRHBasePlugin<T> implements MapReducePlugin<Featur
             str_params[0] = Base64.encodeBase64String(serials);
             str_params[1] = Base64.encodeBase64String(sSet);
             str_params[2] = Base64.encodeBase64String(dSet);
-
-
+            
+            conf.setStrings("tmpjars", Constants.DEVELOPMENT_DEPENDENCY);
             conf.setStrings(PARAMETERS, str_params);
 
             this.job = new Job(conf, this.getClass().getSimpleName());
-
+            
             Scan scan = new Scan();
             scan.setMaxVersions();       // we need all version data
             scan.setCaching(500);        // 1 is the default in Scan, which will be bad for MapReduce jobs
@@ -93,18 +101,18 @@ public abstract class AbstractMRHBasePlugin<T> implements MapReducePlugin<Featur
 
             // handle the part that changes from job to job
             performVariableInit(tableName, destTableName, scan);
-
-            job.setJarByClass(AbstractMRHBasePlugin.class);
+            
             TableMapReduceUtil.addDependencyJars(job);
+            job.setJarByClass(AbstractMRHBasePlugin.class);
             // submit the job, but do not block
             job.submit();
             return new AnalysisPluginInterface.ReturnValue();
         } catch (InterruptedException ex) {
-            java.util.logging.Logger.getLogger(AbstractMRHBasePlugin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(AbstractMRHBasePlugin.class.getName()).fatal(java.util.logging.Level.SEVERE, ex);
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AbstractMRHBasePlugin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(AbstractMRHBasePlugin.class.getName()).fatal(java.util.logging.Level.SEVERE, ex);
         } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(AbstractMRHBasePlugin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(AbstractMRHBasePlugin.class.getName()).fatal(java.util.logging.Level.SEVERE, ex);
         }
         return null;
     }
