@@ -27,8 +27,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.client.Result;
@@ -37,6 +35,7 @@ import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.log4j.Logger;
 
 /**
  * Implements the "get all features in a feature set" query
@@ -59,7 +58,7 @@ public class MRFeaturesAllPlugin extends AbstractMRHBaseBatchedPlugin{
                     job);
             job.setNumReduceTasks(0);
         } catch (IOException ex) {
-            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).fatal(null, ex);
         }
     }
 
@@ -87,12 +86,19 @@ public class MRFeaturesAllPlugin extends AbstractMRHBaseBatchedPlugin{
             this.sourceSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[0]), FeatureSet.class);
             this.destSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[1]), FeatureSet.class);
 
+            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).info("    Value of fSet is " + destSet.toString());
+            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).info("    Value of fSet.getSGID is " + destSet.getSGID().toString());
+            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).info("    Value of fSet.getReferenceSGID is " + destSet.getReferenceID().toString());
+            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).info("    Value of fSet.getReference() is " + destSet.getReference().toString());
+            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).info("    Value of fSet.getReference().getName() is " + destSet.getReference().getName().toString());
+            
             this.modelManager = SWQEFactory.getModelManager();
             this.modelManager.persist(destSet);
         }
 
         @Override
         protected void cleanup(Mapper.Context context) {
+            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).info("Cleanup");
             this.modelManager.close();
         }
 

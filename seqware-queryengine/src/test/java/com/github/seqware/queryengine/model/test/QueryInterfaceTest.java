@@ -56,15 +56,33 @@ public class QueryInterfaceTest implements Benchmarking {
 
     @Test
     public void testGetFeatures() {
-        // get a FeatureSet from the back-end
+        // get a FeatureSet from the back-end without creating a new set
+        FeatureSet atomBySGID = SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, aSet.getSGID());
+        boolean b1 = false;
+        boolean b2 = false;
+        boolean b3 = false;
+        for (Feature f : atomBySGID) {
+            // sadly, Features no longer will be exactly the same after a query, queries generate new features
+            // in new FeatureSets
+            if (f.getStart() == a1.getStart() && f.getStop() == a1.getStop()) {
+                b1 = true;
+            } else if (f.getStart() == a2.getStart() && f.getStop() == a2.getStop()) {
+                b2 = true;
+            } else if (f.getStart() == a3.getStart() && f.getStop() == a3.getStop()) {
+                b3 = true;
+            }
+        }
+        Assert.assertTrue(atomBySGID.getCount() + " features did not match via query interface getAtomBySGID()", b1 && b2 && b3);
+        
+        // get a FeatureSet from the back-end while creating a new set
         QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeatures(0, aSet);
 
         // check that Features are present match
         FeatureSet result = future.get();
 
-        boolean b1 = false;
-        boolean b2 = false;
-        boolean b3 = false;
+        b1 = false;
+        b2 = false;
+        b3 = false;
         for (Feature f : result) {
             // sadly, Features no longer will be exactly the same after a query, queries generate new features
             // in new FeatureSets
@@ -76,7 +94,7 @@ public class QueryInterfaceTest implements Benchmarking {
                 b3 = true;
             }
         }
-        Assert.assertTrue(b1 && b2 && b3);
+        Assert.assertTrue(result.getCount() + " features did not match via query interface getFeatures() plug-in ", b1 && b2 && b3);
 
         if (BENCHMARK) {
             future = SWQEFactory.getQueryInterface().getFeatures(0, benchmarkSet);
@@ -129,7 +147,7 @@ public class QueryInterfaceTest implements Benchmarking {
 
         FeatureSet result = future.get();
 
-        Assert.assertTrue("Number of returned features within the given range does not match the number of features that were stored there.", result.getCount() == featuresInRange);
+        Assert.assertTrue("Number of returned features within the given range does not match the number of features that were stored there, expected " + featuresInRange + ", got " + result.getCount(), result.getCount() == featuresInRange);
 
         if (BENCHMARK) {
             future = SWQEFactory.getQueryInterface().getFeaturesByRange(0, benchmarkSet, QueryInterface.Location.INCLUDES, "chr1", 10000, 100000);
@@ -148,7 +166,8 @@ public class QueryInterfaceTest implements Benchmarking {
         for (Feature f : result) {
             Assert.assertTrue(f.getType().equals("type1"));
         }
-        Assert.assertTrue("Query results wrong, expected 1 and found " + result.getCount(), result.getCount() == 1);
+        int count = (int) result.getCount();
+        Assert.assertTrue("Query results wrong, expected 1 and found " + count, count == 1);
     }
 
     @Test
@@ -167,14 +186,16 @@ public class QueryInterfaceTest implements Benchmarking {
                 "seqid",
                 Operation.EQUAL));
         FeatureSet resultSet = queryFuture.get();
-        junit.framework.Assert.assertTrue("Setting a query constraints with 1 operation on 'id' failed, expected 10 and found " + resultSet.getCount(), resultSet.getCount() == 10);
+        int count = (int) resultSet.getCount();
+        junit.framework.Assert.assertTrue("Setting a query constraints with 1 operation on 'id' failed, expected 10 and found " + count, count == 10);
 
         queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant(Feature.Strand.NEGATIVE),
                 "strand",
                 Operation.EQUAL));
         resultSet = queryFuture.get();
-        junit.framework.Assert.assertTrue("Setting a query constraints with 1 operation on 'strand' failed.", resultSet.getCount() == 3);
+        count = (int) resultSet.getCount();
+        junit.framework.Assert.assertTrue("Setting a query constraints with 1 operation on 'strand' failed, expected 3 and found " + count, count == 3);
 
         queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant(Feature.Strand.NEGATIVE),
@@ -185,6 +206,7 @@ public class QueryInterfaceTest implements Benchmarking {
                 Operation.EQUAL,
                 Operation.AND));
         resultSet = queryFuture.get();
-        junit.framework.Assert.assertTrue("Setting a query constraints with 3 operations failed.", resultSet.getCount() == 2);
+        count = (int) resultSet.getCount();
+        junit.framework.Assert.assertTrue("Setting a query constraints with 3 operations failed, expected 2 and found " + count, count == 2);
     }
 }

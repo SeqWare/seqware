@@ -28,6 +28,19 @@ import java.util.Map;
 public class Constants {
 
     /**
+     * Sets a prefix for your tables in at least the HBaseStorage back-end, 
+     * change this when developing to avoid name collisions with other developers
+     */
+    public static final String NAMESPACE = "batman";
+
+    /**
+     * Properly set this task if you want your compiled jar files to automatically load in the cluster when
+     * performing map/reduce tasks
+     */
+    public static final String DEVELOPMENT_DEPENDENCY = "file:/home/dyuen/seqware_github/seqware-distribution/target/seqware-queryengine-0.12.0-full.jar";
+
+
+    /**
      * Show the rather verbose map/reduce messages
      */
     public final static boolean MAP_REDUCE_LOGGING = true;
@@ -41,7 +54,7 @@ public class Constants {
      * Use the properties defined for HBase to connect to a remote HBase
      * instance
      */
-    public final static boolean HBASE_REMOTE_TESTING = false;
+    public final static boolean HBASE_REMOTE_TESTING = true;
     private final static Map<String, String> SQWDEV = Maps.newHashMap(
             ImmutableMap.<String, String>builder().
             put("hbase.zookeeper.quorum", "sqwdev.res.oicr.on.ca").
@@ -54,9 +67,10 @@ public class Constants {
             ImmutableMap.<String, String>builder().
             put("hbase.zookeeper.quorum", "hboot.res.oicr.on.ca").
             put("hbase.zookeeper.property.clientPort", "2181").
-            put("hbase.master", "hboot.res:60000").
-            put("mapred.job.tracker", "hboot:8021").
-            put("fs.default.name", "hdfs://hboot:8020").
+            put("hbase.master", "hboot.res.oicr.on.ca:60000").
+            //put("mapred.job.tracker", "local").
+            put("mapred.job.tracker", "hboot.res.oicr.on.ca:8021").
+            put("fs.default.name", "hdfs://hboot.res.oicr.on.ca:8020").
             build());
     /**
      * Properties used when connecting to a remote instance of HBase

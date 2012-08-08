@@ -19,6 +19,7 @@ package com.github.seqware.queryengine.util;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Atom;
 import java.io.Serializable;
+import org.apache.log4j.Logger;
 
 /**
  * Lazy reference class, needed if we wish to reduce the number of random accesses
@@ -28,8 +29,8 @@ import java.io.Serializable;
  */
 public class LazyReference<T extends Atom> implements Serializable {
 
-    protected transient boolean referenceChecked = false;
-    protected transient T referenceCache = null;
+    protected boolean referenceChecked = false;
+    protected T referenceCache = null;
     protected SGID referenceSGID = null;
     protected Class<T> type;
     
@@ -73,8 +74,12 @@ public class LazyReference<T extends Atom> implements Serializable {
      * @return 
      */
     public T get() {
+        //Logger.getLogger(LazyReference.class.getName()).info("Attempting to resolve lazy reference: referenceChecked " + referenceChecked + " referenceSGID " + referenceSGID.getRowKey() + " referenceAddr " + this.referenceCache);
         if (!referenceChecked && referenceSGID != null) {
             this.referenceCache = (T) SWQEFactory.getQueryInterface().getAtomBySGID(type, referenceSGID);
+            if (this.referenceCache == null){
+                Logger.getLogger(LazyReference.class.getName()).error("Unable to retrieve " + referenceSGID.getRowKey() + " as a " + this.type.getSimpleName());
+            }
         }
         referenceChecked = true;
         return this.referenceCache;

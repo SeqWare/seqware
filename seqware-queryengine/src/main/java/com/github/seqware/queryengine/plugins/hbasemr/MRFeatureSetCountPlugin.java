@@ -25,8 +25,6 @@ import com.github.seqware.queryengine.model.impl.FeatureList;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.client.Result;
@@ -36,6 +34,7 @@ import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.output.NullOutputFormat;
+import org.apache.log4j.Logger;
 
 /**
  * Counts the number of Features in a FeatureSet
@@ -56,7 +55,7 @@ public class MRFeatureSetCountPlugin extends AbstractMRHBasePlugin<Long> {
                     job);
             job.setOutputFormatClass(NullOutputFormat.class);   // because we aren't emitting anything from mapper
         } catch (IOException ex) {
-            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).fatal(null, ex);
         }
     }
 
@@ -66,7 +65,7 @@ public class MRFeatureSetCountPlugin extends AbstractMRHBasePlugin<Long> {
             long result = job.getCounters().findCounter(MRFeatureSetCountPlugin.RowCounterMapper.Counters.ROWS).getValue();
             return result;
         } catch (IOException ex) {
-            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).fatal(null, ex);
         }
         return null;
     }
@@ -112,8 +111,13 @@ public class MRFeatureSetCountPlugin extends AbstractMRHBasePlugin<Long> {
                 Mapper.Context context)
                 throws IOException {
             List<FeatureList> list = HBaseStorage.grabFeatureListsGivenRow(values, sourceSet.getSGID(), SWQEFactory.getSerialization());
+            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).info("Counting " + sourceSet.getSGID() + " on row with " + list.size() + " lists");
             Collection<Feature> consolidateRow = SimplePersistentBackEnd.consolidateRow(list);
-            context.getCounter(MRFeatureSetCountPlugin.RowCounterMapper.Counters.ROWS).increment(consolidateRow.size());
+            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).info("Consolidated to  " + consolidateRow.size() + " features");
+            for(Feature f: consolidateRow){
+                // why can't I increment this by the size directly on the cluster?
+                context.getCounter(MRFeatureSetCountPlugin.RowCounterMapper.Counters.ROWS).increment(1);
+            }
         }
     }
 }
