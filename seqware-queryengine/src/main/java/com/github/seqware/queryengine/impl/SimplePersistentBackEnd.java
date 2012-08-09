@@ -32,6 +32,8 @@ import com.github.seqware.queryengine.util.InMemoryIterable;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -43,19 +45,19 @@ import java.util.*;
  */
 public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface {
 
-    private List<AnalysisPluginInterface> apis = new ArrayList<AnalysisPluginInterface>();
-    private StorageInterface fsi;
+    private Map<Class, AnalysisPluginInterface> pluginMap = new HashMap<Class, AnalysisPluginInterface>();
+    protected StorageInterface storage;
 
     public SimplePersistentBackEnd(StorageInterface fsi) {
-        this.fsi = fsi;
-        apis.add(new InMemoryFeaturesAllPlugin());
-        apis.add(new InMemoryFeaturesByReferencePlugin());
-        apis.add(new LazyFeaturesByAttributesPlugin());
+        this.storage = fsi;
+        pluginMap.put(InMemoryFeaturesAllPlugin.class, new InMemoryFeaturesAllPlugin());
+        pluginMap.put(InMemoryFeaturesByReferencePlugin.class, new InMemoryFeaturesByReferencePlugin());
+        pluginMap.put(LazyFeaturesByAttributesPlugin.class, new LazyFeaturesByAttributesPlugin());
     }
 
     @Override
     public void store(Atom... objArr) {
-        fsi.serializeAtomsToTarget(objArr);
+        storage.serializeAtomsToTarget(objArr);
     }
 
     @Override
@@ -92,7 +94,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
 
     @Override
     public Atom getAtomBySGID(SGID sgid) {
-        Atom p = fsi.deserializeTargetToAtom(sgid);
+        Atom p = storage.deserializeTargetToAtom(sgid);
         p = locateWithinFeatureList(p, sgid);
         assert (p == null || p.getSGID().equals(sgid));
         return p;
@@ -100,12 +102,12 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
 
     @Override
     public <T extends Atom> List getAtomsBySGID(Class<T> t, SGID... sgid) {
-        return fsi.deserializeTargetToAtoms(t, sgid);
+        return storage.deserializeTargetToAtoms(t, sgid);
     }
 
     @Override
     public <T extends Atom> T getAtomBySGID(Class<T> t, SGID sgid) {
-        T p = fsi.deserializeTargetToAtom(t, sgid);
+        T p = storage.deserializeTargetToAtom(t, sgid);
         p = (T) locateWithinFeatureList(p, sgid);
         assert (p == null || p.getSGID().equals(sgid));
         return p;
@@ -113,7 +115,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
 
     @Override
     public Atom getLatestAtomBySGID(SGID sgid) {
-        Atom p = fsi.deserializeTargetToLatestAtom(sgid);
+        Atom p = storage.deserializeTargetToLatestAtom(sgid);
         p = locateWithinFeatureList(p, sgid);
         assert (p == null || p.getSGID().getRowKey().equals(sgid.getRowKey()));
         return p;
@@ -121,7 +123,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
 
     @Override
     public <T extends Atom> T getLatestAtomBySGID(SGID sgid, Class<T> t) {
-        T p = fsi.deserializeTargetToLatestAtom(sgid, t);
+        T p = storage.deserializeTargetToLatestAtom(sgid, t);
         assert (p == null || p.getSGID().getRowKey().equals(sgid.getRowKey()));
         return p;
     }
@@ -168,7 +170,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
 
     @Override
     public SeqWareIterable<AnalysisPluginInterface> getAnalysisPlugins() {
-        return new InMemoryIterable(this.apis);
+        return new InMemoryIterable(this.pluginMap.values());
     }
 
     @Override
@@ -208,8 +210,8 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
 
     private SeqWareIterable getAllOfClass(Class aClass) {
         List list = new ArrayList();
-        for (SGID u : fsi.getAllAtoms()) { //listOfEverything) {
-            Atom p = fsi.deserializeTargetToLatestAtom(u);
+        for (SGID u : storage.getAllAtoms()) { //listOfEverything) {
+            Atom p = storage.deserializeTargetToLatestAtom(u);
             if (aClass.isInstance(p)) {
                 list.add(p);
             }
@@ -283,5 +285,24 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     @Override
     public QueryFuture<Long> getFeatureSetCount(int hours, FeatureSet set) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public QueryFuture<FeatureSet> getFeaturesByPlugin(int hours, Class<? extends AnalysisPluginInterface> pluginClass, FeatureSet set, Object... parameters) {
+        try {
+            AnalysisPluginInterface plugin = pluginClass.newInstance();
+            plugin.init(set, parameters);
+            return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
+        } catch (InstantiationException ex) {
+            Logger.getLogger(SimplePersistentBackEnd.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(SimplePersistentBackEnd.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    @Override
+    public void installAnalysisPlugin(AnalysisPluginInterface plugin) {
+        this.pluginMap.put(plugin.getClass(), plugin);
     }
 }

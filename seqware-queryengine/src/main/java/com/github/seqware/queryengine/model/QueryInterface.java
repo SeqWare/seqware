@@ -185,6 +185,21 @@ public interface QueryInterface {
          */
         EXACT
     }
+    
+    /**
+     * Install a plug-in so that it can be listed
+     * @param plugin 
+     */
+    public void installAnalysisPlugin(AnalysisPluginInterface plugin);
+    
+    /**
+     * Call an arbitrary installed plug-in by class and initiate it 
+     * @param hours minimum time to live
+     * @param pluginClass plug-in class to use 
+     * @param parameters parameters to use when initializing the plug-in
+     * @return null if there is an error, QueryFuture if the plug-in is successfully run 
+     */
+    public QueryFuture<FeatureSet> getFeaturesByPlugin(int hours, Class<? extends AnalysisPluginInterface> pluginClass,  FeatureSet set, Object ... parameters);
 
     /**
      * Filter features by a range of attributes.
