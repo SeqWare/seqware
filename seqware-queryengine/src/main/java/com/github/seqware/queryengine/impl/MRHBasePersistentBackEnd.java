@@ -31,11 +31,8 @@ import com.github.seqware.queryengine.plugins.hbasemr.*;
  */
 public class MRHBasePersistentBackEnd extends HBasePersistentBackEnd {
 
-    private StorageInterface storage;
-
     public MRHBasePersistentBackEnd(StorageInterface i) {
         super(i);
-        this.storage = i;
     }
     
     @Override

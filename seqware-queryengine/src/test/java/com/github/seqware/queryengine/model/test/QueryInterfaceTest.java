@@ -4,6 +4,7 @@ import com.github.seqware.model.test.FeatureStoreInterfaceTest;
 import com.github.seqware.queryengine.Benchmarking;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.github.seqware.queryengine.impl.test.SimplePersistentBackEndTest;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.Constant;
@@ -12,6 +13,9 @@ import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
 import com.github.seqware.queryengine.model.QueryInterface;
+import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesByAttributesPlugin;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByAttributesPlugin;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,8 +51,9 @@ public class QueryInterfaceTest implements Benchmarking {
 
         bSet = FeatureStoreInterfaceTest.diverseBSet(mManager);
 
-        if (BENCHMARK)
+        if (BENCHMARK) {
             benchmarkSet = FeatureStoreInterfaceTest.largeTestSet(mManager, BENCHMARK_FEATURES);
+        }
 
         //TODO: this test was somewhat invalid, no flush ... causes error ... we may want a new test case with a nice clean error message
         mManager.flush();
@@ -73,7 +78,7 @@ public class QueryInterfaceTest implements Benchmarking {
             }
         }
         Assert.assertTrue(atomBySGID.getCount() + " features did not match via query interface getAtomBySGID()", b1 && b2 && b3);
-        
+
         // get a FeatureSet from the back-end while creating a new set
         QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeatures(0, aSet);
 
@@ -112,8 +117,9 @@ public class QueryInterfaceTest implements Benchmarking {
 
             FeatureSet result = future.get();
             Iterator<Feature> iterator = result.getFeatures();
-            while (iterator.hasNext())
+            while (iterator.hasNext()) {
                 iterator.next();
+            }
 
             totalTimes[run] = System.currentTimeMillis() - totalTimes[run];
         }
@@ -124,11 +130,11 @@ public class QueryInterfaceTest implements Benchmarking {
 
         long sum = 0;
         for (int run = 0; run < BENCHMARK_RUNS; run++) {
-            System.out.println(" get() + iteration through set " + (run + 1) + ":\t" + totalTimes[run] + "\t(in ms)" );
+            System.out.println(" get() + iteration through set " + (run + 1) + ":\t" + totalTimes[run] + "\t(in ms)");
             sum += totalTimes[run];
         }
 
-        System.out.println(" average:\t" + (1. * sum / totalTimes.length)  + "\t(in ms)" );
+        System.out.println(" average:\t" + (1. * sum / totalTimes.length) + "\t(in ms)");
         System.out.println(" total runtime: " + totalRunTime);
     }
 
@@ -141,9 +147,11 @@ public class QueryInterfaceTest implements Benchmarking {
         QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeaturesByRange(0, bSet, QueryInterface.Location.INCLUDES, structure, start, stop);
 
         int featuresInRange = 0;
-        for (Feature feature : bSet)
-            if (feature.getSeqid().equals(structure) && feature.getStart() >= start && feature.getStop() <= stop)
+        for (Feature feature : bSet) {
+            if (feature.getSeqid().equals(structure) && feature.getStart() >= start && feature.getStop() <= stop) {
                 featuresInRange++;
+            }
+        }
 
         FeatureSet result = future.get();
 
@@ -168,6 +176,28 @@ public class QueryInterfaceTest implements Benchmarking {
         }
         int count = (int) result.getCount();
         Assert.assertTrue("Query results wrong, expected 1 and found " + count, count == 1);
+    }
+
+    @Test
+    public void testInstallAndRunArbitraryPlugin() {
+        Class<? extends AnalysisPluginInterface> arbitraryPlugin;
+        if (SWQEFactory.getStorage() instanceof HBaseStorage) {
+            // pretend that the included com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesByAttributesPlugin is an external plug-in
+            arbitraryPlugin = MRFeaturesByAttributesPlugin.class;
+        } else {
+            // pretend the equivalent for a non-HBase back-end
+            arbitraryPlugin = InMemoryFeaturesByAttributesPlugin.class;
+        }
+        // get a FeatureSet from the back-end
+            QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeaturesByPlugin(0, arbitraryPlugin, aSet, new RPNStack(
+                    new Constant("type1"), "type", Operation.EQUAL));
+            // check that Features are present match
+            FeatureSet result = future.get();
+            for (Feature f : result) {
+                Assert.assertTrue(f.getType().equals("type1"));
+            }
+            int count = (int) result.getCount();
+            Assert.assertTrue("Query results wrong, expected 1 and found " + count, count == 1);
     }
 
     @Test

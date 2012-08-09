@@ -28,11 +28,8 @@ import com.github.seqware.queryengine.util.SeqWareIterable;
  */
 public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
 
-    private StorageInterface storage;
-
     public HBasePersistentBackEnd(StorageInterface i) {
         super(i);
-        this.storage = i;
     }
 
     @Override
