@@ -45,7 +45,7 @@ public class FeatureImporter extends Importer {
             System.err.println("Only " + args.length + " arguments found");
             //System.out.println("FeatureImporter <worker_module> <db_dir> <create_db> <cacheSize> <locks> "
             //        + "<max_thread_count> <compressed_input> <input_file(s)>");
-            System.out.println("FeatureImporter <worker_module> <max_thread_count> <compressed_input> <referenceID> <input_file(s)>");
+            System.out.println("FeatureImporter <worker_module> <max_thread_count> <compressed_input> <reference name> <input_file(s)>");
             System.exit(-1);
         }
 

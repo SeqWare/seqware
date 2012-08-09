@@ -17,16 +17,21 @@
 package com.github.seqware.queryengine.model.test;
 
 import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 
 /**
  * Small hack, allows us to profile test suites for performance.
+ *
  * @author dyuen
  */
 public class ProfilingStub {
 
     public static void main(String[] args) {
         JUnitCore runner = new JUnitCore();
-        runner.run(MRHBaseModelHBaseStoragePBSerializationSuite.class);
+        Result run = runner.run(MRHBaseModelHBaseStoragePBSerializationSuite.class);
         //runner.run(InMemoryFileStoragePBSerializationSuite.class);
+        System.out.println(run.toString());
+        System.out.println("Fail count: " + run.getFailureCount());
+        System.out.println("Success: " + run.wasSuccessful());
     }
 }
