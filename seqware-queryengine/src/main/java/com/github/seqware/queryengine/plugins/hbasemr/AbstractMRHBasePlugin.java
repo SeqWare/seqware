@@ -25,7 +25,10 @@ import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.plugins.MapReducePlugin;
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -89,7 +92,10 @@ public abstract class AbstractMRHBasePlugin<T> implements MapReducePlugin<Featur
             str_params[1] = Base64.encodeBase64String(sSet);
             str_params[2] = Base64.encodeBase64String(dSet);
             
-            conf.setStrings("tmpjars", Constants.DEVELOPMENT_DEPENDENCY);
+            File file = new File(new URI(Constants.DEVELOPMENT_DEPENDENCY));
+            if (file.exists()){
+                conf.setStrings("tmpjars", Constants.DEVELOPMENT_DEPENDENCY);
+            }
             conf.setStrings(PARAMETERS, str_params);
 
             this.job = new Job(conf, this.getClass().getSimpleName());
@@ -107,6 +113,8 @@ public abstract class AbstractMRHBasePlugin<T> implements MapReducePlugin<Featur
             // submit the job, but do not block
             job.submit();
             return new AnalysisPluginInterface.ReturnValue();
+        } catch (URISyntaxException ex) {
+            java.util.logging.Logger.getLogger(AbstractMRHBasePlugin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
             Logger.getLogger(AbstractMRHBasePlugin.class.getName()).fatal(java.util.logging.Level.SEVERE, ex);
         } catch (ClassNotFoundException ex) {
