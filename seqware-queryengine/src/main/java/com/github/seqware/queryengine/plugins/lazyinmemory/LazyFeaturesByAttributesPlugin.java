@@ -19,6 +19,8 @@ package com.github.seqware.queryengine.plugins.lazyinmemory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.kernel.RPNStack;
+import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
+import com.github.seqware.queryengine.kernel.RPNStack.Parameter;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.plugins.inmemory.AbstractMRInMemoryPlugin;
@@ -56,8 +58,11 @@ public class LazyFeaturesByAttributesPlugin extends AbstractMRInMemoryPlugin {
     @Override
     public ReturnValue map(Feature feature, FeatureSet mappedSet) {
         // Get the parameters from the RPN stack and replace them with concrete values:
-        for (Object parameter : rpnStack.getParameters())
-            rpnStack.setParameter(parameter, feature.getAttribute((String)parameter));
+        for (Parameter parameter : rpnStack.getParameters()) {
+            if (!(parameter instanceof FeatureAttribute))
+                throw new UnsupportedOperationException("This plugin can only handle FeatureAttribute parameters.");
+            rpnStack.setParameter(parameter, feature.getAttribute(parameter.getName()));
+        }
 
         // Now carry out the actual evaluation that determines whether f is relevant:
         if ((Boolean)rpnStack.evaluate() == true){
