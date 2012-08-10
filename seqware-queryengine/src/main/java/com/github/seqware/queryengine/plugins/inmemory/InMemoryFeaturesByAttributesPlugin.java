@@ -16,82 +16,33 @@
  */
 package com.github.seqware.queryengine.plugins.inmemory;
 
-import com.github.seqware.queryengine.factory.CreateUpdateManager;
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.FeatureSet;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
- * Generic query implementation over all attributes of a Feature (including additional attributes).
+ * Generic query implementation over all attributes of a Feature (including
+ * additional attributes).
  *
  * @author dyuen
  * @author jbaran
  */
-public class InMemoryFeaturesByAttributesPlugin extends AbstractMRInMemoryPlugin {
-
-    private RPNStack rpnStack;
-    private Set<Feature> accumulator = new HashSet<Feature>();
+public class InMemoryFeaturesByAttributesPlugin extends InMemoryFeaturesByFilterPlugin {
 
     @Override
-    public ReturnValue init(FeatureSet inputSet, Object ... parameters) {
-        this.inputSet = inputSet;
-        this.rpnStack = (RPNStack)parameters[0];
-        return new ReturnValue();
+    protected FeatureFilter getFilter() {
+        return new FeaturesByAttributesFilter();
     }
-
-    @Override
-    public ReturnValue map(Feature feature, FeatureSet mappedSet) {
-        boolean result = matchFeature(feature, rpnStack);
-
-        // Now carry out the actual evaluation that determines whether f is relevant:
-        if (result){
-            Feature build = feature.toBuilder().build();
-            accumulator.add(build);
+    
+    public static class FeaturesByAttributesFilter implements FeatureFilter {
+        @Override
+        public boolean featurePasses(Feature f, Object... parameters) {
+            RPNStack rpnStack = (RPNStack) parameters[0];
+            // Get the parameters from the RPN stack and replace them with concrete values:
+            for (Object parameter : rpnStack.getParameters()) {
+                rpnStack.setParameter(parameter, f.getAttribute((String) parameter));
+            }
+            boolean result = (Boolean) rpnStack.evaluate();
+            return result;
         }
-
-        return new ReturnValue();
-    }
-
-    public static boolean matchFeature(Feature feature, RPNStack rpnStack) {
-        // Get the parameters from the RPN stack and replace them with concrete values:
-        for (Object parameter : rpnStack.getParameters()){
-            rpnStack.setParameter(parameter, feature.getAttribute((String)parameter));
-        }
-        boolean result = (Boolean)rpnStack.evaluate();
-        return result;
-    }
-
-    @Override
-    public ReturnValue reduce(FeatureSet mappedSet, FeatureSet resultSet) {
-        // doesn't really do anything
-        return new ReturnValue();
-    }
-
-    @Override
-    public FeatureSet getFinalResult() {
-        super.performInMemoryRun();
-        CreateUpdateManager mManager = SWQEFactory.getModelManager();
-        FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("ad_hoc_analysis").build()).build();
-        for(Feature f : accumulator){
-            mManager.objectCreated(f);
-        }
-        fSet.add(accumulator);
-        mManager.close();
-        return fSet;
-    }
-
-    @Override
-    public ReturnValue reduceInit() {
-        // doesn't really do anything
-        return new ReturnValue();
-    }
-
-    @Override
-    public ReturnValue mapInit() {
-        // doesn't really do anything
-        return new ReturnValue();
     }
 }

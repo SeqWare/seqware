@@ -223,17 +223,6 @@ public interface QueryInterface {
     public QueryFuture<FeatureSet> getFeatures(int hours, FeatureSet set);
 
     /**
-     * filter features relative to a reference TODO: FeatureSets should only
-     * have one reference, not sure what this does
-     *
-     * @param hours minimum time to live
-     * @param set parent FeatureSet
-     * @param reference reference
-     * @return featureSet with features filtered by reference
-     */
-    public QueryFuture<FeatureSet> getFeaturesByReference(int hours, FeatureSet set, Reference reference);
-
-    /**
      * filter features that overlap with a given range
      *
      * @param hours minimum time to live

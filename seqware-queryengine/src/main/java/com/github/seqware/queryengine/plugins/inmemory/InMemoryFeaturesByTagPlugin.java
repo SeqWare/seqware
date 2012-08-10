@@ -16,96 +16,47 @@
  */
 package com.github.seqware.queryengine.plugins.inmemory;
 
-import com.github.seqware.queryengine.factory.CreateUpdateManager;
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import org.apache.commons.lang.ArrayUtils;
 
 /**
  *
  * @author dyuen
  */
-public class InMemoryFeaturesByTagPlugin extends AbstractMRInMemoryPlugin {
+public class InMemoryFeaturesByTagPlugin extends InMemoryFeaturesByFilterPlugin {
 
-    private String subject = null;
-    private String predicate = null;
-    private String object = null;
-    private Set<Feature> accumulator = new HashSet<Feature>();
+    @Override
+    protected FeatureFilter getFilter() {
+        return new InMemoryFeaturesByTagPlugin.FeaturesByTagFilter();
+    }
+    
+    public static class FeaturesByTagFilter implements FeatureFilter {
 
-    public static boolean matchFeatureByTags(Feature atom, String subject, String predicate, String object) {
-        boolean b[] = new boolean[3];
-        Arrays.fill(b, false);
-        for (Tag t : atom.getTags()) {
-            // three cases
-            if (subject == null || subject.equals(t.getKey())) {
-                b[0] = true;
+        @Override
+        public boolean featurePasses(Feature f, Object... parameters) {
+            boolean b[] = new boolean[3];
+            String subject = (String) parameters[0];
+            String predicate = (String) parameters[1];
+            String object = (String) parameters[2];
+
+            Arrays.fill(b, false);
+            for (Tag t : f.getTags()) {
+                // three cases
+                if (subject == null || subject.equals(t.getKey())) {
+                    b[0] = true;
+                }
+                if (predicate == null || predicate.equals(t.getPredicate())) {
+                    b[1] = true;
+                }
+                if (object == null || object.equals(t.getValue())) {
+                    b[2] = true;
+                }
+
             }
-            if (predicate == null || predicate.equals(t.getPredicate())) {
-                b[1] = true;
-            }
-            if (object == null || object.equals(t.getValue())) {
-                b[2] = true;
-            }
-
+            boolean result = !ArrayUtils.contains(b, false);
+            return result;
         }
-        boolean result = !ArrayUtils.contains(b, false);
-        return result;
-    }
-
-    @Override
-    public ReturnValue init(FeatureSet inputSet, Object... parameters) {
-        this.inputSet = inputSet;
-        assert (parameters.length == 3);
-        this.subject = (String) parameters[0];
-        this.predicate = (String) parameters[1];
-        this.object = (String) parameters[2];
-        return new ReturnValue();
-    }
-
-    @Override
-    public ReturnValue mapInit() {
-        /** do nothing */
-        return null;
-    }
-
-    @Override
-    public ReturnValue map(Feature atom, FeatureSet mappedSet) {
-        boolean result = matchFeatureByTags(atom, subject, predicate, object);
-        if (result) {
-            Feature build = atom.toBuilder().build();
-            accumulator.add(build);
-        }
-
-        return new ReturnValue();
-    }
-
-    @Override
-    public ReturnValue reduceInit() {
-        /** do nothing */
-        return null;
-    }
-
-    @Override
-    public ReturnValue reduce(FeatureSet mappedSet, FeatureSet resultSet) {
-        // doesn't really do anything
-        return new ReturnValue();
-    }
-
-    @Override
-    public FeatureSet getFinalResult() {
-        super.performInMemoryRun();
-        CreateUpdateManager mManager = SWQEFactory.getModelManager();
-        FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("ad_hoc_analysis").build()).build();
-        for(Feature f : accumulator){
-            mManager.objectCreated(f);
-        }
-        fSet.add(accumulator);
-        mManager.close();
-        return fSet;
     }
 }

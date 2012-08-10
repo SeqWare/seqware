@@ -16,67 +16,25 @@
  */
 package com.github.seqware.queryengine.plugins.inmemory;
 
-import com.github.seqware.queryengine.factory.CreateUpdateManager;
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
-import com.github.seqware.queryengine.plugins.MapReducePlugin;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  *
  * @author dyuen
  */
-public class InMemoryFeaturesAllPlugin extends AbstractMRInMemoryPlugin {
-
-    private Set<Feature> accumulator = new HashSet<Feature>();
+public class InMemoryFeaturesAllPlugin extends InMemoryFeaturesByFilterPlugin {
 
     @Override
-    public AnalysisPluginInterface.ReturnValue init(FeatureSet inputSet, Object... parameters) {
-        this.inputSet = inputSet;
-        return new AnalysisPluginInterface.ReturnValue();
+    protected FeatureFilter getFilter() {
+        return new InMemoryFeaturesAllPlugin.FeaturesAllFilter();
     }
 
-    @Override
-    public AnalysisPluginInterface.ReturnValue mapInit() {
-        /** do nothing */
-        return null;
-    }
+    public class FeaturesAllFilter implements FeatureFilter {
 
-
-    @Override
-    public AnalysisPluginInterface.ReturnValue reduceInit() {
-        /** do nothing */
-        return null;
-    }
-
-    @Override
-    public FeatureSet getFinalResult() {
-        super.performInMemoryRun();
-        CreateUpdateManager mManager = SWQEFactory.getModelManager();
-        FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("ad_hoc_analysis").build()).build();
-        for(Feature f : accumulator){
-            mManager.objectCreated(f);
+        @Override
+        public boolean featurePasses(Feature f, Object... parameters) {
+            // everything passes
+            return true;
         }
-        fSet.add(accumulator);
-        mManager.close();
-        return fSet;
-    }
-
-    @Override
-    public ReturnValue map(Feature atom, FeatureSet mappedSet) {
-        for (Feature f : this.inputSet) {
-            Feature build = f.toBuilder().build();
-            accumulator.add(build);
-        }
-        return new AnalysisPluginInterface.ReturnValue();
-    }
-
-    @Override
-    public ReturnValue reduce(FeatureSet mappedSet, FeatureSet resultSet) {
-        // doesn't really do anything
-        return new AnalysisPluginInterface.ReturnValue();
     }
 }

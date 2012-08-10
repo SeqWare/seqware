@@ -6,7 +6,6 @@ import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
 import com.github.seqware.queryengine.model.impl.LazyMolSet;
 import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
-import com.github.seqware.queryengine.tutorial.MapReduceFeatureSetCounter;
 
 /**
  * An "lazy" representation of a feature set. This forces individual members to

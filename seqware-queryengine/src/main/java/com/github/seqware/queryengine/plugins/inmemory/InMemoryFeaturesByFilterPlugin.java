@@ -20,44 +20,52 @@ import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.Reference;
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Generic query implementation over all attributes of a Feature using a FeatureFilter.
  *
  * @author dyuen
+ * @author jbaran
  */
-public class InMemoryFeaturesByReferencePlugin extends AbstractMRInMemoryPlugin {
-
-    private Reference reference;
+public abstract class InMemoryFeaturesByFilterPlugin extends AbstractMRInMemoryPlugin {
+    private Object[] parameters;    
     private Set<Feature> accumulator = new HashSet<Feature>();
+    
+    protected abstract FeatureFilter getFilter();
 
     @Override
-    public AnalysisPluginInterface.ReturnValue init(FeatureSet inputSet, Object... parameters) {
+    public ReturnValue init(FeatureSet inputSet, Object ... parameters) {
         this.inputSet = inputSet;
-        this.reference = (Reference) parameters[0];
-        return new AnalysisPluginInterface.ReturnValue();
+        this.parameters = parameters;
+        return new ReturnValue();
     }
 
     @Override
-    public AnalysisPluginInterface.ReturnValue mapInit() {
-        /** do nothing */
-        return null;
+    public ReturnValue map(Feature feature, FeatureSet mappedSet) {
+        boolean result = getFilter().featurePasses(feature, parameters);
+
+        // Now carry out the actual evaluation that determines whether f is relevant:
+        if (result){
+            Feature build = feature.toBuilder().build();
+            accumulator.add(build);
+        }
+
+        return new ReturnValue();
     }
 
     @Override
-    public AnalysisPluginInterface.ReturnValue reduceInit() {
-        /** do nothing */
-        return null;
+    public ReturnValue reduce(FeatureSet mappedSet, FeatureSet resultSet) {
+        // doesn't really do anything
+        return new ReturnValue();
     }
 
     @Override
     public FeatureSet getFinalResult() {
         super.performInMemoryRun();
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
-        FeatureSet fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("").build()).build();
+        FeatureSet fSet = mManager.buildFeatureSet().setReference(inputSet.getReference()).build();
         for(Feature f : accumulator){
             mManager.objectCreated(f);
         }
@@ -67,17 +75,14 @@ public class InMemoryFeaturesByReferencePlugin extends AbstractMRInMemoryPlugin 
     }
 
     @Override
-    public ReturnValue map(Feature atom, FeatureSet mappedSet) {
-        if (inputSet.getReference().equals(reference)){
-            Feature build = atom.toBuilder().build();
-            accumulator.add(build);
-        }
-        return new AnalysisPluginInterface.ReturnValue();
+    public ReturnValue reduceInit() {
+        // doesn't really do anything
+        return new ReturnValue();
     }
 
     @Override
-    public ReturnValue reduce(FeatureSet mappedSet, FeatureSet resultSet) {
+    public ReturnValue mapInit() {
         // doesn't really do anything
-        return new AnalysisPluginInterface.ReturnValue();
+        return new ReturnValue();
     }
 }

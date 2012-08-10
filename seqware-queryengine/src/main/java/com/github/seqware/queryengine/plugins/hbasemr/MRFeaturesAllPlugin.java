@@ -86,11 +86,11 @@ public class MRFeaturesAllPlugin extends AbstractMRHBaseBatchedPlugin{
             this.sourceSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[0]), FeatureSet.class);
             this.destSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[1]), FeatureSet.class);
 
-            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).info("    Value of fSet is " + destSet.toString());
-            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).info("    Value of fSet.getSGID is " + destSet.getSGID().toString());
-            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).info("    Value of fSet.getReferenceSGID is " + destSet.getReferenceID().toString());
-            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).info("    Value of fSet.getReference() is " + destSet.getReference().toString());
-            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).info("    Value of fSet.getReference().getName() is " + destSet.getReference().getName().toString());
+            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).trace("    Value of fSet is " + destSet.toString());
+            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).trace("    Value of fSet.getSGID is " + destSet.getSGID().toString());
+            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).trace("    Value of fSet.getReferenceSGID is " + destSet.getReferenceID().toString());
+            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).trace("    Value of fSet.getReference() is " + destSet.getReference().toString());
+            Logger.getLogger(MRFeaturesAllPlugin.class.getName()).trace("    Value of fSet.getReference().getName() is " + destSet.getReference().getName().toString());
             
             this.modelManager = SWQEFactory.getModelManager();
             this.modelManager.persist(destSet);
