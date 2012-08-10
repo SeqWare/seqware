@@ -23,6 +23,7 @@ import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.FeatureList;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByRangePlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByTagPlugin;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,6 +31,23 @@ import java.util.Collection;
 import java.util.List;
 
 ;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.client.Result;
+import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
+import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
+import org.apache.hadoop.hbase.mapreduce.TableMapper;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.log4j.Logger;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.client.Result;
+import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
+import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
+import org.apache.hadoop.hbase.mapreduce.TableMapper;
+import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.client.Result;
@@ -87,6 +105,8 @@ public class MRFeaturesByTagsPlugin extends AbstractMRHBaseBatchedPlugin {
         private String subject;
         private String predicate;
         private String object;
+        private InMemoryFeaturesByTagPlugin.FeaturesByTagFilter filter = new InMemoryFeaturesByTagPlugin.FeaturesByTagFilter();
+
 
         @Override
         protected void setup(Mapper.Context context) {
@@ -127,7 +147,7 @@ public class MRFeaturesByTagsPlugin extends AbstractMRHBaseBatchedPlugin {
             Collection<Feature> results = new ArrayList<Feature>();
             for (Feature f : consolidateRow) {
                 f.setManager(modelManager);
-                boolean match = InMemoryFeaturesByTagPlugin.matchFeatureByTags(f, subject, predicate, object);
+                boolean match = filter.featurePasses(f, subject, predicate, object);
                 if (match) {
                     results.add(f);
                 }

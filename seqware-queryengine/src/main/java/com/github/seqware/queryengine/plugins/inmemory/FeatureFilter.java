@@ -14,23 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.queryengine.tutorial;
+package com.github.seqware.queryengine.plugins.inmemory;
 
-import java.io.IOException;
-import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
-import org.apache.hadoop.hbase.mapreduce.TableMapper;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Mapper.Context;
+import com.github.seqware.queryengine.model.Feature;
 
 /**
- *
+ * Interface for matching functions that we can quickly use in both in-memory and M/R plug-ins.
  * @author dyuen
  */
-public class MyMapper extends TableMapper<Text, Text> {
-
-    @Override
-  public void map(ImmutableBytesWritable row, Result value, Context context) throws InterruptedException, IOException {
-    // process data for the row from the Result instance.
-   }
-}    
+public interface FeatureFilter {
+    
+    public boolean featurePasses(Feature f, Object ... parameters);
+    
+}

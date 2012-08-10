@@ -44,7 +44,7 @@ import org.apache.log4j.Logger;
  *
  * @author dyuen
  */
-public abstract class AbstractMRHBasePlugin<T> implements MapReducePlugin<Feature, FeatureSet> {
+public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlugin<Feature, FeatureSet> {
 
     protected FeatureSet outputSet;
     private CreateUpdateManager manager;
@@ -199,7 +199,7 @@ public abstract class AbstractMRHBasePlugin<T> implements MapReducePlugin<Featur
     }
 
     @Override
-    public T getFinalResult() {
+    public ReturnType getFinalResult() {
         try {
             boolean b = job.waitForCompletion(true);
             return variableResult();
@@ -246,5 +246,5 @@ public abstract class AbstractMRHBasePlugin<T> implements MapReducePlugin<Featur
      *
      * @return
      */
-    public abstract T variableResult();
+    public abstract ReturnType variableResult();
 }

@@ -29,16 +29,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.client.Scan;
-import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
-import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
-import org.apache.hadoop.hbase.mapreduce.TableMapper;
-import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.log4j.Logger;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.conf.Configuration;
@@ -86,6 +76,8 @@ public class MRFeaturesByAttributesPlugin extends AbstractMRHBaseBatchedPlugin {
         private FeatureSet destSet;
         private CreateUpdateManager modelManager;
         private RPNStack rpnStack;
+        
+        private InMemoryFeaturesByAttributesPlugin.FeaturesByAttributesFilter filter = new InMemoryFeaturesByAttributesPlugin.FeaturesByAttributesFilter();
 
         @Override
         protected void setup(Mapper.Context context) {
@@ -124,7 +116,7 @@ public class MRFeaturesByAttributesPlugin extends AbstractMRHBaseBatchedPlugin {
             Collection<Feature> results = new ArrayList<Feature>();
             for (Feature f : consolidateRow) {
                 f.setManager(modelManager);
-                boolean match = InMemoryFeaturesByAttributesPlugin.matchFeature(f, rpnStack);
+                boolean match = filter.featurePasses(f, rpnStack);
                 if (match) {
                     results.add(f);
                 }

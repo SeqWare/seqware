@@ -1,4 +1,4 @@
 /**
- * Classes for testing different types of Map/Reduce (back-development only)
+ * Classes for testing and hacking new tools.
  */
 package com.github.seqware.queryengine.tutorial;

@@ -24,7 +24,6 @@ import com.github.seqware.queryengine.model.impl.inMemory.InMemoryQueryFutureImp
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByRangePlugin;
-import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByReferencePlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByTagPlugin;
 import com.github.seqware.queryengine.plugins.lazyinmemory.LazyFeaturesByAttributesPlugin;
 import com.github.seqware.queryengine.util.FSGID;
@@ -50,7 +49,6 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     public SimplePersistentBackEnd(StorageInterface fsi) {
         this.storage = fsi;
         pluginMap.put(InMemoryFeaturesAllPlugin.class, new InMemoryFeaturesAllPlugin());
-        pluginMap.put(InMemoryFeaturesByReferencePlugin.class, new InMemoryFeaturesByReferencePlugin());
         pluginMap.put(LazyFeaturesByAttributesPlugin.class, new LazyFeaturesByAttributesPlugin());
     }
 
@@ -182,13 +180,6 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     @Override
     public QueryFuture getFeatures(int hours, FeatureSet set) {
         AnalysisPluginInterface plugin = new InMemoryFeaturesAllPlugin();
-        plugin.init(set);
-        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
-    }
-
-    @Override
-    public QueryFuture getFeaturesByReference(int hours, FeatureSet set, Reference reference) {
-        AnalysisPluginInterface plugin = new InMemoryFeaturesByReferencePlugin();
         plugin.init(set);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }

@@ -24,6 +24,7 @@ import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryInterface.Location;
 import com.github.seqware.queryengine.model.impl.FeatureList;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByAttributesPlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByRangePlugin;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,6 +80,8 @@ public class MRFeaturesByRangePlugin extends AbstractMRHBaseBatchedPlugin {
         private String structure;
         private long start;
         private long stop;
+        private InMemoryFeaturesByRangePlugin.FeaturesByRangeFilter filter = new InMemoryFeaturesByRangePlugin.FeaturesByRangeFilter();
+
 
         @Override
         protected void setup(Mapper.Context context) {
@@ -126,7 +129,7 @@ public class MRFeaturesByRangePlugin extends AbstractMRHBaseBatchedPlugin {
             Collection<Feature> results = new ArrayList<Feature>();
             for (Feature f : consolidateRow) {
                 f.setManager(modelManager);
-                boolean match = InMemoryFeaturesByRangePlugin.matchRange(f, location, structure, start, stop);
+                boolean match = filter.featurePasses(f, location, structure, start, stop);
                 if (match) {
                     results.add(f);
                 }

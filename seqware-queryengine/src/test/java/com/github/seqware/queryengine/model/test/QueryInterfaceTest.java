@@ -5,6 +5,7 @@ import com.github.seqware.queryengine.Benchmarking;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.HBaseStorage;
+import com.github.seqware.queryengine.impl.MRHBaseModelManager;
 import com.github.seqware.queryengine.impl.test.SimplePersistentBackEndTest;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.Constant;
@@ -180,7 +181,8 @@ public class QueryInterfaceTest implements Benchmarking {
     @Test
     public void testInstallAndRunArbitraryPlugin() {
         Class<? extends AnalysisPluginInterface> arbitraryPlugin;
-        if (SWQEFactory.getStorage() instanceof HBaseStorage) {
+        // only use the M/R plugin for this test if using MR
+        if (SWQEFactory.getModelManager() instanceof MRHBaseModelManager) {
             // pretend that the included com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesByAttributesPlugin is an external plug-in
             arbitraryPlugin = MRFeaturesByAttributesPlugin.class;
         } else {
