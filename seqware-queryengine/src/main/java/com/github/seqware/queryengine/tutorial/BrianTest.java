@@ -14,37 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.queryengine.system.exporters;
+package com.github.seqware.queryengine.tutorial;
 
-import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.Reference;
+import com.github.seqware.queryengine.model.QueryFuture;
+import com.github.seqware.queryengine.model.QueryInterface;
 import com.github.seqware.queryengine.system.importers.workers.ImportConstants;
 import com.github.seqware.queryengine.util.SGID;
-import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.UUID;
-import org.apache.log4j.Logger;
-
-;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * This will dump VCF files given a FeatureSet that was originally imported from
+ * This is a quick and sample application built on top of our API, created during the August 9th Hackathon. 
+ * It demonstrates query restrictions and exporting.
+ * Based on VCFDumper. This will dump VCF files given a FeatureSet that was originally imported from
  * a VCF file.
  *
  * @author dyuen
  */
-public class VCFDumper {
+public class BrianTest {
 
     private String[] args;
 
     public static void main(String[] args) {
-        VCFDumper dumper = new VCFDumper(args);
+        BrianTest dumper = new BrianTest(args);
         dumper.export();
     }
 
@@ -52,7 +52,7 @@ public class VCFDumper {
 
         if (args.length < 1 || args.length > 2) {
             System.err.println(args.length + " arguments found");
-            System.out.println("VCFDumper <featureSetID> [outputFile]");
+            System.out.println("BrianTest <featureSetID> [outputFile]");
             System.exit(-1);
         }
 
@@ -68,6 +68,16 @@ public class VCFDumper {
             System.exit(-2);
         }
 
+      // get a FeatureSet from the back-end
+        String structure = "chr16";
+        int start = 0;
+        int stop = Integer.MAX_VALUE;
+        QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeaturesByRange(0, fSet, QueryInterface.Location.INCLUDES, structure, start, stop);
+	FeatureSet resultSet = future.get();
+        QueryFuture<FeatureSet> featuresByTag = SWQEFactory.getQueryInterface().getFeaturesByTag(0, resultSet, "nonsynonymous", null, null);
+
+
+
         BufferedWriter outputStream = null;
         try {
 
@@ -77,9 +87,9 @@ public class VCFDumper {
                 outputStream = new BufferedWriter(new OutputStreamWriter(System.out));
             }
             outputStream.append("#CHROM	POS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\n");
-            SeqWareIterable<FeatureSet> featureSets = SWQEFactory.getQueryInterface().getFeatureSets();
+            //SeqWareIterable<FeatureSet> featureSets = SWQEFactory.getQueryInterface().getFeatureSets();
             boolean caughtNonVCF = false;
-            for (Feature feature : fSet) {
+            for (Feature feature : featuresByTag.get()) {
                 outputStream.append(feature.getSeqid() + "\t" + (feature.getStart() + 1) + "\t");
                 if (feature.getTagByKey(ImportConstants.VCF_SECOND_ID) == null) {
                     outputStream.append(".\t");
@@ -94,7 +104,7 @@ public class VCFDumper {
                     outputStream.append(feature.getTagByKey(ImportConstants.VCF_INFO).getValue().toString());
                 } catch (NullPointerException npe) {
                     if (!caughtNonVCF) {
-                        Logger.getLogger(VCFDumper.class.getName()).info( "VCF exporting non-VCF feature");
+                        Logger.getLogger(BrianTest.class.getName()).log(Level.INFO, "VCF exporting non-VCF feature");
 
                     }
                     // this may occur when exporting Features that were not originally VCF files
@@ -104,7 +114,7 @@ public class VCFDumper {
             }
         } // TODO: clearly this should be expanded to include closing database etc 
         catch (Exception e) {
-            Logger.getLogger(VCFDumper.class.getName()).fatal( "Exception thrown exporting to file:", e);
+            Logger.getLogger(BrianTest.class.getName()).log(Level.SEVERE, "Exception thrown exporting to file:", e);
             System.exit(-1);
         } finally {
             try {
@@ -112,12 +122,12 @@ public class VCFDumper {
                 outputStream.close();
                 SWQEFactory.getStorage().closeStorage();
             } catch (IOException ex) {
-                Logger.getLogger(VCFDumper.class.getName()).fatal( "Exception thrown flushing to file:", ex);
+                Logger.getLogger(BrianTest.class.getName()).log(Level.SEVERE, "Exception thrown flushing to file:", ex);
             }
         }
     }
 
-    public VCFDumper(String[] args) {
+    public BrianTest(String[] args) {
         this.args = args;
     }
 }

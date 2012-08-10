@@ -29,8 +29,9 @@ import com.github.seqware.queryengine.model.impl.inMemory.InMemoryGroup;
 import com.github.seqware.queryengine.util.SGID;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
+
+;
 
 /**
  *
@@ -82,7 +83,7 @@ public class GroupIO implements ProtobufTransferInterface<GroupPB, Group>{
             QueryEngine.GroupPB userpb = QueryEngine.GroupPB.parseFrom(arr);
             return pb2m(userpb);
         } catch (InvalidProtocolBufferException ex) {
-            Logger.getLogger(FeatureSetIO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FeatureSetIO.class.getName()).fatal( "Invalid PB", ex);
         }
         return null;
     }

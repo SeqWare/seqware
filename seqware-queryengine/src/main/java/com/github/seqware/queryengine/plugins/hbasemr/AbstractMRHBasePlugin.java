@@ -35,7 +35,6 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -51,8 +50,6 @@ public abstract class AbstractMRHBasePlugin<T> implements MapReducePlugin<Featur
     private CreateUpdateManager manager;
     public static final String PARAMETERS = "parameters";
     protected Job job;
-    private Logger rootLogger;
-    private Level previousLevel;
 
     @Override
     public AnalysisPluginInterface.ReturnValue init(FeatureSet inputSet, Object... parameters) {
@@ -70,15 +67,10 @@ public abstract class AbstractMRHBasePlugin<T> implements MapReducePlugin<Featur
             manager.close();
 
             // do setup for Map/Reduce from the HBase API
-            this.rootLogger = Logger.getRootLogger();
-            this.previousLevel = rootLogger.getLevel();
-            if (!Constants.MAP_REDUCE_LOGGING) {
-                rootLogger.setLevel(Level.OFF);
-            }
             String tableName = generateTableName(inputSet);
             String destTableName = generateTableName(outputSet);
 
-            Configuration conf = HBaseConfiguration.create();
+            Configuration conf = new Configuration();
             HBaseStorage.configureHBaseConfig(conf);
             HBaseConfiguration.addHbaseResources(conf);
 
@@ -210,9 +202,6 @@ public abstract class AbstractMRHBasePlugin<T> implements MapReducePlugin<Featur
     public T getFinalResult() {
         try {
             boolean b = job.waitForCompletion(true);
-            if (!Constants.MAP_REDUCE_LOGGING) {
-                rootLogger.setLevel(previousLevel);
-            }
             return variableResult();
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(AbstractMRHBasePlugin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);

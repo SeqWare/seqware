@@ -13,8 +13,9 @@ import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
+
+;
 
 /**
  * Port of the class from the original prototype, adapted to use the new classes
@@ -156,7 +157,7 @@ public class FeatureImporter extends Importer {
             }
         } // TODO: clearly this should be expanded to include closing database etc 
         catch (Exception e) {
-            Logger.getLogger(GFF3VariantImportWorker.class.getName()).log(Level.SEVERE, "Exception thrown with file: \n", e);
+            Logger.getLogger(GFF3VariantImportWorker.class.getName()).fatal( "Exception thrown with file: \n", e);
             System.exit(-1);
         }
         // clean-up

@@ -21,8 +21,9 @@ import com.github.seqware.queryengine.dto.QueryEngine.FeaturePB;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.util.FSGID;
 import com.google.protobuf.InvalidProtocolBufferException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
+
+;
 
 /**
  *
@@ -76,7 +77,7 @@ public class FeatureIO implements ProtobufTransferInterface<FeaturePB, Feature> 
             FeaturePB userpb = FeaturePB.parseFrom(arr);
             return pb2m(userpb);
         } catch (InvalidProtocolBufferException ex) {
-            Logger.getLogger(FeatureSetIO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FeatureSetIO.class.getName()).fatal("Invalid PB", ex);
         }
         return null;
     }

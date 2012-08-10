@@ -29,8 +29,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.client.Result;
+import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
+import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
+import org.apache.hadoop.hbase.mapreduce.TableMapper;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.log4j.Logger;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.client.Result;
@@ -63,7 +72,7 @@ public class MRFeaturesByAttributesPlugin extends AbstractMRHBaseBatchedPlugin {
                     job);
             job.setNumReduceTasks(0);
         } catch (IOException ex) {
-            Logger.getLogger(MRFeaturesByAttributesPlugin.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MRFeaturesByAttributesPlugin.class.getName()).fatal( null, ex);
         }
     }
 

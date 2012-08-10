@@ -18,8 +18,7 @@ package com.github.seqware.queryengine.impl.test;
 
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.test.util.DynamicSuite;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -33,12 +32,12 @@ public class ImplTestSuite {
 
     @BeforeClass
     public static void setupSuite() {
-        Logger.getLogger(ImplTestSuite.class.getName()).log(Level.INFO, "Running test suite for implementation-specific tests");
+        Logger.getLogger(ImplTestSuite.class.getName()).info( "Running test suite for implementation-specific tests");
     }
     
     @AfterClass
     public static void tearDownSuite(){
-        Logger.getLogger(ImplTestSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
+        Logger.getLogger(ImplTestSuite.class.getName()).info( "Ending test suite and resetting");
         SWQEFactory.setFactoryBackendType(null, null, null);
     }
 }

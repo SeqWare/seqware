@@ -18,8 +18,7 @@ package com.github.seqware.queryengine.model.test;
 
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.test.util.DynamicSuite;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -35,13 +34,13 @@ public class InMemoryHBaseStoragePBSerializationSuite {
 
     @BeforeClass
     public static void setupSuite() {
-        Logger.getLogger(InMemoryHBaseStoragePBSerializationSuite.class.getName()).log(Level.INFO, "Running test suite with in-memory objects using Protobuf serialization to HBase");
+        Logger.getLogger(InMemoryHBaseStoragePBSerializationSuite.class.getName()).info( "Running test suite with in-memory objects using Protobuf serialization to HBase");
         SWQEFactory.setFactoryBackendType(SWQEFactory.Model_Type.IN_MEMORY, SWQEFactory.Storage_Type.HBASE_STORAGE, SWQEFactory.Serialization_Type.PROTOBUF);
     }
 
     @AfterClass
     public static void tearDownSuite() {
-        Logger.getLogger(InMemoryHBaseStoragePBSerializationSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
+        Logger.getLogger(InMemoryHBaseStoragePBSerializationSuite.class.getName()).info( "Ending test suite and resetting");
         SWQEFactory.setFactoryBackendType(null, null, null);
     }
 }

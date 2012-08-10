@@ -1,21 +1,19 @@
 package com.github.seqware.queryengine.impl.test;
 
-import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
-import com.github.seqware.queryengine.kernel.RPNStack;
-import com.github.seqware.queryengine.model.Atom;
-import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.model.test.FeatureStoreInterfaceTest;
 import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
+import com.github.seqware.queryengine.kernel.RPNStack;
+import com.github.seqware.queryengine.kernel.RPNStack.Constant;
+import com.github.seqware.queryengine.kernel.RPNStack.Operation;
+import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Feature;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
+import java.util.UUID;
 import junit.framework.Assert;
+import org.apache.log4j.Logger;
 import org.junit.Test;
-
-import static com.github.seqware.queryengine.kernel.RPNStack.*;
 
 /**
  * Tests for the {@link SimplePersistentBackEnd}. This also tests the complex 
@@ -37,7 +35,7 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
             backend.store(aSet);
         }
         catch(Exception e) {
-            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).log(Level.SEVERE, "Exception",  e);
+            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).fatal( "Exception",  e);
             Assert.assertTrue("Backend could not store the given FeatureSet.", false);
         }
 
@@ -46,7 +44,7 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
             atom = backend.getAtomBySGID(FeatureSet.class, aSet.getSGID());
         }
         catch(Exception e) {
-            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).log(Level.SEVERE, "Exception",  e);
+            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).fatal( "Exception",  e);
             Assert.assertTrue("Could not retrieve the previously stored FeatureSet.", false);
         }
 
@@ -68,7 +66,7 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
             backend.store(bSet);
         }
         catch(Exception e) {
-            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).log(Level.SEVERE, "Exception",  e);
+            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).fatal( "Exception",  e);
             Assert.assertTrue("Backend could not store the given FeatureSet.", false);
         }
 

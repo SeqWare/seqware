@@ -111,9 +111,9 @@ public class MRFeatureSetCountPlugin extends AbstractMRHBasePlugin<Long> {
                 Mapper.Context context)
                 throws IOException {
             List<FeatureList> list = HBaseStorage.grabFeatureListsGivenRow(values, sourceSet.getSGID(), SWQEFactory.getSerialization());
-            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).info("Counting " + sourceSet.getSGID() + " on row with " + list.size() + " lists");
+            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).trace("Counting " + sourceSet.getSGID() + " on row with " + list.size() + " lists");
             Collection<Feature> consolidateRow = SimplePersistentBackEnd.consolidateRow(list);
-            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).info("Consolidated to  " + consolidateRow.size() + " features");
+            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).trace("Consolidated to  " + consolidateRow.size() + " features");
             for(Feature f: consolidateRow){
                 // why can't I increment this by the size directly on the cluster?
                 context.getCounter(MRFeatureSetCountPlugin.RowCounterMapper.Counters.ROWS).increment(1);

@@ -18,8 +18,7 @@ package com.github.seqware.queryengine.model.test;
 
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.test.util.DynamicSuite;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -33,13 +32,13 @@ public class NonPersistentTestSuite {
 
     @BeforeClass
     public static void setupSuite() {
-        Logger.getLogger(NonPersistentTestSuite.class.getName()).log(Level.INFO, "Running test suite with Apache serialization to a non-persistent back-end");
+        Logger.getLogger(NonPersistentTestSuite.class.getName()).info("Running test suite with Apache serialization to a non-persistent back-end");
         SWQEFactory.setFactoryBackendType(SWQEFactory.Model_Type.IN_MEMORY, SWQEFactory.Storage_Type.IN_MEMORY, SWQEFactory.Serialization_Type.APACHE);
     }
     
     @AfterClass
     public static void tearDownSuite(){
-        Logger.getLogger(NonPersistentTestSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
+        Logger.getLogger(NonPersistentTestSuite.class.getName()).info("Ending test suite and resetting");
         SWQEFactory.setFactoryBackendType(null, null, null);
     }
 }

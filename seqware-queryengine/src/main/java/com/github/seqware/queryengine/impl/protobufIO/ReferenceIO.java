@@ -23,8 +23,7 @@ import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
 import com.github.seqware.queryengine.model.impl.inMemory.InMemoryReference;
 import com.google.protobuf.InvalidProtocolBufferException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -65,7 +64,7 @@ public class ReferenceIO implements ProtobufTransferInterface<ReferencePB, Refer
             QueryEngine.ReferencePB userpb = QueryEngine.ReferencePB.parseFrom(arr);
             return pb2m(userpb);
         } catch (InvalidProtocolBufferException ex) {
-            Logger.getLogger(FeatureSetIO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FeatureSetIO.class.getName()).fatal( "Invalid PB", ex);
         }
         return null;
     }

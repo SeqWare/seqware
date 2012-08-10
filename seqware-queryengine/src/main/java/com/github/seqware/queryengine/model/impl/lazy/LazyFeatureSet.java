@@ -2,7 +2,6 @@ package com.github.seqware.queryengine.model.impl.lazy;
 
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.impl.StorageInterface;
 import com.github.seqware.queryengine.model.Feature;
@@ -10,13 +9,11 @@ import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Reference;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.model.impl.LazyMolSet;
-import com.github.seqware.queryengine.tutorial.MapReduceFeatureSetCounter;
 import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.LazyReference;
 import com.github.seqware.queryengine.util.SGID;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * An "lazy" representation of a feature set. This forces individual members to
@@ -276,7 +273,7 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
     @Override
     public long getCount() {
         if (!EXPENSIVE_ITERATION_WARNED) {
-            Logger.getLogger(LazyFeatureSet.class.getName()).log(Level.WARNING, "Iterating through a LazyFeatureSet is expensive, avoid this");
+            Logger.getLogger(LazyFeatureSet.class.getName()).warn("Iterating through a LazyFeatureSet is expensive, avoid this");
             EXPENSIVE_ITERATION_WARNED = true;
         }
         // expensive, we need to iterate and count

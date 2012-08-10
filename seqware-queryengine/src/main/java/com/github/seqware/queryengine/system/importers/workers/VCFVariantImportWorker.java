@@ -9,8 +9,11 @@ import java.io.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+;
+import java.util.regex.Pattern;
+import org.apache.commons.compress.compressors.CompressorStreamFactory;
+import org.apache.log4j.Logger;
 import java.util.regex.Pattern;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 
@@ -283,7 +286,7 @@ public class VCFVariantImportWorker extends ImportWorker {
                         fSet.add(build);
 
                         if (count % 200000 == 0) {
-                            Logger.getLogger(VCFVariantImportWorker.class.getName()).log(Level.INFO, "{0} {1}: adding mismatch to db: {2}:{3}-{4} total records added: {5} total lines so far: {6}", new Object[]{(new Date()).toString(), workerName, build.getSeqid(), build.getStart(), build.getStop(), build.getSeqid(), count});
+                            Logger.getLogger(VCFVariantImportWorker.class.getName()).info( new Date().toString() + workerName + " adding mismatch to db: "+build.getSeqid()+":"+build.getStart()+"-"+build.getStop()+" total records added: "+build.getSeqid()+" total lines so far: "+count);
                         }
                     }
 
@@ -303,7 +306,7 @@ public class VCFVariantImportWorker extends ImportWorker {
             System.out.print("\n");
 
         } catch (Exception e) {
-            Logger.getLogger(VCFVariantImportWorker.class.getName()).log(Level.SEVERE, "Exception thrown with file: " + input + "\n", e);
+            Logger.getLogger(VCFVariantImportWorker.class.getName()).fatal( "Exception thrown with file: " + input + "\n", e);
             System.out.println("Exception with file: " + input + "\n" + e.getMessage());
             //e.printStackTrace();
         } finally {

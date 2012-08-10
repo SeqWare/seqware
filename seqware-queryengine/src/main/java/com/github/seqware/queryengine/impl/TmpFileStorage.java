@@ -26,11 +26,10 @@ import com.github.seqware.queryengine.util.SGID;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.log4j.Logger;
 
 /**
  * Stores objects in the temporary directory of the disk
@@ -47,7 +46,7 @@ public class TmpFileStorage extends StorageInterface {
 
     public TmpFileStorage(SerializationInterface i) {
         this.serializer = i;
-        Logger.getLogger(TmpFileStorage.class.getName()).log(Level.INFO, "Starting with {0} in {1} using {2}", new Object[]{TmpFileStorage.class.getSimpleName(), tempDir.getAbsolutePath(), serializer.getClass().getSimpleName()});
+        Logger.getLogger(TmpFileStorage.class.getName()).info( "Starting with "+TmpFileStorage.class.getSimpleName()+" in "+tempDir.getAbsolutePath()+" using "+serializer.getClass().getSimpleName());
         // make a persistent store exists already, otherwise try to retrieve existing items
         try {
             if (!tempDir.exists()) {
@@ -58,7 +57,7 @@ public class TmpFileStorage extends StorageInterface {
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(SimplePersistentBackEnd.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SimplePersistentBackEnd.class.getName()).fatal( null, ex);
             System.exit(-1);
         }
     }
@@ -72,7 +71,7 @@ public class TmpFileStorage extends StorageInterface {
         try {
             FileUtils.writeByteArrayToFile(target, serialRep);
         } catch (IOException ex) {
-            Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, "Failiure to serialize", ex);
+            Logger.getLogger(TmpFileStorage.class.getName()).fatal( "Failiure to serialize", ex);
             System.exit(-1);
         }
     }
@@ -102,7 +101,7 @@ public class TmpFileStorage extends StorageInterface {
             }
             return null;
         } catch (IOException ex) {
-            Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, "Failure to deserialize", ex);
+            Logger.getLogger(TmpFileStorage.class.getName()).fatal( "Failure to deserialize", ex);
         }
         System.exit(-1);
         return null;
@@ -132,7 +131,7 @@ public class TmpFileStorage extends StorageInterface {
         try {
             FileUtils.cleanDirectory(tempDir);
         } catch (IOException ex) {
-            Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, "failed to clear serialization store", ex);
+            Logger.getLogger(TmpFileStorage.class.getName()).fatal( "failed to clear serialization store", ex);
         }
     }
 
@@ -149,7 +148,7 @@ public class TmpFileStorage extends StorageInterface {
                 if (!oldClassesFound) {
                     oldClassesFound = true;
                     //TODO: we'll probably want something cooler, but for now, if we run into an old version, just warn about it
-                    Logger.getLogger(TmpFileStorage.class.getName()).log(Level.INFO, "Obselete classes detected in {0} you may want to clean it", tempDir.getAbsolutePath());
+                    Logger.getLogger(TmpFileStorage.class.getName()).info( "Obselete classes detected in "+tempDir.getAbsolutePath()+" you may want to clean it");
                 }
             }
         }
@@ -182,7 +181,7 @@ public class TmpFileStorage extends StorageInterface {
                     aList.add(suspect);
                 }
             } catch (IOException ex) {
-                Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(TmpFileStorage.class.getName()).fatal( null, ex);
             }
         }
         // check for latest one, HBase will do this much more efficiently
@@ -225,7 +224,7 @@ public class TmpFileStorage extends StorageInterface {
                 }
                 features.add(suspect);
             } catch (IOException ex) {
-                Logger.getLogger(TmpFileStorage.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(TmpFileStorage.class.getName()).fatal( null, ex);
             }
         }
         Collections.sort(features, new Comparator<FeatureList>(){

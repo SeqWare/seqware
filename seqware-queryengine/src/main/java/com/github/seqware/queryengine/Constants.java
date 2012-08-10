@@ -41,9 +41,10 @@ public class Constants {
 
 
     /**
-     * Show the rather verbose map/reduce messages
+     * Show the rather verbose map/reduce messages.
+     * This functionality moved out to the more standard log4j.properties files in the resources directories
      */
-    public final static boolean MAP_REDUCE_LOGGING = true;
+    // public final static boolean MAP_REDUCE_LOGGING = true;
     
     /**
      * Back-end storage implementations will reference this to decide whether to

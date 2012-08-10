@@ -27,13 +27,13 @@ package com.github.seqware.queryengine.model.test;
 //
 //    @BeforeClass
 //    public static void setupSuite() {
-//        Logger.getLogger(InMemoryFileStorageKyroSerializationSuite.class.getName()).log(Level.INFO, "Running test suite with in-memory objects using Kyro serialization to HBase");
+//        Logger.getLogger(InMemoryFileStorageKyroSerializationSuite.class.getName()).info( "Running test suite with in-memory objects using Kyro serialization to HBase");
 //        SWQEFactory.setFactoryBackendType(SWQEFactory.Model_Type.IN_MEMORY, SWQEFactory.Storage_Type.FILE_STORAGE, SWQEFactory.Serialization_Type.KRYO);
 //    }
 //    
 //    @AfterClass
 //    public static void tearDownSuite(){
-//        Logger.getLogger(InMemoryFileStorageKyroSerializationSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
+//        Logger.getLogger(InMemoryFileStorageKyroSerializationSuite.class.getName()).info( "Ending test suite and resetting");
 //        SWQEFactory.setFactoryBackendType(null, null, null);
 //    }
 //}

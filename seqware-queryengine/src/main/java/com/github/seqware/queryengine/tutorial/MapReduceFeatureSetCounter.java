@@ -59,9 +59,6 @@ public class MapReduceFeatureSetCounter {
         try {
             Logger rootLogger = Logger.getRootLogger();
             Level previousLevel = rootLogger.getLevel();
-            if (!Constants.MAP_REDUCE_LOGGING){
-                rootLogger.setLevel(Level.OFF);
-            }
             
             LazyFeatureSet lfSet = (LazyFeatureSet) fSet;
             String prefix = lfSet.getTablename();
@@ -95,10 +92,6 @@ public class MapReduceFeatureSetCounter {
             boolean b = job.waitForCompletion(true);
             if (!b) {
                 throw new IOException("error with job!");
-            }
-            
-            if (!Constants.MAP_REDUCE_LOGGING){
-                rootLogger.setLevel(previousLevel);
             }
             
             return job.getCounters().findCounter(MapReduceTest_RowCounter.RowCounterMapper.Counters.ROWS).getValue();
@@ -160,7 +153,7 @@ public class MapReduceFeatureSetCounter {
      * @throws Exception When running the job fails.
      */
     public static void main(String[] args) throws Exception {
-        UUID uuid = UUID.fromString("eee09c44-d03f-4c26-9c5f-378a4f294a80");
+        UUID uuid = UUID.fromString("fe44eda6-ada7-4bba-ad3d-57d22a2d2e76");
         SGID sgid = new SGID(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits(), 0);
         FeatureSet fSet = SWQEFactory.getQueryInterface().getLatestAtomBySGID(sgid, FeatureSet.class);
         System.out.println("Counted " + MapReduceFeatureSetCounter.getCountForFeatureSet(fSet)+ " features in " + uuid.toString());
