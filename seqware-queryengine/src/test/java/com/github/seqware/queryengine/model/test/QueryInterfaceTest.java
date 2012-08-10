@@ -9,6 +9,8 @@ import com.github.seqware.queryengine.impl.MRHBaseModelManager;
 import com.github.seqware.queryengine.impl.test.SimplePersistentBackEndTest;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.Constant;
+import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
+import com.github.seqware.queryengine.kernel.RPNStack.TagOccurrence;
 import com.github.seqware.queryengine.kernel.RPNStack.Operation;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
@@ -214,7 +216,7 @@ public class QueryInterfaceTest implements Benchmarking {
 
         QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant("chr16"),
-                "seqid",
+                new FeatureAttribute("seqid"),
                 Operation.EQUAL));
         FeatureSet resultSet = queryFuture.get();
         int count = (int) resultSet.getCount();
@@ -222,7 +224,7 @@ public class QueryInterfaceTest implements Benchmarking {
 
         queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant(Feature.Strand.NEGATIVE),
-                "strand",
+                new FeatureAttribute("strand"),
                 Operation.EQUAL));
         resultSet = queryFuture.get();
         count = (int) resultSet.getCount();
@@ -230,10 +232,10 @@ public class QueryInterfaceTest implements Benchmarking {
 
         queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant(Feature.Strand.NEGATIVE),
-                "strand",
+                new FeatureAttribute("strand"),
                 Operation.EQUAL,
                 new Constant("chr16"),
-                "seqid",
+                new FeatureAttribute("seqid"),
                 Operation.EQUAL,
                 Operation.AND));
         resultSet = queryFuture.get();
