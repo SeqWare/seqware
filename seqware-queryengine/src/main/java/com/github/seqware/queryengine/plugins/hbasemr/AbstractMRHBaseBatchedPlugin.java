@@ -16,7 +16,6 @@
  */
 package com.github.seqware.queryengine.plugins.hbasemr;
 
-import com.esotericsoftware.kryo.KryoException;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.FeatureSet;
@@ -39,24 +38,11 @@ public abstract class AbstractMRHBaseBatchedPlugin extends AbstractMRHBasePlugin
     }
     
     public static Object[] handleDeserialization(byte[] data){
-        // why doesn't this work?
-        //Kryo kryo = new Kryo();
-        //kryo.setInstantiatorStrategy(new StdInstantiatorStrategy());
-        //Input input = new Input(new ByteArrayInputStream(data));
-        //Object[] result = (Object[]) kryo.readClassAndObject(input);
-        //input.close();
         Object[] result = (Object[]) SerializationUtils.deserialize(data);
         return result;
     }
 
-    private byte[] serialParam(Object ... obj) throws KryoException {
-        //        Kryo kryo = new Kryo();
-        //        kryo.setInstantiatorStrategy(new StdInstantiatorStrategy());
-        //        ByteArrayOutputStream featureBytes = new ByteArrayOutputStream();
-        //        Output o = new Output(featureBytes);
-        //        kryo.writeClassAndObject(o, obj);
-        //        o.close();
-        //        return featureBytes.toByteArray();
+    private byte[] serialParam(Object ... obj) {
         byte[] serialize = SerializationUtils.serialize(obj);
         return serialize;
     }

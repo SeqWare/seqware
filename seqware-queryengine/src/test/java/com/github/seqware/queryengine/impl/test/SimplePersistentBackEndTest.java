@@ -1,6 +1,5 @@
 package com.github.seqware.queryengine.impl.test;
 
-import com.github.seqware.model.test.FeatureStoreInterfaceTest;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.kernel.RPNStack;
@@ -10,6 +9,7 @@ import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
+import com.github.seqware.queryengine.model.test.FeatureStoreInterfaceTest;
 import java.util.UUID;
 import junit.framework.Assert;
 import org.apache.log4j.Logger;
