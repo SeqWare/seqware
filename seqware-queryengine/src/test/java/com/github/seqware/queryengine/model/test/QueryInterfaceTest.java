@@ -1,6 +1,6 @@
 package com.github.seqware.queryengine.model.test;
 
-import com.github.seqware.model.test.FeatureStoreInterfaceTest;
+import com.github.seqware.queryengine.model.test.FeatureStoreInterfaceTest;
 import com.github.seqware.queryengine.Benchmarking;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
