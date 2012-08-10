@@ -38,7 +38,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.log4j.Logger;
 
 /**
- * Abstract implementation of an abstract map/reduce-based plugin for a HBase
+ * Abstract implementation of an abstract map/reduce-based plug-in for a HBase
  * back-end. Have not figured out how to reconcile an interface that defines
  * map/reduce operations with the HBase map/reduce signatures.
  *
@@ -48,22 +48,23 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
 
     protected FeatureSet outputSet;
     private CreateUpdateManager manager;
-    public static final String PARAMETERS = "parameters";
+    public static final String INT_PARAMETERS = "int_parameters";
+    public static final String EXT_PARAMETERS = "ext_parameters";
     protected Job job;
+    
+    /**
+     * Internal parameters that can be used to pass information to the
+     * Mapper and Reducers.
+     * @return 
+     */
+    public abstract Object[] getInternalParameters(); 
 
     @Override
     public AnalysisPluginInterface.ReturnValue init(FeatureSet inputSet, Object... parameters) {
         try {
-            
-            
             this.manager = SWQEFactory.getModelManager();
             //outputSet should attach to the original reference
             outputSet = manager.buildFeatureSet().setReferenceID(inputSet.getReferenceID()).build();       
-//            Logger.getLogger(AbstractMRHBasePlugin.class.getName()).info("    Value of fSet is " + outputSet.toString());
-//            Logger.getLogger(AbstractMRHBasePlugin.class.getName()).info("    Value of fSet.getSGID is " + outputSet.getSGID().toString());
-//            Logger.getLogger(AbstractMRHBasePlugin.class.getName()).info("    Value of fSet.getReferenceSGID is " + outputSet.getReferenceID().toString());
-//            Logger.getLogger(AbstractMRHBasePlugin.class.getName()).info("    Value of fSet.getReference() is " + outputSet.getReference().toString());
-//            Logger.getLogger(AbstractMRHBasePlugin.class.getName()).info("    Value of fSet.getReferenceSGID().getName() is " + outputSet.getReference().getName().toString());
             manager.close();
 
             // do setup for Map/Reduce from the HBase API
@@ -78,17 +79,19 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
             byte[] sSet = SWQEFactory.getSerialization().serialize(inputSet);
             byte[] dSet = SWQEFactory.getSerialization().serialize(outputSet);
 
-            String[] str_params = new String[3];
-            byte[] serials = this.handleSerialization(parameters);
-            str_params[0] = Base64.encodeBase64String(serials);
-            str_params[1] = Base64.encodeBase64String(sSet);
-            str_params[2] = Base64.encodeBase64String(dSet);
+            String[] str_params = new String[4];
+            byte[] ext_serials = this.handleSerialization(parameters);
+            byte[] int_serials = this.handleSerialization(this.getInternalParameters());
+            str_params[0] = Base64.encodeBase64String(ext_serials);
+            str_params[1] = Base64.encodeBase64String(int_serials);
+            str_params[2] = Base64.encodeBase64String(sSet);
+            str_params[3] = Base64.encodeBase64String(dSet);
             
             File file = new File(new URI(Constants.DEVELOPMENT_DEPENDENCY));
             if (file.exists()){
                 conf.setStrings("tmpjars", Constants.DEVELOPMENT_DEPENDENCY);
             }
-            conf.setStrings(PARAMETERS, str_params);
+            conf.setStrings(EXT_PARAMETERS, str_params);
 
             this.job = new Job(conf, this.getClass().getSimpleName());
             

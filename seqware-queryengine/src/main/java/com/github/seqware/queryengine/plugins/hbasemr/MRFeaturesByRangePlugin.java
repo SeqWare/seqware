@@ -16,125 +16,17 @@
  */
 package com.github.seqware.queryengine.plugins.hbasemr;
 
-import com.github.seqware.queryengine.factory.CreateUpdateManager;
-import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.impl.HBaseStorage;
-import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
-import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.QueryInterface.Location;
-import com.github.seqware.queryengine.model.impl.FeatureList;
-import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByAttributesPlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByRangePlugin;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.client.Scan;
-import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
-import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
-import org.apache.hadoop.hbase.mapreduce.TableMapper;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.log4j.Logger;
 
 /**
  * Implements queries by range operations
  *
  * @author dyuen
  */
-public class MRFeaturesByRangePlugin extends AbstractMRHBaseBatchedPlugin {
+public class MRFeaturesByRangePlugin extends MRFeaturesByFilterPlugin {
 
     @Override
-    public void performVariableInit(String inputTableName, String outputTableName, Scan scan) {
-        try {
-            TableMapReduceUtil.initTableMapperJob(
-                    inputTableName, // input HBase table name
-                    scan, // Scan instance to control CF and attribute selection
-                    MRFeaturesByRangePlugin.Mapper.class, // mapper
-                    null, // mapper output key 
-                    null, // mapper output value
-                    job);
-            TableMapReduceUtil.initTableReducerJob(
-                    outputTableName, // output table
-                    null, // reducer class
-                    job);
-            job.setNumReduceTasks(0);
-        } catch (IOException ex) {
-            Logger.getLogger(MRFeaturesByRangePlugin.class.getName()).fatal(null, ex);
-        }
-    }
-
-    /**
-     * Mapper that runs the count.
-     */
-    private static class Mapper
-            extends TableMapper<ImmutableBytesWritable, Result> {
-
-        private FeatureSet sourceSet;
-        private FeatureSet destSet;
-        private CreateUpdateManager modelManager;
-        private Location location;
-        private String structure;
-        private long start;
-        private long stop;
-        private InMemoryFeaturesByRangePlugin.FeaturesByRangeFilter filter = new InMemoryFeaturesByRangePlugin.FeaturesByRangeFilter();
-
-
-        @Override
-        protected void setup(Mapper.Context context) {
-
-            Configuration conf = context.getConfiguration();
-            String[] strings = conf.getStrings(PARAMETERS);
-            this.sourceSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[1]), FeatureSet.class);
-            this.destSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[2]), FeatureSet.class);
-            byte[] otherParam =  Base64.decodeBase64(strings[0]);
-            Object[] parameters = AbstractMRHBaseBatchedPlugin.handleDeserialization(otherParam);
-            this.location = (Location) parameters[0];
-            this.structure = (String) parameters[1];
-            this.start = (Long) parameters[2];
-            this.stop = (Long) parameters[3];
-            
-            Logger.getLogger(MRFeaturesByRangePlugin.class.getName()).info("    Value of fSet is " + destSet.toString());
-            Logger.getLogger(MRFeaturesByRangePlugin.class.getName()).info("    Value of fSet.getSGID is " + destSet.getSGID().toString());
-            Logger.getLogger(MRFeaturesByRangePlugin.class.getName()).info("    Value of fSet.getReferenceSGID is " + destSet.getReferenceID().toString());
-            Logger.getLogger(MRFeaturesByRangePlugin.class.getName()).info("    Value of fSet.getReference() is " + destSet.getReference().toString());
-            Logger.getLogger(MRFeaturesByRangePlugin.class.getName()).info("    Value of fSet.getReferenceSGID().getName() is " + destSet.getReference().getName().toString());
-
-            this.modelManager = SWQEFactory.getModelManager();
-            this.modelManager.persist(destSet);
-        }
-
-        @Override
-        protected void cleanup(Mapper.Context context) {
-            this.modelManager.close();
-        }
-
-        /**
-         * Maps the data.
-         *
-         * @param row The current table row key.
-         * @param values The columns.
-         * @param context The current context.
-         * @throws IOException When something is broken with the data.
-         * @see org.apache.hadoop.mapreduce.Mapper#map(KEYIN, VALUEIN,
-         * org.apache.hadoop.mapreduce.Mapper.Context)
-         */
-        @Override
-        public void map(ImmutableBytesWritable row, Result values, Mapper.Context context) throws IOException {
-            List<FeatureList> list = HBaseStorage.grabFeatureListsGivenRow(values, sourceSet.getSGID(), SWQEFactory.getSerialization());
-            Collection<Feature> consolidateRow = SimplePersistentBackEnd.consolidateRow(list);
-            Collection<Feature> results = new ArrayList<Feature>();
-            for (Feature f : consolidateRow) {
-                f.setManager(modelManager);
-                boolean match = filter.featurePasses(f, location, structure, start, stop);
-                if (match) {
-                    results.add(f);
-                }
-            }
-            destSet.add(results);
-        }
+    public Object[] getInternalParameters() {
+        return new Object[]{new InMemoryFeaturesByRangePlugin.FeaturesByRangeFilter()};
     }
 }

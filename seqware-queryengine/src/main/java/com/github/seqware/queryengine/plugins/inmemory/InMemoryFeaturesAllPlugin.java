@@ -29,7 +29,7 @@ public class InMemoryFeaturesAllPlugin extends InMemoryFeaturesByFilterPlugin {
         return new InMemoryFeaturesAllPlugin.FeaturesAllFilter();
     }
 
-    public class FeaturesAllFilter implements FeatureFilter {
+    public static class FeaturesAllFilter implements FeatureFilter {
 
         @Override
         public boolean featurePasses(Feature f, Object... parameters) {

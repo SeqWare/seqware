@@ -16,13 +16,16 @@
  */
 package com.github.seqware.queryengine.plugins.hbasemr;
 
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.FeatureList;
+import com.github.seqware.queryengine.plugins.inmemory.FeatureFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.apache.commons.codec.binary.Base64;
@@ -33,72 +36,68 @@ import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.lib.output.NullOutputFormat;
 import org.apache.log4j.Logger;
 
 /**
- * Counts the number of Features in a FeatureSet
+ * Implements the generic queries which independently decide on whether a Feature is 
+ * included in a result.
  *
  * @author dyuen
  */
-public class MRFeatureSetCountPlugin extends AbstractMRHBasePlugin<Long> {
-
+public abstract class MRFeaturesByFilterPlugin extends AbstractMRHBaseBatchedPlugin {
+    
     @Override
-    public void performVariableInit(String inputTableName, String destTableName, Scan scan) {
+    public void performVariableInit(String inputTableName, String outputTableName, Scan scan) {
         try {
             TableMapReduceUtil.initTableMapperJob(
                     inputTableName, // input HBase table name
                     scan, // Scan instance to control CF and attribute selection
-                    MRFeatureSetCountPlugin.RowCounterMapper.class, // mapper
+                    MRFeaturesByFilterPlugin.Mapper.class, // mapper
                     null, // mapper output key 
                     null, // mapper output value
                     job);
-            job.setOutputFormatClass(NullOutputFormat.class);   // because we aren't emitting anything from mapper
+            TableMapReduceUtil.initTableReducerJob(
+                    outputTableName, // output table
+                    null, // reducer class
+                    job);
+            job.setNumReduceTasks(0);
         } catch (IOException ex) {
-            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).fatal(null, ex);
+            Logger.getLogger(MRFeaturesByFilterPlugin.class.getName()).fatal( null, ex);
         }
     }
 
-    @Override
-    public Long variableResult() {
-        try {
-            long result = job.getCounters().findCounter(MRFeatureSetCountPlugin.RowCounterMapper.Counters.ROWS).getValue();
-            return result;
-        } catch (IOException ex) {
-            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).fatal(null, ex);
-        }
-        return null;
-    }
+    /**
+     * Generic Mapper that uses a FeatureFilter.
+     */
+    private static class Mapper extends TableMapper<ImmutableBytesWritable, Result> {
 
-    @Override
-    public byte[] handleSerialization(Object... parameters) {
-        /** no other parameters */
-        return new byte[0];
-    }
-
-    @Override
-    public Object[] getInternalParameters() {
-        return new Object[0];
-    }
-    
-    private static class RowCounterMapper
-            extends TableMapper<ImmutableBytesWritable, Result> {
         private FeatureSet sourceSet;
         private FeatureSet destSet;
-
-        /**
-         * Counter enumeration to count the actual rows.
-         */
-        public static enum Counters {
-            ROWS
-        }
+        private CreateUpdateManager modelManager;
+        private Object[] ext_parameters;
+        private Object[] int_parameters;
+        private FeatureFilter filter;
         
         @Override
         protected void setup(Mapper.Context context) {
+
             Configuration conf = context.getConfiguration();
             String[] strings = conf.getStrings(EXT_PARAMETERS);
-            this.sourceSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[0]), FeatureSet.class);
-            this.destSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[1]), FeatureSet.class);
+            this.ext_parameters = AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(strings[0]));
+            this.int_parameters = AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(strings[1]));
+            this.sourceSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[2]), FeatureSet.class);
+            this.destSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[3]), FeatureSet.class);
+            
+            // specific to this kind of plugin
+            this.filter = (FeatureFilter) this.int_parameters[0];
+
+            this.modelManager = SWQEFactory.getModelManager();
+            this.modelManager.persist(destSet);
+        }
+
+        @Override
+        protected void cleanup(Mapper.Context context) {
+            this.modelManager.close();
         }
 
         /**
@@ -112,17 +111,18 @@ public class MRFeatureSetCountPlugin extends AbstractMRHBasePlugin<Long> {
          * org.apache.hadoop.mapreduce.Mapper.Context)
          */
         @Override
-        public void map(ImmutableBytesWritable row, Result values,
-                Mapper.Context context)
-                throws IOException {
+        public void map(ImmutableBytesWritable row, Result values, Mapper.Context context) throws IOException {
             List<FeatureList> list = HBaseStorage.grabFeatureListsGivenRow(values, sourceSet.getSGID(), SWQEFactory.getSerialization());
-            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).trace("Counting " + sourceSet.getSGID() + " on row with " + list.size() + " lists");
             Collection<Feature> consolidateRow = SimplePersistentBackEnd.consolidateRow(list);
-            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).trace("Consolidated to  " + consolidateRow.size() + " features");
-            for(Feature f: consolidateRow){
-                // why can't I increment this by the size directly on the cluster?
-                context.getCounter(MRFeatureSetCountPlugin.RowCounterMapper.Counters.ROWS).increment(1);
+            Collection<Feature> results = new ArrayList<Feature>();
+            for (Feature f : consolidateRow) {
+                f.setManager(modelManager);
+                boolean match = filter.featurePasses(f, this.ext_parameters);
+                if (match) {
+                    results.add(f);
+                }
             }
+            destSet.add(results);
         }
     }
 }

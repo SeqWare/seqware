@@ -69,12 +69,11 @@ public class Constants {
             put("hbase.zookeeper.quorum", "hboot.res.oicr.on.ca").
             put("hbase.zookeeper.property.clientPort", "2181").
             put("hbase.master", "hboot.res.oicr.on.ca:60000").
-            //put("mapred.job.tracker", "local").
             put("mapred.job.tracker", "hboot.res.oicr.on.ca:8021").
             put("fs.default.name", "hdfs://hboot.res.oicr.on.ca:8020").
             build());
     /**
      * Properties used when connecting to a remote instance of HBase
      */
-    public final static Map<String, String> HBASE_PROPERTIES = SQWDEV;
+    public final static Map<String, String> HBASE_PROPERTIES = HBOOT;
 }

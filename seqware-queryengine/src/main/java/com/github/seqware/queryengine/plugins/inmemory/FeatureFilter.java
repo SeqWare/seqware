@@ -17,12 +17,13 @@
 package com.github.seqware.queryengine.plugins.inmemory;
 
 import com.github.seqware.queryengine.model.Feature;
+import java.io.Serializable;
 
 /**
  * Interface for matching functions that we can quickly use in both in-memory and M/R plug-ins.
  * @author dyuen
  */
-public interface FeatureFilter {
+public interface FeatureFilter extends Serializable{
     
     public boolean featurePasses(Feature f, Object ... parameters);
     

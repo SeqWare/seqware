@@ -16,9 +16,6 @@
  */
 package com.github.seqware.queryengine.model.test.util;
 
-import com.github.seqware.model.test.FeatureStoreInterfaceTest;
-import com.github.seqware.model.test.FeatureTest;
-import com.github.seqware.model.test.GVFFormatTest;
 import com.github.seqware.queryengine.model.test.*;
 import org.junit.runner.RunWith;
 
