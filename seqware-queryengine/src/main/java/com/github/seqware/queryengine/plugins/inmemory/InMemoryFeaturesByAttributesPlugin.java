@@ -17,6 +17,8 @@
 package com.github.seqware.queryengine.plugins.inmemory;
 
 import com.github.seqware.queryengine.kernel.RPNStack;
+import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
+import com.github.seqware.queryengine.kernel.RPNStack.Parameter;
 import com.github.seqware.queryengine.model.Feature;
 
 /**
@@ -38,8 +40,10 @@ public class InMemoryFeaturesByAttributesPlugin extends InMemoryFeaturesByFilter
         public boolean featurePasses(Feature f, Object... parameters) {
             RPNStack rpnStack = (RPNStack) parameters[0];
             // Get the parameters from the RPN stack and replace them with concrete values:
-            for (Object parameter : rpnStack.getParameters()) {
-                rpnStack.setParameter(parameter, f.getAttribute((String) parameter));
+            for (Parameter parameter : rpnStack.getParameters()) {
+                if (!(parameter instanceof FeatureAttribute))
+                    throw new UnsupportedOperationException("This attribute can only query feature attributes.");
+                rpnStack.setParameter(parameter, f.getAttribute(parameter.getName()));
             }
             boolean result = (Boolean) rpnStack.evaluate();
             return result;
