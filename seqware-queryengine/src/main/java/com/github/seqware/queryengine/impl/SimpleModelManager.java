@@ -29,8 +29,7 @@ import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 import com.github.seqware.queryengine.util.FSGID;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * A Simple implementation of the CreateUpdateManager interface. We can make
@@ -66,7 +65,7 @@ public class SimpleModelManager implements CreateUpdateManager {
         try {
             Thread.sleep(1);
         } catch (InterruptedException ex) {
-            Logger.getLogger(SimpleModelManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SimpleModelManager.class.getName()).fatal("Exception when waiting to flush objects", ex);
         }
 
         // create separate working lists for objects destined for different tables
@@ -192,7 +191,7 @@ public class SimpleModelManager implements CreateUpdateManager {
     public void persist(Atom p) {
         AtomImpl pImpl = (AtomImpl) p;
         if (this.dirtySet.containsKey(p.getSGID().toString())) {
-            Logger.getLogger(SimpleModelManager.class.getName()).log(Level.INFO, "Attempted to persist a managed object, ignored it");
+            Logger.getLogger(SimpleModelManager.class.getName()).warn("Attempted to persist a managed object, ignored it");
             return;
         }
         // we also have to make sure that the correct manager is associated with this Atom

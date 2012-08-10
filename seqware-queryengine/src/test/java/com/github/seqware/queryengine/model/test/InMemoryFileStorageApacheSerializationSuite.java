@@ -18,8 +18,7 @@ package com.github.seqware.queryengine.model.test;
 
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.test.util.DynamicSuite;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -35,14 +34,14 @@ public class InMemoryFileStorageApacheSerializationSuite {
 
     @BeforeClass
     public static void setupSuite() {
-        Logger.getLogger(InMemoryFileStorageApacheSerializationSuite.class.getName()).log(Level.INFO, "Running test suite with in-memory objects and apache serialization to the filesystem");
+        Logger.getLogger(InMemoryFileStorageApacheSerializationSuite.class.getName()).info( "Running test suite with in-memory objects and apache serialization to the filesystem");
         SWQEFactory.setFactoryBackendType(SWQEFactory.Model_Type.IN_MEMORY, SWQEFactory.Storage_Type.FILE_STORAGE, SWQEFactory.Serialization_Type.APACHE);
         SWQEFactory.getStorage().clearStorage();
     }
 
     @AfterClass
     public static void tearDownSuite() {
-        Logger.getLogger(InMemoryFileStorageApacheSerializationSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
+        Logger.getLogger(InMemoryFileStorageApacheSerializationSuite.class.getName()).info( "Ending test suite and resetting");
         SWQEFactory.setFactoryBackendType(null, null, null);
     }
 }

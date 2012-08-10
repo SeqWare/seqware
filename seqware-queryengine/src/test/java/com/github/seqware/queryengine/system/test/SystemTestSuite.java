@@ -18,8 +18,7 @@ package com.github.seqware.queryengine.system.test;
 
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.system.test.util.DynamicSuite;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -33,12 +32,12 @@ public class SystemTestSuite {
 
     @BeforeClass
     public static void setupSuite() {
-        Logger.getLogger(SystemTestSuite.class.getName()).log(Level.INFO, "Running system test suite with defaults");
+        Logger.getLogger(SystemTestSuite.class.getName()).info( "Running system test suite with defaults");
     }
     
     @AfterClass
     public static void tearDownSuite(){
-        Logger.getLogger(SystemTestSuite.class.getName()).log(Level.INFO, "Ending test suite and resetting");
+        Logger.getLogger(SystemTestSuite.class.getName()).info( "Ending test suite and resetting");
         SWQEFactory.setFactoryBackendType(null, null, null);
     }
 }

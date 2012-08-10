@@ -27,8 +27,9 @@ import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import java.util.Date;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
+
+;
 
 /**
  * Special class for Features which also stores the row key for features.
@@ -93,11 +94,11 @@ public class FSGID extends SGID implements KryoSerializable {
             rowKey = builder.toString();
             referenceName = fSet.getReference().getName();
         } catch (Exception ex) {
-            Logger.getLogger(FSGID.class.getName()).log(Level.SEVERE, null, ex);
-            System.err.println("Could not upgrade SGID on Feature " + f.getSGID() + " due to location out of bounds");
-            System.err.println("    Value of fSet is " + fSet.toString());
-            System.err.println("    Value of f is " + f.toString());
-            System.err.println("    Value of fSet.getSGID is " + fSet.getSGID().toString());
+            Logger.getLogger(FSGID.class.getName()).fatal( null, ex);
+            Logger.getLogger(FSGID.class.getName()).fatal("Could not upgrade SGID on Feature " + f.getSGID() + " due to location out of bounds");
+            Logger.getLogger(FSGID.class.getName()).fatal("    Value of fSet is " + fSet.toString());
+            Logger.getLogger(FSGID.class.getName()).fatal("    Value of f is " + f.toString());
+            Logger.getLogger(FSGID.class.getName()).fatal("    Value of fSet.getSGID is " + fSet.getSGID().toString());
         }
     }
 

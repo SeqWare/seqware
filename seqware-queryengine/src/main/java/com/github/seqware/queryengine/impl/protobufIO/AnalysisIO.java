@@ -21,8 +21,7 @@ import com.github.seqware.queryengine.dto.QueryEngine.AnalysisPB;
 import com.github.seqware.queryengine.model.Analysis;
 import com.github.seqware.queryengine.model.impl.inMemory.InMemoryQueryFutureImpl;
 import com.google.protobuf.InvalidProtocolBufferException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * Place-holder
@@ -69,7 +68,7 @@ public class AnalysisIO implements ProtobufTransferInterface<AnalysisPB, Analysi
             QueryEngine.AnalysisPB userpb = QueryEngine.AnalysisPB.parseFrom(arr);
             return pb2m(userpb);
         } catch (InvalidProtocolBufferException ex) {
-            Logger.getLogger(FeatureSetIO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FeatureSetIO.class.getName()).fatal("Invalid PB found for Analysis", ex);
         }
         return null;
     }

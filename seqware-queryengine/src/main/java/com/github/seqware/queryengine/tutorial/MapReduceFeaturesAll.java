@@ -63,9 +63,6 @@ public class MapReduceFeaturesAll {
         try {
             Logger rootLogger = Logger.getRootLogger();
             Level previousLevel = rootLogger.getLevel();
-            if (!Constants.MAP_REDUCE_LOGGING) {
-                rootLogger.setLevel(Level.OFF);
-            }
             String tableName = generateTableName(sourceSet);
             String destTableName = generateTableName(destSet);
 
@@ -104,10 +101,6 @@ public class MapReduceFeaturesAll {
             boolean b = job.waitForCompletion(true);
             if (!b) {
                 throw new IOException("error with job!");
-            }
-
-            if (!Constants.MAP_REDUCE_LOGGING) {
-                rootLogger.setLevel(previousLevel);
             }
         } catch (InterruptedException ex) {
             Logger.getLogger(MapReduceFeaturesAll.class.getName()).log(Level.FATAL, null, ex);

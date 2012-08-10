@@ -34,7 +34,7 @@ public class ACLTest {
 
     @BeforeClass
     public static void setupTests() {
-//        Logger.getLogger(ACLTest.class.getName()).log(Level.INFO, "@BeforeClass");
+//        Logger.getLogger(ACLTest.class.getName()).info( "@BeforeClass");
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         // test ACL on every possible class that can be ACLed
         fSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing_dummy_reference").build()).build();
@@ -70,7 +70,7 @@ public class ACLTest {
 
     @Test
     public void testACLWithVersions() {
-//        Logger.getLogger(ACLTest.class.getName()).log(Level.INFO, "@Test");
+//        Logger.getLogger(ACLTest.class.getName()).info( "@Test");
         // check that everything looks ok
         FeatureSet targetSet = (FeatureSet) SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, fSet.getSGID());
         // check some versioning while we are at it

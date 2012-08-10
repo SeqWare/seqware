@@ -7,8 +7,12 @@ import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
+
+;
+import org.biojava3.genome.parsers.gff.FeatureI;
+import org.biojava3.genome.parsers.gff.FeatureList;
+import org.biojava3.genome.parsers.gff.GFF3Reader;
 import org.biojava3.genome.parsers.gff.FeatureI;
 import org.biojava3.genome.parsers.gff.FeatureList;
 import org.biojava3.genome.parsers.gff.GFF3Reader;
@@ -416,7 +420,7 @@ public class GFF3VariantImportWorker extends ImportWorker {
             }
             System.out.print("\n");
         } catch (Exception e) {
-            Logger.getLogger(GFF3VariantImportWorker.class.getName()).log(Level.SEVERE, "Exception thrown with file: " + input + "\n", e);
+            Logger.getLogger(GFF3VariantImportWorker.class.getName()).fatal( "Exception thrown with file: " + input + "\n", e);
             System.out.println("Exception with file: " + input + "\n" + e.getMessage());
             //e.printStackTrace();
         } finally {

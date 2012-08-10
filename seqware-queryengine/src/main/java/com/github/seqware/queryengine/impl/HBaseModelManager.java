@@ -21,8 +21,7 @@ import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.util.FSGID;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * A Simple implementation of the CreateUpdateManager interface. We can make this more
@@ -52,7 +51,7 @@ public class HBaseModelManager extends SimpleModelManager {
                 // should be upgraded now, if not
                 if (!(f.getSGID() instanceof FSGID)) {
                     // this should not happen
-                    Logger.getLogger(FSGID.class.getName()).log(Level.WARNING, "Orphaned features, please add them to a FeatureSet, aborting flush()");
+                    Logger.getLogger(FSGID.class.getName()).warn("Orphaned features, please add them to a FeatureSet, aborting flush()");
                     return;
                 }
             }

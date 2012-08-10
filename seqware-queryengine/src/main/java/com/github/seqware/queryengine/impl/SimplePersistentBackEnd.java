@@ -32,8 +32,7 @@ import com.github.seqware.queryengine.util.InMemoryIterable;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -294,9 +293,9 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
             plugin.init(set, parameters);
             return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
         } catch (InstantiationException ex) {
-            Logger.getLogger(SimplePersistentBackEnd.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SimplePersistentBackEnd.class.getName()).fatal( null, ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(SimplePersistentBackEnd.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SimplePersistentBackEnd.class.getName()).fatal( null, ex);
         }
         return null;
     }

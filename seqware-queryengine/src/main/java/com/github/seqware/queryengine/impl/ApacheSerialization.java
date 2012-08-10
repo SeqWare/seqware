@@ -18,11 +18,10 @@ package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.lang.SerializationException;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -49,7 +48,7 @@ public class ApacheSerialization implements SerializationInterface {
         } catch (SerializationException e) {
             if (!corruptClassesDetected){
                 corruptClassesDetected = true;
-                Logger.getLogger(ApacheSerialization.class.getName()).log(Level.INFO, "ApacheSerialization hit an invalid byte array, ignore if this is expected");
+                Logger.getLogger(ApacheSerialization.class.getName()).info("ApacheSerialization hit an invalid byte array, ignore if this is expected");
             }
         }
         return null;

@@ -17,8 +17,7 @@ import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesByAttributesPlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByAttributesPlugin;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -207,7 +206,7 @@ public class QueryInterfaceTest implements Benchmarking {
         try {
             mManager.persist(bSet);
         } catch (Exception e) {
-            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).log(Level.SEVERE, "Exception", e);
+            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).fatal( "Exception", e);
             junit.framework.Assert.assertTrue("Backend could not store the given FeatureSet.", false);
         }
 

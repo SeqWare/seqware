@@ -171,10 +171,10 @@ public class HBaseStorage extends StorageInterface {
                 if (obj instanceof FeatureList) {
                     FSGID fsgid = (FSGID) obj.getSGID();
                     p.add(TEST_FAMILY_INBYTES, Bytes.toBytes(fsgid.getFeatureSetID().getUuid().toString()), featureBytes);
-                    Logger.getLogger(HBaseStorage.class.getName()).info("Put on (FeatureList of size " + ((FeatureList)obj).getFeatures().size() + ") " + obj.toString() + " at " + obj.getSGID().toString());
+                    Logger.getLogger(HBaseStorage.class.getName()).trace("Put on (FeatureList of size " + ((FeatureList)obj).getFeatures().size() + ") " + obj.toString() + " at " + obj.getSGID().toString());
                 } else {
                     p.add(TEST_FAMILY_INBYTES, TEST_QUALIFIER_INBYTES, featureBytes);
-                    Logger.getLogger(HBaseStorage.class.getName()).info("Put on " + obj.toString() + " at " + obj.getSGID().toString());
+                    Logger.getLogger(HBaseStorage.class.getName()).trace("Put on " + obj.toString() + " at " + obj.getSGID().toString());
                 }
                 putList.add(p);
             }
@@ -191,7 +191,7 @@ public class HBaseStorage extends StorageInterface {
 
             // establish put
             Object[] putBatch = table.batch(putList);
-            Logger.getLogger(HBaseStorage.class.getName()).info("putBatch results: " + putBatch.length);
+            Logger.getLogger(HBaseStorage.class.getName()).trace("putBatch results: " + putBatch.length);
         } catch (IOException ex) {
             Logger.getLogger(HBaseStorage.class.getName()).fatal( null, ex);
         } catch (InterruptedException ex) {
