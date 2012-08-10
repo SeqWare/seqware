@@ -1,6 +1,8 @@
 package com.github.seqware.queryengine.kernel;
 
 
+import com.github.seqware.queryengine.model.Tag;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -12,7 +14,7 @@ import java.util.*;
 public class RPNStack implements Serializable {
 
     private List<Object> stack;
-    private Map<Object, Integer> parameters = new HashMap<Object, Integer>();
+    private Map<Parameter, Integer> parameters = new HashMap<Parameter, Integer>();
 
     /**
      * Operations for combining query constraints.
@@ -51,6 +53,70 @@ public class RPNStack implements Serializable {
         }
     }
 
+    public abstract static class Parameter {
+        private String name;
+
+        protected Parameter(String name) {
+            this.name = name;
+        }
+
+        public final String getName() {
+            return name;
+        }
+
+        public final String getUniqueName() {
+            return this.getClass().getName() + "://" + name;
+        }
+
+        @Override
+        public int hashCode() {
+            return this.getUniqueName().hashCode();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof Parameter))
+                return false;
+
+            return this.getUniqueName().equals(((Parameter)o).getUniqueName());
+        }
+    }
+
+    /**
+     * Represents attributes of features that are passed as parameter.
+     */
+    public static class FeatureAttribute extends Parameter {
+        public FeatureAttribute(String name) {
+            super(name);
+        }
+    }
+
+    /**
+     * Represents tags whose occurrence is probed.
+     */
+    public static class TagOccurrence extends Parameter {
+        public TagOccurrence(String name) {
+            super(name);
+        }
+    }
+
+    /**
+     * Represents tag/value pairs that should be present.
+     */
+    public static class TagValuePresence extends Parameter {
+        private Tag.ValueType value;
+
+        public TagValuePresence(String name, Tag.ValueType value) {
+            super(name + "/" + value);
+
+            this.value = value;
+        }
+
+        public Tag.ValueType getValue() {
+            return this.value;
+        }
+    }
+
     public RPNStack(Object ... arguments) {
         this.stack = Arrays.asList(arguments);
 
@@ -61,8 +127,10 @@ public class RPNStack implements Serializable {
                 this.stack.set(i, ((Constant)argument).getValue());
             } else if (argument instanceof Operation) {
                 // Do nothing.
-            } else // Has to be a parameter now...
-                this.parameters.put(argument, i);
+            } else if (argument instanceof Parameter) {
+                this.parameters.put((Parameter)argument, i);
+            } else
+                throw new UnsupportedOperationException("An RPNStack can only be populated with Constant, Parameter, or Operation instances. You provided a " + argument.getClass().getName());
         }
     }
 
@@ -72,7 +140,7 @@ public class RPNStack implements Serializable {
      * @param parameter Parameter whose value is to be set.
      * @param value Value of the parameter.
      */
-    public void setParameter(Object parameter, Object value) {
+    public void setParameter(Parameter parameter, Object value) {
         this.stack.set(this.parameters.get(parameter), value);
     }
 
@@ -80,7 +148,7 @@ public class RPNStack implements Serializable {
      * Returns the parameters of the argument stack, i.e., everything that is not a constant and considered to be a variable.
      * @return
      */
-    public Set<Object> getParameters() {
+    public Set<Parameter> getParameters() {
         return this.parameters.keySet();
     }
 
