@@ -9,10 +9,6 @@ import java.io.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-;
-import java.util.regex.Pattern;
-import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.log4j.Logger;
 import java.util.regex.Pattern;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
@@ -64,8 +60,7 @@ public class VCFVariantImportWorker extends ImportWorker {
                     throw new Exception("Don't know how to interpret the filename extension for: " + input + " we support 'bz2', 'bzip2', 'gz', and 'gzip'");
                 }
             } else {
-                inputStream =
-                        new BufferedReader(new FileReader(input));
+                inputStream = new BufferedReader(new FileReader(input));
             }
             String l;
             //Variant m = new Variant();
@@ -303,11 +298,8 @@ public class VCFVariantImportWorker extends ImportWorker {
 
             // close file
             inputStream.close();
-            System.out.print("\n");
-
         } catch (Exception e) {
             Logger.getLogger(VCFVariantImportWorker.class.getName()).fatal( "Exception thrown with file: " + input + "\n", e);
-            System.out.println("Exception with file: " + input + "\n" + e.getMessage());
             //e.printStackTrace();
         } finally {
             // new, this is needed to have the model manager write results to the DB in one big batch

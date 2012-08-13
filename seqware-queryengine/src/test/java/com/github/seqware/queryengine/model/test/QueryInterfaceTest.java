@@ -170,7 +170,7 @@ public class QueryInterfaceTest implements Benchmarking {
     public void testTypeQuery() {
         // get a FeatureSet from the back-end
         QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeaturesByAttributes(0, aSet, new RPNStack(
-                new Constant("type1"), "type", Operation.EQUAL));
+                new Constant("type1"), new FeatureAttribute("type"), Operation.EQUAL));
         // check that Features are present match
         FeatureSet result = future.get();
         for (Feature f : result) {
@@ -193,7 +193,7 @@ public class QueryInterfaceTest implements Benchmarking {
         }
         // get a FeatureSet from the back-end
             QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeaturesByPlugin(0, arbitraryPlugin, aSet, new RPNStack(
-                    new Constant("type1"), "type", Operation.EQUAL));
+                    new Constant("type1"), new FeatureAttribute("type"), Operation.EQUAL));
             // check that Features are present match
             FeatureSet result = future.get();
             for (Feature f : result) {

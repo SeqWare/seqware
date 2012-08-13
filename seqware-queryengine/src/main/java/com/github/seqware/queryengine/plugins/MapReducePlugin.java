@@ -4,7 +4,8 @@ import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 
 /**
- * An abstracted map-reduce interface.
+ * An abstracted map-reduce interface. These interfaces will eventually restrict our plug-ins.
+ * Currently, they are just placeholders.
  *
  * Implementation orients itself on HBase's TableMapper, TableReduce.
  *

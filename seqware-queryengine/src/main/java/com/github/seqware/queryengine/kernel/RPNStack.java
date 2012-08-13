@@ -2,7 +2,6 @@ package com.github.seqware.queryengine.kernel;
 
 
 import com.github.seqware.queryengine.model.Tag;
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -53,7 +52,7 @@ public class RPNStack implements Serializable {
         }
     }
 
-    public abstract static class Parameter {
+    public abstract static class Parameter implements Serializable {
         private String name;
 
         protected Parameter(String name) {
