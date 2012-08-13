@@ -41,9 +41,12 @@ public class InMemoryFeaturesByAttributesPlugin extends InMemoryFeaturesByFilter
             RPNStack rpnStack = (RPNStack) parameters[0];
             // Get the parameters from the RPN stack and replace them with concrete values:
             for (Parameter parameter : rpnStack.getParameters()) {
-                if (!(parameter instanceof FeatureAttribute))
-                    throw new UnsupportedOperationException("This attribute can only query feature attributes.");
-                rpnStack.setParameter(parameter, f.getAttribute(parameter.getName()));
+                if (parameter instanceof FeatureAttribute)
+                    rpnStack.setParameter(parameter, f.getAttribute(parameter.getName()));
+                else if (parameter instanceof RPNStack.TagOccurrence)
+                    rpnStack.setParameter(parameter, f.getTagByKey(parameter.getName()) != null);
+                else
+                    throw new UnsupportedOperationException("This plugin can only handle FeatureAttribute parameters.");
             }
             boolean result = (Boolean) rpnStack.evaluate();
             return result;
