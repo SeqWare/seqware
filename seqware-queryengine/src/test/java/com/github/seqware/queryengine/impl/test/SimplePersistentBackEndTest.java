@@ -4,6 +4,7 @@ import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.Constant;
+import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
 import com.github.seqware.queryengine.kernel.RPNStack.Operation;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Feature;
@@ -72,7 +73,7 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
 
         QueryFuture<FeatureSet> queryFuture = backend.getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant("chr16"),
-                "seqid",
+                new FeatureAttribute("seqid"),
                 Operation.EQUAL
         ));
         FeatureSet resultSet = queryFuture.get();
@@ -80,7 +81,7 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
 
         queryFuture = backend.getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant(Feature.Strand.NEGATIVE),
-                "strand",
+                new FeatureAttribute("strand"),
                 Operation.EQUAL
         ));
         resultSet = queryFuture.get();
@@ -88,10 +89,10 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
 
         queryFuture = backend.getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant(Feature.Strand.NEGATIVE),
-                "strand",
+                new FeatureAttribute("strand"),
                 Operation.EQUAL,
                 new Constant("chr16"),
-                "seqid",
+                new FeatureAttribute("seqid"),
                 Operation.EQUAL,
                 Operation.AND
         ));

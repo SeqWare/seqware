@@ -25,13 +25,20 @@
             <id>Cloudera repository</id>
             <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
         </repository>
-        <!-- looks down, added artifacts to local repo 
+        
+        <!--
 	<repository>
             <id>biojava3-repository</id>
             <name>BioJava Repository</name>
             <url>http://biojava.org/download/maven</url>
         </repository>
-	-->
+
+        <repository>
+            <id>biojava-maven-repo</id>
+            <name>BioJava Repository</name>
+            <url>http://biojava.org/download/maven</url>
+        </repository>
+        -->
     </repositories>
 
     <build>
@@ -42,6 +49,9 @@
                     <include>**/*.java</include>
                 </includes>
             </resource>
+	    <resource>
+		<directory>src/main/resources</directory>
+	    </resource>
         </resources>
         
         <plugins>
@@ -233,6 +243,11 @@
             <groupId>org.biojava</groupId>
             <artifactId>biojava3-genome</artifactId>
             <version>3.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.biojava</groupId>
+            <artifactId>core</artifactId>
+            <version>1.8.2</version>
         </dependency>
     </dependencies>
 </project>

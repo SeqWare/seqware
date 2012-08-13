@@ -16,7 +16,6 @@
  */
 package com.github.seqware.queryengine.impl.test.util;
 
-import com.github.seqware.model.test.util.*;
 import org.junit.runners.Suite;
 import org.junit.runners.model.InitializationError;
 

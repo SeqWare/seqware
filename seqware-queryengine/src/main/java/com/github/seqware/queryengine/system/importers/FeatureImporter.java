@@ -7,12 +7,14 @@ import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Reference;
-import com.github.seqware.queryengine.system.importers.workers.GFF3VariantImportWorker;
 import com.github.seqware.queryengine.system.importers.workers.ImportWorker;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 ;
@@ -20,25 +22,27 @@ import org.apache.log4j.Logger;
 /**
  * Port of the class from the original prototype, adapted to use the new classes
  * in the new API. In the old API, there was very little "management" code so
- * all of the workers shared a reference to the same Store class with a small dab of 
- * synchronization. In the new API, we have to contend with the CreateUpdateManager, so
- * I think it makes more sense to have one CreateUpdateManager per thread rather than freeze 
- * all threads when one wants to synchronize for example. 
+ * all of the workers shared a reference to the same Store class with a small
+ * dab of synchronization. In the new API, we have to contend with the
+ * CreateUpdateManager, so I think it makes more sense to have one
+ * CreateUpdateManager per thread rather than freeze all threads when one wants
+ * to synchronize for example.
  *
  * @author boconnor
  * @author dyuen
  */
 public class FeatureImporter extends Importer {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         FeatureImporter.mainMethod(args);
     }
-    
+
     /**
-     * Import a set of Features into a particular specified reference.
-     * The ID for the FeatureSet we use is returned.
+     * Import a set of Features into a particular specified reference. The ID
+     * for the FeatureSet we use is returned.
+     *
      * @param args
-     * @return 
+     * @return
      */
     public static SGID mainMethod(String[] args) {
 
@@ -46,7 +50,7 @@ public class FeatureImporter extends Importer {
             System.err.println("Only " + args.length + " arguments found");
             //System.out.println("FeatureImporter <worker_module> <db_dir> <create_db> <cacheSize> <locks> "
             //        + "<max_thread_count> <compressed_input> <input_file(s)>");
-            System.out.println("FeatureImporter <worker_module> <max_thread_count> <compressed_input> <reference name> <input_file(s)>");
+            System.out.println("FeatureImporter <worker_module> <max_thread_count> <compressed_input> <reference name> <input_file1[,input_file(s)]> [output_file]");
             System.exit(-1);
         }
 
@@ -60,23 +64,37 @@ public class FeatureImporter extends Importer {
         String referenceID = args[3];
 
         ArrayList<String> inputFiles = new ArrayList<String>();
-        for (int i = 4; i < args.length; i++) {
-            inputFiles.add(args[i]);
+        inputFiles.addAll(Arrays.asList(args[4].split(",")));
+
+        // handle output
+        File outputFile = null;
+        if (args.length == 6) {
+            outputFile = new File(args[5]);
+            if (outputFile.exists()) {
+                outputFile.delete();
+            }
+            try {
+                boolean created = outputFile.createNewFile();
+            } catch (IOException ex) {
+                Logger.getLogger(FeatureImporter.class.getName()).fatal("Could not create output file");
+                System.exit(-1);
+            }
         }
+
         // objects to access the mutation datastore
         //      BerkeleyDBFactory factory = new BerkeleyDBFactory();
         //      BerkeleyDBStore store = null;
         CreateUpdateManager modelManager = SWQEFactory.getModelManager();
         SeqWareIterable<Reference> references = SWQEFactory.getQueryInterface().getReferences();
         Reference ref = null;
-        for(Reference reference : references){
-            if (reference.getName().equals(referenceID)){
+        for (Reference reference : references) {
+            if (reference.getName().equals(referenceID)) {
                 ref = reference;
                 break;
             }
         }
         // see if this referenceID already exists
-        if (ref == null){
+        if (ref == null) {
             ref = modelManager.buildReference().setName(referenceID).build();
             modelManager.flush();
         }
@@ -118,7 +136,7 @@ public class FeatureImporter extends Importer {
 
                     // print message
                     String input = (String) it.next();
-                    System.out.println("Starting worker thread to process file: " + input);
+                    Logger.getLogger(FeatureImporter.class.getName()).info("Starting worker thread to process file: " + input);
 
                     // make a worker and launch it
                     Class processorClass = Class.forName("com.github.seqware.queryengine.system.importers.workers." + workerModule);
@@ -142,13 +160,12 @@ public class FeatureImporter extends Importer {
                     index++;
 
                 }
-
-                System.out.println("Joining threads");
+                Logger.getLogger(FeatureImporter.class.getName()).info("Joining threads");
                 // join the threads, wait for each to finish
                 for (int i = 0; i < workerArray.length; i++) {
                     workerArray[i].join();
                 }
-                System.out.println("Threads finished");
+                Logger.getLogger(FeatureImporter.class.getName()).info("Threads finished");
 
                 // finally close, checkpoint is part of the process
                 // modelManager.close();
@@ -157,13 +174,23 @@ public class FeatureImporter extends Importer {
             }
         } // TODO: clearly this should be expanded to include closing database etc 
         catch (Exception e) {
-            Logger.getLogger(GFF3VariantImportWorker.class.getName()).fatal( "Exception thrown with file: \n", e);
+            Logger.getLogger(FeatureImporter.class.getName()).fatal("Exception thrown with file: \n", e);
             System.exit(-1);
         }
         // clean-up
         SWQEFactory.getStorage().closeStorage();
-        System.out.println("Success, FeatureSet written with an ID of:");
-        System.out.println(featureSet.getSGID().getUuid().toString());
+        System.out.println("FeatureSet written with an ID of:");
+        String outputID = featureSet.getSGID().getUuid().toString();
+        System.out.println(outputID);
+        if (outputFile != null) {
+            try {
+                PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
+                out.println("FeatureSetID\t" + outputID);
+                out.close();
+            } catch (IOException ex) {
+                Logger.getLogger(FeatureImporter.class.getName()).fatal("Could not write to output file");
+            }
+        }
         return featureSet.getSGID();
     }
 

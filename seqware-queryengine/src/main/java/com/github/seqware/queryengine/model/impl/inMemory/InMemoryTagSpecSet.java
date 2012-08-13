@@ -5,6 +5,8 @@ import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.model.TagSpecSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An in-memory representation of a TagSpecSet.
@@ -14,6 +16,11 @@ import java.util.Collection;
 public class InMemoryTagSpecSet extends AbstractInMemorySet<TagSpecSet, Tag> implements TagSpecSet {
 
     private String name = null;
+    private Map<String, Tag> map;
+    
+    protected InMemoryTagSpecSet(){
+       
+    }
 
     @Override
     public InMemoryTagSpecSet add(Tag element) {
