@@ -241,5 +241,15 @@ public class QueryInterfaceTest implements Benchmarking {
         resultSet = queryFuture.get();
         count = (int) resultSet.getCount();
         junit.framework.Assert.assertTrue("Setting a query constraints with 3 operations failed, expected 2 and found " + count, count == 2);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
+                new Constant(Feature.Strand.POSITIVE),
+                new FeatureAttribute("strand"),
+                Operation.EQUAL,
+                new TagOccurrence("SO_term"),
+                Operation.AND));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        junit.framework.Assert.assertTrue("Setting a query constraints over one feature attribute and testing for presence of a specific tag failed, expected 3 and found " + count, count == 3);
     }
 }

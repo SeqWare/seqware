@@ -7,6 +7,9 @@ import com.github.seqware.queryengine.model.FeatureSet;
 
 import java.util.Random;
 import java.util.UUID;
+
+import com.github.seqware.queryengine.model.Tag;
+import com.github.seqware.queryengine.model.TagSpecSet;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -52,9 +55,28 @@ public class FeatureStoreInterfaceTest {
     public static FeatureSet diverseBSet(CreateUpdateManager mManager) {
         FeatureSet set = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Diverse_Set").build()).build();
 
-        set.add(mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000101).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setSeqid("chr16").setStart(2000000).setStop(2000102).setStrand(Feature.Strand.POSITIVE).build());
+        // Sequence Ontology (SO), http://www.sequenceontology.org/
+        TagSpecSet tagSpecSet = mManager.buildTagSpecSet().setName("SOFA -- Sequence Ontology Feature Annotation").build();
+
+        Tag termTag = mManager.buildTagSpec().setKey("SO_term").build();
+        Tag idTag = mManager.buildTagSpec().setKey("SO_id").build();
+
+        Feature a = mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).setStrand(Feature.Strand.POSITIVE).build();
+        Feature b = mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000101).setStrand(Feature.Strand.POSITIVE).build();
+        Feature c = mManager.buildFeature().setSeqid("chr16").setStart(2000000).setStop(2000102).setStrand(Feature.Strand.POSITIVE).build();
+
+        a.associateTag(termTag.toBuilder().setValue("region").build());
+        a.associateTag(idTag.toBuilder().setValue("SO:0000001").build());
+        b.associateTag(termTag.toBuilder().setValue("region").build());
+        b.associateTag(idTag.toBuilder().setValue("SO:0000001").build());
+        b.associateTag(termTag.toBuilder().setValue("contig").build());
+        b.associateTag(idTag.toBuilder().setValue("SO:0000149").build());
+        c.associateTag(termTag.toBuilder().setValue("contig").build());
+        c.associateTag(idTag.toBuilder().setValue("SO:0000149").build());
+
+        set.add(a);
+        set.add(b);
+        set.add(c);
         set.add(mManager.buildFeature().setSeqid("chr16").setStart(2000000).setStop(2000101).setStrand(Feature.Strand.NEGATIVE).build());
         set.add(mManager.buildFeature().setSeqid("chr16").setStart(2000000).setStop(2000102).setStrand(Feature.Strand.POSITIVE).build());
         set.add(mManager.buildFeature().setSeqid("chr16").setStart(2000000).setStop(2000101).setStrand(Feature.Strand.POSITIVE).build());
