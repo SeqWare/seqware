@@ -21,9 +21,11 @@ import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
 import com.github.seqware.queryengine.kernel.RPNStack.TagOccurrence;
+import com.github.seqware.queryengine.kernel.RPNStack.TagValuePresence;
 import com.github.seqware.queryengine.kernel.RPNStack.Parameter;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
+import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.plugins.inmemory.AbstractMRInMemoryPlugin;
 
 /**
@@ -64,7 +66,13 @@ public class LazyFeaturesByAttributesPlugin extends AbstractMRInMemoryPlugin {
                 rpnStack.setParameter(parameter, feature.getAttribute(parameter.getName()));
             else if (parameter instanceof TagOccurrence)
                 rpnStack.setParameter(parameter, feature.getTagByKey(parameter.getName()) != null);
-            else
+            else if (parameter instanceof TagValuePresence) {
+                Tag tag = feature.getTagByKey(parameter.getName());
+                rpnStack.setParameter(parameter,
+                                      tag != null &&
+                                      (tag.getValue() == null && ((TagValuePresence) parameter).getValue() == null ||
+                                       tag.getValue() != null && tag.getValue().equals(((TagValuePresence) parameter).getValue())));
+            } else
                 throw new UnsupportedOperationException("This plugin can only handle FeatureAttribute parameters.");
         }
 

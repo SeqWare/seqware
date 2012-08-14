@@ -1,5 +1,6 @@
 package com.github.seqware.queryengine.model.test;
 
+import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.test.FeatureStoreInterfaceTest;
 import com.github.seqware.queryengine.Benchmarking;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
@@ -11,11 +12,8 @@ import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.Constant;
 import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
 import com.github.seqware.queryengine.kernel.RPNStack.TagOccurrence;
+import com.github.seqware.queryengine.kernel.RPNStack.TagValuePresence;
 import com.github.seqware.queryengine.kernel.RPNStack.Operation;
-import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.QueryFuture;
-import com.github.seqware.queryengine.model.QueryInterface;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesByAttributesPlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByAttributesPlugin;
@@ -251,5 +249,15 @@ public class QueryInterfaceTest implements Benchmarking {
         resultSet = queryFuture.get();
         count = (int) resultSet.getCount();
         junit.framework.Assert.assertTrue("Setting a query constraints over one feature attribute and testing for presence of a specific tag failed, expected 3 and found " + count, count == 3);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
+                new Constant(Feature.Strand.POSITIVE),
+                new FeatureAttribute("strand"),
+                Operation.EQUAL,
+                new TagValuePresence("SO_id", Tag.ValueType.STRING, "SO:0000149"),
+                Operation.AND));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        junit.framework.Assert.assertTrue("Setting a query constraints over one feature attribute and testing the value of a specific tag failed, expected 2 and found " + count, count == 2);
     }
 }
