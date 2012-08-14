@@ -20,6 +20,7 @@ import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
 import com.github.seqware.queryengine.kernel.RPNStack.Parameter;
 import com.github.seqware.queryengine.model.Feature;
+import com.github.seqware.queryengine.model.Tag;
 
 /**
  * Generic query implementation over all attributes of a Feature (including
@@ -45,7 +46,13 @@ public class InMemoryFeaturesByAttributesPlugin extends InMemoryFeaturesByFilter
                     rpnStack.setParameter(parameter, f.getAttribute(parameter.getName()));
                 else if (parameter instanceof RPNStack.TagOccurrence)
                     rpnStack.setParameter(parameter, f.getTagByKey(parameter.getName()) != null);
-                else
+                else if (parameter instanceof RPNStack.TagValuePresence) {
+                    Tag tag = f.getTagByKey(parameter.getName());
+                    rpnStack.setParameter(parameter,
+                                          tag != null &&
+                                          (tag.getValue() == null && ((RPNStack.TagValuePresence) parameter).getValue() == null ||
+                                           tag.getValue() != null && tag.getValue().equals(((RPNStack.TagValuePresence) parameter).getValue())));
+                } else
                     throw new UnsupportedOperationException("This plugin can only handle FeatureAttribute parameters.");
             }
             boolean result = (Boolean) rpnStack.evaluate();

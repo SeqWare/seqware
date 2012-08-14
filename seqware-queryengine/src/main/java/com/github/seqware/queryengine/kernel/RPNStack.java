@@ -63,7 +63,7 @@ public class RPNStack implements Serializable {
             return name;
         }
 
-        public final String getUniqueName() {
+        public String getUniqueName() {
             return this.getClass().getName() + "://" + name;
         }
 
@@ -103,15 +103,25 @@ public class RPNStack implements Serializable {
      * Represents tag/value pairs that should be present.
      */
     public static class TagValuePresence extends Parameter {
-        private Tag.ValueType value;
+        private Tag.ValueType type;
+        private Object value;
 
-        public TagValuePresence(String name, Tag.ValueType value) {
-            super(name + "/" + value);
+        public TagValuePresence(String name, Tag.ValueType type, Object value) {
+            super(name);
 
+            this.type = type;
             this.value = value;
         }
 
-        public Tag.ValueType getValue() {
+        public final String getUniqueName() {
+            return this.getClass().getName() + "://" + this.getName() + "#" + getValue();
+        }
+
+        public Tag.ValueType getType() {
+            return this.type;
+        }
+
+        public Object getValue() {
             return this.value;
         }
     }
