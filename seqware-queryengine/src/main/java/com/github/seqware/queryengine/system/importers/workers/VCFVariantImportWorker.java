@@ -9,9 +9,9 @@ import java.io.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import org.apache.log4j.Logger;
 import java.util.regex.Pattern;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
+import org.apache.log4j.Logger;
 
 //import net.sourceforge.seqware.queryengine.backend.model.Coverage;
 //import net.sourceforge.seqware.queryengine.backend.model.Variant;
@@ -98,7 +98,7 @@ public class VCFVariantImportWorker extends ImportWorker {
 
                     //m.setContig(t[0]);
                     fBuilder.setSeqid(t[0]);
-                    if (!t[0].startsWith("chr")) {
+                    if (!".".equals(t[0]) && !t[0].startsWith("chr")) {
                         //m.setContig("chr" + t[0]);
                         fBuilder.setSeqid("chr" + t[0]);
                     }
@@ -118,7 +118,9 @@ public class VCFVariantImportWorker extends ImportWorker {
                     //m.setCalledBase(t[4].toUpperCase());
 
                     // figure out the consensusCallQuality
-                    fBuilder.setScore(Double.parseDouble(t[5]));
+                    if (!".".equals(t[5])) {
+                        fBuilder.setScore(Double.parseDouble(t[5]));
+                    }
                     //m.setConsensusCallQuality(Float.parseFloat(t[5]));
 
                     // parse ID
@@ -203,9 +205,11 @@ public class VCFVariantImportWorker extends ImportWorker {
                     // always save a tag
                     tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_SNV).build());
                     //m.addTag("SNV", null);
-                    Integer pos = Integer.parseInt(t[1]);
-                    fBuilder.setStart(pos - 1);
-                    fBuilder.setStop(pos);
+                    if (!".".equals(t[1])) {
+                        Integer pos = Integer.parseInt(t[1]);
+                        fBuilder.setStart(pos - 1);
+                        fBuilder.setStop(pos);
+                    }
                     //m.setStartPosition(pos - 1);
                     //m.setStopPosition(pos);
 
@@ -299,8 +303,9 @@ public class VCFVariantImportWorker extends ImportWorker {
             // close file
             inputStream.close();
         } catch (Exception e) {
-            Logger.getLogger(VCFVariantImportWorker.class.getName()).fatal( "Exception thrown with file: " + input + "\n", e);
+            Logger.getLogger(VCFVariantImportWorker.class.getName()).fatal( "Exception thrown with file: " + input, e);
             //e.printStackTrace();
+            throw new RuntimeException("Error in VCRVariantImportWorker");
         } finally {
             // new, this is needed to have the model manager write results to the DB in one big batch
             modelManager.close();

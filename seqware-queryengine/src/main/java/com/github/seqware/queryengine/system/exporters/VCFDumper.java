@@ -89,7 +89,7 @@ public class VCFDumper {
                 try {
                     outputStream.append(feature.getTagByKey(ImportConstants.VCF_REFERENCE_BASE).getValue().toString() + "\t");
                     outputStream.append(feature.getTagByKey(ImportConstants.VCF_CALLED_BASE).getValue().toString() + "\t");
-                    outputStream.append(feature.getScore() + "\t");
+                    outputStream.append((feature.getScore() == null ? "." : feature.getScore()) + "\t");
                     outputStream.append(feature.getTagByKey(ImportConstants.VCF_FILTER).getValue().toString() + "\t");
                     outputStream.append(feature.getTagByKey(ImportConstants.VCF_INFO).getValue().toString());
                 } catch (NullPointerException npe) {
