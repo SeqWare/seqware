@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.github.seqware.queryengine.system.importers;
 
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
@@ -14,7 +11,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.logging.Level;
+import java.util.List;
 import org.apache.log4j.Logger;
 
 ;
@@ -32,55 +29,21 @@ import org.apache.log4j.Logger;
  * @author dyuen
  */
 public class FeatureImporter extends Importer {
-
-    public static void main(String[] args) {
-        FeatureImporter.mainMethod(args);
-    }
+    
+    public static int EXIT_CODE_INVALID_ARGS = 1;
+    public static int EXIT_CODE_INVALID_FILE = 10;
 
     /**
-     * Import a set of Features into a particular specified reference. The ID
-     * for the FeatureSet we use is returned.
-     *
-     * @param args
-     * @return
+     * This method does the actual work of importing given properly parsed parameters
+     * @param referenceID
+     * @param threadCount
+     * @param inputFiles
+     * @param workerModule
+     * @param compressed
+     * @param outputFile
+     * @return 
      */
-    public static SGID mainMethod(String[] args) {
-
-        if (args.length < 5) {
-            System.err.println("Only " + args.length + " arguments found");
-            //System.out.println("FeatureImporter <worker_module> <db_dir> <create_db> <cacheSize> <locks> "
-            //        + "<max_thread_count> <compressed_input> <input_file(s)>");
-            System.out.println("FeatureImporter <worker_module> <max_thread_count> <compressed_input> <reference name> <input_file1[,input_file(s)]> [output_file]");
-            System.exit(-1);
-        }
-
-        String workerModule = args[0];
-        int threadCount = Integer.parseInt(args[1]);
-        boolean compressed = false;
-        if ("true".equals(args[2])) {
-            compressed = true;
-        }
-
-        String referenceID = args[3];
-
-        ArrayList<String> inputFiles = new ArrayList<String>();
-        inputFiles.addAll(Arrays.asList(args[4].split(",")));
-
-        // handle output
-        File outputFile = null;
-        if (args.length == 6) {
-            outputFile = new File(args[5]);
-            if (outputFile.exists()) {
-                outputFile.delete();
-            }
-            try {
-                boolean created = outputFile.createNewFile();
-            } catch (IOException ex) {
-                Logger.getLogger(FeatureImporter.class.getName()).fatal("Could not create output file");
-                System.exit(-1);
-            }
-        }
-
+    protected static SGID performImport(String referenceID, int threadCount, ArrayList<String> inputFiles, String workerModule, boolean compressed, File outputFile) {
         // objects to access the mutation datastore
         //      BerkeleyDBFactory factory = new BerkeleyDBFactory();
         //      BerkeleyDBStore store = null;
@@ -104,7 +67,7 @@ public class FeatureImporter extends Importer {
         modelManager.close();
 
         // a pointer to this object (for thread coordination)
-        FeatureImporter pmi = new FeatureImporter(threadCount);
+        final FeatureImporter pmi = new FeatureImporter(threadCount);
 
         try {
 
@@ -156,6 +119,15 @@ public class FeatureImporter extends Importer {
                     workerArray[index].setIncludeIndels(false);
                     workerArray[index].setIncludeCoverage(false);
                     workerArray[index].setBinSize(0);
+                    
+                    // set up exception handling
+                    workerArray[index].setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+                        @Override
+                        public void uncaughtException(Thread thread, Throwable thrwbl) {
+                            pmi.failedWorkers.add((ImportWorker)thread);
+                        }
+                    });
+                    
                     workerArray[index].start();
                     index++;
 
@@ -175,8 +147,13 @@ public class FeatureImporter extends Importer {
         } // TODO: clearly this should be expanded to include closing database etc 
         catch (Exception e) {
             Logger.getLogger(FeatureImporter.class.getName()).fatal("Exception thrown with file: \n", e);
-            System.exit(-1);
+            return null;
         }
+        // check for failed workers
+        if (pmi.failedWorkers.size() > 0){
+            return null;
+        }
+        
         // clean-up
         SWQEFactory.getStorage().closeStorage();
         System.out.println("FeatureSet written with an ID of:");
@@ -193,8 +170,68 @@ public class FeatureImporter extends Importer {
         }
         return featureSet.getSGID();
     }
+    
+    private List<ImportWorker> failedWorkers = new ArrayList<ImportWorker>();
+
+
+    public static void main(String[] args) {
+        SGID mainMethod = FeatureImporter.naiveRun(args);
+        if (mainMethod == null){
+            System.exit(EXIT_CODE_INVALID_FILE);
+        }
+    }
+
+    /**
+     * Import a set of Features into a particular specified reference. The ID
+     * for the FeatureSet we use is returned.
+     *
+     * @param args
+     * @return
+     */
+    public static SGID naiveRun(String[] args) {
+
+        if (args.length < 5) {
+            System.err.println("Only " + args.length + " arguments found");
+            //System.out.println("FeatureImporter <worker_module> <db_dir> <create_db> <cacheSize> <locks> "
+            //        + "<max_thread_count> <compressed_input> <input_file(s)>");
+            System.out.println("FeatureImporter <worker_module> <max_thread_count> <compressed_input> <reference name> <input_file1[,input_file(s)]> [output_file]");
+            System.exit(EXIT_CODE_INVALID_ARGS);
+        }
+
+        String workerModule = args[0];
+        int threadCount = Integer.parseInt(args[1]);
+        boolean compressed = false;
+        if ("true".equals(args[2])) {
+            compressed = true;
+        }
+
+        String referenceID = args[3];
+
+        ArrayList<String> inputFiles = new ArrayList<String>();
+        inputFiles.addAll(Arrays.asList(args[4].split(",")));
+
+        // handle output
+        File outputFile = null;
+        if (args.length == 6) {
+            outputFile = new File(args[5]);
+            if (outputFile.exists()) {
+                outputFile.delete();
+            }
+            try {
+                boolean created = outputFile.createNewFile();
+            } catch (IOException ex) {
+                Logger.getLogger(FeatureImporter.class.getName()).fatal("Could not create output file");
+                return null;
+            }
+        }
+        return performImport(referenceID, threadCount, inputFiles, workerModule, compressed, outputFile);
+    }
 
     public FeatureImporter(int threadCount) {
         super(threadCount);
+    }
+
+    public void reportException(ImportWorker aThis) {
+        this.failedWorkers.add(aThis);
     }
 }

@@ -7,10 +7,7 @@ import com.github.seqware.queryengine.model.interfaces.Taggable;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.queryengine.util.SeqWareIterable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -96,14 +93,14 @@ public class TaggableTest {
     @Test
     public void testTaggingOnEverything() {
 // Some of these global tests are no longer working because the back-end persists between test classes, we need a search API
-        SeqWareIterable<TagSpecSet> tagSets = SWQEFactory.getQueryInterface().getTagSpecSets();
+        SeqWareIterable<TagSpecSet> tagSets = SWQEFactory.getQueryInterface().getTagSpecSets();       
         // we have two tag sets
         boolean t1found = false;
         boolean t2found = false;
         for (TagSpecSet t : tagSets) {
-            if (t.equals(tSet1)) {
+            if (t.getSGID().getRowKey().equals(tSet1.getSGID().getRowKey())) {
                 t1found = true;
-            } else if (t.equals(tSet2)) {
+            } else if (t.getSGID().getRowKey().equals(tSet2.getSGID().getRowKey())) {
                 t2found = true;
             }
         }

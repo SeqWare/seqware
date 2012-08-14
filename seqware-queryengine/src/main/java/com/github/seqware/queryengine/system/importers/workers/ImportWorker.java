@@ -174,6 +174,7 @@ public class ImportWorker extends Thread {
     public void setFeatureSetID(SGID featureSetID) {
         this.featureSetID = featureSetID;
     }
+
     
     
 }

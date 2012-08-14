@@ -39,7 +39,7 @@ public class GVFImportExportTest {
     public void testGVFImport() throws IOException{
         File createTempFile = File.createTempFile("output", "txt");
         Assert.assertTrue("Cannot read GVF file for test", testGVFFile.exists() && testGVFFile.canRead());
-        SGID main = FeatureImporter.mainMethod(new String[]{"GFF3VariantImportWorker", "1", "false", randomRef, testGVFFile.getAbsolutePath()});
+        SGID main = FeatureImporter.naiveRun(new String[]{"GFF3VariantImportWorker", "1", "false", randomRef, testGVFFile.getAbsolutePath()});
         // do some output comparisons, we may need to sort the results
         VCFDumper.main(new String[]{main.getUuid().toString(), createTempFile.getAbsolutePath()});
         BufferedReader in = new BufferedReader(new FileReader(createTempFile));

@@ -4,9 +4,9 @@ import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.model.TagSpecSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import org.apache.log4j.Logger;
+
 
 /**
  * An in-memory representation of a TagSpecSet.
@@ -16,15 +16,16 @@ import java.util.Map;
 public class InMemoryTagSpecSet extends AbstractInMemorySet<TagSpecSet, Tag> implements TagSpecSet {
 
     private String name = null;
-    private Map<String, Tag> map;
-    
-    protected InMemoryTagSpecSet(){
-       
-    }
+    private Map<String, Tag> map = new HashMap<String, Tag>();
 
     @Override
     public InMemoryTagSpecSet add(Tag element) {
+        if (map.containsKey(element.getKey())){ 
+            Logger.getLogger(InMemoryTagSpecSet.class.getName()).warn("Adding duplicated key in TagSet ignored with key " + element.getKey());
+            return this;
+        }
         super.add(element);
+        map.put(element.getKey(), element);
         assert (this.getSGID().getBackendTimestamp() != null);
         element.setTagSpecSet(this);
         return this;
@@ -32,9 +33,17 @@ public class InMemoryTagSpecSet extends AbstractInMemorySet<TagSpecSet, Tag> imp
 
     @Override
     public InMemoryTagSpecSet add(Collection<Tag> elements) {
-        super.add(elements);
+        Collection<Tag> newCol = new ArrayList<Tag>();
+        for(Tag element : elements){
+            if (!map.containsKey(element.getKey())){
+                newCol.add(element);
+                map.put(element.getKey(), element);
+            }
+        }
+        
+        super.add(newCol);
         assert (this.getSGID().getBackendTimestamp() != null);
-        for (Tag e : elements) {
+        for (Tag e : newCol) {
             e.setTagSpecSet(this);
         }
         return this;
@@ -42,12 +51,7 @@ public class InMemoryTagSpecSet extends AbstractInMemorySet<TagSpecSet, Tag> imp
 
     @Override
     public InMemoryTagSpecSet add(Tag... elements) {
-        super.add(elements);
-        assert (this.getSGID().getBackendTimestamp() != null);
-        for (Tag e : elements) {
-            e.setTagSpecSet(this);
-        }
-        return this;
+        return this.add(Arrays.asList(elements));
     }
 
     @Override
@@ -74,6 +78,16 @@ public class InMemoryTagSpecSet extends AbstractInMemorySet<TagSpecSet, Tag> imp
     @Override
     public String getHBasePrefix() {
         return TagSpecSet.prefix;
+    }
+
+    @Override
+    public boolean containsKey(String tagKey) {
+        return this.map.containsKey(tagKey);
+    }
+
+    @Override
+    public Tag get(String tagKey) {
+        return this.map.get(tagKey);
     }
 
     public static class Builder extends TagSpecSet.Builder {

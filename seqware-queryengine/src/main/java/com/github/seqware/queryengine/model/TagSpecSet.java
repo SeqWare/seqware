@@ -19,6 +19,19 @@ public interface TagSpecSet extends MolSetInterface<TagSpecSet, Tag> {
      * @return the name of the tag set
      */
     public String getName();
+    
+    /**
+     * 
+     * @return true iff this set already contains the key for tag  
+     */
+    public boolean containsKey(String tagKey);
+    
+    /**
+     * 
+     * @param tagKey
+     * @return a tag specification given a particular key
+     */
+    public Tag get(String tagKey);
 
     /**
      * Create an FeatureSet builder started with a copy of this
