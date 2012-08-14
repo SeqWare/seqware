@@ -34,7 +34,6 @@ public class Tag extends AtomImpl<Tag> {
     private ValueType vType = null;
 
     public enum ValueType {
-
         STRING, BYTEARR, SGID, FLOAT, DOUBLE, LONG, INTEGER
     };
 
