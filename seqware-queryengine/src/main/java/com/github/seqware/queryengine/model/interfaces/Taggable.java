@@ -31,7 +31,7 @@ public interface Taggable<T> {
     public SeqWareIterable<Tag> getTags();
     
     /**
-     * Quickly get the value of a tag by the key
+     * Quickly get the value of a tag by the key.
      * @param key
      * @return 
      */

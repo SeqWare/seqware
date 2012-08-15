@@ -16,11 +16,10 @@
  */
 package com.github.seqware.queryengine.system.exporters;
 
-import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.model.Reference;
+import com.github.seqware.queryengine.system.Utility;
 import com.github.seqware.queryengine.system.importers.workers.ImportConstants;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
@@ -28,7 +27,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.UUID;
 import org.apache.log4j.Logger;
 
 ;
@@ -58,8 +56,7 @@ public class VCFDumper {
 
         // parse a SGID from a String representation, we need a more elegant solution here
         String featureSetID = args[0];
-        UUID uuid = UUID.fromString(featureSetID);
-        SGID sgid = new SGID(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits(), 0);
+        SGID sgid = Utility.parseSGID(featureSetID);
         FeatureSet fSet = SWQEFactory.getQueryInterface().getLatestAtomBySGID(sgid, FeatureSet.class);
 
         // if this featureSet does not exist
@@ -116,6 +113,8 @@ public class VCFDumper {
             }
         }
     }
+
+
 
     public VCFDumper(String[] args) {
         this.args = args;

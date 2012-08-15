@@ -9,10 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 import org.apache.log4j.Logger;
 
-;
-import org.biojava3.genome.parsers.gff.FeatureI;
-import org.biojava3.genome.parsers.gff.FeatureList;
-import org.biojava3.genome.parsers.gff.GFF3Reader;
 import org.biojava3.genome.parsers.gff.FeatureI;
 import org.biojava3.genome.parsers.gff.FeatureList;
 import org.biojava3.genome.parsers.gff.GFF3Reader;
