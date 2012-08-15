@@ -39,17 +39,17 @@ public class OBOParserTest {
         SGID tagSetID = OBOImporter.mainMethod(new String[]{file.getAbsolutePath()});
         TagSpecSet tagSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSpecSet.class, tagSetID);
         // count is 2135 if we do not omit obselete terms and check for duplicates
-        Assert.assertTrue("loaded incorrect number of SO terms, expected 1935 found " + tagSet.getCount(), tagSet.getCount() == 1935);
+        Assert.assertTrue("loaded incorrect number of SO terms, expected 1935 found " + tagSet.getCount(), tagSet.getCount() == (1935*2));
         // check that a few known sequence tags are present
-        Assert.assertTrue("tandem_repeat not found in tagset", tagSet.containsKey("tandem_repeat"));
-        Assert.assertTrue("5KB_upstream_variant not found in tagset", tagSet.containsKey("5KB_upstream_variant"));
-        Assert.assertTrue("intergenic_variant not found in tagset", tagSet.containsKey("intergenic_variant"));
-        Assert.assertTrue("500B_downstream_variant not found in tagset", tagSet.containsKey("500B_downstream_variant"));
+        Assert.assertTrue("tandem_repeat not found in tagset", tagSet.containsKey("SO:0000705::tandem_repeat"));
+        Assert.assertTrue("5KB_upstream_variant not found in tagset", tagSet.containsKey("SO:0001635::5KB_upstream_variant"));
+        Assert.assertTrue("intergenic_variant not found in tagset", tagSet.containsKey("SO:0001628::intergenic_variant"));
+        Assert.assertTrue("500B_downstream_variant not found in tagset", tagSet.containsKey("SO:0001634::500B_downstream_variant"));
         // check that the tags are linked properly back to their tag set
-        Tag tandem_repeat = tagSet.get("tandem_repeat");
-        Tag upstream_variant = tagSet.get("5KB_upstream_variant");
-        Tag intergenic_variant = tagSet.get("intergenic_variant");
-        Tag downstream_variant = tagSet.get("500B_downstream_variant");
+        Tag tandem_repeat = tagSet.get("SO:0000705::tandem_repeat");
+        Tag upstream_variant = tagSet.get("SO:0001635::5KB_upstream_variant");
+        Tag intergenic_variant = tagSet.get("SO:0001628::intergenic_variant");
+        Tag downstream_variant = tagSet.get("SO:0001634::500B_downstream_variant");
         Assert.assertTrue(tandem_repeat.getTagSet().equals(tagSet));
         Assert.assertTrue(upstream_variant.getTagSet().equals(tagSet));
         Assert.assertTrue(intergenic_variant.getTagSet().equals(tagSet));

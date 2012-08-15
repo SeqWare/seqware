@@ -4,21 +4,19 @@ import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Reference;
+import com.github.seqware.queryengine.model.TagSpecSet;
+import com.github.seqware.queryengine.system.Utility;
 import com.github.seqware.queryengine.system.importers.workers.ImportWorker;
 import com.github.seqware.queryengine.util.SGID;
-import com.github.seqware.queryengine.util.SeqWareIterable;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 import org.apache.log4j.Logger;
 
-;
 
 /**
  * Port of the class from the original prototype, adapted to use the new classes
- * in the new API. In the old API, there was very little "management" code so
+ * in the new API; command-line interface is the older one without support for SO.  In the old API, there was very little "management" code so
  * all of the workers shared a reference to the same Store class with a small
  * dab of synchronization. In the new API, we have to contend with the
  * CreateUpdateManager, so I think it makes more sense to have one
@@ -32,37 +30,37 @@ public class FeatureImporter extends Importer {
     
     public static int EXIT_CODE_INVALID_ARGS = 1;
     public static int EXIT_CODE_INVALID_FILE = 10;
+    public static final String FEATURE_SET_ID = "FeatureSetID";
 
     /**
-     * This method does the actual work of importing given properly parsed parameters
+     * This method does the actual work of importing given properly parsed
+     * parameters
      * @param referenceID
      * @param threadCount
      * @param inputFiles
      * @param workerModule
      * @param compressed
      * @param outputFile
-     * @return 
+     * @param tagSetSGIDs
+     * @param adhocTagSet
+     * @return SGID if successful, null if not
      */
-    protected static SGID performImport(String referenceID, int threadCount, ArrayList<String> inputFiles, String workerModule, boolean compressed, File outputFile) {
+    protected static SGID performImport(SGID referenceID, int threadCount, List<String> inputFiles, String workerModule, boolean compressed, File outputFile, List<SGID> tagSetSGIDs, SGID adhocTagSetID) {
+
         // objects to access the mutation datastore
         //      BerkeleyDBFactory factory = new BerkeleyDBFactory();
         //      BerkeleyDBStore store = null;
         CreateUpdateManager modelManager = SWQEFactory.getModelManager();
-        SeqWareIterable<Reference> references = SWQEFactory.getQueryInterface().getReferences();
-        Reference ref = null;
-        for (Reference reference : references) {
-            if (reference.getName().equals(referenceID)) {
-                ref = reference;
-                break;
-            }
-        }
-        // see if this referenceID already exists
-        if (ref == null) {
-            ref = modelManager.buildReference().setName(referenceID).build();
-            modelManager.flush();
-        }
+        Reference ref = SWQEFactory.getQueryInterface().getLatestAtomBySGID(referenceID, Reference.class);
         // create a centralized FeatureSet
         FeatureSet featureSet = modelManager.buildFeatureSet().setReference(ref).build();
+        TagSpecSet adHocSet;
+        // process ad hoc set if given, create a new one if there is not
+        if (adhocTagSetID != null){
+            adHocSet = SWQEFactory.getQueryInterface().getLatestAtomBySGID(adhocTagSetID, TagSpecSet.class);
+        } else{
+            adHocSet = modelManager.buildTagSpecSet().setName("ad hoc tag set for FeatureSet " + featureSet.getSGID().getRowKey()).build();
+        }
         // we don't really need the central model manager past this point 
         modelManager.close();
 
@@ -109,6 +107,9 @@ public class FeatureImporter extends Importer {
 //                    workerArray[index].setStore(modelManager);
                     workerArray[index].setInput(input);
                     workerArray[index].setFeatureSetID(featureSet.getSGID());
+                    workerArray[index].setAdhoctagset(adHocSet.getSGID());
+                    workerArray[index].setTagSetIDs(tagSetSGIDs);
+                    
                     // FIXME: most of the rest aren't used, I should consider cleaning this up
                     workerArray[index].setCompressed(compressed);
                     workerArray[index].setMinCoverage(0);
@@ -119,15 +120,16 @@ public class FeatureImporter extends Importer {
                     workerArray[index].setIncludeIndels(false);
                     workerArray[index].setIncludeCoverage(false);
                     workerArray[index].setBinSize(0);
-                    
+
                     // set up exception handling
                     workerArray[index].setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
                         @Override
                         public void uncaughtException(Thread thread, Throwable thrwbl) {
-                            pmi.failedWorkers.add((ImportWorker)thread);
+                            pmi.failedWorkers.add((ImportWorker) thread);
                         }
                     });
-                    
+
                     workerArray[index].start();
                     index++;
 
@@ -150,33 +152,34 @@ public class FeatureImporter extends Importer {
             return null;
         }
         // check for failed workers
-        if (pmi.failedWorkers.size() > 0){
+        if (pmi.failedWorkers.size() > 0) {
             return null;
         }
-        
+
         // clean-up
         SWQEFactory.getStorage().closeStorage();
         System.out.println("FeatureSet written with an ID of:");
         String outputID = featureSet.getSGID().getUuid().toString();
         System.out.println(outputID);
-        if (outputFile != null) {
-            try {
-                PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
-                out.println("FeatureSetID\t" + outputID);
-                out.close();
-            } catch (IOException ex) {
-                Logger.getLogger(FeatureImporter.class.getName()).fatal("Could not write to output file");
-            }
+        Map<String, String> keyValues = new HashMap<String, String>();
+        keyValues.put(FEATURE_SET_ID, outputID);
+        if (adhocTagSetID == null){
+            // we created a tag set on the fly
+            System.out.println("adHocTagSetID written with an ID of:");
+            String aoutputID = adHocSet.getSGID().getUuid().toString();
+            System.out.println(aoutputID);
+            keyValues.put("adHocTagSetID", aoutputID);
         }
+        Utility.writeKeyValueFile(outputFile, keyValues);
         return featureSet.getSGID();
     }
+
     
     private List<ImportWorker> failedWorkers = new ArrayList<ImportWorker>();
 
-
     public static void main(String[] args) {
         SGID mainMethod = FeatureImporter.naiveRun(args);
-        if (mainMethod == null){
+        if (mainMethod == null) {
             System.exit(EXIT_CODE_INVALID_FILE);
         }
     }
@@ -206,26 +209,39 @@ public class FeatureImporter extends Importer {
         }
 
         String referenceID = args[3];
-
+        SGID referenceSGID = null;
+        
+        for (Reference reference : SWQEFactory.getQueryInterface().getReferences()) {
+            if (reference.getName().equals(referenceID)) {
+                referenceSGID = reference.getSGID();
+                break;
+            }
+        }
+        // see if this referenceID already exists
+        if (referenceSGID == null) {
+            CreateUpdateManager modelManager = SWQEFactory.getModelManager();
+            Reference ref = modelManager.buildReference().setName(referenceID).build();
+            referenceSGID = ref.getSGID();
+            modelManager.flush();
+        }
+        
         ArrayList<String> inputFiles = new ArrayList<String>();
         inputFiles.addAll(Arrays.asList(args[4].split(",")));
 
         // handle output
         File outputFile = null;
         if (args.length == 6) {
-            outputFile = new File(args[5]);
-            if (outputFile.exists()) {
-                outputFile.delete();
-            }
             try {
-                boolean created = outputFile.createNewFile();
+                outputFile = Utility.checkOutput(args[5]);
             } catch (IOException ex) {
-                Logger.getLogger(FeatureImporter.class.getName()).fatal("Could not create output file");
-                return null;
+                System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
             }
         }
-        return performImport(referenceID, threadCount, inputFiles, workerModule, compressed, outputFile);
+        
+        return performImport(referenceSGID, threadCount, inputFiles, workerModule, compressed, outputFile, null, null);
     }
+
+    
 
     public FeatureImporter(int threadCount) {
         super(threadCount);

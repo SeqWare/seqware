@@ -34,6 +34,7 @@ public class Tag extends AtomImpl<Tag> {
     private ValueType vType = null;
 
     public enum ValueType {
+
         STRING, BYTEARR, SGID, FLOAT, DOUBLE, LONG, INTEGER
     };
 
@@ -62,7 +63,7 @@ public class Tag extends AtomImpl<Tag> {
     public TagSpecSet getTagSet() {
         return tagSet.get();
     }
-    
+
     /**
      * Get a reference to the parent TagSpecSet
      *
@@ -92,22 +93,24 @@ public class Tag extends AtomImpl<Tag> {
 
     /**
      * Set the TagSpecSet for this particular tag, should not be called outside
-     * of the back-end. This is used primary to keep track of which TagSet a tag 
-     * came from. 
+     * of the back-end. This is used primary to keep track of which TagSet a tag
+     * came from.
+     *
      * @param sgid
-     * @return 
+     * @return
      */
     public Tag setTagSpecSet(SGID sgid) {
         this.tagSet.setSGID(sgid);
         return this;
     }
-    
+
     /**
      * Set the TagSpecSet for this particular tag, should not be called outside
-     * of the back-end. This is used primary to keep track of which TagSet a tag 
-     * came from. 
+     * of the back-end. This is used primary to keep track of which TagSet a tag
+     * came from.
+     *
      * @param sgid
-     * @return 
+     * @return
      */
     public Tag setTagSpecSet(TagSpecSet set) {
         this.tagSet.set(set);
@@ -134,14 +137,24 @@ public class Tag extends AtomImpl<Tag> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        // will cause recursion
-        return EqualsBuilder.reflectionEquals(this, obj);
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (!(o instanceof Tag)) {
+            return false;
+        }
+        Tag that = (Tag) o;
+        EqualsBuilder b = new EqualsBuilder();
+        b.append(this.getSGID(), ((Tag)o).getSGID());
+        return b.isEquals();
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
+        HashCodeBuilder b = new HashCodeBuilder();
+        b.append(this.getSGID());
+        return b.hashCode();
     }
 
     /**

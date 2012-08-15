@@ -5,6 +5,7 @@ package com.github.seqware.queryengine.system.importers.workers;
 
 import com.github.seqware.queryengine.system.importers.Importer;
 import com.github.seqware.queryengine.util.SGID;
+import java.util.List;
 
 /**
  * Base Worker class, looks like a Bean for storing settings about the file to
@@ -16,23 +17,25 @@ import com.github.seqware.queryengine.util.SGID;
  */
 public class ImportWorker extends Thread {
 
-    String workerName = null;
-    Importer pmi = null;
+    protected String workerName = null;
+    protected Importer pmi = null;
     // Actually, on second thought. I think a shared CreateUpdateManager would be a bad idea. 
     // We don't really want all threads to freeze
     //    CreateUpdateManager mManager = null;
     //Store store = null;
-    String input = null;
-    boolean compressed = false;
-    int minCoverage;
-    int maxCoverage;
-    float minSnpQuality;
-    boolean includeSNV;
-    int fastqConvNum;
-    boolean includeIndels;
-    boolean includeCoverage = false;
-    int binSize = 0;
-    SGID featureSetID = null;
+    protected String input = null;
+    protected boolean compressed = false;
+    protected int minCoverage;
+    protected int maxCoverage;
+    protected float minSnpQuality;
+    protected boolean includeSNV;
+    protected int fastqConvNum;
+    protected boolean includeIndels;
+    protected boolean includeCoverage = false;
+    protected int binSize = 0;
+    protected SGID featureSetID = null;
+    protected List<SGID> tagSetIDs = null;
+    protected SGID adhoctagset = null;
 
     public ImportWorker() {
     }
@@ -173,6 +176,22 @@ public class ImportWorker extends Thread {
 
     public void setFeatureSetID(SGID featureSetID) {
         this.featureSetID = featureSetID;
+    }
+
+    public SGID getAdhoctagset() {
+        return adhoctagset;
+    }
+
+    public void setAdhoctagset(SGID adhoctagset) {
+        this.adhoctagset = adhoctagset;
+    }
+
+    public List<SGID> getTagSetIDs() {
+        return tagSetIDs;
+    }
+
+    public void setTagSetIDs(List<SGID> tagSetIDs) {
+        this.tagSetIDs = tagSetIDs;
     }
 
     
