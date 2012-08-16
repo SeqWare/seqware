@@ -2,37 +2,37 @@ package com.github.seqware.queryengine.model.impl.inMemory;
 
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Tag;
-import com.github.seqware.queryengine.model.TagSpecSet;
+import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import java.util.*;
 import org.apache.log4j.Logger;
 
 
 /**
- * An in-memory representation of a TagSpecSet.
+ * An in-memory representation of a TagSet.
  *
  * @author dyuen
  */
-public class InMemoryTagSpecSet extends AbstractInMemorySet<TagSpecSet, Tag> implements TagSpecSet {
+public class InMemoryTagSet extends AbstractInMemorySet<TagSet, Tag> implements TagSet {
 
     private String name = null;
     private Map<String, Tag> map = new HashMap<String, Tag>();
 
     @Override
-    public InMemoryTagSpecSet add(Tag element) {
+    public InMemoryTagSet add(Tag element) {
         if (map.containsKey(element.getKey())){ 
-            Logger.getLogger(InMemoryTagSpecSet.class.getName()).warn("Adding duplicated key in TagSet ignored with key " + element.getKey());
+            Logger.getLogger(InMemoryTagSet.class.getName()).warn("Adding duplicated key in TagSet ignored with key " + element.getKey());
             return this;
         }
         super.add(element);
         map.put(element.getKey(), element);
         assert (this.getSGID().getBackendTimestamp() != null);
-        element.setTagSpecSet(this);
+        element.setTagSet(this);
         return this;
     }
 
     @Override
-    public InMemoryTagSpecSet add(Collection<Tag> elements) {
+    public InMemoryTagSet add(Collection<Tag> elements) {
         Collection<Tag> newCol = new ArrayList<Tag>();
         for(Tag element : elements){
             if (!map.containsKey(element.getKey())){
@@ -44,13 +44,13 @@ public class InMemoryTagSpecSet extends AbstractInMemorySet<TagSpecSet, Tag> imp
         super.add(newCol);
         assert (this.getSGID().getBackendTimestamp() != null);
         for (Tag e : newCol) {
-            e.setTagSpecSet(this);
+            e.setTagSet(this);
         }
         return this;
     }
 
     @Override
-    public InMemoryTagSpecSet add(Tag... elements) {
+    public InMemoryTagSet add(Tag... elements) {
         return this.add(Arrays.asList(elements));
     }
 
@@ -59,25 +59,25 @@ public class InMemoryTagSpecSet extends AbstractInMemorySet<TagSpecSet, Tag> imp
         return name;
     }
 
-    public static TagSpecSet.Builder newBuilder() {
-        return new InMemoryTagSpecSet.Builder();
+    public static TagSet.Builder newBuilder() {
+        return new InMemoryTagSet.Builder();
     }
 
     @Override
-    public InMemoryTagSpecSet.Builder toBuilder() {
-        InMemoryTagSpecSet.Builder b = new InMemoryTagSpecSet.Builder();
-        b.aSet = (InMemoryTagSpecSet) this.copy(true);
+    public InMemoryTagSet.Builder toBuilder() {
+        InMemoryTagSet.Builder b = new InMemoryTagSet.Builder();
+        b.aSet = (InMemoryTagSet) this.copy(true);
         return b;
     }
 
     @Override
     public Class getHBaseClass() {
-        return TagSpecSet.class;
+        return TagSet.class;
     }
 
     @Override
     public String getHBasePrefix() {
-        return TagSpecSet.prefix;
+        return TagSet.prefix;
     }
 
     @Override
@@ -90,14 +90,14 @@ public class InMemoryTagSpecSet extends AbstractInMemorySet<TagSpecSet, Tag> imp
         return this.map.get(tagKey);
     }
 
-    public static class Builder extends TagSpecSet.Builder {
+    public static class Builder extends TagSet.Builder {
 
         public Builder() {
-            aSet = new InMemoryTagSpecSet();
+            aSet = new InMemoryTagSet();
         }
 
         @Override
-        public TagSpecSet build(boolean newObject) {
+        public TagSet build(boolean newObject) {
             if (((AtomImpl) aSet).getManager() != null) {
                 ((AtomImpl) aSet).getManager().objectCreated((Atom) aSet);
             }
@@ -106,7 +106,7 @@ public class InMemoryTagSpecSet extends AbstractInMemorySet<TagSpecSet, Tag> imp
 
         @Override
         public Builder setName(String name) {
-            ((InMemoryTagSpecSet) aSet).name = name;
+            ((InMemoryTagSet) aSet).name = name;
             return this;
         }
     }

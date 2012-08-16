@@ -62,9 +62,9 @@ public class SOFeatureImporter extends Importer {
         options.addOption(option5);
         Option option6 = OptionBuilder.withArgName("outputFile").withDescription("(optional) output file with our resulting key values").hasArgs(1).create(OUTPUT_FILE);
         options.addOption(option6);
-        Option option7 = OptionBuilder.withArgName("tagSpec").withDescription("(optional) comma separated tag specification set IDs, new tags will be linked to the first set that they appear, these sets will not be modified").withValueSeparator(VALUE_SEPARATOR).hasArgs().create(TAGSETS);
+        Option option7 = OptionBuilder.withArgName("tagSet").withDescription("(optional) comma separated TagSet IDs, new Tags will be linked to the first set that they appear, these TagSets will not be modified").withValueSeparator(VALUE_SEPARATOR).hasArgs().create(TAGSETS);
         options.addOption(option7);
-        Option option8 = OptionBuilder.withArgName("adHocTagSpec").withDescription("(optional) an ID for an ad hoc tag set, tags will either be found or added to this set, a new set will be generated if none is specified here").hasArgs().create(ADHOC_TAGSETS);
+        Option option8 = OptionBuilder.withArgName("adHocTagSet").withDescription("(optional) an ID for an ad hoc TagSet, Tags will either be found or added to this set, a new TagSet will be generated if none is specified here").hasArgs().create(ADHOC_TAGSETS);
         options.addOption(option8);
 
         try {

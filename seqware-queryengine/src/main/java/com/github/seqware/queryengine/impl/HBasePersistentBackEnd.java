@@ -82,11 +82,11 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
     }
 
     @Override
-    public SeqWareIterable<TagSpecSet> getTagSpecSets() {
+    public SeqWareIterable<TagSet> getTagSets() {
         if (storage instanceof HBaseStorage) {
-            return handleTableScan(TagSpecSet.class, TagSpecSet.prefix);
+            return handleTableScan(TagSet.class, TagSet.prefix);
         }
-        return super.getTagSpecSets();
+        return super.getTagSets();
     }
 
     @Override

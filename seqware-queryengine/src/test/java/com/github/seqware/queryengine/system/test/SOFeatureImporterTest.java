@@ -3,9 +3,9 @@ package com.github.seqware.queryengine.system.test;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Reference;
-import com.github.seqware.queryengine.model.TagSpecSet;
+import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.system.ReferenceCreator;
-import com.github.seqware.queryengine.system.TagSpecSetCreator;
+import com.github.seqware.queryengine.system.TagSetCreator;
 import com.github.seqware.queryengine.system.exporters.VCFDumper;
 import com.github.seqware.queryengine.system.importers.FeatureImporter;
 import com.github.seqware.queryengine.system.importers.OBOImporter;
@@ -34,9 +34,9 @@ public class SOFeatureImporterTest {
     private static File testVCFFile = null;
     private static File testVCFFile_missingValues = null;
     private static File testVCFFile_invalid = null;
-    private static TagSpecSet sequenceOntology = null;
+    private static TagSet sequenceOntology = null;
     private static Reference reference = null;
-    private static TagSpecSet adHocSet = null;
+    private static TagSet adHocSet = null;
 
     @BeforeClass
     public static void setupTests() {
@@ -46,15 +46,15 @@ public class SOFeatureImporterTest {
         String curDir = System.getProperty("user.dir");
         File file = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/so.obo");
         SGID tagSetID = OBOImporter.mainMethod(new String[]{file.getAbsolutePath()});
-        sequenceOntology = SWQEFactory.getQueryInterface().getAtomBySGID(TagSpecSet.class, tagSetID);
+        sequenceOntology = SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, tagSetID);
 
         // setup reference
         SGID refID = ReferenceCreator.mainMethod(new String[]{"hg_19"});
         reference = SWQEFactory.getQueryInterface().getAtomBySGID(Reference.class, refID);
 
         // setup ad hoc tag set
-        SGID aSetID = TagSpecSetCreator.mainMethod(new String[]{"ad_hoc_tagSet"});
-        adHocSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSpecSet.class, aSetID);
+        SGID aSetID = TagSetCreator.mainMethod(new String[]{"ad_hoc_tagSet"});
+        adHocSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, aSetID);
 
         testVCFFile = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated.vcf");
         testVCFFile_missingValues = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/test_missingValues.vcf");
