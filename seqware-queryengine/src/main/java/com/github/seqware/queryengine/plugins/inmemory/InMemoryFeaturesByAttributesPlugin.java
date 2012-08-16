@@ -17,6 +17,9 @@
 package com.github.seqware.queryengine.plugins.inmemory;
 
 import com.github.seqware.queryengine.kernel.RPNStack;
+import com.github.seqware.queryengine.kernel.RPNStack.TagOccurrence;
+import com.github.seqware.queryengine.kernel.RPNStack.TagValuePresence;
+import com.github.seqware.queryengine.kernel.RPNStack.TagHierarchicalOccurrence;
 import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
 import com.github.seqware.queryengine.kernel.RPNStack.Parameter;
 import com.github.seqware.queryengine.model.Feature;
@@ -47,26 +50,23 @@ public class InMemoryFeaturesByAttributesPlugin extends InMemoryFeaturesByFilter
             for (Parameter parameter : rpnStack.getParameters()) {
                 if (parameter instanceof FeatureAttribute)
                     rpnStack.setParameter(parameter, f.getAttribute(parameter.getName()));
-                else if (parameter instanceof RPNStack.TagOccurrence)
+                else if (parameter instanceof TagOccurrence)
                     rpnStack.setParameter(parameter, f.getTagByKey(parameter.getName()) != null);
-                else if (parameter instanceof RPNStack.TagHierarchicalOccurrence) {
-                    boolean isTrue = false;
+                else if (parameter instanceof TagHierarchicalOccurrence) {
+                    boolean foundTag = false;
                     SeqWareIterable<Tag> tags = f.getTags();
                     for (Tag tag : tags)
-                        if (tag.getTagSet().containsKey(parameter.getName())) {
-                            Tag tagConstraint = tag.getTagSet().getTagByKey(parameter.getName());
-                            if (tag.isDescendantOf(tagConstraint)) {
-                                isTrue = true;
-                                break;
-                            }
+                        if (tag.isDescendantOf(parameter.getName())) {
+                            foundTag = true;
+                            break;
                         }
-                    rpnStack.setParameter(parameter, isTrue);
-                } else if (parameter instanceof RPNStack.TagValuePresence) {
+                    rpnStack.setParameter(parameter, foundTag);
+                } else if (parameter instanceof TagValuePresence) {
                     Tag tag = f.getTagByKey(parameter.getName());
                     rpnStack.setParameter(parameter,
                                           tag != null &&
-                                          (tag.getValue() == null && ((RPNStack.TagValuePresence) parameter).getValue() == null ||
-                                           tag.getValue() != null && tag.getValue().equals(((RPNStack.TagValuePresence) parameter).getValue())));
+                                          (tag.getValue() == null && ((TagValuePresence) parameter).getValue() == null ||
+                                           tag.getValue() != null && tag.getValue().equals(((TagValuePresence) parameter).getValue())));
                 } else
                     throw new UnsupportedOperationException("This plugin can only handle FeatureAttribute parameters.");
             }

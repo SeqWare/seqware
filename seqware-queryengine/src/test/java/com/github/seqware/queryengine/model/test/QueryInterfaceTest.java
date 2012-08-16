@@ -265,10 +265,10 @@ public class QueryInterfaceTest implements Benchmarking {
                 new Constant("chr16"),
                 new FeatureAttribute("seqid"),
                 Operation.EQUAL,
-                new TagHierarchicalOccurrence("SO:0001538::transcript_function_variant"),
+                new TagHierarchicalOccurrence("SO::sequence_variant::functional_variant"),
                 Operation.AND));
         resultSet = queryFuture.get();
         count = (int) resultSet.getCount();
-        // junit.framework.Assert.assertTrue("Setting a query constraints over one feature attribute and testing the value of a specific tag failed, expected 2 and found " + count, count == 2);
+        junit.framework.Assert.assertTrue("Setting a query constraints over one feature attribute and for a (possibly parent) term in a tree hierarchy failed, expected 3 and found " + count, count == 3);
     }
 }
