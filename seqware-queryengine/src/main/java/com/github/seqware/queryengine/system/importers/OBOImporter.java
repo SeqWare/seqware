@@ -17,8 +17,6 @@ import org.biojava.ontology.Ontology;
 import org.biojava.ontology.Term;
 import org.biojava.ontology.io.OboParser;
 
-;
-
 /**
  * Quick and dirty OBO file importer.
  * 

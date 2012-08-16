@@ -12,6 +12,7 @@ import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.Constant;
 import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
 import com.github.seqware.queryengine.kernel.RPNStack.TagOccurrence;
+import com.github.seqware.queryengine.kernel.RPNStack.TagHierarchicalOccurrence;
 import com.github.seqware.queryengine.kernel.RPNStack.TagValuePresence;
 import com.github.seqware.queryengine.kernel.RPNStack.Operation;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
@@ -259,5 +260,15 @@ public class QueryInterfaceTest implements Benchmarking {
         resultSet = queryFuture.get();
         count = (int) resultSet.getCount();
         junit.framework.Assert.assertTrue("Setting a query constraints over one feature attribute and testing the value of a specific tag failed, expected 2 and found " + count, count == 2);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
+                new Constant("chr16"),
+                new FeatureAttribute("seqid"),
+                Operation.EQUAL,
+                new TagHierarchicalOccurrence("SO:0001538::transcript_function_variant"),
+                Operation.AND));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        // junit.framework.Assert.assertTrue("Setting a query constraints over one feature attribute and testing the value of a specific tag failed, expected 2 and found " + count, count == 2);
     }
 }

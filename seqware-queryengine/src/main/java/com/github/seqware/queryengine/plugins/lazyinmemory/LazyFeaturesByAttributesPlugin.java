@@ -27,6 +27,7 @@ import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.plugins.inmemory.AbstractMRInMemoryPlugin;
+import com.github.seqware.queryengine.util.SeqWareIterable;
 
 /**
  * Generic query implementation over all attributes of a Feature (including additional attributes).
@@ -66,7 +67,19 @@ public class LazyFeaturesByAttributesPlugin extends AbstractMRInMemoryPlugin {
                 rpnStack.setParameter(parameter, feature.getAttribute(parameter.getName()));
             else if (parameter instanceof TagOccurrence)
                 rpnStack.setParameter(parameter, feature.getTagByKey(parameter.getName()) != null);
-            else if (parameter instanceof TagValuePresence) {
+            else if (parameter instanceof RPNStack.TagHierarchicalOccurrence) {
+                boolean isTrue = false;
+                SeqWareIterable<Tag> tags = feature.getTags();
+                for (Tag tag : tags)
+                    if (tag.getTagSet() != null && tag.getTagSet().containsKey(parameter.getName())) {
+                        Tag tagConstraint = tag.getTagSet().get(parameter.getName());
+                        if (tag.isDescendantOf(tagConstraint)) {
+                            isTrue = true;
+                            break;
+                        }
+                    }
+                rpnStack.setParameter(parameter, isTrue);
+            } else if (parameter instanceof TagValuePresence) {
                 Tag tag = feature.getTagByKey(parameter.getName());
                 rpnStack.setParameter(parameter,
                                       tag != null &&

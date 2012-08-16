@@ -21,6 +21,9 @@ import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
 import com.github.seqware.queryengine.kernel.RPNStack.Parameter;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.Tag;
+import com.github.seqware.queryengine.util.SeqWareIterable;
+
+import java.util.Iterator;
 
 /**
  * Generic query implementation over all attributes of a Feature (including
@@ -46,7 +49,19 @@ public class InMemoryFeaturesByAttributesPlugin extends InMemoryFeaturesByFilter
                     rpnStack.setParameter(parameter, f.getAttribute(parameter.getName()));
                 else if (parameter instanceof RPNStack.TagOccurrence)
                     rpnStack.setParameter(parameter, f.getTagByKey(parameter.getName()) != null);
-                else if (parameter instanceof RPNStack.TagValuePresence) {
+                else if (parameter instanceof RPNStack.TagHierarchicalOccurrence) {
+                    boolean isTrue = false;
+                    SeqWareIterable<Tag> tags = f.getTags();
+                    for (Tag tag : tags)
+                        if (tag.getTagSet().containsKey(parameter.getName())) {
+                            Tag tagConstraint = tag.getTagSet().getTagByKey(parameter.getName());
+                            if (tag.isDescendantOf(tagConstraint)) {
+                                isTrue = true;
+                                break;
+                            }
+                        }
+                    rpnStack.setParameter(parameter, isTrue);
+                } else if (parameter instanceof RPNStack.TagValuePresence) {
                     Tag tag = f.getTagByKey(parameter.getName());
                     rpnStack.setParameter(parameter,
                                           tag != null &&

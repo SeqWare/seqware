@@ -58,13 +58,35 @@ public class FeatureStoreInterfaceTest {
         // Sequence Ontology (SO), http://www.sequenceontology.org/
         TagSpecSet tagSpecSet = mManager.buildTagSpecSet().setName("SOFA -- Sequence Ontology Feature Annotation").build();
 
-        Tag termTag = mManager.buildTagSpec().setKey("SO_term").build();
-        Tag idTag = mManager.buildTagSpec().setKey("SO_id").build();
+        // Named tags, where the values convey actual information:
+        Tag termTag = mManager.buildTagSpec().setKey("SO_term").setTagSpecSet(tagSpecSet).build();
+        Tag idTag = mManager.buildTagSpec().setKey("SO_id").setTagSpecSet(tagSpecSet).build();
 
+        // Heavy tags, where the tag key itself represents information:
+        Tag functionalVariant = mManager.buildTagSpec().setKey("SO:0001536::functional_variant").setTagSpecSet(tagSpecSet).build();
+        Tag transcriptFunctionalVariant = mManager.buildTagSpec().setKey("SO:0001538::transcript_function_variant").setTagSpecSet(tagSpecSet).build();
+        Tag transcriptProcessingVariant = mManager.buildTagSpec().setKey("SO:0001543::transcript_processing_variant").setTagSpecSet(tagSpecSet).build();
+        Tag transcriptStabilityVariant = mManager.buildTagSpec().setKey("SO:0001546::transcript_stability_variant").setTagSpecSet(tagSpecSet).build();
+        Tag structuralVariant = mManager.buildTagSpec().setKey("SO:0001537::structural_variant").setTagSpecSet(tagSpecSet).build();
+        // ...and their hierarchy:
+        transcriptFunctionalVariant.setParent(functionalVariant);
+        transcriptProcessingVariant.setParent(transcriptFunctionalVariant);
+        transcriptStabilityVariant.setParent(transcriptFunctionalVariant);
+        // ...and their membership in the tag set:
+        tagSpecSet.add(functionalVariant, transcriptFunctionalVariant, transcriptProcessingVariant, transcriptStabilityVariant, structuralVariant);
+
+        // Features for location based tagging, which tests tag querying capabilities:
         Feature a = mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).setStrand(Feature.Strand.POSITIVE).build();
         Feature b = mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000101).setStrand(Feature.Strand.POSITIVE).build();
         Feature c = mManager.buildFeature().setSeqid("chr16").setStart(2000000).setStop(2000102).setStrand(Feature.Strand.POSITIVE).build();
 
+        // Features for variant based tagging, which tests inheritance based querying capabilities:
+        Feature d = mManager.buildFeature().setSeqid("chr16").setStart(2000000).setStop(2000101).setStrand(Feature.Strand.NEGATIVE).build();
+        Feature e = mManager.buildFeature().setSeqid("chr16").setStart(2000000).setStop(2000102).setStrand(Feature.Strand.POSITIVE).build();
+        Feature f = mManager.buildFeature().setSeqid("chr16").setStart(2000000).setStop(2000101).setStrand(Feature.Strand.POSITIVE).build();
+        Feature g = mManager.buildFeature().setSeqid("chr16").setStart(3000000).setStop(3000102).setStrand(Feature.Strand.POSITIVE).build();
+
+        // Loci tags:
         a.associateTag(termTag.toBuilder().setValue("region").build());
         a.associateTag(idTag.toBuilder().setValue("SO:0000001").build());
         b.associateTag(termTag.toBuilder().setValue("region").build());
@@ -74,13 +96,19 @@ public class FeatureStoreInterfaceTest {
         c.associateTag(termTag.toBuilder().setValue("contig").build());
         c.associateTag(idTag.toBuilder().setValue("SO:0000149").build());
 
+        // Variant tags:
+        d.associateTag(transcriptProcessingVariant);
+        e.associateTag(transcriptProcessingVariant);
+        f.associateTag(transcriptStabilityVariant);
+        g.associateTag(structuralVariant);
+
         set.add(a);
         set.add(b);
         set.add(c);
-        set.add(mManager.buildFeature().setSeqid("chr16").setStart(2000000).setStop(2000101).setStrand(Feature.Strand.NEGATIVE).build());
-        set.add(mManager.buildFeature().setSeqid("chr16").setStart(2000000).setStop(2000102).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setSeqid("chr16").setStart(2000000).setStop(2000101).setStrand(Feature.Strand.POSITIVE).build());
-        set.add(mManager.buildFeature().setSeqid("chr16").setStart(3000000).setStop(3000102).setStrand(Feature.Strand.POSITIVE).build());
+        set.add(d);
+        set.add(e);
+        set.add(f);
+        set.add(g);
         set.add(mManager.buildFeature().setSeqid("chr16").setStart(3000000).setStop(3000102).setStrand(Feature.Strand.POSITIVE).build());
         set.add(mManager.buildFeature().setSeqid("chr16").setStart(3000000).setStop(3000101).setStrand(Feature.Strand.NEGATIVE).build());
         set.add(mManager.buildFeature().setSeqid("chr16").setStart(3000000).setStop(3000102).setStrand(Feature.Strand.POSITIVE).build());

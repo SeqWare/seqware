@@ -121,9 +121,9 @@ public class SWQEFactory {
 
         abstract SerializationInterface buildSerialization();
     };
-    private static final Model_Type DEFAULT_BACKEND = Model_Type.MRHBASE;
+    private static final Model_Type DEFAULT_BACKEND = Model_Type.IN_MEMORY; // Model_Type.MRHBASE;
     private static Model_Type current_backend = DEFAULT_BACKEND;
-    private static final Storage_Type DEFAULT_STORAGE = Storage_Type.HBASE_STORAGE;
+    private static final Storage_Type DEFAULT_STORAGE = Storage_Type.IN_MEMORY; // Storage_Type.HBASE_STORAGE;
     private static Storage_Type current_storage = DEFAULT_STORAGE;
     private static final Serialization_Type DEFAULT_SERIALIZATION = Serialization_Type.PROTOBUF;
     private static Serialization_Type current_serialization = DEFAULT_SERIALIZATION;
