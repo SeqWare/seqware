@@ -1,13 +1,13 @@
     PROJECT: SeqWare
     FILE: README.md
-    UPDATED: 20120530
+    UPDATED: 20120816
     HOMEPAGE: http://seqware.sourceforge.net
 
 INTRODUCTION
 ====================
 
 This is top level of the SeqWare Project. For now, this contains work on the
-SeqWare query engine version 2 and the documentation for the seqware-webservice. 
+SeqWare query engine version 2, the intial prototype of the query engine, a folder for creating self-contained jar files with our command-line tools, and the documentation for the seqware-webservice. 
 
 Eventually this will also contain the components of the SeqWare project that 
 follow and are currently hosted at sourceforge:
@@ -26,7 +26,7 @@ BUILDING
 PREREQUISITES
 -------------
 
-Currently we are evaluating two serialization frameworks: [Kryo](http://code.google.com/p/kryo/) and [protobuf](http://code.google.com/p/protobuf/)
+We use [protobuf](http://code.google.com/p/protobuf/) to handle serialization and de-serialization.
 
 Protobuf requires the following installation steps:
 
@@ -56,34 +56,7 @@ You can also build individual components such as the new query engine with:
 LOCAL UNIT TESTING SETUP
 ------------------------
 
-Get HBase. Either versions 0.92.1 and 0.94.0 are fine:
-
-    wget http://apache.raffsoftware.com/hbase/hbase-0.94.0/hbase-0.94.0.tar.gz
-    tar xzf hbase-0.94.0.tar.gz
-    cd hbase-0.94.0
-
-Prepare a local directory for the HBase database by populating the file `conf/hbase-site.xml` with (adjust the file path `/opt/local/var/db/hbase` to your needs):
-
-    <?xml version="1.0"?>
-    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-    <configuration>
-      <property>
-        <name>hbase.rootdir</name>
-        <value>file:///opt/local/var/db/hbase</value>
-      </property>
-    </configuration>
-
-Start the HBase server:
-
-    ./bin/start-hbase.sh
-
-Stopping the HBase server is similarly simple:
-
-    ./bin/stop-hbase.sh
-
-Some libraries make use of HBase's Stargate interface (a REST interface), which can be started via:
-
-    ./bin/hbase rest start
+The full test suite requires Hadoop and HBase. Set this up by following Cloudera's [quick start guide](https://ccp.cloudera.com/display/CDH4DOC/CDH4+Quick+Start+Guide).
 
 INSTALLING
 ====================
