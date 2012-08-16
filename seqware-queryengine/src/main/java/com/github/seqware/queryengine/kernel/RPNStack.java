@@ -100,6 +100,15 @@ public class RPNStack implements Serializable {
     }
 
     /**
+     * Represents tags whose occurrence is tested -- including the tags children!
+     */
+    public static class TagHierarchicalOccurrence extends Parameter {
+        public TagHierarchicalOccurrence(String name) {
+            super(name);
+        }
+    }
+
+    /**
      * Represents tag/value pairs that should be present.
      */
     public static class TagValuePresence extends Parameter {

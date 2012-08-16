@@ -8,6 +8,8 @@ import com.github.seqware.queryengine.util.LazyReference;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -23,6 +25,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * permissions
  *
  * @author dyuen
+ * @author jbaran
  */
 public class Tag extends AtomImpl<Tag> {
 
@@ -33,8 +36,13 @@ public class Tag extends AtomImpl<Tag> {
     private Object value = null;
     private ValueType vType = null;
 
-    public enum ValueType {
+    /**
+     * SGID of a parent tag, if it exists, which can be used when querying tags that are
+     * representing terms of an ontology that is structured as a tree (e.g. Sequence Ontology, SO).
+     */
+    private SGID parent = null;
 
+    public enum ValueType {
         STRING, BYTEARR, SGID, FLOAT, DOUBLE, LONG, INTEGER
     };
 
@@ -44,6 +52,62 @@ public class Tag extends AtomImpl<Tag> {
     private Tag() {
         super();
         vType = ValueType.STRING;
+    }
+
+    /**
+     * If not null, then it denotes the parent tag. A parent tag can be
+     * used to represent hierarchies in tree-structured ontologies. Parent
+     * tags are bound to be in the same tag set as this current tag.
+     *
+     * @return Parent tag within the same tag set, or null otherwise.
+     */
+    public Tag getParent() {
+        if (this.parent == null)
+            return null;
+
+        // TODO Iterating through the set to get the right parent tag is
+        //      not optimal. There should be an easier method to get the
+        //      tag by SGID.
+        SeqWareIterable<Tag> tags = tagSet.get().getTags();
+        Iterator<Tag> iter = tags.iterator();
+        while (iter.hasNext()) {
+            Tag tag = iter.next();
+            if (tag.getSGID().equals(this.parent))
+                return tag;
+        }
+
+        // Well, well, well, this should not really happen.
+        throw new IllegalStateException("Parent relationships within a tag set are broken.");
+    }
+
+    /**
+     * Sets the parent tag, which can be for example a parent term
+     * in a tree-structured ontology.
+     *
+     * @param parent The tag that supersedes this tag, or null if this tag has no parent.
+     */
+    public void setParent(Tag parent) {
+        this.parent = parent.getSGID();
+    }
+
+    /**
+     * Tests whether the given tag is a parent of this tag -- making this
+     * tag a descendant of the parameter tag.
+     *
+     * @param tag Tag that we want to check if we descent from it.
+     * @return True if this tag is a descendant of the tag in the parameter.
+     */
+    public boolean isDescendantOf(Tag tag) {
+        if (tag == null)
+            return false;
+
+        if (tag.getKey().equals(this.getKey()))
+            return true;
+
+        if (tag.getParent() == null)
+            return false;
+
+        return this.getParent().isDescendantOf(tag);
     }
 
     /**
