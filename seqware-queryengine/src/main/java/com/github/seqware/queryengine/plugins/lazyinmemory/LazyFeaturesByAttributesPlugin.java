@@ -21,6 +21,7 @@ import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
 import com.github.seqware.queryengine.kernel.RPNStack.TagOccurrence;
+import com.github.seqware.queryengine.kernel.RPNStack.TagHierarchicalOccurrence;
 import com.github.seqware.queryengine.kernel.RPNStack.TagValuePresence;
 import com.github.seqware.queryengine.kernel.RPNStack.Parameter;
 import com.github.seqware.queryengine.model.Feature;
@@ -67,18 +68,15 @@ public class LazyFeaturesByAttributesPlugin extends AbstractMRInMemoryPlugin {
                 rpnStack.setParameter(parameter, feature.getAttribute(parameter.getName()));
             else if (parameter instanceof TagOccurrence)
                 rpnStack.setParameter(parameter, feature.getTagByKey(parameter.getName()) != null);
-            else if (parameter instanceof RPNStack.TagHierarchicalOccurrence) {
-                boolean isTrue = false;
+            else if (parameter instanceof TagHierarchicalOccurrence) {
+                boolean foundTag = false;
                 SeqWareIterable<Tag> tags = feature.getTags();
                 for (Tag tag : tags)
-                    if (tag.getTagSet() != null && tag.getTagSet().containsKey(parameter.getName())) {
-                        Tag tagConstraint = tag.getTagSet().get(parameter.getName());
-                        if (tag.isDescendantOf(tagConstraint)) {
-                            isTrue = true;
-                            break;
-                        }
+                    if (tag.isDescendantOf(parameter.getName())) {
+                        foundTag = true;
+                        break;
                     }
-                rpnStack.setParameter(parameter, isTrue);
+                rpnStack.setParameter(parameter, foundTag);
             } else if (parameter instanceof TagValuePresence) {
                 Tag tag = feature.getTagByKey(parameter.getName());
                 rpnStack.setParameter(parameter,

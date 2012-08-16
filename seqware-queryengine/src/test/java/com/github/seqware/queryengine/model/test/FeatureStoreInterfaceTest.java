@@ -55,25 +55,18 @@ public class FeatureStoreInterfaceTest {
     public static FeatureSet diverseBSet(CreateUpdateManager mManager) {
         FeatureSet set = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Diverse_Set").build()).build();
 
-        // Sequence Ontology (SO), http://www.sequenceontology.org/
-        TagSet TagSet = mManager.buildTagSet().setName("SOFA -- Sequence Ontology Feature Annotation").build();
+        //
+        // The following uses the Sequence Ontology (SO), http://www.sequenceontology.org/
+        //
 
         // Named tags, where the values convey actual information:
-        Tag termTag = mManager.buildTagSpec().setKey("SO_term").setTagSpecSet(tagSpecSet).build();
-        Tag idTag = mManager.buildTagSpec().setKey("SO_id").setTagSpecSet(tagSpecSet).build();
+        Tag termTag = mManager.buildTagSpec().setKey("SO_term").build();
+        Tag idTag = mManager.buildTagSpec().setKey("SO_id").build();
 
         // Heavy tags, where the tag key itself represents information:
-        Tag functionalVariant = mManager.buildTagSpec().setKey("SO:0001536::functional_variant").setTagSpecSet(tagSpecSet).build();
-        Tag transcriptFunctionalVariant = mManager.buildTagSpec().setKey("SO:0001538::transcript_function_variant").setTagSpecSet(tagSpecSet).build();
-        Tag transcriptProcessingVariant = mManager.buildTagSpec().setKey("SO:0001543::transcript_processing_variant").setTagSpecSet(tagSpecSet).build();
-        Tag transcriptStabilityVariant = mManager.buildTagSpec().setKey("SO:0001546::transcript_stability_variant").setTagSpecSet(tagSpecSet).build();
-        Tag structuralVariant = mManager.buildTagSpec().setKey("SO:0001537::structural_variant").setTagSpecSet(tagSpecSet).build();
-        // ...and their hierarchy:
-        transcriptFunctionalVariant.setParent(functionalVariant);
-        transcriptProcessingVariant.setParent(transcriptFunctionalVariant);
-        transcriptStabilityVariant.setParent(transcriptFunctionalVariant);
-        // ...and their membership in the tag set:
-        tagSpecSet.add(functionalVariant, transcriptFunctionalVariant, transcriptProcessingVariant, transcriptStabilityVariant, structuralVariant);
+        Tag transcriptProcessingVariant = mManager.buildTagSpec().setKey("SO::sequence_variant::functional_variant::transcript_function_variant::transcript_processing_variant").build();
+        Tag transcriptStabilityVariant = mManager.buildTagSpec().setKey("SO::sequence_variant::functional_variant::transcript_function_variant::transcript_stability_variant").build();
+        Tag copyNumberChange = mManager.buildTagSpec().setKey("SO::sequence_variant::structural_variant::copy_number_change").build();
 
         // Features for location based tagging, which tests tag querying capabilities:
         Feature a = mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).setStrand(Feature.Strand.POSITIVE).build();
@@ -99,8 +92,9 @@ public class FeatureStoreInterfaceTest {
         // Variant tags:
         d.associateTag(transcriptProcessingVariant);
         e.associateTag(transcriptProcessingVariant);
+        e.associateTag(transcriptStabilityVariant);
         f.associateTag(transcriptStabilityVariant);
-        g.associateTag(structuralVariant);
+        g.associateTag(copyNumberChange);
 
         set.add(a);
         set.add(b);
