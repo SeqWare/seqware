@@ -141,7 +141,7 @@ public class VCFVariantImportWorker extends ImportWorker {
                 count++;
                 // we need to flush and clear the manager in order to release the memory consumed by the Features themselves
                 // the featureSet has to be reattached
-                if (count % 100 == 0){
+                if (count % 100000 == 0){
                     modelManager.flush();
                     modelManager.clear();
                     modelManager.persist(adHocSet);

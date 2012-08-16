@@ -29,8 +29,8 @@ import org.apache.log4j.Logger;
  */
 public class LazyReference<T extends Atom> implements Serializable {
 
-    protected boolean referenceChecked = false;
-    protected T referenceCache = null;
+    protected transient boolean referenceChecked = false;
+    protected transient T referenceCache = null;
     protected SGID referenceSGID = null;
     protected Class<T> type;
     
