@@ -40,7 +40,7 @@ message TagPB {
     // Tag-specific
     optional string key = 5;
     optional string predicate = 6;
-    optional SGIDPB tagSpecSet = 7;
+    optional SGIDPB TagSet = 7;
 
     // value-specific, specifically one of these should be populated (maybe less)
     optional string vString = 10;

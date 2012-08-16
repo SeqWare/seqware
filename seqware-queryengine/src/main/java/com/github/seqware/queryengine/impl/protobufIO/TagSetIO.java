@@ -17,13 +17,13 @@
 package com.github.seqware.queryengine.impl.protobufIO;
 
 import com.github.seqware.queryengine.dto.QueryEngine;
-import com.github.seqware.queryengine.dto.QueryEngine.TagSpecSetPB;
+import com.github.seqware.queryengine.dto.QueryEngine.TagSetPB;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Tag;
-import com.github.seqware.queryengine.model.TagSpecSet;
+import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
-import com.github.seqware.queryengine.model.impl.inMemory.InMemoryTagSpecSet;
+import com.github.seqware.queryengine.model.impl.inMemory.InMemoryTagSet;
 import com.github.seqware.queryengine.util.SGID;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.List;
@@ -33,13 +33,13 @@ import org.apache.log4j.Logger;
  *
  * @author dyuen
  */
-public class TagSpecSetIO implements ProtobufTransferInterface<TagSpecSetPB, TagSpecSet>{
+public class TagSetIO implements ProtobufTransferInterface<TagSetPB, TagSet>{
 
     @Override
-    public TagSpecSet pb2m(TagSpecSetPB userpb) {
-        TagSpecSet.Builder builder = InMemoryTagSpecSet.newBuilder();
+    public TagSet pb2m(TagSetPB userpb) {
+        TagSet.Builder builder = InMemoryTagSet.newBuilder();
         builder = userpb.hasName() ? builder.setName(userpb.getName()) : builder;
-        TagSpecSet user = builder.build();
+        TagSet user = builder.build();
         UtilIO.handlePB2Atom(userpb.getAtom(), (AtomImpl)user);
         UtilIO.handlePB2Mol(userpb.getMol(), (MoleculeImpl)user);
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && userpb.hasPrecedingVersion()){
@@ -56,8 +56,8 @@ public class TagSpecSetIO implements ProtobufTransferInterface<TagSpecSetPB, Tag
     
 
     @Override
-    public TagSpecSetPB m2pb(TagSpecSet sgid) {
-        QueryEngine.TagSpecSetPB.Builder builder = QueryEngine.TagSpecSetPB.newBuilder();
+    public TagSetPB m2pb(TagSet sgid) {
+        QueryEngine.TagSetPB.Builder builder = QueryEngine.TagSetPB.newBuilder();
         builder = sgid.getName() != null ? builder.setName(sgid.getName()) : builder;
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), (AtomImpl)sgid));
         builder.setMol(UtilIO.handleMol2PB(builder.getMol(), (MoleculeImpl)sgid));
@@ -67,14 +67,14 @@ public class TagSpecSetIO implements ProtobufTransferInterface<TagSpecSetPB, Tag
         for(Tag ref : sgid){
             builder.addTagSpecIDs(SGIDIO.m2pb(ref.getSGID()));
         }
-        TagSpecSetPB userpb = builder.build();
+        TagSetPB userpb = builder.build();
         return userpb;
     }
 
     @Override
-    public TagSpecSet byteArr2m(byte[] arr) {
+    public TagSet byteArr2m(byte[] arr) {
         try {
-            QueryEngine.TagSpecSetPB userpb = QueryEngine.TagSpecSetPB.parseFrom(arr);
+            QueryEngine.TagSetPB userpb = QueryEngine.TagSetPB.parseFrom(arr);
             return pb2m(userpb);
         } catch (InvalidProtocolBufferException ex) {
             Logger.getLogger(FeatureSetIO.class.getName()).fatal( "Invalid PB", ex);

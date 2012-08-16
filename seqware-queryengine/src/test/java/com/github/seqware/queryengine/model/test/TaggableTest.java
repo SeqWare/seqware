@@ -21,7 +21,7 @@ public class TaggableTest {
 
     private static FeatureSet fSet;
     private static Feature f1, f2, f3;
-    private static TagSpecSet tSet1, tSet2;
+    private static TagSet tSet1, tSet2;
     private static ReferenceSet rSet;
     private static Reference r1;
     private static Group group;
@@ -45,8 +45,8 @@ public class TaggableTest {
         testFeatures.add(f2);
         testFeatures.add(f3);
         fSet.add(testFeatures);
-        tSet1 = mManager.buildTagSpecSet().setName("Funky tags").build();
-        tSet2 = mManager.buildTagSpecSet().setName("Unfunky tags").build();
+        tSet1 = mManager.buildTagSet().setName("Funky tags").build();
+        tSet2 = mManager.buildTagSet().setName("Unfunky tags").build();
         rSet = mManager.buildReferenceSet().setName("Minbar").setOrganism("Minbari").build();
         aSet = mManager.buildAnalysisSet().setName("FP").setDescription("Funky program").build();
         // only for testing, Analysis classes 
@@ -93,11 +93,11 @@ public class TaggableTest {
     @Test
     public void testTaggingOnEverything() {
 // Some of these global tests are no longer working because the back-end persists between test classes, we need a search API
-        SeqWareIterable<TagSpecSet> tagSets = SWQEFactory.getQueryInterface().getTagSpecSets();       
+        SeqWareIterable<TagSet> tagSets = SWQEFactory.getQueryInterface().getTagSets();       
         // we have two tag sets
         boolean t1found = false;
         boolean t2found = false;
-        for (TagSpecSet t : tagSets) {
+        for (TagSet t : tagSets) {
             if (t.getSGID().getRowKey().equals(tSet1.getSGID().getRowKey())) {
                 t1found = true;
             } else if (t.getSGID().getRowKey().equals(tSet2.getSGID().getRowKey())) {
@@ -109,7 +109,7 @@ public class TaggableTest {
 //        Tag[] tagsCheck = {t1a, t1b, t1c, t2a, t2b, t2c, t3a};
 //        boolean[] tagsCheckFound = new boolean[tagsCheck.length];
 //        Arrays.fill(tagsCheckFound, false);
-////        for(TagSpecSet t : tagSets){
+////        for(TagSet t : tagSets){
 //        for (Tag ta : tags) {
 //            for (int i = 0; i < tagsCheckFound.length; i++) {
 //                if (tagsCheck[i].equals(ta)) {
@@ -130,10 +130,10 @@ public class TaggableTest {
     }
 
     @Test
-    public void testAddingAndRemovingTagSpecsFromTagSpecSets() {
+    public void testAddingAndRemovingTagSpecsFromTagSets() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         // tags are not initially in a key set
-        TagSpecSet initialTestSet = (TagSpecSet) SWQEFactory.getQueryInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
+        TagSet initialTestSet = (TagSet) SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, tSet2.getSGID());
         Tag[] tagsCheck = {ts1, ts2, ts3};
         boolean[] tagsCheckFound = new boolean[tagsCheck.length];
         Arrays.fill(tagsCheckFound, false);
@@ -153,17 +153,17 @@ public class TaggableTest {
         mManager.persist(tSet2);
         tSet2.add(ts1).add(ts2);
         mManager.flush();
-        TagSpecSet testSet = (TagSpecSet) SWQEFactory.getQueryInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
+        TagSet testSet = (TagSet) SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, tSet2.getSGID());
         Assert.assertTrue(testSet.getCount() == 2);
         tSet2.add(ts3);
         mManager.flush();
-        testSet = (TagSpecSet) SWQEFactory.getQueryInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
+        testSet = (TagSet) SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, tSet2.getSGID());
         Assert.assertTrue(testSet.getCount() == 3);
         Assert.assertTrue(testSet.getPrecedingVersion().getCount() == 2);
         // and then remove them
         tSet2.remove(ts3).remove(ts2);
         mManager.flush();
-        testSet = (TagSpecSet) SWQEFactory.getQueryInterface().getAtomBySGID(TagSpecSet.class, tSet2.getSGID());
+        testSet = (TagSet) SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, tSet2.getSGID());
         Assert.assertTrue(testSet.getCount() == 1);
         Assert.assertTrue(testSet.getPrecedingVersion().getCount() == 3);
     }
@@ -271,7 +271,7 @@ public class TaggableTest {
     public void testTagSetParentReferences() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         // create an "ontology" tag set
-        TagSpecSet tagset = mManager.buildTagSpecSet().setName("one tag set to bind them all").build();
+        TagSet tagset = mManager.buildTagSet().setName("one tag set to bind them all").build();
         // add a few tag "specifications" to the tag set
         Tag dwarfTag = mManager.buildTagSpec().setKey("dwarf").build();
         Tag elvenTag = mManager.buildTagSpec().setKey("elven").build();

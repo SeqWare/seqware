@@ -19,7 +19,7 @@ public class TTLTest {
 
     private static FeatureSet fSet;
     private static Feature f1;
-    private static TagSpecSet tSet1;
+    private static TagSet tSet1;
     private static ReferenceSet rSet;
     private static Reference r1;
     private static Group group, viewerGroup;
@@ -37,7 +37,7 @@ public class TTLTest {
         f1 = mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).build();
         testFeatures.add(f1);
         fSet.add(testFeatures);
-        tSet1 = mManager.buildTagSpecSet().setName("Funky tags").build();
+        tSet1 = mManager.buildTagSet().setName("Funky tags").build();
         tSet1.setTTL(2, false);
         rSet = mManager.buildReferenceSet().setName("Minbar").setOrganism("Minbari").build();
         // time in the future
@@ -72,7 +72,7 @@ public class TTLTest {
         Assert.assertTrue("featureSet time (as long) wrong", fSetExpiryTime.after(new Date()) && fSetExpiryTime.before(twoHoursAhead.getTime()));
         Assert.assertTrue("featureSet time (as Date) wrong", testSet.getExpiryDate().after(new Date()) && testSet.getExpiryDate().before(twoHoursAhead.getTime()));
         // handle time two hours in future
-        TagSpecSet tagSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSpecSet.class, tSet1.getSGID());
+        TagSet tagSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, tSet1.getSGID());
         Assert.assertTrue("tagSet cascade wrong", tagSet.getCascade() == false);
         Assert.assertTrue("tagSet time (in hours) wrong", tagSet.getTTL() == 2);
         Date tSetExpiryTime = new Date(tagSet.getExpiryTime());

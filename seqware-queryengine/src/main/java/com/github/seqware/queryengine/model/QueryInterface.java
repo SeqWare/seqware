@@ -130,7 +130,7 @@ public interface QueryInterface {
      *
      * @return something iterable that iterates through all TagSets
      */
-    public SeqWareIterable<TagSpecSet> getTagSpecSets();
+    public SeqWareIterable<TagSet> getTagSets();
 
 //    // TAG/CV METHODS
     /**
