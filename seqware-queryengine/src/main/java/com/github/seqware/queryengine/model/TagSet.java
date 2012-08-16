@@ -10,8 +10,8 @@ import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
  *
  * @author dyuen
  */
-public interface TagSpecSet extends MolSetInterface<TagSpecSet, Tag> {
-    public final static String prefix = "TagSpecSet";
+public interface TagSet extends MolSetInterface<TagSet, Tag> {
+    public final static String prefix = "TagSet";
 
     /**
      * Get the name of the tag set
@@ -38,18 +38,18 @@ public interface TagSpecSet extends MolSetInterface<TagSpecSet, Tag> {
      * @return 
      */
     @Override
-    public abstract TagSpecSet.Builder toBuilder();
+    public abstract TagSet.Builder toBuilder();
 
     public abstract static class Builder implements BaseBuilder {
 
-        public TagSpecSet aSet;
+        public TagSet aSet;
         
         @Override
-        public TagSpecSet build() {
+        public TagSet build() {
            return build(true);
         }
 
-        public abstract TagSpecSet build(boolean newObject);
+        public abstract TagSet build(boolean newObject);
 
         @Override
         public Builder setManager(CreateUpdateManager aThis) {

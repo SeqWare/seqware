@@ -27,7 +27,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 public class Tag extends AtomImpl<Tag> {
 
     public final static String prefix = "Tag";
-    private LazyReference<TagSpecSet> tagSet = new LazyReference<TagSpecSet>(TagSpecSet.class);
+    private LazyReference<TagSet> tagSet = new LazyReference<TagSet>(TagSet.class);
     private String key = null;
     private String predicate = "=";
     private Object value = null;
@@ -56,18 +56,18 @@ public class Tag extends AtomImpl<Tag> {
     }
 
     /**
-     * Get a reference to the parent TagSpecSet
+     * Get a reference to the parent TagSet
      *
-     * @return parent TagSpecSet
+     * @return parent TagSet
      */
-    public TagSpecSet getTagSet() {
+    public TagSet getTagSet() {
         return tagSet.get();
     }
 
     /**
-     * Get a reference to the parent TagSpecSet
+     * Get a reference to the parent TagSet
      *
-     * @return parent TagSpecSet
+     * @return parent TagSet
      */
     public SGID getTagSetSGID() {
         return tagSet.getSGID();
@@ -92,27 +92,27 @@ public class Tag extends AtomImpl<Tag> {
     }
 
     /**
-     * Set the TagSpecSet for this particular tag, should not be called outside
+     * Set the TagSet for this particular tag, should not be called outside
      * of the back-end. This is used primary to keep track of which TagSet a tag
      * came from.
      *
      * @param sgid
      * @return
      */
-    public Tag setTagSpecSet(SGID sgid) {
+    public Tag setTagSet(SGID sgid) {
         this.tagSet.setSGID(sgid);
         return this;
     }
 
     /**
-     * Set the TagSpecSet for this particular tag, should not be called outside
+     * Set the TagSet for this particular tag, should not be called outside
      * of the back-end. This is used primary to keep track of which TagSet a tag
      * came from.
      *
      * @param sgid
      * @return
      */
-    public Tag setTagSpecSet(TagSpecSet set) {
+    public Tag setTagSet(TagSet set) {
         this.tagSet.set(set);
         return this;
     }
@@ -235,12 +235,12 @@ public class Tag extends AtomImpl<Tag> {
             return this;
         }
 
-        public Tag.Builder setTagSpecSet(TagSpecSet set) {
+        public Tag.Builder setTagSet(TagSet set) {
             this.tag.tagSet.set(set);
             return this;
         }
 
-        public Tag.Builder setTagSpecSet(SGID sgid) {
+        public Tag.Builder setTagSet(SGID sgid) {
             this.tag.tagSet.setSGID(sgid);
             return this;
         }

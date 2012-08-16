@@ -6,7 +6,7 @@ import com.github.seqware.queryengine.impl.StorageInterface;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
-import com.github.seqware.queryengine.model.TagSpecSet;
+import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.util.FSGID;
 import java.util.*;
 import org.junit.Assert;
@@ -30,7 +30,7 @@ public class RowKeyFeatureSetTest {
         String pragma = "##gvf-version 1.06 ##genome-build NCBI B36.3 ##sequence-region chr16 1 88827254";
         fSet = mManager.buildFeatureSet().setDescription(pragma).setReference(mManager.buildReference().setName("funky_ref").build()).build();
         Set<Feature> testFeatures = new HashSet<Feature>();
-        TagSpecSet stdTagSet = mManager.buildTagSpecSet().setName("Std_tags").build();
+        TagSet stdTagSet = mManager.buildTagSet().setName("Std_tags").build();
         Tag idSpec = mManager.buildTagSpec().setKey("ID").build();
         Tag variantSpec = mManager.buildTagSpec().setKey("Variant_seq").build();
         Tag referenceSpec = mManager.buildTagSpec().setKey("ReferenceSeq").build();

@@ -129,7 +129,7 @@ public interface CreateUpdateManager {
      *
      * @return tag set
      */
-    public TagSpecSet.Builder buildTagSpecSet();
+    public TagSet.Builder buildTagSet();
 
     /**
      * Build an analysis set

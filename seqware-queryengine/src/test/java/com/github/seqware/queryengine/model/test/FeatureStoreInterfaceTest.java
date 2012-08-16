@@ -9,7 +9,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import com.github.seqware.queryengine.model.Tag;
-import com.github.seqware.queryengine.model.TagSpecSet;
+import com.github.seqware.queryengine.model.TagSet;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -56,7 +56,7 @@ public class FeatureStoreInterfaceTest {
         FeatureSet set = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Diverse_Set").build()).build();
 
         // Sequence Ontology (SO), http://www.sequenceontology.org/
-        TagSpecSet tagSpecSet = mManager.buildTagSpecSet().setName("SOFA -- Sequence Ontology Feature Annotation").build();
+        TagSet TagSet = mManager.buildTagSet().setName("SOFA -- Sequence Ontology Feature Annotation").build();
 
         Tag termTag = mManager.buildTagSpec().setKey("SO_term").build();
         Tag idTag = mManager.buildTagSpec().setKey("SO_id").build();

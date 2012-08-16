@@ -4,7 +4,7 @@ import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Reference;
-import com.github.seqware.queryengine.model.TagSpecSet;
+import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.system.Utility;
 import com.github.seqware.queryengine.system.importers.workers.ImportWorker;
 import com.github.seqware.queryengine.util.SGID;
@@ -54,12 +54,12 @@ public class FeatureImporter extends Importer {
         Reference ref = SWQEFactory.getQueryInterface().getLatestAtomBySGID(referenceID, Reference.class);
         // create a centralized FeatureSet
         FeatureSet featureSet = modelManager.buildFeatureSet().setReference(ref).build();
-        TagSpecSet adHocSet;
+        TagSet adHocSet;
         // process ad hoc set if given, create a new one if there is not
         if (adhocTagSetID != null){
-            adHocSet = SWQEFactory.getQueryInterface().getLatestAtomBySGID(adhocTagSetID, TagSpecSet.class);
+            adHocSet = SWQEFactory.getQueryInterface().getLatestAtomBySGID(adhocTagSetID, TagSet.class);
         } else{
-            adHocSet = modelManager.buildTagSpecSet().setName("ad hoc tag set for FeatureSet " + featureSet.getSGID().getRowKey()).build();
+            adHocSet = modelManager.buildTagSet().setName("ad hoc tag set for FeatureSet " + featureSet.getSGID().getRowKey()).build();
         }
         // we don't really need the central model manager past this point 
         modelManager.close();
