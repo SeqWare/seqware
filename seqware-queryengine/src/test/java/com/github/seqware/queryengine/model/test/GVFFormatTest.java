@@ -5,7 +5,7 @@ import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
-import com.github.seqware.queryengine.model.TagSpecSet;
+import com.github.seqware.queryengine.model.TagSet;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.AfterClass;
@@ -29,7 +29,7 @@ public class GVFFormatTest {
         String pragma = "##gvf-version 1.06 ##genome-build NCBI B36.3 ##sequence-region chr16 1 88827254";
         fSet = mManager.buildFeatureSet().setDescription(pragma).setReference(mManager.buildReference().setName("source").build()).build();
         Set<Feature> testFeatures = new HashSet<Feature>();
-        TagSpecSet stdTagSet = mManager.buildTagSpecSet().setName("Std_tags").build();
+        TagSet stdTagSet = mManager.buildTagSet().setName("Std_tags").build();
         Tag idSpec = mManager.buildTagSpec().setKey("ID").build();
         Tag variantSpec = mManager.buildTagSpec().setKey("Variant_seq").build();
         Tag referenceSpec = mManager.buildTagSpec().setKey("ReferenceSeq").build();

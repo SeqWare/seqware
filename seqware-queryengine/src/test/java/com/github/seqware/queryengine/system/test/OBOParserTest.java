@@ -18,7 +18,7 @@ package com.github.seqware.queryengine.system.test;
 
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Tag;
-import com.github.seqware.queryengine.model.TagSpecSet;
+import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.system.importers.OBOImporter;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.File;
@@ -37,7 +37,7 @@ public class OBOParserTest {
         String curDir = System.getProperty("user.dir");
         File file = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/so.obo");
         SGID tagSetID = OBOImporter.mainMethod(new String[]{file.getAbsolutePath()});
-        TagSpecSet tagSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSpecSet.class, tagSetID);
+        TagSet tagSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, tagSetID);
         // count is 2135 if we do not omit obselete terms and check for duplicates
         Assert.assertTrue("loaded incorrect number of SO terms, expected 1935 found " + tagSet.getCount(), tagSet.getCount() == (1935*2));
         // check that a few known sequence tags are present

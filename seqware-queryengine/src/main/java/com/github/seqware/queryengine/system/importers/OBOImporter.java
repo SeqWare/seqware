@@ -2,7 +2,7 @@ package com.github.seqware.queryengine.system.importers;
 
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.model.TagSpecSet;
+import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.system.Utility;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.*;
@@ -68,7 +68,7 @@ public class OBOImporter {
             Pattern p = Pattern.compile("SO:\\d+");
 
             CreateUpdateManager modelManager = SWQEFactory.getModelManager();
-            TagSpecSet tagSet = modelManager.buildTagSpecSet().setName("Sequence Ontology").build();
+            TagSet tagSet = modelManager.buildTagSet().setName("Sequence Ontology").build();
 
             while (iter.hasNext()) {
                 Term term = (Term) iter.next();
@@ -101,11 +101,11 @@ public class OBOImporter {
 
             // clean-up
             SWQEFactory.getStorage().closeStorage();
-            System.out.println(tagSet.getCount() + " terms written to a TagSpecSet written with an ID of:");
+            System.out.println(tagSet.getCount() + " terms written to a TagSet written with an ID of:");
             String outputID = tagSet.getSGID().getUuid().toString();
             System.out.println(outputID);
             Map<String, String> keyValues = new HashMap<String, String>();
-            keyValues.put("tagSpecSetID", outputID);
+            keyValues.put("TagSetID", outputID);
             Utility.writeKeyValueFile(outputFile, keyValues);
             return tagSet.getSGID();
         } catch (ParseException ex) {

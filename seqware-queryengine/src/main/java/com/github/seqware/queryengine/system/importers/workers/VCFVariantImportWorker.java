@@ -6,7 +6,7 @@ import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.model.Tag.Builder;
-import com.github.seqware.queryengine.model.TagSpecSet;
+import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.*;
 import java.util.ArrayList;
@@ -37,8 +37,8 @@ import org.apache.log4j.Logger;
  */
 public class VCFVariantImportWorker extends ImportWorker {
     private CreateUpdateManager modelManager;
-    private List<TagSpecSet> potentialTagSets = new ArrayList<TagSpecSet>();
-    private TagSpecSet adHocSet;
+    private List<TagSet> potentialTagSets = new ArrayList<TagSet>();
+    private TagSet adHocSet;
     private Map<String, Tag> localCache = new HashMap<String, Tag>();
     
 
@@ -65,7 +65,7 @@ public class VCFVariantImportWorker extends ImportWorker {
             return this.localCache.get(key);
         }
         
-        for(TagSpecSet set : this.potentialTagSets){
+        for(TagSet set : this.potentialTagSets){
             if (set.containsKey(key)){
                 Logger.getLogger(VCFVariantImportWorker.class.getName()).trace(key + " found in provided set " + set.getSGID().getRowKey());
                 Tag tagByKey = set.get(key);
@@ -99,10 +99,10 @@ public class VCFVariantImportWorker extends ImportWorker {
         // process potential tag sets
         if (this.getTagSetIDs() != null){
             for(SGID tagSetID : this.getTagSetIDs()){
-                this.potentialTagSets.add(SWQEFactory.getQueryInterface().getLatestAtomBySGID(tagSetID, TagSpecSet.class));
+                this.potentialTagSets.add(SWQEFactory.getQueryInterface().getLatestAtomBySGID(tagSetID, TagSet.class));
             }
         }
-        this.adHocSet = SWQEFactory.getQueryInterface().getLatestAtomBySGID(this.getAdhoctagset(), TagSpecSet.class);   
+        this.adHocSet = SWQEFactory.getQueryInterface().getLatestAtomBySGID(this.getAdhoctagset(), TagSet.class);   
         modelManager.persist(adHocSet);
         
         // open the file
@@ -158,14 +158,15 @@ public class VCFVariantImportWorker extends ImportWorker {
 
                     //m.setContig(t[0]);
                     fBuilder.setSeqid(t[0]);
-                    if (!".".equals(t[0]) && !t[0].startsWith("chr")) {
-                        //m.setContig("chr" + t[0]);
-                        fBuilder.setSeqid("chr" + t[0]);
-                    }
+// should not rename this actually
+//                    if (!".".equals(t[0]) && !t[0].startsWith("chr")) {
+//                        //m.setContig("chr" + t[0]);
+//                        fBuilder.setSeqid("chr" + t[0]);
+//                    }
 
                     // cache our tags till our message is built
                     Set<Tag> tagSet = new HashSet<Tag>();
-                    //TODO: link this up with proper TagSpecSets, these are ad hoc tags
+                    //TODO: link this up with proper TagSets, these are ad hoc tags
                     //tagSet.add(Tag.newBuilder().setKey(t[0]).build());
                     tagSet.add(getTagSpec(t[0]));
                     //m.addTag(t[0], null);
@@ -347,7 +348,7 @@ public class VCFVariantImportWorker extends ImportWorker {
                         // this is new, add it to a featureSet
                         fSet.add(build);
 
-                        if (count % 10 == 0) {
+                        if (count % 1000 == 0) {
                             Logger.getLogger(VCFVariantImportWorker.class.getName()).info( new Date().toString() + workerName + " adding mismatch to db: "+build.getSeqid()+":"+build.getStart()+"-"+build.getStop()+" total records added: "+build.getSeqid()+" total lines so far: "+count);
                         }
                     }

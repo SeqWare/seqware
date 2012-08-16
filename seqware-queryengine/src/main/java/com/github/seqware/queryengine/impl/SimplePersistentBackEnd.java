@@ -151,8 +151,8 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     }
 
     @Override
-    public SeqWareIterable<TagSpecSet> getTagSpecSets() {
-        return getAllOfClass(TagSpecSet.class);
+    public SeqWareIterable<TagSet> getTagSets() {
+        return getAllOfClass(TagSet.class);
     }
 
     @Override

@@ -39,7 +39,7 @@ public abstract class StorageInterface {
      */
     public final BiMap<Class, String> directBIMap = new ImmutableBiMap.Builder<Class, String>().put(Analysis.class, Analysis.prefix)
             .put(AnalysisSet.class, AnalysisSet.prefix).put(Reference.class, Reference.prefix).put(ReferenceSet.class, ReferenceSet.prefix)
-            .put(Tag.class, Tag.prefix).put(TagSpecSet.class, TagSpecSet.prefix).put(User.class, User.prefix).put(Group.class, Group.prefix)
+            .put(Tag.class, Tag.prefix).put(TagSet.class, TagSet.prefix).put(User.class, User.prefix).put(Group.class, Group.prefix)
             .put(FeatureSet.class, FeatureSet.prefix).build();
     
     public static final String SEPARATOR = ".";

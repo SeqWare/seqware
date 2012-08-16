@@ -18,9 +18,9 @@ package com.github.seqware.queryengine.system.test;
 
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Reference;
-import com.github.seqware.queryengine.model.TagSpecSet;
+import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.system.ReferenceCreator;
-import com.github.seqware.queryengine.system.TagSpecSetCreator;
+import com.github.seqware.queryengine.system.TagSetCreator;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.File;
 import java.io.IOException;
@@ -40,8 +40,8 @@ public class CommandLineUtilsTest {
     public void createtagSetViaCommandLine() {
         try {
             File outputFile = File.createTempFile("keyValue", "out");
-            SGID tagSetID = TagSpecSetCreator.mainMethod(new String[]{"ad_hoc_tagSet", outputFile.getAbsolutePath()});
-            TagSpecSet tagSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSpecSet.class, tagSetID);
+            SGID tagSetID = TagSetCreator.mainMethod(new String[]{"ad_hoc_tagSet", outputFile.getAbsolutePath()});
+            TagSet tagSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, tagSetID);
             Assert.assertTrue("command-line util should create empty set " + tagSet.getCount(), tagSet.getCount() == 0);
         } catch (IOException ex) {
             Logger.getLogger(CommandLineUtilsTest.class.getName()).log(Level.SEVERE, null, ex);

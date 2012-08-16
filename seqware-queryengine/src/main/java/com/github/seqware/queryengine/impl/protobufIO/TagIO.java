@@ -50,8 +50,8 @@ public class TagIO implements ProtobufTransferInterface<TagPB, Tag> {
         } else if (tag.hasVString()) {
             builder.setValue(tag.getVString());
         }
-        if (tag.hasTagSpecSet()){
-            builder.setTagSpecSet(SGIDIO.pb2m(tag.getTagSpecSet()));
+        if (tag.hasTagSet()){
+            builder.setTagSet(SGIDIO.pb2m(tag.getTagSet()));
         }
         Tag rTag = builder.build();
         UtilIO.handlePB2Atom(tag.getAtom(), rTag);
@@ -84,7 +84,7 @@ public class TagIO implements ProtobufTransferInterface<TagPB, Tag> {
             }
         }
         if (tag.getTagSetSGID() != null){
-            builder.setTagSpecSet(SGIDIO.m2pb(tag.getTagSetSGID()));
+            builder.setTagSet(SGIDIO.m2pb(tag.getTagSetSGID()));
         }
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), tag));
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && tag.getPrecedingVersion() != null) {
