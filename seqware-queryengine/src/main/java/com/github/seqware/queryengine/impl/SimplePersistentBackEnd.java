@@ -106,7 +106,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     public <T extends Atom> T getAtomBySGID(Class<T> t, SGID sgid) {
         T p = storage.deserializeTargetToAtom(t, sgid);
         p = (T) locateWithinFeatureList(p, sgid);
-        assert (p == null || p.getSGID().equals(sgid));
+        assert (p == null || p.getSGID().equals(sgid) || p.getSGID().getFriendlyRowKey().equals(sgid.getFriendlyRowKey()));
         return p;
     }
 
@@ -114,14 +114,14 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     public Atom getLatestAtomBySGID(SGID sgid) {
         Atom p = storage.deserializeTargetToLatestAtom(sgid);
         p = locateWithinFeatureList(p, sgid);
-        assert (p == null || p.getSGID().getRowKey().equals(sgid.getRowKey()));
+        assert (p == null || p.getSGID().getRowKey().equals(sgid.getRowKey())) || p.getSGID().getFriendlyRowKey().equals(sgid.getFriendlyRowKey());
         return p;
     }
 
     @Override
     public <T extends Atom> T getLatestAtomBySGID(SGID sgid, Class<T> t) {
         T p = storage.deserializeTargetToLatestAtom(sgid, t);
-        assert (p == null || p.getSGID().getRowKey().equals(sgid.getRowKey()));
+        assert (p == null || p.getSGID().getRowKey().equals(sgid.getRowKey()) || p.getSGID().getFriendlyRowKey().equals(sgid.getFriendlyRowKey()));
         return p;
     }
 

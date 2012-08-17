@@ -23,6 +23,7 @@ message SGIDPB {
     optional int64 mostSigBits = 1;
     optional int64 leastSigBits = 2;
     optional int64 timestamp = 3;
+    optional string friendly_rowkey = 4;
 }
 
 message FSGIDPB {

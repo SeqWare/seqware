@@ -11,7 +11,6 @@ import com.github.seqware.queryengine.util.SeqWareIterable;
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
-import java.util.Date;
 
 /**
  * @author boconnor
@@ -26,6 +25,7 @@ public class FeatureTB extends TupleBinding {
     to.writeLong(f.getSGID().getUuid().getMostSignificantBits());
     to.writeLong(f.getSGID().getUuid().getLeastSignificantBits());
     to.writeLong(f.getTimestamp().getTime());
+    to.writeString(f.getSGID().getFriendlyRowKey());
     //to.writeLong(f.getPrecedingSGID().getUuid().getMostSignificantBits());
     //to.writeLong(f.getPrecedingSGID().getUuid().getLeastSignificantBits());
     to.writeString(f.getPragma());
@@ -53,7 +53,7 @@ public class FeatureTB extends TupleBinding {
       Builder newBuilder = Feature.newBuilder();
       // reset because this InputStream may have been sniffed before this tuple binder was called
       ti.reset();
-      SGID sgid = new SGID(ti.readLong(), ti.readLong(), ti.readLong());
+      SGID sgid = new SGID(ti.readLong(), ti.readLong(), ti.readLong(), ti.readString());
       SGID oldSgid = null; //new SGID(ti.readLong(), ti.readLong());
       newBuilder.setPragma(ti.readString()).setSource(ti.readString()).setType(ti.readString()).setScore(ti.readDouble());
       newBuilder.setPhase(ti.readString()).setSeqid(ti.readString()).setStart(ti.readLong()).setStop(ti.readLong());

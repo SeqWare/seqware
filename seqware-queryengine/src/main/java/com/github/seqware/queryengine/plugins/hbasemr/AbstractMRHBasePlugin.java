@@ -34,6 +34,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.log4j.Logger;
 
@@ -99,6 +100,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
             scan.setMaxVersions();       // we need all version data
             scan.setCaching(500);        // 1 is the default in Scan, which will be bad for MapReduce jobs
             scan.setCacheBlocks(false);  // don't set to true for MR jobs
+            scan.addColumn(HBaseStorage.TEST_FAMILY_INBYTES, Bytes.toBytes(inputSet.getSGID().getUuid().toString()));
 
             // handle the part that changes from job to job
             performVariableInit(tableName, destTableName, scan);

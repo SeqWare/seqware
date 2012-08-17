@@ -60,7 +60,7 @@ public class Constants {
             ImmutableMap.<String, String>builder().
             put("hbase.zookeeper.quorum", "sqwdev.res.oicr.on.ca").
             put("hbase.zookeeper.property.clientPort", "2181").
-            put("hbase.master", "sqwdev.res:60000").
+            put("hbase.master", "sqwdev.res.oicr.on.ca:60000").
             put("mapred.job.tracker", "sqwdev.res.oicr.on.ca:8021").
             put("fs.default.name", "hdfs://sqwdev.res.oicr.on.ca:8020").
             build());
