@@ -74,7 +74,6 @@ public class VCFDumper {
                 outputStream = new BufferedWriter(new OutputStreamWriter(System.out));
             }
             outputStream.append("#CHROM	POS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\n");
-            SeqWareIterable<FeatureSet> featureSets = SWQEFactory.getQueryInterface().getFeatureSets();
             boolean caughtNonVCF = false;
             for (Feature feature : fSet) {
                 outputStream.append(feature.getSeqid() + "\t" + (feature.getStart() + 1) + "\t");

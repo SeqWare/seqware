@@ -27,7 +27,7 @@ import com.github.seqware.queryengine.util.SGID;
 public class SGIDIO {
 
     public static SGID pb2m(SGIDPB sgidpg) {
-        return new SGID(sgidpg.getMostSigBits(), sgidpg.getLeastSigBits(), sgidpg.getTimestamp());
+        return new SGID(sgidpg.getMostSigBits(), sgidpg.getLeastSigBits(), sgidpg.getTimestamp(), sgidpg.hasFriendlyRowkey() ? sgidpg.getFriendlyRowkey() : null);
     }
 
     public static SGIDPB m2pb(SGID sgid) {
@@ -35,6 +35,9 @@ public class SGIDIO {
         builder.setMostSigBits(sgid.getUuid().getMostSignificantBits());
         if (sgid.getBackendTimestamp() != null) {
             builder.setTimestamp(sgid.getBackendTimestamp().getTime());
+        }
+        if (sgid.getFriendlyRowKey() != null){
+            builder.setFriendlyRowkey(sgid.getFriendlyRowKey());
         }
         SGIDPB fMesg = builder.build();
         return fMesg;

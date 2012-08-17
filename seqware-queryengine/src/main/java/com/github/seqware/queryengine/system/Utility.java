@@ -28,14 +28,20 @@ import org.apache.log4j.Logger;
  * @author dyuen
  */
 public class Utility {
-        /**
+    /**
      * Parse a timestamp-less SGID from a String representation
-     * @param featureSetID
+     * @param stringSGID
      * @return 
      */
-    public static SGID parseSGID(String featureSetID) {
-        UUID uuid = UUID.fromString(featureSetID);
-        SGID sgid = new SGID(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits(), 0);
+    public static SGID parseSGID(String stringSGID) {
+        SGID sgid;
+        try{
+            UUID uuid = UUID.fromString(stringSGID);
+            sgid = new SGID(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits(), 0, null);
+        } catch (IllegalArgumentException e){
+            String fRowKey = stringSGID;
+            sgid = new SGID(0,0,0,fRowKey);
+        }
         return sgid;
     }
     

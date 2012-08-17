@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
  */
 public class FSGID extends SGID implements KryoSerializable {
     public static final String PositionSeparator = ":";
-    private String rowKey = null;
+//    private String rowKey = null;
     private String referenceName = null;
     private SGID featureSetID = null;
     private boolean tombstone = false;
@@ -48,7 +48,7 @@ public class FSGID extends SGID implements KryoSerializable {
 
     @Override
     public String toString() {
-        return rowKey + StorageInterface.SEPARATOR + featureSetID.toString() + StorageInterface.SEPARATOR + super.toString();
+        return friendlyRowKey + StorageInterface.SEPARATOR + featureSetID.toString() + StorageInterface.SEPARATOR + super.toString();
     }
     
     /**
@@ -58,8 +58,8 @@ public class FSGID extends SGID implements KryoSerializable {
      * @param timestamp 
      */
     public FSGID(long mostSig, long leastSig, long timestamp, String rowKey, String referenceName, SGID featureSet, boolean tombstone) {
-        super(mostSig, leastSig, timestamp);
-        this.rowKey = rowKey;
+        super(mostSig, leastSig, timestamp, null);
+        this.friendlyRowKey = rowKey;
         this.referenceName = referenceName;
         this.featureSetID = featureSet;
         this.tombstone = tombstone;
@@ -70,8 +70,8 @@ public class FSGID extends SGID implements KryoSerializable {
      * non-unique aspects on a FSGID, used when creating FeatureLists only
      */
     public FSGID(SGID sgid, FSGID fsgid){
-        super(sgid.getUuid().getMostSignificantBits(), sgid.getUuid().getLeastSignificantBits(), sgid.getBackendTimestamp().getTime());
-        this.rowKey = fsgid.rowKey;
+        super(sgid.getUuid().getMostSignificantBits(), sgid.getUuid().getLeastSignificantBits(), sgid.getBackendTimestamp().getTime(), null);
+        friendlyRowKey = fsgid.friendlyRowKey;
         this.referenceName = fsgid.referenceName;
         this.featureSetID = fsgid.getFeatureSetID();
         this.setBackendTimestamp(fsgid.getBackendTimestamp());
@@ -91,7 +91,7 @@ public class FSGID extends SGID implements KryoSerializable {
             // generate row key
             StringBuilder builder = new StringBuilder();
             builder.append(fSet.getReference().getName()).append(StorageInterface.SEPARATOR).append(f.getSeqid()).append(PositionSeparator).append(padZeros(f.getStart(), HBaseStorage.PAD))/** unnecessary .append(".feature.").append(f.getVersion())*/;
-            rowKey = builder.toString();
+            friendlyRowKey = builder.toString();
             referenceName = fSet.getReference().getName();
         } catch (Exception ex) {
             Logger.getLogger(FSGID.class.getName()).fatal( null, ex);
@@ -148,7 +148,7 @@ public class FSGID extends SGID implements KryoSerializable {
      */
     @Override
     public String getRowKey() {
-        return rowKey;
+        return friendlyRowKey;
     }
 
     public String getReferenceName() {
@@ -164,7 +164,7 @@ public class FSGID extends SGID implements KryoSerializable {
         if (super.getBackendTimestamp() != null){
             output.writeLong(super.getBackendTimestamp().getTime());
         }
-        output.writeString(rowKey);
+        output.writeString(super.friendlyRowKey);
         output.writeString(referenceName);
     }
 
@@ -177,11 +177,17 @@ public class FSGID extends SGID implements KryoSerializable {
         if (hasTimestamp){
             super.setBackendTimestamp(new Date(input.readLong()));
         }
-        this.rowKey = input.readString();
+        super.friendlyRowKey = input.readString();
         this.referenceName = input.readString();
     } 
     
     public String getTablename(){
         return FeatureList.prefix + StorageInterface.SEPARATOR + this.getReferenceName();
     }
+    
+    @Override
+    public void setFriendlyRowKey(String friendlyRowKey) {
+        throw new UnsupportedOperationException();
+    }
+
 }

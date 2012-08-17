@@ -21,6 +21,7 @@ import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
 import com.github.seqware.queryengine.model.QueryInterface;
+import com.github.seqware.queryengine.system.Utility;
 import com.github.seqware.queryengine.system.importers.workers.ImportConstants;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.BufferedWriter;
@@ -57,9 +58,7 @@ public class BrianTest {
         }
 
         // parse a SGID from a String representation, we need a more elegant solution here
-        String featureSetID = args[0];
-        UUID uuid = UUID.fromString(featureSetID);
-        SGID sgid = new SGID(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits(), 0);
+        SGID sgid = Utility.parseSGID(args[0]);
         FeatureSet fSet = SWQEFactory.getQueryInterface().getLatestAtomBySGID(sgid, FeatureSet.class);
 
         // if this featureSet does not exist

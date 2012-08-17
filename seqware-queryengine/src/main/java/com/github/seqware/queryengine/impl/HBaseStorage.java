@@ -355,6 +355,7 @@ public class HBaseStorage extends StorageInterface {
             // I think this should return in sorted order already
             Scan s = new Scan();
             s.setMaxVersions();
+            s.setCaching(500); 
             // we need the actual values if we do not store SGID in row key for debugging
             //s.setFilter(new KeyOnlyFilter());
             ResultScanner scanner = table.getScanner(s);
