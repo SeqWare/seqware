@@ -4,6 +4,7 @@
 package com.github.seqware.queryengine.system.importers.workers;
 
 import com.github.seqware.queryengine.system.importers.Importer;
+import com.github.seqware.queryengine.system.importers.SOFeatureImporter;
 import com.github.seqware.queryengine.util.SGID;
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class ImportWorker extends Thread {
     protected SGID featureSetID = null;
     protected List<SGID> tagSetIDs = null;
     protected SGID adhoctagset = null;
+    protected int batch_size = SOFeatureImporter.BATCH_SIZE;
 
     public ImportWorker() {
     }
@@ -192,6 +194,14 @@ public class ImportWorker extends Thread {
 
     public void setTagSetIDs(List<SGID> tagSetIDs) {
         this.tagSetIDs = tagSetIDs;
+    }
+
+    public int getBatch_size() {
+        return batch_size;
+    }
+
+    public void setBatch_size(int batch_size) {
+        this.batch_size = batch_size;
     }
 
     
