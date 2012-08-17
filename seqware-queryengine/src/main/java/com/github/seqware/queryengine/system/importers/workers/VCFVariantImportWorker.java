@@ -36,7 +36,6 @@ import org.apache.log4j.Logger;
  *
  */
 public class VCFVariantImportWorker extends ImportWorker {
-    public static final int BATCH_SIZE = 100000;
     private CreateUpdateManager modelManager;
     private List<TagSet> potentialTagSets = new ArrayList<TagSet>();
     private TagSet adHocSet;
@@ -142,8 +141,7 @@ public class VCFVariantImportWorker extends ImportWorker {
                 count++;
                 // we need to flush and clear the manager in order to release the memory consumed by the Features themselves
                 // the featureSet has to be reattached
-                if (count % BATCH_SIZE == 0){
-                    System.out.println("Flushing at " + count);
+                if (count % this.getBatch_size() == 0){
                     modelManager.flush();
                     modelManager.clear();
                     modelManager.persist(adHocSet);
@@ -350,7 +348,7 @@ public class VCFVariantImportWorker extends ImportWorker {
                         // this is new, add it to a featureSet
                         fSet.add(build);
 
-                        if (count % BATCH_SIZE == 0) {
+                        if (count % this.getBatch_size() == 0) {
                             System.out.println(new Date().toString() + workerName + " adding mismatch to db: "+build.getSeqid()+":"+build.getStart()+"-"+build.getStop()+" total records added: "+build.getSeqid()+" total lines so far: "+count);
                         }
                     }
