@@ -9,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -20,8 +21,8 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @author dyuen
  */
 public class User extends MoleculeImpl<User> {
-    public final static String prefix = "User";
 
+    public final static String prefix = "User";
     private String firstName;
     private String lastName;
     private String emailAddress;
@@ -84,19 +85,33 @@ public class User extends MoleculeImpl<User> {
 
     @Override
     public boolean equals(Object obj) {
-        // will cause recursion
-//        return EqualsBuilder.reflectionEquals(this, obj);
-        if (obj instanceof User) {
-            User other = (User) obj;
-            return this.firstName.equals(other.firstName) && this.lastName.equals(other.lastName)
-                    && this.emailAddress.equals(other.emailAddress);
+        if (obj == null) {
+            return false;
         }
-        return false;
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        User rhs = (User) obj;
+        return new EqualsBuilder()
+                // Group Equality does not need SGID equality, we do not want different Users with different times to be treated differently
+                //                .appendSuper(super.equals(obj))
+                .append(super.getSGID().getRowKey(), rhs.getSGID().getRowKey())
+                .append(firstName, rhs.getFirstName())
+                .append(lastName, rhs.getLastName())
+                .append(emailAddress, rhs.getEmailAddress())
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
+        int hash = 7;
+        hash = 31 * hash + (this.firstName != null ? this.firstName.hashCode() : 0);
+        hash = 31 * hash + (this.lastName != null ? this.lastName.hashCode() : 0);
+        hash = 31 * hash + (this.emailAddress != null ? this.emailAddress.hashCode() : 0);
+        return hash;
     }
 
     /**
@@ -127,10 +142,11 @@ public class User extends MoleculeImpl<User> {
         }
         return buffer.toString();
     }
-    
+
     /**
      * Create a new ACL builder
-     * @return 
+     *
+     * @return
      */
     public static User.Builder newBuilder() {
         return new User.Builder();
@@ -138,18 +154,20 @@ public class User extends MoleculeImpl<User> {
 
     /**
      * A hashed password for the user
-     * @return 
+     *
+     * @return
      */
     public String getPassword() {
         return password;
     }
-    
+
     /**
      * Create an User builder started with a copy of this
-     * @return 
+     *
+     * @return
      */
     @Override
-    public User.Builder toBuilder(){
+    public User.Builder toBuilder() {
         User.Builder b = new User.Builder();
         b.user = this.copy(true);
         return b;
@@ -165,7 +183,7 @@ public class User extends MoleculeImpl<User> {
         return User.prefix;
     }
 
-    public static class Builder implements BaseBuilder {
+    public static class Builder extends BaseBuilder {
 
         private User user = new User();
 
@@ -178,7 +196,7 @@ public class User extends MoleculeImpl<User> {
             user.lastName = lastName;
             return this;
         }
-        
+
         public User.Builder setPasswordWithoutHash(String password) {
             user.password = password;
             return this;
@@ -188,7 +206,7 @@ public class User extends MoleculeImpl<User> {
             user.password = hashedPassword(password);
             return this;
         }
-        
+
         public User.Builder setEmailAddress(String emailAddress) {
             user.emailAddress = emailAddress;
             return this;
@@ -196,7 +214,7 @@ public class User extends MoleculeImpl<User> {
 
         @Override
         public User build() {
-            if (user.getManager() != null){
+            if (user.getManager() != null) {
                 user.getManager().objectCreated(user);
             }
             return user;
@@ -206,6 +224,11 @@ public class User extends MoleculeImpl<User> {
         public Builder setManager(CreateUpdateManager aThis) {
             user.setManager(aThis);
             return this;
+        }
+
+        @Override
+        public Builder setFriendlyRowKey(String rowKey) {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 }

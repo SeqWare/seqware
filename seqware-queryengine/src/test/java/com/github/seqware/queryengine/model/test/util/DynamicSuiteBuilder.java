@@ -28,7 +28,7 @@ public class DynamicSuiteBuilder {
     
     private static Class<?>[] ModelTests = {ACLTest.class, FeatureSetTest.class, FeatureStoreInterfaceTest.class, 
         FeatureTest.class, QueryInterfaceTest.class, ReferenceSetTest.class, TaggableTest.class, GVFFormatTest.class, 
-        UserGroupTest.class, TTLTest.class};
+        UserGroupTest.class, TTLTest.class, FriendlyNameTest.class};
     
     public static Class[] modelSuite() {
          return DynamicSuiteBuilder.ModelTests;

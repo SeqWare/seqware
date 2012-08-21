@@ -60,7 +60,7 @@ public abstract class Analysis<ReturnType> extends MoleculeImpl<Analysis> implem
      */
     protected abstract void setPlugin(AnalysisPluginInterface plugin);
 
-    public abstract static class Builder implements BaseBuilder {
+    public abstract static class Builder extends BaseBuilder {
 
         public Analysis analysis;
 
@@ -86,6 +86,11 @@ public abstract class Analysis<ReturnType> extends MoleculeImpl<Analysis> implem
         public Analysis.Builder setManager(CreateUpdateManager aThis) {
             analysis.setManager(aThis);
             return this;
+        }
+        
+        @Override
+        public Analysis.Builder setFriendlyRowKey(String rowKey) {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 }

@@ -40,7 +40,7 @@ public interface TagSet extends MolSetInterface<TagSet, Tag> {
     @Override
     public abstract TagSet.Builder toBuilder();
 
-    public abstract static class Builder implements BaseBuilder {
+    public abstract static class Builder extends BaseBuilder {
 
         public TagSet aSet;
         
@@ -58,6 +58,13 @@ public interface TagSet extends MolSetInterface<TagSet, Tag> {
         }
 
         public abstract Builder setName(String name);
+        
+        @Override
+        public Builder setFriendlyRowKey(String rowKey) {
+            super.checkFriendlyRowKey(rowKey);
+            aSet.getSGID().setFriendlyRowKey(rowKey);
+            return this;
+        }
     }
 
 

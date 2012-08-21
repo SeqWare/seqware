@@ -4,6 +4,7 @@ import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Group;
 import com.github.seqware.queryengine.model.User;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
+import org.apache.commons.lang.builder.EqualsBuilder;
 
 /**
  * An in-memory representation of a group.
@@ -11,39 +12,59 @@ import com.github.seqware.queryengine.model.impl.AtomImpl;
  * @author jbaran
  * @author dyuen
  */
-public class InMemoryGroup extends AbstractInMemorySet<Group, User> implements Group{
-    
+public class InMemoryGroup extends AbstractInMemorySet<Group, User> implements Group {
+
     private String name = null;
     private String description = null;
-    
+
     @Override
     public String getName() {
         return name;
     }
-    
-    @Override 
-    public String getDescription(){
+
+    @Override
+    public String getDescription() {
         return description;
     }
-    
+
     /**
-     * Override the equals method for Group, kind of a cheat
-     * With other objects we take into account things like version or SGID
-     * However, with Group, the object is embedded inside the ACL for other objects
-     * explicitly, so the version changes too often for easy API use
+     * Override the equals method for Group, kind of a cheat With other objects
+     * we take into account things like version or SGID However, with Group, the
+     * object is embedded inside the ACL for other objects explicitly, so the
+     * version changes too often for easy API use
+     *
      * @param obj
-     * @return 
+     * @return
      */
     @Override
     public boolean equals(Object obj) {
-         if (obj instanceof Group) {
-            Group other = (Group) obj;
-            return this.getName().equals(other.getName()) && this.getDescription().equals(other.getDescription());
+        if (obj == null) {
+            return false;
         }
-        return false;
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Group rhs = (Group) obj;
+        return new EqualsBuilder()
+                // Group Equality does not need SGID equality, we do not want different Groups with different times to be treated differently
+                //                .appendSuper(super.equals(obj))
+                .append(super.getSGID().getRowKey(), rhs.getSGID().getRowKey())
+                .append(name, rhs.getName())
+                .append(description, rhs.getDescription())
+                .isEquals();
     }
 
-    
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 71 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 71 * hash + (this.description != null ? this.description.hashCode() : 0);
+        return hash;
+    }
+
     public static Group.Builder newBuilder() {
         return new InMemoryGroup.Builder();
     }
@@ -66,30 +87,29 @@ public class InMemoryGroup extends AbstractInMemorySet<Group, User> implements G
     }
 
     public static class Builder extends Group.Builder {
-        
-        public Builder(){
+
+        public Builder() {
             aSet = new InMemoryGroup();
         }
 
         @Override
         public Group build(boolean newObject) {
-            if(((AtomImpl)aSet).getManager() != null){
-            ((AtomImpl)aSet).getManager().objectCreated((Atom)aSet);
+            if (((AtomImpl) aSet).getManager() != null) {
+                ((AtomImpl) aSet).getManager().objectCreated((Atom) aSet);
             }
             return aSet;
         }
 
         @Override
         public InMemoryGroup.Builder setName(String name) {
-            ((InMemoryGroup)aSet).name = name;
+            ((InMemoryGroup) aSet).name = name;
             return this;
         }
-        
+
         @Override
         public InMemoryGroup.Builder setDescription(String description) {
-            ((InMemoryGroup)aSet).description = description;
+            ((InMemoryGroup) aSet).description = description;
             return this;
         }
     }
-
 }

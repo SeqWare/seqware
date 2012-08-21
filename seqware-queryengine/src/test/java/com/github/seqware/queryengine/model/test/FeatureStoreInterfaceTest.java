@@ -1,15 +1,12 @@
 package com.github.seqware.queryengine.model.test;
 
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
-
+import com.github.seqware.queryengine.model.Tag;
 import java.util.Random;
 import java.util.UUID;
-
-import com.github.seqware.queryengine.model.Tag;
-import com.github.seqware.queryengine.model.TagSet;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

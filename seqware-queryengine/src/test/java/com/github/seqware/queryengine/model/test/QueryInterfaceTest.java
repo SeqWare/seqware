@@ -1,20 +1,18 @@
 package com.github.seqware.queryengine.model.test;
 
-import com.github.seqware.queryengine.model.*;
-import com.github.seqware.queryengine.model.test.FeatureStoreInterfaceTest;
 import com.github.seqware.queryengine.Benchmarking;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.github.seqware.queryengine.impl.MRHBaseModelManager;
 import com.github.seqware.queryengine.impl.test.SimplePersistentBackEndTest;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.Constant;
 import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
-import com.github.seqware.queryengine.kernel.RPNStack.TagOccurrence;
-import com.github.seqware.queryengine.kernel.RPNStack.TagHierarchicalOccurrence;
-import com.github.seqware.queryengine.kernel.RPNStack.TagValuePresence;
 import com.github.seqware.queryengine.kernel.RPNStack.Operation;
+import com.github.seqware.queryengine.kernel.RPNStack.TagHierarchicalOccurrence;
+import com.github.seqware.queryengine.kernel.RPNStack.TagOccurrence;
+import com.github.seqware.queryengine.kernel.RPNStack.TagValuePresence;
+import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesByAttributesPlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByAttributesPlugin;

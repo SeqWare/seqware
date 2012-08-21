@@ -87,7 +87,7 @@ public class FeatureList extends AtomImpl<FeatureList> {
         return this;
     }
 
-    public static class Builder implements BaseBuilder {
+    public static class Builder extends BaseBuilder {
 
         private FeatureList featureArr = new FeatureList();
 
@@ -103,6 +103,11 @@ public class FeatureList extends AtomImpl<FeatureList> {
         public Builder setManager(CreateUpdateManager aThis) {
             featureArr.setManager(aThis);
             return this;
+        }
+
+        @Override
+        public Builder setFriendlyRowKey(String rowKey) {
+            throw new UnsupportedOperationException("FeatureLists do not support custom rowKey.");
         }
     }
 }

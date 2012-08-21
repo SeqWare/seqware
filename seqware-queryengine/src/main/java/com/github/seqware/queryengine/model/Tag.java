@@ -8,8 +8,6 @@ import com.github.seqware.queryengine.util.LazyReference;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -229,7 +227,7 @@ public class Tag extends AtomImpl<Tag> {
         return new InMemoryIterable(new ArrayList<Tag>());
     }
 
-    public static class Builder implements BaseBuilder {
+    public static class Builder extends BaseBuilder {
 
         private Tag tag = new Tag();
 
@@ -301,6 +299,13 @@ public class Tag extends AtomImpl<Tag> {
         @Override
         public Builder setManager(CreateUpdateManager aThis) {
             tag.setManager(aThis);
+            return this;
+        }
+
+        @Override
+        public Builder setFriendlyRowKey(String rowKey) {
+            super.checkFriendlyRowKey(rowKey);
+            tag.getSGID().setFriendlyRowKey(rowKey);
             return this;
         }
     }

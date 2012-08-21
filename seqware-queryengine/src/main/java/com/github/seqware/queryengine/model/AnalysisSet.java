@@ -34,7 +34,7 @@ public interface AnalysisSet extends MolSetInterface<AnalysisSet, Analysis> {
     @Override
     public abstract AnalysisSet.Builder toBuilder();
 
-    public abstract static class Builder implements BaseBuilder {
+    public abstract static class Builder extends BaseBuilder {
 
         public AnalysisSet aSet;
         
@@ -54,6 +54,11 @@ public interface AnalysisSet extends MolSetInterface<AnalysisSet, Analysis> {
         public abstract AnalysisSet.Builder setName(String name);
         
         public abstract AnalysisSet.Builder setDescription(String description);
+        
+        @Override
+        public AnalysisSet.Builder setFriendlyRowKey(String rowKey) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
     }
 
 

@@ -2,8 +2,8 @@ package com.github.seqware.queryengine.model;
 
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
-import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
+import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 
 /**
  * A Group of users that may share ACL permissions
@@ -32,7 +32,7 @@ public interface Group extends MolSetInterface<Group, User> {
     @Override
     public abstract Group.Builder toBuilder();
 
-    public abstract static class Builder implements BaseBuilder {
+    public abstract static class Builder extends BaseBuilder {
 
         public Group aSet;
         
@@ -52,6 +52,13 @@ public interface Group extends MolSetInterface<Group, User> {
         public abstract Group.Builder setName(String name);
         
         public abstract Group.Builder setDescription(String description);
+        
+        @Override
+        public Group.Builder setFriendlyRowKey(String rowKey) {
+            super.checkFriendlyRowKey(rowKey);
+            aSet.getSGID().setFriendlyRowKey(rowKey);
+            return this;
+        }
     }
 
 

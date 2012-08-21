@@ -2,8 +2,8 @@ package com.github.seqware.queryengine.model;
 
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
-import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
+import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 import java.util.Iterator;
 
 /**
@@ -39,7 +39,7 @@ public interface Reference extends MolSetInterface<Reference, FeatureSet> {
     @Override
     public abstract Reference.Builder toBuilder();
 
-    public abstract static class Builder implements BaseBuilder {
+    public abstract static class Builder extends BaseBuilder {
 
         public Reference reference;
 
@@ -51,6 +51,13 @@ public interface Reference extends MolSetInterface<Reference, FeatureSet> {
         @Override
         public Builder setManager(CreateUpdateManager aThis) {
             ((AtomImpl)reference).setManager(aThis);
+            return this;
+        }
+        
+        @Override
+        public Builder setFriendlyRowKey(String rowKey) {
+            super.checkFriendlyRowKey(rowKey);
+            reference.getSGID().setFriendlyRowKey(rowKey);
             return this;
         }
     }

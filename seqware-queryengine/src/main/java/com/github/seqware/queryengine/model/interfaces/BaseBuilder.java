@@ -16,22 +16,49 @@
  */
 package com.github.seqware.queryengine.model.interfaces;
 
+import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
+import java.util.regex.Pattern;
 
 /**
- * Builders are used to construct Atom. 
+ * Builders are used to construct Atom.
+ *
  * @author dyuen
  */
-public interface BaseBuilder<S, T extends BaseBuilder> {
+public abstract class BaseBuilder<S, T extends BaseBuilder> {
+
     /**
      * Build a Atom
+     *
      * @return constructed Atom
      */
-    public S build();
+    public abstract S build();
+
     /**
      * Set a manager for this Atom
+     *
      * @param aThis
      * @return the base-builder itself
      */
-    public T setManager(CreateUpdateManager aThis);
+    public abstract T setManager(CreateUpdateManager aThis);
+
+    /**
+     * Set a friendly rowKey for the atom to be built. Developer should check
+     * whether the row key is already in use.
+     *
+     * @param rowKey
+     */
+    public abstract T setFriendlyRowKey(String rowKey);
+    
+    /**
+     * Check a row key
+     * @param rowKey 
+     */
+    protected boolean checkFriendlyRowKey(String rowKey){
+        if (rowKey == null || !Pattern.matches(Constants.refRegex, rowKey)) {
+            throw new RuntimeException("Invalid rowkey (" + rowKey + ") names should be of the form " + Constants.refRegex);
+            //return false;
+        }
+        return true;
+    }
 }
