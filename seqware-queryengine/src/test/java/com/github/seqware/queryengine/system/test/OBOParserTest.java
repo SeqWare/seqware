@@ -32,6 +32,8 @@ import org.junit.Test;
  */
 public class OBOParserTest {
 
+    public static final int NUMBER_TERMS = 6861;
+
     @Test
     public void importOBOTest() {
         String curDir = System.getProperty("user.dir");
@@ -39,12 +41,18 @@ public class OBOParserTest {
         SGID tagSetID = OBOImporter.mainMethod(new String[]{file.getAbsolutePath()});
         TagSet tagSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, tagSetID);
         // count is 2135 if we do not omit obselete terms and check for duplicates
-        Assert.assertTrue("loaded incorrect number of SO terms, expected 1935 found " + tagSet.getCount(), tagSet.getCount() == (1935*2));
+        Assert.assertTrue("loaded incorrect number of SO terms, expected " + NUMBER_TERMS + " found " + tagSet.getCount(), tagSet.getCount() == NUMBER_TERMS);
         // check that a few known sequence tags are present
-        Assert.assertTrue("tandem_repeat not found in tagset", tagSet.containsKey("SO:0000705::tandem_repeat"));
-        Assert.assertTrue("5KB_upstream_variant not found in tagset", tagSet.containsKey("SO:0001635::5KB_upstream_variant"));
-        Assert.assertTrue("intergenic_variant not found in tagset", tagSet.containsKey("SO:0001628::intergenic_variant"));
-        Assert.assertTrue("500B_downstream_variant not found in tagset", tagSet.containsKey("SO:0001634::500B_downstream_variant"));
+        Assert.assertTrue("tandem_repeat not found in TagSet", tagSet.containsKey("SO:0000705::tandem_repeat"));
+        Assert.assertTrue("5KB_upstream_variant not found in TagSet", tagSet.containsKey("SO:0001635::5KB_upstream_variant"));
+        Assert.assertTrue("intergenic_variant not found in TagSet", tagSet.containsKey("SO:0001628::intergenic_variant"));
+        Assert.assertTrue("500B_downstream_variant not found in TagSet", tagSet.containsKey("SO:0001634::500B_downstream_variant"));
+        // check on some synonyms
+        Assert.assertTrue("SO:1000043 not found in TagSet", tagSet.containsKey("SO:1000043"));
+        Assert.assertTrue("Robertsonian_fusion not found in TagSet", tagSet.containsKey("SO:1000043::Robertsonian_fusion"));
+        Assert.assertTrue("centric-fusion translocations not found in TagSet", tagSet.containsKey("SO:1000043::centric-fusion translocations"));
+        Assert.assertTrue("whole-arm translocations not found in TagSet", tagSet.containsKey("SO:1000043::whole-arm translocations"));
+
         // check that the tags are linked properly back to their tag set
         Tag tandem_repeat = tagSet.get("SO:0000705::tandem_repeat");
         Tag upstream_variant = tagSet.get("SO:0001635::5KB_upstream_variant");
@@ -59,11 +67,11 @@ public class OBOParserTest {
         //Tag build2 = tandem_repeat.toBuilder().setKey("new key").build(); // we do not allow changing keys
         Tag build3 = tandem_repeat.toBuilder().setPredicate("!=").build();
         Tag build4 = tandem_repeat.toBuilder().setValue("SO:00000000").build();
-        
+
         Assert.assertTrue(build1.getTagSet().equals(tagSet));
         //Assert.assertTrue(build2.getTagSet().equals(tagSet));
         Assert.assertTrue(build3.getTagSet().equals(tagSet));
         Assert.assertTrue(build4.getTagSet().equals(tagSet));
-        
+
     }
 }

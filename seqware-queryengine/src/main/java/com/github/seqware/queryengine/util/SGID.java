@@ -64,12 +64,13 @@ public class SGID implements Serializable, KryoSerializable {
         uuid = UUID.randomUUID();
         backendTimestamp = new Date();
     }
-    
+
     /**
      * Generate a SGID that can look up things given only a rowKey.
-     * @param rowKey 
+     *
+     * @param rowKey
      */
-    public SGID(String rowKey){
+    public SGID(String rowKey) {
         friendlyRowKey = rowKey;
     }
 
@@ -99,12 +100,12 @@ public class SGID implements Serializable, KryoSerializable {
             SGID a = (SGID) other;
             boolean uidEq = this.uuid.equals(a.uuid);
             if (!uidEq) {
-            return false;
-        }
+                return false;
+            }
             return this.backendTimestamp.equals(a.backendTimestamp);
         }
-            return false;
-        }
+        return false;
+    }
 
     @Override
     public int hashCode() {
@@ -134,7 +135,7 @@ public class SGID implements Serializable, KryoSerializable {
      * @return
      */
     public String getRowKey() {
-        if (this.friendlyRowKey != null){
+        if (this.friendlyRowKey != null) {
             return this.friendlyRowKey;
         }
         return uuid.toString();
@@ -177,6 +178,4 @@ public class SGID implements Serializable, KryoSerializable {
     public void setFriendlyRowKey(String friendlyRowKey) {
         this.friendlyRowKey = friendlyRowKey;
     }
-    
-    
 }

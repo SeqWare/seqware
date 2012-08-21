@@ -60,13 +60,13 @@ public class FeatureStoreInterfaceTest {
         //
 
         // Named tags, where the values convey actual information:
-        Tag termTag = mManager.buildTagSpec().setKey("SO_term").build();
-        Tag idTag = mManager.buildTagSpec().setKey("SO_id").build();
+        Tag termTag = mManager.buildTag().setKey("SO_term").build();
+        Tag idTag = mManager.buildTag().setKey("SO_id").build();
 
         // Heavy tags, where the tag key itself represents information:
-        Tag transcriptProcessingVariant = mManager.buildTagSpec().setKey("SO::sequence_variant::functional_variant::transcript_function_variant::transcript_processing_variant").build();
-        Tag transcriptStabilityVariant = mManager.buildTagSpec().setKey("SO::sequence_variant::functional_variant::transcript_function_variant::transcript_stability_variant").build();
-        Tag copyNumberChange = mManager.buildTagSpec().setKey("SO::sequence_variant::structural_variant::copy_number_change").build();
+        Tag transcriptProcessingVariant = mManager.buildTag().setKey("SO::sequence_variant::functional_variant::transcript_function_variant::transcript_processing_variant").build();
+        Tag transcriptStabilityVariant = mManager.buildTag().setKey("SO::sequence_variant::functional_variant::transcript_function_variant::transcript_stability_variant").build();
+        Tag copyNumberChange = mManager.buildTag().setKey("SO::sequence_variant::structural_variant::copy_number_change").build();
 
         // Features for location based tagging, which tests tag querying capabilities:
         Feature a = mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).setStrand(Feature.Strand.POSITIVE).build();

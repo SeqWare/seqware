@@ -335,7 +335,7 @@ public class SimpleModelManager implements CreateUpdateManager {
     }
 
     @Override
-    public Tag.Builder buildTagSpec() {
+    public Tag.Builder buildTag() {
         Tag.Builder aSet = null;
         if (backend instanceof SimplePersistentBackEnd) {
             return Tag.newBuilder().setManager(this);

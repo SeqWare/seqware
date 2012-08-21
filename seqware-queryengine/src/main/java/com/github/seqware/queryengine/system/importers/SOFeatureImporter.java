@@ -67,7 +67,7 @@ public class SOFeatureImporter extends Importer {
         options.addOption(option6);
         Option option7 = OptionBuilder.withArgName("tagSet").withDescription("(optional) comma separated TagSet IDs, new Tags will be linked to the first set that they appear, these TagSets will not be modified").withValueSeparator(VALUE_SEPARATOR_PARAM).hasArgs().create(TAGSETS_PARAM);
         options.addOption(option7);
-        Option option8 = OptionBuilder.withArgName("adHocTagSet").withDescription("(optional) an ID for an ad hoc TagSet, Tags will either be found or added to this set, a new TagSet will be generated if none is specified here").hasArgs().create(ADHOC_TAGSETS_PARAM);
+        Option option8 = OptionBuilder.withArgName("adHocTagSet").withDescription("(optional) an ID for an ad hoc TagSet, Tags will either be found or added to this set, a new TagSet will be generated if this option is not used").hasArgs().create(ADHOC_TAGSETS_PARAM);
         options.addOption(option8);
         Option option9 = OptionBuilder.withArgName("batch_size").withDescription("(optional) batch-size for the number of features in memory to keep before a flush, will automatically be chosen if not specified, we use " +BATCH_SIZE+ " for now").hasArgs(1).create(BATCH_SIZE_PARAM);
         options.addOption(option9);

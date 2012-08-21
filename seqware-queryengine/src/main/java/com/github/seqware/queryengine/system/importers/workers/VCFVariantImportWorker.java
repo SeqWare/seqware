@@ -81,7 +81,7 @@ public class VCFVariantImportWorker extends ImportWorker {
             return tagByKey;
         } else{
             Logger.getLogger(VCFVariantImportWorker.class.getName()).trace(key + " added to ad hoc tag set");
-            Tag build = modelManager.buildTagSpec().setKey(key).build();
+            Tag build = modelManager.buildTag().setKey(key).build();
             adHocSet.add(build);
             this.localCache.put(key, build);
             return build;

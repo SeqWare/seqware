@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * This interface allows users to access queries that are built into the query
- * engine, as well as install/uninstall plugins that allow the user to perform
+ * engine, as well as install/un-install plug-ins that allow the user to perform
  * additional annotation and/or other operations (in other words, this handles
  * the R operations from CRUD)). This interface also specifies the semantics and
  * types of things we need to consider when creating an API to support
@@ -19,9 +19,9 @@ import java.util.List;
  * zero for permanent creation.
  *
  * This interface specifies all queries that are intrinsic (i.e. built into the
- * query engine). While they share a similar structure to plugins which can be
+ * query engine). While they share a similar structure to plug-ins which can be
  * installed, parts of the back-end will call these so it does not make sense to
- * install/uninstall them.
+ * install/un-install them.
  *
  *
  * @author jbaran
@@ -50,7 +50,7 @@ public interface QueryInterface {
      * Find a batch of objects in the back-end when a specific class is known
      * using a globally unique SGID while taking into account the timestamp
      *
-     * @param <T>
+     * @param <T> 
      * @param t type of class to retrieve (used as a filter)
      * @param sgid globally unique id
      * @return
@@ -64,7 +64,7 @@ public interface QueryInterface {
      * @param <T>
      * @param sgid globally unique id
      * @param t type of class to retrieve (used as a filter)
-     * @return
+     * @return atom if SGID exists, null if not
      */
     public <T extends Atom> T getAtomBySGID(Class<T> t, SGID sgid);
 
@@ -73,7 +73,7 @@ public interface QueryInterface {
      * ignoring the timestamp
      *
      * @param sgid globally unique id
-     * @return a object from the back-end
+     * @return a object from the back-end, null if it does not exist
      * @deprecated It is much more efficient to retrieve an Atom when you know
      * the class
      */
@@ -84,11 +84,22 @@ public interface QueryInterface {
      * ignoring the timestamp
      *
      * @param <T>
-     * @param sgid globally unique id
+     * @param sgid globally unique id, null if not
      * @param t type of class to retrieve (used as a filter)
      * @return
      */
     public <T extends Atom> T getLatestAtomBySGID(SGID sgid, Class<T> t);
+    
+    /**
+     * Find an atom in the back-end when a specific class is known and a
+     * specific row key is known
+     * @param <T> type of atom to return
+     * @param rowKey rowKey for the atom
+     * @param t type of atom to return
+     * @return 
+     */
+    public <T extends Atom> T getLatestAtomByRowKey(String rowKey, Class<T> t);
+    
 
     /**
      * Gets all users in all groups
