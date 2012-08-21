@@ -97,6 +97,27 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
         return (T)newAtom;
     }
 
+    @Override
+    public NestedLevel getNestedTags(){
+        NestedLevel rootLevel = new NestedLevel();
+        for(Tag t : this.getTags()){
+            String[] keyArr = t.getKey().split(Tag.SEPARATOR);
+            NestedLevel point = rootLevel;
+            for(int i = 0; i < keyArr.length - 1; i++){
+                String seg = keyArr[i];
+                // create a level for all but the last level
+                if (!point.getChildMaps().containsKey(seg)){
+                    point.getChildMaps().put(seg, new NestedLevel());
+                }
+                // then move down before the next segment
+                point = point.getChildMaps().get(seg);
+            }
+            // add the tag as a child at the appropriate level
+            point.getChildTags().put(keyArr[keyArr.length-1], t);
+        }
+        return rootLevel;
+    }
+    
     /**
      * Get the universally unique identifier of this object. This should be
      * unique across the whole backend and not just this resource

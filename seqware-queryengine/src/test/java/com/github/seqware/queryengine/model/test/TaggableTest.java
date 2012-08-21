@@ -4,6 +4,7 @@ import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.interfaces.Taggable;
+import com.github.seqware.queryengine.model.interfaces.Taggable.NestedLevel;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.queryengine.util.SeqWareIterable;
@@ -93,7 +94,7 @@ public class TaggableTest {
     @Test
     public void testTaggingOnEverything() {
 // Some of these global tests are no longer working because the back-end persists between test classes, we need a search API
-        SeqWareIterable<TagSet> tagSets = SWQEFactory.getQueryInterface().getTagSets();       
+        SeqWareIterable<TagSet> tagSets = SWQEFactory.getQueryInterface().getTagSets();
         // we have two tag sets
         boolean t1found = false;
         boolean t2found = false;
@@ -278,7 +279,7 @@ public class TaggableTest {
         Tag humanTag = mManager.buildTag().setKey("human").build();
         tagset.add(dwarfTag, elvenTag, humanTag);
         mManager.flush();
-                
+
         // build a FeatureSet, add features to it
         FeatureSet fset = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("testing_Dummy_reference").build()).build();
         Feature fe1 = mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).build();
@@ -292,21 +293,21 @@ public class TaggableTest {
         fe1.associateTag(dwarfTag.toBuilder().setValue("gimli").build());
         fe1.associateTag(elvenTag.toBuilder().setValue("legolas").build());
         fe1.associateTag(humanTag.toBuilder().setValue("boromir").build());
-        
+
         Assert.assertTrue("feature set does not have proper number of tags", fset.getTags().getCount() == 3);
         Assert.assertTrue("fe2 count", fe2.getTags().getCount() == 0);
         Assert.assertTrue("fe1 tag count", fe1.getTags().getCount() == 3);
         // check parents
         boolean correctParent = true;
-        for(Tag t : fset.getTags()){
+        for (Tag t : fset.getTags()) {
             correctParent = t.getTagSet().getSGID().equals(tagset.getSGID());
         }
-        for(Tag t : fe1.getTags()){
+        for (Tag t : fe1.getTags()) {
             correctParent = t.getTagSet().getSGID().equals(tagset.getSGID());
         }
         Assert.assertTrue("tags do not have proper parents", correctParent);
         mManager.flush();
-        
+
         // try it again for persisted tags
         fset = SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, fset.getSGID());
         fe2 = SWQEFactory.getQueryInterface().getAtomBySGID(Feature.class, fe2.getSGID());
@@ -316,12 +317,68 @@ public class TaggableTest {
         Assert.assertTrue("persisted fe1 tag count", fe1.getTags().getCount() == 3);
         // check parents
         correctParent = true;
-        for(Tag t : fset.getTags()){
+        for (Tag t : fset.getTags()) {
             correctParent = t.getTagSet().getSGID().equals(tagset.getSGID());
         }
-        for(Tag t : fe1.getTags()){
+        for (Tag t : fe1.getTags()) {
             correctParent = t.getTagSet().getSGID().equals(tagset.getSGID());
         }
         Assert.assertTrue("persisted tags do not have proper parents", correctParent);
+    }
+
+    @Test
+    public void testNestedHashes() {
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
+        Tag ta = mManager.buildTag().setKey("MTTS::dbSNP::ID").setValue("rs123").build();
+        Tag tb = mManager.buildTag().setKey("MTTS::dbSNP::pop_freq").setValue(0.70f).build();
+        User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
+        u.associateTag(ta);
+        u.associateTag(tb);
+
+        Tag t1 = mManager.buildTag().setKey("TS::A").setValue(1).build();
+        Tag t2 = mManager.buildTag().setKey("TS::B").setValue(2).build();
+        Tag t3 = mManager.buildTag().setKey("TS::C::1").setValue(3).build();
+        Tag t4 = mManager.buildTag().setKey("TS::C::2").setValue(4).build();
+        Tag t5 = mManager.buildTag().setKey("TS::C::3").setValue(5).build();
+        Tag t6 = mManager.buildTag().setKey("TS::D::1").setValue(6).build();
+        Tag t7 = mManager.buildTag().setKey("TS::D::2").setValue(7).build();
+        Tag t8 = mManager.buildTag().setKey("TS::Z1").setValue(8).build();
+        Tag t9 = mManager.buildTag().setKey("TS::Z2").setValue(9).build();
+        Tag t10 = mManager.buildTag().setKey("TQ::A").setValue(10).build();
+
+        User u2 = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
+        u2.associateTag(t1);
+        u2.associateTag(t2);
+        u2.associateTag(t3);
+        u2.associateTag(t4);
+        u2.associateTag(t5);
+        u2.associateTag(t6);
+        u2.associateTag(t7);
+        u2.associateTag(t8);
+        u2.associateTag(t9);
+        u2.associateTag(t10); 
+        mManager.flush();
+
+        // do our checking on the objects after we retrieve them
+        User userPersisted1 = SWQEFactory.getQueryInterface().getAtomBySGID(User.class, u.getSGID());
+        User userPersisted2 = SWQEFactory.getQueryInterface().getAtomBySGID(User.class, u2.getSGID());
+        
+        // check the first nested hash and check the values while we're at it
+        NestedLevel nestedTags = userPersisted1.getNestedTags();
+        Assert.assertTrue("root level ok", nestedTags.getChildTags().isEmpty() && nestedTags.getChildMaps().size() == 1);
+        nestedTags = nestedTags.getChildMaps().get("MTTS");
+        Assert.assertTrue("MTTS level ok", nestedTags.getChildTags().isEmpty() && nestedTags.getChildMaps().size() == 1);
+        nestedTags = nestedTags.getChildMaps().get("dbSNP");
+        Assert.assertTrue("dbSNP level ok", nestedTags.getChildTags().size() == 2 && nestedTags.getChildMaps().isEmpty());
+        Assert.assertTrue("ID Tag ok", nestedTags.getChildTags().get("ID").getValue().equals("rs123"));
+        Assert.assertTrue("pop_freq Tag ok", (Float)nestedTags.getChildTags().get("pop_freq").getValue() == 0.70f);
+        
+        // check the second one, just level numbers
+        nestedTags = userPersisted2.getNestedTags();
+        Assert.assertTrue("root level ok", nestedTags.getChildTags().isEmpty() && nestedTags.getChildMaps().size() == 2);
+        nestedTags = nestedTags.getChildMaps().get("TS");
+        Assert.assertTrue("TS level ok", nestedTags.getChildTags().size() == 4 && nestedTags.getChildMaps().size() == 2);
+        nestedTags = userPersisted2.getNestedTags().getChildMaps().get("TQ");
+        Assert.assertTrue("TQ level ok", nestedTags.getChildTags().size() == 1 && nestedTags.getChildMaps().isEmpty());     
     }
 }

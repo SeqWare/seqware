@@ -28,6 +28,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 public class Tag extends AtomImpl<Tag> {
 
     public final static String prefix = "Tag";
+    public static String SEPARATOR = "::";
     private LazyReference<TagSet> tagSet = new LazyReference<TagSet>(TagSet.class);
     private String key = null;
     private String predicate = "=";
