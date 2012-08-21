@@ -26,7 +26,7 @@ public class TagSetCreator {
                 System.exit(FeatureImporter.EXIT_CODE_INVALID_FILE);
             }
         } catch (IllegalArgumentException e) {
-            System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
+            System.exit(FeatureImporter.EXIT_CODE_EXISTING_NAME);
         }
     }
 
@@ -63,7 +63,7 @@ public class TagSetCreator {
             // clean-up
             SWQEFactory.getStorage().closeStorage();
             System.out.println("TagSet written with an ID of:");
-            String outputID = build.getSGID().getUuid().toString();
+            String outputID = build.getSGID().getRowKey();
             System.out.println(outputID);
             Map<String, String> keyValues = new HashMap<String, String>();
             keyValues.put("TagSetID", outputID);

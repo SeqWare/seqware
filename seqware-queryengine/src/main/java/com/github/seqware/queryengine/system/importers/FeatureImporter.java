@@ -162,7 +162,7 @@ public class FeatureImporter extends Importer {
         // clean-up
         SWQEFactory.getStorage().closeStorage();
         System.out.println("FeatureSet written with an ID of:");
-        String outputID = featureSet.getSGID().getUuid().toString();
+        String outputID = featureSet.getSGID().getRowKey();
         System.out.println(outputID);
         Map<String, String> keyValues = new HashMap<String, String>();
         keyValues.put(FEATURE_SET_ID, outputID);
