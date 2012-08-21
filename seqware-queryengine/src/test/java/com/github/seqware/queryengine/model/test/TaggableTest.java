@@ -98,9 +98,9 @@ public class TaggableTest {
         boolean t1found = false;
         boolean t2found = false;
         for (TagSet t : tagSets) {
-            if (t.getSGID().getRowKey().equals(tSet1.getSGID().getRowKey())) {
+            if (t.equals(tSet1)) {
                 t1found = true;
-            } else if (t.getSGID().getRowKey().equals(tSet2.getSGID().getRowKey())) {
+            } else if (t.equals(tSet2)) {
                 t2found = true;
             }
         }

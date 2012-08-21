@@ -5,6 +5,7 @@ import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import java.util.*;
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.log4j.Logger;
 
 
@@ -88,6 +89,33 @@ public class InMemoryTagSet extends AbstractInMemorySet<TagSet, Tag> implements 
     @Override
     public Tag get(String tagKey) {
         return this.map.get(tagKey);
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        TagSet rhs = (TagSet) obj;
+        return new EqualsBuilder()
+                // Group Equality does not need SGID equality, we do not want different Users with different times to be treated differently
+                //                .appendSuper(super.equals(obj))
+                .append(super.getSGID().getRowKey(), rhs.getSGID().getRowKey())
+                .append(name, rhs.getName())
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 23 * hash + (this.name != null ? this.name.hashCode() : 0);
+        return hash;
     }
 
     public static class Builder extends TagSet.Builder {

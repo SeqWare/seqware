@@ -2,7 +2,6 @@ package com.github.seqware.queryengine.system;
 
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.model.Reference;
 import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.system.importers.FeatureImporter;
 import com.github.seqware.queryengine.util.SGID;
@@ -13,7 +12,7 @@ import org.apache.log4j.Logger;
 
 /**
  * Quick and dirty TagSet creator.
- * 
+ *
  * TODO: merge back-end with ReferenceCreator
  *
  * @author dyuen
@@ -21,9 +20,13 @@ import org.apache.log4j.Logger;
 public class TagSetCreator {
 
     public static void main(String[] args) {
-        SGID mainMethod = TagSetCreator.mainMethod(args);
-        if (mainMethod == null){
-            System.exit(FeatureImporter.EXIT_CODE_INVALID_FILE);
+        try {
+            SGID mainMethod = TagSetCreator.mainMethod(args);
+            if (mainMethod == null) {
+                System.exit(FeatureImporter.EXIT_CODE_INVALID_FILE);
+            }
+        } catch (IllegalArgumentException e) {
+            System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
         }
     }
 
@@ -33,7 +36,7 @@ public class TagSetCreator {
      * @param args
      * @return
      */
-    public static SGID mainMethod(String[] args) {
+    public static SGID mainMethod(String[] args) throws IllegalArgumentException {
 
         if (args.length < 1) {
             System.err.println("Only " + args.length + " arguments found");
@@ -41,10 +44,15 @@ public class TagSetCreator {
             System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
         }
 
-        
+        // check that the Reference does not already exist
+        TagSet checkAtom = SWQEFactory.getQueryInterface().getLatestAtomByRowKey(args[0], TagSet.class);
+        if (checkAtom != null) {
+            throw new IllegalArgumentException();
+        }
+
         try {
             CreateUpdateManager modelManager = SWQEFactory.getModelManager();
-            TagSet build = modelManager.buildTagSet().setName(args[0]).build();
+            TagSet build = modelManager.buildTagSet().setFriendlyRowKey(args[0]).setName(args[0]).build();
             // handle output
             File outputFile = null;
             if (args.length == 2) {

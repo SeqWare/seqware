@@ -48,13 +48,21 @@ public class SOFeatureImporterTest {
         SGID tagSetID = OBOImporter.mainMethod(new String[]{file.getAbsolutePath()});
         sequenceOntology = SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, tagSetID);
 
-        // setup reference
-        SGID refID = ReferenceCreator.mainMethod(new String[]{"hg_19"});
-        reference = SWQEFactory.getQueryInterface().getAtomBySGID(Reference.class, refID);
+        try {
+            // setup reference
+            SGID refID = ReferenceCreator.mainMethod(new String[]{"hg_19"});
+            reference = SWQEFactory.getQueryInterface().getAtomBySGID(Reference.class, refID);
+        } catch (IllegalArgumentException e) {
+            // proceed if this is already created 
+        }
 
-        // setup ad hoc tag set
-        SGID aSetID = TagSetCreator.mainMethod(new String[]{"ad_hoc_tagSet"});
-        adHocSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, aSetID);
+        try {
+            // setup ad hoc tag set
+            SGID aSetID = TagSetCreator.mainMethod(new String[]{"ad_hoc_tagSet"});
+            adHocSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, aSetID);
+        } catch (IllegalArgumentException e) {
+            // proceed if this is already created 
+        }
 
         testVCFFile = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated.vcf");
         testVCFFile_missingValues = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/test_missingValues.vcf");
