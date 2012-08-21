@@ -78,7 +78,7 @@ public class SOFeatureImporter extends Importer {
 
             String worker = cmd.getOptionValue(WORKER_CHAR_PARAM);
             int threads = Integer.valueOf(cmd.getOptionValue(NUMBER_THREADS_PARAM, "1"));
-            boolean compressed = Boolean.valueOf(cmd.getOptionValue(COMPRESSED_PARAM, "false"));
+            boolean compressed = Boolean.valueOf(cmd.hasOption(COMPRESSED_PARAM));
             // process referenceID
             SGID referenceSGID = Utility.parseSGID(cmd.getOptionValue(REFERENCE_ID_PARAM));
             

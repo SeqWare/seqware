@@ -10,16 +10,19 @@ import com.github.seqware.queryengine.system.exporters.VCFDumper;
 import com.github.seqware.queryengine.system.importers.FeatureImporter;
 import com.github.seqware.queryengine.system.importers.OBOImporter;
 import com.github.seqware.queryengine.system.importers.SOFeatureImporter;
+import com.github.seqware.queryengine.system.importers.workers.VCFVariantImportWorker;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.compress.compressors.CompressorException;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -34,6 +37,7 @@ public class SOFeatureImporterTest {
     private static File testVCFFile = null;
     private static File testVCFFile_missingValues = null;
     private static File testVCFFile_invalid = null;
+    private static File testVCFFile_zipped = null;
     private static TagSet sequenceOntology = null;
     private static Reference reference = null;
     private static TagSet adHocSet = null;
@@ -54,6 +58,7 @@ public class SOFeatureImporterTest {
             reference = SWQEFactory.getQueryInterface().getAtomBySGID(Reference.class, refID);
         } catch (IllegalArgumentException e) {
             // proceed if this is already created 
+            reference = SWQEFactory.getQueryInterface().getLatestAtomByRowKey("hg_19", Reference.class);
         }
 
         try {
@@ -62,8 +67,10 @@ public class SOFeatureImporterTest {
             adHocSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, aSetID);
         } catch (IllegalArgumentException e) {
             // proceed if this is already created 
+            adHocSet = SWQEFactory.getQueryInterface().getLatestAtomByRowKey("ad_hoc_tagSet", TagSet.class);
         }
 
+        testVCFFile_zipped = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated.vcf.gz");
         testVCFFile = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated.vcf");
         testVCFFile_missingValues = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/test_missingValues.vcf");
         testVCFFile_invalid = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/test_invalid.vcf");
@@ -102,31 +109,40 @@ public class SOFeatureImporterTest {
 
     @Test
     public void testNormalVCFImport() {
-        testFile(testVCFFile, true);
+        testFile(testVCFFile, true, false);
+    }
+    
+    @Test
+    public void testZippedVCFImport(){
+        testFile(testVCFFile_zipped, true, true);
     }
 
     @Test
     public void testMissingValueVCFImport() {
         // should handle this normally, all columns but POS look like they could use the missing value (".") according to the VCF specification
-        testFile(testVCFFile_missingValues, true);
+        testFile(testVCFFile_missingValues, true, false);
     }
 
     @Test
     public void testInvalidVCFImport() {
         // should bug out
-        testFile(testVCFFile_invalid, false);
+        testFile(testVCFFile_invalid, false, false);
     }
 
-    private void testFile(File testFile, boolean shouldSucceed) {
+    private void testFile(File testFile, boolean shouldSucceed, boolean compressed) {
         BufferedReader in = null;
         BufferedReader controlIn = null;
         try {
             File createTempFile = File.createTempFile("output", "txt");
             Assert.assertTrue("Cannot read VCF file for test", testFile.exists() && testFile.canRead());
-            SGID main = SOFeatureImporter.runMain(new String[]{"-w", "VCFVariantImportWorker", "-a", adHocSet.getSGID().getRowKey(),
-                        "-i", testFile.getAbsolutePath(), "-o", createTempFile.getAbsolutePath(),
-                        "-r", reference.getSGID().getRowKey(), "-s", sequenceOntology.getSGID().getRowKey()
-                    });
+            List<String> argList = new ArrayList<String>();
+            argList.addAll(Arrays.asList(new String[]{"-w", "VCFVariantImportWorker", "-a", adHocSet.getSGID().getRowKey(),
+                        "-i", testFile.getAbsolutePath(), "-o", createTempFile.getAbsolutePath(), 
+                        "-r", reference.getSGID().getRowKey(), "-s", sequenceOntology.getSGID().getRowKey()}));
+            if (compressed){
+                argList.add("-c");
+            }
+            SGID main = SOFeatureImporter.runMain(argList.toArray(new String[argList.size()]));
             if (!shouldSucceed) {
                 // would be an error code on the command-line
                 Assert.assertTrue(main == null);
@@ -143,10 +159,24 @@ public class SOFeatureImporterTest {
             }
             Collections.sort(output);
             // compare against original VCF file
-            controlIn = new BufferedReader(new FileReader(testFile));
+            
+            if (compressed){
+                try {
+                    controlIn = VCFVariantImportWorker.handleCompressedInput(testFile.getAbsolutePath());
+                } catch (CompressorException ex) {
+                    Logger.getLogger(SOFeatureImporterTest.class.getName()).fatal(null, ex);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(SOFeatureImporterTest.class.getName()).fatal(null, ex);
+                }
+            } else{
+                controlIn = new BufferedReader(new FileReader(testFile));
+            }
+            
             List<String> control = new ArrayList<String>();
-            while (controlIn.ready()) {
-                control.add(controlIn.readLine());
+            // why does not controlIn.isReady() work here?
+            String l;
+            while ((l = controlIn.readLine()) != null) {
+                control.add(l);
             }
             Collections.sort(control);
             for (int i = 0; i < output.size(); i++) {
@@ -160,7 +190,7 @@ public class SOFeatureImporterTest {
                 Assert.assertTrue("VCF INFO does not match", cLine[7].equals(eLine[7]));
             }
         } catch (IOException ex) {
-            Logger.getLogger(SOFeatureImporterTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SOFeatureImporterTest.class.getName()).fatal(null, ex);
             Assert.assertTrue("IO Exception", false);
         } finally {
             try {
