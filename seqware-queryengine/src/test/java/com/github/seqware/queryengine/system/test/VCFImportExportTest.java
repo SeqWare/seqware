@@ -4,6 +4,7 @@ import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.system.exporters.VCFDumper;
 import com.github.seqware.queryengine.system.importers.FeatureImporter;
+import com.github.seqware.queryengine.system.importers.SOFeatureImporter;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -38,6 +40,7 @@ public class VCFImportExportTest {
         testVCFFile = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/test.vcf");
         testVCFFile_missingValues = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/test_missingValues.vcf");
         testVCFFile_invalid = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/test_invalid.vcf");
+        
         SecureRandom random = new SecureRandom();
         randomRef = "Random_ref_" + new BigInteger(20, random).toString(32);
     }
@@ -78,13 +81,17 @@ public class VCFImportExportTest {
         testFile(testVCFFile_invalid, false);
     }
 
-    private void testFile(File testFile, boolean shouldSucceed) {
+    private void testFile(File testFile, boolean shouldSucceed, String ... args) {
         BufferedReader in = null;
         BufferedReader controlIn = null;
         try {
             File createTempFile = File.createTempFile("output", "txt");
             Assert.assertTrue("Cannot read VCF file for test", testFile.exists() && testFile.canRead());
-            SGID main = FeatureImporter.naiveRun(new String[]{"VCFVariantImportWorker", "1", "false", randomRef, testFile.getAbsolutePath()});
+            List<String> argList = new ArrayList<String>();
+            argList.addAll(Arrays.asList(new String[]{"VCFVariantImportWorker", "1", "false", randomRef, testFile.getAbsolutePath()}));
+            argList.addAll(Arrays.asList(args));
+            
+            SGID main = FeatureImporter.naiveRun(argList.toArray(new String[argList.size()]));
             if (!shouldSucceed){
                 // would be an error code on the command-line
                 Assert.assertTrue(main == null);

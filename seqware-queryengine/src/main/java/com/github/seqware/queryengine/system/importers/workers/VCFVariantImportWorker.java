@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.log4j.Logger;
 
@@ -114,13 +115,7 @@ public class VCFVariantImportWorker extends ImportWorker {
 
             // Attempting to guess the file format
             if (compressed) {
-                if (input.endsWith("bz2") || input.endsWith("bzip2")) {
-                    inputStream = new BufferedReader(new InputStreamReader(new CompressorStreamFactory().createCompressorInputStream("bzip2", new BufferedInputStream(new FileInputStream(input)))));
-                } else if (input.endsWith("gz") || input.endsWith("gzip")) {
-                    inputStream = new BufferedReader(new InputStreamReader(new CompressorStreamFactory().createCompressorInputStream("gz", new BufferedInputStream(new FileInputStream(input)))));
-                } else {
-                    throw new Exception("Don't know how to interpret the filename extension for: " + input + " we support 'bz2', 'bzip2', 'gz', and 'gzip'");
-                }
+                inputStream = handleCompressedInput(input);
             } else {
                 inputStream = new BufferedReader(new FileReader(input));
             }
@@ -375,5 +370,17 @@ public class VCFVariantImportWorker extends ImportWorker {
             modelManager.close();
             pmi.releaseLock();
         }
+    }
+
+    public static BufferedReader handleCompressedInput(String input) throws CompressorException, FileNotFoundException {
+        BufferedReader inputStream;
+        if (input.endsWith("bz2") || input.endsWith("bzip2")) {
+            inputStream = new BufferedReader(new InputStreamReader(new CompressorStreamFactory().createCompressorInputStream("bzip2", new BufferedInputStream(new FileInputStream(input)))));
+        } else if (input.endsWith("gz") || input.endsWith("gzip")) {
+            inputStream = new BufferedReader(new InputStreamReader(new CompressorStreamFactory().createCompressorInputStream("gz", new BufferedInputStream(new FileInputStream(input)))));
+        } else {
+            throw new RuntimeException("Don't know how to interpret the filename extension for: " + input + " we support 'bz2', 'bzip2', 'gz', and 'gzip'");
+        }
+        return inputStream;
     }
 }
