@@ -12,7 +12,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Logger;
 import org.biojava.bio.seq.io.ParseException;
 import org.biojava.ontology.Ontology;
@@ -28,6 +35,8 @@ import org.biojava.ontology.Term;
  * @author dyuen
  */
 public class OBOImporter {
+
+    public static final char TAG_CHAR = 'n';
 
     public static void main(String[] args) {
         SGID mainMethod = OBOImporter.mainMethod(args);
@@ -46,8 +55,22 @@ public class OBOImporter {
 
         if (args.length < 1) {
             System.err.println("Only " + args.length + " arguments found");
-            System.out.println(OBOImporter.class.getSimpleName() + " <input_file> [output_file]");
+            System.out.println(OBOImporter.class.getSimpleName() + " [-" + TAG_CHAR + " optional name] <input_file> [output_file]");
             System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
+        }
+
+        Options options = new Options();
+        Option option1 = OptionBuilder.withArgName("name").withDescription("(optional) name for the SO TagSet").isRequired(false).hasArgs(1).create(TAG_CHAR);
+        options.addOption(option1);
+        String friendlyName = null;
+
+        try {
+            CommandLineParser clparser = new PosixParser();
+            CommandLine cmd = clparser.parse(options, args);
+            friendlyName = cmd.getOptionValue(TAG_CHAR);
+            args = cmd.getArgs();
+        } catch (org.apache.commons.cli.ParseException ex) {
+            Logger.getLogger(OBOImporter.class.getName()).info(null, ex);
         }
 
         InputStream inStream = null;
@@ -70,7 +93,13 @@ public class OBOImporter {
             Pattern p = Pattern.compile("SO:\\d+");
 
             CreateUpdateManager modelManager = SWQEFactory.getModelManager();
-            TagSet tagSet = modelManager.buildTagSet().setName("Sequence Ontology").build();
+            TagSet tagSet;
+            if (friendlyName == null){
+                tagSet = modelManager.buildTagSet().setName("Sequence Ontology").build();
+            } else{
+                tagSet = modelManager.buildTagSet().setName("Sequence Ontology").setFriendlyRowKey(friendlyName).build();
+            }
+            
 
             while (iter.hasNext()) {
                 Term term = (Term) iter.next();
@@ -85,10 +114,10 @@ public class OBOImporter {
                         continue;
                     }
                 }
-                
+
                 Logger.getLogger(OBOImporter.class.getName()).trace("Adding ... TERM: " + term.getDescription() + " DESC: " + term.getName());
 
-                
+
                 // record the "head-liner" version of the Tag
                 String key1 = term.getName() + "::" + term.getDescription();
                 Logger.getLogger(OBOImporter.class.getName()).trace("Adding ... KEY: " + key1);
@@ -116,7 +145,7 @@ public class OBOImporter {
             // clean-up
             SWQEFactory.getStorage().closeStorage();
             System.out.println(tagSet.getCount() + " terms written to a TagSet written with an ID of:");
-            String outputID = tagSet.getSGID().getUuid().toString();
+            String outputID = tagSet.getSGID().getRowKey();
             System.out.println(outputID);
             Map<String, String> keyValues = new HashMap<String, String>();
             keyValues.put("TagSetID", outputID);
