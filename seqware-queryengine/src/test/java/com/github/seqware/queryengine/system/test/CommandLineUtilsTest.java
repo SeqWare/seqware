@@ -24,9 +24,12 @@ import com.github.seqware.queryengine.system.TagSetCreator;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -36,29 +39,88 @@ import org.junit.Test;
  */
 public class CommandLineUtilsTest {
 
+    private static String randomRef1 = null;
+    private static String randomRef2 = null;
+    private static String randomRef3 = null;
+    private static String randomRef4 = null;
+
+    @BeforeClass
+    public static void setupTests() {
+        randomRef1 = "Random_ref_" + new BigInteger(20, new SecureRandom()).toString(32);
+        randomRef2 = "Random_ref_" + new BigInteger(20, new SecureRandom()).toString(32);
+        randomRef3 = "Random_ref_" + new BigInteger(20, new SecureRandom()).toString(32);
+        randomRef4 = "Random_ref_" + new BigInteger(20, new SecureRandom()).toString(32);
+    }
+
     @Test
     public void createtagSetViaCommandLine() {
         try {
             File outputFile = File.createTempFile("keyValue", "out");
-            SGID tagSetID = TagSetCreator.mainMethod(new String[]{"ad_hoc_tagSet", outputFile.getAbsolutePath()});
+            SGID tagSetID = TagSetCreator.mainMethod(new String[]{randomRef1, outputFile.getAbsolutePath()});
             TagSet tagSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, tagSetID);
             Assert.assertTrue("command-line util should create empty set " + tagSet.getCount(), tagSet.getCount() == 0);
         } catch (IOException ex) {
             Logger.getLogger(CommandLineUtilsTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.assertTrue("IOException", false);
-        }   
+        }
     }
-    
+
     @Test
     public void createReferenceViaCommandLine() {
         try {
             File outputFile = File.createTempFile("keyValue", "out");
-            SGID refID = ReferenceCreator.mainMethod(new String[]{"hg_19", outputFile.getAbsolutePath()});
+            SGID refID = ReferenceCreator.mainMethod(new String[]{randomRef2, outputFile.getAbsolutePath()});
             Reference reference = SWQEFactory.getQueryInterface().getAtomBySGID(Reference.class, refID);
             Assert.assertTrue("command-line util should create empty reference ", reference.getCount() == 0);
         } catch (IOException ex) {
             Logger.getLogger(CommandLineUtilsTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.assertTrue("IOException", false);
-        }   
+        }
+    }
+
+    @Test
+    public void checkExistingTagSetViaCommandLine() {
+        try {
+            File outputFile = File.createTempFile("keyValue", "out");
+            SGID tagSetID = TagSetCreator.mainMethod(new String[]{randomRef3, outputFile.getAbsolutePath()});
+            TagSet tagSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, tagSetID);
+            Assert.assertTrue("command-line util should create empty set " + tagSet.getCount(), tagSet.getCount() == 0);
+
+            // check that re-creation of the same key fails
+            try {
+                SGID tagSetID2 = TagSetCreator.mainMethod(new String[]{randomRef3, outputFile.getAbsolutePath()});
+            } catch (IllegalArgumentException ex) {
+                /** we actually want an exception here */
+                return;
+            }
+
+            Assert.assertTrue("creation of repeated key did not fail", false);
+        } catch (IOException ex) {
+            Logger.getLogger(CommandLineUtilsTest.class.getName()).log(Level.SEVERE, null, ex);
+            Assert.assertTrue("IOException", false);
+        }
+    }
+
+    @Test
+    public void checkExistingReferenceViaCommandLine() {
+        try {
+            File outputFile = File.createTempFile("keyValue", "out");
+            SGID refID = ReferenceCreator.mainMethod(new String[]{randomRef4, outputFile.getAbsolutePath()});
+            Reference reference = SWQEFactory.getQueryInterface().getAtomBySGID(Reference.class, refID);
+            Assert.assertTrue("command-line util should create empty reference ", reference.getCount() == 0);
+            
+            // check that re-creation of the same key fails
+            try {
+                SGID tagSetID2 = ReferenceCreator.mainMethod(new String[]{randomRef4, outputFile.getAbsolutePath()});
+            } catch (IllegalArgumentException ex) {
+                /** we actually want an exception here */
+                return;
+            }
+
+            Assert.assertTrue("creation of repeated key did not fail", false);
+        } catch (IOException ex) {
+            Logger.getLogger(CommandLineUtilsTest.class.getName()).log(Level.SEVERE, null, ex);
+            Assert.assertTrue("IOException", false);
+        }
     }
 }

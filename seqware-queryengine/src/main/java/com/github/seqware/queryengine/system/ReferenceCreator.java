@@ -20,9 +20,13 @@ import org.apache.log4j.Logger;
 public class ReferenceCreator {
 
     public static void main(String[] args) {
-        SGID mainMethod = ReferenceCreator.mainMethod(args);
-        if (mainMethod == null){
-            System.exit(FeatureImporter.EXIT_CODE_INVALID_FILE);
+        try {
+            SGID mainMethod = ReferenceCreator.mainMethod(args);
+            if (mainMethod == null) {
+                System.exit(FeatureImporter.EXIT_CODE_INVALID_FILE);
+            }
+        } catch (IllegalArgumentException e) {
+            System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
         }
     }
 
@@ -32,7 +36,7 @@ public class ReferenceCreator {
      * @param args
      * @return
      */
-    public static SGID mainMethod(String[] args) {
+    public static SGID mainMethod(String[] args) throws IllegalArgumentException {
 
         if (args.length < 1) {
             System.err.println("Only " + args.length + " arguments found");
@@ -40,10 +44,15 @@ public class ReferenceCreator {
             System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
         }
 
-        
+        // check that the Reference does not already exist
+        Reference checkAtom = SWQEFactory.getQueryInterface().getLatestAtomByRowKey(args[0], Reference.class);
+        if (checkAtom != null) {
+            throw new IllegalArgumentException();
+        }
+
         try {
             CreateUpdateManager modelManager = SWQEFactory.getModelManager();
-            Reference build = modelManager.buildReference().setName(args[0]).build();
+            Reference build = modelManager.buildReference().setFriendlyRowKey(args[0]).setName(args[0]).build();
             // handle output
             File outputFile = null;
             if (args.length == 2) {
