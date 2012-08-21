@@ -129,9 +129,9 @@ public class NonPersistentStorage extends StorageInterface {
     @Override
     public Atom deserializeTargetToLatestAtom(SGID sgid) {
         List<Atom> aList = new ArrayList<Atom>();
-        String rowKey = createKey(sgid);
+        String rowKey = createKey(sgid, false);
         for (Entry<String, ByteTypePair> e : map.entrySet()) {
-            if (e.getKey().equals(rowKey)) {
+            if (e.getKey().startsWith(rowKey)) {
                 aList.add((Atom) serializer.deserialize(e.getValue().bArr, e.getValue().cl));
             }
         }

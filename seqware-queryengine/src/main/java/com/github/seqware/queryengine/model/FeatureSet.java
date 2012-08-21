@@ -81,7 +81,7 @@ public abstract class FeatureSet extends AbstractMolSet<FeatureSet> implements M
     @Override
     public abstract FeatureSet.Builder toBuilder();
 
-    public abstract static class Builder implements BaseBuilder {
+    public abstract static class Builder extends BaseBuilder {
 
         public FeatureSet aSet;
 
@@ -98,5 +98,10 @@ public abstract class FeatureSet extends AbstractMolSet<FeatureSet> implements M
         
         public abstract FeatureSet.Builder setDescription(String description);
         public abstract FeatureSet.Builder setReferenceID(SGID referenceSGID);
+        
+        @Override
+        public FeatureSet.Builder setFriendlyRowKey(String rowKey) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
     }
 }

@@ -35,7 +35,7 @@ public interface ReferenceSet extends MolSetInterface<ReferenceSet, Reference> {
     @Override
     public abstract ReferenceSet.Builder toBuilder();
 
-    public abstract static class Builder implements BaseBuilder {
+    public abstract static class Builder extends BaseBuilder {
 
         public ReferenceSet aSet;
         
@@ -55,6 +55,13 @@ public interface ReferenceSet extends MolSetInterface<ReferenceSet, Reference> {
         public abstract ReferenceSet.Builder setName(String name);
         
         public abstract ReferenceSet.Builder setOrganism(String organism);
+        
+        @Override
+        public ReferenceSet.Builder setFriendlyRowKey(String rowKey) {
+            super.checkFriendlyRowKey(rowKey);
+            aSet.getSGID().setFriendlyRowKey(rowKey);
+            return this;
+        }
     }
 
 

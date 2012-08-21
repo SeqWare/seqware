@@ -72,6 +72,7 @@ public class SGID implements Serializable, KryoSerializable {
      */
     public SGID(String rowKey) {
         friendlyRowKey = rowKey;
+        backendTimestamp = new Date();
     }
 
     /**

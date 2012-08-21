@@ -266,7 +266,7 @@ public class Feature extends AtomImpl<Feature> {
         return b;
     }
 
-    public static class Builder implements BaseBuilder {
+    public static class Builder extends BaseBuilder {
 
         private Feature feature = new Feature();
 
@@ -335,6 +335,11 @@ public class Feature extends AtomImpl<Feature> {
         public Builder setManager(CreateUpdateManager aThis) {
             feature.setManager(aThis);
             return this;
+        }
+
+        @Override
+        public Builder setFriendlyRowKey(String rowKey) {
+            throw new UnsupportedOperationException("Feature does not support custom rowkey.");
         }
     }
 }

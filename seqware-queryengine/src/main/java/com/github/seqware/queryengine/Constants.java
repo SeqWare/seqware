@@ -76,4 +76,9 @@ public class Constants {
      * Properties used when connecting to a remote instance of HBase
      */
     public final static Map<String, String> HBASE_PROPERTIES = HBOOT;
+    
+    /**
+     * Regular Expression for suitable rowKeys
+     */
+    public static final String refRegex = "[a-zA-Z_0-9]+";
 }

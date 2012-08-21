@@ -12,6 +12,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class GVFImportExportTest {
         testGVFFile = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/test.gvf");
         SecureRandom random = new SecureRandom();
         randomRef = "Random_ref_" + new BigInteger(20, random).toString(32);
-        System.err.println(randomRef);
+        Logger.getLogger(GVFImportExportTest.class.getName()).info("Using " + randomRef + " in " + GVFImportExportTest.class.getName());
     }
     
     @Test
