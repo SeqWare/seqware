@@ -5,23 +5,25 @@ import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.system.Utility;
 import com.github.seqware.queryengine.util.SGID;
+import com.github.seqware.queryengine.util.obo.OboParser;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.biojava.bio.seq.io.ParseException;
 import org.biojava.ontology.Ontology;
+import org.biojava.ontology.Synonym;
 import org.biojava.ontology.Term;
-import org.biojava.ontology.io.OboParser;
 
 /**
  * Quick and dirty OBO file importer.
- * 
+ *
  * This importer will create tagSets with term keys in two formats
- * SO:0001023::allele and SO:0001023/not fo
+ * SO:0001023::allele and SO:0001023
  *
  * @author dyuen
  */
@@ -29,7 +31,7 @@ public class OBOImporter {
 
     public static void main(String[] args) {
         SGID mainMethod = OBOImporter.mainMethod(args);
-        if (mainMethod == null){
+        if (mainMethod == null) {
             System.exit(FeatureImporter.EXIT_CODE_INVALID_FILE);
         }
     }
@@ -83,16 +85,28 @@ public class OBOImporter {
                         continue;
                     }
                 }
+                
+                Logger.getLogger(OBOImporter.class.getName()).trace("Adding ... TERM: " + term.getDescription() + " DESC: " + term.getName());
 
-                //System.out.println("Adding ... TERM: " + term.getDescription() + " DESC: " + term.getName());
-                //System.out.println(term.getAnnotation());
-                //Object[] synonyms = term.getSynonyms();
-                //for (Object syn : synonyms) {
-                //    System.out.println(syn);
-                //}
-                // tagSet.add(modelManager.buildTagSpec().setKey(term.getDescription() + "::" + term.getName()).build());
-                tagSet.add(modelManager.buildTagSpec().setKey(term.getName() + "::" + term.getDescription()).build());
-                tagSet.add(modelManager.buildTagSpec().setKey(term.getName()).build());
+                
+                // record the "head-liner" version of the Tag
+                String key1 = term.getName() + "::" + term.getDescription();
+                Logger.getLogger(OBOImporter.class.getName()).trace("Adding ... KEY: " + key1);
+                tagSet.add(modelManager.buildTag().setKey(key1).build());
+                String key2 = term.getName();
+                Logger.getLogger(OBOImporter.class.getName()).trace("Adding ... KEY: " + key2);
+                tagSet.add(modelManager.buildTag().setKey(key2).build());
+                List<Synonym> synonyms = parser.getSynonymMap().get(term); //term.getSynonyms();
+                if (synonyms == null) {
+                    continue;
+                }
+                for (Synonym syn : synonyms) {
+                    String key3 = term.getName() + "::" + syn.getName();
+                    Logger.getLogger(OBOImporter.class.getName()).trace("Adding synonym ... KEY: " + key3);
+                    // for each of the synonyms, record them in the TagSet
+                    tagSet.add(modelManager.buildTag().setKey(key3).build());
+                }
+
             }
 
             Logger.getLogger(OBOImporter.class.getName()).info("Writing " + tagSet.getCount() + " tag specifications.");

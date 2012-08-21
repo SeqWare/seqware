@@ -31,9 +31,9 @@ public class RowKeyFeatureSetTest {
         fSet = mManager.buildFeatureSet().setDescription(pragma).setReference(mManager.buildReference().setName("funky_ref").build()).build();
         Set<Feature> testFeatures = new HashSet<Feature>();
         TagSet stdTagSet = mManager.buildTagSet().setName("Std_tags").build();
-        Tag idSpec = mManager.buildTagSpec().setKey("ID").build();
-        Tag variantSpec = mManager.buildTagSpec().setKey("Variant_seq").build();
-        Tag referenceSpec = mManager.buildTagSpec().setKey("ReferenceSeq").build();
+        Tag idSpec = mManager.buildTag().setKey("ID").build();
+        Tag variantSpec = mManager.buildTag().setKey("Variant_seq").build();
+        Tag referenceSpec = mManager.buildTag().setKey("ReferenceSeq").build();
         stdTagSet.add(idSpec, variantSpec, referenceSpec);
         // have to make up scores, not present in example
         Feature f1 = mManager.buildFeature().setSeqid("chr16").setSource("samtools").setType("SNV").setStart(49291141).setStop(49291141).setStrand(Feature.Strand.POSITIVE).build();

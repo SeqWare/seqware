@@ -157,14 +157,8 @@ public interface CreateUpdateManager {
      *
      * @return
      */
-    public Tag.Builder buildTagSpec();
+    public Tag.Builder buildTag();
 
-//    /**
-//     * Build a tag
-//     *
-//     * @return
-//     */
-//    public Tag.Builder buildTag();
     /**
      * Build a feature
      *

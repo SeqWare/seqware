@@ -58,9 +58,9 @@ public class TaggableTest {
         group.add(u1);
 
         // create tag specifications
-        ts1 = mManager.buildTagSpec().setKey("KR").build();
-        ts2 = mManager.buildTagSpec().setKey("AS").build();
-        ts3 = mManager.buildTagSpec().setKey("JC").build();
+        ts1 = mManager.buildTag().setKey("KR").build();
+        ts2 = mManager.buildTag().setKey("AS").build();
+        ts3 = mManager.buildTag().setKey("JC").build();
         tSet1.add(ts1, ts2, ts3);
 
         // tag stuff
@@ -273,9 +273,9 @@ public class TaggableTest {
         // create an "ontology" tag set
         TagSet tagset = mManager.buildTagSet().setName("one tag set to bind them all").build();
         // add a few tag "specifications" to the tag set
-        Tag dwarfTag = mManager.buildTagSpec().setKey("dwarf").build();
-        Tag elvenTag = mManager.buildTagSpec().setKey("elven").build();
-        Tag humanTag = mManager.buildTagSpec().setKey("human").build();
+        Tag dwarfTag = mManager.buildTag().setKey("dwarf").build();
+        Tag elvenTag = mManager.buildTag().setKey("elven").build();
+        Tag humanTag = mManager.buildTag().setKey("human").build();
         tagset.add(dwarfTag, elvenTag, humanTag);
         mManager.flush();
                 

@@ -117,6 +117,12 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
         assert (p == null || p.getSGID().getRowKey().equals(sgid.getRowKey())) || p.getSGID().getFriendlyRowKey().equals(sgid.getFriendlyRowKey());
         return p;
     }
+    
+    @Override
+    public <T extends Atom> T getLatestAtomByRowKey(String rowKey, Class<T> t) {
+        SGID sgid = new SGID(rowKey);
+        return this.getLatestAtomBySGID(sgid, t);
+    }
 
     @Override
     public <T extends Atom> T getLatestAtomBySGID(SGID sgid, Class<T> t) {
