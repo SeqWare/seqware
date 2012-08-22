@@ -31,6 +31,7 @@ We use [protobuf](http://code.google.com/p/protobuf/) to handle serialization an
 Protobuf requires the following installation steps:
 
     wget http://protobuf.googlecode.com/files/protobuf-2.4.1.tar.gz
+    tar xzf protobuf-2.4.1.tar.gz
     cd protobuf-2.4.1
     ./configure
     make
