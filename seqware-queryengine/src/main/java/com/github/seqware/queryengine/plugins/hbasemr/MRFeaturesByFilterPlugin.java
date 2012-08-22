@@ -24,9 +24,11 @@ import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.plugins.inmemory.FeatureFilter;
+import com.github.seqware.queryengine.system.importers.SOFeatureImporter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.conf.Configuration;
@@ -39,13 +41,13 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.log4j.Logger;
 
 /**
- * Implements the generic queries which independently decide on whether a Feature is 
- * included in a result.
+ * Implements the generic queries which independently decide on whether a
+ * Feature is included in a result.
  *
  * @author dyuen
  */
 public abstract class MRFeaturesByFilterPlugin extends AbstractMRHBaseBatchedPlugin {
-    
+
     @Override
     public void performVariableInit(String inputTableName, String outputTableName, Scan scan) {
         try {
@@ -62,7 +64,7 @@ public abstract class MRFeaturesByFilterPlugin extends AbstractMRHBaseBatchedPlu
                     job);
             job.setNumReduceTasks(0);
         } catch (IOException ex) {
-            Logger.getLogger(MRFeaturesByFilterPlugin.class.getName()).fatal( null, ex);
+            Logger.getLogger(MRFeaturesByFilterPlugin.class.getName()).fatal(null, ex);
         }
     }
 
@@ -77,7 +79,8 @@ public abstract class MRFeaturesByFilterPlugin extends AbstractMRHBaseBatchedPlu
         private Object[] ext_parameters;
         private Object[] int_parameters;
         private FeatureFilter filter;
-        
+        private long count = 0;
+
         @Override
         protected void setup(Mapper.Context context) {
 
@@ -87,7 +90,7 @@ public abstract class MRFeaturesByFilterPlugin extends AbstractMRHBaseBatchedPlu
             this.int_parameters = AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(strings[1]));
             this.sourceSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[2]), FeatureSet.class);
             this.destSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[3]), FeatureSet.class);
-            
+
             // specific to this kind of plugin
             this.filter = (FeatureFilter) this.int_parameters[0];
 
@@ -97,6 +100,7 @@ public abstract class MRFeaturesByFilterPlugin extends AbstractMRHBaseBatchedPlu
 
         @Override
         protected void cleanup(Mapper.Context context) {
+            System.out.println(new Date().toString() + " cleaning up with total lines: " + count);
             this.modelManager.close();
         }
 
@@ -112,6 +116,7 @@ public abstract class MRFeaturesByFilterPlugin extends AbstractMRHBaseBatchedPlu
          */
         @Override
         public void map(ImmutableBytesWritable row, Result values, Mapper.Context context) throws IOException {
+            count++;
             List<FeatureList> list = HBaseStorage.grabFeatureListsGivenRow(values, sourceSet.getSGID(), SWQEFactory.getSerialization());
             Collection<Feature> consolidateRow = SimplePersistentBackEnd.consolidateRow(list);
             Collection<Feature> results = new ArrayList<Feature>();
@@ -123,6 +128,17 @@ public abstract class MRFeaturesByFilterPlugin extends AbstractMRHBaseBatchedPlu
                 }
             }
             destSet.add(results);
+            if (count % 1000 == 0) {
+                System.out.println(new Date().toString() + " with total lines so far: " + count);
+            }
+            // TODO: we only seem to be able to keep about a quarter of the number of Features that we can keep in memory in
+            // VCF importer, check this out
+            if (count % (SOFeatureImporter.BATCH_SIZE/4) == 0) {
+                modelManager.flush();
+                modelManager.clear();
+                modelManager.persist(destSet);
+                System.out.println(new Date().toString() + " flushing with total lines so far: " + count);
+            }
         }
     }
 }

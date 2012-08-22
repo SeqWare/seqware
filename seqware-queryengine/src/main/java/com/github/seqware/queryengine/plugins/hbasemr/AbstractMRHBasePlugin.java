@@ -33,6 +33,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.filter.BinaryComparator;
+import org.apache.hadoop.hbase.filter.CompareFilter;
+import org.apache.hadoop.hbase.filter.QualifierFilter;
+import org.apache.hadoop.hbase.filter.WritableByteArrayComparable;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.mapreduce.Job;
@@ -93,6 +97,18 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
                 conf.setStrings("tmpjars", Constants.DEVELOPMENT_DEPENDENCY);
             }
             conf.setStrings(EXT_PARAMETERS, str_params);
+            conf.set("mapreduce.map.java.opts", "-Xmx4096m  -verbose:gc");
+            conf.set("mapreduce.reduce.java.opts", "-Xmx4096m  -verbose:gc");
+            conf.set("mapreduce.map.ulimit", "4194304");
+            conf.set("mapreduce.reduce.ulimit", "4194304");
+            conf.set("mapreduce.map.memory.mb", "4096");
+            conf.set("mapreduce.reduce.memory.mb", "4096");
+            conf.set("mapreduce.map.memory.physical.mb", "4096");
+            conf.set("mapreduce.reduce.memory.physical.mb", "4096");
+            // the above settings all seem to be ignored by hboot
+            // TODO: only this one works, but as far I know, we're using mapreduce not mapred.
+            // Strange
+            conf.set("mapred.child.java.opts", "-Xmx2048m -verbose:gc");
 
             this.job = new Job(conf, this.getClass().getSimpleName());
             
@@ -100,7 +116,9 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
             scan.setMaxVersions();       // we need all version data
             scan.setCaching(500);        // 1 is the default in Scan, which will be bad for MapReduce jobs
             scan.setCacheBlocks(false);  // don't set to true for MR jobs
-            scan.addColumn(HBaseStorage.TEST_FAMILY_INBYTES, Bytes.toBytes(inputSet.getSGID().getUuid().toString()));
+            byte[] qualiferBytes = Bytes.toBytes(inputSet.getSGID().getUuid().toString());
+            scan.addColumn(HBaseStorage.TEST_FAMILY_INBYTES, qualiferBytes);
+            scan.setFilter(new QualifierFilter(CompareFilter.CompareOp.EQUAL, new BinaryComparator(qualiferBytes)));
 
             // handle the part that changes from job to job
             performVariableInit(tableName, destTableName, scan);
