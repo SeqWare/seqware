@@ -1,7 +1,9 @@
 package com.github.seqware.queryengine.model.impl;
 
+import com.github.seqware.queryengine.dto.QESupporting.TagPB;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.impl.protobufIO.TagIO;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.model.interfaces.Versionable;
@@ -24,6 +26,8 @@ import org.apache.commons.lang.builder.EqualsBuilder;
  */
 public abstract class AtomImpl<T extends Atom> implements Atom<T> {
 
+    private final static transient TagIO tagIO = new TagIO();
+    
     /**
      * Unique identifier of this Atom
      */
@@ -32,7 +36,6 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      * Exposed timestamp of this Atom
      */
     //private Date clientTimestamp;
-    
     private int externalSerializationVersion = SWQEFactory.getSerialization().getSerializationConstant();
 
     @Override
@@ -43,13 +46,11 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     public void setExternalSerializationVersion(int externalSerializationVersion) {
         this.externalSerializationVersion = externalSerializationVersion;
     }
-    
     /**
      * Current manager
      */
     private transient CreateUpdateManager manager = null;
     private Map<String, Tag> tags = new HashMap<String, Tag>();
-    
     private LazyReference<T> precedingVersion = new LazyReference<T>(this.getHBaseClass());
 
     protected AtomImpl() {
@@ -60,21 +61,28 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      * Copy constructor, used to generate a shallow copy of a Atom with
      * potentially a new clientTimestamp and UUID
      *
-     * @param newSGID whether or not to generate a new UUID and clientTimestamp for
-     * the new copy
+     * @param newSGID whether or not to generate a new UUID and clientTimestamp
+     * for the new copy
      */
     @Override
     public T copy(boolean newSGID) {
-        AtomImpl newAtom = (AtomImpl) SerializationUtils.clone(this);
+        AtomImpl newAtom;
+        if (this instanceof Tag) {
+            TagPB m2pb = tagIO.m2pb((Tag)this);
+            Tag pb2m = tagIO.pb2m(m2pb);
+            newAtom = pb2m;
+        } else {
+            newAtom = (AtomImpl) SerializationUtils.clone(this);
+        }
         // copy over the transient properties for now
         newAtom.setManager(this.manager);
-        if (newSGID){
+        if (newSGID) {
             newAtom.impersonate(new SGID());
-        } else{
+        } else {
             newAtom.getSGID().setBackendTimestamp(new Date());
-            assert(!newAtom.getSGID().equals(this.sgid));
+            assert (!newAtom.getSGID().equals(this.sgid));
         }
-        
+
 //        SGID oldUUID = this.sgid;
 //        // TODO This will have to be replaced with a stronger UUID generation method.
 //        if (newSGID) {
@@ -94,30 +102,30 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
             ((AtomImpl) newAtom).setPrecedingSGID(this.sgid);
         }
 
-        return (T)newAtom;
+        return (T) newAtom;
     }
 
     @Override
-    public NestedLevel getNestedTags(){
+    public NestedLevel getNestedTags() {
         NestedLevel rootLevel = new NestedLevel();
-        for(Tag t : this.getTags()){
+        for (Tag t : this.getTags()) {
             String[] keyArr = t.getKey().split(Tag.SEPARATOR);
             NestedLevel point = rootLevel;
-            for(int i = 0; i < keyArr.length - 1; i++){
+            for (int i = 0; i < keyArr.length - 1; i++) {
                 String seg = keyArr[i];
                 // create a level for all but the last level
-                if (!point.getChildMaps().containsKey(seg)){
+                if (!point.getChildMaps().containsKey(seg)) {
                     point.getChildMaps().put(seg, new NestedLevel());
                 }
                 // then move down before the next segment
                 point = point.getChildMaps().get(seg);
             }
             // add the tag as a child at the appropriate level
-            point.getChildTags().put(keyArr[keyArr.length-1], t);
+            point.getChildTags().put(keyArr[keyArr.length - 1], t);
         }
         return rootLevel;
     }
-    
+
     /**
      * Get the universally unique identifier of this object. This should be
      * unique across the whole backend and not just this resource
@@ -144,7 +152,8 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     }
 
     /**
-     * Set the clientTimestamp, this should never be called outside of the backend
+     * Set the clientTimestamp, this should never be called outside of the
+     * backend
      *
      * @param clientTimestamp new time stamp
      */
@@ -240,9 +249,9 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     public SeqWareIterable<Tag> getTags() {
         return new InMemoryIterable(tags.values());//Factory.getBackEnd().getTags(this);
     }
-    
+
     @Override
-    public Tag getTagByKey(String key){
+    public Tag getTagByKey(String key) {
         return tags.get(key);
     }
 
