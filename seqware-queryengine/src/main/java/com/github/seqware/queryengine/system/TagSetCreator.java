@@ -1,5 +1,6 @@
 package com.github.seqware.queryengine.system;
 
+import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.TagSet;
@@ -67,6 +68,7 @@ public class TagSetCreator {
             System.out.println(outputID);
             Map<String, String> keyValues = new HashMap<String, String>();
             keyValues.put("TagSetID", outputID);
+            keyValues.put("namespace", Constants.NAMESPACE);
             Utility.writeKeyValueFile(outputFile, keyValues);
             return build.getSGID();
         } catch (IOException ex) {

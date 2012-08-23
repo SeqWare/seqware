@@ -5,7 +5,6 @@ import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
-import com.github.seqware.queryengine.model.Tag.Builder;
 import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.*;
@@ -313,7 +312,8 @@ public class VCFVariantImportWorker extends ImportWorker {
                                 }
                             }
                         } else {
-                            tagSet.add(getTagSpec(tag).toBuilder().build());
+                            // this is dangerous because it could add an arbitrary number of additional Tags
+                            // tagSet.add(getTagSpec(tag).toBuilder().build());
                             //m.addTag(tag, null);
                         }
                     }
