@@ -1,5 +1,6 @@
 package com.github.seqware.queryengine.system.importers;
 
+import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.FeatureSet;
@@ -172,6 +173,7 @@ public class FeatureImporter extends Importer {
             String aoutputID = adHocSet.getSGID().getUuid().toString();
             System.out.println(aoutputID);
             keyValues.put("adHocTagSetID", aoutputID);
+            keyValues.put("namespace", Constants.NAMESPACE);
         }
         Utility.writeKeyValueFile(outputFile, keyValues);
         return featureSet.getSGID();
