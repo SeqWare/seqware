@@ -30,7 +30,17 @@ public class Tag extends AtomImpl<Tag> {
     public final static String prefix = "Tag";
     public static String SEPARATOR = "::";
     private LazyReference<TagSet> tagSet = new LazyReference<TagSet>(TagSet.class);
+
+    /**
+     * Format: ACCESSION[::NAME]
+     *
+     *   ACCESSION : some sort of unique identifier for the tag within the tagset
+     *   NAME : an optional addition to the accession for denoting names and
+     *          synonyms -- note that one accession can appear multiple times in
+     *          a tag set under various names and synonyms.
+     */
     private String key = null;
+
     private String predicate = "=";
     private Object value = null;
     private ValueType vType = null;

@@ -30,9 +30,16 @@ import org.biojava.ontology.Term;
  * Quick and dirty OBO file importer.
  *
  * This importer will create tagSets with term keys in two formats
- * SO:0001023::allele and SO:0001023
+ * SO:0001023 and one or more SO:0001023::a, SO:0001023::b and so on.
+ *
+ * A term SO:001023 is the unique identifier of an SO ontology entry,
+ * referring to the term independent of its name or synonyms.
+ *
+ * SO:0001023::a, SO:0001023::b, etc., refers to the SO ontology entry's
+ * name (here "a"), and its optional synonyms (here "b").
  *
  * @author dyuen
+ * @author jbaran
  */
 public class OBOImporter {
 
@@ -107,7 +114,7 @@ public class OBOImporter {
                     Logger.getLogger(OBOImporter.class.getName()).trace("Skipping ... TERM: " + term.getDescription() + " DESC: " + term.getName());
                     continue;
                 }
-                // check for obselete terms
+                // check for obsolete terms
                 if (term.getAnnotation().containsProperty("is_obsolete")) {
                     Object property = term.getAnnotation().getProperty("is_obsolete");
                     if (property.equals(true)) {

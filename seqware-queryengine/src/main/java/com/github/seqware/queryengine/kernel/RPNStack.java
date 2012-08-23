@@ -103,7 +103,9 @@ public class RPNStack implements Serializable {
      * Represents tags whose occurrence is tested -- including the tags children!
      */
     public static class TagHierarchicalOccurrence extends Parameter {
-        public TagHierarchicalOccurrence(String name) {
+        private String tagSetRowKey;
+
+        public TagHierarchicalOccurrence(String name, String tagSetRowKey) {
             super(name);
         }
     }
