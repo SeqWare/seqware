@@ -16,12 +16,17 @@
  */
 package com.github.seqware.queryengine.impl;
 
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
+import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.model.impl.inMemory.InMemoryQueryFutureImpl;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.plugins.hbasemr.*;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Implement HBase optimizations for the back-end. Will implement 
@@ -45,7 +50,10 @@ public class MRHBasePersistentBackEnd extends HBasePersistentBackEnd {
      @Override
     public QueryFuture getFeaturesByAttributes(int hours, FeatureSet set, RPNStack constraints) {
         AnalysisPluginInterface plugin = new MRFeaturesByAttributesPlugin();
-        plugin.init(set, constraints);
+        List<TagSet> tagSets = new LinkedList<TagSet>();
+        // TODO
+        tagSets.add(SWQEFactory.getQueryInterface().getLatestAtomByRowKey("SO", TagSet.class));
+        plugin.init(set, constraints, tagSets);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 

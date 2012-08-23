@@ -263,7 +263,8 @@ public class QueryInterfaceTest implements Benchmarking {
                 new Constant("chr16"),
                 new FeatureAttribute("seqid"),
                 Operation.EQUAL,
-                new TagHierarchicalOccurrence("SO::sequence_variant::functional_variant"),
+                // new TagHierarchicalOccurrence("SO:0001536::specific_synonym", "SO"),
+                new TagHierarchicalOccurrence("SO:0001536", "SO"),
                 Operation.AND));
         resultSet = queryFuture.get();
         count = (int) resultSet.getCount();

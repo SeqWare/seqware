@@ -5,13 +5,26 @@ import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
+
 /**
  * A set of Tag specifications
  *
  * @author dyuen
+ * @author jbaran
  */
 public interface TagSet extends MolSetInterface<TagSet, Tag> {
     public final static String prefix = "TagSet";
+
+    /**
+     * Get a possible empty list of parent tag-keys for a given tag ket.
+     *
+     * @param tagKey Key of the tag whose parents we are interested in.
+     * @return Either a list of tag keys or null of the queried tagKey has no parents.
+     */
+    //public List<String> getParentTagKeys(String tagKey);
 
     /**
      * Get the name of the tag set
