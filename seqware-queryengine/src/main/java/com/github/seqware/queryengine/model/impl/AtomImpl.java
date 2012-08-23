@@ -73,9 +73,9 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
             newAtom = pb2m;
         } else {
             newAtom = (AtomImpl) SerializationUtils.clone(this);
+            // copy over the transient properties for now, but not for Tags
+            newAtom.setManager(this.manager);
         }
-        // copy over the transient properties for now
-        newAtom.setManager(this.manager);
         if (newSGID) {
             newAtom.impersonate(new SGID());
         } else {

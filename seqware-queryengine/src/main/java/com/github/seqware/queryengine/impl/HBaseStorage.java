@@ -57,11 +57,13 @@ public class HBaseStorage extends StorageInterface {
     public final static boolean DEBUG = true;
     private Map<String, Integer> minMap = null;
     private Map<String, Integer> maxMap = null;
+    private Map<String, Long> countMap = null;
 
     public HBaseStorage(SerializationInterface i) {
         if (DEBUG) {
             minMap = new HashMap<String, Integer>();
             maxMap = new HashMap<String, Integer>();
+            countMap = new HashMap<String, Long>();
         }
 
         this.serializer = i;
@@ -70,7 +72,7 @@ public class HBaseStorage extends StorageInterface {
         this.config = HBaseConfiguration.create();
         configureHBaseConfig(config);
         try {
-            Logger.getLogger(HBaseStorage.class.getName()).info("Starting with "+HBaseStorage.class.getSimpleName()+" using " + serializer.getClass().getSimpleName() + " on " + java.net.InetAddress.getLocalHost().getHostName());
+            Logger.getLogger(HBaseStorage.class.getName()).info("Starting with " + HBaseStorage.class.getSimpleName() + " using " + serializer.getClass().getSimpleName() + " on " + java.net.InetAddress.getLocalHost().getHostName());
             HBaseAdmin hba = new HBaseAdmin(config);
             // kick out existing tables if thats what we want
             if (!PERSIST) {
@@ -94,7 +96,7 @@ public class HBaseStorage extends StorageInterface {
 
         } catch (IOException ex) {
             Logger.getLogger(HBaseStorage.class.getName()).fatal("Big problem with HBase, abort!", ex);
-        } 
+        }
     }
 
     /**
@@ -171,7 +173,7 @@ public class HBaseStorage extends StorageInterface {
                 if (obj instanceof FeatureList) {
                     FSGID fsgid = (FSGID) obj.getSGID();
                     p.add(TEST_FAMILY_INBYTES, Bytes.toBytes(fsgid.getFeatureSetID().getUuid().toString()), featureBytes);
-                    Logger.getLogger(HBaseStorage.class.getName()).trace("Put on (FeatureList of size " + ((FeatureList)obj).getFeatures().size() + ") " + obj.toString() + " at " + obj.getSGID().toString());
+                    Logger.getLogger(HBaseStorage.class.getName()).trace("Put on (FeatureList of size " + ((FeatureList) obj).getFeatures().size() + ") " + obj.toString() + " at " + obj.getSGID().toString());
                 } else {
                     p.add(TEST_FAMILY_INBYTES, TEST_QUALIFIER_INBYTES, featureBytes);
                     Logger.getLogger(HBaseStorage.class.getName()).trace("Put on " + obj.toString() + " at " + obj.getSGID().toString());
@@ -185,17 +187,21 @@ public class HBaseStorage extends StorageInterface {
                 if (!this.maxMap.containsKey(prefix)) {
                     this.maxMap.put(prefix, Integer.MIN_VALUE);
                 }
+                if (!this.countMap.containsKey(prefix)) {
+                    this.countMap.put(prefix, 0L);
+                }
                 this.minMap.put(prefix, Math.min(minSize, this.minMap.get(prefix)));
                 this.maxMap.put(prefix, Math.max(maxSize, this.maxMap.get(prefix)));
+                this.countMap.put(prefix, this.countMap.get(prefix) + objArr.length);
             }
 
             // establish put
             Object[] putBatch = table.batch(putList);
             Logger.getLogger(HBaseStorage.class.getName()).trace("putBatch results: " + putBatch.length);
         } catch (IOException ex) {
-            Logger.getLogger(HBaseStorage.class.getName()).fatal( null, ex);
+            Logger.getLogger(HBaseStorage.class.getName()).fatal(null, ex);
         } catch (InterruptedException ex) {
-            Logger.getLogger(HBaseStorage.class.getName()).fatal( null, ex);
+            Logger.getLogger(HBaseStorage.class.getName()).fatal(null, ex);
         }
     }
 
@@ -212,7 +218,7 @@ public class HBaseStorage extends StorageInterface {
     private Atom deserializeTargetToAtom(SGID sgid, boolean useTimestamp) {
         if (!inefficiencyWarning) {
             inefficiencyWarning = true;
-            Logger.getLogger(HBaseStorage.class.getName()).warn( "Why you use deserializeTargetToAtom(SGID sgid) in HBase?");
+            Logger.getLogger(HBaseStorage.class.getName()).warn("Why you use deserializeTargetToAtom(SGID sgid) in HBase?");
         }
         if (sgid instanceof FSGID) {
             FSGID fsgid = (FSGID) sgid;
@@ -278,10 +284,10 @@ public class HBaseStorage extends StorageInterface {
             }
             return atomList;
         } catch (IOException ex) {
-            Logger.getLogger(HBaseStorage.class.getName()).fatal( null, ex);
+            Logger.getLogger(HBaseStorage.class.getName()).fatal(null, ex);
             return null;
         } catch (InterruptedException ex) {
-            Logger.getLogger(HBaseStorage.class.getName()).fatal( null, ex);
+            Logger.getLogger(HBaseStorage.class.getName()).fatal(null, ex);
             return null;
         }
     }
@@ -301,7 +307,7 @@ public class HBaseStorage extends StorageInterface {
                 hba.createTable(ht);
                 tableMap.put(s, new HTable(config, tableName));
             } catch (IOException ex) {
-                Logger.getLogger(HBaseStorage.class.getName()).fatal( "Big problem with HBase, abort!", ex);
+                Logger.getLogger(HBaseStorage.class.getName()).fatal("Big problem with HBase, abort!", ex);
                 System.exit(-1);
             }
         }
@@ -311,7 +317,7 @@ public class HBaseStorage extends StorageInterface {
     public Iterable<SGID> getAllAtoms() {
         if (!inefficiencyWarning) {
             inefficiencyWarning = true;
-            Logger.getLogger(HBaseStorage.class.getName()).warn( "getAllAtoms() in HBase is extremely expensive, you probably want to avoid this");
+            Logger.getLogger(HBaseStorage.class.getName()).warn("getAllAtoms() in HBase is extremely expensive, you probably want to avoid this");
         }
         List<SGID> list = new ArrayList<SGID>();
         Set<String> keys = new HashSet<String>(tableMap.keySet());
@@ -335,7 +341,7 @@ public class HBaseStorage extends StorageInterface {
             ResultScanner scanner = table.getScanner(s);
             return new ScanIterable(scanner, cl);
         } catch (IOException iOException) {
-            Logger.getLogger(HBaseStorage.class.getName()).fatal( "Big problem with HBase, abort!", iOException);
+            Logger.getLogger(HBaseStorage.class.getName()).fatal("Big problem with HBase, abort!", iOException);
             return null;
         }
     }
@@ -355,13 +361,13 @@ public class HBaseStorage extends StorageInterface {
             // I think this should return in sorted order already
             Scan s = new Scan();
             s.setMaxVersions();
-            s.setCaching(500); 
+            s.setCaching(500);
             // we need the actual values if we do not store SGID in row key for debugging
             //s.setFilter(new KeyOnlyFilter());
             ResultScanner scanner = table.getScanner(s);
             return new FeatureScanIterable(scanner, fSet.getSGID());
         } catch (IOException iOException) {
-            Logger.getLogger(HBaseStorage.class.getName()).fatal( "Big problem with HBase, abort!", iOException);
+            Logger.getLogger(HBaseStorage.class.getName()).fatal("Big problem with HBase, abort!", iOException);
             return null;
         }
     }
@@ -377,7 +383,7 @@ public class HBaseStorage extends StorageInterface {
             HBaseAdmin hba = new HBaseAdmin(this.config);
             this.createTable(tableName, hba);
         } catch (Exception ex) {
-            Logger.getLogger(HBaseStorage.class.getName()).fatal( "Big problem with HBase, abort!", ex);
+            Logger.getLogger(HBaseStorage.class.getName()).fatal("Big problem with HBase, abort!", ex);
         }
     }
 
@@ -462,20 +468,22 @@ public class HBaseStorage extends StorageInterface {
             try {
                 table.close();
             } catch (IOException ex) {
-                Logger.getLogger(HBaseStorage.class.getName()).fatal( "exception on HTable closing", ex);
+                Logger.getLogger(HBaseStorage.class.getName()).fatal("exception on HTable closing", ex);
             }
         }
-        Logger.getLogger(HBaseStorage.class.getName()).info( "closing HBaseStorage tables");
+        Logger.getLogger(HBaseStorage.class.getName()).info("closing HBaseStorage tables");
         tableMap.clear();
         if (DEBUG) {
             for (Entry<String, Integer> e : maxMap.entrySet()) {
                 int maxValue = e.getValue();
                 int minValue = minMap.get(e.getKey());
-                Logger.getLogger(HBaseStorage.class.getName()).info( "Serialized sizes for "+e.getKey()+" are max: "+maxValue+" and min: "+minValue);
+                long count = countMap.get(e.getKey());
+                Logger.getLogger(HBaseStorage.class.getName()).info(count + " " + e.getKey() + " serialized with a max: " + maxValue + " and min: " + minValue);
             }
+            maxMap.clear();
+            minMap.clear();
+            countMap.clear();
         }
-        maxMap.clear();
-        minMap.clear();
         // ensure that the factory references are also closed, just in case
         SWQEFactory.closeStorage();
     }

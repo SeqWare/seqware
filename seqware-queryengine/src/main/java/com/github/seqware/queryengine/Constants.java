@@ -75,7 +75,7 @@ public class Constants {
     /**
      * Properties used when connecting to a remote instance of HBase
      */
-    public final static Map<String, String> HBASE_PROPERTIES = HBOOT;
+    public final static Map<String, String> HBASE_PROPERTIES = SQWDEV;
     
     /**
      * Regular Expression for suitable rowKeys

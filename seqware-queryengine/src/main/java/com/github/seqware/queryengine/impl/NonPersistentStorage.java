@@ -58,7 +58,8 @@ public class NonPersistentStorage extends StorageInterface {
     }
 
     protected static String createKey(Atom obj) {
-        assert (!(obj instanceof FeatureList) && obj.getSGID() instanceof SGID || (obj instanceof FeatureList && obj.getSGID() instanceof FSGID));
+        boolean test = !(obj instanceof FeatureList) && obj.getSGID() instanceof SGID || (obj instanceof FeatureList && obj.getSGID() instanceof FSGID);
+        assert (test);
         SGID sgid = obj.getSGID();
         return createKey(sgid);
     }
