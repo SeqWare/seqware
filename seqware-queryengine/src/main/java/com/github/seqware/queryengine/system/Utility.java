@@ -56,6 +56,7 @@ public class Utility {
                 PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
                 for (Map.Entry<String, String> e : map.entrySet()) {
                     out.println(e.getKey() + "\t" + e.getValue());
+                    Logger.getLogger(FeatureImporter.class.getName()).info("Writing "+e.getKey() + " " + e.getValue() +" file");
                 }
                 out.close();
             } catch (IOException ex) {
