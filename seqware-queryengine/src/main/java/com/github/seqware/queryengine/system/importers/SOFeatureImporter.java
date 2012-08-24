@@ -29,6 +29,7 @@ public class SOFeatureImporter extends Importer {
     public static final char VALUE_SEPARATOR_PARAM = ',';
     public static final char WORKER_CHAR_PARAM = 'w';
     public static final char BATCH_SIZE_PARAM = 'b';
+    public static final char FEATURE_SET_PARAM = 'f';
     
     public static final int BATCH_SIZE = 100000;
 
@@ -71,6 +72,8 @@ public class SOFeatureImporter extends Importer {
         options.addOption(option8);
         Option option9 = OptionBuilder.withArgName("batch_size").withDescription("(optional) batch-size for the number of features in memory to keep before a flush, will automatically be chosen if not specified, we use " +BATCH_SIZE+ " for now").hasArgs(1).create(BATCH_SIZE_PARAM);
         options.addOption(option9);
+        Option option10 = OptionBuilder.withArgName("featureSet").withDescription("(optional) for benchmarking for now, append features to an existing featureset").hasArgs(1).create(FEATURE_SET_PARAM);
+        options.addOption(option10);
 
         try {
             CommandLineParser parser = new PosixParser();
@@ -101,11 +104,14 @@ public class SOFeatureImporter extends Importer {
                     tagSetSGIDs.add(Utility.parseSGID(ID));
                 }
             }
+            
+            // for benchmarking
+            SGID featureSetID = cmd.hasOption(FEATURE_SET_PARAM) ? Utility.parseSGID(cmd.getOptionValue(FEATURE_SET_PARAM)) : null;
 
             // process ad hoc tag set
             SGID adhocSGID = cmd.hasOption(ADHOC_TAGSETS_PARAM) ? Utility.parseSGID(cmd.getOptionValue(ADHOC_TAGSETS_PARAM)) : null;
 
-            SGID mainMethod = FeatureImporter.performImport(referenceSGID, threads, inputFiles, worker, compressed, outputFile, tagSetSGIDs, adhocSGID, batch_size);
+            SGID mainMethod = FeatureImporter.performImport(referenceSGID, threads, inputFiles, worker, compressed, outputFile, tagSetSGIDs, adhocSGID, batch_size, featureSetID);
             if (mainMethod == null) {
                 return null;
             }

@@ -19,8 +19,6 @@ package com.github.seqware.queryengine.tutorial;
 import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.HBaseStorage;
-import com.github.seqware.queryengine.kernel.RPNStack;
-import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Reference;
 import com.github.seqware.queryengine.system.ReferenceCreator;
@@ -28,6 +26,7 @@ import com.github.seqware.queryengine.system.Utility;
 import com.github.seqware.queryengine.system.importers.SOFeatureImporter;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
@@ -89,6 +88,7 @@ public class Poster {
         // go through all input files
         File fileDirectory = new File(args[1]);
         File[] listFiles = fileDirectory.listFiles();
+        SGID fSet_sgid = null;
         for(File inputFile : listFiles){
             // record start and finish time
             Date startDate = new Date();
@@ -96,10 +96,21 @@ public class Poster {
             keyValues.put(count + "-start-date-human" , startDate.toString());
             
             // run without unnecessary parameters
-            SGID main = SOFeatureImporter.runMain(new String[]{"-w", "VCFVariantImportWorker",
+            if (fSet_sgid == null){
+                fSet_sgid =
+                    SOFeatureImporter.runMain(new String[]{"-w", "VCFVariantImportWorker",
                         "-i", inputFile.getAbsolutePath(),
-                        "-r", reference.getSGID().getRowKey(),});
-            FeatureSet fSet = SWQEFactory.getQueryInterface().getLatestAtomBySGID(main, FeatureSet.class);
+                        "-r", reference.getSGID().getRowKey()});
+            } else{
+                fSet_sgid =
+                    SOFeatureImporter.runMain(new String[]{"-w", "VCFVariantImportWorker",
+                        "-i", inputFile.getAbsolutePath(),
+                        "-r", reference.getSGID().getRowKey(),
+                        "-f", fSet_sgid.getRowKey()
+                    });
+            }
+            
+            FeatureSet fSet = SWQEFactory.getQueryInterface().getLatestAtomBySGID(fSet_sgid, FeatureSet.class);
             keyValues.put(count + "-featuresSet-id" , fSet.getSGID().getRowKey());
             keyValues.put(count + "-featuresSet-id-timestamp" , Long.toString(fSet.getSGID().getBackendTimestamp().getTime()));
             // runs count query
@@ -118,6 +129,7 @@ public class Poster {
     }
 
     private void recordSpace(String key) throws IOException {
+        try{
         Configuration conf = new Configuration();
         HBaseStorage.configureHBaseConfig(conf);
         HBaseConfiguration.addHbaseResources(conf);
@@ -137,6 +149,9 @@ public class Poster {
         contentSummary = fs.getContentSummary(featureTable);
         spaceConsumedinGB = convertToGB(contentSummary);
         keyValues.put(key + "-feature-space-in-GB", Long.toString(spaceConsumedinGB));
+        } catch (FileNotFoundException e){
+            /** throw away, this is ok the first time **/
+        }
         
     }
 
