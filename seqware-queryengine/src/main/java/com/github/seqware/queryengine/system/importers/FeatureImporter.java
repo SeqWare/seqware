@@ -48,7 +48,7 @@ public class FeatureImporter extends Importer {
      * @param batch_size
      * @return SGID if successful, null if not
      */
-    protected static SGID performImport(SGID referenceID, int threadCount, List<String> inputFiles, String workerModule, boolean compressed, File outputFile, List<SGID> tagSetSGIDs, SGID adhocTagSetID, int batch_size) {
+    protected static SGID performImport(SGID referenceID, int threadCount, List<String> inputFiles, String workerModule, boolean compressed, File outputFile, List<SGID> tagSetSGIDs, SGID adhocTagSetID, int batch_size, SGID existingfeatureSet) {
 
         // objects to access the mutation datastore
         //      BerkeleyDBFactory factory = new BerkeleyDBFactory();
@@ -56,7 +56,14 @@ public class FeatureImporter extends Importer {
         CreateUpdateManager modelManager = SWQEFactory.getModelManager();
         Reference ref = SWQEFactory.getQueryInterface().getLatestAtomBySGID(referenceID, Reference.class);
         // create a centralized FeatureSet
-        FeatureSet featureSet = modelManager.buildFeatureSet().setReference(ref).build();
+        FeatureSet featureSet; 
+        if (existingfeatureSet == null){
+            featureSet = modelManager.buildFeatureSet().setReference(ref).build();
+        } else{
+            featureSet = SWQEFactory.getQueryInterface().getLatestAtomBySGID(existingfeatureSet, FeatureSet.class);
+            Logger.getLogger(FeatureImporter.class.getName()).info("Appending to existing FeatureSet: " + featureSet.getSGID().getRowKey());
+        }
+        
         TagSet adHocSet;
         // process ad hoc set if given, create a new one if there is not
         if (adhocTagSetID != null){
@@ -243,7 +250,7 @@ public class FeatureImporter extends Importer {
             }
         }
         
-        return performImport(referenceSGID, threadCount, inputFiles, workerModule, compressed, outputFile, null, null, SOFeatureImporter.BATCH_SIZE);
+        return performImport(referenceSGID, threadCount, inputFiles, workerModule, compressed, outputFile, null, null, SOFeatureImporter.BATCH_SIZE, null);
     }
 
     
