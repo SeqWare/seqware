@@ -252,6 +252,9 @@ public class RPNStack implements Serializable {
      * Carries out an exact match.
      */
     private boolean equal(Object a, Object b) {
+        if (a == null || b == null){
+            return a == null && b == null;
+        }
         return a.equals(b);
     }
 }

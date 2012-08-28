@@ -312,8 +312,9 @@ public class VCFVariantImportWorker extends ImportWorker {
                                 }
                             }
                         } else {
-                            // this is dangerous because it could add an arbitrary number of additional Tags
-                            // tagSet.add(getTagSpec(tag).toBuilder().build());
+                            // this is dangerous because it could add an arbitrary number of additional Tags,
+                            // but we need it for testing dbSNP
+                            tagSet.add(getTagSpec(tag).toBuilder().build());
                             //m.addTag(tag, null);
                         }
                     }
