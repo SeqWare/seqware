@@ -17,6 +17,7 @@
 package com.github.seqware.queryengine.tutorial;
 
 import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
@@ -49,14 +50,14 @@ public class DenisTest {
 
     public void export() {
 
-        if (args.length < 1 || args.length > 2) {
-            System.err.println(args.length + " arguments found");
-            System.out.println(DenisTest.class.getSimpleName() + " <featureSetID> [outputFile]");
-            System.exit(-1);
-        }
+//        if (args.length < 1 || args.length > 2) {
+//            System.err.println(args.length + " arguments found");
+//            System.out.println(DenisTest.class.getSimpleName() + " <featureSetID> [outputFile]");
+//            System.exit(-1);
+//        }
 
         // parse a SGID from a String representation, we need a more elegant solution here
-        SGID sgid = Utility.parseSGID(args[0]);
+        SGID sgid = Utility.parseSGID("19ab9688-89bd-4352-8835-cd313bae42ab");
         FeatureSet fSet = SWQEFactory.getQueryInterface().getLatestAtomBySGID(sgid, FeatureSet.class);
 
         // if this featureSet does not exist
@@ -66,7 +67,9 @@ public class DenisTest {
         }
 
       // get a FeatureSet from the back-end
-        QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeatures(0, fSet);
+        QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, fSet, new RPNStack(
+                new RPNStack.TagOccurrence("PMC")
+                ));
 
         BufferedWriter outputStream = null;
         try {

@@ -31,7 +31,7 @@ public class Constants {
      * Sets a prefix for your tables in at least the HBaseStorage back-end, 
      * change this when developing to avoid name collisions with other developers
      */
-    public static final String NAMESPACE = "iron_man";
+    public static final String NAMESPACE = "iron_man10";
 
     /**
      * Properly set this task if you want your compiled jar files to automatically load in the cluster when
