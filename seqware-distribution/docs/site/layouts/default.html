@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SeqWare - <%= @item[:title] %></title>
+    <link rel="stylesheet" type="text/css" href="/style.css" media="screen">
+    <meta name="generator" content="nanoc 3.3.6">
+  </head>
+  <body>
+    <div id="main">
+      <%= yield %>
+    </div>
+    <div id="sidebar">
+      <div id="homepic">
+        <a href="/"><img src="pictures/seqware_logo.png"/></a>
+      </div>
+      <h2>Quick Reference</h2>
+      <ul>
+        <li><a href="http://nanoc.stoneship.org/docs/3-getting-started/">Installing SeqWare</a></li>
+        <li><a href="http://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_Write_a_Bundled_Workflow">Writing Bundled Workflows</a></li>
+	<li><a href="/webservice-api/">Web Service API</a></li>
+     </ul>
+      <h2>Community</h2>
+      <ul>
+        <li><a href="http://sourceforge.net/mail/?group_id=239239">Mailing Lists</a></li>
+        <li><a href="source.html">Source Code</a></li>
+        <li><a href="http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Main_Page">Old Wiki</a></li>
+      </ul>
+      <h2>Contact</h2>
+      <ul>
+	<li><a href="">Submit a bug</a></li>
+      </ul>
+    </div>
+  </body>
+</html>
