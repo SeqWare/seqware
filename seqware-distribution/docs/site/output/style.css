@@ -6,6 +6,7 @@
 }
 
 body {
+  color: #1F2120;
   background: #fff;
 }
 
@@ -15,11 +16,11 @@ a {
 
 a:link,
 a:visited {
-  color: #003366;
+  color: #00519D;
 }
 
 a:hover {
-  color: #f90;
+  color: #003366;
 }
 
 #main {
@@ -32,10 +33,10 @@ a:hover {
 }
 
 #main h1 {
-  font-size: 30px;
+  font-size: 18px;
   font-weight: normal;
-
-  line-height: 40px;
+  color: #003366;
+  /*line-height: 40px;*/
 
   letter-spacing: -1px;
 }
@@ -43,7 +44,7 @@ a:hover {
 #main p {
   margin: 20px 0;
   
-  font-size: 15px;
+  font-size: 14px;
   
   line-height: 20px;
 }
@@ -75,10 +76,11 @@ a:hover {
 
 #main table th {
   text-transform: uppercase;
+  color: #003366;
 }
 
 #homepic {
-  margin-bottom:20px;
+  margin:20px 0px;
 
 }
 
@@ -92,7 +94,7 @@ a:hover {
 
   padding: 20px 20px 0 0;
 
-  border-right: 1px solid #ccc;
+  border-right: 1px solid #687331;
 
   text-align: right;
 }
@@ -107,16 +109,42 @@ a:hover {
   letter-spacing: 1px;
 
   line-height: 20px;
+
+ -moz-border-radius:  1em 0em 0em 4em;
+  border-radius:  1em 0em 0em 4em;
+  border:1px solid #687331;
+
 }
 
 #sidebar ul {
   list-style-type: none;
 
-  margin: 20px 0;
+/*  margin: 20px 0;*/
 }
 
 #sidebar li {
   font-size: 14px;
+  line-height: 24px;
+  background: #CEE3F6;
+  color: #C6C5C3;
+  -moz-border-radius:  1em 0em 0em 4em;
+  border-radius:  1em 0em 0em 4em;
+  margin:2px;
+}
 
-  line-height: 20px;
+#sidebar li:hover {
+  background: #A5C6E5;
+}
+
+
+#sidebar li a {
+  color: #1F2120;
+}
+
+/*#sidebar li a:hover {
+  background: #656766;
+}*/
+
+span {
+  padding:5px;
 }
