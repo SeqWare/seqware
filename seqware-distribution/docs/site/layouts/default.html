@@ -7,28 +7,33 @@
     <meta name="generator" content="nanoc 3.3.6">
   </head>
   <body>
+    <div id="homepic">
+      <a href="/"><img src="/pictures/seqware_logo.png"/></a>
+    </div>
     <div id="main">
-       <div id="homepic">
-        <a href="/"><img src="pictures/seqware_logo.png"/></a>
-      </div>
-      <%= yield %>
+     <%= yield %>
     </div>
     <div id="sidebar">
+    <ul>
+	<li><a href="/about/"><span>About SeqWare</span></a></li>
+	<li><a href="/download/"><span>Download</span></a></li>
+     </ul>
      <h2><span>Quick Reference</span></h2>
       <ul>
-        <li><a href="http://nanoc.stoneship.org/docs/3-getting-started/"><span>Installing SeqWare</span></a></li>
-        <li><a href="http://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_Write_a_Bundled_Workflow"><span>Writing Bundled Workflows</span></a></li>
-	<li><a href="/webservice-api/"><span>Web Service API</span></a></li>
-     </ul>
-      <h2><span>Community</span></h2>
-      <ul>
-        <li><a href="http://sourceforge.net/mail/?group_id=239239"><span>Mailing Lists</span></a></li>
-        <li><a href="source.html"><span>Source Code</span></a></li>
+	<li><a href="/users/"><span>User Guide</span></a></li>
+	<li><a href="/administrators/"><span>Administrator Guide</span></a></li>
+	<li><a href="/source/"><span>Developers Guide</span></a></li>
         <li><a href="http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Main_Page"><span>Old Wiki</span></a></li>
-      </ul>
+    </ul>
+    <h2><span>APIs</span></h2>
+    <ul>
+	<li><a href="/webservice-api/"><span>Web Service API</span></a></li>
+ 	<li><a href="/queryengine-api/"><span>Query Engine API</span></a></li>
+    </ul>
       <h2><span>Contact</span></h2>
       <ul>
-	<li><a href=""><span>Submit a bug</span></a></li>
+	<li><a href="http://sourceforge.net/mail/?group_id=239239"><span>Mailing Lists</span></a></li>
+	<li><a href="mailto:seqware.jira@oicr.on.ca"><span>JIRA Bug Tracker</span></a></li>
       </ul>
     </div>
   </body>
