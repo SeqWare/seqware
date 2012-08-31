@@ -8,6 +8,8 @@
 body {
   color: #1F2120;
   background: #fff;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 a {
@@ -36,17 +38,29 @@ a:hover {
   font-size: 18px;
   font-weight: normal;
   color: #003366;
-  /*line-height: 40px;*/
 
-  letter-spacing: -1px;
+}
+
+#main h2 {
+  font-size: 16px;
+  font-weight: normal;
+  color: #003366;
+  line-height: 40px;
+  margin-top:10px;
+  margin-bottom:-15px;
+}
+
+
+#main h3 {
+  font-size: 14px;
+  font-weight: strong;
+  color: #003366;
+  margin-top:10px;
 }
 
 #main p {
-  margin: 20px 0;
+  margin: 10px 0;
   
-  font-size: 14px;
-  
-  line-height: 20px;
 }
 
 #main ul, #main ol {
@@ -54,9 +68,9 @@ a:hover {
 }
 
 #main li {
-  font-size: 15px;
+  /*font-size: 15px;
   
-  line-height: 20px;
+  line-height: 20px;*/
 }
 
 #main ul li {
@@ -80,7 +94,8 @@ a:hover {
 }
 
 #homepic {
-  margin:20px 0px;
+  
+  margin:20px;
 
 }
 
@@ -147,4 +162,36 @@ a:hover {
 
 span {
   padding:5px;
+}
+
+blockquote {
+  padding: 0px 10px 0px 10px;
+  margin-left:20px;
+/*  position:relative;*/
+  background:#CEE3F6;
+  -moz-border-radius:  5px;
+  border-radius:  5px;
+}
+
+pre {
+  font-family: monospace;
+  font-size: 12px;
+  border: 1px solid gray;
+  padding: 10px;
+  background: #FAFAFA;
+
+
+  white-space: pre;           /* CSS 2.0 */
+  white-space: pre-wrap;      /* CSS 2.1 */
+  white-space: pre-line;      /* CSS 3.0 */
+  white-space: -pre-wrap;     /* Opera 4-6 */
+  white-space: -o-pre-wrap;   /* Opera 7 */
+  white-space: -moz-pre-wrap; /* Mozilla */
+  white-space: -hp-pre-wrap;  /* HP Printers */
+  word-wrap: break-word;      /* IE 5+ */ 
+}
+
+code {
+  font-family: monospace;
+  width: 100%;
 }

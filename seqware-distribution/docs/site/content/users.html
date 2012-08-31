@@ -1,46 +1,57 @@
 ---
-title: Home 
+title: Users 
 ---
 
-<h1>SeqWare</h1>
+User Guide
+============
 
-<p>The open source SeqWare project is a portable software infrastructure designed to analyze massive genomics datasets produced by contemporary and emerging technologies, in particular Next Generation Sequencing (NGS) platforms.  It consists of a comprehensive suite of tools focused on enabling the end-to-end analysis of sequence data -- from from raw base calling to analyzed variants ready for interpretation by users.</p>
+SeqWare is an open-source bioinformatics workflow deployment and management system. Its core features include:
 
+* A centralized metadata database that tracks samples, annotations and analyses, and a web application to visualize it
+* A module specification and execution engine that lets you package computational tools and use them to build and run complex analytical workflows
+* Support for running workflows irrespective of the underlying cluster environment
+* An advanced query engine that allows you to store and search variants, coverage, and annotations produced in your workflows using either a simple or distributed database backend 
 
-<table>
-<tr>
-<th>Users</th>
-<th>Administrators</th>
-<th>Developers</th>
-</tr>
-<tr>
-<td><img src="pictures/Use.png"/></td>
-<td><img src="pictures/Deploy.png"/></td>
-<td><img src="pictures/Develop.png"/></td>
-</tr>
-<tr>
-<td width="200">Create and run workflows either using a web application or command line interface</td>
-<td width="200">Deploy SeqWare on a virtual machine, in the Cloud, or on your own cluster</td>
-<td width="200">Contribute to SeqWare by getting involved with core development</td>
-</tr>
-</table>
+This Guide
+---------
+
+The major point of this guide is to describe how, as a user, you would log into a pre-configured SeqWare server and start launching workflows. It is focused on running existing workflows and creating new workflows using the SeqWare Pipeline API.
+
+This guide assumes your starting with SeqWare, and its various components, already installed. It assumes that you or your admin have already setup and tested SeqWare. This guide picks up where the installation guide leaves off and walks you through the process of launching SeqWare workflows for the first time.
 
 
+Download the Project
+---------------------
+
+Every user using SeqWare Pipeline and other tools in the SeqWare project will need to download the code into your home directory using Subversion. Instructions are available on the SeqWare SourceForge page.
+
+Manuals
+-----------------
+* [Writing Workflows](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_Write_a_Bundled_Workflow) : A series of analysis tools and modules chained together to produce a particular result
+* [Writing Modules](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Developing_New_SeqWare_Pipeline_Modules) : Java wrappers around tools for use in a workflow
+* [Command-Line Tools](/manuals/command_line_tools/) : Tools to create samples, experiments and studies on the command line, upload data, launch workflows, and more.
+* [SeqWare Conventions](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Module_Conventions): File MIME-types, Error codes
+
+Reference
+----------------
+* [Generic Pipeline Modules](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Available_Modules) : Generic Modules for your workflows
+
+### Reporting Tools
+* [Study Reporter](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=SymLink_Reporter) : Create a nested tree structure of all of the output files from a particular sample, or all of the samples in a study
+* [Sequencer Run Reporter](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Sequencer_Run_Reporter): Gives you a view of all the sequencer runs/lanes/barcodes and the associated analysis processing events.
+* [Workflow Run Reporter](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Workflow_Run_Reporter): Find the identity and library samples and input and output files from one or more workflow runs. 
+
+### Import Tools
+* [FileLinker](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=FileLinker) : Import files into the MetaDB and link them with IUS's or lanes. 
+
+### Metadata Tools
+* [AttributeAnnotator](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=AttributeAnnotator) : Annotate items in the MetaDB with 'skip' or key-value pairs. 
 
 
+Cite SeqWare
+------------------------
 
+O'Connor, B. D., B. Merriman, and S. F. Nelson. SeqWare Query Engine: storing and searching sequence data in the cloud. BMC Bioinformatics 2010, 11(Suppl 12):S2
+Support
 
-
-
-<p>SeqWare currently provides four tools specifically designed to support massively parallel sequencing technologies. All four tools can be used together or separately.</p> 
-
-<ol>
-<li> <strong>Portal</strong>: a LIMS-like web application to manage samples, record computational events, and present results back to end users. 
-<li> <strong>Pipeline</strong>: a workflow engine that is capable of wrapping and combining other tools (BFAST, BWA, SAMtools, etc) into complex pipelines, recording metadata about the analysis, and facilitates automation of pipelines based on metadata. 
-<li><strong>Query Engine</strong>:  a query tool to store and query variants and other events inferred from sequence data. 
-<li> <strong>MetaDB</strong>: provides a common database to store metadata used by all components. 
-</ol>
-
-SeqWare is currently used by a variety of NGS users including the <a href="http://unclineberger.org/">Lineberger Comprehensive Cancer Center at UNC</a>, at the <a href="http://oicr.on.ca/">Ontario Institute for Cancer Research in Toronto</a> and by our commercial partner <a href="http://nimbusinformatics.com/">Nimbus Informatics.</a></p>
-
-
+The best way to get help with SeqWare is to send email the seqware-users mailing list at seqware-users@lists.sourceforge.net. Subscribe here. 
