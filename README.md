@@ -57,7 +57,36 @@ You can also build individual components such as the new query engine with:
 LOCAL UNIT TESTING SETUP
 ------------------------
 
-The full test suite requires Hadoop and HBase. Set this up by following Cloudera's [quick start guide](https://ccp.cloudera.com/display/CDH4DOC/CDH4+Quick+Start+Guide).
+The full test suite requires Hadoop and HBase; a good start is to follow Cloudera's [quick start guide](https://ccp.cloudera.com/display/CDH4DOC/CDH4+Quick+Start+Guide).
+
+Otherwise, it is also possible to manually HBase as follows: get HBase where either versions 0.92.1, 0.94.0 or newer are fine.
+
+    wget http://apache.raffsoftware.com/hbase/hbase-0.94.0/hbase-0.94.0.tar.gz
+    tar xzf hbase-0.94.0.tar.gz
+    cd hbase-0.94.0
+
+Prepare a local directory for the HBase database by populating the file `conf/hbase-site.xml` with (adjust the file path `/opt/local/var/db/hbase` to your needs):
+
+    <?xml version="1.0"?>
+    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+    <configuration>
+      <property>
+        <name>hbase.rootdir</name>
+        <value>file:///opt/local/var/db/hbase</value>
+      </property>
+    </configuration>
+
+Start the HBase server:
+
+    ./bin/start-hbase.sh
+
+Stopping the HBase server is similarly simple:
+
+    ./bin/stop-hbase.sh
+
+Finally, set the HBase configuration that should be used in `seqware-queryengine/src/main/java/com/github/seqware/queryengine/Constants.java` to:
+
+    public final static Map<String, String> HBASE_PROPERTIES = LOCAL;
 
 INSTALLING
 ====================
