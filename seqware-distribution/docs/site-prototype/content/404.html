@@ -1,0 +1,43 @@
+<p>Unfortunately, the page you requested was not found on the server. It may have have been removed; the site was recently restructured quite a bit and some outdated pages were removed in the process.</p>
+
+<p>If you arrived on this page by entering an address (URL) manually, double-check it to make sure that you did not accidentally mistyped the address.</p>
+
+<?php
+
+########## CONFIGURATION #####################################################
+
+// E-mail settings
+$src_email_address = 'webmaster@seqware.github.com';
+$dst_email_address = 'briandoconnor@gmail.com';
+
+// The name of the site
+$site_name = 'SeqWare';
+
+// Should a mail be sent if there is no referrer?
+$send_mail_if_no_referrer = false;
+
+########## DO NOT CHANGE BELOW THIS LINE #####################################
+
+// Get path and URL of this page
+$this_path = $_SERVER['REQUEST_URI'];
+$this_url  = 'http://' . $_SERVER['SERVER_NAME'] . $this_path;
+
+// Check whether page has referrer
+$has_referrer = isset($_SERVER['HTTP_REFERER']);
+
+// Send mail if necessary
+$should_send_mail = true;
+if(!$has_referrer && !$send_mail_if_no_referrer)
+	$should_send_mail = false;
+if($should_send_mail)
+{
+	$subject = '404 @ ' . $site_name . ': ' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+	$message = 'The following URL caused a 404 error on ' . $site_name . ':' . "\n\n" .
+		'URL:      ' . 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] . "\n" .
+		'Referrer: ' . $_SERVER['HTTP_REFERER'];
+	$headers = 'From: ' . $src_email_address;
+
+	mail($dst_email_address, $subject, $message, $headers);
+}
+
+?>
