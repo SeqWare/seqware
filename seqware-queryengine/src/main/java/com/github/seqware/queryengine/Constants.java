@@ -31,7 +31,7 @@ public class Constants {
      * Sets a prefix for your tables in at least the HBaseStorage back-end, 
      * change this when developing to avoid name collisions with other developers
      */
-    public static final String NAMESPACE = "iron_man10";
+    public static final String NAMESPACE = "batman";
 
     /**
      * Properly set this task if you want your compiled jar files to automatically load in the cluster when
@@ -55,7 +55,7 @@ public class Constants {
      * Use the properties defined for HBase to connect to a remote HBase
      * instance
      */
-    public final static boolean HBASE_REMOTE_TESTING = true;
+    public final static boolean HBASE_REMOTE_TESTING = false;
     private final static Map<String, String> SQWDEV = Maps.newHashMap(
             ImmutableMap.<String, String>builder().
             put("hbase.zookeeper.quorum", "sqwdev.res.oicr.on.ca").

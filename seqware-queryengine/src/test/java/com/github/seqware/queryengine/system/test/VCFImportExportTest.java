@@ -88,7 +88,7 @@ public class VCFImportExportTest {
             File createTempFile = File.createTempFile("output", "txt");
             Assert.assertTrue("Cannot read VCF file for test", testFile.exists() && testFile.canRead());
             List<String> argList = new ArrayList<String>();
-            argList.addAll(Arrays.asList(new String[]{"VCFVariantImportWorker", "1", "false", randomRef, testFile.getAbsolutePath()}));
+            argList.addAll(Arrays.asList(new String[]{"VCFVariantImportWorker", "1", "false", randomRef, testFile.getAbsolutePath(), createTempFile.getAbsolutePath()}));
             argList.addAll(Arrays.asList(args));
             
             SGID main = FeatureImporter.naiveRun(argList.toArray(new String[argList.size()]));

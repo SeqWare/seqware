@@ -406,6 +406,10 @@ public class HBaseStorage extends StorageInterface {
             prefix = ((FSGID) sgid).getTablename();
         }
         HTable table = tableMap.get(prefix);
+        if (table == null) {
+            establishTableConnection(prefix);
+            table = tableMap.get(prefix);
+        }
         List<Atom> deserializeAtom = deserializeAtom(t, table, useTimestamp, sgid);
         if (deserializeAtom != null && deserializeAtom.size() > 0) {
             return (T) deserializeAtom.get(0);

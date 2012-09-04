@@ -1,12 +1,18 @@
 package com.github.seqware.queryengine.system.importers.workers;
 
+import com.github.seqware.queryengine.dto.QESupporting.FSGIDPB;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.impl.protobufIO.FSGIDIO;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.model.TagSet;
+import com.github.seqware.queryengine.system.importers.FeatureImporter;
+import com.github.seqware.queryengine.system.importers.SOFeatureImporter;
+import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.SGID;
+import com.google.protobuf.TextFormat;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.log4j.Logger;
@@ -36,13 +43,24 @@ import org.apache.log4j.Logger;
  *
  */
 public class VCFVariantImportWorker extends ImportWorker {
+    public static final String SECONDARY_INDEX = "sIndex.out";
     private CreateUpdateManager modelManager;
     private List<TagSet> potentialTagSets = new ArrayList<TagSet>();
     private TagSet adHocSet;
     private Map<String, Tag> localCache = new HashMap<String, Tag>();
     
+    private PrintWriter out = null;
+    
 
     public VCFVariantImportWorker() {
+        if (SOFeatureImporter.SECONDARY_INDEX_HACK){
+            try {
+                out = new PrintWriter(new BufferedWriter(new FileWriter(SECONDARY_INDEX, true)));
+            } catch (IOException ex) {
+               Logger.getLogger(VCFVariantImportWorker.class.getName()).fatal(null, ex);
+               System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
+            }
+        }
     }
     
     /**
@@ -340,9 +358,21 @@ public class VCFVariantImportWorker extends ImportWorker {
                         for (Tag tag : tagSet) {
                             build.associateTag(tag);
                         }
+                        
                         //store.putMismatch(m);
                         // this is new, add it to a featureSet
                         fSet.add(build);
+                        
+                        // hack to spit out secondary index
+                        if (SOFeatureImporter.SECONDARY_INDEX_HACK){
+                            if (build.getTagByKey(keyIndex) != null){
+                               FSGID fsgid = (FSGID) build.getSGID();
+                               FSGIDPB m2pb = FSGIDIO.m2pb(fsgid);
+                               String message = TextFormat.printToString(m2pb);
+                               out.print(message);
+                               out.println("!");
+                            }
+                        }
 
                         if (count % this.getBatch_size() == 0) {
                             System.out.println(new Date().toString() + workerName + " adding mismatch to db: "+build.getSeqid()+":"+build.getStart()+"-"+build.getStop()+" total records added: "+build.getSeqid()+" total lines so far: "+count);
@@ -360,6 +390,9 @@ public class VCFVariantImportWorker extends ImportWorker {
                 }
             }
 
+            if (SOFeatureImporter.SECONDARY_INDEX_HACK){
+                out.close();
+            }
             // close file
             inputStream.close();
         } catch (Exception e) {

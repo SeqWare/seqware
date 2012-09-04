@@ -38,6 +38,7 @@ public class ImportWorker extends Thread {
     protected List<SGID> tagSetIDs = null;
     protected SGID adhoctagset = null;
     protected int batch_size = SOFeatureImporter.BATCH_SIZE;
+    protected String keyIndex = null;
 
     public ImportWorker() {
     }
@@ -202,6 +203,14 @@ public class ImportWorker extends Thread {
 
     public void setBatch_size(int batch_size) {
         this.batch_size = batch_size;
+    }
+
+    public String getKeyIndex() {
+        return keyIndex;
+    }
+
+    public void setKeyIndex(String keyIndex) {
+        this.keyIndex = keyIndex;
     }
 
     

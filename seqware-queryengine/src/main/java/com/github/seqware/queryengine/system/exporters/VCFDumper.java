@@ -17,12 +17,20 @@
 package com.github.seqware.queryengine.system.exporters;
 
 import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.impl.MRHBaseModelManager;
+import com.github.seqware.queryengine.impl.MRHBasePersistentBackEnd;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
+import com.github.seqware.queryengine.model.QueryFuture;
+import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.plugins.hbasemr.MRVCFDumperPlugin;
 import com.github.seqware.queryengine.system.Utility;
 import com.github.seqware.queryengine.system.importers.workers.ImportConstants;
 import com.github.seqware.queryengine.util.SGID;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -37,6 +45,11 @@ import org.apache.log4j.Logger;
 public class VCFDumper {
 
     private String[] args;
+    /**
+     * This does not work quite right, I need to copy from hdfs and parse the
+     * output a little Performance (speed) should be correct though.
+     */
+    public static final boolean EXPERIMENTAL_MAP_REDUCE_EXPORT = false;
 
     public static void main(String[] args) {
         VCFDumper dumper = new VCFDumper(args);
@@ -72,32 +85,37 @@ public class VCFDumper {
             }
             outputStream.append("#CHROM	POS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\n");
             boolean caughtNonVCF = false;
-            for (Feature feature : fSet) {
-                outputStream.append(feature.getSeqid() + "\t" + (feature.getStart() + 1) + "\t");
-                if (feature.getTagByKey(ImportConstants.VCF_SECOND_ID) == null) {
-                    outputStream.append(".\t");
-                } else {
-                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_SECOND_ID).getValue().toString() + "\t");
-                }
-                try {
-                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_REFERENCE_BASE).getValue().toString() + "\t");
-                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_CALLED_BASE).getValue().toString() + "\t");
-                    outputStream.append((feature.getScore() == null ? "." : feature.getScore()) + "\t");
-                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_FILTER).getValue().toString() + "\t");
-                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_INFO).getValue().toString());
-                } catch (NullPointerException npe) {
-                    if (!caughtNonVCF) {
-                        Logger.getLogger(VCFDumper.class.getName()).info( "VCF exporting non-VCF feature");
 
+            if (SWQEFactory.getBackEnd() instanceof MRHBasePersistentBackEnd && EXPERIMENTAL_MAP_REDUCE_EXPORT) {
+                // hack to use VCF MR
+                if (SWQEFactory.getModelManager() instanceof MRHBaseModelManager) {
+                    // pretend that the included com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesByAttributesPlugin is an external plug-in
+                    Class<? extends AnalysisPluginInterface> arbitraryPlugin;
+                    arbitraryPlugin = MRVCFDumperPlugin.class;
+
+                    // get a FeatureSet from the back-end
+                    QueryFuture<File> future = SWQEFactory.getQueryInterface().getFeaturesByPlugin(0, arbitraryPlugin, fSet);
+                    // check that Features are present match
+                    File get = future.get();
+                    BufferedReader in = new BufferedReader(new FileReader(get));
+                    while (in.ready()) {
+                        outputStream.write(in.readLine());
+                        outputStream.newLine();
                     }
-                    // this may occur when exporting Features that were not originally VCF files
-                    caughtNonVCF = true;
+                } // TODO: clearly this should be expanded to include closing database etc 
+            } else {
+                for (Feature feature : fSet) {
+                    StringBuffer buffer = new StringBuffer();
+                    boolean caught = outputFeatureInVCF(buffer, feature);
+                    if (caught) {
+                        caughtNonVCF = true;
+                    }
+                    outputStream.append(buffer);
+                    outputStream.newLine();
                 }
-                outputStream.newLine();
             }
-        } // TODO: clearly this should be expanded to include closing database etc 
-        catch (Exception e) {
-            Logger.getLogger(VCFDumper.class.getName()).fatal( "Exception thrown exporting to file:", e);
+        } catch (Exception e) {
+            Logger.getLogger(VCFDumper.class.getName()).fatal("Exception thrown exporting to file:", e);
             System.exit(-1);
         } finally {
             try {
@@ -105,14 +123,37 @@ public class VCFDumper {
                 outputStream.close();
                 SWQEFactory.getStorage().closeStorage();
             } catch (IOException ex) {
-                Logger.getLogger(VCFDumper.class.getName()).fatal( "Exception thrown flushing to file:", ex);
+                Logger.getLogger(VCFDumper.class.getName()).fatal("Exception thrown flushing to file:", ex);
             }
         }
     }
 
-
-
     public VCFDumper(String[] args) {
         this.args = args;
+    }
+
+    public static boolean outputFeatureInVCF(StringBuffer buffer, Feature feature) {
+        boolean caughtNonVCF = false;
+        buffer.append(feature.getSeqid()).append("\t").append(feature.getStart() + 1).append("\t");
+        if (feature.getTagByKey(ImportConstants.VCF_SECOND_ID) == null) {
+            buffer.append(".\t");
+        } else {
+            buffer.append(feature.getTagByKey(ImportConstants.VCF_SECOND_ID).getValue().toString()).append("\t");
+        }
+        try {
+            buffer.append(feature.getTagByKey(ImportConstants.VCF_REFERENCE_BASE).getValue().toString()).append("\t");
+            buffer.append(feature.getTagByKey(ImportConstants.VCF_CALLED_BASE).getValue().toString()).append("\t");
+            buffer.append(feature.getScore() == null ? "." : feature.getScore()).append("\t");
+            buffer.append(feature.getTagByKey(ImportConstants.VCF_FILTER).getValue().toString()).append("\t");
+            buffer.append(feature.getTagByKey(ImportConstants.VCF_INFO).getValue().toString());
+        } catch (NullPointerException npe) {
+            if (!caughtNonVCF) {
+                Logger.getLogger(VCFDumper.class.getName()).info("VCF exporting non-VCF feature");
+
+            }
+            // this may occur when exporting Features that were not originally VCF files
+            caughtNonVCF = true;
+        }
+        return caughtNonVCF;
     }
 }
