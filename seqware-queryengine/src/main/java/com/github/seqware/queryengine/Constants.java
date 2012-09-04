@@ -51,11 +51,23 @@ public class Constants {
      * persist objects permanently and/or wipe out existing ones
      */
     public final static boolean PERSIST = true;
+
     /**
      * Use the properties defined for HBase to connect to a remote HBase
-     * instance
+     * instance.
+     *
+     * Important: for local development, set the variable to false.
      */
     public final static boolean HBASE_REMOTE_TESTING = true;
+
+    /**
+     * Configuration for using HBase on a local machine.
+     */
+    private final static Map<String, String> LOCAL = Maps.newHashMap(ImmutableMap.<String, String>builder().build());
+
+    /**
+     * Configuration for using HBase on the Seqware development cluster.
+     */
     private final static Map<String, String> SQWDEV = Maps.newHashMap(
             ImmutableMap.<String, String>builder().
             put("hbase.zookeeper.quorum", "sqwdev.res.oicr.on.ca").
@@ -64,6 +76,10 @@ public class Constants {
             put("mapred.job.tracker", "sqwdev.res.oicr.on.ca:8021").
             put("fs.default.name", "hdfs://sqwdev.res.oicr.on.ca:8020").
             build());
+
+    /**
+     * Configuration for using HBase on OICR's HBase cluster.
+     */
     private final static Map<String, String> HBOOT = Maps.newHashMap(
             ImmutableMap.<String, String>builder().
             put("hbase.zookeeper.quorum", "hboot.res.oicr.on.ca").
@@ -73,7 +89,11 @@ public class Constants {
             put("fs.default.name", "hdfs://hboot.res.oicr.on.ca:8020").
             build());
     /**
-     * Properties used when connecting to a remote instance of HBase
+     * Properties used when connecting to a remote instance of HBase.
+     *
+     * Use SQWDEV to configure HBase to use the Seqware development cluster,
+     * use HBOOT to configure HBase to use OICR's HBase cluster,
+     * use LOCAL to configure HBase for use on a local machine.
      */
     public final static Map<String, String> HBASE_PROPERTIES = HBOOT;
     
