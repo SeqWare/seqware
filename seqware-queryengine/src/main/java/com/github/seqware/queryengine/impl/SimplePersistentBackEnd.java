@@ -16,6 +16,7 @@
  */
 package com.github.seqware.queryengine.impl;
 
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
@@ -180,7 +181,13 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     @Override
     public QueryFuture getFeaturesByAttributes(int hours, FeatureSet set, RPNStack constraints) {
         AnalysisPluginInterface plugin = new LazyFeaturesByAttributesPlugin();
-        plugin.init(set, constraints);
+        List<TagSet> tagSets = new LinkedList<TagSet>();
+        // If there are hierarchical occurrences to be checked, retrieve the tag set now, so that paths in
+        // trees can be resolved later on.
+        for (RPNStack.Parameter parameter : constraints.getParameters())
+            if (parameter instanceof RPNStack.TagHierarchicalOccurrence)
+                tagSets.add(SWQEFactory.getQueryInterface().getLatestAtomByRowKey(((RPNStack.TagHierarchicalOccurrence) parameter).getTagSetRowKey(), TagSet.class));
+        plugin.init(set, constraints, tagSets);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
