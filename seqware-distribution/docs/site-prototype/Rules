@@ -1,0 +1,133 @@
+#!/usr/bin/env ruby
+
+### Configuration ############################################################
+
+UseFastAleck = false
+
+### Loading ##################################################################
+
+if UseFastAleck
+  begin
+    require 'fast-aleck'
+    require 'fast-aleck/nanoc'
+  rescue LoadError
+    $stderr.puts "Cannot load fast-aleck. Either install it and add it to the Gemfile, " +
+      "or disable UseFastAleck in the Rules file."
+    exit 1
+  end
+  TypographicalImprovementFilter = :fast_aleck
+  TypographicalImprovementFilterParams = {
+    :wrap_quotes => true,
+    :wrap_amps   => true,
+    :wrap_caps   => true,
+    :widont      => true
+  }
+else
+  TypographicalImprovementFilter = :rubypants
+  TypographicalImprovementFilterParams = {}
+end
+
+require 'compass'
+
+Compass.add_project_configuration('compass_config.rb')
+
+### Preprocessing ############################################################
+
+preprocess do
+  config[:nanoc_version_info] = `nanoc --version`.strip
+  config[:gem_version_info]   = `gem --version`.strip
+end
+
+### Routing ##################################################################
+
+route '/static/*' do
+  # /static/foo.html/ → /foo.html
+  item.identifier[7..-2]
+end
+
+route '/404/' do
+  '/error-404.php'
+end
+
+route '/assets/style/_*/' do
+  # Don't output partials, so return nil
+  nil
+end
+
+route '/assets/style/*/' do
+  # path with version
+  '/assets/style' + '-v' + rep.item[:version].to_s + '.css'
+end
+
+route '/blog/feed_private/' do
+  rep.item.identifier + 'index.xml'
+end
+
+route '*' do
+  if item.binary?
+    item.identifier.chop + '.' + item[:extension]
+  elsif item[:is_partial] || item[:kind] == 'article'
+    # Don’t output partial items (e.g. sub-stylesheets)
+    nil
+  else
+    # Place each file in its own directory
+    rep.item.identifier + 'index.html'
+  end
+end
+
+### Compilation ##############################################################
+
+compile '/assets/style/_*/' do
+  # Don’t compile partials
+end
+
+compile '/assets/style/*/' do
+  filter :sass, Compass.sass_engine_options
+  filter :relativize_paths, :type => :css
+  filter :rainpress
+end
+
+compile '/static/*' do
+end
+
+compile '/blog/feed_private/' do
+  filter :erb
+end
+
+compile '/404/' do
+  filter :erb
+  layout '/default/'
+  filter TypographicalImprovementFilter, TypographicalImprovementFilterParams
+end
+
+compile '/' do
+  filter :erb
+  layout '/default/'
+  filter :relativize_paths, :type => :html
+  filter TypographicalImprovementFilter, TypographicalImprovementFilterParams
+end
+
+compile '*' do
+  filter :erb if item[:is_dynamic]
+
+  case item[:markdown]
+  when 'advanced'
+    filter :kramdown, :auto_ids => false
+  when 'basic'
+    filter :rdiscount
+  end
+  filter :remove_spacing_around_pre
+
+  snapshot :before_sections
+  filter :add_sections
+  layout '/default/'
+  filter :colorize_syntax, :is_fullpage => true
+  filter :relativize_paths, :type => :html unless item[:is_partial] || item[:kind] == 'article'
+  filter TypographicalImprovementFilter, TypographicalImprovementFilterParams
+end
+
+### Layouting ################################################################
+
+layout '/default/', :haml, :format => :html5, :ugly => true
+
+layout '*', :erb

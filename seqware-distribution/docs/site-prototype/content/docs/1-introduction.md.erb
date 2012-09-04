@@ -1,0 +1,83 @@
+---
+
+title:                 "Introduction to SeqWare"
+markdown:              basic
+is_dynamic:            true
+toc_includes_sections: true
+
+---
+
+What is SeqWare?
+--------------
+
+SeqWare is an open-source bioinformatics workflow deployment and management system. Its core features include:
+
+* A centralized metadata database that tracks samples, annotations and analyses, and a web application to visualize it
+* A module specification and execution engine that lets you package computational tools and use them to build and run complex analytical workflows
+* Support for running workflows irrespective of the underlying cluster environment
+* An advanced query engine that allows you to store and search variants, coverage, and annotations produced in your workflows using either a simple or distributed database backend
+
+Why use SeqWare?
+--------------
+
+You would want to use SeqWare in order to build workflows and processes that automate large volumes of NGS analysis, that track analytical events in a database (provenance), and that link analysis to wet lab entities like samples and studies. You would especially want to use SeqWare if you needed to do the above on both a local and cloud-based environments or if you have a lot of different types of clusters to submit jobs to.
+
+Why not use SeqWare?
+--------------
+
+You would not want to use SeqWare if you have a small number of NGS samples to analyze, if you need to interactively explore tools and settings for your project, or you want pre-built workflows that will analyze data "out-of-the-box".  If this is you, we would instead recommend you look for commercial solutions such as Nimbus Informatics or DNAnexus for pre-built workflows ready to run on the cloud or Galaxy for interactive analysis either locally or on the cloud. Rememeber, SeqWare is an infrastructure toolkit not an analysis pipeline for particular NGS experimental designs.
+
+Who uses SeqWare?
+--------------
+
+The type of users targeted by the SeqWare project are ones that have massive amounts of NGS data to analyze (TB to PB), have specific/custom analytical workflows in mind, that their workflows are typically more complex than the generic workflows offered by other projects, want to automate and track analysis of their data, and need to be able to run on a local cluster or the cloud. 
+
+How to use SeqWare?
+--------------
+
+There are currently 3 different ways to work with SeqWare:
+
+* a local VM (that may or may not be connected to a local cluster)
+* a VM on Amazon's cloud
+* or a hosted SeqWare instance or cluster provided by Nimbus Informatics, our commercial partner
+
+Similar Projects
+----------------
+
+<%
+
+similar_projects = [
+  { :name => 'Galaxy',          :lang => 'XML', :url => 'http://galaxy.psu.edu/' },
+  { :name => 'Taverna',       :lang => 'XML', :url => 'http://www.taverna.org.uk/' },
+  { :name => 'Ergatis',       :lang => 'XML', :url => 'http://ergatis.sourceforge.net/' },
+  { :name => 'Pegasus',       :lang => 'XML', :url => 'http://pegasus.isi.edu/' },
+  { :name => 'DNAnexus',       :lang => 'private', :url => 'http://dnanexus.com/' },
+  { :name => 'Samsung SDS Bioinformatics Service',       :lang => 'private', :url => 'http://www.samsunggenome.com/' },
+  { :name => 'BaseSpace by Illumina',       :lang => 'private', :url => 'http://basespace.illumina.com/' },
+]
+
+def join_with_and(arr)
+  if arr.size > 1
+    arr[0..-2].join(', ') + ' and ' + arr[-1]
+  else
+    arr.join
+  end
+end
+
+%>
+
+There are several workflow engines which can be used for NGS data analysis: <%=
+join_with_and(similar_projects.select { |p| p[:lang] == 'XML' }.sort_by { |p|
+p[:name].downcase }.map { |p| %[<a href="#{p[:url]}">#{p[:name]}</a>] }) %>.
+Each has their own strengths and weaknesses depending on how easy they are to
+work with vs. how much data they can process.  Some of these provide ready-made
+workflows for analyzing NGS data while others require you to build your own.
+There are also commercial solutions available on the cloud that typically
+provide a one-size-fits all model in which they have a collection of
+standardized workflows that a user can choose from. Examples include <%=
+join_with_and(similar_projects.select { |p| p[:lang] == 'private' }.sort_by {
+|p| p[:name].downcase }.map { |p| %[<a href="#{p[:url]}">#{p[:name]}</a>] })
+%>. These commercial services attempt to accomplish similar things to a SeqWare
+install but they offer the analysis itself as a service whereas SeqWare allows
+you to create local or cloud-based infrastructure similar to these commercial
+offerings.

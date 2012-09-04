@@ -18,6 +18,8 @@ package com.github.seqware.queryengine.impl;
 
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.kernel.RPNStack;
+import com.github.seqware.queryengine.kernel.RPNStack.Parameter;
+import com.github.seqware.queryengine.kernel.RPNStack.TagHierarchicalOccurrence;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
 import com.github.seqware.queryengine.model.TagSet;
@@ -51,8 +53,11 @@ public class MRHBasePersistentBackEnd extends HBasePersistentBackEnd {
     public QueryFuture getFeaturesByAttributes(int hours, FeatureSet set, RPNStack constraints) {
         AnalysisPluginInterface plugin = new MRFeaturesByAttributesPlugin();
         List<TagSet> tagSets = new LinkedList<TagSet>();
-        // TODO
-        tagSets.add(SWQEFactory.getQueryInterface().getLatestAtomByRowKey("SO", TagSet.class));
+        // If there are hierarchical occurrences to be checked, retrieve the tag set now, so that paths in
+        // trees can be resolved later on.
+        for (Parameter parameter : constraints.getParameters())
+            if (parameter instanceof TagHierarchicalOccurrence)
+                tagSets.add(SWQEFactory.getQueryInterface().getLatestAtomByRowKey(((TagHierarchicalOccurrence) parameter).getTagSetRowKey(), TagSet.class));
         plugin.init(set, constraints, tagSets);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
