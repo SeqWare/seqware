@@ -2,6 +2,7 @@ package com.github.seqware.queryengine.model;
 
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.List;
@@ -210,7 +211,7 @@ public interface QueryInterface {
      * @param parameters parameters to use when initializing the plug-in
      * @return null if there is an error, QueryFuture if the plug-in is successfully run 
      */
-    public QueryFuture<FeatureSet> getFeaturesByPlugin(int hours, Class<? extends AnalysisPluginInterface> pluginClass,  FeatureSet set, Object ... parameters);
+    public <ReturnValue> QueryFuture<ReturnValue> getFeaturesByPlugin(int hours, Class<? extends AnalysisPluginInterface> pluginClass,  FeatureSet set, Object ... parameters);
 
     /**
      * Filter features by a range of attributes.

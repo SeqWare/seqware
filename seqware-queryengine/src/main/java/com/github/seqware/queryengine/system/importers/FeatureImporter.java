@@ -48,7 +48,9 @@ public class FeatureImporter extends Importer {
      * @param batch_size
      * @return SGID if successful, null if not
      */
-    protected static SGID performImport(SGID referenceID, int threadCount, List<String> inputFiles, String workerModule, boolean compressed, File outputFile, List<SGID> tagSetSGIDs, SGID adhocTagSetID, int batch_size, SGID existingfeatureSet) {
+    protected static SGID performImport(SGID referenceID, int threadCount, List<String> inputFiles, String workerModule, boolean compressed, 
+            File outputFile, List<SGID> tagSetSGIDs, SGID adhocTagSetID, int batch_size, SGID existingfeatureSet,
+            String secondaryIndex) {
 
         // objects to access the mutation datastore
         //      BerkeleyDBFactory factory = new BerkeleyDBFactory();
@@ -120,6 +122,7 @@ public class FeatureImporter extends Importer {
                     workerArray[index].setAdhoctagset(adHocSet.getSGID());
                     workerArray[index].setTagSetIDs(tagSetSGIDs);
                     workerArray[index].setBatch_size(batch_size);
+                    workerArray[index].setKeyIndex(secondaryIndex);
                     
                     // FIXME: most of the rest aren't used, I should consider cleaning this up
                     workerArray[index].setCompressed(compressed);
@@ -131,6 +134,7 @@ public class FeatureImporter extends Importer {
                     workerArray[index].setIncludeIndels(false);
                     workerArray[index].setIncludeCoverage(false);
                     workerArray[index].setBinSize(0);
+                    
 
                     // set up exception handling
                     workerArray[index].setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
@@ -250,7 +254,7 @@ public class FeatureImporter extends Importer {
             }
         }
         
-        return performImport(referenceSGID, threadCount, inputFiles, workerModule, compressed, outputFile, null, null, SOFeatureImporter.BATCH_SIZE, null);
+        return performImport(referenceSGID, threadCount, inputFiles, workerModule, compressed, outputFile, null, null, SOFeatureImporter.BATCH_SIZE, null, null);
     }
 
     

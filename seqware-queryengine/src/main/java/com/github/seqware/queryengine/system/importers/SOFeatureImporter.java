@@ -18,6 +18,8 @@ import org.apache.commons.cli.*;
  * @author dyuen
  */
 public class SOFeatureImporter extends Importer {
+    
+    public static final boolean SECONDARY_INDEX_HACK = false;
 
     public static final char ADHOC_TAGSETS_PARAM = 'a';
     public static final char COMPRESSED_PARAM = 'c';
@@ -30,6 +32,7 @@ public class SOFeatureImporter extends Importer {
     public static final char WORKER_CHAR_PARAM = 'w';
     public static final char BATCH_SIZE_PARAM = 'b';
     public static final char FEATURE_SET_PARAM = 'f';
+    public static final char SECONDARY_INDEX_PARAM = 'x';
     
     public static final int BATCH_SIZE = 100000;
 
@@ -74,6 +77,10 @@ public class SOFeatureImporter extends Importer {
         options.addOption(option9);
         Option option10 = OptionBuilder.withArgName("featureSet").withDescription("(optional) for benchmarking for now, append features to an existing featureset").hasArgs(1).create(FEATURE_SET_PARAM);
         options.addOption(option10);
+        if (SOFeatureImporter.SECONDARY_INDEX_HACK){
+            Option option11 = OptionBuilder.withArgName("secondaryIndex").withDescription("(optional) spit out a secondary index to STDOUT").hasArgs(1).create(SECONDARY_INDEX_PARAM);
+            options.addOption(option11);
+        }
 
         try {
             CommandLineParser parser = new PosixParser();
@@ -111,7 +118,12 @@ public class SOFeatureImporter extends Importer {
             // process ad hoc tag set
             SGID adhocSGID = cmd.hasOption(ADHOC_TAGSETS_PARAM) ? Utility.parseSGID(cmd.getOptionValue(ADHOC_TAGSETS_PARAM)) : null;
 
-            SGID mainMethod = FeatureImporter.performImport(referenceSGID, threads, inputFiles, worker, compressed, outputFile, tagSetSGIDs, adhocSGID, batch_size, featureSetID);
+            String secondaryIndex = null;
+            if (SOFeatureImporter.SECONDARY_INDEX_HACK){
+                secondaryIndex = cmd.getOptionValue(SECONDARY_INDEX_PARAM);
+            }
+            
+            SGID mainMethod = FeatureImporter.performImport(referenceSGID, threads, inputFiles, worker, compressed, outputFile, tagSetSGIDs, adhocSGID, batch_size, featureSetID, secondaryIndex);
             if (mainMethod == null) {
                 return null;
             }

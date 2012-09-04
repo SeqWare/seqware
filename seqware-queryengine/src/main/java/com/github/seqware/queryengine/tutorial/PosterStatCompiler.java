@@ -38,6 +38,15 @@ import org.apache.log4j.Logger;
  * @author dyuen
  */
 public class PosterStatCompiler {
+    public static final String START_PMC_QUERYDATELONG = "start-PMC_query-date-long";
+    public static final String START_PMCSI_QUERYDATELONG = "start-PMCSI_query-date-long";
+    public static final String START_QUAL_QUERYDATELONG = "start-QUAL_query-date-long";
+    public static final String START_ALL_QUERYDATELONG = "start-ALL_query-date-long";
+    public static final String STARTDUMP_QUERYDATELONG = "start-dump_query-date-long";
+    public static final String STARTCOUNTDATELONG = "start-count-date-long";
+    public static final String END_PMC_QUERYDATELONG = "end-PMC_query-date-long";
+    public static final String END_QUAL_QUERYDATELONG = "end-QUAL_query-date-long";
+    public static final String END_ALL_QUERYDATELONG = "end-ALL_query-date-long";
     
     public static void main(String[] args){
         try {
@@ -64,10 +73,30 @@ public class PosterStatCompiler {
                 }   
             }
             
+            // print overall stat in case counts fail
+            long overallTime = Long.valueOf(countedMaps.get(0).get("end-date-long")) - Long.valueOf(countedMaps.get(0).get("start-date-long"));
+            System.out.println(overallTime/1000);
+            System.exit(0);
+            
             // process and create statistics
              PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
-             out.println("Batch Count\tFeatures\tFeature Space Used\tCumulative Loading Time(seconds)\tQuery Time for Count(seconds)");
-             
+             out.print("Batch Count\tFeatures\tFeature Space Used\tCumulative Loading Time(seconds)\tQuery Time for Count(seconds)");
+             if (countedMaps.get(0).containsKey(START_PMC_QUERYDATELONG)){
+                 out.print("\tPMC Query Time (seconds)\tPMC Features Copied\tPMC count time (seconds)");
+             }
+             if (countedMaps.get(0).containsKey(START_PMCSI_QUERYDATELONG)){
+                 out.print("\tPMCSI Query Time (seconds)\tPMCSI Features Copied");
+             }
+             if (countedMaps.get(0).containsKey(START_QUAL_QUERYDATELONG)){
+                 out.print("\tQUAL Query Time (seconds)\tQUAL Features Copied\tQUAL count time (seconds)");
+             }
+             if (countedMaps.get(0).containsKey(START_ALL_QUERYDATELONG)){
+                 out.print("\tALL-copy Query Time (seconds)\tALL-copy Features Copied\tALL-copy count time (seconds)");
+             }
+             if (countedMaps.get(0).containsKey(STARTDUMP_QUERYDATELONG)){
+                 out.print("\tVCFDump Query Time (seconds)");
+             }
+             out.println();
              // prime pump
              int startSpace;
              if (!baseKeys.containsKey("start-feature-space-in-GB")){
@@ -82,10 +111,43 @@ public class PosterStatCompiler {
                  int count = e.getKey();
                  String featureCount = e.getValue().get("features-loaded");
                  float featureSpaceUsed = Integer.valueOf(e.getValue().get("feature-space-in-GB")) - startSpace;
-                 long batchLoadingTime = Long.valueOf(e.getValue().get("start-count-date-long")) - Long.valueOf(e.getValue().get("start-date-long"));
+                 long batchLoadingTime = Long.valueOf(e.getValue().get(STARTCOUNTDATELONG)) - Long.valueOf(e.getValue().get("start-date-long"));
                  cumulativeLoadingTime += batchLoadingTime;
-                 long queryTime = Long.valueOf(e.getValue().get("end-count-date-long")) - Long.valueOf(e.getValue().get("start-count-date-long"));
-                 out.println(count+"\t"+featureCount+"\t"+featureSpaceUsed+"\t"+cumulativeLoadingTime/1000+"\t"+queryTime/1000);
+                 long queryTime = Long.valueOf(e.getValue().get("end-count-date-long")) - Long.valueOf(e.getValue().get(STARTCOUNTDATELONG));
+                 out.print(count+"\t"+featureCount+"\t"+featureSpaceUsed+"\t"+cumulativeLoadingTime/1000+"\t"+queryTime/1000);
+                 // if PMC is available
+                 if (e.getValue().containsKey(START_PMC_QUERYDATELONG)){
+                     long qTime = Long.valueOf(e.getValue().get(END_PMC_QUERYDATELONG)) - Long.valueOf(e.getValue().get(START_PMC_QUERYDATELONG));
+                     long features = Long.valueOf(e.getValue().get("features-PMC_query-written"));
+                     long countTime = Long.valueOf(e.getValue().get("end-PMC_query-count-date-long")) - Long.valueOf(e.getValue().get(END_PMC_QUERYDATELONG));
+                     out.print("\t" + qTime/1000 + "\t" + features + "\t" + countTime/1000);
+                 } 
+                 // if PMCSI is available
+                 if (e.getValue().containsKey(START_PMCSI_QUERYDATELONG)){
+                     long qTime = Long.valueOf(e.getValue().get("end-PMCSI_query-date-long")) - Long.valueOf(e.getValue().get(START_PMCSI_QUERYDATELONG));
+                     long features = Long.valueOf(e.getValue().get("features-PMCSI_query-written"));
+                     out.print("\t" + qTime/1000 + "\t" + features);
+                 } 
+                 // if QUAL is available
+                 if (e.getValue().containsKey(START_QUAL_QUERYDATELONG)){
+                     long qTime = Long.valueOf(e.getValue().get(END_QUAL_QUERYDATELONG)) - Long.valueOf(e.getValue().get(START_QUAL_QUERYDATELONG));
+                     long features = Long.valueOf(e.getValue().get("features-QUAL_query-written"));
+                     long countTime = Long.valueOf(e.getValue().get("end-QUAL_query-count-date-long")) - Long.valueOf(e.getValue().get(END_QUAL_QUERYDATELONG));
+                     out.print("\t" + qTime/1000 + "\t" + features + "\t" + countTime/1000);
+                 } 
+                 // if COPY_ALL is available
+                 if (e.getValue().containsKey(START_ALL_QUERYDATELONG)){
+                     long qTime = Long.valueOf(e.getValue().get(END_ALL_QUERYDATELONG)) - Long.valueOf(e.getValue().get(START_ALL_QUERYDATELONG));
+                     long features = Long.valueOf(e.getValue().get("features-ALL_query-written"));
+                     long countTime = Long.valueOf(e.getValue().get("end-QUAL_query-count-date-long")) - Long.valueOf(e.getValue().get(END_ALL_QUERYDATELONG));
+                     out.print("\t" + qTime/1000 + "\t" + features + "\t" + countTime/1000);
+                 } 
+                 // if DUMP is available
+                 if (e.getValue().containsKey(STARTDUMP_QUERYDATELONG)){
+                     long qTime = Long.valueOf(e.getValue().get("end-dump_query-count-date-long")) - Long.valueOf(e.getValue().get(STARTDUMP_QUERYDATELONG));
+                     out.print("\t" + qTime/1000);
+                 }
+                 out.println();
              }
              out.close();
         } catch (FileNotFoundException ex) {

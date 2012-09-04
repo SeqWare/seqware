@@ -127,6 +127,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     @Override
     public <T extends Atom> T getLatestAtomBySGID(SGID sgid, Class<T> t) {
         T p = storage.deserializeTargetToLatestAtom(sgid, t);
+        p = (T) locateWithinFeatureList(p, sgid);
         assert (p == null || p.getSGID().getRowKey().equals(sgid.getRowKey()) || p.getSGID().getFriendlyRowKey().equals(sgid.getFriendlyRowKey()));
         return p;
     }
@@ -284,7 +285,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     }
 
     @Override
-    public QueryFuture<FeatureSet> getFeaturesByPlugin(int hours, Class<? extends AnalysisPluginInterface> pluginClass, FeatureSet set, Object... parameters) {
+    public <ReturnValue> QueryFuture<ReturnValue> getFeaturesByPlugin(int hours, Class<? extends AnalysisPluginInterface> pluginClass, FeatureSet set, Object... parameters) {
         try {
             AnalysisPluginInterface plugin = pluginClass.newInstance();
             plugin.init(set, parameters);
