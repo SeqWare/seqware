@@ -107,6 +107,12 @@ public class RPNStack implements Serializable {
 
         public TagHierarchicalOccurrence(String name, String tagSetRowKey) {
             super(name);
+
+            this.tagSetRowKey = tagSetRowKey;
+        }
+
+        public String getTagSetRowKey() {
+            return this.tagSetRowKey;
         }
     }
 

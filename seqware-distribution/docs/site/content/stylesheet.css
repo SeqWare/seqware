@@ -1,0 +1,197 @@
+* {
+  margin: 0;
+  padding: 0;
+
+  font-family: Georgia, Palatino, Times, 'Times New Roman', sans-serif;
+}
+
+body {
+  color: #1F2120;
+  background: #fff;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:link,
+a:visited {
+  color: #00519D;
+}
+
+a:hover {
+  color: #003366;
+}
+
+#main {
+  position: absolute;
+
+  top: 40px;
+  left: 280px;
+  right: 60px;
+  /*width: 700px;*/
+}
+
+#main h1 {
+  font-size: 18px;
+  font-weight: normal;
+  color: #003366;
+
+}
+
+#main h2 {
+  font-size: 16px;
+  font-weight: normal;
+  color: #003366;
+  line-height: 40px;
+  margin-top:10px;
+  margin-bottom:-15px;
+}
+
+
+#main h3 {
+  font-size: 14px;
+  font-weight: strong;
+  color: #003366;
+  margin-top:10px;
+}
+
+#main p {
+  margin: 10px 0;
+  
+}
+
+#main ul, #main ol {
+  margin: 20px;
+}
+
+#main li {
+  /*font-size: 15px;
+  
+  line-height: 20px;*/
+}
+
+#main ul li {
+  list-style-type: square;
+}
+
+#main table {
+  margin-top:50px;
+  margin-bottom:50px;
+  border: 0;
+  margin-left:auto; 
+  margin-right:auto;
+  text-align:center;
+  font-size: 13px;
+
+}
+
+#main table th {
+  text-transform: uppercase;
+  color: #003366;
+}
+
+#homepic {
+  
+  margin:20px;
+
+}
+
+
+#sidebar {
+  position: absolute;
+
+  top: 40px;
+  left: 20px;
+  width: 200px;
+
+  padding: 20px 20px 0 0;
+
+  border-right: 1px solid #687331;
+
+  text-align: right;
+}
+
+#sidebar h2 {
+  text-transform: uppercase;
+
+  font-size: 13px;
+
+  color: #333;
+
+  letter-spacing: 1px;
+
+  line-height: 20px;
+
+ -moz-border-radius:  1em 0em 0em 4em;
+  border-radius:  1em 0em 0em 4em;
+  border:1px solid #687331;
+
+}
+
+#sidebar ul {
+  list-style-type: none;
+
+/*  margin: 20px 0;*/
+}
+
+#sidebar li {
+  font-size: 14px;
+  line-height: 24px;
+  background: #CEE3F6;
+  color: #C6C5C3;
+  -moz-border-radius:  1em 0em 0em 4em;
+  border-radius:  1em 0em 0em 4em;
+  margin:2px;
+}
+
+#sidebar li:hover {
+  background: #A5C6E5;
+}
+
+
+#sidebar li a {
+  color: #1F2120;
+}
+
+/*#sidebar li a:hover {
+  background: #656766;
+}*/
+
+span {
+  padding:5px;
+}
+
+blockquote {
+  padding: 0px 10px 0px 10px;
+  margin-left:20px;
+/*  position:relative;*/
+  background:#CEE3F6;
+  -moz-border-radius:  5px;
+  border-radius:  5px;
+}
+
+pre {
+  font-family: monospace;
+  font-size: 12px;
+  border: 1px solid gray;
+  padding: 10px;
+  background: #FAFAFA;
+
+
+  white-space: pre;           /* CSS 2.0 */
+  white-space: pre-wrap;      /* CSS 2.1 */
+  white-space: pre-line;      /* CSS 3.0 */
+  white-space: -pre-wrap;     /* Opera 4-6 */
+  white-space: -o-pre-wrap;   /* Opera 7 */
+  white-space: -moz-pre-wrap; /* Mozilla */
+  white-space: -hp-pre-wrap;  /* HP Printers */
+  word-wrap: break-word;      /* IE 5+ */ 
+}
+
+code {
+  font-family: monospace;
+  width: 100%;
+}
