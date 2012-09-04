@@ -1,0 +1,51 @@
+Install nanoc:
+
+For a basic version of nanoc just follow the directions on their site. This is
+what I had to do to get their very nice sample website to compile:
+
+sudo apt-get install ruby1.9.1
+sudo apt-get install ruby-rvm
+sudo apt-get install ruby-rdiscount
+sudo apt-get install ruby-nokogiri
+
+sudo gem install nanoc
+sudo gem install kramdown
+sudo gem install adsf
+sudo gem install mime-types
+sudo gem install fast-aleck # had to disable this in the code, didn't seem to work for me
+sudo gem install compass
+sudo gem install compass
+sudo gem install haml
+sudo gem install coderay
+sudo gem install rubypants
+sudo gem install builder
+sudo gem install rainpress
+
+Source code is here:
+seqware/seqware-distribution/docs/site
+
+Prototype code is here:
+seqware/seqware-distribution/docs/site-prototype
+
+Compile the site:
+nanoc compile
+
+View the site in http://localhost:3000 :
+nanoc view
+
+Dynamically compile and view the site at localhost:3000:
+nanoc autocompile
+
+Get the website pages:
+git clone -b gh-pages git@github.com:SeqWare/seqware.git gh-page
+
+Update the branch with the new pages:
+cp -R seqware/seqware-distribution/docs/site/output/* gh-pages/
+
+Modify the index.html so the logo points to /seqware/ and the css points to /seqware/style.css
+
+Push to github (both on the source and gh-pages):
+git pull
+git add *
+git commit -m "Changed things"
+git push
