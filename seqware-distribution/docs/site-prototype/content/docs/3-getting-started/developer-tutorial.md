@@ -43,7 +43,7 @@ back.
 
 Go into the bundle directory so you can look around:
 
- cd provisioned-bundles/Workflow_Bundle_HelloWorldWorkflow_1.0_SeqWare_0.12.5/Workflow_Bundle_helloworld/1.0/
+<pre> cd provisioned-bundles/Workflow_Bundle_HelloWorldWorkflow_1.0_SeqWare_0.12.5/Workflow_Bundle_helloworld/1.0/</pre>
 
 You
 should look at three files in particular.  The workflows/workflow.ftl and the
@@ -61,6 +61,7 @@ records the output file back to the metadatabase.
 Here is the example workflow XML:
 
 <pre>
+<code class="language-text">
 <?xml version="1.0" encoding="UTF-8"?>
 <adag xmlns="http://pegasus.isi.edu/schema/DAX" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pegasus.isi.edu/schema/DAX http://pegasus.isi.edu/schema/dax-3.2.xsd" version="3.2" count="1" index="0" name="HelloWorldWorkflow">
 <!--
@@ -208,6 +209,7 @@ This is a sample HelloWorld workflow. Use it as a template to build your own wor
   </child>
 <!-- End of Dependencies -->
 </adag>
+</code>
 </pre>
 
 The ini config file is the place where you define 1) what parameters the
@@ -235,7 +237,7 @@ The final file to look at is metadata.xml which is the place where workflows inc
 
 Look at: 
 
- /home/seqware/SeqWare/provisioned-bundles/Workflow_Bundle_HelloWorldWorkflow_1.0_SeqWare_0.12.5/Workflow_Bundle_helloworld/1.0/metadata.xml
+<pre> /home/seqware/SeqWare/provisioned-bundles/Workflow_Bundle_HelloWorldWorkflow_1.0_SeqWare_0.12.5/Workflow_Bundle_helloworld/1.0/metadata.xml</pre>
 
 <pre>
 <bundle version="1.0">
@@ -251,7 +253,7 @@ Look at:
 </bundle>
 </pre>
 
-This is only a brief introduction to the workflow bundle process.  Take a look at http://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_Write_a_Bundled_Workflow for extensive details on the workflow development process.  There is also information on this site on using Maven to create workflow bundles using the excellent archetype system.  And we also are prototyping a workflow language based on Java. These are experimental but could be very useful. Eventually that documentation will be migrated to this guide.
+This is only a brief introduction to the workflow bundle process.  Take a look at [How to Write a Workflow Bundle](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_Write_a_Bundled_Workflow) for extensive details on the workflow development process.  There is also information on this site on using Maven to create workflow bundles using the excellent archetype system.  And we also are prototyping a workflow language based on Java. These are experimental but could be very useful. Eventually that documentation will be migrated to this guide.
 
 ## Creating a New Worlflow Bundle
 
@@ -283,8 +285,7 @@ Now modify the metadata.xml, change the name of the workflow here:
 Next, change the name at the top of the workflow bundle:
 
 <pre>
-<?xml version="1.0" encoding="UTF-8"?>
-<adag xmlns="http://pegasus.isi.edu/schema/DAX" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pegasus.isi.edu/schema/DAX http://pegasus.isi.edu/schema/dax-3.2.xsd" version="3.2" count="1" index="0" name="MyHelloWorldWorkflow">
+xmlns="http://pegasus.isi.edu/schema/DAX" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pegasus.isi.edu/schema/DAX http://pegasus.isi.edu/schema/dax-3.2.xsd" version="3.2" count="1" index="0" name="MyHelloWorldWorkflow"
 ...
 </pre>
 
@@ -366,7 +367,7 @@ RUNNING: step 4 of 5 (80%)
 WORKFLOW COMPLETED SUCCESSFULLY!
 </pre>
 
-## Packaging and Installing the MyHelloWorld Workflow Bundle Locally
+## Packaging and Installing the MyHelloWorld Locally
 
 Assuming the workflow above worked fine the next step is to install it locally,
 this means it will be inserted into the MetaDB via the locally running web
@@ -441,6 +442,6 @@ Now that this is installed you can trigger it just like you have done in the [Us
 
 ## Next Steps
 
-The guide http://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_Write_a_Bundled_Workflow on the public SeqWare project wiki goes into very detailed information about workflow bundles, how to create them, the syntax they use, and other key information. In the near future this will be migrated to this site but the directions there should still be up to date.
+The guide [How to Write a Workflow Bundle](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_Write_a_Bundled_Workflow) on the public SeqWare project wiki goes into very detailed information about workflow bundles, how to create them, the syntax they use, and other key information. In the near future this will be migrated to this site but the directions there should still be up to date.
 
 

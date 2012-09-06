@@ -6,7 +6,7 @@ toc_includes_sections: false
 
 ---
 
-The majority of this guide is dedicated to walking users and developers through the basics of using SeqWare. We assume that people are most interested in the Pipeline sub-project and focus most of our time on that.  The examples below will all be based on a local VM but the environment on our cloud instance is almost identical, so most of the examples below will be applicable to either VM type. In the future we will probably have a spearate user guide that focuses on the differences of running on Amazon's cloud.
+The majority of this guide is dedicated to walking users and developers through the basics of using SeqWare. We assume that people are most interested in the Pipeline sub-project and focus most of our time on that.  The examples below will all be based on a local VM but the environment on our cloud instance is almost identical, so most of the examples below will be applicable to either VM type. In the future we will probably have a separate user guide that focuses on the differences of running on Amazon's cloud.
 
 ## By the End of This Tutorial
 
@@ -34,7 +34,7 @@ Please launch your local VM in VirtualBox and login as user <kbd>seqware</kbd>, 
 
 SeqWare is open source architecture built mostly in Java. In the <kbd>/home/seqware/SeqWare</kbd> directory you will see a jar file. This contains SeqWare Pipeline code that will allow you to interact with the SeqWare Web service (actually either on a VM, installed on another local machine/cluster, or in the cloud) that controls, among other things, workflow execution. This jar is, essentially, the command line interface for the whole SeqWare project.
 
-<p class="warning"><strong>Tip:</strong> The VM will contain a recent version of the jar that we have validated with this tutorial.  You may want to upgrade to the latest version, though, which you can download from our continuous build server. Please choose the jar that has the -full suffix, e.g. <a href="http://jenkins.res.oicr.on.ca/job/seqware/lastStableBuild/net.sourceforge.seqware$seqware-distribution/">seqware-distribution-0.12.5-SNAPSHOT-full.jar</a>. Keep in mind we make no promisses that the latest version will be bug free!</p>
+<p class="warning"><strong>Tip:</strong> The VM will contain a recent version of the jar that we have validated with this tutorial.  You may want to upgrade to the latest version, though, which you can download from our continuous build server. Please choose the jar that has the -full suffix, e.g. <a href="http://jenkins.res.oicr.on.ca/job/seqware/lastStableBuild/net.sourceforge.seqware$seqware-distribution/">seqware-distribution-0.12.5-SNAPSHOT-full.jar</a>. Keep in mind we make no promises that the latest version will be bug free!</p>
 
 ## The SeqWare Settings File
 
@@ -112,9 +112,9 @@ At this point you will see your complete study/experiment/sample hierarchy in th
 
 <img src="/assets/images/my_studies.png" width="600px"/>
 
-<p class="warning"><strong>Tip:</strong> Notice the "SWID: 14" next to "My Test Study". The other items in the hierarchy have an SWID as well.  This is common for every item in the MetaDB, everything has a SWID aka accession.  When you use command line tools they will often take a "parent accession" to attach output to and this is refering to what you see as SWID in the Portal.</p>
+<p class="warning"><strong>Tip:</strong> Notice the "SWID: 14" next to "My Test Study". The other items in the hierarchy have an SWID as well.  This is common for every item in the MetaDB, everything has a SWID aka accession.  When you use command line tools they will often take a "parent accession" to attach output to and this is referring to what you see as SWID in the Portal.</p>
 
-<p class="warning"><strong>Tip:</strong> You can also track sequencer runs and associate samples with the particular "lanes" on the flowcell (or equivalent on the particualr sequencing platform).  This is not covered here but will be in the SeqWare Portal guide.  Suffice it to say, this lets you use Portal as a light-weight LIMS system for tracking both studies/experiments/sample and sequencer runs/lanes and how they relate to each other.</p>
+<p class="warning"><strong>Tip:</strong> You can also track sequencer runs and associate samples with the particular "lanes" on the flowcell (or equivalent on the particular sequencing platform).  This is not covered here but will be in the SeqWare Portal guide.  Suffice it to say, this lets you use Portal as a light-weight LIMS system for tracking both studies/experiments/sample and sequencer runs/lanes and how they relate to each other.</p>
 
 
 ### Via Command Line Tools
@@ -185,7 +185,7 @@ First, create your text document that you want to associate with a sample (we ar
 
 Now, navigate to "My Studies", pick a sample, and then click "upload file".  You can then either give the complete path to the text file ("enter the file URL into the database" or you can use the "File to upload" browser to upload the simple.txt file. The third option (using a dedicated transfer tool) requires admin configuration and only works on the cloud so we will skip it here. Click upload when you are done.
 
-If possible you should enter a path or URL (http://server/file/path or s3://<bucket>/file/path) since this will not result in duplicate data or long uploads. If you do this then the file path should be accessible to whaever computer the workflow jobs run on (either a shared filesystem or S3). If you choose to upload it might fail for large files and it will also cause a duplicate file to live in <kbd>/datastore/uploads</kbd>.  In these examples we will just provide a URL.
+If possible you should enter a path or URL (http://server/file/path or s3://<bucket>/file/path) since this will not result in duplicate data or long uploads. If you do this then the file path should be accessible to whatever computer the workflow jobs run on (either a shared filesystem or S3). If you choose to upload it might fail for large files and it will also cause a duplicate file to live in <kbd>/datastore/uploads</kbd>.  In these examples we will just provide a URL.
 
 <img src="/assets/images/upload.png" width="600px"/>
 
@@ -234,7 +234,7 @@ The fourth column includes the SWID for this workflow that you will use in the n
 
 	java -jar seqware-pipeline-0.12.5.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession 7 > workflow.ini
 
-In this example the workflow “HelloWorldWorkflow” version 1.0 (SWID 7) parameters are listed.  The output conforms to the input you can use to parameterize and launch workflows.  For example:
+In this example the workflow “HelloWorldWorkflow” version 1.0 (SWID 7) parameters are listed.  The output conforms to the input you can use to parametrize and launch workflows.  For example:
 
 <pre>
 #key=input_file:type=file:display=F:display_name=input_file:file_meta_type=text/plain
@@ -270,13 +270,15 @@ Once submitted, you can use the Portal to list the number of submitted, running,
 
 A better way of monitoring workflows (and getting a list of the outputs) is to use the WorkflowRunReporter plugin. This will let you script the monitoring of workflow runs.
 
-	java -jar ~/seqware-pipeline-0.12.5.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- -wa 7
+<pre>java -jar ~/seqware-pipeline-0.12.5.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- -wa 7</pre>
 
 In this example all the status information for workflows with workflow accession 7 are printed out to a file in the local file system.  This includes several columns of interest including the status of the workflow, the output file types, and their locations in S3 or the file system. You can use this information to automate the checking of workflows and the retrieval of the results!
 
 In the output from the above command you will see accessions for each workflow run. If the status is “failed” you can use resources directly on the Web Service to see what went wrong by returning the stderr and stdout from the workflow. This is how you might do that for a workflow_run with an accession of 6774:
 
+<pre>
 	GET -C admin@admin.com:admin http://localhost:8080/SeqWareWebService/reports/workflowruns/6774/stderr
+</pre>
 
 Keep in mind two things: 
 
@@ -287,19 +289,27 @@ Keep in mind two things:
 
 Once a workflow has finished running you will want to list out the associated files and download the results.  While you can use the Portal for downloading files the best way to get files in bulk is to use our reporting tool. This produces a tab-delimited file that lists all the files produced for the workflows you are interested in.  You can then use the same ProvisionFiles utility above to pull files back.  Since the report produces a simple tab-delimited file you can easily automate the downloading of results by looping over the output files and calling ProvisionFiles using a script.
 
+<pre>
 	java -jar seqware-pipeline-0.12.5.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 7 --study Test
+</pre>
 
 The output here is a study_report.csv file that contains a line for each file (both those uploaded and those produced by workflows).  You can also filter by file types, for example if you want to see report bundles (not applicable to the HelloWorld workflow but you get the idea):
 
+<pre>
 	java -jar seqware-pipeline-0.12.5.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 13224 --study 20120403_SEQ1 --file-type application/zip-report-bundle
+</pre>
 
 Or an example filtering by sample (again, not directly applicable to the HelloWorld output):
 
+<pre>
 	java -jar seqware-pipeline-0.12.5.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 13224  --sample 20120403_SEQ1_GAG
+</pre>
 
 You can use these URLs (such as s3://bucket/samplename/test_R1.text.gz) with ProvisionFiles to download results (if they were remote, in the local VM they are just local files).  Here’s an example downloading a report bundle:
 
+<pre>
 	java -jar seqware-pipeline-0.12.5.jar -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles --no-metadata -- -i s3://bucket/results/seqware-0.10.0_ComprehensiveExomeGenomeAnalysis-0.10.5/59491657/GAG.fa.variant_quality.gatk.hg19.report.zip -o ./
+</pre>
 
 Here the zip report bundle is downloaded to the current working directory on the computer you are working on.  In this way you can pull back the results of workflows entirely through scripts that wrap the SymLinkFileReporter and ProvisionFiles.
 
@@ -310,6 +320,11 @@ In addition to the command line tools, you can also use the Portal to explore th
 You can find more information on this report tool on the public SeqWare wiki: [Study Reporter](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=SymLink_Reporter).
 
 <p class="warning"><strong>Note:</strong> in the example above I use --no-metadata with ProvisionFiles. This is to prevent the tool from writing back an event to the central database. Since you are just downloading a file (versus uploading a file) you do not really want to record that download event in the database.
+</p>
+
+## Next Steps
+
+See the [Developer's Guide](/docs/3-getting-started/developer-tutorial/) for how to create a new workflow.
 
 
 ## To Do
