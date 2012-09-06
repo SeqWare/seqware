@@ -1,4 +1,4 @@
-Install nanoc:
+Install nanoc (on Ubuntu 12.04):
 
 For a basic version of nanoc just follow the directions on their site. This is
 what I had to do to get their very nice sample website to compile:
