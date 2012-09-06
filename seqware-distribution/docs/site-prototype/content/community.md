@@ -1,7 +1,7 @@
 Transition from SourceForge
 -------------
 
-We are currently transitioning to off of SourceForge to GitHub and other services.  This is a pretty big task since we have years of content in our current wiki, multiple bug tracking systems, and two mailing lists. Please bear with us while we make this migration.  In the mean time you can find our subversion repository and current wiki on SourceForge, see:
+We are currently transitioning off of SourceForge to GitHub and other services.  This is a pretty big task since we have years of content in our current wiki, multiple bug tracking systems, and two mailing lists. Please bear with us while we make this migration.  In the mean time you can find our subversion repository and current wiki on SourceForge, see:
 
 * the SourceForge [developers site](http://sourceforge.net/projects/seqware/)
 * the SourceForge [wiki page](http://sourceforge.net/projects/seqware/) for lots of detailed, developer docs
