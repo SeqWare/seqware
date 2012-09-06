@@ -103,7 +103,7 @@ What makes Amazon's cloud so amazingly awesome is its excellent support for both
 
 Our current public AMI(s):
 
-* SWStandaloneCentOS_v2_GenericDevBox_v5: ami-6bf54102
+* SWStandaloneCentOS_v2_GenericDevBox_v5: ami-cb0fb9a2
 
 An example of the launching wizard in the Amazon AWS console can be seen below:
 
