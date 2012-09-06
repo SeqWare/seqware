@@ -15,7 +15,7 @@ The SeqWare Query Engine is intended to be a universal store for sequence varian
 We can start by getting your development environment setup with the appropriate prerequisites. The [Installing with a Local VM](/docs/2-installation/) guide will give you access to a VM which has these setup correctly. However, if you wish to set this up yourself and you have git and mvn installed:
 
 1.	You will want to go to the [SeqWare Github repository](https://github.com/SeqWare/seqware) and run the command <code>git clone git@github.com:SeqWare/seqware.git seqware_github</code>     
-2. 	You will also need to setup Hadoop and HBase if it is not already setup. We highly recommend [Cloudea's CDH packages](https://ccp.cloudera.com/display/CDH4DOC/CDH4+Quick+Start+Guide) since they are tested for package incompatibilities between Hadoop projects (which are still common). It is also worth double-checking the web interface for HBase which is usually at [http://localhost:60010/master-status](http://localhost:60010/master-status).
+2. 	You will also need to setup Hadoop and HBase if it is not already setup. We highly recommend [Cloudera's CDH packages](https://ccp.cloudera.com/display/CDH4DOC/CDH4+Quick+Start+Guide) since they are tested for package incompatibilities between Hadoop projects (which are still common). It is also worth double-checking the web interface for HBase which is usually at [http://localhost:60010/master-status](http://localhost:60010/master-status).
 
 For both the VM and a local development environment, continue here:
 
@@ -23,7 +23,7 @@ There are a number of constants that may have to be set, particularly for a deve
 <p class="warning"><strong>Note:</strong>
 	   It is important that you check your <code>NAMESPACE</code>, <code>HBASE_REMOTE_TESTING</code>, and <code>HBASE_PROPERTIES</code> variables. They currently control the prefix for your tables, whether you connect to a local install of HBase, and which remote install of HBase you want to connect to respectively.
 </p>
-1. 	Refresh the seqware engine by doing a <code>git fetch</code> and <code>git pull</code> in the seqware_github directory.
+1. 	Refresh the code for the query engine by doing a <code>git fetch</code> and <code>git pull</code> in the seqware_github directory. On the VM, you may need to merge changes or simply discard changes with a command such as <code>git checkout seqware-queryengine/src/main/java/com/github/seqware/queryengine/Constants.java</code>
 2. 	If the [web interface](http://localhost:60010/master-status) for HBase stalls or is inactive, you may need to restart the HBase processes. This can be done by the following commands:
 	<pre title="Title of the snippet">
 	sudo bash
@@ -41,14 +41,14 @@ There are a number of constants that may have to be set, particularly for a deve
 	mvn javadoc:javadoc
 	mvn javadoc:test-javadoc
 	</pre>
-This will generate javadoc documentation for both the main code and the testing code. 
+This will generate javadoc documentation for both the main code and the testing code in <code>seqware-queryengine/target/site/apidocs/index.html</code> and <code>seqware-queryengine/target/site/testapidocs/index.html</code> respectively. 
 
 ## Loading Data
 
 We currently load data via our command-line programs. In order to do this, you will want to go to the root directory and compile a full version of our jar with dependencies included. You will probably wish to skip the tests for our other components. This should look something like:
 <pre title="Title of the snippet">
   <kbd>cd ...</kbd>
-  <kbd>mvn install -Dmaven.test.skip=true</kbd>
+  <kbd>mvn clean install -Dmaven.test.skip=true</kbd>
   <kbd>cd seqware-distribution/target</kbd>
 </pre>
 
@@ -60,7 +60,7 @@ The first time you run these tools in a new namespace, you may wish to create a 
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.ReferenceCreator</kbd>
 Only 0 arguments found
 ReferenceCreator <reference_name> [output_file]
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.ReferenceCreator hg_19 keyValue_ref.out</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.ReferenceCreator hg_42 keyValue_ref.out</kbd>
 Reference written with an ID of:
 59a1aca5-4a5f-4006-b395-ca8cb5dd8c50
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>cat keyValue_ref.out</kbd>
@@ -91,7 +91,7 @@ TagSetID    5e7a2327-08ac-4455-9687-ec4c3737074f
 The previous steps should only really need to be done once when first setting up a namespace. Afterwards, the VCF file importer can be called repeatedly for each of your datasets.
 
 <pre title="Title of the snippet">
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd> java -classpath seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.importers.SOFeatureImporter ../../seqware-queryengine/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated.vcf -o keyValueVCF.out -r 59a1aca5-4a5f-4006-b395-ca8cb5dd8c50 -s 5e7a2327-08ac-4455-9687-ec4c3737074f -w VCFVariantImportWorker </kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd> java -classpath seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.importers.SOFeatureImporter</kbd>
 usage: SOFeatureImporter
  -a <adHocTagSet>   (optional) an ID for an ad hoc TagSet, Tags will
                     either be found or added to this set, a new TagSet
@@ -161,6 +161,14 @@ In general, operations that iterate through a feature set, read or update indivi
 ## Testing
 
 The testing directories are <code>com.github.seqware.queryengine.model.test</code>, <code>com.github.seqware.queryengine.impl.test</code>, and <code>com.github.seqware.queryengine.system.test</code>. These directories test the model objects that outside developers can manipulate and interact with, specific features of the back-end, and the command-line tools respectively. Note that the tests can be run from a <code>TestSuite</code> that is available in each directory while new tests should be added to the <code>DynamicSuiteBuilder</code> in each directory. Note that the tests in the model directory can be run against a variety of back-ends and two serialization techniques. 
+
+Note, after running through the full test suite multiple times, the tests run against the simpler back-ends with no optimization will slow down. This can be fixed by running the following code via the HBase shell in order to clear out all stored data:
+
+<pre title="Title of the snippet">
+  <kbd>hbase shell</kbd>
+  <kbd>disable_all '.*'</kbd>
+  <kbd>drop_all '.*'</kbd>
+</pre>
 
 ## Features
 
