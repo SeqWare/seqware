@@ -6,7 +6,7 @@ The majority of SeqWare development is currently happening at [OICR](http://oicr
 
 ##Commercial Partner
 
-Please see Nimbus' website if you are interested in consulting services such as SeqWare workflow creation, hosting of SeqWare on Amazon's cloud, or support for local installs of SeqWare.
+Please see Nimbus' website if you are interested in consulting services for SeqWare workflow creation, hosting of SeqWare on Amazon's cloud, or support for local installs of SeqWare.
 
 <a href="http://nimbusinformatics.com"><img src="/assets/images/nimbus_clear.png"/></a>
 

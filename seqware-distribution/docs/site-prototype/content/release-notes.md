@@ -105,7 +105,7 @@ We still have to manually delete the parent task IDs for technical tasks though.
 * SEQWARE-955 - hboot.res
 * SEQWARE-969 - Implement HighCapacity FeatureSets
 * SEQWARE-975 - Create and Tag Release
-* SEQWARE-1004 - Add biojava dependencies to our artifactory
+* SEQWARE-1004 - Add guava dependencies to our artifactory
 
 ###Story
 * SEQWARE-555 - Design a Framework for Deciders

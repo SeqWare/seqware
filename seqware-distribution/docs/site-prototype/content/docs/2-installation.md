@@ -13,7 +13,7 @@ SeqWare is designed to work in a 64-bit Linux environment, we do not support Win
 or MacOS.  You can still use SeqWare on your local Mac or Windows PC through
 virtualization software.  You need to be comfortable with Linux before moving
 forward with SeqWare, specifically the Bash shell, using an editor like vim or
-emacs, and some experience programming in Java.
+emacs, and some experience programming in Java is extremely helpful.
 
 To learn about Linux, the Bash shell, and Java we recommend the O'Reilly series of books:
 
@@ -28,7 +28,7 @@ with some sample data.  This is the easiest way to get started with SeqWare
 since it requires no installation and configuration on your part.  While the
 download is pretty large, you will not incur per hour fees as you do when
 running on Amazon so it is a great way to get started with SeqWare, kick the
-tires, and see if this is something you want to use more.
+tires, and see if this is something you want to use.
 
 ### Getting the VM
 
@@ -37,23 +37,23 @@ your OS's package management system) the VirtualBox application. This is a
 great piece of software that will let you run the SeqWare CentOS VM on whatever
 OS you currently have.
 
-[Oracle Virtual Box](http://amzn.com/B0043EWVDI)
+* [Oracle Virtual Box](http://amzn.com/B0043EWVDI)
 
 Next, you will need to download our current VM image which is linked below.
 Please make sure you are using the latest version, when we post a new one we
 will tweet about it so consider following us on Twitter.
 
-* [SeqWareVM_0.12.5-r5163_CentOS_6.2_20120815.ova](https://s3.amazonaws.com/nimbusinformatics.exchange/private/SeqWareVM_0.12.5-r5163_CentOS_6.2_20120815.ova)
+* [SeqWareVM_0.12.5-r5163_CentOS_6.2_20120904.ova](https://s3.amazonaws.com/nimbusinformatics.exchange/private/SeqWareVM_0.12.5-r5163_CentOS_6.2_20120904b.ova)
 
 Open VirtualBox and use the "Import Appliance" tool to create a new SeqWare VM
 on your system.  You can then launch it and you will be presented with a fairly
 standard Linux desktop with links to the project's documentation to give you an
 idea of where to begin (the "Getting Started" guide here which provides a
-walkthrough of using this VM).
+walk-through of using this VM).
 
 <p class="warning"><strong>Note:</strong>
 When you import the VM you need to set your memory and CPU correctly.  Do not
-overcommit resources (espcially memory) since that will cause the machine to
+over-commit resources (especially memory) since that will cause the machine to
 "swap" memory to disk and slow your computer to a crawl. This VM is intended
 for you to see SeqWare in action and then create your own workflows. If you are
 making a workflow that will take 16GB of memory then you will need a VM running
@@ -89,7 +89,7 @@ see [Cluster Compute Quadruple Extra Large
 Instance](http://aws.amazon.com/ec2/instance-types/). These machines provide
 23GB of memory and 2x quad core "Nehalem" processors which is typically
 sufficient for analyzing a human exome within about 4 hours depending on the
-specfics of your workflows.
+specifics of your workflows.
 
 ### Getting an Amazon Cloud Account
 
@@ -113,7 +113,7 @@ An example of the launching wizard in the Amazon AWS console can be seen below:
 
 ### Logging In
 
-Unlike the local VM there is no graphical desktop to log into.  Instead you will need to follow the directions on the Amazon site for using <kbd>ssh</kbd> to log into your running VM.  There you will have a command line interface to interact with the SeqWare tools. You can also view the SeqWare Portal and SeqWare Web Service remotely in your browser.
+Unlike the local VM there is no graphical desktop to log into.  Instead you will need to follow the directions on the Amazon site for using <kbd>ssh</kbd> to log into your running VM.  There you will have a command line interface to interact with the SeqWare tools. You can also view the SeqWare Portal and SeqWare Web Service remotely in your browser if you have previously opened the ports 22 and 8080.
 
 ### What Can You Do With It?
 
@@ -142,3 +142,8 @@ This guide will be ported to this manual but for now the best instructions for
 setting up SeqWare from scratch can be found on our [SourceForge
 wiki](https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Creating_a_SeqWare_VM).
 
+## Next Step
+
+Now that you have seen how to launch either a local of cloud-based SeqWare instance follow the 
+"[Getting Started](/docs/3-getting-started/)" guide to see how to run the sample HelloWorld
+workflow.

@@ -15,7 +15,7 @@ SeqWare is an open-source bioinformatics workflow deployment and management syst
 * A centralized metadata database that tracks samples, annotations and analyses, and a web application to visualize it
 * A module specification and execution engine that lets you package computational tools and use them to build and run complex analytical workflows
 * Support for running workflows irrespective of the underlying cluster environment
-* An advanced query engine that allows you to store and search variants, coverage, and annotations produced in your workflows using either a simple or distributed database backend
+* An advanced query engine that allows you to store and search variants and annotations produced in your workflows using a highly-scalable, distributed database backend
 
 Why use SeqWare?
 --------------
@@ -25,7 +25,7 @@ You would want to use SeqWare in order to build workflows and processes that aut
 Why not use SeqWare?
 --------------
 
-You would not want to use SeqWare if you have a small number of NGS samples to analyze, if you need to interactively explore tools and settings for your project, or you want pre-built workflows that will analyze data "out-of-the-box".  If this is you, we would instead recommend you look for commercial solutions such as Nimbus Informatics or DNAnexus for pre-built workflows ready to run on the cloud or Galaxy for interactive analysis either locally or on the cloud. Rememeber, SeqWare is an infrastructure toolkit not an analysis pipeline for particular NGS experimental designs.
+You would not want to use SeqWare if you have a small number of NGS samples to analyze, if you need to interactively explore tools and settings for your project, or you want pre-built workflows that will analyze data "out-of-the-box".  If this is you, we would instead recommend you look for commercial solutions such as Nimbus Informatics or DNAnexus for pre-built workflows ready to run on the cloud or Galaxy for interactive analysis either locally or on the cloud. Remember, SeqWare is an infrastructure toolkit not an analysis pipeline for particular NGS experimental designs.
 
 Who uses SeqWare?
 --------------
@@ -79,5 +79,5 @@ join_with_and(similar_projects.select { |p| p[:lang] == 'private' }.sort_by {
 |p| p[:name].downcase }.map { |p| %[<a href="#{p[:url]}">#{p[:name]}</a>] })
 %>. These commercial services attempt to accomplish similar things to a SeqWare
 install but they offer the analysis itself as a service whereas SeqWare allows
-you to create local or cloud-based infrastructure similar to these commercial
+you to create local or cloud-based infrastructure similar to what powers these commercial
 offerings.

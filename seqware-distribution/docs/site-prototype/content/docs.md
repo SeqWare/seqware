@@ -5,8 +5,10 @@ markdown: basic
 
 ---
 
+<p class="warning"><strong>Note:</strong> This guide is a work in progress.</p> 
+
 This is the core documentation for the SeqWare project, including all the
-various subprojects. We wanted to create a single manual that would bring
+various sub-projects. We wanted to create a single manual that would bring
 together all of our documentation since much of it is currently spread across a
 poorly-organized wiki.  While this guide is organized by logical sections that
 flow from one to the next you do not need to read the whole thing in order to

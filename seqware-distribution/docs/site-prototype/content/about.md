@@ -16,7 +16,7 @@ SeqWare currently provides 5 main tools specifically designed to support massive
 * **Web Service**: a programmatic API that lets people build new tools on top of the project
 * **Query Engine**: a NOSQL database designed to store and query variants and other events inferred from sequence data.
 
-<img src="/assets/images/seqware_arch.png"/>
+<img width="600" src="/assets/images/seqware_arch.png"/>
 
 ## Publications
 
