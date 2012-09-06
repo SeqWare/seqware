@@ -1,13 +1,12 @@
     PROJECT: SeqWare
     FILE: README.md
-    UPDATED: 20120816
-    HOMEPAGE: http://seqware.sourceforge.net
+    UPDATED: 20120905
+    HOMEPAGE: http://seqware.github.com/
 
 INTRODUCTION
 ====================
 
-This is top level of the SeqWare Project. For now, this contains work on the
-SeqWare query engine version 2, the intial prototype of the query engine, a folder for creating self-contained jar files with our command-line tools, and the documentation for the seqware-webservice. 
+This is top level of the SeqWare Project. For now, this contains the source of the SeqWare homepage, the second iteration of the SeqWare query engine, the intial prototype of the query engine, a folder for creating self-contained jar files with our command-line tools, and the documentation for the seqware-webservice. 
 
 Eventually this will also contain the components of the SeqWare project that 
 follow and are currently hosted at sourceforge:
@@ -59,7 +58,7 @@ LOCAL UNIT TESTING SETUP
 
 The full test suite requires Hadoop and HBase; a good start is to follow Cloudera's [quick start guide](https://ccp.cloudera.com/display/CDH4DOC/CDH4+Quick+Start+Guide).
 
-Otherwise, it is also possible to manually HBase as follows: get HBase where either versions 0.92.1, 0.94.0 or newer are fine.
+Otherwise, it is also possible to manually install HBase as follows: get HBase where either versions 0.92.1, 0.94.0 or newer are fine.
 
     wget http://apache.raffsoftware.com/hbase/hbase-0.94.0/hbase-0.94.0.tar.gz
     tar xzf hbase-0.94.0.tar.gz
@@ -91,7 +90,7 @@ Finally, set the HBase configuration that should be used in `seqware-queryengine
 INSTALLING
 ====================
 
-See http://seqware.sourceforge.net for detailed installation instructions
+See http://seqware.github.com/ for detailed installation instructions
 including links to a pre-configured virtual machine that can be used for
 testing, development, and deployment.
 
