@@ -15,7 +15,7 @@ The SeqWare Query Engine is intended to be a universal store for sequence varian
 We can start by getting your development environment setup with the appropriate prerequisites. The [Installing with a Local VM](/docs/2-installation/) guide will give you access to a VM which has these setup correctly. However, if you wish to set this up yourself and you have git and mvn installed:
 
 1.	You will want to go to the [SeqWare Github repository](https://github.com/SeqWare/seqware) and run the command <code>git clone git@github.com:SeqWare/seqware.git seqware_github</code>     
-2. 	You will also need to setup Hadoop and HBase if it is not already setup. We highly recommend [Cloudera's CDH packages](https://ccp.cloudera.com/display/CDH4DOC/CDH4+Quick+Start+Guide) since they are tested for package incompatibilities between Hadoop projects (which are still common). It is also worth double-checking the web interface for HBase which is usually at [http://localhost:60010/master-status](http://localhost:60010/master-status).
+2. 	You will also need to setup Hadoop and HBase if it is not already setup. We highly recommend [Cloudera's CDH packages](https://ccp.cloudera.com/display/CDH4DOC/CDH4+Quick+Start+Guide) since they are tested for package incompatibilities between Hadoop projects (which are still common). It is also worth double-checking the web interface for HBase which is usually at [http://localhost:60010/master-status](http://localhost:60010/master-status) once you have gone through the setup tutorials in order to confirm that HBase is setup correctly.
 
 For both the VM and a local development environment, continue here:
 
@@ -54,25 +54,26 @@ We currently load data via our command-line programs. In order to do this, you w
 
 In this distribution directory, you can run our command line tools for import.
 
-The first time you run these tools in a new namespace, you may wish to create a common reference and then create an ad hoc tag set that will store all tags that do not match known terms.
+The first time you run these tools in a new namespace, you may wish to create a common reference and then create an ad hoc tag set that will store all tags that do not match known tags. Most of our command-line tools output a key value file that you can keep in order to record the ID of your created objects.
 
 <pre title="Title of the snippet">
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.ReferenceCreator</kbd>
 Only 0 arguments found
 ReferenceCreator <reference_name> [output_file]
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.ReferenceCreator hg_42 keyValue_ref.out</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.ReferenceCreator hg_19 keyValue_ref.out</kbd>
 Reference written with an ID of:
-59a1aca5-4a5f-4006-b395-ca8cb5dd8c50
+hg_19
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>cat keyValue_ref.out</kbd>
-referenceID    59a1aca5-4a5f-4006-b395-ca8cb5dd8c50
+referenceID    hg_19
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.TagSetCreator</kbd>
 Only 0 arguments found
 TagSetCreator <TagSet name> [output_file]
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.TagSetCreator ad_hoc keyValue_adHoc.out</kbd>
 TagSet written with an ID of:
-84ec5dfb-1cba-4b7b-b06a-eebbfc3dfd60
+ad_hoc
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>cat keyValue_adHoc.out</kbd>
-TagSetID    84ec5dfb-1cba-4b7b-b06a-eebbfc3dfd60
+TagSetID	ad_hoc
+namespace	batman
 </pre>
 
 You may also wish to pre-populate the database with (Sequence Ontology) SO terms in a TagSet:
@@ -82,10 +83,11 @@ You may also wish to pre-populate the database with (Sequence Ontology) SO terms
 Only 0 arguments found
 OBOImporter <input_file> [output_file]
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.importers.OBOImporter ../../seqware-queryengine/src/test/resources/com/github/seqware/queryengine/system/so.obo keyValueOBO.out</kbd>
-3870 terms written to a TagSet written with an ID of:
-5e7a2327-08ac-4455-9687-ec4c3737074f
+6861 terms written to a TagSet written with an ID of:
+c0323336-13ab-4eb9-afb0-b4fdc6d9af78
 <span class="prompt">dyuen@odl-dyuen:~/seqware_github/seqware-distribution/target$</span> <kbd>cat keyValueOBO.out</kbd>
-TagSetID    5e7a2327-08ac-4455-9687-ec4c3737074f
+TagSetID	c0323336-13ab-4eb9-afb0-b4fdc6d9af78
+namespace	batman
 </pre>
 
 The previous steps should only really need to be done once when first setting up a namespace. Afterwards, the VCF file importer can be called repeatedly for each of your datasets.
@@ -95,9 +97,14 @@ The previous steps should only really need to be done once when first setting up
 usage: SOFeatureImporter
  -a <adHocTagSet>   (optional) an ID for an ad hoc TagSet, Tags will
                     either be found or added to this set, a new TagSet
-                    will be generated if none is specified here
+                    will be generated if this option is not used
+ -b <batch_size>    (optional) batch-size for the number of features in
+                    memory to keep before a flush, will automatically be
+                    chosen if not specified, we use 100000 for now
  -c                 (optional) whether we are working with compressed
                     input
+ -f <featureSet>    (optional) for benchmarking for now, append features
+                    to an existing featureset
  -i <inputFile>     (required) comma separated input files
  -o <outputFile>    (optional) output file with our resulting key values
  -r <reference>     (required) the reference ID to attach our FeatureSet
@@ -109,14 +116,16 @@ usage: SOFeatureImporter
                     our import
  -w <worker>        (required) the work module and thus the type of file
                     we are working with
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd> java -classpath seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.importers.SOFeatureImporter -i ../../seqware-queryengine/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated.vcf -o keyValueVCF.out -r 59a1aca5-4a5f-4006-b395-ca8cb5dd8c50 -s 5e7a2327-08ac-4455-9687-ec4c3737074f -a 84ec5dfb-1cba-4b7b-b06a-eebbfc3dfd60 -w VCFVariantImportWorker </kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd> java -classpath seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.importers.SOFeatureImporter -i ../../seqware-queryengine/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated.vcf -o keyValueVCF.out -r hg_19 -s c0323336-13ab-4eb9-afb0-b4fdc6d9af78 -a ad_hoc -w VCFVariantImportWorker </kbd>
 FeatureSet written with an ID of:
-99d3cc0e-26e0-4b23-9ebf-90fbe07a6c5e
+835488d4-bfed-4f8a-b7ef-1c8222555df5
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd> echo $? </kbd>
 0
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd> cat keyValueVCF.out </kbd>
-FeatureSetID    99d3cc0e-26e0-4b23-9ebf-90fbe07a6c5e
+FeatureSetID    835488d4-bfed-4f8a-b7ef-1c8222555df5
 </pre>
+
+The ID of your feature sets and parameters will obviously change from run to run. Depending on the size of your data, you may also need to either tune the size of your batches (via the <code>'-b</code> option) when loading features or allocate more memory to java (<code>java -Xmx4096m -classpath ... </code>).
 
 ## Querying Data
 
@@ -126,7 +135,7 @@ The SOFeatureImporter will output a FeatureSet ID that should be used as part of
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  java -classpath seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.exporters.VCFDumper</kbd>
 0 arguments found
 VCFDumper <featureSetID> [outputFile]
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  java -classpath seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.exporters.VCFDumper 99d3cc0e-26e0-4b23-9ebf-90fbe07a6c5e test_out.vcf</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  java -classpath seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.exporters.VCFDumper 835488d4-bfed-4f8a-b7ef-1c8222555df5 test_out.vcf</kbd>
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  sort test_out.vcf > sorted_test_out.vcf</kbd>
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  sort ../../seqware-queryengine/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated.vcf  > control.vcf</kbd>
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  diff sorted_test_out.vcf control.vcf</kbd>
@@ -158,6 +167,62 @@ In general, operations that iterate through a feature set, read or update indivi
 
 <code>QueryInterfaceTest</code> brings us to the code in the testing directories which demonstrate many of the features available to the Query Engine.
 
+A quick aid that can be used to quickly test out queries is the <code>QueryVCFDumper</code>. This class takes in a featureID as input and a class name for a class that implements the <code>com.github.seqware.queryengine.system.exporters.QueryDumperInterface</code> in order to perform a few queries and output the last feature set to VCF format. 
+
+Here is an example of how to interact with the utility, here we run through compiling a few queries and running them.
+
+<pre title="Title of the snippet">
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  cp ../../seqware-queryengine/src/test/java/com/github/seqware/queryengine/system/test/queryDumper/VCFDumperParameterExample.java QueryTutorial.java</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd> gvim QueryTutorial.java</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd> javac -cp seqware-queryengine-0.12.0-full.jar QueryTutorial.java</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd> jar cvf QueryTutorial.jar QueryTutorial.class </kbd>
+added manifest
+adding: QueryTutorial.class(in = 2273) (out= 859)(deflated 62%)
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>export HADOOP_CLASSPATH=/home/dyuen/seqware_github/seqware-distribution/target/QueryTutorial.jar:/home/dyuen/seqware_github/seqware-distribution/target/seqware-queryengine-0.12.0-full.jar </kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>hadoop jar seqware-queryengine-0.12.0-full.jar com.github.seqware.queryengine.system.exporters.QueryVCFDumper -f 835488d4-bfed-4f8a-b7ef-1c8222555df5 -k keyValue.out -o output.vcf -p QueryTutorial</kbd>
+</pre>
+
+During the <code>gvim</code> step, it is important to delete the package line, change the classname, and then perform the required changes to the queries. For example, to search for intron_variants rather than non_synonymous_codon, we will need to change the file to the following:
+
+<pre title="Title of the snippet"><code class="language-java">
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.kernel.RPNStack;
+import com.github.seqware.queryengine.model.FeatureSet;
+import com.github.seqware.queryengine.model.QueryFuture;
+import com.github.seqware.queryengine.model.QueryInterface;
+import com.github.seqware.queryengine.system.exporters.QueryDumperInterface;
+
+/**
+ * An example of a parameter file. See more possible Queries in {@link QueryInterfaceTest}.
+ * @author dyuen
+ */
+public class QueryTutorial implements QueryDumperInterface{
+
+    @Override
+    public int getNumQueries() {
+        // we will run three queries
+        return 3;
+    }
+
+    @Override
+    public QueryFuture<FeatureSet> getQuery(FeatureSet set, int queryNum) {
+        if (queryNum == 0){
+            /// limits us to CHROM #21
+            return SWQEFactory.getQueryInterface().getFeaturesByAttributes(0, set, new RPNStack(new RPNStack.FeatureAttribute("seqid"), new RPNStack.Constant("21"), RPNStack.Operation.EQUAL));
+        } else if (queryNum == 1){
+            // limits us to the range of 20000000 through 30000000
+            return SWQEFactory.getQueryInterface().getFeaturesByRange(0, set, QueryInterface.Location.INCLUDES, "21", 20000000, 30000000);
+        } else{
+            // limits us to features with a particular tag
+            return SWQEFactory.getQueryInterface().getFeaturesByAttributes(0, set, new RPNStack(new RPNStack.TagOccurrence("intron_variant")));
+        }
+    }
+    
+}
+</code></pre>
+
+Also note that we run the jar via the <code>hadoop jar</code> command rather than the basic <code>java -classpath</code> command. This allows hadoop to connect to a TaskTracker and launch MapReduce queries whether on the local machine or on a remote cluster. 
+
 ## Testing
 
 The testing directories are <code>com.github.seqware.queryengine.model.test</code>, <code>com.github.seqware.queryengine.impl.test</code>, and <code>com.github.seqware.queryengine.system.test</code>. These directories test the model objects that outside developers can manipulate and interact with, specific features of the back-end, and the command-line tools respectively. Note that the tests can be run from a <code>TestSuite</code> that is available in each directory while new tests should be added to the <code>DynamicSuiteBuilder</code> in each directory. Note that the tests in the model directory can be run against a variety of back-ends and two serialization techniques. 
@@ -169,6 +234,11 @@ Note, after running through the full test suite multiple times, the tests run ag
   <kbd>disable_all '.*'</kbd>
   <kbd>drop_all '.*'</kbd>
 </pre>
+
+<p class="warning"><strong>Note:</strong>
+	This will destroy all data on the HBase storage. If you have any doubt or are working in a production environment, it is better to restrict the delete to one namespace, for example <code>disable_all '<namespace>.*' </code>
+</p>
+
 
 ## Features
 
