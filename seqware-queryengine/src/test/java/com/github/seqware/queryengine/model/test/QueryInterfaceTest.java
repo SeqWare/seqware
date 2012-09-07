@@ -9,7 +9,6 @@ import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.Constant;
 import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
 import com.github.seqware.queryengine.kernel.RPNStack.Operation;
-import com.github.seqware.queryengine.kernel.RPNStack.TagHierarchicalOccurrence;
 import com.github.seqware.queryengine.kernel.RPNStack.TagOccurrence;
 import com.github.seqware.queryengine.kernel.RPNStack.TagValuePresence;
 import com.github.seqware.queryengine.model.*;
