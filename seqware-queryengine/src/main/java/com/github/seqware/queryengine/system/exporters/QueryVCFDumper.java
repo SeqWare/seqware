@@ -9,13 +9,10 @@ import com.github.seqware.queryengine.util.SGID;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.cli.*;
+import org.apache.log4j.Logger;
 
 /**
  * Exporter using a new interface to the parameters in order to support queries
@@ -87,7 +84,7 @@ public class QueryVCFDumper extends Importer {
             String paramClassName = cmd.getOptionValue(QUERY_PARAM);
             Class c = Class.forName(paramClassName);
             QueryDumperInterface queries = (QueryDumperInterface) c.newInstance();
-            
+
             String outputFile = cmd.getOptionValue(OUTPUTFILE_PARAM);
 
             // verify queries from paramFile
@@ -97,7 +94,7 @@ public class QueryVCFDumper extends Importer {
             stack.add(fSet);
             try {
                 String l;
-                for(int i = 0; i < queries.getNumQueries(); i++){
+                for (int i = 0; i < queries.getNumQueries(); i++) {
                     QueryFuture<FeatureSet> query = queries.getQuery(stack.peek(), i);
                     FeatureSet resultingSet = query.get();
                     stack.push(resultingSet);
@@ -106,14 +103,14 @@ public class QueryVCFDumper extends Importer {
                 System.out.println("Error parsing query parameters");
                 System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
             }
-            
+
             FeatureSet finalSet = stack.pop();
             sgidStack.add(finalSet.getSGID());
             // output key value file
             Map<String, String> keyValues = new HashMap<String, String>();
-            keyValues.put("Initial-FeatureSetID",  fSet.getSGID().getRowKey());
+            keyValues.put("Initial-FeatureSetID", fSet.getSGID().getRowKey());
             keyValues.put("Final-FeatureSetID", finalSet.getSGID().getRowKey());
-            while(!stack.empty()){
+            while (!stack.empty()) {
                 FeatureSet set = stack.pop();
                 sgidStack.add(set.getSGID());
                 keyValues.put(stack.size() + "-featureSetID", set.getSGID().getRowKey());
@@ -124,32 +121,37 @@ public class QueryVCFDumper extends Importer {
         } catch (IOException ex) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp(QueryVCFDumper.class.getSimpleName(), options);
-            Logger.getLogger(QueryVCFDumper.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(QueryVCFDumper.class.getName()).fatal(null, ex);
             System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
         } catch (MissingOptionException e) {
             // automatically generate the help statement
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp(QueryVCFDumper.class.getSimpleName(), options);
+            Logger.getLogger(QueryVCFDumper.class.getName()).fatal(null, e);
             System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
         } catch (ParseException e) {
             // automatically generate the help statement
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp(QueryVCFDumper.class.getSimpleName(), options);
+            Logger.getLogger(QueryVCFDumper.class.getName()).fatal(null, e);
             System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
         } catch (ClassNotFoundException e) {
             // automatically generate the help statement
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp(QueryVCFDumper.class.getSimpleName(), options);
+            Logger.getLogger(QueryVCFDumper.class.getName()).fatal(null, e);
             System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
         } catch (InstantiationException e) {
             // automatically generate the help statement
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp(QueryVCFDumper.class.getSimpleName(), options);
+            Logger.getLogger(QueryVCFDumper.class.getName()).fatal(null, e);
             System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
         } catch (IllegalAccessException e) {
             // automatically generate the help statement
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp(QueryVCFDumper.class.getSimpleName(), options);
+            Logger.getLogger(QueryVCFDumper.class.getName()).fatal(null, e);
             System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
         }
         return null;

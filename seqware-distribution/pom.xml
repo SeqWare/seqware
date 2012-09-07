@@ -41,7 +41,6 @@
           <configuration>
             <archive>
               <manifest>
-                <mainClass>com.github.seqware.queryengine.system.importers.FeatureImporter</mainClass>
               </manifest>
             </archive>
             <descriptors>
