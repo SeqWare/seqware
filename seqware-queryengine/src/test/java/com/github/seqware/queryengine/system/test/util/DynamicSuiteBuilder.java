@@ -19,6 +19,7 @@ package com.github.seqware.queryengine.system.test.util;
 import com.github.seqware.queryengine.system.test.CommandLineUtilsTest;
 import com.github.seqware.queryengine.system.test.GVFImportExportTest;
 import com.github.seqware.queryengine.system.test.OBOParserTest;
+import com.github.seqware.queryengine.system.test.QueryVCFDumperTest;
 import com.github.seqware.queryengine.system.test.SOFeatureImporterTest;
 import com.github.seqware.queryengine.system.test.VCFImportExportTest;
 import org.junit.runner.RunWith;
@@ -30,7 +31,7 @@ import org.junit.runner.RunWith;
 @RunWith(DynamicSuite.class)
 public class DynamicSuiteBuilder {
     
-    private static Class<?>[] SystemTests = {GVFImportExportTest.class, VCFImportExportTest.class, CommandLineUtilsTest.class, OBOParserTest.class, SOFeatureImporterTest.class};
+    private static Class<?>[] SystemTests = {GVFImportExportTest.class, VCFImportExportTest.class, CommandLineUtilsTest.class, OBOParserTest.class, SOFeatureImporterTest.class, QueryVCFDumperTest.class};
     
     public static Class[] modelSuite() {
          return DynamicSuiteBuilder.SystemTests;

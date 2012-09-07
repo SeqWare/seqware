@@ -2,7 +2,6 @@ package com.github.seqware.queryengine.model;
 
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.List;

@@ -58,7 +58,7 @@ public class Constants {
      *
      * Important: for local development, set the variable to false.
      */
-    public final static boolean HBASE_REMOTE_TESTING = false;
+    public final static boolean HBASE_REMOTE_TESTING = true;
 
 
     /**

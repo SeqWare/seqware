@@ -41,6 +41,7 @@ public class SOFeatureImporterTest {
     private static TagSet sequenceOntology = null;
     private static Reference reference = null;
     private static TagSet adHocSet = null;
+    public static final String REFERENCE = "hg_42";
 
     @BeforeClass
     public static void setupTests() {
@@ -54,11 +55,11 @@ public class SOFeatureImporterTest {
 
         try {
             // setup reference
-            SGID refID = ReferenceCreator.mainMethod(new String[]{"hg_19"});
+            SGID refID = ReferenceCreator.mainMethod(new String[]{REFERENCE});
             reference = SWQEFactory.getQueryInterface().getAtomBySGID(Reference.class, refID);
         } catch (IllegalArgumentException e) {
             // proceed if this is already created 
-            reference = SWQEFactory.getQueryInterface().getLatestAtomByRowKey("hg_19", Reference.class);
+            reference = SWQEFactory.getQueryInterface().getLatestAtomByRowKey(REFERENCE, Reference.class);
         }
 
         try {
@@ -111,9 +112,9 @@ public class SOFeatureImporterTest {
     public void testNormalVCFImport() {
         testFile(testVCFFile, true, false);
     }
-    
+
     @Test
-    public void testZippedVCFImport(){
+    public void testZippedVCFImport() {
         testFile(testVCFFile_zipped, true, true);
     }
 
@@ -130,28 +131,38 @@ public class SOFeatureImporterTest {
     }
 
     private void testFile(File testFile, boolean shouldSucceed, boolean compressed) {
+        File createTempFile = null;
+        try {
+            createTempFile = File.createTempFile("output", "txt");
+        } catch (IOException ex) {
+            Logger.getLogger(SOFeatureImporterTest.class.getName()).fatal(null, ex);
+            Assert.assertTrue("IO Exception", false);
+        }
+        Assert.assertTrue("Cannot read VCF file for test", testFile.exists() && testFile.canRead());
+        List<String> argList = new ArrayList<String>();
+        argList.addAll(Arrays.asList(new String[]{"-w", "VCFVariantImportWorker", "-a", adHocSet.getSGID().getRowKey(),
+                    "-i", testFile.getAbsolutePath(), "-o", createTempFile.getAbsolutePath(),
+                    "-r", reference.getSGID().getRowKey(), "-s", sequenceOntology.getSGID().getRowKey()}));
+        if (compressed) {
+            argList.add("-c");
+        }
+        SGID main = SOFeatureImporter.runMain(argList.toArray(new String[argList.size()]));
+        if (!shouldSucceed) {
+            // would be an error code on the command-line
+            Assert.assertTrue(main == null);
+            return;
+        }
+
+        // do some output comparisons, we may need to sort the results
+        VCFDumper.main(new String[]{main.getUuid().toString(), createTempFile.getAbsolutePath()});
+        matchOutputToControl(createTempFile, compressed, testFile);    
+    }
+
+    public static boolean matchOutputToControl(File outputFile, boolean compressed, File controlFile) {
         BufferedReader in = null;
         BufferedReader controlIn = null;
         try {
-            File createTempFile = File.createTempFile("output", "txt");
-            Assert.assertTrue("Cannot read VCF file for test", testFile.exists() && testFile.canRead());
-            List<String> argList = new ArrayList<String>();
-            argList.addAll(Arrays.asList(new String[]{"-w", "VCFVariantImportWorker", "-a", adHocSet.getSGID().getRowKey(),
-                        "-i", testFile.getAbsolutePath(), "-o", createTempFile.getAbsolutePath(), 
-                        "-r", reference.getSGID().getRowKey(), "-s", sequenceOntology.getSGID().getRowKey()}));
-            if (compressed){
-                argList.add("-c");
-            }
-            SGID main = SOFeatureImporter.runMain(argList.toArray(new String[argList.size()]));
-            if (!shouldSucceed) {
-                // would be an error code on the command-line
-                Assert.assertTrue(main == null);
-                return;
-            }
-
-            // do some output comparisons, we may need to sort the results
-            VCFDumper.main(new String[]{main.getUuid().toString(), createTempFile.getAbsolutePath()});
-            in = new BufferedReader(new FileReader(createTempFile));
+            in = new BufferedReader(new FileReader(outputFile));
             List<String> output = new ArrayList<String>();
             while (in.ready()) {
                 String inLine = in.readLine();
@@ -159,19 +170,19 @@ public class SOFeatureImporterTest {
             }
             Collections.sort(output);
             // compare against original VCF file
-            
-            if (compressed){
+
+            if (compressed) {
                 try {
-                    controlIn = VCFVariantImportWorker.handleCompressedInput(testFile.getAbsolutePath());
+                    controlIn = VCFVariantImportWorker.handleCompressedInput(controlFile.getAbsolutePath());
                 } catch (CompressorException ex) {
                     Logger.getLogger(SOFeatureImporterTest.class.getName()).fatal(null, ex);
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(SOFeatureImporterTest.class.getName()).fatal(null, ex);
                 }
-            } else{
-                controlIn = new BufferedReader(new FileReader(testFile));
+            } else {
+                controlIn = new BufferedReader(new FileReader(controlFile));
             }
-            
+
             List<String> control = new ArrayList<String>();
             // why does not controlIn.isReady() work here?
             String l;
@@ -189,10 +200,11 @@ public class SOFeatureImporterTest {
                 Assert.assertTrue("VCF FILTER does not match", cLine[6].equals(eLine[6]));
                 Assert.assertTrue("VCF INFO does not match", cLine[7].equals(eLine[7]));
             }
-        } catch (IOException ex) {
-            Logger.getLogger(SOFeatureImporterTest.class.getName()).fatal(null, ex);
-            Assert.assertTrue("IO Exception", false);
-        } finally {
+            Assert.assertTrue(output.size() == control.size());
+        }catch (IOException ex) {
+           Logger.getLogger(SOFeatureImporterTest.class.getName()).fatal(null, ex);
+           Assert.assertTrue("IO Exception", false);
+       } finally {
             try {
                 if (in != null) {
                     in.close();
@@ -204,8 +216,9 @@ public class SOFeatureImporterTest {
                 /**
                  * we don't really care if the tests file closing fails
                  */
-                return;
+                return true;
             }
         }
+        return false;
     }
 }

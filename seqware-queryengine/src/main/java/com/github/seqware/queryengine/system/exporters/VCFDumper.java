@@ -71,15 +71,47 @@ public class VCFDumper {
 
         // if this featureSet does not exist
         if (fSet == null) {
-            System.out.println("referenceID not found");
+            System.out.println("featureSet ID not found");
             System.exit(-2);
         }
+        dumpVCFFromFeatureSetID(fSet, (args.length == 2 ? args[1] : null));
+    }
 
+    public VCFDumper(String[] args) {
+        this.args = args;
+    }
+
+    public static boolean outputFeatureInVCF(StringBuffer buffer, Feature feature) {
+        boolean caughtNonVCF = false;
+        buffer.append(feature.getSeqid()).append("\t").append(feature.getStart() + 1).append("\t");
+        if (feature.getTagByKey(ImportConstants.VCF_SECOND_ID) == null) {
+            buffer.append(".\t");
+        } else {
+            buffer.append(feature.getTagByKey(ImportConstants.VCF_SECOND_ID).getValue().toString()).append("\t");
+        }
+        try {
+            buffer.append(feature.getTagByKey(ImportConstants.VCF_REFERENCE_BASE).getValue().toString()).append("\t");
+            buffer.append(feature.getTagByKey(ImportConstants.VCF_CALLED_BASE).getValue().toString()).append("\t");
+            buffer.append(feature.getScore() == null ? "." : feature.getScore()).append("\t");
+            buffer.append(feature.getTagByKey(ImportConstants.VCF_FILTER).getValue().toString()).append("\t");
+            buffer.append(feature.getTagByKey(ImportConstants.VCF_INFO).getValue().toString());
+        } catch (NullPointerException npe) {
+            if (!caughtNonVCF) {
+                Logger.getLogger(VCFDumper.class.getName()).info("VCF exporting non-VCF feature");
+
+            }
+            // this may occur when exporting Features that were not originally VCF files
+            caughtNonVCF = true;
+        }
+        return caughtNonVCF;
+    }
+
+    public static void dumpVCFFromFeatureSetID(FeatureSet fSet, String file) {
         BufferedWriter outputStream = null;
         try {
 
-            if (args.length == 2) {
-                outputStream = new BufferedWriter(new FileWriter(args[1]));
+            if (file != null) {
+                outputStream = new BufferedWriter(new FileWriter(file));
             } else {
                 outputStream = new BufferedWriter(new OutputStreamWriter(System.out));
             }
@@ -126,34 +158,5 @@ public class VCFDumper {
                 Logger.getLogger(VCFDumper.class.getName()).fatal("Exception thrown flushing to file:", ex);
             }
         }
-    }
-
-    public VCFDumper(String[] args) {
-        this.args = args;
-    }
-
-    public static boolean outputFeatureInVCF(StringBuffer buffer, Feature feature) {
-        boolean caughtNonVCF = false;
-        buffer.append(feature.getSeqid()).append("\t").append(feature.getStart() + 1).append("\t");
-        if (feature.getTagByKey(ImportConstants.VCF_SECOND_ID) == null) {
-            buffer.append(".\t");
-        } else {
-            buffer.append(feature.getTagByKey(ImportConstants.VCF_SECOND_ID).getValue().toString()).append("\t");
-        }
-        try {
-            buffer.append(feature.getTagByKey(ImportConstants.VCF_REFERENCE_BASE).getValue().toString()).append("\t");
-            buffer.append(feature.getTagByKey(ImportConstants.VCF_CALLED_BASE).getValue().toString()).append("\t");
-            buffer.append(feature.getScore() == null ? "." : feature.getScore()).append("\t");
-            buffer.append(feature.getTagByKey(ImportConstants.VCF_FILTER).getValue().toString()).append("\t");
-            buffer.append(feature.getTagByKey(ImportConstants.VCF_INFO).getValue().toString());
-        } catch (NullPointerException npe) {
-            if (!caughtNonVCF) {
-                Logger.getLogger(VCFDumper.class.getName()).info("VCF exporting non-VCF feature");
-
-            }
-            // this may occur when exporting Features that were not originally VCF files
-            caughtNonVCF = true;
-        }
-        return caughtNonVCF;
     }
 }
