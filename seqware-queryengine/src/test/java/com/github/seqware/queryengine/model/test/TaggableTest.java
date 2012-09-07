@@ -92,45 +92,6 @@ public class TaggableTest {
     }
 
     @Test
-    public void testTaggingOnEverything() {
-// Some of these global tests are no longer working because the back-end persists between test classes, we need a search API
-        SeqWareIterable<TagSet> tagSets = SWQEFactory.getQueryInterface().getTagSets();
-        // we have two tag sets
-        boolean t1found = false;
-        boolean t2found = false;
-        for (TagSet t : tagSets) {
-            if (t.equals(tSet1)) {
-                t1found = true;
-            } else if (t.equals(tSet2)) {
-                t2found = true;
-            }
-        }
-        Assert.assertTrue(t1found == true && t2found == true);
-//        SeqWareIterable<Tag> tags = SWQEFactory.getQueryInterface().getTags();
-//        Tag[] tagsCheck = {t1a, t1b, t1c, t2a, t2b, t2c, t3a};
-//        boolean[] tagsCheckFound = new boolean[tagsCheck.length];
-//        Arrays.fill(tagsCheckFound, false);
-////        for(TagSet t : tagSets){
-//        for (Tag ta : tags) {
-//            for (int i = 0; i < tagsCheckFound.length; i++) {
-//                if (tagsCheck[i].equals(ta)) {
-//                    tagsCheckFound[i] = true;
-//                }
-//            }
-//        }
-////        }
-//        for (boolean b : tagsCheckFound) {
-//            Assert.assertTrue(b);
-//        }
-        SeqWareIterable<Tag> tags1 = fSet.getTags();
-        // 3 tags were associated with the featureSet
-        // behaviour here has changed, but looking at the old prototype, I don't think we meant to allow tagging something with the same
-        // key multiple times, albeit with different predicates or values
-        Assert.assertTrue(tags1.getCount() == 1);
-        Assert.assertTrue(a.getTags().getCount() == 1);
-    }
-
-    @Test
     public void testAddingAndRemovingTagSpecsFromTagSets() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         // tags are not initially in a key set
