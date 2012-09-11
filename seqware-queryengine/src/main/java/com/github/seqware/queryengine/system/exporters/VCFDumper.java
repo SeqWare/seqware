@@ -34,6 +34,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -45,11 +46,6 @@ import org.apache.log4j.Logger;
 public class VCFDumper {
 
     private String[] args;
-    /**
-     * This does not work quite right, I need to copy from hdfs and parse the
-     * output a little Performance (speed) should be correct though.
-     */
-    public static final boolean EXPERIMENTAL_MAP_REDUCE_EXPORT = false;
 
     public static void main(String[] args) {
         VCFDumper dumper = new VCFDumper(args);
@@ -108,55 +104,68 @@ public class VCFDumper {
 
     public static void dumpVCFFromFeatureSetID(FeatureSet fSet, String file) {
         BufferedWriter outputStream = null;
-        try {
 
+        try {
             if (file != null) {
                 outputStream = new BufferedWriter(new FileWriter(file));
             } else {
                 outputStream = new BufferedWriter(new OutputStreamWriter(System.out));
             }
             outputStream.append("#CHROM	POS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\n");
-            boolean caughtNonVCF = false;
+        } catch (IOException e) {
+            Logger.getLogger(VCFDumper.class.getName()).fatal("Exception thrown starting export to file:", e);
+            System.exit(-1);
+        }
 
-            if (SWQEFactory.getBackEnd() instanceof MRHBasePersistentBackEnd && EXPERIMENTAL_MAP_REDUCE_EXPORT) {
-                // hack to use VCF MR
-                if (SWQEFactory.getModelManager() instanceof MRHBaseModelManager) {
+        boolean caughtNonVCF = false;
+        boolean mrSuccess = false;
+        if (SWQEFactory.getBackEnd() instanceof MRHBasePersistentBackEnd) {
+            // hack to use VCF MR
+            if (SWQEFactory.getModelManager() instanceof MRHBaseModelManager) {
+                try {
                     // pretend that the included com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesByAttributesPlugin is an external plug-in
                     Class<? extends AnalysisPluginInterface> arbitraryPlugin;
                     arbitraryPlugin = MRVCFDumperPlugin.class;
-
                     // get a FeatureSet from the back-end
                     QueryFuture<File> future = SWQEFactory.getQueryInterface().getFeaturesByPlugin(0, arbitraryPlugin, fSet);
-                    // check that Features are present match
                     File get = future.get();
                     BufferedReader in = new BufferedReader(new FileReader(get));
-                    while (in.ready()) {
-                        outputStream.write(in.readLine());
-                        outputStream.newLine();
-                    }
-                } // TODO: clearly this should be expanded to include closing database etc 
-            } else {
-                for (Feature feature : fSet) {
-                    StringBuffer buffer = new StringBuffer();
-                    boolean caught = outputFeatureInVCF(buffer, feature);
-                    if (caught) {
-                        caughtNonVCF = true;
-                    }
-                    outputStream.append(buffer);
-                    outputStream.newLine();
+                    IOUtils.copy(in, outputStream);
+                    in.close();
+                    get.deleteOnExit();
+                    outputStream.flush();
+                    outputStream.close();
+                    mrSuccess = true;
+                } catch (IOException e) {
+                    // fail out on IO error
+                    Logger.getLogger(VCFDumper.class.getName()).fatal("Exception thrown exporting to file:", e);
+                    System.exit(-1);
+                } catch(Exception e){
+                    Logger.getLogger(VCFDumper.class.getName()).fatal("MapReduce exporting failed, falling-through to normal exporting to file:", e);
+                    // fall-through and do normal exporting if Map Reduce exporting fails
                 }
+            } // TODO: clearly this should be expanded to include closing database etc 
+        }
+        if (mrSuccess) {
+            return;
+        }
+        // fall-through if plugin-fails
+        try {
+            for (Feature feature : fSet) {
+                StringBuffer buffer = new StringBuffer();
+                boolean caught = outputFeatureInVCF(buffer, feature);
+                if (caught) {
+                    caughtNonVCF = true;
+                }
+                outputStream.append(buffer);
+                outputStream.newLine();
             }
-        } catch (Exception e) {
+            outputStream.flush();
+        } catch (IOException e) {
             Logger.getLogger(VCFDumper.class.getName()).fatal("Exception thrown exporting to file:", e);
             System.exit(-1);
         } finally {
-            try {
-                outputStream.flush();
-                outputStream.close();
-                SWQEFactory.getStorage().closeStorage();
-            } catch (IOException ex) {
-                Logger.getLogger(VCFDumper.class.getName()).fatal("Exception thrown flushing to file:", ex);
-            }
+            IOUtils.closeQuietly(outputStream);
         }
     }
 }

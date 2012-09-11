@@ -24,6 +24,7 @@ import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
+import com.github.seqware.queryengine.system.importers.FeatureImporter;
 import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.IOException;
@@ -199,9 +200,18 @@ public class HBaseStorage extends StorageInterface {
             Object[] putBatch = table.batch(putList);
             Logger.getLogger(HBaseStorage.class.getName()).trace("putBatch results: " + putBatch.length);
         } catch (IOException ex) {
-            Logger.getLogger(HBaseStorage.class.getName()).fatal(null, ex);
+            Logger.getLogger(HBaseStorage.class.getName()).fatal("IOException during table.batch()", ex);
+            // try to parse out more information to track down this issue with large data loads
+            if (ex instanceof RetriesExhaustedWithDetailsException) {
+                RetriesExhaustedWithDetailsException e = (RetriesExhaustedWithDetailsException) ex;
+                Logger.getLogger(FeatureImporter.class.getName()).fatal("Extra information on RetriesExhaustedWithDetailsException");
+                Logger.getLogger(FeatureImporter.class.getName()).fatal("Are we dealing with cluster issues? " + e.mayHaveClusterIssues());
+                Logger.getLogger(FeatureImporter.class.getName()).fatal("Issues over " + e.getNumExceptions() + " exceptions");
+            }
+            throw new RuntimeException("Unrecoverable error in HBaseStorage");
         } catch (InterruptedException ex) {
-            Logger.getLogger(HBaseStorage.class.getName()).fatal(null, ex);
+            Logger.getLogger(HBaseStorage.class.getName()).fatal("InterruptedException during table.batch()", ex);
+            throw new RuntimeException("Unrecoverable error in HBaseStorage");
         }
     }
 

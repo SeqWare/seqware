@@ -34,9 +34,9 @@ import java.util.List;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileContext;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
-import org.apache.hadoop.fs.LocalFileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Result;
@@ -87,7 +87,9 @@ public class MRVCFDumperPlugin extends AbstractMRHBasePlugin<File> {
                     Text.class, // mapper output value
                     job);
             job.setReducerClass(MRVCFDumperPlugin.PluginReducer.class);    // reducer class
-            job.setNumReduceTasks(1);    // at least one, adjust as required
+            job.setNumReduceTasks(1);    // restrict to one reducer so we have one output file
+            FileContext fileContext = FileContext.getFileContext(this.job.getConfiguration());
+            path = fileContext.makeQualified(path);
             TextOutputFormat.setOutputPath(job, path);  // adjust directories as required
         } catch (IOException ex) {
             Logger.getLogger(MRFeaturesByFilterPlugin.class.getName()).fatal(null, ex);
@@ -158,45 +160,57 @@ public class MRVCFDumperPlugin extends AbstractMRHBasePlugin<File> {
     }
 
     private static class PluginReducer extends Reducer<Text, Text, Text, Text> {
-        
+
+        private Text text = new Text();
 
         @Override
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
             for (Text val : values) {
-                context.write(key, val);
+                context.write(val, text);
             }
         }
     }
 
     @Override
     public File variableResult() {
+        FileSystem fs = null;
         try {
+            Path outputPartPath = new Path(path, "part-r-00000");
             // copy file from HDFS to local temporary file
-            Logger.getLogger(MRFeaturesByFilterPlugin.class.getName()).info("Source file is " + path.toString());
+            Logger.getLogger(MRFeaturesByFilterPlugin.class.getName()).info("Source file is " + outputPartPath.toString());
             Configuration conf = new Configuration();
             HBaseStorage.configureHBaseConfig(conf);
             HBaseConfiguration.addHbaseResources(conf);
-            FileSystem fs = FileSystem.get(conf);
-            Path outPath = new Path(File.createTempFile("vcf", "out").toURI());
+            fs = FileSystem.get(conf);
+            File createTempFile = File.createTempFile("vcf", "out");
+            createTempFile.delete();
+            Path outPath = new Path(createTempFile.toURI());
             
             FileSystem localSystem = FileSystem.get(new Configuration());
             
             Logger.getLogger(MRFeaturesByFilterPlugin.class.getName()).info("Destination file is " + outPath.toString());
-            if (!fs.exists(path)) {
+            if (!fs.exists(outputPartPath)) {
                 Logger.getLogger(MRFeaturesByFilterPlugin.class.getName()).fatal("Input file not found");
             }
-            if (!fs.isFile(path)) {
+            if (!fs.isFile(outputPartPath)) {
                 Logger.getLogger(MRFeaturesByFilterPlugin.class.getName()).fatal("Input should be a file");
             }
             if (localSystem.exists(outPath)) {
                 Logger.getLogger(MRFeaturesByFilterPlugin.class.getName()).fatal("Output already exists");
             }
             // doesn't quite work yet, no time to finish before poster, check results manually on hdfs
-            FileUtil.copy(fs, path, localSystem, outPath, true, true, conf);
+            FileUtil.copy(fs, outputPartPath, localSystem, outPath, true, true, conf);
             return new File(outPath.toUri());
-
         } catch (IOException ex) {
             Logger.getLogger(MRVCFDumperPlugin.class.getName()).fatal(null, ex);
+        } finally{
+            if (fs != null){
+                try {
+                    fs.delete(path, true);
+                } catch (IOException ex) {
+                    Logger.getLogger(MRVCFDumperPlugin.class.getName()).warn("IOException when clearing after text output", ex);
+                }
+            }
         }
         return null;
     }
