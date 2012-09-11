@@ -12,6 +12,7 @@ import com.github.seqware.queryengine.util.SGID;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import org.apache.hadoop.hbase.client.RetriesExhaustedWithDetailsException;
 import org.apache.log4j.Logger;
 
 
@@ -142,6 +143,7 @@ public class FeatureImporter extends Importer {
                         @Override
                         public void uncaughtException(Thread thread, Throwable thrwbl) {
                             pmi.failedWorkers.add((ImportWorker) thread);
+                            throw new RuntimeException("Error in VCRVariantImportWorker");
                         }
                     });
 

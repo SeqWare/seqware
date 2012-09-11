@@ -16,6 +16,10 @@
  */
 package com.github.seqware.queryengine.system.test;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 
@@ -24,14 +28,22 @@ import org.junit.runner.Result;
  *
  * @author dyuen
  */
-public class ProfilingStub {
+public class ProfilingStub extends Configured implements Tool {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
+        // Let ToolRunner handle generic command-line options 
+        int res = ToolRunner.run(new Configuration(), new ProfilingStub(), args);
+        System.exit(res);
+    }
+
+    @Override
+    public int run(String[] args) throws Exception {
         JUnitCore runner = new JUnitCore();
         Result run = runner.run(SystemTestSuite.class);
         //runner.run(InMemoryFileStoragePBSerializationSuite.class);
         System.out.println(run.toString());
         System.out.println("Fail count: " + run.getFailureCount());
         System.out.println("Success: " + run.wasSuccessful());
+        return run.getFailureCount();
     }
 }

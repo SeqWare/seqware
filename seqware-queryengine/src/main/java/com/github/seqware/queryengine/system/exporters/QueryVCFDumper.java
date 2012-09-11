@@ -100,7 +100,8 @@ public class QueryVCFDumper extends Importer {
                     stack.push(resultingSet);
                 }
             } catch (Exception e) {
-                System.out.println("Error parsing query parameters");
+                Logger.getLogger(QueryVCFDumper.class.getName()).fatal(null, e);
+                System.out.println("Error running queries");
                 System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
             }
 
