@@ -4,7 +4,6 @@ import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.system.exporters.VCFDumper;
 import com.github.seqware.queryengine.system.importers.FeatureImporter;
-import com.github.seqware.queryengine.system.importers.SOFeatureImporter;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.BufferedReader;
 import java.io.File;
@@ -125,7 +124,7 @@ public class VCFImportExportTest {
                 Assert.assertTrue("VCF INFO does not match" , cLine[7].equals(eLine[7]));
             }
         } catch (IOException ex) {
-            Logger.getLogger(VCFImportExportTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VCFImportExportTest.class.getName()).log(Level.SEVERE, "IOException in export test", ex);
             Assert.assertTrue("IO Exception", false);
         }  finally {
             try {

@@ -67,7 +67,7 @@ public class Constants {
     private final static Map<String, String> LOCAL = Maps.newHashMap(ImmutableMap.<String, String>builder().build());
 
     /**
-     * Configuration for using HBase on the Seqware development cluster.
+     * Configuration for using HBase on the SeqWare development cluster.
      */
     private final static Map<String, String> SQWDEV = Maps.newHashMap(
             ImmutableMap.<String, String>builder().
@@ -76,6 +76,9 @@ public class Constants {
             put("hbase.master", "sqwdev.res.oicr.on.ca:60000").
             put("mapred.job.tracker", "sqwdev.res.oicr.on.ca:8021").
             put("fs.default.name", "hdfs://sqwdev.res.oicr.on.ca:8020").
+            put("fs.defaultFS", "hdfs://sqwdev.res.oicr.on.ca:8020").
+            put("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem").
+            put("hadoop.security.token.service.use_ip", "false").
             build());
 
     /**
@@ -88,6 +91,9 @@ public class Constants {
             put("hbase.master", "hboot.res.oicr.on.ca:60000").
             put("mapred.job.tracker", "hboot.res.oicr.on.ca:8021").
             put("fs.default.name", "hdfs://hboot.res.oicr.on.ca:8020").
+            put("fs.defaultFS", "hdfs://hboot.res.oicr.on.ca:8020").
+            put("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem").
+            put("hadoop.security.token.service.use_ip", "false").
             build());
     /**
      * Properties used when connecting to a remote instance of HBase.
