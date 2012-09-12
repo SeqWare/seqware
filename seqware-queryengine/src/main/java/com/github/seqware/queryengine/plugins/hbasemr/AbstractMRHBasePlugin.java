@@ -50,11 +50,10 @@ import org.apache.log4j.Logger;
  */
 public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlugin<Feature, FeatureSet> {
 
-    protected FeatureSet outputSet;
-    private CreateUpdateManager manager;
     public static final String INT_PARAMETERS = "int_parameters";
     public static final String EXT_PARAMETERS = "ext_parameters";
     protected Job job;
+    protected FeatureSet outputSet;
     
     /**
      * Internal parameters that can be used to pass information to the
@@ -66,9 +65,9 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
     @Override
     public AnalysisPluginInterface.ReturnValue init(FeatureSet inputSet, Object... parameters) {
         try {
-            this.manager = SWQEFactory.getModelManager();
+            CreateUpdateManager manager = SWQEFactory.getModelManager();
             //outputSet should attach to the original reference
-            outputSet = manager.buildFeatureSet().setReferenceID(inputSet.getReferenceID()).build();       
+            this.outputSet = manager.buildFeatureSet().setReferenceID(inputSet.getReferenceID()).build();       
             manager.close();
 
             // do setup for Map/Reduce from the HBase API
