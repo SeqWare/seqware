@@ -39,7 +39,7 @@ import org.apache.log4j.Logger;
 public class TmpFileStorage extends StorageInterface {
 
     boolean oldClassesFound = false;
-    private static final boolean PERSIST = Constants.PERSIST;
+    private static final boolean PERSIST = Constants.Term.PERSIST.getTermValue(Boolean.class);
     private static final String CLASS_BREAK = "~";
     private File tempDir = new File(FileUtils.getTempDirectory(), this.getClass().getCanonicalName());
     private final SerializationInterface serializer;

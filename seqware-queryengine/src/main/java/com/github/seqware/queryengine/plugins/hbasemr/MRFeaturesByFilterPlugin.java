@@ -16,6 +16,7 @@
  */
 package com.github.seqware.queryengine.plugins.hbasemr;
 
+import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.HBaseStorage;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.client.Result;
@@ -84,13 +86,18 @@ public abstract class MRFeaturesByFilterPlugin extends AbstractMRHBaseBatchedPlu
         @Override
         protected void setup(Mapper.Context context) {
 
+            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).info("Setting up mapper");
             Configuration conf = context.getConfiguration();
             String[] strings = conf.getStrings(EXT_PARAMETERS);
+            Map<String,String> settingsMap = (Map<String,String>) AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(strings[4]))[0];
+            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).info("Settings map retrieved with  " + settingsMap.size() + " entries");
+            Constants.setSETTINGS_MAP(settingsMap);
             this.ext_parameters = AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(strings[0]));
             this.int_parameters = AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(strings[1]));
             this.sourceSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[2]), FeatureSet.class);
             this.destSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[3]), FeatureSet.class);
 
+            
             // specific to this kind of plugin
             this.filter = (FeatureFilter) this.int_parameters[0];
 

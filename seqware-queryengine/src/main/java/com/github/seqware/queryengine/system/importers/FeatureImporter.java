@@ -186,7 +186,7 @@ public class FeatureImporter extends Importer {
             String aoutputID = adHocSet.getSGID().getUuid().toString();
             System.out.println(aoutputID);
             keyValues.put("adHocTagSetID", aoutputID);
-            keyValues.put("namespace", Constants.NAMESPACE);
+            keyValues.put("namespace", Constants.Term.NAMESPACE.getTermValue(String.class));
         }
         Utility.writeKeyValueFile(outputFile, keyValues);
         return featureSet.getSGID();
