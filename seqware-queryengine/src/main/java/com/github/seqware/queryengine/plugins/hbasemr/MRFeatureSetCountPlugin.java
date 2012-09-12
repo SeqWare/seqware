@@ -16,25 +16,19 @@
  */
 package com.github.seqware.queryengine.plugins.hbasemr;
 
-import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.SerializationUtils;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
-import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.output.NullOutputFormat;
 import org.apache.log4j.Logger;
@@ -84,29 +78,18 @@ public class MRFeatureSetCountPlugin extends AbstractMRHBasePlugin<Long> {
         return new Object[0];
     }
 
-    private static class RowCounterMapper
-            extends TableMapper<ImmutableBytesWritable, Result> {
-
-        private FeatureSet sourceSet;
-        private FeatureSet destSet;
+    private static class RowCounterMapper extends QEMapper<ImmutableBytesWritable, Result> {
 
         /**
          * Counter enumeration to count the actual rows.
          */
         public static enum Counters {
-
             ROWS
         }
 
         @Override
         protected void setup(Mapper.Context context) {
-            Configuration conf = context.getConfiguration();
-            String[] strings = conf.getStrings(EXT_PARAMETERS);
-            Map<String,String> settingsMap = (Map<String,String>) AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(strings[4]))[0];
-            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).info("Settings map retrieved with  " + settingsMap.size() + " entries");
-            Constants.setSETTINGS_MAP(settingsMap);
-            this.sourceSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[2]), FeatureSet.class);
-            //this.destSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[3]), FeatureSet.class);
+            super.setup(context);
         }
 
         /**

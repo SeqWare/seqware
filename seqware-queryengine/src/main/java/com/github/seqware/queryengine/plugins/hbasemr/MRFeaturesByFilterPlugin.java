@@ -16,13 +16,11 @@
  */
 package com.github.seqware.queryengine.plugins.hbasemr;
 
-import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.plugins.inmemory.FeatureFilter;
 import com.github.seqware.queryengine.system.importers.SOFeatureImporter;
@@ -31,14 +29,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
-import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.log4j.Logger;
 
@@ -66,37 +60,22 @@ public abstract class MRFeaturesByFilterPlugin extends AbstractMRHBaseBatchedPlu
                     job);
             job.setNumReduceTasks(0);
         } catch (IOException ex) {
-            Logger.getLogger(MRFeaturesByFilterPlugin.class.getName()).fatal(null, ex);
+            Logger.getLogger(MRFeaturesByFilterPlugin.class.getName()).fatal("IoException in variable init", ex);
         }
     }
 
     /**
      * Generic Mapper that uses a FeatureFilter.
      */
-    private static class Mapper extends TableMapper<ImmutableBytesWritable, Result> {
+    private static class Mapper extends QEMapper<ImmutableBytesWritable, Result> {
 
-        private FeatureSet sourceSet;
-        private FeatureSet destSet;
         private CreateUpdateManager modelManager;
-        private Object[] ext_parameters;
-        private Object[] int_parameters;
         private FeatureFilter filter;
         private long count = 0;
 
         @Override
         protected void setup(Mapper.Context context) {
-
-            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).info("Setting up mapper");
-            Configuration conf = context.getConfiguration();
-            String[] strings = conf.getStrings(EXT_PARAMETERS);
-            Map<String,String> settingsMap = (Map<String,String>) AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(strings[4]))[0];
-            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).info("Settings map retrieved with  " + settingsMap.size() + " entries");
-            Constants.setSETTINGS_MAP(settingsMap);
-            this.ext_parameters = AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(strings[0]));
-            this.int_parameters = AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(strings[1]));
-            this.sourceSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[2]), FeatureSet.class);
-            this.destSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[3]), FeatureSet.class);
-
+            super.setup(context);
             
             // specific to this kind of plugin
             this.filter = (FeatureFilter) this.int_parameters[0];
@@ -107,7 +86,7 @@ public abstract class MRFeaturesByFilterPlugin extends AbstractMRHBaseBatchedPlu
 
         @Override
         protected void cleanup(Mapper.Context context) {
-            System.out.println(new Date().toString() + " cleaning up with total lines: " + count);
+            Logger.getLogger(MRFeaturesByFilterPlugin.class.getName()).info(new Date().toString() + " cleaning up with total lines: " + count);
             this.modelManager.close();
         }
 
@@ -136,7 +115,7 @@ public abstract class MRFeaturesByFilterPlugin extends AbstractMRHBaseBatchedPlu
             }
             destSet.add(results);
             if (count % 1000 == 0) {
-                System.out.println(new Date().toString() + " with total lines so far: " + count);
+                Logger.getLogger(MRFeaturesByFilterPlugin.class.getName()).info(new Date().toString() + " with total lines so far: " + count);
             }
             // TODO: we only seem to be able to keep about a quarter of the number of Features that we can keep in memory in
             // VCF importer, check this out
@@ -144,8 +123,8 @@ public abstract class MRFeaturesByFilterPlugin extends AbstractMRHBaseBatchedPlu
                 modelManager.flush();
                 modelManager.clear();
                 modelManager.persist(destSet);
-                System.out.println(new Date().toString() + " flushing with total lines so far: " + count);
+                Logger.getLogger(MRFeaturesByFilterPlugin.class.getName()).info(new Date().toString() + " cleaning up with total lines: " + count);
             }
-        }
+        } 
     }
 }
