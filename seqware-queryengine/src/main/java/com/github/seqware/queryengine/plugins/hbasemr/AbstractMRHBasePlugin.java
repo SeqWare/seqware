@@ -83,17 +83,18 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
             byte[] sSet = SWQEFactory.getSerialization().serialize(inputSet);
             byte[] dSet = SWQEFactory.getSerialization().serialize(outputSet);
 
-            String[] str_params = new String[4];
+            String[] str_params = new String[5];
             byte[] ext_serials = this.handleSerialization(parameters);
             byte[] int_serials = this.handleSerialization(this.getInternalParameters());
             str_params[0] = Base64.encodeBase64String(ext_serials);
             str_params[1] = Base64.encodeBase64String(int_serials);
             str_params[2] = Base64.encodeBase64String(sSet);
             str_params[3] = Base64.encodeBase64String(dSet);
+            str_params[4] = Base64.encodeBase64String(this.handleSerialization(Constants.getSETTINGS_MAP()));
             
-            File file = new File(new URI(Constants.DEVELOPMENT_DEPENDENCY));
+            File file = new File(new URI(Constants.Term.DEVELOPMENT_DEPENDENCY.getTermValue(String.class)));
             if (file.exists()){
-                conf.setStrings("tmpjars", Constants.DEVELOPMENT_DEPENDENCY);
+                conf.setStrings("tmpjars", Constants.Term.DEVELOPMENT_DEPENDENCY.getTermValue(String.class));
             }
             conf.setStrings(EXT_PARAMETERS, str_params);
             conf.set("mapreduce.map.java.opts", "-Xmx4096m  -verbose:gc");
@@ -139,6 +140,12 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
         return null;
     }
 
+    /**
+     * Handle serialization of parameters. Custom plug-ins may implement their own serialization
+     * routines. 
+     * @param parameters parameters used by the plug-in during init() and passed to the Map/Reduce tasks
+     * @return 
+     */
     public abstract byte[] handleSerialization(Object... parameters);
     
     private static String generateTableName(FeatureSet sourceSet) {

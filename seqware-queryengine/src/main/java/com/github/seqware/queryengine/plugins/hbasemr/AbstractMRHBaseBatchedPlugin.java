@@ -33,20 +33,14 @@ public abstract class AbstractMRHBaseBatchedPlugin extends AbstractMRHBasePlugin
     
     @Override
     public byte[] handleSerialization(Object... parameters) {
-        byte[] result = serialParam(parameters);
-        return result;
+        byte[] serialize = SerializationUtils.serialize(parameters);
+        return serialize;
     }
     
     public static Object[] handleDeserialization(byte[] data){
         Object[] result = (Object[]) SerializationUtils.deserialize(data);
         return result;
     }
-
-    private byte[] serialParam(Object ... obj) {
-        byte[] serialize = SerializationUtils.serialize(obj);
-        return serialize;
-    }
-    
     
     @Override
     public FeatureSet variableResult() {

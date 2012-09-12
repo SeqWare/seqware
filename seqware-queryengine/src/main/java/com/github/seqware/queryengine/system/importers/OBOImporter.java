@@ -157,7 +157,7 @@ public class OBOImporter {
             System.out.println(outputID);
             Map<String, String> keyValues = new HashMap<String, String>();
             keyValues.put("TagSetID", outputID);
-            keyValues.put("namespace", Constants.NAMESPACE);            
+            keyValues.put("namespace", Constants.Term.NAMESPACE.getTermValue(String.class));            
             Utility.writeKeyValueFile(outputFile, keyValues);
             return tagSet.getSGID();
         } catch (ParseException ex) {
