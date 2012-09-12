@@ -1,0 +1,74 @@
+Crashlog created at Fri Aug 17 15:37:09 -0400 2012
+
+=== MESSAGE:
+
+LoadError: no such file to load -- yajl/json_gem
+
+=== COMPILATION STACK:
+
+  (empty)
+
+=== BACKTRACE:
+
+  0. /Library/Ruby/Site/1.8/rubygems/custom_require.rb:36:in `gem_original_require'
+  1. /Library/Ruby/Site/1.8/rubygems/custom_require.rb:36:in `require'
+  2. lib/resources.rb:2
+
+=== VERSION INFORMATION:
+
+nanoc 3.4.0 © 2007-2012 Denis Defreyne.
+Running ruby 1.8.7 (2011-12-28) on universal-darwin11.0 with RubyGems 1.8.24.
+
+=== INSTALLED GEMS:
+
+  rubygems-update 1.8.24
+  adsf 1.1.1
+  cri 2.3.0
+  kramdown 0.13.7
+  rack 1.4.1
+  nanoc 3.4.0
+  colored 1.2
+
+=== ENVIRONMENT:
+
+Apple_PubSub_Socket_Render => "/tmp/launch-Rvr87g/Render"
+Apple_Ubiquity_Message => "/tmp/launch-NbW9pT/Apple_Ubiquity_Message"
+CATALINA_HOME => "/Users/yongliang/apache-tomcat-6.0.35"
+COMMAND_MODE => "unix2003"
+DISPLAY => "/tmp/launch-DsdHB8/org.x:0"
+HOME => "/Users/yongliang"
+JETTY_HOME => "/Users/yongliang/Downloads/jetty-6.1.26"
+LANG => "en_CA.UTF-8"
+LOGNAME => "yongliang"
+OLDPWD => "/Users/yongliang/git/seqware/seqware-webservice/docs"
+PATH => "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/usr/local/git/bin:/usr/local/git/bin:/usr/local/mysql-5.5.8-osx10.6-x86_64/bin"
+PWD => "/Users/yongliang/git/seqware/seqware-webservice/docs/webservice-spec"
+SHELL => "/bin/bash"
+SHLVL => "1"
+SSH_AUTH_SOCK => "/tmp/launch-yX9A9B/Listeners"
+TERM => "xterm-256color"
+TERM_PROGRAM => "Apple_Terminal"
+TERM_PROGRAM_VERSION => "303.2"
+TERM_SESSION_ID => "F00AF417-F2B4-4C5C-898E-2631A0E63506"
+TMPDIR => "/var/folders/r6/74nc9p212dx6zlmryy6cb_rh0000gr/T/"
+USER => "yongliang"
+_ => "/usr/bin/nanoc"
+__CF_USER_TEXT_ENCODING => "0x1F8:0:0"
+
+=== $LOAD_PATH:
+
+  0. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib
+  1. /Library/Ruby/Gems/1.8/gems/colored-1.2/lib
+  2. /Library/Ruby/Gems/1.8/gems/cri-2.3.0/lib
+  3. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib
+  4. /Library/Ruby/Site/1.8
+  5. /Library/Ruby/Site/1.8/powerpc-darwin11.0
+  6. /Library/Ruby/Site/1.8/universal-darwin11.0
+  7. /Library/Ruby/Site
+  8. /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/vendor_ruby/1.8
+  9. /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/vendor_ruby/1.8/universal-darwin11.0
+  10. /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/vendor_ruby
+  11. /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8
+  12. /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/powerpc-darwin11.0
+  13. /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/universal-darwin11.0
+  14. .
