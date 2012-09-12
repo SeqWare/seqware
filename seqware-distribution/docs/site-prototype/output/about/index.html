@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>SeqWare › About</title>
+<meta content="nanoc 3.4.0" name="generator">
+<link href="../assets/style-v17.css" media="screen" rel="stylesheet" type="text/css">
+<link href="http://feeds.feedburner.com/seqware" rel="alternate" title="The SeqWare Blog" type="application/atom+xml">
+<script type="text/javascript"> var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-34523087-1']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); })(); </script>
+</head>
+<body>
+<div class="wrapper">
+<!-- ***** navigation ***** -->
+<div class="nav">
+<ol>
+<li><a href="../"><span>Home</span></a></li>
+<li><a href="../blog/"><span>News</span></a></li>
+<li><a href="../docs/"><span>Documentation</span></a></li>
+<li><a href="../community/"><span>Community</span></a></li>
+<li><a href="../partners/"><span>Partners</span></a></li>
+<li><span class="active" title="You're here."><span>About</span></span></li>
+</ol>
+</div>
+<!-- ***** sidebar ***** -->
+<div class="side">
+<div class="section odd">
+<script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script><script> new TWTR.Widget({   version: 2,   type: 'profile',   rpp: 4,   interval: 30000,   width: 250,   height: 370,   theme: {     shell: {       background: '#daebff',       color: '#153b66'     },     tweets: {       background: '#daebff',       color: '#000000',       links: '#153b66'     }   },   features: {     scrollbar: false,     loop: false,     live: true,     behavior: 'all'   } }).render().setUser('seqware').start(); </script>
+</div>
+<div class="section even">
+<p>The current version of SeqWare is 0.13.1, released on September 3rd, 2012. See the <a href="../release-notes/">release notes</a> for details.</p>
+</div>
+</div>
+<!-- ***** body ***** -->
+<div class="body">
+<div class="article">
+<div class="header">
+<h1>About</h1>
+</div>
+<div class="section" id="history">
+<h2>History</h2>
+
+<p>The SeqWare project (originally SolexaTools) was started in 2007 by Brian O&#8217;Connor while he was a postdoc in the Nelson Lab at UCLA.  Brian moved to UNC in 2010 to be a research associate in the Lineberger center where the project grew and developed into the pipeline system used for the center&#8217;s TCGA RNA-Seq analysis.  In 2011 Brian moved to OICR in Toronto where he is currently a software architect and manager for the Software Engineering team. SeqWare continues to be developed by his team and is used for the institutes NGS data analysis needs, including the center&#8217;s ICGC projects.</p>
+
+</div>
+<div class="section" id="purpose">
+<h2>Purpose</h2>
+
+<p>The open source SeqWare project is a portable software infrastructure designed to analyze massive genomics datasets produced by contemporary and emerging technologies, in particular Next Generation Sequencing (NGS) platforms. It consists of a comprehensive suite of tools focused on enabling the end-to-end analysis of sequence data – from from raw base calling to analyzed variants ready for interpretation by users. <strong>SeqWare is tool agnostic, it is a framework for building analysis workflows and does not provide specific implementations out-of-the-box. You use SeqWare to create high-throughput infrastructure for NGS analysis using whatever analysis tools you like.</strong></p>
+
+</div>
+<div class="section" id="components">
+<h2>Components</h2>
+
+<p>SeqWare currently provides 5 main tools specifically designed to support massively parallel sequencing technologies. All tools can be used together or separately:</p>
+
+<ul>
+<li>
+<strong>MetaDB</strong>: provides a common database to store metadata used by all components.</li>
+<li>
+<strong>Portal</strong>: a LIMS-like web application to manage samples, record computational events, and present results back to end users.</li>
+<li>
+<strong>Pipeline</strong>: a workflow engine that is capable of wrapping and combining other tools (BFAST, BWA, SAMtools, etc) into complex pipelines, recording metadata about the analysis, and facilitates automation of pipelines based on metadata.</li>
+<li>
+<strong>Web Service</strong>: a programmatic API that lets people build new tools on top of the project</li>
+<li>
+<strong>Query Engine</strong>: a NOSQL database designed to store and query variants and other events inferred from sequence data.</li>
+</ul>
+<p><img width="600" src="../assets/images/seqware_arch.png"></p>
+
+</div>
+<div class="section" id="publications">
+<h2>Publications</h2>
+
+<p>Please cite the SeqWare paper:</p>
+
+<p>O’Connor, B. D., B. Merriman, and S. F. Nelson. <a href="http://www.biomedcentral.com/1471-2105/11/S12/S2">SeqWare Query Engine: storing and searching sequence data in the cloud</a>. BMC Bioinformatics 2010, 11(Suppl 12):S2</p>
+</div>
+</div>
+</div>
+</div>
+<!-- ***** footer ***** -->
+<div id="footer">
+<p>SeqWare © 2007–2012 Brian O&#8217;Connor. SeqWare is released under the a <a rel="license" href="http://www.gnu.org/licenses/licenses.html">GNU GPL v3</a>. This site is built using the excellent <a href="http://nanoc.stoneship.org/">nanoc</a> tool and example site along with the <a href="http://www.fonts.info/info/press/free-fonts-for-font-face-embedding.htm">Graublau</a> and <a href="http://scripts.sil.org/Gentium">Gentium</a> fonts.</p>
+</div>
+</body>
+</html>

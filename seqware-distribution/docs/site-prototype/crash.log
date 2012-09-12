@@ -1,119 +1,111 @@
-Crashlog created at 2012-09-03 14:06:15 -0400
+Crashlog created at Tue Sep 11 15:28:50 -0400 2012
 
 === MESSAGE:
 
-NoMethodError: undefined method `inner_html' for nil:NilClass
+LoadError: no such file to load -- rainpress
+Try installing the 'rainpress' gem (`gem install rainpress`) and then re-running the command.
 
 === COMPILATION STACK:
 
-  - [item]   /docs/3-getting-started/ (rep default)
+  - [item]   /assets/style/screen/ (rep default)
 
 === BACKTRACE:
 
-  0. lib/helpers/toc.rb:23:in `block in toc_for'
-  1. /usr/lib/ruby/vendor_ruby/nokogiri/xml/node_set.rb:239:in `block in each'
-  2. /usr/lib/ruby/vendor_ruby/nokogiri/xml/node_set.rb:238:in `upto'
-  3. /usr/lib/ruby/vendor_ruby/nokogiri/xml/node_set.rb:238:in `each'
-  4. lib/helpers/toc.rb:19:in `map'
-  5. lib/helpers/toc.rb:19:in `toc_for'
-  6. lib/sites-nanoc.rb:27:in `nav_item_for'
-  7. layout /default/:35:in `block in render'
-  8. /var/lib/gems/1.9.1/gems/haml-3.1.7/lib/haml/engine.rb:191:in `eval'
-  9. /var/lib/gems/1.9.1/gems/haml-3.1.7/lib/haml/engine.rb:191:in `render'
-  10. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/filters/haml.rb:23:in `run'
-  11. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/base/result_data/item_rep.rb:408:in `layout'
-  12. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/base/compilation/item_rep_proxy.rb:69:in `layout'
-  13. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/base/compilation/rule_context.rb:67:in `layout'
-  14. ./Rules:123:in `block in load'
-  15. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/base/compilation/rule.rb:68:in `instance_eval'
-  16. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/base/compilation/rule.rb:68:in `apply_to'
-  17. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/base/compilation/compiler.rb:381:in `compile_rep'
-  18. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/base/compilation/compiler.rb:337:in `block in compile_reps'
-  19. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/base/compilation/compiler.rb:330:in `loop'
-  20. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/base/compilation/compiler.rb:330:in `compile_reps'
-  21. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/base/compilation/compiler.rb:85:in `run'
-  22. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/base/source_data/site.rb:57:in `compile'
-  23. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/cli/commands/compile.rb:57:in `run'
-  24. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/cli/command_runner.rb:14:in `block in call'
-  25. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/cli/error_handler.rb:63:in `handle_while'
-  26. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/cli/error_handler.rb:26:in `handle_while'
-  27. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/cli/command_runner.rb:13:in `call'
-  28. /var/lib/gems/1.9.1/gems/cri-2.3.0/lib/cri/command_dsl.rb:185:in `block in runner'
-  29. /var/lib/gems/1.9.1/gems/cri-2.3.0/lib/cri/command.rb:296:in `call'
-  30. /var/lib/gems/1.9.1/gems/cri-2.3.0/lib/cri/command.rb:296:in `run_this'
-  31. /var/lib/gems/1.9.1/gems/cri-2.3.0/lib/cri/command.rb:249:in `run'
-  32. /var/lib/gems/1.9.1/gems/cri-2.3.0/lib/cri/command.rb:262:in `run'
-  33. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/cli.rb:47:in `block in run'
-  34. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/cli/error_handler.rb:63:in `handle_while'
-  35. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/cli/error_handler.rb:26:in `handle_while'
-  36. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib/nanoc/cli.rb:44:in `run'
-  37. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/bin/nanoc:19:in `<top (required)>'
-  38. /usr/local/bin/nanoc:19:in `load'
-  39. /usr/local/bin/nanoc:19:in `<main>'
+  0. /Library/Ruby/Site/1.8/rubygems/custom_require.rb:36:in `gem_original_require'
+  1. /Library/Ruby/Site/1.8/rubygems/custom_require.rb:36:in `require'
+  2. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/filters/rainpress.rb:3
+  3. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/plugin_registry.rb:175:in `const_get'
+  4. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/plugin_registry.rb:175:in `resolve'
+  5. /Library/Ruby/Site/1.8/rubygems/custom_require.rb:36:in `inject'
+  6. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/plugin_registry.rb:174:in `each'
+  7. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/plugin_registry.rb:174:in `inject'
+  8. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/plugin_registry.rb:174:in `resolve'
+  9. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/plugin_registry.rb:117:in `find'
+  10. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/plugin_registry.rb:65:in `named'
+  11. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/result_data/item_rep.rb:486:in `filter_named'
+  12. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/result_data/item_rep.rb:324:in `filter'
+  13. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/compilation/item_rep_proxy.rb:47:in `filter'
+  14. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/compilation/rule_context.rb:54:in `filter'
+  15. ./Rules:87:in `load'
+  16. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/compilation/rule.rb:68:in `instance_eval'
+  17. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/compilation/rule.rb:68:in `apply_to'
+  18. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/compilation/compiler.rb:381:in `compile_rep'
+  19. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/compilation/compiler.rb:337:in `compile_reps'
+  20. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/compilation/compiler.rb:330:in `loop'
+  21. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/compilation/compiler.rb:330:in `compile_reps'
+  22. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/compilation/compiler.rb:85:in `run'
+  23. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/base/source_data/site.rb:57:in `compile'
+  24. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/cli/commands/compile.rb:57:in `run'
+  25. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/cli/command_runner.rb:14:in `call'
+  26. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/cli/error_handler.rb:63:in `handle_while'
+  27. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/cli/error_handler.rb:26:in `handle_while'
+  28. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/cli/command_runner.rb:13:in `call'
+  29. /Library/Ruby/Gems/1.8/gems/cri-2.3.0/lib/cri/command_dsl.rb:185:in `runner'
+  30. /Library/Ruby/Gems/1.8/gems/cri-2.3.0/lib/cri/command.rb:296:in `call'
+  31. /Library/Ruby/Gems/1.8/gems/cri-2.3.0/lib/cri/command.rb:296:in `run_this'
+  32. /Library/Ruby/Gems/1.8/gems/cri-2.3.0/lib/cri/command.rb:249:in `run'
+  33. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/cli/commands/nanoc.rb:39:in `define'
+  34. /Library/Ruby/Gems/1.8/gems/cri-2.3.0/lib/cri/command.rb:296:in `call'
+  35. /Library/Ruby/Gems/1.8/gems/cri-2.3.0/lib/cri/command.rb:296:in `run_this'
+  36. /Library/Ruby/Gems/1.8/gems/cri-2.3.0/lib/cri/command.rb:249:in `run'
+  37. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/cli.rb:47:in `run'
+  38. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/cli/error_handler.rb:63:in `handle_while'
+  39. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/cli/error_handler.rb:26:in `handle_while'
+  40. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib/nanoc/cli.rb:44:in `run'
+  41. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/bin/nanoc:19
+  42. /usr/bin/nanoc:23:in `load'
+  43. /usr/bin/nanoc:23
 
 === VERSION INFORMATION:
 
 nanoc 3.4.0 © 2007-2012 Denis Defreyne.
-Running ruby 1.9.3 (2011-10-30) on x86_64-linux with RubyGems 1.8.11.
+Running ruby 1.8.7 (2011-12-28) on universal-darwin11.0 with RubyGems 1.8.24.
 
 === INSTALLED GEMS:
 
-  adsf 1.1.1
-  builder 3.0.0
-  chunky_png 1.2.6
-  coderay 1.0.7
-  colored 1.2
-  compass 0.12.2
-  cri 2.3.0
-  fast-aleck 0.1
-  fssm 0.2.9
-  haml 3.1.7
-  kramdown 0.13.8
-  mime-types 1.19
-  nanoc 3.4.0
   rack 1.4.1
-  rainpress 1.0
-  rubypants 0.2.0
+  nokogiri 1.5.5
   sass 3.2.1
+  rdiscount 1.6.8
+  compass 0.12.2
+  fssm 0.2.9
+  nanoc 3.4.0
+  haml 3.1.7
+  rubypants 0.2.0
+  coderay 1.0.7
+  chunky_png 1.2.6
+  adsf 1.1.1
+  cri 2.3.0
+  colored 1.2
+  rubygems-update 1.8.24
+  kramdown 0.13.7
 
 === ENVIRONMENT:
 
-COLORTERM => "mate-terminal"
-DBUS_SESSION_BUS_ADDRESS => "unix:abstract=/tmp/dbus-mCEBxjnkZb,guid=9ebc05f762e8251ed5eeb2730000001f"
-DEFAULTS_PATH => "/usr/share/gconf/mate.default.path"
-DESKTOP_SESSION => "mate"
-DISPLAY => ":0"
-GNOME_KEYRING_CONTROL => "/tmp/keyring-wiAfF2"
-GNOME_KEYRING_PID => "2002"
-GPG_AGENT_INFO => "/tmp/keyring-yghirn/gpg:0:1"
-HOME => "/home/boconnor"
+Apple_PubSub_Socket_Render => "/tmp/launch-lYDcM1/Render"
+Apple_Ubiquity_Message => "/tmp/launch-LMmCXC/Apple_Ubiquity_Message"
+CATALINA_HOME => "/Users/yongliang/apache-tomcat-6.0.35"
+COMMAND_MODE => "unix2003"
+DISPLAY => "/tmp/launch-OIoZTe/org.x:0"
+HOME => "/Users/yongliang"
+JETTY_HOME => "/Users/yongliang/Downloads/jetty-6.1.26"
 LANG => "en_CA.UTF-8"
-LOGNAME => "boconnor"
-MANDATORY_PATH => "/usr/share/gconf/mate.mandatory.path"
-MATECORBA_SOCKETDIR => "/tmp/matecorba-boconnor"
-MATE_DESKTOP_SESSION_ID => "this-is-deprecated"
-MATE_KEYRING_CONTROL => "/tmp/keyring-yghirn"
-MDMSESSION => "mate"
-MDM_LANG => "en_CA.UTF-8"
-MDM_XSERVER_LOCATION => "local"
-PATH => "/home/boconnor/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games"
-PWD => "/home/boconnor/Development/gitroot/seqware/seqware-distribution/docs/site-prototype"
-SESSION_MANAGER => "local/oslo:@/tmp/.ICE-unix/2079,unix/oslo:/tmp/.ICE-unix/2079"
+LOGNAME => "yongliang"
+OLDPWD => "/Users/yongliang/git/seqware/seqware-distribution/docs"
+PATH => "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/usr/local/git/bin:/usr/local/git/bin:/usr/local/mysql-5.5.8-osx10.6-x86_64/bin"
+PWD => "/Users/yongliang/git/seqware/seqware-distribution/docs/site-prototype"
+SECURITYSESSIONID => "186a4"
 SHELL => "/bin/bash"
 SHLVL => "1"
-SSH_AGENT_PID => "2163"
-SSH_AUTH_SOCK => "/tmp/keyring-yghirn/ssh"
-TERM => "xterm"
-UBUNTU_MENUPROXY => "libappmenu.so"
-USER => "boconnor"
-USERNAME => "boconnor"
-WINDOWID => "75497478"
-WINDOWPATH => "8"
-XAUTHORITY => "/home/boconnor/.Xauthority"
-XDG_CONFIG_DIRS => "/etc/xdg/xdg-mate:/etc/xdg"
-XDG_DATA_DIRS => "/usr/share/mate:/usr/local/share/:/usr/share/:/usr/share/mdm/"
-XDG_SESSION_COOKIE => "884dbe3f23ab020c74bc9b9b0000000c-1346598310.822225-1549125187"
-_ => "/usr/local/bin/nanoc"
+SSH_AUTH_SOCK => "/tmp/launch-OABeik/Listeners"
+TERM => "xterm-256color"
+TERM_PROGRAM => "Apple_Terminal"
+TERM_PROGRAM_VERSION => "303.2"
+TERM_SESSION_ID => "89FB389F-7720-444F-A6F9-A1B65D4D2645"
+TMPDIR => "/var/folders/r6/74nc9p212dx6zlmryy6cb_rh0000gr/T/"
+USER => "yongliang"
+_ => "/usr/bin/nanoc"
+__CF_USER_TEXT_ENCODING => "0x1F8:0:0"
 
 === GEMFILE.LOCK:
 
@@ -166,23 +158,29 @@ DEPENDENCIES
 
 === $LOAD_PATH:
 
-  0. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib
-  1. /var/lib/gems/1.9.1/gems/colored-1.2/lib
-  2. /var/lib/gems/1.9.1/gems/cri-2.3.0/lib
-  3. /var/lib/gems/1.9.1/gems/nanoc-3.4.0/lib
-  4. /var/lib/gems/1.9.1/gems/sass-3.2.1/lib
-  5. /var/lib/gems/1.9.1/gems/chunky_png-1.2.6/lib
-  6. /var/lib/gems/1.9.1/gems/fssm-0.2.9/lib
-  7. /var/lib/gems/1.9.1/gems/compass-0.12.2/lib
-  8. /var/lib/gems/1.9.1/gems/haml-3.1.7/lib
-  9. /var/lib/gems/1.9.1/gems/coderay-1.0.7/lib
-  10. /var/lib/gems/1.9.1/gems/rubypants-0.2.0/.
-  11. /var/lib/gems/1.9.1/gems/kramdown-0.13.8/lib
-  12. /usr/local/lib/site_ruby/1.9.1
-  13. /usr/local/lib/site_ruby/1.9.1/x86_64-linux
-  14. /usr/local/lib/site_ruby
-  15. /usr/lib/ruby/vendor_ruby/1.9.1
-  16. /usr/lib/ruby/vendor_ruby/1.9.1/x86_64-linux
-  17. /usr/lib/ruby/vendor_ruby
-  18. /usr/lib/ruby/1.9.1
-  19. /usr/lib/ruby/1.9.1/x86_64-linux
+  0. /Library/Ruby/Gems/1.8/gems/sass-3.2.1/lib/sass/..
+  1. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib
+  2. /Library/Ruby/Gems/1.8/gems/colored-1.2/lib
+  3. /Library/Ruby/Gems/1.8/gems/cri-2.3.0/lib
+  4. /Library/Ruby/Gems/1.8/gems/nanoc-3.4.0/lib
+  5. /Library/Ruby/Gems/1.8/gems/sass-3.2.1/lib
+  6. /Library/Ruby/Gems/1.8/gems/chunky_png-1.2.6/lib
+  7. /Library/Ruby/Gems/1.8/gems/fssm-0.2.9/lib
+  8. /Library/Ruby/Gems/1.8/gems/compass-0.12.2/lib
+  9. /Library/Ruby/Gems/1.8/gems/rdiscount-1.6.8/lib
+  10. /Library/Ruby/Gems/1.8/gems/nokogiri-1.5.5/lib
+  11. /Library/Ruby/Gems/1.8/gems/haml-3.1.7/lib
+  12. /Library/Ruby/Gems/1.8/gems/rubypants-0.2.0/.
+  13. /Library/Ruby/Gems/1.8/gems/kramdown-0.13.7/lib
+  14. /Library/Ruby/Gems/1.8/gems/coderay-1.0.7/lib
+  15. /Library/Ruby/Site/1.8
+  16. /Library/Ruby/Site/1.8/powerpc-darwin11.0
+  17. /Library/Ruby/Site/1.8/universal-darwin11.0
+  18. /Library/Ruby/Site
+  19. /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/vendor_ruby/1.8
+  20. /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/vendor_ruby/1.8/universal-darwin11.0
+  21. /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/vendor_ruby
+  22. /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8
+  23. /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/powerpc-darwin11.0
+  24. /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/universal-darwin11.0
+  25. .

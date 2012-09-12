@@ -32,7 +32,7 @@ markdown:              basic
 
 ## Metadata Tools
 
-* [AttributeAnnotator](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=AttributeAnnotator) : Annotate items in the MetaDB with 'skip' or key-value pairs.
+* <a href="/docs/attribute-annotator/">AttributeAnnotator</a>: Annotate items in the MetaDB with 'skip' or key-value pairs.
 
 
 
