@@ -247,7 +247,7 @@ public class Poster {
              * if (spaceConsumedinGB > CUT_OFF){ return; }
              *
              */
-            Path featureTable = new Path(hbase, Constants.NAMESPACE + ".hbaseTestTable_v2.Feature." + HG_19);
+            Path featureTable = new Path(hbase, Constants.Term.NAMESPACE.getTermValue(String.class) + ".hbaseTestTable_v2.Feature." + HG_19);
             contentSummary = fs.getContentSummary(featureTable);
             spaceConsumedinGB = convertToGB(contentSummary);
             keyValues.put(key + "-feature-space-in-GB", Long.toString(spaceConsumedinGB));

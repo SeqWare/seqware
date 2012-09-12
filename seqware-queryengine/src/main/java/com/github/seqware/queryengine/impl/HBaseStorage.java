@@ -50,8 +50,8 @@ public class HBaseStorage extends StorageInterface {
     public static final byte[] TEST_QUALIFIER_INBYTES = Bytes.toBytes("qualifier");
     private boolean inefficiencyWarning = false;
     public static final int PAD = 15;
-    public static final String TEST_TABLE_PREFIX = Constants.NAMESPACE + StorageInterface.SEPARATOR + "hbaseTestTable_v2";
-    private static final boolean PERSIST = Constants.PERSIST;
+    public static final String TEST_TABLE_PREFIX = Constants.Term.NAMESPACE.getTermValue(String.class) + StorageInterface.SEPARATOR + "hbaseTestTable_v2";
+    private static final boolean PERSIST = Constants.Term.PERSIST.getTermValue(Boolean.class);
     private Configuration config;
     private SerializationInterface serializer;
     private Map<String, HTable> tableMap = new HashMap<String, HTable>();
@@ -128,9 +128,10 @@ public class HBaseStorage extends StorageInterface {
      * @param config
      */
     public static void configureHBaseConfig(Configuration config) {
-        if (Constants.HBASE_REMOTE_TESTING) {
+        if (Constants.Term.HBASE_REMOTE_TESTING.getTermValue(Boolean.class)) {
             config.clear();
-            for (Entry<String, String> e : Constants.HBASE_PROPERTIES.entrySet()) {
+            Map<String, String> termValue = Constants.Term.HBASE_PROPERTIES.getTermValue(Map.class);
+            for (Entry<String, String> e : termValue.entrySet()) {
                 config.set(e.getKey(), e.getValue());
             }
         }

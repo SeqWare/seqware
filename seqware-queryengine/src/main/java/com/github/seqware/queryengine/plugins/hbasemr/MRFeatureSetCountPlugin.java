@@ -16,6 +16,7 @@
  */
 package com.github.seqware.queryengine.plugins.hbasemr;
 
+import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
@@ -25,7 +26,9 @@ import com.github.seqware.queryengine.model.impl.FeatureList;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
@@ -72,17 +75,18 @@ public class MRFeatureSetCountPlugin extends AbstractMRHBasePlugin<Long> {
 
     @Override
     public byte[] handleSerialization(Object... parameters) {
-        /** no other parameters */
-        return new byte[0];
+        byte[] serialize = SerializationUtils.serialize(parameters);
+        return serialize;
     }
 
     @Override
     public Object[] getInternalParameters() {
         return new Object[0];
     }
-    
+
     private static class RowCounterMapper
             extends TableMapper<ImmutableBytesWritable, Result> {
+
         private FeatureSet sourceSet;
         private FeatureSet destSet;
 
@@ -90,15 +94,19 @@ public class MRFeatureSetCountPlugin extends AbstractMRHBasePlugin<Long> {
          * Counter enumeration to count the actual rows.
          */
         public static enum Counters {
+
             ROWS
         }
-        
+
         @Override
         protected void setup(Mapper.Context context) {
             Configuration conf = context.getConfiguration();
             String[] strings = conf.getStrings(EXT_PARAMETERS);
-            this.sourceSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[0]), FeatureSet.class);
-            this.destSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[1]), FeatureSet.class);
+            Map<String,String> settingsMap = (Map<String,String>) AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(strings[4]))[0];
+            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).info("Settings map retrieved with  " + settingsMap.size() + " entries");
+            Constants.setSETTINGS_MAP(settingsMap);
+            this.sourceSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[2]), FeatureSet.class);
+            //this.destSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[3]), FeatureSet.class);
         }
 
         /**
@@ -119,7 +127,7 @@ public class MRFeatureSetCountPlugin extends AbstractMRHBasePlugin<Long> {
             Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).trace("Counting " + sourceSet.getSGID() + " on row with " + list.size() + " lists");
             Collection<Feature> consolidateRow = SimplePersistentBackEnd.consolidateRow(list);
             Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).trace("Consolidated to  " + consolidateRow.size() + " features");
-            for(Feature f: consolidateRow){
+            for (Feature f : consolidateRow) {
                 // why can't I increment this by the size directly on the cluster?
                 context.getCounter(MRFeatureSetCountPlugin.RowCounterMapper.Counters.ROWS).increment(1);
             }

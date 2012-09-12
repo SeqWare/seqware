@@ -16,6 +16,7 @@
  */
 package com.github.seqware.queryengine.plugins.hbasemr;
 
+import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -62,18 +64,13 @@ public class MRVCFDumperPlugin extends AbstractMRHBasePlugin<File> {
 
     @Override
     public byte[] handleSerialization(Object... parameters) {
-        byte[] result = serialParam(parameters);
-        return result;
+        byte[] serialize = SerializationUtils.serialize(parameters);
+        return serialize;
     }
 
     public static Object[] handleDeserialization(byte[] data) {
         Object[] result = (Object[]) SerializationUtils.deserialize(data);
         return result;
-    }
-
-    private byte[] serialParam(Object... obj) {
-        byte[] serialize = SerializationUtils.serialize(obj);
-        return serialize;
     }
 
     @Override
@@ -107,9 +104,6 @@ public class MRVCFDumperPlugin extends AbstractMRHBasePlugin<File> {
     private static class PluginMapper extends TableMapper<Text, Text> {
 
         private FeatureSet sourceSet;
-        private FeatureSet destSet;
-        private Object[] ext_parameters;
-        private Object[] int_parameters;
         private long count = 0;
         private Text text = new Text();
         private Text textKey = new Text();
@@ -117,12 +111,13 @@ public class MRVCFDumperPlugin extends AbstractMRHBasePlugin<File> {
         @Override
         protected void setup(MRVCFDumperPlugin.PluginMapper.Context context) {
 
+            Logger.getLogger(MRVCFDumperPlugin.class.getName()).info("Setting up mapper");
             Configuration conf = context.getConfiguration();
             String[] strings = conf.getStrings(EXT_PARAMETERS);
-            this.ext_parameters = AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(strings[0]));
-            this.int_parameters = AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(strings[1]));
+            Map<String,String> settingsMap = (Map<String,String>) AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(strings[4]))[0];
+            Logger.getLogger(MRVCFDumperPlugin.class.getName()).info("Settings map retrieved with  " + settingsMap.size() + " entries");
+            Constants.setSETTINGS_MAP(settingsMap);
             this.sourceSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[2]), FeatureSet.class);
-            this.destSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[3]), FeatureSet.class);
 
             // specific to this kind of plugin
             //this.filter = (FeatureFilter) this.int_parameters[0];
@@ -148,7 +143,6 @@ public class MRVCFDumperPlugin extends AbstractMRHBasePlugin<File> {
             count++;
             List<FeatureList> list = HBaseStorage.grabFeatureListsGivenRow(values, sourceSet.getSGID(), SWQEFactory.getSerialization());
             Collection<Feature> consolidateRow = SimplePersistentBackEnd.consolidateRow(list);
-            Collection<Feature> results = new ArrayList<Feature>();
             for (Feature f : consolidateRow) {
                 StringBuffer buffer = new StringBuffer();
                 VCFDumper.outputFeatureInVCF(buffer, f);
