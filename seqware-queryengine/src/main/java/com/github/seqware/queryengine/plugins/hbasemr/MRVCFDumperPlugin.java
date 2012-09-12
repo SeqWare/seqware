@@ -16,24 +16,19 @@
  */
 package com.github.seqware.queryengine.plugins.hbasemr;
 
-import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.system.exporters.VCFDumper;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileContext;
@@ -45,7 +40,6 @@ import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
-import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
@@ -101,31 +95,20 @@ public class MRVCFDumperPlugin extends AbstractMRHBasePlugin<File> {
     /**
      * Mapper that emits rows of the resulting VCF
      */
-    private static class PluginMapper extends TableMapper<Text, Text> {
+    private static class PluginMapper extends QEMapper<Text, Text> {
 
-        private FeatureSet sourceSet;
         private long count = 0;
         private Text text = new Text();
         private Text textKey = new Text();
 
         @Override
         protected void setup(MRVCFDumperPlugin.PluginMapper.Context context) {
-
-            Logger.getLogger(MRVCFDumperPlugin.class.getName()).info("Setting up mapper");
-            Configuration conf = context.getConfiguration();
-            String[] strings = conf.getStrings(EXT_PARAMETERS);
-            Map<String,String> settingsMap = (Map<String,String>) AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(strings[4]))[0];
-            Logger.getLogger(MRVCFDumperPlugin.class.getName()).info("Settings map retrieved with  " + settingsMap.size() + " entries");
-            Constants.setSETTINGS_MAP(settingsMap);
-            this.sourceSet = SWQEFactory.getSerialization().deserialize(Base64.decodeBase64(strings[2]), FeatureSet.class);
-
-            // specific to this kind of plugin
-            //this.filter = (FeatureFilter) this.int_parameters[0];
+            super.setup(context);
         }
 
         @Override
         protected void cleanup(MRVCFDumperPlugin.PluginMapper.Context context) {
-            System.out.println(new Date().toString() + " cleaning up with total lines: " + count);
+            Logger.getLogger(MRFeaturesByFilterPlugin.class.getName()).info(new Date().toString() + " cleaning up with total lines: " + count);  
         }
 
         /**
@@ -153,7 +136,7 @@ public class MRVCFDumperPlugin extends AbstractMRHBasePlugin<File> {
         }
     }
 
-    private static class PluginReducer extends Reducer<Text, Text, Text, Text> {
+    private static class PluginReducer extends QEReducer<Text, Text, Text, Text> {
 
         private Text text = new Text();
 
