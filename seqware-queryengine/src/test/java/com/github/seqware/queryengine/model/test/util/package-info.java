@@ -3,4 +3,4 @@
  * test suites. Add new tests to DynamicSuiteBuilder as you create them if you
  * want them to run via the suites.
  */
-package com.github.seqware.model.test.util;
+package com.github.seqware.queryengine.model.test.util;

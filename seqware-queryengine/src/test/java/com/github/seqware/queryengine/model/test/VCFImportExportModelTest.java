@@ -16,6 +16,9 @@
  */
 package com.github.seqware.queryengine.model.test;
 
+import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.impl.HBasePersistentBackEnd;
+import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.system.test.VCFImportExportTest;
 import java.io.IOException;
 import org.junit.Test;
@@ -26,6 +29,16 @@ import org.junit.Test;
  * @author dyuen
  */
 public class VCFImportExportModelTest extends VCFImportExportTest {
+
+    @Test
+    @Override
+    public void testNormalVCFImport() {
+        if (!(SWQEFactory.getBackEnd() instanceof HBasePersistentBackEnd)){
+            // in-memory models are too slow for the following test
+            return;
+        }
+        super.testNormalVCFImport();;
+    }
 
     @Test
     @Override

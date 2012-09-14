@@ -3,7 +3,6 @@ package com.github.seqware.queryengine.system.importers;
 import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.kernel.Compression;
 import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.system.Utility;
 import com.github.seqware.queryengine.util.SGID;
@@ -14,7 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.regex.Pattern;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -31,14 +29,14 @@ import org.biojava.ontology.Term;
 /**
  * Quick and dirty OBO file importer.
  *
- * This importer will create tagSets with term keys in the format
- * [0-9]+( [0-9]+)*, with leading 0's removed. A wrapper is
- * provided for use with RPNStack, so that full SO accessions
- * can be passed as an argument (e.g. SO:0001019), and the correct
- * shortened accession will be looked up in the tag set.
+ * This importer will create tagSets with term keys in the format [0-9]+(
+ * [0-9]+)*, with leading 0's removed. A wrapper is provided for use with
+ * RPNStack, so that full SO accessions can be passed as an argument (e.g.
+ * SO:0001019), and the correct shortened accession will be looked up in the tag
+ * set.
  *
- * A term SO:001023 is the unique identifier of an SO ontology entry,
- * referring to the term independent of its name or synonyms.
+ * A term SO:001023 is the unique identifier of an SO ontology entry, referring
+ * to the term independent of its name or synonyms.
  *
  * @author dyuen
  * @author jbaran
@@ -46,6 +44,10 @@ import org.biojava.ontology.Term;
 public class OBOImporter {
 
     public static final char TAG_CHAR = 'n';
+    /**
+     * Determines whether we use "acccession-only" tags.
+     */
+    public static final boolean ACCESSION_ONLY = false;
 
     public static void main(String[] args) {
         SGID mainMethod = OBOImporter.mainMethod(args);
@@ -103,12 +105,12 @@ public class OBOImporter {
 
             CreateUpdateManager modelManager = SWQEFactory.getModelManager();
             TagSet tagSet;
-            if (friendlyName == null){
+            if (friendlyName == null) {
                 tagSet = modelManager.buildTagSet().setName("Sequence Ontology").build();
-            } else{
+            } else {
                 tagSet = modelManager.buildTagSet().setName("Sequence Ontology").setFriendlyRowKey(friendlyName).build();
             }
-            
+
 
             while (iter.hasNext()) {
                 Term term = (Term) iter.next();
@@ -129,44 +131,35 @@ public class OBOImporter {
 
                 // record the "head-liner" version of the Tag
                 /* Removed storage of term names, since they are subject to change -- even
-                   more so than synonyms. Rely only on accessions here.
-
-                String key1 = term.getName() + "::" + term.getDescription();
-                Logger.getLogger(OBOImporter.class.getName()).trace("Adding ... KEY: " + key1);
-                tagSet.add(modelManager.buildTag().setKey(key1).build());
+                 more so than synonyms. Rely only on accessions here.
+                 * 
                  */
+                if (!OBOImporter.ACCESSION_ONLY) {
+                    String key1 = term.getName() + "::" + term.getDescription();
+                    Logger.getLogger(OBOImporter.class.getName()).trace("Adding ... KEY: " + key1);
+                    tagSet.add(modelManager.buildTag().setKey(key1).build());
+                }
+
+
                 String key2 = term.getName();
                 Logger.getLogger(OBOImporter.class.getName()).trace("Adding ... KEY: " + key2);
-
-                /*** HARDCODING OF THE OBO HIERARCHY FOR ONE TEST-CASE FOR QUERYINTERFACETEST ***/
-                if (key2.equals("SO:0000149"))
-                    key2 = Compression.getSequenceOntologyAccessionSurrogate("SO:0000110") +
-                           " " +
-                           Compression.getSequenceOntologyAccessionSurrogate("SO:0000001").replaceFirst("^SO:", "") +
-                           " " +
-                           Compression.getSequenceOntologyAccessionSurrogate("SO:0001410").replaceFirst("^SO:", "") +
-                           " " +
-                           Compression.getSequenceOntologyAccessionSurrogate("SO:0001248").replaceFirst("^SO:", "") +
-                           " " +
-                           Compression.getSequenceOntologyAccessionSurrogate("SO:0000353").replaceFirst("^SO:", "") +
-                           " " +
-                           Compression.getSequenceOntologyAccessionSurrogate("SO:0000149").replaceFirst("^SO:", "");
-
                 tagSet.add(modelManager.buildTag().setKey(key2).build());
-                /* Removed storage of synonyms, since they are subject to change. Ontology
-                   terms are sufficiently identified by their accession.
 
-                List<Synonym> synonyms = parser.getSynonymMap().get(term); //term.getSynonyms();
-                if (synonyms == null) {
-                    continue;
+                if (!OBOImporter.ACCESSION_ONLY) {
+                    /* Removed storage of synonyms, since they are subject to change. Ontology
+                     terms are sufficiently identified by their accession.
+                     */
+                    List<Synonym> synonyms = parser.getSynonymMap().get(term); //term.getSynonyms();
+                    if (synonyms == null) {
+                        continue;
+                    }
+                    for (Synonym syn : synonyms) {
+                        String key3 = term.getName() + "::" + syn.getName();
+                        Logger.getLogger(OBOImporter.class.getName()).trace("Adding synonym ... KEY: " + key3);
+                        // for each of the synonyms, record them in the TagSet
+                        tagSet.add(modelManager.buildTag().setKey(key3).build());
+                    }
                 }
-                for (Synonym syn : synonyms) {
-                    String key3 = term.getName() + "::" + syn.getName();
-                    Logger.getLogger(OBOImporter.class.getName()).trace("Adding synonym ... KEY: " + key3);
-                    // for each of the synonyms, record them in the TagSet
-                    tagSet.add(modelManager.buildTag().setKey(key3).build());
-                }
-                 */
             }
 
             Logger.getLogger(OBOImporter.class.getName()).info("Writing " + tagSet.getCount() + " tag specifications.");
@@ -180,7 +173,7 @@ public class OBOImporter {
             System.out.println(outputID);
             Map<String, String> keyValues = new HashMap<String, String>();
             keyValues.put("TagSetID", outputID);
-            keyValues.put("namespace", Constants.Term.NAMESPACE.getTermValue(String.class));            
+            keyValues.put("namespace", Constants.Term.NAMESPACE.getTermValue(String.class));
             Utility.writeKeyValueFile(outputFile, keyValues);
             return tagSet.getSGID();
         } catch (ParseException ex) {
