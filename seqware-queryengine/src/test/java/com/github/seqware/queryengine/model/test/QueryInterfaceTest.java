@@ -3,7 +3,9 @@ package com.github.seqware.queryengine.model.test;
 import com.github.seqware.queryengine.Benchmarking;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.impl.HBasePersistentBackEnd;
 import com.github.seqware.queryengine.impl.MRHBaseModelManager;
+import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.impl.test.SimplePersistentBackEndTest;
 import com.github.seqware.queryengine.kernel.Compression;
 import com.github.seqware.queryengine.kernel.RPNStack;
@@ -195,31 +197,26 @@ public class QueryInterfaceTest implements Benchmarking {
             arbitraryPlugin = InMemoryFeaturesByAttributesPlugin.class;
         }
         // get a FeatureSet from the back-end
-            QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeaturesByPlugin(0, arbitraryPlugin, aSet, new RPNStack(
-                    new Constant("type1"), new FeatureAttribute("type"), Operation.EQUAL));
-            // check that Features are present match
-            FeatureSet result = future.get();
-            for (Feature f : result) {
-                Assert.assertTrue(f.getType().equals("type1"));
-            }
-            int count = (int) result.getCount();
-            Assert.assertTrue("Query results wrong, expected 1 and found " + count, count == 1);
+        QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeaturesByPlugin(0, arbitraryPlugin, aSet, new RPNStack(
+                new Constant("type1"), new FeatureAttribute("type"), Operation.EQUAL));
+        // check that Features are present match
+        FeatureSet result = future.get();
+        for (Feature f : result) {
+            Assert.assertTrue(f.getType().equals("type1"));
+        }
+        int count = (int) result.getCount();
+        Assert.assertTrue("Query results wrong, expected 1 and found " + count, count == 1);
     }
 
     @Test
     public void complexQueryTest() {
         // This version of complexQueryTest is model-agnostic and will run on all back-ends.
 
-        // Load the Sequence Ontology first:
-        String curDir = System.getProperty("user.dir");
-        File file = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/so.obo");
-        SGID sequenceOntologyTagSetID = OBOImporter.mainMethod(new String[]{file.getAbsolutePath()});
-
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         try {
             mManager.persist(bSet);
         } catch (Exception e) {
-            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).fatal( "Exception", e);
+            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).fatal("Exception", e);
             junit.framework.Assert.assertTrue("Backend could not store the given FeatureSet.", false);
         }
 
@@ -271,7 +268,40 @@ public class QueryInterfaceTest implements Benchmarking {
         count = (int) resultSet.getCount();
         junit.framework.Assert.assertTrue("Setting a query constraints over one feature attribute and testing the value of a specific tag failed, expected 2 and found " + count, count == 2);
 
-        // does not work yet, commenting out for testing purposes
+        if (!(SWQEFactory.getBackEnd() instanceof HBasePersistentBackEnd)){
+            // in-memory models are too slow for the following test
+            return;
+        }
+        
+        // Load the Sequence Ontology first:
+        String curDir = System.getProperty("user.dir");
+        File file = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/so.obo");
+        SGID sequenceOntologyTagSetID = OBOImporter.mainMethod(new String[]{file.getAbsolutePath()});
+        
+        TagSet tagset = SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, sequenceOntologyTagSetID);
+        CreateUpdateManager modelManager = SWQEFactory.getModelManager();
+        modelManager.persist(tagset);
+
+        /**
+         * * HARDCODING OF THE OBO HIERARCHY FOR ONE TEST-CASE FOR
+         * QUERYINTERFACETEST **
+         */
+        String key2 = Compression.getSequenceOntologyAccessionSurrogate("SO:0000110")
+                + " "
+                + Compression.getSequenceOntologyAccessionSurrogate("SO:0000001").replaceFirst("^SO:", "")
+                + " "
+                + Compression.getSequenceOntologyAccessionSurrogate("SO:0001410").replaceFirst("^SO:", "")
+                + " "
+                + Compression.getSequenceOntologyAccessionSurrogate("SO:0001248").replaceFirst("^SO:", "")
+                + " "
+                + Compression.getSequenceOntologyAccessionSurrogate("SO:0000353").replaceFirst("^SO:", "")
+                + " "
+                + Compression.getSequenceOntologyAccessionSurrogate("SO:0000149").replaceFirst("^SO:", "");
+        
+        Tag build = modelManager.buildTag().setKey(key2).build();
+        tagset.add(build);
+        modelManager.close();  
+        
         queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant("chr16"),
                 new FeatureAttribute("seqid"),

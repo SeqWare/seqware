@@ -32,7 +32,7 @@ import org.junit.Test;
  */
 public class OBOParserTest {
 
-    public static final int NUMBER_TERMS = 6861;
+    public static final int NUMBER_TERMS = OBOImporter.ACCESSION_ONLY ? 1935 : 6861;
 
     @Test
     public void importOBOTest() {
@@ -43,15 +43,19 @@ public class OBOParserTest {
         // count is 2135 if we do not omit obselete terms and check for duplicates
         Assert.assertTrue("loaded incorrect number of SO terms, expected " + NUMBER_TERMS + " found " + tagSet.getCount(), tagSet.getCount() == NUMBER_TERMS);
         // check that a few known sequence tags are present
+        Assert.assertTrue("SO:1000043 not found in TagSet", tagSet.containsKey("SO:1000043"));
+        if (OBOImporter.ACCESSION_ONLY) {
+            return;
+        }
         Assert.assertTrue("tandem_repeat not found in TagSet", tagSet.containsKey("SO:0000705::tandem_repeat"));
         Assert.assertTrue("5KB_upstream_variant not found in TagSet", tagSet.containsKey("SO:0001635::5KB_upstream_variant"));
         Assert.assertTrue("intergenic_variant not found in TagSet", tagSet.containsKey("SO:0001628::intergenic_variant"));
         Assert.assertTrue("500B_downstream_variant not found in TagSet", tagSet.containsKey("SO:0001634::500B_downstream_variant"));
         // check on some synonyms
-        Assert.assertTrue("SO:1000043 not found in TagSet", tagSet.containsKey("SO:1000043"));
         Assert.assertTrue("Robertsonian_fusion not found in TagSet", tagSet.containsKey("SO:1000043::Robertsonian_fusion"));
         Assert.assertTrue("centric-fusion translocations not found in TagSet", tagSet.containsKey("SO:1000043::centric-fusion translocations"));
         Assert.assertTrue("whole-arm translocations not found in TagSet", tagSet.containsKey("SO:1000043::whole-arm translocations"));
+
 
         // check that the tags are linked properly back to their tag set
         Tag tandem_repeat = tagSet.get("SO:0000705::tandem_repeat");
