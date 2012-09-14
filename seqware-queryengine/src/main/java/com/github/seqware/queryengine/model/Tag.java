@@ -61,17 +61,26 @@ public class Tag extends AtomImpl<Tag> {
      * Tests whether the given tag is a parent of this tag -- making this
      * tag a descendant of the parameter tag.
      *
+     * Only applicable to Sequence Ontology hierarchies right now, because the
+     * hierarchy check depends on the coding used to represent the hierarchy.
+     *
      * @param tagKey Tag-key that we want to check if we descent from it.
      * @return True if this tag is a descendant of the tag in the parameter.
      */
     public boolean isDescendantOf(String tagKey) {
-        if (tagKey == null)
+        if (!this.getKey().startsWith("SO:"))
             return false;
 
-        return this.getKey().equals(tagKey) || // Perfect match. Top of the hierarchy match.
-               this.getKey().endsWith(" " + tagKey) || // The tag key matches us as a leaf.
-               this.getKey().startsWith(tagKey + " ") || // Top-level match, i.e. our hierarchy is rooted with tagKey.
-               this.getKey().contains(" " + tagKey + " "); // The tag key appears somewhere between the root and leaf.
+        if (tagKey == null || !tagKey.startsWith("SO:"))
+            return false;
+
+        String thisKey = this.getKey().replaceFirst("^SO:", "");
+        tagKey = tagKey.replaceFirst("^SO:", "");
+
+        return thisKey.equals(tagKey) || // Perfect match. Top of the hierarchy match.
+               thisKey.endsWith(" " + tagKey) || // The tag key matches us as a leaf.
+               thisKey.startsWith(tagKey + " ") || // Top-level match, i.e. our hierarchy is rooted with tagKey.
+               thisKey.contains(" " + tagKey + " "); // The tag key appears somewhere between the root and leaf.
     }
 
     /**

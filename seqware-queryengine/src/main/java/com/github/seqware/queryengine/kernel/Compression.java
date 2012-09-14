@@ -22,11 +22,14 @@ public class Compression {
         if (!sequenceOntologyAccession.startsWith("SO:"))
             throw new IllegalArgumentException("Argument is not an SO accession.");
 
-        return toBaseN(Integer.parseInt(sequenceOntologyAccession.replaceFirst("^SO:", "")), MAX_BASE);
+        return "SO:" + toBaseN(Integer.parseInt(sequenceOntologyAccession.replaceFirst("^SO:", "")), MAX_BASE);
     }
 
     public static String getSequenceOntologyAccession(String surrogate) {
-        String accession = Integer.toString(fromBaseN(surrogate, MAX_BASE));
+        if (!surrogate.startsWith("SO:"))
+            throw new IllegalArgumentException("Argument is not an SO accession.");
+
+        String accession = Integer.toString(fromBaseN(surrogate.replaceFirst("^SO:", ""), MAX_BASE));
 
         return "SO:" + StringUtils.repeat(" ", 7 - accession.length()) + accession;
     }

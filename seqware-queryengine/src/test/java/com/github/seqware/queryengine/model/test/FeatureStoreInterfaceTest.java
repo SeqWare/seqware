@@ -60,6 +60,7 @@ public class FeatureStoreInterfaceTest {
         // Named tags, where the values convey actual information:
         Tag termTag = mManager.buildTag().setKey("SO_term").build();
         Tag idTag = mManager.buildTag().setKey("SO_id").build();
+        Tag contigTag = mManager.buildTag().setKey(Compression.getSequenceOntologyAccessionSurrogate("SO:0000149")).build();
 
         // Heavy tags, where the tag key itself represents information:
         Tag transcriptProcessingVariant = mManager.buildTag().setKey("SO::sequence_variant::functional_variant::transcript_function_variant::transcript_processing_variant").build();
@@ -86,6 +87,10 @@ public class FeatureStoreInterfaceTest {
         b.associateTag(idTag.toBuilder().setValue(Compression.getSequenceOntologyAccessionSurrogate("SO:0000149")).build());
         c.associateTag(termTag.toBuilder().setValue("contig").build());
         c.associateTag(idTag.toBuilder().setValue(Compression.getSequenceOntologyAccessionSurrogate("SO:0000149")).build());
+
+        // Alternative tag formatting:
+        b.associateTag(contigTag.toBuilder().setValue("1").build());
+        c.associateTag(contigTag.toBuilder().setValue("2").build());
 
         // Variant tags:
         d.associateTag(transcriptProcessingVariant);
