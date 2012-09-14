@@ -142,15 +142,15 @@ public class OBOImporter {
                 if (key2.equals("SO:0000149"))
                     key2 = Compression.getSequenceOntologyAccessionSurrogate("SO:0000110") +
                            " " +
-                           Compression.getSequenceOntologyAccessionSurrogate("SO:0000001") +
+                           Compression.getSequenceOntologyAccessionSurrogate("SO:0000001").replaceFirst("^SO:", "") +
                            " " +
-                           Compression.getSequenceOntologyAccessionSurrogate("SO:0001410") +
+                           Compression.getSequenceOntologyAccessionSurrogate("SO:0001410").replaceFirst("^SO:", "") +
                            " " +
-                           Compression.getSequenceOntologyAccessionSurrogate("SO:0001248") +
+                           Compression.getSequenceOntologyAccessionSurrogate("SO:0001248").replaceFirst("^SO:", "") +
                            " " +
-                           Compression.getSequenceOntologyAccessionSurrogate("SO:0000353") +
+                           Compression.getSequenceOntologyAccessionSurrogate("SO:0000353").replaceFirst("^SO:", "") +
                            " " +
-                           Compression.getSequenceOntologyAccessionSurrogate("SO:0000149");
+                           Compression.getSequenceOntologyAccessionSurrogate("SO:0000149").replaceFirst("^SO:", "");
 
                 tagSet.add(modelManager.buildTag().setKey(key2).build());
                 /* Removed storage of synonyms, since they are subject to change. Ontology
