@@ -84,21 +84,21 @@ public class LazyFeaturesByAttributesPlugin extends AbstractMRInMemoryPlugin {
                 SeqWareIterable<Tag> tags = feature.getTags();
                 for (Tag tag : tags) {
                     // TODO For now, it cannot distinguish between various tag sets -- in either the feature tags and ontologies to search.
-                    if (!tag.getKey().equals("SO_id"))
+                    if (!tag.getKey().startsWith("SO:"))
                         continue;
 
-                    if (!this.hierarchyCache.containsKey(tag.getValue()))
+                    if (!this.hierarchyCache.containsKey(tag.getKey()))
                         for (TagSet tagSet: this.hierarchyConstraintSets) {
                             Iterator<Tag> tagIterator = tagSet.iterator();
                             while (tagIterator.hasNext()) {
                                 Tag hTag = tagIterator.next();
-                                if (hTag.getKey().replaceFirst(".* ", "").equals(tag.getValue()))
-                                    this.hierarchyCache.put((String)tag.getValue(), hTag);
+                                if (hTag.getKey().replaceFirst(":.* ", ":").equals(tag.getKey()))
+                                    this.hierarchyCache.put((String)tag.getKey(), hTag);
                             }
                         }
 
                     // The following can be null, if the tag is from a tag set that we are not looking at:
-                    Tag tagWithHierachy = this.hierarchyCache.get(tag.getValue());
+                    Tag tagWithHierachy = this.hierarchyCache.get(tag.getKey());
 
                     if (tagWithHierachy != null && tagWithHierachy.isDescendantOf(parameter.getName())) {
                         foundTag = true;
