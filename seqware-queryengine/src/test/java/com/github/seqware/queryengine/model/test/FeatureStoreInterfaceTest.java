@@ -2,6 +2,7 @@ package com.github.seqware.queryengine.model.test;
 
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
+import com.github.seqware.queryengine.kernel.Compression;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
@@ -78,13 +79,13 @@ public class FeatureStoreInterfaceTest {
 
         // Loci tags:
         a.associateTag(termTag.toBuilder().setValue("region").build());
-        a.associateTag(idTag.toBuilder().setValue("SO:0000001").build());
+        a.associateTag(idTag.toBuilder().setValue(Compression.getSequenceOntologyAccessionSurrogate("SO:0000001")).build());
         b.associateTag(termTag.toBuilder().setValue("region").build());
-        b.associateTag(idTag.toBuilder().setValue("SO:0000001").build());
+        b.associateTag(idTag.toBuilder().setValue(Compression.getSequenceOntologyAccessionSurrogate("SO:0000001")).build());
         b.associateTag(termTag.toBuilder().setValue("contig").build());
-        b.associateTag(idTag.toBuilder().setValue("SO:0000149").build());
+        b.associateTag(idTag.toBuilder().setValue(Compression.getSequenceOntologyAccessionSurrogate("SO:0000149")).build());
         c.associateTag(termTag.toBuilder().setValue("contig").build());
-        c.associateTag(idTag.toBuilder().setValue("SO:0000149").build());
+        c.associateTag(idTag.toBuilder().setValue(Compression.getSequenceOntologyAccessionSurrogate("SO:0000149")).build());
 
         // Variant tags:
         d.associateTag(transcriptProcessingVariant);

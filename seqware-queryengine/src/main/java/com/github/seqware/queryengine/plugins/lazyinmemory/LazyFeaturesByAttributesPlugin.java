@@ -27,8 +27,14 @@ import com.github.seqware.queryengine.kernel.RPNStack.Parameter;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
+import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.plugins.inmemory.AbstractMRInMemoryPlugin;
 import com.github.seqware.queryengine.util.SeqWareIterable;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Generic query implementation over all attributes of a Feature (including additional attributes).
@@ -40,6 +46,8 @@ import com.github.seqware.queryengine.util.SeqWareIterable;
 public class LazyFeaturesByAttributesPlugin extends AbstractMRInMemoryPlugin {
 
     private RPNStack rpnStack;
+    private List<TagSet> hierarchyConstraintSets;
+    private Map<String, Tag> hierarchyCache = new HashMap<String, Tag>();
     private FeatureSet set;
     private CreateUpdateManager manager;
 
@@ -50,6 +58,9 @@ public class LazyFeaturesByAttributesPlugin extends AbstractMRInMemoryPlugin {
         set = manager.buildFeatureSet().setReferenceID(inputSet.getReferenceID()).build();
         this.inputSet = inputSet;
         this.rpnStack = (RPNStack)parameters[0];
+        for (int i = 1; i < parameters.length; i++)
+            if (parameters[i] instanceof List)
+                this.hierarchyConstraintSets = (List<TagSet>)parameters[i];
         // set is no longer managed, but we can still attach to it
         return new ReturnValue();
     }
@@ -71,11 +82,29 @@ public class LazyFeaturesByAttributesPlugin extends AbstractMRInMemoryPlugin {
             else if (parameter instanceof TagHierarchicalOccurrence) {
                 boolean foundTag = false;
                 SeqWareIterable<Tag> tags = feature.getTags();
-                for (Tag tag : tags)
-                    if (tag.isDescendantOf(parameter.getName())) {
+                for (Tag tag : tags) {
+                    // TODO For now, it cannot distinguish between various tag sets -- in either the feature tags and ontologies to search.
+                    if (!tag.getKey().equals("SO_id"))
+                        continue;
+
+                    if (!this.hierarchyCache.containsKey(tag.getValue()))
+                        for (TagSet tagSet: this.hierarchyConstraintSets) {
+                            Iterator<Tag> tagIterator = tagSet.iterator();
+                            while (tagIterator.hasNext()) {
+                                Tag hTag = tagIterator.next();
+                                if (hTag.getKey().replaceFirst(".* ", "").equals(tag.getValue()))
+                                    this.hierarchyCache.put((String)tag.getValue(), hTag);
+                            }
+                        }
+
+                    // The following can be null, if the tag is from a tag set that we are not looking at:
+                    Tag tagWithHierachy = this.hierarchyCache.get(tag.getValue());
+
+                    if (tagWithHierachy != null && tagWithHierachy.isDescendantOf(parameter.getName())) {
                         foundTag = true;
                         break;
                     }
+                }
                 rpnStack.setParameter(parameter, foundTag);
             } else if (parameter instanceof TagValuePresence) {
                 Tag tag = feature.getTagByKey(parameter.getName());
