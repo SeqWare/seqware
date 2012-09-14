@@ -24,10 +24,14 @@ import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
 import com.github.seqware.queryengine.kernel.RPNStack.Parameter;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.Tag;
+import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.util.SeqWareIterable;
+import java.util.HashMap;
 import org.apache.commons.lang.NotImplementedException;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Generic query implementation over all attributes of a Feature (including
@@ -42,27 +46,67 @@ public class InMemoryFeaturesByAttributesPlugin extends InMemoryFeaturesByFilter
     protected FeatureFilter getFilter() {
         return new FeaturesByAttributesFilter();
     }
-    
+
     public static class FeaturesByAttributesFilter implements FeatureFilter {
+        
+        private List<TagSet> hierarchyConstraintSets = null;
+        private Map<String, Tag> hierarchyCache = new HashMap<String, Tag>();
+
         @Override
-        public boolean featurePasses(Feature f, Object... parameters) {
+        public boolean featurePasses(Feature feature, Object... parameters) {
+
+            for (int i = 1; hierarchyConstraintSets == null && i < parameters.length; i++) {
+                if (parameters[i] instanceof List) {
+                    this.hierarchyConstraintSets = (List<TagSet>) parameters[i];
+                }
+            }
+
             RPNStack rpnStack = (RPNStack) parameters[0];
             // Get the parameters from the RPN stack and replace them with concrete values:
             for (Parameter parameter : rpnStack.getParameters()) {
-                if (parameter instanceof FeatureAttribute)
-                    rpnStack.setParameter(parameter, f.getAttribute(parameter.getName()));
-                else if (parameter instanceof TagOccurrence)
-                    rpnStack.setParameter(parameter, f.getTagByKey(parameter.getName()) != null);
-                else if (parameter instanceof TagHierarchicalOccurrence) {
-                    throw new NotImplementedException("Could not implement the equivalent algorithm as in LazyFeaturesByAttributesPlugin due to unknown init method.");
+                if (parameter instanceof FeatureAttribute) {
+                    rpnStack.setParameter(parameter, feature.getAttribute(parameter.getName()));
+                } else if (parameter instanceof TagOccurrence) {
+                    rpnStack.setParameter(parameter, feature.getTagByKey(parameter.getName()) != null);
+                } else if (parameter instanceof TagHierarchicalOccurrence) {
+                    boolean foundTag = false;
+                    SeqWareIterable<Tag> tags = feature.getTags();
+                    for (Tag tag : tags) {
+                        // TODO For now, it cannot distinguish between various tag sets -- in either the feature tags and ontologies to search.
+                        if (!tag.getKey().startsWith("SO:")) {
+                            continue;
+                        }
+
+                        if (!this.hierarchyCache.containsKey(tag.getKey())) {
+                            for (TagSet tagSet : this.hierarchyConstraintSets) {
+                                Iterator<Tag> tagIterator = tagSet.iterator();
+                                while (tagIterator.hasNext()) {
+                                    Tag hTag = tagIterator.next();
+                                    if (hTag.getKey().replaceFirst(":.* ", ":").equals(tag.getKey())) {
+                                        this.hierarchyCache.put((String) tag.getKey(), hTag);
+                                    }
+                                }
+                            }
+                        }
+
+                        // The following can be null, if the tag is from a tag set that we are not looking at:
+                        Tag tagWithHierachy = this.hierarchyCache.get(tag.getKey());
+
+                        if (tagWithHierachy != null && tagWithHierachy.isDescendantOf(parameter.getName())) {
+                            foundTag = true;
+                            break;
+                        }
+                    }
+                    rpnStack.setParameter(parameter, foundTag);
                 } else if (parameter instanceof TagValuePresence) {
-                    Tag tag = f.getTagByKey(parameter.getName());
+                    Tag tag = feature.getTagByKey(parameter.getName());
                     rpnStack.setParameter(parameter,
-                                          tag != null &&
-                                          (tag.getValue() == null && ((TagValuePresence) parameter).getValue() == null ||
-                                           tag.getValue() != null && tag.getValue().equals(((TagValuePresence) parameter).getValue())));
-                } else
+                            tag != null
+                            && (tag.getValue() == null && ((TagValuePresence) parameter).getValue() == null
+                            || tag.getValue() != null && tag.getValue().equals(((TagValuePresence) parameter).getValue())));
+                } else {
                     throw new UnsupportedOperationException("This plugin can only handle FeatureAttribute parameters.");
+                }
             }
             boolean result = (Boolean) rpnStack.evaluate();
             return result;
