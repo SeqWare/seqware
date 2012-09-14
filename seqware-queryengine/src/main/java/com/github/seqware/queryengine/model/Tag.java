@@ -68,7 +68,10 @@ public class Tag extends AtomImpl<Tag> {
         if (tagKey == null)
             return false;
 
-        return this.getKey().equals(tagKey) || this.getKey().startsWith(tagKey + "::");
+        return this.getKey().equals(tagKey) || // Perfect match. Top of the hierarchy match.
+               this.getKey().endsWith(" " + tagKey) || // The tag key matches us as a leaf.
+               this.getKey().startsWith(tagKey + " ") || // Top-level match, i.e. our hierarchy is rooted with tagKey.
+               this.getKey().contains(" " + tagKey + " "); // The tag key appears somewhere between the root and leaf.
     }
 
     /**
@@ -134,7 +137,6 @@ public class Tag extends AtomImpl<Tag> {
      * of the back-end. This is used primary to keep track of which TagSet a tag
      * came from.
      *
-     * @param sgid
      * @return
      */
     public Tag setTagSet(TagSet set) {

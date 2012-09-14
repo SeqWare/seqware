@@ -25,6 +25,7 @@ import com.github.seqware.queryengine.kernel.RPNStack.Parameter;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.util.SeqWareIterable;
+import org.apache.commons.lang.NotImplementedException;
 
 import java.util.Iterator;
 
@@ -53,14 +54,7 @@ public class InMemoryFeaturesByAttributesPlugin extends InMemoryFeaturesByFilter
                 else if (parameter instanceof TagOccurrence)
                     rpnStack.setParameter(parameter, f.getTagByKey(parameter.getName()) != null);
                 else if (parameter instanceof TagHierarchicalOccurrence) {
-                    boolean foundTag = false;
-                    SeqWareIterable<Tag> tags = f.getTags();
-                    for (Tag tag : tags)
-                        if (tag.isDescendantOf(parameter.getName())) {
-                            foundTag = true;
-                            break;
-                        }
-                    rpnStack.setParameter(parameter, foundTag);
+                    throw new NotImplementedException("Could not implement the equivalent algorithm as in LazyFeaturesByAttributesPlugin due to unknown init method.");
                 } else if (parameter instanceof TagValuePresence) {
                     Tag tag = f.getTagByKey(parameter.getName());
                     rpnStack.setParameter(parameter,

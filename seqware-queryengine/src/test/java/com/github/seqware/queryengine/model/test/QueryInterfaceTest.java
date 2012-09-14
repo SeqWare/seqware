@@ -5,17 +5,24 @@ import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.MRHBaseModelManager;
 import com.github.seqware.queryengine.impl.test.SimplePersistentBackEndTest;
+import com.github.seqware.queryengine.kernel.Compression;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.Constant;
 import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
 import com.github.seqware.queryengine.kernel.RPNStack.Operation;
 import com.github.seqware.queryengine.kernel.RPNStack.TagOccurrence;
 import com.github.seqware.queryengine.kernel.RPNStack.TagValuePresence;
+import com.github.seqware.queryengine.kernel.RPNStack.TagHierarchicalOccurrence;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesByAttributesPlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByAttributesPlugin;
+
+import java.io.File;
 import java.util.Iterator;
+
+import com.github.seqware.queryengine.system.importers.OBOImporter;
+import com.github.seqware.queryengine.util.SGID;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -201,7 +208,13 @@ public class QueryInterfaceTest implements Benchmarking {
 
     @Test
     public void complexQueryTest() {
-        // this version of complexQueryTest is model-agnostic and will run on all back-ends
+        // This version of complexQueryTest is model-agnostic and will run on all back-ends.
+
+        // Load the Sequence Ontology first:
+        String curDir = System.getProperty("user.dir");
+        File file = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/so.obo");
+        SGID sequenceOntologyTagSetID = OBOImporter.mainMethod(new String[]{file.getAbsolutePath()});
+
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         try {
             mManager.persist(bSet);
@@ -252,22 +265,21 @@ public class QueryInterfaceTest implements Benchmarking {
                 new Constant(Feature.Strand.POSITIVE),
                 new FeatureAttribute("strand"),
                 Operation.EQUAL,
-                new TagValuePresence("SO_id", Tag.ValueType.STRING, "SO:0000149"),
+                new TagValuePresence("SO_id", Tag.ValueType.STRING, Compression.getSequenceOntologyAccessionSurrogate("SO:0000149")),
                 Operation.AND));
         resultSet = queryFuture.get();
         count = (int) resultSet.getCount();
         junit.framework.Assert.assertTrue("Setting a query constraints over one feature attribute and testing the value of a specific tag failed, expected 2 and found " + count, count == 2);
 
         // does not work yet, commenting out for testing purposes
-//        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
-//                new Constant("chr16"),
-//                new FeatureAttribute("seqid"),
-//                Operation.EQUAL,
-//                // new TagHierarchicalOccurrence("SO:0001536::specific_synonym", "SO"),
-//                new TagHierarchicalOccurrence("SO:0001536", "SO"),
-//                Operation.AND));
-//        resultSet = queryFuture.get();
-//        count = (int) resultSet.getCount();
-//        junit.framework.Assert.assertTrue("Setting a query constraints over one feature attribute and for a (possibly parent) term in a tree hierarchy failed, expected 3 and found " + count, count == 3);
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
+                new Constant("chr16"),
+                new FeatureAttribute("seqid"),
+                Operation.EQUAL,
+                new TagHierarchicalOccurrence(Compression.getSequenceOntologyAccessionSurrogate("SO:0001410"), sequenceOntologyTagSetID.getRowKey()),
+                Operation.AND));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        junit.framework.Assert.assertTrue("Setting a query constraints over one feature attribute and for a (possibly parent) term in a tree hierarchy failed, expected 2 and found " + count, count == 2);
     }
 }
