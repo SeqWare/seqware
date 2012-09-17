@@ -28,3 +28,9 @@ seqware-webservice/docs/webservice-spec/tmp
 # seqware-queryengine documentation
 seqware-queryengine/docs/webservice-spec/output
 seqware-queryengine/docs/webservice-spec/tmp
+
+# seqware-distribution documentation
+seqware-distribution/docs/site-prototype/output
+seqware-distribution/docs/site-prototype/tmp
+seqware-distribution/docs/site/output
+seqware-distribution/docs/site/tmp
