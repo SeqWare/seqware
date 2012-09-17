@@ -32,7 +32,7 @@ markdown:              basic
 
 ## Metadata Tools
 
-* <a href="/docs/attribute-annotator/">AttributeAnnotator</a>: Annotate items in the MetaDB with 'skip' or key-value pairs.
+* <a href="/docs/12-attribute-annotator/">AttributeAnnotator</a>: Annotate items in the MetaDB with 'skip' or key-value pairs.
 
 
 
