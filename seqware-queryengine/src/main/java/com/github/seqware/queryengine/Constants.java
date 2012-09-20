@@ -99,7 +99,7 @@ public class Constants {
          *
          * Important: for local development, set the variable to false.
          */
-        HBASE_REMOTE_TESTING("QE_HBASE_REMOTE_TESTING", true, Boolean.class),
+        HBASE_REMOTE_TESTING("QE_HBASE_REMOTE_TESTING", false, Boolean.class),
         /**
          * Properties used when connecting to a remote instance of HBase.
          *
