@@ -17,6 +17,7 @@
 package com.github.seqware.queryengine;
 
 import com.github.seqware.queryengine.common.ConfigTools;
+import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import java.util.Map;
@@ -69,6 +70,7 @@ public class Constants {
         try {
             SETTINGS_MAP = ConfigTools.getSettings();
         } catch (Exception e) {
+            Logger.getLogger(Constants.class.getName()).fatal(e);
             Logger.getLogger(Constants.class.getName()).info("Unable to read settings file: " + e.getMessage() + " expected for plug-ins");
         }
     }
@@ -97,7 +99,7 @@ public class Constants {
          *
          * Important: for local development, set the variable to false.
          */
-        HBASE_REMOTE_TESTING("QE_HBASE_REMOTE_TESTING", false, Boolean.class),
+        HBASE_REMOTE_TESTING("QE_HBASE_REMOTE_TESTING", true, Boolean.class),
         /**
          * Properties used when connecting to a remote instance of HBase.
          *
@@ -141,6 +143,8 @@ public class Constants {
                             put("fs.hdfs.impl", Constants.SETTINGS_MAP.get("QE_" + value + "_FS_HDFS_IMPL")).
                             //put("hadoop.security.token.service.use_ip", Constants.SETTINGS_MAP.get("QE_"+value+"_USE_IP")).
                             build());
+                } else{
+                    return (T)value;
                 }
             }
             return (T) term_default;
@@ -190,6 +194,7 @@ public class Constants {
      */
     public static void setSETTINGS_MAP(Map<String, String> SETTINGS_MAP) {
         Constants.SETTINGS_MAP = SETTINGS_MAP;
+        Logger.getLogger(Constants.class.getName()).info("Constants configured with: host: " + Constants.Term.HBASE_PROPERTIES.getTermValue(Map.class).toString() + " namespace: " +  Constants.Term.NAMESPACE.getTermValue(String.class));
     }
 
     /**

@@ -58,12 +58,16 @@ public abstract class QEMapper<KEYOUT, VALUEOUT> extends TableMapper<KEYOUT, VAL
         Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).info("Setting up mapper");
         Configuration conf = context.getConfiguration();
         String[] strings = conf.getStrings(AbstractMRHBaseBatchedPlugin.EXT_PARAMETERS);
+        Logger.getLogger(QEMapper.class.getName()).info("QEMapper configured with: host: " + Constants.Term.HBASE_PROPERTIES.getTermValue(Map.class).toString() + " namespace: " +  Constants.Term.NAMESPACE.getTermValue(String.class));
         final String mapParameter = strings[4];
         if (mapParameter != null && !mapParameter.isEmpty()){
             Map<String, String> settingsMap = (Map<String, String>) AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(mapParameter))[0];
-            Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).info("Settings map retrieved with " + settingsMap.size() + " entries");
-            Constants.setSETTINGS_MAP(settingsMap);
+            if (settingsMap != null){
+                Logger.getLogger(MRFeatureSetCountPlugin.class.getName()).info("Settings map retrieved with " + settingsMap.size() + " entries");
+                Constants.setSETTINGS_MAP(settingsMap);
+            }
         }
+        Logger.getLogger(QEMapper.class.getName()).info("QEMapper configured with: host: " + Constants.Term.HBASE_PROPERTIES.getTermValue(Map.class).toString() + " namespace: " +  Constants.Term.NAMESPACE.getTermValue(String.class));
         final String externalParameters = strings[0];
         if (externalParameters != null && !externalParameters.isEmpty()){
             this.ext_parameters = AbstractMRHBaseBatchedPlugin.handleDeserialization(Base64.decodeBase64(externalParameters));
