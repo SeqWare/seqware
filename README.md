@@ -1,7 +1,7 @@
     PROJECT: SeqWare
     FILE: README.md
     UPDATED: 20120920
-    HOMEPAGE: <a href="http://seqware.github.com/">http://seqware.github.com/</a>
+    HOMEPAGE: [http://seqware.github.com/](http://seqware.github.com/)
 
 INTRODUCTION
 ====================
