@@ -24,6 +24,7 @@ import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
+import com.github.seqware.queryengine.plugins.hbasemr.QEMapper;
 import com.github.seqware.queryengine.system.importers.FeatureImporter;
 import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.SGID;
@@ -66,12 +67,12 @@ public class HBaseStorage extends StorageInterface {
             maxMap = new HashMap<String, Integer>();
             countMap = new HashMap<String, Long>();
         }
-
         this.serializer = i;
         // The HBaseConfiguration reads in hbase-site.xml and hbase-default.xml,
         // as long as these can be found in the CLASSPATH.
         this.config = HBaseConfiguration.create();
         configureHBaseConfig(config);
+        Logger.getLogger(HBaseStorage.class.getName()).info("HBaseStorage configured with: host: " + Constants.Term.HBASE_PROPERTIES.getTermValue(Map.class).toString() + " namespace: " +  Constants.Term.NAMESPACE.getTermValue(String.class));
         try {
             Logger.getLogger(HBaseStorage.class.getName()).info("Starting with " + HBaseStorage.class.getSimpleName() + " using " + serializer.getClass().getSimpleName() + " on " + java.net.InetAddress.getLocalHost().getHostName());
             HBaseAdmin hba = new HBaseAdmin(config);

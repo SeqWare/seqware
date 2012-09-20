@@ -27,6 +27,7 @@ public class TagSetCreator {
                 System.exit(FeatureImporter.EXIT_CODE_INVALID_FILE);
             }
         } catch (IllegalArgumentException e) {
+            Logger.getLogger(ReferenceCreator.class.getName()).fatal(e);
             System.exit(FeatureImporter.EXIT_CODE_EXISTING_NAME);
         }
     }

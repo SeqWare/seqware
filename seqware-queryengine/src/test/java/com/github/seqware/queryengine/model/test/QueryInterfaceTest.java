@@ -152,7 +152,7 @@ public class QueryInterfaceTest implements Benchmarking {
         int start = 1000000;
         int stop = 1000105;
         QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeaturesByRange(0, bSet, QueryInterface.Location.INCLUDES, structure, start, stop);
-
+                
         int featuresInRange = 0;
         for (Feature feature : bSet) {
             if (feature.getSeqid().equals(structure) && feature.getStart() >= start && feature.getStop() <= stop) {
