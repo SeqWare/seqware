@@ -1,22 +1,25 @@
     PROJECT: SeqWare
     FILE: README.md
+    PROEJCT LEAD: Brian O'Connor <briandoconnor@gmail.com>
     UPDATED: 20120920
-    HOMEPAGE: [http://seqware.github.com/](http://seqware.github.com/)
+    HOMEPAGE: http://seqware.github.com/
 
 INTRODUCTION
 ====================
 
-This is top level of the SeqWare Project. For now, this contains the source of the SeqWare homepage, the second iteration of the SeqWare query engine, the intial prototype of the query engine, a folder for creating self-contained jar files with our command-line tools, and the documentation for the seqware-webservice. 
+This is top level of the [SeqWare Project](http://seqware.github.com).  
+This contains the 5 major components of the SeqWare project along with
+documentation:
 
-Eventually this will also contain the components of the SeqWare project that 
-follow and are currently hosted at sourceforge:
 * seqware-meta-db
 * seqware-webservice
 * seqware-portal
 * seqware-pipeline
 * seqware-queryengine
+* seqware-common
+* the http://seqware.github.com website and manual
 
-In addition the seqware-common sub-project provides a location for common code
+The seqware-common sub-project provides a location for common code
 and most of the other sub-projects have this as a dependency.
 
 BUILDING
@@ -24,6 +27,8 @@ BUILDING
 
 PREREQUISITES
 -------------
+
+###SeqWare Query Engine
 
 We use [protobuf](http://code.google.com/p/protobuf/) to handle serialization and de-serialization.
 
@@ -55,6 +60,8 @@ You can also build individual components such as the new query engine with:
 
 LOCAL UNIT TESTING SETUP
 ------------------------
+
+### SeqWare Query Engine
 
 The full test suite requires Hadoop and HBase; a good start is to follow Cloudera's [quick start guide](https://ccp.cloudera.com/display/CDH4DOC/CDH4+Quick+Start+Guide).
 
@@ -98,7 +105,12 @@ testing, development, and deployment.
 COPYRIGHT
 ====================
 
-Copyright 2008-2012 Brian D O'Connor, Denis Yuen, Joachim Baran
+Copyright 2008-2012 Brian D O'Connor, OICR, UNC, and Nimbus Informatics, LLC
+
+CONTRIBUTORS
+============
+
+Denis Yuen, Joachim Baran, Yong Liang, Morgan Taschuk, Tony DeBat, and Zheng Zha
 
 LICENSE
 ====================
