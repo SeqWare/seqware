@@ -1,0 +1,2795 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="net.sourceforge.seqware.common.model">
+
+  <!-- ********** **************** File Type **************** ********** -->
+    <class name="FileType" table="file_type" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            File type table.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="fileTypeId" type="integer" column="file_type_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">file_type_file_type_id_seq</param>
+            </generator>
+        </id>
+
+        <property name="displayName" column="display_name" type="string"/>
+        <property name="metaType" column="meta_type" type="string"/>
+        <property name="extension" column="extension" type="string"/>
+
+    </class>
+
+ <!-- ******** WorkflowRun share ******** -->
+    <class name="ShareWorkflowRun" table="share_workflow_run" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            Workflow run share table.
+        </meta>
+
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="shareWorkflowRunId" type="integer" column="share_workflow_run_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">share_workflow_run_share_workflow_run_id_seq</param>
+            </generator>
+        </id>
+
+        <version name="updateTimestamp" column="update_tstmp" type="timestamp" unsaved-value="null"/>
+
+        <property name="swAccession" column="sw_accession" type="integer" generated="insert">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
+        <property name="workflowRunId" column="workflow_run_id" type="integer"/>
+        <property name="active" column="active" type="boolean"/>
+	<!--property name="email" column="email" type="string"/-->
+
+        <many-to-one
+            name="registration"
+            class="Registration"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="registration_id"
+    />
+
+    </class>
+
+  <!-- ******** Study share ******** -->
+    <class name="ShareStudy" table="share_study" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            Study share table.
+        </meta>
+
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="shareStudyId" type="integer" column="share_study_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">share_study_id_seq</param>
+            </generator>
+        </id>
+
+        <version name="updateTimestamp" column="update_tstmp" type="timestamp" unsaved-value="null"/>
+
+        <property name="swAccession" column="sw_accession" type="integer" generated="insert">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
+        <property name="studyId" column="study_id" type="integer"/>
+        <property name="active" column="active" type="boolean"/>
+	<!--property name="email" column="email" type="string"/-->
+
+        <many-to-one
+            name="registration"
+            class="Registration"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="registration_id"
+    />
+
+    </class>
+
+
+
+  <!-- ********** **************** Workflow **************** ********** -->
+    <class name="Workflow" table="workflow" dynamic-insert="true" dynamic-update="true" optimistic-lock="none">
+        <meta attribute="class-description">
+            An Workflow.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="workflowId" type="integer" column="workflow_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">workflow_workflow_id_seq</param>
+            </generator>
+        </id>
+
+        <version name="updateTimestamp" column="update_tstmp" type="timestamp" unsaved-value="null"/>
+
+        <property name="swAccession" column="sw_accession" type="integer" generated="insert">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
+
+        <property name="name" column="name" type="string"/>
+        <property name="description" column="description" type="string"/>
+        <property name="version" column="version" type="string"/>
+        <property name="cwd" column="current_working_dir" type="string"/>
+        <property name="command" column="cmd" type="string"/>
+        <property name="inputAlgorithm" column="input_algorithm" type="string"/>
+        <property name="seqwareVersion" column="seqware_version" type="string"/>
+        <property name="baseIniFile" column="base_ini_file" type="string"/>
+        <property name="permanentBundleLocation" column="permanent_bundle_location" type="string"/>
+        <property name="host" column="host" type="string"/>
+        <property name="username" column="username" type="string"/>
+        <property name="template" column="workflow_template" type="string"/>
+
+        <many-to-one
+            name="owner"
+            class="Registration"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="owner_id"
+            not-found="ignore"
+    />
+
+        <set
+            name="workflowRuns"
+            lazy="true"
+            inverse="true"
+            cascade="all"
+            sort="natural">
+            <key column="workflow_id" />
+            <one-to-many class="WorkflowRun" />
+        </set>
+
+        <set
+            name="workflowParams"
+            lazy="true"
+            inverse="true"
+            cascade="all"
+            sort="natural">
+            <key column="workflow_id" />
+            <one-to-many class="WorkflowParam" />
+        </set>
+        <set name="workflowAttributes" inverse="true" lazy="true" table="workflow_attribute" cascade="all-delete-orphan" fetch="select">
+            <key>
+                <column name="workflow_id" not-null="true" />
+            </key>
+
+            <one-to-many class="WorkflowAttribute" />
+        </set>
+    </class>
+
+
+  <!-- ********** **************** Invoice **************** ********** -->
+    <class name="Invoice" table="invoice" dynamic-insert="true" dynamic-update="true" optimistic-lock="none">
+        <meta attribute="class-description">
+            An Invoice.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="invoiceId" type="integer" column="invoice_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">invoice_invoice_id_seq</param>
+            </generator>
+        </id>
+
+        <version name="createTimestamp" column="create_tstmp" type="timestamp" unsaved-value="null"/>
+
+        
+        <property name="swAccession" column="sw_accession" type="integer" generated="insert">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="startDate" column="start_date" type="date" not-null="true"/>
+        <property name="endDate" column="end_date" type="date" not-null="true"/>
+        <property name="state" column="state" type="string"/>
+        <property name="finalized" column="finalized" type="boolean"/>
+        <property name="fullyPaid" column="fully_paid" type="boolean"/>
+        <property name="paidAmount" column="paid_amount" type="double"/>
+        <property name="daysUntilDue" column="days_until_due" type="integer"/>
+        <property name="externalId" column="external_id" type="string"/>
+        <property name="clientNotes" column="client_notes" type="string"/>
+        <property name="notes" column="notes" type="string"/>
+
+
+        <many-to-one
+            name="owner"
+            class="Registration"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="owner_id"
+            not-found="ignore"
+        />
+        
+        <set
+            name="expenses"
+            lazy="true"
+            inverse="true"
+            cascade="all"
+            sort="natural">
+            <key column="invoice_id" />
+            <one-to-many class="Expense" />
+        </set>
+
+        <!-- set name="invoiceAttributes" inverse="true" lazy="true" table="invoice_attribute" fetch="select">
+            <key>
+                <column name="invoice_id" not-null="true" />
+            </key>
+            <one-to-many class="InvoiceAttribute" />
+        </set-->
+    </class>
+    
+    
+    <!-- ********** **************** Expense **************** ********** -->
+    <class name="Expense" table="expense" dynamic-insert="true" dynamic-update="true" optimistic-lock="none">
+        <meta attribute="class-description">
+            An Expense.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="expenseId" type="integer" column="expense_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">expense_expense_id_seq</param>
+            </generator>
+        </id>
+
+        <version name="finishedTimestamp" column="expense_finished_tstmp" type="timestamp" unsaved-value="null"/>
+
+        
+        <property name="swAccession" column="sw_accession" type="integer" generated="insert">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+        
+        <property name="agent" column="agent" type="string"/>
+        <property name="expenseType" column="expense_type" type="string"/>
+        <property name="description" column="description" type="string"/>
+        <property name="pricePerUnit" column="price_per_unit" type="double"/>
+        <property name="totalUnits" column="total_units" type="double"/>
+        <property name="totalPrice" column="total_price" type="double"/>
+        <property name="addedSurcharge" column="added_surcharge" type="double"/>
+
+        <many-to-one
+            name="workflowRun"
+            class="WorkflowRun"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="workflow_run_id"
+            not-found="ignore"
+        />
+
+        <many-to-one
+            name="invoice"
+            class="Invoice"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="invoice_id"
+            not-found="ignore"
+        />
+        
+        <!-- set name="invoiceAttributes" inverse="true" lazy="true" table="invoice_attribute" fetch="select">
+            <key>
+                <column name="invoice_id" not-null="true" />
+            </key>
+            <one-to-many class="InvoiceAttribute" />
+        </set-->
+    </class>
+
+  <!-- ********** **************** Workflow_Param **************** ********** -->
+    <class name="WorkflowParam" table="workflow_param" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            An WorkflowParam.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="workflowParamId" type="integer" column="workflow_param_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">workflow_param_workflow_param_id_seq</param>
+            </generator>
+        </id>
+
+    <!--version name="updateTimestamp" column="update_tstmp" type="timestamp" unsaved-value="null"/-->
+
+        <property name="type" column="type" type="string"/>
+        <property name="key" column="key" type="string"/>
+        <property name="defaultValue" column="default_value" type="string"/>
+        <property name="display" column="display" type="boolean"/>
+        <property name="fileMetaType" column="file_meta_type" type="string"/>
+        <property name="displayName" column="display_name" type="string"/>
+
+        <many-to-one
+            name="workflow"
+            class="Workflow"
+            cascade="all"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="workflow_id"
+    />
+
+        <set
+            name="values"
+            lazy="true"
+            inverse="true"
+            cascade="all"
+            sort="natural">
+            <key column="workflow_param_id" />
+            <one-to-many class="WorkflowParamValue" />
+        </set>
+
+    </class>
+
+  <!-- ********** **************** Workflow_Param_Value **************** ********** -->
+    <class name="WorkflowParamValue" table="workflow_param_value" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            An WorkflowParamValue.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="workflowParamValueId" type="integer" column="workflow_param_value_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">workflow_param_value_workflow_param_value_id_seq</param>
+            </generator>
+        </id>
+
+        <property name="value" column="value" type="string"/>
+        <property name="displayName" column="display_name" type="string"/>
+
+        <many-to-one
+            name="workflowParam"
+            class="WorkflowParam"
+            cascade="all"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="workflow_param_id"
+    />
+
+    </class>
+
+  <!-- ********** **************** Workflow_Run **************** ********** -->
+    <class name="WorkflowRun" table="workflow_run" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            An WorkflowRun.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="workflowRunId" type="integer" column="workflow_run_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">workflow_run_workflow_run_id_seq</param>
+            </generator>
+        </id>
+
+        <version name="updateTimestamp" column="update_tstmp" type="timestamp" unsaved-value="null"/>
+
+        <property name="swAccession" column="sw_accession" type="integer" generated="insert">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
+
+        <property name="name" column="name" type="string"/>
+
+        <property name="status" column="status" type="string"/>
+        <property name="statusCmd" column="status_cmd" type="string"/>
+        <property name="seqwareRevision" column="seqware_revision" type="string"/>
+        <property name="host" column="host" type="string"/>
+        <property name="currentWorkingDir" column="current_working_dir" type="string"/>
+        <property name="userName" column="username" type="string"/>
+        <property name="command" column="cmd" type="string"/>
+        <property name="template" column="workflow_template" type="string"/>
+        <property name="stdErr" column="stderr" type="string"/>
+        <property name="stdOut" column="stdout" type="string"/>
+        <!-- <property name="dax" type="string" column="dax" /> -->
+        <property name="iniFile" type="string" column="ini_file" />
+
+        <many-to-one
+            name="owner"
+            class="Registration"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="owner_id"
+            not-found="ignore"
+    />
+
+        <many-to-one
+            name="workflow"
+            class="Workflow"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="workflow_id"
+    />
+
+        <set
+            name="processings"
+            lazy="true"
+            inverse="true"
+            cascade="all"
+            sort="natural">
+            <key column="workflow_run_id" />
+            <one-to-many class="Processing" />
+        </set>
+
+        <set
+            name="offspringProcessings"
+            lazy="true"
+            inverse="true"
+            cascade="all"
+            sort="natural">
+            <key column="ancestor_workflow_run_id" />
+            <one-to-many class="Processing" />
+        </set>
+
+
+    <!--set
+      name="processings"
+      lazy="true"
+      inverse="true"
+      cascade="all"
+      sort="natural">
+      <key column="workflow_run_id" />
+      <one-to-many class="Processing" />
+    </set-->
+
+        <set
+            name="sharedWorkflowRuns"
+            lazy="true"
+            inverse="true"
+            cascade="all"
+            sort="natural"  access="field">
+            <key column="workflow_run_id"/>
+            <one-to-many class="ShareWorkflowRun"/>
+        </set>
+
+        <set
+            name="workflowRunParams"
+            lazy="true"
+            inverse="true"
+            cascade="all"
+            sort="natural">
+            <key column="workflow_run_id"/>
+            <one-to-many class="WorkflowRunParam"/>
+        </set>
+
+        <set name="ius" table = "ius_workflow_runs" cascade="all" sort="natural">
+            <key column="workflow_run_id"/>
+            <many-to-many class="IUS" column="ius_id" unique="true"/>
+        </set>
+
+        <set name="lanes" table = "lane_workflow_runs" cascade="all" sort="natural">
+            <key column="workflow_run_id"/>
+            <many-to-many class="Lane" column="lane_id" unique="true"/>
+        </set>
+        <set name="workflowRunAttributes" inverse="true" lazy="true" table="workflow_run_attribute" fetch="select" cascade="all">
+            <key>
+                <column name="workflow_run_id" not-null="true" />
+            </key>
+
+            <one-to-many class="WorkflowRunAttribute" />
+        </set>
+    </class>
+
+  <!-- ********** **************** Workflow_Run_Param **************** ********** -->
+    <class name="WorkflowRunParam" table="workflow_run_param" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            An WorkflowRunParam.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="workflowRunParamId" type="integer" column="workflow_run_param_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">workflow_run_param_workflow_run_param_id_seq</param>
+            </generator>
+        </id>
+
+    <!--version name="updateTimestamp" column="update_tstmp" type="timestamp" unsaved-value="null"/-->
+
+        <property name="type" column="type" type="string"/>
+        <property name="key" column="key" type="string"/>
+        <property name="value" column="value" type="string"/>
+        <property name="parentProcessingAccession" column="parent_processing_accession" type="integer"/>
+
+        <many-to-one
+            name="workflowRun"
+            class="WorkflowRun"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="workflow_run_id"
+    />
+
+    </class>
+
+  <!-- ********* Start SRA ********* -->
+
+  <!-- ********** **************** Study **************** ********** -->
+    <class name="Study" table="study" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            A Study is a container for a sequencing investigation that may comprise multiple experiments.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="studyId" type="integer" column="study_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">study_study_id_seq</param>
+            </generator>
+        </id>
+
+        <version name="updateTimestamp" column="update_tstmp" type="timestamp" unsaved-value="null"/>
+
+        <property name="title" column="title" type="string">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="swAccession" column="sw_accession" type="integer" generated="insert">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="alias" column="alias" type="string"/>
+        <property name="description" column="description" type="string"/>
+        <property name="accession" column="accession" type="string"/>
+        <property name="abstractStr" column="abstract" type="string"/>
+        <property name="newType" column="new_type" type="string"/>
+        <property name="centerName" column="center_name" type="string"/>
+        <property name="centerProjectName" column="center_project_name" type="string"/>
+        <property name="projectId" column="project_id" type="integer"/>
+        <property name="status" column="status" type="string"/>
+
+        <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
+
+    <!--property name="ownerId" column="owner_id" type="integer"/-->
+
+
+        <many-to-one
+            name="owner"
+            class="Registration"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="owner_id"
+            not-found="ignore"
+    />
+
+        <many-to-one
+            name="existingType"
+            class="StudyType"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="existing_type"
+    />
+
+        <set
+            name="experiments"
+            lazy="true"
+            inverse="true"
+            cascade="all"
+            sort="natural">
+            <key column="study_id"/>
+            <one-to-many class="Experiment"/>
+        </set>
+
+        <set
+            name="sharedStudies"
+            lazy="true"
+            inverse="true"
+            cascade="all"
+            sort="natural">
+            <key column="study_id"/>
+            <one-to-many class="ShareStudy"/>
+        </set>
+
+        <set name="processings" table = "processing_studies" cascade="all">
+            <key column="study_id"/>
+            <many-to-many class="Processing" column="processing_id" unique="true"/>
+        </set>
+
+        <set name="studyLinks" inverse="true" lazy="true" table="study_link" fetch="select">
+            <key>
+                <column name="study_id" not-null="true" />
+            </key>
+
+            <one-to-many class="StudyLink" />
+        </set>
+
+        <set name="studyAttributes" inverse="true" lazy="true" table="study_attribute" fetch="select" cascade="all-delete-orphan">
+            <key>
+                <column name="study_id" not-null="true" />
+            </key>
+
+            <one-to-many class="StudyAttribute" />
+        </set>
+
+
+    </class>
+
+  <!-- ********** **************** StudyLink **************** ********** -->
+    <class name="StudyLink" table="study_link" schema="public">
+        <id name="studyLinkId" type="int">
+            <column name="study_link_id" />
+
+            <generator class="assigned" />
+        </id>
+
+        <many-to-one name="study" class="Study" fetch="select">
+            <column name="study_id" not-null="true" />
+        </many-to-one>
+
+        <property name="label" type="string">
+            <column name="label" not-null="true" />
+        </property>
+
+        <property name="url" type="string">
+            <column name="url" not-null="true" />
+        </property>
+
+        <property name="db" type="string">
+            <column name="db" />
+        </property>
+
+        <property name="id" type="string">
+            <column name="id" />
+        </property>
+    </class>
+
+  <!-- ********** **************** StudyAttribute **************** ********** -->
+    <class name="StudyAttribute" table="study_attribute" schema="public">
+        <id name="studyAttributeId" type="int">
+            <column name="study_attribute_id" />
+
+            <generator class="sequence">
+                <param name="sequence">study_attribute_study_attribute_id_seq</param>
+            </generator>
+        </id>
+
+        <many-to-one name="study" class="Study" fetch="select">
+            <column name="study_id" not-null="true" />
+        </many-to-one>
+
+        <property name="tag" type="string">
+            <column name="tag" not-null="true" />
+        </property>
+
+        <property name="value" type="string">
+            <column name="value" not-null="true" />
+        </property>
+
+        <property name="units" type="string">
+            <column name="units" />
+        </property>
+    </class>
+
+
+  <!-- ********** **************** StudyType **************** ********** -->
+    <class name="StudyType" table="study_type" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            A Study Type.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="studyTypeId" type="integer" column="study_type_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">study_type_study_type_id_seq</param>
+            </generator>
+        </id>
+
+        <property name="name" column="name" type="string"/>
+        <property name="description" column="description" type="string"/>
+
+    </class>
+
+  <!-- ********** **************** Experiment **************** ********** -->
+    <class name="Experiment" table="experiment" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            An Experiment.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="experimentId" type="integer" column="experiment_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">experiment_experiment_id_seq</param>
+            </generator>
+        </id>
+
+        <version name="updateTimestamp" column="update_tstmp" type="timestamp" unsaved-value="null"/>
+
+        <property name="swAccession" column="sw_accession" type="integer" generated="insert">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
+
+        <property name="title" column="title" type="string">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="name" column="name" type="string"/>
+        <property name="description" column="description" type="string"/>
+        <property name="alias" column="alias" type="string"/>
+        <property name="accession" column="accession" type="string"/>
+        <property name="status" column="status" type="string"/>
+        <property name="centerName" column="center_name" type="string"/>
+        <property name="sequenceSpace" column="sequence_space" type="string"/>
+        <property name="baseCaller" column="base_caller" type="string"/>
+        <property name="qualityScorer" column="quality_scorer" type="string"/>
+        <property name="qualityNumberOfLevels" column="quality_number_of_levels" type="integer"/>
+        <property name="qualityMultiplier" column="quality_multiplier" type="integer"/>
+        <property name="qualityType" column="quality_type" type="string"/>
+        <property name="expectedNumberRuns" column="expected_number_runs" type="integer"/>
+        <property name="expectedNumberSpots" column="expected_number_spots" type="long"/>
+        <property name="expectedNumberReads" column="expected_number_reads" type="long"/>
+
+        <many-to-one
+            name="owner"
+            class="Registration"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="owner_id"
+            not-found="ignore"
+    />
+
+        <many-to-one
+            name="study"
+            class="Study"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="study_id"
+    />
+
+        <many-to-one
+            name="platform"
+            class="Platform"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="platform_id"
+    />
+
+        <many-to-one
+            name="experimentLibraryDesign"
+            class="ExperimentLibraryDesign"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="experiment_library_design_id"
+    />
+
+        <many-to-one
+            name="experimentSpotDesign"
+            class="ExperimentSpotDesign"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="experiment_spot_design_id"
+    />
+
+        <set
+            name="samples"
+            lazy="false"
+            inverse="true"
+            cascade="all"
+            sort="natural">
+            <key column="experiment_id"/>
+            <one-to-many class="Sample"/>
+        </set>
+
+        <set name="experimentLinks" inverse="true" lazy="true" table="experiment_link" fetch="select">
+            <key>
+                <column name="experiment_id" not-null="true" />
+            </key>
+            <one-to-many class="ExperimentLink" />
+        </set>
+
+        <set name="experimentAttributes" inverse="true" lazy="true" table="experiment_attribute" fetch="select" cascade="all-delete-orphan">
+            <key>
+                <column name="experiment_id" />
+            </key>
+            <one-to-many class="ExperimentAttribute" />
+        </set>
+
+
+        <set name="processings" table = "processing_experiments" cascade="all">
+            <key column="experiment_id"/>
+            <many-to-many class="Processing" column="processing_id" unique="true"/>
+        </set>
+    </class>
+
+  <!-- ********** **************** ExperimentAttribute **************** ********** -->
+    <class name="ExperimentAttribute" table="experiment_attribute" schema="public">
+        <id name="experimentAttributeId" type="int">
+            <column name="experiment_attribute_id" />
+
+             <generator class="sequence">
+                <param name="sequence">experiment_attribute_experiment_attribute_id_seq</param>
+            </generator>
+        </id>
+
+        <many-to-one name="experiment" class="Experiment" fetch="select">
+            <column name="experiment_id" not-null="true" />
+        </many-to-one>
+
+        <property name="tag" type="string">
+            <column name="tag" />
+        </property>
+
+        <property name="value" type="string">
+            <column name="value" />
+        </property>
+
+        <property name="units" type="string">
+            <column name="units" />
+        </property>
+    </class>
+
+  <!-- ********** **************** ExperimentLink **************** ********** -->
+    <class name="ExperimentLink" table="experiment_link" schema="public">
+        <id name="experimentLinkId" type="int">
+            <column name="experiment_link_id" />
+
+            <generator class="assigned" />
+        </id>
+
+        <many-to-one name="experiment" class="Experiment" cascade="all" fetch="select">
+            <column name="experiment_id" not-null="true" />
+        </many-to-one>
+
+        <property name="label" type="string">
+            <column name="label" />
+        </property>
+
+        <property name="url" type="string">
+            <column name="url" />
+        </property>
+
+        <property name="db" type="string">
+            <column name="db" />
+        </property>
+
+        <property name="id" type="string">
+            <column name="id" />
+        </property>
+    </class>
+
+
+
+  <!-- ********** **************** ExperimentLibraryDesign **************** ********** -->
+    <class name="ExperimentLibraryDesign" table="experiment_library_design" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            An Experiment Library Design.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="experimentLibraryDesignId" type="integer" column="experiment_library_design_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">experiment_library_design_experiment_library_design_id_seq</param>
+            </generator>
+        </id>
+
+        <property name="name" column="name" type="string">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="description" column="description" type="string"/>
+        <property name="constructionProtocol" column="construction_protocol" type="string"/>
+        <property name="layout" column="layout" type="string"/>
+        <property name="pairedOrientation" column="paired_orientation" type="string"/>
+        <property name="nominalLength" column="nominal_length" type="integer"/>
+        <property name="nominalSdev" column="nominal_sdev" type="double"/>
+
+        <many-to-one
+            name="strategy"
+            class="LibraryStrategy"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="strategy"
+    />
+        <many-to-one
+            name="source"
+            class="LibrarySource"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="source"
+    />
+        <many-to-one
+            name="selection"
+            class="LibrarySelection"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="selection"
+    />
+
+    </class>
+
+  <!-- ********** **************** ExperimentSpotDesign **************** ********** -->
+    <class name="ExperimentSpotDesign" table="experiment_spot_design" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            An Experiment Spot Design.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="experimentSpotDesignId" type="integer" column="experiment_spot_design_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">experiment_spot_design_experiment_spot_design_id_seq</param>
+            </generator>
+        </id>
+
+        <property name="decodeMethod" column="decode_method" type="integer"/>
+        <property name="readsPerSpot" column="reads_per_spot" type="integer"/>
+        <property name="readSpec" column="read_spec" type="string"/>
+        <property name="tagSpec" column="tag_spec" type="string"/>
+        <property name="adapterSpec" column="adapter_spec" type="string"/>
+
+    <!-- cascade="all" -->
+
+        <set
+            name="readSpecs"
+            lazy="true"
+            inverse="true"
+            order-by="read_index desc"
+            sort="net.sourceforge.seqware.common.model.comparator.ExperimentSpotDesignReadSpecComparator">
+            <key column="experiment_spot_design_id"/>
+            <one-to-many class="ExperimentSpotDesignReadSpec"/>
+        </set>
+
+    </class>
+
+  <!-- ********** **************** ExperimentSpotDesignReadSpec **************** ********** -->
+    <class name="ExperimentSpotDesignReadSpec" table="experiment_spot_design_read_spec" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            An Experiment Spot Design Read Spec.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="experimentSpotDesignReadSpecId" type="integer" column="experiment_spot_design_read_spec_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">experiment_spot_design_read_s_experiment_spot_design_read_s_seq</param>
+            </generator>
+        </id>
+
+        <property name="readIndex" column="read_index" type="integer"/>
+        <property name="readLabel" column="read_label" type="text"/>
+        <property name="readClass" column="read_class" type="string"/>
+        <property name="readType" column="read_type" type="string"/>
+        <property name="expectedBaseCall" column="expected_basecall" type="string"/>
+        <property name="baseCoord" column="base_coord" type="integer"/>
+        <property name="cycleCoord" column="cycle_coord" type="integer"/>
+        <property name="length" column="length" type="integer"/>
+
+        <many-to-one
+            name="experimentSpotDesign"
+            class="ExperimentSpotDesign"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="experiment_spot_design_id"
+    />
+
+    </class>
+
+
+  <!-- ********** **************** Sample **************** ********** -->
+    <class name="Sample" table="sample" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            An Sample.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="sampleId" type="integer" column="sample_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">sample_sample_id_seq</param>
+            </generator>
+        </id>
+
+        <version name="updateTimestamp" column="update_tstmp" type="timestamp" unsaved-value="null"/>
+
+        <property name="swAccession" column="sw_accession" type="integer" generated="insert">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="title" column="title" type="string">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
+
+        <property name="name" column="name" type="string"/>
+        <property name="description" column="description" type="string"/>
+        <property name="type" column="type" type="string"/>
+    <!--property name="title" column="title" type="string"/-->
+        <property name="alias" column="alias" type="string"/>
+        <property name="individualName" column="individual_name" type="string"/>
+        <property name="anonymizedName" column="anonymized_name" type="string"/>
+        <property name="tags" column="tags" type="string"/>
+        <property name="adapters" column="adapters" type="string"/>
+        <property name="regions" column="regions" type="string"/>
+        <property name="expectedNumRuns" column="expected_number_runs" type="integer"/>
+        <property name="expectedNumSpots" column="expected_number_spots" type="integer"/>
+        <property name="expectedNumReads" column="expected_number_reads" type="integer"/>
+        <property name="skip" column="skip" type="boolean"/>
+
+        <many-to-one
+            name="owner"
+            class="Registration"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="owner_id"
+            not-found="ignore"
+    />
+
+        <many-to-one
+            name="experiment"
+            class="Experiment"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="experiment_id"
+    />
+
+        <many-to-one
+            name="organism"
+            class="Organism"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="organism_id"
+    />
+
+    <!--set
+      name="lanes"
+      lazy="true"
+      inverse="true"
+      cascade="all"
+      sort="natural">
+      <key column="sample_id" />
+      <one-to-many class="Lane" />
+    </set-->
+
+        <set
+            name="IUS"
+            lazy="true"
+            inverse="true"
+            cascade="all"
+            sort="natural">
+            <key column="sample_id" />
+            <one-to-many class="IUS" />
+        </set>
+
+        <set name="processings" table = "processing_samples" cascade="all">
+            <key column="sample_id"/>
+            <many-to-many class="Processing" column="processing_id" unique="true"/>
+        </set>
+
+        <set name="children" table = "sample_hierarchy" cascade="all" lazy="true">
+            <key column="parent_id"/>
+            <many-to-many class="Sample" column="sample_id" unique="true"/>
+        </set>
+
+        <set name="parents" table = "sample_hierarchy" inverse="true">
+            <key column="sample_id"/>
+            <many-to-many class="Sample" column="parent_id" unique="true"/>
+        </set>
+
+        <set name="sampleAttributes" inverse="true" lazy="true" cascade="all-delete-orphan" table="sample_attribute" fetch="select">
+            <key>
+                <column name="sample_id" not-null="true" />
+            </key>
+
+            <one-to-many class="SampleAttribute" />
+        </set>
+
+        <set name="sampleLinks" inverse="true" lazy="true" table="sample_link" fetch="select">
+            <key>
+                <column name="sample_id" not-null="true" />
+            </key>
+
+            <one-to-many class="SampleLink" />
+        </set>
+
+    </class>
+
+  <!-- ********* End SRA ********* -->
+
+  <!-- ********* **************** Sample_Attribute **************** ********* -->
+    <class name="SampleAttribute" table="sample_attribute" schema="public">
+        <id name="sampleAttributeId" type="int">
+            <column name="sample_attribute_id" />
+             <generator class="sequence">
+                <param name="sequence">sample_attribute_sample_attribute_id_seq</param>
+            </generator>
+        </id>
+
+        <many-to-one name="sample" class="Sample" fetch="select">
+            <column name="sample_id" not-null="true" />
+        </many-to-one>
+
+        <property name="tag" type="string">
+            <column name="tag" not-null="true" />
+        </property>
+
+        <property name="value" type="string">
+            <column name="value" not-null="true" />
+        </property>
+
+        <property name="units" type="string">
+            <column name="units" />
+        </property>
+    </class>
+
+  <!-- ********* **************** Sample_Link **************** ********* -->
+    <class name="SampleLink" table="sample_link" schema="public">
+        <id name="sampleLinkId" type="int">
+            <column name="sample_link_id" />
+
+            <generator class="assigned" />
+        </id>
+
+        <many-to-one name="sample" class="Sample" fetch="select">
+            <column name="sample_id" not-null="true" />
+        </many-to-one>
+
+        <property name="label" type="string">
+            <column name="label" not-null="true" />
+        </property>
+
+        <property name="url" type="string">
+            <column name="url" not-null="true" />
+        </property>
+
+        <property name="db" type="string">
+            <column name="db" />
+        </property>
+
+        <property name="id" type="string">
+            <column name="id" />
+        </property>
+    </class>
+
+
+
+  <!-- ********* **************** Registration **************** ********* -->
+    <class name="Registration" table="registration" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="registrationId" type="integer" column="registration_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+
+      <!-- generator class="native"></generator -->
+            <generator class="sequence">
+                <param name="sequence">registration_registration_id_seq</param>
+            </generator>
+        </id>
+
+    <!-- 'version' must be before any 'property' -->
+        <version column="last_update_tstmp" name="updateTimestamp" type="timestamp" unsaved-value="null"/>
+        <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
+
+        <property name="emailAddress" column="email" type="string" not-null="true">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+        <property name="password" column="password" type="string" length="50">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="passwordHint" column="password_hint" type="string"/>
+        <property name="firstName" column="first_name" type="string" not-null="true"/>
+        <property name="lastName" column="last_name" type="string" not-null="true"/>
+        <property name="institution" column="institution" type="string" not-null="false"/>
+
+        <property name="LIMSAdmin" column="lims_admin" type="boolean" not-null="true" />
+        <property name="payee" column="payee" type="boolean" not-null="false" />
+
+        <property name="joinDevelopersMailingList" 	column="developer_ml" type="boolean" not-null="true" />
+        <property name="joinUsersMailingList" 		column="user_ml" type="boolean" not-null="true" />
+        <property name="invitationCode" column="invitation_code" type="string" />
+    </class>
+
+  <!-- ********** **************** SequencerRun **************** ********** -->
+    <class name="SequencerRun" table="sequencer_run" dynamic-insert="true" dynamic-update="true" optimistic-lock="none">
+        <meta attribute="class-description">
+            Represents a physical run of the sequencing machine.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="sequencerRunId" type="integer" column="sequencer_run_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <meta attribute="use-in-equals">true</meta>
+            <generator class="sequence">
+                <param name="sequence">sequencer_run_sequencer_run_id_seq</param>
+            </generator>
+        </id>
+
+        <version column="update_tstmp" name="updateTimestamp" type="timestamp" unsaved-value="null"/>
+
+        <property name="name" column="name" type="string">
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="description" column="description" type="string"/>
+        <property name="status" column="status" type="string"/>
+        <property name="instrumentName" column="instrument_name" type="string"/>
+        <property name="cycleDescriptor" column="cycle_descriptor" type="string"/>
+        <property name="cycleCount" column="cycle_count" type="integer"/>
+        <property name="cycleSequence" column="cycle_sequence" type="string"/>
+        <property name="refLane" column="ref_lane" type="integer"/>
+        <property name="filePath" column="file_path" type="string"/>
+        <property name="pairedEnd" column="paired_end" type="boolean"/>
+        <property name="process" column="process" type="boolean"/>
+        <property name="pairedFilePath" column="paired_file_path" type="string"/>
+        <property name="useIparIntensities" column="use_ipar_intensities" type="boolean"/>
+        <property name="colorMatrix" column="color_matrix" type="string"/>
+        <property name="colorMatrixCode" column="color_matrix_code" type="string"/>
+        <property name="slideOneLaneCount" column="slide_1_lane_count" type="integer"/>
+        <property name="slideTwoLaneCount" column="slide_2_lane_count" type="integer"/>
+        <property name="slideOneFilePath" column="slide_1_file_path" type="string"/>
+        <property name="slideTwoFilePath" column="slide_2_file_path" type="string"/>
+        <property name="flowSequence" column="flow_sequence" type="string"/>
+        <property name="flowCount" column="flow_count" type="integer"/>
+        <property name="runCenter" column="run_center" type="string"/>
+        <property name="swAccession" column="sw_accession" type="integer" generated="insert"/>
+        <property name="skip" column="skip" type="boolean"/>
+        <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
+
+        <many-to-one
+            name="owner"
+            class="Registration"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="owner_id"
+            not-found="ignore"
+    />
+
+        <many-to-one
+            name="platform"
+            class="Platform"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="platform_id"
+    />
+
+    <!-- set
+      name="processings"
+      lazy="true"
+      inverse="true"
+      cascade="all"
+      sort="natural"
+    >  <key column="sequencer_run_id" />
+      <one-to-many class="Processing" />
+    </set -->
+
+        <set
+            name="lanes"
+            lazy="true"
+            inverse="true"
+            cascade="none"
+            sort="natural"
+        >
+            <key column="sequencer_run_id" />
+            <one-to-many class="Lane" />
+        </set>
+
+        <set name="processings" table = "processing_sequencer_runs" cascade="all">
+            <key column="sequencer_run_id"/>
+            <many-to-many class="Processing" column="processing_id" unique="true"/>
+        </set>
+
+        <set name="sequencerRunAttributes" inverse="true" lazy="true" table="sequencer_run_attribute" fetch="select" cascade="all-delete-orphan">
+            <key>
+                <column name="sample_id" not-null="true" />
+            </key>
+
+            <one-to-many class="SequencerRunAttribute" />
+        </set>
+
+    </class>
+
+
+   <!-- ********** **************** SequencerRunWizardDTO **************** ********** -->
+    <class name="SequencerRunWizardDTO" table="sequencer_run" dynamic-insert="true" dynamic-update="true" optimistic-lock="none">
+        <meta attribute="class-description">
+            Represents a physical run of the sequencing machine.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="sequencerRunId" type="integer" column="sequencer_run_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">sequencer_run_sequencer_run_id_seq</param>
+            </generator>
+        </id>
+
+        <version column="update_tstmp" name="updateTimestamp" type="timestamp" unsaved-value="null"/>
+
+        <property name="description" column="description" type="string"/>
+        <property name="status" column="status" type="string"/>
+        <property name="instrumentName" column="instrument_name" type="string"/>
+        <property name="cycleDescriptor" column="cycle_descriptor" type="string"/>
+        <property name="cycleCount" column="cycle_count" type="integer"/>
+        <property name="cycleSequence" column="cycle_sequence" type="string"/>
+        <property name="refLane" column="ref_lane" type="integer"/>
+        <property name="filePath" column="file_path" type="string"/>
+        <property name="pairedEnd" column="paired_end" type="boolean"/>
+        <property name="pairedFilePath" column="paired_file_path" type="string"/>
+        <property name="useIparIntensities" column="use_ipar_intensities" type="boolean"/>
+        <property name="colorMatrix" column="color_matrix" type="string"/>
+        <property name="colorMatrixCode" column="color_matrix_code" type="string"/>
+        <property name="slideOneLaneCount" column="slide_1_lane_count" type="integer"/>
+        <property name="slideTwoLaneCount" column="slide_2_lane_count" type="integer"/>
+        <property name="slideOneFilePath" column="slide_1_file_path" type="string"/>
+        <property name="slideTwoFilePath" column="slide_2_file_path" type="string"/>
+        <property name="flowSequence" column="flow_sequence" type="string"/>
+        <property name="flowCount" column="flow_count" type="integer"/>
+        <property name="runCenter" column="run_center" type="string"/>
+        <property name="swAccession" column="sw_accession" type="integer" generated="insert"/>
+        <property name="skip" column="skip" type="boolean"/>
+        <property name="name" column="name" type="string">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
+
+        <many-to-one
+            name="owner"
+            class="Registration"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="owner_id"
+            not-found="ignore"
+    />
+
+        <many-to-one
+            name="platform"
+            class="Platform"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="platform_id"
+    />
+
+        <set
+            name="lanes"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="natural">
+            <key column="sequencer_run_id" />
+            <one-to-many class="Lane" />
+        </set>
+
+        <set name="sequencerRunAttributes" inverse="true" lazy="true" table="sequencer_run_attribute" fetch="select" cascade="all">
+            <key>
+                <column name="sample_id" not-null="true" />
+            </key>
+
+            <one-to-many class="SequencerRunAttribute" />
+        </set>
+
+    </class>
+
+  <!-- ********** **************** Platform **************** ********** -->
+    <class name="Platform" table="platform" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            Represents a sequencer platform.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="platformId" type="integer" column="platform_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">platform_platform_id_seq</param>
+            </generator>
+        </id>
+
+        <property name="name" column="name" type="string">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="description" column="description" type="string"/>
+        <property name="instrumentModel" column="instrument_model" type="string"/>
+
+    </class>
+
+  <!-- ********** **************** LibrarySelection **************** ********** -->
+    <class name="LibrarySelection" table="library_selection" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            Represents a sequencer librarySelection.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="librarySelectionId" type="integer" column="library_selection_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">library_selection_library_selection_id_seq</param>
+            </generator>
+        </id>
+
+        <property name="name" column="name" type="string">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="description" column="description" type="string"/>
+
+    </class>
+
+  <!-- ********** **************** LibrarySource **************** ********** -->
+    <class name="LibrarySource" table="library_source" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            Represents a sequencer librarySource.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="librarySourceId" type="integer" column="library_source_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">library_source_library_source_id_seq</param>
+            </generator>
+        </id>
+
+        <property name="name" column="name" type="string">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="description" column="description" type="string"/>
+
+    </class>
+
+  <!-- ********** **************** LibraryStrategy **************** ********** -->
+    <class name="LibraryStrategy" table="library_strategy" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            Represents a sequencer libraryStrategy.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="libraryStrategyId" type="integer" column="library_strategy_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">library_strategy_library_strategy_id_seq</param>
+            </generator>
+        </id>
+
+        <property name="name" column="name" type="string">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+
+        <property name="description" column="description" type="string"/>
+
+    </class>
+
+  <!-- ************* **************** Lane **************** ************* -->
+    <class name="Lane" table="lane" dynamic-insert="true" dynamic-update="true" select-before-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            An lane.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="laneId" type="integer" column="lane_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">lane_lane_id_seq</param>
+            </generator>
+      <!-- generator class="native"></generator -->
+        </id>
+
+        <version column="update_tstmp" name="updateTimestamp" type="timestamp" unsaved-value="null"/>
+
+        <property name="name" column="name" type="string">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+        <property name="tags" column="tags" type="string"/>
+        <property name="regions" column="regions" type="string"/>
+        <property name="cycleDescriptor" column="cycle_descriptor" type="string"/>
+        <property name="laneIndex" column="lane_index" type="integer"/>
+        <property name="swAccession" column="sw_accession" type="integer" generated="insert"/>
+
+        <many-to-one
+            name="sequencerRun"
+            class="SequencerRun"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="sequencer_run_id"
+    />
+
+    <!--many-to-one
+      name="sample"
+      class="Sample"
+      cascade="none"
+      outer-join="auto"
+      update="true"
+      insert="true"
+      column="sample_id"
+    /-->
+
+        <property name="description" column="description" type="string"/>
+        <property name="skip" column="skip" type="boolean"/>
+
+        <many-to-one
+            name="owner"
+            class="Registration"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="owner_id"
+            not-found="ignore"
+    />
+
+    <!--set
+      name="processings"
+      lazy="false"
+      inverse="true"
+      cascade="all"
+      sort="natural">
+    <key column="lane_id" />
+        <one-to-many class="Processing" />
+    </set-->
+
+        <set
+            name="IUS"
+            lazy="true"
+            inverse="true"
+            cascade="all"
+            sort="natural">
+            <key column="lane_id" />
+            <one-to-many class="IUS" />
+        </set>
+
+	<!-- cascade="all" inverse="true"  cascade="all"-->
+        <set name="processings" table = "processing_lanes" cascade="all">
+            <key column="lane_id"/>
+            <many-to-many class="Processing" column="processing_id" unique="true"/>
+        </set>
+
+        <set name="workflowRuns" table = "lane_workflow_runs" cascade="all">
+            <key column="lane_id"/>
+            <many-to-many class="WorkflowRun" column="workflow_run_id" unique="true"/>
+        </set>
+
+        <set name="laneLinks" inverse="true" lazy="true" table="lane_link" fetch="select">
+            <key>
+                <column name="lane_id" not-null="true" />
+            </key>
+            <one-to-many class="LaneLink" />
+        </set>
+
+        <set name="laneAttributes" inverse="true" lazy="true" table="lane_attribute" fetch="select" cascade="all-delete-orphan">
+            <key>
+                <column name="lane_id" not-null="true" />
+            </key>
+
+            <one-to-many class="LaneAttribute" />
+        </set>
+
+        <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
+    </class>
+
+  <!-- ************* **************** LaneAttribute **************** ************* -->
+    <class name="LaneAttribute" table="lane_attribute" schema="public">
+        <id name="laneAttributeId" type="int">
+            <column name="lane_attribute_id" />
+
+             <generator class="sequence">
+                <param name="sequence">lane_attribute_lane_attribute_id_seq</param>
+            </generator>
+        </id>
+
+        <many-to-one name="lane" class="Lane" cascade="all" fetch="select">
+            <column name="lane_id" not-null="true" />
+        </many-to-one>
+
+        <property name="tag" type="string">
+            <column name="tag" />
+        </property>
+
+        <property name="value" type="string">
+            <column name="value" />
+        </property>
+
+        <property name="units" type="string">
+            <column name="units" />
+        </property>
+    </class>
+
+    <!-- ************* **************** SequencerRunAttribute **************** ************* -->
+    <class name="SequencerRunAttribute" table="sequencer_run_attribute" schema="public">
+        <id name="sequencerRunAttributeId" type="int">
+            <column name="sequencer_run_attribute_id" />
+
+            <generator class="sequence">
+                <param name="sequence">sequencer_run_attribute_sequencer_run_attribute_id_seq</param>
+            </generator>
+        </id>
+
+        <many-to-one name="sequencerRunWizardDTO" class="SequencerRunWizardDTO" cascade="all" fetch="select">
+            <column name="sample_id" not-null="true" />
+        </many-to-one>
+
+        <property name="tag" type="string">
+            <column name="tag" />
+        </property>
+
+        <property name="value" type="string">
+            <column name="value" />
+        </property>
+
+        <property name="units" type="string">
+            <column name="units" />
+        </property>
+    </class>
+
+
+  <!-- ************* **************** LaneLink **************** ************* -->
+    <class name="LaneLink" table="lane_link" schema="public">
+        <id name="laneLinkId" type="int">
+            <column name="lane_link_id" />
+
+            <generator class="assigned" />
+        </id>
+
+        <many-to-one name="lane" class="Lane" fetch="select">
+            <column name="lane_id" not-null="true" />
+        </many-to-one>
+
+        <property name="label" type="string">
+            <column name="label" not-null="true" />
+        </property>
+
+        <property name="url" type="string">
+            <column name="url" not-null="true" />
+        </property>
+
+        <property name="db" type="string">
+            <column name="db" />
+        </property>
+
+        <property name="id" type="string">
+            <column name="id" />
+        </property>
+    </class>
+
+  <!-- ************* **************** IUS **************** ************* -->
+    <class name="IUS" table="ius" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            An IUS.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="iusId" type="integer" column="ius_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">ius_ius_id_seq</param>
+            </generator>
+        </id>
+
+        <version column="update_tstmp" name="updateTimestamp" type="timestamp" unsaved-value="null"/>
+
+        <property name="name" column="name" type="string">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+        <property name="alias" column="alias" type="string"/>
+        <property name="description" column="description" type="string"/>
+        <property name="tag" column="tag" type="string"/>
+        <property name="swAccession" column="sw_accession" type="integer" generated="insert"/>
+        <property name="skip" column="skip" type="boolean"/>
+        <many-to-one
+            name="lane"
+            class="Lane"
+            cascade="delete"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="lane_id"
+    />
+
+        <many-to-one
+            name="sample"
+            class="Sample"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="sample_id"
+    />
+
+        <many-to-one
+            name="owner"
+            class="Registration"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="owner_id"
+            not-found="ignore"
+    />
+
+	<!-- cascade="all" inverse="true"  cascade="all"-->
+        <set name="processings" table = "processing_ius" cascade="all">
+            <key column="ius_id"/>
+            <many-to-many class="Processing" column="processing_id" unique="true"/>
+        </set>
+
+        <set name="workflowRuns" table = "ius_workflow_runs" cascade="all">
+            <key column="ius_id"/>
+            <many-to-many class="WorkflowRun" column="workflow_run_id" unique="true"/>
+        </set>
+
+        <set name="iusAttributes" inverse="true" lazy="true" table="ius_attribute" fetch="select" cascade="all-delete-orphan">
+            <key>
+                <column name="ius_id" not-null="true" />
+            </key>
+            <one-to-many class="IUSAttribute" />
+        </set>
+
+        <set name="iusLinks" inverse="true" lazy="true" table="ius_link" fetch="select">
+            <key>
+                <column name="ius_id" not-null="true" />
+            </key>
+            <one-to-many class="IUSLink" />
+        </set>
+
+
+        <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
+
+    </class>
+
+  <!-- ************* **************** IUSAttribute **************** ************* -->
+    <class name="IUSAttribute" table="ius_attribute" schema="public">
+        <id name="iusAttributeId" type="int">
+            <column name="ius_attribute_id" />
+
+            <generator class="sequence">
+                <param name="sequence">ius_attribute_ius_attribute_id_seq</param>
+            </generator>
+        </id>
+
+        <many-to-one name="ius" class="IUS" cascade="all" fetch="select">
+            <column name="ius_id" not-null="true" />
+        </many-to-one>
+
+        <property name="tag" type="string">
+            <column name="tag" />
+        </property>
+
+        <property name="value" type="string">
+            <column name="value" />
+        </property>
+
+        <property name="units" type="string">
+            <column name="units" />
+        </property>
+    </class>
+
+  <!-- ************* **************** IUSLink **************** ************* -->
+    <class name="IUSLink" table="ius_link" schema="public">
+        <id name="iusLinkId" type="int">
+            <column name="ius_link_id" />
+
+            <generator class="assigned" />
+        </id>
+
+        <many-to-one name="ius" class="IUS" fetch="select">
+            <column name="ius_id" not-null="true" />
+        </many-to-one>
+
+        <property name="label" type="string">
+            <column name="label" not-null="true" />
+        </property>
+
+        <property name="url" type="string">
+            <column name="url" not-null="true" />
+        </property>
+
+        <property name="db" type="string">
+            <column name="db" />
+        </property>
+
+        <property name="id" type="string">
+            <column name="id" />
+        </property>
+    </class>
+
+  <!-- ************* **************** Organism **************** ************* -->
+    <class name="Organism" table="organism" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            An Organism object.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="organismId" type="integer" column="organism_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">organism_organism_id_seq</param>
+            </generator>
+        </id>
+
+        <property name="name" column="name" type="string">
+            <meta attribute="use-in-equals">true</meta>
+            <meta attribute="use-in-tostring">true</meta>
+        </property>
+        <property name="code" column="code" type="string"/>
+        <property name="accession" column="accession" type="string"/>
+        <property name="ncbiTaxId" column="ncbi_taxid" type="integer"/>
+
+    </class>
+
+  <!-- ********** **************** Processing **************** ********** -->
+    <class name="Processing" table="processing" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            A sample-processing step.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="processingId" type="integer" column="processing_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">processing_processing_id_seq</param>
+            </generator>
+      <!-- generator class="native"></generator -->
+        </id>
+
+        <version column="update_tstmp" name="updateTimestamp" type="timestamp" unsaved-value="null"/>
+
+    <!-- property name="filePath" column="file_path" type="string">
+      <meta attribute="use-in-equals">true</meta>
+      <meta attribute="use-in-tostring">true</meta>
+    </property -->
+
+    <!-- many-to-one
+      name="lane"
+      class="Lane"
+      cascade="none"
+      outer-join="auto"
+      update="true"
+      insert="true"
+      column="lane_id"
+    / -->
+
+        <many-to-one name="workflowRunByAncestorWorkflowRunId"
+                     class="WorkflowRun"
+                     fetch="select"
+                     cascade="all"
+                     update="true"
+                     insert="true"
+                     column="ancestor_workflow_run_id" />
+
+        <many-to-one
+            name="owner"
+            class="Registration"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="owner_id"
+            not-found="ignore"
+    />
+
+        <many-to-one
+            name="workflowRun"
+            class="WorkflowRun"
+            cascade="all"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="workflow_run_id"
+    />
+
+	<!-- cascade="all" -->
+        <set name="lanes" table = "processing_lanes" inverse="true">
+            <key column="processing_id"/>
+            <many-to-many class="Lane" column="lane_id" unique="true"/>
+        </set>
+
+        <set name="studies" table = "processing_studies" inverse="true">
+            <key column="processing_id"/>
+            <many-to-many class="Study" column="study_id" unique="true"/>
+        </set>
+
+        <set name="experiments" table = "processing_experiments" inverse="true">
+            <key column="processing_id"/>
+            <many-to-many class="Experiment" column="experiment_id" unique="true"/>
+        </set>
+
+        <set name="samples" table = "processing_samples" inverse="true">
+            <key column="processing_id"/>
+            <many-to-many class="Sample" column="sample_id" unique="true"/>
+        </set>
+
+        <set name="sequencerRuns" table = "processing_sequencer_runs" inverse="true">
+            <key column="processing_id"/>
+            <many-to-many class="SequencerRun" column="sequencer_run_id" unique="true"/>
+        </set>
+
+        <set name="IUS" table = "processing_ius" inverse="true" cascade="all">
+            <key column="processing_id"/>
+            <many-to-many class="IUS" column="ius_id" unique="true"/>
+        </set>
+
+        <set name="files" table = "processing_files" cascade="all" lazy="false" access="field">
+            <key column="processing_id"/>
+            <many-to-many class="File" column="file_id" unique="true"/>
+        </set>
+
+    <!--set name="lanes" table = "ius" cascade="all" lazy="true">
+      <key column="sample_id"/>
+      <many-to-many class="Lanes" column="lane_id" unique="true"/>
+    </set-->
+
+	<!-- cascade="all" inverse="true" lazy="true" -->
+        <set name="children" table = "processing_relationship" cascade="all" lazy="true">
+            <key column="parent_id"/>
+            <many-to-many class="Processing" column="child_id" unique="true"/>
+        </set>
+
+        <set name="parents" table = "processing_relationship" inverse="true">
+            <key column="child_id"/>
+            <many-to-many class="Processing" column="parent_id" unique="true"/>
+        </set>
+
+        <set name="processingAttributes" inverse="true" lazy="true" table="processing_attribute" fetch="select" cascade="all-delete-orphan">
+            <key>
+                <column name="processing_id" not-null="true" />
+            </key>
+
+            <one-to-many class="ProcessingAttribute" />
+        </set>
+
+ 	<!--set
+      name="children"
+	  table = "processing_relationship"
+      lazy="false"
+      inverse="true"
+      cascade="all"
+      sort="natural">
+      <key column="parent_id" />
+      <one-to-many class="Processing" />
+    </set-->
+
+        <property name="taskGroup" column="task_group" type="boolean"/>
+        <property name="swAccession" column="sw_accession" type="integer" generated="insert"/>
+        <property name="algorithm" column="algorithm" type="string"/>
+        <property name="status" column="status" type="string"/>
+        <property name="exitStatus" column="exit_status" type="integer"/>
+        <property name="processExitStatus" column="process_exit_status" type="integer"/>
+        <property name="description" column="description" type="string"/>
+        <property name="url" column="url" type="string"/>
+        <property name="urlLabel" column="url_label" type="string"/>
+        <property name="version" column="version" type="string"/>
+        <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
+        <property name="runStartTimestamp" column="run_start_tstmp" type="timestamp"/>
+        <property name="runStopTimestamp" column="run_stop_tstmp" type="timestamp"/>
+        <property name="parameters" type="string" column="parameters" />
+        <property name="stdout" type="string" column="stdout" />
+        <property name="stderr" type="string" column="stderr" />
+	<!--property name="workflowRunId" column="workflow_run_id" type="integer"/-->
+    </class>
+
+  <!-- ********** **************** Processing_Attribute **************** ********** -->
+    <class name="ProcessingAttribute" table="processing_attribute" schema="public">
+        <id name="processingAttributeId" type="int">
+            <column name="processing_attribute_id" />
+
+            <generator class="sequence">
+                <param name="sequence">processing_attribute_processing_attribute_id_seq</param>
+            </generator>
+        </id>
+
+        <many-to-one name="processing" class="Processing" fetch="select">
+            <column name="processing_id" not-null="true" />
+        </many-to-one>
+
+        <property name="tag" type="string">
+            <column name="tag" />
+        </property>
+
+        <property name="value" type="string">
+            <column name="value" />
+        </property>
+
+        <property name="units" type="string">
+            <column name="units" />
+        </property>
+    </class>
+
+
+  <!-- ********** **************** Share_Sample **************** ********** -->
+    <class name="ShareSample" table="share_sample" schema="public">
+        <id name="shareSampleId" type="int">
+            <column name="share_sample_id" />
+
+            <generator class="assigned" />
+        </id>
+
+        <many-to-one name="sample" class="Sample" fetch="select">
+            <column name="sample_id" not-null="true" />
+        </many-to-one>
+
+        <many-to-one name="registration" class="Registration" fetch="select">
+            <column name="registration_id" not-null="true" />
+        </many-to-one>
+
+        <property name="active" type="java.lang.Boolean">
+            <column name="active" />
+        </property>
+
+        <property name="swAccession" type="java.lang.Integer" generated="insert">
+            <column name="sw_accession" />
+        </property>
+
+        <property name="createTstmp" type="timestamp">
+            <column name="create_tstmp" length="29" not-null="true" />
+        </property>
+
+        <property name="updateTstmp" type="timestamp">
+            <column name="update_tstmp" length="29" />
+        </property>
+    </class>
+
+
+  <!-- ********** **************** Share_Processing **************** ********** -->
+    <class name="ShareProcessing" table="share_processing" schema="public">
+        <id name="shareProcessingId" type="int">
+            <column name="share_processing_id" />
+
+            <generator class="assigned" />
+        </id>
+
+        <many-to-one name="processing" class="Processing" fetch="select">
+            <column name="processing_id" not-null="true" />
+        </many-to-one>
+
+        <many-to-one name="registration" class="Registration" fetch="select">
+            <column name="registration_id" not-null="true" />
+        </many-to-one>
+
+        <property name="active" type="java.lang.Boolean">
+            <column name="active" />
+        </property>
+
+        <property name="swAccession" type="java.lang.Integer" generated="insert">
+            <column name="sw_accession" />
+        </property>
+
+        <property name="createTstmp" type="timestamp">
+            <column name="create_tstmp" length="29" not-null="true" />
+        </property>
+
+        <property name="updateTstmp" type="timestamp">
+            <column name="update_tstmp" length="29" />
+        </property>
+    </class>
+
+
+  <!-- ********** **************** Share_Lane **************** ********** -->
+    <class name="ShareLane" table="share_lane" schema="public">
+        <id name="shareLaneId" type="int">
+            <column name="share_lane_id" />
+
+            <generator class="assigned" />
+        </id>
+
+        <many-to-one name="lane" class="Lane" fetch="select">
+            <column name="lane_id" not-null="true" />
+        </many-to-one>
+
+        <many-to-one name="registration" class="Registration" fetch="select">
+            <column name="registration_id" not-null="true" />
+        </many-to-one>
+
+        <property name="active" type="java.lang.Boolean">
+            <column name="active" />
+        </property>
+
+        <property name="swAccession" type="java.lang.Integer" generated="insert">
+            <column name="sw_accession" />
+        </property>
+
+        <property name="createTstmp" type="timestamp">
+            <column name="create_tstmp" length="29" not-null="true" />
+        </property>
+
+        <property name="updateTstmp" type="timestamp">
+            <column name="update_tstmp" length="29" />
+        </property>
+    </class>
+
+
+  <!-- ********** **************** Share_Experiment **************** ********** -->
+    <class name="ShareExperiment" table="share_experiment" schema="public">
+        <id name="shareExperimentId" type="int">
+            <column name="share_experiment_id" />
+
+            <generator class="assigned" />
+        </id>
+
+        <many-to-one name="experiment" class="Experiment" fetch="select">
+            <column name="experiment_id" not-null="true" />
+        </many-to-one>
+
+        <many-to-one name="registration" class="Registration" fetch="select">
+            <column name="registration_id" not-null="true" />
+        </many-to-one>
+
+        <property name="active" type="java.lang.Boolean">
+            <column name="active" />
+        </property>
+
+        <property name="swAccession" type="java.lang.Integer" generated="insert">
+            <column name="sw_accession" />
+        </property>
+
+        <property name="createTstmp" type="timestamp">
+            <column name="create_tstmp" length="29" not-null="true" />
+        </property>
+
+        <property name="updateTstmp" type="timestamp">
+            <column name="update_tstmp" length="29" />
+        </property>
+    </class>
+
+  <!-- ********** **************** Share_File **************** ********** -->
+    <class name="ShareFile" table="share_file" schema="public">
+        <id name="shareFileId" type="int">
+            <column name="share_file_id" />
+
+            <generator class="assigned" />
+        </id>
+
+        <many-to-one name="file" class="File" fetch="select">
+            <column name="file_id" not-null="true" />
+        </many-to-one>
+
+        <many-to-one name="registration" class="Registration" fetch="select">
+            <column name="registration_id" not-null="true" />
+        </many-to-one>
+
+        <property name="active" type="java.lang.Boolean">
+            <column name="active" />
+        </property>
+
+        <property name="swAccession" type="java.lang.Integer" generated="insert">
+            <column name="sw_accession" />
+        </property>
+
+        <property name="createTstmp" type="timestamp">
+            <column name="create_tstmp" length="29" not-null="true" />
+        </property>
+
+        <property name="updateTstmp" type="timestamp">
+            <column name="update_tstmp" length="29" />
+        </property>
+    </class>
+
+
+  <!-- ********** **************** Processing_Studies **************** ********** -->
+    <class name="ProcessingStudies" table="processing_studies" schema="public">
+        <id name="processingStudiesId" type="integer" column="processing_studies_id">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">processing_studies_processing_studies_id_seq</param>
+            </generator>
+      <!-- generator class="native"></generator -->
+<!--            <generator class="assigned" />-->
+        </id>
+
+        <many-to-one name="processing" class="Processing" fetch="select">
+            <column name="processing_id" not-null="true" />
+        </many-to-one>
+
+        <many-to-one name="study" class="Study" fetch="select">
+            <column name="study_id" not-null="true" />
+        </many-to-one>
+
+        <property name="description" type="string">
+            <column name="description" />
+        </property>
+
+        <property name="label" type="string">
+            <column name="label" />
+        </property>
+
+        <property name="url" type="string">
+            <column name="url" />
+        </property>
+
+        <property name="swAccession" type="java.lang.Integer" generated="insert">
+            <column name="sw_accession" />
+        </property>
+    </class>
+
+
+  <!-- ********** **************** Processing_Sequencer_Runs **************** ********** -->
+    <class name="ProcessingSequencerRuns" table="processing_sequencer_runs" schema="public">
+        <id name="processingSequencerRunsId" type="integer" column="processing_sequencer_runs_id">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">processing_sequencer_runs_processing_sequencer_runs_id_seq</param>
+            </generator>
+<!--            <generator class="assigned" />-->
+        </id>
+
+        <many-to-one name="processing" class="Processing" fetch="select">
+            <column name="processing_id" not-null="true" />
+        </many-to-one>
+
+        <many-to-one name="sequencerRun" class="SequencerRun" fetch="select">
+            <column name="sequencer_run_id" not-null="true" />
+        </many-to-one>
+
+        <property name="description" type="string">
+            <column name="description" />
+        </property>
+
+        <property name="label" type="string">
+            <column name="label" />
+        </property>
+
+        <property name="url" type="string">
+            <column name="url" />
+        </property>
+
+        <property name="swAccession" type="java.lang.Integer" generated="insert">
+            <column name="sw_accession" />
+        </property>
+    </class>
+
+
+  <!-- ********** **************** Processing_Samples **************** ********** -->
+    <class name="ProcessingSamples" table="processing_samples" schema="public">
+        <id name="processingSamplesId" type="integer" column="processing_samples_id">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">processing_samples_processing_samples_id_seq</param>
+            </generator>
+<!--            <generator class="assigned" />-->
+        </id>
+
+        <many-to-one name="processing" class="Processing" fetch="select">
+            <column name="processing_id" not-null="true" />
+        </many-to-one>
+
+        <many-to-one name="sample" class="Sample" fetch="select">
+            <column name="sample_id" not-null="true" />
+        </many-to-one>
+
+        <property name="description" type="string">
+            <column name="description" />
+        </property>
+
+        <property name="label" type="string">
+            <column name="label" />
+        </property>
+
+        <property name="url" type="string">
+            <column name="url" />
+        </property>
+
+        <property name="swAccession" type="java.lang.Integer" generated="insert">
+            <column name="sw_accession" />
+        </property>
+    </class>
+
+
+  <!-- ********** **************** Processing_Relationship **************** ********** -->
+    <class name="ProcessingRelationship" table="processing_relationship" schema="public">
+        <id name="processingRelationshipId" type="integer" column="processing_relationship_id">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">processing_relationship_processing_relationship_id_seq</param>
+            </generator>
+<!--            <generator class="assigned" />-->
+        </id>
+
+        <many-to-one name="processingByParentId" class="Processing" fetch="select">
+            <column name="parent_id" />
+        </many-to-one>
+
+        <many-to-one name="processingByChildId" class="Processing" fetch="select">
+            <column name="child_id" />
+        </many-to-one>
+
+        <property name="relationship" type="string">
+            <column name="relationship" />
+        </property>
+    </class>
+
+
+  <!-- ********** **************** Processing_Lanes **************** ********** -->
+    <class name="ProcessingLanes" table="processing_lanes" schema="public">
+        <id name="processingLanesId" type="integer" column="processing_lanes_id">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">processing_lanes_processing_lanes_id_seq</param>
+            </generator>
+<!--            <generator class="assigned" />-->
+        </id>
+
+        <many-to-one name="processing" class="Processing" fetch="select">
+            <column name="processing_id" not-null="true" />
+        </many-to-one>
+
+        <many-to-one name="lane" class="Lane" fetch="select">
+            <column name="lane_id" not-null="true" />
+        </many-to-one>
+
+        <property name="description" type="string">
+            <column name="description" />
+        </property>
+
+        <property name="label" type="string">
+            <column name="label" />
+        </property>
+
+        <property name="url" type="string">
+            <column name="url" />
+        </property>
+
+        <property name="swAccession" type="java.lang.Integer" generated="insert">
+            <column name="sw_accession" />
+        </property>
+    </class>
+
+
+ <!-- ********** **************** Processing_IUS **************** ********** -->
+    <class name="ProcessingIus" table="processing_ius" schema="public">
+        <id name="processingIusId" type="integer" column="processing_ius_id" >
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">processing_ius_processing_ius_id_seq</param>
+            </generator>
+<!--            <generator class="assigned" />-->
+        </id>
+
+        <many-to-one name="ius" class="IUS" fetch="select">
+            <column name="ius_id" not-null="true" />
+        </many-to-one>
+
+        <many-to-one name="processing" class="Processing" fetch="select">
+            <column name="processing_id" not-null="true" />
+        </many-to-one>
+
+        <property name="description" type="string">
+            <column name="description" />
+        </property>
+
+        <property name="label" type="string">
+            <column name="label" />
+        </property>
+
+        <property name="url" type="string">
+            <column name="url" />
+        </property>
+
+        <property name="swAccession" type="java.lang.Integer" generated="insert">
+            <column name="sw_accession" />
+        </property>
+    </class>
+
+ <!-- ********** **************** Processing_Experiments **************** ********** -->
+    <class name="ProcessingExperiments" table="processing_experiments" schema="public">
+        <id name="processingExperimentsId" type="integer" column="processing_experiments_id">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">processing_experiments_processing_experiments_id_seq</param>
+            </generator>
+<!--            <generator class="assigned" />-->
+        </id>
+
+        <many-to-one name="processing" class="Processing" fetch="select">
+            <column name="processing_id" not-null="true" />
+        </many-to-one>
+
+        <many-to-one name="experiment" class="Experiment" fetch="select">
+            <column name="experiment_id" not-null="true" />
+        </many-to-one>
+
+        <property name="description" type="string">
+            <column name="description" />
+        </property>
+
+        <property name="label" type="string">
+            <column name="label" />
+        </property>
+
+        <property name="url" type="string">
+            <column name="url" />
+        </property>
+
+        <property name="swAccession" type="java.lang.Integer" generated="insert">
+            <column name="sw_accession" />
+        </property>
+    </class>
+
+
+ <!-- ********** **************** File **************** ********** -->
+    <class name="File" table="file" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+        <meta attribute="class-description">
+            A sample-file output.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="fileId" type="integer" column="file_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="sequence">
+                <param name="sequence">file_file_id_seq</param>
+            </generator>
+        </id>
+
+        <many-to-one name="fileType" class="FileType" fetch="select">
+            <column name="file_type_id" />
+        </many-to-one>
+
+        <many-to-one
+            name="owner"
+            class="Registration"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="owner_id"
+            not-found="ignore"
+    />
+
+        <set name="processings" table = "processing_files" lazy="false">
+            <key column="file_id"/>
+            <many-to-many class="Processing" column="processing_id" unique="true"/>
+        </set>
+
+    <!--set name="files" table = "processing_files" cascade="all" lazy="true">
+      <key column="processing_id"/>
+      <many-to-many class="File" column="file_id" unique="true"/>
+    </set-->
+
+    <!-- set
+      name="workflowRuns"
+      lazy="true"
+      inverse="true"
+      cascade="all"
+      sort="natural">
+      <key column="workflow_id" />
+      <one-to-many class="WorkflowRun" />
+    </set-->
+
+        <property name="swAccession" column="sw_accession" type="integer" generated="insert"/>
+        <property name="filePath" column="file_path" type="string"/>
+        <property name="type" column="type" type="string"/>
+        <property name="metaType" column="meta_type" type="string"/>
+        <property name="description" column="description" type="string"/>
+        <property name="md5sum" type="string" column="md5sum" />
+        <property name="url" type="string" column="url" />
+        <property name="urlLabel" type="string" column="url_label" />
+        <set name="fileAttributes" inverse="true" lazy="true" table="file_attribute" fetch="select">
+            <key>
+                <column name="file_id" not-null="true" />
+            </key>
+
+            <one-to-many class="FileAttribute" />
+        </set>
+        <property name="size" column="size" type="long"/>
+    </class>
+
+  <!-- ********** **************** FileReportRow **************** ********** -->
+    <class name="FileReportRow" table="file_report" >
+        <meta attribute="class-description">
+            The class holder FileReport entities.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="rowId" type="integer" column="row_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="increment"/>
+        </id>
+
+        <many-to-one
+            name="study"
+            class="Study"
+            cascade="none"
+            outer-join="auto"
+            update="false"
+            insert="false"
+            column="study_id"
+	    />
+
+        <many-to-one
+            name="experiment"
+            class="Experiment"
+            cascade="none"
+            outer-join="auto"
+            update="false"
+            insert="false"
+            column="experiment_id"
+	    />
+
+        <many-to-one
+            name="sample"
+            class="Sample"
+            cascade="none"
+            outer-join="auto"
+            update="false"
+            insert="false"
+            column="sample_id"
+	    />
+
+        <many-to-one
+            name="childSample"
+            class="Sample"
+            cascade="none"
+            outer-join="auto"
+            update="false"
+            insert="false"
+            column="child_sample_id"
+	    />
+
+        <many-to-one
+            name="ius"
+            class="IUS"
+            cascade="none"
+            outer-join="auto"
+            update="false"
+            insert="false"
+            column="ius_id"
+	    />
+
+        <many-to-one
+            name="lane"
+            class="Lane"
+            cascade="none"
+            outer-join="auto"
+            update="false"
+            insert="false"
+            column="lane_id"
+	    />
+
+        <many-to-one
+            name="processing"
+            class="Processing"
+            cascade="none"
+            outer-join="auto"
+            update="false"
+            insert="false"
+            column="processing_id"
+	    />
+
+        <many-to-one
+            name="file"
+            class="File"
+            cascade="none"
+            outer-join="auto"
+            update="false"
+            insert="false"
+            column="file_id"
+	    />
+    </class>
+
+	<!-- ********** **************** SampleReportRow **************** ********** -->
+    <class name="SampleReportRow" table="sample_report" >
+        <meta attribute="class-description">
+            The class holder for the SampleReport entities.
+        </meta>
+        <meta attribute="implement-equals">true</meta>
+        <meta attribute="implement-tostring">true</meta>
+
+        <id name="rowId" type="integer" column="row_id" unsaved-value="none">
+            <meta attribute="scope-set">public</meta>
+            <meta attribute="use-in-tostring">true</meta>
+            <generator class="increment"/>
+        </id>
+
+        <many-to-one
+            name="study"
+            class="Study"
+            cascade="none"
+            outer-join="auto"
+            update="false"
+            insert="false"
+            column="study_id"
+	    />
+
+        <many-to-one
+            name="childSample"
+            class="Sample"
+            cascade="none"
+            outer-join="auto"
+            update="false"
+            insert="false"
+            column="child_sample_id"
+	    />
+
+        <many-to-one
+            name="workflow"
+            class="Workflow"
+            cascade="none"
+            outer-join="auto"
+            update="false"
+            insert="false"
+            column="workflow_id"
+	    />
+
+	    <many-to-one
+            name="sequencerRun"
+            class="SequencerRun"
+            cascade="none"
+            outer-join="auto"
+            update="false"
+            insert="false"
+            column="sequencer_run_id"
+	    />
+
+	    <many-to-one
+            name="lane"
+            class="Lane"
+            cascade="none"
+            outer-join="auto"
+            update="false"
+            insert="false"
+            column="lane_id"
+	    />
+
+	    <many-to-one
+            name="ius"
+            class="IUS"
+            cascade="none"
+            outer-join="auto"
+            update="false"
+            insert="false"
+            column="ius_id"
+	    />
+
+        <property name="status" column="status" type="string"/>
+    </class>
+
+</hibernate-mapping>
