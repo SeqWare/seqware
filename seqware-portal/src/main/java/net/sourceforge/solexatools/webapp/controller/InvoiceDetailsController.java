@@ -1,0 +1,114 @@
+package net.sourceforge.solexatools.webapp.controller;
+
+import java.text.NumberFormat;
+import java.util.Currency;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import net.sourceforge.seqware.common.business.InvoiceService;
+
+import net.sourceforge.seqware.common.business.WorkflowService;
+import net.sourceforge.seqware.common.model.Expense;
+import net.sourceforge.seqware.common.model.Invoice;
+import net.sourceforge.seqware.common.model.Registration;
+import net.sourceforge.solexatools.Security;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.BaseCommandController;
+
+public class InvoiceDetailsController  extends BaseCommandController {
+
+	public InvoiceService invoiceService;
+        private double totalPrice = 0.0;
+	
+	public InvoiceDetailsController() {
+		super();
+		setSupportedMethods(new String[] {METHOD_GET});
+	}
+        
+	@Override
+	protected ModelAndView handleRequestInternal(HttpServletRequest	 request, HttpServletResponse response)
+		throws Exception {
+
+                this.totalPrice = 0.0;
+                
+		Registration registration = Security.getRegistration(request);
+		if(registration == null)
+			return new ModelAndView("redirect:/login.htm");
+
+		ModelAndView			modelAndView	= null;
+		HashMap<String,Object>	model			= new HashMap<String,Object>();
+
+                Invoice invoice = getInvoiceService().findBySWAccession(Integer.parseInt(request.getParameter("invoiceSwAccession")));
+                model.put("invoice", invoice);
+                
+                // now figure out the three types of expenses
+                Set<Expense> expenses = invoice.getExpenses();
+                // fixed
+                Set<Expense> fixed = new TreeSet<Expense>();
+                filterExpenses(expenses, fixed, "fixed");
+                model.put("fixed", fixed);
+                model.put("fixed_size", fixed.size());
+                model.put("fixed_total_price", totalExpenses(fixed));
+                
+                // consulting
+                Set<Expense> consulting = new TreeSet<Expense>();
+                filterExpenses(expenses, consulting, "consulting");
+                model.put("consulting_size", consulting.size());
+                model.put("consulting", consulting);
+                model.put("consulting_total_price", totalExpenses(consulting));
+
+                // analysis
+                Set<Expense> analysis = new TreeSet<Expense>();
+                filterExpenses(expenses, analysis, "analysis");
+                model.put("analysis", analysis);
+                model.put("analysis_size", analysis.size());
+                model.put("analysis_total_price", totalExpenses(analysis));
+                
+                // total price
+                model.put("total_price", this.totalPrice);
+                model.put("paid_amount", invoice.getPaidAmount());
+                Double totalDue = this.totalPrice - invoice.getPaidAmount();
+                model.put("total_due", totalDue);
+
+                
+                NumberFormat currencyFormatter = 
+                    NumberFormat.getCurrencyInstance(Locale.US);
+                
+                model.put("total_due_currency", currencyFormatter.format(totalDue).toString());
+
+		modelAndView = new ModelAndView("invoiceDetails", model);
+		
+		return modelAndView;
+	}
+        
+        private String totalExpenses(Set<Expense> expenses) {
+            Double total = 0.0;
+            for(Expense e : expenses) {
+                total += e.getTotalPrice();
+            }
+            return(total.toString());
+        }
+
+	public InvoiceService getInvoiceService() {
+		return invoiceService;
+	}
+
+	public void setInvoiceService(InvoiceService invoiceService) {
+		this.invoiceService = invoiceService;
+	}
+        
+        private void filterExpenses(Set<Expense> expenses, Set<Expense> dest, String type) {
+            for(Expense e : expenses) {
+                
+                if (e.getExpenseType() != null && e.getExpenseType().equals(type)) {
+                    dest.add(e);
+                    this.totalPrice += e.getTotalPrice();
+                }
+            }
+        }
+}
