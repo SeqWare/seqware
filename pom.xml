@@ -7,29 +7,93 @@
     <url>https://github.com/SeqWare/seqware</url>
 
     <properties>
-        <maven-assembly-plugin.version>2.3</maven-assembly-plugin.version> 
+ 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <aws-java-sdk.version>1.3.0</aws-java-sdk.version>
+        <jackson.version>1.9.4</jackson.version>
+        <spring.version>3.0.5.RELEASE</spring.version>
+        <hibernate.version>3.6.6.Final</hibernate.version>
+        <hibernate.jpa.version>1.0.1.Final</hibernate.jpa.version>
+        <hibernate-validator.version>4.2.0.Final</hibernate-validator.version>
+        <junit.version>4.10</junit.version>
+        <hamcrest.version>1.1</hamcrest.version>
+        <beanlib.version>5.0.2beta</beanlib.version>
+        <commons-lang.version>2.6</commons-lang.version>
+        <postgresql.version>9.1-901.jdbc3</postgresql.version>
+        <guava.version>11.0.2</guava.version>
+        <restlet.version>2.1-RC5</restlet.version>
+        <maven-assembly-plugin.version>2.3</maven-assembly-plugin.version>
+        <jetty-maven-plugin.version>7.0.0.pre5</jetty-maven-plugin.version>
+        <github.url>scm:git:git@github.com:SeqWare/seqware.git</github.url>
     </properties>
+
+    <scm>
+        <connection>${github.url}</connection>
+        <developerConnection>${github.url}</developerConnection>
+        <url>${github.url}</url>
+    </scm>
+    <distributionManagement>
+       <repository>
+        <id>wrench.res.oicr.on.ca</id>
+        <name>wrench.res.oicr.on.ca-releases</name>
+        <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-release</url>
+        <uniqueVersion>false</uniqueVersion>
+       </repository>
+    </distributionManagement>
+
+<!-- old parameters
+    <scm>
+        <connection>scm:svn:https://seqware.svn.sourceforge.net/svnroot/seqware/trunk</connection>
+        <developerConnection>scm:svn:https://seqware.svn.sourceforge.net/svnroot/seqware/trunk</developerConnection>
+    </scm>
+    <distributionManagement>
+        <repository>
+            <id>wrench.res.oicr.on.ca</id>
+            <name>wrench.res.oicr.on.ca-releases</name>
+            <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-release</url>
+            <uniqueVersion>false</uniqueVersion>
+        </repository>
+    </distributionManagement>
+-->
 
     <artifactId>seqware</artifactId>
     <packaging>pom</packaging>
     <groupId>com.github.seqware</groupId>
-    <version>0.12.0</version>
+    <version>0.42.0-SNAPSHOT</version>
 
     <repositories>
-        <repository>
+	 <repository>
             <id>seqware.sourceforge.net</id>
             <name>SeqWare Maven Repository</name>
-            <url>http://206.108.121.137/artifactory/seqware-release</url>
+            <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-release</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
         <repository>
             <id>snapshot.seqware.sourceforge.net</id>
             <name>SeqWare Snapshot Maven Repository</name>
-            <url>http://206.108.121.137/artifactory/seqware-snapshot</url>
+            <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-snapshot</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
         <repository>
             <id>dependencies.seqware.sourceforge.net</id>
             <name>SeqWare Dependencies Maven Repository</name>
-            <url>http://206.108.121.137/artifactory/seqware-dependencies</url>
+            <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-dependencies</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
         <repository>
             <id>org.codehaus.plexus</id>
@@ -48,36 +112,16 @@
         </repository>
     </repositories>
 
-    <build>
-         <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>${maven-assembly-plugin.version}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-        <plugins>
-	    <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>${maven-assembly-plugin.version}</version>
-            </plugin>
-	    <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
     <modules>
         <module>seqware-queryengine</module>
         <module>seqware-distribution</module>
         <module>seqware-queryengine-legacy</module>
+	<module>seqware-meta-db</module>
+        <module>seqware-common</module>
+        <module>seqware-pipeline</module>
+        <module>seqware-webservice-dto</module>
+        <module>seqware-webservice</module>
+        <module>seqware-portal</module>
     </modules>
 
     <licenses>
@@ -91,4 +135,326 @@
         <name>SeqWare</name>
         <url>https://github.com/SeqWare</url>
     </organization>
+
+    <dependencyManagement>
+            <dependencies>
+         <!-- Amazon Web Services SDK dependencies -->
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk</artifactId>
+                <version>${aws-java-sdk.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.codehaus.jackson</groupId>
+                        <artifactId>jackson-core-asl</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-core-asl</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-mapper-asl</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-jaxrs</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-xc</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context-support</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-orm</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-struts</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-entitymanager</artifactId>
+                <version>${hibernate.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>cglib</groupId>
+                        <artifactId>cglib</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.javax.persistence</groupId>
+                <artifactId>hibernate-jpa-2.0-api</artifactId>
+                <version>${hibernate.jpa.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit-dep</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-all</artifactId>
+                <version>${hamcrest.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>net.sf.beanlib</groupId>
+                <artifactId>beanlib-hibernate</artifactId>
+                <version>${beanlib.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.hibernate</groupId>
+                        <artifactId>hibernate</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.beanlib</groupId>
+                <artifactId>beanlib</artifactId>
+                <version>${beanlib.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-lang</groupId>
+                        <artifactId>commons-lang</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>cglib</groupId>
+                        <artifactId>cglib</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xstream</groupId>
+                        <artifactId>xstream</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons-lang.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet.ext.xstream</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet.ext.jackson</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet.ext.xml</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet.ext.net</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet.ext.fileupload</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet.ext.servlet</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet.ext.wadl</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet.ext.json</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet.ext.jaxb</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet.ext.freemarker</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet.ext.protobuf</artifactId>
+                <version>2.1-R2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet.ext.httpclient</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet.ext.ssl</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet.test</artifactId>
+                <version>${restlet.version}</version>
+                <exclusions>
+                    <!-- Excluded since they rely on maven 2 specific code that prevents maven 3 from being used. -->
+                    <exclusion>
+                        <groupId>org.restlet.jee</groupId>
+                        <artifactId>org.restlet.ext.lucene</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.restlet.jee</groupId>
+                        <artifactId>org.restlet.ext.jibx</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${maven-assembly-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.mortbay.jetty</groupId>
+                    <artifactId>jetty-maven-plugin</artifactId>
+                    <version>${jetty-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.3.2</version>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                        <showDeprecation>true</showDeprecation>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.codehaus.plexus</groupId>
+                            <artifactId>plexus-compiler-javac</artifactId>
+                            <version>1.8.2</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.plexus</groupId>
+                            <artifactId>plexus-compiler-api</artifactId>
+                            <version>1.8.2</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

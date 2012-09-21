@@ -6,14 +6,13 @@
 
 
     <description>SeqWare utility code shared across modules</description>
-    <url>http://seqware.sf.net</url>
-
+    <url>https://github.com/SeqWare/seqware</url>
     <artifactId>seqware-common</artifactId>
     <packaging>jar</packaging>
 
     <parent> 
-        <version>0.13.3-SNAPSHOT</version> 
-        <groupId>net.sourceforge.seqware</groupId> 
+        <version>0.42.0-SNAPSHOT</version> 
+        <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
         <relativePath>../pom.xml</relativePath> 
     </parent>
@@ -114,9 +113,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.sourceforge.seqware</groupId>
+            <groupId>com.github.seqware</groupId> 
             <artifactId>seqware-meta-db</artifactId>
-            <version>0.13.3-SNAPSHOT</version>
+            <version>0.42.0-SNAPSHOT</version> 
         </dependency>
             <dependency>
                 <groupId>org.restlet.jee</groupId>
