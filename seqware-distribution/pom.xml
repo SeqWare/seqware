@@ -21,9 +21,9 @@
       <version>0.42.0-SNAPSHOT</version> 
     </dependency>
     <dependency>
-      <groupId>net.sourceforge.seqware</groupId>
+      <groupId>com.github.seqware</groupId>
       <artifactId>seqware-pipeline</artifactId>
-      <version>0.13.3-SNAPSHOT</version>
+      <version>0.42.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <properties>
@@ -36,24 +36,7 @@
     <plugin>
       <artifactId>maven-assembly-plugin</artifactId>
       <version>2.3</version>
-      <executions>
-        <execution>
-          <id>executable-jar-assembly-qe</id>
-          <phase>package</phase>
-          <goals>
-            <goal>single</goal>
-          </goals>
-          <configuration>
-            <archive>
-              <manifest>
-              </manifest>
-            </archive>
-            <descriptors>
-              <descriptor>src/assemble/seqware-queryengine.xml</descriptor>
-            </descriptors>
-            <finalName>seqware-queryengine-${version}</finalName>
-          </configuration>
-        </execution>
+	<executions>
 	<execution>
           <id>executable-jar-assembly</id>
           <phase>package</phase>
@@ -68,8 +51,9 @@
             </archive>
             <descriptors>
               <descriptor>src/assemble/seqware-pipeline-full.xml</descriptor>
+              <descriptor>src/assemble/seqware-queryengine.xml</descriptor>
             </descriptors>
-            <finalName>seqware-pipeline-${project.version}</finalName>
+            <finalName>seqware</finalName>
           </configuration>
         </execution>
       </executions>
