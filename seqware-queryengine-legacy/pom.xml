@@ -11,7 +11,7 @@
     <parent>
         <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
-        <version>0.12.0</version>
+        <version>0.42.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <build>
@@ -47,9 +47,9 @@
                         <QE_POSTGRESQL_DB>seqware_qe_db</QE_POSTGRESQL_DB>
                         <QE_HBASE_FEATUREID>GO:12323121hg18.chr22:000000000001234.feature.Genome032399.v1337266516375</QE_HBASE_FEATUREID>
                     </systemPropertyVariables>
-                    <!--<excludes>
+                    <excludes>
                         <exclude>**/*Test.java</exclude>
-                    </excludes> -->
+                    </excludes>
                 </configuration>
                
             </plugin>
