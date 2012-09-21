@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
-        <version>0.42.0</version>
+        <version>0.42.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -144,7 +144,7 @@
         <dependency>
             <groupId>com.github.seqware</groupId>
             <artifactId>seqware-common</artifactId>
-            <version>0.42.0</version>
+            <version>0.42.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
@@ -163,7 +163,7 @@
         <dependency>
             <groupId>com.github.seqware</groupId>
             <artifactId>seqware-pipeline</artifactId>
-            <version>0.42.0</version>
+            <version>0.42.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>net.sourceforge.seqware</groupId>
