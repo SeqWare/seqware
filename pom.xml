@@ -24,7 +24,7 @@
         <restlet.version>2.1-RC5</restlet.version>
         <maven-assembly-plugin.version>2.3</maven-assembly-plugin.version>
         <jetty-maven-plugin.version>7.0.0.pre5</jetty-maven-plugin.version>
-        <github.url>scm:git:git@github.com:SeqWare/seqware.git</github.url>
+        <github.url>scm:git:git://github.com/SeqWare/seqware.git</github.url>
     </properties>
 
     <scm>
@@ -59,7 +59,7 @@
     <artifactId>seqware</artifactId>
     <packaging>pom</packaging>
     <groupId>com.github.seqware</groupId>
-    <version>0.42.0</version>
+    <version>0.42.1-SNAPSHOT</version>
 
     <repositories>
 	 <repository>
