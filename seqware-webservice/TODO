@@ -1,0 +1,5 @@
+* Because many of the databases don't have the generic feature table created I set the following object
+  to allow create, this must be turned off for production!!
+  ** src/net/sourceforge/seqware/queryengine/webservice/view/ConsequenceResource.java:        settings.setReadOnly(true);
+  ** src/net/sourceforge/seqware/queryengine/webservice/view/MismatchResource.java:        settings.setReadOnly(true);
+  ** src/net/sourceforge/seqware/queryengine/webservice/view/CoverageResource.java:        settings.setReadOnly(true);

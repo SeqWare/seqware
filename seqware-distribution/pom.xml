@@ -2,23 +2,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-
-  <parent>
-    <artifactId>seqware</artifactId>
-    <groupId>com.github.seqware</groupId>
-    <version>0.12.0</version>
+  <parent> 
+        <version>0.13.3-SNAPSHOT</version> 
+        <groupId>com.github.seqware</groupId> 
+        <artifactId>seqware</artifactId> 
+        <relativePath>../pom.xml</relativePath> 
   </parent>
 
   <artifactId>seqware-distribution</artifactId>
 
   <name>seqware-distribution</name>
-  <url>http://seqware.sf.net</url>
+  <url>https://github.com/SeqWare/seqware</url>
 
   <dependencies>
     <dependency>
       <groupId>com.github.seqware</groupId>
       <artifactId>seqware-queryengine</artifactId>
-      <version>0.12.0</version>
+      <version>0.13.3-SNAPSHOT</version> 
+    </dependency>
+    <dependency>
+      <groupId>com.github.seqware</groupId>
+      <artifactId>seqware-pipeline</artifactId>
+      <version>0.13.3-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <properties>
@@ -31,8 +36,8 @@
     <plugin>
       <artifactId>maven-assembly-plugin</artifactId>
       <version>2.3</version>
-      <executions>
-          <execution>
+	<executions>
+	<execution>
           <id>executable-jar-assembly</id>
           <phase>package</phase>
           <goals>
@@ -41,12 +46,14 @@
           <configuration>
             <archive>
               <manifest>
+                <mainClass>net.sourceforge.seqware.pipeline.runner.PluginRunner</mainClass>
               </manifest>
             </archive>
             <descriptors>
+              <descriptor>src/assemble/seqware-pipeline-full.xml</descriptor>
               <descriptor>src/assemble/seqware-queryengine.xml</descriptor>
             </descriptors>
-            <finalName>seqware-queryengine-${version}</finalName>
+            <finalName>seqware</finalName>
           </configuration>
         </execution>
       </executions>
