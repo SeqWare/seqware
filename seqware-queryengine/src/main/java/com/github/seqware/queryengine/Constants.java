@@ -82,7 +82,7 @@ public class Constants {
          * change this when developing to avoid name collisions with other
          * developers
          */
-        NAMESPACE("QE_NAMESPACE", "batman_1", String.class),
+        NAMESPACE("QE_NAMESPACE", "batman", String.class),
         /**
          * Properly set this task if you want your compiled jar files to
          * automatically load in the cluster when performing map/reduce tasks
