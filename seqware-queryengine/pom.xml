@@ -123,6 +123,13 @@
           	</executions>
 		<configuration>
 			<mapReduceEnabled>true</mapReduceEnabled>
+			<hadoopConfiguration>
+				<property>
+					<!-- scanners seem to timeout more often when using this mini-cluster, possible for performance reasons -->
+					<name>hbase.client.scanner.timeout.period</name>	
+					<value>120000</value>
+				</property>
+			</hadoopConfiguration>
 		</configuration>
 	    </plugin>
             <plugin>
