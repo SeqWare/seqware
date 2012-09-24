@@ -13,7 +13,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <protobuf.version>2.4.1</protobuf.version>
 	<skipHBaseTests>false</skipHBaseTests>
-	<hbase-maven-plugin-version>1.0.7-cdh4</hbase-maven-plugin-version>
     </properties>
     <parent>
         <groupId>com.github.seqware</groupId>
@@ -27,7 +26,6 @@
             <id>Cloudera repository</id>
             <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
         </repository>
-        
         <!--
 	<repository>
             <id>biojava3-repository</id>
@@ -42,6 +40,13 @@
         </repository>
         -->
     </repositories>
+    <pluginRepositories>
+	 <pluginRepository>
+            <id>dependencies.seqware.sourceforge.net</id>
+            <name>SeqWare Dependencies Maven Repository</name>
+            <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-dependencies</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <resources>
@@ -107,7 +112,7 @@
 		<!-- thanks to wibidata, this plugin allows us to spin up and shut down a mini-hbase cluster for hbase testing -->
           	<groupId>com.wibidata.maven.plugins</groupId>
           	<artifactId>hbase-maven-plugin</artifactId>
-          	<version>${hbase-maven-plugin-version}</version>
+          	<version>1.0.7-cdh4</version>
           	<executions>
             		<execution>
               			<goals>
