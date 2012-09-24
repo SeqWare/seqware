@@ -1,0 +1,4 @@
+
+0.8.0
+- Added constraint to registration table to ensure that email
+  address is unique.
