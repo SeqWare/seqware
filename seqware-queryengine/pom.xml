@@ -12,6 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <protobuf.version>2.4.1</protobuf.version>
+	<skipHBaseTests>true</skipHBaseTests>
     </properties>
     <parent>
         <groupId>com.github.seqware</groupId>
@@ -68,6 +69,7 @@
                 </executions>
             </plugin>
             <plugin>
+		<!-- only try to run self-contained tests here -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.11</version>
@@ -75,9 +77,33 @@
                     <includes>
                         <include>**/*Suite.java</include>
                     </includes>
+		    <excludes>
+                        <include>**/*HBase*.java</include>
+                        <include>**/*System*.java</include>
+                        <include>**/*Impl*.java</include>
+		    </excludes>
                     <forkMode>
                         never
                     </forkMode>
+                </configuration>
+            </plugin>
+            <plugin>
+		<!-- try to run tests that require HBase here -->
+        	<artifactId>maven-failsafe-plugin</artifactId>
+        	<version>2.12.3</version>
+        	<executions>
+          		<execution>
+            			<goals>
+              				<goal>integration-test</goal>
+              				<goal>verify</goal>
+            			</goals>
+          		</execution>
+        	</executions>
+                <configuration>
+		    <skipTests>${skipHBaseTests}</skipTests>
+                    <includes>
+                        <include>**/*Suite.java</include>
+                    </includes>
                 </configuration>
             </plugin>
             <plugin>
