@@ -99,4 +99,25 @@ public class Arguments extends PegasusAbstract {
 	    this.moduleOptions.remove(rem);
 	}
     }
+
+    public void updateOption(String key, String value) {
+	// check module option first
+	for (Argument arg : this.moduleOptions) {
+	    if (arg.getKey().equals(key)) {
+		arg.setValue(arg.getValue() + ":" + value);
+		return;
+	    }
+	}
+	// check sys option
+	for (Argument arg : this.sysOptions) {
+	    if (arg.getKey().equals(key)) {
+		arg.setValue(arg.getValue() + ":" + value);
+		return;
+	    }
+	}
+    }
+
+    public boolean hasModuleOption() {
+	return !this.moduleOptions.isEmpty();
+    }
 }

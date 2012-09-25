@@ -16,12 +16,11 @@
  */
 package net.sourceforge.seqware.pipeline.workflowV2;
 
-import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 /**
- *
+ * 
  * @author yongliang
  */
 public interface WorkflowInterface {
-	public void generateWorkflow(Workflow workflow);
+    // public void generateWorkflow(Workflow workflow);
 
 }

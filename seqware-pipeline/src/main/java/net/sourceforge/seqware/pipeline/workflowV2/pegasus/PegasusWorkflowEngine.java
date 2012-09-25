@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.pipeline.workflowV2.pegasus;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -29,10 +30,12 @@ import java.util.Random;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowClassFinder;
+import net.sourceforge.seqware.pipeline.workflowV2.WorkflowXmlParser;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 
 /**
@@ -121,6 +124,7 @@ public class PegasusWorkflowEngine extends BasicWorkflow {
 	Class<?> clazz = finder.findFirstWorkflowClass(clazzPath);
 	Workflow wfObj = new Workflow(newMap);
 	if (null != clazz) {
+	    Log.debug("using java object");
 	    try {
 		Object object = clazz.newInstance();
 		Method m = clazz.getDeclaredMethod("generateWorkflow",
@@ -139,10 +143,30 @@ public class PegasusWorkflowEngine extends BasicWorkflow {
 	    } catch (InvocationTargetException ex) {
 		ex.printStackTrace();
 	    }
+	    Log.error("before generating dax");
+	    return daxGen.generateDax(wfObj, dax.getAbsolutePath());
+	} else {
+	    Log.debug("using XML template");
+	    File xml = this.createXMLFile();
+	    ReturnValue rv = super.generateDaxFile(wi, xml, iniFilesStr,
+		    newMap, cmdLineOptions);
+	    if (rv.getExitStatus() != ReturnValue.SUCCESS) {
+		return rv;
+	    }
+	    WorkflowXmlParser xmlParser = new WorkflowXmlParser();
+	    xmlParser.parseXml(wfObj, xml);
+	    // xml to java object
+	    /*
+	     * try { JAXBContext jaxbContext = JAXBContext .newInstance(
+	     * Workflow.class,
+	     * net.sourceforge.seqware.pipeline.workflowV2.model.Job.class);
+	     * Unmarshaller jaxbMarshaller = jaxbContext.createUnmarshaller();
+	     * Object obj = jaxbMarshaller.unmarshal(xml);
+	     * System.out.println(obj); } catch (JAXBException e) { // TODO
+	     * Auto-generated catch e.printStackTrace(); }
+	     */
+	    return daxGen.generateDax(wfObj, dax.getAbsolutePath());
 	}
-	Log.error("before generating dax");
-	return daxGen.generateDax(wfObj, dax.getAbsolutePath());
-
     }
 
     protected Map<String, String> prepareData(WorkflowInfo wi,
@@ -157,4 +181,18 @@ public class PegasusWorkflowEngine extends BasicWorkflow {
 	ret.put("workflow_seqware_version", wi.getWorkflowSqwVersion());
 	return ret;
     }
+
+    private File createXMLFile() {
+	File xml = null;
+
+	try {
+	    xml = FileTools.createFileWithUniqueName(new File("/tmp"), "xml");
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+
+	Log.stdout("CREATING DAX IN: " + xml.getAbsolutePath());
+	return xml;
+    }
+
 }
