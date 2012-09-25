@@ -12,7 +12,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <protobuf.version>2.4.1</protobuf.version>
-	<skipHBaseTests>false</skipHBaseTests>
     </properties>
     <parent>
         <groupId>com.github.seqware</groupId>
@@ -103,9 +102,10 @@
                         <include>**/*System*.java</include>
                         <include>**/*Impl*.java</include>
 		    </excludes>
-                    <forkMode>
+                  <!--  <forkMode>
                         never
                     </forkMode>
+		  -->
                 </configuration>
             </plugin>
 	    <plugin>
@@ -149,7 +149,6 @@
           		</execution>
         	</executions>
                 <configuration>
-		    <skipTests>${skipHBaseTests}</skipTests>
                     <includes>
                         <include>**/*Suite.java</include>
                     </includes>
