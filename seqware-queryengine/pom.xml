@@ -12,6 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <protobuf.version>2.4.1</protobuf.version>
+	<skipTests>true</skipTests>
     </properties>
     <parent>
         <groupId>com.github.seqware</groupId>
@@ -108,8 +109,9 @@
 		  -->
                 </configuration>
             </plugin>
+	    <!-- this seems to cause issues with Jetty
 	    <plugin>
-		<!-- thanks to wibidata, this plugin allows us to spin up and shut down a mini-hbase cluster for hbase testing -->
+		thanks to wibidata, this plugin allows us to spin up and shut down a mini-hbase cluster for hbase testing
           	<groupId>com.wibidata.maven.plugins</groupId>
           	<artifactId>hbase-maven-plugin</artifactId>
           	<version>1.0.7-cdh4</version>
@@ -124,7 +126,7 @@
 		<configuration>
 			<mapReduceEnabled>true</mapReduceEnabled>
 			<hadoopConfiguration>
-				<!-- scanners seem to timeout more often when using this mini-cluster, possible for performance reasons -->
+				scanners seem to timeout more often when using this mini-cluster, possible for performance reasons 
 				<property>
 					<name>hbase.client.scanner.timeout.period</name>	
 					<value>120000</value>
@@ -136,6 +138,7 @@
 			</hadoopConfiguration>
 		</configuration>
 	    </plugin>
+	    -->
             <plugin>
 		<!-- try to run tests that require HBase here -->
         	<artifactId>maven-failsafe-plugin</artifactId>
@@ -149,6 +152,7 @@
           		</execution>
         	</executions>
                 <configuration>
+		    <skipTests>${skipTests}</skipTests>
                     <includes>
                         <include>**/*Suite.java</include>
                     </includes>
