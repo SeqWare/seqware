@@ -259,5 +259,10 @@
             <artifactId>core</artifactId>
             <version>1.8.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr</artifactId>
+            <version>3.4</version>
+        </dependency>
     </dependencies>
 </project>
