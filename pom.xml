@@ -122,6 +122,8 @@
         <module>seqware-webservice-dto</module>
         <module>seqware-webservice</module>
         <module>seqware-portal</module>
+	<module>seqware-archetype-module</module>
+        <module>seqware-archetype-workflow</module>
     </modules>
 
     <licenses>
@@ -433,6 +435,9 @@
                         <source>1.6</source>
                         <target>1.6</target>
                         <showDeprecation>true</showDeprecation>
+			<!-- added forkMode, the full GitHub mvn compile seems to blow up with an OutOfMemoryError -->
+                        <fork>true</fork>
+                        <maxmem>8192m</maxmem>
                     </configuration>
                     <dependencies>
                         <dependency>
