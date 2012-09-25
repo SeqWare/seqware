@@ -6,6 +6,12 @@
 
     <name>seqware-webservice</name>
     <packaging>war</packaging>
+
+    <properties>
+	<skipTests>true</skipTests>
+        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
+        <netbeans.compile.on.save>all</netbeans.compile.on.save>
+    </properties>
     
     <parent>
         <groupId>com.github.seqware</groupId>
@@ -66,6 +72,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.11</version>
                 <configuration>
+		    <skipTests>${skipTests}</skipTests>
                     <argLine>-Xms512m -Xmx512m</argLine>
                     <forkMode>pertest</forkMode>
                     <includes>
@@ -458,8 +465,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <properties>
-        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
-        <netbeans.compile.on.save>all</netbeans.compile.on.save>
-    </properties>
 </project>
