@@ -124,9 +124,13 @@
 		<configuration>
 			<mapReduceEnabled>true</mapReduceEnabled>
 			<hadoopConfiguration>
+				<!-- scanners seem to timeout more often when using this mini-cluster, possible for performance reasons -->
 				<property>
-					<!-- scanners seem to timeout more often when using this mini-cluster, possible for performance reasons -->
 					<name>hbase.client.scanner.timeout.period</name>	
+					<value>120000</value>
+				</property>
+				<property>
+					<name>hbase.regionserver.lease.period</name>	
 					<value>120000</value>
 				</property>
 			</hadoopConfiguration>
