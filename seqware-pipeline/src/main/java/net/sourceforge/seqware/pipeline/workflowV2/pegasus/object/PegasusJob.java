@@ -75,7 +75,9 @@ public class PegasusJob extends PegasusAbstract {
 
 	    }
 	}
-	element.addContent(this.argument.serializeXML());
+	Element arg = this.argument.serializeXML();
+	element.addContent(arg);
+	this.addModuleArgumentString(arg);
 
 	for (Element profile : this.generateDefaultProfileElements()) {
 	    element.addContent(profile);
@@ -286,5 +288,18 @@ public class PegasusJob extends PegasusAbstract {
     @Override
     public String toString() {
 	return this.jobObj.getAlgorithm() + "--" + this.jobObj.getId();
+    }
+
+    protected void addModuleArgumentString(Element element) {
+	if (element == null)
+	    return;
+	if (null != this.jobObj.getModuleArgumentString()
+		&& !this.jobObj.getModuleArgumentString().isEmpty()) {
+	    String s = this.jobObj.getModuleArgumentString();
+	    if (!this.argument.hasModuleOption()) {
+		s = "--\n" + s;
+	    }
+	    element.setText(element.getText() + "\n" + s);
+	}
     }
 }

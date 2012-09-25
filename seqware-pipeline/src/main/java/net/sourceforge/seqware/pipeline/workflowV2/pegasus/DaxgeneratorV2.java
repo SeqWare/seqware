@@ -52,7 +52,7 @@ public class DaxgeneratorV2 {
 	    Adag adag = new Adag(workflow);
 	    doc.setRootElement(adag.serializeXML());
 	    serializer.output(doc, out);
-	    serializer.output(doc, System.out);
+	    // serializer.output(doc, System.out);
 	    out.flush();
 	    out.close();
 	} catch (IOException e) {

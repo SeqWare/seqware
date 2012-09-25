@@ -18,9 +18,11 @@ package net.sourceforge.seqware.pipeline.workflowV2.pegasus.object;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
@@ -146,13 +148,15 @@ public class Adag extends PegasusAbstract {
 	    if (pjob.hasProvisionFilesDependent()) {
 		provisionFiles.add(pjob);
 	    }
-	    Collection<Job> parentJobs = pjob.getJobObject().getParents();
-	    if (!parentJobs.isEmpty()) {
-		for (Job job : parentJobs) {
-		    pjob.addParent(this.jobs.get(job.getId()));
-		}
 
-	    }
+	    this.autoDependency();
+	    /*
+	     * Collection<Job> parentJobs = pjob.getJobObject().getParents(); if
+	     * (!parentJobs.isEmpty()) { for (Job job : parentJobs) {
+	     * pjob.addParent(this.jobs.get(job.getId())); }
+	     * 
+	     * }
+	     */
 	}
 	// set provisionfiles job
 	for (PegasusJob job : provisionFiles) {
@@ -182,11 +186,11 @@ public class Adag extends PegasusAbstract {
 	    if (job.getParents().isEmpty()) {
 		i++;
 		// set the first non provisionfiles job
-		for (PegasusJob child : this
-			.getFirstLevelNonProvisionFilesJobs(job)) {
-		    // child.
-		    child.setParentAccessionId(pas[i]);
-		}
+		/*
+		 * for (PegasusJob child : this
+		 * .getFirstLevelNonProvisionFilesJobs(job)) { // child.
+		 * child.setParentAccessionId(pas[i]); }
+		 */
 	    }
 
 	}
@@ -232,5 +236,33 @@ public class Adag extends PegasusAbstract {
 	    return null;
 	}
 	return _pid;
+    }
+
+    private void autoDependency() {
+	Map<String, List<PegasusJob>> orderedMap = new LinkedHashMap<String, List<PegasusJob>>();
+	for (Map.Entry<String, PegasusJob> entry : this.jobs.entrySet()) {
+	    List<PegasusJob> list = orderedMap.get(entry.getValue()
+		    .getAlgorithm());
+	    if (null == list) {
+		list = new ArrayList<PegasusJob>();
+		orderedMap.put(entry.getValue().getAlgorithm(), list);
+	    }
+	    list.add(entry.getValue());
+	}
+	// set parents
+	if (orderedMap.isEmpty())
+	    return;
+	Iterator<Entry<String, List<PegasusJob>>> it = orderedMap.entrySet()
+		.iterator();
+	Entry<String, List<PegasusJob>> parent = it.next();
+	while (it.hasNext()) {
+	    Entry<String, List<PegasusJob>> child = it.next();
+	    for (PegasusJob c : child.getValue()) {
+		for (PegasusJob p : parent.getValue()) {
+		    c.addParent(p);
+		}
+	    }
+	    parent = child;
+	}
     }
 }

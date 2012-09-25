@@ -67,8 +67,8 @@ public class Workflow {
 	return this.version;
     }
 
-    @XmlElementWrapper(name = "Jobs")
-    @XmlElement(name = "Job")
+    @XmlElementWrapper(name = "jobs")
+    @XmlElement(name = "job")
     public Collection<Job> getJobs() {
 	return this.jobs.values();
     }
