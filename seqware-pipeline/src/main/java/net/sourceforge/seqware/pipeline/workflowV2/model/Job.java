@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+
 import net.sourceforge.seqware.common.util.Log;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -29,10 +31,13 @@ public class Job {
     private String preJobDir;
     private boolean metadataOverridable = false;
     private List<Argument> moduleArgs;
+    private String classPath;
     // default 1
     private int threadCount = 1;
     // default 5000
     private int maxMem = 5000;
+    private String moduleArgumentString;
+    private boolean inputfilemetadata;
 
     public Job() {
 	this("");
@@ -151,17 +156,35 @@ public class Job {
     }
 
     public void setInputFile(String input) {
-	this.inputFile = input;
+	this.setInputFile(input, false);
     }
 
+    public void setInputFile(String input, boolean metadata) {
+	this.inputFile = input;
+	this.inputfilemetadata = metadata;
+    }
+
+    @XmlElement(name = "inputfile")
     public String getInputFile() {
 	return this.inputFile;
+    }
+
+    /**
+     * input-file input-file-metadata
+     * 
+     * @return
+     */
+    public String getInputFileKey() {
+	return this.inputfilemetadata ? "--input-file-metadata"
+		: "--input-file";
+
     }
 
     public void setOutputDir(String output) {
 	this.outputDir = output;
     }
 
+    @XmlElement(name = "outputdir")
     public String getOutputDir() {
 	return this.outputDir;
     }
@@ -221,6 +244,27 @@ public class Job {
 
     public void setMetadataOverridden(boolean metadata) {
 	this.metadataOverridable = metadata;
+    }
+
+    public String getClassPath() {
+	return classPath;
+    }
+
+    public void addClassPath(String classPath) {
+	this.classPath = classPath;
+    }
+
+    /**
+     * take in the whole arguments as a long string
+     * 
+     * @param input
+     */
+    public void setModuleArgumentString(String input) {
+	this.moduleArgumentString = input;
+    }
+
+    public String getModuleArgumentString() {
+	return this.moduleArgumentString;
     }
 
 }
