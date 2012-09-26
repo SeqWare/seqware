@@ -1,25 +1,25 @@
 ---
 
-title:                 "Getting Started"
+title:                 "Admin Tutorial"
 markdown:              advanced
 toc_includes_sections: true
 
 ---
 
-The majority of this guide is dedicated to walking users and developers through the basics of using SeqWare. We assume that people are most interested in the Pipeline sub-project and focus most of our time on that.  The examples below will all be based on a local VM but the environment on our cloud instance is almost identical.
+**This guide is a work in progress.**
+This guide will, in the near future, focus on how to setup SeqWare at your site or on the cloud.
+It focuses on what you need to do to get “real” work done e.g. to run workflows you create on
+datasets that require multiple nodes to analyze the data in a reasonable amount of time.
+There are basically two approaches for this, connect the VirtualBox VM to a cluster at your
+local site or to launch a full SeqWare cluster on EC2 using Starcluster. Either of these
+approaches will leave you with a system that can process large amounts of data. This guide
+assumes you are an IT admin at your site or are working with an admin since some of the
+steps will require “root” privileges.
 
 ## By the End of These Tutorials
 
 By the end of these tutorials you will:
 
-* create studies, experiments, and samples in the MetaDB
-* run a HelloWorld workflow in Pipeline
-* create a new workflow bundle in Pipeline
-* install and schedule your new workflow bundle in Pipeline and MetaDB
-* generate a report on the outputs of your workflows in Pipeline and Portal
-* get an overview of the administration process for SeqWare
-* be prepared to move on to more detailed documentation for each sub-project
-
-Please launch your local VM and log in as <kbd>seqware</kbd> at this time. 
-
-
+* see how to connect a local VM to a local cluster for running large-scale workflows
+* see how to launch a cluster on Amazon’s cloud for running large-scale workflows
+* more to come
