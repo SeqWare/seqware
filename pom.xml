@@ -122,6 +122,7 @@
         <module>seqware-webservice-dto</module>
         <module>seqware-webservice</module>
         <module>seqware-portal</module>
+        <module>seqware-archetype-workflowV2</module>
     </modules>
 
     <licenses>
