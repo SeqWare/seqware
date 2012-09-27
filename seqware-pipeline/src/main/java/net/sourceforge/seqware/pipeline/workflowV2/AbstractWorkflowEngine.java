@@ -31,9 +31,7 @@ public abstract class AbstractWorkflowEngine {
 	 * @param objectModel
 	 * @return
 	 */
-	public ReturnValue launchWorkflow(WorkflowObjectModel objectModel) {
-		return null;
-	}
+	public abstract ReturnValue launchWorkflow(WorkflowObjectModel objectModel);
 	
 	
 }
