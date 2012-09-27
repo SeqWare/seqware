@@ -3,7 +3,7 @@ package net.sourceforge.seqware.pipeline.workflowV2;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.workflowV2.model.WorkflowObjectModel;
 
-public abstract class AbstractWorkflowEngineV2 {
+public abstract class AbstractWorkflowEngine {
 	private WorkflowObjectModel objectModel;
 	private ReturnValue returnValue;
 	
