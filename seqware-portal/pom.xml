@@ -31,6 +31,8 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>tomcat-maven-plugin</artifactId>
+<!-- snapshot was here but commented out originally, using the latest released version as checked by mvn help:describe -DgroupId=org.codehaus.mojo  -DartifactId=tomcat-maven-plugin -Dfull=true | less -->
+                    <version>1.1</version>
 <!--                <version>1.2-SNAPSHOT</version>-->
                 <configuration>
                 	<server>TomcatServer</server>
