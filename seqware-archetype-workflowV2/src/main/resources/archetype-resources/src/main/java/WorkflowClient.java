@@ -16,26 +16,14 @@
  */
 package net.sourceforge.seqware;
 
-import net.sourceforge.seqware.pipeline.workflowV2.WorkflowInterface;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
+import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDescriptor;
 
-public class WorkflowClient extends AbstractWorkflow {
-    
-    @Override
-    public void beforeWorkflow() {
-	
-    }
-    
-    @Override
-    public void generateWorkflow() {
-	workflow.setName("Hello");
-	Job job0 = workflow.createSeqwareModuleJob("test");
-	job0.setCommand("mkdir data; mkdir bin; mkdir lib;");
-    }
-    
-    @Override
-    public void afterWorkflow() {
-	
-    }
+public class WorkflowClient extends AbstractWorkflowDescriptor {
+
+	@Override
+	public void buildWorkflow() {
+		
+		
+	}
+
 }

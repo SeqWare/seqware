@@ -10,16 +10,18 @@ public class Command {
 		this.arguments = new ArrayList<String>();
 	}
 
-	public void addArgument(String argument) {
+	public Command addArgument(String argument) {
 		this.arguments.add(argument);
+		return this;
 	}
 	
 	public List<String> getArguments() {
 		return arguments;
 	}
 
-	public void setArguments(List<String> arguments) {
+	public Command setArguments(List<String> arguments) {
 		this.arguments = arguments;
+		return this;
 	}
 	
 	@Override

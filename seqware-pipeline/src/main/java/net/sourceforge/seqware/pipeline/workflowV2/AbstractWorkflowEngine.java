@@ -16,7 +16,7 @@ public abstract class AbstractWorkflowEngine {
 	}
 	
 	/**
-	 * get the return value of the running workflow
+	 * get the return value of the running workflow, if the workflow is not finished, return null;
 	 * @return
 	 */
 	public ReturnValue getReturnValue() {
