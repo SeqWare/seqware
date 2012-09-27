@@ -312,4 +312,35 @@ public class QueryInterfaceTest implements Benchmarking {
         count = (int) resultSet.getCount();
         junit.framework.Assert.assertTrue("Setting a query constraints over one feature attribute and for a (possibly parent) term in a tree hierarchy failed, expected 2 and found " + count, count == 2);
     }
+
+    @Test
+    public void queryLanguageTest() {
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
+        try {
+            mManager.persist(bSet);
+        } catch (Exception e) {
+            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).fatal("Exception", e);
+            junit.framework.Assert.assertTrue("Backend could not store the given FeatureSet.", false);
+        }
+
+        try {
+            QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, RPNStack.compileQuery("seqid==\"chr16\""));
+            FeatureSet resultSet = queryFuture.get();
+            int count = (int) resultSet.getCount();
+            junit.framework.Assert.assertTrue("Setting a query constraints with 1 operation on 'id' failed, expected 10 and found " + count, count == 10);
+
+            queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, RPNStack.compileQuery("strand==NEGATIVE_STRAND"));
+            resultSet = queryFuture.get();
+            count = (int) resultSet.getCount();
+            junit.framework.Assert.assertTrue("Setting a query constraints with 1 operation on 'strand' failed, expected 3 and found " + count, count == 3);
+
+            queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, RPNStack.compileQuery("seqid==\"chr16\"&&strand==NEGATIVE_STRAND"));
+            resultSet = queryFuture.get();
+            count = (int) resultSet.getCount();
+            junit.framework.Assert.assertTrue("Setting a query constraints with 3 operations failed, expected 2 and found " + count, count == 2);
+        }
+        catch(Exception e) {
+            junit.framework.Assert.assertTrue("Exception thrown during query language tests.", false);
+        }
+    }
 }
