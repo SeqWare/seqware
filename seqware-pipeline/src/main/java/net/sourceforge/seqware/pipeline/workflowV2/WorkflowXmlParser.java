@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Job1;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Module;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 
@@ -39,7 +39,7 @@ public class WorkflowXmlParser {
     }
 
     private void unserializeJob(Workflow wf, Element element) {
-	Job job = null;
+	Job1 job = null;
 	Module module = Module.Seqware_GenericCommandRunner; // default;
 	String algo = element.getChildText("algorithm");
 	// default it is gcr
