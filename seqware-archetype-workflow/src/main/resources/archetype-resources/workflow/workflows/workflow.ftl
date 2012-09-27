@@ -43,14 +43,14 @@ This is a sample HelloWorld workflow. Use it as a template to build your own wor
   
   Before setting to 'true' create the default module using the seqware-archetype-module.
   $ mvn archetype:generate (choose the seqware-archetype-module option)
-  'groupId': : net.sourceforge.seqware
+  'groupId': : com.github.seqware
   'artifactId': : module-helloworld-example
   'version': 1.0
   'package': net.sourceforge.seqware: net.sourceforge.seqware.module
   
   Add to the pom.xml:
   <dependency>
-    <groupId>net.sourceforge.seqware</groupId>
+    <groupid>com.github.seqware</groupid>
     <artifactId>module-helloworld-example</artifactId>
     <version>1.0</version>
   </dependency>  
