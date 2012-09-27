@@ -40,7 +40,7 @@ public class WorkflowXmlParser {
 
     private void unserializeJob(Workflow wf, Element element) {
 	Job job = null;
-	Module module = Module.GenericCommandRunner; // default;
+	Module module = Module.Seqware_GenericCommandRunner; // default;
 	String algo = element.getChildText("algorithm");
 	// default it is gcr
 	String type = element.getAttributeValue("type");
@@ -51,7 +51,7 @@ public class WorkflowXmlParser {
 	    job = wf.createSeqwareModuleJob(algo, module);
 	}
 
-	if (module == Module.ProvisionFiles) {
+	if (module == Module.Seqware_ProvisionFiles) {
 	    Element inputfileE = element.getChild("inputfile");
 	    String inputfiles = inputfileE.getText();
 	    String b = inputfileE.getAttributeValue("metadata");
