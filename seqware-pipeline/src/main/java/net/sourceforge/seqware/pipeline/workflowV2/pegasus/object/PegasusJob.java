@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import net.sourceforge.seqware.pipeline.workflowV2.model.Argument;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Job1;
 import net.sourceforge.seqware.pipeline.workflowV2.model.JobProfile;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.StringUtils;
 
@@ -16,14 +16,14 @@ import org.jdom.Element;
 public class PegasusJob extends PegasusAbstract {
 
     protected static String NS = "seqware";
-    protected Job jobObj;
+    protected Job1 jobObj;
     protected Arguments argument;
     private Collection<PegasusJob> parents;
     private Collection<PegasusJob> childrens;
     protected String parentAccessionId;
     protected Collection<String> inputs;
 
-    public PegasusJob(Job job) {
+    public PegasusJob(Job1 job) {
 	this.jobObj = job;
 	this.parents = new ArrayList<PegasusJob>();
 	this.childrens = new ArrayList<PegasusJob>();
@@ -187,7 +187,7 @@ public class PegasusJob extends PegasusAbstract {
 	return this.jobObj.getId();
     }
 
-    public Job getJobObject() {
+    public Job1 getJobObject() {
 	return this.jobObj;
     }
 

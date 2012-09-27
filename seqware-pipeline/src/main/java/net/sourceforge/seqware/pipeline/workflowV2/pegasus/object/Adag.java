@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Job1;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Module;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SeqwareModuleJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
@@ -100,7 +100,7 @@ public class Adag extends PegasusAbstract {
 
     private void parseWorkflow(Workflow wf) {
 	this.setWorkflow(wf);
-	for (Job job : wf.getJobs()) {
+	for (Job1 job : wf.getJobs()) {
 	    PegasusJob pjob = this.createPegasusJob(job);
 	    this.addJob(pjob);
 	}
@@ -125,7 +125,7 @@ public class Adag extends PegasusAbstract {
 	}
     }
 
-    private PegasusJob createPegasusJob(Job job) {
+    private PegasusJob createPegasusJob(Job1 job) {
 	PegasusJob pjob = null;
 	if (job instanceof SeqwareModuleJob) {
 	    pjob = new PegasusSeqwareModuleJob(job);
@@ -162,7 +162,7 @@ public class Adag extends PegasusAbstract {
 	for (PegasusJob job : provisionFiles) {
 	    if (job.hasProvisionFilesDependent()) {
 		// create provisionfiles job
-		Job jobO = this.getWorkflow().createSeqwareModuleJob(
+		Job1 jobO = this.getWorkflow().createSeqwareModuleJob(
 			job.getAlgorithm(), Module.Seqware_ProvisionFiles);
 		PegasusSeqwareModuleJob pjob = new PegasusSeqwareModuleJob(jobO);
 		this.addJob(pjob);

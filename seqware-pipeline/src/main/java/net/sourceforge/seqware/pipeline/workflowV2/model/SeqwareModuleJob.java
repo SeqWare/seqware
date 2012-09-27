@@ -20,7 +20,7 @@ package net.sourceforge.seqware.pipeline.workflowV2.model;
  * 
  * @author yongliang
  */
-public class SeqwareModuleJob extends Job {
+public class SeqwareModuleJob extends Job1 {
     private Module module;
 
     public SeqwareModuleJob(String algo) {

@@ -38,15 +38,15 @@ public class Workflow {
     private String finalDestination;
     private Map<String, String> properties;
 
-    private Map<String, Job> jobs;
+    private Map<String, Job1> jobs;
 
     public Workflow() {
-	this.jobs = new LinkedHashMap<String, Job>();
+	this.jobs = new LinkedHashMap<String, Job1>();
     }
 
     public Workflow(Map<String, String> properties) {
 	this.properties = properties;
-	this.jobs = new LinkedHashMap<String, Job>();
+	this.jobs = new LinkedHashMap<String, Job1>();
     }
 
     public void setName(String name) {
@@ -69,23 +69,23 @@ public class Workflow {
 
     @XmlElementWrapper(name = "jobs")
     @XmlElement(name = "job")
-    public Collection<Job> getJobs() {
+    public Collection<Job1> getJobs() {
 	return this.jobs.values();
     }
 
-    public void setJobs(Collection<Job> jobs) {
-	for (Job job : jobs) {
+    public void setJobs(Collection<Job1> jobs) {
+	for (Job1 job : jobs) {
 	    this.jobs.put(job.getName(), job);
 	}
     }
 
-    public void addJob(Job job) {
+    public void addJob(Job1 job) {
 	int count = this.jobs.size();
 	job.setId("" + count);
 	this.jobs.put(job.getId(), job);
     }
 
-    public Job getJobById(String id) {
+    public Job1 getJobById(String id) {
 	return this.jobs.get(id);
     }
 
@@ -113,8 +113,8 @@ public class Workflow {
 	return this.properties;
     }
 
-    public Job createJavaJob(String algo) {
-	Job job = new JavaJob(algo);
+    public Job1 createJavaJob(String algo) {
+	Job1 job = new JavaJob(algo);
 	this.addJob(job);
 	return job;
     }
@@ -140,9 +140,9 @@ public class Workflow {
 	return job;
     }
 
-    public Collection<Job> getJobsByAlgo(String algo) {
-	List<Job> res = new ArrayList<Job>();
-	for (Job job : this.jobs.values()) {
+    public Collection<Job1> getJobsByAlgo(String algo) {
+	List<Job1> res = new ArrayList<Job1>();
+	for (Job1 job : this.jobs.values()) {
 	    if (job.getAlgorithm().equals(algo)) {
 		res.add(job);
 	    }
@@ -150,8 +150,8 @@ public class Workflow {
 	return res;
     }
 
-    public Job createJob(String algo) {
-	Job job = new Job(algo);
+    public Job1 createJob(String algo) {
+	Job1 job = new Job1(algo);
 	this.addJob(job);
 	return job;
     }
