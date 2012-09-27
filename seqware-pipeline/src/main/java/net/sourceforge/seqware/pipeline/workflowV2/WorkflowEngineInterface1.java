@@ -25,7 +25,7 @@ import net.sourceforge.seqware.common.module.ReturnValue;
  * 
  * @author yongliang
  */
-public interface WorkflowEngineInterface {
+public interface WorkflowEngineInterface1 {
     public ReturnValue launchBundle(String workflow, String version,
 	    String metadataFile, String bundle, ArrayList<String> iniFiles,
 	    boolean metadataWriteback, ArrayList<String> parentAccessions,
