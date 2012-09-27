@@ -10,7 +10,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
 import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
-import net.sourceforge.seqware.pipeline.workflowV2.pegasus.PegasusWorkflowEngine;
+import net.sourceforge.seqware.pipeline.workflowV2.pegasus.PegasusWorkflowEngine1;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -33,6 +33,6 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 
     @Override
     public BasicWorkflow createWorkflow() {
-	return new PegasusWorkflowEngine(metadata, config);
+	return new PegasusWorkflowEngine1(metadata, config);
     }
 }
