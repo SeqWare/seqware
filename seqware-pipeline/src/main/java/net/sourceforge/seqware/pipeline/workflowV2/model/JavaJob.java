@@ -20,7 +20,7 @@ package net.sourceforge.seqware.pipeline.workflowV2.model;
  *
  * @author yongliang
  */
-public class JavaJob extends Job {
+public class JavaJob extends Job1 {
 	public JavaJob(String algo) {
 		super(algo);
 		this.name = "java";

@@ -22,7 +22,7 @@ public class WorkflowObjectModel {
 	private List<String> parentAccessions;
 	private List<String> parentsLinkedToWR;
 	//may be better to use Map
-	private List<Job> jobs;
+	private List<Job1> jobs;
 	
 	/**
 	 * 
@@ -87,7 +87,7 @@ public class WorkflowObjectModel {
 	 * get all jobs in current workflow
 	 * @return
 	 */
-	public List<Job> getJobs() {
+	public List<Job1> getJobs() {
 		return jobs;
 	}
 
@@ -95,7 +95,7 @@ public class WorkflowObjectModel {
 	 * add job to the workflow
 	 * @param job
 	 */
-	public void addJobs(Job job) {
+	public void addJobs(Job1 job) {
 		this.jobs.add(job);
 	}
 	

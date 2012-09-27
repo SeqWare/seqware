@@ -18,7 +18,7 @@ package net.sourceforge.seqware.pipeline.workflowV2.pegasus.object;
 
 import java.util.Map;
 
-import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Job1;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Module;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SeqwareModuleJob;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.ArgumentUtils;
@@ -31,7 +31,7 @@ import org.jdom.Element;
  */
 public class PegasusSeqwareModuleJob extends PegasusJob {
 
-    public PegasusSeqwareModuleJob(Job job) {
+    public PegasusSeqwareModuleJob(Job1 job) {
 	super(job);
     }
 
