@@ -3,10 +3,13 @@ package net.sourceforge.seqware.pipeline.workflowV2.model;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Module;
 
 public enum Module {
-    GenericCommandRunner(
-	    "net.sourceforge.seqware.pipeline.modules.GenericCommandRunner"), ProvisionFiles(
-	    "net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles"), ParseVEPsVCF(
-	    "ca.on.oicr.seqware.modules.ParseVEPsVCF");
+	Java("java"),
+	Perl("perl"),
+    Seqware_GenericCommandRunner(
+	    "net.sourceforge.seqware.pipeline.modules.GenericCommandRunner"), 
+	Seqware_ProvisionFiles(
+	    "net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles");
+	
 
     private String fullname;
 

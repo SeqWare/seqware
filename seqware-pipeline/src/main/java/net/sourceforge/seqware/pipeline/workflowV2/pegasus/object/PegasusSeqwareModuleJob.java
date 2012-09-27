@@ -43,7 +43,7 @@ public class PegasusSeqwareModuleJob extends PegasusJob {
 	element.setAttribute("namespace", NS);
 	element.setAttribute("version", this.jobObj.getVersion());
 
-	if (Module.ProvisionFiles == this.getModule()) {
+	if (Module.Seqware_ProvisionFiles == this.getModule()) {
 	    this.argument.removeModuleOption("--gcr-algorithm");
 	    if (null != this.getInputFile()) {
 		this.argument.addModuleOption(this.jobObj.getInputFileKey(),
@@ -114,9 +114,9 @@ public class PegasusSeqwareModuleJob extends PegasusJob {
 	this.setSeqwareContext();
 	Module module = this.getModule();
 	if (null == module)
-	    module = Module.GenericCommandRunner;
+	    module = Module.Seqware_GenericCommandRunner;
 	this.argument.addSysOption("--module", module.getName());
-	if (module == Module.GenericCommandRunner) {
+	if (module == Module.Seqware_GenericCommandRunner) {
 	    this.argument.addModuleOption("--gcr-algorithm",
 		    this.jobObj.getAlgorithm());
 	}
@@ -146,7 +146,7 @@ public class PegasusSeqwareModuleJob extends PegasusJob {
 	Module module = this.getModule();
 
 	return this.jobObj.getInputFile() != null
-		&& Module.ProvisionFiles != module;
+		&& Module.Seqware_ProvisionFiles != module;
     }
 
     public Module getModule() {
@@ -163,6 +163,6 @@ public class PegasusSeqwareModuleJob extends PegasusJob {
 
     @Override
     public boolean isProvisionFilesJob() {
-	return Module.ProvisionFiles == this.getModule();
+	return Module.Seqware_ProvisionFiles == this.getModule();
     }
 }

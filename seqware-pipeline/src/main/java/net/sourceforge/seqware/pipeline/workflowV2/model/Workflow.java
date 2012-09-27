@@ -120,12 +120,12 @@ public class Workflow {
     }
 
     public SeqwareModuleJob createSeqwareModuleJob(String algo) {
-	return this.createSeqwareModuleJob(algo, Module.GenericCommandRunner,
+	return this.createSeqwareModuleJob(algo, Module.Seqware_GenericCommandRunner,
 		false);
     }
 
     public SeqwareModuleJob createSeqwareModuleJob(String algo, boolean local) {
-	return this.createSeqwareModuleJob(algo, Module.GenericCommandRunner,
+	return this.createSeqwareModuleJob(algo, Module.Seqware_GenericCommandRunner,
 		local);
     }
 
