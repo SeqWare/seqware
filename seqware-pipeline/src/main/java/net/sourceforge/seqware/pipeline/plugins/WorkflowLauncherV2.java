@@ -10,15 +10,28 @@ package net.sourceforge.seqware.pipeline.plugins;
 import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
+import net.sourceforge.seqware.pipeline.bundle.Bundle;
+import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
 import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
+import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
+import net.sourceforge.seqware.pipeline.workflowV2.WorkflowClassFinder;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
+import net.sourceforge.seqware.pipeline.workflowV2.model.WorkflowObjectModel;
+import net.sourceforge.seqware.pipeline.workflowV2.pegasus.PegasusWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.PegasusWorkflowEngine1;
 
 import org.openide.util.lookup.ServiceProvider;
@@ -33,16 +46,16 @@ import org.openide.util.lookup.ServiceProvider;
 public class WorkflowLauncherV2 extends WorkflowPlugin {
 
     public WorkflowLauncherV2() {
-	super();
+    	super();
     }
 
     public String get_description() {
-	return ("A plugin that lets you launch workflow bundles once you have installed them via the BundleManager.");
+    	return ("A plugin that lets you launch workflow bundles once you have installed them via the BundleManager.");
     }
 
     @Override
     public BasicWorkflow createWorkflow() {
-	return new PegasusWorkflowEngine1(metadata, config);
+    	return new PegasusWorkflowEngine1(metadata, config);
     }
     
     /*
@@ -53,7 +66,45 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     public ReturnValue do_run() {
 
     	// set up workflow engine
-    	//AbstractWorkflowEngine engine = ;
+    	AbstractWorkflowEngine engine = new PegasusWorkflowEngine();
+    	
+    	// set up workflowObjectModel
+    	WorkflowObjectModel wfom = this.setupWorkflowObjectModel();
+    	
+    	// load workflow client class
+    	String clazzPath = wfom.getWorkflowInfo().getClassesDir();
+    	clazzPath = clazzPath.replaceFirst("\\$\\{workflow_bundle_dir\\}",
+    			wfom.getWorkflowInfo().getWorkflowDir());
+    	Log.info("CLASSPATH: " + clazzPath);
+
+    	// get user defined classes
+    	WorkflowClassFinder finder = new WorkflowClassFinder();
+    	Class<?> clazz = finder.findFirstWorkflowClass(clazzPath);
+    	if (null != clazz) {
+    	    Log.debug("using java object");
+    	    try {
+	    		Object object = clazz.newInstance();
+	    		Method m = clazz.getDeclaredMethod("setWorkflowObjectModel",
+	    			WorkflowObjectModel.class);
+	    		m.invoke(object, (Object) wfom);
+    	    } catch (InstantiationException ex) {
+    	    	Log.error(ex);
+    	    } catch (IllegalAccessException ex) {
+    	    	Log.error(ex);
+    	    } catch (NoSuchMethodException ex) {
+    	    	Log.error(ex);
+    	    } catch (SecurityException ex) {
+    	    	Log.error(ex);
+    	    } catch (IllegalArgumentException ex) {
+    	    	Log.error(ex);
+    	    } catch (InvocationTargetException ex) {
+    	    	ex.printStackTrace();
+    	    }
+    	    //return daxGen.generateDax(wfObj, dax.getAbsolutePath());
+    	}
+    	engine.launchWorkflow(wfom);
+    	// parse workflowobjectmodel defined by workflow author
+    	
 		/*
 		 * 
 		 * TODO: need to be able to pass in the workflow_run metadata!!!!
@@ -220,5 +271,66 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 		}
 	
 		return ret;
+    }
+    
+    private WorkflowObjectModel setupWorkflowObjectModel() {
+    	WorkflowObjectModel wfom = new WorkflowObjectModel();
+    	//set command line options
+    	wfom.setCmdOptions(new ArrayList<String>(Arrays.asList(this.params)));
+    	//parse metadata.xml
+    	WorkflowInfo wfi = this.setupWorkflowInfo();
+    	wfom.setWorkflowInfo(wfi);
+    	wfom.setWorkflowBundleDir(wfi.getWorkflowDir());
+    	
+    	return wfom;
+    }
+    
+    private WorkflowInfo setupWorkflowInfo() {
+    	if ((options.has("bundle") || options
+    			.has("provisioned-bundle-dir"))
+    			&& options.has("workflow")
+    			&& options.has("version") && options.has("ini-files")) {
+		    // then your launching direclty and not something that has been
+		    // installed
+		    Log.info("FYI: You are running the workflow without metadata writeback since you are running directly from a bundle zip file or directory.");
+		    // then run the workflow specified
+		    String bundlePath = "";
+		    if (options.has("bundle")) {
+		    	bundlePath = (String) options.valueOf("bundle");
+		    } else {
+		    	bundlePath = (String) options.valueOf("provisioned-bundle-dir");
+		    }
+		    Log.info("Bundle Path: " + bundlePath);
+
+		    String workflow = (String) options.valueOf("workflow");
+		    String version = (String) options.valueOf("version");
+    		String metadataFile = (String) options.valueOf("metadata");
+    		File metadataFileObj = null;
+    		if (metadataFile != null) {
+    		    metadataFileObj = new File(metadataFile);
+    		}
+    		// pull back information from metadata
+    		Bundle bundleUtil = new Bundle(metadata, config);
+    		Log.info("Bundle: " + bundlePath);
+    		BundleInfo bundleInfo = bundleUtil.getBundleInfo(new File(bundlePath),
+    			metadataFileObj);
+    		for (WorkflowInfo wi : bundleInfo.getWorkflowInfo()) {
+
+    		    Log.info("Workflow: " + wi.getName() + " Version: "
+    			    + wi.getVersion());
+
+    		    if (wi.getName().equals(workflow)
+    			    && wi.getVersion().equals(version)) {
+
+	    			Log.info("Match!");
+	    			// then this is the workflow we need to run
+	    			String bundleoutPath = bundleUtil.getOutputDir();	
+	    			wi.setWorkflowDir(bundleoutPath);	
+	    			return wi;
+	    		 }
+    		}
+    	}
+    	return null;
+
     }
 }

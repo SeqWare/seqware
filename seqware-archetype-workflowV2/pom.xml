@@ -9,8 +9,8 @@
   <description>SeqWare workflowV2 archetype</description>
 
     <parent> 
-        <version>0.12.5-SNAPSHOT</version> 
-        <groupId>net.sourceforge.seqware</groupId> 
+        <version>0.13.3-SNAPSHOT</version> 
+        <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
     </parent>
 
@@ -42,9 +42,9 @@
   <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>
-            <groupId>net.sourceforge.seqware</groupId>
+            <groupId>com.github.seqware</groupId>
             <artifactId>seqware-pipeline</artifactId>
-            <version>0.12.5-SNAPSHOT</version>
+            <version>0.13.3-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
     </dependencies>
