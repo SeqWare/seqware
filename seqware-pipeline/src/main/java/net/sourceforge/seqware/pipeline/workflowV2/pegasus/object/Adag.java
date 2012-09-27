@@ -163,7 +163,7 @@ public class Adag extends PegasusAbstract {
 	    if (job.hasProvisionFilesDependent()) {
 		// create provisionfiles job
 		Job jobO = this.getWorkflow().createSeqwareModuleJob(
-			job.getAlgorithm(), Module.ProvisionFiles);
+			job.getAlgorithm(), Module.Seqware_ProvisionFiles);
 		PegasusSeqwareModuleJob pjob = new PegasusSeqwareModuleJob(jobO);
 		this.addJob(pjob);
 		job.addParent(pjob);

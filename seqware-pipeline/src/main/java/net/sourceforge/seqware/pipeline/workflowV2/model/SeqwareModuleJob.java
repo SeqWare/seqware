@@ -24,11 +24,11 @@ public class SeqwareModuleJob extends Job {
     private Module module;
 
     public SeqwareModuleJob(String algo) {
-	this(algo, Module.GenericCommandRunner);
+	this(algo, Module.Seqware_GenericCommandRunner);
     }
 
     public SeqwareModuleJob(String algo, boolean local) {
-	this(algo, Module.GenericCommandRunner, local);
+	this(algo, Module.Seqware_GenericCommandRunner, local);
     }
 
     public SeqwareModuleJob(String algo, Module module) {
