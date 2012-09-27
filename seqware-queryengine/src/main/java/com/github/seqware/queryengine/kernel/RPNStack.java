@@ -1,7 +1,14 @@
 package com.github.seqware.queryengine.kernel;
 
 
+import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.Tag;
+import org.antlr.runtime.ANTLRStringStream;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.Tree;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -144,10 +151,14 @@ public class RPNStack implements Serializable {
     }
 
     public RPNStack(Object ... arguments) {
-        this.stack = Arrays.asList(arguments);
+        this(Arrays.asList(arguments));
+    }
 
-        for (int i = 0; i < arguments.length; i++) {
-            Object argument = arguments[i];
+    public RPNStack(List arguments) {
+        this.stack = arguments;
+
+        for (int i = 0; i < arguments.size(); i++) {
+            Object argument = arguments.get(i);
 
             if (argument instanceof Constant) {
                 this.stack.set(i, ((Constant)argument).getValue());
@@ -262,5 +273,109 @@ public class RPNStack implements Serializable {
             return a == null && b == null;
         }
         return a.equals(b);
+    }
+
+    /**
+     * Compiles the given query string that adheres to the syntax of SeqWareQueryLanguage.g
+     * and returns a RPNStack object representing the query.
+     *
+     * @param query A query string.
+     * @return An RPNStack that represents the query.
+     */
+    public static RPNStack compileQuery(String query) throws RecognitionException {
+        SeqWareQueryLanguageLexer lexer = new SeqWareQueryLanguageLexer(new ANTLRStringStream(query));
+        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+        SeqWareQueryLanguageParser parser = new SeqWareQueryLanguageParser(tokenStream);
+        SeqWareQueryLanguageParser.query_return parsedInput = parser.query();
+        Tree tree = (CommonTree)parsedInput.getTree();
+
+        List<Object> arguments = new ArrayList<Object>();
+        abstractSyntaxTreeTraversal(tree, arguments);
+
+        return new RPNStack(arguments);
+    }
+
+    /**
+     * Traverses an abstract syntex tree of a query and returns the arguments
+     * for a RPNStack.
+     *
+     * @param node Node within the abstract syntax tree -- initially the root node.
+     * @param arguments List of arguments that can be passed to an RPNStack -- initially empty.
+     */
+    private static void abstractSyntaxTreeTraversal(Tree node, List<Object> arguments) {
+        for (int i = 0 ; i < node.getChildCount(); i++)
+            abstractSyntaxTreeTraversal(node.getChild(i), arguments);
+
+        String text = node.getText();
+        switch (node.getType()) {
+        // Boolean operators:
+        case SeqWareQueryLanguageParser.AND:
+            arguments.add(Operation.AND);
+            break;
+        case SeqWareQueryLanguageParser.OR:
+            arguments.add(Operation.OR);
+            break;
+
+        // Other binary operators:
+        case SeqWareQueryLanguageParser.EQUALS:
+            arguments.add(Operation.EQUAL);
+            break;
+        case SeqWareQueryLanguageParser.NOTEQUALS:
+            arguments.add(Operation.EQUAL);
+            arguments.add(Operation.NOT);
+            break;
+
+        // Constants:
+        case SeqWareQueryLanguageParser.FLOAT:
+            arguments.add(new Constant(Float.parseFloat(text)));
+            break;
+        case SeqWareQueryLanguageParser.INT:
+            arguments.add(new Constant(Integer.parseInt(text)));
+            break;
+        case SeqWareQueryLanguageParser.STRING:
+            arguments.add(new Constant(text.replaceFirst("^\"", "").replaceFirst("\"$", "")));
+            break;
+        case SeqWareQueryLanguageParser.NAMED_CONSTANT:
+            if (text.equals("STRAND_UNKNOWN"))
+                arguments.add(new Constant(Feature.Strand.UNKNOWN));
+            else if (text.equals("NOT_STRANDED"))
+                arguments.add(new Constant(Feature.Strand.NOT_STRANDED));
+            else if (text.equals("NEGATIVE_STRAND"))
+                arguments.add(new Constant(Feature.Strand.NEGATIVE));
+            else if (text.equals("POSITIVE_STRAND"))
+                arguments.add(new Constant(Feature.Strand.POSITIVE));
+            else
+                throw new IllegalArgumentException("The following constant is not handled by the parser: " + text);
+            break;
+
+        // Variables:
+        case SeqWareQueryLanguageParser.ID:
+            arguments.add(new FeatureAttribute(text));
+            break;
+
+        // Functions:
+        case SeqWareQueryLanguageParser.NAMED_FUNCTION:
+            Object functionArgument = arguments.remove(arguments.size() - 1);
+            if (text.equals("tagOccurrence"))
+                arguments.add(new TagOccurrence((String)functionArgument));
+            else if (text.equals("tagHierarchicalOccurrence")) {
+                // TODO I don't know how to get the row key.
+                // arguments.add(new TagHierarchicalOccurrence(Compression.getSequenceOntologyAccessionSurrogate((String)functionArgument)), ...);
+            } else if (text.equals("tagValuePresence")) {
+                // TODO I don't know the status quo on tag set identification and representation.
+                // arguments.add(new TagValuePresence(...));
+            } else
+                throw new IllegalArgumentException("A function call of the following name is not known: " + text);
+            break;
+
+        // Not implemented (yet):
+        case SeqWareQueryLanguageParser.GT:
+        case SeqWareQueryLanguageParser.GTEQ:
+        case SeqWareQueryLanguageParser.LT:
+        case SeqWareQueryLanguageParser.LTEQ:
+            throw new UnsupportedOperationException("This has yet to be implemented. Sorry.");
+        default:
+            break;
+        }
     }
 }
