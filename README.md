@@ -1,7 +1,7 @@
     PROJECT: SeqWare
     FILE: README.md
     PROEJCT LEAD: Brian O'Connor <briandoconnor@gmail.com>
-    UPDATED: 20120920
+    UPDATED: 20120928
     HOMEPAGE: http://seqware.github.com/
 
 INTRODUCTION
@@ -22,17 +22,14 @@ documentation:
 The seqware-common sub-project provides a location for common code
 and most of the other sub-projects have this as a dependency.
 
-BUILDING
-========
-
-PREREQUISITES
--------------
+PREREQUISITES ON Mac OS
+-----------------------
 
 ###SeqWare Query Engine
 
 We use [protobuf](http://code.google.com/p/protobuf/) to handle serialization and de-serialization.
 
-Protobuf requires the following installation steps:
+On Mac OS, Protobuf requires the following installation steps:
 
     wget http://protobuf.googlecode.com/files/protobuf-2.4.1.tar.gz
     tar xzf protobuf-2.4.1.tar.gz
@@ -41,22 +38,37 @@ Protobuf requires the following installation steps:
     make
     make install
 
+
+BUILDING
+========
+
 BUILDING THE PROJECT
 --------------------
 
-We're moving to Maven (3.0.4 or greater) for our builds, this is currently how
+We're moving to Maven for our builds, this is currently how
 you do it in the trunk directory:
 
     mvn clean install
 
-You can also skip the tests for a faster build with:
+Maven now separates out unit tests and integration tests as follows.
 
-    mvn clean install -Dmaven.test.skip=true
-  
+    mvn clean install # (runs unit tests but skips integration tests, HBase for query engine and Jetty for web service by default) 
+    mvn clean install -DskipTests # (skips all unit tests and integration tests)
+    mvn clean install -DskipITs=false # (runs all unit tests and all integration tests)
+
+If you wish to build the whole of SeqWare at once, you will need:
+
+    export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=512m"
+    mvn clean install -DskipITs=false
+
+
 You can also build individual components such as the new query engine with: 
 
     cd seqware-queryengine
     mvn clean install
+
+<!-- With the latest update to the query engine, we use an integrated maven plugin to spin up a mini-hbase cluster courtesy of wibidata, but these 
+     instructions may still be transferred to the website to explain how to setup an HBase cluster
 
 LOCAL UNIT TESTING SETUP
 ------------------------
@@ -93,6 +105,13 @@ Stopping the HBase server is similarly simple:
 Finally, set the HBase configuration that should be used in `seqware-queryengine/src/main/java/com/github/seqware/queryengine/Constants.java` to:
 
     public final static Map<String, String> HBASE_PROPERTIES = LOCAL;
+
+--> 
+
+QUERY ENGINE INTEGRATION TESTING
+--------------------------------
+
+By default, our integration test suite runs tests against the [hbase-maven-plugin](https://github.com/wibidata/hbase-maven-plugin). You can, however, run the full test suite against a real Hadoop and HBase cluster; for setup, a good start is to follow Cloudera's [quick start guide](https://ccp.cloudera.com/display/CDH4DOC/CDH4+Quick+Start+Guide). You will then need to set the HBase configuration in `seqware-queryengine/src/main/java/com/github/seqware/queryengine/Constants.java` by turning on HBASE_REMOTE_TESTING and completing a family of terms for HBASE_PROPERTIES. You can also set these in an external ~/.seqware/settings file.
 
 INSTALLING
 ====================

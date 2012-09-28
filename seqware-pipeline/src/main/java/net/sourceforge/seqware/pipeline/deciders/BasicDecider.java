@@ -67,11 +67,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         parser.acceptsAll(Arrays.asList("group-by"), "Optional: Group by one of the headings in FindAllTheFiles. Default: FILE_SWA. One of LANE_SWA or IUS_SWA.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("parent-wf-accessions"), "The workflow accessions of the parent workflows, comma-separated with no spaces. May also specify the meta-type.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("meta-types"), "The comma-separated meta-type(s) of the files to run this workflow with. Alternatively, use parent-wf-accessions.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("check-wf-accessions"), "The workflow accession of the workflow").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("check-wf-accessions"), "The comma-separated, no spaces, workflow accessions of the workflow that perform the same function (e.g. older versions). Any files that have been processed with these workflows will be skipped.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("force-run-all"), "Forces the decider to run all matches regardless of whether they've been run before or not");
         parser.acceptsAll(Arrays.asList("test"),
-                "Overrides all other options and does not submit the workflow, "
-                + "only prints the INI files to standard out.");
+                "Testing mode. Prints the INI files to standard out and does not submit the workflow.");
         parser.acceptsAll(Arrays.asList("no-meta-db", "no-metadata"),
                 "Optional: a flag that prevents metadata writeback (which is done "
                 + "by default) by the Decider and that is subsequently "
@@ -79,7 +78,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 + "they should write metadata at runtime on the cluster.");
         parser.acceptsAll(Arrays.asList("schedule"), "Schedule this workflow to be run rather than running it immediately. See also: --run");
         parser.acceptsAll(Arrays.asList("run"), "Run this workflow now. This is the default behaviour. See also: --schedule");
-        parser.acceptsAll(Arrays.asList("ignore-skip-flag"));
+        parser.acceptsAll(Arrays.asList("ignore-skip-flag"), "Ignores any 'skip' flags on lanes, IUSes, sequencer runs, samples, etc. Use caution.");
 
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
@@ -95,6 +94,27 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             Log.stdout(this.get_syntax());
             Log.error("Please provide either a study-name or a sample-name");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+        }
+
+        try {
+            ResourceBundle rb = PropertyResourceBundle.getBundle("decider");
+            String parents = rb.getString("parent-workflow-accessions");
+            String checks = rb.getString("check-wf-accessions");
+            String wfa = rb.getString("workflow-accession");
+            if (wfa != null && !wfa.trim().isEmpty()) {
+                this.setWorkflowAccession(wfa);
+            }
+            if (parents != null && !parents.trim().isEmpty()) {
+                List<String> pas = Arrays.asList(parents.split(","));
+                this.setParentWorkflowAccessions(new TreeSet(pas));
+            }
+            if (checks != null && !checks.trim().isEmpty()) {
+                List<String> cwa = Arrays.asList(checks.split(","));
+                this.setWorkflowAccessionsToCheck(new TreeSet(cwa));
+
+            }
+        } catch (MissingResourceException e) {
+            Log.debug("No decider resource found: ", e);
         }
 
         //Group-by allows you to group processing events based on one characteristic.
@@ -135,8 +155,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 hasFilter = true;
             }
         }
-        if (options.has("meta-type")) {
-            String mt = (String) options.valueOf("meta-type");
+        if (options.has("meta-types")) {
+            String mt = (String) options.valueOf("meta-types");
             metaTypes = Arrays.asList(mt.split(","));
             hasFilter = true;
         }
@@ -144,7 +164,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
 
         if (!hasFilter && parentWorkflowAccessions.isEmpty() && metaTypes == null) {
-            Log.error("You must run a decider with parent-wf-accessions or meta-type (or both).");
+            Log.error("You must run a decider with parent-wf-accessions or meta-types (or both).");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
 
@@ -310,6 +330,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                                     (ArrayList) workflowParentAccessionsToRun, false, options.nonOptionArguments());
                         }
                     }
+                } else {
+                    Log.debug("Why are we here, seriously!?");
                 }
 
             }
@@ -416,11 +438,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
         Map<String, String> iniFileMap = new TreeMap<String, String>();
         SortedSet<WorkflowParam> wps = metaws.getWorkflowParams(workflowAccession);
-        for (WorkflowParam param: wps)
-        {
+        for (WorkflowParam param : wps) {
             iniFileMap.put(param.getKey(), param.getDefaultValue());
-        }        
-        
+        }
+
         Map<String, String> iniParameters = modifyIniFile(commaSeparatedFilePaths, commaSeparatedParentAccessions);
 
         for (String param : iniParameters.keySet()) {
@@ -469,7 +490,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         if (skipStuff) {
             for (String key : returnValue.getAttributes().keySet()) {
                 if (key.contains("skip")) {
-                    Log.warn("File SWID:"+fm.getDescription()+" path " +fm.getFilePath()+ " is skipped: "+key+ ">"+returnValue.getAttribute(key));
+                    Log.warn("File SWID:" + fm.getDescription() + " path " + fm.getFilePath() + " is skipped: " + key + ">" + returnValue.getAttribute(key));
                     return false;
                 }
             }
