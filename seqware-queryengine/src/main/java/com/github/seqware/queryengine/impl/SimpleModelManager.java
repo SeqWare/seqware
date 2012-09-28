@@ -99,14 +99,14 @@ public class SimpleModelManager implements CreateUpdateManager {
         // order in order to avoid problems when sets are flushed before their elements (leading to unpopulated 
         // timestamp values) (order is now irrelevant since timestamps are generated locally)
         //Class[] classOrder = {Feature.class, Tag.class, User.class, Reference.class, Analysis.class, FeatureSet.class, Group.class, TagSet.class, ReferenceSet.class, AnalysisSet.class};
-        for (String cl : sortedStore.keySet()) {
-            List<Atom> s1 = sortedStore.get(cl);
+        for (Entry<String, List<Atom>> e : sortedStore.entrySet()) {
+            List<Atom> s1 = e.getValue();
             if (s1 != null && !s1.isEmpty()) {
                 backend.store(s1.toArray(new Atom[s1.size()]));
             }
         }
-        for (String cl : sortedUpdate.keySet()) {
-            List<Atom> s2 = sortedUpdate.get(cl);
+        for (Entry<String, List<Atom>> e : sortedUpdate.entrySet()) {
+            List<Atom> s2 = e.getValue();
             if (s2 != null && !s2.isEmpty()) {
                 backend.update(s2.toArray(new Atom[s2.size()]));
             }
@@ -270,6 +270,7 @@ public class SimpleModelManager implements CreateUpdateManager {
         if (backend instanceof SimplePersistentBackEnd) {
             fSet = buildFeatureSetInternal();
         }
+        assert(fSet != null);
         fSet.setManager(this);
         return fSet;
     }
@@ -308,7 +309,7 @@ public class SimpleModelManager implements CreateUpdateManager {
     public AnalysisSet.Builder buildAnalysisSet() {
         AnalysisSet.Builder aSet = null;
         if (backend instanceof SimplePersistentBackEnd) {
-            return InMemoryAnalysisSet.newBuilder().setManager(this);
+            aSet = InMemoryAnalysisSet.newBuilder().setManager(this);
         }
         assert (aSet != null);
         return aSet;
@@ -318,7 +319,7 @@ public class SimpleModelManager implements CreateUpdateManager {
     public User.Builder buildUser() {
         User.Builder aSet = null;
         if (backend instanceof SimplePersistentBackEnd) {
-            return User.newBuilder().setManager(this);
+            aSet = User.newBuilder().setManager(this);
         }
         assert (aSet != null);
         return aSet;
@@ -328,7 +329,7 @@ public class SimpleModelManager implements CreateUpdateManager {
     public Group.Builder buildGroup() {
         Group.Builder aSet = null;
         if (backend instanceof SimplePersistentBackEnd) {
-            return InMemoryGroup.newBuilder().setManager(this);
+            aSet = InMemoryGroup.newBuilder().setManager(this);
         }
         assert (aSet != null);
         return aSet;
@@ -338,7 +339,7 @@ public class SimpleModelManager implements CreateUpdateManager {
     public Tag.Builder buildTag() {
         Tag.Builder aSet = null;
         if (backend instanceof SimplePersistentBackEnd) {
-            return Tag.newBuilder().setManager(this);
+            aSet = Tag.newBuilder().setManager(this);
         }
         assert (aSet != null);
         return aSet;
@@ -348,7 +349,7 @@ public class SimpleModelManager implements CreateUpdateManager {
     public Feature.Builder buildFeature() {
         Feature.Builder aSet = null;
         if (backend instanceof SimplePersistentBackEnd) {
-            return Feature.newBuilder().setManager(this);
+            aSet = Feature.newBuilder().setManager(this);
         }
         assert (aSet != null);
         return aSet;
@@ -402,7 +403,7 @@ public class SimpleModelManager implements CreateUpdateManager {
         return aSet;
     }
 
-    protected class AtomStatePair {
+    protected static class AtomStatePair {
 
         protected AtomStatePair(Atom atom, State state) {
             this.atom = atom;
