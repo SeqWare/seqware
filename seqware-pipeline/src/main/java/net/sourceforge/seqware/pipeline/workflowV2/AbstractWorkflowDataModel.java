@@ -1,9 +1,9 @@
 package net.sourceforge.seqware.pipeline.workflowV2;
 
-import net.sourceforge.seqware.pipeline.workflowV2.model.WorkflowObjectModel;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 
 public abstract class AbstractWorkflowDataModel  {
-    protected WorkflowObjectModel wfom;
+    protected Workflow workflow;
 
     protected void setupWorkflow() {
     	
@@ -19,7 +19,8 @@ public abstract class AbstractWorkflowDataModel  {
     	
     }
 
-    protected void setWorkflowObjectModel(WorkflowObjectModel wfom) {
-    	this.wfom = wfom;
+    protected Workflow setWorkflowObjectModel(Workflow wfom) {
+    	this.workflow = wfom;
+    	return this.workflow;
     }
 }
