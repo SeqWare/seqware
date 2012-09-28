@@ -36,7 +36,7 @@
 	<maven-war-plugin.version>2.1.1</maven-war-plugin.version>
 	<skipITs>true</skipITs>
 	<findbugs.version>2.5.2</findbugs.version>
-	<maven-pmd-plugin.version>2.5.2</maven-pmd-plugin.version>
+	<maven-pmd-plugin.version>2.7.1</maven-pmd-plugin.version>
     </properties>
 
     <scm>
