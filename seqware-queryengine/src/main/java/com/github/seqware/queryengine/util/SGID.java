@@ -143,7 +143,7 @@ public class SGID implements Serializable, KryoSerializable {
     }
 
     public Date getBackendTimestamp() {
-        return backendTimestamp;
+        return new Date(backendTimestamp.getTime());
     }
 
     @Override
@@ -169,7 +169,7 @@ public class SGID implements Serializable, KryoSerializable {
     }
 
     public void setBackendTimestamp(Date date) {
-        this.backendTimestamp = date;
+        this.backendTimestamp = new Date(date.getTime());
     }
 
     public String getFriendlyRowKey() {
