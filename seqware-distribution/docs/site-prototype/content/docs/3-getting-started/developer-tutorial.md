@@ -21,7 +21,7 @@ By the end of these tutorials you will:
 
 ## First Steps
 
-Please launch your local VM in VirtualBox and login as user <kbd>seqware</kbd>, password <kbd>seqware</kbd> at this time. Click on the "SeqWare Directory" link on the desktop which will open a terminal to the location where we installed the SeqWare tools.
+Please launch your local VM in VirtualBox and login as user <kbd>seqware</kbd>, password <kbd>seqware</kbd> at this time. Click on the "SeqWare Directory" link on the desktop which will open a terminal to the location where we installed the SeqWare tools. 
 
 ## Overview of Workflow Development Using the VM
 
@@ -38,6 +38,9 @@ the web service (to either the remote cloud VM or local VM). Once
 installed you can use the workflow scheduling tools you have used before to
 trigger workflows (on the cloud or the local VM), monitor them, and get data
 back.
+
+Please note that the parent of this directory also contains a copy of the SeqWare source code retrieved via the procedure in [source code](/docs/13-code/).
+
 
 ## The Sample Workflow Bundle
 

@@ -44,7 +44,7 @@ Protobuf requires the following installation steps:
 BUILDING THE PROJECT
 --------------------
 
-We're moving to Maven (2.2.x or greater) for our builds, this is currently how
+We're moving to Maven (3.0.4 or greater) for our builds, this is currently how
 you do it in the trunk directory:
 
     mvn clean install
