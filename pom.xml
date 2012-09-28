@@ -71,7 +71,7 @@
     <artifactId>seqware</artifactId>
     <packaging>pom</packaging>
     <groupId>com.github.seqware</groupId>
-    <version>0.13.3-SNAPSHOT</version>
+    <version>0.12.5.1</version>
 
     <repositories>
 	 <repository>
@@ -126,7 +126,6 @@
 
     <modules>
         <module>seqware-queryengine</module>
-        <module>seqware-distribution</module>
         <module>seqware-queryengine-legacy</module>
 	<module>seqware-meta-db</module>
         <module>seqware-common</module>
@@ -136,6 +135,7 @@
         <module>seqware-portal</module>
 	<module>seqware-archetype-module</module>
         <module>seqware-archetype-workflow</module>
+        <module>seqware-distribution</module>
     </modules>
 
     <licenses>

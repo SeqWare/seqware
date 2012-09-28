@@ -9,7 +9,7 @@
     <description>SeqWare workflow archetype</description>
 
     <parent>
-        <version>0.13.3-SNAPSHOT</version>
+        <version>0.12.5.1</version>
         <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
     </parent>
