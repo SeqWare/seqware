@@ -44,15 +44,23 @@ Protobuf requires the following installation steps:
 BUILDING THE PROJECT
 --------------------
 
-We're moving to Maven (3.0.4 or greater) for our builds, this is currently how
+We're moving to Maven for our builds, this is currently how
 you do it in the trunk directory:
 
-    mvn clean install
+  mvn clean install
 
-You can also skip the tests for a faster build with:
+Maven now separates out unit tests and integration tests as follows.
 
-    mvn clean install -Dmaven.test.skip=true
-  
+  mvn clean install # (runs unit tests but skips integration tests, HBase for query engine and Jetty for web service by default) 
+  mvn clean install -DskipTests # (skips all unit tests and integration tests)
+  mvn clean install -DskipITs=false # (runs all unit tests and all integration tests)
+
+If you wish to build the whole of SeqWare at once, you will need:
+
+  export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=512m"
+  mvn clean install -DskipITs=false
+
+
 You can also build individual components such as the new query engine with: 
 
     cd seqware-queryengine
