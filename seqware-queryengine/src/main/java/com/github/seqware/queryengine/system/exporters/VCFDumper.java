@@ -141,7 +141,7 @@ public class VCFDumper {
                     Logger.getLogger(VCFDumper.class.getName()).fatal("Exception thrown exporting to file:", e);
                     System.exit(-1);
                 } catch(Exception e){
-                    Logger.getLogger(VCFDumper.class.getName()).fatal("MapReduce exporting failed, falling-through to normal exporting to file:", e);
+                    Logger.getLogger(VCFDumper.class.getName()).info("MapReduce exporting failed, falling-through to normal exporting to file");
                     // fall-through and do normal exporting if Map Reduce exporting fails
                 }
             } // TODO: clearly this should be expanded to include closing database etc 
