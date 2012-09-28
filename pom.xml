@@ -36,7 +36,7 @@
 	<maven-war-plugin.version>2.1.1</maven-war-plugin.version>
 	<skipITs>true</skipITs>
 	<findbugs.version>2.5.2</findbugs.version>
-	<maven-pmd-plugin.version>2.5.2</maven-pmd-plugin.version>
+	<maven-pmd-plugin.version>2.7.1</maven-pmd-plugin.version>
     </properties>
 
     <scm>
@@ -466,7 +466,7 @@
 		<plugin>
 		    <groupId>org.codehaus.mojo</groupId>
                     <artifactId>findbugs-maven-plugin</artifactId>
-		    <version>2.5.2</version>
+		    <version>${findbugs.version}</version>
 		    <configuration>
       			<findbugsXmlOutput>true</findbugsXmlOutput>
       			<findbugsXmlWithMessages>true</findbugsXmlWithMessages>
@@ -476,6 +476,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
+                    <version>${maven-pmd-plugin.version}</version>
                     <configuration>
                     	<targetJdk>1.6</targetJdk>
  		    </configuration>
