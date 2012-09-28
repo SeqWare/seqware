@@ -116,7 +116,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
             scan.setCaching(500);        // 1 is the default in Scan, which will be bad for MapReduce jobs
             scan.setCacheBlocks(false);  // don't set to true for MR jobs
             byte[] qualiferBytes = Bytes.toBytes(inputSet.getSGID().getUuid().toString());
-            scan.addColumn(HBaseStorage.TEST_FAMILY_INBYTES, qualiferBytes);
+            scan.addColumn(HBaseStorage.getTEST_FAMILY_INBYTES(), qualiferBytes);
             scan.setFilter(new QualifierFilter(CompareFilter.CompareOp.EQUAL, new BinaryComparator(qualiferBytes)));
 
             // handle the part that changes from job to job
@@ -229,14 +229,14 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
     @Override
     public ReturnType getFinalResult() {
         try {
-            boolean b = job.waitForCompletion(true);
+            job.waitForCompletion(true);
             return variableResult();
         } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(AbstractMRHBasePlugin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(AbstractMRHBasePlugin.class.getName()).log(null, ex);
         } catch (InterruptedException ex) {
-            java.util.logging.Logger.getLogger(AbstractMRHBasePlugin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(AbstractMRHBasePlugin.class.getName()).log(null, ex);
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AbstractMRHBasePlugin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(AbstractMRHBasePlugin.class.getName()).log(null, ex);
         }
         return null;
     }

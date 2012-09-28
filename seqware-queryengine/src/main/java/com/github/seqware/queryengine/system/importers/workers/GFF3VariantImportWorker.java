@@ -1,14 +1,13 @@
 package com.github.seqware.queryengine.system.importers.workers;
 
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
 import java.util.HashSet;
 import java.util.Set;
 import org.apache.log4j.Logger;
-
 import org.biojava3.genome.parsers.gff.FeatureI;
 import org.biojava3.genome.parsers.gff.FeatureList;
 import org.biojava3.genome.parsers.gff.GFF3Reader;
@@ -370,13 +369,13 @@ public class GFF3VariantImportWorker extends ImportWorker {
 //                if (m.getTagByKey("is_dbSNP") == null) {
 //                    severity++;
 //                }
-                if (location != null && "exonic".equals(location.getTagByKey("location"))) {
+                if (location != null && "exonic".equals(location.getTagByKey("location").getValue())) {
                     severity++;
                 }
-                if (location != null && "exonic,splicing".equals(location.getTagByKey("location"))) {
+                if (location != null && "exonic,splicing".equals(location.getTagByKey("location").getValue())) {
                     severity++;
                 }
-                if (location != null && !"intergenic".equals(location.getTagByKey("location"))) {
+                if (location != null && !"intergenic".equals(location.getTagByKey("location").getValue())) {
                     severity++;
                 }
 //                if ("exonic".equals(m.getTagByKey("location"))) {
