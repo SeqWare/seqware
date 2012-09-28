@@ -1,17 +1,17 @@
 package net.sourceforge.seqware.pipeline.workflowV2;
 
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.pipeline.workflowV2.model.WorkflowObjectModel;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 
 public abstract class AbstractWorkflowEngine {
-	private WorkflowObjectModel objectModel;
+	private Workflow objectModel;
 	private ReturnValue returnValue;
 	
 	/**
 	 * get the objectModel for the workflow
 	 * @return
 	 */
-	public WorkflowObjectModel getObjectModel() {
+	public Workflow getObjectModel() {
 		return objectModel;
 	}
 	
@@ -31,7 +31,7 @@ public abstract class AbstractWorkflowEngine {
 	 * @param objectModel
 	 * @return
 	 */
-	public abstract ReturnValue launchWorkflow(WorkflowObjectModel objectModel);
+	public abstract ReturnValue launchWorkflow(Workflow objectModel);
 	
 	
 }

@@ -30,7 +30,7 @@ import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowClassFinder;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
-import net.sourceforge.seqware.pipeline.workflowV2.model.WorkflowObjectModel;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.PegasusWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.PegasusWorkflowEngine1;
 
@@ -69,7 +69,7 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     	AbstractWorkflowEngine engine = new PegasusWorkflowEngine();
     	
     	// set up workflowObjectModel
-    	WorkflowObjectModel wfom = this.setupWorkflowObjectModel();
+    	Workflow wfom = this.setupWorkflowObjectModel();
     	
     	// load workflow client class
     	String clazzPath = wfom.getWorkflowInfo().getClassesDir();
@@ -85,7 +85,7 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     	    try {
 	    		Object object = clazz.newInstance();
 	    		Method m = clazz.getDeclaredMethod("setWorkflowObjectModel",
-	    			WorkflowObjectModel.class);
+	    			Workflow.class);
 	    		m.invoke(object, (Object) wfom);
     	    } catch (InstantiationException ex) {
     	    	Log.error(ex);
@@ -273,8 +273,8 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 		return ret;
     }
     
-    private WorkflowObjectModel setupWorkflowObjectModel() {
-    	WorkflowObjectModel wfom = new WorkflowObjectModel();
+    private Workflow setupWorkflowObjectModel() {
+    	Workflow wfom = new Workflow();
     	//set command line options
     	wfom.setCmdOptions(new ArrayList<String>(Arrays.asList(this.params)));
     	//parse metadata.xml
