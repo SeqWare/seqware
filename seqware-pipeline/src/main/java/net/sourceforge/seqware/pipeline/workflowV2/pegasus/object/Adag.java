@@ -28,7 +28,7 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job1;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Module;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SeqwareModuleJob;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.WorkflowExecutableUtils;
 
 import org.jdom.Element;
@@ -46,7 +46,7 @@ public class Adag extends PegasusAbstract {
     private String count = "1";
     private String index = "0";
 
-    public Adag(Workflow wf) {
+    public Adag(Workflow2 wf) {
 	this.jobs = new LinkedHashMap<String, PegasusJob>();
 	this.parseWorkflow(wf);
 	this.setDefaultExcutables();
@@ -98,7 +98,7 @@ public class Adag extends PegasusAbstract {
 	return adag;
     }
 
-    private void parseWorkflow(Workflow wf) {
+    private void parseWorkflow(Workflow2 wf) {
 	this.setWorkflow(wf);
 	for (Job1 job : wf.getJobs()) {
 	    PegasusJob pjob = this.createPegasusJob(job);

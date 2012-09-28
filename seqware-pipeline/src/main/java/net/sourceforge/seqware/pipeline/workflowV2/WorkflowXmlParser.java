@@ -6,7 +6,7 @@ import java.util.List;
 
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job1;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Module;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
 
 import org.jdom.Document;
 import org.jdom.Element;
@@ -14,7 +14,7 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 public class WorkflowXmlParser {
-    public void parseXml(Workflow wf, File file) {
+    public void parseXml(Workflow2 wf, File file) {
 	SAXBuilder builder = new SAXBuilder();
 	try {
 	    Document document = (Document) builder.build(file);
@@ -28,7 +28,7 @@ public class WorkflowXmlParser {
 	return;
     }
 
-    private void createWorkflowFromXml(Workflow wf, Element root) {
+    private void createWorkflowFromXml(Workflow2 wf, Element root) {
 	wf.setName(root.getAttributeValue("name"));
 	// parse jobs
 	Element jobsElement = root.getChild("jobs");
@@ -38,7 +38,7 @@ public class WorkflowXmlParser {
 	}
     }
 
-    private void unserializeJob(Workflow wf, Element element) {
+    private void unserializeJob(Workflow2 wf, Element element) {
 	Job1 job = null;
 	Module module = Module.Seqware_GenericCommandRunner; // default;
 	String algo = element.getChildText("algorithm");
