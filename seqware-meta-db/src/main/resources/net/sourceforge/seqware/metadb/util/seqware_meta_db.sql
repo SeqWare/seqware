@@ -2031,11 +2031,11 @@ CREATE TABLE registration (
     institution text,
     invitation_code text,
     lims_admin boolean DEFAULT false NOT NULL,
-    payee boolean DEFAULT false NOT NULL,
     create_tstmp timestamp without time zone NOT NULL,
     last_update_tstmp timestamp without time zone NOT NULL,
     developer_ml boolean DEFAULT false NOT NULL,
-    user_ml boolean DEFAULT false NOT NULL
+    user_ml boolean DEFAULT false NOT NULL,
+    payee boolean DEFAULT false NOT NULL
 );
 
 

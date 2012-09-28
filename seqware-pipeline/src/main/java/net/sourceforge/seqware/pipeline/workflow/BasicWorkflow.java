@@ -521,6 +521,8 @@ public abstract class BasicWorkflow implements WorkflowEngineInterface1 {
 		    mapBuffer.toString(), wr.getHost(), 0, 0,
 		    retPegasus.getStderr(), retPegasus.getStdout());
 	}
+  
+  Log.stdout("PEGASUS STATUS COMMAND: " + statusCmd);
 
 	// if the user passes in --wait then hang around until the workflow
 	// finishes or fails
