@@ -39,7 +39,7 @@ public class WorkflowClassFinder {
 			Thread.currentThread().getContextClassLoader());
 	}
 
-	public Class findFirstWorkflowClass(String clazzPath) {
+	public Class<?> findFirstWorkflowClass(String clazzPath) {
 		String candidateClassesLocationPattern = "file:" + 
 			clazzPath + "**" + FOLDERS_SEPARATOR_AS_STRING + "*.class";
 		Resource[] resources = null;
