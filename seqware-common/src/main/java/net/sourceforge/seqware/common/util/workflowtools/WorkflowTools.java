@@ -126,7 +126,6 @@ public class WorkflowTools {
 
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
-    Log.stdout("PEGASUS STATUS COMMAND: " + statusCmd);
     boolean cont = true;
     int currCycle = 0;
     try {
