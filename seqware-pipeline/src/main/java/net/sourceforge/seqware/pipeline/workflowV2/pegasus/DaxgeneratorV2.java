@@ -23,7 +23,7 @@ import java.io.OutputStream;
 
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.Adag;
 
 import org.jdom.Document;
@@ -35,14 +35,14 @@ import org.jdom.output.XMLOutputter;
  * @author yongliang
  */
 public class DaxgeneratorV2 {
-    public ReturnValue generateDax(Workflow workflow, String output) {
+    public ReturnValue generateDax(Workflow2 workflow, String output) {
 	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 	// Map<String, Object> newMap = MapTools.mapString2Int(map);
 	this.createDax(workflow, output);
 	return ret;
     }
 
-    private void createDax(Workflow workflow, String output) {
+    private void createDax(Workflow2 workflow, String output) {
 	File dax = new File(output);
 	// write to dax
 	Document doc = new Document();

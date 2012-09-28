@@ -29,7 +29,7 @@ import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
 import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowClassFinder;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
 import net.sourceforge.seqware.pipeline.workflowV2.model.WorkflowObjectModel;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.PegasusWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.PegasusWorkflowEngine1;

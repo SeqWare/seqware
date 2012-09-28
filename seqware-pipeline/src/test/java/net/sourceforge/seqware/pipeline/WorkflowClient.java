@@ -1,8 +1,8 @@
 package net.sourceforge.seqware.pipeline;
 
-import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDescriptor;
+import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 
-public class WorkflowClient extends AbstractWorkflowDescriptor {
+public class WorkflowClient extends AbstractWorkflowDataModel {
 
 	@Override
 	public void buildWorkflow() {
