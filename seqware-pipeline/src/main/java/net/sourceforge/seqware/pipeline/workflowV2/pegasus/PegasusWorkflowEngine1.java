@@ -36,7 +36,7 @@ import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowClassFinder;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowXmlParser;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
 
 /**
  * 
@@ -122,13 +122,13 @@ public class PegasusWorkflowEngine1 extends BasicWorkflow {
 	// get user defined classes
 	WorkflowClassFinder finder = new WorkflowClassFinder();
 	Class<?> clazz = finder.findFirstWorkflowClass(clazzPath);
-	Workflow wfObj = new Workflow(newMap);
+	Workflow2 wfObj = new Workflow2(newMap);
 	if (null != clazz) {
 	    Log.debug("using java object");
 	    try {
 		Object object = clazz.newInstance();
 		Method m = clazz.getDeclaredMethod("generateWorkflow",
-			Workflow.class);
+			Workflow2.class);
 		m.invoke(object, (Object) wfObj);
 	    } catch (InstantiationException ex) {
 		Log.error(ex);

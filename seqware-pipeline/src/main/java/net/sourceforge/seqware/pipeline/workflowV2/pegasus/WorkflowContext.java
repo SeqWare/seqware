@@ -16,7 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.workflowV2.pegasus;
 
-import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
 
 /**
  *
@@ -25,7 +25,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 public class WorkflowContext {
 	private static WorkflowContext instance;
 
-	private Workflow workflow;
+	private Workflow2 workflow;
 
 	public static WorkflowContext getInstance() {
 		if(null== instance) {
@@ -38,11 +38,11 @@ public class WorkflowContext {
 
 	}
 
-	public void setWorkflow(Workflow wf) {
+	public void setWorkflow(Workflow2 wf) {
 		this.workflow = wf;
 	}
 
-	public Workflow getWorkflow() {
+	public Workflow2 getWorkflow() {
 		return this.workflow;
 	}
 }

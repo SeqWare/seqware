@@ -17,7 +17,7 @@
 package net.sourceforge.seqware.pipeline.workflowV2.pegasus.object;
 
 import java.util.Map;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.WorkflowContext;
 
 import org.jdom.Element;
@@ -34,11 +34,11 @@ public abstract class PegasusAbstract {
 
   public abstract Element serializeXML();
 
-  public Workflow getWorkflow() {
+  public Workflow2 getWorkflow() {
 	  return WorkflowContext.getInstance().getWorkflow();
   }
 
-  public void setWorkflow(Workflow wf) {
+  public void setWorkflow(Workflow2 wf) {
 	  WorkflowContext.getInstance().setWorkflow(wf);
   }
 
