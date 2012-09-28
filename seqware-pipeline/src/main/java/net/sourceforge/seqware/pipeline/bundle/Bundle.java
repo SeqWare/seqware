@@ -354,7 +354,7 @@ public class Bundle {
                     // actual test command
                     String testCmd = wi.getTestCmd();
                     testCmd = testCmd.replaceAll("\\$\\{workflow_bundle_dir\\}", getOutputDir());
-                    Log.info("Running Test Command:\n" + testCmd);
+                    Log.stdout("  Running Test Command:\n" + testCmd);
 
                     ReturnValue runReturn = RunTools.runCommand(testCmd);
                     if (runReturn.getExitStatus() != ReturnValue.SUCCESS) {
