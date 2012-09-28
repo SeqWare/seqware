@@ -319,12 +319,29 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     	}
     	if(res == null)
     		return null;
-    	
+    	//TODO should these set method defined as private and load the field using reflection?
     	//set command line options
     	res.setCmdOptions(new ArrayList<String>(Arrays.asList(this.params)));
     	//set workflowInfo
     	res.setWorkflowInfo(wfi);
 
+    	//set Workflow
+    	Workflow workflow = new Workflow();
+    	res.setWorkflow(workflow);
+		// figure out what was passed as params and make structs to pass to the
+		// workflow layer
+		// metadata
+		boolean metadataWriteback = true;
+		if (options.has("no-metadata") || options.has("no-meta-db")) {
+		    metadataWriteback = false;
+		}
+		//this.setPrivateField(res, field, value);
+		//res.setMetadataWriteBack(metadataWriteback);
+
     	return res;
+    }
+    
+    private void setPrivateField(AbstractWorkflowDataModel dataModel, String field, Object value) {
+    	
     }
 }

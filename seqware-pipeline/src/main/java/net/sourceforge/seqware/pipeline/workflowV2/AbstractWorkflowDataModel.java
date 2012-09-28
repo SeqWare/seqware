@@ -10,7 +10,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 
 public abstract class AbstractWorkflowDataModel  {
-    protected Workflow workflow;
+    private Workflow workflow;
     private String name;
     protected String version;
     protected Environment env;
@@ -18,7 +18,7 @@ public abstract class AbstractWorkflowDataModel  {
     protected Map<String,String> configs;
     private Metadata metadata;
     protected boolean wait;
-    protected boolean metadataWriteBack;
+    private boolean metadataWriteBack;
     protected Collection<SqwFile> files;
 	/**
 	 * 	extra params, these will be passed directly to the Java Object/FTL, 
@@ -91,4 +91,19 @@ public abstract class AbstractWorkflowDataModel  {
 	public void setWorkflowInfo(WorkflowInfo workflowInfo) {
 		this.workflowInfo = workflowInfo;
 	}
+	
+	public void setWorkflow(Workflow workflow) {
+		this.workflow = workflow;
+	}
+	/**
+	 * 
+	 * @return pre-defined workflow object;
+	 */
+	public Workflow getWorkflow() {
+		return this.workflow;
+	}
+	public boolean isMetadataWriteBack() {
+		return metadataWriteBack;
+	}
+
 }
