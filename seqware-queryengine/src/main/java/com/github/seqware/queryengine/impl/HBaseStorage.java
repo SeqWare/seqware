@@ -373,7 +373,8 @@ public class HBaseStorage extends StorageInterface {
             // I think this should return in sorted order already
             Scan s = new Scan();
             s.setMaxVersions();
-            s.setCaching(500);
+            // is caching causing us the timeout to UnknownScannerExceptions?
+            // s.setCaching(500);
             // we need the actual values if we do not store SGID in row key for debugging
             //s.setFilter(new KeyOnlyFilter());
             ResultScanner scanner = table.getScanner(s);
@@ -522,13 +523,13 @@ public class HBaseStorage extends StorageInterface {
             return new FeatureScanIterator(scanner, featureSetID);
         }
 
-        @Override
-        protected void finalize() throws Throwable {
-//            // make sure that we close the scanner if the using aborts the iteration and garbage collects this 
-//            super.finalize();
-//            scanner.close();
-            // don't think this is working properly? getting UnknownScannerExceptions
-        }
+//        @Override
+//        protected void finalize() throws Throwable {
+////            // make sure that we close the scanner if the using aborts the iteration and garbage collects this 
+////            super.finalize();
+////            scanner.close();
+//            // don't think this is working properly? getting UnknownScannerExceptions
+//        }
     }
 
     /**
