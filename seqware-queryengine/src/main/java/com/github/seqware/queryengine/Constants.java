@@ -27,11 +27,11 @@ import org.apache.log4j.Logger;
  * Defaults for our Constants are defined here and can be overridden by entries
  * in the ~/.seqware/settings file.
  *
- * An example of the contents of such a file follows:
+ * An example of the contents of such a file follows (update QE_DEVELOPMENT_DEPENDENCY for your version):
  *
  * #
  * # SEQWARE QUERY ENGINE SETTINGS # QE_NAMESPACE=IRON_MAN
- * QE_DEVELOPMENT_DEPENDENCY=file:/home/dyuen/seqware_github/seqware-distribution/target/seqware-queryengine-0.12.0-full.jar
+ * QE_DEVELOPMENT_DEPENDENCY=file:/home/dyuen/seqware_github/seqware-distribution/target/seqware-queryengine-0.13.3-full.jar 
  * QE_PERSIST=true QE_HBASE_REMOTE_TESTING=true # Connect to either HBOOT,
  * SQWDEV, or an implicit localhost QE_HBASE_PROPERTIES=HBOOT
  *
