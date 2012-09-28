@@ -27,6 +27,7 @@ import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
 import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
+import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowClassFinder;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
@@ -68,41 +69,9 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     	// set up workflow engine
     	AbstractWorkflowEngine engine = new PegasusWorkflowEngine();
     	
-    	// set up workflowObjectModel
-    	Workflow wfom = this.setupWorkflowObjectModel();
-    	
-    	// load workflow client class
-    	String clazzPath = wfom.getWorkflowInfo().getClassesDir();
-    	clazzPath = clazzPath.replaceFirst("\\$\\{workflow_bundle_dir\\}",
-    			wfom.getWorkflowInfo().getWorkflowDir());
-    	Log.info("CLASSPATH: " + clazzPath);
-
-    	// get user defined classes
-    	WorkflowClassFinder finder = new WorkflowClassFinder();
-    	Class<?> clazz = finder.findFirstWorkflowClass(clazzPath);
-    	if (null != clazz) {
-    	    Log.debug("using java object");
-    	    try {
-	    		Object object = clazz.newInstance();
-	    		Method m = clazz.getDeclaredMethod("setWorkflowObjectModel",
-	    			Workflow.class);
-	    		m.invoke(object, (Object) wfom);
-    	    } catch (InstantiationException ex) {
-    	    	Log.error(ex);
-    	    } catch (IllegalAccessException ex) {
-    	    	Log.error(ex);
-    	    } catch (NoSuchMethodException ex) {
-    	    	Log.error(ex);
-    	    } catch (SecurityException ex) {
-    	    	Log.error(ex);
-    	    } catch (IllegalArgumentException ex) {
-    	    	Log.error(ex);
-    	    } catch (InvocationTargetException ex) {
-    	    	ex.printStackTrace();
-    	    }
-    	    //return daxGen.generateDax(wfObj, dax.getAbsolutePath());
-    	}
-    	engine.launchWorkflow(wfom);
+    	// load abstractWorkflowDataModel
+    	AbstractWorkflowDataModel dataModel = this.loadDataModel();
+    	engine.launchWorkflow(dataModel);
     	// parse workflowobjectmodel defined by workflow author
     	
 		/*
@@ -273,17 +242,6 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 		return ret;
     }
     
-    private Workflow setupWorkflowObjectModel() {
-    	Workflow wfom = new Workflow();
-    	//set command line options
-    	wfom.setCmdOptions(new ArrayList<String>(Arrays.asList(this.params)));
-    	//parse metadata.xml
-    	WorkflowInfo wfi = this.setupWorkflowInfo();
-    	wfom.setWorkflowInfo(wfi);
-    	wfom.setWorkflowBundleDir(wfi.getWorkflowDir());
-    	
-    	return wfom;
-    }
     
     private WorkflowInfo setupWorkflowInfo() {
     	if ((options.has("bundle") || options
@@ -331,6 +289,42 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     		}
     	}
     	return null;
+    }
+    
+    private AbstractWorkflowDataModel loadDataModel() {
+    	AbstractWorkflowDataModel res = null;
+    	//parse metadata.xml
+    	WorkflowInfo wfi = this.setupWorkflowInfo();
+    	String clazzPath = wfi.getClassesDir();
+    	clazzPath = clazzPath.replaceFirst("\\$\\{workflow_bundle_dir\\}",
+    			wfi.getWorkflowDir());
+    	Log.info("CLASSPATH: " + clazzPath);
+    	// get user defined classes
+    	WorkflowClassFinder finder = new WorkflowClassFinder();
+    	Class<?> clazz = finder.findFirstWorkflowClass(clazzPath);
+    	if (null != clazz) {
+    	    Log.debug("using java object");
+    	    try {
+	    		Object object = clazz.newInstance();
+	    		res = (AbstractWorkflowDataModel) object;
+    	    } catch (InstantiationException ex) {
+    	    	Log.error(ex);
+    	    } catch (IllegalAccessException ex) {
+    	    	Log.error(ex);
+    	    }  catch (SecurityException ex) {
+    	    	Log.error(ex);
+    	    } catch (IllegalArgumentException ex) {
+    	    	Log.error(ex);
+    	    } 
+    	}
+    	if(res == null)
+    		return null;
+    	
+    	//set command line options
+    	res.setCmdOptions(new ArrayList<String>(Arrays.asList(this.params)));
+    	//set workflowInfo
+    	res.setWorkflowInfo(wfi);
 
+    	return res;
     }
 }
