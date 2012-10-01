@@ -23,8 +23,10 @@ import java.io.OutputStream;
 
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.Adag;
+import net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.AdagObject;
 
 import org.jdom.Document;
 import org.jdom.output.Format;
@@ -40,6 +42,12 @@ public class DaxgeneratorV2 {
 	// Map<String, Object> newMap = MapTools.mapString2Int(map);
 	this.createDax(workflow, output);
 	return ret;
+    }
+    
+    public ReturnValue generateDax(AbstractWorkflowDataModel wfdm, String output) {
+    	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+    	this.createDax(wfdm, output);
+    	return ret;
     }
 
     private void createDax(Workflow2 workflow, String output) {
@@ -58,6 +66,24 @@ public class DaxgeneratorV2 {
 	} catch (IOException e) {
 	    Log.error(e);
 	}
+    }
+    
+    private void createDax(AbstractWorkflowDataModel wfdm, String output) {
+    	File dax = new File(output);
+    	// write to dax
+    	Document doc = new Document();
+    	try {
+    	    OutputStream out = new FileOutputStream(dax);
+    	    XMLOutputter serializer = new XMLOutputter(Format.getPrettyFormat());
+    	    AdagObject adag = new AdagObject(wfdm);
+    	    doc.setRootElement(adag.serializeXML());
+    	    serializer.output(doc, out);
+    	    // serializer.output(doc, System.out);
+    	    out.flush();
+    	    out.close();
+    	} catch (IOException e) {
+    	    Log.error(e);
+    	}
     }
 
 }

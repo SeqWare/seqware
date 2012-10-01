@@ -14,6 +14,7 @@ public class Requirement {
 	
 	private Type type;
 	private String value;
+	private String namespace = "globus";
 	
 	public Type getType() {
 		return this.type;
@@ -29,6 +30,14 @@ public class Requirement {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public String getNamespace() {
+		return namespace;
+	}
+
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
 	}
 	
 	
