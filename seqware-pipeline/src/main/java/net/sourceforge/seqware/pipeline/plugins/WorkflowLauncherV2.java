@@ -386,6 +386,21 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
         res.setVersion(map.get("version"));
 		//set metadata
 		
+        //call the tmplate methods
+        try {
+			Method m = clazz.getDeclaredMethod("buildWorkflow");
+			m.invoke(res);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
 
     	return res;
     }

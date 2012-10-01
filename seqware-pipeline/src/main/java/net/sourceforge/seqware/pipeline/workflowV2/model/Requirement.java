@@ -5,7 +5,7 @@ package net.sourceforge.seqware.pipeline.workflowV2.model;
  *
  */
 public class Requirement {
-	enum Type {
+	public enum Type {
 		JOBTYPE,
 		MAXMEMORY,
 		THREADS,
