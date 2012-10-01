@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job1;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Module;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SeqwareModuleJob;
@@ -33,45 +34,46 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.WorkflowExecutableUtils;
 
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 /**
  * 
  * @author yongliang
  */
-public class Adag extends PegasusAbstract {
+public class AdagObject  {
     private Collection<WorkflowExecutable> executables;
     private Map<String, PegasusJob> jobs;
 
     private String schemaLocation = "http://pegasus.isi.edu/schema/DAX http://pegasus.isi.edu/schema/dax-3.2.xsd";
+    private Namespace NAMESPACE = Namespace.getNamespace("http://pegasus.isi.edu/schema/DAX");
+    private Namespace XSI = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+
     private String version = "3.2";
     private String count = "1";
     private String index = "0";
+    
+    private Workflow wf;
+    private AbstractWorkflowDataModel wfdm;
 
-    public Adag(Workflow2 wf) {
-	this.jobs = new LinkedHashMap<String, PegasusJob>();
-	this.parseWorkflow(wf);
-	this.setDefaultExcutables();
+    public AdagObject(AbstractWorkflowDataModel wfdm) {
+    	this.wfdm = wfdm;
+		this.jobs = new LinkedHashMap<String, PegasusJob>();
+		//this.parseWorkflow(wf);
+		this.setDefaultExcutables();
     }
     
 
 
     private void setDefaultExcutables() {
-	executables = new ArrayList<WorkflowExecutable>();
-	executables.add(WorkflowExecutableUtils.getDefaultJavaExcutable(this
-		.getWorkflow().getProperties()));
-	executables.add(WorkflowExecutableUtils.getLocalJavaExcutable(this
-		.getWorkflow().getProperties()));
-	executables.add(WorkflowExecutableUtils.getDefaultPerlExcutable(this
-		.getWorkflow().getProperties()));
-	executables.add(WorkflowExecutableUtils
-		.getDefaultDirManagerExcutable(this.getWorkflow()
-			.getProperties()));
-	executables
-		.add(WorkflowExecutableUtils.getDefaultSeqwareExecutable(this
-			.getWorkflow().getProperties()));
+		executables = new ArrayList<WorkflowExecutable>();
+		executables.add(WorkflowExecutableUtils.getDefaultJavaExcutable(this.wfdm.getConfigs()));
+		executables.add(WorkflowExecutableUtils.getLocalJavaExcutable(this.wfdm.getConfigs()));
+		executables.add(WorkflowExecutableUtils.getDefaultPerlExcutable(this.wfdm.getConfigs()));
+		executables.add(WorkflowExecutableUtils.getDefaultDirManagerExcutable(this.wfdm.getConfigs()));
+		executables.add(WorkflowExecutableUtils.getDefaultSeqwareExecutable(this.wfdm.getConfigs()));
     }
 
-    @Override
+
     public Element serializeXML() {
 	Element adag = new Element("adag", NAMESPACE);
 	adag.addNamespaceDeclaration(XSI);
@@ -79,7 +81,7 @@ public class Adag extends PegasusAbstract {
 	adag.setAttribute("version", version);
 	adag.setAttribute("count", count);
 	adag.setAttribute("index", index);
-	adag.setAttribute("name", this.getWorkflow().getName());
+	adag.setAttribute("name", this.wfdm.getName());
 
 	for (WorkflowExecutable ex : executables) {
 	    adag.addContent(ex.serializeXML());
@@ -101,7 +103,7 @@ public class Adag extends PegasusAbstract {
 	return adag;
     }
 
-    private void parseWorkflow(Workflow2 wf) {
+/*    private void parseWorkflow(Workflow wf) {
 	this.setWorkflow(wf);
 	for (Job1 job : wf.getJobs()) {
 	    PegasusJob pjob = this.createPegasusJob(job);
@@ -111,7 +113,7 @@ public class Adag extends PegasusAbstract {
 	this.preprocessJobs();
 	this.setParentAccessionIds();
 	this.setCommandIO();
-    }
+    }*/
 
     private void setCommandIO() {
 	for (PegasusJob job : this.jobs.values()) {
@@ -142,7 +144,7 @@ public class Adag extends PegasusAbstract {
 	this.jobs.put(job.getId(), job);
     }
 
-    private void preprocessJobs() {
+/*    private void preprocessJobs() {
 	List<PegasusJob> provisionFiles = new ArrayList<PegasusJob>();
 	// set parents
 	for (Map.Entry<String, PegasusJob> entry : this.jobs.entrySet()) {
@@ -153,13 +155,13 @@ public class Adag extends PegasusAbstract {
 	    }
 
 	    this.autoDependency();
-	    /*
-	     * Collection<Job> parentJobs = pjob.getJobObject().getParents(); if
-	     * (!parentJobs.isEmpty()) { for (Job job : parentJobs) {
-	     * pjob.addParent(this.jobs.get(job.getId())); }
-	     * 
-	     * }
-	     */
+	    
+	      Collection<Job> parentJobs = pjob.getJobObject().getParents(); if
+	      (!parentJobs.isEmpty()) { for (Job job : parentJobs) {
+	      pjob.addParent(this.jobs.get(job.getId())); }
+	      
+	      }
+	     
 	}
 	// set provisionfiles job
 	for (PegasusJob job : provisionFiles) {
@@ -172,9 +174,9 @@ public class Adag extends PegasusAbstract {
 		job.addParent(pjob);
 	    }
 	}
-    }
+    }*/
 
-    private void setParentAccessionIds() {
+/*    private void setParentAccessionIds() {
 	String parentAccessions = this.getWorkflowProperty("parent_accessions");
 	if (null == parentAccessions)
 	    return;
@@ -189,15 +191,15 @@ public class Adag extends PegasusAbstract {
 	    if (job.getParents().isEmpty()) {
 		i++;
 		// set the first non provisionfiles job
-		/*
-		 * for (PegasusJob child : this
-		 * .getFirstLevelNonProvisionFilesJobs(job)) { // child.
-		 * child.setParentAccessionId(pas[i]); }
-		 */
+		
+		  for (PegasusJob child : this
+		  .getFirstLevelNonProvisionFilesJobs(job)) { // child.
+		  child.setParentAccessionId(pas[i]); }
+		 
 	    }
 
 	}
-    }
+    }*/
 
     private Collection<PegasusJob> getFirstLevelNonProvisionFilesJobs(
 	    PegasusJob parent) {
@@ -219,7 +221,7 @@ public class Adag extends PegasusAbstract {
      * @param parentAccessions
      * @return
      */
-    private String[] parentAccessionCheck(String parentAccessions) {
+/*    private String[] parentAccessionCheck(String parentAccessions) {
 	// check with input_files, the order should be the same, or only one
 	// number
 	String input_files = this.getWorkflowProperty("input_files");
@@ -239,7 +241,7 @@ public class Adag extends PegasusAbstract {
 	    return null;
 	}
 	return _pid;
-    }
+    }*/
 
     private void autoDependency() {
 	Map<String, List<PegasusJob>> orderedMap = new LinkedHashMap<String, List<PegasusJob>>();
@@ -268,4 +270,16 @@ public class Adag extends PegasusAbstract {
 	    parent = child;
 	}
     }
+
+
+
+	public Workflow getWorkflow() {
+		return wf;
+	}
+
+
+
+	public void setWorkflow(Workflow wf) {
+		this.wf = wf;
+	}
 }
