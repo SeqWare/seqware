@@ -39,7 +39,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.github.seqware</groupId>
+      <groupId>net.sourceforge.seqware</groupId>
       <artifactId>seqware-pipeline</artifactId>
       <version>${seqware-version}</version>
       <scope>provided</scope>

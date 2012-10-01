@@ -10,7 +10,7 @@
 
     <parent>
         <version>0.12.5.1</version>
-        <groupId>com.github.seqware</groupId>
+        <groupId>net.sourceforge.seqware</groupId>
         <artifactId>seqware</artifactId>
     </parent>
 
