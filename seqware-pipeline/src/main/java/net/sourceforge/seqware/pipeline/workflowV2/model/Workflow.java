@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -12,14 +13,18 @@ public class Workflow {
 	private List<String> parentAccessions;
 	private List<String> parentsLinkedToWR;
 	//may be better to use Map
-	private List<Job1> jobs;
+	private List<Job> jobs;
 	
 
+	public Workflow() {
+		this.jobs = new ArrayList<Job>();
+	}
+	
 	/**
 	 * get all jobs in current workflow
 	 * @return
 	 */
-	public List<Job1> getJobs() {
+	public List<Job> getJobs() {
 		return jobs;
 	}
 
@@ -27,7 +32,7 @@ public class Workflow {
 	 * add job to the workflow
 	 * @param job
 	 */
-	public void addJobs(Job1 job) {
+	public void addJobs(Job job) {
 		this.jobs.add(job);
 	}
 	
@@ -107,8 +112,12 @@ public class Workflow {
 		return null;
 	}
 	
-	public Job createBashJob() {
-		return null;
+	public Job createBashJob(String algo) {
+		Job job = new Job();
+		job.setModule(Module.Bash);
+		job.setAlgo(algo);
+		this.jobs.add(job);
+		return job;
 	}
 	
 	public Job createPerlJob() {
