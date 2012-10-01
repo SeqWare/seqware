@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>com.github.seqware</groupId>
+        <groupId>net.sourceforge.seqware</groupId>
         <artifactId>seqware</artifactId>
         <version>0.12.5.1</version>
         <relativePath>../pom.xml</relativePath>
@@ -52,7 +52,7 @@
     </repositories>
     <dependencies>
         <dependency>
-            <groupId>com.github.seqware</groupId>
+            <groupId>net.sourceforge.seqware</groupId>
             <artifactId>seqware-common</artifactId>
             <version>0.12.5.1</version>
         </dependency>
