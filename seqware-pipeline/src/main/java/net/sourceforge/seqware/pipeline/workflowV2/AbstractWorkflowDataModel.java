@@ -2,8 +2,6 @@ package net.sourceforge.seqware.pipeline.workflowV2;
 
 import java.util.Collection;
 import java.util.Map;
-
-import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Environment;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
@@ -12,11 +10,10 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 public abstract class AbstractWorkflowDataModel  {
     private Workflow workflow;
     private String name;
-    protected String version;
+    private String version;
     protected Environment env;
     private WorkflowInfo workflowInfo;
     protected Map<String,String> configs;
-    private Metadata metadata;
     protected boolean wait;
     private boolean metadataWriteBack;
     protected Collection<SqwFile> files;
@@ -105,5 +102,22 @@ public abstract class AbstractWorkflowDataModel  {
 	public boolean isMetadataWriteBack() {
 		return metadataWriteBack;
 	}
-
+	public void setMetadataWriteBack(boolean b) {
+		this.metadataWriteBack = b;
+	}
+	
+	public Map<String,String> getConfigs() {
+		return this.configs;
+	}
+	
+	public void setConfigs(Map<String,String> configs) {
+		this.configs = configs;
+	}
+	public String getVersion() {
+		return version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
+	}
+	
 }

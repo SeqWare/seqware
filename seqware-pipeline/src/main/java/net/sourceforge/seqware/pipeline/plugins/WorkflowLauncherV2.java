@@ -15,12 +15,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
@@ -78,7 +82,7 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 		 * 
 		 * TODO: need to be able to pass in the workflow_run metadata!!!!
 		 */
-	
+/*	
 		// setup workflow object
 		BasicWorkflow w = this.createWorkflow();
 	
@@ -238,7 +242,7 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 		    Log.info(this.get_syntax());
 		    ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
 		}
-	
+	*/
 		return ret;
     }
     
@@ -336,7 +340,52 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 		    metadataWriteback = false;
 		}
 		//this.setPrivateField(res, field, value);
-		//res.setMetadataWriteBack(metadataWriteback);
+		res.setMetadataWriteBack(metadataWriteback);
+		//set conifg, pass the config files to Map<String,String>, also put the .settings to Map<String,String>
+		// ini-files
+		ArrayList<String> iniFiles = new ArrayList<String>();
+		if (options.has("ini-files")) {
+		    List opts = options.valuesOf("ini-files");
+		    for (Object opt : opts) {
+		    	String[] tokens = ((String) opt).split(",");
+				for (String t : tokens) {
+				    iniFiles.add(t);
+				}
+		    }
+		}
+		Map<String,String> map = new HashMap<String,String>();
+		for(String ini: iniFiles) {
+			Log.stdout("  INI FILE: "+ini);
+            if ((new File(ini)).exists()) {
+            	MapTools.ini2Map(ini, map);
+            }
+		}
+		// allow the command line options to override options in the map
+        // Parse command line options for additional configuration. Note that we
+        // do it last so it takes precedence over the INI
+		MapTools.cli2Map(this.params, map);
+		
+		// Expand variables in the map
+        MapTools.mapExpandVariables(map);
+        
+        //set data
+        // magic variables always set
+        Date date = new Date();
+        map.put("date", date.toString());
+
+        //set random
+        Random rand = new Random(System.currentTimeMillis());
+        int randInt = rand.nextInt(100000000);
+        map.put("random", ""+randInt);
+        
+        res.setConfigs(map);
+        
+		//set name
+        res.setName(map.get("workflow"));
+        //set version
+        res.setVersion(map.get("version"));
+		//set metadata
+		
 
     	return res;
     }

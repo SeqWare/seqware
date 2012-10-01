@@ -1,6 +1,8 @@
 package net.sourceforge.seqware.pipeline.workflowV2.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Requirement.Type;
 
 
 public class Job {
@@ -16,6 +18,29 @@ public class Job {
 	private Command command;
 	private Collection<Requirement> requirements;
 	
+	public Job() {
+		this.arguments = new ArrayList<String>();
+		this.parents = new ArrayList<Job>();
+		this.files = new ArrayList<SqwFile>();
+		this.requirements = new ArrayList<Requirement>();
+		this.initRequirements();
+	}
+	
+	private void initRequirements() {
+		Requirement threadR = new Requirement();
+		threadR.setType(Type.JOBTYPE);
+		threadR.setValue("1");
+		this.requirements.add(threadR);
+		
+		Requirement memR = new Requirement();
+		memR.setType(Type.MAXMEMORY);
+		memR.setValue("2000");
+		this.requirements.add(memR);
+		
+		Requirement jobR = new Requirement();
+		jobR.setType(Type.JOBTYPE);
+		jobR.setValue("condor");
+	}
 	
 	/**
 	 * 
@@ -108,5 +133,13 @@ public class Job {
 	}
 	public void setRequirements(Collection<Requirement> requirements) {
 		this.requirements = requirements;
+	}
+	
+	public int getThreads() {
+		return 0;
+	}
+	
+	public void setThreads(int count) {
+		
 	}
 }

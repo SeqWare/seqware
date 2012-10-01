@@ -102,6 +102,23 @@ public class Workflow {
 	public void setAccession(String accession) {
 		this.accession = accession;
 	}
+	
+	public Job createJavaJob() {
+		return null;
+	}
+	
+	public Job createBashJob() {
+		return null;
+	}
+	
+	public Job createPerlJob() {
+		return null;
+	}
+	
+	public Job createSqwJob_GenericCommandRunner() {
+		
+		return null;
+	}
 
 	
 }
