@@ -23,12 +23,14 @@ public class Job {
 		this.parents = new ArrayList<Job>();
 		this.files = new ArrayList<SqwFile>();
 		this.requirements = new ArrayList<Requirement>();
+		this.command = new Command();
 		this.initRequirements();
 	}
 	
+	
 	private void initRequirements() {
 		Requirement threadR = new Requirement();
-		threadR.setType(Type.JOBTYPE);
+		threadR.setType(Type.THREADS);
 		threadR.setValue("1");
 		this.requirements.add(threadR);
 		
@@ -40,6 +42,7 @@ public class Job {
 		Requirement jobR = new Requirement();
 		jobR.setType(Type.JOBTYPE);
 		jobR.setValue("condor");
+		this.requirements.add(jobR);
 	}
 	
 	/**
@@ -49,13 +52,7 @@ public class Job {
 	public Command getCommand() {
 		return command;
 	}
-	/**
-	 * set the command object to current job
-	 * @param command
-	 */
-	public void setCommand(Command command) {
-		this.command = command;
-	}
+
 	/**
 	 * 
 	 * @return the module for current job

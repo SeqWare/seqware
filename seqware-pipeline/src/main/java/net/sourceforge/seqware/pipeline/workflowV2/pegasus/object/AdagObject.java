@@ -26,6 +26,7 @@ import java.util.Map.Entry;
 
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job1;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Module;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SeqwareModuleJob;
@@ -42,11 +43,11 @@ import org.jdom.Namespace;
  */
 public class AdagObject  {
     private Collection<WorkflowExecutable> executables;
-    private Map<String, PegasusJob> jobs;
+    private List<PegasusJobObject> jobs;
 
     private String schemaLocation = "http://pegasus.isi.edu/schema/DAX http://pegasus.isi.edu/schema/dax-3.2.xsd";
-    private Namespace NAMESPACE = Namespace.getNamespace("http://pegasus.isi.edu/schema/DAX");
-    private Namespace XSI = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+    public static Namespace NAMESPACE = Namespace.getNamespace("http://pegasus.isi.edu/schema/DAX");
+    public static Namespace XSI = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
 
     private String version = "3.2";
     private String count = "1";
@@ -57,8 +58,9 @@ public class AdagObject  {
 
     public AdagObject(AbstractWorkflowDataModel wfdm) {
     	this.wfdm = wfdm;
-		this.jobs = new LinkedHashMap<String, PegasusJob>();
+		this.jobs = new ArrayList<PegasusJobObject>();
 		//this.parseWorkflow(wf);
+		this.parseWorkflow(wfdm);
 		this.setDefaultExcutables();
     }
     
@@ -75,32 +77,32 @@ public class AdagObject  {
 
 
     public Element serializeXML() {
-	Element adag = new Element("adag", NAMESPACE);
-	adag.addNamespaceDeclaration(XSI);
-	adag.setAttribute("schemaLocation", schemaLocation, XSI);
-	adag.setAttribute("version", version);
-	adag.setAttribute("count", count);
-	adag.setAttribute("index", index);
-	adag.setAttribute("name", this.wfdm.getName());
-
-	for (WorkflowExecutable ex : executables) {
-	    adag.addContent(ex.serializeXML());
-	}
-
-	for (PegasusJob pjob : this.jobs.values()) {
-	    adag.addContent(pjob.serializeXML());
-	}
-	// dependencies
-	for (PegasusJob pjob : this.jobs.values()) {
-	    if (pjob.getParents().isEmpty())
-		continue;
-	    for (PegasusJob parent : pjob.getParents()) {
-
-		adag.addContent(pjob.getDependentElement(parent));
-
-	    }
-	}
-	return adag;
+		Element adag = new Element("adag", NAMESPACE);
+		adag.addNamespaceDeclaration(XSI);
+		adag.setAttribute("schemaLocation", schemaLocation, XSI);
+		adag.setAttribute("version", version);
+		adag.setAttribute("count", count);
+		adag.setAttribute("index", index);
+		adag.setAttribute("name", this.wfdm.getName());
+	
+		for (WorkflowExecutable ex : executables) {
+		    adag.addContent(ex.serializeXML());
+		}
+	
+		for (PegasusJobObject pjob : this.jobs) {
+		    adag.addContent(pjob.serializeXML());
+		}
+		// dependencies
+		for (PegasusJobObject pjob : this.jobs) {
+/*		    if (pjob.getParents().isEmpty())
+			continue;
+		    for (PegasusJob parent : pjob.getParents()) {
+	
+			adag.addContent(pjob.getDependentElement(parent));
+	
+		    }*/
+		}
+		return adag;
     }
 
 /*    private void parseWorkflow(Workflow wf) {
@@ -116,32 +118,32 @@ public class AdagObject  {
     }*/
 
     private void setCommandIO() {
-	for (PegasusJob job : this.jobs.values()) {
-	    if (!job.checkCommandIO())
-		continue;
-
-	    for (PegasusJob pjob : job.getParents()) {
-		if (!pjob.hasCommandOutput()) {
-		    Log.error("******* check output ****** ");
-		}
-		job.addCommandInput(pjob.getCommandOutput());
-	    }
-
-	}
+/*		for (PegasusJobObject job : this.jobs) {
+		    if (!job.checkCommandIO())
+			continue;
+	
+		    for (PegasusJob pjob : job.getParents()) {
+			if (!pjob.hasCommandOutput()) {
+			    Log.error("******* check output ****** ");
+			}
+			job.addCommandInput(pjob.getCommandOutput());
+		    }
+	
+		}*/
     }
 
     private PegasusJob createPegasusJob(Job1 job) {
-	PegasusJob pjob = null;
-	if (job instanceof SeqwareModuleJob) {
-	    pjob = new PegasusSeqwareModuleJob(job);
-	} else {
-	    pjob = new PegasusJob(job);
-	}
-	return pjob;
+		PegasusJob pjob = null;
+		if (job instanceof SeqwareModuleJob) {
+		    pjob = new PegasusSeqwareModuleJob(job);
+		} else {
+		    pjob = new PegasusJob(job);
+		}
+		return pjob;
     }
 
     public void addJob(PegasusJob job) {
-	this.jobs.put(job.getId(), job);
+    	//this.jobs.add(job);
     }
 
 /*    private void preprocessJobs() {
@@ -243,34 +245,6 @@ public class AdagObject  {
 	return _pid;
     }*/
 
-    private void autoDependency() {
-	Map<String, List<PegasusJob>> orderedMap = new LinkedHashMap<String, List<PegasusJob>>();
-	for (Map.Entry<String, PegasusJob> entry : this.jobs.entrySet()) {
-	    List<PegasusJob> list = orderedMap.get(entry.getValue()
-		    .getAlgorithm());
-	    if (null == list) {
-		list = new ArrayList<PegasusJob>();
-		orderedMap.put(entry.getValue().getAlgorithm(), list);
-	    }
-	    list.add(entry.getValue());
-	}
-	// set parents
-	if (orderedMap.isEmpty())
-	    return;
-	Iterator<Entry<String, List<PegasusJob>>> it = orderedMap.entrySet()
-		.iterator();
-	Entry<String, List<PegasusJob>> parent = it.next();
-	while (it.hasNext()) {
-	    Entry<String, List<PegasusJob>> child = it.next();
-	    for (PegasusJob c : child.getValue()) {
-		for (PegasusJob p : parent.getValue()) {
-		    c.addParent(p);
-		}
-	    }
-	    parent = child;
-	}
-    }
-
 
 
 	public Workflow getWorkflow() {
@@ -281,5 +255,14 @@ public class AdagObject  {
 
 	public void setWorkflow(Workflow wf) {
 		this.wf = wf;
+	}
+	
+	private void parseWorkflow(AbstractWorkflowDataModel wfdm) {
+		int idCount = 0;
+		for(Job job: wfdm.getWorkflow().getJobs()) {
+			PegasusJobObject pjob = new PegasusJobObject(job);
+			pjob.setId(idCount);
+			this.jobs.add(pjob);
+		}
 	}
 }
