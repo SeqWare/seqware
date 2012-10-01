@@ -22,8 +22,15 @@ documentation:
 The seqware-common sub-project provides a location for common code
 and most of the other sub-projects have this as a dependency.
 
+PREREQUISITES
+====================
+
+SeqWare requires Oracle JDK 1.6. We use version 1.6.0_31. 
+An example of instructions on how to update your Linux installation can be found [here](https://ccp.cloudera.com/display/CDH4DOC/Before+You+Install+CDH4+on+a+Single+Node#BeforeYouInstallCDH4onaSingleNode-InstalltheOracleJavaDevelopmentKit).
+
+
 PREREQUISITES ON Mac OS
------------------------
+--------------------
 
 ###SeqWare Query Engine
 
