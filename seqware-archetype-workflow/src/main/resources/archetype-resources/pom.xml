@@ -140,7 +140,7 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>com.github.seqware</groupId>
+                  <groupId>net.sourceforge.seqware</groupId>
                   <artifactId>seqware-distribution</artifactId>
                   <version>${seqware-version}</version>
                   <classifier>full</classifier>

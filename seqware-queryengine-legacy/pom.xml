@@ -9,7 +9,7 @@
     <url>http://seqware.sf.net</url>
 
     <parent>
-        <groupId>com.github.seqware</groupId>
+        <groupId>net.sourceforge.seqware</groupId>
         <artifactId>seqware</artifactId>
         <version>0.12.5.1</version>
         <relativePath>../pom.xml</relativePath>

@@ -4,7 +4,7 @@
 
   <parent> 
         <version>0.12.5.1</version>
-        <groupId>com.github.seqware</groupId> 
+        <groupId>net.sourceforge.seqware</groupId> 
         <artifactId>seqware</artifactId> 
         <relativePath>../pom.xml</relativePath> 
   </parent>
@@ -16,12 +16,12 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.github.seqware</groupId>
+      <groupId>net.sourceforge.seqware</groupId>
       <artifactId>seqware-queryengine</artifactId>
       <version>0.12.5.1</version>
     </dependency>
     <dependency>
-      <groupId>com.github.seqware</groupId>
+      <groupId>net.sourceforge.seqware</groupId>
       <artifactId>seqware-pipeline</artifactId>
         <version>0.12.5.1</version>
     </dependency>
