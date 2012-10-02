@@ -175,15 +175,15 @@ public class Poster {
             /**
              * PMC code follows
              */
-            keyValues.put(count + "-start-PMC_query-date-long", Long.toString(System.currentTimeMillis()));
-            // run a query that looks for tag called "PMC", should touch a small fraction of Features
-            QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, fSet, new RPNStack(
-                    new RPNStack.TagOccurrence("RV")));
-            FeatureSet resultSet = queryFuture.get();
-            keyValues.put(count + "-end-PMC_query-date-long", Long.toString(System.currentTimeMillis()));
-            fsetcount = (int) resultSet.getCount();
-            keyValues.put(count + "-features-PMC_query-written", Long.toString(fsetcount));
-            keyValues.put(count + "-end-PMC_query-count-date-long", Long.toString(System.currentTimeMillis()));
+//            keyValues.put(count + "-start-PMC_query-date-long", Long.toString(System.currentTimeMillis()));
+//            // run a query that looks for tag called "PMC", should touch a small fraction of Features
+//            QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, fSet, new RPNStack(
+//                    new RPNStack.TagOccurrence("RV")));
+//            FeatureSet resultSet = queryFuture.get();
+//            keyValues.put(count + "-end-PMC_query-date-long", Long.toString(System.currentTimeMillis()));
+//            fsetcount = (int) resultSet.getCount();
+//            keyValues.put(count + "-features-PMC_query-written", Long.toString(fsetcount));
+//            keyValues.put(count + "-end-PMC_query-count-date-long", Long.toString(System.currentTimeMillis()));
             /**
              * PMC code ends
              */

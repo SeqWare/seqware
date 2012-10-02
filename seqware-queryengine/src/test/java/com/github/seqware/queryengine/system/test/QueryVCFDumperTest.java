@@ -102,7 +102,8 @@ public class QueryVCFDumperTest {
         Assert.assertTrue("starting feature set was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 173);
         Assert.assertTrue("first query was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 37);
         Assert.assertTrue("second query was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 10);
-        Assert.assertTrue("third query was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 3);
+        // tagset will now vary by execution
+        //Assert.assertTrue("third query was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 3);
         
         // test comparison
         String curDir = System.getProperty("user.dir");

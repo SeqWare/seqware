@@ -1,11 +1,10 @@
 package com.github.seqware.queryengine.model.interfaces;
 
 import com.github.seqware.queryengine.model.Tag;
+import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Interface for all classes that can be tagged. Associating or dissociating 
@@ -38,16 +37,24 @@ public interface Taggable<T> {
      * Get tags that have been sorted into a structure of Nested Maps.
      * Splits are handled by '::'
      * i.e. MTTS::dbSNP::ID becomes MTTS -> dbSNP -> ID
+     * @param tagSet
      * @return 
      */
-    public NestedLevel getNestedTags();
+    public NestedLevel getNestedTags(String tagSet);
+    
+    /**
+     * Convenience method for getNestedTags(String tagSet)
+     * @param tagSet
+     * @return 
+     */
+    public NestedLevel getNestedTags(TagSet tagSet);
     
     /**
      * Quickly get the value of a tag by the key.
      * @param key
      * @return 
      */
-    public Tag getTagByKey(String key);
+    public Tag getTagByKey(String tagSet, String key);
     
     
     /**
