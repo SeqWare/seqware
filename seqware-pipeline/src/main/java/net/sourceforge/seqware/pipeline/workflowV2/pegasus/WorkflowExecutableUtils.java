@@ -21,7 +21,7 @@ public class WorkflowExecutableUtils {
 	ex_java.setVersion("1.6.0");
 
 	Pfn pfn_java = new Pfn();
-	Object siteObj = map.get("seqware_cluster");
+	Object siteObj = map.get("SW_CLUSTER");
 	pfn_java.setSite(siteObj == null ? "local" : (String) siteObj);
 	String url = StringUtils.replace(URL_JAVA, map);
 	pfn_java.setUrl(url);
@@ -62,7 +62,8 @@ public class WorkflowExecutableUtils {
 
     	Pfn pfn_java = new Pfn();
 
-    	pfn_java.setSite("local");
+    	Object siteObj = map.get("SW_CLUSTER");
+    	pfn_java.setSite(siteObj == null ? "local" : (String) siteObj);
     	String url = StringUtils.replace(URL_JAVA, map);
     	pfn_java.setUrl(url);
     	ex_java.setPfn(pfn_java);
@@ -81,7 +82,7 @@ public class WorkflowExecutableUtils {
 	ex_perl.setVersion("5.14.1");
 
 	Pfn pfn_perl = new Pfn();
-	Object siteObj = map.get("seqware_cluster");
+	Object siteObj = map.get("SW_CLUSTER");
 	pfn_perl.setSite(siteObj == null ? "local" : (String) siteObj);
 	String url = StringUtils.replace(URL_PERL, map);
 	pfn_perl.setUrl(url);
@@ -100,7 +101,7 @@ public class WorkflowExecutableUtils {
 	ex_dirmanager.setVersion("1");
 
 	Pfn pfn_dirmanager = new Pfn();
-	Object siteObj = map.get("seqware_cluster");
+	Object siteObj = map.get("SW_CLUSTER");
 	pfn_dirmanager.setSite(siteObj == null ? "local" : (String) siteObj);
 	String url = StringUtils.replace(URL_DIRMANAGER, map);
 	pfn_dirmanager.setUrl(url);
@@ -119,7 +120,7 @@ public class WorkflowExecutableUtils {
 	ex_seqware.setVersion("0.12.5");
 
 	Pfn pfn_java = new Pfn();
-	Object siteObj = map.get("seqware_cluster");
+	Object siteObj = map.get("SW_CLUSTER");
 	pfn_java.setSite(siteObj == null ? "local" : (String) siteObj);
 	String url = StringUtils.replace(URL_JAVA, map);
 	pfn_java.setUrl(url);
