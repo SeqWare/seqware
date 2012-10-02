@@ -35,6 +35,7 @@ public class QueryVCFDumperTest {
     private static TagSet adHocSet = null;
     public static final String REFERENCE = "hg_42";
     private static File outputFile;
+    public static final String AD_HOC_TAG_SET = "ad_hoc_tagSet";
 
     @BeforeClass
     public static void setupTests() {
@@ -57,11 +58,11 @@ public class QueryVCFDumperTest {
 
         try {
             // setup ad hoc tag set
-            SGID aSetID = TagSetCreator.mainMethod(new String[]{"ad_hoc_tagSet"});
+            SGID aSetID = TagSetCreator.mainMethod(new String[]{AD_HOC_TAG_SET});
             adHocSet = SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, aSetID);
         } catch (IllegalArgumentException e) {
             // proceed if this is already created 
-            adHocSet = SWQEFactory.getQueryInterface().getLatestAtomByRowKey("ad_hoc_tagSet", TagSet.class);
+            adHocSet = SWQEFactory.getQueryInterface().getLatestAtomByRowKey(AD_HOC_TAG_SET, TagSet.class);
         }
 
         File testVCFFile = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated.vcf");
@@ -81,9 +82,9 @@ public class QueryVCFDumperTest {
         originalSet = SOFeatureImporter.runMain(argList.toArray(new String[argList.size()]));
         Assert.assertTrue("Could not import VCF for test", originalSet != null);
     }
-    
+
     @Test
-    public void testQueryVCFDumper(){
+    public void testQueryVCFDumperByClass() {
         File keyValueFile = null;
         try {
             keyValueFile = File.createTempFile("keyValue", "txt");
@@ -91,20 +92,101 @@ public class QueryVCFDumperTest {
             Logger.getLogger(QueryVCFDumperTest.class.getName()).fatal(null, ex);
             Assert.fail("Could not create output for test");
         }
-        
+
         List<String> argList = new ArrayList<String>();
         argList.addAll(Arrays.asList(new String[]{"-f", originalSet.getRowKey(),
                     "-k", keyValueFile.getAbsolutePath(), "-p", "com.github.seqware.queryengine.system.test.queryDumper.VCFDumperParameterExample",
                     "-o", outputFile.getAbsolutePath()}));
         Stack<SGID> runMain = QueryVCFDumper.runMain(argList.toArray(new String[argList.size()]));
-        
+
         Assert.assertTrue("should have four resulting feature sets, had " + runMain.size(), runMain.size() == 4);
         Assert.assertTrue("starting feature set was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 173);
         Assert.assertTrue("first query was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 37);
         Assert.assertTrue("second query was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 10);
         // tagset will now vary by execution
-        //Assert.assertTrue("third query was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 3);
-        
+        Assert.assertTrue("third query was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 3);
+
+        // test comparison
+        String curDir = System.getProperty("user.dir");
+        SOFeatureImporterTest.matchOutputToControl(outputFile, false, new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated_dumperControl.vcf"));
+    }
+
+    @Test
+    public void testFirstVCFQueryDumper() {
+        File keyValueFile = null;
+        try {
+            keyValueFile = File.createTempFile("keyValue", "txt");
+        } catch (IOException ex) {
+            Logger.getLogger(QueryVCFDumperTest.class.getName()).fatal(null, ex);
+            Assert.fail("Could not create output for test");
+        }
+
+        List<String> argList = new ArrayList<String>();
+        // strange, we have to leave a space in at the end of the query here
+        argList.addAll(Arrays.asList(new String[]{"-f", originalSet.getRowKey(),
+                    "-k", keyValueFile.getAbsolutePath(), "-s", "seqid==\"21\" ",
+                    "-o", outputFile.getAbsolutePath()}));
+        Stack<SGID> runMain = QueryVCFDumper.runMain(argList.toArray(new String[argList.size()]));
+
+        Assert.assertTrue("should have 1 resulting feature set, had " + runMain.size(), runMain.size() == 2);
+        Assert.assertTrue("starting feature set was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 173);
+        long count = SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount();
+        Assert.assertTrue("first query was incorrect, should have 37, found " + count, count == 37);
+
+        // test comparison
+        //String curDir = System.getProperty("user.dir");
+        //SOFeatureImporterTest.matchOutputToControl(outputFile, false, new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated_dumperControl.vcf"));
+    }
+    
+    @Test
+    public void testSecondVCFQueryDumper() {
+        File keyValueFile = null;
+        try {
+            keyValueFile = File.createTempFile("keyValue", "txt");
+        } catch (IOException ex) {
+            Logger.getLogger(QueryVCFDumperTest.class.getName()).fatal(null, ex);
+            Assert.fail("Could not create output for test");
+        }
+
+        List<String> argList = new ArrayList<String>();
+        // strange, we have to leave a space in at the end of the query here
+        argList.addAll(Arrays.asList(new String[]{"-f", originalSet.getRowKey(),
+                    "-k", keyValueFile.getAbsolutePath(), "-s", "seqid==\"21\" && start >= 20000000 && stop <= 30000000",
+                    "-o", outputFile.getAbsolutePath()}));
+        Stack<SGID> runMain = QueryVCFDumper.runMain(argList.toArray(new String[argList.size()]));
+
+        Assert.assertTrue("should have 1 resulting feature set, had " + runMain.size(), runMain.size() == 2);
+        Assert.assertTrue("starting feature set was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 173);
+        long count = SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount();
+        Assert.assertTrue("second query was incorrect, should have 37, found " + count, count == 10);
+
+        // test comparison
+        //String curDir = System.getProperty("user.dir");
+        //SOFeatureImporterTest.matchOutputToControl(outputFile, false, new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated_dumperControl.vcf"));
+    }
+    
+    @Test
+    public void testThirdVCFQueryDumper() {
+        File keyValueFile = null;
+        try {
+            keyValueFile = File.createTempFile("keyValue", "txt");
+        } catch (IOException ex) {
+            Logger.getLogger(QueryVCFDumperTest.class.getName()).fatal(null, ex);
+            Assert.fail("Could not create output for test");
+        }
+
+        List<String> argList = new ArrayList<String>();
+        // strange, we have to leave a space in at the end of the query here
+        argList.addAll(Arrays.asList(new String[]{"-f", originalSet.getRowKey(),
+                    "-k", keyValueFile.getAbsolutePath(), "-s", "seqid==\"21\" && start >= 20000000 && stop <= 30000000 && tagOccurrence(\""+QueryVCFDumperTest.AD_HOC_TAG_SET+"\",\"non_synonymous_codon\")",
+                    "-o", outputFile.getAbsolutePath()}));
+        Stack<SGID> runMain = QueryVCFDumper.runMain(argList.toArray(new String[argList.size()]));
+
+        Assert.assertTrue("should have 1 resulting feature set, had " + runMain.size(), runMain.size() == 2);
+        Assert.assertTrue("starting feature set was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 173);
+        long count = SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount();
+        Assert.assertTrue("third query was incorrect, should have 3, found " + count, count == 3);
+
         // test comparison
         String curDir = System.getProperty("user.dir");
         SOFeatureImporterTest.matchOutputToControl(outputFile, false, new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated_dumperControl.vcf"));

@@ -269,6 +269,11 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     public SeqWareIterable<Tag> getTags() {
         return new TagValueIterable(tags);//Factory.getBackEnd().getTags(this);
     }
+    
+    @Override
+    public Tag getTagByKey(TagSet tagSet, String key) {
+        return getTagByKey(tagSet.getSGID().getRowKey(), key);
+    }
 
     @Override
     public Tag getTagByKey(String tagSet, String key) {
