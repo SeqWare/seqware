@@ -51,11 +51,19 @@ public interface Taggable<T> {
     
     /**
      * Quickly get the value of a tag by the key.
+     * @param tagSet
      * @param key
      * @return 
      */
     public Tag getTagByKey(String tagSet, String key);
     
+    /**
+     * Quickly get the value of a tag by the key.
+     * @param tagSet
+     * @param key
+     * @return 
+     */
+    public Tag getTagByKey(TagSet tagSet, String key);
     
     /**
      * This class represents both the tags that may be present at a particular level of the nested hash structure
