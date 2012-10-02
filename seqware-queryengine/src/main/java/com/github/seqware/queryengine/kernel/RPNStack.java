@@ -43,7 +43,23 @@ public class RPNStack implements Serializable {
         /**
          * Takes two arguments of any kind and compares whether they are equal.
          */
-        EQUAL
+        EQUAL,
+        /**
+         * Takes two numeric arguments and compares whether one is strictly lesser than.
+         */
+        LESSERTHAN,
+        /**
+         * Takes two numeric arguments and compares whether one is lesser than or equal to.
+         */
+        LESSERTHANOREQ,
+        /**
+         * Takes two numeric arguments and compares whether one is strictly greater than.
+         */
+        GREATERTHAN,
+        /**
+         * Takes two numeric arguments and compares whether one is strictly greater than or equal to.
+         */
+        GREATERTHANOREQ
     }
 
     public static class Constant {
@@ -247,6 +263,26 @@ public class RPNStack implements Serializable {
                         a = operationArguments.remove(0);
                         operationArguments.add(0, this.equal(a, b));
                         break;
+                    case LESSERTHAN:
+                        b = operationArguments.remove(0);
+                        a = operationArguments.remove(0);
+                        operationArguments.add(0, this.lesser(a, b, false));
+                        break;
+                    case LESSERTHANOREQ:
+                        b = operationArguments.remove(0);
+                        a = operationArguments.remove(0);
+                        operationArguments.add(0, this.lesser(a, b, true));
+                        break;
+                    case GREATERTHAN:
+                        b = operationArguments.remove(0);
+                        a = operationArguments.remove(0);
+                        operationArguments.add(0, this.lesser(b, a, false));
+                        break;
+                    case GREATERTHANOREQ:
+                        b = operationArguments.remove(0);
+                        a = operationArguments.remove(0);
+                        operationArguments.add(0, this.lesser(b, a, true));
+                        break;
                     default:
                         throw new UnsupportedOperationException("Unsupported operation: " + op);
                 }
@@ -267,6 +303,26 @@ public class RPNStack implements Serializable {
         }
 
         return false;
+    }
+    
+    /**
+     * Ugly and inefficient, just testing this out to get the tests to compile
+     * Carries out a numeric GREATERTHAN.
+     */
+    private boolean lesser(Object a, Object b, boolean allowEq) {   
+        if (a instanceof Long || b instanceof Long) {
+            if (allowEq){
+                return (Long.valueOf(a.toString())).longValue() <= (Long.valueOf(b.toString())).longValue();
+            }
+            return (Long.valueOf(a.toString())).longValue() < (Long.valueOf(b.toString())).longValue();
+        }
+        if (a instanceof Double || b instanceof Double) {
+            if (allowEq){
+                return (Double.valueOf(a.toString())).doubleValue() <= (Double.valueOf(b.toString())).doubleValue();
+            }
+            return (Double.valueOf(a.toString())).doubleValue() < (Double.valueOf(b.toString())).doubleValue();
+        }
+        throw new UnsupportedOperationException("This comparison has yet to be implemented. Sorry.");
     }
 
     /**
@@ -386,11 +442,11 @@ public class RPNStack implements Serializable {
 
             // Functions:
             case SeqWareQueryLanguageParser.NAMED_TWO_PARAM_FUNCTION: {
-                Object functionKey = arguments.remove(arguments.size() - 1);
-                Object functionTagSet = arguments.remove(arguments.size() - 1);
+                Constant functionKey = (Constant) arguments.remove(arguments.size() - 1);
+                Constant functionTagSet = (Constant) arguments.remove(arguments.size() - 1);
 
                 if (text.equals("tagOccurrence")) {
-                    arguments.add(new TagOccurrence((String) functionTagSet, (String) functionKey));
+                    arguments.add(new TagOccurrence((String) functionTagSet.getValue(), (String) functionKey.getValue()));
                 } else if (text.equals("tagHierarchicalOccurrence")) {
                     throw new IllegalArgumentException("A tagHierarchialOccurence is not supported yet: " + text);
                     // TODO I don't know how to get the row key.
@@ -419,10 +475,17 @@ public class RPNStack implements Serializable {
 
             // Not implemented (yet):
             case SeqWareQueryLanguageParser.GT:
+                arguments.add(Operation.GREATERTHAN);
+                break;
             case SeqWareQueryLanguageParser.GTEQ:
+                arguments.add(Operation.GREATERTHANOREQ);
+                break;
             case SeqWareQueryLanguageParser.LT:
+                arguments.add(Operation.LESSERTHAN);
+                break;
             case SeqWareQueryLanguageParser.LTEQ:
-                throw new UnsupportedOperationException("This has yet to be implemented. Sorry.");
+                arguments.add(Operation.LESSERTHANOREQ);
+                break;
             default:
                 break;
         }
