@@ -368,16 +368,7 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 		// Expand variables in the map
         MapTools.mapExpandVariables(map);
         
-        //set data
-        // magic variables always set
-        Date date = new Date();
-        map.put("date", date.toString());
-
-        //set random
-        Random rand = new Random(System.currentTimeMillis());
-        int randInt = rand.nextInt(100000000);
-        map.put("random", ""+randInt);
-        
+        this.addExtraConfigs(map);
         res.setConfigs(map);
         
 		//set name
@@ -385,10 +376,14 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
         //set version
         res.setVersion(map.get("version"));
 		//set metadata
-		
+        //set base dir
+        String basedir = res.getWorkflowBundleDir() + File.separator + "Workflow_Bundle_"+res.getName()+ File.separator + res.getVersion();
+		map.put("basedir", basedir);
         //call the tmplate methods
         try {
-			Method m = clazz.getDeclaredMethod("buildWorkflow");
+        	Method m = clazz.getDeclaredMethod("setupFiles");
+        	m.invoke(res);
+			m = clazz.getDeclaredMethod("buildWorkflow");
 			m.invoke(res);
 		} catch (SecurityException e) {
 			e.printStackTrace();
@@ -402,10 +397,27 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 			e.printStackTrace();
 		}
 
+        res.setWait(options.has("wait"));
     	return res;
     }
     
     private void setPrivateField(AbstractWorkflowDataModel dataModel, String field, Object value) {
     	
+    }
+    
+    private void addExtraConfigs(Map<String,String> map) {
+        //set date
+        // magic variables always set
+        Date date = new Date();
+        map.put("date", date.toString());
+
+        //set random
+        Random rand = new Random(System.currentTimeMillis());
+        int randInt = rand.nextInt(100000000);
+        map.put("random", ""+randInt);
+        //copy some properties from .settings to configs
+        map.put("SW_PEGASUS_CONFIG_DIR", config.get("SW_PEGASUS_CONFIG_DIR"));
+        map.put("SW_DAX_DIR", config.get("SW_DAX_DIR"));
+        map.put("SW_CLUSTER", config.get("SW_CLUSTER"));
     }
 }

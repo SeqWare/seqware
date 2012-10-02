@@ -49,6 +49,26 @@ public class WorkflowExecutableUtils {
 
 	return ex_java;
     }
+    
+    public static WorkflowExecutable getBashExcutable(
+    	    Map<String, String> map) {
+    	WorkflowExecutable ex_java = new WorkflowExecutable();
+    	ex_java.setNamespace("seqware");
+    	ex_java.setName("bash");
+    	ex_java.setInstalled(true);
+    	ex_java.setArch("x86_64");
+    	ex_java.setOs("linux");
+    	ex_java.setVersion("1.6.0");
+
+    	Pfn pfn_java = new Pfn();
+
+    	pfn_java.setSite("local");
+    	String url = StringUtils.replace(URL_JAVA, map);
+    	pfn_java.setUrl(url);
+    	ex_java.setPfn(pfn_java);
+
+    	return ex_java;
+    }
 
     public static WorkflowExecutable getDefaultPerlExcutable(
 	    Map<String, String> map) {

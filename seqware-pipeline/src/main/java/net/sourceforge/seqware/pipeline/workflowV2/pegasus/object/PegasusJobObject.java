@@ -1,18 +1,25 @@
 package net.sourceforge.seqware.pipeline.workflowV2.pegasus.object;
 
-import org.jdom.Element;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
+import org.jdom.Element;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Module;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Requirement;
 
 public class PegasusJobObject {
-	private Job jobObj;
+	protected Job jobObj;
 	private int id;
-	private static String NS = "seqware";
+	protected String basedir;
+	private List<PegasusJobObject> parents;
+	protected static String NS = "seqware";
 	
-	public PegasusJobObject(Job job) {
+	public PegasusJobObject(Job job, String basedir) {
 		this.jobObj = job;
+		this.basedir = basedir;
+		this.parents = new ArrayList<PegasusJobObject>();
 	}
 	
 	public Element serializeXML() {
@@ -48,23 +55,46 @@ public class PegasusJobObject {
 		sb.append(this.buildCommandString());
 		sb.append("\n");
 		//set non command argument
+		for(String arg: this.jobObj.getArguments()) {
+			sb.append(arg).append("\n");
+		}
 		argumentE.setText(sb.toString());
 		return argumentE;
 	}
 	
-	private String buildCommandString() {
+	protected String buildCommandString() {
 		StringBuilder sb = new StringBuilder();
 		//add memory, classpath, module for bash
-		//FIXME
 		if(this.jobObj.getModule() == Module.Bash) {
-			sb.append("-Xmx500M").append("\n");
-			sb.append("-classpath /lib").append("\n");
+			sb.append("-Xmx").append(this.jobObj.getCommand().getMaxMemory()).append("\n");
+			sb.append("-classpath ").append(basedir).append("/lib").append("\n");
 			sb.append("net.sourceforge.seqware.pipeline.runner.Runner").append("\n");
 			sb.append("--no-metadata").append("\n");
 			sb.append("--module net.sourceforge.seqware.pipeline.modules.GenericCommandRunner").append("\n");
 			sb.append("--").append("\n");
+			sb.append("--gcr-algorithm ").append(this.jobObj.getAlgo()).append("\n");
 		}
-		sb.append(this.jobObj.getCommand().toString());	
+		if(this.jobObj.getCommand().toString().isEmpty() == false) {
+			sb.append("--gcr-command").append("\n");
+			sb.append(this.jobObj.getCommand().toString());	
+		}
 		return sb.toString();
 	}
+	
+	public Job getJobObject() {
+		return this.jobObj;
+	}
+	
+	public Collection<PegasusJobObject> getParents() {
+		return this.parents;
+	}
+	
+    public Element getDependentElement(PegasusJobObject parent) {
+		Element element = new Element("child", AdagObject.NAMESPACE);
+		element.setAttribute("ref", this.jobObj.getAlgo() + "_" + this.getId());
+		Element parentE = new Element("parent", AdagObject.NAMESPACE);
+		parentE.setAttribute("ref", parent.getJobObject().getAlgo() + "_" + parent.getId());
+		element.addContent(parentE);
+		return element;
+    }
 }

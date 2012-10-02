@@ -108,8 +108,12 @@ public class Workflow {
 		this.accession = accession;
 	}
 	
-	public Job createJavaJob() {
-		return null;
+	public Job createJavaJob(String cp, String mainclass) {
+		Job job = new Job();
+		job.setModule(Module.Java);
+		job.setAlgo("java");
+		this.jobs.add(job);
+		return job;
 	}
 	
 	public Job createBashJob(String algo) {
@@ -121,12 +125,11 @@ public class Workflow {
 	}
 	
 	public Job createPerlJob() {
-		return null;
-	}
-	
-	public Job createSqwJob_GenericCommandRunner() {
-		
-		return null;
+		Job job = new Job();
+		job.setModule(Module.Java);
+		job.setAlgo("java");
+		this.jobs.add(job);
+		return job;
 	}
 
 	
