@@ -5,26 +5,23 @@ import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.HBasePersistentBackEnd;
 import com.github.seqware.queryengine.impl.MRHBaseModelManager;
-import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
 import com.github.seqware.queryengine.impl.test.SimplePersistentBackEndTest;
 import com.github.seqware.queryengine.kernel.Compression;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.Constant;
 import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
 import com.github.seqware.queryengine.kernel.RPNStack.Operation;
+import com.github.seqware.queryengine.kernel.RPNStack.TagHierarchicalOccurrence;
 import com.github.seqware.queryengine.kernel.RPNStack.TagOccurrence;
 import com.github.seqware.queryengine.kernel.RPNStack.TagValuePresence;
-import com.github.seqware.queryengine.kernel.RPNStack.TagHierarchicalOccurrence;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesByAttributesPlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByAttributesPlugin;
-
-import java.io.File;
-import java.util.Iterator;
-
 import com.github.seqware.queryengine.system.importers.OBOImporter;
 import com.github.seqware.queryengine.util.SGID;
+import java.io.File;
+import java.util.Iterator;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -40,6 +37,7 @@ public class QueryInterfaceTest implements Benchmarking {
 
     private static FeatureSet aSet, bSet, benchmarkSet;
     private static Feature a1, a2, a3, a4;
+    private static TagSet tagSet;
 
     @BeforeClass
     public static void setupTests() {
@@ -55,8 +53,8 @@ public class QueryInterfaceTest implements Benchmarking {
         aSet.add(a2);
         aSet.add(a3);
         aSet.add(a4);
-
-        bSet = FeatureStoreInterfaceTest.diverseBSet(mManager);
+        tagSet = mManager.buildTagSet().build();
+        bSet = FeatureStoreInterfaceTest.diverseBSet(mManager, tagSet);
 
         if (BENCHMARK) {
             benchmarkSet = FeatureStoreInterfaceTest.largeTestSet(mManager, BENCHMARK_FEATURES);
@@ -252,7 +250,7 @@ public class QueryInterfaceTest implements Benchmarking {
                 new Constant(Feature.Strand.POSITIVE),
                 new FeatureAttribute("strand"),
                 Operation.EQUAL,
-                new TagOccurrence("SO_term"),
+                new TagOccurrence(tagSet.getSGID().getRowKey(), "SO_term"),
                 Operation.AND));
         resultSet = queryFuture.get();
         count = (int) resultSet.getCount();
@@ -262,7 +260,7 @@ public class QueryInterfaceTest implements Benchmarking {
                 new Constant(Feature.Strand.POSITIVE),
                 new FeatureAttribute("strand"),
                 Operation.EQUAL,
-                new TagValuePresence("SO_id", Tag.ValueType.STRING, Compression.getSequenceOntologyAccessionSurrogate("SO:0000149")),
+                new TagValuePresence(tagSet.getSGID().getRowKey(), "SO_id", Tag.ValueType.STRING, Compression.getSequenceOntologyAccessionSurrogate("SO:0000149")),
                 Operation.AND));
         resultSet = queryFuture.get();
         count = (int) resultSet.getCount();
@@ -306,7 +304,7 @@ public class QueryInterfaceTest implements Benchmarking {
                 new Constant("chr16"),
                 new FeatureAttribute("seqid"),
                 Operation.EQUAL,
-                new TagHierarchicalOccurrence(Compression.getSequenceOntologyAccessionSurrogate("SO:0001410"), sequenceOntologyTagSetID.getRowKey()),
+                new TagHierarchicalOccurrence(sequenceOntologyTagSetID.getRowKey(), Compression.getSequenceOntologyAccessionSurrogate("SO:0001410")),
                 Operation.AND));
         resultSet = queryFuture.get();
         count = (int) resultSet.getCount();

@@ -6,6 +6,7 @@ import com.github.seqware.queryengine.kernel.Compression;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
+import com.github.seqware.queryengine.model.TagSet;
 import java.util.Random;
 import java.util.UUID;
 import org.junit.Assert;
@@ -24,6 +25,7 @@ public class FeatureStoreInterfaceTest {
     protected static FeatureSet aSet;
     protected static FeatureSet bSet;
     protected static Feature a1, a2, a3;
+    private static TagSet tagSet;
 
     @BeforeClass
     public static void setupTests() {
@@ -39,8 +41,9 @@ public class FeatureStoreInterfaceTest {
         aSet.add(a2);
         aSet.add(a3);
         mManager.flush();
+        tagSet = mManager.buildTagSet().build();
         //System.out.println("ending beforeClass in testID: " + testID.toString());
-        bSet = diverseBSet(mManager);
+        bSet = diverseBSet(mManager, tagSet);
         mManager.flush();
     }
 
@@ -50,23 +53,28 @@ public class FeatureStoreInterfaceTest {
      * @param mManager Entity manager for persisting atoms.
      * @return A feature set with somewhat diverse data values.
      */
-    public static FeatureSet diverseBSet(CreateUpdateManager mManager) {
+    public static FeatureSet diverseBSet(CreateUpdateManager mManager, TagSet tagset) {
         FeatureSet set = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Diverse_Set").build()).build();
 
         //
         // The following uses the Sequence Ontology (SO), http://www.sequenceontology.org/
         //
-
+        
         // Named tags, where the values convey actual information:
         Tag termTag = mManager.buildTag().setKey("SO_term").build();
         Tag idTag = mManager.buildTag().setKey("SO_id").build();
         Tag contigTag = mManager.buildTag().setKey(Compression.getSequenceOntologyAccessionSurrogate("SO:0000149")).build();
+               
+        // Create a group for our Tags
+        tagset.add(termTag, idTag, contigTag);
 
         // Heavy tags, where the tag key itself represents information:
         Tag transcriptProcessingVariant = mManager.buildTag().setKey("SO::sequence_variant::functional_variant::transcript_function_variant::transcript_processing_variant").build();
         Tag transcriptStabilityVariant = mManager.buildTag().setKey("SO::sequence_variant::functional_variant::transcript_function_variant::transcript_stability_variant").build();
         Tag copyNumberChange = mManager.buildTag().setKey("SO::sequence_variant::structural_variant::copy_number_change").build();
 
+        tagset.add(transcriptProcessingVariant, transcriptStabilityVariant, copyNumberChange);
+        
         // Features for location based tagging, which tests tag querying capabilities:
         Feature a = mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).setStrand(Feature.Strand.POSITIVE).build();
         Feature b = mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000101).setStrand(Feature.Strand.POSITIVE).build();

@@ -44,7 +44,7 @@ public class VCFDumperParameterExample implements QueryDumperInterface{
             return SWQEFactory.getQueryInterface().getFeaturesByRange(0, set, QueryInterface.Location.INCLUDES, "21", 20000000, 30000000);
         } else{
             // limits us to features with a particular tag
-            return SWQEFactory.getQueryInterface().getFeaturesByAttributes(0, set, new RPNStack(new RPNStack.TagOccurrence("non_synonymous_codon")));
+            return SWQEFactory.getQueryInterface().getFeaturesByAttributes(0, set, new RPNStack(new RPNStack.TagOccurrence("ad_hoc", "non_synonymous_codon")));
         }
     }
     
