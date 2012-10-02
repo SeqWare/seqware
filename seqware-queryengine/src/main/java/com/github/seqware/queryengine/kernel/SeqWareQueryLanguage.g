@@ -38,7 +38,8 @@ nested_constraint
 constraint
 	:	identifier comparison^ constant
 	|	constant comparison^ identifier
-	|	function
+	|	two_param_function
+	| 	three_param_function
 	;
 
 identifier
@@ -58,8 +59,12 @@ literal
 	:	INT | FLOAT | STRING
 	;
 
-function
-	:	NAMED_FUNCTION^ BRACKET_OPEN! literal BRACKET_CLOSE!
+two_param_function
+	:	NAMED_TWO_PARAM_FUNCTION^ BRACKET_OPEN! literal ',' literal BRACKET_CLOSE!
+	;
+	
+three_param_function
+	:	NAMED_THREE_PARAM_FUNCTION^ BRACKET_OPEN! literal ',' literal ',' literal BRACKET_CLOSE!
 	;
 	
 comment
@@ -70,8 +75,12 @@ NAMED_CONSTANT
 	:	'STRAND_UNKNOWN' | 'NOT_STRANDED' | 'NEGATIVE_STRAND' | 'POSITIVE_STRAND'
 	;
 	
-NAMED_FUNCTION
-	:	'tagOccurrence' | 'tagHierarchicalOccurrence' | 'tagValuePresence'
+NAMED_TWO_PARAM_FUNCTION
+	:	'tagOccurrence' | 'tagHierarchicalOccurrence'
+	;
+	
+NAMED_THREE_PARAM_FUNCTION
+	:	'tagValuePresence'
 	;
 			
 ID

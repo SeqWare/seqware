@@ -65,6 +65,11 @@ public class TagIO implements ProtobufTransferInterface<TagPB, Tag> {
     public TagPB m2pb(Tag tag) {
         QESupporting.TagPB.Builder builder = QESupporting.TagPB.newBuilder().setKey(tag.getKey());
         builder = tag.getPredicate() != null ? builder.setPredicate(tag.getPredicate()) : builder;
+        // ensure that parent is properly set
+        if (tag.getTagSetSGID() == null){
+            Logger.getLogger(TagIO.class.getName()).fatal("Tag " + tag.getKey() + " is not owned by a tagset");
+            throw new RuntimeException("Tag cannot be flushed without a TagSet");
+        }
         // tag value
         if (tag.getValue() != null) {
             if (tag.getvType() == Tag.ValueType.BYTEARR) {

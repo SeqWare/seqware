@@ -383,6 +383,9 @@ public class SimpleModelManager implements CreateUpdateManager {
                 validTransition = true;
             } else if (current == State.NEW_VERSION && state == State.MANAGED) {
                 validTransition = true;
+            } else if (state == State.UNMANAGED){
+                // anything should be able to be unmanaged
+                validTransition = true;
             }
         } else {
             // assume all other transitions are valid for now

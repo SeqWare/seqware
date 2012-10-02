@@ -1,7 +1,6 @@
 package com.github.seqware.queryengine.model;
 
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
-import com.github.seqware.queryengine.impl.TmpFileStorage;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 import java.math.BigInteger;
@@ -11,7 +10,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.apache.commons.lang.CharSet;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.log4j.Logger;
 

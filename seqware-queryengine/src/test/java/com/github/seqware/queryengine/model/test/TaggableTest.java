@@ -7,7 +7,6 @@ import com.github.seqware.queryengine.model.interfaces.Taggable;
 import com.github.seqware.queryengine.model.interfaces.Taggable.NestedLevel;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
-import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.*;
 import junit.framework.Assert;
 import org.junit.BeforeClass;
@@ -158,9 +157,9 @@ public class TaggableTest {
         User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
         u.associateTag(tag1a);
         long version1 = u.getVersion();
-        Assert.assertTrue(u.getTags().getCount() == 1);
+        Assert.assertTrue("found " + u.getTags().getCount() + " tags, expected " + 1 , u.getTags().getCount() == 1);
         u.dissociateTag(tag1a);
-        Assert.assertTrue(u.getTags().getCount() == 0);
+        Assert.assertTrue("found " + u.getTags().getCount() + " tags, expected " + 0, u.getTags().getCount() == 0);
         long version2 = u.getVersion();
         Assert.assertTrue(version1 == version2);
     }
@@ -290,9 +289,11 @@ public class TaggableTest {
     @Test
     public void testNestedHashes() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
+        TagSet tagset = mManager.buildTagSet().build();
         Tag ta = mManager.buildTag().setKey("MTTS::dbSNP::ID").setValue("rs123").build();
         Tag tb = mManager.buildTag().setKey("MTTS::dbSNP::pop_freq").setValue(0.70f).build();
         User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
+        tagset.add(ta, tb);
         u.associateTag(ta);
         u.associateTag(tb);
 
@@ -307,6 +308,8 @@ public class TaggableTest {
         Tag t9 = mManager.buildTag().setKey("TS::Z2").setValue(9).build();
         Tag t10 = mManager.buildTag().setKey("TQ::A").setValue(10).build();
 
+        tagset.add(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10);
+        
         User u2 = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
         u2.associateTag(t1);
         u2.associateTag(t2);
@@ -325,7 +328,7 @@ public class TaggableTest {
         User userPersisted2 = SWQEFactory.getQueryInterface().getAtomBySGID(User.class, u2.getSGID());
         
         // check the first nested hash and check the values while we're at it
-        NestedLevel nestedTags = userPersisted1.getNestedTags();
+        NestedLevel nestedTags = userPersisted1.getNestedTags(tagset);
         Assert.assertTrue("root level ok", nestedTags.getChildTags().isEmpty() && nestedTags.getChildMaps().size() == 1);
         nestedTags = nestedTags.getChildMaps().get("MTTS");
         Assert.assertTrue("MTTS level ok", nestedTags.getChildTags().isEmpty() && nestedTags.getChildMaps().size() == 1);
@@ -335,11 +338,11 @@ public class TaggableTest {
         Assert.assertTrue("pop_freq Tag ok", (Float)nestedTags.getChildTags().get("pop_freq").getValue() == 0.70f);
         
         // check the second one, just level numbers
-        nestedTags = userPersisted2.getNestedTags();
+        nestedTags = userPersisted2.getNestedTags(tagset);
         Assert.assertTrue("root level ok", nestedTags.getChildTags().isEmpty() && nestedTags.getChildMaps().size() == 2);
         nestedTags = nestedTags.getChildMaps().get("TS");
         Assert.assertTrue("TS level ok", nestedTags.getChildTags().size() == 4 && nestedTags.getChildMaps().size() == 2);
-        nestedTags = userPersisted2.getNestedTags().getChildMaps().get("TQ");
+        nestedTags = userPersisted2.getNestedTags(tagset).getChildMaps().get("TQ");
         Assert.assertTrue("TQ level ok", nestedTags.getChildTags().size() == 1 && nestedTags.getChildMaps().isEmpty());     
     }
 }
