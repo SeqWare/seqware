@@ -1,5 +1,8 @@
 package net.sourceforge.seqware.pipeline.workflowV2.model;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class SqwFile {
 	private String type;
 	private String location;
@@ -31,5 +34,21 @@ public class SqwFile {
 	
 	public void setIsOutput(boolean isOutput) {
 		this.input = !isOutput;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof SqwFile == false)
+			return false;
+		if(obj == this)
+			return true;
+		SqwFile rhs = (SqwFile)obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj)).append(type, rhs.type).
+				append(location, rhs.location).append(input, rhs.input).isEquals();
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 37).append(type).append(location).append(input).toHashCode();
 	}
 }

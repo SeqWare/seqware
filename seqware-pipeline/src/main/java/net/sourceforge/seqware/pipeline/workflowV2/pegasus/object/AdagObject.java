@@ -18,6 +18,7 @@ package net.sourceforge.seqware.pipeline.workflowV2.pegasus.object;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -30,8 +31,8 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job1;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Module;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SeqwareModuleJob;
+import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.WorkflowExecutableUtils;
 
 import org.jdom.Element;
@@ -55,10 +56,13 @@ public class AdagObject  {
     
     private Workflow wf;
     private AbstractWorkflowDataModel wfdm;
+    
+    private Map<SqwFile, PegasusJobObject> fileJobMap;
 
     public AdagObject(AbstractWorkflowDataModel wfdm) {
     	this.wfdm = wfdm;
 		this.jobs = new ArrayList<PegasusJobObject>();
+		this.fileJobMap = new HashMap<SqwFile, PegasusJobObject>();
 		//this.parseWorkflow(wf);
 		this.parseWorkflow(wfdm);
 		this.setDefaultExcutables();
@@ -70,6 +74,7 @@ public class AdagObject  {
 		executables = new ArrayList<WorkflowExecutable>();
 		executables.add(WorkflowExecutableUtils.getDefaultJavaExcutable(this.wfdm.getConfigs()));
 		executables.add(WorkflowExecutableUtils.getLocalJavaExcutable(this.wfdm.getConfigs()));
+		executables.add(WorkflowExecutableUtils.getBashExcutable(this.wfdm.getConfigs()));
 		executables.add(WorkflowExecutableUtils.getDefaultPerlExcutable(this.wfdm.getConfigs()));
 		executables.add(WorkflowExecutableUtils.getDefaultDirManagerExcutable(this.wfdm.getConfigs()));
 		executables.add(WorkflowExecutableUtils.getDefaultSeqwareExecutable(this.wfdm.getConfigs()));
@@ -94,13 +99,11 @@ public class AdagObject  {
 		}
 		// dependencies
 		for (PegasusJobObject pjob : this.jobs) {
-/*		    if (pjob.getParents().isEmpty())
-			continue;
-		    for (PegasusJob parent : pjob.getParents()) {
-	
-			adag.addContent(pjob.getDependentElement(parent));
-	
-		    }*/
+		    if (pjob.getParents().isEmpty())
+		    	continue;
+		    for (PegasusJobObject parent : pjob.getParents()) {	
+		    	adag.addContent(pjob.getDependentElement(parent));	
+		    }
 		}
 		return adag;
     }
@@ -258,11 +261,62 @@ public class AdagObject  {
 	}
 	
 	private void parseWorkflow(AbstractWorkflowDataModel wfdm) {
+		//mkdir data job
+		Job job0 = new Job();
+		job0.setModule(Module.Bash);
+		job0.getCommand().addArgument("mkdir data");
+		job0.setAlgo("start");
+		PegasusJobObject pjob0 = new PegasusJobObject(job0, wfdm.getConfigs().get("basedir"));
+		pjob0.setId(this.jobs.size());
+		this.jobs.add(pjob0);
+		
+		//sqwfiles
+		for(Map.Entry<String,SqwFile> entry: wfdm.getFiles().entrySet()) {
+			//handle in 
+			if(entry.getValue().isInput()) {
+				Job job = new Job();
+				job.setAlgo("provisionFile_"+entry.getKey());
+				job.setModule(Module.Bash);
+				job.addFile(entry.getValue());
+				PegasusJobObject pjob = new ProvisionFilesJob(job,wfdm.getConfigs().get("basedir"));
+				pjob.setId(this.jobs.size());
+				pjob.getParents().add(pjob0);
+				this.jobs.add(pjob);
+				this.fileJobMap.put(entry.getValue(), pjob);
+			}
+		}
+		
 		int idCount = 0;
 		for(Job job: wfdm.getWorkflow().getJobs()) {
-			PegasusJobObject pjob = new PegasusJobObject(job);
+			PegasusJobObject provisionFileParent = null;
+			//has provisionfiles dependency?
+			if(job.getFiles().isEmpty() == false) {
+				for(SqwFile file: job.getFiles()) {
+					//is the file belongs to global or job only
+					//if global, need to get the parent, 
+					//if local, create a provisionfile job
+					if(this.fileJobMap.containsKey(file)) {
+						provisionFileParent = this.fileJobMap.get(file);
+					} else {
+						//create a provisionFileJob;
+					}
+					
+				}
+			}
+			PegasusJobObject pjob = new PegasusJobObject(job, wfdm.getConfigs().get("basedir"));
 			pjob.setId(idCount);
+			if(provisionFileParent!=null)
+				pjob.getParents().add(provisionFileParent);
 			this.jobs.add(pjob);
+			idCount++;
 		}
+	}
+	
+	private PegasusJobObject getPegasusJobObject(Job job) {
+		for(PegasusJobObject pjob: this.jobs) {
+			if(job.equals(pjob.getJobObject()))
+				return pjob;
+		}
+		return null;
 	}
 }
