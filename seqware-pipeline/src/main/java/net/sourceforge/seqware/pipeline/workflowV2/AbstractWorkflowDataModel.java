@@ -1,6 +1,7 @@
 package net.sourceforge.seqware.pipeline.workflowV2;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Environment;
@@ -14,9 +15,9 @@ public abstract class AbstractWorkflowDataModel  {
     protected Environment env;
     private WorkflowInfo workflowInfo;
     protected Map<String,String> configs;
-    protected boolean wait;
+    private boolean wait;
     private boolean metadataWriteBack;
-    protected Collection<SqwFile> files;
+    private Map<String,SqwFile> files;
 	/**
 	 * 	extra params, these will be passed directly to the Java Object/FTL, 
 	 *  so you can use this to override key/values from the ini files
@@ -28,6 +29,10 @@ public abstract class AbstractWorkflowDataModel  {
     private String random;
     private String date;
 
+    public AbstractWorkflowDataModel() {
+    	this.files = new HashMap<String, SqwFile>();
+    }
+    
     protected void setupWorkflow() {
     	
     }
@@ -119,5 +124,17 @@ public abstract class AbstractWorkflowDataModel  {
 	public void setVersion(String version) {
 		this.version = version;
 	}
+	public Map<String,SqwFile> getFiles() {
+		return files;
+	}
+
+	public boolean isWait() {
+		return wait;
+	}
+
+	public void setWait(boolean wait) {
+		this.wait = wait;
+	}
+
 	
 }

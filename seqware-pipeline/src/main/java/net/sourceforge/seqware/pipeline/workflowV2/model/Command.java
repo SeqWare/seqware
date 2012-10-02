@@ -5,6 +5,8 @@ import java.util.List;
 
 public class Command {
 	private List<String> arguments;
+	//default
+	private String mem = "500M";
 	
 	public Command() {
 		this.arguments = new ArrayList<String>();
@@ -37,5 +39,13 @@ public class Command {
 			}
 		}
 		return sb.toString();
+	}
+
+	public String getMaxMemory() {
+		return mem;
+	}
+
+	public void setMaxMemory(String mem) {
+		this.mem = mem;
 	}
 }
