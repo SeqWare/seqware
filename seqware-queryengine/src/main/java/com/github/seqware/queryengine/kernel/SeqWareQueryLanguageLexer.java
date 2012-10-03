@@ -1,4 +1,4 @@
-// $ANTLR 3.4 /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g 2012-10-01 16:06:16
+// $ANTLR 3.4 /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g 2012-10-03 11:46:11
 
 package com.github.seqware.queryengine.kernel;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 @SuppressWarnings({"all", "warnings", "unchecked"})
 public class SeqWareQueryLanguageLexer extends Lexer {
     public static final int EOF=-1;
-    public static final int T__23=23;
+    public static final int T__24=24;
     public static final int AND=4;
     public static final int BRACKET_CLOSE=5;
     public static final int BRACKET_OPEN=6;
@@ -28,9 +28,10 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     public static final int NAMED_CONSTANT=17;
     public static final int NAMED_THREE_PARAM_FUNCTION=18;
     public static final int NAMED_TWO_PARAM_FUNCTION=19;
-    public static final int NOTEQUALS=20;
-    public static final int OR=21;
-    public static final int STRING=22;
+    public static final int NOT=20;
+    public static final int NOTEQUALS=21;
+    public static final int OR=22;
+    public static final int STRING=23;
 
     // delegates
     // delegators
@@ -47,10 +48,10 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     }
     public String getGrammarFileName() { return "/home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g"; }
 
-    // $ANTLR start "T__23"
-    public final void mT__23() throws RecognitionException {
+    // $ANTLR start "T__24"
+    public final void mT__24() throws RecognitionException {
         try {
-            int _type = T__23;
+            int _type = T__24;
             int _channel = DEFAULT_TOKEN_CHANNEL;
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:12:7: ( ',' )
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:12:9: ','
@@ -66,14 +67,14 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         	// do for sure before leaving
         }
     }
-    // $ANTLR end "T__23"
+    // $ANTLR end "T__24"
 
     // $ANTLR start "NAMED_CONSTANT"
     public final void mNAMED_CONSTANT() throws RecognitionException {
         try {
             int _type = NAMED_CONSTANT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:75:2: ( 'STRAND_UNKNOWN' | 'NOT_STRANDED' | 'NEGATIVE_STRAND' | 'POSITIVE_STRAND' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:77:2: ( 'STRAND_UNKNOWN' | 'NOT_STRANDED' | 'NEGATIVE_STRAND' | 'POSITIVE_STRAND' )
             int alt1=4;
             switch ( input.LA(1) ) {
             case 'S':
@@ -115,7 +116,7 @@ public class SeqWareQueryLanguageLexer extends Lexer {
 
             switch (alt1) {
                 case 1 :
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:75:4: 'STRAND_UNKNOWN'
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:77:4: 'STRAND_UNKNOWN'
                     {
                     match("STRAND_UNKNOWN"); 
 
@@ -124,7 +125,7 @@ public class SeqWareQueryLanguageLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:75:23: 'NOT_STRANDED'
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:77:23: 'NOT_STRANDED'
                     {
                     match("NOT_STRANDED"); 
 
@@ -133,7 +134,7 @@ public class SeqWareQueryLanguageLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:75:40: 'NEGATIVE_STRAND'
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:77:40: 'NEGATIVE_STRAND'
                     {
                     match("NEGATIVE_STRAND"); 
 
@@ -142,7 +143,7 @@ public class SeqWareQueryLanguageLexer extends Lexer {
                     }
                     break;
                 case 4 :
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:75:60: 'POSITIVE_STRAND'
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:77:60: 'POSITIVE_STRAND'
                     {
                     match("POSITIVE_STRAND"); 
 
@@ -166,7 +167,7 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = NAMED_TWO_PARAM_FUNCTION;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:79:2: ( 'tagOccurrence' | 'tagHierarchicalOccurrence' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:81:2: ( 'tagOccurrence' | 'tagHierarchicalOccurrence' )
             int alt2=2;
             int LA2_0 = input.LA(1);
 
@@ -218,7 +219,7 @@ public class SeqWareQueryLanguageLexer extends Lexer {
             }
             switch (alt2) {
                 case 1 :
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:79:4: 'tagOccurrence'
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:81:4: 'tagOccurrence'
                     {
                     match("tagOccurrence"); 
 
@@ -227,7 +228,7 @@ public class SeqWareQueryLanguageLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:79:22: 'tagHierarchicalOccurrence'
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:81:22: 'tagHierarchicalOccurrence'
                     {
                     match("tagHierarchicalOccurrence"); 
 
@@ -251,8 +252,8 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = NAMED_THREE_PARAM_FUNCTION;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:83:2: ( 'tagValuePresence' )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:83:4: 'tagValuePresence'
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:85:2: ( 'tagValuePresence' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:85:4: 'tagValuePresence'
             {
             match("tagValuePresence"); 
 
@@ -274,8 +275,8 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = ID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:87:2: ( ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )* )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:87:4: ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:89:2: ( ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )* )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:89:4: ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
             {
             if ( (input.LA(1) >= 'A' && input.LA(1) <= 'Z')||input.LA(1)=='_'||(input.LA(1) >= 'a' && input.LA(1) <= 'z') ) {
                 input.consume();
@@ -287,7 +288,7 @@ public class SeqWareQueryLanguageLexer extends Lexer {
             }
 
 
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:87:28: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:89:28: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
             loop3:
             do {
                 int alt3=2;
@@ -337,10 +338,10 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = INT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:91:2: ( ( '0' .. '9' )+ )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:91:4: ( '0' .. '9' )+
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:93:2: ( ( '0' .. '9' )+ )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:93:4: ( '0' .. '9' )+
             {
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:91:4: ( '0' .. '9' )+
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:93:4: ( '0' .. '9' )+
             int cnt4=0;
             loop4:
             do {
@@ -395,7 +396,7 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = FLOAT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:95:6: ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* | '.' ( '0' .. '9' )+ )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:97:6: ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* | '.' ( '0' .. '9' )+ )
             int alt8=2;
             int LA8_0 = input.LA(1);
 
@@ -414,9 +415,9 @@ public class SeqWareQueryLanguageLexer extends Lexer {
             }
             switch (alt8) {
                 case 1 :
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:95:8: ( '0' .. '9' )+ '.' ( '0' .. '9' )*
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:97:8: ( '0' .. '9' )+ '.' ( '0' .. '9' )*
                     {
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:95:8: ( '0' .. '9' )+
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:97:8: ( '0' .. '9' )+
                     int cnt5=0;
                     loop5:
                     do {
@@ -457,7 +458,7 @@ public class SeqWareQueryLanguageLexer extends Lexer {
 
                     match('.'); 
 
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:95:24: ( '0' .. '9' )*
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:97:24: ( '0' .. '9' )*
                     loop6:
                     do {
                         int alt6=2;
@@ -494,11 +495,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:96:8: '.' ( '0' .. '9' )+
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:98:8: '.' ( '0' .. '9' )+
                     {
                     match('.'); 
 
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:96:12: ( '0' .. '9' )+
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:98:12: ( '0' .. '9' )+
                     int cnt7=0;
                     loop7:
                     do {
@@ -555,14 +556,14 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = COMMENT_EOL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:100:2: ( '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:100:4: '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:102:2: ( '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:102:4: '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
             {
             match("//"); 
 
 
 
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:100:9: (~ ( '\\n' | '\\r' ) )*
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:102:9: (~ ( '\\n' | '\\r' ) )*
             loop9:
             do {
                 int alt9=2;
@@ -596,7 +597,7 @@ public class SeqWareQueryLanguageLexer extends Lexer {
             } while (true);
 
 
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:100:23: ( '\\r' )?
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:102:23: ( '\\r' )?
             int alt10=2;
             int LA10_0 = input.LA(1);
 
@@ -605,7 +606,7 @@ public class SeqWareQueryLanguageLexer extends Lexer {
             }
             switch (alt10) {
                 case 1 :
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:100:23: '\\r'
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:102:23: '\\r'
                     {
                     match('\r'); 
 
@@ -635,14 +636,14 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = COMMENT_INLINE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:104:2: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:104:4: '/*' ( options {greedy=false; } : . )* '*/'
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:106:2: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:106:4: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
 
 
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:104:9: ( options {greedy=false; } : . )*
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:106:9: ( options {greedy=false; } : . )*
             loop11:
             do {
                 int alt11=2;
@@ -667,7 +668,7 @@ public class SeqWareQueryLanguageLexer extends Lexer {
 
                 switch (alt11) {
             	case 1 :
-            	    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:104:37: .
+            	    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:106:37: .
             	    {
             	    matchAny(); 
 
@@ -702,12 +703,12 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = STRING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:108:5: ( '\"' (~ ( '\\\\' | '\"' ) )* '\"' )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:108:8: '\"' (~ ( '\\\\' | '\"' ) )* '\"'
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:110:5: ( '\"' (~ ( '\\\\' | '\"' ) )* '\"' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:110:8: '\"' (~ ( '\\\\' | '\"' ) )* '\"'
             {
             match('\"'); 
 
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:108:12: (~ ( '\\\\' | '\"' ) )*
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:110:12: (~ ( '\\\\' | '\"' ) )*
             loop12:
             do {
                 int alt12=2;
@@ -754,13 +755,34 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     }
     // $ANTLR end "STRING"
 
+    // $ANTLR start "NOT"
+    public final void mNOT() throws RecognitionException {
+        try {
+            int _type = NOT;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:114:2: ( '!' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:114:4: '!'
+            {
+            match('!'); 
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        	// do for sure before leaving
+        }
+    }
+    // $ANTLR end "NOT"
+
     // $ANTLR start "OR"
     public final void mOR() throws RecognitionException {
         try {
             int _type = OR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:112:2: ( '||' )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:112:4: '||'
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:118:2: ( '||' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:118:4: '||'
             {
             match("||"); 
 
@@ -782,8 +804,8 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = AND;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:116:2: ( '&&' )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:116:4: '&&'
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:122:2: ( '&&' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:122:4: '&&'
             {
             match("&&"); 
 
@@ -805,8 +827,8 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = EQUALS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:120:2: ( '==' )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:120:4: '=='
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:126:2: ( '==' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:126:4: '=='
             {
             match("=="); 
 
@@ -828,8 +850,8 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = NOTEQUALS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:124:2: ( '!=' )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:124:4: '!='
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:130:2: ( '!=' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:130:4: '!='
             {
             match("!="); 
 
@@ -851,8 +873,8 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = LT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:128:2: ( '<' )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:128:4: '<'
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:134:2: ( '<' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:134:4: '<'
             {
             match('<'); 
 
@@ -872,8 +894,8 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = LTEQ;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:132:2: ( '<=' )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:132:4: '<='
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:138:2: ( '<=' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:138:4: '<='
             {
             match("<="); 
 
@@ -895,8 +917,8 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = GT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:136:2: ( '>' )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:136:4: '>'
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:142:2: ( '>' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:142:4: '>'
             {
             match('>'); 
 
@@ -916,8 +938,8 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = GTEQ;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:140:2: ( '>=' )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:140:4: '>='
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:146:2: ( '>=' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:146:4: '>='
             {
             match(">="); 
 
@@ -939,8 +961,8 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = BRACKET_OPEN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:144:2: ( '(' )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:144:4: '('
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:150:2: ( '(' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:150:4: '('
             {
             match('('); 
 
@@ -960,8 +982,8 @@ public class SeqWareQueryLanguageLexer extends Lexer {
         try {
             int _type = BRACKET_CLOSE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:148:2: ( ')' )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:148:4: ')'
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:154:2: ( ')' )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:154:4: ')'
             {
             match(')'); 
 
@@ -977,14 +999,14 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "BRACKET_CLOSE"
 
     public void mTokens() throws RecognitionException {
-        // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:8: ( T__23 | NAMED_CONSTANT | NAMED_TWO_PARAM_FUNCTION | NAMED_THREE_PARAM_FUNCTION | ID | INT | FLOAT | COMMENT_EOL | COMMENT_INLINE | STRING | OR | AND | EQUALS | NOTEQUALS | LT | LTEQ | GT | GTEQ | BRACKET_OPEN | BRACKET_CLOSE )
-        int alt13=20;
+        // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:8: ( T__24 | NAMED_CONSTANT | NAMED_TWO_PARAM_FUNCTION | NAMED_THREE_PARAM_FUNCTION | ID | INT | FLOAT | COMMENT_EOL | COMMENT_INLINE | STRING | NOT | OR | AND | EQUALS | NOTEQUALS | LT | LTEQ | GT | GTEQ | BRACKET_OPEN | BRACKET_CLOSE )
+        int alt13=21;
         alt13 = dfa13.predict(input);
         switch (alt13) {
             case 1 :
-                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:10: T__23
+                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:10: T__24
                 {
-                mT__23(); 
+                mT__24(); 
 
 
                 }
@@ -1062,79 +1084,87 @@ public class SeqWareQueryLanguageLexer extends Lexer {
                 }
                 break;
             case 11 :
-                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:130: OR
+                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:130: NOT
+                {
+                mNOT(); 
+
+
+                }
+                break;
+            case 12 :
+                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:134: OR
                 {
                 mOR(); 
 
 
                 }
                 break;
-            case 12 :
-                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:133: AND
+            case 13 :
+                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:137: AND
                 {
                 mAND(); 
 
 
                 }
                 break;
-            case 13 :
-                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:137: EQUALS
+            case 14 :
+                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:141: EQUALS
                 {
                 mEQUALS(); 
 
 
                 }
                 break;
-            case 14 :
-                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:144: NOTEQUALS
+            case 15 :
+                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:148: NOTEQUALS
                 {
                 mNOTEQUALS(); 
 
 
                 }
                 break;
-            case 15 :
-                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:154: LT
+            case 16 :
+                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:158: LT
                 {
                 mLT(); 
 
 
                 }
                 break;
-            case 16 :
-                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:157: LTEQ
+            case 17 :
+                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:161: LTEQ
                 {
                 mLTEQ(); 
 
 
                 }
                 break;
-            case 17 :
-                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:162: GT
+            case 18 :
+                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:166: GT
                 {
                 mGT(); 
 
 
                 }
                 break;
-            case 18 :
-                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:165: GTEQ
+            case 19 :
+                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:169: GTEQ
                 {
                 mGTEQ(); 
 
 
                 }
                 break;
-            case 19 :
-                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:170: BRACKET_OPEN
+            case 20 :
+                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:174: BRACKET_OPEN
                 {
                 mBRACKET_OPEN(); 
 
 
                 }
                 break;
-            case 20 :
-                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:183: BRACKET_CLOSE
+            case 21 :
+                // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:187: BRACKET_CLOSE
                 {
                 mBRACKET_CLOSE(); 
 
@@ -1149,44 +1179,44 @@ public class SeqWareQueryLanguageLexer extends Lexer {
 
     protected DFA13 dfa13 = new DFA13(this);
     static final String DFA13_eotS =
-        "\2\uffff\4\6\1\uffff\1\30\7\uffff\1\34\1\36\2\uffff\5\6\7\uffff"+
-        "\76\6\1\144\6\6\1\uffff\2\6\1\155\2\6\1\144\2\6\1\uffff\2\6\2\144"+
-        "\3\6\1\167\1\6\1\uffff\7\6\1\155";
+        "\2\uffff\4\6\1\uffff\1\30\3\uffff\1\34\3\uffff\1\36\1\40\2\uffff"+
+        "\5\6\11\uffff\76\6\1\146\6\6\1\uffff\2\6\1\157\2\6\1\146\2\6\1\uffff"+
+        "\2\6\2\146\3\6\1\171\1\6\1\uffff\7\6\1\157";
     static final String DFA13_eofS =
-        "\u0080\uffff";
+        "\u0082\uffff";
     static final String DFA13_minS =
         "\1\41\1\uffff\1\124\1\105\1\117\1\141\1\uffff\1\56\1\uffff\1\52"+
-        "\5\uffff\2\75\2\uffff\1\122\1\124\1\107\1\123\1\147\7\uffff\1\101"+
-        "\1\137\1\101\1\111\1\110\1\116\1\123\2\124\1\143\1\151\1\141\1\104"+
-        "\1\124\2\111\1\143\1\145\1\154\1\137\1\122\2\126\1\165\1\162\1\165"+
-        "\1\125\1\101\2\105\1\162\1\141\1\145\2\116\2\137\2\162\1\120\1\113"+
-        "\1\104\2\123\1\145\1\143\1\162\1\116\1\105\2\124\1\156\1\150\1\145"+
-        "\1\117\1\104\2\122\1\143\1\151\1\163\1\127\1\60\2\101\1\145\1\143"+
-        "\1\145\1\116\1\uffff\2\116\1\60\1\141\1\156\1\60\2\104\1\uffff\1"+
-        "\154\1\143\2\60\1\117\1\145\1\143\1\60\1\143\1\uffff\1\165\2\162"+
-        "\1\145\1\156\1\143\1\145\1\60";
+        "\1\uffff\1\75\3\uffff\2\75\2\uffff\1\122\1\124\1\107\1\123\1\147"+
+        "\11\uffff\1\101\1\137\1\101\1\111\1\110\1\116\1\123\2\124\1\143"+
+        "\1\151\1\141\1\104\1\124\2\111\1\143\1\145\1\154\1\137\1\122\2\126"+
+        "\1\165\1\162\1\165\1\125\1\101\2\105\1\162\1\141\1\145\2\116\2\137"+
+        "\2\162\1\120\1\113\1\104\2\123\1\145\1\143\1\162\1\116\1\105\2\124"+
+        "\1\156\1\150\1\145\1\117\1\104\2\122\1\143\1\151\1\163\1\127\1\60"+
+        "\2\101\1\145\1\143\1\145\1\116\1\uffff\2\116\1\60\1\141\1\156\1"+
+        "\60\2\104\1\uffff\1\154\1\143\2\60\1\117\1\145\1\143\1\60\1\143"+
+        "\1\uffff\1\165\2\162\1\145\1\156\1\143\1\145\1\60";
     static final String DFA13_maxS =
-        "\1\174\1\uffff\1\124\2\117\1\141\1\uffff\1\71\1\uffff\1\57\5\uffff"+
-        "\2\75\2\uffff\1\122\1\124\1\107\1\123\1\147\7\uffff\1\101\1\137"+
-        "\1\101\1\111\1\126\1\116\1\123\2\124\1\143\1\151\1\141\1\104\1\124"+
-        "\2\111\1\143\1\145\1\154\1\137\1\122\2\126\1\165\1\162\1\165\1\125"+
-        "\1\101\2\105\1\162\1\141\1\145\2\116\2\137\2\162\1\120\1\113\1\104"+
-        "\2\123\1\145\1\143\1\162\1\116\1\105\2\124\1\156\1\150\1\145\1\117"+
-        "\1\104\2\122\1\143\1\151\1\163\1\127\1\172\2\101\1\145\1\143\1\145"+
-        "\1\116\1\uffff\2\116\1\172\1\141\1\156\1\172\2\104\1\uffff\1\154"+
-        "\1\143\2\172\1\117\1\145\1\143\1\172\1\143\1\uffff\1\165\2\162\1"+
-        "\145\1\156\1\143\1\145\1\172";
+        "\1\174\1\uffff\1\124\2\117\1\141\1\uffff\1\71\1\uffff\1\57\1\uffff"+
+        "\1\75\3\uffff\2\75\2\uffff\1\122\1\124\1\107\1\123\1\147\11\uffff"+
+        "\1\101\1\137\1\101\1\111\1\126\1\116\1\123\2\124\1\143\1\151\1\141"+
+        "\1\104\1\124\2\111\1\143\1\145\1\154\1\137\1\122\2\126\1\165\1\162"+
+        "\1\165\1\125\1\101\2\105\1\162\1\141\1\145\2\116\2\137\2\162\1\120"+
+        "\1\113\1\104\2\123\1\145\1\143\1\162\1\116\1\105\2\124\1\156\1\150"+
+        "\1\145\1\117\1\104\2\122\1\143\1\151\1\163\1\127\1\172\2\101\1\145"+
+        "\1\143\1\145\1\116\1\uffff\2\116\1\172\1\141\1\156\1\172\2\104\1"+
+        "\uffff\1\154\1\143\2\172\1\117\1\145\1\143\1\172\1\143\1\uffff\1"+
+        "\165\2\162\1\145\1\156\1\143\1\145\1\172";
     static final String DFA13_acceptS =
-        "\1\uffff\1\1\4\uffff\1\5\1\uffff\1\7\1\uffff\1\12\1\13\1\14\1\15"+
-        "\1\16\2\uffff\1\23\1\24\5\uffff\1\6\1\10\1\11\1\20\1\17\1\22\1\21"+
-        "\105\uffff\1\2\10\uffff\1\3\11\uffff\1\4\10\uffff";
+        "\1\uffff\1\1\4\uffff\1\5\1\uffff\1\7\1\uffff\1\12\1\uffff\1\14\1"+
+        "\15\1\16\2\uffff\1\24\1\25\5\uffff\1\6\1\10\1\11\1\17\1\13\1\21"+
+        "\1\20\1\23\1\22\105\uffff\1\2\10\uffff\1\3\11\uffff\1\4\10\uffff";
     static final String DFA13_specialS =
-        "\u0080\uffff}>";
+        "\u0082\uffff}>";
     static final String[] DFA13_transitionS = {
-            "\1\16\1\12\3\uffff\1\14\1\uffff\1\21\1\22\2\uffff\1\1\1\uffff"+
-            "\1\10\1\11\12\7\2\uffff\1\17\1\15\1\20\2\uffff\15\6\1\3\1\6"+
+            "\1\13\1\12\3\uffff\1\15\1\uffff\1\21\1\22\2\uffff\1\1\1\uffff"+
+            "\1\10\1\11\12\7\2\uffff\1\17\1\16\1\20\2\uffff\15\6\1\3\1\6"+
             "\1\4\2\6\1\2\7\6\4\uffff\1\6\1\uffff\23\6\1\5\6\6\1\uffff\1"+
-            "\13",
+            "\14",
             "",
             "\1\23",
             "\1\25\11\uffff\1\24",
@@ -1197,33 +1227,33 @@ public class SeqWareQueryLanguageLexer extends Lexer {
             "",
             "\1\32\4\uffff\1\31",
             "",
-            "",
-            "",
-            "",
-            "",
             "\1\33",
+            "",
+            "",
+            "",
             "\1\35",
-            "",
-            "",
             "\1\37",
-            "\1\40",
+            "",
+            "",
             "\1\41",
             "\1\42",
             "\1\43",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
             "\1\44",
             "\1\45",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
             "\1\46",
             "\1\47",
-            "\1\51\6\uffff\1\50\6\uffff\1\52",
-            "\1\53",
-            "\1\54",
+            "\1\50",
+            "\1\51",
+            "\1\53\6\uffff\1\52\6\uffff\1\54",
             "\1\55",
             "\1\56",
             "\1\57",
@@ -1279,40 +1309,42 @@ public class SeqWareQueryLanguageLexer extends Lexer {
             "\1\141",
             "\1\142",
             "\1\143",
-            "\12\6\7\uffff\32\6\4\uffff\1\6\1\uffff\32\6",
+            "\1\144",
             "\1\145",
-            "\1\146",
+            "\12\6\7\uffff\32\6\4\uffff\1\6\1\uffff\32\6",
             "\1\147",
             "\1\150",
             "\1\151",
             "\1\152",
-            "",
             "\1\153",
             "\1\154",
-            "\12\6\7\uffff\32\6\4\uffff\1\6\1\uffff\32\6",
+            "",
+            "\1\155",
             "\1\156",
-            "\1\157",
             "\12\6\7\uffff\32\6\4\uffff\1\6\1\uffff\32\6",
             "\1\160",
             "\1\161",
-            "",
+            "\12\6\7\uffff\32\6\4\uffff\1\6\1\uffff\32\6",
             "\1\162",
             "\1\163",
-            "\12\6\7\uffff\32\6\4\uffff\1\6\1\uffff\32\6",
-            "\12\6\7\uffff\32\6\4\uffff\1\6\1\uffff\32\6",
+            "",
             "\1\164",
             "\1\165",
-            "\1\166",
             "\12\6\7\uffff\32\6\4\uffff\1\6\1\uffff\32\6",
+            "\12\6\7\uffff\32\6\4\uffff\1\6\1\uffff\32\6",
+            "\1\166",
+            "\1\167",
             "\1\170",
-            "",
-            "\1\171",
+            "\12\6\7\uffff\32\6\4\uffff\1\6\1\uffff\32\6",
             "\1\172",
+            "",
             "\1\173",
             "\1\174",
             "\1\175",
             "\1\176",
             "\1\177",
+            "\1\u0080",
+            "\1\u0081",
             "\12\6\7\uffff\32\6\4\uffff\1\6\1\uffff\32\6"
     };
 
@@ -1346,7 +1378,7 @@ public class SeqWareQueryLanguageLexer extends Lexer {
             this.transition = DFA13_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( T__23 | NAMED_CONSTANT | NAMED_TWO_PARAM_FUNCTION | NAMED_THREE_PARAM_FUNCTION | ID | INT | FLOAT | COMMENT_EOL | COMMENT_INLINE | STRING | OR | AND | EQUALS | NOTEQUALS | LT | LTEQ | GT | GTEQ | BRACKET_OPEN | BRACKET_CLOSE );";
+            return "1:1: Tokens : ( T__24 | NAMED_CONSTANT | NAMED_TWO_PARAM_FUNCTION | NAMED_THREE_PARAM_FUNCTION | ID | INT | FLOAT | COMMENT_EOL | COMMENT_INLINE | STRING | NOT | OR | AND | EQUALS | NOTEQUALS | LT | LTEQ | GT | GTEQ | BRACKET_OPEN | BRACKET_CLOSE );";
         }
     }
  

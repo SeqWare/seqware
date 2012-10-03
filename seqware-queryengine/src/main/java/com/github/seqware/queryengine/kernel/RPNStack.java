@@ -410,6 +410,11 @@ public class RPNStack implements Serializable {
                 arguments.add(Operation.EQUAL);
                 arguments.add(Operation.NOT);
                 break;
+            
+            // singular negation
+            case SeqWareQueryLanguageParser.NOT:
+                arguments.add(Operation.NOT);
+                break;
 
             // Constants:
             case SeqWareQueryLanguageParser.FLOAT:
