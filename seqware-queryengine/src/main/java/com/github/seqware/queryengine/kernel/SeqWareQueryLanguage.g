@@ -33,6 +33,7 @@ nested_constraint
 	:	BRACKET_OPEN! low_precedence_constraint BRACKET_CLOSE!
 	|	constraint
 	|	comment!
+	|	NOT^ nested_constraint
 	;
 
 constraint
@@ -40,6 +41,7 @@ constraint
 	|	constant comparison^ identifier
 	|	two_param_function
 	| 	three_param_function
+//	| 	NOT^ constraint
 	;
 
 identifier
@@ -107,6 +109,10 @@ COMMENT_INLINE
 STRING
     :  '"' ( ~('\\'|'"') )* '"'
     ;
+
+NOT
+	:	'!'
+	;
 
 OR
 	:	'||'
