@@ -7,9 +7,6 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import it.sauronsoftware.junique.AlreadyLockedException;
-import it.sauronsoftware.junique.JUnique;
-
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,8 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
@@ -30,14 +25,11 @@ import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
-import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowClassFinder;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.PegasusWorkflowEngine;
-import net.sourceforge.seqware.pipeline.workflowV2.pegasus.PegasusWorkflowEngine1;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.StringUtils;
 
 import org.openide.util.lookup.ServiceProvider;
@@ -59,11 +51,7 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     	return ("A plugin that lets you launch workflow bundles once you have installed them via the BundleManager.");
     }
 
-    @Override
-    public BasicWorkflow createWorkflow() {
-    	return new PegasusWorkflowEngine1(metadata, config);
-    }
-    
+  
     /*
      * (non-Javadoc) @see
      * net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_run()
