@@ -30,7 +30,7 @@ An example of instructions on how to update your Linux installation can be found
 
 In addition to Java we also require PostgreSQL to be installed, version 8.4 is what we use but newer versions are probably supported.  You need to use the method appropriate to your distribution to install this. For example, on a recent Debian-based system you would do:
 
-  sudo apt-get install postgresql-8.4
+    sudo apt-get install postgresql-8.4
 
 PREREQUISITES ON Mac OS
 -----------------------
