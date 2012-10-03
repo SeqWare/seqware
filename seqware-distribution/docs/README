@@ -1,3 +1,10 @@
+In relation to Hubflow, our procedure will be as follows. For new features that 
+are still in a feature branch, documentation can be kept in that feature branch. 
+Compilation should be invoked for local viewing, but do not push the results to 
+the public website. New documentation meant for public release should be done on 
+the 'develop' branch. 'Master' should be avoided and should only be modified 
+during releases or with the Hubflow hotfix workflow.
+
 Install nanoc (on Ubuntu 12.04):
 
 For a basic version of nanoc just follow the directions on their site. This is
