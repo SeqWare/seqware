@@ -1,4 +1,4 @@
-// $ANTLR 3.4 /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g 2012-10-03 16:22:35
+// $ANTLR 3.4 /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g 2012-10-03 17:19:15
 
 package com.github.seqware.queryengine.kernel;
 
@@ -76,7 +76,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "query"
-    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:20:1: query : low_precedence_constraint ^;
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:20:1: query : low_precedence_constraint ^ EOF ;
     public final SeqWareQueryLanguageParser.query_return query() throws RecognitionException {
         SeqWareQueryLanguageParser.query_return retval = new SeqWareQueryLanguageParser.query_return();
         retval.start = input.LT(1);
@@ -84,13 +84,15 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
+        Token EOF2=null;
         SeqWareQueryLanguageParser.low_precedence_constraint_return low_precedence_constraint1 =null;
 
 
+        CommonTree EOF2_tree=null;
 
         try {
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:21:2: ( low_precedence_constraint ^)
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:21:4: low_precedence_constraint ^
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:21:2: ( low_precedence_constraint ^ EOF )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:21:4: low_precedence_constraint ^ EOF
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -101,6 +103,13 @@ public TreeAdaptor getTreeAdaptor() {
             state._fsp--;
 
             root_0 = (CommonTree)adaptor.becomeRoot(low_precedence_constraint1.getTree(), root_0);
+
+            EOF2=(Token)match(input,EOF,FOLLOW_EOF_in_query78); 
+            EOF2_tree = 
+            (CommonTree)adaptor.create(EOF2)
+            ;
+            adaptor.addChild(root_0, EOF2_tree);
+
 
             }
 
@@ -141,13 +150,13 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token OR3=null;
-        SeqWareQueryLanguageParser.high_precedence_constraint_return high_precedence_constraint2 =null;
+        Token OR4=null;
+        SeqWareQueryLanguageParser.high_precedence_constraint_return high_precedence_constraint3 =null;
 
-        SeqWareQueryLanguageParser.high_precedence_constraint_return high_precedence_constraint4 =null;
+        SeqWareQueryLanguageParser.high_precedence_constraint_return high_precedence_constraint5 =null;
 
 
-        CommonTree OR3_tree=null;
+        CommonTree OR4_tree=null;
 
         try {
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:25:2: ( ( high_precedence_constraint ) ( OR ^ high_precedence_constraint )* )
@@ -159,12 +168,12 @@ public TreeAdaptor getTreeAdaptor() {
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:25:4: ( high_precedence_constraint )
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:25:5: high_precedence_constraint
             {
-            pushFollow(FOLLOW_high_precedence_constraint_in_low_precedence_constraint88);
-            high_precedence_constraint2=high_precedence_constraint();
+            pushFollow(FOLLOW_high_precedence_constraint_in_low_precedence_constraint90);
+            high_precedence_constraint3=high_precedence_constraint();
 
             state._fsp--;
 
-            adaptor.addChild(root_0, high_precedence_constraint2.getTree());
+            adaptor.addChild(root_0, high_precedence_constraint3.getTree());
 
             }
 
@@ -184,19 +193,19 @@ public TreeAdaptor getTreeAdaptor() {
             	case 1 :
             	    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:25:34: OR ^ high_precedence_constraint
             	    {
-            	    OR3=(Token)match(input,OR,FOLLOW_OR_in_low_precedence_constraint92); 
-            	    OR3_tree = 
-            	    (CommonTree)adaptor.create(OR3)
+            	    OR4=(Token)match(input,OR,FOLLOW_OR_in_low_precedence_constraint94); 
+            	    OR4_tree = 
+            	    (CommonTree)adaptor.create(OR4)
             	    ;
-            	    root_0 = (CommonTree)adaptor.becomeRoot(OR3_tree, root_0);
+            	    root_0 = (CommonTree)adaptor.becomeRoot(OR4_tree, root_0);
 
 
-            	    pushFollow(FOLLOW_high_precedence_constraint_in_low_precedence_constraint95);
-            	    high_precedence_constraint4=high_precedence_constraint();
+            	    pushFollow(FOLLOW_high_precedence_constraint_in_low_precedence_constraint97);
+            	    high_precedence_constraint5=high_precedence_constraint();
 
             	    state._fsp--;
 
-            	    adaptor.addChild(root_0, high_precedence_constraint4.getTree());
+            	    adaptor.addChild(root_0, high_precedence_constraint5.getTree());
 
             	    }
             	    break;
@@ -246,13 +255,13 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token AND6=null;
-        SeqWareQueryLanguageParser.nested_constraint_return nested_constraint5 =null;
+        Token AND7=null;
+        SeqWareQueryLanguageParser.nested_constraint_return nested_constraint6 =null;
 
-        SeqWareQueryLanguageParser.nested_constraint_return nested_constraint7 =null;
+        SeqWareQueryLanguageParser.nested_constraint_return nested_constraint8 =null;
 
 
-        CommonTree AND6_tree=null;
+        CommonTree AND7_tree=null;
 
         try {
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:29:2: ( ( nested_constraint ) ( AND ^ nested_constraint )* )
@@ -264,12 +273,12 @@ public TreeAdaptor getTreeAdaptor() {
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:29:4: ( nested_constraint )
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:29:5: nested_constraint
             {
-            pushFollow(FOLLOW_nested_constraint_in_high_precedence_constraint110);
-            nested_constraint5=nested_constraint();
+            pushFollow(FOLLOW_nested_constraint_in_high_precedence_constraint112);
+            nested_constraint6=nested_constraint();
 
             state._fsp--;
 
-            adaptor.addChild(root_0, nested_constraint5.getTree());
+            adaptor.addChild(root_0, nested_constraint6.getTree());
 
             }
 
@@ -289,19 +298,19 @@ public TreeAdaptor getTreeAdaptor() {
             	case 1 :
             	    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:29:25: AND ^ nested_constraint
             	    {
-            	    AND6=(Token)match(input,AND,FOLLOW_AND_in_high_precedence_constraint114); 
-            	    AND6_tree = 
-            	    (CommonTree)adaptor.create(AND6)
+            	    AND7=(Token)match(input,AND,FOLLOW_AND_in_high_precedence_constraint116); 
+            	    AND7_tree = 
+            	    (CommonTree)adaptor.create(AND7)
             	    ;
-            	    root_0 = (CommonTree)adaptor.becomeRoot(AND6_tree, root_0);
+            	    root_0 = (CommonTree)adaptor.becomeRoot(AND7_tree, root_0);
 
 
-            	    pushFollow(FOLLOW_nested_constraint_in_high_precedence_constraint117);
-            	    nested_constraint7=nested_constraint();
+            	    pushFollow(FOLLOW_nested_constraint_in_high_precedence_constraint119);
+            	    nested_constraint8=nested_constraint();
 
             	    state._fsp--;
 
-            	    adaptor.addChild(root_0, nested_constraint7.getTree());
+            	    adaptor.addChild(root_0, nested_constraint8.getTree());
 
             	    }
             	    break;
@@ -351,21 +360,21 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token BRACKET_OPEN8=null;
-        Token BRACKET_CLOSE10=null;
-        Token NOT13=null;
-        SeqWareQueryLanguageParser.low_precedence_constraint_return low_precedence_constraint9 =null;
+        Token BRACKET_OPEN9=null;
+        Token BRACKET_CLOSE11=null;
+        Token NOT14=null;
+        SeqWareQueryLanguageParser.low_precedence_constraint_return low_precedence_constraint10 =null;
 
-        SeqWareQueryLanguageParser.constraint_return constraint11 =null;
+        SeqWareQueryLanguageParser.constraint_return constraint12 =null;
 
-        SeqWareQueryLanguageParser.comment_return comment12 =null;
+        SeqWareQueryLanguageParser.comment_return comment13 =null;
 
-        SeqWareQueryLanguageParser.nested_constraint_return nested_constraint14 =null;
+        SeqWareQueryLanguageParser.nested_constraint_return nested_constraint15 =null;
 
 
-        CommonTree BRACKET_OPEN8_tree=null;
-        CommonTree BRACKET_CLOSE10_tree=null;
-        CommonTree NOT13_tree=null;
+        CommonTree BRACKET_OPEN9_tree=null;
+        CommonTree BRACKET_CLOSE11_tree=null;
+        CommonTree NOT14_tree=null;
 
         try {
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:33:2: ( BRACKET_OPEN ! low_precedence_constraint BRACKET_CLOSE !| constraint | comment !| NOT ^ nested_constraint )
@@ -414,16 +423,16 @@ public TreeAdaptor getTreeAdaptor() {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    BRACKET_OPEN8=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_nested_constraint131); 
+                    BRACKET_OPEN9=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_nested_constraint133); 
 
-                    pushFollow(FOLLOW_low_precedence_constraint_in_nested_constraint134);
-                    low_precedence_constraint9=low_precedence_constraint();
+                    pushFollow(FOLLOW_low_precedence_constraint_in_nested_constraint136);
+                    low_precedence_constraint10=low_precedence_constraint();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, low_precedence_constraint9.getTree());
+                    adaptor.addChild(root_0, low_precedence_constraint10.getTree());
 
-                    BRACKET_CLOSE10=(Token)match(input,BRACKET_CLOSE,FOLLOW_BRACKET_CLOSE_in_nested_constraint136); 
+                    BRACKET_CLOSE11=(Token)match(input,BRACKET_CLOSE,FOLLOW_BRACKET_CLOSE_in_nested_constraint138); 
 
                     }
                     break;
@@ -433,12 +442,12 @@ public TreeAdaptor getTreeAdaptor() {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    pushFollow(FOLLOW_constraint_in_nested_constraint142);
-                    constraint11=constraint();
+                    pushFollow(FOLLOW_constraint_in_nested_constraint144);
+                    constraint12=constraint();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, constraint11.getTree());
+                    adaptor.addChild(root_0, constraint12.getTree());
 
                     }
                     break;
@@ -448,8 +457,8 @@ public TreeAdaptor getTreeAdaptor() {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    pushFollow(FOLLOW_comment_in_nested_constraint147);
-                    comment12=comment();
+                    pushFollow(FOLLOW_comment_in_nested_constraint149);
+                    comment13=comment();
 
                     state._fsp--;
 
@@ -462,19 +471,19 @@ public TreeAdaptor getTreeAdaptor() {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    NOT13=(Token)match(input,NOT,FOLLOW_NOT_in_nested_constraint153); 
-                    NOT13_tree = 
-                    (CommonTree)adaptor.create(NOT13)
+                    NOT14=(Token)match(input,NOT,FOLLOW_NOT_in_nested_constraint155); 
+                    NOT14_tree = 
+                    (CommonTree)adaptor.create(NOT14)
                     ;
-                    root_0 = (CommonTree)adaptor.becomeRoot(NOT13_tree, root_0);
+                    root_0 = (CommonTree)adaptor.becomeRoot(NOT14_tree, root_0);
 
 
-                    pushFollow(FOLLOW_nested_constraint_in_nested_constraint156);
-                    nested_constraint14=nested_constraint();
+                    pushFollow(FOLLOW_nested_constraint_in_nested_constraint158);
+                    nested_constraint15=nested_constraint();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, nested_constraint14.getTree());
+                    adaptor.addChild(root_0, nested_constraint15.getTree());
 
                     }
                     break;
@@ -517,21 +526,21 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        SeqWareQueryLanguageParser.identifier_return identifier15 =null;
+        SeqWareQueryLanguageParser.identifier_return identifier16 =null;
 
-        SeqWareQueryLanguageParser.comparison_return comparison16 =null;
-
-        SeqWareQueryLanguageParser.constant_return constant17 =null;
+        SeqWareQueryLanguageParser.comparison_return comparison17 =null;
 
         SeqWareQueryLanguageParser.constant_return constant18 =null;
 
-        SeqWareQueryLanguageParser.comparison_return comparison19 =null;
+        SeqWareQueryLanguageParser.constant_return constant19 =null;
 
-        SeqWareQueryLanguageParser.identifier_return identifier20 =null;
+        SeqWareQueryLanguageParser.comparison_return comparison20 =null;
 
-        SeqWareQueryLanguageParser.two_param_predicate_return two_param_predicate21 =null;
+        SeqWareQueryLanguageParser.identifier_return identifier21 =null;
 
-        SeqWareQueryLanguageParser.three_param_predicate_return three_param_predicate22 =null;
+        SeqWareQueryLanguageParser.two_param_predicate_return two_param_predicate22 =null;
+
+        SeqWareQueryLanguageParser.three_param_predicate_return three_param_predicate23 =null;
 
 
 
@@ -578,26 +587,26 @@ public TreeAdaptor getTreeAdaptor() {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    pushFollow(FOLLOW_identifier_in_constraint167);
-                    identifier15=identifier();
+                    pushFollow(FOLLOW_identifier_in_constraint169);
+                    identifier16=identifier();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, identifier15.getTree());
+                    adaptor.addChild(root_0, identifier16.getTree());
 
-                    pushFollow(FOLLOW_comparison_in_constraint169);
-                    comparison16=comparison();
-
-                    state._fsp--;
-
-                    root_0 = (CommonTree)adaptor.becomeRoot(comparison16.getTree(), root_0);
-
-                    pushFollow(FOLLOW_constant_in_constraint172);
-                    constant17=constant();
+                    pushFollow(FOLLOW_comparison_in_constraint171);
+                    comparison17=comparison();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, constant17.getTree());
+                    root_0 = (CommonTree)adaptor.becomeRoot(comparison17.getTree(), root_0);
+
+                    pushFollow(FOLLOW_constant_in_constraint174);
+                    constant18=constant();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, constant18.getTree());
 
                     }
                     break;
@@ -607,26 +616,26 @@ public TreeAdaptor getTreeAdaptor() {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    pushFollow(FOLLOW_constant_in_constraint177);
-                    constant18=constant();
+                    pushFollow(FOLLOW_constant_in_constraint179);
+                    constant19=constant();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, constant18.getTree());
+                    adaptor.addChild(root_0, constant19.getTree());
 
-                    pushFollow(FOLLOW_comparison_in_constraint179);
-                    comparison19=comparison();
-
-                    state._fsp--;
-
-                    root_0 = (CommonTree)adaptor.becomeRoot(comparison19.getTree(), root_0);
-
-                    pushFollow(FOLLOW_identifier_in_constraint182);
-                    identifier20=identifier();
+                    pushFollow(FOLLOW_comparison_in_constraint181);
+                    comparison20=comparison();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, identifier20.getTree());
+                    root_0 = (CommonTree)adaptor.becomeRoot(comparison20.getTree(), root_0);
+
+                    pushFollow(FOLLOW_identifier_in_constraint184);
+                    identifier21=identifier();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, identifier21.getTree());
 
                     }
                     break;
@@ -636,12 +645,12 @@ public TreeAdaptor getTreeAdaptor() {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    pushFollow(FOLLOW_two_param_predicate_in_constraint187);
-                    two_param_predicate21=two_param_predicate();
+                    pushFollow(FOLLOW_two_param_predicate_in_constraint189);
+                    two_param_predicate22=two_param_predicate();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, two_param_predicate21.getTree());
+                    adaptor.addChild(root_0, two_param_predicate22.getTree());
 
                     }
                     break;
@@ -651,12 +660,12 @@ public TreeAdaptor getTreeAdaptor() {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    pushFollow(FOLLOW_three_param_predicate_in_constraint193);
-                    three_param_predicate22=three_param_predicate();
+                    pushFollow(FOLLOW_three_param_predicate_in_constraint195);
+                    three_param_predicate23=three_param_predicate();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, three_param_predicate22.getTree());
+                    adaptor.addChild(root_0, three_param_predicate23.getTree());
 
                     }
                     break;
@@ -699,11 +708,11 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token ID23=null;
-        SeqWareQueryLanguageParser.key_value_function_return key_value_function24 =null;
+        Token ID24=null;
+        SeqWareQueryLanguageParser.key_value_function_return key_value_function25 =null;
 
 
-        CommonTree ID23_tree=null;
+        CommonTree ID24_tree=null;
 
         try {
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:47:2: ( ID | key_value_function )
@@ -730,11 +739,11 @@ public TreeAdaptor getTreeAdaptor() {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    ID23=(Token)match(input,ID,FOLLOW_ID_in_identifier204); 
-                    ID23_tree = 
-                    (CommonTree)adaptor.create(ID23)
+                    ID24=(Token)match(input,ID,FOLLOW_ID_in_identifier206); 
+                    ID24_tree = 
+                    (CommonTree)adaptor.create(ID24)
                     ;
-                    adaptor.addChild(root_0, ID23_tree);
+                    adaptor.addChild(root_0, ID24_tree);
 
 
                     }
@@ -745,12 +754,12 @@ public TreeAdaptor getTreeAdaptor() {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    pushFollow(FOLLOW_key_value_function_in_identifier210);
-                    key_value_function24=key_value_function();
+                    pushFollow(FOLLOW_key_value_function_in_identifier212);
+                    key_value_function25=key_value_function();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, key_value_function24.getTree());
+                    adaptor.addChild(root_0, key_value_function25.getTree());
 
                     }
                     break;
@@ -793,9 +802,9 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token set25=null;
+        Token set26=null;
 
-        CommonTree set25_tree=null;
+        CommonTree set26_tree=null;
 
         try {
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:52:2: ( EQUALS | NOTEQUALS | LT | LTEQ | GT | GTEQ )
@@ -804,12 +813,12 @@ public TreeAdaptor getTreeAdaptor() {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            set25=(Token)input.LT(1);
+            set26=(Token)input.LT(1);
 
             if ( input.LA(1)==EQUALS||(input.LA(1) >= GT && input.LA(1) <= GTEQ)||(input.LA(1) >= LT && input.LA(1) <= LTEQ)||input.LA(1)==NOTEQUALS ) {
                 input.consume();
                 adaptor.addChild(root_0, 
-                (CommonTree)adaptor.create(set25)
+                (CommonTree)adaptor.create(set26)
                 );
                 state.errorRecovery=false;
             }
@@ -858,11 +867,11 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token NAMED_CONSTANT27=null;
-        SeqWareQueryLanguageParser.literal_return literal26 =null;
+        Token NAMED_CONSTANT28=null;
+        SeqWareQueryLanguageParser.literal_return literal27 =null;
 
 
-        CommonTree NAMED_CONSTANT27_tree=null;
+        CommonTree NAMED_CONSTANT28_tree=null;
 
         try {
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:56:2: ( literal | NAMED_CONSTANT )
@@ -889,12 +898,12 @@ public TreeAdaptor getTreeAdaptor() {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    pushFollow(FOLLOW_literal_in_constant253);
-                    literal26=literal();
+                    pushFollow(FOLLOW_literal_in_constant255);
+                    literal27=literal();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, literal26.getTree());
+                    adaptor.addChild(root_0, literal27.getTree());
 
                     }
                     break;
@@ -904,11 +913,11 @@ public TreeAdaptor getTreeAdaptor() {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    NAMED_CONSTANT27=(Token)match(input,NAMED_CONSTANT,FOLLOW_NAMED_CONSTANT_in_constant258); 
-                    NAMED_CONSTANT27_tree = 
-                    (CommonTree)adaptor.create(NAMED_CONSTANT27)
+                    NAMED_CONSTANT28=(Token)match(input,NAMED_CONSTANT,FOLLOW_NAMED_CONSTANT_in_constant260); 
+                    NAMED_CONSTANT28_tree = 
+                    (CommonTree)adaptor.create(NAMED_CONSTANT28)
                     ;
-                    adaptor.addChild(root_0, NAMED_CONSTANT27_tree);
+                    adaptor.addChild(root_0, NAMED_CONSTANT28_tree);
 
 
                     }
@@ -952,9 +961,9 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token set28=null;
+        Token set29=null;
 
-        CommonTree set28_tree=null;
+        CommonTree set29_tree=null;
 
         try {
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:61:2: ( INT | FLOAT | STRING )
@@ -963,12 +972,12 @@ public TreeAdaptor getTreeAdaptor() {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            set28=(Token)input.LT(1);
+            set29=(Token)input.LT(1);
 
             if ( input.LA(1)==FLOAT||input.LA(1)==INT||input.LA(1)==STRING ) {
                 input.consume();
                 adaptor.addChild(root_0, 
-                (CommonTree)adaptor.create(set28)
+                (CommonTree)adaptor.create(set29)
                 );
                 state.errorRecovery=false;
             }
@@ -1017,19 +1026,19 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token NAMED_FUNCTION29=null;
-        Token BRACKET_OPEN30=null;
-        Token char_literal32=null;
-        Token BRACKET_CLOSE34=null;
-        SeqWareQueryLanguageParser.literal_return literal31 =null;
+        Token NAMED_FUNCTION30=null;
+        Token BRACKET_OPEN31=null;
+        Token char_literal33=null;
+        Token BRACKET_CLOSE35=null;
+        SeqWareQueryLanguageParser.literal_return literal32 =null;
 
-        SeqWareQueryLanguageParser.literal_return literal33 =null;
+        SeqWareQueryLanguageParser.literal_return literal34 =null;
 
 
-        CommonTree NAMED_FUNCTION29_tree=null;
-        CommonTree BRACKET_OPEN30_tree=null;
-        CommonTree char_literal32_tree=null;
-        CommonTree BRACKET_CLOSE34_tree=null;
+        CommonTree NAMED_FUNCTION30_tree=null;
+        CommonTree BRACKET_OPEN31_tree=null;
+        CommonTree char_literal33_tree=null;
+        CommonTree BRACKET_CLOSE35_tree=null;
 
         try {
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:65:2: ( NAMED_FUNCTION ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !)
@@ -1038,37 +1047,37 @@ public TreeAdaptor getTreeAdaptor() {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            NAMED_FUNCTION29=(Token)match(input,NAMED_FUNCTION,FOLLOW_NAMED_FUNCTION_in_key_value_function289); 
-            NAMED_FUNCTION29_tree = 
-            (CommonTree)adaptor.create(NAMED_FUNCTION29)
+            NAMED_FUNCTION30=(Token)match(input,NAMED_FUNCTION,FOLLOW_NAMED_FUNCTION_in_key_value_function291); 
+            NAMED_FUNCTION30_tree = 
+            (CommonTree)adaptor.create(NAMED_FUNCTION30)
             ;
-            root_0 = (CommonTree)adaptor.becomeRoot(NAMED_FUNCTION29_tree, root_0);
+            root_0 = (CommonTree)adaptor.becomeRoot(NAMED_FUNCTION30_tree, root_0);
 
 
-            BRACKET_OPEN30=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_key_value_function292); 
+            BRACKET_OPEN31=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_key_value_function294); 
 
-            pushFollow(FOLLOW_literal_in_key_value_function295);
-            literal31=literal();
+            pushFollow(FOLLOW_literal_in_key_value_function297);
+            literal32=literal();
 
             state._fsp--;
 
-            adaptor.addChild(root_0, literal31.getTree());
+            adaptor.addChild(root_0, literal32.getTree());
 
-            char_literal32=(Token)match(input,26,FOLLOW_26_in_key_value_function297); 
-            char_literal32_tree = 
-            (CommonTree)adaptor.create(char_literal32)
+            char_literal33=(Token)match(input,26,FOLLOW_26_in_key_value_function299); 
+            char_literal33_tree = 
+            (CommonTree)adaptor.create(char_literal33)
             ;
-            adaptor.addChild(root_0, char_literal32_tree);
+            adaptor.addChild(root_0, char_literal33_tree);
 
 
-            pushFollow(FOLLOW_literal_in_key_value_function299);
-            literal33=literal();
+            pushFollow(FOLLOW_literal_in_key_value_function301);
+            literal34=literal();
 
             state._fsp--;
 
-            adaptor.addChild(root_0, literal33.getTree());
+            adaptor.addChild(root_0, literal34.getTree());
 
-            BRACKET_CLOSE34=(Token)match(input,BRACKET_CLOSE,FOLLOW_BRACKET_CLOSE_in_key_value_function301); 
+            BRACKET_CLOSE35=(Token)match(input,BRACKET_CLOSE,FOLLOW_BRACKET_CLOSE_in_key_value_function303); 
 
             }
 
@@ -1109,19 +1118,19 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token NAMED_TWO_PARAM_PREDICATE35=null;
-        Token BRACKET_OPEN36=null;
-        Token char_literal38=null;
-        Token BRACKET_CLOSE40=null;
-        SeqWareQueryLanguageParser.literal_return literal37 =null;
+        Token NAMED_TWO_PARAM_PREDICATE36=null;
+        Token BRACKET_OPEN37=null;
+        Token char_literal39=null;
+        Token BRACKET_CLOSE41=null;
+        SeqWareQueryLanguageParser.literal_return literal38 =null;
 
-        SeqWareQueryLanguageParser.literal_return literal39 =null;
+        SeqWareQueryLanguageParser.literal_return literal40 =null;
 
 
-        CommonTree NAMED_TWO_PARAM_PREDICATE35_tree=null;
-        CommonTree BRACKET_OPEN36_tree=null;
-        CommonTree char_literal38_tree=null;
-        CommonTree BRACKET_CLOSE40_tree=null;
+        CommonTree NAMED_TWO_PARAM_PREDICATE36_tree=null;
+        CommonTree BRACKET_OPEN37_tree=null;
+        CommonTree char_literal39_tree=null;
+        CommonTree BRACKET_CLOSE41_tree=null;
 
         try {
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:69:2: ( NAMED_TWO_PARAM_PREDICATE ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !)
@@ -1130,37 +1139,37 @@ public TreeAdaptor getTreeAdaptor() {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            NAMED_TWO_PARAM_PREDICATE35=(Token)match(input,NAMED_TWO_PARAM_PREDICATE,FOLLOW_NAMED_TWO_PARAM_PREDICATE_in_two_param_predicate313); 
-            NAMED_TWO_PARAM_PREDICATE35_tree = 
-            (CommonTree)adaptor.create(NAMED_TWO_PARAM_PREDICATE35)
+            NAMED_TWO_PARAM_PREDICATE36=(Token)match(input,NAMED_TWO_PARAM_PREDICATE,FOLLOW_NAMED_TWO_PARAM_PREDICATE_in_two_param_predicate315); 
+            NAMED_TWO_PARAM_PREDICATE36_tree = 
+            (CommonTree)adaptor.create(NAMED_TWO_PARAM_PREDICATE36)
             ;
-            root_0 = (CommonTree)adaptor.becomeRoot(NAMED_TWO_PARAM_PREDICATE35_tree, root_0);
+            root_0 = (CommonTree)adaptor.becomeRoot(NAMED_TWO_PARAM_PREDICATE36_tree, root_0);
 
 
-            BRACKET_OPEN36=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_two_param_predicate316); 
+            BRACKET_OPEN37=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_two_param_predicate318); 
 
-            pushFollow(FOLLOW_literal_in_two_param_predicate319);
-            literal37=literal();
+            pushFollow(FOLLOW_literal_in_two_param_predicate321);
+            literal38=literal();
 
             state._fsp--;
 
-            adaptor.addChild(root_0, literal37.getTree());
+            adaptor.addChild(root_0, literal38.getTree());
 
-            char_literal38=(Token)match(input,26,FOLLOW_26_in_two_param_predicate321); 
-            char_literal38_tree = 
-            (CommonTree)adaptor.create(char_literal38)
+            char_literal39=(Token)match(input,26,FOLLOW_26_in_two_param_predicate323); 
+            char_literal39_tree = 
+            (CommonTree)adaptor.create(char_literal39)
             ;
-            adaptor.addChild(root_0, char_literal38_tree);
+            adaptor.addChild(root_0, char_literal39_tree);
 
 
-            pushFollow(FOLLOW_literal_in_two_param_predicate323);
-            literal39=literal();
+            pushFollow(FOLLOW_literal_in_two_param_predicate325);
+            literal40=literal();
 
             state._fsp--;
 
-            adaptor.addChild(root_0, literal39.getTree());
+            adaptor.addChild(root_0, literal40.getTree());
 
-            BRACKET_CLOSE40=(Token)match(input,BRACKET_CLOSE,FOLLOW_BRACKET_CLOSE_in_two_param_predicate325); 
+            BRACKET_CLOSE41=(Token)match(input,BRACKET_CLOSE,FOLLOW_BRACKET_CLOSE_in_two_param_predicate327); 
 
             }
 
@@ -1201,23 +1210,23 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token NAMED_THREE_PARAM_PREDICATE41=null;
-        Token BRACKET_OPEN42=null;
-        Token char_literal44=null;
-        Token char_literal46=null;
-        Token BRACKET_CLOSE48=null;
-        SeqWareQueryLanguageParser.literal_return literal43 =null;
+        Token NAMED_THREE_PARAM_PREDICATE42=null;
+        Token BRACKET_OPEN43=null;
+        Token char_literal45=null;
+        Token char_literal47=null;
+        Token BRACKET_CLOSE49=null;
+        SeqWareQueryLanguageParser.literal_return literal44 =null;
 
-        SeqWareQueryLanguageParser.literal_return literal45 =null;
+        SeqWareQueryLanguageParser.literal_return literal46 =null;
 
-        SeqWareQueryLanguageParser.literal_return literal47 =null;
+        SeqWareQueryLanguageParser.literal_return literal48 =null;
 
 
-        CommonTree NAMED_THREE_PARAM_PREDICATE41_tree=null;
-        CommonTree BRACKET_OPEN42_tree=null;
-        CommonTree char_literal44_tree=null;
-        CommonTree char_literal46_tree=null;
-        CommonTree BRACKET_CLOSE48_tree=null;
+        CommonTree NAMED_THREE_PARAM_PREDICATE42_tree=null;
+        CommonTree BRACKET_OPEN43_tree=null;
+        CommonTree char_literal45_tree=null;
+        CommonTree char_literal47_tree=null;
+        CommonTree BRACKET_CLOSE49_tree=null;
 
         try {
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:73:2: ( NAMED_THREE_PARAM_PREDICATE ^ BRACKET_OPEN ! literal ',' literal ',' literal BRACKET_CLOSE !)
@@ -1226,51 +1235,51 @@ public TreeAdaptor getTreeAdaptor() {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            NAMED_THREE_PARAM_PREDICATE41=(Token)match(input,NAMED_THREE_PARAM_PREDICATE,FOLLOW_NAMED_THREE_PARAM_PREDICATE_in_three_param_predicate338); 
-            NAMED_THREE_PARAM_PREDICATE41_tree = 
-            (CommonTree)adaptor.create(NAMED_THREE_PARAM_PREDICATE41)
+            NAMED_THREE_PARAM_PREDICATE42=(Token)match(input,NAMED_THREE_PARAM_PREDICATE,FOLLOW_NAMED_THREE_PARAM_PREDICATE_in_three_param_predicate340); 
+            NAMED_THREE_PARAM_PREDICATE42_tree = 
+            (CommonTree)adaptor.create(NAMED_THREE_PARAM_PREDICATE42)
             ;
-            root_0 = (CommonTree)adaptor.becomeRoot(NAMED_THREE_PARAM_PREDICATE41_tree, root_0);
+            root_0 = (CommonTree)adaptor.becomeRoot(NAMED_THREE_PARAM_PREDICATE42_tree, root_0);
 
 
-            BRACKET_OPEN42=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_three_param_predicate341); 
+            BRACKET_OPEN43=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_three_param_predicate343); 
 
-            pushFollow(FOLLOW_literal_in_three_param_predicate344);
-            literal43=literal();
+            pushFollow(FOLLOW_literal_in_three_param_predicate346);
+            literal44=literal();
 
             state._fsp--;
 
-            adaptor.addChild(root_0, literal43.getTree());
+            adaptor.addChild(root_0, literal44.getTree());
 
-            char_literal44=(Token)match(input,26,FOLLOW_26_in_three_param_predicate346); 
-            char_literal44_tree = 
-            (CommonTree)adaptor.create(char_literal44)
+            char_literal45=(Token)match(input,26,FOLLOW_26_in_three_param_predicate348); 
+            char_literal45_tree = 
+            (CommonTree)adaptor.create(char_literal45)
             ;
-            adaptor.addChild(root_0, char_literal44_tree);
+            adaptor.addChild(root_0, char_literal45_tree);
 
 
-            pushFollow(FOLLOW_literal_in_three_param_predicate348);
-            literal45=literal();
+            pushFollow(FOLLOW_literal_in_three_param_predicate350);
+            literal46=literal();
 
             state._fsp--;
 
-            adaptor.addChild(root_0, literal45.getTree());
+            adaptor.addChild(root_0, literal46.getTree());
 
-            char_literal46=(Token)match(input,26,FOLLOW_26_in_three_param_predicate350); 
-            char_literal46_tree = 
-            (CommonTree)adaptor.create(char_literal46)
+            char_literal47=(Token)match(input,26,FOLLOW_26_in_three_param_predicate352); 
+            char_literal47_tree = 
+            (CommonTree)adaptor.create(char_literal47)
             ;
-            adaptor.addChild(root_0, char_literal46_tree);
+            adaptor.addChild(root_0, char_literal47_tree);
 
 
-            pushFollow(FOLLOW_literal_in_three_param_predicate352);
-            literal47=literal();
+            pushFollow(FOLLOW_literal_in_three_param_predicate354);
+            literal48=literal();
 
             state._fsp--;
 
-            adaptor.addChild(root_0, literal47.getTree());
+            adaptor.addChild(root_0, literal48.getTree());
 
-            BRACKET_CLOSE48=(Token)match(input,BRACKET_CLOSE,FOLLOW_BRACKET_CLOSE_in_three_param_predicate354); 
+            BRACKET_CLOSE49=(Token)match(input,BRACKET_CLOSE,FOLLOW_BRACKET_CLOSE_in_three_param_predicate356); 
 
             }
 
@@ -1311,9 +1320,9 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token set49=null;
+        Token set50=null;
 
-        CommonTree set49_tree=null;
+        CommonTree set50_tree=null;
 
         try {
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:77:2: ( COMMENT_EOL | COMMENT_INLINE )
@@ -1322,12 +1331,12 @@ public TreeAdaptor getTreeAdaptor() {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            set49=(Token)input.LT(1);
+            set50=(Token)input.LT(1);
 
             if ( (input.LA(1) >= COMMENT_EOL && input.LA(1) <= COMMENT_INLINE) ) {
                 input.consume();
                 adaptor.addChild(root_0, 
-                (CommonTree)adaptor.create(set49)
+                (CommonTree)adaptor.create(set50)
                 );
                 state.errorRecovery=false;
             }
@@ -1365,51 +1374,52 @@ public TreeAdaptor getTreeAdaptor() {
 
  
 
-    public static final BitSet FOLLOW_low_precedence_constraint_in_query75 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_high_precedence_constraint_in_low_precedence_constraint88 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_OR_in_low_precedence_constraint92 = new BitSet(new long[]{0x00000000013E65C0L});
-    public static final BitSet FOLLOW_high_precedence_constraint_in_low_precedence_constraint95 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_nested_constraint_in_high_precedence_constraint110 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_AND_in_high_precedence_constraint114 = new BitSet(new long[]{0x00000000013E65C0L});
-    public static final BitSet FOLLOW_nested_constraint_in_high_precedence_constraint117 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_BRACKET_OPEN_in_nested_constraint131 = new BitSet(new long[]{0x00000000013E65C0L});
-    public static final BitSet FOLLOW_low_precedence_constraint_in_nested_constraint134 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_BRACKET_CLOSE_in_nested_constraint136 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_constraint_in_nested_constraint142 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_comment_in_nested_constraint147 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NOT_in_nested_constraint153 = new BitSet(new long[]{0x00000000013E65C0L});
-    public static final BitSet FOLLOW_nested_constraint_in_nested_constraint156 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_identifier_in_constraint167 = new BitSet(new long[]{0x0000000000419A00L});
-    public static final BitSet FOLLOW_comparison_in_constraint169 = new BitSet(new long[]{0x0000000001024400L});
-    public static final BitSet FOLLOW_constant_in_constraint172 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_constant_in_constraint177 = new BitSet(new long[]{0x0000000000419A00L});
-    public static final BitSet FOLLOW_comparison_in_constraint179 = new BitSet(new long[]{0x0000000000042000L});
-    public static final BitSet FOLLOW_identifier_in_constraint182 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_two_param_predicate_in_constraint187 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_three_param_predicate_in_constraint193 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ID_in_identifier204 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_key_value_function_in_identifier210 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_literal_in_constant253 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NAMED_CONSTANT_in_constant258 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NAMED_FUNCTION_in_key_value_function289 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_BRACKET_OPEN_in_key_value_function292 = new BitSet(new long[]{0x0000000001004400L});
-    public static final BitSet FOLLOW_literal_in_key_value_function295 = new BitSet(new long[]{0x0000000004000000L});
-    public static final BitSet FOLLOW_26_in_key_value_function297 = new BitSet(new long[]{0x0000000001004400L});
-    public static final BitSet FOLLOW_literal_in_key_value_function299 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_BRACKET_CLOSE_in_key_value_function301 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NAMED_TWO_PARAM_PREDICATE_in_two_param_predicate313 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_BRACKET_OPEN_in_two_param_predicate316 = new BitSet(new long[]{0x0000000001004400L});
-    public static final BitSet FOLLOW_literal_in_two_param_predicate319 = new BitSet(new long[]{0x0000000004000000L});
-    public static final BitSet FOLLOW_26_in_two_param_predicate321 = new BitSet(new long[]{0x0000000001004400L});
-    public static final BitSet FOLLOW_literal_in_two_param_predicate323 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_BRACKET_CLOSE_in_two_param_predicate325 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NAMED_THREE_PARAM_PREDICATE_in_three_param_predicate338 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_BRACKET_OPEN_in_three_param_predicate341 = new BitSet(new long[]{0x0000000001004400L});
-    public static final BitSet FOLLOW_literal_in_three_param_predicate344 = new BitSet(new long[]{0x0000000004000000L});
-    public static final BitSet FOLLOW_26_in_three_param_predicate346 = new BitSet(new long[]{0x0000000001004400L});
-    public static final BitSet FOLLOW_literal_in_three_param_predicate348 = new BitSet(new long[]{0x0000000004000000L});
-    public static final BitSet FOLLOW_26_in_three_param_predicate350 = new BitSet(new long[]{0x0000000001004400L});
-    public static final BitSet FOLLOW_literal_in_three_param_predicate352 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_BRACKET_CLOSE_in_three_param_predicate354 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_low_precedence_constraint_in_query75 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_query78 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_high_precedence_constraint_in_low_precedence_constraint90 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_OR_in_low_precedence_constraint94 = new BitSet(new long[]{0x00000000013E65C0L});
+    public static final BitSet FOLLOW_high_precedence_constraint_in_low_precedence_constraint97 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_nested_constraint_in_high_precedence_constraint112 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_AND_in_high_precedence_constraint116 = new BitSet(new long[]{0x00000000013E65C0L});
+    public static final BitSet FOLLOW_nested_constraint_in_high_precedence_constraint119 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_BRACKET_OPEN_in_nested_constraint133 = new BitSet(new long[]{0x00000000013E65C0L});
+    public static final BitSet FOLLOW_low_precedence_constraint_in_nested_constraint136 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_BRACKET_CLOSE_in_nested_constraint138 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_constraint_in_nested_constraint144 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_comment_in_nested_constraint149 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NOT_in_nested_constraint155 = new BitSet(new long[]{0x00000000013E65C0L});
+    public static final BitSet FOLLOW_nested_constraint_in_nested_constraint158 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_identifier_in_constraint169 = new BitSet(new long[]{0x0000000000419A00L});
+    public static final BitSet FOLLOW_comparison_in_constraint171 = new BitSet(new long[]{0x0000000001024400L});
+    public static final BitSet FOLLOW_constant_in_constraint174 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_constant_in_constraint179 = new BitSet(new long[]{0x0000000000419A00L});
+    public static final BitSet FOLLOW_comparison_in_constraint181 = new BitSet(new long[]{0x0000000000042000L});
+    public static final BitSet FOLLOW_identifier_in_constraint184 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_two_param_predicate_in_constraint189 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_three_param_predicate_in_constraint195 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ID_in_identifier206 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_key_value_function_in_identifier212 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_literal_in_constant255 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NAMED_CONSTANT_in_constant260 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NAMED_FUNCTION_in_key_value_function291 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_BRACKET_OPEN_in_key_value_function294 = new BitSet(new long[]{0x0000000001004400L});
+    public static final BitSet FOLLOW_literal_in_key_value_function297 = new BitSet(new long[]{0x0000000004000000L});
+    public static final BitSet FOLLOW_26_in_key_value_function299 = new BitSet(new long[]{0x0000000001004400L});
+    public static final BitSet FOLLOW_literal_in_key_value_function301 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_BRACKET_CLOSE_in_key_value_function303 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NAMED_TWO_PARAM_PREDICATE_in_two_param_predicate315 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_BRACKET_OPEN_in_two_param_predicate318 = new BitSet(new long[]{0x0000000001004400L});
+    public static final BitSet FOLLOW_literal_in_two_param_predicate321 = new BitSet(new long[]{0x0000000004000000L});
+    public static final BitSet FOLLOW_26_in_two_param_predicate323 = new BitSet(new long[]{0x0000000001004400L});
+    public static final BitSet FOLLOW_literal_in_two_param_predicate325 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_BRACKET_CLOSE_in_two_param_predicate327 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NAMED_THREE_PARAM_PREDICATE_in_three_param_predicate340 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_BRACKET_OPEN_in_three_param_predicate343 = new BitSet(new long[]{0x0000000001004400L});
+    public static final BitSet FOLLOW_literal_in_three_param_predicate346 = new BitSet(new long[]{0x0000000004000000L});
+    public static final BitSet FOLLOW_26_in_three_param_predicate348 = new BitSet(new long[]{0x0000000001004400L});
+    public static final BitSet FOLLOW_literal_in_three_param_predicate350 = new BitSet(new long[]{0x0000000004000000L});
+    public static final BitSet FOLLOW_26_in_three_param_predicate352 = new BitSet(new long[]{0x0000000001004400L});
+    public static final BitSet FOLLOW_literal_in_three_param_predicate354 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_BRACKET_CLOSE_in_three_param_predicate356 = new BitSet(new long[]{0x0000000000000002L});
 
 }
