@@ -2,6 +2,7 @@ package com.github.seqware.queryengine.kernel;
 
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.Tag;
+import com.github.seqware.queryengine.system.exporters.QueryVCFDumper;
 import java.io.Serializable;
 import java.util.*;
 import org.antlr.runtime.ANTLRStringStream;
@@ -9,6 +10,7 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
+import org.apache.log4j.Logger;
 
 /**
  * A stack of arguments and operations in Reverse Polish Notation (RPN,
@@ -45,24 +47,28 @@ public class RPNStack implements Serializable {
          */
         EQUAL,
         /**
-         * Takes two numeric arguments and compares whether one is strictly lesser than.
+         * Takes two numeric arguments and compares whether one is strictly
+         * lesser than.
          */
         LESSERTHAN,
         /**
-         * Takes two numeric arguments and compares whether one is lesser than or equal to.
+         * Takes two numeric arguments and compares whether one is lesser than
+         * or equal to.
          */
         LESSERTHANOREQ,
         /**
-         * Takes two numeric arguments and compares whether one is strictly greater than.
+         * Takes two numeric arguments and compares whether one is strictly
+         * greater than.
          */
         GREATERTHAN,
         /**
-         * Takes two numeric arguments and compares whether one is strictly greater than or equal to.
+         * Takes two numeric arguments and compares whether one is strictly
+         * greater than or equal to.
          */
         GREATERTHANOREQ
     }
 
-    public static class Constant {
+    public static class Constant implements Serializable {
 
         private final Object constant;
 
@@ -130,6 +136,28 @@ public class RPNStack implements Serializable {
 
         public String getTagSetRowKey() {
             return tagSetRowKey;
+        }
+    }
+
+    /**
+     * Represents tags whose value is retrieved
+     */
+    public static class TagValue extends Parameter {
+
+        private String tagSetRowKey;
+        private Object value;
+
+        public TagValue(String tagSetRowKey, String key) {
+            super(key);
+            this.tagSetRowKey = tagSetRowKey;
+        }
+
+        public String getTagSetRowKey() {
+            return tagSetRowKey;
+        }
+
+        public Object getValue() {
+            return this.value;
         }
     }
 
@@ -301,23 +329,39 @@ public class RPNStack implements Serializable {
         if (a instanceof Boolean && b instanceof Boolean) {
             return ((Boolean) a) && ((Boolean) b);
         }
-
         return false;
     }
-    
+
     /**
      * Ugly and inefficient, just testing this out to get the tests to compile
      * Carries out a numeric GREATERTHAN.
      */
-    private boolean lesser(Object a, Object b, boolean allowEq) {   
+    private boolean lesser(Object a, Object b, boolean allowEq) {
+        // if one of the values in a comparison is null, return false
+        if (a == null || b == null){
+            return false;
+        }
+        
         if (a instanceof Long || b instanceof Long) {
-            if (allowEq){
+            if (allowEq) {
                 return (Long.valueOf(a.toString())).longValue() <= (Long.valueOf(b.toString())).longValue();
             }
             return (Long.valueOf(a.toString())).longValue() < (Long.valueOf(b.toString())).longValue();
         }
+        if (a instanceof Float || b instanceof Float) {
+            if (allowEq) {
+                return (Float.valueOf(a.toString())).floatValue() <= (Float.valueOf(b.toString())).floatValue();
+            }
+            return (Float.valueOf(a.toString())).floatValue() < (Float.valueOf(b.toString())).floatValue();
+        }
+        if (a instanceof Integer || b instanceof Integer) {
+            if (allowEq) {
+                return (Integer.valueOf(a.toString())).intValue() <= (Integer.valueOf(b.toString())).intValue();
+            }
+            return (Integer.valueOf(a.toString())).intValue() < (Integer.valueOf(b.toString())).intValue();
+        }
         if (a instanceof Double || b instanceof Double) {
-            if (allowEq){
+            if (allowEq) {
                 return (Double.valueOf(a.toString())).doubleValue() <= (Double.valueOf(b.toString())).doubleValue();
             }
             return (Double.valueOf(a.toString())).doubleValue() < (Double.valueOf(b.toString())).doubleValue();
@@ -366,6 +410,7 @@ public class RPNStack implements Serializable {
      * @return An RPNStack that represents the query.
      */
     public static RPNStack compileQuery(String query) throws RecognitionException {
+        Logger.getLogger(RPNStack.class.getName()).info("Compile query: " + query);
         SeqWareQueryLanguageLexer lexer = new SeqWareQueryLanguageLexer(new ANTLRStringStream(query));
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         SeqWareQueryLanguageParser parser = new SeqWareQueryLanguageParser(tokenStream);
@@ -410,7 +455,7 @@ public class RPNStack implements Serializable {
                 arguments.add(Operation.EQUAL);
                 arguments.add(Operation.NOT);
                 break;
-            
+
             // singular negation
             case SeqWareQueryLanguageParser.NOT:
                 arguments.add(Operation.NOT);
@@ -445,8 +490,20 @@ public class RPNStack implements Serializable {
                 arguments.add(new FeatureAttribute(text));
                 break;
 
+            case SeqWareQueryLanguageParser.NAMED_FUNCTION: {
+                Constant functionKey = (Constant) arguments.remove(arguments.size() - 1);
+                Constant functionTagSet = (Constant) arguments.remove(arguments.size() - 1);
+
+                if (text.equals("tagValue")) {
+                    arguments.add(new TagValue((String) functionTagSet.getValue(), (String) functionKey.getValue()));
+                } else {
+                    throw new IllegalArgumentException("A two parameter function call of the following name is not known: " + text);
+                }
+            }
+            break;
+
             // Functions:
-            case SeqWareQueryLanguageParser.NAMED_TWO_PARAM_FUNCTION: {
+            case SeqWareQueryLanguageParser.NAMED_TWO_PARAM_PREDICATE: {
                 Constant functionKey = (Constant) arguments.remove(arguments.size() - 1);
                 Constant functionTagSet = (Constant) arguments.remove(arguments.size() - 1);
 
@@ -457,23 +514,22 @@ public class RPNStack implements Serializable {
                     // TODO I don't know how to get the row key.
                     // arguments.add(new TagHierarchicalOccurrence(Compression.getSequenceOntologyAccessionSurrogate((String)functionArgument)), ...);
                 } else {
-                    throw new IllegalArgumentException("A two parameter function call of the following name is not known: " + text);
+                    throw new IllegalArgumentException("A two parameter predicate call of the following name is not known: " + text);
                 }
             }
             break;
 
             // Functions:
-            case SeqWareQueryLanguageParser.NAMED_THREE_PARAM_FUNCTION: {
-                Object functionValue = arguments.remove(arguments.size() - 1);
-                Object functionKey = arguments.remove(arguments.size() - 1);
-                Object functionTagSet = arguments.remove(arguments.size() - 1);
+            case SeqWareQueryLanguageParser.NAMED_THREE_PARAM_PREDICATE: {
+                Constant functionValue = (Constant) arguments.remove(arguments.size() - 1);
+                Constant functionKey = (Constant) arguments.remove(arguments.size() - 1);
+                Constant functionTagSet = (Constant) arguments.remove(arguments.size() - 1);
 
                 if (text.equals("tagValuePresence")) {
-                    arguments.add(new TagValuePresence((String)functionTagSet, (String)functionKey, Tag.ValueType.STRING, functionValue) );
-                    // TODO I don't know the status quo on tag set identification and representation.
-                    // arguments.add(new TagValuePresence(...));
+                    // TODO: we can ignore type for now until we measure efficiency loss
+                    arguments.add(new TagValuePresence((String) functionTagSet.getValue(), (String) functionKey.getValue(), null, functionValue.getValue()));
                 } else {
-                    throw new IllegalArgumentException("A three parameter function call of the following name is not known: " + text);
+                    throw new IllegalArgumentException("A three parameter predicate call of the following name is not known: " + text);
                 }
             }
             break;
