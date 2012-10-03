@@ -133,8 +133,9 @@
         <module>seqware-webservice-dto</module>
         <module>seqware-webservice</module>
         <module>seqware-portal</module>
-	<module>seqware-archetype-module</module>
-        <module>seqware-archetype-workflow</module>
+	<module>seqware-archetypes/seqware-archetype-module</module>
+        <module>seqware-archetypes/seqware-archetype-workflow</module>
+        <module>seqware-archetypes/seqware-archetype-simple-workflow</module>
         <module>seqware-distribution</module>
     </modules>
 
