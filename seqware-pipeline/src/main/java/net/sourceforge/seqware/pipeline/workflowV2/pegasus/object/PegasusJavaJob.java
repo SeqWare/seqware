@@ -1,5 +1,7 @@
 package net.sourceforge.seqware.pipeline.workflowV2.pegasus.object;
 
+import java.io.File;
+
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
 
 public class PegasusJavaJob extends PegasusJobObject {
@@ -8,4 +10,18 @@ public class PegasusJavaJob extends PegasusJobObject {
 		super(job, basedir);
 	}
 
+	@Override
+	protected String buildCommandString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("-Xmx").append(this.jobObj.getCommand().getMaxMemory()).append("\n");
+		sb.append("-classpath ").append(basedir).append(File.separator).append("lib");
+		if(this.jobObj.getClassPath().isEmpty() == false) {
+			sb.append(":"+basedir+File.separator+this.jobObj.getClassPath());
+		}
+		sb.append("\n");
+		if(this.jobObj.getMainClass().isEmpty() == false) {
+			sb.append(this.jobObj.getMainClass()).append("\n");
+		}
+		return sb.toString();
+	}
 }

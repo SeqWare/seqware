@@ -8,7 +8,7 @@ public class Requirement {
 	public enum Type {
 		JOBTYPE,
 		MAXMEMORY,
-		THREADS,
+		COUNT,
 		QUEUE
 	}
 	
