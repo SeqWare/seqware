@@ -18,7 +18,7 @@ package com.github.seqware.queryengine.kernel;
 @parser::namespace { SeqWareQueryLanguage }
 
 query
-	:	low_precedence_constraint^
+	:	low_precedence_constraint^ EOF
 	;
 
 low_precedence_constraint

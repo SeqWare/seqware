@@ -338,29 +338,35 @@ public class RPNStack implements Serializable {
      */
     private boolean lesser(Object a, Object b, boolean allowEq) {
         // if one of the values in a comparison is null, return false
-        if (a == null || b == null){
+        if (a == null || b == null) {
             return false;
         }
         
-        if (a instanceof Long || b instanceof Long) {
+// cannot enforce this yet  
+//        // throw an error if both operands are not null, but do not match types
+//        if (a != null && b != null && !a.getClass().equals(b.getClass())){
+//            throw new IllegalArgumentException("Attempted to operate on two clashing objects " + a.toString() + " and " + b.toString());
+//        }
+
+        if (a instanceof Long) {
             if (allowEq) {
                 return (Long.valueOf(a.toString())).longValue() <= (Long.valueOf(b.toString())).longValue();
             }
             return (Long.valueOf(a.toString())).longValue() < (Long.valueOf(b.toString())).longValue();
         }
-        if (a instanceof Float || b instanceof Float) {
+        if (a instanceof Float) {
             if (allowEq) {
                 return (Float.valueOf(a.toString())).floatValue() <= (Float.valueOf(b.toString())).floatValue();
             }
             return (Float.valueOf(a.toString())).floatValue() < (Float.valueOf(b.toString())).floatValue();
         }
-        if (a instanceof Integer || b instanceof Integer) {
+        if (a instanceof Integer) {
             if (allowEq) {
                 return (Integer.valueOf(a.toString())).intValue() <= (Integer.valueOf(b.toString())).intValue();
             }
             return (Integer.valueOf(a.toString())).intValue() < (Integer.valueOf(b.toString())).intValue();
         }
-        if (a instanceof Double || b instanceof Double) {
+        if (a instanceof Double) {
             if (allowEq) {
                 return (Double.valueOf(a.toString())).doubleValue() <= (Double.valueOf(b.toString())).doubleValue();
             }
@@ -411,16 +417,23 @@ public class RPNStack implements Serializable {
      */
     public static RPNStack compileQuery(String query) throws RecognitionException {
         Logger.getLogger(RPNStack.class.getName()).info("Compile query: " + query);
-        SeqWareQueryLanguageLexer lexer = new SeqWareQueryLanguageLexer(new ANTLRStringStream(query));
-        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-        SeqWareQueryLanguageParser parser = new SeqWareQueryLanguageParser(tokenStream);
-        SeqWareQueryLanguageParser.query_return parsedInput = parser.query();
-        Tree tree = (CommonTree) parsedInput.getTree();
+        try {
+            SeqWareQueryLanguageLexerWrapper lexer = new SeqWareQueryLanguageLexerWrapper(new ANTLRStringStream(query));
 
-        List<Object> arguments = new ArrayList<Object>();
-        abstractSyntaxTreeTraversal(tree, arguments);
+            CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+            SeqWareQueryLanguageParserWrapper parser = new SeqWareQueryLanguageParserWrapper(tokenStream);
+            SeqWareQueryLanguageParser.query_return parsedInput = parser.query();
+            Tree tree = (CommonTree) parsedInput.getTree();
 
-        return new RPNStack(arguments);
+            List<Object> arguments = new ArrayList<Object>();
+            abstractSyntaxTreeTraversal(tree, arguments);
+
+            return new RPNStack(arguments);
+        } catch (IllegalArgumentException e) {
+            // hack to retrieve recognition exception
+            RecognitionException re = (RecognitionException) e.getCause();
+            throw re;
+        }
     }
 
     /**
