@@ -25,8 +25,12 @@ and most of the other sub-projects have this as a dependency.
 PREREQUISITES
 ====================
 
-SeqWare requires Oracle JDK 1.6. We use version 1.6.0_31.
-An example of instructions on how to update your Linux installation can be found [here](https://ccp.cloudera.com/display/CDH4DOC/Before+You+Install+CDH4+on+a+Single+Node#BeforeYouInstallCDH4onaSingleNode-InstalltheOracleJavaDevelopmentKit).
+SeqWare requires Oracle JDK 1.6 or greater, we primarily write and test with JDK 1.6.x.
+An example of instructions on how to update your Linux installation can be found [here](https://ccp.cloudera.com/display/CDH4DOC/Before+You+Install+CDH4+on+a+Single+Node#BeforeYouInstallCDH4onaSingleNode-InstalltheOracleJavaDevelopmentKit). You will need to use the method appropriate to your distribution to install this.
+
+In addition to Java we also require PostgreSQL to be installed, version 8.4 is what we use but newer versions are probably supported.  You need to use the method appropriate to your distribution to install this. For example, on a recent Debian-based system you would do:
+
+  sudo apt-get install postgresql-8.4
 
 PREREQUISITES ON Mac OS
 -----------------------
