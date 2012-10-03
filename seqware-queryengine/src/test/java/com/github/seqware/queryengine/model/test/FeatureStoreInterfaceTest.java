@@ -26,6 +26,9 @@ public class FeatureStoreInterfaceTest {
     protected static FeatureSet bSet;
     protected static Feature a1, a2, a3;
     private static TagSet tagSet;
+    public static final String SOSEQUENCE_VARIANTFUNCTIONAL_VARIANT = "SO::sequence_variant::functional_variant::transcript_function_variant::transcript_processing_variant";
+    public static final String SOSEQUENCE_VARIANTFUNCTIONAL_VARIANT2 = "SO::sequence_variant::functional_variant::transcript_function_variant::transcript_stability_variant";
+    public static final String SOSEQUENCE_VARIANTSTRUCTURAL_VARIANT = "SO::sequence_variant::structural_variant::copy_number_change";
 
     @BeforeClass
     public static void setupTests() {
@@ -69,9 +72,9 @@ public class FeatureStoreInterfaceTest {
         tagset.add(termTag, idTag, contigTag);
 
         // Heavy tags, where the tag key itself represents information:
-        Tag transcriptProcessingVariant = mManager.buildTag().setKey("SO::sequence_variant::functional_variant::transcript_function_variant::transcript_processing_variant").build();
-        Tag transcriptStabilityVariant = mManager.buildTag().setKey("SO::sequence_variant::functional_variant::transcript_function_variant::transcript_stability_variant").build();
-        Tag copyNumberChange = mManager.buildTag().setKey("SO::sequence_variant::structural_variant::copy_number_change").build();
+        Tag transcriptProcessingVariant = mManager.buildTag().setKey(SOSEQUENCE_VARIANTFUNCTIONAL_VARIANT).build();
+        Tag transcriptStabilityVariant = mManager.buildTag().setKey(SOSEQUENCE_VARIANTFUNCTIONAL_VARIANT2).build();
+        Tag copyNumberChange = mManager.buildTag().setKey(SOSEQUENCE_VARIANTSTRUCTURAL_VARIANT).build();
 
         tagset.add(transcriptProcessingVariant, transcriptStabilityVariant, copyNumberChange);
         

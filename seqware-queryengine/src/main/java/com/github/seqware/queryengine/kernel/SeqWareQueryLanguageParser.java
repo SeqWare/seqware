@@ -1,4 +1,4 @@
-// $ANTLR 3.4 /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g 2012-10-01 16:06:16
+// $ANTLR 3.4 /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g 2012-10-03 11:46:11
 
 package com.github.seqware.queryengine.kernel;
 
@@ -14,11 +14,11 @@ import org.antlr.runtime.tree.*;
 @SuppressWarnings({"all", "warnings", "unchecked"})
 public class SeqWareQueryLanguageParser extends Parser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "AND", "BRACKET_CLOSE", "BRACKET_OPEN", "COMMENT_EOL", "COMMENT_INLINE", "EQUALS", "FLOAT", "GT", "GTEQ", "ID", "INT", "LT", "LTEQ", "NAMED_CONSTANT", "NAMED_THREE_PARAM_FUNCTION", "NAMED_TWO_PARAM_FUNCTION", "NOTEQUALS", "OR", "STRING", "','"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "AND", "BRACKET_CLOSE", "BRACKET_OPEN", "COMMENT_EOL", "COMMENT_INLINE", "EQUALS", "FLOAT", "GT", "GTEQ", "ID", "INT", "LT", "LTEQ", "NAMED_CONSTANT", "NAMED_THREE_PARAM_FUNCTION", "NAMED_TWO_PARAM_FUNCTION", "NOT", "NOTEQUALS", "OR", "STRING", "','"
     };
 
     public static final int EOF=-1;
-    public static final int T__23=23;
+    public static final int T__24=24;
     public static final int AND=4;
     public static final int BRACKET_CLOSE=5;
     public static final int BRACKET_OPEN=6;
@@ -35,9 +35,10 @@ public class SeqWareQueryLanguageParser extends Parser {
     public static final int NAMED_CONSTANT=17;
     public static final int NAMED_THREE_PARAM_FUNCTION=18;
     public static final int NAMED_TWO_PARAM_FUNCTION=19;
-    public static final int NOTEQUALS=20;
-    public static final int OR=21;
-    public static final int STRING=22;
+    public static final int NOT=20;
+    public static final int NOTEQUALS=21;
+    public static final int OR=22;
+    public static final int STRING=23;
 
     // delegates
     public Parser[] getDelegates() {
@@ -340,7 +341,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "nested_constraint"
-    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:32:1: nested_constraint : ( BRACKET_OPEN ! low_precedence_constraint BRACKET_CLOSE !| constraint | comment !);
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:32:1: nested_constraint : ( BRACKET_OPEN ! low_precedence_constraint BRACKET_CLOSE !| constraint | comment !| NOT ^ nested_constraint );
     public final SeqWareQueryLanguageParser.nested_constraint_return nested_constraint() throws RecognitionException {
         SeqWareQueryLanguageParser.nested_constraint_return retval = new SeqWareQueryLanguageParser.nested_constraint_return();
         retval.start = input.LT(1);
@@ -350,19 +351,23 @@ public TreeAdaptor getTreeAdaptor() {
 
         Token BRACKET_OPEN8=null;
         Token BRACKET_CLOSE10=null;
+        Token NOT13=null;
         SeqWareQueryLanguageParser.low_precedence_constraint_return low_precedence_constraint9 =null;
 
         SeqWareQueryLanguageParser.constraint_return constraint11 =null;
 
         SeqWareQueryLanguageParser.comment_return comment12 =null;
 
+        SeqWareQueryLanguageParser.nested_constraint_return nested_constraint14 =null;
+
 
         CommonTree BRACKET_OPEN8_tree=null;
         CommonTree BRACKET_CLOSE10_tree=null;
+        CommonTree NOT13_tree=null;
 
         try {
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:33:2: ( BRACKET_OPEN ! low_precedence_constraint BRACKET_CLOSE !| constraint | comment !)
-            int alt3=3;
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:33:2: ( BRACKET_OPEN ! low_precedence_constraint BRACKET_CLOSE !| constraint | comment !| NOT ^ nested_constraint )
+            int alt3=4;
             switch ( input.LA(1) ) {
             case BRACKET_OPEN:
                 {
@@ -384,6 +389,11 @@ public TreeAdaptor getTreeAdaptor() {
             case COMMENT_INLINE:
                 {
                 alt3=3;
+                }
+                break;
+            case NOT:
+                {
+                alt3=4;
                 }
                 break;
             default:
@@ -443,6 +453,28 @@ public TreeAdaptor getTreeAdaptor() {
 
                     }
                     break;
+                case 4 :
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:36:4: NOT ^ nested_constraint
+                    {
+                    root_0 = (CommonTree)adaptor.nil();
+
+
+                    NOT13=(Token)match(input,NOT,FOLLOW_NOT_in_nested_constraint153); 
+                    NOT13_tree = 
+                    (CommonTree)adaptor.create(NOT13)
+                    ;
+                    root_0 = (CommonTree)adaptor.becomeRoot(NOT13_tree, root_0);
+
+
+                    pushFollow(FOLLOW_nested_constraint_in_nested_constraint156);
+                    nested_constraint14=nested_constraint();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, nested_constraint14.getTree());
+
+                    }
+                    break;
 
             }
             retval.stop = input.LT(-1);
@@ -474,7 +506,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "constraint"
-    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:38:1: constraint : ( identifier comparison ^ constant | constant comparison ^ identifier | two_param_function | three_param_function );
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:39:1: constraint : ( identifier comparison ^ constant | constant comparison ^ identifier | two_param_function | three_param_function );
     public final SeqWareQueryLanguageParser.constraint_return constraint() throws RecognitionException {
         SeqWareQueryLanguageParser.constraint_return retval = new SeqWareQueryLanguageParser.constraint_return();
         retval.start = input.LT(1);
@@ -482,26 +514,26 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        SeqWareQueryLanguageParser.identifier_return identifier13 =null;
+        SeqWareQueryLanguageParser.identifier_return identifier15 =null;
 
-        SeqWareQueryLanguageParser.comparison_return comparison14 =null;
+        SeqWareQueryLanguageParser.comparison_return comparison16 =null;
 
-        SeqWareQueryLanguageParser.constant_return constant15 =null;
+        SeqWareQueryLanguageParser.constant_return constant17 =null;
 
-        SeqWareQueryLanguageParser.constant_return constant16 =null;
+        SeqWareQueryLanguageParser.constant_return constant18 =null;
 
-        SeqWareQueryLanguageParser.comparison_return comparison17 =null;
+        SeqWareQueryLanguageParser.comparison_return comparison19 =null;
 
-        SeqWareQueryLanguageParser.identifier_return identifier18 =null;
+        SeqWareQueryLanguageParser.identifier_return identifier20 =null;
 
-        SeqWareQueryLanguageParser.two_param_function_return two_param_function19 =null;
+        SeqWareQueryLanguageParser.two_param_function_return two_param_function21 =null;
 
-        SeqWareQueryLanguageParser.three_param_function_return three_param_function20 =null;
+        SeqWareQueryLanguageParser.three_param_function_return three_param_function22 =null;
 
 
 
         try {
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:39:2: ( identifier comparison ^ constant | constant comparison ^ identifier | two_param_function | three_param_function )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:40:2: ( identifier comparison ^ constant | constant comparison ^ identifier | two_param_function | three_param_function )
             int alt4=4;
             switch ( input.LA(1) ) {
             case ID:
@@ -537,90 +569,90 @@ public TreeAdaptor getTreeAdaptor() {
 
             switch (alt4) {
                 case 1 :
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:39:4: identifier comparison ^ constant
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:40:4: identifier comparison ^ constant
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    pushFollow(FOLLOW_identifier_in_constraint159);
-                    identifier13=identifier();
+                    pushFollow(FOLLOW_identifier_in_constraint167);
+                    identifier15=identifier();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, identifier13.getTree());
+                    adaptor.addChild(root_0, identifier15.getTree());
 
-                    pushFollow(FOLLOW_comparison_in_constraint161);
-                    comparison14=comparison();
-
-                    state._fsp--;
-
-                    root_0 = (CommonTree)adaptor.becomeRoot(comparison14.getTree(), root_0);
-
-                    pushFollow(FOLLOW_constant_in_constraint164);
-                    constant15=constant();
+                    pushFollow(FOLLOW_comparison_in_constraint169);
+                    comparison16=comparison();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, constant15.getTree());
+                    root_0 = (CommonTree)adaptor.becomeRoot(comparison16.getTree(), root_0);
+
+                    pushFollow(FOLLOW_constant_in_constraint172);
+                    constant17=constant();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, constant17.getTree());
 
                     }
                     break;
                 case 2 :
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:40:4: constant comparison ^ identifier
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:41:4: constant comparison ^ identifier
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    pushFollow(FOLLOW_constant_in_constraint169);
-                    constant16=constant();
+                    pushFollow(FOLLOW_constant_in_constraint177);
+                    constant18=constant();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, constant16.getTree());
+                    adaptor.addChild(root_0, constant18.getTree());
 
-                    pushFollow(FOLLOW_comparison_in_constraint171);
-                    comparison17=comparison();
-
-                    state._fsp--;
-
-                    root_0 = (CommonTree)adaptor.becomeRoot(comparison17.getTree(), root_0);
-
-                    pushFollow(FOLLOW_identifier_in_constraint174);
-                    identifier18=identifier();
+                    pushFollow(FOLLOW_comparison_in_constraint179);
+                    comparison19=comparison();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, identifier18.getTree());
+                    root_0 = (CommonTree)adaptor.becomeRoot(comparison19.getTree(), root_0);
+
+                    pushFollow(FOLLOW_identifier_in_constraint182);
+                    identifier20=identifier();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, identifier20.getTree());
 
                     }
                     break;
                 case 3 :
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:41:4: two_param_function
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:42:4: two_param_function
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    pushFollow(FOLLOW_two_param_function_in_constraint179);
-                    two_param_function19=two_param_function();
+                    pushFollow(FOLLOW_two_param_function_in_constraint187);
+                    two_param_function21=two_param_function();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, two_param_function19.getTree());
+                    adaptor.addChild(root_0, two_param_function21.getTree());
 
                     }
                     break;
                 case 4 :
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:42:5: three_param_function
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:43:5: three_param_function
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    pushFollow(FOLLOW_three_param_function_in_constraint185);
-                    three_param_function20=three_param_function();
+                    pushFollow(FOLLOW_three_param_function_in_constraint193);
+                    three_param_function22=three_param_function();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, three_param_function20.getTree());
+                    adaptor.addChild(root_0, three_param_function22.getTree());
 
                     }
                     break;
@@ -655,7 +687,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "identifier"
-    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:45:1: identifier : ID ;
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:47:1: identifier : ID ;
     public final SeqWareQueryLanguageParser.identifier_return identifier() throws RecognitionException {
         SeqWareQueryLanguageParser.identifier_return retval = new SeqWareQueryLanguageParser.identifier_return();
         retval.start = input.LT(1);
@@ -663,22 +695,22 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token ID21=null;
+        Token ID23=null;
 
-        CommonTree ID21_tree=null;
+        CommonTree ID23_tree=null;
 
         try {
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:46:2: ( ID )
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:46:4: ID
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:48:2: ( ID )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:48:4: ID
             {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            ID21=(Token)match(input,ID,FOLLOW_ID_in_identifier196); 
-            ID21_tree = 
-            (CommonTree)adaptor.create(ID21)
+            ID23=(Token)match(input,ID,FOLLOW_ID_in_identifier205); 
+            ID23_tree = 
+            (CommonTree)adaptor.create(ID23)
             ;
-            adaptor.addChild(root_0, ID21_tree);
+            adaptor.addChild(root_0, ID23_tree);
 
 
             }
@@ -712,7 +744,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "comparison"
-    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:49:1: comparison : ( EQUALS | NOTEQUALS | LT | LTEQ | GT | GTEQ );
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:51:1: comparison : ( EQUALS | NOTEQUALS | LT | LTEQ | GT | GTEQ );
     public final SeqWareQueryLanguageParser.comparison_return comparison() throws RecognitionException {
         SeqWareQueryLanguageParser.comparison_return retval = new SeqWareQueryLanguageParser.comparison_return();
         retval.start = input.LT(1);
@@ -720,23 +752,23 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token set22=null;
+        Token set24=null;
 
-        CommonTree set22_tree=null;
+        CommonTree set24_tree=null;
 
         try {
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:50:2: ( EQUALS | NOTEQUALS | LT | LTEQ | GT | GTEQ )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:52:2: ( EQUALS | NOTEQUALS | LT | LTEQ | GT | GTEQ )
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:
             {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            set22=(Token)input.LT(1);
+            set24=(Token)input.LT(1);
 
             if ( input.LA(1)==EQUALS||(input.LA(1) >= GT && input.LA(1) <= GTEQ)||(input.LA(1) >= LT && input.LA(1) <= LTEQ)||input.LA(1)==NOTEQUALS ) {
                 input.consume();
                 adaptor.addChild(root_0, 
-                (CommonTree)adaptor.create(set22)
+                (CommonTree)adaptor.create(set24)
                 );
                 state.errorRecovery=false;
             }
@@ -777,7 +809,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "constant"
-    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:53:1: constant : ( literal | NAMED_CONSTANT );
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:55:1: constant : ( literal | NAMED_CONSTANT );
     public final SeqWareQueryLanguageParser.constant_return constant() throws RecognitionException {
         SeqWareQueryLanguageParser.constant_return retval = new SeqWareQueryLanguageParser.constant_return();
         retval.start = input.LT(1);
@@ -785,14 +817,14 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token NAMED_CONSTANT24=null;
-        SeqWareQueryLanguageParser.literal_return literal23 =null;
+        Token NAMED_CONSTANT26=null;
+        SeqWareQueryLanguageParser.literal_return literal25 =null;
 
 
-        CommonTree NAMED_CONSTANT24_tree=null;
+        CommonTree NAMED_CONSTANT26_tree=null;
 
         try {
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:54:2: ( literal | NAMED_CONSTANT )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:56:2: ( literal | NAMED_CONSTANT )
             int alt5=2;
             int LA5_0 = input.LA(1);
 
@@ -811,31 +843,31 @@ public TreeAdaptor getTreeAdaptor() {
             }
             switch (alt5) {
                 case 1 :
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:54:4: literal
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:56:4: literal
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    pushFollow(FOLLOW_literal_in_constant239);
-                    literal23=literal();
+                    pushFollow(FOLLOW_literal_in_constant248);
+                    literal25=literal();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, literal23.getTree());
+                    adaptor.addChild(root_0, literal25.getTree());
 
                     }
                     break;
                 case 2 :
-                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:55:4: NAMED_CONSTANT
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:57:4: NAMED_CONSTANT
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    NAMED_CONSTANT24=(Token)match(input,NAMED_CONSTANT,FOLLOW_NAMED_CONSTANT_in_constant244); 
-                    NAMED_CONSTANT24_tree = 
-                    (CommonTree)adaptor.create(NAMED_CONSTANT24)
+                    NAMED_CONSTANT26=(Token)match(input,NAMED_CONSTANT,FOLLOW_NAMED_CONSTANT_in_constant253); 
+                    NAMED_CONSTANT26_tree = 
+                    (CommonTree)adaptor.create(NAMED_CONSTANT26)
                     ;
-                    adaptor.addChild(root_0, NAMED_CONSTANT24_tree);
+                    adaptor.addChild(root_0, NAMED_CONSTANT26_tree);
 
 
                     }
@@ -871,7 +903,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "literal"
-    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:58:1: literal : ( INT | FLOAT | STRING );
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:60:1: literal : ( INT | FLOAT | STRING );
     public final SeqWareQueryLanguageParser.literal_return literal() throws RecognitionException {
         SeqWareQueryLanguageParser.literal_return retval = new SeqWareQueryLanguageParser.literal_return();
         retval.start = input.LT(1);
@@ -879,23 +911,23 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token set25=null;
+        Token set27=null;
 
-        CommonTree set25_tree=null;
+        CommonTree set27_tree=null;
 
         try {
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:59:2: ( INT | FLOAT | STRING )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:61:2: ( INT | FLOAT | STRING )
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:
             {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            set25=(Token)input.LT(1);
+            set27=(Token)input.LT(1);
 
             if ( input.LA(1)==FLOAT||input.LA(1)==INT||input.LA(1)==STRING ) {
                 input.consume();
                 adaptor.addChild(root_0, 
-                (CommonTree)adaptor.create(set25)
+                (CommonTree)adaptor.create(set27)
                 );
                 state.errorRecovery=false;
             }
@@ -936,7 +968,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "two_param_function"
-    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:62:1: two_param_function : NAMED_TWO_PARAM_FUNCTION ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !;
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:64:1: two_param_function : NAMED_TWO_PARAM_FUNCTION ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !;
     public final SeqWareQueryLanguageParser.two_param_function_return two_param_function() throws RecognitionException {
         SeqWareQueryLanguageParser.two_param_function_return retval = new SeqWareQueryLanguageParser.two_param_function_return();
         retval.start = input.LT(1);
@@ -944,58 +976,58 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token NAMED_TWO_PARAM_FUNCTION26=null;
-        Token BRACKET_OPEN27=null;
-        Token char_literal29=null;
-        Token BRACKET_CLOSE31=null;
-        SeqWareQueryLanguageParser.literal_return literal28 =null;
-
+        Token NAMED_TWO_PARAM_FUNCTION28=null;
+        Token BRACKET_OPEN29=null;
+        Token char_literal31=null;
+        Token BRACKET_CLOSE33=null;
         SeqWareQueryLanguageParser.literal_return literal30 =null;
 
+        SeqWareQueryLanguageParser.literal_return literal32 =null;
 
-        CommonTree NAMED_TWO_PARAM_FUNCTION26_tree=null;
-        CommonTree BRACKET_OPEN27_tree=null;
-        CommonTree char_literal29_tree=null;
-        CommonTree BRACKET_CLOSE31_tree=null;
+
+        CommonTree NAMED_TWO_PARAM_FUNCTION28_tree=null;
+        CommonTree BRACKET_OPEN29_tree=null;
+        CommonTree char_literal31_tree=null;
+        CommonTree BRACKET_CLOSE33_tree=null;
 
         try {
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:63:2: ( NAMED_TWO_PARAM_FUNCTION ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !)
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:63:4: NAMED_TWO_PARAM_FUNCTION ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:65:2: ( NAMED_TWO_PARAM_FUNCTION ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !)
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:65:4: NAMED_TWO_PARAM_FUNCTION ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !
             {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            NAMED_TWO_PARAM_FUNCTION26=(Token)match(input,NAMED_TWO_PARAM_FUNCTION,FOLLOW_NAMED_TWO_PARAM_FUNCTION_in_two_param_function275); 
-            NAMED_TWO_PARAM_FUNCTION26_tree = 
-            (CommonTree)adaptor.create(NAMED_TWO_PARAM_FUNCTION26)
+            NAMED_TWO_PARAM_FUNCTION28=(Token)match(input,NAMED_TWO_PARAM_FUNCTION,FOLLOW_NAMED_TWO_PARAM_FUNCTION_in_two_param_function284); 
+            NAMED_TWO_PARAM_FUNCTION28_tree = 
+            (CommonTree)adaptor.create(NAMED_TWO_PARAM_FUNCTION28)
             ;
-            root_0 = (CommonTree)adaptor.becomeRoot(NAMED_TWO_PARAM_FUNCTION26_tree, root_0);
+            root_0 = (CommonTree)adaptor.becomeRoot(NAMED_TWO_PARAM_FUNCTION28_tree, root_0);
 
 
-            BRACKET_OPEN27=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_two_param_function278); 
+            BRACKET_OPEN29=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_two_param_function287); 
 
-            pushFollow(FOLLOW_literal_in_two_param_function281);
-            literal28=literal();
-
-            state._fsp--;
-
-            adaptor.addChild(root_0, literal28.getTree());
-
-            char_literal29=(Token)match(input,23,FOLLOW_23_in_two_param_function283); 
-            char_literal29_tree = 
-            (CommonTree)adaptor.create(char_literal29)
-            ;
-            adaptor.addChild(root_0, char_literal29_tree);
-
-
-            pushFollow(FOLLOW_literal_in_two_param_function285);
+            pushFollow(FOLLOW_literal_in_two_param_function290);
             literal30=literal();
 
             state._fsp--;
 
             adaptor.addChild(root_0, literal30.getTree());
 
-            BRACKET_CLOSE31=(Token)match(input,BRACKET_CLOSE,FOLLOW_BRACKET_CLOSE_in_two_param_function287); 
+            char_literal31=(Token)match(input,24,FOLLOW_24_in_two_param_function292); 
+            char_literal31_tree = 
+            (CommonTree)adaptor.create(char_literal31)
+            ;
+            adaptor.addChild(root_0, char_literal31_tree);
+
+
+            pushFollow(FOLLOW_literal_in_two_param_function294);
+            literal32=literal();
+
+            state._fsp--;
+
+            adaptor.addChild(root_0, literal32.getTree());
+
+            BRACKET_CLOSE33=(Token)match(input,BRACKET_CLOSE,FOLLOW_BRACKET_CLOSE_in_two_param_function296); 
 
             }
 
@@ -1028,7 +1060,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "three_param_function"
-    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:66:1: three_param_function : NAMED_THREE_PARAM_FUNCTION ^ BRACKET_OPEN ! literal ',' literal ',' literal BRACKET_CLOSE !;
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:68:1: three_param_function : NAMED_THREE_PARAM_FUNCTION ^ BRACKET_OPEN ! literal ',' literal ',' literal BRACKET_CLOSE !;
     public final SeqWareQueryLanguageParser.three_param_function_return three_param_function() throws RecognitionException {
         SeqWareQueryLanguageParser.three_param_function_return retval = new SeqWareQueryLanguageParser.three_param_function_return();
         retval.start = input.LT(1);
@@ -1036,76 +1068,76 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token NAMED_THREE_PARAM_FUNCTION32=null;
-        Token BRACKET_OPEN33=null;
-        Token char_literal35=null;
+        Token NAMED_THREE_PARAM_FUNCTION34=null;
+        Token BRACKET_OPEN35=null;
         Token char_literal37=null;
-        Token BRACKET_CLOSE39=null;
-        SeqWareQueryLanguageParser.literal_return literal34 =null;
-
+        Token char_literal39=null;
+        Token BRACKET_CLOSE41=null;
         SeqWareQueryLanguageParser.literal_return literal36 =null;
 
         SeqWareQueryLanguageParser.literal_return literal38 =null;
 
+        SeqWareQueryLanguageParser.literal_return literal40 =null;
 
-        CommonTree NAMED_THREE_PARAM_FUNCTION32_tree=null;
-        CommonTree BRACKET_OPEN33_tree=null;
-        CommonTree char_literal35_tree=null;
+
+        CommonTree NAMED_THREE_PARAM_FUNCTION34_tree=null;
+        CommonTree BRACKET_OPEN35_tree=null;
         CommonTree char_literal37_tree=null;
-        CommonTree BRACKET_CLOSE39_tree=null;
+        CommonTree char_literal39_tree=null;
+        CommonTree BRACKET_CLOSE41_tree=null;
 
         try {
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:67:2: ( NAMED_THREE_PARAM_FUNCTION ^ BRACKET_OPEN ! literal ',' literal ',' literal BRACKET_CLOSE !)
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:67:4: NAMED_THREE_PARAM_FUNCTION ^ BRACKET_OPEN ! literal ',' literal ',' literal BRACKET_CLOSE !
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:69:2: ( NAMED_THREE_PARAM_FUNCTION ^ BRACKET_OPEN ! literal ',' literal ',' literal BRACKET_CLOSE !)
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:69:4: NAMED_THREE_PARAM_FUNCTION ^ BRACKET_OPEN ! literal ',' literal ',' literal BRACKET_CLOSE !
             {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            NAMED_THREE_PARAM_FUNCTION32=(Token)match(input,NAMED_THREE_PARAM_FUNCTION,FOLLOW_NAMED_THREE_PARAM_FUNCTION_in_three_param_function300); 
-            NAMED_THREE_PARAM_FUNCTION32_tree = 
-            (CommonTree)adaptor.create(NAMED_THREE_PARAM_FUNCTION32)
+            NAMED_THREE_PARAM_FUNCTION34=(Token)match(input,NAMED_THREE_PARAM_FUNCTION,FOLLOW_NAMED_THREE_PARAM_FUNCTION_in_three_param_function309); 
+            NAMED_THREE_PARAM_FUNCTION34_tree = 
+            (CommonTree)adaptor.create(NAMED_THREE_PARAM_FUNCTION34)
             ;
-            root_0 = (CommonTree)adaptor.becomeRoot(NAMED_THREE_PARAM_FUNCTION32_tree, root_0);
+            root_0 = (CommonTree)adaptor.becomeRoot(NAMED_THREE_PARAM_FUNCTION34_tree, root_0);
 
 
-            BRACKET_OPEN33=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_three_param_function303); 
+            BRACKET_OPEN35=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_three_param_function312); 
 
-            pushFollow(FOLLOW_literal_in_three_param_function306);
-            literal34=literal();
-
-            state._fsp--;
-
-            adaptor.addChild(root_0, literal34.getTree());
-
-            char_literal35=(Token)match(input,23,FOLLOW_23_in_three_param_function308); 
-            char_literal35_tree = 
-            (CommonTree)adaptor.create(char_literal35)
-            ;
-            adaptor.addChild(root_0, char_literal35_tree);
-
-
-            pushFollow(FOLLOW_literal_in_three_param_function310);
+            pushFollow(FOLLOW_literal_in_three_param_function315);
             literal36=literal();
 
             state._fsp--;
 
             adaptor.addChild(root_0, literal36.getTree());
 
-            char_literal37=(Token)match(input,23,FOLLOW_23_in_three_param_function312); 
+            char_literal37=(Token)match(input,24,FOLLOW_24_in_three_param_function317); 
             char_literal37_tree = 
             (CommonTree)adaptor.create(char_literal37)
             ;
             adaptor.addChild(root_0, char_literal37_tree);
 
 
-            pushFollow(FOLLOW_literal_in_three_param_function314);
+            pushFollow(FOLLOW_literal_in_three_param_function319);
             literal38=literal();
 
             state._fsp--;
 
             adaptor.addChild(root_0, literal38.getTree());
 
-            BRACKET_CLOSE39=(Token)match(input,BRACKET_CLOSE,FOLLOW_BRACKET_CLOSE_in_three_param_function316); 
+            char_literal39=(Token)match(input,24,FOLLOW_24_in_three_param_function321); 
+            char_literal39_tree = 
+            (CommonTree)adaptor.create(char_literal39)
+            ;
+            adaptor.addChild(root_0, char_literal39_tree);
+
+
+            pushFollow(FOLLOW_literal_in_three_param_function323);
+            literal40=literal();
+
+            state._fsp--;
+
+            adaptor.addChild(root_0, literal40.getTree());
+
+            BRACKET_CLOSE41=(Token)match(input,BRACKET_CLOSE,FOLLOW_BRACKET_CLOSE_in_three_param_function325); 
 
             }
 
@@ -1138,7 +1170,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "comment"
-    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:70:1: comment : ( COMMENT_EOL | COMMENT_INLINE );
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:72:1: comment : ( COMMENT_EOL | COMMENT_INLINE );
     public final SeqWareQueryLanguageParser.comment_return comment() throws RecognitionException {
         SeqWareQueryLanguageParser.comment_return retval = new SeqWareQueryLanguageParser.comment_return();
         retval.start = input.LT(1);
@@ -1146,23 +1178,23 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token set40=null;
+        Token set42=null;
 
-        CommonTree set40_tree=null;
+        CommonTree set42_tree=null;
 
         try {
-            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:71:2: ( COMMENT_EOL | COMMENT_INLINE )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:73:2: ( COMMENT_EOL | COMMENT_INLINE )
             // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:
             {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            set40=(Token)input.LT(1);
+            set42=(Token)input.LT(1);
 
             if ( (input.LA(1) >= COMMENT_EOL && input.LA(1) <= COMMENT_INLINE) ) {
                 input.consume();
                 adaptor.addChild(root_0, 
-                (CommonTree)adaptor.create(set40)
+                (CommonTree)adaptor.create(set42)
                 );
                 state.errorRecovery=false;
             }
@@ -1201,41 +1233,43 @@ public TreeAdaptor getTreeAdaptor() {
  
 
     public static final BitSet FOLLOW_low_precedence_constraint_in_query75 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_high_precedence_constraint_in_low_precedence_constraint88 = new BitSet(new long[]{0x0000000000200002L});
-    public static final BitSet FOLLOW_OR_in_low_precedence_constraint92 = new BitSet(new long[]{0x00000000004E65C0L});
-    public static final BitSet FOLLOW_high_precedence_constraint_in_low_precedence_constraint95 = new BitSet(new long[]{0x0000000000200002L});
+    public static final BitSet FOLLOW_high_precedence_constraint_in_low_precedence_constraint88 = new BitSet(new long[]{0x0000000000400002L});
+    public static final BitSet FOLLOW_OR_in_low_precedence_constraint92 = new BitSet(new long[]{0x00000000009E65C0L});
+    public static final BitSet FOLLOW_high_precedence_constraint_in_low_precedence_constraint95 = new BitSet(new long[]{0x0000000000400002L});
     public static final BitSet FOLLOW_nested_constraint_in_high_precedence_constraint110 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_AND_in_high_precedence_constraint114 = new BitSet(new long[]{0x00000000004E65C0L});
+    public static final BitSet FOLLOW_AND_in_high_precedence_constraint114 = new BitSet(new long[]{0x00000000009E65C0L});
     public static final BitSet FOLLOW_nested_constraint_in_high_precedence_constraint117 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_BRACKET_OPEN_in_nested_constraint131 = new BitSet(new long[]{0x00000000004E65C0L});
+    public static final BitSet FOLLOW_BRACKET_OPEN_in_nested_constraint131 = new BitSet(new long[]{0x00000000009E65C0L});
     public static final BitSet FOLLOW_low_precedence_constraint_in_nested_constraint134 = new BitSet(new long[]{0x0000000000000020L});
     public static final BitSet FOLLOW_BRACKET_CLOSE_in_nested_constraint136 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_constraint_in_nested_constraint142 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_comment_in_nested_constraint147 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_identifier_in_constraint159 = new BitSet(new long[]{0x0000000000119A00L});
-    public static final BitSet FOLLOW_comparison_in_constraint161 = new BitSet(new long[]{0x0000000000424400L});
-    public static final BitSet FOLLOW_constant_in_constraint164 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_constant_in_constraint169 = new BitSet(new long[]{0x0000000000119A00L});
-    public static final BitSet FOLLOW_comparison_in_constraint171 = new BitSet(new long[]{0x0000000000002000L});
-    public static final BitSet FOLLOW_identifier_in_constraint174 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_two_param_function_in_constraint179 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_three_param_function_in_constraint185 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ID_in_identifier196 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_literal_in_constant239 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NAMED_CONSTANT_in_constant244 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NAMED_TWO_PARAM_FUNCTION_in_two_param_function275 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_BRACKET_OPEN_in_two_param_function278 = new BitSet(new long[]{0x0000000000404400L});
-    public static final BitSet FOLLOW_literal_in_two_param_function281 = new BitSet(new long[]{0x0000000000800000L});
-    public static final BitSet FOLLOW_23_in_two_param_function283 = new BitSet(new long[]{0x0000000000404400L});
-    public static final BitSet FOLLOW_literal_in_two_param_function285 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_BRACKET_CLOSE_in_two_param_function287 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NAMED_THREE_PARAM_FUNCTION_in_three_param_function300 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_BRACKET_OPEN_in_three_param_function303 = new BitSet(new long[]{0x0000000000404400L});
-    public static final BitSet FOLLOW_literal_in_three_param_function306 = new BitSet(new long[]{0x0000000000800000L});
-    public static final BitSet FOLLOW_23_in_three_param_function308 = new BitSet(new long[]{0x0000000000404400L});
-    public static final BitSet FOLLOW_literal_in_three_param_function310 = new BitSet(new long[]{0x0000000000800000L});
-    public static final BitSet FOLLOW_23_in_three_param_function312 = new BitSet(new long[]{0x0000000000404400L});
-    public static final BitSet FOLLOW_literal_in_three_param_function314 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_BRACKET_CLOSE_in_three_param_function316 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NOT_in_nested_constraint153 = new BitSet(new long[]{0x00000000009E65C0L});
+    public static final BitSet FOLLOW_nested_constraint_in_nested_constraint156 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_identifier_in_constraint167 = new BitSet(new long[]{0x0000000000219A00L});
+    public static final BitSet FOLLOW_comparison_in_constraint169 = new BitSet(new long[]{0x0000000000824400L});
+    public static final BitSet FOLLOW_constant_in_constraint172 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_constant_in_constraint177 = new BitSet(new long[]{0x0000000000219A00L});
+    public static final BitSet FOLLOW_comparison_in_constraint179 = new BitSet(new long[]{0x0000000000002000L});
+    public static final BitSet FOLLOW_identifier_in_constraint182 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_two_param_function_in_constraint187 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_three_param_function_in_constraint193 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ID_in_identifier205 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_literal_in_constant248 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NAMED_CONSTANT_in_constant253 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NAMED_TWO_PARAM_FUNCTION_in_two_param_function284 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_BRACKET_OPEN_in_two_param_function287 = new BitSet(new long[]{0x0000000000804400L});
+    public static final BitSet FOLLOW_literal_in_two_param_function290 = new BitSet(new long[]{0x0000000001000000L});
+    public static final BitSet FOLLOW_24_in_two_param_function292 = new BitSet(new long[]{0x0000000000804400L});
+    public static final BitSet FOLLOW_literal_in_two_param_function294 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_BRACKET_CLOSE_in_two_param_function296 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NAMED_THREE_PARAM_FUNCTION_in_three_param_function309 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_BRACKET_OPEN_in_three_param_function312 = new BitSet(new long[]{0x0000000000804400L});
+    public static final BitSet FOLLOW_literal_in_three_param_function315 = new BitSet(new long[]{0x0000000001000000L});
+    public static final BitSet FOLLOW_24_in_three_param_function317 = new BitSet(new long[]{0x0000000000804400L});
+    public static final BitSet FOLLOW_literal_in_three_param_function319 = new BitSet(new long[]{0x0000000001000000L});
+    public static final BitSet FOLLOW_24_in_three_param_function321 = new BitSet(new long[]{0x0000000000804400L});
+    public static final BitSet FOLLOW_literal_in_three_param_function323 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_BRACKET_CLOSE_in_three_param_function325 = new BitSet(new long[]{0x0000000000000002L});
 
 }
