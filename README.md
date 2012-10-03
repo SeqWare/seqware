@@ -7,6 +7,9 @@
 INTRODUCTION
 ====================
 
+This README is just a quick overview of building SeqWare. See our
+[project homepage](http://seqware.github.com) for much more documentation.
+
 This is top level of the [SeqWare Project](http://seqware.github.com).  
 This contains the 5 major components of the SeqWare project along with
 documentation:
@@ -25,12 +28,38 @@ and most of the other sub-projects have this as a dependency.
 PREREQUISITES
 ====================
 
+###A Recent Linux Distribution
+
+This pretty much goes without saying but the SeqWare project is targeted at
+Linux.  You may be able to compile and use the software on MacOS X but, in all
+honesty, we recommend you use a recent Linux distribution such as Debian
+(Ubuntu, Linux Mint, etc) or RedHat (RedHat Enterprise, Fedora, etc).  This
+software, although written in Java mostly, was never intended to work on
+Windows. If you need to use Windows for development or deployment we recommend
+you simply use our VirtualBox VM for both activities, see our extensive documentation
+on http://seqware.github.com for more information. You can also use this same
+approach on MacOS (or even another version of Linux).
+
+###Java
+
 SeqWare requires Oracle JDK 1.6 or greater, we primarily write and test with JDK 1.6.x.
 An example of instructions on how to update your Linux installation can be found [here](https://ccp.cloudera.com/display/CDH4DOC/Before+You+Install+CDH4+on+a+Single+Node#BeforeYouInstallCDH4onaSingleNode-InstalltheOracleJavaDevelopmentKit). You will need to use the method appropriate to your distribution to install this.
 
-In addition to Java we also require PostgreSQL to be installed, version 8.4 is what we use but newer versions are probably supported.  You need to use the method appropriate to your distribution to install this. For example, on a recent Debian-based system you would do:
+###PostgreSQL
+
+In addition to Java we also require PostgreSQL to be installed, version 8.4 is
+what we use but newer versions are probably supported.  You need to use the
+method appropriate to your distribution to install this. For example, on a
+recent Debian-based system you would do:
 
     sudo apt-get install postgresql-8.4
+
+###Problems with Maven
+
+Sometimes we run into problems when building, strange missing dependency issues
+and broken packages. A lot of the time this is an issue with Maven, try
+deleting your ~/.m2 directory and running the build process again.
+
 
 PREREQUISITES ON Mac OS
 -----------------------
@@ -118,10 +147,25 @@ Finally, set the HBase configuration that should be used in `seqware-queryengine
 
 --> 
 
+WEB SERVICE INTEGRATION TESTING
+--------------------------------
+
+The web service integration tests require an external PostgreSQL instance
+running with create DB access for the "seqware" user.  You can set this up by
+first installing PostgreSQL (see above) and then do the following:
+
+<pre>
+sudo -u postgres createlang plpgsql template1
+sudo -u postgres psql -c "CREATE USER seqware WITH PASSWORD 'seqware' CREATEDB;"
+</pre>
+
+The test process will use this user to create a temporary test database.
+
+
 QUERY ENGINE INTEGRATION TESTING
 --------------------------------
 
-By default, our integration test suite runs tests against the [hbase-maven-plugin](https://github.com/wibidata/hbase-maven-plugin). You can, however, run the full test suite against a real Hadoop and HBase cluster; for setup, a good start is to follow Cloudera's [quick start guide](https://ccp.cloudera.com/display/CDH4DOC/CDH4+Quick+Start+Guide). You will then need to set the HBase configuration in `seqware-queryengine/src/main/java/com/github/seqware/queryengine/Constants.java` by turning on HBASE_REMOTE_TESTING and completing a family of terms for HBASE_PROPERTIES. You can also set these in an external ~/.seqware/settings file.
+By default, our integration test suite runs tests against the [hbase-maven-plugin](https://github.com/wibidata/hbase-maven-plugin). You can, however, run the full test suite against a real Hadoop and HBase cluster; for setup, a good start is to follow Cloudera's [quick start guide](https://ccp.cloudera.com/display/CDH4DOC/CDH4+Quick+Start+Guide). You will then need to set the HBase configuration in `seqware-queryengine/src/main/java/com/github/seqware/queryengine/Constants.java` by turning on HBASE_REMOTE_TESTING and completing a family of terms for HBASE\_PROPERTIES. You can also set these in an external ~/.seqware/settings file.
 
 If you run into the following error when the hbase-plugin starts up, please check for an incorrect entry in your <code>/etc/hosts</code> file.
 
