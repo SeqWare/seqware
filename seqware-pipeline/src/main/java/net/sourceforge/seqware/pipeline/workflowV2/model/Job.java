@@ -17,20 +17,37 @@ public class Job {
 	private Module module;
 	private Command command;
 	private Collection<Requirement> requirements;
+	private String cp;
+	private String mainclass;
 	
-	public Job() {
+	public Job(String algo) {
+		this(algo, "", "");
+	}
+	
+	/**
+	 * 
+	 */
+	public Job(String algo, String cp, String mainclass) {
+		this.cp = cp;
+		this.mainclass = mainclass;
 		this.arguments = new ArrayList<String>();
 		this.parents = new ArrayList<Job>();
 		this.files = new ArrayList<SqwFile>();
 		this.requirements = new ArrayList<Requirement>();
 		this.command = new Command();
+		this.algo = algo;
 		this.initRequirements();
 	}
 	
 	
 	private void initRequirements() {
+		Requirement jobR = new Requirement();
+		jobR.setType(Type.JOBTYPE);
+		jobR.setValue("condor");
+		this.requirements.add(jobR);
+		
 		Requirement threadR = new Requirement();
-		threadR.setType(Type.THREADS);
+		threadR.setType(Type.COUNT);
 		threadR.setValue("1");
 		this.requirements.add(threadR);
 		
@@ -39,10 +56,6 @@ public class Job {
 		memR.setValue("2000");
 		this.requirements.add(memR);
 		
-		Requirement jobR = new Requirement();
-		jobR.setType(Type.JOBTYPE);
-		jobR.setValue("condor");
-		this.requirements.add(jobR);
 	}
 	
 	/**
@@ -133,10 +146,36 @@ public class Job {
 	}
 	
 	public int getThreads() {
-		return 0;
+		return Integer.parseInt(this.getRequirementByType(Type.COUNT).getValue());
 	}
 	
-	public void setThreads(int count) {
-		
+	public Job setThreads(int count) {
+		this.getRequirementByType(Type.COUNT).setValue(""+count);
+		return this;
+	}
+	
+	public String getMaxMemory() {
+		return this.getRequirementByType(Type.MAXMEMORY).getValue();
+	}
+	
+	public Job setMaxMemory(String mem) {
+		this.getRequirementByType(Type.MAXMEMORY).setValue(mem);
+		return this;
+	}
+	
+	public String getClassPath() {
+		return this.cp;
+	}
+	
+	public String getMainClass() {
+		return this.mainclass;
+	}
+	
+	private Requirement getRequirementByType(Type type) {
+		for(Requirement r: this.requirements) {
+			if(r.getType() == type)
+				return r;
+		}
+		return null;
 	}
 }

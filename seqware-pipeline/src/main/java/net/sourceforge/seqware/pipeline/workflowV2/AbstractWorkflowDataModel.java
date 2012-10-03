@@ -14,6 +14,7 @@ public abstract class AbstractWorkflowDataModel  {
     private String version;
     protected Environment env;
     private WorkflowInfo workflowInfo;
+    private Map<String,String> tags;
     protected Map<String,String> configs;
     private boolean wait;
     private boolean metadataWriteBack;
@@ -31,6 +32,8 @@ public abstract class AbstractWorkflowDataModel  {
 
     public AbstractWorkflowDataModel() {
     	this.files = new HashMap<String, SqwFile>();
+    	this.tags = new HashMap<String,String>();
+    	this.configs = new HashMap<String,String>();
     }
     
     protected void setupWorkflow() {

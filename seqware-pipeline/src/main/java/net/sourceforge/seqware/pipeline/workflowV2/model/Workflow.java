@@ -108,26 +108,23 @@ public class Workflow {
 		this.accession = accession;
 	}
 	
-	public Job createJavaJob(String cp, String mainclass) {
-		Job job = new Job();
+	public Job createJavaJob(String algo, String cp, String mainclass) {
+		Job job = new Job(algo,cp,mainclass);
 		job.setModule(Module.Java);
-		job.setAlgo("java");
 		this.jobs.add(job);
 		return job;
 	}
 	
 	public Job createBashJob(String algo) {
-		Job job = new Job();
+		Job job = new Job(algo);
 		job.setModule(Module.Bash);
-		job.setAlgo(algo);
 		this.jobs.add(job);
 		return job;
 	}
 	
-	public Job createPerlJob() {
-		Job job = new Job();
-		job.setModule(Module.Java);
-		job.setAlgo("java");
+	public Job createPerlJob(String algo, String script) {
+		Job job = new Job(algo, "", script);
+		job.setModule(Module.Perl);
 		this.jobs.add(job);
 		return job;
 	}

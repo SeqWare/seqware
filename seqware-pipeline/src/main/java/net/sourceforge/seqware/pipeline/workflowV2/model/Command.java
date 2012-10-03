@@ -45,7 +45,8 @@ public class Command {
 		return mem;
 	}
 
-	public void setMaxMemory(String mem) {
+	public Command setMaxMemory(String mem) {
 		this.mem = mem;
+		return this;
 	}
 }
