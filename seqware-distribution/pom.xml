@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent> 
-        <version>0.12.5.1</version>
+        <version>0.12.5.1</version> 
         <groupId>net.sourceforge.seqware</groupId> 
         <artifactId>seqware</artifactId> 
         <relativePath>../pom.xml</relativePath> 
@@ -16,14 +16,14 @@
 
   <dependencies>
     <dependency>
-      <groupId>net.sourceforge.seqware</groupId>
+      <groupId>com.github.seqware</groupId>
       <artifactId>seqware-queryengine</artifactId>
-      <version>0.12.5.1</version>
+      <version>0.12.5.1</version> 
     </dependency>
     <dependency>
-      <groupId>net.sourceforge.seqware</groupId>
+      <groupId>com.github.seqware</groupId>
       <artifactId>seqware-pipeline</artifactId>
-        <version>0.12.5.1</version>
+      <version>0.12.5.1</version>
     </dependency>
   </dependencies>
   <properties>
@@ -51,6 +51,18 @@
             </archive>
             <descriptors>
               <descriptor>src/assemble/seqware-pipeline-full.xml</descriptor>
+            </descriptors>
+            <finalName>seqware</finalName>
+          </configuration>
+        </execution>
+	<execution>
+          <id>executable-queryengine-jar-assembly</id>
+          <phase>package</phase>
+          <goals>
+            <goal>single</goal>
+          </goals>
+          <configuration>
+            <descriptors>
               <descriptor>src/assemble/seqware-queryengine.xml</descriptor>
             </descriptors>
             <finalName>seqware</finalName>
@@ -61,4 +73,3 @@
     </plugins>
   </build>
 </project>
-
