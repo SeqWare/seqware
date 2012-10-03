@@ -7,6 +7,8 @@ public class SqwFile {
 	private String type;
 	private String location;
 	private boolean input;
+	private boolean forceCopy;
+	
 	public String getType() {
 		return type;
 	}
@@ -50,5 +52,11 @@ public class SqwFile {
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(17, 37).append(type).append(location).append(input).toHashCode();
+	}
+	public boolean isForceCopy() {
+		return forceCopy;
+	}
+	public void setForceCopy(boolean forceCopy) {
+		this.forceCopy = forceCopy;
 	}
 }

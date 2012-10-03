@@ -67,7 +67,7 @@ public class PegasusJobObject {
 		//add memory, classpath, module for bash
 		if(this.jobObj.getModule() == Module.Bash) {
 			sb.append("-Xmx").append(this.jobObj.getCommand().getMaxMemory()).append("\n");
-			sb.append("-classpath ").append(basedir).append("/lib").append("\n");
+			sb.append("-classpath ").append(basedir).append("/lib/").append(AdagObject.PIPELINE).append("\n");
 			sb.append("net.sourceforge.seqware.pipeline.runner.Runner").append("\n");
 			sb.append("--no-metadata").append("\n");
 			sb.append("--module net.sourceforge.seqware.pipeline.modules.GenericCommandRunner").append("\n");

@@ -1,6 +1,7 @@
 package net.sourceforge.seqware.pipeline.workflowV2.pegasus.object;
 
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
+import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 
 
 public class ProvisionFilesJob extends PegasusJobObject {
@@ -15,7 +16,7 @@ public class ProvisionFilesJob extends PegasusJobObject {
 		//add memory, classpath, module for bash
 
 		sb.append("-Xmx").append(this.jobObj.getCommand().getMaxMemory()).append("\n");
-		sb.append("-classpath ").append(basedir).append("/lib").append("\n");
+		sb.append("-classpath ").append(basedir).append("/lib/").append(AdagObject.PIPELINE).append("\n");
 		sb.append("net.sourceforge.seqware.pipeline.runner.Runner").append("\n");
 		sb.append("--no-metadata").append("\n");
 		sb.append("--module module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles").append("\n");
@@ -26,7 +27,12 @@ public class ProvisionFilesJob extends PegasusJobObject {
 			sb.append(this.jobObj.getCommand().toString()).append("\n");	
 		}
 		// set input, output
-		sb.append("--input-file ").append(this.jobObj.getFiles().iterator().next().getLocation()).append("\n");
+		SqwFile file = this.jobObj.getFiles().iterator().next();
+		String inputType = "--input-file ";
+		if(file.getType().indexOf("::")>=0) {
+			inputType = "--input-file-metadata "+ file.getType() + "/";
+		}
+		sb.append(inputType).append(this.jobObj.getFiles().iterator().next().getLocation()).append("\n");
 		sb.append("--output-dir data").append("\n");
 		
 		return sb.toString();

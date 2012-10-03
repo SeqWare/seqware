@@ -38,6 +38,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.PegasusWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.PegasusWorkflowEngine1;
+import net.sourceforge.seqware.pipeline.workflowV2.pegasus.StringUtils;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -365,12 +366,8 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
         // do it last so it takes precedence over the INI
 		MapTools.cli2Map(this.params, map);
 		
-		// Expand variables in the map
-        MapTools.mapExpandVariables(map);
-        
-        this.addExtraConfigs(map);
-        res.setConfigs(map);
-        
+		map.put("workflow_bundle_dir",res.getWorkflowBundleDir());
+      
 		//set name
         res.setName(map.get("workflow"));
         //set version
@@ -379,6 +376,12 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
         //set base dir
         String basedir = res.getWorkflowBundleDir() + File.separator + "Workflow_Bundle_"+res.getName()+ File.separator + res.getVersion();
 		map.put("basedir", basedir);
+		// Expand variables in the map
+        MapTools.mapExpandVariables(map);
+        
+        this.addExtraConfigs(map);
+        Map<String,String> newMap = this.resolveMap(map);
+        res.setConfigs(newMap);
         //call the tmplate methods
         try {
         	Method m = clazz.getDeclaredMethod("setupFiles");
@@ -419,5 +422,17 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
         map.put("SW_PEGASUS_CONFIG_DIR", config.get("SW_PEGASUS_CONFIG_DIR"));
         map.put("SW_DAX_DIR", config.get("SW_DAX_DIR"));
         map.put("SW_CLUSTER", config.get("SW_CLUSTER"));
+    }
+    
+    private Map<String, String> resolveMap(Map<String, String> input) {
+		Map<String, String> result = new HashMap<String, String>();
+		for (Map.Entry<String, String> entry : input.entrySet()) {
+		    String value = entry.getValue();
+		    if (StringUtils.hasVariable(value)) {
+			value = StringUtils.replace(value, input);
+		    }
+		    result.put(entry.getKey(), value);
+		}
+		return result;
     }
 }
