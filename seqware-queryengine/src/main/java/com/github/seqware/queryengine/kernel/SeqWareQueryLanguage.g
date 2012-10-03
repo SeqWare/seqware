@@ -39,13 +39,13 @@ nested_constraint
 constraint
 	:	identifier comparison^ constant
 	|	constant comparison^ identifier
-	|	two_param_function
-	| 	three_param_function
-//	| 	NOT^ constraint
+	|	two_param_predicate
+	| 	three_param_predicate
 	;
 
 identifier
 	:	ID
+	| 	key_value_function
 	;
 	
 comparison
@@ -61,12 +61,16 @@ literal
 	:	INT | FLOAT | STRING
 	;
 
-two_param_function
-	:	NAMED_TWO_PARAM_FUNCTION^ BRACKET_OPEN! literal ',' literal BRACKET_CLOSE!
+key_value_function
+	:	NAMED_FUNCTION^ BRACKET_OPEN! literal ',' literal BRACKET_CLOSE!
+	;
+
+two_param_predicate
+	:	NAMED_TWO_PARAM_PREDICATE^ BRACKET_OPEN! literal ',' literal BRACKET_CLOSE!
 	;
 	
-three_param_function
-	:	NAMED_THREE_PARAM_FUNCTION^ BRACKET_OPEN! literal ',' literal ',' literal BRACKET_CLOSE!
+three_param_predicate
+	:	NAMED_THREE_PARAM_PREDICATE^ BRACKET_OPEN! literal ',' literal ',' literal BRACKET_CLOSE!
 	;
 	
 comment
@@ -77,11 +81,15 @@ NAMED_CONSTANT
 	:	'STRAND_UNKNOWN' | 'NOT_STRANDED' | 'NEGATIVE_STRAND' | 'POSITIVE_STRAND'
 	;
 	
-NAMED_TWO_PARAM_FUNCTION
+NAMED_FUNCTION
+	:	'tagValue'
+	;
+	
+NAMED_TWO_PARAM_PREDICATE
 	:	'tagOccurrence' | 'tagHierarchicalOccurrence'
 	;
 	
-NAMED_THREE_PARAM_FUNCTION
+NAMED_THREE_PARAM_PREDICATE
 	:	'tagValuePresence'
 	;
 			
@@ -153,4 +161,8 @@ BRACKET_OPEN
 BRACKET_CLOSE
 	:	')'
 	;
+	
+WHITESPACE 
+	: ( '\t' | ' ' | '\r' | '\n'| '\u000C' )+  
+	{ $channel=HIDDEN;} ;
 	

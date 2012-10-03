@@ -17,10 +17,12 @@
 package com.github.seqware.queryengine.plugins.inmemory;
 
 import com.github.seqware.queryengine.kernel.RPNStack;
+import com.github.seqware.queryengine.kernel.RPNStack.Constant;
 import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
 import com.github.seqware.queryengine.kernel.RPNStack.Parameter;
 import com.github.seqware.queryengine.kernel.RPNStack.TagHierarchicalOccurrence;
 import com.github.seqware.queryengine.kernel.RPNStack.TagOccurrence;
+import com.github.seqware.queryengine.kernel.RPNStack.TagValue;
 import com.github.seqware.queryengine.kernel.RPNStack.TagValuePresence;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.Tag;
@@ -70,6 +72,10 @@ public class InMemoryFeaturesByAttributesPlugin extends InMemoryFeaturesByFilter
             for (Parameter parameter : rpnStack.getParameters()) {
                 if (parameter instanceof FeatureAttribute) {
                     rpnStack.setParameter(parameter, feature.getAttribute(parameter.getName()));
+                } else if (parameter instanceof TagValue) {
+                    TagValue to = (TagValue)parameter;
+                    Tag tagByKey = feature.getTagByKey(to.getTagSetRowKey(), parameter.getName());
+                    rpnStack.setParameter(parameter, tagByKey == null ? null : tagByKey.getValue());
                 } else if (parameter instanceof TagOccurrence) {
                     TagOccurrence to = (TagOccurrence)parameter;
                     rpnStack.setParameter(parameter, feature.getTagByKey(to.getTagSetRowKey(), parameter.getName()) != null);
@@ -106,10 +112,11 @@ public class InMemoryFeaturesByAttributesPlugin extends InMemoryFeaturesByFilter
                 } else if (parameter instanceof TagValuePresence) {
                     TagValuePresence to = (TagValuePresence)parameter;
                     Tag tag = feature.getTagByKey(to.getTagSetRowKey(), parameter.getName());
+                    
                     rpnStack.setParameter(parameter,
                             tag != null
-                            && (tag.getValue() == null && ((TagValuePresence) parameter).getValue() == null
-                            || tag.getValue() != null && tag.getValue().equals(((TagValuePresence) parameter).getValue())));
+                            && (tag.getValue() == null && to.getValue() == null
+                            || tag.getValue() != null && tag.getValue().equals(to.getValue())));
                 } else {
                     throw new UnsupportedOperationException("This plugin can only handle FeatureAttribute parameters.");
                 }
