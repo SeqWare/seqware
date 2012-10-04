@@ -122,7 +122,6 @@ public class QueryVCFDumperTest {
         }
 
         List<String> argList = new ArrayList<String>();
-        // strange, since Apache explicitly calls Util.stripLeadingAndTrailingQuotes we have to leave a space in at the end of the query here
         argList.addAll(Arrays.asList(new String[]{"-f", originalSet.getRowKey(),
                     "-k", keyValueFile.getAbsolutePath(), "-s", "seqid==\"21\" ",
                     "-o", outputFile.getAbsolutePath()}));
