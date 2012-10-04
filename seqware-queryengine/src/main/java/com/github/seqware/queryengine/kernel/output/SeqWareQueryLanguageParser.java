@@ -1,6 +1,6 @@
-// $ANTLR 3.4 /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g 2012-10-04 15:12:45
+// $ANTLR 3.4 /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g 2012-10-04 15:30:02
 
-package com.github.seqware.queryengine.kernel;
+package com.github.seqware.queryengine.kernel.output;
 
 
 import org.antlr.runtime.*;
@@ -66,7 +66,7 @@ public TreeAdaptor getTreeAdaptor() {
     return adaptor;
 }
     public String[] getTokenNames() { return SeqWareQueryLanguageParser.tokenNames; }
-    public String getGrammarFileName() { return "/Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g"; }
+    public String getGrammarFileName() { return "/home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g"; }
 
 
     public static class query_return extends ParserRuleReturnScope {
@@ -76,7 +76,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "query"
-    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:20:1: query : low_precedence_constraint ^ EOF !;
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:20:1: query : low_precedence_constraint ^ EOF !;
     public final SeqWareQueryLanguageParser.query_return query() throws RecognitionException {
         SeqWareQueryLanguageParser.query_return retval = new SeqWareQueryLanguageParser.query_return();
         retval.start = input.LT(1);
@@ -91,8 +91,8 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree EOF2_tree=null;
 
         try {
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:21:2: ( low_precedence_constraint ^ EOF !)
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:21:4: low_precedence_constraint ^ EOF !
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:21:2: ( low_precedence_constraint ^ EOF !)
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:21:4: low_precedence_constraint ^ EOF !
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -137,7 +137,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "low_precedence_constraint"
-    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:24:1: low_precedence_constraint : ( high_precedence_constraint ) ( OR ^ high_precedence_constraint )* ;
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:24:1: low_precedence_constraint : ( high_precedence_constraint ) ( OR ^ high_precedence_constraint )* ;
     public final SeqWareQueryLanguageParser.low_precedence_constraint_return low_precedence_constraint() throws RecognitionException {
         SeqWareQueryLanguageParser.low_precedence_constraint_return retval = new SeqWareQueryLanguageParser.low_precedence_constraint_return();
         retval.start = input.LT(1);
@@ -154,14 +154,14 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree OR4_tree=null;
 
         try {
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:25:2: ( ( high_precedence_constraint ) ( OR ^ high_precedence_constraint )* )
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:25:4: ( high_precedence_constraint ) ( OR ^ high_precedence_constraint )*
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:25:2: ( ( high_precedence_constraint ) ( OR ^ high_precedence_constraint )* )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:25:4: ( high_precedence_constraint ) ( OR ^ high_precedence_constraint )*
             {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:25:4: ( high_precedence_constraint )
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:25:5: high_precedence_constraint
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:25:4: ( high_precedence_constraint )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:25:5: high_precedence_constraint
             {
             pushFollow(FOLLOW_high_precedence_constraint_in_low_precedence_constraint91);
             high_precedence_constraint3=high_precedence_constraint();
@@ -173,7 +173,7 @@ public TreeAdaptor getTreeAdaptor() {
             }
 
 
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:25:33: ( OR ^ high_precedence_constraint )*
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:25:33: ( OR ^ high_precedence_constraint )*
             loop1:
             do {
                 int alt1=2;
@@ -186,7 +186,7 @@ public TreeAdaptor getTreeAdaptor() {
 
                 switch (alt1) {
             	case 1 :
-            	    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:25:34: OR ^ high_precedence_constraint
+            	    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:25:34: OR ^ high_precedence_constraint
             	    {
             	    OR4=(Token)match(input,OR,FOLLOW_OR_in_low_precedence_constraint95); 
             	    OR4_tree = 
@@ -242,7 +242,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "high_precedence_constraint"
-    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:28:1: high_precedence_constraint : ( nested_constraint ) ( AND ^ nested_constraint )* ;
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:28:1: high_precedence_constraint : ( nested_constraint ) ( AND ^ nested_constraint )* ;
     public final SeqWareQueryLanguageParser.high_precedence_constraint_return high_precedence_constraint() throws RecognitionException {
         SeqWareQueryLanguageParser.high_precedence_constraint_return retval = new SeqWareQueryLanguageParser.high_precedence_constraint_return();
         retval.start = input.LT(1);
@@ -259,14 +259,14 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree AND7_tree=null;
 
         try {
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:29:2: ( ( nested_constraint ) ( AND ^ nested_constraint )* )
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:29:4: ( nested_constraint ) ( AND ^ nested_constraint )*
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:29:2: ( ( nested_constraint ) ( AND ^ nested_constraint )* )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:29:4: ( nested_constraint ) ( AND ^ nested_constraint )*
             {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:29:4: ( nested_constraint )
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:29:5: nested_constraint
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:29:4: ( nested_constraint )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:29:5: nested_constraint
             {
             pushFollow(FOLLOW_nested_constraint_in_high_precedence_constraint113);
             nested_constraint6=nested_constraint();
@@ -278,7 +278,7 @@ public TreeAdaptor getTreeAdaptor() {
             }
 
 
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:29:24: ( AND ^ nested_constraint )*
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:29:24: ( AND ^ nested_constraint )*
             loop2:
             do {
                 int alt2=2;
@@ -291,7 +291,7 @@ public TreeAdaptor getTreeAdaptor() {
 
                 switch (alt2) {
             	case 1 :
-            	    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:29:25: AND ^ nested_constraint
+            	    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:29:25: AND ^ nested_constraint
             	    {
             	    AND7=(Token)match(input,AND,FOLLOW_AND_in_high_precedence_constraint117); 
             	    AND7_tree = 
@@ -347,7 +347,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "nested_constraint"
-    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:32:1: nested_constraint : ( ( NOT ^)? BRACKET_OPEN ! low_precedence_constraint BRACKET_CLOSE !| constraint );
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:32:1: nested_constraint : ( ( NOT ^)? BRACKET_OPEN ! low_precedence_constraint BRACKET_CLOSE !| constraint );
     public final SeqWareQueryLanguageParser.nested_constraint_return nested_constraint() throws RecognitionException {
         SeqWareQueryLanguageParser.nested_constraint_return retval = new SeqWareQueryLanguageParser.nested_constraint_return();
         retval.start = input.LT(1);
@@ -368,7 +368,7 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree BRACKET_CLOSE12_tree=null;
 
         try {
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:33:2: ( ( NOT ^)? BRACKET_OPEN ! low_precedence_constraint BRACKET_CLOSE !| constraint )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:33:2: ( ( NOT ^)? BRACKET_OPEN ! low_precedence_constraint BRACKET_CLOSE !| constraint )
             int alt4=2;
             int LA4_0 = input.LA(1);
 
@@ -387,12 +387,12 @@ public TreeAdaptor getTreeAdaptor() {
             }
             switch (alt4) {
                 case 1 :
-                    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:33:4: ( NOT ^)? BRACKET_OPEN ! low_precedence_constraint BRACKET_CLOSE !
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:33:4: ( NOT ^)? BRACKET_OPEN ! low_precedence_constraint BRACKET_CLOSE !
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
 
-                    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:33:4: ( NOT ^)?
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:33:4: ( NOT ^)?
                     int alt3=2;
                     int LA3_0 = input.LA(1);
 
@@ -401,7 +401,7 @@ public TreeAdaptor getTreeAdaptor() {
                     }
                     switch (alt3) {
                         case 1 :
-                            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:33:5: NOT ^
+                            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:33:5: NOT ^
                             {
                             NOT9=(Token)match(input,NOT,FOLLOW_NOT_in_nested_constraint135); 
                             NOT9_tree = 
@@ -430,7 +430,7 @@ public TreeAdaptor getTreeAdaptor() {
                     }
                     break;
                 case 2 :
-                    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:34:4: constraint
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:34:4: constraint
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -475,7 +475,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "constraint"
-    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:38:1: constraint : ( identifier comparison ^ constant | constant comparison ^ identifier | two_param_predicate | three_param_predicate );
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:38:1: constraint : ( identifier comparison ^ constant | constant comparison ^ identifier | two_param_predicate | three_param_predicate );
     public final SeqWareQueryLanguageParser.constraint_return constraint() throws RecognitionException {
         SeqWareQueryLanguageParser.constraint_return retval = new SeqWareQueryLanguageParser.constraint_return();
         retval.start = input.LT(1);
@@ -502,7 +502,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
         try {
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:39:2: ( identifier comparison ^ constant | constant comparison ^ identifier | two_param_predicate | three_param_predicate )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:39:2: ( identifier comparison ^ constant | constant comparison ^ identifier | two_param_predicate | three_param_predicate )
             int alt5=4;
             switch ( input.LA(1) ) {
             case ID:
@@ -539,7 +539,7 @@ public TreeAdaptor getTreeAdaptor() {
 
             switch (alt5) {
                 case 1 :
-                    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:39:4: identifier comparison ^ constant
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:39:4: identifier comparison ^ constant
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -568,7 +568,7 @@ public TreeAdaptor getTreeAdaptor() {
                     }
                     break;
                 case 2 :
-                    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:40:4: constant comparison ^ identifier
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:40:4: constant comparison ^ identifier
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -597,7 +597,7 @@ public TreeAdaptor getTreeAdaptor() {
                     }
                     break;
                 case 3 :
-                    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:41:4: two_param_predicate
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:41:4: two_param_predicate
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -612,7 +612,7 @@ public TreeAdaptor getTreeAdaptor() {
                     }
                     break;
                 case 4 :
-                    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:42:5: three_param_predicate
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:42:5: three_param_predicate
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -657,7 +657,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "identifier"
-    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:45:1: identifier : ( ID | key_value_function );
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:45:1: identifier : ( ID | key_value_function );
     public final SeqWareQueryLanguageParser.identifier_return identifier() throws RecognitionException {
         SeqWareQueryLanguageParser.identifier_return retval = new SeqWareQueryLanguageParser.identifier_return();
         retval.start = input.LT(1);
@@ -672,7 +672,7 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree ID22_tree=null;
 
         try {
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:46:2: ( ID | key_value_function )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:46:2: ( ID | key_value_function )
             int alt6=2;
             int LA6_0 = input.LA(1);
 
@@ -691,7 +691,7 @@ public TreeAdaptor getTreeAdaptor() {
             }
             switch (alt6) {
                 case 1 :
-                    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:46:4: ID
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:46:4: ID
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -706,7 +706,7 @@ public TreeAdaptor getTreeAdaptor() {
                     }
                     break;
                 case 2 :
-                    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:47:5: key_value_function
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:47:5: key_value_function
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -751,7 +751,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "comparison"
-    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:50:1: comparison : ( EQUALS | NOTEQUALS | LT | LTEQ | GT | GTEQ );
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:50:1: comparison : ( EQUALS | NOTEQUALS | LT | LTEQ | GT | GTEQ );
     public final SeqWareQueryLanguageParser.comparison_return comparison() throws RecognitionException {
         SeqWareQueryLanguageParser.comparison_return retval = new SeqWareQueryLanguageParser.comparison_return();
         retval.start = input.LT(1);
@@ -764,8 +764,8 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree set24_tree=null;
 
         try {
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:51:2: ( EQUALS | NOTEQUALS | LT | LTEQ | GT | GTEQ )
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:51:2: ( EQUALS | NOTEQUALS | LT | LTEQ | GT | GTEQ )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -816,7 +816,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "constant"
-    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:54:1: constant : ( literal | NAMED_CONSTANT );
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:54:1: constant : ( literal | NAMED_CONSTANT );
     public final SeqWareQueryLanguageParser.constant_return constant() throws RecognitionException {
         SeqWareQueryLanguageParser.constant_return retval = new SeqWareQueryLanguageParser.constant_return();
         retval.start = input.LT(1);
@@ -831,7 +831,7 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree NAMED_CONSTANT26_tree=null;
 
         try {
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:55:2: ( literal | NAMED_CONSTANT )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:55:2: ( literal | NAMED_CONSTANT )
             int alt7=2;
             int LA7_0 = input.LA(1);
 
@@ -850,7 +850,7 @@ public TreeAdaptor getTreeAdaptor() {
             }
             switch (alt7) {
                 case 1 :
-                    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:55:4: literal
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:55:4: literal
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -865,7 +865,7 @@ public TreeAdaptor getTreeAdaptor() {
                     }
                     break;
                 case 2 :
-                    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:56:4: NAMED_CONSTANT
+                    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:56:4: NAMED_CONSTANT
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -910,7 +910,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "literal"
-    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:59:1: literal : ( INT | FLOAT | STRING );
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:59:1: literal : ( INT | FLOAT | STRING );
     public final SeqWareQueryLanguageParser.literal_return literal() throws RecognitionException {
         SeqWareQueryLanguageParser.literal_return retval = new SeqWareQueryLanguageParser.literal_return();
         retval.start = input.LT(1);
@@ -923,8 +923,8 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree set27_tree=null;
 
         try {
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:60:2: ( INT | FLOAT | STRING )
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:60:2: ( INT | FLOAT | STRING )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -975,7 +975,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "key_value_function"
-    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:63:1: key_value_function : NAMED_FUNCTION ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !;
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:63:1: key_value_function : NAMED_FUNCTION ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !;
     public final SeqWareQueryLanguageParser.key_value_function_return key_value_function() throws RecognitionException {
         SeqWareQueryLanguageParser.key_value_function_return retval = new SeqWareQueryLanguageParser.key_value_function_return();
         retval.start = input.LT(1);
@@ -998,8 +998,8 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree BRACKET_CLOSE33_tree=null;
 
         try {
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:64:2: ( NAMED_FUNCTION ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !)
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:64:4: NAMED_FUNCTION ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:64:2: ( NAMED_FUNCTION ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !)
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:64:4: NAMED_FUNCTION ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -1067,7 +1067,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "two_param_predicate"
-    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:67:1: two_param_predicate : NAMED_TWO_PARAM_PREDICATE ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !;
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:67:1: two_param_predicate : NAMED_TWO_PARAM_PREDICATE ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !;
     public final SeqWareQueryLanguageParser.two_param_predicate_return two_param_predicate() throws RecognitionException {
         SeqWareQueryLanguageParser.two_param_predicate_return retval = new SeqWareQueryLanguageParser.two_param_predicate_return();
         retval.start = input.LT(1);
@@ -1090,8 +1090,8 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree BRACKET_CLOSE39_tree=null;
 
         try {
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:68:2: ( NAMED_TWO_PARAM_PREDICATE ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !)
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:68:4: NAMED_TWO_PARAM_PREDICATE ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:68:2: ( NAMED_TWO_PARAM_PREDICATE ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !)
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:68:4: NAMED_TWO_PARAM_PREDICATE ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -1159,7 +1159,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "three_param_predicate"
-    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:71:1: three_param_predicate : NAMED_THREE_PARAM_PREDICATE ^ BRACKET_OPEN ! literal ',' literal ',' literal BRACKET_CLOSE !;
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:71:1: three_param_predicate : NAMED_THREE_PARAM_PREDICATE ^ BRACKET_OPEN ! literal ',' literal ',' literal BRACKET_CLOSE !;
     public final SeqWareQueryLanguageParser.three_param_predicate_return three_param_predicate() throws RecognitionException {
         SeqWareQueryLanguageParser.three_param_predicate_return retval = new SeqWareQueryLanguageParser.three_param_predicate_return();
         retval.start = input.LT(1);
@@ -1186,8 +1186,8 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree BRACKET_CLOSE47_tree=null;
 
         try {
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:72:2: ( NAMED_THREE_PARAM_PREDICATE ^ BRACKET_OPEN ! literal ',' literal ',' literal BRACKET_CLOSE !)
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:72:4: NAMED_THREE_PARAM_PREDICATE ^ BRACKET_OPEN ! literal ',' literal ',' literal BRACKET_CLOSE !
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:72:2: ( NAMED_THREE_PARAM_PREDICATE ^ BRACKET_OPEN ! literal ',' literal ',' literal BRACKET_CLOSE !)
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:72:4: NAMED_THREE_PARAM_PREDICATE ^ BRACKET_OPEN ! literal ',' literal ',' literal BRACKET_CLOSE !
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -1269,7 +1269,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "comment"
-    // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:75:1: comment : ( COMMENT_EOL | COMMENT_INLINE );
+    // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:75:1: comment : ( COMMENT_EOL | COMMENT_INLINE );
     public final SeqWareQueryLanguageParser.comment_return comment() throws RecognitionException {
         SeqWareQueryLanguageParser.comment_return retval = new SeqWareQueryLanguageParser.comment_return();
         retval.start = input.LT(1);
@@ -1282,8 +1282,8 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree set48_tree=null;
 
         try {
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:76:2: ( COMMENT_EOL | COMMENT_INLINE )
-            // /Users/joachim/src/seqware/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:76:2: ( COMMENT_EOL | COMMENT_INLINE )
+            // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:
             {
             root_0 = (CommonTree)adaptor.nil();
 
