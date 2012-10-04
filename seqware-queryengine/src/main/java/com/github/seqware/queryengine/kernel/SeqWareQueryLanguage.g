@@ -18,7 +18,7 @@ package com.github.seqware.queryengine.kernel;
 @parser::namespace { SeqWareQueryLanguage }
 
 query
-	:	low_precedence_constraint^ EOF
+	:	low_precedence_constraint^ EOF!
 	;
 
 low_precedence_constraint
@@ -30,10 +30,9 @@ high_precedence_constraint
 	;
 	
 nested_constraint
-	:	BRACKET_OPEN! low_precedence_constraint BRACKET_CLOSE!
+	:	(NOT^)? BRACKET_OPEN! low_precedence_constraint BRACKET_CLOSE!
 	|	constraint
-	|	comment!
-	|	NOT^ nested_constraint
+//	|	comment!
 	;
 
 constraint
