@@ -6,6 +6,7 @@ import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
 import com.github.seqware.queryengine.system.Utility;
 import com.github.seqware.queryengine.system.importers.*;
+import org.apache.commons.cli.HackedPosixParser;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.File;
 import java.io.IOException;
@@ -73,7 +74,7 @@ public class QueryVCFDumper extends Importer {
         options.addOption(option4);
 
         try {
-            CommandLineParser parser = new PosixParser();
+            CommandLineParser parser = new HackedPosixParser();
             CommandLine cmd = parser.parse(options, args);
 
             // parse a SGID from a String representation, we need a more elegant solution here
@@ -134,7 +135,7 @@ public class QueryVCFDumper extends Importer {
             // automatically generate the help statement
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp(QueryVCFDumper.class.getSimpleName(), options);
-            Logger.getLogger(QueryVCFDumper.class.getName()).fatal(null, e);
+//            Logger.getLogger(QueryVCFDumper.class.getName()).fatal(null, e);
             System.exit(FeatureImporter.EXIT_CODE_INVALID_ARGS);
         } catch (ClassNotFoundException e) {
             // automatically generate the help statement
