@@ -9,9 +9,15 @@
     </requiredProperties>
   <fileSets>
     <fileSet filtered="true" encoding="UTF-8">
+      <directory>workflow/bin</directory>
+      <includes>
+        <include>**/*</include>
+      </includes>
+    </fileSet>
+    <fileSet filtered="true" encoding="UTF-8">
       <directory>workflow/data</directory>
       <includes>
-        <include>**/*.txt</include>
+        <include>**/*</include>
       </includes>
     </fileSet>
     <fileSet filtered="false" encoding="UTF-8">
@@ -35,7 +41,7 @@
     <fileSet encoding="UTF-8">
       <directory>workflow/lib</directory>
       <includes>
-        <include>**/*.jar</include>
+        <include>**/*</include>
       </includes>
     </fileSet>
     <fileSet filtered="true" encoding="UTF-8">
