@@ -7,11 +7,11 @@ options{
 }
 
 @header {
-package com.github.seqware.queryengine.kernel;
+package com.github.seqware.queryengine.kernel.output;
 }
 
 @lexer::header {
-package com.github.seqware.queryengine.kernel;
+package com.github.seqware.queryengine.kernel.output;
 }
 
 @lexer::namespace { SeqWareQueryLanguage }

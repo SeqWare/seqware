@@ -16,6 +16,7 @@
  */
 package com.github.seqware.queryengine.kernel;
 
+import com.github.seqware.queryengine.kernel.output.SeqWareQueryLanguageLexer;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.RecognizerSharedState;

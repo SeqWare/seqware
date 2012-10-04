@@ -1,8 +1,8 @@
 package com.github.seqware.queryengine.kernel;
 
+import com.github.seqware.queryengine.kernel.output.SeqWareQueryLanguageParser;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.Tag;
-import com.github.seqware.queryengine.system.exporters.QueryVCFDumper;
 import java.io.Serializable;
 import java.util.*;
 import org.antlr.runtime.ANTLRStringStream;

@@ -345,7 +345,7 @@ public class QueryInterfaceTest implements Benchmarking {
         count = (int) resultSet.getCount();
         Assert.assertTrue("Setting a query constraint with a != operation failed, expected 7 and found " + count, count == 7);
 
-        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, RPNStack.compileQuery("!tagOccurrence(\"" + b_tagset.getSGID().getRowKey() + "\",\"SO::sequence_variant::functional_variant::transcript_function_variant::transcript_processing_variant\")"));
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, RPNStack.compileQuery("!(tagOccurrence(\"" + b_tagset.getSGID().getRowKey() + "\",\"SO::sequence_variant::functional_variant::transcript_function_variant::transcript_processing_variant\"))"));
         resultSet = queryFuture.get();
         count = (int) resultSet.getCount();
         Assert.assertTrue("Setting a query constraint with a ! operation failed, expected 15 and found " + count, count == 15);

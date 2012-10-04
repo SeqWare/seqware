@@ -16,6 +16,7 @@
  */
 package com.github.seqware.queryengine.kernel;
 
+import com.github.seqware.queryengine.kernel.output.SeqWareQueryLanguageParser;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.TokenStream;
