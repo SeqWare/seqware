@@ -187,7 +187,7 @@ This is a sample HelloWorld workflow. Use it as a template to build your own wor
       --module net.sourceforge.seqware.pipeline.modules.GenericCommandRunner
       --
       --gcr-algorithm HelloWorldGenericCommandRunner
-      --gcr-output-file HelloWorldGenericCommandRunner:text/plain:${data_dir}/${basename}.hello
+      --gcr-output-file HelloWorldGenericCommandRunner::text/plain::${data_dir}/${basename}.hello
       --gcr-command ${workflow_bundle_dir}/${workflow_name}/bin/gnu-coreutils-5.67/echo "${greeting}, job3" >> ${data_dir}/${basename}.hello
     </argument>
 
