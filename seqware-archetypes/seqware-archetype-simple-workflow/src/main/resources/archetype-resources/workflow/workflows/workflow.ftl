@@ -64,7 +64,7 @@ should be almost everything you need to be build more complex workflows.
   <job id="IDPRE1" namespace="seqware" name="java" version="${java_version}">
     <argument>
       -Xmx1000M
-      -classpath ${workflow_bundle_dir}/${workflow_name}/classes:${workflow_bundle_dir}/${workflow_name}/lib/seqware-pipeline-${seqware_version}.jar
+      -classpath ${workflow_bundle_dir}/${workflow_name}/classes:${workflow_bundle_dir}/${workflow_name}/lib/seqware-pipeline-${seqware_version}-full.jar
       net.sourceforge.seqware.pipeline.runner.Runner
       --no-metadata
       --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles
@@ -84,7 +84,7 @@ should be almost everything you need to be build more complex workflows.
   <job id="ID001" namespace="seqware" name="java" version="${java_version}">
     <argument>
       -Xmx1000M
-      -classpath ${workflow_bundle_dir}/${workflow_name}/bin:${workflow_bundle_dir}/${workflow_name}/lib/seqware-pipeline-${seqware_version}.jar
+      -classpath ${workflow_bundle_dir}/${workflow_name}/bin:${workflow_bundle_dir}/${workflow_name}/lib/seqware-pipeline-${seqware_version}-full.jar
       net.sourceforge.seqware.pipeline.runner.Runner
       --no-metadata
       --module net.sourceforge.seqware.pipeline.modules.GenericCommandRunner
@@ -105,7 +105,7 @@ should be almost everything you need to be build more complex workflows.
   <job id="IDPOST1" namespace="seqware" name="java" version="${java_version}">
     <argument>
       -Xmx1000M
-      -classpath ${workflow_bundle_dir}/${workflow_name}/classes:${workflow_bundle_dir}/${workflow_name}/lib/seqware-pipeline-${seqware_version}.jar
+      -classpath ${workflow_bundle_dir}/${workflow_name}/classes:${workflow_bundle_dir}/${workflow_name}/lib/seqware-pipeline-${seqware_version}-full.jar
       net.sourceforge.seqware.pipeline.runner.Runner
       --no-metadata
       --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles
@@ -126,7 +126,7 @@ should be almost everything you need to be build more complex workflows.
   <job id="IDPOST2" namespace="seqware" name="java" version="${java_version}">
     <argument>
       -Xmx1000M
-      -classpath ${workflow_bundle_dir}/${workflow_name}/classes:${workflow_bundle_dir}/${workflow_name}/lib/seqware-pipeline-${seqware_version}.jar
+      -classpath ${workflow_bundle_dir}/${workflow_name}/classes:${workflow_bundle_dir}/${workflow_name}/lib/seqware-pipeline-${seqware_version}-full.jar
       net.sourceforge.seqware.pipeline.runner.Runner
       --${metadata}
       <#list parentAccessions?split(",") as pa>
