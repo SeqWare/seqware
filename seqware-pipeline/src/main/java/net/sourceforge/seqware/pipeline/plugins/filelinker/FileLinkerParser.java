@@ -18,7 +18,6 @@ import net.sourceforge.seqware.common.module.FileMetadata;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.collections.Sets;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.bean.CsvToBean;
@@ -26,6 +25,7 @@ import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 public class FileLinkerParser {
 
@@ -100,11 +100,14 @@ public class FileLinkerParser {
          if (!line.hasRequiredValues()) {
             hasRequiredValues = false;
             badLines.add(i + 2);
-            log.error("Required value(s) missing in csv file at line number [{}]. Lane, seqwareAccession, mimeType and file are required. {}", i + 2, line);
+            log.error(
+                  "Required value(s) missing in csv file at line number [{}]. Lane, seqwareAccession, mimeType and file are required. {}",
+                  i + 2, line);
          }
       }
-      if(!hasRequiredValues) {
-         throw new FileLinkerLineException("Csv file missing required values on the following lines: " + Arrays.toString(badLines.toArray()));
+      if (!hasRequiredValues) {
+         throw new FileLinkerLineException("Csv file missing required values on the following lines: "
+               + Arrays.toString(badLines.toArray()));
       }
    }
 
