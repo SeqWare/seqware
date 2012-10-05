@@ -27,7 +27,7 @@ import java.util.Map.Entry;
 
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
+import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job1;
 import net.sourceforge.seqware.pipeline.workflowV2.model.JobInterface;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Module;
@@ -265,7 +265,7 @@ public class AdagObject  {
 	
 	private void parseWorkflow(AbstractWorkflowDataModel wfdm) {
 		//mkdir data job
-		Job job0 = new Job("start");
+		AbstractJob job0 = new AbstractJob("start");
 		job0.setModule(Module.Bash);
 		job0.getCommand().addArgument("mkdir data");
 		PegasusJobObject pjob0 = new PegasusJobObject(job0, wfdm.getConfigs().get("basedir"));
@@ -274,7 +274,7 @@ public class AdagObject  {
 		
 		//sqwfiles
 		for(Map.Entry<String,SqwFile> entry: wfdm.getFiles().entrySet()) {
-			Job job = new Job("provisionFile_"+entry.getKey());
+			AbstractJob job = new AbstractJob("provisionFile_"+entry.getKey());
 			job.setModule(Module.Bash);
 			job.addFile(entry.getValue());
 			PegasusJobObject pjob = new ProvisionFilesJob(job,wfdm.getConfigs().get("basedir"));
@@ -289,12 +289,12 @@ public class AdagObject  {
 		}
 		
 		int idCount = 0;
-		for(Job job: wfdm.getWorkflow().getJobs()) {
+		for(AbstractJob job: wfdm.getWorkflow().getJobs()) {
 			PegasusJobObject pjob = this.createPegasusJobObject(job, wfdm);
 			pjob.setId(idCount);
 
 			for(JobInterface parent: job.getParents()) {
-				pjob.getParents().add(this.getPegasusJobObject((Job)parent));
+				pjob.getParents().add(this.getPegasusJobObject((AbstractJob)parent));
 			}
 			
 			
@@ -310,7 +310,7 @@ public class AdagObject  {
 							pjob.getParents().add(this.fileJobMap.get(file));
 						} else {
 							//create a provisionFileJob;
-							Job pfjob = new Job("provisionFile_in");
+							AbstractJob pfjob = new AbstractJob("provisionFile_in");
 							pfjob.setModule(Module.Bash);
 							pfjob.addFile(file);
 							PegasusJobObject parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getConfigs().get("basedir"));
@@ -324,7 +324,7 @@ public class AdagObject  {
 							this.fileJobMap.get(file).getParents().add(pjob);
 						} else {
 							//create a provisionFileJob;
-							Job pfjob = new Job("provisionFile_in");
+							AbstractJob pfjob = new AbstractJob("provisionFile_in");
 							pfjob.setModule(Module.Bash);
 							pfjob.addFile(file);
 							PegasusJobObject parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getConfigs().get("basedir"));
@@ -345,7 +345,7 @@ public class AdagObject  {
 		}
 	}
 	
-	private PegasusJobObject getPegasusJobObject(Job job) {
+	private PegasusJobObject getPegasusJobObject(AbstractJob job) {
 		for(PegasusJobObject pjob: this.jobs) {
 			if(job.equals(pjob.getJobObject()))
 				return pjob;
@@ -353,7 +353,7 @@ public class AdagObject  {
 		return null;
 	}
 	
-	private PegasusJobObject createPegasusJobObject(Job job, AbstractWorkflowDataModel wfdm) {
+	private PegasusJobObject createPegasusJobObject(AbstractJob job, AbstractWorkflowDataModel wfdm) {
 		PegasusJobObject ret = null;
 		if(job.getModule() == Module.Java) {
 			ret = new PegasusJavaJob(job,wfdm.getConfigs().get("basedir"));
