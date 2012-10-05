@@ -7,7 +7,7 @@ import java.util.List;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Argument;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job1;
 import net.sourceforge.seqware.pipeline.workflowV2.model.JobProfile;
-import net.sourceforge.seqware.pipeline.workflowV2.pegasus.StringUtils;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.StringUtils;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;

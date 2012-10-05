@@ -30,10 +30,20 @@ public class SqwFile {
 		return input;
 	}
 	
+	/**
+	 * isInput = @param isInput
+	 * isOutput = !@param isInput
+	 * @param isInupt
+	 */
 	public void setIsInput(boolean isInupt) {
 		this.input = isInupt;
 	}
 	
+	/**
+	 * isInput = !@param isOutput
+	 * isOutput = @param isOutput
+	 * @param isInupt
+	 */
 	public void setIsOutput(boolean isOutput) {
 		this.input = !isOutput;
 	}
@@ -56,6 +66,10 @@ public class SqwFile {
 	public boolean isForceCopy() {
 		return forceCopy;
 	}
+	/**
+	 * when forceCopy is true, it will pass "--forcecopy" argument to provisionFileJob
+	 * @param forceCopy
+	 */
 	public void setForceCopy(boolean forceCopy) {
 		this.forceCopy = forceCopy;
 	}

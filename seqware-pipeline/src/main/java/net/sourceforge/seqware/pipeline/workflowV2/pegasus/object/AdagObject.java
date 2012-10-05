@@ -29,11 +29,12 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job1;
+import net.sourceforge.seqware.pipeline.workflowV2.model.JobInterface;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Module;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SeqwareModuleJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
-import net.sourceforge.seqware.pipeline.workflowV2.pegasus.WorkflowExecutableUtils;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.WorkflowExecutableUtils;
 
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -292,8 +293,8 @@ public class AdagObject  {
 			PegasusJobObject pjob = this.createPegasusJobObject(job, wfdm);
 			pjob.setId(idCount);
 
-			for(Job parent: job.getParents()) {
-				pjob.getParents().add(this.getPegasusJobObject(parent));
+			for(JobInterface parent: job.getParents()) {
+				pjob.getParents().add(this.getPegasusJobObject((Job)parent));
 			}
 			
 			

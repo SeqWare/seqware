@@ -139,5 +139,11 @@ public abstract class AbstractWorkflowDataModel  {
 		this.wait = wait;
 	}
 
+	/**
+	 * @return ${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}
+	 */
+	public String getWorkflowBaseDir() {
+		return "";
+	}
 	
 }
