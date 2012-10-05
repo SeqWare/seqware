@@ -18,6 +18,7 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
   
 import net.sourceforge.seqware.pipeline.module.Module;
+import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 import net.sourceforge.seqware.common.util.runtools.RunTools;
 
 import org.openide.util.lookup.ServiceProvider;
