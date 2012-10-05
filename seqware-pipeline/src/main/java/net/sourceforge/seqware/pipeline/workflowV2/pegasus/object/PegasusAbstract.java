@@ -18,7 +18,7 @@ package net.sourceforge.seqware.pipeline.workflowV2.pegasus.object;
 
 import java.util.Map;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
-import net.sourceforge.seqware.pipeline.workflowV2.pegasus.WorkflowContext;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.WorkflowContext;
 
 import org.jdom.Element;
 import org.jdom.Namespace;

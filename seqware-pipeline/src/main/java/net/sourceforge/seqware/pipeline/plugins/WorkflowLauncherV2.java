@@ -17,10 +17,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
+import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
@@ -29,8 +34,8 @@ import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowClassFinder;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
-import net.sourceforge.seqware.pipeline.workflowV2.pegasus.PegasusWorkflowEngine;
-import net.sourceforge.seqware.pipeline.workflowV2.pegasus.StringUtils;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.PegasusWorkflowEngine;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.StringUtils;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -64,7 +69,134 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     	
     	// load abstractWorkflowDataModel
     	AbstractWorkflowDataModel dataModel = this.loadDataModel();
-    	engine.launchWorkflow(dataModel);
+    	ReturnValue retPegasus = engine.launchWorkflow(dataModel);
+    	// metadataWriteback
+    	// figure out the status command
+    	String stdOut = retPegasus.getStdout();
+    	Pattern p = Pattern.compile("(pegasus-status -l \\S+)");
+    	Matcher m = p.matcher(stdOut);
+    	String statusCmd = null;
+    	if (m.find()) {
+    	    statusCmd = m.group(1);
+    	}
+
+    	// look for the status directory
+    	p = Pattern.compile("pegasus-status -l (\\S+)");
+    	m = p.matcher(stdOut);
+    	String statusDir = null;
+    	if (m.find()) {
+    	    statusDir = m.group(1);
+    	}
+    	
+    	// keep this id handy
+    	int workflowRunId = 0;
+    	int workflowRunAccessionInt = 0;
+    	int workflowAccession = 0;
+    	String workflowRunAccession = null;
+    	List<String> parentsLinkedToWR = new ArrayList<String>();
+    	WorkflowInfo wi = dataModel.getWorkflowInfo();
+		// metadata
+		boolean metadataWriteback = true;
+		if (options.has("no-metadata") || options.has("no-meta-db")) {
+		    metadataWriteback = false;
+		}
+		// if we're doing metadata writeback will need to parameterize the
+		// workflow correctly
+		WorkflowRun wr = null;
+		if (metadataWriteback) {
+
+		    // need to figure out workflow_run_accession
+		    workflowAccession = wi.getWorkflowAccession();
+		    // create the workflow_run row if it doesn't exist
+		    if (workflowRunAccession == null) {
+				workflowRunId = this.metadata
+					.add_workflow_run(workflowAccession);
+				workflowRunAccessionInt = this.metadata
+					.get_workflow_run_accession(workflowRunId);
+				workflowRunAccession = new Integer(workflowRunAccessionInt)
+					.toString();
+		    } else { // if the workflow_run row exists get the workflow_run_id
+				workflowRunId = this.metadata.get_workflow_run_id(Integer
+					.parseInt(workflowRunAccession));
+				workflowRunAccessionInt = this.metadata
+					.get_workflow_run_accession(workflowRunId);
+		    }
+
+		    // need to link all the parents to this workflow run accession
+		    for (String parentLinkedToWR : parentsLinkedToWR) {
+				try {
+				    this.metadata.linkWorkflowRunAndParent(workflowRunId,
+					    Integer.parseInt(parentLinkedToWR));
+				} catch (Exception e) {
+				    Log.error(e.getMessage());
+				}
+		    }
+
+	    	// need to pull back the workflow run object since some fields may
+	    	// already be set
+	    	// and we need to use their values before writing back to the DB!
+	    	wr = metadata.getWorkflowRun(workflowRunAccessionInt);
+		}
+    	if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS
+    			|| statusCmd == null) {
+    		    // then something went wrong trying to call pegasus
+    		    if (metadataWriteback) {
+	    			metadata.update_workflow_run(workflowRunId, wi.getCommand(),
+	    				wi.getTemplatePath(), "failed", statusCmd,
+	    				wi.getWorkflowDir(), "",
+	    				"", wr.getHost(), 0, 0,
+	    				retPegasus.getStderr(), retPegasus.getStdout());
+    		    }
+    		    return (retPegasus);
+    		}
+    	
+    	// wait
+    	// if the user passes in --wait then hang around until the workflow
+    	// finishes or fails
+    	// periodically checking the status in a robust way
+    	boolean success = true;
+    	if (dataModel.isWait()) {
+    	    success = false;
+
+    	    // now parse out the return status from the pegasus tool
+    	    ReturnValue watchedResult = null;
+    	    if (statusCmd != null && statusDir != null) {
+				WorkflowTools workflowTools = new WorkflowTools();			
+				watchedResult = workflowTools.watchWorkflow(statusCmd,
+					statusDir);
+    	    }
+
+    	    if (watchedResult.getExitStatus() == ReturnValue.SUCCESS) {
+	    		success = true;
+	    		if (metadataWriteback) {
+	    		    metadata.update_workflow_run(workflowRunId,
+	    			    wi.getCommand(), wi.getTemplatePath(), "completed",
+	    			    statusCmd, wi.getWorkflowDir(), "","", wr
+	    				    .getHost(), Integer.parseInt(watchedResult
+	    				    .getAttribute("currStep")), Integer
+	    				    .parseInt(watchedResult
+	    					    .getAttribute("totalSteps")),
+	    			    retPegasus.getStderr(), retPegasus.getStdout());
+	    		}
+	
+    	    } else if (watchedResult.getExitStatus() == ReturnValue.FAILURE) {
+	    		Log.error("ERROR: problems watching workflow");
+	    		// need to save back to the DB if watching
+	    		if (metadataWriteback) {
+	    		    metadata.update_workflow_run(workflowRunId,
+	    			    wi.getCommand(), wi.getTemplatePath(), "failed",
+	    			    statusCmd, wi.getWorkflowDir(), "", "", wr
+	    				    .getHost(), Integer.parseInt(watchedResult
+	    				    .getAttribute("currStep")), Integer
+	    				    .parseInt(watchedResult
+	    					    .getAttribute("totalSteps")),
+	    			    watchedResult.getStderr(), watchedResult
+	    				    .getStdout());
+	    		}
+	    		ret.setExitStatus(ReturnValue.FAILURE);
+    	    }
+    	}
+    	
     	// parse workflowobjectmodel defined by workflow author
     	
 		/*
@@ -312,7 +444,6 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     	}
     	if(res == null)
     		return null;
-    	//TODO should these set method defined as private and load the field using reflection?
     	//set command line options
     	res.setCmdOptions(new ArrayList<String>(Arrays.asList(this.params)));
     	//set workflowInfo
@@ -374,6 +505,10 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
         try {
         	Method m = clazz.getDeclaredMethod("setupFiles");
         	m.invoke(res);
+/*        	m = clazz.getDeclaredMethod("setupWorkflow");
+        	m.invoke(res);
+        	m = clazz.getDeclaredMethod("setupEnvironment");
+        	m.invoke(res);*/
 			m = clazz.getDeclaredMethod("buildWorkflow");
 			m.invoke(res);
 		} catch (SecurityException e) {
