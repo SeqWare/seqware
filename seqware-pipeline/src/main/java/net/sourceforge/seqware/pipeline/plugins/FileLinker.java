@@ -16,13 +16,9 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 import joptsimple.OptionSpec;
@@ -76,7 +72,6 @@ public class FileLinker extends Plugin {
       if (options.has("file-list-file") && options.has("workflow-accession")) {
          // parse the file
          String filename = (String) options.valueOf("file-list-file");
-         Map<FileMetadata, Integer> info = parseFile(filename);
 
          Map<Integer, FileMetadata> swaToFileMap = null;
          try {
@@ -95,22 +90,8 @@ public class FileLinker extends Plugin {
             ret.setExitStatus(ReturnValue.SQLQUERYFAILED);
             return ret;
          }
-         // add the files to the database and link to the workflow_run
-         for (FileMetadata fileMetadata : info.keySet()) {
-            if (!metadata.isDuplicateFile(fileMetadata.getFilePath())) {
-               int iusAccession = info.get(fileMetadata);
-               ReturnValue rv = metadata.saveFileForIus(workflowRunId, iusAccession, fileMetadata);
-               if (rv.getExitStatus() != ReturnValue.SUCCESS) {
-                  Log.error("Failure in adding the file " + fileMetadata.getFilePath() + " " + fileMetadata.getMetaType()
-                        + " to IUS sw_accession " + iusAccession);
-                  Log.error("The IUS sw_accession may be incorrect.");
-                  ret.setExitStatus(ReturnValue.FAILURE);
-                  return ret;
-               }
-            } else {
-               Log.error("IGNORED: " + fileMetadata.getFilePath() + " already exists in the DB");
-            }
-         }
+
+         if (!saveFiles(workflowRunId, swaToFileMap)) { return ret; }
 
          // update the workflow run to reflect success
          ReturnValue rv = metadata.update_workflow_run(workflowRunId, null, null, Metadata.SUCCESS, null, currentDir, null, null,
@@ -129,50 +110,25 @@ public class FileLinker extends Plugin {
       return ret;
    }
 
-   /**
-    * Parses the bespoke data format to import files. In the format ius
-    * sw_accession, file path and mime-type space-separated, one file per line
-    * 
-    * @param fileListFile
-    *           full path of the file
-    * @return Files mapped to their parent accessions (ius or lane). We did it
-    *         this way around so that one parent can be mapped to multiple
-    *         files.
-    */
-   private Map<FileMetadata, Integer> parseFile(String fileListFile) {
-      Map<FileMetadata, Integer> set = new HashMap<FileMetadata, Integer>();
-      try {
-         BufferedReader reader = new BufferedReader(new FileReader(fileListFile));
-         // header
-         String line = reader.readLine();
-         line = reader.readLine();
-         while (line != null) {
-            String[] tokens = line.split("\\s+");
-            // ius sw_accession, file path and mime-type
-            if (tokens.length == 7) {
-               // kind of a cheap test to see if the file is in the right
-               // format. If there's not an integer here, it should error out...
-               int iusAccession = new Integer(tokens[3]);
-               set.put(new FileMetadata(tokens[6], tokens[5]), iusAccession);
-            } else if (tokens.length == 6) {
-               // kind of a cheap test to see if the file is in the right
-               // format. If there's not an integer here, it should error out...
-               int iusAccession = new Integer(tokens[3]);
-               FileMetadata fm = new FileMetadata();
-               fm.setFilePath(tokens[5]);
-               set.put(fm, iusAccession);
-            } else {
-               Log.error("Parser ignored line: " + line);
+   private boolean saveFiles(int workflowRunId, Map<Integer, FileMetadata> swaToFileMap) {
+      boolean result = true;
+      for (Map.Entry<Integer, FileMetadata> entry : swaToFileMap.entrySet()) {
+         if (!metadata.isDuplicateFile(entry.getValue().getFilePath())) {
+            ReturnValue rv;
+            if ((rv = metadata.saveFileForIus(workflowRunId, entry.getKey(), entry.getValue())).getExitStatus() != ReturnValue.SUCCESS) {
+               Log.error("Failed to add file [" + entry.getValue().getFilePath() + "] with meta data type ["
+                     + entry.getValue().getMetaType()
+                     + "] to database. Attempting to add file to entity with SeqWare Accession [" + entry.getKey()
+                     + "]. Most likely an IUS or Lane.");
+               ret.setExitStatus(rv.getExitStatus());
+               result = false;
+               break;
             }
-            line = reader.readLine();
-
+         } else {
+            Log.error("Ignored file [" + entry.getValue().getFilePath() + "]. Already exists in database.");
          }
-      } catch (FileNotFoundException e) {
-         e.printStackTrace();
-      } catch (IOException e) {
-         e.printStackTrace();
       }
-      return set;
+      return result;
    }
 
    @Override
