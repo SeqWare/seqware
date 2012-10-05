@@ -2,11 +2,11 @@ package net.sourceforge.seqware.pipeline.workflowV2.pegasus.object;
 
 import java.io.File;
 
-import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
+import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 
 public class PegasusJavaJob extends PegasusJobObject {
 
-	public PegasusJavaJob(Job job, String basedir) {
+	public PegasusJavaJob(AbstractJob job, String basedir) {
 		super(job, basedir);
 	}
 

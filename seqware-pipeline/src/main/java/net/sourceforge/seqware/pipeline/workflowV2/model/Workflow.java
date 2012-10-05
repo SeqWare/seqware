@@ -13,18 +13,18 @@ public class Workflow {
 	private List<String> parentAccessions;
 	private List<String> parentsLinkedToWR;
 	//may be better to use Map
-	private List<Job> jobs;
+	private List<AbstractJob> jobs;
 	
 
 	public Workflow() {
-		this.jobs = new ArrayList<Job>();
+		this.jobs = new ArrayList<AbstractJob>();
 	}
 	
 	/**
 	 * get all jobs in current workflow
 	 * @return
 	 */
-	public List<Job> getJobs() {
+	public List<AbstractJob> getJobs() {
 		return jobs;
 	}
 
@@ -32,7 +32,7 @@ public class Workflow {
 	 * add job to the workflow
 	 * @param job
 	 */
-	public void addJobs(Job job) {
+	public void addJobs(AbstractJob job) {
 		this.jobs.add(job);
 	}
 	
@@ -108,22 +108,22 @@ public class Workflow {
 		this.accession = accession;
 	}
 	
-	public Job createJavaJob(String algo, String cp, String mainclass) {
-		Job job = new Job(algo,cp,mainclass);
+	public AbstractJob createJavaJob(String algo, String cp, String mainclass) {
+		AbstractJob job = new AbstractJob(algo,cp,mainclass);
 		job.setModule(Module.Java);
 		this.jobs.add(job);
 		return job;
 	}
 	
-	public Job createBashJob(String algo) {
-		Job job = new Job(algo);
+	public AbstractJob createBashJob(String algo) {
+		AbstractJob job = new AbstractJob(algo);
 		job.setModule(Module.Bash);
 		this.jobs.add(job);
 		return job;
 	}
 	
-	public Job createPerlJob(String algo, String script) {
-		Job job = new Job(algo, "", script);
+	public AbstractJob createPerlJob(String algo, String script) {
+		AbstractJob job = new AbstractJob(algo, "", script);
 		job.setModule(Module.Perl);
 		this.jobs.add(job);
 		return job;

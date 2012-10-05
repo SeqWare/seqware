@@ -1,12 +1,12 @@
 package net.sourceforge.seqware.pipeline.workflowV2.pegasus.object;
 
-import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
+import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 
 
 public class ProvisionFilesJob extends PegasusJobObject {
 
-	public ProvisionFilesJob(Job job, String basedir) {
+	public ProvisionFilesJob(AbstractJob job, String basedir) {
 		super(job, basedir);
 	}
 
