@@ -33,6 +33,8 @@ import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowClassFinder;
+import net.sourceforge.seqware.pipeline.workflowV2.WorkflowDataModelFactory;
+import net.sourceforge.seqware.pipeline.workflowV2.WorkflowXmlParser;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.PegasusWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.StringUtils;
@@ -66,6 +68,8 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 
     	// set up workflow engine
     	AbstractWorkflowEngine engine = new PegasusWorkflowEngine();
+    	WorkflowDataModelFactory factory = new WorkflowDataModelFactory(metadata, options, config, params);
+    	factory.getWorkflowDataModel();
     	
     	// load abstractWorkflowDataModel
     	AbstractWorkflowDataModel dataModel = this.loadDataModel();
@@ -416,6 +420,10 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     	return null;
     }
     
+    private void loadMatadataXml() {
+    	
+    }
+    
     private AbstractWorkflowDataModel loadDataModel() {
     	AbstractWorkflowDataModel res = null;
     	//parse metadata.xml
@@ -442,8 +450,12 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     	    	Log.error(ex);
     	    } 
     	}
-    	if(res == null)
-    		return null;
+    	if(res == null) {
+    		Log.debug("using FTL");
+    		String ftlPath = wfi.getTemplatePath();
+    		WorkflowXmlParser xmlparser = new WorkflowXmlParser();
+    		return xmlparser.parseXml(ftlPath, null);
+    	}
     	//set command line options
     	res.setCmdOptions(new ArrayList<String>(Arrays.asList(this.params)));
     	//set workflowInfo
@@ -527,9 +539,6 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     	return res;
     }
     
-    private void setPrivateField(AbstractWorkflowDataModel dataModel, String field, Object value) {
-    	
-    }
     
     private void addExtraConfigs(Map<String,String> map) {
         //set date
