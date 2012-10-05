@@ -14,7 +14,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <seqware-version>0.11.4</seqware-version>
+    <seqware-version>0.12.5.1</seqware-version>
   </properties>
 
   <build>
