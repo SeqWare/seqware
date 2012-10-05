@@ -137,6 +137,14 @@ public class WorkflowDataModelFactory {
         ret.getEnv().setDaxDir(config.get("SW_DAX_DIR"));
         ret.getEnv().setSwCluster(config.get("SW_CLUSTER"));
 		ret.setConfigs(config);	
+		
+		//parse XML or Java Object for
+		if(workflow_java) {
+			
+		} else {
+			WorkflowXmlParser xmlParser = new WorkflowXmlParser();
+			xmlParser.parseXml(ret, metaInfo.get("workflow_template"));
+		}
 		return ret;
 	}
 	
@@ -209,7 +217,7 @@ public class WorkflowDataModelFactory {
     		Log.debug("using FTL");
     		String ftlPath = wfi.getTemplatePath();
     		WorkflowXmlParser xmlparser = new WorkflowXmlParser();
-    		return xmlparser.parseXml(ftlPath, null);
+    		return null;
     	}
     	//set command line options
     	res.setCmdOptions(new ArrayList<String>(Arrays.asList(this.params)));
