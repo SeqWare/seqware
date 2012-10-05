@@ -28,9 +28,8 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job1;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Module;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SeqwareModuleJob;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
-import net.sourceforge.seqware.pipeline.workflowV2.pegasus.WorkflowExecutableUtils;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.WorkflowExecutableUtils;
 
 import org.jdom.Element;
 

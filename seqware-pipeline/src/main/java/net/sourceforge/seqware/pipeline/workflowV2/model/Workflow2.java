@@ -113,11 +113,7 @@ public class Workflow2 {
 	return this.properties;
     }
 
-    public Job1 createJavaJob(String algo) {
-	Job1 job = new JavaJob(algo);
-	this.addJob(job);
-	return job;
-    }
+
 
     public SeqwareModuleJob createSeqwareModuleJob(String algo) {
 	return this.createSeqwareModuleJob(algo, Module.Seqware_GenericCommandRunner,

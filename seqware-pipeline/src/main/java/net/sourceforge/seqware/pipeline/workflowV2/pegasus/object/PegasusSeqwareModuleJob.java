@@ -21,7 +21,7 @@ import java.util.Map;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job1;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Module;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SeqwareModuleJob;
-import net.sourceforge.seqware.pipeline.workflowV2.pegasus.ArgumentUtils;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.ArgumentUtils;
 
 import org.jdom.Element;
 
