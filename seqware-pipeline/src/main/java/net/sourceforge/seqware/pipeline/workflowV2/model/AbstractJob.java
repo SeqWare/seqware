@@ -5,16 +5,15 @@ import java.util.Collection;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Requirement.Type;
 
 
-public class AbstractJob implements JobInterface {
+public class AbstractJob implements Job {
 	/**
 	 * a private id to identify the job for internal use
 	 */
 	private String id;
 	private String algo;
 	private Collection<String> arguments;
-	private Collection<JobInterface> parents;
+	private Collection<Job> parents;
 	private Collection<SqwFile> files;
-	private Module module;
 	private Command command;
 	private Collection<Requirement> requirements;
 	private String cp;
@@ -35,7 +34,7 @@ public class AbstractJob implements JobInterface {
 		this.cp = cp;
 		this.mainclass = mainclass;
 		this.arguments = new ArrayList<String>();
-		this.parents = new ArrayList<JobInterface>();
+		this.parents = new ArrayList<Job>();
 		this.files = new ArrayList<SqwFile>();
 		this.requirements = new ArrayList<Requirement>();
 		this.command = new Command();
@@ -70,20 +69,7 @@ public class AbstractJob implements JobInterface {
 		return command;
 	}
 
-	/**
-	 * 
-	 * @return the module for current job
-	 */
-	public Module getModule() {
-		return module;
-	}
-	/**
-	 * set the module for current job
-	 * @param module
-	 */
-	public void setModule(Module module) {
-		this.module = module;
-	}
+
 	public Collection<SqwFile> getFiles() {
 		return files;
 	}
@@ -97,14 +83,14 @@ public class AbstractJob implements JobInterface {
 	 * add all parent jobs
 	 * @return
 	 */
-	public Collection<JobInterface> getParents() {
+	public Collection<Job> getParents() {
 		return parents;
 	}
 	/**
 	 * set parent jobs
 	 * @param parents
 	 */
-	public void setParents(Collection<JobInterface> parents) {
+	public void setParents(Collection<Job> parents) {
 		this.parents = parents;
 	}
 	/**
@@ -193,20 +179,21 @@ public class AbstractJob implements JobInterface {
 	}
 
 	@Override
-	public JobInterface addParent(JobInterface parent) {
+	public Job addParent(Job parent) {
 		this.parents.add(parent);
 		return this;
 	}
 
 	@Override
-	public JobInterface addRequirement(Requirement requirement) {
+	public Job addRequirement(Requirement requirement) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public JobInterface setQueue(String queue) {
+	public Job setQueue(String queue) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }
