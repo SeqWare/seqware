@@ -20,6 +20,8 @@ import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.pipeline.module.Module;
 import net.sourceforge.seqware.common.util.runtools.RunTools;
 
+import org.openide.util.lookup.ServiceProvider;
+
 
 /**
  * This is a hello world module that should give you an idea of how
@@ -33,6 +35,7 @@ import net.sourceforge.seqware.common.util.runtools.RunTools;
  * @author briandoconnor@gmail.com
  *
  */
+@ServiceProvider(service=ModuleInterface.class)
 public class HelloWorldExample extends Module {
 
   private OptionSet options = null;
