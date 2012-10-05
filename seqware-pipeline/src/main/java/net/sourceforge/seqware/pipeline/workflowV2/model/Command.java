@@ -5,8 +5,11 @@ import java.util.List;
 
 public class Command {
 	private List<String> arguments;
-	//default
+	//default FIXME should put in a property file
 	private String mem = "500M";
+	private boolean gcrSkipIfMissing;
+	private boolean gcrSkipIfOutputExists;
+	private String gcrOutputFile;
 	
 	public Command() {
 		this.arguments = new ArrayList<String>();
@@ -48,5 +51,29 @@ public class Command {
 	public Command setMaxMemory(String mem) {
 		this.mem = mem;
 		return this;
+	}
+
+	public boolean isGcrSkipIfMissing() {
+		return gcrSkipIfMissing;
+	}
+
+	public void setGcrSkipIfMissing(boolean gcrSkipIfMissing) {
+		this.gcrSkipIfMissing = gcrSkipIfMissing;
+	}
+
+	public boolean isGcrSkipIfOutputExists() {
+		return gcrSkipIfOutputExists;
+	}
+
+	public void setGcrSkipIfOutputExists(boolean gcrSkipIfOutputExists) {
+		this.gcrSkipIfOutputExists = gcrSkipIfOutputExists;
+	}
+
+	public String getGcrOutputFile() {
+		return gcrOutputFile;
+	}
+
+	public void setGcrOutputFile(String gcrOutputFile) {
+		this.gcrOutputFile = gcrOutputFile;
 	}
 }

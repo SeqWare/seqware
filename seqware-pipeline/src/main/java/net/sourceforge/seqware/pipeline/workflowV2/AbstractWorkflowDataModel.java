@@ -12,7 +12,7 @@ public abstract class AbstractWorkflowDataModel  {
     private Workflow workflow;
     private String name;
     private String version;
-    protected Environment env;
+    private Environment env;
     private WorkflowInfo workflowInfo;
     private Map<String,String> tags;
     protected Map<String,String> configs;
@@ -31,8 +31,9 @@ public abstract class AbstractWorkflowDataModel  {
     private String date;
 
     public AbstractWorkflowDataModel() {
+    	this.env = new Environment();
     	this.files = new HashMap<String, SqwFile>();
-    	this.tags = new HashMap<String,String>();
+    	this.setTags(new HashMap<String,String>());
     	this.configs = new HashMap<String,String>();
     }
     
@@ -42,8 +43,8 @@ public abstract class AbstractWorkflowDataModel  {
     protected void setupEnvironment() {
     	
     }
-    protected void setupFiles() {
-    	
+    protected Map<String, SqwFile> setupFiles() {
+    	return this.files;
     }
     protected abstract void buildWorkflow();
     protected void wrapup() {
@@ -145,5 +146,19 @@ public abstract class AbstractWorkflowDataModel  {
 	public String getWorkflowBaseDir() {
 		return "";
 	}
+
+	public Map<String,String> getTags() {
+		return tags;
+	}
+
+	public void setTags(Map<String,String> tags) {
+		this.tags = tags;
+	}
+
+	public Environment getEnv() {
+		return env;
+	}
+
+
 	
 }
