@@ -107,7 +107,7 @@ public class FileMetadata {
    @Override
    public String toString() {
       return "FileMetadata{" + "url=" + url + ", urlLabel=" + urlLabel + ", filePath=" + filePath + ", type=" + type
-            + ", metaType=" + metaType + ", description=" + description + '}';
+            + ", metaType=" + metaType + ", description=" + description + ", md5sum=" + md5sum + ", size=" + size + '}';
    }
 
    public String getMd5sum() {
