@@ -15,8 +15,6 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.Module;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
-import net.sourceforge.seqware.pipeline.workflowV2.model.XmlWorkflowDataModel;
-
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -26,7 +24,8 @@ import freemarker.template.TemplateException;
 
 public class WorkflowXmlParser {
 	
-	public AbstractWorkflowDataModel parseXml(String file, Map<String,String> configs) {
+	public ReturnValue parseXml(AbstractWorkflowDataModel wfdm, String file) {
+		ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 		//generate tmp xml file from FTL file
 		File xml = null;
 		try {
@@ -37,11 +36,11 @@ public class WorkflowXmlParser {
 
 		try {
 	         // Merge template with data
-	         boolean changed = Freemarker.merge(file, xml.getAbsolutePath(), configs);
+	         boolean changed = Freemarker.merge(file, xml.getAbsolutePath(), wfdm.getConfigs());
 
 	         // While there are variables left, merge output file with hash
 	         while (changed == true) {
-	             changed = Freemarker.merge(xml.getAbsolutePath(), xml.getAbsolutePath(), configs);
+	             changed = Freemarker.merge(xml.getAbsolutePath(), xml.getAbsolutePath(), wfdm.getConfigs());
 	         }
 	     } catch (IOException e) {
 	         Log.error("IOException", e);
@@ -52,12 +51,11 @@ public class WorkflowXmlParser {
 	         System.exit(ReturnValue.FREEMARKEREXCEPTION);
 	     }
 
-		AbstractWorkflowDataModel ret = null;
 		SAXBuilder builder = new SAXBuilder();
 		try {
 		    Document document = (Document) builder.build(xml);
 		    Element root = document.getRootElement();
-		    ret = this.getWorkflowFromXml(root);
+		    this.getWorkflowFromXml(wfdm, root);
 		} catch (JDOMException e) {
 		    e.printStackTrace();
 		} catch (IOException e) {
@@ -66,8 +64,8 @@ public class WorkflowXmlParser {
 		return ret;
 	}
 	
-	private AbstractWorkflowDataModel getWorkflowFromXml(Element root) {
-		AbstractWorkflowDataModel dm = new XmlWorkflowDataModel();
+	private ReturnValue getWorkflowFromXml(AbstractWorkflowDataModel wfdm, Element root) {
+		ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 		//handle files
 		Element filesE = root.getChild("files");
 		if(filesE != null) {
@@ -80,7 +78,7 @@ public class WorkflowXmlParser {
 				if(fe.getAttribute("forcecopy") != null) {
 					file0.setForceCopy(Boolean.parseBoolean(fe.getAttributeValue("forcecopy")));
 				}
-				dm.getFiles().put(fe.getAttributeValue("name"), file0); 
+				wfdm.getFiles().put(fe.getAttributeValue("name"), file0); 
 			}
 		}
 		//handle jobs
@@ -88,13 +86,13 @@ public class WorkflowXmlParser {
 		if(jobsE != null) {
 			List<Element> jobES = jobsE.getChildren();
 			for(Element je: jobES) {
-				Job job = this.createJobFromElement(je, dm.getWorkflow());
+				Job job = this.createJobFromElement(je, wfdm.getWorkflow());
 			}
 		}
-		return dm;
+		return ret;
 	}
 	
-    public void parseXml(Workflow2 wf, File file) {
+    public void parseXml2(Workflow2 wf, File file) {
 	SAXBuilder builder = new SAXBuilder();
 	try {
 	    Document document = (Document) builder.build(file);

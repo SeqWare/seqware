@@ -454,7 +454,7 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     		Log.debug("using FTL");
     		String ftlPath = wfi.getTemplatePath();
     		WorkflowXmlParser xmlparser = new WorkflowXmlParser();
-    		return xmlparser.parseXml(ftlPath, null);
+    		return null;
     	}
     	//set command line options
     	res.setCmdOptions(new ArrayList<String>(Arrays.asList(this.params)));
