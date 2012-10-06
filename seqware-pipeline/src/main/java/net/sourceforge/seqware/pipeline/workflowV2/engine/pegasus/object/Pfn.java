@@ -1,4 +1,4 @@
-package net.sourceforge.seqware.pipeline.workflowV2.pegasus.object;
+package net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object;
 
 import org.jdom.Element;
 
