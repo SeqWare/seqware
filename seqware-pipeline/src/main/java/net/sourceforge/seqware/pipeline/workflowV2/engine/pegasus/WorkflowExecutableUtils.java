@@ -2,8 +2,8 @@ package net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus;
 
 import java.util.Map;
 
-import net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.Pfn;
-import net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.WorkflowExecutable;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Pfn;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.WorkflowExecutable;
 
 public class WorkflowExecutableUtils {
     private static String URL_JAVA = "file:///${basedir}/bin/jre1.6.0_29/bin/java";

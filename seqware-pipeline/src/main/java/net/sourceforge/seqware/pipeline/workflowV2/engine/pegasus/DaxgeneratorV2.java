@@ -24,9 +24,9 @@ import java.io.OutputStream;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Adag;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.AdagObject;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
-import net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.Adag;
-import net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.AdagObject;
 
 import org.jdom.Document;
 import org.jdom.output.Format;
