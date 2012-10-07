@@ -4,7 +4,7 @@ import java.io.File;
 
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 
-public class PegasusJavaJob extends PegasusJobObject {
+public class PegasusJavaJob extends PegasusJob {
 
 	public PegasusJavaJob(AbstractJob job, String basedir) {
 		super(job, basedir);
