@@ -91,7 +91,7 @@ public class PegasusJobObject {
 			//gcr-output-file
 			//gcr-skip-if-output-exists
 			//gcr-skip-if-missing
-			if(cmd.getGcrOutputFile().isEmpty() == false) {
+			if(cmd.getGcrOutputFile() != null && cmd.getGcrOutputFile().isEmpty() == false) {
 				sb.append("--gcr-output-file " + cmd.getGcrOutputFile() + "\n");
 			}
 			if(cmd.isGcrSkipIfMissing()) {
