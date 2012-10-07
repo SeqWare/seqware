@@ -128,19 +128,17 @@
         <module>seqware-queryengine</module>
         <module>seqware-distribution</module>
         <module>seqware-queryengine-legacy</module>
-	<module>seqware-meta-db</module>
+		<module>seqware-meta-db</module>
         <module>seqware-common</module>
         <module>seqware-pipeline</module>
         <module>seqware-webservice-dto</module>
         <module>seqware-webservice</module>
         <module>seqware-portal</module>
-
         <module>seqware-archetype-java-workflow</module>
-
-	<module>seqware-archetype-module</module>
+		<module>seqware-archetype-module</module>
         <module>seqware-archetype-workflow</module>
-
-    </modules>
+    	<module>seqware-archetype-ftl-workflow</module>
+  </modules>
 
     <licenses>
         <license>
