@@ -35,6 +35,7 @@ public abstract class AbstractWorkflowDataModel  {
     	this.files = new HashMap<String, SqwFile>();
     	this.setTags(new HashMap<String,String>());
     	this.configs = new HashMap<String,String>();
+    	this.workflow = new Workflow();
     }
     
     protected void setupWorkflow() {

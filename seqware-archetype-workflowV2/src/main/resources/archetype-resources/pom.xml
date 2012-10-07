@@ -45,7 +45,7 @@
       <version>1.0.0</version>
     </dependency>
 	<dependency>
-		<groupId>net.sourceforge.seqware</groupId>
+		<groupId>com.github.seqware</groupId>
 		<artifactId>seqware-pipeline</artifactId>
 		<version>${seqware-version}</version>
 	</dependency>
@@ -53,7 +53,7 @@
 
   <repositories>
     <repository>
-      <id>seqware.sourceforge.net</id>
+      <id>com.github.seqware</id>
       <name>SeqWare Maven Repository</name>
       <url>http://206.108.121.137/artifactory/seqware-release</url>
       <releases>
@@ -64,7 +64,7 @@
       </snapshots>
     </repository>
     <repository>
-      <id>snapshot.seqware.sourceforge.net</id>
+      <id>snapshot.com.github.seqware</id>
       <name>SeqWare Snapshot Maven Repository</name>
       <url>http://206.108.121.137/artifactory/seqware-snapshot</url>
       <releases>
@@ -175,10 +175,10 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>net.sourceforge.seqware</groupId>
-                  <artifactId>seqware-distribution</artifactId>
+                  <groupId>com.github.seqware</groupId>
+                  <artifactId>seqware-pipeline</artifactId>
                   <version>${seqware-version}</version>
-                  <classifier>full</classifier>
+                <!--  <classifier>full</classifier> -->
                   <overWrite>true</overWrite>
                   <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/lib</outputDirectory>
                 </artifactItem>
