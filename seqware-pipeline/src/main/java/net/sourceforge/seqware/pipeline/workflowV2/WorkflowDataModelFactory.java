@@ -120,6 +120,7 @@ public class WorkflowDataModelFactory {
 		//load ini config
 		Map<String, String> configs = this.loadIniConfigs();
 		configs.put("workflow_bundle_dir", bundlePath);
+		configs.put("workflow_name", ret.getName());
         String basedir = bundlePath + File.separator + "Workflow_Bundle_"+ret.getName()+ File.separator + ret.getVersion();
 		configs.put("basedir", basedir);	
 		
@@ -136,7 +137,7 @@ public class WorkflowDataModelFactory {
         ret.getEnv().setPegasusConfigDir(config.get("SW_PEGASUS_CONFIG_DIR"));
         ret.getEnv().setDaxDir(config.get("SW_DAX_DIR"));
         ret.getEnv().setSwCluster(config.get("SW_CLUSTER"));
-		ret.setConfigs(config);	
+		ret.setConfigs(configs);	
 		
 		//parse XML or Java Object for
 		if(workflow_java) {
