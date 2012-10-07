@@ -2,7 +2,7 @@ package net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object;
 
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 
-public class PegasusPerlJob extends PegasusJobObject {
+public class PegasusPerlJob extends PegasusJob {
 
 	public PegasusPerlJob(AbstractJob job, String basedir) {
 		super(job, basedir);

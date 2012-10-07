@@ -20,14 +20,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Adag;
-import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.AdagObject;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
-
 import org.jdom.Document;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -37,45 +33,22 @@ import org.jdom.output.XMLOutputter;
  * @author yongliang
  */
 public class DaxgeneratorV2 {
-    public ReturnValue generateDax(Workflow2 workflow, String output) {
-	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-	// Map<String, Object> newMap = MapTools.mapString2Int(map);
-	this.createDax(workflow, output);
-	return ret;
-    }
     
     public ReturnValue generateDax(AbstractWorkflowDataModel wfdm, String output) {
     	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-    	this.createDax(wfdm, output);
+    	ret = this.createDax(wfdm, output);
     	return ret;
     }
-
-    private void createDax(Workflow2 workflow, String output) {
-	File dax = new File(output);
-	// write to dax
-	Document doc = new Document();
-	try {
-	    OutputStream out = new FileOutputStream(dax);
-	    XMLOutputter serializer = new XMLOutputter(Format.getPrettyFormat());
-	    Adag adag = new Adag(workflow);
-	    doc.setRootElement(adag.serializeXML());
-	    serializer.output(doc, out);
-	    // serializer.output(doc, System.out);
-	    out.flush();
-	    out.close();
-	} catch (IOException e) {
-	    Log.error(e);
-	}
-    }
     
-    private void createDax(AbstractWorkflowDataModel wfdm, String output) {
+    private ReturnValue createDax(AbstractWorkflowDataModel wfdm, String output) {
+    	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
     	File dax = new File(output);
     	// write to dax
     	Document doc = new Document();
     	try {
     	    OutputStream out = new FileOutputStream(dax);
     	    XMLOutputter serializer = new XMLOutputter(Format.getPrettyFormat());
-    	    AdagObject adag = new AdagObject(wfdm);
+    	    Adag adag = new Adag(wfdm);
     	    doc.setRootElement(adag.serializeXML());
     	    serializer.output(doc, out);
     	    // serializer.output(doc, System.out);
@@ -83,7 +56,9 @@ public class DaxgeneratorV2 {
     	    out.close();
     	} catch (IOException e) {
     	    Log.error(e);
+    	    ret.setExitStatus(ReturnValue.FAILURE);
     	}
+    	return ret;
     }
 
 }

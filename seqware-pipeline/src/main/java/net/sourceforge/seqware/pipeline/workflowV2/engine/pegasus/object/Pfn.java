@@ -2,14 +2,14 @@ package net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object;
 
 import org.jdom.Element;
 
-public class Pfn extends PegasusAbstract {
+public class Pfn  {
 
   private String url;
   private String site;
 
-  @Override
+
   public Element serializeXML() {
-    Element element = new Element("pfn", NAMESPACE);
+    Element element = new Element("pfn", Adag.NAMESPACE);
     element.setAttribute("url", this.url);
     element.setAttribute("site", this.site);
     return element;

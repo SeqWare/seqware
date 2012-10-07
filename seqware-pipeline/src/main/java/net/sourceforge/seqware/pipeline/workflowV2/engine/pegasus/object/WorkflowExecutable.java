@@ -24,7 +24,7 @@ import org.jdom.Element;
  * 
  * @author yongliang
  */
-public class WorkflowExecutable extends PegasusAbstract {
+public class WorkflowExecutable {
 
   private Pfn pfn;
 
@@ -83,9 +83,9 @@ public class WorkflowExecutable extends PegasusAbstract {
     this.installed = installed;
   }
 
-  @Override
+
   public Element serializeXML() {
-    Element element = new Element("executable", NAMESPACE);
+    Element element = new Element("executable", Adag.NAMESPACE);
     element.setAttribute("namespace", this.namespace);
     element.setAttribute("name", this.name);
     element.setAttribute("version", this.version);

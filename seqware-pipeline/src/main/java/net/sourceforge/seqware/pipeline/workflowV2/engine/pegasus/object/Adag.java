@@ -18,253 +18,195 @@ package net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Job1;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Module;
-import net.sourceforge.seqware.pipeline.workflowV2.model.SeqwareModuleJob;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow2;
+import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
+import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
+import net.sourceforge.seqware.pipeline.workflowV2.model.BashJob;
+import net.sourceforge.seqware.pipeline.workflowV2.model.JavaJob;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
+import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.WorkflowExecutableUtils;
-
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 /**
  * 
  * @author yongliang
  */
-public class Adag extends PegasusAbstract {
+public class Adag  {
     private Collection<WorkflowExecutable> executables;
-    private Map<String, PegasusJob> jobs;
+    private List<PegasusJob> jobs;
 
     private String schemaLocation = "http://pegasus.isi.edu/schema/DAX http://pegasus.isi.edu/schema/dax-3.2.xsd";
+    public static Namespace NAMESPACE = Namespace.getNamespace("http://pegasus.isi.edu/schema/DAX");
+    public static Namespace XSI = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+    //FIXME should be passed in from maven 
+    public static String PIPELINE = "seqware-pipeline-0.13.3-SNAPSHOT-full.jar";
+
     private String version = "3.2";
     private String count = "1";
     private String index = "0";
+    
+    private Workflow wf;
+    private AbstractWorkflowDataModel wfdm;
+    
+    private Map<SqwFile, PegasusJob> fileJobMap;
 
-    public Adag(Workflow2 wf) {
-	this.jobs = new LinkedHashMap<String, PegasusJob>();
-	this.parseWorkflow(wf);
-	this.setDefaultExcutables();
+    public Adag(AbstractWorkflowDataModel wfdm) {
+    	this.wfdm = wfdm;
+		this.jobs = new ArrayList<PegasusJob>();
+		this.fileJobMap = new HashMap<SqwFile, PegasusJob>();
+		//this.parseWorkflow(wf);
+		this.parseWorkflow(wfdm);
+		this.setDefaultExcutables();
     }
     
 
 
     private void setDefaultExcutables() {
-	executables = new ArrayList<WorkflowExecutable>();
-	executables.add(WorkflowExecutableUtils.getDefaultJavaExcutable(this
-		.getWorkflow().getProperties()));
-	executables.add(WorkflowExecutableUtils.getLocalJavaExcutable(this
-		.getWorkflow().getProperties()));
-	executables.add(WorkflowExecutableUtils.getDefaultPerlExcutable(this
-		.getWorkflow().getProperties()));
-	executables.add(WorkflowExecutableUtils
-		.getDefaultDirManagerExcutable(this.getWorkflow()
-			.getProperties()));
-	executables
-		.add(WorkflowExecutableUtils.getDefaultSeqwareExecutable(this
-			.getWorkflow().getProperties()));
+		executables = new ArrayList<WorkflowExecutable>();
+		executables.add(WorkflowExecutableUtils.getDefaultJavaExcutable(this.wfdm.getConfigs()));
+		executables.add(WorkflowExecutableUtils.getLocalJavaExcutable(this.wfdm.getConfigs()));
+		executables.add(WorkflowExecutableUtils.getBashExcutable(this.wfdm.getConfigs()));
+		executables.add(WorkflowExecutableUtils.getDefaultPerlExcutable(this.wfdm.getConfigs()));
+		executables.add(WorkflowExecutableUtils.getDefaultDirManagerExcutable(this.wfdm.getConfigs()));
+		executables.add(WorkflowExecutableUtils.getDefaultSeqwareExecutable(this.wfdm.getConfigs()));
     }
 
-    @Override
+
     public Element serializeXML() {
-	Element adag = new Element("adag", NAMESPACE);
-	adag.addNamespaceDeclaration(XSI);
-	adag.setAttribute("schemaLocation", schemaLocation, XSI);
-	adag.setAttribute("version", version);
-	adag.setAttribute("count", count);
-	adag.setAttribute("index", index);
-	adag.setAttribute("name", this.getWorkflow().getName());
-
-	for (WorkflowExecutable ex : executables) {
-	    adag.addContent(ex.serializeXML());
-	}
-
-	for (PegasusJob pjob : this.jobs.values()) {
-	    adag.addContent(pjob.serializeXML());
-	}
-	// dependencies
-	for (PegasusJob pjob : this.jobs.values()) {
-	    if (pjob.getParents().isEmpty())
-		continue;
-	    for (PegasusJob parent : pjob.getParents()) {
-
-		adag.addContent(pjob.getDependentElement(parent));
-
-	    }
-	}
-	return adag;
-    }
-
-    private void parseWorkflow(Workflow2 wf) {
-	this.setWorkflow(wf);
-	for (Job1 job : wf.getJobs()) {
-	    PegasusJob pjob = this.createPegasusJob(job);
-	    this.addJob(pjob);
-	}
-	// preprocess jobs
-	this.preprocessJobs();
-	this.setParentAccessionIds();
-	this.setCommandIO();
-    }
-
-    private void setCommandIO() {
-	for (PegasusJob job : this.jobs.values()) {
-	    if (!job.checkCommandIO())
-		continue;
-
-	    for (PegasusJob pjob : job.getParents()) {
-		if (!pjob.hasCommandOutput()) {
-		    Log.error("******* check output ****** ");
+		Element adag = new Element("adag", NAMESPACE);
+		adag.addNamespaceDeclaration(XSI);
+		adag.setAttribute("schemaLocation", schemaLocation, XSI);
+		adag.setAttribute("version", version);
+		adag.setAttribute("count", count);
+		adag.setAttribute("index", index);
+		adag.setAttribute("name", this.wfdm.getName());
+	
+		for (WorkflowExecutable ex : executables) {
+		    adag.addContent(ex.serializeXML());
 		}
-		job.addCommandInput(pjob.getCommandOutput());
-	    }
-
-	}
-    }
-
-    private PegasusJob createPegasusJob(Job1 job) {
-	PegasusJob pjob = null;
-	if (job instanceof SeqwareModuleJob) {
-	    pjob = new PegasusSeqwareModuleJob(job);
-	} else {
-	    pjob = new PegasusJob(job);
-	}
-	return pjob;
-    }
-
-    public void addJob(PegasusJob job) {
-	this.jobs.put(job.getId(), job);
-    }
-
-    private void preprocessJobs() {
-	List<PegasusJob> provisionFiles = new ArrayList<PegasusJob>();
-	// set parents
-	for (Map.Entry<String, PegasusJob> entry : this.jobs.entrySet()) {
-	    // check if the job has provisionfiles dependency
-	    PegasusJob pjob = entry.getValue();
-	    if (pjob.hasProvisionFilesDependent()) {
-		provisionFiles.add(pjob);
-	    }
-
-	    this.autoDependency();
-	    /*
-	     * Collection<Job> parentJobs = pjob.getJobObject().getParents(); if
-	     * (!parentJobs.isEmpty()) { for (Job job : parentJobs) {
-	     * pjob.addParent(this.jobs.get(job.getId())); }
-	     * 
-	     * }
-	     */
-	}
-	// set provisionfiles job
-	for (PegasusJob job : provisionFiles) {
-	    if (job.hasProvisionFilesDependent()) {
-		// create provisionfiles job
-		Job1 jobO = this.getWorkflow().createSeqwareModuleJob(
-			job.getAlgorithm(), Module.Seqware_ProvisionFiles);
-		PegasusSeqwareModuleJob pjob = new PegasusSeqwareModuleJob(jobO);
-		this.addJob(pjob);
-		job.addParent(pjob);
-	    }
-	}
-    }
-
-    private void setParentAccessionIds() {
-	String parentAccessions = this.getWorkflowProperty("parent_accessions");
-	if (null == parentAccessions)
-	    return;
-	if (null == parentAccessionCheck(parentAccessions)) {
-	    return;
-	}
-	String[] pas = parentAccessions.split(",");
-	int i = -1;
-	for (PegasusJob job : this.jobs.values()) {
-	    // find the first non provisionfiles job, then set the
-	    // parentaccessionid
-	    if (job.getParents().isEmpty()) {
-		i++;
-		// set the first non provisionfiles job
-		/*
-		 * for (PegasusJob child : this
-		 * .getFirstLevelNonProvisionFilesJobs(job)) { // child.
-		 * child.setParentAccessionId(pas[i]); }
-		 */
-	    }
-
-	}
-    }
-
-    private Collection<PegasusJob> getFirstLevelNonProvisionFilesJobs(
-	    PegasusJob parent) {
-	Collection<PegasusJob> res = new ArrayList<PegasusJob>();
-	if (!parent.isProvisionFilesJob())
-	    res.add(parent);
-	else {
-	    for (PegasusJob child : parent.getChildren()) {
-		res.addAll(this.getFirstLevelNonProvisionFilesJobs(child));
-	    }
-	}
-	return res;
-    }
-
-    /**
-     * return an array of parentAccessionId with the same order of input bam
-     * files
-     * 
-     * @param parentAccessions
-     * @return
-     */
-    private String[] parentAccessionCheck(String parentAccessions) {
-	// check with input_files, the order should be the same, or only one
-	// number
-	String input_files = this.getWorkflowProperty("input_files");
-	if (null == input_files)
-	    return null;
-	String[] _files = input_files.split(",");
-	String[] res = new String[_files.length];
-	String[] _pid = parentAccessions.split(",");
-	// FIXME, will check with database, no parentAccession
-	if (_pid.length == 1 && parentAccessions.equals("0")) {
-	    for (int i = 0; i < res.length; i++) {
-		res[i] = "0";
-	    }
-	    return res;
-	}
-	if (_files.length != _pid.length) {
-	    return null;
-	}
-	return _pid;
-    }
-
-    private void autoDependency() {
-	Map<String, List<PegasusJob>> orderedMap = new LinkedHashMap<String, List<PegasusJob>>();
-	for (Map.Entry<String, PegasusJob> entry : this.jobs.entrySet()) {
-	    List<PegasusJob> list = orderedMap.get(entry.getValue()
-		    .getAlgorithm());
-	    if (null == list) {
-		list = new ArrayList<PegasusJob>();
-		orderedMap.put(entry.getValue().getAlgorithm(), list);
-	    }
-	    list.add(entry.getValue());
-	}
-	// set parents
-	if (orderedMap.isEmpty())
-	    return;
-	Iterator<Entry<String, List<PegasusJob>>> it = orderedMap.entrySet()
-		.iterator();
-	Entry<String, List<PegasusJob>> parent = it.next();
-	while (it.hasNext()) {
-	    Entry<String, List<PegasusJob>> child = it.next();
-	    for (PegasusJob c : child.getValue()) {
-		for (PegasusJob p : parent.getValue()) {
-		    c.addParent(p);
+	
+		for (PegasusJob pjob : this.jobs) {
+		    adag.addContent(pjob.serializeXML());
 		}
-	    }
-	    parent = child;
-	}
+		// dependencies
+		for (PegasusJob pjob : this.jobs) {
+		    if (pjob.getParents().isEmpty())
+		    	continue;
+		    for (PegasusJob parent : pjob.getParents()) {	
+		    	adag.addContent(pjob.getDependentElement(parent));	
+		    }
+		}
+		return adag;
     }
+
+	public Workflow getWorkflow() {
+		return wf;
+	}
+
+
+
+	public void setWorkflow(Workflow wf) {
+		this.wf = wf;
+	}
+	
+	private void parseWorkflow(AbstractWorkflowDataModel wfdm) {
+		//mkdir data job
+		AbstractJob job0 = new BashJob("start");
+		job0.getCommand().addArgument("mkdir data");
+		PegasusJob pjob0 = new PegasusJob(job0, wfdm.getConfigs().get("basedir"));
+		pjob0.setId(this.jobs.size());
+		this.jobs.add(pjob0);
+		
+		//sqwfiles
+		for(Map.Entry<String,SqwFile> entry: wfdm.getFiles().entrySet()) {
+			AbstractJob job = new BashJob("provisionFile_"+entry.getKey());
+			job.addFile(entry.getValue());
+			PegasusJob pjob = new ProvisionFilesJob(job,wfdm.getConfigs().get("basedir"));
+			pjob.setId(this.jobs.size());
+			this.jobs.add(pjob);
+			this.fileJobMap.put(entry.getValue(), pjob);
+
+			//handle in 
+			if(entry.getValue().isInput()) {
+				pjob.getParents().add(pjob0);
+			} 
+		}
+		
+		int idCount = 0;
+		for(AbstractJob job: wfdm.getWorkflow().getJobs()) {
+			PegasusJob pjob = this.createPegasusJobObject(job, wfdm);
+			pjob.setId(idCount);
+
+			for(Job parent: job.getParents()) {
+				pjob.getParents().add(this.getPegasusJobObject((AbstractJob)parent));
+			}
+			
+			
+			//has provisionfiles dependency?
+			// this based on the assumption that the provisionFiles job is always in the beginning or the end.
+			if(job.getFiles().isEmpty() == false) {
+				for(SqwFile file: job.getFiles()) {
+					//is the file belongs to global or job only
+					//if global, need to get the parent, 
+					//if local, create a provisionfile job\
+					if(file.isInput()) {
+						if(this.fileJobMap.containsKey(file)) {
+							pjob.getParents().add(this.fileJobMap.get(file));
+						} else {
+							//create a provisionFileJob;
+							AbstractJob pfjob = new BashJob("provisionFile_in");
+							pfjob.addFile(file);
+							PegasusJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getConfigs().get("basedir"));
+							parentPfjob.setId(this.jobs.size());
+							parentPfjob.getParents().add(pjob0);
+							this.jobs.add(parentPfjob);
+							pjob.getParents().add(parentPfjob);
+						}
+					} else {
+						if(this.fileJobMap.containsKey(file)) {
+							this.fileJobMap.get(file).getParents().add(pjob);
+						} else {
+							//create a provisionFileJob;
+							AbstractJob pfjob = new BashJob("provisionFile_in");
+							pfjob.addFile(file);
+							PegasusJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getConfigs().get("basedir"));
+							parentPfjob.setId(this.jobs.size());
+							parentPfjob.getParents().add(pjob);
+							this.jobs.add(parentPfjob);
+						}
+					}
+				}
+			}
+
+			//if no parent, set to pjob0
+			if(pjob.getParents().isEmpty()) {
+				pjob.getParents().add(pjob0);
+			}
+			this.jobs.add(pjob);
+			idCount++;
+		}
+	}
+	
+	private PegasusJob getPegasusJobObject(AbstractJob job) {
+		for(PegasusJob pjob: this.jobs) {
+			if(job.equals(pjob.getJobObject()))
+				return pjob;
+		}
+		return null;
+	}
+	
+	private PegasusJob createPegasusJobObject(AbstractJob job, AbstractWorkflowDataModel wfdm) {
+		PegasusJob ret = null;
+		if(job instanceof JavaJob) {
+			ret = new PegasusJavaJob(job,wfdm.getConfigs().get("basedir"));
+		} else {
+			ret = new PegasusJob(job, wfdm.getConfigs().get("basedir"));
+		}
+		return ret;
+	}
 }
