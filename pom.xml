@@ -135,7 +135,7 @@
         <module>seqware-webservice</module>
         <module>seqware-portal</module>
 
-        <module>seqware-archetype-workflowV2</module>
+        <module>seqware-archetype-java-workflow</module>
 
 	<module>seqware-archetype-module</module>
         <module>seqware-archetype-workflow</module>
