@@ -101,16 +101,6 @@ public class AbstractJob implements Job {
 		this.parents.add(parent);
 	}
 	/**
-	 * get all user defined job arguments
-	 * @return
-	 */
-	public Collection<String> getArguments() {
-		return arguments;
-	}
-	public void setArguments(Collection<String> arguments) {
-		this.arguments = arguments;
-	}
-	/**
 	 * get the job algorithm
 	 * @return
 	 */

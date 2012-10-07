@@ -4,7 +4,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 
 
-public class ProvisionFilesJob extends PegasusJobObject {
+public class ProvisionFilesJob extends PegasusJob {
 
 	public ProvisionFilesJob(AbstractJob job, String basedir) {
 		super(job, basedir);
@@ -16,7 +16,7 @@ public class ProvisionFilesJob extends PegasusJobObject {
 		//add memory, classpath, module for bash
 
 		sb.append("-Xmx").append(this.jobObj.getCommand().getMaxMemory()).append("\n");
-		sb.append("-classpath ").append(basedir).append("/lib/").append(AdagObject.PIPELINE).append("\n");
+		sb.append("-classpath ").append(basedir).append("/lib/").append(Adag.PIPELINE).append("\n");
 		sb.append("net.sourceforge.seqware.pipeline.runner.Runner").append("\n");
 		sb.append("--no-metadata").append("\n");
 		sb.append("--module module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles").append("\n");
