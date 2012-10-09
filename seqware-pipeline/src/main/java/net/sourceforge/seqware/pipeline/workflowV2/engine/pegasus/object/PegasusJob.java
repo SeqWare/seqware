@@ -8,6 +8,8 @@ import org.jdom.Element;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.BashJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Command;
+import net.sourceforge.seqware.pipeline.workflowV2.model.JavaJob;
+import net.sourceforge.seqware.pipeline.workflowV2.model.JavaModuleJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.PerlJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Requirement;
 
@@ -32,7 +34,10 @@ public class PegasusJob {
 			name = "perl";
 			//FIXME should put in property file
 			version = "5.14.1";
-		}
+		} else if (this.jobObj instanceof JavaJob) {
+			name = "java";
+			version = "1.6.0";
+		} 
 		Element element = new Element("job", Adag.NAMESPACE);
 		element.setAttribute("id", this.jobObj.getAlgo()+"_"+this.id);
 		element.setAttribute("name", name);

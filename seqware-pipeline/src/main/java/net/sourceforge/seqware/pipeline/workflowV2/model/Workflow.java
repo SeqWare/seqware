@@ -69,7 +69,7 @@ public class Workflow {
 	}
 	
 	public Job createPerlJob(String algo, String script) {
-		AbstractJob job = new AbstractJob(algo, "", script);
+		AbstractJob job = new PerlJob(algo, "", script);
 		this.jobs.add(job);
 		return job;
 	}
