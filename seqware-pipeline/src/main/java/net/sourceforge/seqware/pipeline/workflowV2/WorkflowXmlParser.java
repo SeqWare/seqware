@@ -2,7 +2,10 @@ package net.sourceforge.seqware.pipeline.workflowV2;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
@@ -78,10 +81,23 @@ public class WorkflowXmlParser {
 		}
 		//handle jobs
 		Element jobsE = root.getChild("jobs");
+		Map<String, Job> jobsMap = new HashMap<String, Job>();
 		if(jobsE != null) {
 			List<Element> jobES = jobsE.getChildren();
 			for(Element je: jobES) {
 				Job job = this.createJobFromElement(je, wfdm.getWorkflow());
+				jobsMap.put(je.getAttributeValue("refid").trim(), job);
+			}
+			//handle the dependency
+			for(Element je: jobES) {
+				List<Element> parents = je.getChildren("parent");
+				Job job = jobsMap.get(je.getAttributeValue("refid"));
+				if(parents != null) {
+					for(Element parentE: parents) {
+						Job parent = jobsMap.get(parentE.getText().trim());
+						job.addParent(parent);
+					}
+				}
 			}
 		}
 		return ret;
