@@ -102,7 +102,28 @@ public class WorkflowXmlParser {
     		String script = jobE.getAttributeValue("main");
     		job = workflow.createPerlJob(algo, script);
     	} else if(jobE.getAttributeValue("type").toLowerCase().equals("javamodule")) {
-    		job = workflow.createJavaModuleJob(algo);
+    		String cp = jobE.getAttributeValue("classpath");
+    		String module = jobE.getAttributeValue("module");
+    		job = workflow.createJavaModuleJob(algo, cp, module);
+    	}
+    	//set command
+    	Element aE = jobE.getChild("argument");
+    	if(aE != null) {
+    		job.setCommand(aE.getText());
+    	}
+    	//set file
+    	List<Element> files = jobE.getChildren("file");
+    	if(files != null && !files.isEmpty()) {
+    		for(Element fileE: files) {
+    			SqwFile sqwFile = new SqwFile();
+    			sqwFile.setLocation(fileE.getAttributeValue("location"));
+    			sqwFile.setType(fileE.getAttributeValue("type"));
+    			sqwFile.setIsInput(Boolean.parseBoolean(fileE.getAttributeValue("input")));
+				if(fileE.getAttribute("forcecopy") != null) {
+					sqwFile.setForceCopy(Boolean.parseBoolean(fileE.getAttributeValue("forcecopy")));
+				}
+    			job.addFile(sqwFile);
+    		}
     	}
     	return job;
     }

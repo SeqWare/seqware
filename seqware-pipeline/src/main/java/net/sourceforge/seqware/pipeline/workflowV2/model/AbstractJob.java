@@ -11,7 +11,6 @@ public class AbstractJob implements Job {
 	 */
 	private String id;
 	private String algo;
-	private Collection<String> arguments;
 	private Collection<Job> parents;
 	private Collection<SqwFile> files;
 	private Command command;
@@ -28,12 +27,11 @@ public class AbstractJob implements Job {
 	}
 	
 	/**
-	 * for Java/Perl job
+	 * for Java/Perl/JavaModule job
 	 */
 	public AbstractJob(String algo, String cp, String mainclass) {
 		this.cp = cp;
 		this.mainclass = mainclass;
-		this.arguments = new ArrayList<String>();
 		this.parents = new ArrayList<Job>();
 		this.files = new ArrayList<SqwFile>();
 		this.requirements = new ArrayList<Requirement>();
@@ -165,6 +163,7 @@ public class AbstractJob implements Job {
 
 	@Override
 	public Command setCommand(String cmd) {
+		this.command.getArguments().add(cmd);
 		return this.command;
 	}
 
@@ -176,13 +175,11 @@ public class AbstractJob implements Job {
 
 	@Override
 	public Job addRequirement(Requirement requirement) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Job setQueue(String queue) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
