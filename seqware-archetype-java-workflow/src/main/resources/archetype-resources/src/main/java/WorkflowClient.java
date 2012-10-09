@@ -16,13 +16,23 @@
  */
 package net.sourceforge.seqware;
 
-import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDescriptor;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-public class WorkflowClient extends AbstractWorkflowDescriptor {
+import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
+import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
+import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 
+public class WorkflowClient extends AbstractWorkflowDataModel {
+
+
+	
 	@Override
 	public void buildWorkflow() {
-		
 		
 	}
 

@@ -115,7 +115,7 @@ public class WorkflowXmlParser {
     		String mainclass = jobE.getAttributeValue("main");
     		job = workflow.createJavaJob(algo, cp, mainclass);
     	} else if(jobE.getAttributeValue("type").equals("perl")) {
-    		String script = jobE.getAttributeValue("main");
+    		String script = jobE.getAttributeValue("script");
     		job = workflow.createPerlJob(algo, script);
     	} else if(jobE.getAttributeValue("type").toLowerCase().equals("javamodule")) {
     		String cp = jobE.getAttributeValue("classpath");
