@@ -47,12 +47,13 @@ An example of instructions on how to update your Linux installation can be found
 
 ###PostgreSQL
 
-In addition to Java we also require PostgreSQL to be installed, version 8.4 is
-what we use but newer versions are probably supported.  You need to use the
-method appropriate to your distribution to install this. For example, on a
+In addition to Java we also require PostgreSQL to be installed, version 8.4 is what we currently support.
+You need to use the method appropriate to your distribution to install this. For example, on a
 recent Debian-based system you would do:
 
     sudo apt-get install postgresql-8.4
+
+We are currently investigating issues with postgres version 9.1.
 
 ###Problems with Maven
 
