@@ -14,7 +14,7 @@
         <protobuf.version>2.4.1</protobuf.version>
     </properties>
     <parent>
-        <groupId>com.github.seqware</groupId>
+        <groupId>net.sourceforge.seqware</groupId>
         <artifactId>seqware</artifactId>
         <version>0.13.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
