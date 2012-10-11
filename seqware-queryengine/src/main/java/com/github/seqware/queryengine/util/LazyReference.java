@@ -28,6 +28,8 @@ import org.apache.log4j.Logger;
  * @author dyuen
  */
 public class LazyReference<T extends Atom> implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     protected transient boolean referenceChecked = false;
     protected transient T referenceCache = null;

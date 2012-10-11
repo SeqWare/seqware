@@ -6,13 +6,17 @@ import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.protobufIO.TagIO;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Tag;
+import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.model.interfaces.Versionable;
 import com.github.seqware.queryengine.util.*;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.log4j.Logger;
 
 /**
  * Implements core functionality that is shared by all classes that require
@@ -27,7 +31,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 public abstract class AtomImpl<T extends Atom> implements Atom<T> {
 
     private final static transient TagIO tagIO = new TagIO();
-    
     /**
      * Unique identifier of this Atom
      */
@@ -50,7 +53,10 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      * Current manager
      */
     private transient CreateUpdateManager manager = null;
-    private Map<String, Tag> tags = new HashMap<String, Tag>();
+    /**
+     * Map from rowkey for tagSet => name for tag => value
+     */
+    private Map<String, Map<String, Tag>> tags = new HashMap<String, Map<String, Tag>>();
     private LazyReference<T> precedingVersion = new LazyReference<T>(this.getHBaseClass());
 
     protected AtomImpl() {
@@ -68,7 +74,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     public T copy(boolean newSGID) {
         AtomImpl newAtom;
         if (this instanceof Tag) {
-            TagPB m2pb = tagIO.m2pb((Tag)this);
+            TagPB m2pb = tagIO.m2pb((Tag) this);
             Tag pb2m = tagIO.pb2m(m2pb);
             newAtom = pb2m;
         } else {
@@ -104,11 +110,16 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
 
         return (T) newAtom;
     }
+    
+    @Override
+    public  NestedLevel getNestedTags(TagSet tagSet) {
+        return getNestedTags(tagSet.getSGID().getRowKey());
+    }
 
     @Override
-    public NestedLevel getNestedTags() {
+    public NestedLevel getNestedTags(String tagSetRowKey) {
         NestedLevel rootLevel = new NestedLevel();
-        for (Tag t : this.getTags()) {
+        for (Tag t : this.tags.get(tagSetRowKey).values()) {
             String[] keyArr = t.getKey().split(Tag.SEPARATOR);
             NestedLevel point = rootLevel;
             for (int i = 0; i < keyArr.length - 1; i++) {
@@ -226,7 +237,16 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
 
     @Override
     public boolean associateTag(Tag tag) {
-        tags.put(tag.getKey(), tag);
+        if (tag.getTagSetSGID() == null) {
+            Logger.getLogger(TagIO.class.getName()).fatal("Tag " + tag.getKey() + " is not owned by a tagset");
+            throw new RuntimeException("Tag cannot be associated without a TagSet");
+        }
+
+        String rowKey = tag.getTagSetSGID().getRowKey();
+        if (!tags.containsKey(rowKey)) {
+            tags.put(rowKey, new HashMap<String, Tag>());
+        }
+        tags.get(rowKey).put(tag.getKey(), tag);
         // this only makes sense if we've attached to a FeatureSet already
         if (this.getManager() != null && this.getSGID() instanceof FSGID) {
             this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);
@@ -237,7 +257,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
 
     @Override
     public boolean dissociateTag(Tag tag) {
-        tags.remove(tag.getKey());
+        tags.get(tag.getTagSetSGID().getRowKey()).remove(tag.getKey());
         if (this.getManager() != null) {
             this.getManager().atomStateChange(this, CreateUpdateManager.State.NEW_VERSION);
         }
@@ -247,12 +267,20 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
 
     @Override
     public SeqWareIterable<Tag> getTags() {
-        return new InMemoryIterable(tags.values());//Factory.getBackEnd().getTags(this);
+        return new TagValueIterable(tags);//Factory.getBackEnd().getTags(this);
+    }
+    
+    @Override
+    public Tag getTagByKey(TagSet tagSet, String key) {
+        return getTagByKey(tagSet.getSGID().getRowKey(), key);
     }
 
     @Override
-    public Tag getTagByKey(String key) {
-        return tags.get(key);
+    public Tag getTagByKey(String tagSet, String key) {
+        if (!tags.containsKey(tagSet)){
+            return null;
+        }
+        return tags.get(tagSet).get(key);
     }
 
     @Override
@@ -313,4 +341,73 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      * @return
      */
     public abstract String getHBasePrefix();
+
+    public static class TagValueIterable implements SeqWareIterable<Tag> {
+
+        private final Map<String, Map<String, Tag>> values;
+
+        public TagValueIterable(Map<String, Map<String, Tag>> tags) {
+            this.values = tags;
+        }
+
+        @Override
+        public long getCount() {
+            int count = 0;
+            for (Map<String, Tag> c : values.values()) {
+                count += c.size();
+            }
+            return count;
+        }
+
+        @Override
+        public Iterator<Tag> iterator() {
+            return new TagValueIterator(values);
+        }
+    }
+
+    public static class TagValueIterator implements Iterator<Tag> {
+
+        private final Iterator<Map<String, Tag>> iterator;
+        private Iterator<Tag> line = null;
+
+        public TagValueIterator(Map<String, Map<String, Tag>> tags) {
+            this.iterator = tags.values().iterator();
+            if (iterator.hasNext()) {
+                this.line = iterator.next().values().iterator();
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (line != null && line.hasNext()) {
+                return true;
+            }
+            while (iterator.hasNext()) {
+                line = iterator.next().values().iterator();
+                if (line.hasNext()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public Tag next() {
+            if (line != null && line.hasNext()) {
+                return line.next();
+            }
+            while (iterator.hasNext()) {
+                line = iterator.next().values().iterator();
+                if (line.hasNext()) {
+                    return line.next();
+                }
+            }
+            throw new NoSuchElementException();
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
 }
