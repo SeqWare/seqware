@@ -107,11 +107,14 @@ public class User extends MoleculeImpl<User> {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 31 * hash + (this.firstName != null ? this.firstName.hashCode() : 0);
-        hash = 31 * hash + (this.lastName != null ? this.lastName.hashCode() : 0);
-        hash = 31 * hash + (this.emailAddress != null ? this.emailAddress.hashCode() : 0);
-        return hash;
+	// you pick a hard-coded, randomly chosen, non-zero, odd number
+        // ideally different for each class
+        return new HashCodeBuilder(17, 37).
+                append(super.getSGID().getRowKey()).
+                append(firstName).
+                append(lastName).
+                append(emailAddress).
+                toHashCode();
     }
 
     /**
