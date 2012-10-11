@@ -12,7 +12,6 @@ import com.github.seqware.queryengine.util.SGID;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import org.apache.hadoop.hbase.client.RetriesExhaustedWithDetailsException;
 import org.apache.log4j.Logger;
 
 
@@ -30,10 +29,10 @@ import org.apache.log4j.Logger;
  */
 public class FeatureImporter extends Importer {
     
-    public static int EXIT_CODE_INVALID_ARGS = 1;
-    public static int EXIT_CODE_EXISTING_NAME = 5;
-    public static int EXIT_CODE_INVALID_FILE = 10;
-    public static final String FEATURE_SET_ID = "FeatureSetID";
+    public final static int EXIT_CODE_INVALID_ARGS = 1;
+    public final static int EXIT_CODE_EXISTING_NAME = 5;
+    public final static int EXIT_CODE_INVALID_FILE = 10;
+    public final static String FEATURE_SET_ID = "FeatureSetID";
 
     /**
      * This method does the actual work of importing given properly parsed

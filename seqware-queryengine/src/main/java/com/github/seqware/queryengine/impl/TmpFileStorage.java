@@ -57,8 +57,8 @@ public class TmpFileStorage extends StorageInterface {
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(SimplePersistentBackEnd.class.getName()).fatal( null, ex);
-            System.exit(-1);
+            Logger.getLogger(SimplePersistentBackEnd.class.getName()).fatal("IOException starting TmpFileStorage", ex);
+            throw new RuntimeException("Serious problem with file storage");
         }
     }
 
@@ -72,7 +72,7 @@ public class TmpFileStorage extends StorageInterface {
             FileUtils.writeByteArrayToFile(target, serialRep);
         } catch (IOException ex) {
             Logger.getLogger(TmpFileStorage.class.getName()).fatal( "Failiure to serialize", ex);
-            System.exit(-1);
+            throw new RuntimeException("Serious problem with file storage");
         }
     }
 
@@ -103,8 +103,7 @@ public class TmpFileStorage extends StorageInterface {
         } catch (IOException ex) {
             Logger.getLogger(TmpFileStorage.class.getName()).fatal( "Failure to deserialize", ex);
         }
-        System.exit(-1);
-        return null;
+        throw new RuntimeException("Serious problem with file storage");
     }
 
     private Atom handleFileWithoutClass(File file) throws IOException {
