@@ -5,9 +5,6 @@ import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
 
 /**
  * A set of Tag specifications

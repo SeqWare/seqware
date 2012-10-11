@@ -72,7 +72,7 @@ public class ImportConstants {
      * Unprocessed attributes, many of these could be parsed further, but this would take work to account for 
      * multi-individual files and the like
      */
-    public static final String[] UNPROCESSED_ATTRIBUTES = new String[]{GVF_ALIAS, GVF_DBXREF, GVF_VARIANT_SEQ,
+    static final String[] UNPROCESSED_ATTRIBUTES = new String[]{GVF_ALIAS, GVF_DBXREF, GVF_VARIANT_SEQ,
         GVF_REFERENCE_SEQ, GVF_VARIANT_READS, GVF_TOTAL_READS, GVF_VARIANT_FREQ, GVF_VARIANT_EFFECT, 
         GVF_START_RANGE, GVF_END_RANGE, GVF_PHASED, GVF_GENOTYPE, GVF_INDIVIDUAL, GVF_VARIANT_CODON, 
         GVF_REFERENCE_CODON, GVF_VARIANT_AA, GVF_REFERENCE_AA, GVF_REFERENCE_AA, GVF_BREAKPOINT_DETAIL, 
