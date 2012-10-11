@@ -69,12 +69,12 @@ public class Adag  {
 
     private void setDefaultExcutables() {
 		executables = new ArrayList<WorkflowExecutable>();
-		executables.add(WorkflowExecutableUtils.getDefaultJavaExcutable(this.wfdm.getConfigs()));
-		executables.add(WorkflowExecutableUtils.getLocalJavaExcutable(this.wfdm.getConfigs()));
-		executables.add(WorkflowExecutableUtils.getBashExcutable(this.wfdm.getConfigs()));
-		executables.add(WorkflowExecutableUtils.getDefaultPerlExcutable(this.wfdm.getConfigs()));
-		executables.add(WorkflowExecutableUtils.getDefaultDirManagerExcutable(this.wfdm.getConfigs()));
-		executables.add(WorkflowExecutableUtils.getDefaultSeqwareExecutable(this.wfdm.getConfigs()));
+		executables.add(WorkflowExecutableUtils.getDefaultJavaExcutable(this.wfdm));
+		executables.add(WorkflowExecutableUtils.getLocalJavaExcutable(this.wfdm));
+		executables.add(WorkflowExecutableUtils.getBashExcutable(this.wfdm));
+		executables.add(WorkflowExecutableUtils.getDefaultPerlExcutable(this.wfdm));
+		executables.add(WorkflowExecutableUtils.getDefaultDirManagerExcutable(this.wfdm));
+		executables.add(WorkflowExecutableUtils.getDefaultSeqwareExecutable(this.wfdm));
     }
 
 
@@ -118,7 +118,7 @@ public class Adag  {
 	private void parseWorkflow(AbstractWorkflowDataModel wfdm) {
 		//mkdir data job
 		AbstractJob job0 = new BashJob("start");
-		job0.getCommand().addArgument("mkdir data");
+		job0.getCommand().addArgument("mkdir data1");
 		PegasusJob pjob0 = new PegasusJob(job0, wfdm.getConfigs().get("basedir"));
 		pjob0.setId(this.jobs.size());
 		this.jobs.add(pjob0);

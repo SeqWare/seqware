@@ -120,7 +120,7 @@ public class WorkflowXmlParser {
     	} else if(jobE.getAttributeValue("type").toLowerCase().equals("javamodule")) {
     		String cp = jobE.getAttributeValue("classpath");
     		String module = jobE.getAttributeValue("module");
-    		job = workflow.createJavaModuleJob(algo, cp, module);
+    		job = workflow.createJavaSeqwareModuleJob(algo, cp, module);
     	}
     	//set command
     	Element aE = jobE.getChild("argument");
