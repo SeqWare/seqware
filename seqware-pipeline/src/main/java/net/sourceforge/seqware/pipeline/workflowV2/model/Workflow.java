@@ -50,8 +50,8 @@ public class Workflow {
 		this.workflowBundleDir = workflowBundleDir;
 	}
 	
-	public Job createJavaModuleJob(String algo, String cp, String module) {
-		AbstractJob job = new JavaModuleJob(algo, cp, module);
+	public Job createJavaSeqwareModuleJob(String algo, String cp, String module) {
+		AbstractJob job = new JavaSeqwareModuleJob(algo, cp, module);
 		this.jobs.add(job);
 		return job;
 	}

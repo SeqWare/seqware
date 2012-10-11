@@ -68,7 +68,7 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 
     	// set up workflow engine
     	AbstractWorkflowEngine engine = new PegasusWorkflowEngine();
-    	WorkflowDataModelFactory factory = new WorkflowDataModelFactory(metadata, options, config, params);
+    	WorkflowDataModelFactory factory = new WorkflowDataModelFactory(options, config, params);
     	AbstractWorkflowDataModel dataModel = factory.getWorkflowDataModel();
     	
     	ReturnValue retPegasus = engine.launchWorkflow(dataModel);
