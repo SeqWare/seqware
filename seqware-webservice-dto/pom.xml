@@ -4,7 +4,7 @@
     <parent>
         <artifactId>seqware</artifactId>
         <groupId>net.sourceforge.seqware</groupId>
-        <version>0.12.5.1</version>
+        <version>0.13.3-SNAPSHOT</version>
     </parent>
     <artifactId>seqware-webservice-dto</artifactId>
     <name>seqware-webservice-dto</name>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>net.sourceforge.seqware</groupId>
             <artifactId>seqware-common</artifactId>
-            <version>0.12.5.1</version>
+            <version>0.13.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
