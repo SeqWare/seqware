@@ -24,13 +24,12 @@ import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
-import com.github.seqware.queryengine.plugins.hbasemr.QEMapper;
 import com.github.seqware.queryengine.system.importers.FeatureImporter;
 import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.IOException;
-import java.util.Map.Entry;
 import java.util.*;
+import java.util.Map.Entry;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
@@ -47,8 +46,8 @@ import org.apache.log4j.Logger;
 public class HBaseStorage extends StorageInterface {
 
     private static final String TEST_COLUMN = "d";
-    public static final byte[] TEST_FAMILY_INBYTES = Bytes.toBytes(TEST_COLUMN); // Try to keep the ColumnFamily names as small as possible, preferably one character (e.g. "d" for data/default). 
-    public static final byte[] TEST_QUALIFIER_INBYTES = Bytes.toBytes("qualifier");
+    private static final byte[] TEST_FAMILY_INBYTES = Bytes.toBytes(TEST_COLUMN); // Try to keep the ColumnFamily names as small as possible, preferably one character (e.g. "d" for data/default). 
+    private static final byte[] TEST_QUALIFIER_INBYTES = Bytes.toBytes("qualifier");
     private boolean inefficiencyWarning = false;
     public static final int PAD = 15;
     public static final String TEST_TABLE_PREFIX = Constants.Term.NAMESPACE.getTermValue(String.class) + StorageInterface.SEPARATOR + "hbaseTestTable_v2";
@@ -320,7 +319,7 @@ public class HBaseStorage extends StorageInterface {
                 tableMap.put(s, new HTable(config, tableName));
             } catch (IOException ex) {
                 Logger.getLogger(HBaseStorage.class.getName()).fatal("Big problem with HBase, abort!", ex);
-                System.exit(-1);
+                throw new RuntimeException("Big problem with HBase shutdown, abort!");
             }
         }
     }
@@ -705,5 +704,11 @@ public class HBaseStorage extends StorageInterface {
             cachedPayloads.add(list);
         }
         return cachedPayloads;
+    }
+    
+    
+    public static byte[] getTEST_FAMILY_INBYTES() {
+        // defensive copy
+        return Arrays.copyOf(TEST_FAMILY_INBYTES, TEST_FAMILY_INBYTES.length);
     }
 }
