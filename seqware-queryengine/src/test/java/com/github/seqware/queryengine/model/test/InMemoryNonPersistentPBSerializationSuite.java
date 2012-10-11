@@ -24,7 +24,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
- * This tests non-optimized in-memory objects against a non-peristent
+ * This tests non-optimized in-memory objects against a non-persistent
  * (in-memory) back-end using ProtoBuffer serialization.
  *
  * @author dyuen
