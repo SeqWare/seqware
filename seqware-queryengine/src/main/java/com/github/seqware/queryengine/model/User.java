@@ -4,6 +4,7 @@ import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.log4j.Logger;
 
 /**
  * A user of the Generic Feature Store.
@@ -107,7 +109,7 @@ public class User extends MoleculeImpl<User> {
 
     @Override
     public int hashCode() {
-	// you pick a hard-coded, randomly chosen, non-zero, odd number
+        // you pick a hard-coded, randomly chosen, non-zero, odd number
         // ideally different for each class
         return new HashCodeBuilder(17, 37).
                 append(super.getSGID().getRowKey()).
@@ -126,14 +128,16 @@ public class User extends MoleculeImpl<User> {
      */
     private static String hashedPassword(String password) {
 //        return password;
-        String hashword = null;
+        String hashword;
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
-            md5.update(password.getBytes());
+            Charset charset = Charset.forName("UTF-8");
+            md5.update(password.getBytes(charset));
             BigInteger hash = new BigInteger(1, md5.digest());
             hashword = hash.toString(16);
-
         } catch (NoSuchAlgorithmException nsae) {
+            hashword = "testing";
+            Logger.getLogger(User.class.getClass()).info("algorithm error with password encryption");
         }
         return pad(hashword, 32, '0');
     }

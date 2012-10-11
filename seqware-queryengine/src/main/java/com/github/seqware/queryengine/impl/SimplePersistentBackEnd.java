@@ -184,9 +184,11 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
         List<TagSet> tagSets = new LinkedList<TagSet>();
         // If there are hierarchical occurrences to be checked, retrieve the tag set now, so that paths in
         // trees can be resolved later on.
-        for (RPNStack.Parameter parameter : constraints.getParameters())
-            if (parameter instanceof RPNStack.TagHierarchicalOccurrence)
+        for (RPNStack.Parameter parameter : constraints.getParameters()) {
+            if (parameter instanceof RPNStack.TagHierarchicalOccurrence) {
                 tagSets.add(SWQEFactory.getQueryInterface().getLatestAtomByRowKey(((RPNStack.TagHierarchicalOccurrence) parameter).getTagSetRowKey(), TagSet.class));
+            }
+        }
         plugin.init(set, constraints, tagSets);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
