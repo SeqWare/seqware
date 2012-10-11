@@ -39,18 +39,18 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>net.sourceforge.seqware</groupId>
+      <groupId>com.github.seqware</groupId>
       <artifactId>seqware-pipeline</artifactId>
       <version>${seqware-version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>net.sourceforge.seqware</groupId>
+      <groupId>com.github.seqware</groupId>
       <artifactId>seqware-bin-linux-x86-64-cat-5.67</artifactId>
       <version>1.0.0</version>
     </dependency>
     <dependency>
-      <groupId>net.sourceforge.seqware</groupId>
+      <groupId>com.github.seqware</groupId>
       <artifactId>seqware-bin-linux-x86-64-echo-5.67</artifactId>
       <version>1.0.0</version>
     </dependency>
