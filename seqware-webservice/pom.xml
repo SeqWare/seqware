@@ -13,7 +13,7 @@
     </properties>
     
     <parent>
-        <groupId>com.github.seqware</groupId>
+        <groupId>net.sourceforge.seqware</groupId>
         <artifactId>seqware</artifactId>
         <version>0.13.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -207,7 +207,7 @@
         -->
         
         <dependency>
-            <groupId>com.github.seqware</groupId>
+            <groupId>net.sourceforge.seqware</groupId>
             <artifactId>seqware-common</artifactId>
             <version>0.13.3-SNAPSHOT</version>
             <exclusions>
@@ -226,7 +226,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.github.seqware</groupId>
+            <groupId>net.sourceforge.seqware</groupId>
             <artifactId>seqware-pipeline</artifactId>
             <version>0.13.3-SNAPSHOT</version>
             <exclusions>
@@ -235,7 +235,7 @@
                     <artifactId>seqware-common</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>com.github.seqware</groupId>
+                    <groupId>net.sourceforge.seqware</groupId>
                     <artifactId>seqware-common</artifactId>
                 </exclusion>
                     
@@ -283,7 +283,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.github.seqware</groupId>
+            <groupId>net.sourceforge.seqware</groupId>
             <artifactId>seqware-queryengine-legacy</artifactId>
             <version>0.13.3-SNAPSHOT</version>
             <exclusions>
@@ -304,13 +304,13 @@
                     <artifactId>seqware-common</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>com.github.seqware</groupId>
+                    <groupId>net.sourceforge.seqware</groupId>
                     <artifactId>seqware-common</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.github.seqware</groupId>
+            <groupId>net.sourceforge.seqware</groupId>
             <artifactId>seqware-webservice-dto</artifactId>
             <version>0.13.3-SNAPSHOT</version>
         </dependency>
