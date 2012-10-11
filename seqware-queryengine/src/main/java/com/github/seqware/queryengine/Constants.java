@@ -16,11 +16,10 @@
  */
 package com.github.seqware.queryengine;
 
-import com.github.seqware.queryengine.common.ConfigTools;
-import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import java.util.Map;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import org.apache.log4j.Logger;
 
 /**

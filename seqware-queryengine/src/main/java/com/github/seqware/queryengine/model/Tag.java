@@ -28,7 +28,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 public class Tag extends AtomImpl<Tag> {
 
     public final static String prefix = "Tag";
-    public static String SEPARATOR = "::";
+    public final static String SEPARATOR = "::";
     private LazyReference<TagSet> tagSet = new LazyReference<TagSet>(TagSet.class);
 
     /**
@@ -68,11 +68,13 @@ public class Tag extends AtomImpl<Tag> {
      * @return True if this tag is a descendant of the tag in the parameter.
      */
     public boolean isDescendantOf(String tagKey) {
-        if (!this.getKey().startsWith("SO:"))
+        if (!this.getKey().startsWith("SO:")) {
             return false;
+        }
 
-        if (tagKey == null || !tagKey.startsWith("SO:"))
+        if (tagKey == null || !tagKey.startsWith("SO:")) {
             return false;
+        }
 
         String thisKey = this.getKey().replaceFirst("^SO:", "");
         tagKey = tagKey.replaceFirst("^SO:", "");
@@ -180,7 +182,6 @@ public class Tag extends AtomImpl<Tag> {
         if (!(o instanceof Tag)) {
             return false;
         }
-        Tag that = (Tag) o;
         EqualsBuilder b = new EqualsBuilder();
         b.append(this.getSGID(), ((Tag)o).getSGID());
         return b.isEquals();
