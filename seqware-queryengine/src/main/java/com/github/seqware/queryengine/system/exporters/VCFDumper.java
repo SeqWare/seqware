@@ -26,6 +26,7 @@ import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.plugins.hbasemr.MRVCFDumperPlugin;
 import com.github.seqware.queryengine.system.Utility;
 import com.github.seqware.queryengine.system.importers.workers.ImportConstants;
+import com.github.seqware.queryengine.system.importers.workers.VCFVariantImportWorker;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -44,6 +45,7 @@ import org.apache.log4j.Logger;
  * @author dyuen
  */
 public class VCFDumper {
+    public static final String VCF = VCFVariantImportWorker.VCF;
 
     private String[] args;
 
@@ -80,17 +82,17 @@ public class VCFDumper {
     public static boolean outputFeatureInVCF(StringBuffer buffer, Feature feature) {
         boolean caughtNonVCF = false;
         buffer.append(feature.getSeqid()).append("\t").append(feature.getStart() + 1).append("\t");
-        if (feature.getTagByKey(ImportConstants.VCF_SECOND_ID) == null) {
+        if (feature.getTagByKey(VCF, ImportConstants.VCF_SECOND_ID) == null) {
             buffer.append(".\t");
         } else {
-            buffer.append(feature.getTagByKey(ImportConstants.VCF_SECOND_ID).getValue().toString()).append("\t");
+            buffer.append(feature.getTagByKey(VCF,ImportConstants.VCF_SECOND_ID).getValue().toString()).append("\t");
         }
         try {
-            buffer.append(feature.getTagByKey(ImportConstants.VCF_REFERENCE_BASE).getValue().toString()).append("\t");
-            buffer.append(feature.getTagByKey(ImportConstants.VCF_CALLED_BASE).getValue().toString()).append("\t");
+            buffer.append(feature.getTagByKey(VCF,ImportConstants.VCF_REFERENCE_BASE).getValue().toString()).append("\t");
+            buffer.append(feature.getTagByKey(VCF,ImportConstants.VCF_CALLED_BASE).getValue().toString()).append("\t");
             buffer.append(feature.getScore() == null ? "." : feature.getScore()).append("\t");
-            buffer.append(feature.getTagByKey(ImportConstants.VCF_FILTER).getValue().toString()).append("\t");
-            buffer.append(feature.getTagByKey(ImportConstants.VCF_INFO).getValue().toString());
+            buffer.append(feature.getTagByKey(VCF,ImportConstants.VCF_FILTER).getValue().toString()).append("\t");
+            buffer.append(feature.getTagByKey(VCF,ImportConstants.VCF_INFO).getValue().toString());
         } catch (NullPointerException npe) {
             if (!caughtNonVCF) {
                 Logger.getLogger(VCFDumper.class.getName()).info("VCF exporting non-VCF feature");

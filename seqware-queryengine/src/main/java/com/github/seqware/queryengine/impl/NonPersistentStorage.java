@@ -24,6 +24,7 @@ import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
 import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.SGID;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -190,13 +191,16 @@ public class NonPersistentStorage extends StorageInterface {
         return features;
     }
 
-    public class ByteTypePair {
+    /**
+     *
+     */
+    public static class ByteTypePair {
 
         private byte[] bArr;
         private Class cl;
 
         public ByteTypePair(byte[] bArr, Class cl) {
-            this.bArr = bArr;
+            this.bArr = Arrays.copyOf(bArr, bArr.length);
             this.cl = cl;
         }
     }

@@ -22,6 +22,7 @@ import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
 import com.github.seqware.queryengine.model.QueryInterface;
 import com.github.seqware.queryengine.system.exporters.QueryDumperInterface;
+import com.github.seqware.queryengine.system.test.QueryVCFDumperTest;
 
 /**
  * An example of a parameter file. See more possible Queries in {@link QueryInterfaceTest}.
@@ -45,7 +46,7 @@ public class VCFDumperParameterExample implements QueryDumperInterface{
             return SWQEFactory.getQueryInterface().getFeaturesByRange(0, set, QueryInterface.Location.INCLUDES, "21", 20000000, 30000000);
         } else{
             // limits us to features with a particular tag
-            return SWQEFactory.getQueryInterface().getFeaturesByAttributes(0, set, new RPNStack(new RPNStack.TagOccurrence("non_synonymous_codon")));
+            return SWQEFactory.getQueryInterface().getFeaturesByAttributes(0, set, new RPNStack(new RPNStack.TagOccurrence(QueryVCFDumperTest.AD_HOC_TAG_SET, "non_synonymous_codon")));
         }
     }
     

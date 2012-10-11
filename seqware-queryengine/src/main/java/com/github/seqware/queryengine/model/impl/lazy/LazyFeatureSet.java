@@ -26,7 +26,7 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
     /**
      * Trigger a warning about iteration being expensive only once
      */
-    protected static boolean EXPENSIVE_ITERATION_WARNED = false;
+    private static boolean EXPENSIVE_ITERATION_WARNED = false;
     /**
      * Associated reference.
      */

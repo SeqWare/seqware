@@ -28,7 +28,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -90,17 +89,17 @@ public class BrianTest {
             boolean caughtNonVCF = false;
             for (Feature feature : featuresByTag.get()) {
                 outputStream.append(feature.getSeqid() + "\t" + (feature.getStart() + 1) + "\t");
-                if (feature.getTagByKey(ImportConstants.VCF_SECOND_ID) == null) {
+                if (feature.getTagByKey("VCF", ImportConstants.VCF_SECOND_ID) == null) {
                     outputStream.append(".\t");
                 } else {
-                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_SECOND_ID).getValue().toString() + "\t");
+                    outputStream.append(feature.getTagByKey("VCF", ImportConstants.VCF_SECOND_ID).getValue().toString() + "\t");
                 }
                 try {
-                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_REFERENCE_BASE).getValue().toString() + "\t");
-                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_CALLED_BASE).getValue().toString() + "\t");
+                    outputStream.append(feature.getTagByKey("VCF", ImportConstants.VCF_REFERENCE_BASE).getValue().toString() + "\t");
+                    outputStream.append(feature.getTagByKey("VCF", ImportConstants.VCF_CALLED_BASE).getValue().toString() + "\t");
                     outputStream.append(feature.getScore() + "\t");
-                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_FILTER).getValue().toString() + "\t");
-                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_INFO).getValue().toString());
+                    outputStream.append(feature.getTagByKey("VCF", ImportConstants.VCF_FILTER).getValue().toString() + "\t");
+                    outputStream.append(feature.getTagByKey("VCF", ImportConstants.VCF_INFO).getValue().toString());
                 } catch (NullPointerException npe) {
                     if (!caughtNonVCF) {
                         Logger.getLogger(BrianTest.class.getName()).log(Level.INFO, "VCF exporting non-VCF feature");
