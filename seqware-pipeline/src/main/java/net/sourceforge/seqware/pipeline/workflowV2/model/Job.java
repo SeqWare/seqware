@@ -10,8 +10,10 @@ public interface Job {
 	public Job addParent(Job parent);
 	public Collection<Job> getParents();
 	
-	public Job addRequirement(Requirement requirement);
+	//public Job addRequirement(Requirement requirement);
 	public Job setMaxMemory(String mem);
 	public Job setThreads(int count);
 	public Job setQueue(String queue);
+	public void setHasMetadataWriteback(boolean metadata);
+	public boolean hasMetadataWriteback();
 }

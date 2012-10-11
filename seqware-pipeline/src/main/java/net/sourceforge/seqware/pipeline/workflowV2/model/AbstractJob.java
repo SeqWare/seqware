@@ -17,6 +17,7 @@ public class AbstractJob implements Job {
 	private Collection<Requirement> requirements;
 	private String cp;
 	private String mainclass;
+	protected boolean hasMetadataWriteback;
 	
 	/**
 	 * for bash Job
@@ -173,7 +174,7 @@ public class AbstractJob implements Job {
 		return this;
 	}
 
-	@Override
+
 	public Job addRequirement(Requirement requirement) {
 		return null;
 	}
@@ -181,6 +182,16 @@ public class AbstractJob implements Job {
 	@Override
 	public Job setQueue(String queue) {
 		return null;
+	}
+
+	@Override
+	public void setHasMetadataWriteback(boolean metadata) {
+		this.hasMetadataWriteback = metadata;
+	}
+
+	@Override
+	public boolean hasMetadataWriteback() {
+		return this.hasMetadataWriteback;
 	}
 
 }

@@ -9,7 +9,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.BashJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Command;
 import net.sourceforge.seqware.pipeline.workflowV2.model.JavaJob;
-import net.sourceforge.seqware.pipeline.workflowV2.model.JavaModuleJob;
+import net.sourceforge.seqware.pipeline.workflowV2.model.JavaSeqwareModuleJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.PerlJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Requirement;
 

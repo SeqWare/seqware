@@ -52,10 +52,10 @@ public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
 		ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 		// create the submission of the DAX to Pegasus
 		String pegasusCmd = "pegasus-plan -Dpegasus.user.properties="
-			+ objectModel.getConfigs().get("SW_PEGASUS_CONFIG_DIR") + "/properties --dax "
-			+ dax.getAbsolutePath() + " --dir " + objectModel.getConfigs().get("SW_DAX_DIR")
-			+ " -o " + objectModel.getConfigs().get("SW_CLUSTER") + " --force --submit -s "
-			+ objectModel.getConfigs().get("SW_CLUSTER");
+				+ objectModel.getEnv().getPegasusConfigDir() + "/properties --dax "
+			+ dax.getAbsolutePath() + " --dir " + objectModel.getEnv().getDaxDir()
+			+ " -o " + objectModel.getEnv().getSwCluster() + " --force --submit -s "
+			+ objectModel.getEnv().getSwCluster();
 
 		// run the pegasus submission
 		Log.stdout("SUBMITTING TO PEGASUS: " + pegasusCmd);
