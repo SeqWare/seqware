@@ -7,7 +7,7 @@
     <name>seqware-portal</name>
     <packaging>war</packaging>
     <parent>
-        <groupId>net.sourceforge.seqware</groupId>
+        <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
         <version>0.13.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -144,7 +144,7 @@
         -->
         
         <dependency>
-            <groupId>net.sourceforge.seqware</groupId>
+            <groupId>com.github.seqware</groupId>
             <artifactId>seqware-common</artifactId>
             <version>0.13.3-SNAPSHOT</version>
             <exclusions>
@@ -163,16 +163,16 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>net.sourceforge.seqware</groupId>
+            <groupId>com.github.seqware</groupId>
             <artifactId>seqware-pipeline</artifactId>
             <version>0.13.3-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
-                    <groupId>net.sourceforge.seqware</groupId>
+                    <groupId>com.github.seqware</groupId>
                     <artifactId>seqware-common</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>net.sourceforge.seqware</groupId>
+                    <groupId>com.github.seqware</groupId>
                     <artifactId>seqware-common</artifactId>
                 </exclusion>
                     

@@ -3,7 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>seqware</artifactId>
+<<<<<<< Updated upstream
         <groupId>net.sourceforge.seqware</groupId>
+=======
+        <groupId>com.github.seqware</groupId>
+>>>>>>> Stashed changes
         <version>0.13.3-SNAPSHOT</version>
     </parent>
     <artifactId>seqware-webservice-dto</artifactId>
@@ -29,7 +33,7 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.sourceforge.seqware</groupId>
+            <groupId>com.github.seqware</groupId>
             <artifactId>seqware-common</artifactId>
             <version>0.13.3-SNAPSHOT</version>
         </dependency>
