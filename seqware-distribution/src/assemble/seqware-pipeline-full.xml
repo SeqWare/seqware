@@ -17,7 +17,7 @@
     
       <includes>
         <!-- Includes seqware-pipeline and all it's dependencies. -->
-        <include>net.sourceforge.seqware:seqware-pipeline</include>
+        <include>com.github.seqware:seqware-pipeline</include>
       </includes>
       <binaries>
       	<outputDirectory>/</outputDirectory>
