@@ -1,0 +1,35 @@
+<Context reloadable="true">
+	<!-- Please note: This is NOT implied to be a production-quality Tomcat
+	context file. This file is just an example to illustrate SOME of the
+	elements and parameters that may be set. Consult your system administrator
+	for configuration that is appropriate in a production environment.
+	For more information, see the following URLS:
+	http://jakarta.apache.org/commons/dbcp/configuration.html
+	http://dev.mysql.com/doc/refman/5.0/en/connector-j-usagenotes-j2ee.html
+	http://tomcat.apache.org/tomcat-5.5-doc/jndi-datasource-examples-howto.html
+	-->
+	<Resource name="jdbc/SeqWareLIMS" auth="Container" type="javax.sql.DataSource"
+		factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory"
+		defaultTransactionIsolation="REPEATABLE_READ"
+		maxActive="20"
+		maxIdle="5"
+		maxWait="10000"
+		validationQuery="SELECT 1"
+		testOnBorrow="true"
+		defaultAutoCommit="false"
+		driverClassName="@DATABASE_DRIVER@"
+		username="@DATABASE_USERNAME@"
+		password="@DATABASE_PASSWORD@"
+		url="@DATABASE_URL@"
+	/>
+        <Environment name="port" value="@PORT@" type="java.lang.Integer" override="false"/>
+        <Environment name="java.library.path" value="@JAVA_LIBRARY_PATH@" type="java.lang.String" override="false"/>
+        <Environment name="dbserver" value="@DATABASE_SERVER@" type="java.lang.String" override="false"/>
+        <Environment name="db" value="@DATABASE@" type="java.lang.String" override="false"/>
+        <Environment name="user" value="@DATABASE_USERNAME@" type="java.lang.String" override="false"/>
+        <Environment name="pass" value="@DATABASE_PASSWORD@" type="java.lang.String" override="false"/>
+        <Environment name="rooturl" value="@ROOT_URL@" type="java.lang.String" override="false"/>
+        <Environment name="version" value="@VERSION@" type="java.lang.String" override="false"/>
+        <Environment name="maxconnections" value="@MAX_CONNECTIONS@" type="java.lang.Integer" override="false"/>
+        <Environment name="datadir" value="@DATA_DIR@" type="java.lang.String" override="false"/>
+</Context>

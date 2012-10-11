@@ -1,0 +1,1473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+ xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+ http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- JNDI DataSource -->
+    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName">
+            <value>java:comp/env/jdbc/SeqWareMetaDB</value>
+        </property>
+    </bean>
+
+	<!-- Hibernate SessionFactory -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource">
+            <ref local="dataSource" />
+        </property>
+        <property name="mappingResources">
+            <list>
+                <value>net/sourceforge/seqware/common/model/Mappings.hbm.xml</value>
+            </list>
+        </property>
+        <property name="packagesToScan" value="net.sourceforge.seqware.common.model" /> 
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+                <!-- <prop key="hibernate.show_sql">true</prop> -->
+                <prop key="hibernate.default_entity_mode">pojo</prop>
+                <prop key="hibernate.cache.use_second_level_cache">false</prop>
+				<!-- prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop -->
+            </props>
+        </property>
+    </bean>
+
+	<!-- Transaction manager for the Hibernate SessionFactory. -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+
+	<!-- RegistrationDAO: Hibernate implementation -->
+    <bean id="registrationDAO" class="net.sourceforge.seqware.common.dao.hibernate.RegistrationDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+    <bean id="sequencerRunDAO" class="net.sourceforge.seqware.common.dao.hibernate.SequencerRunDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+    <bean id="laneDAO" class="net.sourceforge.seqware.common.dao.hibernate.LaneDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+    <bean id="invoiceDAO" class="net.sourceforge.seqware.common.dao.hibernate.InvoiceDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+    <bean id="IUSDAO" class="net.sourceforge.seqware.common.dao.hibernate.IUSDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+    <bean id="processingDAO" class="net.sourceforge.seqware.common.dao.hibernate.ProcessingDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+
+	<!-- Registration Service -->
+    <bean id="registrationServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.RegistrationServiceImpl">
+        <property name="registrationDAO">
+            <ref local="registrationDAO"/>
+        </property>
+    </bean>
+
+    
+
+	<!-- Transaction declarations for Registration Service -->
+    <bean id="registrationService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="registrationServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+
+	<!-- Processing Service -->
+    <bean id="processingServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.ProcessingServiceImpl">
+        <property name="processingDAO">
+            <ref local="processingDAO"/>
+        </property>
+        <property name="fileDAO">
+            <ref local="fileDAO"/>
+        </property>
+    </bean>
+
+	<!-- Transaction declarations for Processing Service -->
+    <bean id="processingService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="processingServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+
+	<!-- SequencerRun Service -->
+    <bean id="sequencerRunServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.SequencerRunServiceImpl">
+        <property name="sequencerRunDAO">
+            <ref local="sequencerRunDAO"/>
+        </property>
+        <property name="laneDAO">
+            <ref local="laneDAO"/>
+        </property>
+        <property name="fileDAO">
+            <ref local="fileDAO"/>
+        </property>
+    </bean>
+
+	<!-- Transaction declarations for SequencerRun Service -->
+    <bean id="sequencerRunService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="sequencerRunServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+
+  <!-- Lane Service -->
+    <bean id="laneServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.LaneServiceImpl">
+        <property name="laneDAO">
+            <ref local="laneDAO"/>
+        </property>
+        <property name="processingDAO">
+            <ref local="processingDAO"/>
+        </property>
+        <property name="fileDAO">
+            <ref local="fileDAO"/>
+        </property>
+        <property name="IUSDAO">
+            <ref local="IUSDAO"/>
+        </property>
+    </bean>
+
+  <!-- Transaction declarations for Lane Service -->
+    <bean id="laneService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="laneServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert*">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete*">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <!-- Invoice Service -->
+    <bean id="invoiceServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.InvoiceServiceImpl">
+        <property name="invoiceDAO">
+            <ref local="invoiceDAO"/>
+        </property>
+    </bean>
+    
+  <!-- Transaction declarations for Invoice Service -->
+    <bean id="invoiceService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="invoiceServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert*">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete*">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+  
+  <!-- IUS Service -->
+    <bean id="IUSServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.IUSServiceImpl">
+        <property name="IUSDAO">
+            <ref local="IUSDAO"/>
+        </property>
+        <property name="fileDAO">
+            <ref local="fileDAO"/>
+        </property>
+    </bean>
+
+  <!-- Transaction declarations for IUS Service -->
+    <bean id="IUSService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="IUSServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+	
+	<!-- Added for SRA compliance -->
+	
+	<!-- Study Service -->
+    <bean id="studyServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.StudyServiceImpl">
+        <property name="studyDAO">
+            <ref local="studyDAO"/>
+        </property>
+        <property name="fileDAO">
+            <ref local="fileDAO"/>
+        </property>
+    </bean>
+	
+    <bean id="studyDAO" class="net.sourceforge.seqware.common.dao.hibernate.StudyDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+	
+	<!-- Transaction declarations for Study Service -->
+    <bean id="studyService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="studyServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="merge">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+	
+	<!-- Study Type Service -->
+    <bean id="studyTypeServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.StudyTypeServiceImpl">
+        <property name="studyTypeDAO">
+            <ref local="studyTypeDAO"/>
+        </property>
+    </bean>
+	
+    <bean id="studyTypeDAO" class="net.sourceforge.seqware.common.dao.hibernate.StudyTypeDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+	
+	<!-- Transaction declarations for Study Service -->
+    <bean id="studyTypeService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="studyTypeServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+	
+	 <!-- Organism Service -->
+    <bean id="organismServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.OrganismServiceImpl">
+        <property name="organismDAO">
+            <ref local="organismDAO"/>
+        </property>
+    </bean>
+  
+    <bean id="organismDAO" class="net.sourceforge.seqware.common.dao.hibernate.OrganismDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+  <!-- Transaction declarations for Organism -->
+    <bean id="organismService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="organismServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+        <!--prop key="insert">PROPAGATION_REQUIRED</prop>
+        <prop key="update">PROPAGATION_REQUIRED</prop-->
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+	
+	<!-- Platform Service -->
+    <bean id="platformServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.PlatformServiceImpl">
+        <property name="platformDAO">
+            <ref local="platformDAO"/>
+        </property>
+    </bean>
+	
+    <bean id="platformDAO" class="net.sourceforge.seqware.common.dao.hibernate.PlatformDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+	
+	<!-- Transaction declarations for Platform -->
+    <bean id="platformService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="platformServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+				<!--prop key="insert">PROPAGATION_REQUIRED</prop>
+				<prop key="update">PROPAGATION_REQUIRED</prop-->
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+	
+	<!-- LibrarySelection Service -->
+    <bean id="librarySelectionServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.LibrarySelectionServiceImpl">
+        <property name="librarySelectionDAO">
+            <ref local="librarySelectionDAO"/>
+        </property>
+    </bean>
+	
+    <bean id="librarySelectionDAO" class="net.sourceforge.seqware.common.dao.hibernate.LibrarySelectionDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+	
+	<!-- Transaction declarations for LibrarySelection -->
+    <bean id="librarySelectionService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="librarySelectionServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+				<!--prop key="insert">PROPAGATION_REQUIRED</prop>
+				<prop key="update">PROPAGATION_REQUIRED</prop-->
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+	
+	<!-- LibrarySource Service -->
+    <bean id="librarySourceServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.LibrarySourceServiceImpl">
+        <property name="librarySourceDAO">
+            <ref local="librarySourceDAO"/>
+        </property>
+    </bean>
+	
+    <bean id="librarySourceDAO" class="net.sourceforge.seqware.common.dao.hibernate.LibrarySourceDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+	
+	<!-- Transaction declarations for LibrarySource -->
+    <bean id="librarySourceService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="librarySourceServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+				<!--prop key="insert">PROPAGATION_REQUIRED</prop>
+				<prop key="update">PROPAGATION_REQUIRED</prop-->
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+	
+	<!-- LibraryStrategy Service -->
+    <bean id="libraryStrategyServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.LibraryStrategyServiceImpl">
+        <property name="libraryStrategyDAO">
+            <ref local="libraryStrategyDAO"/>
+        </property>
+    </bean>
+	
+    <bean id="libraryStrategyDAO" class="net.sourceforge.seqware.common.dao.hibernate.LibraryStrategyDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+	
+	<!-- Transaction declarations for LibraryStrategy -->
+    <bean id="libraryStrategyService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="libraryStrategyServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+				<!--prop key="insert">PROPAGATION_REQUIRED</prop>
+				<prop key="update">PROPAGATION_REQUIRED</prop-->
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+  
+	<!-- Experiment Service -->
+    <bean id="experimentServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.ExperimentServiceImpl">
+        <property name="experimentDAO">
+            <ref local="experimentDAO"/>
+        </property>
+        <property name="fileDAO">
+            <ref local="fileDAO"/>
+        </property>
+    </bean>
+	
+    <bean id="experimentDAO" class="net.sourceforge.seqware.common.dao.hibernate.ExperimentDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+	
+	<!-- Transaction declarations for Experiment Service -->
+    <bean id="experimentService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="experimentServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="merge">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>  
+  
+  <!-- Sample Service -->
+    <bean id="sampleServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.SampleServiceImpl">
+        <property name="sampleDAO">
+            <ref local="sampleDAO"/>
+        </property>
+        <property name="fileDAO">
+            <ref local="fileDAO"/>
+        </property>
+    </bean>
+  
+    <bean id="sampleDAO" class="net.sourceforge.seqware.common.dao.hibernate.SampleDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+  <!-- Transaction declarations for Sample Service -->
+    <bean id="sampleService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="sampleServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>  
+
+  <!-- File Service -->
+    <bean id="fileServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.FileServiceImpl">
+        <property name="fileDAO">
+            <ref local="fileDAO"/>
+        </property>
+    </bean>
+  
+    <bean id="fileDAO" class="net.sourceforge.seqware.common.dao.hibernate.FileDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+  <!-- Transaction declarations for File Service -->
+    <bean id="fileService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="fileServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>  
+    
+     <!-- File Report Service -->
+    <bean id="fileReportServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.FileReportServiceImpl">
+        <property name="fileReportDAO">
+            <ref local="fileReportDAO"/>
+        </property>
+    </bean>
+  
+    <bean id="fileReportDAO" class="net.sourceforge.seqware.common.dao.hibernate.FileReportDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+  <!-- Transaction declarations for File Report Service -->
+    <bean id="fileReportService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="fileReportServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean> 
+    
+     <!-- Sample Report Service -->
+    <bean id="sampleReportServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.SampleReportServiceImpl">
+        <property name="sampleReportDAO">
+            <ref local="sampleReportDAO"/>
+        </property>
+    </bean>
+  
+    <bean id="sampleReportDAO" class="net.sourceforge.seqware.common.dao.hibernate.SampleReportDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+  <!-- Transaction declarations for Sample Report Service -->
+    <bean id="sampleReportService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="sampleReportServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+
+  <!-- Experiment Library Design Service -->
+    <bean id="experimentLibraryDesignServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.ExperimentLibraryDesignServiceImpl">
+        <property name="experimentLibraryDesignDAO">
+            <ref local="experimentLibraryDesignDAO"/>
+        </property>
+    </bean>
+  
+    <bean id="experimentLibraryDesignDAO" class="net.sourceforge.seqware.common.dao.hibernate.ExperimentLibraryDesignDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+  <!-- Transaction declarations for Experiment Library Design Service -->
+    <bean id="experimentLibraryDesignService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="experimentLibraryDesignServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+  
+  <!-- Experiment Spot Design Service -->
+    <bean id="experimentSpotDesignServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.ExperimentSpotDesignServiceImpl">
+        <property name="experimentSpotDesignDAO">
+            <ref local="experimentSpotDesignDAO"/>
+        </property>
+    </bean>
+  
+    <bean id="experimentSpotDesignDAO" class="net.sourceforge.seqware.common.dao.hibernate.ExperimentSpotDesignDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+  <!-- Transaction declarations for Experiment Library Design Service -->
+    <bean id="experimentSpotDesignService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="experimentSpotDesignServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+  
+  <!-- Experiment Spot Design Read Spec Service -->
+    <bean id="experimentSpotDesignReadSpecServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.ExperimentSpotDesignReadSpecServiceImpl">
+        <property name="experimentSpotDesignReadSpecDAO">
+            <ref local="experimentSpotDesignReadSpecDAO"/>
+        </property>
+    </bean>
+  
+    <bean id="experimentSpotDesignReadSpecDAO" class="net.sourceforge.seqware.common.dao.hibernate.ExperimentSpotDesignReadSpecDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+  <!-- Transaction declarations for Experiment Library Design Service -->
+    <bean id="experimentSpotDesignReadSpecService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="experimentSpotDesignReadSpecServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+  
+	<!-- Processing Experiments Service  -->
+    <bean id="processingExperimentsServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.ProcessingExperimentsServiceImpl">
+        <property name="processingExperimentsDAO">
+            <ref local="processingExperimentsDAO"/>
+        </property>
+    </bean>
+  
+    <bean id="processingExperimentsDAO" class="net.sourceforge.seqware.common.dao.hibernate.ProcessingExperimentsDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+  
+    <!-- Transaction declarations for ProcessingExperiment Service -->
+    <bean id="processingExperimentsService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="processingExperimentsServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+  
+
+  <!-- Processing IUS Service  -->
+    <bean id="processingIUSServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.ProcessingIUSServiceImpl">
+        <property name="processingIUSDAO">
+            <ref local="processingIUSDAOHibernate"/>
+        </property>
+    </bean>
+  
+    <bean id="processingIUSDAOHibernate" class="net.sourceforge.seqware.common.dao.hibernate.ProcessingIUSDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+      <!-- Transaction declarations for ProcessingExperiment Service -->
+    <bean id="processingIUSService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="processingIUSServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+  
+  <!-- Processing Lanes Service  -->
+    <bean id="processingLanesServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.ProcessingLanesServiceImpl">
+        <property name="processingLanesDAO">
+            <ref local="processingLanesDAOHibernate"/>
+        </property>
+    </bean>
+  
+    <bean id="processingLanesDAOHibernate" class="net.sourceforge.seqware.common.dao.hibernate.ProcessingLanesDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+      <!-- Transaction declarations for ProcessingExperiment Service -->
+    <bean id="processingLanesService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="processingLanesServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+  
+   <!-- Processing Relationship Service  -->
+    <bean id="processingRelationshipServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.ProcessingRelationshipServiceImpl">
+        <property name="processingRelationshipDAO">
+            <ref local="processingRelationshipDAOHibernate"/>
+        </property>
+    </bean>
+  
+    <bean id="processingRelationshipDAOHibernate" class="net.sourceforge.seqware.common.dao.hibernate.ProcessingRelationshipDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+        <!-- Transaction declarations for ProcessingExperiment Service -->
+    <bean id="processingRelationshipService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="processingRelationshipServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+  
+  
+  <!-- Processing Samples Service  -->
+    <bean id="processingSamplesServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.ProcessingSamplesServiceImpl">
+        <property name="processingSamplesDAO">
+            <ref local="processingSamplesDAOHibernate"/>
+        </property>
+    </bean>
+  
+    <bean id="processingSamplesDAOHibernate" class="net.sourceforge.seqware.common.dao.hibernate.ProcessingSamplesDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+          <!-- Transaction declarations for ProcessingExperiment Service -->
+    <bean id="processingSamplesService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="processingSamplesServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+  
+  <!-- Processing Sequencer Runs Service  -->
+    <bean id="processingSequencerRunsServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.ProcessingSequencerRunsServiceImpl">
+        <property name="processingSequencerRunsDAO">
+            <ref local="processingSequencerRunsDAOHibernate"/>
+        </property>
+    </bean>
+  
+    <bean id="processingSequencerRunsDAOHibernate" class="net.sourceforge.seqware.common.dao.hibernate.ProcessingSequencerRunsDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+            <!-- Transaction declarations for ProcessingExperiment Service -->
+    <bean id="processingSequencerRunsService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="processingSequencerRunsServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+  
+  
+  
+    <!-- Processing Studies Service  -->
+    <bean id="processingStudiesServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.ProcessingStudiesServiceImpl">
+        <property name="processingStudiesDAO">
+            <ref local="processingStudiesDAOHibernate"/>
+        </property>
+    </bean>
+  
+    <bean id="processingStudiesDAOHibernate" class="net.sourceforge.seqware.common.dao.hibernate.ProcessingStudiesDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+              <!-- Transaction declarations for ProcessingExperiment Service -->
+    <bean id="processingStudiesService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="processingStudiesServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+  
+  
+  <!-- Share File Service -->
+    <bean id="shareFileServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.ShareFileServiceImpl">
+        <property name="shareFileDAO">
+            <ref local="shareFileDAO"/>
+        </property>
+    </bean>
+  
+    <bean id="shareFileDAO" class="net.sourceforge.seqware.common.dao.hibernate.ShareFileDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+   <!-- Share Experiment Service -->
+    <bean id="shareExperimentTarget"
+          class="net.sourceforge.seqware.common.business.impl.ShareExperimentServiceImpl">
+        <property name="shareExperimentDAO">
+            <ref local="shareExperimentDAO"/>
+        </property>
+    </bean>
+  
+    <bean id="shareExperimentDAO" class="net.sourceforge.seqware.common.dao.hibernate.ShareExperimentDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+   <!-- Share Lane Service -->
+    <bean id="shareLaneTarget"
+          class="net.sourceforge.seqware.common.business.impl.ShareLaneServiceImpl">
+        <property name="shareLaneDAO">
+            <ref local="shareLaneDAO"/>
+        </property>
+    </bean>
+  
+    <bean id="shareLaneDAO" class="net.sourceforge.seqware.common.dao.hibernate.ShareLaneDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+   <!-- Share Processing Service -->
+    <bean id="shareProcessingTarget"
+          class="net.sourceforge.seqware.common.business.impl.ShareProcessingServiceImpl">
+        <property name="shareProcessingDAO">
+            <ref local="shareProcessingDAO"/>
+        </property>
+    </bean>
+  
+    <bean id="shareProcessingDAO" class="net.sourceforge.seqware.common.dao.hibernate.ShareProcessingDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+  <!-- Share Sample Service -->
+    <bean id="shareSampleTarget"
+          class="net.sourceforge.seqware.common.business.impl.ShareSampleServiceImpl">
+        <property name="shareSampleDAO">
+            <ref local="shareSampleDAO"/>
+        </property>
+    </bean>
+  
+    <bean id="shareSampleDAO" class="net.sourceforge.seqware.common.dao.hibernate.ShareSampleDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+  <!-- Share Study Service -->
+    <bean id="shareStudyServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.ShareStudyServiceImpl">
+        <property name="shareStudyDAO">
+            <ref local="shareStudyDAO"/>
+        </property>
+    </bean>
+  
+    <bean id="shareStudyDAO" class="net.sourceforge.seqware.common.dao.hibernate.ShareStudyDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+  <!-- Transaction declarations for File Service -->
+    <bean id="shareStudyService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="shareStudyServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>  
+
+	<!-- Workflow Service -->
+    <bean id="workflowServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.WorkflowServiceImpl">
+        <property name="workflowDAO">
+            <ref local="workflowDAO"/>
+        </property>
+    </bean>
+	
+    <bean id="workflowDAO" class="net.sourceforge.seqware.common.dao.hibernate.WorkflowDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+	
+	<!-- Transaction declarations for Workflow Service -->
+    <bean id="workflowService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="workflowServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+
+
+  <!-- Share WorkflowRun Service -->
+    <bean id="shareWorkflowRunServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.ShareWorkflowRunServiceImpl">
+        <property name="shareWorkflowRunDAO">
+            <ref local="shareWorkflowRunDAO"/>
+        </property>
+    </bean>
+  
+    <bean id="shareWorkflowRunDAO" class="net.sourceforge.seqware.common.dao.hibernate.ShareWorkflowRunDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+  
+  <!-- Transaction declarations for File Service -->
+    <bean id="shareWorkflowRunService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="shareWorkflowRunServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>  
+
+	<!-- WorkflowRun Service -->
+    <bean id="workflowRunServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.WorkflowRunServiceImpl">
+        <property name="workflowRunDAO">
+            <ref local="workflowRunDAO"/>
+        </property>
+        <property name="processingDAO">
+            <ref local="processingDAO"/>
+        </property>
+        <property name="workflowRunParamDAO">
+            <ref local="workflowRunParamDAO"/>
+        </property>
+        <property name="fileDAO">
+            <ref local="fileDAO"/>
+        </property>
+    </bean>
+	
+    <bean id="workflowRunDAO" class="net.sourceforge.seqware.common.dao.hibernate.WorkflowRunDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+	
+	<!-- Transaction declarations for WorkflowRun Service -->
+    <bean id="workflowRunService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="workflowRunServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="runWorkflow">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+
+	<!-- WorkflowRunParam Service -->
+    <bean id="workflowRunParamServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.WorkflowRunParamServiceImpl">
+        <property name="workflowRunParamDAO">
+            <ref local="workflowRunParamDAO"/>
+        </property>
+    </bean>
+	
+    <bean id="workflowRunParamDAO" class="net.sourceforge.seqware.common.dao.hibernate.WorkflowRunParamDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+	
+	<!-- Transaction declarations for WorkflowRunParam Service -->
+    <bean id="workflowRunParamService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="workflowRunParamServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+
+	<!-- FileType Service -->
+    <bean id="fileTypeServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.FileTypeServiceImpl">
+        <property name="fileTypeDAO">
+            <ref local="fileTypeDAO"/>
+        </property>
+    </bean>
+	
+    <bean id="fileTypeDAO" class="net.sourceforge.seqware.common.dao.hibernate.FileTypeDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+	
+	<!-- Transaction declarations for Platform -->
+    <bean id="fileTypeService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="fileTypeServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+				<!--prop key="insert">PROPAGATION_REQUIRED</prop>
+				<prop key="update">PROPAGATION_REQUIRED</prop-->
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+
+	<!-- File Upload Service -->
+    <bean id="fileUploadServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.FileUploadServiceImpl">
+        <property name="studyDAO">
+            <ref local="studyDAO"/>
+        </property>
+        <property name="experimentDAO">
+            <ref local="experimentDAO"/>
+        </property>
+        <property name="sampleDAO">
+            <ref local="sampleDAO"/>
+        </property>
+        <property name="laneDAO">
+            <ref local="laneDAO"/>
+        </property>
+        <property name="processingDAO">
+            <ref local="processingDAO"/>
+        </property>
+        <property name="sequencerRunDAO">
+            <ref local="sequencerRunDAO"/>
+        </property>
+        <property name="IUSDAO">
+            <ref local="IUSDAO"/>
+        </property>
+        <property name="fileTypeDAO">
+            <ref local="fileTypeDAO"/>
+        </property>
+        <property name="fileDAO">
+            <ref local="fileDAO"/>
+        </property>
+    </bean>
+	
+	<!-- Transaction declarations for File Upload Service -->
+    <bean id="fileUploadService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="fileUploadServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="upload*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+
+	<!-- WorkflowParam Service -->
+    <bean id="workflowParamServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.WorkflowParamServiceImpl">
+        <property name="workflowParamDAO">
+            <ref local="workflowParamDAO"/>
+        </property>
+    </bean>
+	
+	<!-- WorkflowParam DAO -->
+    <bean id="workflowParamDAO" class="net.sourceforge.seqware.common.dao.hibernate.WorkflowParamDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+	
+	<!-- Transaction declarations for WorkflowParam Service -->
+    <bean id="workflowParamService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="workflowParamServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+
+	<!-- WorkflowParamValue Service -->
+    <bean id="workflowParamValueServiceTarget"
+          class="net.sourceforge.seqware.common.business.impl.WorkflowParamValueServiceImpl">
+        <property name="workflowParamValueDAO">
+            <ref local="workflowParamValueDAO"/>
+        </property>
+    </bean>
+	
+	<!-- WorkflowParamValue DAO -->
+    <bean id="workflowParamValueDAO" class="net.sourceforge.seqware.common.dao.hibernate.WorkflowParamValueDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+	
+	<!-- Transaction declarations for WorkflowParamValue Service -->
+    <bean id="workflowParamValueService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref local="transactionManager"/>
+        </property>
+        <property name="target">
+            <ref local="workflowParamValueServiceTarget"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="insert">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+	
+
+
+<tx:annotation-driven />
+
+<bean class=
+  "org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+
+  <context:component-scan base-package="net.sourceforge.seqware.common">
+  </context:component-scan>  
+    <context:component-scan base-package="net.sourceforge.seqware.webservice">
+  </context:component-scan> 
+      
+      
+    <bean id="contextImpl" class="net.sourceforge.seqware.common.ContextImpl">
+        <property name="studyService">
+            <ref local="studyService"/>
+        </property>
+        <property name="experimentService">
+            <ref local="experimentService"/>
+        </property>
+        <property name="fileService">
+            <ref local="fileService"/>
+        </property>
+        <property name="iusService">
+            <ref local="IUSService"/>
+        </property>
+        <property name="laneService">
+            <ref local="laneService"/>
+        </property>
+        <property name="processingService">
+            <ref local="processingService"/>
+        </property>
+        <property name="sampleService">
+            <ref local="sampleService"/>
+        </property>
+        <property name="sampleReportService">
+            <ref local="sampleReportService"/>
+        </property>
+        <property name="sequencerRunService">
+            <ref local="sequencerRunService"/>
+        </property>        
+        <property name="workflowRunService">
+            <ref local="workflowRunService"/>
+        </property>        
+        <property name="workflowService">
+            <ref local="workflowService"/>
+        </property>
+        <property name="registrationService">
+            <ref local="registrationService"/>
+        </property>        
+        <property name="processingRelationshipService">
+            <ref local="processingRelationshipService"/>
+        </property>        
+        <property name="processingExperimentsService">
+            <ref local="processingExperimentsService"/>
+        </property>
+        <property name="processingIusService">
+            <ref local="processingIUSService"/>
+        </property>        
+        <property name="processingLaneService">
+            <ref local="processingLanesService"/>
+        </property>        
+        <property name="processingSamplesService">
+            <ref local="processingSamplesService"/>
+        </property>        
+        <property name="processingSequencerRunService">
+            <ref local="processingSequencerRunsService"/>
+        </property>
+        <property name="processingStudiesService">
+            <ref local="processingStudiesService"/>
+        </property>
+        <property name="workflowParamService">
+            <ref local="workflowParamService"/>
+        </property>
+        <property name="workflowParamValueService">
+            <ref local="workflowParamValueService"/>
+        </property>        
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+        <property name="platformService">
+            <ref local="platformService"/>
+        </property>
+    </bean>
+      
+</beans>

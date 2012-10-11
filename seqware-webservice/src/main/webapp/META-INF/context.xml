@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="">
+    <Resource name="jdbc/SeqWareMetaDB" auth="Container"
+            type="javax.sql.DataSource"
+            description="Seqware Hibernate"
+            driverClassName="org.postgresql.Driver"
+            url="jdbc:postgresql://localhost:5432/test_seqware_meta_db"
+            username="seqware"
+            password="seqware"/>
+</Context>
