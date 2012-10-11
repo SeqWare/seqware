@@ -25,6 +25,8 @@ import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
  */
 public class InMemoryQueryFutureImpl<T> extends Analysis {
     
+    private static final long serialVersionUID = 1L;
+    
     private transient AnalysisPluginInterface<T> plugin;
 
     public InMemoryQueryFutureImpl() {

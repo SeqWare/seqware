@@ -1,5 +1,6 @@
 package com.github.seqware.queryengine.model.impl.inMemory;
 
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.Tag;
 import com.github.seqware.queryengine.model.TagSet;
@@ -23,6 +24,8 @@ public class InMemoryTagSet extends AbstractInMemorySet<TagSet, Tag> implements 
     public InMemoryTagSet add(Tag element) {
         if (map.containsKey(element.getKey())){ 
             Logger.getLogger(InMemoryTagSet.class.getName()).warn("Adding duplicated key in TagSet ignored with key " + element.getKey());
+            element.getManager().atomStateChange(element, CreateUpdateManager.State.UNMANAGED);
+            element.setManager(null);
             return this;
         }
         super.add(element);
