@@ -360,7 +360,6 @@
         <dependency>
             <groupId>com.github.seqware</groupId>
             <artifactId>seqware-common</artifactId>
-            <version>0.13.3-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>

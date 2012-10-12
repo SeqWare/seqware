@@ -115,7 +115,6 @@
         <dependency>
             <groupId>com.github.seqware</groupId> 
             <artifactId>seqware-meta-db</artifactId>
-            <version>0.13.3-SNAPSHOT</version>
         </dependency>
             <dependency>
                 <groupId>org.restlet.jee</groupId>
