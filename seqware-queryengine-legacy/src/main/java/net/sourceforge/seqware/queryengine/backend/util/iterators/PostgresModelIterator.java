@@ -18,9 +18,9 @@ import net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator;
 
 /**
  * An interator on top of the standard Java SQL iterator
- * 
- * @author boconnor
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class PostgresModelIterator extends SeqWareBase implements SeqWareIterator {
 
@@ -31,6 +31,15 @@ public class PostgresModelIterator extends SeqWareBase implements SeqWareIterato
   int persistenceMethod = PostgreSQLStore.OID;
   LargeObjectManager lobj = null;
   
+  /**
+   * <p>Constructor for PostgresModelIterator.</p>
+   *
+   * @param rs a {@link java.sql.ResultSet} object.
+   * @param binder a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @param persistenceMethod a int.
+   * @param lobj a {@link org.postgresql.largeobject.LargeObjectManager} object.
+   * @throws java.lang.Exception if any.
+   */
   public PostgresModelIterator(ResultSet rs, TupleBinding binder, int persistenceMethod, LargeObjectManager lobj) throws Exception {
 
     this.rs = rs;
@@ -43,12 +52,20 @@ public class PostgresModelIterator extends SeqWareBase implements SeqWareIterato
   }
 
   // so the iterator class provides: hasNext(), next(), remove()
+  /**
+   * <p>close.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   public void close() throws Exception {
     rs.close();
   }
 
   /**
    * Not supported for this backend!
+   *
+   * @return a int.
+   * @throws java.lang.Exception if any.
    */
   public int getCount() throws Exception {
     return(-1);
@@ -57,6 +74,9 @@ public class PostgresModelIterator extends SeqWareBase implements SeqWareIterato
   /**
    * Not applicable for Postgres backend.
    * FIXME: is there a way to get rid of this?
+   *
+   * @return a {@link com.sleepycat.db.Cursor} object.
+   * @throws java.lang.Exception if any.
    */
   public Cursor getCursor() throws Exception {
     return(null);
@@ -65,11 +85,19 @@ public class PostgresModelIterator extends SeqWareBase implements SeqWareIterato
   /**
    * Not applicable for Postgres backend.
    * FIXME: this is a BerkeleyDB specific method
+   *
+   * @return a {@link java.lang.Object} object.
+   * @throws java.io.UnsupportedEncodingException if any.
    */
   public Object nextSecondaryKey() throws UnsupportedEncodingException {
     return(null);
   }
 
+  /**
+   * <p>hasNext.</p>
+   *
+   * @return a boolean.
+   */
   public boolean hasNext() {
     try {
       if (rs != null) {
@@ -99,6 +127,11 @@ public class PostgresModelIterator extends SeqWareBase implements SeqWareIterato
     return(false);
   }
   
+  /**
+   * <p>next.</p>
+   *
+   * @return a {@link java.lang.Object} object.
+   */
   public Object next() {
     
     return(currModel);

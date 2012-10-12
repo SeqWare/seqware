@@ -22,6 +22,12 @@ import net.sourceforge.solexatools.validation.LoginValidator;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>ShareValidatorController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ShareValidatorController extends BaseCommandController {
 	private RegistrationService registrationService;
 	private StudyService studyService;
@@ -29,11 +35,15 @@ public class ShareValidatorController extends BaseCommandController {
 	private WorkflowRunService workflowRunService;
 	private ShareWorkflowRunService shareWorkflowRunService;
 	
+	/**
+	 * <p>Constructor for ShareValidatorController.</p>
+	 */
 	public ShareValidatorController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -138,42 +148,92 @@ public class ShareValidatorController extends BaseCommandController {
 		return str;
 	}
 
+	/**
+	 * <p>Getter for the field <code>registrationService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+	 */
 	public RegistrationService getRegistrationService() {
 		return registrationService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>registrationService</code>.</p>
+	 *
+	 * @param registrationService a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+	 */
 	public void setRegistrationService(RegistrationService registrationService) {
 		this.registrationService = registrationService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>studyService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.StudyService} object.
+	 */
 	public StudyService getStudyService() {
 		return studyService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>studyService</code>.</p>
+	 *
+	 * @param studyService a {@link net.sourceforge.seqware.common.business.StudyService} object.
+	 */
 	public void setStudyService(StudyService studyService) {
 		this.studyService = studyService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public WorkflowRunService getWorkflowRunService() {
 		return workflowRunService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @param workflowRunService a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public void setWorkflowRunService(WorkflowRunService workflowRunService) {
 		this.workflowRunService = workflowRunService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>shareStudyService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.ShareStudyService} object.
+	 */
 	public ShareStudyService getShareStudyService() {
 		return shareStudyService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>shareStudyService</code>.</p>
+	 *
+	 * @param shareStudyService a {@link net.sourceforge.seqware.common.business.ShareStudyService} object.
+	 */
 	public void setShareStudyService(ShareStudyService shareStudyService) {
 		this.shareStudyService = shareStudyService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>shareWorkflowRunService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.ShareWorkflowRunService} object.
+	 */
 	public ShareWorkflowRunService getShareWorkflowRunService() {
 		return shareWorkflowRunService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>shareWorkflowRunService</code>.</p>
+	 *
+	 * @param shareWorkflowRunService a {@link net.sourceforge.seqware.common.business.ShareWorkflowRunService} object.
+	 */
 	public void setShareWorkflowRunService(
 			ShareWorkflowRunService shareWorkflowRunService) {
 		this.shareWorkflowRunService = shareWorkflowRunService;

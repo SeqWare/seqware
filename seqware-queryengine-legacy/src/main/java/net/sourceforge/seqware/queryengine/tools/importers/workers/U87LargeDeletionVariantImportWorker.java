@@ -14,15 +14,23 @@ import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import net.sourceforge.seqware.queryengine.backend.model.Variant;
 
 /**
- * @author boconnor
+ * <p>U87LargeDeletionVariantImportWorker class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class U87LargeDeletionVariantImportWorker extends ImportWorker {
 
 
+  /**
+   * <p>Constructor for U87LargeDeletionVariantImportWorker.</p>
+   */
   public U87LargeDeletionVariantImportWorker() { }
 
 
+  /**
+   * <p>run.</p>
+   */
   public void run() {
 
     // open the file

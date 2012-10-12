@@ -19,11 +19,14 @@ package com.github.seqware.queryengine.plugins.inmemory;
 import com.github.seqware.queryengine.model.Feature;
 
 /**
+ * <p>InMemoryFeaturesAllPlugin class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class InMemoryFeaturesAllPlugin extends InMemoryFeaturesByFilterPlugin {
 
+    /** {@inheritDoc} */
     @Override
     protected FeatureFilter getFilter() {
         return new InMemoryFeaturesAllPlugin.FeaturesAllFilter();

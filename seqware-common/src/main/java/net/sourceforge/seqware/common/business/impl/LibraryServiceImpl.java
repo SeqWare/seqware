@@ -13,16 +13,24 @@ import org.springframework.stereotype.Service;
 import com.google.common.collect.Lists;
 
 @Service
+/**
+ * <p>LibraryServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class LibraryServiceImpl implements LibraryService {
 
   @Autowired
   private LibraryDAO libraryDao;
 
+  /** {@inheritDoc} */
   @Override
   public List<Sample> getLibraries() {
     return libraryDao.getLibraries();
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Sample> getLibraries(Map<String, String> attributes) {
     List<Sample> result = Lists.newArrayList();
@@ -37,6 +45,7 @@ public class LibraryServiceImpl implements LibraryService {
     return result;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Sample findBySWAccession(Long swAccession) {
     return libraryDao.findBySWAccession(swAccession);

@@ -9,23 +9,32 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * <p>UploadSequenceValidator class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class UploadSequenceValidator extends UploadFileValidator implements Validator {
 	private FileService fileService;
 	private FileTypeService fileTypeService;
 	
+	/**
+	 * <p>Constructor for UploadSequenceValidator.</p>
+	 */
 	public UploadSequenceValidator () {
 		super();
 	}
 	
+	/** {@inheritDoc} */
 	public boolean supports(Class clazz) {
 		return UploadSequence.class.equals(clazz);
 	}
 	
 	/**
-	 * Validates the specified Object.
+	 * {@inheritDoc}
 	 *
-	 * @param obj the Object to validate
-	 * @param errors Errors object for validation errors
+	 * Validates the specified Object.
 	 */
 	public void validate(Object obj, Errors errors) {
 		UploadSequence comm = (UploadSequence) obj;
@@ -133,6 +142,7 @@ public class UploadSequenceValidator extends UploadFileValidator implements Vali
 	}
 	
 	/* TODO: this needs to be made more flexible, there are multiple possible extensions for the same file type */
+	/** {@inheritDoc} */
 	public void validateExtension(MultipartFile fileOne, MultipartFile fileTwo, 
 			Integer fileTypeId, Errors errors)
 	{
@@ -189,18 +199,30 @@ public class UploadSequenceValidator extends UploadFileValidator implements Vali
 		}
 	}
 */	
+	/**
+	 * <p>Getter for the field <code>fileService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
+	 */
 	public FileService getFileService() {
 		return fileService;
 	}
 
+	/** {@inheritDoc} */
 	public void setFileService(FileService fileService) {
 		this.fileService = fileService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>fileTypeService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.FileTypeService} object.
+	 */
 	public FileTypeService getFileTypeService() {
 		return fileTypeService;
 	}
 
+	/** {@inheritDoc} */
 	public void setFileTypeService(FileTypeService fileTypeService) {
 		this.fileTypeService = fileTypeService;
 	}

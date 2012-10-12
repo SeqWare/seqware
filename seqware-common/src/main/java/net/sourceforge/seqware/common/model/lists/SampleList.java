@@ -21,25 +21,45 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.Sample;
 
 /**
+ * <p>SampleList class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class SampleList{
 
     protected List<Sample> tList;
 
+    /**
+     * <p>Constructor for SampleList.</p>
+     */
     public SampleList() {
         tList = new ArrayList<Sample>();
     }
 
+    /**
+     * <p>getList.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Sample> getList() {
         return tList;
     }
 
+    /**
+     * <p>setList.</p>
+     *
+     * @param list a {@link java.util.List} object.
+     */
     public void setList(List<Sample> list) {
         this.tList = list;
     }
 
+    /**
+     * <p>add.</p>
+     *
+     * @param ex a {@link net.sourceforge.seqware.common.model.Sample} object.
+     */
     public void add(Sample ex) {
         tList.add(ex);
     }

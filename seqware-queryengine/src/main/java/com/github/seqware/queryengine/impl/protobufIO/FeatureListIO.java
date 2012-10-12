@@ -26,13 +26,16 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import org.apache.log4j.Logger;
 
 /**
+ * <p>FeatureListIO class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class FeatureListIO implements ProtobufTransferInterface<FeatureListPB, FeatureList> {
 
     private FeatureIO featureIO = new FeatureIO();
     
+    /** {@inheritDoc} */
     @Override
     public FeatureList pb2m(FeatureListPB featureList) {
         FeatureList.Builder builder = FeatureList.newBuilder();
@@ -52,6 +55,7 @@ public class FeatureListIO implements ProtobufTransferInterface<FeatureListPB, F
         return fMesg;
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeatureListPB m2pb(FeatureList featureList) {
         assert(featureList.getSGID() instanceof FSGID);
@@ -65,6 +69,7 @@ public class FeatureListIO implements ProtobufTransferInterface<FeatureListPB, F
         return fMesg;
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeatureList byteArr2m(byte[] arr) {
         try {

@@ -37,8 +37,10 @@ import org.apache.log4j.Logger;
  *
  * @author dyuen
  * @author boconnor
+ * @version $Id: $Id
  */
 public class FSGID extends SGID implements KryoSerializable {
+    /** Constant <code>PositionSeparator=":"</code> */
     public static final String PositionSeparator = ":";
 //    private String rowKey = null;
     private String referenceName = null;
@@ -46,6 +48,7 @@ public class FSGID extends SGID implements KryoSerializable {
     private boolean tombstone = false;
 
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return friendlyRowKey + StorageInterface.SEPARATOR + featureSetID.toString() + StorageInterface.SEPARATOR + super.toString();
@@ -53,9 +56,14 @@ public class FSGID extends SGID implements KryoSerializable {
     
     /**
      * Create a fully functional FSGID given raw data
-     * @param mostSig
-     * @param leastSig
-     * @param timestamp 
+     *
+     * @param mostSig a long.
+     * @param leastSig a long.
+     * @param timestamp a long.
+     * @param rowKey a {@link java.lang.String} object.
+     * @param referenceName a {@link java.lang.String} object.
+     * @param featureSet a {@link com.github.seqware.queryengine.util.SGID} object.
+     * @param tombstone a boolean.
      */
     public FSGID(long mostSig, long leastSig, long timestamp, String rowKey, String referenceName, SGID featureSet, boolean tombstone) {
         super(mostSig, leastSig, timestamp, null);
@@ -65,9 +73,12 @@ public class FSGID extends SGID implements KryoSerializable {
         this.tombstone = tombstone;
     }
     
-    /** 
-     * construct a FSGID based on all the components of a SGID while taking the 
+    /**
+     * construct a FSGID based on all the components of a SGID while taking the
      * non-unique aspects on a FSGID, used when creating FeatureLists only
+     *
+     * @param sgid a {@link com.github.seqware.queryengine.util.SGID} object.
+     * @param fsgid a {@link com.github.seqware.queryengine.util.FSGID} object.
      */
     public FSGID(SGID sgid, FSGID fsgid){
         super(sgid.getUuid().getMostSignificantBits(), sgid.getUuid().getLeastSignificantBits(), sgid.getBackendTimestamp().getTime(), null);
@@ -80,9 +91,11 @@ public class FSGID extends SGID implements KryoSerializable {
 
     /**
      * Create a fully functional FSGID given models from the front-end
-     * @param sgid
+     *
+     * @param sgid a {@link com.github.seqware.queryengine.util.SGID} object.
      * @param f
-     * @param fSet 
+     * @param fSet
+     * @param fSet a {@link com.github.seqware.queryengine.model.FeatureSet} object.
      */
     public FSGID(SGID sgid, Feature f, FeatureSet fSet) {
         super(sgid);
@@ -104,7 +117,8 @@ public class FSGID extends SGID implements KryoSerializable {
 
     /**
      * Back-end method for Features stored within high capacity featuresets
-     * @return 
+     *
+     * @return a boolean.
      */
     public boolean isTombstone() {
         return tombstone;
@@ -112,7 +126,8 @@ public class FSGID extends SGID implements KryoSerializable {
 
     /**
      * Back-end method for Features stored within high capacity featuresets
-     * @return 
+     *
+     * @param tombstone a boolean.
      */
     public void setTombstone(boolean tombstone) {
         this.tombstone = tombstone;
@@ -135,26 +150,32 @@ public class FSGID extends SGID implements KryoSerializable {
     /**
      * Get the ID for the associated feature set
      *
-     * @return
+     * @return a {@link com.github.seqware.queryengine.util.SGID} object.
      */
     public SGID getFeatureSetID() {
         return featureSetID;
     }
 
     /**
-     * Get the HBase-style row-key for this Feature
+     * {@inheritDoc}
      *
-     * @return
+     * Get the HBase-style row-key for this Feature
      */
     @Override
     public String getRowKey() {
         return friendlyRowKey;
     }
 
+    /**
+     * <p>Getter for the field <code>referenceName</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getReferenceName() {
         return referenceName;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void write(Kryo kryo, Output output) {
         // doesn't seem to inherit properly?
@@ -168,6 +189,7 @@ public class FSGID extends SGID implements KryoSerializable {
         output.writeString(referenceName);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void read(Kryo kryo, Input input) {
         long leastSig = input.readLong();
@@ -181,10 +203,16 @@ public class FSGID extends SGID implements KryoSerializable {
         this.referenceName = input.readString();
     } 
     
+    /**
+     * <p>getTablename.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getTablename(){
         return FeatureList.prefix + StorageInterface.SEPARATOR + this.getReferenceName();
     }
     
+    /** {@inheritDoc} */
     @Override
     public void setFriendlyRowKey(String friendlyRowKey) {
         throw new UnsupportedOperationException();

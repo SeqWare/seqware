@@ -4,8 +4,23 @@ import net.sourceforge.seqware.common.model.Study;
 
 import org.springframework.validation.Errors;
 
-public class StudyUpdateValidator extends StudyValidator {
+  /**
+   * {@inheritDoc}
+   *
+   *package net.sourceforge.solexatools.validation;
+   *
+   *import net.sourceforge.seqware.common.model.Study;
+   *
+   *import org.springframework.validation.Errors;
+   *
+   *public class StudyUpdateValidator extends StudyValidator {
+   */
 
+import net.sourceforge.seqware.common.model.Study;
+
+import org.springframework.validation.Errors;
+
+public class StudyUpdateValidator extends StudyValidator {
   @Override
   /**
    * We don't want to validate if title exist for the update study.

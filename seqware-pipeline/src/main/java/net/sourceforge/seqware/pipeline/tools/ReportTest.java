@@ -17,15 +17,27 @@
 package net.sourceforge.seqware.pipeline.tools;
 
 /**
+ * <p>ReportTest class.</p>
  *
  * @author yongliang
+ * @version $Id: $Id
  */
 public class ReportTest {
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         ReportTest t = new ReportTest();
         t.test(args);
     }
     
+    /**
+     * <p>test.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public void test(String[] args) {
                 
         for(int i=0; i<1; i++) {

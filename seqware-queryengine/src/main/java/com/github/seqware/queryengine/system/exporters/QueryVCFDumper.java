@@ -24,19 +24,25 @@ import org.apache.log4j.Logger;
  * large assembled jar file in the distribution folder
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class QueryVCFDumper extends Importer {
 
+    /** Constant <code>FEATURE_SET_PARAM='f'</code> */
     public static final char FEATURE_SET_PARAM = 'f';
+    /** Constant <code>KEYVALUE_OUT_PARAM='k'</code> */
     public static final char KEYVALUE_OUT_PARAM = 'k';
+    /** Constant <code>QUERY_PARAM_FILE='p'</code> */
     public static final char QUERY_PARAM_FILE = 'p';
+    /** Constant <code>QUERY_PARAM_STRING='s'</code> */
     public static final char QUERY_PARAM_STRING = 's';
+    /** Constant <code>OUTPUTFILE_PARAM='o'</code> */
     public static final char OUTPUTFILE_PARAM = 'o';
 
     /**
      * Command-line interface
      *
-     * @param args
+     * @param args an array of {@link java.lang.String} objects.
      */
     public static void main(String[] args) {
         Stack<SGID> mainMethod = QueryVCFDumper.runMain(args);
@@ -48,8 +54,8 @@ public class QueryVCFDumper extends Importer {
     /**
      * Interface for mock-testing
      *
-     * @param args
-     * @return
+     * @param args an array of {@link java.lang.String} objects.
+     * @return a {@link java.util.Stack} object.
      */
     public static Stack<SGID> runMain(String[] args) {
         // create Options object

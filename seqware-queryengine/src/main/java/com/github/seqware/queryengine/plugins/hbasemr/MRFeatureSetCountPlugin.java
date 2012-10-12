@@ -37,9 +37,11 @@ import org.apache.log4j.Logger;
  * Counts the number of Features in a FeatureSet
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class MRFeatureSetCountPlugin extends AbstractMRHBasePlugin<Long> {
 
+    /** {@inheritDoc} */
     @Override
     public void performVariableInit(String inputTableName, String destTableName, Scan scan) {
         try {
@@ -56,6 +58,7 @@ public class MRFeatureSetCountPlugin extends AbstractMRHBasePlugin<Long> {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Long variableResult() {
         try {
@@ -67,12 +70,14 @@ public class MRFeatureSetCountPlugin extends AbstractMRHBasePlugin<Long> {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public byte[] handleSerialization(Object... parameters) {
         byte[] serialize = SerializationUtils.serialize(parameters);
         return serialize;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Object[] getInternalParameters() {
         return new Object[0];

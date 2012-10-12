@@ -13,11 +13,14 @@ import net.sourceforge.seqware.queryengine.backend.model.Coverage;
 import net.sourceforge.seqware.queryengine.backend.model.Model;
 
 /**
+ * <p>CoverageTB class.</p>
+ *
  * @author boconnor
- * 
+ * @version $Id: $Id
  */
 public class CoverageTB extends TupleBinding {
 
+  /** {@inheritDoc} */
   @Override
   public void objectToEntry(Object object, TupleOutput to) {
     Coverage c = (Coverage)object;
@@ -42,6 +45,7 @@ public class CoverageTB extends TupleBinding {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public Object entryToObject(TupleInput ti) {
       Coverage c = new Coverage();

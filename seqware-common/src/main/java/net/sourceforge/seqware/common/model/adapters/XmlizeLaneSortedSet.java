@@ -26,11 +26,14 @@ import net.sourceforge.seqware.common.model.lists.LaneList;
 
 
 /**
+ * <p>XmlizeLaneSortedSet class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class XmlizeLaneSortedSet extends XmlAdapter<LaneList, SortedSet<Lane>>{
 
+    /** {@inheritDoc} */
     @Override
     public SortedSet<Lane> unmarshal(LaneList vt) throws Exception {
         SortedSet<Lane> laneSet = new TreeSet<Lane>();
@@ -41,6 +44,7 @@ public class XmlizeLaneSortedSet extends XmlAdapter<LaneList, SortedSet<Lane>>{
         return laneSet;        
     }
 
+    /** {@inheritDoc} */
     @Override
     public LaneList marshal(SortedSet<Lane> bt) throws Exception {
         if (bt != null)

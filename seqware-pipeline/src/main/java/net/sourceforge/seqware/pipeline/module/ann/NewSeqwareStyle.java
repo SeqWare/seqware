@@ -38,6 +38,9 @@ import java.lang.annotation.*;
  * User: Xiaoshu Wang (xiao@renci.org)
  * Date: 9/1/11
  * Time: 2:42 PM
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

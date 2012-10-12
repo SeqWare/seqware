@@ -7,6 +7,12 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 
+/**
+ * <p>WorkflowRunParam class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class WorkflowRunParam implements Serializable, Comparable<WorkflowRunParam>, PermissionsAware {
 
     /**
@@ -20,10 +26,14 @@ public class WorkflowRunParam implements Serializable, Comparable<WorkflowRunPar
     private Integer parentProcessingAccession;
     private WorkflowRun workflowRun;
 
+    /**
+     * <p>Constructor for WorkflowRunParam.</p>
+     */
     public WorkflowRunParam() {
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int compareTo(WorkflowRunParam that) {
         if (that == null) {
@@ -41,10 +51,16 @@ public class WorkflowRunParam implements Serializable, Comparable<WorkflowRunPar
         return (that.getWorkflowRunParamId().compareTo(this.getWorkflowRunParamId()));
     }
 
+    /**
+     * <p>toString.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String toString() {
         return new ToStringBuilder(this).append("swAccession", getWorkflowRunParamId()).toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -56,58 +72,124 @@ public class WorkflowRunParam implements Serializable, Comparable<WorkflowRunPar
         return (this.compareTo(((WorkflowRunParam) other)) == 0);
     }
 
+    /**
+     * <p>hashCode.</p>
+     *
+     * @return a int.
+     */
     public int hashCode() {
         return new HashCodeBuilder().append(getWorkflowRunParamId()).toHashCode();
     }
 
+    /**
+     * <p>Getter for the field <code>parentProcessingAccession</code>.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     public Integer getParentProcessingAccession() {
         return parentProcessingAccession;
     }
 
+    /**
+     * <p>Setter for the field <code>parentProcessingAccession</code>.</p>
+     *
+     * @param parentProcessingAccession a {@link java.lang.Integer} object.
+     */
     public void setParentProcessingAccession(Integer parentProcessingAccession) {
         this.parentProcessingAccession = parentProcessingAccession;
     }
 
+    /**
+     * <p>getWorkflowRunParamId.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     public Integer getWorkflowRunParamId() {
         return WorkflowRunParamId;
     }
 
+    /**
+     * <p>setWorkflowRunParamId.</p>
+     *
+     * @param WorkflowRunParamId a {@link java.lang.Integer} object.
+     */
     public void setWorkflowRunParamId(Integer WorkflowRunParamId) {
         this.WorkflowRunParamId = WorkflowRunParamId;
     }
 
+    /**
+     * <p>Getter for the field <code>type</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * <p>Setter for the field <code>type</code>.</p>
+     *
+     * @param type a {@link java.lang.String} object.
+     */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * <p>Getter for the field <code>key</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getKey() {
         return key;
     }
 
+    /**
+     * <p>Setter for the field <code>key</code>.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     */
     public void setKey(String key) {
         this.key = key;
     }
 
+    /**
+     * <p>Getter for the field <code>value</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getValue() {
         return value;
     }
 
+    /**
+     * <p>Setter for the field <code>value</code>.</p>
+     *
+     * @param value a {@link java.lang.String} object.
+     */
     public void setValue(String value) {
         this.value = value;
     }
 
+    /**
+     * <p>Getter for the field <code>workflowRun</code>.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+     */
     public WorkflowRun getWorkflowRun() {
         return workflowRun;
     }
 
+    /**
+     * <p>Setter for the field <code>workflowRun</code>.</p>
+     *
+     * @param workflowRun a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+     */
     public void setWorkflowRun(WorkflowRun workflowRun) {
         this.workflowRun = workflowRun;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean givesPermission(Registration registration) {
         boolean hasPermission = true;

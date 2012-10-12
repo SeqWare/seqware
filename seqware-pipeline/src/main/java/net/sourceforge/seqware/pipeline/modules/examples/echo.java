@@ -10,8 +10,15 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 
 import net.sourceforge.seqware.pipeline.module.Module;
 
+/**
+ * <p>echo class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class echo extends Module {
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
     ReturnValue ret;
@@ -59,6 +66,7 @@ public class echo extends Module {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_test() {
     ReturnValue ret = new ReturnValue();
@@ -94,29 +102,34 @@ public class echo extends Module {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String get_syntax() {
     return new String("Module to echo.\nSyntax: echo hello world\n");
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
     // TODO Auto-generated method stub
     return ReturnValue.featureNotImplemented();
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     // TODO Auto-generated method stub
     return ReturnValue.featureNotImplemented();
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
     // TODO Auto-generated method stub
     return ReturnValue.featureNotImplemented();
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue init() {
     ReturnValue ret = new ReturnValue();

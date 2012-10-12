@@ -37,15 +37,25 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>FileResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class FileResource extends DatabaseResource {
 
+    /**
+     * <p>Constructor for FileResource.</p>
+     */
     public FileResource() {
         super("file");
     }
 
+    /**
+     * <p>getXml.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     @Get
     public void getXml() throws IOException {
         authenticate();
@@ -74,6 +84,11 @@ public class FileResource extends DatabaseResource {
         }
     }
 
+    /**
+     * <p>postJaxb.</p>
+     *
+     * @param entity a {@link org.restlet.representation.Representation} object.
+     */
     @Post("xml")
     public void postJaxb(Representation entity) {
         authenticate();

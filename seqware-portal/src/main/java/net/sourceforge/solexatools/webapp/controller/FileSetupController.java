@@ -14,18 +14,35 @@ import net.sourceforge.solexatools.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>FileSetupController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class FileSetupController extends BaseCommandController {
 
 	private FileService fileService;
 
+	/**
+	 * <p>Getter for the field <code>fileService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
+	 */
 	public FileService getFileService() {
 		return fileService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>fileService</code>.</p>
+	 *
+	 * @param fileService a {@link net.sourceforge.seqware.common.business.FileService} object.
+	 */
 	public void setFileService(FileService fileService) {
 		this.fileService = fileService;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest request,

@@ -11,30 +11,32 @@ import org.apache.commons.lang.builder.EqualsBuilder;
  *
  * @author jbaran
  * @author dyuen
+ * @version $Id: $Id
  */
 public class InMemoryGroup extends AbstractInMemorySet<Group, User> implements Group {
 
     private String name = null;
     private String description = null;
 
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return description;
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Override the equals method for Group, kind of a cheat With other objects
      * we take into account things like version or SGID However, with Group, the
      * object is embedded inside the ACL for other objects explicitly, so the
      * version changes too often for easy API use
-     *
-     * @param obj
-     * @return
      */
     @Override
     public boolean equals(Object obj) {
@@ -57,6 +59,7 @@ public class InMemoryGroup extends AbstractInMemorySet<Group, User> implements G
                 .isEquals();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         int hash = 3;
@@ -65,10 +68,16 @@ public class InMemoryGroup extends AbstractInMemorySet<Group, User> implements G
         return hash;
     }
 
+    /**
+     * <p>newBuilder.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.model.Group.Builder} object.
+     */
     public static Group.Builder newBuilder() {
         return new InMemoryGroup.Builder();
     }
 
+    /** {@inheritDoc} */
     @Override
     public InMemoryGroup.Builder toBuilder() {
         InMemoryGroup.Builder b = new InMemoryGroup.Builder();
@@ -76,11 +85,13 @@ public class InMemoryGroup extends AbstractInMemorySet<Group, User> implements G
         return b;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Class getHBaseClass() {
         return Group.class;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getHBasePrefix() {
         return Group.prefix;

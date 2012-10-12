@@ -21,17 +21,17 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 
 /**
- * 
- *                 A Run contains the sequencing results from a particular run on a sequencing instrument.  The Run was done in fulfillment 
- *                 of an Experiment that was designed into the Study.  
- *                 One SRA run may consist of only a portion of the plate or slide if the instrument run was partitioned among distinct experiments 
+ *
+ *                 A Run contains the sequencing results from a particular run on a sequencing instrument.  The Run was done in fulfillment
+ *                 of an Experiment that was designed into the Study.
+ *                 One SRA run may consist of only a portion of the plate or slide if the instrument run was partitioned among distinct experiments
  *                 or between distinct RUNs.  By policy the Center should separate these data into distinct SRA Run objects.
- *             
- * 
+ *
+ *
  * <p>Java class for RunType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="RunType">
  *   &lt;complexContent>
@@ -191,8 +191,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ * @author morgantaschuk
+ * @version $Id: $Id
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RunType", propOrder = {
@@ -232,11 +233,8 @@ public class RunType {
 
     /**
      * Gets the value of the experimentref property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link RunType.EXPERIMENTREF }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.RunType.EXPERIMENTREF} object.
      */
     public RunType.EXPERIMENTREF getEXPERIMENTREF() {
         return experimentref;
@@ -244,11 +242,10 @@ public class RunType {
 
     /**
      * Sets the value of the experimentref property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link RunType.EXPERIMENTREF }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.RunType.EXPERIMENTREF}
      */
     public void setEXPERIMENTREF(RunType.EXPERIMENTREF value) {
         this.experimentref = value;
@@ -256,25 +253,25 @@ public class RunType {
 
     /**
      * Gets the value of the datablock property.
-     * 
+     *
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
      * This is why there is not a <CODE>set</CODE> method for the datablock property.
-     * 
+     *
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getDATABLOCK().add(newItem);
      * </pre>
-     * 
-     * 
+     *
+     *
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link RunType.DATABLOCK }
-     * 
-     * 
+     * {@link net.sourceforge.seqware.queryengine.webservice.model.RunType.DATABLOCK}
+     *
+     * @return a {@link java.util.List} object.
      */
     public List<RunType.DATABLOCK> getDATABLOCK() {
         if (datablock == null) {
@@ -285,11 +282,8 @@ public class RunType {
 
     /**
      * Gets the value of the runlinks property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link RunType.RUNLINKS }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.RunType.RUNLINKS} object.
      */
     public RunType.RUNLINKS getRUNLINKS() {
         return runlinks;
@@ -297,11 +291,10 @@ public class RunType {
 
     /**
      * Sets the value of the runlinks property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link RunType.RUNLINKS }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.RunType.RUNLINKS}
      */
     public void setRUNLINKS(RunType.RUNLINKS value) {
         this.runlinks = value;
@@ -309,11 +302,8 @@ public class RunType {
 
     /**
      * Gets the value of the runattributes property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link RunType.RUNATTRIBUTES }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.RunType.RUNATTRIBUTES} object.
      */
     public RunType.RUNATTRIBUTES getRUNATTRIBUTES() {
         return runattributes;
@@ -321,11 +311,10 @@ public class RunType {
 
     /**
      * Sets the value of the runattributes property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link RunType.RUNATTRIBUTES }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.RunType.RUNATTRIBUTES}
      */
     public void setRUNATTRIBUTES(RunType.RUNATTRIBUTES value) {
         this.runattributes = value;
@@ -333,11 +322,8 @@ public class RunType {
 
     /**
      * Gets the value of the alias property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getAlias() {
         return alias;
@@ -345,11 +331,10 @@ public class RunType {
 
     /**
      * Sets the value of the alias property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setAlias(String value) {
         this.alias = value;
@@ -357,11 +342,8 @@ public class RunType {
 
     /**
      * Gets the value of the accession property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getAccession() {
         return accession;
@@ -369,11 +351,10 @@ public class RunType {
 
     /**
      * Sets the value of the accession property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setAccession(String value) {
         this.accession = value;
@@ -381,11 +362,8 @@ public class RunType {
 
     /**
      * Gets the value of the instrumentModel property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getInstrumentModel() {
         return instrumentModel;
@@ -393,11 +371,10 @@ public class RunType {
 
     /**
      * Sets the value of the instrumentModel property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setInstrumentModel(String value) {
         this.instrumentModel = value;
@@ -405,11 +382,8 @@ public class RunType {
 
     /**
      * Gets the value of the instrumentName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getInstrumentName() {
         return instrumentName;
@@ -417,11 +391,10 @@ public class RunType {
 
     /**
      * Sets the value of the instrumentName property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setInstrumentName(String value) {
         this.instrumentName = value;
@@ -429,11 +402,8 @@ public class RunType {
 
     /**
      * Gets the value of the runDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
-     *     
+     *
+     * @return a {@link javax.xml.datatype.XMLGregorianCalendar} object.
      */
     public XMLGregorianCalendar getRunDate() {
         return runDate;
@@ -441,11 +411,10 @@ public class RunType {
 
     /**
      * Sets the value of the runDate property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link XMLGregorianCalendar }
-     *     
+     *     {@link javax.xml.datatype.XMLGregorianCalendar}
      */
     public void setRunDate(XMLGregorianCalendar value) {
         this.runDate = value;
@@ -453,11 +422,8 @@ public class RunType {
 
     /**
      * Gets the value of the runFile property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getRunFile() {
         return runFile;
@@ -465,11 +431,10 @@ public class RunType {
 
     /**
      * Sets the value of the runFile property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setRunFile(String value) {
         this.runFile = value;
@@ -477,11 +442,8 @@ public class RunType {
 
     /**
      * Gets the value of the runCenter property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getRunCenter() {
         return runCenter;
@@ -489,11 +451,10 @@ public class RunType {
 
     /**
      * Sets the value of the runCenter property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setRunCenter(String value) {
         this.runCenter = value;
@@ -501,11 +462,8 @@ public class RunType {
 
     /**
      * Gets the value of the totalDataBlocks property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
+     *
+     * @return a {@link java.math.BigInteger} object.
      */
     public BigInteger getTotalDataBlocks() {
         return totalDataBlocks;
@@ -513,11 +471,10 @@ public class RunType {
 
     /**
      * Sets the value of the totalDataBlocks property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
-     *     
+     *     {@link java.math.BigInteger}
      */
     public void setTotalDataBlocks(BigInteger value) {
         this.totalDataBlocks = value;

@@ -7,9 +7,12 @@ import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 
 /**
  * A Group of users that may share ACL permissions
+ *
  * @author dyuen
+ * @version $Id: $Id
  */
 public interface Group extends MolSetInterface<Group, User> {
+    /** Constant <code>prefix="Group"</code> */
     public final static String prefix = "Group";
 
     /**
@@ -21,13 +24,15 @@ public interface Group extends MolSetInterface<Group, User> {
     
     /**
      * Get the description associated with this group
+     *
      * @return the description associated with this group
      */
     public String getDescription();
 
     /**
+     * {@inheritDoc}
+     *
      * Create a Group builder started with a copy of this
-     * @return 
      */
     @Override
     public abstract Group.Builder toBuilder();

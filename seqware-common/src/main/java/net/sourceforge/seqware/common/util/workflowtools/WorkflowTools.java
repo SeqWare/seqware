@@ -38,6 +38,7 @@ import org.xml.sax.SAXException;
  * finished.
  *
  * @author boconnor
+ * @version $Id: $Id
  */
 public class WorkflowTools {
 
@@ -52,7 +53,7 @@ public class WorkflowTools {
    * object, running as ReturnValue.PROCESSING, failed as ReturnValue.FAILURE,
    * and success as ReturnValue.SUCCESS.
    *
-   * @param statusCmd
+   * @param statusCmd a {@link java.lang.String} object.
    * @return ReturnValue
    */
   public ReturnValue getWorkflowState(String statusCmd) {
@@ -99,8 +100,8 @@ public class WorkflowTools {
    * something goes wrong, it will return false. This method won't return until
    * a workflow either finishes normally or terminates in error.
    *
-   * @param statusCmd
-   * @param statusDir
+   * @param statusCmd a {@link java.lang.String} object.
+   * @param statusDir a {@link java.lang.String} object.
    * @return boolean indicating success or failure, use other methods to get
    * details of failure
    */
@@ -117,10 +118,11 @@ public class WorkflowTools {
    * at least the numbers of cycles specified (each last for 5 seconds) before
    * returning the ReturnValue.
    *
-   * @param statusCmd
-   * @param statusDir
+   * @param statusCmd a {@link java.lang.String} object.
+   * @param statusDir a {@link java.lang.String} object.
    * @return boolean indicating success or failure, use other methods to get
    * details of failure
+   * @param cycles a int.
    */
   public ReturnValue watchWorkflow(String statusCmd, String statusDir, int cycles) {
 
@@ -207,7 +209,8 @@ public class WorkflowTools {
    * and identify the log files for jobs that failed. It will then report these
    * back as an array of RetunValue objects
    *
-   * @param a pegasus dax directory that contains job log files
+   * @param statusDir a {@link java.lang.String} object.
+   * @return an array of {@link net.sourceforge.seqware.common.module.ReturnValue} objects.
    */
   public ReturnValue[] getFailedJobsInfo(String statusDir) {
     ArrayList<ReturnValue> returns = new ArrayList<ReturnValue>();
@@ -506,6 +509,12 @@ public class WorkflowTools {
     }
   }
 
+  /**
+   * <p>parsePegasusStatus.</p>
+   *
+   * @param pegasusStatus a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   public String parsePegasusStatus(String pegasusStatus) {
     String ret = null;
     Pattern p = Pattern.compile(".*\\s(\\d+)/(\\d+)\\s.*");
@@ -533,10 +542,20 @@ public class WorkflowTools {
     return (ret);
   }
 
+  /**
+   * <p>Getter for the field <code>statusCounts</code>.</p>
+   *
+   * @return a int.
+   */
   public int getStatusCounts() {
     return statusCounts;
   }
 
+  /**
+   * <p>Setter for the field <code>statusCounts</code>.</p>
+   *
+   * @param statusCounts a int.
+   */
   public void setStatusCounts(int statusCounts) {
     this.statusCounts = statusCounts;
   }

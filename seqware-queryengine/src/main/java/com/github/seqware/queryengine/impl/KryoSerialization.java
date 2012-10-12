@@ -37,13 +37,18 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.objenesis.strategy.SerializingInstantiatorStrategy;
 
 /**
+ * <p>KryoSerialization class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class KryoSerialization implements SerializationInterface {
 
     private Kryo serializer;
 
+    /**
+     * <p>Constructor for KryoSerialization.</p>
+     */
     public KryoSerialization() {
         this.serializer = new Kryo();
         // Some magic to make serialization work with private default constructors:
@@ -76,6 +81,7 @@ public class KryoSerialization implements SerializationInterface {
         serializer.setRegistrationRequired(true);
     }
 
+    /** {@inheritDoc} */
     @Override
     public byte[] serialize(Atom atom) {
         ByteArrayOutputStream featureBytes = new ByteArrayOutputStream();
@@ -87,6 +93,7 @@ public class KryoSerialization implements SerializationInterface {
     
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends AtomImpl> T deserialize(byte[] bytes, Class<T> type) {
         int serialConstant = Bytes.toInt(Bytes.head(bytes, 4));
@@ -100,6 +107,7 @@ public class KryoSerialization implements SerializationInterface {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getSerializationConstant() {
         return 20000;

@@ -14,9 +14,15 @@ import org.apache.log4j.Logger;
  * Quick and dirty ReferenceCreator. Creates a reference.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class ReferenceCreator {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         try {
             SGID mainMethod = ReferenceCreator.mainMethod(args);
@@ -32,8 +38,9 @@ public class ReferenceCreator {
     /**
      * Create a reference given just a name for the new reference to be created.
      *
-     * @param args
-     * @return
+     * @param args an array of {@link java.lang.String} objects.
+     * @return a {@link com.github.seqware.queryengine.util.SGID} object.
+     * @throws java.lang.IllegalArgumentException if any.
      */
     public static SGID mainMethod(String[] args) throws IllegalArgumentException {
 
@@ -74,6 +81,9 @@ public class ReferenceCreator {
         return null;
     }
 
+    /**
+     * <p>Constructor for ReferenceCreator.</p>
+     */
     public ReferenceCreator() {
         /**
          * do nothing

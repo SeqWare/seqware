@@ -12,16 +12,36 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.MD5Generator;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 
+/**
+ * <p>Abstract Metadata class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public abstract class Metadata implements MetadataInterface {
+  /** Constant <code>SUCCESS="success"</code> */
   public static final String SUCCESS = "success";
+  /** Constant <code>FAILED="failed"</code> */
   public static final String FAILED = "failed";
+  /** Constant <code>PENDING="pending"</code> */
   public static final String PENDING = "pending";
+  /** Constant <code>RUNNING="running"</code> */
   public static final String RUNNING = "running";
+  /** Constant <code>SUBMITTED="submitted"</code> */
   public static final String SUBMITTED = "submitted";
+  /** Constant <code>RESUBMITTED="resubmitted"</code> */
   public static final String RESUBMITTED = "resubmitted";
+  /** Constant <code>COMPLETED="completed"</code> */
   public static final String COMPLETED = "completed";
+  /** Constant <code>UNKNOWN="unknown"</code> */
   public static final String UNKNOWN = "unknown";
 
+  /**
+   * <p>getMD5Hash.</p>
+   *
+   * @param filename a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   protected String getMD5Hash(String filename) {
     String hash = null;
     try {
@@ -42,6 +62,12 @@ public abstract class Metadata implements MetadataInterface {
     return hash;
   }
 
+  /**
+   * <p>locateFile.</p>
+   *
+   * @param filename a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   protected String locateFile(String filename) {
     if (filename != null) {
       File file = new File(filename);

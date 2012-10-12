@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
  * An in-memory representation of a reference.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class InMemoryReference extends AbstractInMemorySet<Reference, FeatureSet> implements Reference {
     
@@ -23,6 +24,7 @@ public class InMemoryReference extends AbstractInMemorySet<Reference, FeatureSet
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<FeatureSet> featureSets() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -31,12 +33,13 @@ public class InMemoryReference extends AbstractInMemorySet<Reference, FeatureSet
     /**
      * Create a new AnalysisSet builder
      *
-     * @return
+     * @return a {@link com.github.seqware.queryengine.model.Reference.Builder} object.
      */
     public static Reference.Builder newBuilder() {
         return new InMemoryReference.Builder();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Reference.Builder toBuilder() {
         InMemoryReference.Builder b = new InMemoryReference.Builder();
@@ -44,16 +47,19 @@ public class InMemoryReference extends AbstractInMemorySet<Reference, FeatureSet
         return b;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Class getHBaseClass() {
         return Reference.class;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getHBasePrefix() {
         return Reference.prefix;

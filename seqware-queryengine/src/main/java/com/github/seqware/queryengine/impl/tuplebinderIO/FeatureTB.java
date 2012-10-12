@@ -13,12 +13,15 @@ import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 
 /**
+ * <p>FeatureTB class.</p>
+ *
  * @author boconnor
  * @author dyuen
- *
+ * @version $Id: $Id
  */
 public class FeatureTB extends TupleBinding {
 
+  /** {@inheritDoc} */
   @Override
   public void objectToEntry(Object object, TupleOutput to) {
     Feature f = (Feature)object;
@@ -48,6 +51,7 @@ public class FeatureTB extends TupleBinding {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public Object entryToObject(TupleInput ti) {
       Builder newBuilder = Feature.newBuilder();

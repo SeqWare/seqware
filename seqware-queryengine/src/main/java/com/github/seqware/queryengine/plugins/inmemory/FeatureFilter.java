@@ -21,10 +21,19 @@ import java.io.Serializable;
 
 /**
  * Interface for matching functions that we can quickly use in both in-memory and M/R plug-ins.
+ *
  * @author dyuen
+ * @version $Id: $Id
  */
 public interface FeatureFilter extends Serializable{
     
+    /**
+     * <p>featurePasses.</p>
+     *
+     * @param f a {@link com.github.seqware.queryengine.model.Feature} object.
+     * @param parameters a {@link java.lang.Object} object.
+     * @return a boolean.
+     */
     public boolean featurePasses(Feature f, Object ... parameters);
     
 }

@@ -20,10 +20,17 @@ import net.sourceforge.seqware.common.util.Log;
 
 /**
  * Standalone application to insert a new processing task group into the database. This can have parents and children associated with it.
- * @author jordan
  *
+ * @author jordan
+ * @version $Id: $Id
  */
 public class ProcessingTaskGroup {
+  /**
+   * <p>getSyntax.</p>
+   *
+   * @param parser a {@link joptsimple.OptionParser} object.
+   * @param errorMessage a {@link java.lang.String} object.
+   */
   public static void getSyntax(OptionParser parser, String errorMessage) {
     if ( errorMessage != null && errorMessage.length() > 0 ) {
       Log.stderr("ERROR: " + errorMessage);
@@ -40,6 +47,11 @@ public class ProcessingTaskGroup {
   }
 
   
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
       OptionParser parser = new OptionParser();
       OptionSet options = null;

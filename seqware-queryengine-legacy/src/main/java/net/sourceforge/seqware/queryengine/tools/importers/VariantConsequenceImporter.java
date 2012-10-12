@@ -25,16 +25,20 @@ import net.sourceforge.seqware.queryengine.backend.util.SeqWareException;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareSettings;
 
 /**
+ * <p>VariantConsequenceImporter class.</p>
+ *
  * @author boconnor
  *
  * TODO:
  * FIXME: this doesn't support parsing the sequences from the knownGene or refGene consequence files
- * 
+ * @version $Id: $Id
  */
 public class VariantConsequenceImporter {
 
   /**
-   * @param args
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
    */
   public static void main(String[] args) {
 

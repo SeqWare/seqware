@@ -6,6 +6,12 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 
+/**
+ * <p>LibraryStrategy class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class LibraryStrategy implements Serializable, Comparable<LibraryStrategy> {
 	private static final long serialVersionUID = 3681345328915990568L;
 	
@@ -13,10 +19,14 @@ public class LibraryStrategy implements Serializable, Comparable<LibraryStrategy
 	private String 		name;
 	private String 		description;
 
+	/**
+	 * <p>Constructor for LibraryStrategy.</p>
+	 */
 	public LibraryStrategy() {
 		super();
 	}
 
+    /** {@inheritDoc} */
     @Override
 	public int compareTo(LibraryStrategy that) {
 		if(that == null)
@@ -31,6 +41,7 @@ public class LibraryStrategy implements Serializable, Comparable<LibraryStrategy
 		return(that.getName().compareTo(this.getName()));
 	}
 
+    /** {@inheritDoc} */
     @Override
 	public String toString() {
 		return new ToStringBuilder(this)
@@ -38,6 +49,7 @@ public class LibraryStrategy implements Serializable, Comparable<LibraryStrategy
 			.toString();
 	}
 
+    /** {@inheritDoc} */
     @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;
@@ -48,6 +60,7 @@ public class LibraryStrategy implements Serializable, Comparable<LibraryStrategy
 			.isEquals();
 	}
 
+    /** {@inheritDoc} */
     @Override
 	public int hashCode() {
 		return new HashCodeBuilder()
@@ -55,26 +68,56 @@ public class LibraryStrategy implements Serializable, Comparable<LibraryStrategy
 			.toHashCode();
 	}
 
+	/**
+	 * <p>Getter for the field <code>libraryStrategyId</code>.</p>
+	 *
+	 * @return a {@link java.lang.Integer} object.
+	 */
 	public Integer getLibraryStrategyId() {
 		return libraryStrategyId;
 	}
 
+	/**
+	 * <p>Setter for the field <code>libraryStrategyId</code>.</p>
+	 *
+	 * @param libraryStrategyId a {@link java.lang.Integer} object.
+	 */
 	public void setLibraryStrategyId(Integer libraryStrategyId) {
 		this.libraryStrategyId = libraryStrategyId;
 	}
 
+	/**
+	 * <p>Getter for the field <code>name</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * <p>Setter for the field <code>name</code>.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * <p>Getter for the field <code>description</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getDescription() {
 		return description;
 	}
 
+	/**
+	 * <p>Setter for the field <code>description</code>.</p>
+	 *
+	 * @param description a {@link java.lang.String} object.
+	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}

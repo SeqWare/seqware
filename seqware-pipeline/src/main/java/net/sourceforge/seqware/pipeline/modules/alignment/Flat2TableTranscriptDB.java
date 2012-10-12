@@ -24,18 +24,18 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Given a set reference transcripts in flat files (fasta sequence file & a mapping/assocation file), create & populate
  * database tables in UCSC format.  This module performs essentially the opposite task as PrepTranscriptDB.
- * 
- * This module generates the necessary UCSC-format database tables for a given transcript reference set.  The user will 
- * input the following information:  transcript mappings/associations, transcript sequences, gene type (entrez or other), 
+ *
+ * This module generates the necessary UCSC-format database tables for a given transcript reference set.  The user will
+ * input the following information:  transcript mappings/associations, transcript sequences, gene type (entrez or other),
  * database information, and table names.
- * 
+ *
  * The only input file that is absolutely required is the fasta file (with transcript accessions & sequences).  The other
  * (optional) inputs provide information that allows exon-level, gene-level, and splice junction summaries.
- * 
+ *
  * Underlying script:  sw_module_Flat2TableTranscriptDB.pl
- * 
+ *
  * Necessary programs:  perl (uses DBI)
- * 
+ *
  * Input criteria:
  * 1. [optional]  Mapping/association file.  This tab-delimited file gives info about pairwise alignment of transcripts to the genome,
  * gene assocations, CDS positions, etc.  The columns must be as follows...
@@ -50,13 +50,13 @@ import org.openide.util.lookup.ServiceProvider;
  *                             strand of the genome the transcript maps to (e.g. 1-50,51-100)>
  *    CDSstart_Transcript     <transcript position of the first base of the CDS; 'unk' if no or unknown CDS>
  *    CDSend_Transcript       <transcript position of the last base of the CDS; 'unk' if no or unknown CDS>
- * 2. [required] Sequences in fasta format.  Transcript ID/accession must exactly match first column of the mapping/assocation file.   
+ * 2. [required] Sequences in fasta format.  Transcript ID/accession must exactly match first column of the mapping/assocation file.
  * 3. [required] Gene type ('entrez' or 'other').
  * 4. [required] Database connection info (database name, database host, username, password).
  * 5. [required] Table names for BlatTable, ExonTable, SeqTable, & GeneTable.  Also table name for RefLink if genetype is 'entrez.
- *    
- * Expected output: 
- * 1. Four (or five) database tables will be created & populated.  (If not mapping or gene association data is available, the output 
+ *
+ * Expected output:
+ * 1. Four (or five) database tables will be created & populated.  (If not mapping or gene association data is available, the output
  * tables may partially or completely empty.)
  *    a. BlatTable - contains blat results for mapping of transcripts to genome; Example = hg19.kgTargetAli
  *    b. ExonTable - contains locus start/stop, cds start/stop, and mapped exons; Example = hg19.knownGene
@@ -64,9 +64,9 @@ import org.openide.util.lookup.ServiceProvider;
  *    d. GeneTable - lists transcript-gene relationship; Example = hg19.knownToLocusLink
  *    e. RefLink - gives information linking gene IDs and gene symbols, only for genetype=entrez; Example = hg19.refLink
  * 2. A text file giving the line count for each new table.  If all line counts = 0, no file will be output.
- * 
- * @author sacheek@med.unc.edu
  *
+ * @author sacheek@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class Flat2TableTranscriptDB extends Module {
@@ -75,9 +75,9 @@ public class Flat2TableTranscriptDB extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line option
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("DBname", "Database name for database connection (e.g. dbi:mysql:DBname:DBhost)").withRequiredArg();
@@ -107,8 +107,9 @@ public class Flat2TableTranscriptDB extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -124,11 +125,11 @@ public class Flat2TableTranscriptDB extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -163,9 +164,9 @@ public class Flat2TableTranscriptDB extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -215,9 +216,9 @@ public class Flat2TableTranscriptDB extends Module {
 
   
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -311,9 +312,9 @@ public class Flat2TableTranscriptDB extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known dataset.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -323,10 +324,10 @@ public class Flat2TableTranscriptDB extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Run core of module.
    * Based on script sw_module_Flat2TableTranscriptDB.pl
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_run() {
@@ -363,9 +364,9 @@ public class Flat2TableTranscriptDB extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Check to make sure the output was created correctly.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -378,10 +379,11 @@ public class Flat2TableTranscriptDB extends Module {
     return(ret);
   }
   
-    /**
+  /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

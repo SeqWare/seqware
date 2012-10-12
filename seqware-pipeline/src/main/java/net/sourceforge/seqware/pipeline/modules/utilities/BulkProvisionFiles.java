@@ -46,23 +46,28 @@ import net.sourceforge.seqware.common.util.Log;
 /**
  *
  * Purpose:
- * 
+ *
  * This module takes one or more inputs (S3 URL, HTTP/HTTPS URL, or local file path)
  * and copies the file to the specified output (S3 bucket URL, HTTP/HTTPS URL, or local directory path).
  * For S3 this bundle supports large, multipart file upload which is needed for files >2G.
- * 
+ *
  * TODO: move the download code to an S3 utility
- * 
+ *
  * TESTING ONLY!!!!  DO NOT USE!!!!
  *
  * @author boconnor
- *
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class BulkProvisionFiles extends Module {
 
   private OptionSet options = null;
   
+  /**
+   * <p>getOptionParser.</p>
+   *
+   * @return a {@link joptsimple.OptionParser} object.
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.acceptsAll( Arrays.asList("input-file", "i"), "Required: input file, multiple should be specified seperately" ).withRequiredArg().describedAs("input file path");
@@ -71,6 +76,11 @@ public class BulkProvisionFiles extends Module {
     return(parser);
   }
   
+  /**
+   * <p>get_syntax.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String get_syntax() {
     OptionParser parser = getOptionParser();
     StringWriter output = new StringWriter();
@@ -84,6 +94,8 @@ public class BulkProvisionFiles extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Things to check:
    * * FIXME
    */
@@ -92,6 +104,7 @@ public class BulkProvisionFiles extends Module {
     return new ReturnValue(ReturnValue.NOTIMPLEMENTED);    
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
 
@@ -119,6 +132,7 @@ public class BulkProvisionFiles extends Module {
     return(ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
     
@@ -147,6 +161,7 @@ public class BulkProvisionFiles extends Module {
     return (ret);
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
 
@@ -168,25 +183,26 @@ public class BulkProvisionFiles extends Module {
   /**
    * This method was tested with:
    * # local to local
-./bin/seqware-runner.sh --no-metadata --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles -- --input-file /tmp/foo --output-dir /tmp/tmp2
-
-# local to S3
-./bin/seqware-runner.sh --no-metadata --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles -- --input-file /tmp/foo --output-dir s3://seqware.bundles/dependencies/data
-
-# http to local
-./bin/seqware-runner.sh --no-metadata --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles -- --input-file https://s3.amazonaws.com/seqware.bundles/dependencies/data/AboutStacks.pdf.zip --output-dir /tmp/tmp2
-
-# http to S3
-./bin/seqware-runner.sh --no-metadata --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles -- --input-file https://s3.amazonaws.com/seqware.bundles/dependencies/data/AboutStacks.pdf.zip --output-dir s3://seqware.bundles/dependencies/noarch
-
-# S3 to local
-./bin/seqware-runner.sh --no-metadata --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles -- --input-file s3://seqware.bundles/dependencies/data/AboutStacks.pdf.zip --output-dir /tmp/tmp2
-
-# S3 to S3
-./bin/seqware-runner.sh --no-metadata --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles -- --input-file s3://seqware.bundles/dependencies/data/AboutStacks.pdf.zip --output-dir  s3://seqware.bundles/dependencies/noarch
-   * @param input
-   * @param output
-   * @return
+   *./bin/seqware-runner.sh --no-metadata --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles -- --input-file /tmp/foo --output-dir /tmp/tmp2
+   *
+   *# local to S3
+   *./bin/seqware-runner.sh --no-metadata --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles -- --input-file /tmp/foo --output-dir s3://seqware.bundles/dependencies/data
+   *
+   *# http to local
+   *./bin/seqware-runner.sh --no-metadata --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles -- --input-file https://s3.amazonaws.com/seqware.bundles/dependencies/data/AboutStacks.pdf.zip --output-dir /tmp/tmp2
+   *
+   *# http to S3
+   *./bin/seqware-runner.sh --no-metadata --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles -- --input-file https://s3.amazonaws.com/seqware.bundles/dependencies/data/AboutStacks.pdf.zip --output-dir s3://seqware.bundles/dependencies/noarch
+   *
+   *# S3 to local
+   *./bin/seqware-runner.sh --no-metadata --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles -- --input-file s3://seqware.bundles/dependencies/data/AboutStacks.pdf.zip --output-dir /tmp/tmp2
+   *
+   *# S3 to S3
+   *./bin/seqware-runner.sh --no-metadata --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles -- --input-file s3://seqware.bundles/dependencies/data/AboutStacks.pdf.zip --output-dir  s3://seqware.bundles/dependencies/noarch
+   *
+   * @param input a {@link java.lang.String} object.
+   * @param output a {@link java.lang.String} object.
+   * @return a boolean.
    */
   protected boolean provisionFile(String input, String output) {
 
@@ -512,6 +528,7 @@ public class BulkProvisionFiles extends Module {
     
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     //TODO: should use a MANIFEST to ensure all files are there

@@ -11,6 +11,12 @@ import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>Abstract Module class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public abstract class Module implements ModuleInterface {
   // Data Members
   Metadata metadata;
@@ -19,6 +25,7 @@ public abstract class Module implements ModuleInterface {
   // this is important because modules may be calling command line tools from
   // other seqware projects so they need to know what version they are so they
   // know what versions of the other SeqWare tools they are compatible with
+  /** Constant <code>VERSION="0.7.0"</code> */
   public static final String VERSION = "0.7.0";
 
   // FIXME: need to add javadocs for everything. What is the best way to do
@@ -41,13 +48,18 @@ public abstract class Module implements ModuleInterface {
    * stdout will be redirected before the do_run() method and turned off after
    * do_run() method. However, this can be changed via the @StdoutRedirect
    * annotation on the module class
-   * 
+   *
    * @return the stdout file object
    */
   public File getStdoutFile() {
     return stdoutFile;
   }
 
+  /**
+   * <p>Setter for the field <code>stdoutFile</code>.</p>
+   *
+   * @param stdoutFile a {@link java.io.File} object.
+   */
   public void setStdoutFile(File stdoutFile) {
     this.stdoutFile = stdoutFile;
   }
@@ -56,7 +68,7 @@ public abstract class Module implements ModuleInterface {
    * Getter for the file where the stderr will be redirected. By default, the
    * stderr will be redirected before the do_run() method and turned off after
    * the do_run(). To change the behavior, use @StderrRedirect annotation.
-   * 
+   *
    * @return the stderr file object
    */
   public File getStderrFile() {
@@ -66,7 +78,7 @@ public abstract class Module implements ModuleInterface {
   /**
    * Added by Xiaoshu Wang: Setter for the file that will be used to redirect
    * stderr
-   * 
+   *
    * @param stderrFile
    *          the stderr file object
    */
@@ -74,36 +86,60 @@ public abstract class Module implements ModuleInterface {
     this.stderrFile = stderrFile;
   }
 
+  /**
+   * <p>Getter for the field <code>metadata</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.metadata.Metadata} object.
+   */
   public Metadata getMetadata() {
     return metadata;
   }
 
+  /**
+   * <p>Getter for the field <code>algorithm</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getAlgorithm() {
     return algorithm;
   }
 
+  /**
+   * <p>Setter for the field <code>algorithm</code>.</p>
+   *
+   * @param algorithm a {@link java.lang.String} object.
+   */
   public void setAlgorithm(String algorithm) {
     this.algorithm = algorithm;
   }
 
+  /**
+   * <p>Setter for the field <code>metadata</code>.</p>
+   *
+   * @param metadata a {@link net.sourceforge.seqware.common.metadata.Metadata} object.
+   */
   public void setMetadata(Metadata metadata) {
     this.metadata = metadata;
   }
 
+  /**
+   * <p>Getter for the field <code>parameters</code>.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<String> getParameters() {
     return parameters;
   }
 
   /**
+   * {@inheritDoc}
+   *
    * This method doesn't just copy the list, it actually parses through the list
    * and looks for values that start with " or ' and then attempts to merge
    * other parameters separated by space until an param ending with " or ' is
    * found. This is to work around a limitation in JOpt. It breaks apart
    * arguments by space regarless if the arg is a quoted string (and hence
    * should be treated as one arg)
-   * 
-   * @param parameters
-   *          the list of module parameters
    */
   public void setParameters(List<String> parameters) {
     Log.info("Parsing Command Parameters:");
@@ -157,15 +193,20 @@ public abstract class Module implements ModuleInterface {
     }
   }
 
+  /**
+   * <p>getOptionParser.</p>
+   *
+   * @return a {@link joptsimple.OptionParser} object.
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = null;
     return (parser);
   }
 
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * 
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -186,6 +227,8 @@ public abstract class Module implements ModuleInterface {
   /**
    * Output Galaxy definition files so you can use this module with Galaxy. See
    * http://bitbucket.org/galaxy/galaxy-central/wiki/AddToolTutorial
+   *
+   * @return a {@link java.lang.String} object.
    */
   public String get_galaxy_xml() {
     OptionParser parser = getOptionParser();
@@ -204,29 +247,74 @@ public abstract class Module implements ModuleInterface {
   }
 
   // Do_run must be implemented, or else object is useless
+  /**
+   * <p>do_run.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public abstract ReturnValue do_run();
 
   // Default member functions member functions
+  /**
+   * <p>init.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue init() {
     return ReturnValue.featureNotImplemented();
   }
 
+  /**
+   * <p>clean_up.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue clean_up() {
     return ReturnValue.featureNotImplemented();
   }
 
+  /**
+   * <p>do_test.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public abstract ReturnValue do_test();
 
+  /**
+   * <p>do_verify_input.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public abstract ReturnValue do_verify_input();
 
+  /**
+   * <p>do_verify_parameters.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public abstract ReturnValue do_verify_parameters();
 
+  /**
+   * <p>do_verify_output.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public abstract ReturnValue do_verify_output();
 
+  /**
+   * <p>Getter for the field <code>processingAccession</code>.</p>
+   *
+   * @return a int.
+   */
   public int getProcessingAccession() {
     return this.processingAccession;
   }
 
+  /**
+   * <p>Setter for the field <code>processingAccession</code>.</p>
+   *
+   * @param accession a int.
+   */
   public void setProcessingAccession(int accession) {
     this.processingAccession = accession;
   }

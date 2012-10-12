@@ -25,30 +25,38 @@ import net.sourceforge.seqware.common.util.Log;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * <p>CycleChecker class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
 public class CycleChecker extends Plugin {
 
     ReturnValue ret = new ReturnValue();
 
+    /**
+     * <p>Constructor for CycleChecker.</p>
+     */
     public CycleChecker() {
         super();
         parser.acceptsAll(Arrays.asList("study-accession"), "The SeqWare accession of the study you want to check").withRequiredArg();
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue init() {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_test() {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_run() {
         
@@ -66,11 +74,13 @@ public class CycleChecker extends Plugin {
     }
 
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue clean_up() {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String get_description() {
         return "Checks for cycles in the sample hierarchy and processing hierarchy of a particular study and prints some information about the study";

@@ -21,9 +21,11 @@ import org.apache.log4j.Logger;
  * may need a "persistent" ID that does not change between versions
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class User extends MoleculeImpl<User> {
 
+    /** Constant <code>prefix="User"</code> */
     public final static String prefix = "User";
     private String firstName;
     private String lastName;
@@ -85,6 +87,7 @@ public class User extends MoleculeImpl<User> {
         return Collections.unmodifiableList(groups);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -107,6 +110,7 @@ public class User extends MoleculeImpl<User> {
                 .isEquals();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         // you pick a hard-coded, randomly chosen, non-zero, odd number
@@ -153,7 +157,7 @@ public class User extends MoleculeImpl<User> {
     /**
      * Create a new ACL builder
      *
-     * @return
+     * @return a {@link com.github.seqware.queryengine.model.User.Builder} object.
      */
     public static User.Builder newBuilder() {
         return new User.Builder();
@@ -162,16 +166,16 @@ public class User extends MoleculeImpl<User> {
     /**
      * A hashed password for the user
      *
-     * @return
+     * @return a {@link java.lang.String} object.
      */
     public String getPassword() {
         return password;
     }
 
     /**
-     * Create an User builder started with a copy of this
+     * {@inheritDoc}
      *
-     * @return
+     * Create an User builder started with a copy of this
      */
     @Override
     public User.Builder toBuilder() {
@@ -180,11 +184,13 @@ public class User extends MoleculeImpl<User> {
         return b;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Class getHBaseClass() {
         return User.class;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getHBasePrefix() {
         return User.prefix;

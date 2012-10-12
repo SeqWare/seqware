@@ -24,19 +24,23 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 
 /**
+ * <p>ApacheSerialization class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class ApacheSerialization implements SerializationInterface {
     
     private boolean corruptClassesDetected = false;
 
+    /** {@inheritDoc} */
     @Override
     public byte[] serialize(Atom atom) {
         return Bytes.add(Bytes.toBytes(getSerializationConstant()), SerializationUtils.serialize(atom));
         //return SerializationUtils.serialize(atom);
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends AtomImpl> T deserialize(byte[] bytes, Class<T> type) {
         try {
@@ -54,6 +58,7 @@ public class ApacheSerialization implements SerializationInterface {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getSerializationConstant() {
         return 0;

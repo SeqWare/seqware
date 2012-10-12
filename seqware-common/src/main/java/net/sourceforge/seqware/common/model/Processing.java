@@ -46,6 +46,12 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
 @XmlRootElement
+/**
+ * <p>Processing class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class Processing implements Serializable, Comparable<Processing>, PermissionsAware {
 
   private static final long serialVersionUID = 4681328115923390568L;
@@ -86,10 +92,14 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
   private String stdout;
   private String stderr;
 
+  /**
+   * <p>Constructor for Processing.</p>
+   */
   public Processing() {
     super();
   }
 
+  /** {@inheritDoc} */
   @Override
   public int compareTo(Processing that) {
     if (that == null || that.getProcessingId() == null) {
@@ -101,6 +111,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     return (that.getProcessingId().compareTo(this.getProcessingId()));
   }
 
+  /** {@inheritDoc} */
   @Override
   public String toString() {
     return "Processing{" + "processingId=" + processingId + ", filePath=" + filePath
@@ -114,6 +125,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
         + stdout + ", stderr=" + stderr + '}';
   }
 
+  /** {@inheritDoc} */
   @Override
   public boolean equals(Object other) {
     if ((this == other)) {
@@ -126,6 +138,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     return new EqualsBuilder().append(this.getProcessingId(), castOther.getProcessingId()).isEquals();
   }
 
+  /** {@inheritDoc} */
   @Override
   public int hashCode() {
     return new HashCodeBuilder().append(getProcessingId()).toHashCode();
@@ -147,130 +160,290 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
    * public int hashCode() { return new HashCodeBuilder()
    * .append(getSwAccession()) .toHashCode(); }
    */
+  /**
+   * <p>Getter for the field <code>exitStatus</code>.</p>
+   *
+   * @return a {@link java.lang.Integer} object.
+   */
   public Integer getExitStatus() {
     return exitStatus;
   }
 
+  /**
+   * <p>Setter for the field <code>exitStatus</code>.</p>
+   *
+   * @param exitStatus a {@link java.lang.Integer} object.
+   */
   public void setExitStatus(Integer exitStatus) {
     this.exitStatus = exitStatus;
   }
 
+  /**
+   * <p>Getter for the field <code>processExitStatus</code>.</p>
+   *
+   * @return a {@link java.lang.Integer} object.
+   */
   public Integer getProcessExitStatus() {
     return processExitStatus;
   }
 
+  /**
+   * <p>Setter for the field <code>processExitStatus</code>.</p>
+   *
+   * @param processExitStatus a {@link java.lang.Integer} object.
+   */
   public void setProcessExitStatus(Integer processExitStatus) {
     this.processExitStatus = processExitStatus;
   }
 
+  /**
+   * <p>Getter for the field <code>parents</code>.</p>
+   *
+   * @return a {@link java.util.Set} object.
+   */
   public Set<Processing> getParents() {
     return parents;
   }
 
+  /**
+   * <p>Setter for the field <code>parents</code>.</p>
+   *
+   * @param parents a {@link java.util.Set} object.
+   */
   public void setParents(Set<Processing> parents) {
     this.parents = parents;
   }
 
+  /**
+   * <p>Getter for the field <code>children</code>.</p>
+   *
+   * @return a {@link java.util.Set} object.
+   */
   public Set<Processing> getChildren() {
     return children;
   }
 
+  /**
+   * <p>Setter for the field <code>children</code>.</p>
+   *
+   * @param children a {@link java.util.Set} object.
+   */
   public void setChildren(Set<Processing> children) {
     this.children = children;
   }
 
+  /**
+   * <p>isTaskGroup.</p>
+   *
+   * @return a boolean.
+   */
   public boolean isTaskGroup() {
     return taskGroup;
   }
 
+  /**
+   * <p>Setter for the field <code>taskGroup</code>.</p>
+   *
+   * @param taskGroup a boolean.
+   */
   public void setTaskGroup(boolean taskGroup) {
     this.taskGroup = taskGroup;
   }
 
+  /**
+   * <p>Getter for the field <code>swAccession</code>.</p>
+   *
+   * @return a {@link java.lang.Integer} object.
+   */
   public Integer getSwAccession() {
     return swAccession;
   }
 
+  /**
+   * <p>Setter for the field <code>swAccession</code>.</p>
+   *
+   * @param swAccession a {@link java.lang.Integer} object.
+   */
   public void setSwAccession(Integer swAccession) {
     this.swAccession = swAccession;
   }
 
+  /**
+   * <p>Getter for the field <code>createTimestamp</code>.</p>
+   *
+   * @return a {@link java.util.Date} object.
+   */
   public Date getCreateTimestamp() {
     return createTimestamp;
   }
 
+  /**
+   * <p>Setter for the field <code>createTimestamp</code>.</p>
+   *
+   * @param createTimestamp a {@link java.util.Date} object.
+   */
   public void setCreateTimestamp(Date createTimestamp) {
     this.createTimestamp = createTimestamp;
   }
 
+  /**
+   * <p>Getter for the field <code>updateTimestamp</code>.</p>
+   *
+   * @return a {@link java.util.Date} object.
+   */
   public Date getUpdateTimestamp() {
     return updateTimestamp;
   }
 
+  /**
+   * <p>Setter for the field <code>updateTimestamp</code>.</p>
+   *
+   * @param updateTimestamp a {@link java.util.Date} object.
+   */
   public void setUpdateTimestamp(Date updateTimestamp) {
     this.updateTimestamp = updateTimestamp;
   }
 
+  /**
+   * <p>Getter for the field <code>serialVersionUID</code>.</p>
+   *
+   * @return a long.
+   */
   public static long getSerialVersionUID() {
     return serialVersionUID;
   }
 
+  /**
+   * <p>Getter for the field <code>algorithm</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getAlgorithm() {
     return algorithm;
   }
 
+  /**
+   * <p>getJsonEscapeAlgorithm.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getJsonEscapeAlgorithm() {
     return JsonUtil.forJSON(getAlgorithm());
   }
 
+  /**
+   * <p>Setter for the field <code>algorithm</code>.</p>
+   *
+   * @param algorithm a {@link java.lang.String} object.
+   */
   public void setAlgorithm(String algorithm) {
     this.algorithm = algorithm;
   }
 
+  /**
+   * <p>Getter for the field <code>filePath</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getFilePath() {
     return filePath;
   }
 
+  /**
+   * <p>Setter for the field <code>filePath</code>.</p>
+   *
+   * @param filePath a {@link java.lang.String} object.
+   */
   public void setFilePath(String filePath) {
     this.filePath = filePath;
   }
 
+  /**
+   * <p>Getter for the field <code>processingId</code>.</p>
+   *
+   * @return a {@link java.lang.Integer} object.
+   */
   public Integer getProcessingId() {
     return processingId;
   }
 
+  /**
+   * <p>Setter for the field <code>processingId</code>.</p>
+   *
+   * @param processingId a {@link java.lang.Integer} object.
+   */
   public void setProcessingId(Integer processingId) {
     this.processingId = processingId;
   }
 
+  /**
+   * <p>Getter for the field <code>status</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getStatus() {
     return status;
   }
 
+  /**
+   * <p>Setter for the field <code>status</code>.</p>
+   *
+   * @param status a {@link java.lang.String} object.
+   */
   public void setStatus(String status) {
     this.status = status;
   }
 
+  /**
+   * <p>getJsonEscapeDescription.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getJsonEscapeDescription() {
     return JsonUtil.forJSON(description);
   }
 
+  /**
+   * <p>Getter for the field <code>description</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getDescription() {
     return description;
   }
 
+  /**
+   * <p>Setter for the field <code>description</code>.</p>
+   *
+   * @param description a {@link java.lang.String} object.
+   */
   public void setDescription(String description) {
     this.description = description;
   }
 
+  /**
+   * <p>Getter for the field <code>url</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getUrl() {
     return url;
   }
 
+  /**
+   * <p>Setter for the field <code>url</code>.</p>
+   *
+   * @param url a {@link java.lang.String} object.
+   */
   public void setUrl(String url) {
     this.url = url;
   }
 
+  /**
+   * <p>Getter for the field <code>lanes</code>.</p>
+   *
+   * @return a {@link java.util.Set} object.
+   */
   public Set<Lane> getLanes() {
     /*
      * Set<Lane> lns = new TreeSet<Lane>(); Set<IUS> setIUS = getIUS();
@@ -280,31 +453,66 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     return lanes;
   }
 
+  /**
+   * <p>Setter for the field <code>lanes</code>.</p>
+   *
+   * @param lanes a {@link java.util.Set} object.
+   */
   public void setLanes(Set<Lane> lanes) {
     this.lanes = lanes;
   }
 
+  /**
+   * <p>Getter for the field <code>urlLabel</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getUrlLabel() {
     return urlLabel;
   }
 
+  /**
+   * <p>Setter for the field <code>urlLabel</code>.</p>
+   *
+   * @param urlLabel a {@link java.lang.String} object.
+   */
   public void setUrlLabel(String urlLabel) {
     this.urlLabel = urlLabel;
   }
 
+  /**
+   * <p>Getter for the field <code>version</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getVersion() {
     return version;
   }
 
+  /**
+   * <p>Setter for the field <code>version</code>.</p>
+   *
+   * @param version a {@link java.lang.String} object.
+   */
   public void setVersion(String version) {
     this.version = version;
   }
 
+  /**
+   * <p>Getter for the field <code>files</code>.</p>
+   *
+   * @return a {@link java.util.Set} object.
+   */
   @XmlJavaTypeAdapter(XmlizeFileSet.class)
   public Set<File> getFiles() {
     return files;
   }
 
+  /**
+   * <p>Setter for the field <code>files</code>.</p>
+   *
+   * @param files a {@link java.util.Set} object.
+   */
   public void setFiles(Set<File> files) {
     if (this.files == null) {
       this.files = files;
@@ -314,146 +522,319 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     }
   }
 
+  /**
+   * <p>Getter for the field <code>workflowRunId</code>.</p>
+   *
+   * @return a {@link java.lang.Integer} object.
+   */
   public Integer getWorkflowRunId() {
     return workflowRunId;
   }
 
+  /**
+   * <p>Setter for the field <code>workflowRunId</code>.</p>
+   *
+   * @param workflowRunId a {@link java.lang.Integer} object.
+   */
   public void setWorkflowRunId(Integer workflowRunId) {
     this.workflowRunId = workflowRunId;
   }
 
+  /**
+   * <p>Getter for the field <code>owner</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
+   */
   public Registration getOwner() {
     return owner;
   }
 
+  /**
+   * <p>Setter for the field <code>owner</code>.</p>
+   *
+   * @param owner a {@link net.sourceforge.seqware.common.model.Registration} object.
+   */
   public void setOwner(Registration owner) {
     this.owner = owner;
   }
 
+  /**
+   * <p>Getter for the field <code>workflowRun</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+   */
   public WorkflowRun getWorkflowRun() {
     return workflowRun;
   }
 
+  /**
+   * <p>Setter for the field <code>workflowRun</code>.</p>
+   *
+   * @param workflowRun a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+   */
   public void setWorkflowRun(WorkflowRun workflowRun) {
     this.workflowRun = workflowRun;
   }
 
+  /**
+   * <p>Getter for the field <code>isSelected</code>.</p>
+   *
+   * @return a {@link java.lang.Boolean} object.
+   */
   public Boolean getIsSelected() {
     return isSelected;
   }
 
+  /**
+   * <p>Setter for the field <code>isSelected</code>.</p>
+   *
+   * @param isSelected a {@link java.lang.Boolean} object.
+   */
   public void setIsSelected(Boolean isSelected) {
     this.isSelected = isSelected;
   }
 
+  /**
+   * <p>Getter for the field <code>isHasFile</code>.</p>
+   *
+   * @return a {@link java.lang.Boolean} object.
+   */
   public Boolean getIsHasFile() {
     return isHasFile;
   }
 
+  /**
+   * <p>Setter for the field <code>isHasFile</code>.</p>
+   *
+   * @param isHasFile a {@link java.lang.Boolean} object.
+   */
   public void setIsHasFile(Boolean isHasFile) {
     this.isHasFile = isHasFile;
   }
 
+  /**
+   * <p>getIUS.</p>
+   *
+   * @return a {@link java.util.Set} object.
+   */
   public Set<IUS> getIUS() {
     return ius;
   }
 
+  /**
+   * <p>setIUS.</p>
+   *
+   * @param ius a {@link java.util.Set} object.
+   */
   public void setIUS(Set<IUS> ius) {
     this.ius = ius;
   }
 
+  /**
+   * <p>Getter for the field <code>studies</code>.</p>
+   *
+   * @return a {@link java.util.Set} object.
+   */
   public Set<Study> getStudies() {
     return studies;
   }
 
+  /**
+   * <p>Setter for the field <code>studies</code>.</p>
+   *
+   * @param studies a {@link java.util.Set} object.
+   */
   public void setStudies(Set<Study> studies) {
     this.studies = studies;
   }
 
+  /**
+   * <p>Getter for the field <code>samples</code>.</p>
+   *
+   * @return a {@link java.util.Set} object.
+   */
   public Set<Sample> getSamples() {
     return samples;
   }
 
+  /**
+   * <p>Setter for the field <code>samples</code>.</p>
+   *
+   * @param samples a {@link java.util.Set} object.
+   */
   public void setSamples(Set<Sample> samples) {
     this.samples = samples;
   }
 
+  /**
+   * <p>Getter for the field <code>sequencerRuns</code>.</p>
+   *
+   * @return a {@link java.util.Set} object.
+   */
   public Set<SequencerRun> getSequencerRuns() {
     return sequencerRuns;
   }
 
+  /**
+   * <p>Setter for the field <code>sequencerRuns</code>.</p>
+   *
+   * @param sequencerRuns a {@link java.util.Set} object.
+   */
   public void setSequencerRuns(Set<SequencerRun> sequencerRuns) {
     this.sequencerRuns = sequencerRuns;
   }
 
+  /**
+   * <p>Getter for the field <code>experiments</code>.</p>
+   *
+   * @return a {@link java.util.Set} object.
+   */
   public Set<Experiment> getExperiments() {
     return experiments;
   }
 
+  /**
+   * <p>Setter for the field <code>experiments</code>.</p>
+   *
+   * @param experiments a {@link java.util.Set} object.
+   */
   public void setExperiments(Set<Experiment> experiments) {
     this.experiments = experiments;
   }
 
+  /**
+   * <p>Getter for the field <code>runStartTimestamp</code>.</p>
+   *
+   * @return a {@link java.util.Date} object.
+   */
   public Date getRunStartTimestamp() {
     return runStartTimestamp;
   }
 
+  /**
+   * <p>Setter for the field <code>runStartTimestamp</code>.</p>
+   *
+   * @param runStartTimestamp a {@link java.util.Date} object.
+   */
   public void setRunStartTimestamp(Date runStartTimestamp) {
     this.runStartTimestamp = runStartTimestamp;
   }
 
+  /**
+   * <p>Getter for the field <code>runStopTimestamp</code>.</p>
+   *
+   * @return a {@link java.util.Date} object.
+   */
   public Date getRunStopTimestamp() {
     return runStopTimestamp;
   }
 
+  /**
+   * <p>Setter for the field <code>runStopTimestamp</code>.</p>
+   *
+   * @param runStopTimestamp a {@link java.util.Date} object.
+   */
   public void setRunStopTimestamp(Date runStopTimestamp) {
     this.runStopTimestamp = runStopTimestamp;
   }
 
+  /**
+   * <p>Getter for the field <code>parameters</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getParameters() {
     return parameters;
   }
 
+  /**
+   * <p>Setter for the field <code>parameters</code>.</p>
+   *
+   * @param parameters a {@link java.lang.String} object.
+   */
   public void setParameters(String parameters) {
     this.parameters = parameters;
   }
 
+  /**
+   * <p>Getter for the field <code>stdout</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   @XmlJavaTypeAdapter(XmlizeXML.class)
   public String getStdout() {
     return stdout;
   }
 
+  /**
+   * <p>Setter for the field <code>stdout</code>.</p>
+   *
+   * @param stdout a {@link java.lang.String} object.
+   */
   public void setStdout(String stdout) {
     this.stdout = stdout;
   }
 
+  /**
+   * <p>Getter for the field <code>stderr</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getStderr() {
     return stderr;
   }
 
+  /**
+   * <p>Setter for the field <code>stderr</code>.</p>
+   *
+   * @param stderr a {@link java.lang.String} object.
+   */
   @XmlJavaTypeAdapter(XmlizeXML.class)
   public void setStderr(String stderr) {
     this.stderr = stderr;
   }
 
+  /**
+   * <p>Getter for the field <code>workflowRunByAncestorWorkflowRunId</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+   */
   public WorkflowRun getWorkflowRunByAncestorWorkflowRunId() {
     return workflowRunByAncestorWorkflowRunId;
   }
 
+  /**
+   * <p>Setter for the field <code>workflowRunByAncestorWorkflowRunId</code>.</p>
+   *
+   * @param workflowRunByAncestorWorkflowRunId a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+   */
   public void setWorkflowRunByAncestorWorkflowRunId(WorkflowRun workflowRunByAncestorWorkflowRunId) {
     this.workflowRunByAncestorWorkflowRunId = workflowRunByAncestorWorkflowRunId;
   }
 
+  /**
+   * <p>Getter for the field <code>processingAttributes</code>.</p>
+   *
+   * @return a {@link java.util.Set} object.
+   */
   @XmlElementWrapper(name = "ProcessingAttributes", nillable = true)
   @XmlElement(name = "ProcessingAttribute")
   public Set<ProcessingAttribute> getProcessingAttributes() {
     return processingAttributes;
   }
 
+  /**
+   * <p>Setter for the field <code>processingAttributes</code>.</p>
+   *
+   * @param processingAttributes a {@link java.util.Set} object.
+   */
   public void setProcessingAttributes(Set<ProcessingAttribute> processingAttributes) {
     this.processingAttributes = processingAttributes;
   }
 
+  /**
+   * <p>resetCompletedChildren.</p>
+   */
   public void resetCompletedChildren() {
     Set<Processing> res = new TreeSet<Processing>();
     Set<Processing> all = this.getChildren();
@@ -469,6 +850,9 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
 
   }
 
+  /**
+   * <p>resetRunningChildren.</p>
+   */
   public void resetRunningChildren() {
     Set<Processing> res = new TreeSet<Processing>();
     Set<Processing> all = this.getChildren();
@@ -483,6 +867,14 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     this.setChildren(res);
   }
 
+  /**
+   * <p>clone.</p>
+   *
+   * @param newP a {@link net.sourceforge.seqware.common.model.Processing} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   * @throws org.restlet.resource.ResourceException if any.
+   * @throws java.sql.SQLException if any.
+   */
   public static ReturnValue clone(Processing newP) throws ResourceException, SQLException {
     ReturnValue p = new ReturnValue();
     p.setAlgorithm(newP.getAlgorithm());
@@ -502,6 +894,14 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     return p;
   }
 
+  /**
+   * <p>cloneFromDB.</p>
+   *
+   * @param processingId a int.
+   * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
+   * @throws org.restlet.resource.ResourceException if any.
+   * @throws java.sql.SQLException if any.
+   */
   public static Processing cloneFromDB(int processingId) throws ResourceException, SQLException {
     Processing updatedProcessing = null;
     try {
@@ -556,6 +956,12 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     return updatedProcessing;
   }
 
+  /**
+   * <p>cloneToHibernate.</p>
+   *
+   * @param newP a {@link net.sourceforge.seqware.common.model.Processing} object.
+   * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
+   */
   public static Processing cloneToHibernate(Processing newP) {
     Logger logger = Logger.getLogger(Processing.class);
     ProcessingService ps = BeanFactory.getProcessingServiceBean();
@@ -759,6 +1165,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     return p;
   }
 
+  /** {@inheritDoc} */
   @Override
   public boolean givesPermission(Registration registration) {
     boolean hasPermission = true;

@@ -21,18 +21,24 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
  * RegistrationSetupController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class DownloaderController extends BaseCommandController {
 
   private FileService fileService;
   private final int BUFFERSIZE = 500 * 1024; // 512K buffer
 
+  /**
+   * <p>Constructor for DownloaderController.</p>
+   */
   public DownloaderController() {
     super();
     setSupportedMethods(new String[] { METHOD_GET });
   }
 
+  /** {@inheritDoc} */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
@@ -114,10 +120,20 @@ public class DownloaderController extends BaseCommandController {
     return file;
   }
 
+  /**
+   * <p>Getter for the field <code>fileService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
+   */
   public FileService getFileService() {
     return fileService;
   }
 
+  /**
+   * <p>Setter for the field <code>fileService</code>.</p>
+   *
+   * @param fileService a {@link net.sourceforge.seqware.common.business.FileService} object.
+   */
   public void setFileService(FileService fileService) {
     this.fileService = fileService;
   }
