@@ -744,12 +744,7 @@ public class ExperimentType {
         this.expectedNumberRuns = value;
     }
 
-     /**
-      * Gets the value of the expectedNumberSpots property.
-      *
-      * @author morgantaschuk
-      * @version $Id: $Id
-      */
+    /**
      * Gets the value of the expectedNumberSpots property.
      *
      * @return
@@ -1005,9 +1000,7 @@ public class ExperimentType {
         @XmlElement(name = "SPOT_DESCRIPTOR", required = true)
         protected ExperimentType.DESIGN.SPOTDESCRIPTOR spotdescriptor;
 
-         /**
-          * Gets the value of the designdescription property.
-          */
+        /**
          * Gets the value of the designdescription property.
          *
          * @return
@@ -1019,12 +1012,9 @@ public class ExperimentType {
             return designdescription;
         }
 
-         /**
-          * Sets the value of the designdescription property.
-          *
-          * @return a {@link java.math.BigInteger} object.
-          */
+        /**
          * Sets the value of the designdescription property.
+         *
          *
          * @param value
          *     allowed object is
@@ -1035,9 +1025,7 @@ public class ExperimentType {
             this.designdescription = value;
         }
 
-         /**
-          * Gets the value of the sampledescriptor property.
-          */
+        /**
          * Gets the value of the sampledescriptor property.
          *
          * @return
@@ -1049,11 +1037,7 @@ public class ExperimentType {
             return sampledescriptor;
         }
 
-         /**
-          * Sets the value of the sampledescriptor property.
-          *
-          * @return a {@link java.math.BigInteger} object.
-          */
+        /**
          * Sets the value of the sampledescriptor property.
          *
          * @param value
@@ -1065,11 +1049,8 @@ public class ExperimentType {
             this.sampledescriptor = value;
         }
 
-         /**
-          * Gets the value of the librarydescriptor property.
-          */
+        /**
          * Gets the value of the librarydescriptor property.
-         *
          * @return
          *     possible object is
          *     {@link ExperimentType.DESIGN.LIBRARYDESCRIPTOR }
@@ -1079,11 +1060,7 @@ public class ExperimentType {
             return librarydescriptor;
         }
 
-         /**
-          * Sets the value of the librarydescriptor property.
-          *
-          * @return a {@link java.lang.String} object.
-          */
+        /**
          * Sets the value of the librarydescriptor property.
          *
          * @param value
@@ -1095,11 +1072,9 @@ public class ExperimentType {
             this.librarydescriptor = value;
         }
 
-         /**
-          * Gets the value of the spotdescriptor property.
-          */
+        /**
          * Gets the value of the spotdescriptor property.
-         *
+         * 
          * @return
          *     possible object is
          *     {@link ExperimentType.DESIGN.SPOTDESCRIPTOR }

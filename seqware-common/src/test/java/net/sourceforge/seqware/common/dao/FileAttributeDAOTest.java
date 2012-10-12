@@ -14,6 +14,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <p>FileAttributeDAOTest class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:dao-test-context.xml" })
 @Transactional
@@ -22,6 +29,9 @@ public class FileAttributeDAOTest {
   @Autowired
   private FileAttributeDAO fileAttributeDao;
 
+  /**
+   * <p>test_add_missing_required_fields_fails.</p>
+   */
   @Test(expected = DataIntegrityViolationException.class)
   public void test_add_missing_required_fields_fails() {
     FileAttribute fileAttribute = new FileAttribute();
@@ -29,6 +39,9 @@ public class FileAttributeDAOTest {
     fileAttributeDao.add(fileAttribute);
   }
 
+  /**
+   * <p>test_add_missing_required_file_field_fails.</p>
+   */
   @Test(expected = DataIntegrityViolationException.class)
   public void test_add_missing_required_file_field_fails() {
     FileAttribute fileAttribute = new FileAttribute();
@@ -37,6 +50,11 @@ public class FileAttributeDAOTest {
     fileAttributeDao.add(fileAttribute);
   }
 
+  /**
+   * <p>test_add_with_all_required_fields_succeeds.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @Test
   public void test_add_with_all_required_fields_succeeds() throws Exception {
     FileAttribute fileAttribute = new FileAttribute();

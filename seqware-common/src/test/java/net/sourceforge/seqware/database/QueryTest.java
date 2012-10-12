@@ -41,16 +41,25 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import org.junit.Test;
 
 /**
- * 
+ * <p>QueryTest class.</p>
+ *
  * @author mtaschuk
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class QueryTest {
 
   private Collection<ReturnValue> returnValues = new ArrayList<ReturnValue>();
 
+  /**
+   * <p>Constructor for QueryTest.</p>
+   */
   public QueryTest() {
   }
 
+  /**
+   * <p>hello.</p>
+   */
   @Test
   public void hello() {
     StudyService ss = BeanFactory.getStudyServiceBean();

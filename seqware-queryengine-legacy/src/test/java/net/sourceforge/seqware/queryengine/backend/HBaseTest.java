@@ -8,6 +8,13 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+/**
+ * <p>HBaseTest class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
+ */
 @Test(groups = "hbase")
 public class HBaseTest {
 
@@ -24,6 +31,11 @@ public class HBaseTest {
 		// nothing to do here
 	}
 
+	/**
+	 * <p>testHBaseReading.</p>
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
 	@Test(dependsOnMethods = { "testHBaseWriting" }, enabled = true)
 	public static void testHBaseReading() throws Exception {
 
@@ -46,6 +58,11 @@ public class HBaseTest {
 
 	}
 
+	/**
+	 * <p>testHBaseWriting.</p>
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
 	@Test(enabled = true)
 	public static void testHBaseWriting(/* String[] args */) throws Exception {
 
