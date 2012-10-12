@@ -4,11 +4,15 @@ SeqWare is currently used by a variety of NGS users including the [Lineberger Co
 
 The majority of SeqWare development is currently happening at [OICR](http://oicr.on.ca) and [Nimbus Informatics](http://nimbusinformatics.com).
 
+<a href="http://oicr.on.ca"><img src="http://oicr.on.ca/files/imagecache/logo_size/OICR2logo.png"/></a>
+
+<a href="http://unclineberger.org"><img width="250px" src="http://unclineberger.org/dif/images/unc-lineberger-logo/image"/></a>
+
 ##Commercial Partner
 
 Please see Nimbus' website if you are interested in consulting services for SeqWare workflow creation, hosting of SeqWare on Amazon's cloud, or support for local installs of SeqWare.
 
-<a href="http://nimbusinformatics.com"><img src="/assets/images/nimbus_clear.png"/></a>
+<a href="http://nimbusinformatics.com"><img width="250px" src="/assets/images/nimbus_clear.png"/></a>
 
 ## Contributions
 
