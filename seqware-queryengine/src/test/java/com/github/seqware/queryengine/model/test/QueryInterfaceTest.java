@@ -32,6 +32,8 @@ import org.junit.Test;
  *
  * @author dyuen
  * @author jbaran
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class QueryInterfaceTest implements Benchmarking {
 
@@ -40,6 +42,9 @@ public class QueryInterfaceTest implements Benchmarking {
     private static TagSet b_tagset;
     private static TagSet c_tagset;
 
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -68,6 +73,9 @@ public class QueryInterfaceTest implements Benchmarking {
         mManager.flush();
     }
 
+    /**
+     * <p>testGetFeatures.</p>
+     */
     @Test
     public void testGetFeatures() {
         // get a FeatureSet from the back-end without creating a new set
@@ -147,6 +155,9 @@ public class QueryInterfaceTest implements Benchmarking {
         System.out.println(" total runtime: " + totalRunTime);
     }
 
+    /**
+     * <p>testGetFeaturesByRange.</p>
+     */
     @Test
     public void testGetFeaturesByRange() {
         // get a FeatureSet from the back-end
@@ -173,6 +184,9 @@ public class QueryInterfaceTest implements Benchmarking {
         }
     }
 
+    /**
+     * <p>testTypeQuery.</p>
+     */
     @Test
     public void testTypeQuery() {
         // get a FeatureSet from the back-end
@@ -187,6 +201,9 @@ public class QueryInterfaceTest implements Benchmarking {
         Assert.assertTrue("Query results wrong, expected 1 and found " + count, count == 1);
     }
 
+    /**
+     * <p>testInstallAndRunArbitraryPlugin.</p>
+     */
     @Test
     public void testInstallAndRunArbitraryPlugin() {
         Class<? extends AnalysisPluginInterface> arbitraryPlugin;
@@ -210,6 +227,9 @@ public class QueryInterfaceTest implements Benchmarking {
         Assert.assertTrue("Query results wrong, expected 1 and found " + count, count == 1);
     }
 
+    /**
+     * <p>complexQueryTest.</p>
+     */
     @Test
     public void complexQueryTest() {
         // This version of complexQueryTest is model-agnostic and will run on all back-ends.
@@ -315,6 +335,11 @@ public class QueryInterfaceTest implements Benchmarking {
         Assert.assertTrue("Setting a query constraints over one feature attribute and for a (possibly parent) term in a tree hierarchy failed, expected 2 and found " + count, count == 2);
     }
 
+    /**
+     * <p>queryLanguageTest.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     @Test
     public void queryLanguageTest() throws RecognitionException {
 //        CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -360,6 +385,11 @@ public class QueryInterfaceTest implements Benchmarking {
         Assert.assertTrue("Setting a query constraint with a complex ! operation failed, expected 13 and found " + count, count == 13);
     }
 
+    /**
+     * <p>queryLanguageTagValuePresenceTest.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     @Test
     public void queryLanguageTagValuePresenceTest() throws RecognitionException {
         QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, RPNStack.compileQuery("tagValuePresence(\"" + b_tagset.getSGID().getRowKey() + "\",\"SO_term\",\"region\")"));
@@ -373,6 +403,11 @@ public class QueryInterfaceTest implements Benchmarking {
         Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 0 and found " + count, count == 0);
     }
 
+    /**
+     * <p>queryLanguageTagValue_GT_R_Test.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     @Test
     public void queryLanguageTagValue_GT_R_Test() throws RecognitionException {
         // test > on right
@@ -408,6 +443,11 @@ public class QueryInterfaceTest implements Benchmarking {
         Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 2 and found " + count, count == 2);
     }
 
+    /**
+     * <p>queryLanguageTagValue_GT_L_Test.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     @Test
     public void queryLanguageTagValue_GT_L_Test() throws RecognitionException {
         // test > on left
@@ -443,6 +483,11 @@ public class QueryInterfaceTest implements Benchmarking {
         Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 4 and found " + count, count == 4);
     }
 
+    /**
+     * <p>queryLanguageTagValue_LS_R_Test.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     @Test
     public void queryLanguageTagValue_LS_R_Test() throws RecognitionException {
         // test < on right
@@ -478,6 +523,11 @@ public class QueryInterfaceTest implements Benchmarking {
         Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 4 and found " + count, count == 4);
     }
 
+    /**
+     * <p>queryLanguageTagValue_LS_L_Test.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     @Test
     public void queryLanguageTagValue_LS_L_Test() throws RecognitionException {
         // test < on left
@@ -513,6 +563,9 @@ public class QueryInterfaceTest implements Benchmarking {
         Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 2 and found " + count, count == 2);
     }
 
+    /**
+     * <p>testMalformedQueries.</p>
+     */
     @Test
     public void testMalformedQueries() {
         try {

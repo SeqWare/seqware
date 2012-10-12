@@ -26,13 +26,21 @@ import org.junit.runner.RunWith;
 
 /**
  * Add tests here to have them run against the command-line tools
+ *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 @RunWith(DynamicSuite.class)
 public class DynamicSuiteBuilder {
     
     private static Class<?>[] SystemTests = {GVFImportExportTest.class, VCFImportExportTest.class, CommandLineUtilsTest.class, OBOParserTest.class, SOFeatureImporterTest.class, QueryVCFDumperTest.class};
     
+    /**
+     * <p>modelSuite.</p>
+     *
+     * @return an array of {@link java.lang.Class} objects.
+     */
     public static Class[] modelSuite() {
          return DynamicSuiteBuilder.SystemTests;
    }

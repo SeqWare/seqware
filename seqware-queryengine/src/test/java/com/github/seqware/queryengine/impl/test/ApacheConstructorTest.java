@@ -12,6 +12,8 @@ import org.junit.Test;
  * Tests specifically using Apache serialization.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class ApacheConstructorTest  {
 
@@ -20,6 +22,9 @@ public class ApacheConstructorTest  {
     private static Feature a1, a2, a3;
     private static SimplePersistentBackEnd backend;
     
+    /**
+     * <p>Constructor for ApacheConstructorTest.</p>
+     */
     public ApacheConstructorTest() {
         ApacheConstructorTest.testID = UUID.randomUUID();
         SWQEFactory.setFactoryBackendType(SWQEFactory.Model_Type.IN_MEMORY, SWQEFactory.Storage_Type.FILE_STORAGE, SWQEFactory.Serialization_Type.APACHE);
@@ -37,6 +42,9 @@ public class ApacheConstructorTest  {
         //System.out.println("ending static init in testID: " + testID.toString());
     }
 
+    /**
+     * <p>testFeatureCreationAndIterate.</p>
+     */
     @Test
     public void testFeatureCreationAndIterate() {
         //System.out.println("running base test in testID: " + testID.toString());

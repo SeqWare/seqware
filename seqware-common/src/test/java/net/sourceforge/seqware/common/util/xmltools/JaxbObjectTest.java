@@ -56,32 +56,56 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * 
+ * <p>JaxbObjectTest class.</p>
+ *
  * @author mtaschuk
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class JaxbObjectTest {
 
+  /**
+   * <p>Constructor for JaxbObjectTest.</p>
+   */
   public JaxbObjectTest() {
   }
 
+  /**
+   * <p>setUpClass.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @BeforeClass
   public static void setUpClass() throws Exception {
   }
 
+  /**
+   * <p>tearDownClass.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @AfterClass
   public static void tearDownClass() throws Exception {
   }
 
+  /**
+   * <p>setUp.</p>
+   */
   @Before
   public void setUp() {
   }
 
+  /**
+   * <p>tearDown.</p>
+   */
   @After
   public void tearDown() {
   }
 
   /**
    * Test of marshal method, of class JaxbObject.
+   *
+   * @throws java.lang.Exception if any.
    */
   @Test
   public void testMarshal() throws Exception {
@@ -100,6 +124,8 @@ public class JaxbObjectTest {
 
   /**
    * Test of unMarshal method, of class JaxbObject.
+   *
+   * @throws java.lang.Exception if any.
    */
   @Test
   public void testUnMarshal() throws Exception {
@@ -119,6 +145,11 @@ public class JaxbObjectTest {
     assertEquals(type, type2);
   }
 
+  /**
+   * <p>testSampleJaxb.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @Test
   public void testSampleJaxb() throws Exception {
     Sample sample = new Sample();
@@ -142,6 +173,11 @@ public class JaxbObjectTest {
     assertEquals(sample, sample2);
   }
 
+  /**
+   * <p>testStudyJaxb.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @Test
   public void testStudyJaxb() throws Exception {
     Study study = new Study();
@@ -165,6 +201,11 @@ public class JaxbObjectTest {
     assertEquals(study, st);
   }
 
+  /**
+   * <p>testIUSJaxb.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @Test
   public void testIUSJaxb() throws Exception {
     IUS ius = new IUS();
@@ -188,6 +229,11 @@ public class JaxbObjectTest {
     assertEquals(ius, st);
   }
 
+  /**
+   * <p>testLaneJaxb.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @Test
   public void testLaneJaxb() throws Exception {
     Lane lane = new Lane();
@@ -211,6 +257,11 @@ public class JaxbObjectTest {
     assertEquals(lane, st);
   }
 
+  /**
+   * <p>testExperimentJaxb.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @Test
   public void testExperimentJaxb() throws Exception {
     Experiment ius = new Experiment();
@@ -234,6 +285,11 @@ public class JaxbObjectTest {
     assertEquals(ius, st);
   }
 
+  /**
+   * <p>testSequencerRunJaxb.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @Test
   public void testSequencerRunJaxb() throws Exception {
     SequencerRun ius = new SequencerRun();
@@ -257,6 +313,11 @@ public class JaxbObjectTest {
     assertEquals(ius, st);
   }
 
+  /**
+   * <p>testProcessingJaxb.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @Test
   public void testProcessingJaxb() throws Exception {
     Processing ius = new Processing();
@@ -280,6 +341,11 @@ public class JaxbObjectTest {
     assertEquals(ius, st);
   }
 
+  /**
+   * <p>testNullProcessingAttribute.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @Test
   public void testNullProcessingAttribute() throws Exception {
     Processing ius = new Processing();
@@ -295,6 +361,8 @@ public class JaxbObjectTest {
 
   /**
    * Test marshalling and unmarshalling of WorkflowRun object.
+   *
+   * @throws java.lang.Exception if any.
    */
   @Test
   public void testWorkflowRunJaxb() throws Exception {
@@ -339,6 +407,11 @@ public class JaxbObjectTest {
     assertEquals(1, x.getIus().size());
   }
 
+  /**
+   * <p>testWorkflowRunListJaxb.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @Test
   public void testWorkflowRunListJaxb() throws Exception {
     WorkflowRun r1 = new WorkflowRun();
@@ -373,6 +446,11 @@ public class JaxbObjectTest {
     }
   }
 
+  /**
+   * <p>testWorkflowListJaxb.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @Test
   public void testWorkflowListJaxb() throws Exception {
     Workflow r1 = new Workflow();
@@ -405,6 +483,11 @@ public class JaxbObjectTest {
     }
   }
 
+  /**
+   * <p>testReturnValueJaxb.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @Test
   public void testReturnValueJaxb() throws Exception {
     ReturnValue r1 = new ReturnValue();

@@ -27,15 +27,24 @@ import org.junit.runner.Result;
  * Small hack, allows us to profile test suites for performance.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class ProfilingStub extends Configured implements Tool {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception{
         // Let ToolRunner handle generic command-line options 
         int res = ToolRunner.run(new Configuration(), new ProfilingStub(), args);
         System.exit(res);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int run(String[] args) throws Exception {
         JUnitCore runner = new JUnitCore();

@@ -18,12 +18,27 @@ import net.sourceforge.seqware.common.util.Log;
 
 import org.junit.Test;
 
+/**
+ * <p>ProcessingServiceImplTest class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
+ */
 public class ProcessingServiceImplTest extends BaseUnit {
 
+  /**
+   * <p>Constructor for ProcessingServiceImplTest.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   public ProcessingServiceImplTest() throws Exception {
     super();
   }
 
+  /**
+   * <p>testProcessingWithFiles.</p>
+   */
   @Test
   public void testProcessingWithFiles() {
     Log.info("Processing without files");
@@ -34,6 +49,9 @@ public class ProcessingServiceImplTest extends BaseUnit {
     InSessionExecutions.unBindSessionFromTheThread();
   }
 
+  /**
+   * <p>testProcessingWithoutFiles.</p>
+   */
   @Test
   public void testProcessingWithoutFiles() {
     Log.info("Processing without files");
@@ -44,6 +62,9 @@ public class ProcessingServiceImplTest extends BaseUnit {
     InSessionExecutions.unBindSessionFromTheThread();
   }
 
+  /**
+   * <p>testInsertProcessing.</p>
+   */
   @Test
   public void testInsertProcessing() {
     ProcessingService ss = BeanFactory.getProcessingServiceBean();
@@ -63,6 +84,9 @@ public class ProcessingServiceImplTest extends BaseUnit {
     ss.insert(newProcessing);
   }
 
+  /**
+   * <p>testFindByCriteria.</p>
+   */
   @Test
   public void testFindByCriteria() {
     ProcessingService processingService = BeanFactory.getProcessingServiceBean();
