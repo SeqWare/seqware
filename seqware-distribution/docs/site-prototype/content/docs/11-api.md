@@ -15,4 +15,8 @@ The [API](http://seqware.github.com/webservice-api/) covers the SeqWare Web Serv
 
 ## Javadoc 
 
+The Javadoc for the release of the last stable version (0.12.5.1) can be found [here](/javadoc/svn_0.12.5.1/apidocs/).
+The Javadoc for the testing of the last stable version (0.12.5.1) can be found [here](/javadoc/svn_0.12.5.1/testapidocs/).
+
+### Older Javadoc Releases
 The Javadoc for the release of version 0.12.5 can be found [here](/javadoc/svn_0.12.5/)
