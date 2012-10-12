@@ -12,15 +12,21 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
  * RegistrationSetupController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class SequencerRunListController extends BaseCommandController {
 	private SequencerRunService sequencerRunService;
+	/**
+	 * <p>Constructor for SequencerRunListController.</p>
+	 */
 	public SequencerRunListController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)
@@ -55,10 +61,20 @@ public class SequencerRunListController extends BaseCommandController {
 		}
 	}
 
+	/**
+	 * <p>Getter for the field <code>sequencerRunService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+	 */
 	public SequencerRunService getSequencerRunService() {
 		return sequencerRunService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sequencerRunService</code>.</p>
+	 *
+	 * @param sequencerRunService a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+	 */
 	public void setSequencerRunService(SequencerRunService sequencerRunService) {
 		this.sequencerRunService = sequencerRunService;
 	}

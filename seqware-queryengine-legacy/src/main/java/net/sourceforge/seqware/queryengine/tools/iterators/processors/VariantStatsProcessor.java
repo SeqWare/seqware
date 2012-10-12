@@ -9,8 +9,11 @@ import net.sourceforge.seqware.queryengine.backend.model.Variant;
 import net.sourceforge.seqware.queryengine.backend.store.impl.BerkeleyDBStore;
 
 /**
+ * <p>VariantStatsProcessor class.</p>
+ *
  * @author boconnor
  *net.sourceforge.seqware.queryengine.tools.iterators.processors.VariantStatsProcessor
+ * @version $Id: $Id
  */
 public class VariantStatsProcessor extends VariantProcessor implements ProcessorInterface {
 
@@ -29,15 +32,19 @@ public class VariantStatsProcessor extends VariantProcessor implements Processor
   HashMap<String, Integer> subFreqNotCoding = new HashMap<String, Integer>();
 
   /**
-   * @param outputFilename
-   * @param includeIndels
-   * @param includeSNVs
-   * @param minCoverage
-   * @param maxCoverage
+   * <p>Constructor for VariantStatsProcessor.</p>
+   *
+   * @param outputFilename a {@link java.lang.String} object.
+   * @param includeIndels a boolean.
+   * @param includeSNVs a boolean.
+   * @param minCoverage a int.
+   * @param maxCoverage a int.
    * @param minObservations
    * @param minObservationsPerStrand
-   * @param minSNVPhred
-   * @param minPercent
+   * @param minObservationsPerStrand a int.
+   * @param minSNVPhred a int.
+   * @param minPercent a int.
+   * @param store a {@link net.sourceforge.seqware.queryengine.backend.store.impl.BerkeleyDBStore} object.
    */
   public VariantStatsProcessor(String outputFilename, BerkeleyDBStore store, boolean includeIndels,
       boolean includeSNVs, int minCoverage, int maxCoverage,
@@ -48,10 +55,14 @@ public class VariantStatsProcessor extends VariantProcessor implements Processor
     // TODO Auto-generated constructor stub
   }
   
+  /**
+   * <p>Constructor for VariantStatsProcessor.</p>
+   */
   public VariantStatsProcessor() {
     
   }
 
+  /** {@inheritDoc} */
   public Object process (Object obj) {
 
     // the mismatch object
@@ -157,6 +168,7 @@ public class VariantStatsProcessor extends VariantProcessor implements Processor
     return(null);
   }
   
+  /** {@inheritDoc} */
   public String report(Object obj) {
     
     StringBuffer sb = new StringBuffer();

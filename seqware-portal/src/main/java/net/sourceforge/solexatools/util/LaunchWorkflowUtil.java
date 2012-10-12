@@ -16,20 +16,41 @@ import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRunParam;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>LaunchWorkflowUtil class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class LaunchWorkflowUtil {
 	
+	/** Constant <code>SELECTED_NODES="launchSelectedNodes"</code> */
 	public final static String SELECTED_NODES = "launchSelectedNodes";
+	/** Constant <code>SELECTED_FILES="selectedLaunchFiles"</code> */
 	public final static String SELECTED_FILES = "selectedLaunchFiles";
+	/** Constant <code>SELECTED_VALUES="selectedWorkflowParamValueId"</code> */
 	public final static String SELECTED_VALUES = "selectedWorkflowParamValueId";
 	
 	
 	// methods for SELECTED NODES
+	/**
+	 * <p>getCurrentSelectedNodes.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	public static List<String> getCurrentSelectedNodes(HttpServletRequest request){
 		Integer key = getCurrentWorkflowParam(request).getWorkflowParamId();
 		Map<Integer, List<String>> selectedNodes = getSelectedNodesFromSession(request);
 		return selectedNodes.get(key);
 	}
 	
+	/**
+	 * <p>setCurrentSelectedNodes.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param selectedNodesOneParam a {@link java.util.List} object.
+	 */
 	public static void setCurrentSelectedNodes(HttpServletRequest request, List<String> selectedNodesOneParam){
 		Integer key = getCurrentWorkflowParam(request).getWorkflowParamId();
 		Map<Integer, List<String>> selectedNodes = getSelectedNodesFromSession(request);
@@ -51,12 +72,24 @@ public class LaunchWorkflowUtil {
 	}
 	
 	// methods for SELECTED FILES
+	/**
+	 * <p>getCurrentSelectedFiles.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	public static List<File> getCurrentSelectedFiles(HttpServletRequest request){
 		Integer key = getCurrentWorkflowParam(request).getWorkflowParamId();
 		Map<Integer, List<File>> selectedFiles = getSelectedFilesFromSession(request);
 		return selectedFiles.get(key);
 	}
 	
+	/**
+	 * <p>setCurrentSelectedFiles.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param selectedFilesOneParam a {@link java.util.List} object.
+	 */
 	public static void setCurrentSelectedFiles(HttpServletRequest request, List<File> selectedFilesOneParam){
 		Integer key = getCurrentWorkflowParam(request).getWorkflowParamId();
 		Map<Integer, List<File>> selectedFiles = getSelectedFilesFromSession(request);
@@ -78,22 +111,32 @@ public class LaunchWorkflowUtil {
 	}
 	
 	// remove Last param data form session
+	/**
+	 * <p>removeSelectedItemsCurrentParam.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 */
 	public static void removeSelectedItemsCurrentParam(HttpServletRequest request){
 		removeSelectedFilesCurrentParam(request);
 		removeSelectedNodesCurrentParam(request);
 	}
 	
+	/**
+	 * <p>removeSelectedItemsLaunchWorkflow.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 */
 	public static void removeSelectedItemsLaunchWorkflow(HttpServletRequest request){
 		request.getSession(false).removeAttribute(SELECTED_NODES);
 		request.getSession(false).removeAttribute(SELECTED_FILES);
 		request.getSession(false).removeAttribute(SELECTED_VALUES);
 	}
 	
-	/** 
+	/**
 	 * Get all selected Files, the files are organized by the name of the parameter (key) and a list of files selected (value) via a hash.
-	 *  
-	 * @param request
-	 * @return
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @return a {@link java.util.Map} object.
 	 */
 	public static Map<String, List<File>> getAllSelectedFiles(HttpServletRequest request){
 	  
@@ -124,6 +167,12 @@ public class LaunchWorkflowUtil {
 		return files;
 	}
 	
+	/**
+	 * <p>getSummaryData.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @return a {@link net.sourceforge.solexatools.util.SummaryData} object.
+	 */
 	public static SummaryData getSummaryData(HttpServletRequest request){
 		SummaryData summaryDate = new SummaryData();
 		List<SummaryLine> summaryLines = new LinkedList<SummaryLine>();
@@ -229,6 +278,13 @@ public class LaunchWorkflowUtil {
 		return summaryDate;
 	}
 	
+	/**
+	 * <p>getIdsSelectedLane.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param param a {@link net.sourceforge.seqware.common.model.WorkflowParam} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	public List<Integer> getIdsSelectedLane(HttpServletRequest request, WorkflowParam param){
 		List<Integer> ids = new LinkedList<Integer>();
 		
@@ -248,6 +304,12 @@ public class LaunchWorkflowUtil {
 	
 	
 	// get current workflow from session
+	/**
+	 * <p>getCurrentWorkflow.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @return a {@link net.sourceforge.seqware.common.model.Workflow} object.
+	 */
 	public static Workflow getCurrentWorkflow(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		if (session != null) {
@@ -260,6 +322,12 @@ public class LaunchWorkflowUtil {
 	}
 	
 	// get current workflow param from session
+	/**
+	 * <p>getCurrentWorkflowParam.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @return a {@link net.sourceforge.seqware.common.model.WorkflowParam} object.
+	 */
 	public static WorkflowParam getCurrentWorkflowParam(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		if (session != null) {
@@ -271,6 +339,13 @@ public class LaunchWorkflowUtil {
 		return new WorkflowParam();
 	}
 	
+	/**
+	 * <p>saveSelectedWorkflowParamValue.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param workflowParamId a {@link java.lang.Integer} object.
+	 * @param strWorkflowParamValueId a {@link java.lang.String} object.
+	 */
 	public static void saveSelectedWorkflowParamValue(HttpServletRequest request, Integer workflowParamId, 
 			String strWorkflowParamValueId)
 	{
@@ -281,6 +356,12 @@ public class LaunchWorkflowUtil {
 		request.getSession(false).setAttribute(SELECTED_VALUES, selectedValues);
 	}
 	
+	/**
+	 * <p>getSelectedWorkflowParamValue.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @return a {@link java.util.Map} object.
+	 */
 	public static Map<Integer, String> getSelectedWorkflowParamValue(HttpServletRequest request)
 	{
 		Map<Integer, String> selectedValues = (Map<Integer, String>)request.getSession(false).getAttribute(SELECTED_VALUES);
@@ -290,6 +371,12 @@ public class LaunchWorkflowUtil {
 		return selectedValues;
 	}
 	
+	/**
+	 * <p>getWorkflowRunParam.</p>
+	 *
+	 * @param params a {@link java.util.SortedSet} object.
+	 * @return a {@link java.util.SortedSet} object.
+	 */
 	public static SortedSet<WorkflowRunParam> getWorkflowRunParam(SortedSet<WorkflowParam> params){
 		SortedSet<WorkflowRunParam> runParams = new TreeSet<WorkflowRunParam>();
 	//	SortedSet<WorkflowParam> params = workflow.getWorkflowParams();

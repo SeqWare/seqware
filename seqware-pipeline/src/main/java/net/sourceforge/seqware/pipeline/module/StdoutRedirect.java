@@ -12,6 +12,9 @@ import java.lang.annotation.Target;
  * Date: 7/25/11
  * Time: 11:13 PM
  * To change this template use File | Settings | File Templates.
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 
 @Target(ElementType.TYPE)

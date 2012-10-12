@@ -38,8 +38,10 @@ import net.sourceforge.seqware.common.util.Log;
 import org.apache.commons.lang.NotImplementedException;
 
 /**
- * 
+ * <p>WorkflowManager class.</p>
+ *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class WorkflowManager {
 
@@ -47,6 +49,18 @@ public class WorkflowManager {
 
   // presume iniFiles, parentAccessions, parentsLinkedToWR, template are the
   // full complete paths separated by commas
+  /**
+   * <p>runWorkflow.</p>
+   *
+   * @param wi a {@link net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo} object.
+   * @param workflowRunAccession a {@link java.lang.String} object.
+   * @param iniFilesStr a {@link java.lang.String} object.
+   * @param noMetadata a boolean.
+   * @param parentAccessionsStr a {@link java.lang.String} object.
+   * @param parentsLinkedToWR a {@link java.util.ArrayList} object.
+   * @param owner a {@link net.sourceforge.seqware.common.model.Registration} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue runWorkflow(WorkflowInfo wi, String workflowRunAccession, 
           String iniFilesStr, boolean noMetadata, String parentAccessionsStr, 
           ArrayList<String> parentsLinkedToWR, Registration owner) {
@@ -199,6 +213,12 @@ public class WorkflowManager {
     return (ret);
   }
 
+  /**
+   * <p>createINI.</p>
+   *
+   * @param map a {@link java.util.HashMap} object.
+   * @return a {@link java.lang.StringBuilder} object.
+   */
   public StringBuilder createINI(HashMap<String, String> map) {
     // after running the daxGen.processTemplate above the map should be filled
     // in with all the ini key/values
@@ -213,6 +233,14 @@ public class WorkflowManager {
     return iniBuffer;
   }
 
+  /**
+   * <p>linkWorkflowRunAndParent.</p>
+   *
+   * @param wr a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+   * @param parentAccession a int.
+   * @return a boolean.
+   * @throws java.sql.SQLException if any.
+   */
   public boolean linkWorkflowRunAndParent(WorkflowRun wr, int parentAccession) throws SQLException {
     IUSService is = BeanFactory.getIUSServiceBean();
     LaneService ls = BeanFactory.getLaneServiceBean();

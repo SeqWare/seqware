@@ -12,10 +12,17 @@ import net.sourceforge.seqware.common.util.Log;
 
 import org.openide.util.lookup.ServiceProvider;
 
+/**
+ * <p>bmfsplit class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 @ServiceProvider(service=ModuleInterface.class)
 public class bmfsplit extends Module {
 
   // FIXME: Should remove all instances of getRuntime.exec and replace with runCommand, for this and all other classes
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
     Process p = null;
@@ -53,6 +60,7 @@ public class bmfsplit extends Module {
     return new ReturnValue();
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
     if (this.getParameters().size() != 4) {
@@ -78,6 +86,7 @@ public class bmfsplit extends Module {
     return new ReturnValue();
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
     ReturnValue retval = FileTools.verifyFile(new File(this.getParameters()
@@ -89,6 +98,7 @@ public class bmfsplit extends Module {
     return new ReturnValue();
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     for (int i = 0; i < Integer.parseInt(this.getParameters().get(2)); i++) {
@@ -102,6 +112,7 @@ public class bmfsplit extends Module {
     return new ReturnValue();
   }
 
+  /** {@inheritDoc} */
   @Override
   public String get_syntax() {
     StringBuffer ReturnString = new StringBuffer(
@@ -134,6 +145,7 @@ public class bmfsplit extends Module {
     return ReturnString.toString();
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_test() {
     // TODO Auto-generated method stub

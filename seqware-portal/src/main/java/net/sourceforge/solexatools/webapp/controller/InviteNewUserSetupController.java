@@ -12,13 +12,23 @@ import net.sourceforge.solexatools.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>InviteNewUserSetupController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class InviteNewUserSetupController extends BaseCommandController{
 	
+	/**
+	 * <p>Constructor for InviteNewUserSetupController.</p>
+	 */
 	public InviteNewUserSetupController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 													 HttpServletResponse response)

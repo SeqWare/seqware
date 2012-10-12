@@ -12,8 +12,15 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ProcessingIUSDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ProcessingIUSDAOHibernate extends HibernateDaoSupport implements ProcessingIUSDAO {
 
+  /** {@inheritDoc} */
   @Override
   public void insert(ProcessingIus processingIus) {
     this.getHibernateTemplate().save(processingIus);
@@ -25,6 +32,7 @@ public class ProcessingIUSDAOHibernate extends HibernateDaoSupport implements Pr
    * @see net.sourceforge.seqware.common.dao.hibernate.ProcessingIusDAO#update (
    * net.sourceforge.seqware.common.model.ProcessingIus)
    */
+  /** {@inheritDoc} */
   @Override
   public void update(ProcessingIus processingIus) {
     this.getHibernateTemplate().update(processingIus);
@@ -36,6 +44,7 @@ public class ProcessingIUSDAOHibernate extends HibernateDaoSupport implements Pr
    * @see net.sourceforge.seqware.common.dao.hibernate.ProcessingIusDAO#delete (
    * net.sourceforge.seqware.common.model.ProcessingIus)
    */
+  /** {@inheritDoc} */
   @Override
   public void delete(ProcessingIus processingIus) {
     this.getHibernateTemplate().delete(processingIus);
@@ -48,6 +57,7 @@ public class ProcessingIUSDAOHibernate extends HibernateDaoSupport implements Pr
    * findByProcessingIUS(net.sourceforge.seqware.common.model.Processing,
    * net.sourceforge.seqware.common.model.IUS)
    */
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("rawtypes")
   public ProcessingIus findByProcessingIUS(Processing processing, IUS ius) {
@@ -61,6 +71,7 @@ public class ProcessingIUSDAOHibernate extends HibernateDaoSupport implements Pr
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ProcessingIus updateDetached(ProcessingIus processingIus) {
     ProcessingIus dbObject = findByProcessingIUS(processingIus.getProcessing(), processingIus.getIus());
@@ -76,6 +87,7 @@ public class ProcessingIUSDAOHibernate extends HibernateDaoSupport implements Pr
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ProcessingIus> list() {
         throw new UnsupportedOperationException("Not supported yet.");

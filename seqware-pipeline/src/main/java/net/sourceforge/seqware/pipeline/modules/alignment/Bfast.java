@@ -12,9 +12,16 @@ import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 import org.apache.commons.lang.StringUtils;
 import org.openide.util.lookup.ServiceProvider;
 
+/**
+ * <p>Bfast class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 @ServiceProvider(service=ModuleInterface.class)
 public class Bfast extends Module {
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue init() {
     // Bfast has different modules (i.e. match, localalign), so first figure out
@@ -31,6 +38,7 @@ public class Bfast extends Module {
           "Bfast requires an arg[1] to specify which module to run", 2);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
     ReturnValue ret = new ReturnValue();
@@ -161,6 +169,7 @@ public class Bfast extends Module {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
     /* Run Bfast */
@@ -180,6 +189,7 @@ public class Bfast extends Module {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   // Instead of oding checks here, call util method to verify files, as in
   // samtools
@@ -239,6 +249,7 @@ public class Bfast extends Module {
     return new ReturnValue(null, null, 0);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_test() {
     ReturnValue ret = new ReturnValue();
@@ -263,6 +274,7 @@ public class Bfast extends Module {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     // For matches, verify bmf file
@@ -297,6 +309,7 @@ public class Bfast extends Module {
     return new ReturnValue(null, null, 0);
   }
 
+  /** {@inheritDoc} */
   @Override
   public String get_syntax() {
     StringBuffer ReturnString = new StringBuffer(

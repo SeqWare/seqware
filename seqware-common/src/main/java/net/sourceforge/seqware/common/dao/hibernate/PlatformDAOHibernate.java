@@ -12,12 +12,22 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>PlatformDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class PlatformDAOHibernate extends HibernateDaoSupport implements PlatformDAO {
 
+    /**
+     * <p>Constructor for PlatformDAOHibernate.</p>
+     */
     public PlatformDAOHibernate() {
         super();
     }
 
+    /** {@inheritDoc} */
     public List<Platform> list(Registration registration) {
         ArrayList<Platform> platforms = new ArrayList<Platform>();
         if (registration == null) {
@@ -35,6 +45,7 @@ public class PlatformDAOHibernate extends HibernateDaoSupport implements Platfor
         return platforms;
     }
 
+    /** {@inheritDoc} */
     public Platform findByID(Integer id) {
         String query = "from Platform as p where p.platformId = ?";
         Platform obj = null;
@@ -46,6 +57,7 @@ public class PlatformDAOHibernate extends HibernateDaoSupport implements Platfor
         return obj;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Platform updateDetached(Platform platform) {
         Platform dbObject = findByID(platform.getPlatformId());
@@ -61,6 +73,7 @@ public class PlatformDAOHibernate extends HibernateDaoSupport implements Platfor
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Platform> list() {
         ArrayList<Platform> platforms = new ArrayList<Platform>();

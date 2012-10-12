@@ -23,9 +23,10 @@ import org.apache.log4j.Logger;
 
 /**
  * Lazy reference class, needed if we wish to reduce the number of random accesses
- * when de-serializing objects or creating HBase specific model implementations. 
- * 
+ * when de-serializing objects or creating HBase specific model implementations.
+ *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class LazyReference<T extends Atom> implements Serializable {
     
@@ -36,10 +37,16 @@ public class LazyReference<T extends Atom> implements Serializable {
     protected SGID referenceSGID = null;
     protected Class<T> type;
     
+    /**
+     * <p>Constructor for LazyReference.</p>
+     *
+     * @param type a {@link java.lang.Class} object.
+     */
     public LazyReference(Class<T> type){
         this.type = type;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object ref){
         if (ref instanceof LazyReference){
@@ -55,6 +62,7 @@ public class LazyReference<T extends Atom> implements Serializable {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         int hash = 7;
@@ -64,7 +72,8 @@ public class LazyReference<T extends Atom> implements Serializable {
     
     /**
      * Set the SGID of the object to be lazy referenced
-     * @param sgid 
+     *
+     * @param sgid a {@link com.github.seqware.queryengine.util.SGID} object.
      */
     public void setSGID(SGID sgid) {       
         this.referenceSGID = sgid;
@@ -73,7 +82,8 @@ public class LazyReference<T extends Atom> implements Serializable {
 
     /**
      * Retrieve the lazy referenced object if possible and return it
-     * @return 
+     *
+     * @return a T object.
      */
     public T get() {
         //Logger.getLogger(LazyReference.class.getName()).info("Attempting to resolve lazy reference: referenceChecked " + referenceChecked + " referenceSGID " + referenceSGID.getRowKey() + " referenceAddr " + this.referenceCache);
@@ -90,7 +100,8 @@ public class LazyReference<T extends Atom> implements Serializable {
     /**
      * Set the lazy reference of the object with an actual object.
      * Can also clear the reference if set to null
-     * @param reference 
+     *
+     * @param reference a T object.
      */
     public void set(T reference) {     
         this.referenceChecked = true;
@@ -105,7 +116,8 @@ public class LazyReference<T extends Atom> implements Serializable {
 
     /**
      * Get the underlying SGID for the lazy reference
-     * @return 
+     *
+     * @return a {@link com.github.seqware.queryengine.util.SGID} object.
      */
     public SGID getSGID() {
         return referenceSGID;

@@ -10,27 +10,36 @@ import com.github.seqware.queryengine.model.impl.AtomImpl;
  *
  * @author jbaran
  * @author dyuen
+ * @version $Id: $Id
  */
 public class InMemoryReferenceSet extends AbstractInMemorySet<ReferenceSet, Reference> implements ReferenceSet{
     
     private String name = null;
     private String organism = null;
     
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return name;
     }
     
+    /** {@inheritDoc} */
     @Override 
     public String getOrganism(){
         return organism;
     }
 
     
+    /**
+     * <p>newBuilder.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.model.ReferenceSet.Builder} object.
+     */
     public static ReferenceSet.Builder newBuilder() {
         return new InMemoryReferenceSet.Builder();
     }
 
+    /** {@inheritDoc} */
     @Override
     public InMemoryReferenceSet.Builder toBuilder() {
         InMemoryReferenceSet.Builder b = new InMemoryReferenceSet.Builder();
@@ -38,11 +47,13 @@ public class InMemoryReferenceSet extends AbstractInMemorySet<ReferenceSet, Refe
         return b;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Class getHBaseClass() {
         return ReferenceSet.class;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getHBasePrefix() {
         return ReferenceSet.prefix;

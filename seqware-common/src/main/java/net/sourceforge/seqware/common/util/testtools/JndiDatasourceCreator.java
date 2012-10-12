@@ -6,6 +6,12 @@ import javax.naming.NoInitialContextException;
 import org.postgresql.ds.PGPoolingDataSource;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
+/**
+ * <p>JndiDatasourceCreator class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class JndiDatasourceCreator {
   // private static final String url =
   // "jdbc:postgres:localhost/seqware_meta_db_test";
@@ -13,6 +19,11 @@ public class JndiDatasourceCreator {
   private static final String password = "seqware";
   private static final String jndiName = "SeqWareMetaDB";
 
+  /**
+   * <p>create.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   public static void create() throws Exception {
     try {
       if (isJNDIExist("java:comp/env/jdbc/" + jndiName))

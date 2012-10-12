@@ -32,6 +32,7 @@ import org.biojava.ontology.obo.OboFileHandler;
  * keep track of them separately
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class OboFileHandlerHack extends OboFileHandler {
 
@@ -39,6 +40,11 @@ public class OboFileHandlerHack extends OboFileHandler {
     private Field privateTermField = null;
     private Field isTermField = null;
 
+    /**
+     * <p>Constructor for OboFileHandlerHack.</p>
+     *
+     * @param ontology a {@link org.biojava.ontology.Ontology} object.
+     */
     public OboFileHandlerHack(Ontology ontology) {
         super(ontology);
         try {
@@ -53,6 +59,7 @@ public class OboFileHandlerHack extends OboFileHandler {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void newSynonym(Synonym synonym) {
         try {
@@ -73,6 +80,11 @@ public class OboFileHandlerHack extends OboFileHandler {
         }
     }
 
+    /**
+     * <p>Getter for the field <code>map</code>.</p>
+     *
+     * @return a {@link java.util.Map} object.
+     */
     public Map<Term, List<Synonym>> getMap() {
         return map;
     }

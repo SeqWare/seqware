@@ -11,8 +11,17 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
 
+/**
+ * <p>LogoutController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class LogoutController extends AbstractController {
 
+  /**
+   * <p>Constructor for LogoutController.</p>
+   */
   public LogoutController() {
     // TODO Auto-generated constructor stub
     super();
@@ -20,6 +29,8 @@ public class LogoutController extends AbstractController {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Handles a user's logout request.
    */
   @Override

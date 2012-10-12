@@ -6,22 +6,31 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+/**
+ * <p>LaneValidator class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class LaneValidator implements Validator {
 	private LaneService laneService;
 
+	/**
+	 * <p>Constructor for LaneValidator.</p>
+	 */
 	public LaneValidator () {
 		super();
 	}
 	
+	/** {@inheritDoc} */
 	public boolean supports(Class clazz) {
 		return Lane.class.equals(clazz);
 	}
 
 	/**
-	 * Validates the specified Object.
+	 * {@inheritDoc}
 	 *
-	 * @param obj the Object to validate
-	 * @param errors Errors object for validation errors
+	 * Validates the specified Object.
 	 */
 	public void validate(Object obj, Errors errors) {
 		Lane lane = (Lane) obj;
@@ -37,6 +46,7 @@ public class LaneValidator implements Validator {
 	 * email address match.
 	 *
 	 * @param errors Errors object for validation errors
+	 * @param name a {@link java.lang.String} object.
 	 */
 	public void validateName(String name, Errors errors) {
 
@@ -48,10 +58,20 @@ public class LaneValidator implements Validator {
 		}
 	}
 
+	/**
+	 * <p>Getter for the field <code>laneService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	 */
 	public LaneService getLaneService() {
 		return laneService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>laneService</code>.</p>
+	 *
+	 * @param LaneService a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	 */
 	public void setLaneService(LaneService LaneService) {
 		this.laneService = LaneService;
 	}

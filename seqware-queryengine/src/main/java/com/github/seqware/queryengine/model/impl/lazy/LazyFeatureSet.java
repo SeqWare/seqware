@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
  * persist and manage their own membership.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet, Feature> {
 
@@ -45,15 +46,16 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
     }
 
     /**
-     * Get the reference for this featureSet
+     * {@inheritDoc}
      *
-     * @return reference for the feature set
+     * Get the reference for this featureSet
      */
     @Override
     public Reference getReference() {
         return this.reference.get();
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeatureSet add(Feature feature) {
         upgradeFeatureSGID(feature);
@@ -102,6 +104,7 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeatureSet add(Feature... elements) {
         for (Feature f : elements) {
@@ -113,6 +116,7 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeatureSet remove(Feature feature) {
         entombFeatureSGID(feature);
@@ -122,6 +126,7 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeatureSet add(Collection<Feature> features) {
         for (Feature f : features) {
@@ -133,6 +138,7 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<Feature> getFeatures() {
         return new ConsolidatedFeatureIterator();
@@ -261,15 +267,22 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
         }
     }
 
+    /**
+     * <p>getTablename.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getTablename() {
         return FeatureList.prefix + StorageInterface.SEPARATOR + this.reference.get().getName();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<Feature> iterator() {
         return getFeatures();
     }
 
+    /** {@inheritDoc} */
     @Override
     public long getCount() {
         if (!EXPENSIVE_ITERATION_WARNED) {
@@ -289,10 +302,16 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
         return count;
     }
 
+    /**
+     * <p>newBuilder.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.model.FeatureSet.Builder} object.
+     */
     public static FeatureSet.Builder newBuilder() {
         return new LazyFeatureSet.Builder();
     }
 
+    /** {@inheritDoc} */
     @Override
     public LazyFeatureSet.Builder toBuilder() {
         LazyFeatureSet.Builder b = new LazyFeatureSet.Builder();
@@ -300,26 +319,31 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
         return b;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return description;
     }
 
+    /** {@inheritDoc} */
     @Override
     public SGID getReferenceID() {
         return this.reference.getSGID();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Class getHBaseClass() {
         return FeatureSet.class;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getHBasePrefix() {
         return FeatureSet.prefix;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void rebuild() {
         /**

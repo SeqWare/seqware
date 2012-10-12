@@ -25,13 +25,16 @@ import org.apache.log4j.Logger;
 
 /**
  * Utility procedures for interacting outside the API
+ *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class Utility {
     /**
      * Parse a timestamp-less SGID from a String representation
-     * @param stringSGID
-     * @return 
+     *
+     * @param stringSGID a {@link java.lang.String} object.
+     * @return a {@link com.github.seqware.queryengine.util.SGID} object.
      */
     public static SGID parseSGID(String stringSGID) {
         SGID sgid;
@@ -47,8 +50,9 @@ public class Utility {
     
     /**
      * Write to output file a tab separated key value file represented by map
-     * @param outputFile
-     * @param map 
+     *
+     * @param outputFile a {@link java.io.File} object.
+     * @param map a {@link java.util.Map} object.
      */
     public static void writeKeyValueFile(File outputFile, Map<String, String> map) {
         if (outputFile != null) {
@@ -67,8 +71,10 @@ public class Utility {
     
     /**
      * Check whether we can create the output for a particular filename
-     * @param filename
+     *
+     * @param filename a {@link java.lang.String} object.
      * @return reference to the newly created output file
+     * @throws java.io.IOException if any.
      */
     public static File checkOutput(String filename) throws IOException {
         File outputFile = new File(filename);

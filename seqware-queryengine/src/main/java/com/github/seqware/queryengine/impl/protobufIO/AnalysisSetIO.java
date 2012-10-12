@@ -31,11 +31,14 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
+ * <p>AnalysisSetIO class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class AnalysisSetIO implements ProtobufTransferInterface<AnalysisSetPB, AnalysisSet>{
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisSet pb2m(AnalysisSetPB pb) {
         AnalysisSet.Builder builder = InMemoryAnalysisSet.newBuilder();
@@ -57,6 +60,7 @@ public class AnalysisSetIO implements ProtobufTransferInterface<AnalysisSetPB, A
     }
     
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisSetPB m2pb(AnalysisSet aSet) {
         QueryEngine.AnalysisSetPB.Builder builder = QueryEngine.AnalysisSetPB.newBuilder();
@@ -74,6 +78,7 @@ public class AnalysisSetIO implements ProtobufTransferInterface<AnalysisSetPB, A
         return userpb;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisSet byteArr2m(byte[] arr) {
         try {

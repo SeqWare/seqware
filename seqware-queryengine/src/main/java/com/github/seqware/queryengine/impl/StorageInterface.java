@@ -24,9 +24,11 @@ import com.google.common.collect.ImmutableBiMap;
 import java.util.List;
 
 /**
- * Defines a very basic interface that allows us to abstract whether we write to 
+ * Defines a very basic interface that allows us to abstract whether we write to
  * files or to databases or just keep things in memory
+ *
  * @author dyuen
+ * @version $Id: $Id
  */
 public abstract class StorageInterface {
     /**
@@ -42,26 +44,29 @@ public abstract class StorageInterface {
             .put(Tag.class, Tag.prefix).put(TagSet.class, TagSet.prefix).put(User.class, User.prefix).put(Group.class, Group.prefix)
             .put(FeatureSet.class, FeatureSet.prefix).build();
     
+    /** Constant <code>SEPARATOR="."</code> */
     public static final String SEPARATOR = ".";
     
     /**
      * Generically serialize an Atom into the interface
      * This method is also responsible for ensuring that the atom's backendTimestamp is populated
-     * @param obj 
+     *
+     * @param obj a {@link com.github.seqware.queryengine.model.Atom} object.
      */
     public abstract void serializeAtomToTarget(Atom obj);
     
     /**
      * Generically serialize a batch of Atoms, all of the same class
      * This method is also responsible for ensuring that the atom's backendTimestamp is populated
-     * @param <T>
-     * @param obj 
+     *
+     * @param obj a T object.
      */
     public abstract <T extends Atom> void serializeAtomsToTarget(T ... obj);
 
     /**
-     * Generically get back a Atom from the store using a sgid 
-     * @param sgid
+     * Generically get back a Atom from the store using a sgid
+     *
+     * @param sgid a {@link com.github.seqware.queryengine.util.SGID} object.
      * @return null if no Atom is present with this sgid
      */
     public abstract Atom deserializeTargetToAtom(SGID sgid);
@@ -69,41 +74,44 @@ public abstract class StorageInterface {
     /**
      * Generically get back the latest Atom in a chain from the store using a sgid
      * while ignoring the timestamp
-     * @param sgid
+     *
+     * @param sgid a {@link com.github.seqware.queryengine.util.SGID} object.
      * @return null if no Atom is present with this sgid
      */
     public abstract Atom deserializeTargetToLatestAtom(SGID sgid);
     
     /**
-     * Generically get back a specific class of Atom from the store using a sgid 
-     * @param <T>
-     * @param sgid
-     * @param t
-     * @return 
+     * Generically get back a specific class of Atom from the store using a sgid
+     *
+     * @param sgid a {@link com.github.seqware.queryengine.util.SGID} object.
+     * @param t a {@link java.lang.Class} object.
+     * @return a T object.
      */
     public abstract <T extends Atom> T deserializeTargetToAtom(Class<T> t, SGID sgid);
     
     /**
-     * Generically get back a specific class of Atom from the store using a sgid 
-     * @param <T>
-     * @param sgid
-     * @param t
-     * @return 
+     * Generically get back a specific class of Atom from the store using a sgid
+     *
+     * @param sgid a {@link com.github.seqware.queryengine.util.SGID} object.
+     * @param t a {@link java.lang.Class} object.
+     * @return a {@link java.util.List} object.
      */
     public abstract <T extends Atom> List<T> deserializeTargetToAtoms(Class<T> t, SGID ... sgid);
     
     /**
-     * Generically get back a specific class of Atom from the store using a sgid 
+     * Generically get back a specific class of Atom from the store using a sgid
      * while ignoring the timestamp to get the latest one
-     * @param <T>
-     * @param sgid
-     * @param t
-     * @return 
+     *
+     * @param sgid a {@link com.github.seqware.queryengine.util.SGID} object.
+     * @param t a {@link java.lang.Class} object.
+     * @return a T object.
      */
     public abstract <T extends Atom> T deserializeTargetToLatestAtom(SGID sgid, Class<T> t);
     
     /**
      * For debugging or very non-optimal implementations
+     *
+     * @return a {@link java.lang.Iterable} object.
      */
     public abstract Iterable<SGID> getAllAtoms();
     
@@ -114,7 +122,7 @@ public abstract class StorageInterface {
     public abstract void closeStorage();
     
     /**
-     * For debugging or testing purposes, this will wipe out all objects in the 
+     * For debugging or testing purposes, this will wipe out all objects in the
      * serialization store
      */
     public abstract void clearStorage();
@@ -123,8 +131,9 @@ public abstract class StorageInterface {
     /**
      * Iterate through all the feature "buckets" in a feature set, this might be moved later.
      * However, it is currently here because iterating through a FeatureSet might become non-trivial and Storage type dependent.
-     * We also need this to return the feature lists in sorted order by rowkey (regardless of timestamp). 
-     * @param fSet
+     * We also need this to return the feature lists in sorted order by rowkey (regardless of timestamp).
+     *
+     * @param fSet a {@link com.github.seqware.queryengine.model.FeatureSet} object.
      * @return iterator that returns FeatureLists in sorted order
      */
     public abstract Iterable<FeatureList> getAllFeatureListsForFeatureSet(FeatureSet fSet);

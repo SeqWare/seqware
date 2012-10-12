@@ -18,29 +18,29 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Generating report card on RNAseq against Microarray - Agilent 244k array.
- * 
- * This module takes input BAM file, converts to SAM, filters unmapped, 
- * gets counts on the transcript level and collapses onto gene level 
+ *
+ * This module takes input BAM file, converts to SAM, filters unmapped,
+ * gets counts on the transcript level and collapses onto gene level
  * using comboID
- * 
+ *
  * Rationale, a request from Derek as an action item from Bioinformatics meeting
  * of May 28th, 2010
  * Jianying, could you please wrap the report card to take in a SAM (vs. transcripts)
- * file and an Agilent microarray file?  It should generate statistics for the ICC 
+ * file and an Agilent microarray file?  It should generate statistics for the ICC
  * and Pearson correlation, and also have error checking for the number of matching
- * gene symbols.  We will need this module to test whether the MapSplice output 
+ * gene symbols.  We will need this module to test whether the MapSplice output
  * yields better correlations to arrays than BWA.
  * Underlying script:   BAM2count.pl
  * Necessary programs:  perl, java, Picard (SamFormatConverter.jar)
- * 
+ *
  * Dependency: /datastore/nextgenproc/analysis/alignment_databases/custom_refseq_length_hg19.txt
  *             /datastore/nextgenproc/analysis/alignment_databases/median_isoform_customeRefseq_length_hg19.txt
  *             /home/jyli/NextGenSeq/java_stuff/picard-tools-1.19/
- * 
- * Expected output:  sample_count.txt
- * 
- * @author jyli@med.unc.edu
  *
+ * Expected output:  sample_count.txt
+ *
+ * @author jyli@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class reportCardSingle extends Module {
@@ -50,9 +50,9 @@ public class reportCardSingle extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("outfile", "Out put count file").withRequiredArg();
@@ -67,8 +67,9 @@ public class reportCardSingle extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -84,11 +85,11 @@ public class reportCardSingle extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -123,9 +124,9 @@ public class reportCardSingle extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -148,9 +149,9 @@ public class reportCardSingle extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -222,9 +223,9 @@ public class reportCardSingle extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known dataset.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -234,10 +235,10 @@ public class reportCardSingle extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Run core of module.
    * Based on script sw_module_BAM2Count.pl
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_run() {
@@ -266,9 +267,9 @@ public class reportCardSingle extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Check to make sure the output was created correctly.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -276,10 +277,11 @@ public class reportCardSingle extends Module {
     return(FileTools.fileExistsAndReadable(new File((String)options.valueOf("outfile"))));
   }
   
-    /**
+  /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.  Remove tempDir.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

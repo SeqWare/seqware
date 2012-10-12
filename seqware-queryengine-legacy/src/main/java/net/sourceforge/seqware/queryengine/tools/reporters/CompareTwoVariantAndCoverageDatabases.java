@@ -25,10 +25,18 @@ import net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareSettings;
 import net.sourceforge.seqware.queryengine.backend.util.iterators.LocatableSecondaryCursorIterator;
 
+/**
+ * <p>CompareTwoVariantAndCoverageDatabases class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class CompareTwoVariantAndCoverageDatabases {
 
   /**
    * A simple program that takes a list of posit
+   *
+   * @param args an array of {@link java.lang.String} objects.
    */
   public static void main(String[] args) {
 

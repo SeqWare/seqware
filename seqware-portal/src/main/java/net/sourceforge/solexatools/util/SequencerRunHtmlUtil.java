@@ -10,9 +10,25 @@ import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>SequencerRunHtmlUtil class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SequencerRunHtmlUtil {
+	/** Constant <code>TYPE_TREE="sr"</code> */
 	public final static String  TYPE_TREE = "sr"; 
 	
+	/**
+	 * <p>getHtml.</p>
+	 *
+	 * @param obj a {@link java.lang.Object} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @param listSeqencerRunNodeId a {@link java.util.List} object.
+	 * @param treeType a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getHtml(Object obj, Registration registration,  List<String> listSeqencerRunNodeId, String treeType){
 		String html = "";
 		if(obj instanceof SequencerRun){
@@ -31,6 +47,13 @@ public class SequencerRunHtmlUtil {
 		return html;
 	}
 	
+	/**
+	 * <p>getFileHtml.</p>
+	 *
+	 * @param proc a {@link net.sourceforge.seqware.common.model.Processing} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getFileHtml(Processing proc, Registration registration){
 	//	return getAllHtml(proc, registration, null, true, true);
 		return "";
@@ -40,6 +63,15 @@ public class SequencerRunHtmlUtil {
 		return  NodeHtmlUtil.getSequencerRunHtml(sequencerRun, registration, openingNodeId, treeType);
 	}
 	
+	/**
+	 * <p>getAllHtml.</p>
+	 *
+	 * @param lane a {@link net.sourceforge.seqware.common.model.Lane} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @param openingNodeId a {@link java.lang.String} object.
+	 * @param treeType a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getAllHtml(Lane lane, Registration registration, String openingNodeId, String treeType){
 		String childHtml = NodeHtmlUtil.getLaneHtml(lane, registration, TYPE_TREE, openingNodeId, treeType);
 		String parentHtml = getAllHtml(lane.getSequencerRun(), registration, Constant.LANE_PREFIX + lane.getLaneId(), treeType);
@@ -47,6 +79,17 @@ public class SequencerRunHtmlUtil {
 		return NodeHtmlUtil.pasteHtmlIntoParentNode(childHtml, parentHtml, parentId, true);
 	}
 	
+	/**
+	 * <p>getAllHtml.</p>
+	 *
+	 * @param ius a {@link net.sourceforge.seqware.common.model.IUS} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @param openingNodeId a {@link java.lang.String} object.
+	 * @param isOpenProc a boolean.
+	 * @param isVisibleProc a boolean.
+	 * @param treeType a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getAllHtml(IUS ius, Registration registration, String openingNodeId, boolean isOpenProc,boolean isVisibleProc, String treeType){
 	//	Log.info("ius call All html");
 		String childHtml = NodeHtmlUtil.getIUSHtml(ius, registration, TYPE_TREE, openingNodeId, isOpenProc, isVisibleProc, treeType);
@@ -55,6 +98,19 @@ public class SequencerRunHtmlUtil {
 		return NodeHtmlUtil.pasteHtmlIntoParentNode(childHtml, parentHtml, parentId, true);
 	}
 	
+	/**
+	 * <p>getAllHtml.</p>
+	 *
+	 * @param processing a {@link net.sourceforge.seqware.common.model.Processing} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @param openingNodeId a {@link java.lang.String} object.
+	 * @param currPosId a {@link java.lang.Integer} object.
+	 * @param listNodeId a {@link java.util.List} object.
+	 * @param isFirstCall a boolean.
+	 * @param isViewCurrentNode a boolean.
+	 * @param treeType a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getAllHtml(Processing processing, Registration registration, String openingNodeId,
 			Integer currPosId, List<String> listNodeId, boolean isFirstCall, boolean isViewCurrentNode, String treeType)
 	{
@@ -138,6 +194,13 @@ public class SequencerRunHtmlUtil {
 		return parentSequencerRun;
 	}
 	
+	/**
+	 * <p>getParentLane.</p>
+	 *
+	 * @param processing a {@link net.sourceforge.seqware.common.model.Processing} object.
+	 * @param parentId a {@link java.lang.Integer} object.
+	 * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
+	 */
 	public static Lane getParentLane(Processing processing, Integer parentId){
 		Lane parentLane = null;
 	//	Log.info("	LANE PARENT ID = " + parentId);
@@ -161,6 +224,13 @@ public class SequencerRunHtmlUtil {
 		return parentIUS;
 	}
 	
+	/**
+	 * <p>getParentProcessing.</p>
+	 *
+	 * @param processing a {@link net.sourceforge.seqware.common.model.Processing} object.
+	 * @param parentId a {@link java.lang.Integer} object.
+	 * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
+	 */
 	public static Processing getParentProcessing(Processing processing, Integer parentId){
 		Processing parentProcessing = null;
 		Set<Processing> processings = processing.getParents();

@@ -65,17 +65,30 @@ import net.sourceforge.seqware.queryengine.webservice.security.SeqWareVerifier;
 import net.sourceforge.seqware.queryengine.webservice.view.*;
 import org.restlet.ext.wadl.*;
 
+/**
+ * <p>SeqWareWebServiceApplicationVersion class.</p>
+ *
+ * @author morgantaschuk
+ * @version $Id: $Id
+ */
 public class SeqWareWebServiceApplicationVersion extends WadlApplication {
 
     private final ConcurrentMap<String, Variant> mismatches = new ConcurrentHashMap<String, Variant>();
     private Configuration configuration = null;
 
+    /**
+     * <p>Getter for the field <code>configuration</code>.</p>
+     *
+     * @return a {@link freemarker.template.Configuration} object.
+     */
     public Configuration getConfiguration() {
         return configuration;
     }
 
     /**
      * Creates a root Restlet that will receive all incoming calls.
+     *
+     * @return a {@link org.restlet.Restlet} object.
      */
     public synchronized Restlet createInboundRoot() {
         final Component component = new Component();
@@ -132,10 +145,16 @@ public class SeqWareWebServiceApplicationVersion extends WadlApplication {
         return guard;
     }
 
+    /**
+     * <p>Getter for the field <code>mismatches</code>.</p>
+     *
+     * @return a {@link java.util.concurrent.ConcurrentMap} object.
+     */
     public ConcurrentMap<String, Variant> getMismatches() {
         return mismatches;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ApplicationInfo getApplicationInfo(Request request, Response response) {
         ApplicationInfo result = super.getApplicationInfo(request, response);

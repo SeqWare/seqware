@@ -19,8 +19,10 @@ package net.sourceforge.seqware.pipeline.modules.examples;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 
 /**
+ * <p>MultiEchoTest class.</p>
  *
  * @author yongliang
+ * @version $Id: $Id
  */
 public class MultiEchoTest {
 	
@@ -37,6 +39,11 @@ public class MultiEchoTest {
 		}		
 	}
 	
+	/**
+	 * <p>main.</p>
+	 *
+	 * @param args an array of {@link java.lang.String} objects.
+	 */
 	public static void main(String args[]) {
 		MultiEchoTest test = new MultiEchoTest();
 		test.test();

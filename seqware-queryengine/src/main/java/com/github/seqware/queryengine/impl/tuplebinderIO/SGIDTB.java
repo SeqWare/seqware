@@ -9,12 +9,15 @@ import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 
 /**
+ * <p>SGIDTB class.</p>
+ *
  * @author boconnor
  * @author dyuen
- *
+ * @version $Id: $Id
  */
 public class SGIDTB extends TupleBinding {
 
+  /** {@inheritDoc} */
   @Override
   public void objectToEntry(Object object, TupleOutput to) {
     SGID f = (SGID)object;
@@ -23,6 +26,7 @@ public class SGIDTB extends TupleBinding {
     to.writeString(f.getFriendlyRowKey());
   }
 
+  /** {@inheritDoc} */
   @Override
   public Object entryToObject(TupleInput ti) {
       // reset because this InputStream may have been sniffed before this tuple binder was called

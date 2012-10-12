@@ -37,15 +37,23 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>WorkflowResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class WorkflowResource extends DatabaseResource {
 
+    /**
+     * <p>Constructor for WorkflowResource.</p>
+     */
     public WorkflowResource() {
         super("Workflows");
     }
 
+    /**
+     * <p>getXml.</p>
+     */
     @Get
     public void getXml() {
         authenticate();
@@ -101,6 +109,11 @@ public class WorkflowResource extends DatabaseResource {
         return line;
     }
 
+    /**
+     * <p>postJaxb.</p>
+     *
+     * @param entity a {@link org.restlet.representation.Representation} object.
+     */
     @Post("xml")
     public void postJaxb(Representation entity) {
         authenticate();

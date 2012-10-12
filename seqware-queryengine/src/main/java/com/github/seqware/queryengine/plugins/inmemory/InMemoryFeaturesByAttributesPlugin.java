@@ -39,9 +39,11 @@ import java.util.Map;
  *
  * @author dyuen
  * @author jbaran
+ * @version $Id: $Id
  */
 public class InMemoryFeaturesByAttributesPlugin extends InMemoryFeaturesByFilterPlugin {
 
+    /** {@inheritDoc} */
     @Override
     protected FeatureFilter getFilter() {
         return new FeaturesByAttributesFilter();
