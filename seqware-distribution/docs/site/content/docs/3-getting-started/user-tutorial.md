@@ -250,8 +250,9 @@ output_prefix=/datastore/
 	input_file=/datastore/simple.txt
 
 Since this is a low-level tool you may see many more parameters exposed with this tool than you would using the web Portal application.  Please use caution when customizing these values since some refer to items that affect the underlying infrastructure.
+</p>
 
-<p class="warning"><strong>Tip:</strong> when you customize key-values in the ini file prepared above you do not need to include key-values that you leave unchanged.  If you do not include these the workflow will run with those values by default anyway.  Removing unchanged key-values will greatly reduce the size of your ini files making it much easier to see the key-values you are interested in.
+<p class="warning"><strong>Tip:</strong> when you customize key-values in the ini file prepared above you do not need to include key-values that you leave unchanged.  If you do not include these the workflow will run with those values by default anyway.  Removing unchanged key-values will greatly reduce the size of your ini files making it much easier to see the key-values you are interested in.</p>
 
 
 ## Triggering a Workflow and Monitoring Progress 
@@ -321,6 +322,7 @@ You can find more information on this report tool on the public SeqWare wiki: [S
 
 <p class="warning"><strong>Note:</strong> in the example above I use --no-metadata with ProvisionFiles. This is to prevent the tool from writing back an event to the central database. Since you are just downloading a file (versus uploading a file) you do not really want to record that download event in the database.
 </p>
+
 
 ## Next Steps
 
