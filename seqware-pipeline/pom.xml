@@ -54,7 +54,6 @@
         <dependency>
             <groupId>com.github.seqware</groupId>
             <artifactId>seqware-common</artifactId>
-            <version>0.13.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -162,11 +161,6 @@
 	  <version>1.0.2</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>seqware-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-                <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <type>jar</type>
