@@ -9,32 +9,46 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Unit tests of {@link Feature}.
+ * Unit tests of {@link com.github.seqware.queryengine.model.Feature}.
  *
  * @author jbaran
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class FeatureTest {
 
     private static FeatureSet aSet;
 
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
     }
 
+    /**
+     * <p>testUUIDGenerationNonStrandedFeature.</p>
+     */
     @Test
     public void testUUIDGenerationNonStrandedFeature() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         Assert.assertNotNull("Feature UUID is null, which means that no UUID was generated for the feature.", mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).build().getSGID());
     }
 
+    /**
+     * <p>testUUIDGenerationStrandedFeature.</p>
+     */
     @Test
     public void testUUIDGenerationStrandedFeature() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         Assert.assertNotNull("Feature UUID is null, which means that no UUID was generated for the feature.", mManager.buildFeature().setSeqid("chr16").setStart(1000000).setStop(1000100).setStrand(Feature.Strand.POSITIVE).build().getSGID());
     }
     
+    /**
+     * <p>testSerializationExposed.</p>
+     */
     @Test 
     public void testSerializationExposed(){
         CreateUpdateManager mManager = SWQEFactory.getModelManager();

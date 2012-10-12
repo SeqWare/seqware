@@ -22,8 +22,11 @@ import net.sourceforge.seqware.queryengine.backend.util.iterators.LocatableSecon
 import net.sourceforge.seqware.queryengine.backend.util.iterators.SecondaryCursorIterator;
 
 /**
- * @author boconnor
+ * <p>BerkeleyDBTest class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 @Test(groups="berkeleydb")
 public class BerkeleyDBTest {
@@ -54,6 +57,11 @@ public class BerkeleyDBTest {
         }
     }
 
+    /**
+     * <p>testFeatureDBReadingAndWriting.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test(enabled = true)
     public void testFeatureDBReadingAndWriting() throws Exception {
 
@@ -179,6 +187,11 @@ public class BerkeleyDBTest {
     }
 
     //
+    /**
+     * <p>testMismatchDBReadingAndWriting.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test(dependsOnMethods = {"testFeatureDBReadingAndWriting"}, enabled = true)
     public void testMismatchDBReadingAndWriting() throws Exception {
 
@@ -431,6 +444,11 @@ public class BerkeleyDBTest {
 
     }
 
+    /**
+     * <p>testMismatchAnnotationTagDBReadingAndWriting.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test(dependsOnMethods = {"testMismatchDBReadingAndWriting"}, enabled = true)
     public void testMismatchAnnotationTagDBReadingAndWriting() throws Exception {
         // settings object
@@ -618,6 +636,11 @@ public class BerkeleyDBTest {
 
     }
 
+    /**
+     * <p>testMismatchContigPositionDBReadingAndWriting.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test(dependsOnMethods = {"testMismatchAnnotationTagDBReadingAndWriting"}, enabled = true)
     public void testMismatchContigPositionDBReadingAndWriting() throws Exception {
 
@@ -688,6 +711,11 @@ public class BerkeleyDBTest {
 
     }
 
+    /**
+     * <p>testCoverageDBReadingAndWriting.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test(dependsOnMethods = {"testMismatchAnnotationTagDBReadingAndWriting"}, enabled = true)
     public void testCoverageDBReadingAndWriting() throws Exception {
 
@@ -789,6 +817,11 @@ public class BerkeleyDBTest {
 
     }
 
+    /**
+     * <p>testConsequenceAnnotationDBReadingAndWriting.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test(dependsOnMethods = {"testCoverageDBReadingAndWriting"}, enabled = true)
     public void testConsequenceAnnotationDBReadingAndWriting() throws Exception {
         System.out.println("Validating Consequence Annotation DB");

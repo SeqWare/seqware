@@ -13,8 +13,18 @@ import net.sourceforge.seqware.common.model.SequencerRun;
 
 import org.junit.Test;
 
+/**
+ * <p>SampleReportServiceImplTest class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
+ */
 public class SampleReportServiceImplTest {
 
+  /**
+   * <p>testGetRowsForSequencerRun.</p>
+   */
   @Test
   public void testGetRowsForSequencerRun() {
     try {
@@ -29,6 +39,9 @@ public class SampleReportServiceImplTest {
     }
   }
 
+  /**
+   * <p>testGetRowsWithSequencerRuns.</p>
+   */
   @Test
   public void testGetRowsWithSequencerRuns() {
     try {

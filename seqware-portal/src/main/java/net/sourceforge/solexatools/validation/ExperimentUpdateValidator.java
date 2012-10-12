@@ -14,11 +14,6 @@ public class ExperimentUpdateValidator extends ExperimentValidator {
 
   @Override
    /**
-    * {@inheritDoc}
-    *
-    * Determines if the experiment's email address and confirm email address
-    * match.
-    */
    * Determines if the experiment's email address and confirm email address
    * match.
    *

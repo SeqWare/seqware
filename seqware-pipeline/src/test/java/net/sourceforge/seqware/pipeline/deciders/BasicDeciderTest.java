@@ -27,15 +27,26 @@ import joptsimple.OptionParser;
 import static org.junit.Assert.*;
 
 /**
+ * <p>BasicDeciderTest class.</p>
  *
  * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class BasicDeciderTest {
   private static Metadata metadata;
   private BasicDecider instance;
+  /**
+   * <p>Constructor for BasicDeciderTest.</p>
+   */
   public BasicDeciderTest() {
   }
 
+  /**
+   * <p>setUpClass.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @BeforeClass
   public static void setUpClass() throws Exception {
 	metadata = new MetadataWS();
@@ -43,11 +54,19 @@ public class BasicDeciderTest {
 
   }
 
+  /**
+   * <p>tearDownClass.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @AfterClass
   public static void tearDownClass() throws Exception {
 	metadata.clean_up();
   }
   
+  /**
+   * <p>setUp.</p>
+   */
   @Before
   public void setUp() {
   	instance = new BasicDecider();
@@ -57,11 +76,15 @@ public class BasicDeciderTest {
 	instance.init();
   }
   
+  /**
+   * <p>tearDown.</p>
+   */
   @After
   public void tearDown() {
   }
 
   /**
+   * <p>testCompareWorkflowRunFiles_Same.</p>
    */
   @Test
   public void testCompareWorkflowRunFiles_Same() {
@@ -74,7 +97,8 @@ public class BasicDeciderTest {
 	assertFalse(instance.compareWorkflowRunFiles(workflowRunAcc, filesToRun));
     }
   
-   /**
+  /**
+   * <p>testCompareWorkflowRunFiles_Bigger.</p>
    */
   @Test
   public void testCompareWorkflowRunFiles_Bigger() {
@@ -89,7 +113,8 @@ public class BasicDeciderTest {
 	assertTrue(instance.compareWorkflowRunFiles(workflowRunAcc, filesToRun));
     }
 
-   /**
+  /**
+   * <p>testCompareWorkflowRunFiles_SameButDifferent.</p>
    */
   @Test
   public void testCompareWorkflowRunFiles_SameButDifferent() {
@@ -103,7 +128,8 @@ public class BasicDeciderTest {
 	assertTrue(instance.compareWorkflowRunFiles(workflowRunAcc, filesToRun));
     }
 
-   /**
+  /**
+   * <p>testCompareWorkflowRunFiles_Smaller.</p>
    */
   @Test
   public void testCompareWorkflowRunFiles_Smaller() {
