@@ -60,8 +60,6 @@ We are currently investigating issues with postgres version 9.1.
 Sometimes we run into problems when building, strange missing dependency issues
 and broken packages. A lot of the time this is an issue with Maven, try
 deleting your ~/.m2 directory and running the build process again.
->>>>>>> 0.12.5.1
-
 
 PREREQUISITES ON Mac OS
 --------------------
