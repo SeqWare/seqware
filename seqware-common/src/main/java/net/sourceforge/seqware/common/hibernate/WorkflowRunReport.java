@@ -32,6 +32,7 @@ import org.restlet.resource.ResourceException;
  * filtered according to Date on the WorkflowRun's createTimestamp.
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class WorkflowRunReport {
 
@@ -79,8 +80,8 @@ public class WorkflowRunReport {
      * events associated with the run. Setting the earliest and latest date has
      * no effect on this method.
      *
-     * @param workflowSWID the SWID of the workflow run
      * @return a workflow run report
+     * @param workflowRunSWID a {@link java.lang.Integer} object.
      */
     public WorkflowRunReportRow getSingleWorkflowRun(Integer workflowRunSWID) {
         WorkflowRunService ws = BeanFactory.getWorkflowRunServiceBean();
@@ -176,6 +177,12 @@ public class WorkflowRunReport {
         return processings;
     }
 
+    /**
+     * <p>calculateTotalTime.</p>
+     *
+     * @param processings a {@link java.util.Collection} object.
+     * @return a {@link java.lang.String} object.
+     */
     public String calculateTotalTime(Collection<Processing> processings) {
         Date earlyDate = new Date(Long.MAX_VALUE), lateDate = new Date(0);
 
@@ -327,6 +334,12 @@ public class WorkflowRunReport {
         return allLibrarySamples;
     }
 
+    /**
+     * <p>testIfNull.</p>
+     *
+     * @param o a {@link java.lang.Object} object.
+     * @return a {@link java.lang.Object} object.
+     */
     protected Object testIfNull(Object o) {
         if (o == null) {
             throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND);

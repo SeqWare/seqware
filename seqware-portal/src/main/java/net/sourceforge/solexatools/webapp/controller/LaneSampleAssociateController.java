@@ -20,6 +20,9 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 /**
  * RegistrationSetupController
  * This is invoked upon entry to Registration.jsp or RegistrationUpdate.jsp
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class LaneSampleAssociateController extends BaseCommandController {
   
@@ -27,11 +30,15 @@ public class LaneSampleAssociateController extends BaseCommandController {
   LaneService laneService = null;
   IUSService iusService = null;
   
+  /**
+   * <p>Constructor for LaneSampleAssociateController.</p>
+   */
   public LaneSampleAssociateController() {
     super();
     setSupportedMethods(new String[] {METHOD_GET, METHOD_POST});
   }
 
+  /** {@inheritDoc} */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request,
       HttpServletResponse response)
@@ -100,34 +107,74 @@ public class LaneSampleAssociateController extends BaseCommandController {
     return(sample);
   }
 
+  /**
+   * <p>Getter for the field <code>sampleService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.SampleService} object.
+   */
   public SampleService getSampleService() {
     return sampleService;
   }
 
+  /**
+   * <p>Setter for the field <code>sampleService</code>.</p>
+   *
+   * @param sampleService a {@link net.sourceforge.seqware.common.business.SampleService} object.
+   */
   public void setSampleService(SampleService sampleService) {
     this.sampleService = sampleService;
   }
 
+  /**
+   * <p>Getter for the field <code>laneService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.LaneService} object.
+   */
   public LaneService getLaneService() {
     return laneService;
   }
 
+  /**
+   * <p>Setter for the field <code>laneService</code>.</p>
+   *
+   * @param laneService a {@link net.sourceforge.seqware.common.business.LaneService} object.
+   */
   public void setLaneService(LaneService laneService) {
     this.laneService = laneService;
   }
 
+  /**
+   * <p>Getter for the field <code>iusService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.IUSService} object.
+   */
   public IUSService getIusService() {
     return iusService;
   }
 
+  /**
+   * <p>Setter for the field <code>iusService</code>.</p>
+   *
+   * @param iusService a {@link net.sourceforge.seqware.common.business.IUSService} object.
+   */
   public void setIusService(IUSService iusService) {
     this.iusService = iusService;
   }
   
+  /**
+   * <p>getIUSService.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.IUSService} object.
+   */
   public IUSService getIUSService() {
     return iusService;
   }
 
+  /**
+   * <p>setIUSService.</p>
+   *
+   * @param iusService a {@link net.sourceforge.seqware.common.business.IUSService} object.
+   */
   public void setIUSService(IUSService iusService) {
     this.iusService = iusService;
   }

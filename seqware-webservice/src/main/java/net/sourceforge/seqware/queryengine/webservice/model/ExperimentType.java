@@ -744,9 +744,14 @@ public class ExperimentType {
         this.expectedNumberRuns = value;
     }
 
-    /**
+     /**
+      * Gets the value of the expectedNumberSpots property.
+      *
+      * @author morgantaschuk
+      * @version $Id: $Id
+      */
      * Gets the value of the expectedNumberSpots property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link BigInteger }
@@ -780,219 +785,208 @@ public class ExperimentType {
         return expectedNumberReads;
     }
 
-    /**
-     * Sets the value of the expectedNumberReads property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
-     */
+        /**
+         * Sets the value of the expectedNumberReads property.
+         *
+         * @return a {@link java.lang.String} object.
+         */
     public void setExpectedNumberReads(BigInteger value) {
         this.expectedNumberReads = value;
     }
 
-    /**
-     * Gets the value of the centerName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
+        /**
+         * Gets the value of the centerName property.
+         */
     public String getCenterName() {
         return centerName;
     }
 
-    /**
-     * Sets the value of the centerName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
+        /**
+         * Sets the value of the centerName property.
+         *
+         * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.ExperimentType.STUDYREF} object.
+         */
     public void setCenterName(String value) {
         this.centerName = value;
     }
 
 
-    /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
-     * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="DESIGN_DESCRIPTION" type="{http://www.w3.org/2001/XMLSchema}string"/>
-     *         &lt;element name="SAMPLE_DESCRIPTOR">
-     *           &lt;complexType>
-     *             &lt;complexContent>
-     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                 &lt;attribute name="accession" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                 &lt;attribute name="refname" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *               &lt;/restriction>
-     *             &lt;/complexContent>
-     *           &lt;/complexType>
-     *         &lt;/element>
-     *         &lt;element name="LIBRARY_DESCRIPTOR">
-     *           &lt;complexType>
-     *             &lt;complexContent>
-     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                 &lt;sequence>
-     *                   &lt;element name="LIBRARY_NAME" type="{http://www.w3.org/2001/XMLSchema}string"/>
-     *                   &lt;element name="LIBRARY_STRATEGY" minOccurs="0">
-     *                     &lt;simpleType>
-     *                       &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
-     *                         &lt;enumeration value="WGS"/>
-     *                         &lt;enumeration value="WCS"/>
-     *                         &lt;enumeration value="CLONE"/>
-     *                         &lt;enumeration value="POOLCLONE"/>
-     *                         &lt;enumeration value="AMPLICON"/>
-     *                         &lt;enumeration value="BARCODE"/>
-     *                         &lt;enumeration value="CLONEEND"/>
-     *                         &lt;enumeration value="FINISHING"/>
-     *                         &lt;enumeration value="ChIP-Seq"/>
-     *                         &lt;enumeration value="MNase-Seq"/>
-     *                         &lt;enumeration value="EST"/>
-     *                         &lt;enumeration value="FL-cDNA"/>
-     *                         &lt;enumeration value="CTS"/>
-     *                         &lt;enumeration value="OTHER"/>
-     *                       &lt;/restriction>
-     *                     &lt;/simpleType>
-     *                   &lt;/element>
-     *                   &lt;element name="LIBRARY_SOURCE">
-     *                     &lt;simpleType>
-     *                       &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
-     *                         &lt;enumeration value="GENOMIC"/>
-     *                         &lt;enumeration value="NON GENOMIC"/>
-     *                         &lt;enumeration value="SYNTHETIC"/>
-     *                         &lt;enumeration value="VIRAL RNA"/>
-     *                         &lt;enumeration value="OTHER"/>
-     *                       &lt;/restriction>
-     *                     &lt;/simpleType>
-     *                   &lt;/element>
-     *                   &lt;element name="LIBRARY_SELECTION">
-     *                     &lt;simpleType>
-     *                       &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
-     *                         &lt;enumeration value="RANDOM"/>
-     *                         &lt;enumeration value="PCR"/>
-     *                         &lt;enumeration value="RANDOM PCR"/>
-     *                         &lt;enumeration value="RT-PCR"/>
-     *                         &lt;enumeration value="HMPR"/>
-     *                         &lt;enumeration value="MF"/>
-     *                         &lt;enumeration value="CF-S"/>
-     *                         &lt;enumeration value="CF-M"/>
-     *                         &lt;enumeration value="CF-H"/>
-     *                         &lt;enumeration value="CF-T"/>
-     *                         &lt;enumeration value="MSLL"/>
-     *                         &lt;enumeration value="cDNA"/>
-     *                         &lt;enumeration value="ChIP"/>
-     *                         &lt;enumeration value="MNase"/>
-     *                         &lt;enumeration value="other"/>
-     *                         &lt;enumeration value="unspecified"/>
-     *                       &lt;/restriction>
-     *                     &lt;/simpleType>
-     *                   &lt;/element>
-     *                   &lt;element name="LIBRARY_LAYOUT">
-     *                     &lt;complexType>
-     *                       &lt;complexContent>
-     *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                           &lt;choice>
-     *                             &lt;element name="SINGLE" type="{http://www.w3.org/2001/XMLSchema}anyType"/>
-     *                             &lt;element name="PAIRED">
-     *                               &lt;complexType>
-     *                                 &lt;complexContent>
-     *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                                     &lt;attribute name="ORIENTATION" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                                     &lt;attribute name="NOMINAL_LENGTH" type="{http://www.w3.org/2001/XMLSchema}nonNegativeInteger" />
-     *                                     &lt;attribute name="NOMINAL_SDEV" type="{http://www.w3.org/2001/XMLSchema}double" />
-     *                                   &lt;/restriction>
-     *                                 &lt;/complexContent>
-     *                               &lt;/complexType>
-     *                             &lt;/element>
-     *                           &lt;/choice>
-     *                         &lt;/restriction>
-     *                       &lt;/complexContent>
-     *                     &lt;/complexType>
-     *                   &lt;/element>
-     *                   &lt;element name="LIBRARY_CONSTRUCTION_PROTOCOL" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
-     *                 &lt;/sequence>
-     *               &lt;/restriction>
-     *             &lt;/complexContent>
-     *           &lt;/complexType>
-     *         &lt;/element>
-     *         &lt;element name="SPOT_DESCRIPTOR">
-     *           &lt;complexType>
-     *             &lt;complexContent>
-     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                 &lt;choice>
-     *                   &lt;element name="SPOT_DECODE_METHOD" type="{http://www.w3.org/2001/XMLSchema}unsignedInt"/>
-     *                   &lt;element name="SPOT_DECODE_SPEC">
-     *                     &lt;complexType>
-     *                       &lt;complexContent>
-     *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                           &lt;sequence>
-     *                             &lt;element name="NUMBER_OF_READS_PER_SPOT" type="{http://www.w3.org/2001/XMLSchema}unsignedInt"/>
-     *                             &lt;element name="ADAPTER_SPEC" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
-     *                             &lt;element name="READ_SPEC" maxOccurs="unbounded">
-     *                               &lt;complexType>
-     *                                 &lt;complexContent>
-     *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                                     &lt;sequence>
-     *                                       &lt;element name="READ_INDEX" type="{http://www.w3.org/2001/XMLSchema}nonNegativeInteger"/>
-     *                                       &lt;element name="READ_CLASS">
-     *                                         &lt;simpleType>
-     *                                           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
-     *                                             &lt;enumeration value="Application Read"/>
-     *                                             &lt;enumeration value="Technical Read"/>
-     *                                           &lt;/restriction>
-     *                                         &lt;/simpleType>
-     *                                       &lt;/element>
-     *                                       &lt;element name="READ_TYPE">
-     *                                         &lt;simpleType>
-     *                                           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
-     *                                             &lt;enumeration value="Forward"/>
-     *                                             &lt;enumeration value="Reverse"/>
-     *                                             &lt;enumeration value="Adapter"/>
-     *                                             &lt;enumeration value="Primer"/>
-     *                                             &lt;enumeration value="Linker"/>
-     *                                             &lt;enumeration value="BarCode"/>
-     *                                             &lt;enumeration value="Other"/>
-     *                                           &lt;/restriction>
-     *                                         &lt;/simpleType>
-     *                                       &lt;/element>
-     *                                       &lt;choice>
-     *                                         &lt;element name="BASE_COORD" type="{http://www.w3.org/2001/XMLSchema}integer"/>
-     *                                         &lt;element name="CYCLE_COORD" type="{http://www.w3.org/2001/XMLSchema}integer"/>
-     *                                         &lt;element name="EXPECTED_BASECALL" type="{http://www.w3.org/2001/XMLSchema}string"/>
-     *                                       &lt;/choice>
-     *                                     &lt;/sequence>
-     *                                   &lt;/restriction>
-     *                                 &lt;/complexContent>
-     *                               &lt;/complexType>
-     *                             &lt;/element>
-     *                           &lt;/sequence>
-     *                         &lt;/restriction>
-     *                       &lt;/complexContent>
-     *                     &lt;/complexType>
-     *                   &lt;/element>
-     *                 &lt;/choice>
-     *               &lt;/restriction>
-     *             &lt;/complexContent>
-     *           &lt;/complexType>
-     *         &lt;/element>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
-     * </pre>
-     * 
-     * 
-     */
+        /**
+         * <p>Java class for anonymous complex type.
+         *
+         * <p>The following schema fragment specifies the expected content contained within this class.
+         *
+         * <pre>
+         * &lt;complexType>
+         *   &lt;complexContent>
+         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+         *       &lt;sequence>
+         *         &lt;element name="DESIGN_DESCRIPTION" type="{http://www.w3.org/2001/XMLSchema}string"/>
+         *         &lt;element name="SAMPLE_DESCRIPTOR">
+         *           &lt;complexType>
+         *             &lt;complexContent>
+         *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+         *                 &lt;attribute name="accession" type="{http://www.w3.org/2001/XMLSchema}string" />
+         *                 &lt;attribute name="refname" type="{http://www.w3.org/2001/XMLSchema}string" />
+         *               &lt;/restriction>
+         *             &lt;/complexContent>
+         *           &lt;/complexType>
+         *         &lt;/element>
+         *         &lt;element name="LIBRARY_DESCRIPTOR">
+         *           &lt;complexType>
+         *             &lt;complexContent>
+         *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+         *                 &lt;sequence>
+         *                   &lt;element name="LIBRARY_NAME" type="{http://www.w3.org/2001/XMLSchema}string"/>
+         *                   &lt;element name="LIBRARY_STRATEGY" minOccurs="0">
+         *                     &lt;simpleType>
+         *                       &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+         *                         &lt;enumeration value="WGS"/>
+         *                         &lt;enumeration value="WCS"/>
+         *                         &lt;enumeration value="CLONE"/>
+         *                         &lt;enumeration value="POOLCLONE"/>
+         *                         &lt;enumeration value="AMPLICON"/>
+         *                         &lt;enumeration value="BARCODE"/>
+         *                         &lt;enumeration value="CLONEEND"/>
+         *                         &lt;enumeration value="FINISHING"/>
+         *                         &lt;enumeration value="ChIP-Seq"/>
+         *                         &lt;enumeration value="MNase-Seq"/>
+         *                         &lt;enumeration value="EST"/>
+         *                         &lt;enumeration value="FL-cDNA"/>
+         *                         &lt;enumeration value="CTS"/>
+         *                         &lt;enumeration value="OTHER"/>
+         *                       &lt;/restriction>
+         *                     &lt;/simpleType>
+         *                   &lt;/element>
+         *                   &lt;element name="LIBRARY_SOURCE">
+         *                     &lt;simpleType>
+         *                       &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+         *                         &lt;enumeration value="GENOMIC"/>
+         *                         &lt;enumeration value="NON GENOMIC"/>
+         *                         &lt;enumeration value="SYNTHETIC"/>
+         *                         &lt;enumeration value="VIRAL RNA"/>
+         *                         &lt;enumeration value="OTHER"/>
+         *                       &lt;/restriction>
+         *                     &lt;/simpleType>
+         *                   &lt;/element>
+         *                   &lt;element name="LIBRARY_SELECTION">
+         *                     &lt;simpleType>
+         *                       &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+         *                         &lt;enumeration value="RANDOM"/>
+         *                         &lt;enumeration value="PCR"/>
+         *                         &lt;enumeration value="RANDOM PCR"/>
+         *                         &lt;enumeration value="RT-PCR"/>
+         *                         &lt;enumeration value="HMPR"/>
+         *                         &lt;enumeration value="MF"/>
+         *                         &lt;enumeration value="CF-S"/>
+         *                         &lt;enumeration value="CF-M"/>
+         *                         &lt;enumeration value="CF-H"/>
+         *                         &lt;enumeration value="CF-T"/>
+         *                         &lt;enumeration value="MSLL"/>
+         *                         &lt;enumeration value="cDNA"/>
+         *                         &lt;enumeration value="ChIP"/>
+         *                         &lt;enumeration value="MNase"/>
+         *                         &lt;enumeration value="other"/>
+         *                         &lt;enumeration value="unspecified"/>
+         *                       &lt;/restriction>
+         *                     &lt;/simpleType>
+         *                   &lt;/element>
+         *                   &lt;element name="LIBRARY_LAYOUT">
+         *                     &lt;complexType>
+         *                       &lt;complexContent>
+         *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+         *                           &lt;choice>
+         *                             &lt;element name="SINGLE" type="{http://www.w3.org/2001/XMLSchema}anyType"/>
+         *                             &lt;element name="PAIRED">
+         *                               &lt;complexType>
+         *                                 &lt;complexContent>
+         *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+         *                                     &lt;attribute name="ORIENTATION" type="{http://www.w3.org/2001/XMLSchema}string" />
+         *                                     &lt;attribute name="NOMINAL_LENGTH" type="{http://www.w3.org/2001/XMLSchema}nonNegativeInteger" />
+         *                                     &lt;attribute name="NOMINAL_SDEV" type="{http://www.w3.org/2001/XMLSchema}double" />
+         *                                   &lt;/restriction>
+         *                                 &lt;/complexContent>
+         *                               &lt;/complexType>
+         *                             &lt;/element>
+         *                           &lt;/choice>
+         *                         &lt;/restriction>
+         *                       &lt;/complexContent>
+         *                     &lt;/complexType>
+         *                   &lt;/element>
+         *                   &lt;element name="LIBRARY_CONSTRUCTION_PROTOCOL" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+         *                 &lt;/sequence>
+         *               &lt;/restriction>
+         *             &lt;/complexContent>
+         *           &lt;/complexType>
+         *         &lt;/element>
+         *         &lt;element name="SPOT_DESCRIPTOR">
+         *           &lt;complexType>
+         *             &lt;complexContent>
+         *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+         *                 &lt;choice>
+         *                   &lt;element name="SPOT_DECODE_METHOD" type="{http://www.w3.org/2001/XMLSchema}unsignedInt"/>
+         *                   &lt;element name="SPOT_DECODE_SPEC">
+         *                     &lt;complexType>
+         *                       &lt;complexContent>
+         *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+         *                           &lt;sequence>
+         *                             &lt;element name="NUMBER_OF_READS_PER_SPOT" type="{http://www.w3.org/2001/XMLSchema}unsignedInt"/>
+         *                             &lt;element name="ADAPTER_SPEC" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+         *                             &lt;element name="READ_SPEC" maxOccurs="unbounded">
+         *                               &lt;complexType>
+         *                                 &lt;complexContent>
+         *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+         *                                     &lt;sequence>
+         *                                       &lt;element name="READ_INDEX" type="{http://www.w3.org/2001/XMLSchema}nonNegativeInteger"/>
+         *                                       &lt;element name="READ_CLASS">
+         *                                         &lt;simpleType>
+         *                                           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+         *                                             &lt;enumeration value="Application Read"/>
+         *                                             &lt;enumeration value="Technical Read"/>
+         *                                           &lt;/restriction>
+         *                                         &lt;/simpleType>
+         *                                       &lt;/element>
+         *                                       &lt;element name="READ_TYPE">
+         *                                         &lt;simpleType>
+         *                                           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+         *                                             &lt;enumeration value="Forward"/>
+         *                                             &lt;enumeration value="Reverse"/>
+         *                                             &lt;enumeration value="Adapter"/>
+         *                                             &lt;enumeration value="Primer"/>
+         *                                             &lt;enumeration value="Linker"/>
+         *                                             &lt;enumeration value="BarCode"/>
+         *                                             &lt;enumeration value="Other"/>
+         *                                           &lt;/restriction>
+         *                                         &lt;/simpleType>
+         *                                       &lt;/element>
+         *                                       &lt;choice>
+         *                                         &lt;element name="BASE_COORD" type="{http://www.w3.org/2001/XMLSchema}integer"/>
+         *                                         &lt;element name="CYCLE_COORD" type="{http://www.w3.org/2001/XMLSchema}integer"/>
+         *                                         &lt;element name="EXPECTED_BASECALL" type="{http://www.w3.org/2001/XMLSchema}string"/>
+         *                                       &lt;/choice>
+         *                                     &lt;/sequence>
+         *                                   &lt;/restriction>
+         *                                 &lt;/complexContent>
+         *                               &lt;/complexType>
+         *                             &lt;/element>
+         *                           &lt;/sequence>
+         *                         &lt;/restriction>
+         *                       &lt;/complexContent>
+         *                     &lt;/complexType>
+         *                   &lt;/element>
+         *                 &lt;/choice>
+         *               &lt;/restriction>
+         *             &lt;/complexContent>
+         *           &lt;/complexType>
+         *         &lt;/element>
+         *       &lt;/sequence>
+         *     &lt;/restriction>
+         *   &lt;/complexContent>
+         * &lt;/complexType>
+         * </pre>
+         *
+         * @return a {@link java.math.BigInteger} object.
+         */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
         "designdescription",
@@ -1011,9 +1005,11 @@ public class ExperimentType {
         @XmlElement(name = "SPOT_DESCRIPTOR", required = true)
         protected ExperimentType.DESIGN.SPOTDESCRIPTOR spotdescriptor;
 
-        /**
+         /**
+          * Gets the value of the designdescription property.
+          */
          * Gets the value of the designdescription property.
-         * 
+         *
          * @return
          *     possible object is
          *     {@link String }
@@ -1023,9 +1019,13 @@ public class ExperimentType {
             return designdescription;
         }
 
-        /**
+         /**
+          * Sets the value of the designdescription property.
+          *
+          * @return a {@link java.math.BigInteger} object.
+          */
          * Sets the value of the designdescription property.
-         * 
+         *
          * @param value
          *     allowed object is
          *     {@link String }
@@ -1035,9 +1035,11 @@ public class ExperimentType {
             this.designdescription = value;
         }
 
-        /**
+         /**
+          * Gets the value of the sampledescriptor property.
+          */
          * Gets the value of the sampledescriptor property.
-         * 
+         *
          * @return
          *     possible object is
          *     {@link ExperimentType.DESIGN.SAMPLEDESCRIPTOR }
@@ -1047,9 +1049,13 @@ public class ExperimentType {
             return sampledescriptor;
         }
 
-        /**
+         /**
+          * Sets the value of the sampledescriptor property.
+          *
+          * @return a {@link java.math.BigInteger} object.
+          */
          * Sets the value of the sampledescriptor property.
-         * 
+         *
          * @param value
          *     allowed object is
          *     {@link ExperimentType.DESIGN.SAMPLEDESCRIPTOR }
@@ -1059,9 +1065,11 @@ public class ExperimentType {
             this.sampledescriptor = value;
         }
 
-        /**
+         /**
+          * Gets the value of the librarydescriptor property.
+          */
          * Gets the value of the librarydescriptor property.
-         * 
+         *
          * @return
          *     possible object is
          *     {@link ExperimentType.DESIGN.LIBRARYDESCRIPTOR }
@@ -1071,9 +1079,13 @@ public class ExperimentType {
             return librarydescriptor;
         }
 
-        /**
+         /**
+          * Sets the value of the librarydescriptor property.
+          *
+          * @return a {@link java.lang.String} object.
+          */
          * Sets the value of the librarydescriptor property.
-         * 
+         *
          * @param value
          *     allowed object is
          *     {@link ExperimentType.DESIGN.LIBRARYDESCRIPTOR }
@@ -1083,9 +1095,11 @@ public class ExperimentType {
             this.librarydescriptor = value;
         }
 
-        /**
+         /**
+          * Gets the value of the spotdescriptor property.
+          */
          * Gets the value of the spotdescriptor property.
-         * 
+         *
          * @return
          *     possible object is
          *     {@link ExperimentType.DESIGN.SPOTDESCRIPTOR }

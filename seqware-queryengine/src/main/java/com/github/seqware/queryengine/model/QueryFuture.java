@@ -21,6 +21,7 @@ package com.github.seqware.queryengine.model;
  * asynchronous query.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public interface QueryFuture<ReturnType> {
 

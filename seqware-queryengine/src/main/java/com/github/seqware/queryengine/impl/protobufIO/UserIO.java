@@ -24,11 +24,14 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import org.apache.log4j.Logger;
 
 /**
+ * <p>UserIO class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class UserIO implements ProtobufTransferInterface<UserPB, User>{
 
+    /** {@inheritDoc} */
     @Override
     public User pb2m(UserPB userpb) {
         User.Builder builder = User.newBuilder();
@@ -46,6 +49,7 @@ public class UserIO implements ProtobufTransferInterface<UserPB, User>{
     }
     
 
+    /** {@inheritDoc} */
     @Override
     public UserPB m2pb(User sgid) {
         QueryEngine.UserPB.Builder builder = QueryEngine.UserPB.newBuilder();
@@ -62,6 +66,7 @@ public class UserIO implements ProtobufTransferInterface<UserPB, User>{
         return userpb;
     }
 
+    /** {@inheritDoc} */
     @Override
     public User byteArr2m(byte[] arr) {
         try {

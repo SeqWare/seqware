@@ -37,11 +37,18 @@ import freemarker.template.Template;
 
 
 /**
- * @author boconnor
+ * <p>CoverageResource class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class CoverageResource extends ServerResource {
 
+  /**
+   * <p>represent.</p>
+   *
+   * @return a {@link org.restlet.representation.Representation} object.
+   */
   @Get
   public Representation represent() {  
 

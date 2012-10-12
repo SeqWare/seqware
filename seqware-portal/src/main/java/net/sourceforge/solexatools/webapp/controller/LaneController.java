@@ -25,41 +25,81 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 /**
  * LaneController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class LaneController extends MultiActionController {
 	private SampleService sampleService;
 	private LaneService laneService;
 	private Validator validator;
 
+	/**
+	 * <p>Constructor for LaneController.</p>
+	 */
 	public LaneController() {
 		super();
 	}
 
+	/**
+	 * <p>Getter for the field <code>sampleService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	 */
 	public SampleService getSampleService() {
 		return sampleService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sampleService</code>.</p>
+	 *
+	 * @param sampleService a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	 */
 	public void setSampleService(SampleService sampleService) {
 		this.sampleService = sampleService;
 	}
 
+	/**
+	 * <p>Constructor for LaneController.</p>
+	 *
+	 * @param delegate a {@link java.lang.Object} object.
+	 */
 	public LaneController(Object delegate) {
 		super(delegate);
 	}
 
+	/**
+	 * <p>Getter for the field <code>laneService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	 */
 	public LaneService getLaneService() {
 		return laneService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>laneService</code>.</p>
+	 *
+	 * @param laneService a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	 */
 	public void setLaneService(LaneService laneService) {
 		this.laneService = laneService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>validator</code>.</p>
+	 *
+	 * @return a {@link org.springframework.validation.Validator} object.
+	 */
 	public Validator getValidator() {
 		return validator;
 	}
 
+	/**
+	 * <p>Setter for the field <code>validator</code>.</p>
+	 *
+	 * @param validator a {@link org.springframework.validation.Validator} object.
+	 */
 	public void setValidator(Validator validator) {
 		this.validator = validator;
 	}
@@ -70,10 +110,8 @@ public class LaneController extends MultiActionController {
 	 * @param request HttpServletRequest
 	 * @param response HttpServletResponse
 	 * @param command Lane command object
-	 *
 	 * @return ModelAndView
-	 *
-	 * @throws Exception
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleSubmit(HttpServletRequest request,
 									 HttpServletResponse response,
@@ -117,10 +155,8 @@ public class LaneController extends MultiActionController {
 	 * @param request HttpServletRequest
 	 * @param response HttpServletResponse
 	 * @param command Lane command object
-	 *
 	 * @return ModelAndView
-	 *
-	 * @throws Exception
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleReset(HttpServletRequest request,
 									HttpServletResponse response,
@@ -149,10 +185,8 @@ public class LaneController extends MultiActionController {
 	 * @param request HttpServletRequest
 	 * @param response HttpServletResponse
 	 * @param command Lane command object
-	 *
 	 * @return ModelAndView
-	 *
-	 * @throws Exception
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleCancel(HttpServletRequest request,
 									 HttpServletResponse response,
@@ -183,10 +217,8 @@ public class LaneController extends MultiActionController {
 	 * @param request HttpServletRequest
 	 * @param response HttpServletResponse
 	 * @param command Lane command object
-	 *
 	 * @return ModelAndView
-	 *
-	 * @throws Exception
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleUpdate(HttpServletRequest request,
 									 HttpServletResponse response,
@@ -298,6 +330,10 @@ public class LaneController extends MultiActionController {
 	 * Handles the user's request to delete their lane.
 	 *
 	 * @param command Lane command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleDelete(HttpServletRequest		request,
 									 HttpServletResponse	response,

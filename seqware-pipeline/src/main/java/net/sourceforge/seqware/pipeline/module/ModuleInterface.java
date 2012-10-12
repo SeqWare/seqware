@@ -10,7 +10,8 @@ package net.sourceforge.seqware.pipeline.module;
 import java.util.List;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
-/**<p>
+/**
+ *<p>
  * This interface defines the required behavior of a SeqWare module.
  * Essentially it assumes a life-cycle made up of several phases for a module,
  * specifying a function for each of these phase that an implementation
@@ -26,24 +27,37 @@ import net.sourceforge.seqware.common.module.ReturnValue;
  * 	<li>{@link ModuleInterface.clean_up() clean_up()}</li>
  * </ol>
  * <p>Information about the the success or
- * failure of each step is packaged into a {@link ReturnValue} object,
+ * failure of each step is packaged into a {@link net.sourceforge.seqware.common.module.ReturnValue} object,
  * including anything sent to STDOUT and STDERR.
  * </p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public interface ModuleInterface {
 
+    /**
+     * <p>setParameters.</p>
+     *
+     * @param params a {@link java.util.List} object.
+     */
     public void setParameters(List<String> params);
 
+    /**
+     * <p>getAlgorithm.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getAlgorithm();
 
-   /**
+	/**
 	 * Generates a "help" message for the user of the module. This will
 	 * be called by [TODO: what?] to provide information about using the
 	 * module. It is up to the implementation to defined the format for the
 	 * returned message. This is not part of the normal life-cycle of a
 	 * module, but represents an "alternate" life, where the module is
 	 * called just to provide a self-description.
-	 * 
+	 *
 	 * @return Description of how to use this module.
 	 */
 	String get_syntax();
@@ -63,7 +77,7 @@ public interface ModuleInterface {
 	 * access, create temp files, define defaults, etc. Preprocessing can be
 	 * done here, although normally processing should be done by/during
 	 * do_run().
-	 * 
+	 *
 	 * @return Success or failure info from this phase, along with any
 	 * console output.
 	 */
@@ -76,7 +90,7 @@ public interface ModuleInterface {
 	 * deferred to the next step where the existence and content of input
 	 * data files will be checked, {@link ModuleInterface.do_verify_input()
 	 * do_verify_input()}.
-	 * 
+	 *
 	 * @return Success or failure info from this phase, along with any
 	 * console output.
 	 */
@@ -85,7 +99,7 @@ public interface ModuleInterface {
 	/**
 	 * Input data validation code goes here. Use to make sure that input
 	 * file exist that needed output directories exist and can be written
-     * to, or can be created, etc. Modules should fail up front when possible
+	 * to, or can be created, etc. Modules should fail up front when possible
 	 * to avoid wasting large amounts of processing time. This is also the
 	 * place to validate combinations of parameters (individual parameters and
 	 * their values are validated in the previous step,
@@ -102,7 +116,7 @@ public interface ModuleInterface {
 	 * only, [TODO: Huh?], that a command line tools can be run, etc.
 	 * You can even write functional tests that run the program you're
 	 * wrapping on a small known good and then verify the output.
-	 * 
+	 *
 	 * @return Success or failure info from this phase, along with any
 	 * console output.
 	 */
@@ -111,7 +125,7 @@ public interface ModuleInterface {
 	/**
 	 * Performs the main tasks for the module. This is where you actually
 	 * execute your task, run the external program, etc.
-	 * 
+	 *
 	 * @return Success or failure info from this phase, along with any
 	 * console output.
 	 */
@@ -120,13 +134,13 @@ public interface ModuleInterface {
 	/**
 	 * Perform post-task tests here. Use to check that expected
 	 * directories exist, that files were not empty unexpectedly, etc.
-	 * 
+	 *
 	 * In practice, this check should be light-weight. If the output appears
 	 * to be fine, then assume it is. Let the next module's input checking do
 	 * any deep verification. Otherwise, everything gets checked twice and
 	 * that can waste a lot of time. If it is a quick check, go ahead and do
 	 * it. Note: Long/hard to do QC checks might deserve their own module!
-	 * 
+	 *
 	 * @return Success or failure info from this phase, along with any
 	 * console output.
 	 */
@@ -135,7 +149,7 @@ public interface ModuleInterface {
 	/**
 	 * Perform post-task clean-up here. Use to remove temporary files and
 	 * directories, flush buffers and db connections, etc.
-	 * 
+	 *
 	 * @return Success or failure info from this phase, along with any
 	 * console output.
 	 */

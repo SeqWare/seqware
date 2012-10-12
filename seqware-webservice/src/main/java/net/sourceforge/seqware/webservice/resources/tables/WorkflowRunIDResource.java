@@ -39,16 +39,24 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>WorkflowRunIDResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class WorkflowRunIDResource extends DatabaseIDResource {
 
+    /**
+     * <p>Constructor for WorkflowRunIDResource.</p>
+     */
     public WorkflowRunIDResource() {
         super("workflowRunId");
 
     }
 
+    /**
+     * <p>getXml.</p>
+     */
     @Get
     public void getXml() {
         authenticate();
@@ -125,6 +133,14 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
 
     }
 
+    /**
+     * <p>updateWorkflowRun.</p>
+     *
+     * @param newWR a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+     * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+     * @throws org.restlet.resource.ResourceException if any.
+     * @throws java.sql.SQLException if any.
+     */
     public WorkflowRun updateWorkflowRun(WorkflowRun newWR) throws ResourceException, SQLException {
         authenticate();
         WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
@@ -224,6 +240,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         return workflowRun;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Representation put(Representation entity) {
         Representation toreturn = null;

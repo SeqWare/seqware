@@ -12,9 +12,17 @@ import net.sourceforge.seqware.common.model.Study;
 
 import org.springframework.context.support.MessageSourceAccessor;
 
+/**
+ * <p>PaginationUtil class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class PaginationUtil {
 
+  /** Constant <code>SIZE_COUNT_TREE=20</code> */
   public final static int SIZE_COUNT_TREE = 20;
+  /** Constant <code>SIZE_COUNT_FILE=5</code> */
   public final static int SIZE_COUNT_FILE = 5;
 
   private static String getOperation(HttpServletRequest request) {
@@ -92,6 +100,14 @@ public class PaginationUtil {
     return result;
   }
 
+  /**
+   * <p>subList.</p>
+   *
+   * @param page a int.
+   * @param sizeCount a int.
+   * @param list a {@link java.util.List} object.
+   * @return a {@link java.util.List} object.
+   */
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public static List subList(int page, int sizeCount, List list) {
     List<File> result = Collections.synchronizedList(new LinkedList<File>());
@@ -120,19 +136,58 @@ public class PaginationUtil {
     return result;
   }
 
+  /**
+   * <p>subList.</p>
+   *
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param namePage a {@link java.lang.String} object.
+   * @param list a {@link java.util.List} object.
+   * @param <T> a T object.
+   * @return a {@link java.util.List} object.
+   */
   public static <T extends Object> List<T> subList(HttpServletRequest request, String namePage, List<T> list) {
     return subListImpl(request, namePage, SIZE_COUNT_TREE, list);
   }
 
+  /**
+   * <p>subList.</p>
+   *
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param namePage a {@link java.lang.String} object.
+   * @param sizeCount a int.
+   * @param list a {@link java.util.List} object.
+   * @param <T> a T object.
+   * @return a {@link java.util.List} object.
+   */
   public static <T extends Object> List<T> subList(HttpServletRequest request, String namePage, int sizeCount,
       List<T> list) {
     return subListImpl(request, namePage, sizeCount, list);
   }
 
+  /**
+   * <p>subListSD.</p>
+   *
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param namePage a {@link java.lang.String} object.
+   * @param list a {@link java.util.List} object.
+   * @return a {@link java.util.List} object.
+   */
   public static List subListSD(HttpServletRequest request, String namePage, List list) {
     return subListImpl(request, namePage, SIZE_COUNT_FILE, list);
   }
 
+  /**
+   * <p>getPageInfo.</p>
+   *
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param namePage a {@link java.lang.String} object.
+   * @param listView a {@link java.util.List} object.
+   * @param listAll a {@link java.util.List} object.
+   * @param nameNode a {@link java.lang.String} object.
+   * @param nameNodes a {@link java.lang.String} object.
+   * @param ma a {@link org.springframework.context.support.MessageSourceAccessor} object.
+   * @return a {@link net.sourceforge.solexatools.util.PageInfo} object.
+   */
   public static PageInfo getPageInfo(HttpServletRequest request, String namePage, List listView, List listAll,
       String nameNode, String nameNodes, MessageSourceAccessor ma) {
     PageInfo pageInfo = getPageInfoImpl(request, namePage, listView.size(), listAll.size(), SIZE_COUNT_TREE, ma);
@@ -150,6 +205,16 @@ public class PaginationUtil {
     return pageInfo;
   }
 
+  /**
+   * <p>getPageInfoSD.</p>
+   *
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param namePage a {@link java.lang.String} object.
+   * @param listView a {@link java.util.List} object.
+   * @param allList a {@link java.util.List} object.
+   * @param ma a {@link org.springframework.context.support.MessageSourceAccessor} object.
+   * @return a {@link net.sourceforge.solexatools.util.PageInfo} object.
+   */
   public static PageInfo getPageInfoSD(HttpServletRequest request, String namePage, List listView, List allList,
       MessageSourceAccessor ma) {
     return getPageInfoImpl(request, namePage, listView.size(), allList.size(), SIZE_COUNT_FILE, ma);
@@ -197,6 +262,14 @@ public class PaginationUtil {
     return pageInfo;
   }
 
+  /**
+   * <p>getPageNumber.</p>
+   *
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param requiredStudy a {@link net.sourceforge.seqware.common.model.Study} object.
+   * @param allList a {@link java.util.List} object.
+   * @return a int.
+   */
   public static int getPageNumber(HttpServletRequest request, Study requiredStudy, List<Study> allList) {
     int size = allList.size();
     int studyIndex = 1;

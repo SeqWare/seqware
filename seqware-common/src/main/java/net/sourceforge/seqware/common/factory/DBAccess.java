@@ -28,13 +28,20 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 
 /**
+ * <p>DBAccess class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class DBAccess {
 
     private static MetadataDB db;
 
+    /**
+     * <p>get.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.common.metadata.MetadataDB} object.
+     */
     public static MetadataDB get() {
         try {
             if (db!=null &&
@@ -78,6 +85,9 @@ public class DBAccess {
         return db;
     }
 
+    /**
+     * <p>close.</p>
+     */
     public static void close() {
         if (db != null) {
             db.clean_up();

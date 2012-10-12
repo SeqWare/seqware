@@ -31,6 +31,12 @@ import org.springframework.validation.Validator;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
+/**
+ * <p>UploadSequenceController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class UploadSequenceController extends MultiActionController{
 	  private SampleService sampleService;
 	  private LaneService laneService;
@@ -39,72 +45,138 @@ public class UploadSequenceController extends MultiActionController{
 	  private FileTypeService fileTypeService;
 	  private Validator validator;
 
+	  /**
+	   * <p>Constructor for UploadSequenceController.</p>
+	   */
 	  public UploadSequenceController() {
 	    super();
 	  }
 
+	  /**
+	   * <p>Constructor for UploadSequenceController.</p>
+	   *
+	   * @param delegate a {@link java.lang.Object} object.
+	   */
 	  public UploadSequenceController(Object delegate) {
 	    super(delegate);
 	  }
 
+	  /**
+	   * <p>Getter for the field <code>validator</code>.</p>
+	   *
+	   * @return a {@link org.springframework.validation.Validator} object.
+	   */
 	  public Validator getValidator() {
 	    return validator;
 	  }
 
+	  /**
+	   * <p>Setter for the field <code>validator</code>.</p>
+	   *
+	   * @param validator a {@link org.springframework.validation.Validator} object.
+	   */
 	  public void setValidator(Validator validator) {
 	    this.validator = validator;
 	  }
 
+	  /**
+	   * <p>Getter for the field <code>sampleService</code>.</p>
+	   *
+	   * @return a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	   */
 	  public SampleService getSampleService() {
 	    return sampleService;
 	  }
 
+	  /**
+	   * <p>Setter for the field <code>sampleService</code>.</p>
+	   *
+	   * @param sampleService a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	   */
 	  public void setSampleService(SampleService sampleService) {
 	    this.sampleService = sampleService;
 	  }
 	  
+	  /**
+	   * <p>Getter for the field <code>laneService</code>.</p>
+	   *
+	   * @return a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	   */
 	  public LaneService getLaneService() {
 		return laneService;
 	  }
 
+	  /**
+	   * <p>Setter for the field <code>laneService</code>.</p>
+	   *
+	   * @param laneService a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	   */
 	  public void setLaneService(LaneService laneService) {
 		 this.laneService = laneService;
 	  }
 
+	  /**
+	   * <p>Getter for the field <code>processingService</code>.</p>
+	   *
+	   * @return a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+	   */
 	  public ProcessingService getProcessingService() {
 		return processingService;
 	  }
 
+	  /**
+	   * <p>Setter for the field <code>processingService</code>.</p>
+	   *
+	   * @param processingService a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+	   */
 	  public void setProcessingService(ProcessingService processingService) {
 		this.processingService = processingService;
 	  }
 
+	  /**
+	   * <p>Getter for the field <code>fileService</code>.</p>
+	   *
+	   * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
+	   */
 	  public FileService getFileService() {
 		return fileService;
 	  }
 
+	  /**
+	   * <p>Setter for the field <code>fileService</code>.</p>
+	   *
+	   * @param fileService a {@link net.sourceforge.seqware.common.business.FileService} object.
+	   */
 	  public void setFileService(FileService fileService) {
 		this.fileService = fileService;
 	  }
 
+	  /**
+	   * <p>Getter for the field <code>fileTypeService</code>.</p>
+	   *
+	   * @return a {@link net.sourceforge.seqware.common.business.FileTypeService} object.
+	   */
 	  public FileTypeService getFileTypeService() {
 		return fileTypeService;
 	  }
 
+	  /**
+	   * <p>Setter for the field <code>fileTypeService</code>.</p>
+	   *
+	   * @param fileTypeService a {@link net.sourceforge.seqware.common.business.FileTypeService} object.
+	   */
 	  public void setFileTypeService(FileTypeService fileTypeService) {
 		this.fileTypeService = fileTypeService;
 	  }
 
-	/**
+	  /**
 	   * Handles the user's request to submit a new study.
 	   *
 	   * @param request HttpServletRequest
 	   * @param response HttpServletResponse
 	   * @param command Study command object
-	   *
 	   * @return ModelAndView
-	   *
-	   * @throws Exception
+	   * @throws java.lang.Exception if any.
 	   */
 	  public ModelAndView handleSubmit(HttpServletRequest		request,
 	      HttpServletResponse	response,
@@ -229,6 +301,10 @@ public class UploadSequenceController extends MultiActionController{
 	   * or the study update page.
 	   *
 	   * @param command Study command object
+	   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	   * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	   * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	   * @throws java.lang.Exception if any.
 	   */
 	  public ModelAndView handleCancel(HttpServletRequest request,
 	      HttpServletResponse response,

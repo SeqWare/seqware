@@ -9,30 +9,44 @@ import net.sourceforge.seqware.common.model.WorkflowParamValue;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>WorkflowParamValueServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class WorkflowParamValueServiceImpl implements WorkflowParamValueService {
   private WorkflowParamValueDAO workflowParamValueDAO = null;
   private static final Log log = LogFactory.getLog(WorkflowParamValueServiceImpl.class);
 
+  /**
+   * <p>Constructor for WorkflowParamValueServiceImpl.</p>
+   */
   public WorkflowParamValueServiceImpl() {
     super();
   }
 
+  /** {@inheritDoc} */
   public void setWorkflowParamValueDAO(WorkflowParamValueDAO workflowParamValueDAO) {
     this.workflowParamValueDAO = workflowParamValueDAO;
   }
 
+  /** {@inheritDoc} */
   public Integer insert(WorkflowParamValue workflowParamValue) {
     return workflowParamValueDAO.insert(workflowParamValue);
   }
 
+  /** {@inheritDoc} */
   public void update(WorkflowParamValue workflowParamValue) {
     workflowParamValueDAO.update(workflowParamValue);
   }
 
+  /** {@inheritDoc} */
   public void delete(WorkflowParamValue workflowParamValue) {
     workflowParamValueDAO.delete(workflowParamValue);
   }
 
+  /** {@inheritDoc} */
   public WorkflowParamValue findByID(Integer id) {
     WorkflowParamValue workflowParamValue = null;
     if (id != null) {
@@ -46,26 +60,31 @@ public class WorkflowParamValueServiceImpl implements WorkflowParamValueService 
     return workflowParamValue;
   }
 
+  /** {@inheritDoc} */
   @Override
   public WorkflowParamValue updateDetached(WorkflowParamValue workflowParamValue) {
     return workflowParamValueDAO.updateDetached(workflowParamValue);
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<WorkflowParamValue> list() {
         return workflowParamValueDAO.list();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(Registration registration, WorkflowParamValue workflowParamValue) {
         workflowParamValueDAO.update(registration, workflowParamValue);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer insert(Registration registration, WorkflowParamValue workflowParamValue) {
         return workflowParamValueDAO.insert(registration, workflowParamValue);
     }
 
+    /** {@inheritDoc} */
     @Override
     public WorkflowParamValue updateDetached(Registration registration, WorkflowParamValue workflowParamValue) {
         return workflowParamValueDAO.updateDetached(registration, workflowParamValue);

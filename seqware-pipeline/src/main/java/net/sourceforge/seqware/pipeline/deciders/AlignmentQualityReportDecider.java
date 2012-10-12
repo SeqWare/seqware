@@ -26,22 +26,27 @@ import net.sourceforge.seqware.common.util.Log;
 /**
  * FIXME: this extends the plugin but really it should be a decider subclass. Doing this for testing now.
  * LEFT OFF WITH: left off with finding all files of a particular type
+ *
  * @author boconnor
+ * @version $Id: $Id
  */
 public class AlignmentQualityReportDecider extends Plugin {
   
   ReturnValue ret = new ReturnValue(ReturnValue.NOTIMPLEMENTED);
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue init() {
     return(ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_test() {
     return(ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
     
@@ -58,6 +63,7 @@ public class AlignmentQualityReportDecider extends Plugin {
     return(new ReturnValue(ReturnValue.SUCCESS));
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue clean_up() {
     return(ret);

@@ -35,9 +35,33 @@ import net.sourceforge.seqware.pipeline.workflow.Workflow;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * <p>BasicDecider class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
+@ServiceProvider(service = PluginInterface.class)
+public class BasicDecider extends Plugin implements DeciderInterface {
+
+    protected ReturnValue ret = new ReturnValue();
+    private MetadataWS metaws;
+    private Header header = Header.FILE_SWA;
+    private Set<String> parentWorkflowAccessions = new TreeSet<String>();
+    private Set<String> workflowAccessionsToCheck = new TreeSet<String>();
+    private List<String> metaTypes = null;
+    private Boolean forceRunAll = null;
+    private Boolean test = null;
+    private String workflowAccession = null;
+    protected Random random = new Random(System.currentTimeMillis());
+    private Boolean metadataWriteback = null;
+    private List<String> parentAccessionsToRun;
+    private List<String> filesToRun;
+    private List<String> workflowParentAccessionsToRun;
+    private ArrayList<String> iniFiles;
+    private Boolean runNow = null;
+    private Boolean skipStuff = null;
+
+    /** {@inheritDoc} */
 @ServiceProvider(service = PluginInterface.class)
 public class BasicDecider extends Plugin implements DeciderInterface {
 
@@ -82,7 +106,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
-
     @Override
     /**
      * This method is intended to be called AFTER any implementing class's init
@@ -238,11 +261,13 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_test() {
         return ReturnValue.featureNotImplemented();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_run() {
         String groupBy = header.getTitle();
@@ -343,6 +368,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * Returns true only if there are more files to run than have been run on
      * any workflow so far, or if the filesToRun have different filepaths than
      * those that have been run before.
+     *
+     * @param previousWorkflowRuns a {@link java.util.List} object.
+     * @param filesToRun a {@link java.util.List} object.
+     * @return a boolean.
      */
     public boolean rerunWorkflowRun(List<String> previousWorkflowRuns, List<String> filesToRun) {
         boolean rerun = true;
@@ -362,6 +391,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * filesToRun and the workflow run have the same number of files with the
      * same file paths. False and prints an error message if there are more
      * files in the workflow run than in the filesToRun.
+     *
+     * @param workflowRunAcc a {@link java.lang.String} object.
+     * @param filesToRun a {@link java.util.List} object.
+     * @return a boolean.
      */
     public boolean compareWorkflowRunFiles(String workflowRunAcc, List<String> filesToRun) {
 
@@ -422,6 +455,12 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         }
     }
 
+    /**
+     * <p>commaSeparateMy.</p>
+     *
+     * @param list a {@link java.util.Collection} object.
+     * @return a {@link java.lang.String} object.
+     */
     protected String commaSeparateMy(Collection<String> list) {
         StringBuilder sb = new StringBuilder();
         for (String s : list) {
@@ -498,17 +537,37 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         return true;
     }
 
+    /**
+     * <p>modifyIniFile.</p>
+     *
+     * @param commaSeparatedFilePaths a {@link java.lang.String} object.
+     * @param commaSeparatedParentAccessions a {@link java.lang.String} object.
+     * @return a {@link java.util.Map} object.
+     */
     protected Map<String, String> modifyIniFile(String commaSeparatedFilePaths, String commaSeparatedParentAccessions) {
         Map<String, String> iniFileMap = new TreeMap<String, String>();
         iniFileMap.put("input_files", commaSeparatedFilePaths);
         return iniFileMap;
     }
 
+    /**
+     * <p>handleGroupByAttribute.</p>
+     *
+     * @param attribute a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     protected String handleGroupByAttribute(String attribute) {
         return attribute;
     }
 
 //    protected
+    /**
+     * <p>separateFiles.</p>
+     *
+     * @param vals a {@link java.util.List} object.
+     * @param groupBy a {@link java.lang.String} object.
+     * @return a {@link java.util.Map} object.
+     */
     public Map<String, List<ReturnValue>> separateFiles(List<ReturnValue> vals, String groupBy) {
         //get files from study
 
@@ -532,11 +591,13 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue clean_up() {
         return ReturnValue.featureNotImplemented();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_summary() {
         StringBuilder command = new StringBuilder();
@@ -556,72 +617,153 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String get_description() {
         String description = super.get_description();
         return description;
     }
 
+    /**
+     * <p>Getter for the field <code>forceRunAll</code>.</p>
+     *
+     * @return a {@link java.lang.Boolean} object.
+     */
     public Boolean getForceRunAll() {
         return forceRunAll;
     }
 
+    /**
+     * <p>Setter for the field <code>forceRunAll</code>.</p>
+     *
+     * @param forceRunAll a {@link java.lang.Boolean} object.
+     */
     public void setForceRunAll(Boolean forceRunAll) {
         this.forceRunAll = forceRunAll;
     }
 
+    /**
+     * <p>Getter for the field <code>header</code>.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header} object.
+     */
     public Header getHeader() {
         return header;
     }
 
+    /**
+     * <p>Setter for the field <code>header</code>.</p>
+     *
+     * @param header a {@link net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header} object.
+     */
     public void setHeader(Header header) {
         this.header = header;
     }
 
+    /**
+     * <p>getMetaType.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<String> getMetaType() {
         return metaTypes;
     }
 
+    /**
+     * <p>setMetaType.</p>
+     *
+     * @param metaType a {@link java.util.List} object.
+     */
     public void setMetaType(List<String> metaType) {
         this.metaTypes = metaType;
     }
 
+    /**
+     * <p>Getter for the field <code>metadataWriteback</code>.</p>
+     *
+     * @return a {@link java.lang.Boolean} object.
+     */
     public Boolean getMetadataWriteback() {
         return metadataWriteback;
     }
 
+    /**
+     * <p>Setter for the field <code>metadataWriteback</code>.</p>
+     *
+     * @param metadataWriteback a {@link java.lang.Boolean} object.
+     */
     public void setMetadataWriteback(Boolean metadataWriteback) {
         this.metadataWriteback = metadataWriteback;
     }
 
+    /**
+     * <p>Getter for the field <code>parentWorkflowAccessions</code>.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<String> getParentWorkflowAccessions() {
         return parentWorkflowAccessions;
     }
 
+    /**
+     * <p>Setter for the field <code>parentWorkflowAccessions</code>.</p>
+     *
+     * @param parentWorkflowAccessions a {@link java.util.Set} object.
+     */
     public void setParentWorkflowAccessions(Set<String> parentWorkflowAccessions) {
         this.parentWorkflowAccessions = parentWorkflowAccessions;
     }
 
+    /**
+     * <p>Getter for the field <code>test</code>.</p>
+     *
+     * @return a {@link java.lang.Boolean} object.
+     */
     public Boolean getTest() {
         return test;
     }
 
+    /**
+     * <p>Setter for the field <code>test</code>.</p>
+     *
+     * @param test a {@link java.lang.Boolean} object.
+     */
     public void setTest(Boolean test) {
         this.test = test;
     }
 
+    /**
+     * <p>Getter for the field <code>workflowAccession</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getWorkflowAccession() {
         return workflowAccession;
     }
 
+    /**
+     * <p>Setter for the field <code>workflowAccession</code>.</p>
+     *
+     * @param workflowAccession a {@link java.lang.String} object.
+     */
     public void setWorkflowAccession(String workflowAccession) {
         this.workflowAccession = workflowAccession;
     }
 
+    /**
+     * <p>Getter for the field <code>workflowAccessionsToCheck</code>.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<String> getWorkflowAccessionsToCheck() {
         return workflowAccessionsToCheck;
     }
 
+    /**
+     * <p>Setter for the field <code>workflowAccessionsToCheck</code>.</p>
+     *
+     * @param workflowAccessions a {@link java.util.Set} object.
+     */
     public void setWorkflowAccessionsToCheck(Set<String> workflowAccessions) {
         this.workflowAccessionsToCheck = workflowAccessions;
     }

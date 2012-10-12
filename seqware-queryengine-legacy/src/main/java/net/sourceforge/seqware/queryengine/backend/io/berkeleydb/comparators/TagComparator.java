@@ -11,14 +11,17 @@ import net.sourceforge.seqware.queryengine.backend.model.Tag;
 import com.sleepycat.db.DatabaseEntry;
 
 /**
- * @author boconnor
+ * <p>TagComparator class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class TagComparator implements Comparator {
 
   /* (non-Javadoc)
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  /** {@inheritDoc} */
   @Override
   public int compare(Object d1, Object d2) {
     byte[] b1 = (byte[])d1;

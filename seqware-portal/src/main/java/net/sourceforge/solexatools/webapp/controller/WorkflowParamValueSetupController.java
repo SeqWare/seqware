@@ -16,15 +16,25 @@ import net.sourceforge.solexatools.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>WorkflowParamValueSetupController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class WorkflowParamValueSetupController extends BaseCommandController {
 	private WorkflowParamService workflowParamService;
 	private WorkflowParamValueService workflowParamValueService;
 
+	/**
+	 * <p>Constructor for WorkflowParamValueSetupController.</p>
+	 */
 	public WorkflowParamValueSetupController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -83,18 +93,38 @@ public class WorkflowParamValueSetupController extends BaseCommandController {
 		return workflowParamValue;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>workflowParamService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.WorkflowParamService} object.
+	 */
 	public WorkflowParamService getWorkflowParamService() {
 		return workflowParamService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowParamService</code>.</p>
+	 *
+	 * @param workflowParamService a {@link net.sourceforge.seqware.common.business.WorkflowParamService} object.
+	 */
 	public void setWorkflowParamService(WorkflowParamService workflowParamService) {
 		this.workflowParamService = workflowParamService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>workflowParamValueService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.WorkflowParamValueService} object.
+	 */
 	public WorkflowParamValueService getWorkflowParamValueService() {
 		return workflowParamValueService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowParamValueService</code>.</p>
+	 *
+	 * @param workflowParamValueService a {@link net.sourceforge.seqware.common.business.WorkflowParamValueService} object.
+	 */
 	public void setWorkflowParamValueService(WorkflowParamValueService workflowParamValueService) {
 		this.workflowParamValueService = workflowParamValueService;
 	}

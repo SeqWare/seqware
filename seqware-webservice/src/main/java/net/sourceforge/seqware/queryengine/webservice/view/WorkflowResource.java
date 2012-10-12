@@ -40,12 +40,20 @@ import javax.servlet.ServletContext;
 import org.restlet.Request;
 
 /**
+ * <p>WorkflowResource class.</p>
+ *
  * @author boconnor
  * FIXME: this needs to be made generic so all workflow-specific cruft comes from the workflow_param and other tables!
+ * @version $Id: $Id
  */
 public class WorkflowResource extends ServerResource {
 
     //Get("text/html")
+    /**
+     * <p>represent.</p>
+     *
+     * @return a {@link org.restlet.representation.Representation} object.
+     */
     @Get
     public Representation represent() {
 
@@ -113,6 +121,13 @@ public class WorkflowResource extends ServerResource {
 
     }
 
+    /**
+     * <p>accept.</p>
+     *
+     * @param entity a {@link org.restlet.representation.Representation} object.
+     * @return a {@link org.restlet.representation.Representation} object.
+     * @throws java.lang.Exception if any.
+     */
     @Post
     public Representation accept(Representation entity) throws Exception {
         Representation rep = null;

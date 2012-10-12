@@ -17,12 +17,22 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>InvoiceDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceDAO {
 
+  /**
+   * <p>Constructor for InvoiceDAOHibernate.</p>
+   */
   public InvoiceDAOHibernate() {
     super();
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer insert(Invoice invoice) {
     this.getHibernateTemplate().save(invoice);
@@ -30,15 +40,22 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
     return invoice.getSwAccession();
   }
 
+  /** {@inheritDoc} */
   public void update(Invoice invoice) {
     getHibernateTemplate().update(invoice);
     getSession().flush();
   }
 
+  /** {@inheritDoc} */
   public void delete(Invoice invoice) {
     getHibernateTemplate().delete(invoice);
   }
 
+  /**
+   * <p>list.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<Invoice> list() {
     ArrayList<Invoice> invoices = new ArrayList<Invoice>();
 
@@ -56,6 +73,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
     return invoices;
   }
 
+  /** {@inheritDoc} */
   public List<Invoice> list(Registration registration) {
     ArrayList<Invoice> invoices = new ArrayList<Invoice>();
 
@@ -78,6 +96,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
     return invoices;
   }
   
+  /** {@inheritDoc} */
   public List<Invoice> list(Registration registration, String state) {
     ArrayList<Invoice> invoices = new ArrayList<Invoice>();
 
@@ -103,6 +122,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
 
  
 
+  /** {@inheritDoc} */
   public Invoice findByID(Integer wfID) {
     String query = "from Invoice as invoice where invoice.invoiceId = ?";
     Invoice invoice = null;
@@ -114,6 +134,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
     return invoice;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Invoice findBySWAccession(Integer swAccession) {
     String query = "from Invoice as invoice where invoice.swAccession = ?";
@@ -130,6 +151,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
   }
 
 
+  /** {@inheritDoc} */
   @Override
   public Invoice updateDetached(Invoice invoice) {
     Invoice dbObject = findByID(invoice.getInvoiceId());
@@ -145,6 +167,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(Registration registration, Invoice invoice) {
     Invoice dbObject = reattachInvoice(invoice);
@@ -160,6 +183,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer insert(Registration registration, Invoice invoice) {
     Logger logger = Logger.getLogger(InvoiceDAOHibernate.class);
@@ -173,6 +197,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public Invoice updateDetached(Registration registration, Invoice invoice) {
     Invoice dbObject = reattachInvoice(invoice);

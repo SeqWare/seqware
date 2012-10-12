@@ -6,22 +6,31 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+/**
+ * <p>SampleValidator class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SampleValidator implements Validator {
 	private SampleService sampleService;
 
+	/**
+	 * <p>Constructor for SampleValidator.</p>
+	 */
 	public SampleValidator () {
 		super();
 	}
 	
+	/** {@inheritDoc} */
 	public boolean supports(Class clazz) {
 		return Sample.class.equals(clazz);
 	}
 
 	/**
-	 * Validates the specified Object.
+	 * {@inheritDoc}
 	 *
-	 * @param obj the Object to validate
-	 * @param errors Errors object for validation errors
+	 * Validates the specified Object.
 	 */
 	public void validate(Object obj, Errors errors) {
 		Sample sample = (Sample) obj;
@@ -33,6 +42,12 @@ public class SampleValidator implements Validator {
 		this.validateExpectedNumberReads(sample, errors);
 	}
 	
+	/**
+	 * <p>validateExpectedNumberRuns.</p>
+	 *
+	 * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+	 * @param errors a {@link org.springframework.validation.Errors} object.
+	 */
 	public void validateExpectedNumberRuns(Sample sample, Errors errors) {
 		if (errors.getFieldError("strExpectedNumRuns") == null) {
 			boolean isHasError = false;
@@ -58,6 +73,12 @@ public class SampleValidator implements Validator {
 		}
 	}
 	
+	/**
+	 * <p>validateExpectedNumberReads.</p>
+	 *
+	 * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+	 * @param errors a {@link org.springframework.validation.Errors} object.
+	 */
 	public void validateExpectedNumberReads(Sample sample, Errors errors) {
 		if (errors.getFieldError("strExpectedNumReads") == null) {
 			boolean isHasError = false;
@@ -88,6 +109,7 @@ public class SampleValidator implements Validator {
 	 * email address match.
 	 *
 	 * @param errors Errors object for validation errors
+	 * @param title a {@link java.lang.String} object.
 	 */
 	public void validateTitle(String title, Errors errors) {
 
@@ -99,10 +121,20 @@ public class SampleValidator implements Validator {
 		}
 	}
 
+	/**
+	 * <p>Getter for the field <code>sampleService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	 */
 	public SampleService getSampleService() {
 		return sampleService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sampleService</code>.</p>
+	 *
+	 * @param sampleService a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	 */
 	public void setSampleService(SampleService sampleService) {
 		this.sampleService = sampleService;
 	}

@@ -2,11 +2,24 @@ package	net.sourceforge.solexatools;								// -*- tab-width: 4 -*-
 import javax.servlet.http.HttpServletRequest;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>Debug class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class Debug {
 	// Produces:	"((ImplementingClassName)InstanceClassName)"
 	//       or:	"ClassName"
 	// ... in the case where the implementing class and class of the instance differ
 	// or are the same respectively.
+	/**
+	 * <p>describeInterfaceAndImplementation.</p>
+	 *
+	 * @param instance a {@link java.lang.Object} object.
+	 * @param implClassName a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String describeInterfaceAndImplementation(
 		Object instance, String implClassName
 	) {
@@ -28,6 +41,11 @@ public class Debug {
 		return "((" + implClassName + ")" + instanceClassName + ")";
 	}
 
+	/**
+	 * <p>put.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 */
 	public static void put(HttpServletRequest request) {
 		putImpl(null,
 				""
@@ -39,9 +57,20 @@ public class Debug {
 				);
 	}
 
+	/**
+	 * <p>put.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
 	public static void put(String message) {
 		putImpl(null, message);
 	}
+	/**
+	 * <p>put.</p>
+	 *
+	 * @param instance a {@link java.lang.Object} object.
+	 * @param message a {@link java.lang.String} object.
+	 */
 	public static void put(Object instance, String message) {
 		putImpl(instance, message);
 	}

@@ -26,18 +26,29 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>BulkDownloaderController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class BulkDownloaderController extends BaseCommandController {
     
 	private FileService fileService;
+	/** Constant <code>BUFFERSIZE=500*1024</code> */
 	public final static int BUFFERSIZE = 500*1024; // 512K buffer
 	private final static String SEPARATOR = java.io.File.separator;
 
 
+	/**
+	 * <p>Constructor for BulkDownloaderController.</p>
+	 */
 	public BulkDownloaderController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -143,10 +154,20 @@ public class BulkDownloaderController extends BaseCommandController {
     	return maxSize;
 	}
 
+  /**
+   * <p>Getter for the field <code>fileService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
+   */
   public FileService getFileService() {
     return fileService;
   }
 
+  /**
+   * <p>Setter for the field <code>fileService</code>.</p>
+   *
+   * @param fileService a {@link net.sourceforge.seqware.common.business.FileService} object.
+   */
   public void setFileService(FileService fileService) {
     this.fileService = fileService;
   }

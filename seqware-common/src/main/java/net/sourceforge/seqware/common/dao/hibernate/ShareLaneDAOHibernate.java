@@ -10,6 +10,12 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ShareLaneDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ShareLaneDAOHibernate extends HibernateDaoSupport implements ShareLaneDAO {
   /*
    * (non-Javadoc)
@@ -17,6 +23,7 @@ public class ShareLaneDAOHibernate extends HibernateDaoSupport implements ShareL
    * @see net.sourceforge.seqware.common.dao.hibernate.ShareLaneDAO#insert(
    * net.sourceforge.seqware.common.model.ShareLane)
    */
+  /** {@inheritDoc} */
   @Override
   public void insert(ShareLane shareLane) {
     this.getHibernateTemplate().save(shareLane);
@@ -28,6 +35,7 @@ public class ShareLaneDAOHibernate extends HibernateDaoSupport implements ShareL
    * @see net.sourceforge.seqware.common.dao.hibernate.ShareLaneDAO#update(
    * net.sourceforge.seqware.common.model.ShareLane)
    */
+  /** {@inheritDoc} */
   @Override
   public void update(ShareLane shareLane) {
     this.getHibernateTemplate().update(shareLane);
@@ -39,6 +47,7 @@ public class ShareLaneDAOHibernate extends HibernateDaoSupport implements ShareL
    * @see net.sourceforge.seqware.common.dao.hibernate.ShareLaneDAO#delete(
    * net.sourceforge.seqware.common.model.ShareLane)
    */
+  /** {@inheritDoc} */
   @Override
   public void delete(ShareLane shareLane) {
     this.getHibernateTemplate().delete(shareLane);
@@ -50,6 +59,7 @@ public class ShareLaneDAOHibernate extends HibernateDaoSupport implements ShareL
    * @see net.sourceforge.seqware.common.dao.hibernate.ShareLaneDAO#findByID
    * (java.lang.Integer)
    */
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("rawtypes")
   public ShareLane findByID(Integer shareLaneID) {
@@ -70,6 +80,7 @@ public class ShareLaneDAOHibernate extends HibernateDaoSupport implements ShareL
    * net.sourceforge.seqware.common.dao.hibernate.ShareLaneDAO#findByOwnerID
    * (java.lang.Integer)
    */
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("unchecked")
   public List<ShareLane> findByOwnerID(Integer registrationID) {
@@ -84,6 +95,7 @@ public class ShareLaneDAOHibernate extends HibernateDaoSupport implements ShareL
    * @see net.sourceforge.seqware.common.dao.hibernate.ShareLaneDAO#
    * findBySWAccession(java.lang.Integer)
    */
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings({ "unchecked" })
   public ShareLane findBySWAccession(Integer swAccession) {
@@ -97,6 +109,7 @@ public class ShareLaneDAOHibernate extends HibernateDaoSupport implements ShareL
     return shareLane;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ShareLane updateDetached(ShareLane shareLane) {
     ShareLane dbObject = findByID(shareLane.getShareLaneId());
@@ -112,6 +125,7 @@ public class ShareLaneDAOHibernate extends HibernateDaoSupport implements ShareL
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ShareLane> list() {
         throw new UnsupportedOperationException("Not supported yet.");

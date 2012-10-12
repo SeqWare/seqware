@@ -10,23 +10,33 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ShareProcessingDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ShareProcessingDAOHibernate extends HibernateDaoSupport implements ShareProcessingDAO {
 
+  /** {@inheritDoc} */
   @Override
   public void insert(ShareProcessing shareProcessing) {
     this.getHibernateTemplate().save(shareProcessing);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(ShareProcessing shareProcessing) {
     this.getHibernateTemplate().update(shareProcessing);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void delete(ShareProcessing shareProcessing) {
     this.getHibernateTemplate().delete(shareProcessing);
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("rawtypes")
   public ShareProcessing findByID(Integer shareProcessingID) {
@@ -40,6 +50,7 @@ public class ShareProcessingDAOHibernate extends HibernateDaoSupport implements 
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("unchecked")
   public List<ShareProcessing> findByOwnerID(Integer registrationID) {
@@ -48,6 +59,7 @@ public class ShareProcessingDAOHibernate extends HibernateDaoSupport implements 
     return this.getHibernateTemplate().find(query, parameters);
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings({ "unchecked" })
   public ShareProcessing findBySWAccession(Integer swAccession) {
@@ -61,6 +73,7 @@ public class ShareProcessingDAOHibernate extends HibernateDaoSupport implements 
     return shareProcessing;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ShareProcessing updateDetached(ShareProcessing shareProcessing) {
     ShareProcessing dbObject = findByID(shareProcessing.getShareProcessingId());
@@ -76,6 +89,7 @@ public class ShareProcessingDAOHibernate extends HibernateDaoSupport implements 
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ShareProcessing> list() {
         throw new UnsupportedOperationException("Not supported yet.");

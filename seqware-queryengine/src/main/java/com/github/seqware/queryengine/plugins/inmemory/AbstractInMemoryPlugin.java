@@ -23,11 +23,13 @@ import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
  * Base class for all in-memory plug-ins
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public abstract class AbstractInMemoryPlugin implements AnalysisPluginInterface {
 
     protected FeatureSet inputSet;
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue test() {
         /**
@@ -36,6 +38,7 @@ public abstract class AbstractInMemoryPlugin implements AnalysisPluginInterface 
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue verifyParameters() {
         /**
@@ -44,6 +47,7 @@ public abstract class AbstractInMemoryPlugin implements AnalysisPluginInterface 
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue verifyInput() {
         /**
@@ -52,6 +56,7 @@ public abstract class AbstractInMemoryPlugin implements AnalysisPluginInterface 
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue filterInit() {
         /**
@@ -60,6 +65,7 @@ public abstract class AbstractInMemoryPlugin implements AnalysisPluginInterface 
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue filter() {
         /**
@@ -68,6 +74,7 @@ public abstract class AbstractInMemoryPlugin implements AnalysisPluginInterface 
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue verifyOutput() {
         /**
@@ -76,6 +83,7 @@ public abstract class AbstractInMemoryPlugin implements AnalysisPluginInterface 
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue cleanup() {
         /**
@@ -84,10 +92,14 @@ public abstract class AbstractInMemoryPlugin implements AnalysisPluginInterface 
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isComplete() {
         return true;
     }
 
+    /**
+     * <p>performInMemoryRun.</p>
+     */
     public abstract void performInMemoryRun();
 }

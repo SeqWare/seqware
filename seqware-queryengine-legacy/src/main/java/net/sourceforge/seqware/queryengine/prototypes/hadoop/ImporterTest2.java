@@ -26,18 +26,23 @@ import net.sourceforge.seqware.queryengine.backend.util.SeqWareException;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareSettings;
 
 /**
+ * <p>ImporterTest2 class.</p>
+ *
  * @author boconnor
- * 
+ *
  * This is a simple program that imports a series of pileup, dbSNP, and coding
  * consequence files using either a BerkeleyDB or HBase backend. It collects timing
  * and object count information and outputs this to a report file.
  *
  * TODO:
+ * @version $Id: $Id
  */
 public class ImporterTest2 {
 
   /**
-   * @param args
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
    */
   public static void main(String[] args) {
 

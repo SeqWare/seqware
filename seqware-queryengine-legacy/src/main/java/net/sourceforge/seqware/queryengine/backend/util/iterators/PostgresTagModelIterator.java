@@ -14,10 +14,11 @@ import net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator;
 
 /**
  * An interator on top of the standard Java SQL iterator
- * 
+ *
  * @author boconnor
- * 
+ *
  * FIXME: is it really wise to pass the store object here!?!?
+ * @version $Id: $Id
  */
 public class PostgresTagModelIterator extends SeqWareBase implements SeqWareIterator {
 
@@ -26,6 +27,13 @@ public class PostgresTagModelIterator extends SeqWareBase implements SeqWareIter
   int currId = 0;
   PostgreSQLStore store = null;
   
+  /**
+   * <p>Constructor for PostgresTagModelIterator.</p>
+   *
+   * @param rs a {@link java.sql.ResultSet} object.
+   * @param store a {@link net.sourceforge.seqware.queryengine.backend.store.impl.PostgreSQLStore} object.
+   * @throws java.lang.Exception if any.
+   */
   public PostgresTagModelIterator(ResultSet rs, PostgreSQLStore store) throws Exception {
 
     this.rs = rs;
@@ -36,12 +44,20 @@ public class PostgresTagModelIterator extends SeqWareBase implements SeqWareIter
   }
 
   // so the iterator class provides: hasNext(), next(), remove()
+  /**
+   * <p>close.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   public void close() throws Exception {
     rs.close();
   }
 
   /**
    * Not supported for this backend!
+   *
+   * @return a int.
+   * @throws java.lang.Exception if any.
    */
   public int getCount() throws Exception {
     return(-1);
@@ -50,6 +66,9 @@ public class PostgresTagModelIterator extends SeqWareBase implements SeqWareIter
   /**
    * Not applicable for Postgres backend.
    * FIXME: is there a way to get rid of this?
+   *
+   * @return a {@link com.sleepycat.db.Cursor} object.
+   * @throws java.lang.Exception if any.
    */
   public Cursor getCursor() throws Exception {
     return(null);
@@ -58,11 +77,19 @@ public class PostgresTagModelIterator extends SeqWareBase implements SeqWareIter
   /**
    * Not applicable for Postgres backend.
    * FIXME: this is a BerkeleyDB specific method
+   *
+   * @return a {@link java.lang.Object} object.
+   * @throws java.io.UnsupportedEncodingException if any.
    */
   public Object nextSecondaryKey() throws UnsupportedEncodingException {
     return(null);
   }
 
+  /**
+   * <p>hasNext.</p>
+   *
+   * @return a boolean.
+   */
   public boolean hasNext() {
     try {
       if (rs != null) {
@@ -83,6 +110,11 @@ public class PostgresTagModelIterator extends SeqWareBase implements SeqWareIter
     return(false);
   }
   
+  /**
+   * <p>next.</p>
+   *
+   * @return a {@link java.lang.Object} object.
+   */
   public Object next() {
     
     return(currModel);

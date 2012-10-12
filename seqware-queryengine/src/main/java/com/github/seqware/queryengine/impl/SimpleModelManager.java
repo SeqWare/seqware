@@ -39,6 +39,7 @@ import org.apache.log4j.Logger;
  * using Hibernate/JPA-like semantics.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class SimpleModelManager implements CreateUpdateManager {
 
@@ -46,8 +47,9 @@ public class SimpleModelManager implements CreateUpdateManager {
     private BackEndInterface backend = SWQEFactory.getBackEnd();
 
     /**
-     * 
-     * @return 
+     * <p>buildFeatureSetInternal.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.model.FeatureSet.Builder} object.
      */
     public FeatureSet.Builder buildFeatureSetInternal() {
         FeatureSet.Builder fSet = LazyFeatureSet.newBuilder();
@@ -57,7 +59,7 @@ public class SimpleModelManager implements CreateUpdateManager {
     /**
      * Flush objects to the back-end giving a working list
      *
-     * @param workingList
+     * @param workingList a {@link java.util.List} object.
      */
     protected void flushObjects(List<Entry<String, AtomStatePair>> workingList) {
         // stupid workaround, if someone really leans on the flush() command after doing very little, 
@@ -187,6 +189,7 @@ public class SimpleModelManager implements CreateUpdateManager {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void persist(Atom p) {
         AtomImpl pImpl = (AtomImpl) p;
@@ -199,11 +202,13 @@ public class SimpleModelManager implements CreateUpdateManager {
         this.dirtySet.put(p.getSGID().toString(), new AtomStatePair(p, State.MANAGED));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void clear() {
         dirtySet.clear();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         // close connection with all objects
@@ -214,6 +219,7 @@ public class SimpleModelManager implements CreateUpdateManager {
         this.clear();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void flush() {
         this.flush(true);
@@ -234,6 +240,11 @@ public class SimpleModelManager implements CreateUpdateManager {
         }
     }
 
+    /**
+     * <p>manageFlushedObjects.</p>
+     *
+     * @param workingList a {@link java.util.List} object.
+     */
     protected void manageFlushedObjects(List<Entry<String, AtomStatePair>> workingList) {
         // reset dirty map and put back the objects from the working list
         for (Entry<String, AtomStatePair> e : workingList) {
@@ -248,6 +259,11 @@ public class SimpleModelManager implements CreateUpdateManager {
         }
     }
 
+    /**
+     * <p>grabObjectsToBeFlushed.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     protected List<Entry<String, AtomStatePair>> grabObjectsToBeFlushed() {
         // update dirty objects
         // TODO: to deal with the possible semantics of the back-end timestamp, we need to
@@ -264,6 +280,7 @@ public class SimpleModelManager implements CreateUpdateManager {
         return workingList;
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeatureSet.Builder buildFeatureSet() {
         FeatureSet.Builder fSet = null;
@@ -275,6 +292,7 @@ public class SimpleModelManager implements CreateUpdateManager {
         return fSet;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Reference.Builder buildReference() {
         Reference.Builder ref = null;
@@ -285,6 +303,7 @@ public class SimpleModelManager implements CreateUpdateManager {
         return ref;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReferenceSet.Builder buildReferenceSet() {
         ReferenceSet.Builder rSet = null;
@@ -295,6 +314,7 @@ public class SimpleModelManager implements CreateUpdateManager {
         return rSet;
     }
 
+    /** {@inheritDoc} */
     @Override
     public TagSet.Builder buildTagSet() {
         TagSet.Builder tSet = null;
@@ -305,6 +325,7 @@ public class SimpleModelManager implements CreateUpdateManager {
         return tSet;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisSet.Builder buildAnalysisSet() {
         AnalysisSet.Builder aSet = null;
@@ -315,6 +336,7 @@ public class SimpleModelManager implements CreateUpdateManager {
         return aSet;
     }
 
+    /** {@inheritDoc} */
     @Override
     public User.Builder buildUser() {
         User.Builder aSet = null;
@@ -325,6 +347,7 @@ public class SimpleModelManager implements CreateUpdateManager {
         return aSet;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Group.Builder buildGroup() {
         Group.Builder aSet = null;
@@ -335,6 +358,7 @@ public class SimpleModelManager implements CreateUpdateManager {
         return aSet;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Tag.Builder buildTag() {
         Tag.Builder aSet = null;
@@ -345,6 +369,7 @@ public class SimpleModelManager implements CreateUpdateManager {
         return aSet;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Feature.Builder buildFeature() {
         Feature.Builder aSet = null;
@@ -355,11 +380,13 @@ public class SimpleModelManager implements CreateUpdateManager {
         return aSet;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void objectCreated(Atom source) {
         atomStateChange(source, State.NEW_CREATION);
     }
 
+    /** {@inheritDoc} */
     @Override
     public State getState(Atom a) {
         AtomStatePair get = this.dirtySet.get(a.getSGID().toString());
@@ -367,6 +394,7 @@ public class SimpleModelManager implements CreateUpdateManager {
         return get.state;
     }
     
+    /** {@inheritDoc} */
     @Override
     public void atomStateChange(Atom source, State state) {
         // check for valid state transitions
@@ -396,6 +424,7 @@ public class SimpleModelManager implements CreateUpdateManager {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Builder buildAnalysis() {
         Analysis.Builder aSet = null;

@@ -34,15 +34,23 @@ import org.restlet.data.Status;
 import org.w3c.dom.Document;
 
 /**
+ * <p>WorkflowRunIdFilesResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class WorkflowRunIdFilesResource extends BasicRestlet {
 
+    /**
+     * <p>Constructor for WorkflowRunIdFilesResource.</p>
+     *
+     * @param context a {@link org.restlet.Context} object.
+     */
     public WorkflowRunIdFilesResource(Context context) {
         super(context);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void handle(Request request, Response response) {
         authenticate(request.getChallengeResponse().getIdentifier());
@@ -65,6 +73,13 @@ public class WorkflowRunIdFilesResource extends BasicRestlet {
         }
     }
 
+    /**
+     * <p>hello.</p>
+     *
+     * @param wrSWA a int.
+     * @return a {@link java.util.List} object.
+     * @throws java.sql.SQLException if any.
+     */
     public List<File> hello(int wrSWA) throws SQLException {
         WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
         List<File> files = (List<File>) testIfNull(wrs.findFiles(wrSWA));

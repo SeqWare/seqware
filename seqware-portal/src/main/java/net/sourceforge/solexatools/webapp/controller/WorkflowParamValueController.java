@@ -20,24 +20,48 @@ import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
+/**
+ * <p>WorkflowParamValueController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class WorkflowParamValueController extends MultiActionController{
 	//private WorkflowParamService workflowParamService;
 	private WorkflowParamValueService workflowParamValueService;
     
 	private Validator validator;
 
+	/**
+	 * <p>Constructor for WorkflowParamValueController.</p>
+	 */
 	public WorkflowParamValueController() {
 		super();
 	}
 
+	/**
+	 * <p>Constructor for WorkflowParamValueController.</p>
+	 *
+	 * @param delegate a {@link java.lang.Object} object.
+	 */
 	public WorkflowParamValueController(Object delegate) {
 		super(delegate);
 	}
 
+	/**
+	 * <p>Getter for the field <code>validator</code>.</p>
+	 *
+	 * @return a {@link org.springframework.validation.Validator} object.
+	 */
 	public Validator getValidator() {
 		return validator;
 	}
 
+	/**
+	 * <p>Setter for the field <code>validator</code>.</p>
+	 *
+	 * @param validator a {@link org.springframework.validation.Validator} object.
+	 */
 	public void setValidator(Validator validator) {
 		this.validator = validator;
 	}
@@ -51,10 +75,20 @@ public class WorkflowParamValueController extends MultiActionController{
 		this.workflowParamService = workflowParamService;
 	}
 */
+	/**
+	 * <p>Getter for the field <code>workflowParamValueService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.WorkflowParamValueService} object.
+	 */
 	public WorkflowParamValueService getWorkflowParamValueService() {
 		return workflowParamValueService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowParamValueService</code>.</p>
+	 *
+	 * @param workflowParamValueService a {@link net.sourceforge.seqware.common.business.WorkflowParamValueService} object.
+	 */
 	public void setWorkflowParamValueService(
 			WorkflowParamValueService workflowParamValueService) {
 		this.workflowParamValueService = workflowParamValueService;
@@ -66,10 +100,8 @@ public class WorkflowParamValueController extends MultiActionController{
 	 * @param request HttpServletRequest
 	 * @param response HttpServletResponse
 	 * @param command Study command object
-	 *
 	 * @return ModelAndView
-	 *
-	 * @throws Exception
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleSubmit(HttpServletRequest		request,
 									 HttpServletResponse	response,
@@ -112,6 +144,10 @@ public class WorkflowParamValueController extends MultiActionController{
 	 * update study.
 	 *
 	 * @param command Study command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleReset(HttpServletRequest request,
 									HttpServletResponse response,
@@ -126,6 +162,10 @@ public class WorkflowParamValueController extends MultiActionController{
 	 * or the study update page.
 	 *
 	 * @param command Study command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleCancel(HttpServletRequest request,
 									 HttpServletResponse response,
@@ -140,6 +180,10 @@ public class WorkflowParamValueController extends MultiActionController{
 	 * Handles the user's request to update their study.
 	 *
 	 * @param command Study command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleUpdate(HttpServletRequest		request,
 									 HttpServletResponse	response,
@@ -178,6 +222,10 @@ public class WorkflowParamValueController extends MultiActionController{
 	 * Handles the user's request to delete their study.
 	 *
 	 * @param command Study command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleDelete(HttpServletRequest		request,
 									 HttpServletResponse	response,

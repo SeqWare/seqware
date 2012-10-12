@@ -8,49 +8,108 @@ import java.util.Stack;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * <p>SeqWareQueryLanguageLexer class.</p>
+ *
+ * @author dyuen
+ * @version $Id: $Id
+ */
 @SuppressWarnings({"all", "warnings", "unchecked"})
 public class SeqWareQueryLanguageLexer extends Lexer {
+    /** Constant <code>EOF=-1</code> */
     public static final int EOF=-1;
+    /** Constant <code>T__26=26</code> */
     public static final int T__26=26;
+    /** Constant <code>AND=4</code> */
     public static final int AND=4;
+    /** Constant <code>BRACKET_CLOSE=5</code> */
     public static final int BRACKET_CLOSE=5;
+    /** Constant <code>BRACKET_OPEN=6</code> */
     public static final int BRACKET_OPEN=6;
+    /** Constant <code>COMMENT_EOL=7</code> */
     public static final int COMMENT_EOL=7;
+    /** Constant <code>COMMENT_INLINE=8</code> */
     public static final int COMMENT_INLINE=8;
+    /** Constant <code>EQUALS=9</code> */
     public static final int EQUALS=9;
+    /** Constant <code>FLOAT=10</code> */
     public static final int FLOAT=10;
+    /** Constant <code>GT=11</code> */
     public static final int GT=11;
+    /** Constant <code>GTEQ=12</code> */
     public static final int GTEQ=12;
+    /** Constant <code>ID=13</code> */
     public static final int ID=13;
+    /** Constant <code>INT=14</code> */
     public static final int INT=14;
+    /** Constant <code>LT=15</code> */
     public static final int LT=15;
+    /** Constant <code>LTEQ=16</code> */
     public static final int LTEQ=16;
+    /** Constant <code>NAMED_CONSTANT=17</code> */
     public static final int NAMED_CONSTANT=17;
+    /** Constant <code>NAMED_FUNCTION=18</code> */
     public static final int NAMED_FUNCTION=18;
+    /** Constant <code>NAMED_THREE_PARAM_PREDICATE=19</code> */
     public static final int NAMED_THREE_PARAM_PREDICATE=19;
+    /** Constant <code>NAMED_TWO_PARAM_PREDICATE=20</code> */
     public static final int NAMED_TWO_PARAM_PREDICATE=20;
+    /** Constant <code>NOT=21</code> */
     public static final int NOT=21;
+    /** Constant <code>NOTEQUALS=22</code> */
     public static final int NOTEQUALS=22;
+    /** Constant <code>OR=23</code> */
     public static final int OR=23;
+    /** Constant <code>STRING=24</code> */
     public static final int STRING=24;
+    /** Constant <code>WHITESPACE=25</code> */
     public static final int WHITESPACE=25;
 
     // delegates
     // delegators
+    /**
+     * <p>getDelegates.</p>
+     *
+     * @return an array of {@link org.antlr.runtime.Lexer} objects.
+     */
     public Lexer[] getDelegates() {
         return new Lexer[] {};
     }
 
+    /**
+     * <p>Constructor for SeqWareQueryLanguageLexer.</p>
+     */
     public SeqWareQueryLanguageLexer() {} 
+    /**
+     * <p>Constructor for SeqWareQueryLanguageLexer.</p>
+     *
+     * @param input a {@link org.antlr.runtime.CharStream} object.
+     */
     public SeqWareQueryLanguageLexer(CharStream input) {
         this(input, new RecognizerSharedState());
     }
+    /**
+     * <p>Constructor for SeqWareQueryLanguageLexer.</p>
+     *
+     * @param input a {@link org.antlr.runtime.CharStream} object.
+     * @param state a {@link org.antlr.runtime.RecognizerSharedState} object.
+     */
     public SeqWareQueryLanguageLexer(CharStream input, RecognizerSharedState state) {
         super(input,state);
     }
+    /**
+     * <p>getGrammarFileName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getGrammarFileName() { return "/home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g"; }
 
     // $ANTLR start "T__26"
+    /**
+     * <p>mT__26.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mT__26() throws RecognitionException {
         try {
             int _type = T__26;
@@ -72,6 +131,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "T__26"
 
     // $ANTLR start "NAMED_CONSTANT"
+    /**
+     * <p>mNAMED_CONSTANT.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mNAMED_CONSTANT() throws RecognitionException {
         try {
             int _type = NAMED_CONSTANT;
@@ -165,6 +229,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "NAMED_CONSTANT"
 
     // $ANTLR start "NAMED_FUNCTION"
+    /**
+     * <p>mNAMED_FUNCTION.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mNAMED_FUNCTION() throws RecognitionException {
         try {
             int _type = NAMED_FUNCTION;
@@ -188,6 +257,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "NAMED_FUNCTION"
 
     // $ANTLR start "NAMED_TWO_PARAM_PREDICATE"
+    /**
+     * <p>mNAMED_TWO_PARAM_PREDICATE.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mNAMED_TWO_PARAM_PREDICATE() throws RecognitionException {
         try {
             int _type = NAMED_TWO_PARAM_PREDICATE;
@@ -273,6 +347,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "NAMED_TWO_PARAM_PREDICATE"
 
     // $ANTLR start "NAMED_THREE_PARAM_PREDICATE"
+    /**
+     * <p>mNAMED_THREE_PARAM_PREDICATE.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mNAMED_THREE_PARAM_PREDICATE() throws RecognitionException {
         try {
             int _type = NAMED_THREE_PARAM_PREDICATE;
@@ -296,6 +375,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "NAMED_THREE_PARAM_PREDICATE"
 
     // $ANTLR start "ID"
+    /**
+     * <p>mID.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mID() throws RecognitionException {
         try {
             int _type = ID;
@@ -359,6 +443,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "ID"
 
     // $ANTLR start "INT"
+    /**
+     * <p>mINT.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mINT() throws RecognitionException {
         try {
             int _type = INT;
@@ -417,6 +506,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "INT"
 
     // $ANTLR start "FLOAT"
+    /**
+     * <p>mFLOAT.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mFLOAT() throws RecognitionException {
         try {
             int _type = FLOAT;
@@ -577,6 +671,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "FLOAT"
 
     // $ANTLR start "COMMENT_EOL"
+    /**
+     * <p>mCOMMENT_EOL.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mCOMMENT_EOL() throws RecognitionException {
         try {
             int _type = COMMENT_EOL;
@@ -657,6 +756,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "COMMENT_EOL"
 
     // $ANTLR start "COMMENT_INLINE"
+    /**
+     * <p>mCOMMENT_INLINE.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mCOMMENT_INLINE() throws RecognitionException {
         try {
             int _type = COMMENT_INLINE;
@@ -724,6 +828,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "COMMENT_INLINE"
 
     // $ANTLR start "STRING"
+    /**
+     * <p>mSTRING.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mSTRING() throws RecognitionException {
         try {
             int _type = STRING;
@@ -781,6 +890,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "STRING"
 
     // $ANTLR start "NOT"
+    /**
+     * <p>mNOT.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mNOT() throws RecognitionException {
         try {
             int _type = NOT;
@@ -802,6 +916,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "NOT"
 
     // $ANTLR start "OR"
+    /**
+     * <p>mOR.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mOR() throws RecognitionException {
         try {
             int _type = OR;
@@ -825,6 +944,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "OR"
 
     // $ANTLR start "AND"
+    /**
+     * <p>mAND.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mAND() throws RecognitionException {
         try {
             int _type = AND;
@@ -848,6 +972,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "AND"
 
     // $ANTLR start "EQUALS"
+    /**
+     * <p>mEQUALS.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mEQUALS() throws RecognitionException {
         try {
             int _type = EQUALS;
@@ -871,6 +1000,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "EQUALS"
 
     // $ANTLR start "NOTEQUALS"
+    /**
+     * <p>mNOTEQUALS.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mNOTEQUALS() throws RecognitionException {
         try {
             int _type = NOTEQUALS;
@@ -894,6 +1028,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "NOTEQUALS"
 
     // $ANTLR start "LT"
+    /**
+     * <p>mLT.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mLT() throws RecognitionException {
         try {
             int _type = LT;
@@ -915,6 +1054,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "LT"
 
     // $ANTLR start "LTEQ"
+    /**
+     * <p>mLTEQ.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mLTEQ() throws RecognitionException {
         try {
             int _type = LTEQ;
@@ -938,6 +1082,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "LTEQ"
 
     // $ANTLR start "GT"
+    /**
+     * <p>mGT.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mGT() throws RecognitionException {
         try {
             int _type = GT;
@@ -959,6 +1108,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "GT"
 
     // $ANTLR start "GTEQ"
+    /**
+     * <p>mGTEQ.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mGTEQ() throws RecognitionException {
         try {
             int _type = GTEQ;
@@ -982,6 +1136,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "GTEQ"
 
     // $ANTLR start "BRACKET_OPEN"
+    /**
+     * <p>mBRACKET_OPEN.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mBRACKET_OPEN() throws RecognitionException {
         try {
             int _type = BRACKET_OPEN;
@@ -1003,6 +1162,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "BRACKET_OPEN"
 
     // $ANTLR start "BRACKET_CLOSE"
+    /**
+     * <p>mBRACKET_CLOSE.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mBRACKET_CLOSE() throws RecognitionException {
         try {
             int _type = BRACKET_CLOSE;
@@ -1024,6 +1188,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     // $ANTLR end "BRACKET_CLOSE"
 
     // $ANTLR start "WHITESPACE"
+    /**
+     * <p>mWHITESPACE.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final void mWHITESPACE() throws RecognitionException {
         try {
             int _type = WHITESPACE;
@@ -1083,6 +1252,11 @@ public class SeqWareQueryLanguageLexer extends Lexer {
     }
     // $ANTLR end "WHITESPACE"
 
+    /**
+     * <p>mTokens.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public void mTokens() throws RecognitionException {
         // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:1:8: ( T__26 | NAMED_CONSTANT | NAMED_FUNCTION | NAMED_TWO_PARAM_PREDICATE | NAMED_THREE_PARAM_PREDICATE | ID | INT | FLOAT | COMMENT_EOL | COMMENT_INLINE | STRING | NOT | OR | AND | EQUALS | NOTEQUALS | LT | LTEQ | GT | GTEQ | BRACKET_OPEN | BRACKET_CLOSE | WHITESPACE )
         int alt14=23;

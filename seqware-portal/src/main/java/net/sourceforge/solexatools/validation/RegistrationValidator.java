@@ -5,17 +5,27 @@ import net.sourceforge.solexatools.Debug;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
+/**
+ * <p>RegistrationValidator class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class RegistrationValidator extends LoginValidator {
 	
 	private static String trueInvitationCode = "19dks1-12i393-12991-2219k";
 	
+	/**
+	 * <p>Constructor for RegistrationValidator.</p>
+	 */
 	public RegistrationValidator () {
 		super();
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Validates the specified RegistrationDTO instance.
-	 * @param reg		The registration to validate
 	 */
 	public void validate(Object reg, Errors errors) {
 		RegistrationDTO registration = (RegistrationDTO)reg;
@@ -56,6 +66,12 @@ public class RegistrationValidator extends LoginValidator {
 		/* //TODO// make sure the user has the required privileges to create/update */
 	}
 	
+	/**
+	 * <p>validateInvitationCode.</p>
+	 *
+	 * @param invitationCode a {@link java.lang.String} object.
+	 * @param errors a {@link org.springframework.validation.Errors} object.
+	 */
 	public void validateInvitationCode(String invitationCode, Errors errors){
 		if (errors.getFieldError("invitationCode") == null){
 			if(!invitationCode.trim().equals(trueInvitationCode)){
@@ -67,6 +83,10 @@ public class RegistrationValidator extends LoginValidator {
 	/**
 	 * Determines if the registration's email address and confirm
 	 * email address match.
+	 *
+	 * @param emailAddress a {@link java.lang.String} object.
+	 * @param confirmEmailAddress a {@link java.lang.String} object.
+	 * @param errors a {@link org.springframework.validation.Errors} object.
 	 */
 	public static void validateEmailAddressesMatch(String emailAddress,
 											String confirmEmailAddress, Errors errors) {
@@ -83,6 +103,10 @@ public class RegistrationValidator extends LoginValidator {
 	/**
 	 * Determines if the registration's password and confirm
 	 * password match.
+	 *
+	 * @param password a {@link java.lang.String} object.
+	 * @param confirmPassword a {@link java.lang.String} object.
+	 * @param errors a {@link org.springframework.validation.Errors} object.
 	 */
 	public static void validatePasswordsMatch(String password,
 									   String confirmPassword, Errors errors) {
@@ -95,6 +119,12 @@ public class RegistrationValidator extends LoginValidator {
 		}
 	}
 
+	/**
+	 * <p>validateEmailNotInUse.</p>
+	 *
+	 * @param emailAddress a {@link java.lang.String} object.
+	 * @param errors a {@link org.springframework.validation.Errors} object.
+	 */
 	public void validateEmailNotInUse(String emailAddress, Errors errors) {
 		if (errors.getFieldError("emailAddress") == null) {
 			//TODO//

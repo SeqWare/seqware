@@ -26,50 +26,100 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 /**
  * SampleController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class SampleController extends MultiActionController {
   private ExperimentService experimentService;
   private SampleService sampleService;
   private OrganismService organismService;
   private Validator validator;
 
+  /**
+   * <p>Constructor for SampleController.</p>
+   */
   public SampleController() {
     super();
   }
 
+  /**
+   * <p>Constructor for SampleController.</p>
+   *
+   * @param delegate a {@link java.lang.Object} object.
+   */
   public SampleController(Object delegate) {
     super(delegate);
   }
 
+  /**
+   * <p>Getter for the field <code>validator</code>.</p>
+   *
+   * @return a {@link org.springframework.validation.Validator} object.
+   */
   public Validator getValidator() {
     return validator;
   }
 
+  /**
+   * <p>Setter for the field <code>validator</code>.</p>
+   *
+   * @param validator a {@link org.springframework.validation.Validator} object.
+   */
   public void setValidator(Validator validator) {
     this.validator = validator;
   }
 
+  /**
+   * <p>Getter for the field <code>sampleService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.SampleService} object.
+   */
   public SampleService getSampleService() {
     return sampleService;
   }
 
+  /**
+   * <p>Setter for the field <code>sampleService</code>.</p>
+   *
+   * @param sampleService a {@link net.sourceforge.seqware.common.business.SampleService} object.
+   */
   public void setSampleService(SampleService sampleService) {
     this.sampleService = sampleService;
   }
 
+  /**
+   * <p>Getter for the field <code>experimentService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+   */
   public ExperimentService getExperimentService() {
     return experimentService;
   }
 
+  /**
+   * <p>Setter for the field <code>experimentService</code>.</p>
+   *
+   * @param experimentService a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+   */
   public void setExperimentService(ExperimentService experimentService) {
     this.experimentService = experimentService;
   }
 
+  /**
+   * <p>Getter for the field <code>organismService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.OrganismService} object.
+   */
   public OrganismService getOrganismService() {
     return organismService;
   }
 
+  /**
+   * <p>Setter for the field <code>organismService</code>.</p>
+   *
+   * @param organismService a {@link net.sourceforge.seqware.common.business.OrganismService} object.
+   */
   public void setOrganismService(OrganismService organismService) {
     this.organismService = organismService;
   }
@@ -80,10 +130,8 @@ public class SampleController extends MultiActionController {
    * @param request HttpServletRequest
    * @param response HttpServletResponse
    * @param command Study command object
-   *
    * @return ModelAndView
-   *
-   * @throws Exception
+   * @throws java.lang.Exception if any.
    */
   public ModelAndView handleSubmit(HttpServletRequest		request,
       HttpServletResponse	response,
@@ -151,6 +199,10 @@ public class SampleController extends MultiActionController {
    * update sample.
    *
    * @param command Sample command object
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+   * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+   * @throws java.lang.Exception if any.
    */
   public ModelAndView handleReset(HttpServletRequest request,
       HttpServletResponse response,
@@ -187,6 +239,10 @@ public class SampleController extends MultiActionController {
    * or the study update page.
    *
    * @param command Study command object
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+   * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+   * @throws java.lang.Exception if any.
    */
   public ModelAndView handleCancel(HttpServletRequest request,
       HttpServletResponse response,
@@ -215,6 +271,10 @@ public class SampleController extends MultiActionController {
    * Handles the user's request to update their study.
    *
    * @param command Study command object
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+   * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+   * @throws java.lang.Exception if any.
    */
   public ModelAndView handleUpdate(HttpServletRequest		request,
       HttpServletResponse	response,
@@ -273,10 +333,14 @@ public class SampleController extends MultiActionController {
     return modelAndView;
   }
   
-  /**
+	/**
 	 * Handles the user's request to delete their sample.
 	 *
 	 * @param command Sample command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleDelete(HttpServletRequest		request,
 									 HttpServletResponse	response,

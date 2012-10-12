@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
  *
  * @author jbaran
  * @author dyuen
+ * @version $Id: $Id
  */
 public abstract class AtomImpl<T extends Atom> implements Atom<T> {
 
@@ -41,11 +42,17 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     //private Date clientTimestamp;
     private int externalSerializationVersion = SWQEFactory.getSerialization().getSerializationConstant();
 
+    /** {@inheritDoc} */
     @Override
     public int getExternalSerializationVersion() {
         return externalSerializationVersion;
     }
 
+    /**
+     * <p>Setter for the field <code>externalSerializationVersion</code>.</p>
+     *
+     * @param externalSerializationVersion a int.
+     */
     public void setExternalSerializationVersion(int externalSerializationVersion) {
         this.externalSerializationVersion = externalSerializationVersion;
     }
@@ -59,16 +66,18 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     private Map<String, Map<String, Tag>> tags = new HashMap<String, Map<String, Tag>>();
     private LazyReference<T> precedingVersion = new LazyReference<T>(this.getHBaseClass());
 
+    /**
+     * <p>Constructor for AtomImpl.</p>
+     */
     protected AtomImpl() {
         //this.clientTimestamp = new Date();
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Copy constructor, used to generate a shallow copy of a Atom with
      * potentially a new clientTimestamp and UUID
-     *
-     * @param newSGID whether or not to generate a new UUID and clientTimestamp
-     * for the new copy
      */
     @Override
     public T copy(boolean newSGID) {
@@ -111,11 +120,13 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
         return (T) newAtom;
     }
     
+    /** {@inheritDoc} */
     @Override
     public  NestedLevel getNestedTags(TagSet tagSet) {
         return getNestedTags(tagSet.getSGID().getRowKey());
     }
 
+    /** {@inheritDoc} */
     @Override
     public NestedLevel getNestedTags(String tagSetRowKey) {
         NestedLevel rootLevel = new NestedLevel();
@@ -138,10 +149,10 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Get the universally unique identifier of this object. This should be
      * unique across the whole backend and not just this resource
-     *
-     * @return unique identifier for this (version of) resource
      */
     @Override
     public SGID getSGID() {
@@ -149,12 +160,11 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Get a creation time for this resource. Associated resource timestamps for
      * older versions can be accessed via the {@link Versionable} interface when
      * applicable
-     *
-     * @return the creation time stamp for this particular instance of the
-     * resource
      */
     @Override
     public Date getTimestamp() {
@@ -166,7 +176,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      * Set the clientTimestamp, this should never be called outside of the
      * backend
      *
-     * @param clientTimestamp new time stamp
+     * @param timestamp a {@link java.util.Date} object.
      */
     public void setTimestamp(Date timestamp) {
         this.getSGID().setBackendTimestamp(timestamp);
@@ -183,6 +193,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
         this.sgid = sgid;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return this.sgid.toString() + " " + super.toString();
@@ -191,7 +202,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     /**
      * Get the model manager for this Atom
      *
-     * @return
+     * @return a {@link com.github.seqware.queryengine.factory.CreateUpdateManager} object.
      */
     public CreateUpdateManager getManager() {
         // happens pretty often now when building model objects
@@ -204,12 +215,13 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     /**
      * Set the model manager for this Atom
      *
-     * @param manager
+     * @param manager a {@link com.github.seqware.queryengine.factory.CreateUpdateManager} object.
      */
     public void setManager(CreateUpdateManager manager) {
         this.manager = manager;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AtomImpl) {
@@ -218,6 +230,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return sgid.hashCode();
@@ -228,6 +241,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      * backend
      *
      * @param sgid new UUID
+     * @param oldSGID a {@link com.github.seqware.queryengine.util.SGID} object.
      */
     public void impersonate(SGID sgid, SGID oldSGID) {
         this.impersonate(sgid);
@@ -235,6 +249,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
         this.precedingVersion.setSGID(oldSGID);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean associateTag(Tag tag) {
         if (tag.getTagSetSGID() == null) {
@@ -255,6 +270,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean dissociateTag(Tag tag) {
         tags.get(tag.getTagSetSGID().getRowKey()).remove(tag.getKey());
@@ -265,16 +281,19 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<Tag> getTags() {
         return new TagValueIterable(tags);//Factory.getBackEnd().getTags(this);
     }
     
+    /** {@inheritDoc} */
     @Override
     public Tag getTagByKey(TagSet tagSet, String key) {
         return getTagByKey(tagSet.getSGID().getRowKey(), key);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Tag getTagByKey(String tagSet, String key) {
         if (!tags.containsKey(tagSet)){
@@ -283,6 +302,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
         return tags.get(tagSet).get(key);
     }
 
+    /** {@inheritDoc} */
     @Override
     public long getVersion() {
         if (this.precedingVersion.get() == null) {
@@ -292,11 +312,13 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public T getPrecedingVersion() {
         return this.precedingVersion.get();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setPrecedingVersion(T precedingVersion) {
         // inform the model manager that this is a new version of an object now
@@ -309,7 +331,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     /**
      * Used in back-end to set previous version without side-effects
      *
-     * @param precedingSGID
+     * @param precedingSGID a {@link com.github.seqware.queryengine.util.SGID} object.
      */
     public void setPrecedingSGID(SGID precedingSGID) {
         this.precedingVersion.setSGID(precedingSGID);
@@ -319,7 +341,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     /**
      * Used in back-end to get previous version ID
      *
-     * @param precedingSGID
+     * @return a {@link com.github.seqware.queryengine.util.SGID} object.
      */
     public SGID getPrecedingSGID() {
         return this.precedingVersion.getSGID();
@@ -329,16 +351,14 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
     /**
      * Get the model class for the HBase where this obj should be stored
      *
-     * @param obj
-     * @return
+     * @return a {@link java.lang.Class} object.
      */
     public abstract Class getHBaseClass();
 
     /**
      * Get the HBase table prefix where this obj should be stored
      *
-     * @param obj
-     * @return
+     * @return a {@link java.lang.String} object.
      */
     public abstract String getHBasePrefix();
 

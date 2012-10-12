@@ -35,6 +35,7 @@ import org.apache.log4j.Logger;
  * Stores objects in the temporary directory of the disk
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class TmpFileStorage extends StorageInterface {
 
@@ -44,6 +45,11 @@ public class TmpFileStorage extends StorageInterface {
     private File tempDir = new File(FileUtils.getTempDirectory(), this.getClass().getCanonicalName());
     private final SerializationInterface serializer;
 
+    /**
+     * <p>Constructor for TmpFileStorage.</p>
+     *
+     * @param i a {@link com.github.seqware.queryengine.impl.SerializationInterface} object.
+     */
     public TmpFileStorage(SerializationInterface i) {
         this.serializer = i;
         Logger.getLogger(TmpFileStorage.class.getName()).info( "Starting with "+TmpFileStorage.class.getSimpleName()+" in "+tempDir.getAbsolutePath()+" using "+serializer.getClass().getSimpleName());
@@ -62,6 +68,7 @@ public class TmpFileStorage extends StorageInterface {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void serializeAtomToTarget(Atom obj) {
         String prefix = ((AtomImpl) obj).getHBasePrefix();
@@ -76,6 +83,7 @@ public class TmpFileStorage extends StorageInterface {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void serializeAtomsToTarget(Atom... atomArr) {
         for (Atom obj : atomArr) {
@@ -83,6 +91,7 @@ public class TmpFileStorage extends StorageInterface {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Atom deserializeTargetToAtom(SGID sgid) {
         // let's just clone everything on store to simulate hbase
@@ -125,6 +134,7 @@ public class TmpFileStorage extends StorageInterface {
         return suspect;
     }
 
+    /** {@inheritDoc} */
     @Override
     public final void clearStorage() {
         try {
@@ -134,6 +144,7 @@ public class TmpFileStorage extends StorageInterface {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterable<SGID> getAllAtoms() {
         List<SGID> list = new ArrayList<SGID>();
@@ -154,6 +165,7 @@ public class TmpFileStorage extends StorageInterface {
         return list;
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Atom> List deserializeTargetToAtoms(Class<T> t, SGID... sgidArr) {
         List<T> list = new ArrayList<T>();
@@ -163,11 +175,13 @@ public class TmpFileStorage extends StorageInterface {
         return list;
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Atom> T deserializeTargetToAtom(Class<T> t, SGID sgid) {
         return (T) this.deserializeTargetToAtom(sgid);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Atom deserializeTargetToLatestAtom(SGID sgid) {
         List<Atom> aList = new ArrayList<Atom>();
@@ -196,11 +210,13 @@ public class TmpFileStorage extends StorageInterface {
         return latest;
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Atom> T deserializeTargetToLatestAtom(SGID sgid, Class<T> t) {
         return (T) this.deserializeTargetToLatestAtom(sgid);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void closeStorage() {
         /**
@@ -208,6 +224,7 @@ public class TmpFileStorage extends StorageInterface {
          */
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterable<FeatureList> getAllFeatureListsForFeatureSet(FeatureSet fSet) {
         assert (fSet instanceof LazyFeatureSet);
