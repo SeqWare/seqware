@@ -23,18 +23,22 @@ import net.sourceforge.seqware.queryengine.backend.util.SeqWareException;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareSettings;
 
 /**
+ * <p>PileupCoverageImporter class.</p>
+ *
  * @author boconnor
  *
- * A simple coverage importer that imports coverage data from a pileup 
+ * A simple coverage importer that imports coverage data from a pileup
  * file. Pileup file is the format from SAMtools
  *
  * TODO:
- * 
+ * @version $Id: $Id
  */
 public class PileupCoverageImporter {
 
   /**
-   * @param args
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
    */
   public static void main(String[] args) {
 

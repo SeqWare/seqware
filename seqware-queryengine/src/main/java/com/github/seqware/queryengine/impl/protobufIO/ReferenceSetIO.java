@@ -30,11 +30,14 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
+ * <p>ReferenceSetIO class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class ReferenceSetIO implements ProtobufTransferInterface<ReferenceSetPB, ReferenceSet>{
 
+    /** {@inheritDoc} */
     @Override
     public ReferenceSet pb2m(ReferenceSetPB userpb) {
         ReferenceSet.Builder builder = InMemoryReferenceSet.newBuilder();
@@ -56,6 +59,7 @@ public class ReferenceSetIO implements ProtobufTransferInterface<ReferenceSetPB,
     }
     
 
+    /** {@inheritDoc} */
     @Override
     public ReferenceSetPB m2pb(ReferenceSet sgid) {
         QueryEngine.ReferenceSetPB.Builder builder = QueryEngine.ReferenceSetPB.newBuilder();
@@ -73,6 +77,7 @@ public class ReferenceSetIO implements ProtobufTransferInterface<ReferenceSetPB,
         return userpb;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReferenceSet byteArr2m(byte[] arr) {
         try {

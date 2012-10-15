@@ -34,27 +34,37 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>StudyResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class StudyResource extends DatabaseResource {
 
+    /**
+     * <p>Constructor for StudyResource.</p>
+     */
     public StudyResource() {
         super("study");
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
         authenticate();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Representation get() {
         getXML();
         return null;
     }
 
+    /**
+     * <p>getXML.</p>
+     */
     @Get
     public void getXML() {
         authenticate();
@@ -83,6 +93,12 @@ public class StudyResource extends DatabaseResource {
 
     }
 
+    /**
+     * <p>postJaxb.</p>
+     *
+     * @param entity a {@link org.restlet.representation.Representation} object.
+     * @throws org.restlet.resource.ResourceException if any.
+     */
     @Post("xml")
     public void postJaxb(Representation entity) throws ResourceException {
         try {

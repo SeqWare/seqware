@@ -36,6 +36,7 @@ import org.biojava.utils.ChangeVetoException;
  * Copied from BioJava 1.8.1 Legacy org.biojava.ontology.io.OboParser
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class OboParser {
     private OboFileHandlerHack handler;
@@ -44,12 +45,11 @@ public class OboParser {
      * Parse a OBO file and return its content as a BioJava Ontology object
      *
      * @param oboFile the file to be parsed
-     * @param ontoName
-     * @param ontoDescription
-     *
+     * @param ontoName a {@link java.lang.String} object.
+     * @param ontoDescription a {@link java.lang.String} object.
      * @return the ontology represented as a BioJava ontology file
-     * @throws ParseException
-     * @throws IOException
+     * @throws org.biojava.bio.seq.io.ParseException if any.
+     * @throws java.io.IOException if any.
      */
     public Ontology parseOBO(
             BufferedReader oboFile,
@@ -82,8 +82,9 @@ public class OboParser {
     }
     
     /**
-     * Hacked map of terms to synonyms 
-     * @return 
+     * Hacked map of terms to synonyms
+     *
+     * @return a {@link java.util.Map} object.
      */
     public Map<Term, List<Synonym>> getSynonymMap(){
         return this.handler.getMap();

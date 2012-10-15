@@ -14,26 +14,39 @@ import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>WorkflowParamDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements WorkflowParamDAO {
 
+    /**
+     * <p>Constructor for WorkflowParamDAOHibernate.</p>
+     */
     public WorkflowParamDAOHibernate() {
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer insert(WorkflowParam workflowParam) {
         return (Integer) this.getHibernateTemplate().save(workflowParam);
     }
 
+    /** {@inheritDoc} */
     public void update(WorkflowParam workflowParam) {
         getHibernateTemplate().update(workflowParam);
         getSession().flush();
     }
 
+    /** {@inheritDoc} */
     public void delete(WorkflowParam workflowParam) {
         getHibernateTemplate().delete(workflowParam);
     }
 
+    /** {@inheritDoc} */
     public WorkflowParam findByID(Integer id) {
         String query = "from WorkflowParam as workflowParam where workflowParam.workflowParamId = ?";
         WorkflowParam workflowParam = null;
@@ -45,6 +58,7 @@ public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements Wo
         return workflowParam;
     }
 
+    /** {@inheritDoc} */
     @Override
     public WorkflowParam updateDetached(WorkflowParam workflowParam) {
         WorkflowParam dbObject = reattachWorkflowParam(workflowParam);
@@ -68,6 +82,7 @@ public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements Wo
         return dbObject;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<WorkflowParam> list() {
         ArrayList<WorkflowParam> l = new ArrayList<WorkflowParam>();
@@ -83,6 +98,7 @@ public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements Wo
         return l;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(Registration registration, WorkflowParam workflowParam) {
         WorkflowParam dbObject = reattachWorkflowParam(workflowParam);
@@ -98,6 +114,7 @@ public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements Wo
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer insert(Registration registration, WorkflowParam workflowParam) {
         Logger logger = Logger.getLogger(WorkflowParamDAOHibernate.class);
@@ -112,6 +129,7 @@ public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements Wo
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public WorkflowParam updateDetached(Registration registration, WorkflowParam workflowParam) {
         WorkflowParam dbObject = reattachWorkflowParam(workflowParam);

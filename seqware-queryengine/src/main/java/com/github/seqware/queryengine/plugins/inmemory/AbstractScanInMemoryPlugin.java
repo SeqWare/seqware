@@ -25,9 +25,11 @@ import java.util.Iterator;
  * Base class for all in-memory plug-ins that do Scan
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public abstract class AbstractScanInMemoryPlugin extends AbstractInMemoryPlugin implements ScanPlugin<Feature, FeatureSet> {
 
+    /** {@inheritDoc} */
     @Override
     public void performInMemoryRun() {
         for (Iterator<Feature> it = this.inputSet.iterator(); it.hasNext();) {

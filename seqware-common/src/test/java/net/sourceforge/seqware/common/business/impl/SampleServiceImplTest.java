@@ -11,12 +11,27 @@ import net.sourceforge.seqware.common.model.Sample;
 
 import org.junit.Test;
 
+/**
+ * <p>SampleServiceImplTest class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
+ */
 public class SampleServiceImplTest extends BaseUnit {
 
+  /**
+   * <p>Constructor for SampleServiceImplTest.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   public SampleServiceImplTest() throws Exception {
     super();
   }
 
+  /**
+   * <p>testFindByCriteria.</p>
+   */
   @Test
   public void testFindByCriteria() {
     SampleService sampleService = BeanFactory.getSampleServiceBean();

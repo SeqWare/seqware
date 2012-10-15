@@ -58,9 +58,12 @@ import java.io.FileNotFoundException;
 
 
 /**
+ * <p>BerkeleyDBStore class.</p>
+ *
  * @author boconnor
  * TODO: the putConsequence and putCoverage methods should detect deadlocks and retry
  * TODO: I may be able to reduce redundancy in the coverage and consequence methods below.
+ * @version $Id: $Id
  */
 public class BerkeleyDBStore extends Store {
 
@@ -122,6 +125,7 @@ public class BerkeleyDBStore extends Store {
   Long currConsequenceId = null;
   Long currCoverageId = null;
 
+  /** {@inheritDoc} */
   public void setup(SeqWareSettings settings) throws FileNotFoundException, DatabaseException, Exception {
 
     super.setup(settings);
@@ -417,6 +421,11 @@ public class BerkeleyDBStore extends Store {
     // TODO: need to add a metadata table so the app knows what the bin size is, API version number, tags used, etc.
   }
 
+  /**
+   * <p>startTransaction.</p>
+   *
+   * @throws com.sleepycat.db.DatabaseException if any.
+   */
   public void startTransaction() throws DatabaseException {
     if (txn == null) {
       TransactionConfig tc = new TransactionConfig();
@@ -426,6 +435,11 @@ public class BerkeleyDBStore extends Store {
     }
   }
 
+  /**
+   * <p>finishTransaction.</p>
+   *
+   * @throws com.sleepycat.db.DatabaseException if any.
+   */
   public void finishTransaction() throws DatabaseException {
     if (txn != null) {
       txn.commit();
@@ -433,10 +447,20 @@ public class BerkeleyDBStore extends Store {
     }
   }
 
+  /**
+   * <p>isActiveTransaction.</p>
+   *
+   * @return a boolean.
+   */
   public boolean isActiveTransaction() {
     return(txn != null);
   }
 
+  /**
+   * <p>abortTransaction.</p>
+   *
+   * @throws com.sleepycat.db.DatabaseException if any.
+   */
   public void abortTransaction() throws DatabaseException {
     if (txn != null) { txn.abort(); txn = null; }
   }
@@ -444,6 +468,13 @@ public class BerkeleyDBStore extends Store {
   
   // Generic Methods
   
+  /**
+   * <p>getModelsUnordered.</p>
+   *
+   * @param database a {@link com.sleepycat.db.Database} object.
+   * @param binding a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.CursorIterator} object.
+   */
   protected CursorIterator getModelsUnordered(Database database, TupleBinding binding) {
     CursorIterator ci = null;
     try {
@@ -455,6 +486,13 @@ public class BerkeleyDBStore extends Store {
     return(ci);
   }
   
+  /**
+   * <p>getModels.</p>
+   *
+   * @param database a {@link com.sleepycat.db.SecondaryDatabase} object.
+   * @param binding a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.CursorIterator} object.
+   */
   protected CursorIterator getModels(SecondaryDatabase database, TupleBinding binding) {
     CursorIterator ci = null;
     try {
@@ -466,6 +504,16 @@ public class BerkeleyDBStore extends Store {
     return(ci);
   }
   
+  /**
+   * <p>getLocatableModels.</p>
+   *
+   * @param database a {@link com.sleepycat.db.SecondaryDatabase} object.
+   * @param binding a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @param contig a {@link java.lang.String} object.
+   * @param start a int.
+   * @param stop a int.
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.LocatableSecondaryCursorIterator} object.
+   */
   protected LocatableSecondaryCursorIterator getLocatableModels(SecondaryDatabase database, TupleBinding binding, String contig, int start, int stop) {
     LocatableSecondaryCursorIterator cci = null;
     try {
@@ -484,6 +532,14 @@ public class BerkeleyDBStore extends Store {
     return(cci);
   }
   
+  /**
+   * <p>getModelsByTag.</p>
+   *
+   * @param database a {@link com.sleepycat.db.SecondaryDatabase} object.
+   * @param binding a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @param tag a {@link java.lang.String} object.
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.SecondaryCursorIterator} object.
+   */
   protected SecondaryCursorIterator getModelsByTag(SecondaryDatabase database, TupleBinding binding, String tag) {
     SecondaryCursorIterator i = null;
     try {
@@ -501,7 +557,10 @@ public class BerkeleyDBStore extends Store {
   
   /**
    * Get access to an iterator containing all the mismatch tags.
-   * @return
+   *
+   * @param database a {@link com.sleepycat.db.SecondaryDatabase} object.
+   * @param binding a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.SecondaryCursorIterator} object.
    */
   protected SecondaryCursorIterator getModelsTags(SecondaryDatabase database, TupleBinding binding) {
     SecondaryCursorIterator i = null;
@@ -514,6 +573,17 @@ public class BerkeleyDBStore extends Store {
     return(i);
   }
   
+  /**
+   * <p>putModel.</p>
+   *
+   * @param database a {@link com.sleepycat.db.Database} object.
+   * @param binding a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @param model a {@link net.sourceforge.seqware.queryengine.backend.model.Model} object.
+   * @param currentId a {@link java.lang.Long} object.
+   * @param it a {@link net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator} object.
+   * @param transactional a boolean.
+   * @return a {@link java.lang.Long} object.
+   */
   protected synchronized Long putModel(Database database, TupleBinding binding, Model model, Long currentId, SeqWareIterator it, boolean transactional) {
     
     DatabaseEntry key = new DatabaseEntry();
@@ -604,18 +674,30 @@ public class BerkeleyDBStore extends Store {
   
   // FEATURE METHODS
   
+  /**
+   * <p>getFeaturesUnordered.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.CursorIterator} object.
+   */
   public CursorIterator getFeaturesUnordered() {
     return(getModelsUnordered(getFeatureDb(), ftb));
   }
   
+  /**
+   * <p>getFeatures.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.CursorIterator} object.
+   */
   public CursorIterator getFeatures() {
     return(getModels(getFeatureContigPositionsDb(), ftb));
   }
   
+  /** {@inheritDoc} */
   public LocatableSecondaryCursorIterator getFeatures(String contig, int start, int stop) {
     return(getLocatableModels(getFeatureContigPositionsDb(), ftb, contig, start, stop));
   }
   
+  /** {@inheritDoc} */
   public Feature getFeature(String featureId) throws Exception {
     DatabaseEntry value = new DatabaseEntry();
     OperationStatus os = getFeatureDb().get(txn, new DatabaseEntry(featureId.getBytes("UTF-8")), value, LockMode.READ_UNCOMMITTED);
@@ -623,23 +705,32 @@ public class BerkeleyDBStore extends Store {
     return((Feature)ftb.entryToObject(value));
   }
   
+  /** {@inheritDoc} */
   public SecondaryCursorIterator getFeaturesByTag(String tag) {
     return(getModelsByTag(getFeatureAnnotationTagDb(), ftb, tag));
   }
   
+  /**
+   * <p>getFeaturesTags.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.SecondaryCursorIterator} object.
+   */
   public SecondaryCursorIterator getFeaturesTags() {
     return(getModelsTags(getFeatureAnnotationTagDb(), ttb));
   }
   
+  /** {@inheritDoc} */
   public SeqWareIterator getFeatureTagsBySearch(String tagSearchStr) {
     return(null);
   }
   
+  /** {@inheritDoc} */
   public synchronized String putFeature(Feature feature, SeqWareIterator it, boolean transactional) {
     currFeatureId = putModel(getFeatureDb(), ftb, feature, currFeatureId, it, transactional);
     return(currFeatureId.toString());
   }
  
+  /** {@inheritDoc} */
   public synchronized String putFeature(Feature feature) {
     currFeatureId = putModel(getFeatureDb(), ftb, feature, currFeatureId, null, true);
     return(currFeatureId.toString());
@@ -647,22 +738,35 @@ public class BerkeleyDBStore extends Store {
   
   // VARIANT METHODS
 
+  /**
+   * <p>getMismatchesUnordered.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.CursorIterator} object.
+   */
   public CursorIterator getMismatchesUnordered() {
     return(getModelsUnordered(getMismatchDb(), mtb));
   }
 
+  /**
+   * <p>getMismatches.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.CursorIterator} object.
+   */
   public CursorIterator getMismatches() {
     return(getModels(getMismatchContigPositionsDb(), mtb));
   }
 
+  /** {@inheritDoc} */
   public LocatableSecondaryCursorIterator getMismatches(String contig, int start, int stop) {
     return(getLocatableModels(getMismatchContigPositionsDb(), mtb, contig, start, stop));
   }
 
+  /** {@inheritDoc} */
   public LocatableSecondaryCursorIterator getMismatches(String contig) {
     return(getMismatches(contig, 1, Integer.MAX_VALUE)); // basically setting this to the largest value possible
   }
 
+  /** {@inheritDoc} */
   public Variant getMismatch(String mismatchId) throws Exception {
     DatabaseEntry value = new DatabaseEntry();
     OperationStatus os = getMismatchDb().get(txn, new DatabaseEntry(mismatchId.getBytes("UTF-8")), value, LockMode.READ_UNCOMMITTED);
@@ -670,26 +774,31 @@ public class BerkeleyDBStore extends Store {
     return((Variant)mtb.entryToObject(value));
   }
 
+  /** {@inheritDoc} */
   public SecondaryCursorIterator getMismatchesByTag(String tag) {
     return(getModelsByTag(getMismatchAnnotationTagDb(), mtb, tag));
   }
 
   /**
    * Get access to an iterator containing all the mismatch tags.
-   * @return
+   *
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.SecondaryCursorIterator} object.
    */
   public SecondaryCursorIterator getMismatchesTags() {
     return(getModelsTags(getMismatchAnnotationTagDb(), ttb));
   }
 
+  /** {@inheritDoc} */
   public SeqWareIterator getMismatchTagsBySearch(String tagSearchStr) {
     return(null);
   }
   
+  /** {@inheritDoc} */
   public synchronized String putMismatch(Variant variant) {
     return(putMismatch(variant, null, true));
   }
 
+  /** {@inheritDoc} */
   public synchronized String putMismatch(Variant variant, SeqWareIterator it, boolean transactional) {
     currId = putModel(getMismatchDb(), mtb, variant, currId, it, transactional);
     return(currId.toString());
@@ -698,12 +807,10 @@ public class BerkeleyDBStore extends Store {
   // COVERAGE METHODS
   
   /**
+   * {@inheritDoc}
+   *
    * Calling function will get back the coverage blocks that are contained within the range of interest
    * so make sure it pads +/- the bin size in the requested range otherwise may miss data!
-   * @param contig
-   * @param start
-   * @param stop
-   * @return
    */
   public LocatableSecondaryCursorIterator getCoverages(String contig, int start, int stop) {
     LocatableSecondaryCursorIterator cci = null;
@@ -723,15 +830,18 @@ public class BerkeleyDBStore extends Store {
     return(cci);
   }
   
+  /** {@inheritDoc} */
   public LocatableSecondaryCursorIterator getCoverages(String contig) {
     return(getCoverages(contig, 1, Integer.MAX_VALUE)); // basically setting this to the largest value possible
   }
 
+  /** {@inheritDoc} */
   public synchronized String putCoverage(Coverage coverage) {
     return(putCoverage(coverage, true));
   }
 
   // FIXME: this should be redone to use putModel
+  /** {@inheritDoc} */
   public synchronized String putCoverage(Coverage coverage, boolean transactional) {
     DatabaseEntry key = new DatabaseEntry();
     DatabaseEntry value = new DatabaseEntry();
@@ -811,11 +921,13 @@ public class BerkeleyDBStore extends Store {
 
   // CONSEQUENCE METHODS
   
+  /** {@inheritDoc} */
   public synchronized String putConsequence(Consequence consequence) {
     return(putConsequence(consequence, true));
   }
   
   //FIXME: this should be redone to use putModel
+  /** {@inheritDoc} */
   public synchronized String putConsequence(Consequence consequence, boolean transactional) {
     DatabaseEntry key = new DatabaseEntry();
     DatabaseEntry value = new DatabaseEntry();
@@ -895,6 +1007,7 @@ public class BerkeleyDBStore extends Store {
     return(currConsequenceId.toString());
   }
 
+  /** {@inheritDoc} */
   public Consequence getConsequence(String consequenceId) throws Exception {
     DatabaseEntry value = new DatabaseEntry();
     OperationStatus os = this.getConsequenceAnnotationDb().get(txn, new DatabaseEntry(consequenceId.getBytes("UTF-8")), value, LockMode.READ_UNCOMMITTED);
@@ -902,6 +1015,7 @@ public class BerkeleyDBStore extends Store {
     return((Consequence)ctb.entryToObject(value));
   }
 
+  /** {@inheritDoc} */
   public SecondaryCursorIterator getConsequencesByTag(String tag) {
     SecondaryCursorIterator i = null;
     try {
@@ -917,10 +1031,12 @@ public class BerkeleyDBStore extends Store {
     return(i);
   }
 
+  /** {@inheritDoc} */
   public SeqWareIterator getConsequenceTagsBySearch(String tagSearchStr) {
     return(null);
   }  
   
+  /** {@inheritDoc} */
   public SecondaryCursorIterator getConsequencesByMismatch(String mismatchId) {
     SecondaryCursorIterator i = null;
     try {
@@ -938,10 +1054,20 @@ public class BerkeleyDBStore extends Store {
 
   // UTIL METHODS
   
+  /**
+   * <p>checkpoint.</p>
+   *
+   * @throws com.sleepycat.db.DatabaseException if any.
+   */
   public void checkpoint() throws DatabaseException {
     if (myDbEnvironment != null) { myDbEnvironment.checkpoint(new CheckpointConfig()); }
   }
   
+  /**
+   * <p>close.</p>
+   *
+   * @throws com.sleepycat.db.DatabaseException if any.
+   */
   public void close() throws DatabaseException {
     // checkpoint before closing
     CheckpointConfig cpc = new CheckpointConfig();

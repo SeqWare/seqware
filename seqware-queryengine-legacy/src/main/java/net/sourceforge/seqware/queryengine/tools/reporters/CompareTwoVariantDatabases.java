@@ -21,11 +21,18 @@ import net.sourceforge.seqware.queryengine.backend.util.SeqWareException;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareSettings;
 
+/**
+ * <p>CompareTwoVariantDatabases class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class CompareTwoVariantDatabases {
   
   /**
    * FIXME: add param to pass in range to compare over eg chr22 or chr1:123-1231231
-   * @param args
+   *
+   * @param args an array of {@link java.lang.String} objects.
    */
   public static void main(String[] args) {
       

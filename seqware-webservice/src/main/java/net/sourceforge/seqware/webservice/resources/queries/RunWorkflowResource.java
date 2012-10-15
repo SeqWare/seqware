@@ -37,16 +37,24 @@ import org.restlet.Response;
 import org.restlet.data.*;
 
 /**
+ * <p>RunWorkflowResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class RunWorkflowResource
         extends BasicRestlet {
 
+    /**
+     * <p>Constructor for RunWorkflowResource.</p>
+     *
+     * @param context a {@link org.restlet.Context} object.
+     */
     public RunWorkflowResource(Context context) {
         super(context);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void handle(Request request, Response response) {
         authenticate(request.getChallengeResponse().getIdentifier());

@@ -17,6 +17,12 @@ import org.hibernate.cfg.Configuration;
 
 import net.sourceforge.seqware.queryengine.webservice.util.EnvUtil;
 
+/**
+ * <p>MetadataDB class.</p>
+ *
+ * @author morgantaschuk
+ * @version $Id: $Id
+ */
 public class MetadataDB {
 
   /* private static final SessionFactory sessionFactory = buildSessionFactory();
@@ -73,6 +79,11 @@ public class MetadataDB {
     return (c);
   }
 
+  /**
+   * <p>getMetadata.</p>
+   *
+   * @return a {@link java.util.ArrayList} object.
+   */
   public ArrayList getMetadata() {
     return(genericGetMetadata("SELECT f.file_path, p.description, p.sw_accession, p.parameters, p.create_tstmp, f.meta_type FROM processing as p, file as f, processing_files as pf " +
         "WHERE f.file_id = pf.file_id AND p.processing_id = pf.processing_id AND (f.meta_type = 'application/seqware-qe-vdb' OR f.meta_type = 'application/seqware-qe-db' OR" +
@@ -80,6 +91,11 @@ public class MetadataDB {
         "(p.status = 'processed' OR p.status = 'success') ORDER BY p.sw_accession"));
   }
   
+  /**
+   * <p>getTagMetadata.</p>
+   *
+   * @return a {@link java.util.ArrayList} object.
+   */
   public ArrayList getTagMetadata() {
     return(genericGetMetadata("SELECT f.file_path, p.description, p.sw_accession, p.parameters, p.create_tstmp, f.meta_type FROM processing as p, file as f, processing_files as pf" +
     		" WHERE f.file_id = pf.file_id AND p.processing_id = pf.processing_id AND f.meta_type = 'application/seqware-qe-tags' AND (p.status = 'processed' OR p.status = 'success') " +
@@ -87,14 +103,31 @@ public class MetadataDB {
   }
 
   
+  /**
+   * <p>getWorkflowMetadata.</p>
+   *
+   * @return a {@link java.util.ArrayList} object.
+   */
   public ArrayList<Map<String, String>> getWorkflowMetadata() {
     return(moreGenericGetMetadata("SELECT name, sw_accession, description, version, seqware_version FROM workflow"));
   }
   
+  /**
+   * <p>getWorkflowParamMetadata.</p>
+   *
+   * @param id a {@link java.lang.Integer} object.
+   * @return a {@link java.util.ArrayList} object.
+   */
   public ArrayList<Map<String, String>> getWorkflowParamMetadata(Integer id) {
     return(moreGenericGetMetadata("SELECT type, key, display, file_meta_type, default_value FROM workflow_param where workflow_id = "+id));
   }
   
+ /**
+  * <p>getFilePath.</p>
+  *
+  * @param accession a int.
+  * @return a {@link java.lang.String} object.
+  */
  public String getFilePath(int accession) {
         
     Connection c = setupConnection();
@@ -124,6 +157,12 @@ public class MetadataDB {
     return(filePath);
  }
   
+  /**
+   * <p>getWorkflowRunInfo.</p>
+   *
+   * @param workflowRunAccession a int.
+   * @return a {@link java.util.HashMap} object.
+   */
   public HashMap<String,Object> getWorkflowRunInfo(int workflowRunAccession) {
     
     HashMap<String,Object> d = new HashMap<String,Object>();
@@ -338,6 +377,12 @@ public class MetadataDB {
     return(data);
   }
 
+  /**
+   * <p>getMetadata.</p>
+   *
+   * @param swid a long.
+   * @return a {@link java.util.Map} object.
+   */
   public Map getMetadata(long swid) {
     return getMetadata(swid, "SELECT f.file_path, p.description, p.sw_accession, p.parameters, p.create_tstmp, f.meta_type FROM processing as p, file as f, processing_files as pf " +
         "WHERE f.file_id = pf.file_id AND p.processing_id = pf.processing_id AND p.sw_accession = " +swid+" AND "+
@@ -346,6 +391,12 @@ public class MetadataDB {
         ") AND (p.status = 'processed' OR p.status = 'success') ORDER BY p.sw_accession");
   }
   
+  /**
+   * <p>getTagMetadata.</p>
+   *
+   * @param swid a long.
+   * @return a {@link java.util.Map} object.
+   */
   public Map getTagMetadata(long swid) {
     return getMetadata(swid, "SELECT f.file_path, p.description, p.sw_accession, p.parameters, p.create_tstmp, f.meta_type FROM processing as p, file as f, processing_files as pf " +
         "WHERE f.file_id = pf.file_id AND p.processing_id = pf.processing_id AND p.sw_accession = " +swid+" AND (f.meta_type = 'application/seqware-qe-tags' OR f.meta_type = 'application/seqware-qe-postgresql-db'" +
@@ -424,6 +475,14 @@ public class MetadataDB {
     return(data);
   }
   
+  /**
+   * <p>addWorkflowRunParam.</p>
+   *
+   * @param workflowRunAccession a int.
+   * @param key a {@link java.lang.String} object.
+   * @param value a {@link java.lang.String} object.
+   * @param type a {@link java.lang.String} object.
+   */
   public void addWorkflowRunParam(int workflowRunAccession, String key, String value, String type) {
     
     Connection c = setupConnection();
@@ -454,6 +513,18 @@ public class MetadataDB {
    
   }
   
+  /**
+   * <p>scheduleWorkflowRun.</p>
+   *
+   * @param workflowAccession a int.
+   * @param name a {@link java.lang.String} object.
+   * @param cwd a {@link java.lang.String} object.
+   * @param iniContents a {@link java.lang.String} object.
+   * @param command a {@link java.lang.String} object.
+   * @param workflowTemplate a {@link java.lang.String} object.
+   * @param status a {@link java.lang.String} object.
+   * @return a int.
+   */
   public int scheduleWorkflowRun(int workflowAccession, String name, String cwd, 
           String iniContents, String command, String workflowTemplate, String status) {
     
@@ -522,6 +593,17 @@ public class MetadataDB {
     
   }
   
+  /**
+   * <p>updateWorkflowRun.</p>
+   *
+   * @param workflowRunAccession a int.
+   * @param name a {@link java.lang.String} object.
+   * @param cwd a {@link java.lang.String} object.
+   * @param iniContents a {@link java.lang.String} object.
+   * @param command a {@link java.lang.String} object.
+   * @param workflowTemplate a {@link java.lang.String} object.
+   * @param status a {@link java.lang.String} object.
+   */
   public void updateWorkflowRun(int workflowRunAccession, String name, String cwd, String iniContents, String command, String workflowTemplate, String status) {
     Connection c = setupConnection();
     Statement s = null;
@@ -556,6 +638,12 @@ public class MetadataDB {
   }
 
 
+  /**
+   * <p>getWorkflowAccession.</p>
+   *
+   * @param workflowId a int.
+   * @return a int.
+   */
   public int getWorkflowAccession(int workflowId) {
 
     // workflow accession

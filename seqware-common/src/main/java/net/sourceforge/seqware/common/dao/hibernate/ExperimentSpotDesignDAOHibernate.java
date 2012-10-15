@@ -10,27 +10,36 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ExperimentSpotDesignDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ExperimentSpotDesignDAOHibernate extends HibernateDaoSupport implements ExperimentSpotDesignDAO {
 
+  /**
+   * <p>Constructor for ExperimentSpotDesignDAOHibernate.</p>
+   */
   public ExperimentSpotDesignDAOHibernate() {
     super();
   }
 
+  /** {@inheritDoc} */
   public void insert(ExperimentSpotDesign obj) {
     this.getHibernateTemplate().save(obj);
   }
 
+  /** {@inheritDoc} */
   public void update(ExperimentSpotDesign obj) {
     this.getHibernateTemplate().update(obj);
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of ExperimentSpotDesign in the database by the
    * ExperimentSpotDesign ID.
-   * 
-   * @param expID
-   *          ID of the ExperimentSpotDesign
-   * @return ExperimentSpotDesign or null if not found
    */
   public ExperimentSpotDesign findByID(Integer id) {
     String query = "from ExperimentSpotDesign as e where e.experimentSpotDesignId = ?";
@@ -43,6 +52,7 @@ public class ExperimentSpotDesignDAOHibernate extends HibernateDaoSupport implem
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ExperimentSpotDesign updateDetached(ExperimentSpotDesign experiment) {
     ExperimentSpotDesign dbObject = findByID(experiment.getExperimentSpotDesignId());
@@ -58,6 +68,7 @@ public class ExperimentSpotDesignDAOHibernate extends HibernateDaoSupport implem
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ExperimentSpotDesign> list() {
         throw new UnsupportedOperationException("Not supported yet.");

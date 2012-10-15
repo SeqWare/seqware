@@ -18,11 +18,16 @@ import org.junit.Test;
  * <a href="http://www.sequenceontology.org/resources/gvf.html"> the specification</a>.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class GVFFormatTest {
 
     private static FeatureSet fSet;
 
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -55,6 +60,9 @@ public class GVFFormatTest {
         mManager.close();
     }
 
+    /**
+     * <p>testOutputAndStore.</p>
+     */
     @Test
     public void testOutputAndStore() {
         FeatureSet targetSet = (FeatureSet) SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, fSet.getSGID());
@@ -93,6 +101,9 @@ public class GVFFormatTest {
         System.out.println(buff);
     }
 
+    /**
+     * <p>sampleCleanup.</p>
+     */
     @AfterClass
     public static void sampleCleanup() {
         // strictly speaking, this probably is not necessary but it is good form

@@ -9,6 +9,12 @@ import java.io.OutputStreamWriter;
 import java.nio.channels.FileLock;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>LockingFileTools class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class LockingFileTools {
   
   private final static int RETRIES = 100;
@@ -16,8 +22,10 @@ public class LockingFileTools {
   /**
    * Try to acquire lock. If we can, write the String to file and then release
    * the lock
-   * 
-   * @param args
+   *
+   * @param file a {@link java.io.File} object.
+   * @param output a {@link java.lang.String} object.
+   * @return a boolean.
    */
   public static boolean lockAndAppend(File file, String output) {
     for (int i=0; i<RETRIES; i++) {
@@ -49,6 +57,13 @@ public class LockingFileTools {
     return(false);
   }
 
+  /**
+   * <p>lockAndAppendLine.</p>
+   *
+   * @param file a {@link java.io.File} object.
+   * @param output a {@link java.lang.String} object.
+   * @return a boolean.
+   */
   public static boolean lockAndAppendLine(File file, String output) {
     return(lockAndAppend(file, output+System.getProperty("line.separator")));
   }

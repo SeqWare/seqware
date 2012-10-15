@@ -21,25 +21,45 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 
 /**
+ * <p>WorkflowRunList2 class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class WorkflowRunList2{
 
     protected List<WorkflowRun> tList;
 
+    /**
+     * <p>Constructor for WorkflowRunList2.</p>
+     */
     public WorkflowRunList2() {
         tList = new ArrayList<WorkflowRun>();
     }
 
+    /**
+     * <p>getList.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<WorkflowRun> getList() {
         return tList;
     }
 
+    /**
+     * <p>setList.</p>
+     *
+     * @param list a {@link java.util.List} object.
+     */
     public void setList(List<WorkflowRun> list) {
         this.tList = list;
     }
 
+    /**
+     * <p>add.</p>
+     *
+     * @param ex a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+     */
     public void add(WorkflowRun ex) {
         tList.add(ex);
     }

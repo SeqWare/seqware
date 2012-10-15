@@ -12,12 +12,23 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ShareWorkflowRunDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements ShareWorkflowRunDAO {
+  /**
+   * <p>Constructor for ShareWorkflowRunDAOHibernate.</p>
+   */
   public ShareWorkflowRunDAOHibernate() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of ShareWorkflowRun into the database.
    */
   public void insert(ShareWorkflowRun shareWorkflowRun) {
@@ -25,6 +36,8 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of ShareWorkflowRun in the database.
    */
   public void update(ShareWorkflowRun shareWorkflowRun) {
@@ -33,6 +46,8 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of ShareWorkflowRun in the database.
    */
   public void delete(ShareWorkflowRun shareWorkflowRun) {
@@ -41,14 +56,11 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of ShareWorkflowRun in the database by the
    * ShareWorkflowRun ID.
-   * 
-   * @param expID
-   *          ID of the ShareWorkflowRun
-   * @return ShareWorkflowRun or null if not found
    */
-
   public ShareWorkflowRun findByWorkflowRunIdAndRegistrationId(Integer workflowRunId, Integer registrationId) {
     String query = "from ShareWorkflowRun as shareWorkflowRun where shareWorkflowRun.workflowRunId = ? and shareWorkflowRun.registration.registrationId = ?";
     ShareWorkflowRun shareWorkflowRun = null;
@@ -61,12 +73,10 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of ShareWorkflowRun in the database by the
    * ShareWorkflowRun ID.
-   * 
-   * @param expID
-   *          ID of the ShareWorkflowRun
-   * @return ShareWorkflowRun or null if not found
    */
   public ShareWorkflowRun findByID(Integer id) {
     String query = "from ShareWorkflowRun as shareWorkflowRun where shareWorkflowRun.shareWorkflowRunId = ?";
@@ -79,6 +89,7 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
     return shareWorkflowRun;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
   public ShareWorkflowRun findBySWAccession(Integer swAccession) {
@@ -92,6 +103,7 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
     return shareWorkflowRun;
   }
 
+  /** {@inheritDoc} */
   public List<ShareWorkflowRun> list(WorkflowRun workflowRun) {
     List<ShareWorkflowRun> shareWorkflowRuns = new ArrayList<ShareWorkflowRun>();
     String query = "from ShareWorkflowRun as shareWorkflowRun where shareWorkflowRun.workflowRunId = ?";
@@ -104,6 +116,7 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
     return shareWorkflowRuns;
   }
 
+  /** {@inheritDoc} */
   public ShareWorkflowRun getShareWorkflowRun(String email, WorkflowRun workflowRun) {
     String query = "from ShareWorkflowRun as shareWorkflowRun where shareWorkflowRun.workflowRunId = ? and shareWorkflowRun.email = ?";
     ShareWorkflowRun shareWorkflowRun = null;
@@ -115,6 +128,7 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
     return shareWorkflowRun;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ShareWorkflowRun updateDetached(ShareWorkflowRun shareWorkflowRun) {
     ShareWorkflowRun dbObject = findByID(shareWorkflowRun.getShareWorkflowRunId());
@@ -130,6 +144,7 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ShareWorkflowRun> list() {
         throw new UnsupportedOperationException("Not supported yet.");

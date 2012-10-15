@@ -16,30 +16,45 @@ import org.apache.commons.cli.*;
  * importing and the specification of a tag set and reference to attach to.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class SOFeatureImporter extends Importer {
     
+    /** Constant <code>SECONDARY_INDEX_HACK=false</code> */
     public static final boolean SECONDARY_INDEX_HACK = false;
 
+    /** Constant <code>ADHOC_TAGSETS_PARAM='a'</code> */
     public static final char ADHOC_TAGSETS_PARAM = 'a';
+    /** Constant <code>COMPRESSED_PARAM='c'</code> */
     public static final char COMPRESSED_PARAM = 'c';
+    /** Constant <code>INPUT_FILES_PARAM='i'</code> */
     public static final char INPUT_FILES_PARAM = 'i';
+    /** Constant <code>NUMBER_THREADS_PARAM='t'</code> */
     public static final char NUMBER_THREADS_PARAM = 't';
+    /** Constant <code>OUTPUT_FILE_PARAM='o'</code> */
     public static final char OUTPUT_FILE_PARAM = 'o';
+    /** Constant <code>REFERENCE_ID_PARAM='r'</code> */
     public static final char REFERENCE_ID_PARAM = 'r';
+    /** Constant <code>TAGSETS_PARAM='s'</code> */
     public static final char TAGSETS_PARAM = 's';
+    /** Constant <code>VALUE_SEPARATOR_PARAM=','</code> */
     public static final char VALUE_SEPARATOR_PARAM = ',';
+    /** Constant <code>WORKER_CHAR_PARAM='w'</code> */
     public static final char WORKER_CHAR_PARAM = 'w';
+    /** Constant <code>BATCH_SIZE_PARAM='b'</code> */
     public static final char BATCH_SIZE_PARAM = 'b';
+    /** Constant <code>FEATURE_SET_PARAM='f'</code> */
     public static final char FEATURE_SET_PARAM = 'f';
+    /** Constant <code>SECONDARY_INDEX_PARAM='x'</code> */
     public static final char SECONDARY_INDEX_PARAM = 'x';
     
+    /** Constant <code>BATCH_SIZE=100000</code> */
     public static final int BATCH_SIZE = 100000;
 
     /**
      * Command-line interface
      *
-     * @param args
+     * @param args an array of {@link java.lang.String} objects.
      */
     public static void main(String[] args) {
         SGID mainMethod = SOFeatureImporter.runMain(args);
@@ -51,8 +66,8 @@ public class SOFeatureImporter extends Importer {
     /**
      * Interface for mock-testing
      *
-     * @param args
-     * @return
+     * @param args an array of {@link java.lang.String} objects.
+     * @return a {@link com.github.seqware.queryengine.util.SGID} object.
      */
     public static SGID runMain(String[] args) {
         // create Options object

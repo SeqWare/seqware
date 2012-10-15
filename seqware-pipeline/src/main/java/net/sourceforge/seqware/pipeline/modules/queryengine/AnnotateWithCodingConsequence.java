@@ -67,7 +67,7 @@ import org.openide.util.lookup.ServiceProvider;
  * could totally break!!! Should be passed in as a variable
  *
  * @author boconnor
- *
+ * @version $Id: $Id
  */
 @ServiceProvider(service = ModuleInterface.class)
 public class AnnotateWithCodingConsequence extends Module {
@@ -78,6 +78,7 @@ public class AnnotateWithCodingConsequence extends Module {
     private String[] tableQueries = null;
     private String[] tableNames = null;
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue init() {
 
@@ -114,6 +115,11 @@ public class AnnotateWithCodingConsequence extends Module {
 
     }
 
+    /**
+     * <p>getOptionParser.</p>
+     *
+     * @return a {@link joptsimple.OptionParser} object.
+     */
     protected OptionParser getOptionParser() {
         OptionParser parser = new OptionParser();
         parser.accepts("bed-input-file").withRequiredArg();
@@ -139,6 +145,11 @@ public class AnnotateWithCodingConsequence extends Module {
         return (parser);
     }
 
+    /**
+     * <p>get_syntax.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String get_syntax() {
         OptionParser parser = getOptionParser();
         StringWriter output = new StringWriter();
@@ -152,6 +163,8 @@ public class AnnotateWithCodingConsequence extends Module {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Things to check: *
      */
     @Override
@@ -168,6 +181,7 @@ public class AnnotateWithCodingConsequence extends Module {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_verify_parameters() {
 
@@ -191,6 +205,7 @@ public class AnnotateWithCodingConsequence extends Module {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_verify_input() {
 
@@ -255,6 +270,7 @@ public class AnnotateWithCodingConsequence extends Module {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_run() {
 
@@ -330,6 +346,7 @@ public class AnnotateWithCodingConsequence extends Module {
         return (retValue);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_verify_output() {
 
@@ -355,6 +372,7 @@ public class AnnotateWithCodingConsequence extends Module {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue clean_up() {
         ReturnValue ret = new ReturnValue();

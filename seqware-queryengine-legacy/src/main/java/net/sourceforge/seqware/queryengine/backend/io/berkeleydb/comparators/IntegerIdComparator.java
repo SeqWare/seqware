@@ -11,14 +11,17 @@ import net.sourceforge.seqware.queryengine.backend.model.StringId;
 import com.sleepycat.db.DatabaseEntry;
 
 /**
- * @author boconnor
+ * <p>IntegerIdComparator class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class IntegerIdComparator implements Comparator {
 
   /* (non-Javadoc)
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  /** {@inheritDoc} */
   @Override
   public int compare(Object d1, Object d2) {
     byte[] b1 = (byte[])d1;

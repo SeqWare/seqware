@@ -9,30 +9,44 @@ import net.sourceforge.seqware.common.model.FileType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>FileTypeServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class FileTypeServiceImpl implements FileTypeService {
   private FileTypeDAO fileTypeDAO = null;
   private static final Log log = LogFactory.getLog(FileTypeServiceImpl.class);
 
+  /**
+   * <p>Constructor for FileTypeServiceImpl.</p>
+   */
   public FileTypeServiceImpl() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Sets a private member variable with an instance of an implementation of
    * FileTypeDAO. This method is called by the Spring framework at run time.
-   * 
-   * @param fileTypeDAO
-   *          implementation of FileTypeDAO
    * @see FileTypeDAO
    */
   public void setFileTypeDAO(FileTypeDAO fileTypeDAO) {
     this.fileTypeDAO = fileTypeDAO;
   }
 
+  /**
+   * <p>list.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<FileType> list() {
     return fileTypeDAO.list();
   }
 
+  /** {@inheritDoc} */
   public FileType findByID(Integer id) {
     FileType obj = null;
     if (id != null) {
@@ -46,6 +60,7 @@ public class FileTypeServiceImpl implements FileTypeService {
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   public FileType updateDetached(FileType fileType) {
     return fileTypeDAO.updateDetached(fileType);

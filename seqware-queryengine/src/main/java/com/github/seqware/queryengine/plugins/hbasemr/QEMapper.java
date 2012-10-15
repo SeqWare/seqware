@@ -29,9 +29,11 @@ import org.apache.log4j.Logger;
  * Base mapper class used by all Query Engine plug-ins.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public abstract class QEMapper<KEYOUT, VALUEOUT> extends TableMapper<KEYOUT, VALUEOUT> {
     
+    /** {@inheritDoc} */
     @Override
     protected void setup(Context context) {
         this.baseMapperSetup(context);

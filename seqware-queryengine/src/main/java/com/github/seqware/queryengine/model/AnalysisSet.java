@@ -10,8 +10,10 @@ import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
  * suites or related tools.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public interface AnalysisSet extends MolSetInterface<AnalysisSet, Analysis> {
+    /** Constant <code>prefix="AnalysisSet"</code> */
     public final static String prefix = "AnalysisSet";
 
     /**
@@ -23,13 +25,15 @@ public interface AnalysisSet extends MolSetInterface<AnalysisSet, Analysis> {
     
     /**
      * Get the description associated with this analysisSet
+     *
      * @return the description associated with this analysisSet
      */
     public String getDescription();
 
     /**
+     * {@inheritDoc}
+     *
      * Create a AnalysisSet builder started with a copy of this
-     * @return 
      */
     @Override
     public abstract AnalysisSet.Builder toBuilder();

@@ -29,30 +29,56 @@ import static org.junit.Assert.*;
  * User: xiao
  * Date: 7/25/11
  * Time: 11:09 PM
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 @StdoutRedirect
 @StderrRedirect
 public class ModuleMethodTest {
 
+    /**
+     * <p>Constructor for ModuleMethodTest.</p>
+     */
     public ModuleMethodTest() {
     }
 
+    /**
+     * <p>setUpClass.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @BeforeClass
     public static void setUpClass() throws Exception {
     }
 
+    /**
+     * <p>tearDownClass.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
 
+    /**
+     * <p>setUp.</p>
+     */
     @Before
     public void setUp() {
     }
 
+    /**
+     * <p>tearDown.</p>
+     */
     @After
     public void tearDown() {
     }
 
+    /**
+     * <p>testAnnotation.</p>
+     */
     @Test
     public void testAnnotation() {
         for (ModuleMethod m : ModuleMethod.values()) {

@@ -53,7 +53,7 @@ import org.openide.util.lookup.ServiceProvider;
  * contig
  *
  * @author boconnor
- *
+ * @version $Id: $Id
  */
 @ServiceProvider(service = ModuleInterface.class)
 public class AnnotateWithDbSNP extends Module {
@@ -61,6 +61,7 @@ public class AnnotateWithDbSNP extends Module {
     private OptionSet options = null;
     private File tempDir = null;
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue init() {
 
@@ -88,6 +89,11 @@ public class AnnotateWithDbSNP extends Module {
 
     }
 
+    /**
+     * <p>getOptionParser.</p>
+     *
+     * @return a {@link joptsimple.OptionParser} object.
+     */
     protected OptionParser getOptionParser() {
         OptionParser parser = new OptionParser();
         parser.accepts("bed-input-file").withRequiredArg();
@@ -102,6 +108,11 @@ public class AnnotateWithDbSNP extends Module {
         return (parser);
     }
 
+    /**
+     * <p>get_syntax.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String get_syntax() {
         OptionParser parser = getOptionParser();
         StringWriter output = new StringWriter();
@@ -115,6 +126,8 @@ public class AnnotateWithDbSNP extends Module {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Things to check: *
      */
     @Override
@@ -131,6 +144,7 @@ public class AnnotateWithDbSNP extends Module {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_verify_parameters() {
 
@@ -142,6 +156,7 @@ public class AnnotateWithDbSNP extends Module {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_verify_input() {
 
@@ -169,6 +184,7 @@ public class AnnotateWithDbSNP extends Module {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_run() {
 
@@ -219,6 +235,7 @@ public class AnnotateWithDbSNP extends Module {
         return (ret);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_verify_output() {
 
@@ -236,6 +253,7 @@ public class AnnotateWithDbSNP extends Module {
         return (ret);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue clean_up() {
         ReturnValue ret = new ReturnValue();

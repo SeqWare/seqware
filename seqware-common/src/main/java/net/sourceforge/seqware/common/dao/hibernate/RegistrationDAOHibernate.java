@@ -11,16 +11,27 @@ import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.log4j.Logger;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>RegistrationDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class RegistrationDAOHibernate extends HibernateDaoSupport implements RegistrationDAO {
   
     private Logger logger;
     
+    /**
+     * <p>Constructor for RegistrationDAOHibernate.</p>
+     */
     public RegistrationDAOHibernate() {
     super();
     logger = Logger.getLogger(RegistrationDAOHibernate.class);
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of Registration into the database.
    */
   public void insert(Registration registration) {
@@ -28,6 +39,8 @@ public class RegistrationDAOHibernate extends HibernateDaoSupport implements Reg
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of Registration in the database.
    */
   public void update(Registration registration) {
@@ -36,10 +49,10 @@ public class RegistrationDAOHibernate extends HibernateDaoSupport implements Reg
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of Registration in the database by the Registration
    * emailAddress only.
-   * 
-   * @return Registration or null if not found
    */
   public Registration findByEmailAddress(String emailAddress) {
     String query = "from Registration as registration where registration.emailAddress = ?";
@@ -53,10 +66,10 @@ public class RegistrationDAOHibernate extends HibernateDaoSupport implements Reg
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of Registration in the database by the Registration
    * emailAddress and password.
-   * 
-   * @return Registration or null if not found
    */
   public Registration findByEmailAddressAndPassword(String emailAddress, String password) {
     String query = "from Registration as registration where registration.emailAddress = ? and registration.password = ?";
@@ -69,6 +82,7 @@ public class RegistrationDAOHibernate extends HibernateDaoSupport implements Reg
     return registration;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Registration updateDetached(Registration registration) {
     Registration dbObject = findByEmailAddress(registration.getEmailAddress());

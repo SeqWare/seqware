@@ -19,27 +19,27 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Calculate read counts, coverage, & RPKM per transcript and gene given a BAM file of aligned reads.
- * 
+ *
  * This module determines the raw read count, coverage, and rpkm for each transcript & each gene.
  * Coverage calculation: AlignedBases/Length
  * RPKM calculation:  [AlignedReads*(10^9)]/[TotalReads*Length].
  * In both calculations, the length for a gene is determined by the median/mean/shortest/longest of
  * transcripts associated with that gene in the reference set.
- * 
+ *
  * Underlying script:  sw_module_GeneCountsRPKM.pl
- * 
+ *
  * Necessary programs:  perl, java, Picard (SamFormatConverter.jar)
- * 
+ *
  * Necessary data file:  'TranscriptDB', which is the flat file output of module PrepTranscriptDB.
  * (e.g. ~/seqware-pipeline/data/annotation_reference/hg19_transcripts.hg19.20091027.trmap)
- * 
+ *
  * Expected output:  ~.transcript.quantification.txt and ~.gene.quantification.txt
  * Both are tab-delimited files, 4 columns:  ID, raw read count, coverage, rpkm.
- * 
- * LIMITATIONS: The BAM file must contain reads mapped to transcripts.
- * 
- * @author sacheek@med.unc.edu
  *
+ * LIMITATIONS: The BAM file must contain reads mapped to transcripts.
+ *
+ * @author sacheek@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class GeneCountsRPKM extends Module {
@@ -49,9 +49,9 @@ public class GeneCountsRPKM extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("infile", "Input BAM file, expects reads aligned to transcripts.").withRequiredArg();
@@ -71,8 +71,9 @@ public class GeneCountsRPKM extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -88,11 +89,11 @@ public class GeneCountsRPKM extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -127,9 +128,9 @@ public class GeneCountsRPKM extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -152,9 +153,9 @@ public class GeneCountsRPKM extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -228,9 +229,9 @@ public class GeneCountsRPKM extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known dataset.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -240,10 +241,10 @@ public class GeneCountsRPKM extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Run core of module.
    * Based on script sw_module_GeneCountsRPKM.pl
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_run() {
@@ -282,9 +283,9 @@ public class GeneCountsRPKM extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Check to make sure the output was created correctly.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -299,10 +300,11 @@ public class GeneCountsRPKM extends Module {
     return(ret);
   }
   
-    /**
+  /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.  Remove tempDir.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

@@ -18,22 +18,30 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>SampleServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SampleServiceImpl implements SampleService {
 
   private SampleDAO sampleDAO = null;
   private FileDAO fileDAO = null;
   private static final Log log = LogFactory.getLog(SampleServiceImpl.class);
 
+  /**
+   * <p>Constructor for SampleServiceImpl.</p>
+   */
   public SampleServiceImpl() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Sets a private member variable with an instance of an implementation of
    * SampleDAO. This method is called by the Spring framework at run time.
-   * 
-   * @param sampleDAO
-   *          implementation of SampleDAO
    * @see SampleDAO
    */
   public void setSampleDAO(SampleDAO sampleDAO) {
@@ -43,7 +51,7 @@ public class SampleServiceImpl implements SampleService {
   /**
    * Sets a private member variable with an instance of an implementation of
    * FileDAO. This method is called by the Spring framework at run time.
-   * 
+   *
    * @param fileDAO
    *          implementation of FileDAO
    * @see FileDAO
@@ -53,10 +61,9 @@ public class SampleServiceImpl implements SampleService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of Sample into the database.
-   * 
-   * @param sampleDAO
-   *          instance of SampleDAO
    */
   public Integer insert(Sample sample) {
     sample.setCreateTimestamp(new Date());
@@ -64,20 +71,18 @@ public class SampleServiceImpl implements SampleService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of Sample in the database.
-   * 
-   * @param sample
-   *          instance of Sample
    */
   public void update(Sample sample) {
     sampleDAO.update(sample);
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Deletes an instance of Sample in the database.
-   * 
-   * @param sample
-   *          instance of Sample
    */
   public void delete(Sample sample, String deleteRealFiles) {
     List<File> deleteFiles = null;
@@ -102,22 +107,27 @@ public class SampleServiceImpl implements SampleService {
     }
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer sampleId) {
     return sampleDAO.getFiles(sampleId);
   }
 
+  /** {@inheritDoc} */
   public boolean isHasFile(Integer sampleId) {
     return sampleDAO.isHasFile(sampleId);
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer studyId, String metaType) {
     return sampleDAO.getFiles(studyId, metaType);
   }
 
+  /** {@inheritDoc} */
   public boolean isHasFile(Integer studyId, String metaType) {
     return sampleDAO.isHasFile(studyId, metaType);
   }
 
+  /** {@inheritDoc} */
   public SortedSet<Sample> setWithHasFile(Integer expId, SortedSet<Sample> list) {
     /*
      * Map<Integer, Integer> countFiles = sampleDAO.getCountFiles(expId); for
@@ -137,6 +147,7 @@ public class SampleServiceImpl implements SampleService {
     return result;
   }
 
+  /** {@inheritDoc} */
   public SortedSet<Sample> listWithHasFile(Integer expId, SortedSet<Sample> list, String metaType) {
     /*
      * SortedSet<Sample> result = new TreeSet<Sample>(); Map<Integer, Integer>
@@ -158,6 +169,7 @@ public class SampleServiceImpl implements SampleService {
     return result;
   }
 
+  /** {@inheritDoc} */
   public Sample findByTitle(String title) {
     Sample sample = null;
     if (title != null) {
@@ -171,13 +183,10 @@ public class SampleServiceImpl implements SampleService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of Sample in the database by the Sample emailAddress, and
    * copies the Sample properties to an instance of Sample.
-   * 
-   * @param emailAddress
-   *          emailAddress of the Sample
-   * 
-   * @return instance of Sample, or null if a Sample cannot be found
    */
   public Sample findByName(String name) {
     Sample sample = null;
@@ -191,6 +200,7 @@ public class SampleServiceImpl implements SampleService {
     return sample;
   }
 
+  /** {@inheritDoc} */
   public Sample findByID(Integer sampleId) {
     Sample sample = null;
     if (sampleId != null) {
@@ -204,6 +214,7 @@ public class SampleServiceImpl implements SampleService {
     return sample;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Sample findBySWAccession(Integer swAccession) {
     Sample sample = null;
@@ -218,6 +229,7 @@ public class SampleServiceImpl implements SampleService {
     return sample;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Sample> findByOwnerID(Integer registrationId) {
     List<Sample> samples = null;
@@ -232,22 +244,16 @@ public class SampleServiceImpl implements SampleService {
     return samples;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Sample> findByCriteria(String criteria, boolean isCaseSens) {
     return sampleDAO.findByCriteria(criteria, isCaseSens);
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Determines if an email address has already been used.
-   * 
-   * @param oldEmail
-   *          The previous email address, or null if this method is being called
-   *          for a new email address
-   * 
-   * @param newEmail
-   *          The email address that is being checked
-   * 
-   * @return true if the newEmail has already been used, and false otherwise
    */
   public boolean hasNameBeenUsed(String oldName, String newName) {
     boolean nameUsed = false;
@@ -273,55 +279,74 @@ public class SampleServiceImpl implements SampleService {
     return nameUsed;
   }
 
+  /**
+   * <p>listComplete.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<Sample> listComplete() {
     return sampleDAO.listComplete();
   }
 
+  /**
+   * <p>listIncomplete.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<Sample> listIncomplete() {
     return sampleDAO.listIncomplete();
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Sample> listSample(Registration registration) {
     return sampleDAO.listSample(registration);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Sample updateDetached(Sample sample) {
     return sampleDAO.updateDetached(sample);
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Sample> getRootSamples(Study study) {
     return sampleDAO.getRootSamples(study);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Sample getRootSample(Sample childSample) {
     return sampleDAO.getRootSample(childSample);
   }
   
+  /** {@inheritDoc} */
   public List<ReturnValue> findFiles(Integer swAccession)
   {
       return sampleDAO.findFiles(swAccession);
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<Sample> list() {
         return sampleDAO.list();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(Registration registration, Sample sample) {
         sampleDAO.update(registration, sample);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer insert(Registration registration, Sample sample) {
         sample.setCreateTimestamp(new Date());
 	return(sampleDAO.insert(registration, sample));
     }
 
+    /** {@inheritDoc} */
     @Override
     public Sample updateDetached(Registration registration, Sample sample) {
         return sampleDAO.updateDetached(registration, sample);

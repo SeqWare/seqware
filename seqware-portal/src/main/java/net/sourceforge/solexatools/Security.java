@@ -6,7 +6,19 @@ import javax.servlet.http.HttpSession;
 import net.sourceforge.seqware.common.model.Registration;
 
 
+/**
+ * <p>Security class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class Security {
+	/**
+	 * <p>isAuthenticated.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @return a boolean.
+	 */
 	public final static boolean isAuthenticated(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		if(session != null
@@ -15,6 +27,12 @@ public class Security {
 		return false;
 	}
 
+	/**
+	 * <p>getRegistration.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 */
 	public final static Registration getRegistration(HttpServletRequest request) {
 		if(request == null
 		   || request.getSession(false) == null)
@@ -22,6 +40,13 @@ public class Security {
 		return (Registration)request.getSession(false).getAttribute("registration");
 	}
 
+	/**
+	 * <p>requireRegistration.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 */
 	public final static Registration requireRegistration(
 			HttpServletRequest	request,
 			HttpServletResponse	response

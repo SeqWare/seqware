@@ -23,13 +23,14 @@ import java.util.List;
  * installed, parts of the back-end will call these so it does not make sense to
  * install/un-install them.
  *
- *
  * @author jbaran
  * @author dyuen
+ * @version $Id: $Id
  */
 public interface QueryInterface {
 
     /**
+     * <p>getVersion.</p>
      *
      * @return information on the version of the back-end currently in use
      */
@@ -50,10 +51,9 @@ public interface QueryInterface {
      * Find a batch of objects in the back-end when a specific class is known
      * using a globally unique SGID while taking into account the timestamp
      *
-     * @param <T> 
      * @param t type of class to retrieve (used as a filter)
      * @param sgid globally unique id
-     * @return
+     * @return a {@link java.util.List} object.
      */
     public <T extends Atom> List getAtomsBySGID(Class<T> t, SGID... sgid);
 
@@ -61,7 +61,6 @@ public interface QueryInterface {
      * Find an object in the back-end when a specific class is known using a
      * globally unique SGID while taking into account the timestamp
      *
-     * @param <T>
      * @param sgid globally unique id
      * @param t type of class to retrieve (used as a filter)
      * @return atom if SGID exists, null if not
@@ -83,20 +82,19 @@ public interface QueryInterface {
      * Find an object in the back-end when a specific class is known while
      * ignoring the timestamp
      *
-     * @param <T>
      * @param sgid globally unique id, null if not
      * @param t type of class to retrieve (used as a filter)
-     * @return
+     * @return a T object.
      */
     public <T extends Atom> T getLatestAtomBySGID(SGID sgid, Class<T> t);
     
     /**
      * Find an atom in the back-end when a specific class is known and a
      * specific row key is known
-     * @param <T> type of atom to return
+     *
      * @param rowKey rowKey for the atom
      * @param t type of atom to return
-     * @return 
+     * @return a T object.
      */
     public <T extends Atom> T getLatestAtomByRowKey(String rowKey, Class<T> t);
     
@@ -117,12 +115,14 @@ public interface QueryInterface {
 
 //    // REFERENCE METHODS
     /**
+     * <p>getReferenceSets.</p>
      *
      * @return something iterable that iterates through all reference sets
      */
     public SeqWareIterable<ReferenceSet> getReferenceSets();
 
     /**
+     * <p>getReferences.</p>
      *
      * @return SeqWareIterable that iterates through all references
      */
@@ -131,6 +131,7 @@ public interface QueryInterface {
 //    // FEATURE SET METHODS
 //    // feature sets can be parents of other feature sets
     /**
+     * <p>getFeatureSets.</p>
      *
      * @return something iterable that iterates through all FeatureSets
      */
@@ -138,6 +139,7 @@ public interface QueryInterface {
 
 //    // TAG/CV SET METHODS
     /**
+     * <p>getTagSets.</p>
      *
      * @return something iterable that iterates through all TagSets
      */
@@ -145,6 +147,7 @@ public interface QueryInterface {
 
 //    // TAG/CV METHODS
     /**
+     * <p>getTags.</p>
      *
      * @return something iterable that that iterates through all Tags
      */
@@ -152,6 +155,7 @@ public interface QueryInterface {
 
 //    // ANALYSIS SET
     /**
+     * <p>getAnalysisSets.</p>
      *
      * @return something iterable that iterates through all AnalysisSets
      */
@@ -163,6 +167,7 @@ public interface QueryInterface {
 //    // ANALYSIS PLUGIN METHODS
 
     /**
+     * <p>getAnalysisPlugins.</p>
      *
      * @return something iterable through all AnalysisPlugins
      */
@@ -199,16 +204,20 @@ public interface QueryInterface {
     
     /**
      * Install a plug-in so that it can be listed
-     * @param plugin 
+     *
+     * @param plugin a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface} object.
      */
     public void installAnalysisPlugin(AnalysisPluginInterface plugin);
     
     /**
-     * Call an arbitrary installed plug-in by class and initiate it 
+     * Call an arbitrary installed plug-in by class and initiate it
+     *
      * @param hours minimum time to live
-     * @param pluginClass plug-in class to use 
+     * @param pluginClass plug-in class to use
      * @param parameters parameters to use when initializing the plug-in
-     * @return null if there is an error, QueryFuture if the plug-in is successfully run 
+     * @return null if there is an error, QueryFuture if the plug-in is successfully run
+     * @param set a {@link com.github.seqware.queryengine.model.FeatureSet} object.
+     * @param <ReturnValue> a ReturnValue object.
      */
     public <ReturnValue> QueryFuture<ReturnValue> getFeaturesByPlugin(int hours, Class<? extends AnalysisPluginInterface> pluginClass,  FeatureSet set, Object ... parameters);
 
@@ -260,9 +269,10 @@ public interface QueryInterface {
     
     /**
      * Get the number of features in a feature set
-     * @param hours
-     * @param set
-     * @return 
+     *
+     * @param hours a int.
+     * @param set a {@link com.github.seqware.queryengine.model.FeatureSet} object.
+     * @return a {@link com.github.seqware.queryengine.model.QueryFuture} object.
      */
     public QueryFuture<Long> getFeatureSetCount(int hours, FeatureSet set);
 }

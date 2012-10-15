@@ -9,24 +9,33 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * <p>UploadFileValidator class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class UploadFileValidator implements Validator {
 	private FileService fileService;
 	private FileTypeService fileTypeService;
 	
+	/**
+	 * <p>Constructor for UploadFileValidator.</p>
+	 */
 	public UploadFileValidator () {
 		super();
 	}
 	
+	/** {@inheritDoc} */
 	@SuppressWarnings("rawtypes")
 	public boolean supports(Class clazz) {
 		return UploadFile.class.equals(clazz);
 	}
 	
 	/**
-	 * Validates the specified Object.
+	 * {@inheritDoc}
 	 *
-	 * @param obj the Object to validate
-	 * @param errors Errors object for validation errors
+	 * Validates the specified Object.
 	 */
 	public void validate(Object obj, Errors errors) {
 		UploadFile uploadFile = (UploadFile) obj;
@@ -112,6 +121,14 @@ public class UploadFileValidator implements Validator {
 	}
 	*/
 	
+	/**
+	 * <p>validateProtocol.</p>
+	 *
+	 * @param strUrl a {@link java.lang.String} object.
+	 * @param trueProtocols an array of {@link java.lang.String} objects.
+	 * @param errors a {@link org.springframework.validation.Errors} object.
+	 * @return a boolean.
+	 */
 	public boolean validateProtocol(String strUrl, String[] trueProtocols, Errors errors){
 		boolean isFound = false;
 		for(String protocol : trueProtocols){
@@ -128,6 +145,15 @@ public class UploadFileValidator implements Validator {
 	}
 	
 	/* TODO: this needs to be made more flexible, there are multiple possible extensions for the same file type */
+	/**
+	 * <p>validateExtension.</p>
+	 *
+	 * @param fileName a {@link java.lang.String} object.
+	 * @param nameField a {@link java.lang.String} object.
+	 * @param fileTypeId a {@link java.lang.Integer} object.
+	 * @param errors a {@link org.springframework.validation.Errors} object.
+	 * @return a boolean.
+	 */
 	public boolean validateExtension(String fileName, String nameField, Integer fileTypeId, Errors errors)
 	{		
 		boolean isTrueExtension = true;
@@ -147,6 +173,12 @@ public class UploadFileValidator implements Validator {
 		return isTrueExtension;
 	}
 	
+	/**
+	 * <p>getExtension.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	protected String getExtension(String name){
 		String extension = "";
 		int dotPos = name.lastIndexOf(".");
@@ -156,6 +188,13 @@ public class UploadFileValidator implements Validator {
 		return extension;
 	}
 	
+	/**
+	 * <p>validateExists.</p>
+	 *
+	 * @param file a {@link org.springframework.web.multipart.MultipartFile} object.
+	 * @param folderStore a {@link java.lang.String} object.
+	 * @param errors a {@link org.springframework.validation.Errors} object.
+	 */
 	public void validateExists(MultipartFile file, String folderStore, Errors errors){
 		String firstFileName = file.getOriginalFilename();
 		if(getFileService().isExists(firstFileName, folderStore)){
@@ -172,18 +211,38 @@ public class UploadFileValidator implements Validator {
 		return str;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>fileService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
+	 */
 	public FileService getFileService() {
 		return fileService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>fileService</code>.</p>
+	 *
+	 * @param fileService a {@link net.sourceforge.seqware.common.business.FileService} object.
+	 */
 	public void setFileService(FileService fileService) {
 		this.fileService = fileService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>fileTypeService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.FileTypeService} object.
+	 */
 	public FileTypeService getFileTypeService() {
 		return fileTypeService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>fileTypeService</code>.</p>
+	 *
+	 * @param fileTypeService a {@link net.sourceforge.seqware.common.business.FileTypeService} object.
+	 */
 	public void setFileTypeService(FileTypeService fileTypeService) {
 		this.fileTypeService = fileTypeService;
 	}

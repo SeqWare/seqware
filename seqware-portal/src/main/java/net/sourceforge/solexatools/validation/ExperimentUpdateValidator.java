@@ -4,13 +4,19 @@ import net.sourceforge.seqware.common.model.Experiment;
 
 import org.springframework.validation.Errors;
 
+/**
+ * <p>ExperimentUpdateValidator class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ExperimentUpdateValidator extends ExperimentValidator {
 
   @Override
-  /**
+   /**
    * Determines if the experiment's email address and confirm email address
    * match.
-   * 
+   *
    * @param errors
    *          Errors object for validation errors
    */

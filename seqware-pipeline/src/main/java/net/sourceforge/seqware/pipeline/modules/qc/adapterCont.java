@@ -19,47 +19,45 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Basic QC report
- * 
+ *
  * This module parses quality report from Illumina pipeline (Gerald)
- * 
- * 
-  PE Adapters1
-
-  5' P-GATCGGAAGAGCGGTTCAGCAGGAATGCCGAG
-
-  5' ACACTCTTTCCCTACACGACGCTCTTCCGATCT
-
-  PE PCR Primer 1.01
-
-  5' AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT
-
-  3
-
-  PE PCR Primer 2.01
-
-  5' CAAGCAGAAGACGGCATACGAGATCGGTCTCGGCATTCCTGCTGAACCGCTCTTCCGATCT
-
-  PE Read 1 Sequencing Primer
-
-  5' ACACTCTTTCCCTACACGACGCTCTTCCGATCT
-
-  PE Read 2 Sequencing Primer
-
-  5' CGGTCTCGGCATTCCTGCTGAACCGCTCTTCCGATCT
-  (1) Normally, PE read 2 is used for SE sequencing and 1st of PE in PE run
-  and (2)PE read 1 will is used for 2nd of PE in PE run
  *
- *  
+ *
+ *  PE Adapters1
+ *
+ *  5' P-GATCGGAAGAGCGGTTCAGCAGGAATGCCGAG
+ *
+ *  5' ACACTCTTTCCCTACACGACGCTCTTCCGATCT
+ *
+ *  PE PCR Primer 1.01
+ *
+ *  5' AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT
+ *
+ *  3
+ *
+ *  PE PCR Primer 2.01
+ *
+ *  5' CAAGCAGAAGACGGCATACGAGATCGGTCTCGGCATTCCTGCTGAACCGCTCTTCCGATCT
+ *
+ *  PE Read 1 Sequencing Primer
+ *
+ *  5' ACACTCTTTCCCTACACGACGCTCTTCCGATCT
+ *
+ *  PE Read 2 Sequencing Primer
+ *
+ *  5' CGGTCTCGGCATTCCTGCTGAACCGCTCTTCCGATCT
+ *  (1) Normally, PE read 2 is used for SE sequencing and 1st of PE in PE run
+ *  and (2)PE read 1 will is used for 2nd of PE in PE run
+ *
+ *
  * Underlying script:  sw_module_adapterCont.pl (by Sara Grimm)
- * Newly updated script:  calculate_adapter_contamination.pl    (by Sara Grimm) 6/2/2010               
- * Necessary programs:  perl 
- *  
- * Expected output:  adapter_cont.txt
- * 
- * 
- * 
- * @author jyli@med.unc.edu
+ * Newly updated script:  calculate_adapter_contamination.pl    (by Sara Grimm) 6/2/2010
+ * Necessary programs:  perl
  *
+ * Expected output:  adapter_cont.txt
+ *
+ * @author jyli@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class adapterCont extends Module {
@@ -69,9 +67,9 @@ public class adapterCont extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("adapterSeq", "adapter sequence to detect in the Illumina raw sequence file").withRequiredArg();
@@ -96,8 +94,9 @@ public class adapterCont extends Module {
      return 1; 
   }
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -113,11 +112,11 @@ public class adapterCont extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -152,9 +151,9 @@ public class adapterCont extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -176,9 +175,9 @@ public class adapterCont extends Module {
     return ret;
   }
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
 
@@ -227,9 +226,9 @@ public class adapterCont extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known dataset.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -239,6 +238,7 @@ public class adapterCont extends Module {
   }
   
   
+  /** {@inheritDoc} */
   @Override
 public ReturnValue do_run() {
     
@@ -263,15 +263,17 @@ public ReturnValue do_run() {
     return(ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     // just make sure the file exists
     return(FileTools.fileExistsAndReadable(new File((String)options.valueOf("outfile"))));
   }
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.  Remove tempDir.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

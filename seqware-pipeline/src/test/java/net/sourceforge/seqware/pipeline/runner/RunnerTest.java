@@ -17,6 +17,10 @@ import static org.testng.Assert.assertEquals;
  * Date: 7/21/11
  * Time: 3:22 PM
  * To change this template use File | Settings | File Templates.
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class RunnerTest {
 
@@ -49,21 +53,35 @@ public class RunnerTest {
         }
     }
 
+    /**
+     * <p>setUpClassProperty.</p>
+     */
     @BeforeClass
     public void setUpClassProperty() {
         rscDir = new File(RunnerTest.class.getResource(".").getPath());
     }
 
+    /**
+     * <p>setup.</p>
+     */
     @BeforeMethod
     public void setup() {
         System.setSecurityManager(new NoExitSecurityManager());
     }
 
+    /**
+     * <p>teardown.</p>
+     */
     @AfterMethod
     public void teardown() {
         System.setSecurityManager(null);
     }
 
+    /**
+     * <p>arguments.</p>
+     *
+     * @return an array of {@link java.lang.Object} objects.
+     */
     @DataProvider(name = "args")
     public Object[][] arguments() {
         Log.info("rscDir = " + rscDir);
@@ -80,6 +98,12 @@ public class RunnerTest {
         };
     }
 
+    /**
+     * <p>testRunner.</p>
+     *
+     * @param args a {@link java.lang.String} object.
+     * @param expected a int.
+     */
     @Test(dataProvider = "args")
     public void testRunner(String args, int expected) {
         try {

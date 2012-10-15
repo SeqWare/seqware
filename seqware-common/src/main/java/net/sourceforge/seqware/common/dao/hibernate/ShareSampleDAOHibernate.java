@@ -10,22 +10,32 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ShareSampleDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ShareSampleDAOHibernate extends HibernateDaoSupport implements ShareSampleDAO {
+  /** {@inheritDoc} */
   @Override
   public void insert(ShareSample shareSample) {
     this.getHibernateTemplate().save(shareSample);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(ShareSample shareSample) {
     this.getHibernateTemplate().update(shareSample);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void delete(ShareSample shareSample) {
     this.getHibernateTemplate().delete(shareSample);
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("rawtypes")
   public ShareSample findByID(Integer shareSampleID) {
@@ -39,6 +49,7 @@ public class ShareSampleDAOHibernate extends HibernateDaoSupport implements Shar
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("unchecked")
   public List<ShareSample> findByOwnerID(Integer registrationID) {
@@ -47,6 +58,7 @@ public class ShareSampleDAOHibernate extends HibernateDaoSupport implements Shar
     return this.getHibernateTemplate().find(query, parameters);
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings({ "unchecked" })
   public ShareSample findBySWAccession(Integer swAccession) {
@@ -60,6 +72,7 @@ public class ShareSampleDAOHibernate extends HibernateDaoSupport implements Shar
     return shareSample;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ShareSample updateDetached(ShareSample shareSample) {
     ShareSample dbObject = findByID(shareSample.getShareSampleId());
@@ -75,6 +88,7 @@ public class ShareSampleDAOHibernate extends HibernateDaoSupport implements Shar
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ShareSample> list() {
         throw new UnsupportedOperationException("Not supported yet.");

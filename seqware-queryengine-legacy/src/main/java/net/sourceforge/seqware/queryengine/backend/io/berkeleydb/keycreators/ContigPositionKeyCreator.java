@@ -14,18 +14,26 @@ import com.sleepycat.db.SecondaryDatabase;
 import com.sleepycat.db.SecondaryKeyCreator;
 
 /**
- * @author boconnor
+ * <p>ContigPositionKeyCreator class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 // could alternatively extend SecondaryMultiKeyCreator for multiple read sequence groups
 public class ContigPositionKeyCreator implements SecondaryKeyCreator {
   
   private TupleBinding binding;
   
+  /**
+   * <p>Constructor for ContigPositionKeyCreator.</p>
+   *
+   * @param binding a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   */
   public ContigPositionKeyCreator(TupleBinding binding) {
     this.binding = binding;
   }
   
+  /** {@inheritDoc} */
   public boolean createSecondaryKey(SecondaryDatabase secDb,
                                     DatabaseEntry key,
                                     DatabaseEntry value,
