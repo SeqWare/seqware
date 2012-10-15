@@ -38,17 +38,21 @@ public abstract class AbstractWorkflowDataModel  {
     	this.workflow = new Workflow();
     }
     
-    protected void setupWorkflow() {
+    public void setupDirectory() {
     	
     }
-    protected void setupEnvironment() {
+    
+    public void setupWorkflow() {
     	
     }
-    protected Map<String, SqwFile> setupFiles() {
+    public void setupEnvironment() {
+    	
+    }
+    public Map<String, SqwFile> setupFiles() {
     	return this.files;
     }
-    protected abstract void buildWorkflow();
-    protected void wrapup() {
+    public abstract void buildWorkflow();
+    public void wrapup() {
     	
     }
 

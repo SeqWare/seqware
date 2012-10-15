@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,15 +19,9 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 import joptsimple.OptionSet;
-
-import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
-import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
-import net.sourceforge.seqware.pipeline.bundle.Bundle;
-import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.StringUtils;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 import net.sourceforge.seqware.pipeline.workflowV2.model.XmlWorkflowDataModel;
 
 public class WorkflowDataModelFactory {
@@ -149,6 +142,8 @@ public class WorkflowDataModelFactory {
 		if(workflow_java) {
 	        try {
 	        	Method m = null;
+	        	m = clazz.getMethod("setupFiles");
+	        	m.invoke(ret);
 	        	//Method m = clazz.getDeclaredMethod("setupFiles");
 	        	//m.invoke(ret);
 	/*        	m = clazz.getDeclaredMethod("setupWorkflow");
