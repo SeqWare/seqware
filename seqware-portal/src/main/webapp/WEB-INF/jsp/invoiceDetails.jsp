@@ -14,7 +14,7 @@
 <!-- End Error -->
 				
 <p>
-
+    <a href="?invoiceSwAccession=${invoice.swAccession}&format=tsv">Download/Print</a>
 </p>
                 
 <div class="b-signup-form">
