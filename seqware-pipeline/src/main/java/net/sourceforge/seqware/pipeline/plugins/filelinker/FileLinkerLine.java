@@ -15,7 +15,7 @@ public class FileLinkerLine {
    private String fileStatus;
    private String mimeType;
    private String filename;
-   private Integer size;
+   private Long size;
    private String md5sum;
 
    public String getSequencerRun() {
@@ -74,11 +74,11 @@ public class FileLinkerLine {
       this.filename = filename;
    }
 
-   public Integer getSize() {
+   public Long getSize() {
       return size;
    }
 
-   public void setSize(Integer size) {
+   public void setSize(Long size) {
       this.size = size;
    }
 
@@ -113,7 +113,7 @@ public class FileLinkerLine {
    public void setSizeString(String sizeString) {
       if (!StringUtils.isBlank(sizeString)) {
          try {
-            setSize(Integer.parseInt(sizeString));
+            setSize(Long.parseLong(sizeString));
          } catch (NumberFormatException e) {
             log.error("The size [{}] is not a valid integer value. {}", sizeString, e);
          }
@@ -140,6 +140,5 @@ public class FileLinkerLine {
       sb.append("}");
       return sb.toString();
    }
-
 
 }
