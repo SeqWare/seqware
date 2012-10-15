@@ -12,13 +12,11 @@ public class Workflow {
 	private Collection<String> tests;
 	//may be better to use Map
 	private List<AbstractJob> jobs;
-	private List<String> dirs;
 	
 
 	public Workflow() {
 		this.jobs = new ArrayList<AbstractJob>();
 		this.tests = new ArrayList<String>();
-		this.dirs = new ArrayList<String>();
 	}
 	
 	/**
@@ -91,21 +89,5 @@ public class Workflow {
 		return this.tests;
 	}
 	
-	/**
-	 * create a user defined directory before all jobs started
-	 * @param name:  directory name
-	 * @return 
-	 */
-	public Workflow addDirectory(String name) {
-		this.dirs.add(name);
-		return this;
-	}
-	
-	/**
-	 * 
-	 * @return user defined directories
-	 */
-	public Collection<String> getDirectories() {
-		return this.dirs;
-	}
+
 }

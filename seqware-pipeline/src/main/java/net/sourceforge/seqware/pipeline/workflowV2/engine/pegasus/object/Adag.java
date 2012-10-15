@@ -116,29 +116,54 @@ public class Adag  {
 	}
 	
 	private void parseWorkflow(AbstractWorkflowDataModel wfdm) {
+		List<PegasusJob> parents = new ArrayList<PegasusJob>();
 		//mkdir data job
 		AbstractJob job0 = new BashJob("start");
-		job0.getCommand().addArgument("mkdir data1");
+		job0.getCommand().addArgument("mkdir provisionfiles");
 		PegasusJob pjob0 = new PegasusJob(job0, wfdm.getConfigs().get("basedir"));
 		pjob0.setId(this.jobs.size());
 		this.jobs.add(pjob0);
-		
+		parents.add(pjob0);
+		//directories
+		if(!wfdm.getDirectories().isEmpty()) {
+			parents.clear();
+			StringBuilder sb = new StringBuilder();
+			for(String dir: wfdm.getDirectories()) {
+				sb.append("mkdir "+dir+";");
+			}
+			AbstractJob dirJob = new BashJob("createdir");
+			dirJob.getCommand().addArgument(sb.toString());
+			PegasusJob pjobdir = new PegasusJob(dirJob, wfdm.getConfigs().get("basedir"));
+			pjobdir.setId(this.jobs.size());
+			this.jobs.add(pjobdir);
+			pjobdir.getParents().add(pjob0);
+			parents.add(pjobdir);
+		}
 		//sqwfiles
-		for(Map.Entry<String,SqwFile> entry: wfdm.getFiles().entrySet()) {
-			AbstractJob job = new BashJob("provisionFile_"+entry.getKey());
-			job.addFile(entry.getValue());
-			PegasusJob pjob = new ProvisionFilesJob(job,wfdm.getConfigs().get("basedir"));
-			pjob.setId(this.jobs.size());
-			this.jobs.add(pjob);
-			this.fileJobMap.put(entry.getValue(), pjob);
-
-			//handle in 
-			if(entry.getValue().isInput()) {
-				pjob.getParents().add(pjob0);
-			} 
+		if(!wfdm.getFiles().isEmpty()) {
+			Collection<PegasusJob> newParents = new ArrayList<PegasusJob>();
+			for(Map.Entry<String,SqwFile> entry: wfdm.getFiles().entrySet()) {
+				AbstractJob job = new BashJob("provisionFile_"+entry.getKey());
+				job.addFile(entry.getValue());
+				PegasusJob pjob = new ProvisionFilesJob(job,wfdm.getConfigs().get("basedir"));
+				pjob.setId(this.jobs.size());
+				this.jobs.add(pjob);
+				this.fileJobMap.put(entry.getValue(), pjob);
+	
+				//handle in 
+				if(entry.getValue().isInput()) {
+					newParents.add(pjob);
+					for(PegasusJob parent: parents) {
+						pjob.getParents().add(parent);
+					}
+				} 
+			}
+			//reset parents
+			parents.clear();
+			parents.addAll(newParents);
 		}
 		
-		int idCount = 0;
+		int idCount = this.jobs.size();
 		for(AbstractJob job: wfdm.getWorkflow().getJobs()) {
 			PegasusJob pjob = this.createPegasusJobObject(job, wfdm);
 			pjob.setId(idCount);
@@ -184,9 +209,11 @@ public class Adag  {
 				}
 			}
 
-			//if no parent, set to pjob0
+			//if no parent, set to parents, after provisionfiles
 			if(pjob.getParents().isEmpty()) {
-				pjob.getParents().add(pjob0);
+				for(PegasusJob parent: parents) {
+					pjob.getParents().add(parent);
+				}
 			}
 			this.jobs.add(pjob);
 			idCount++;
