@@ -32,15 +32,23 @@ import org.restlet.ext.wadl.ResourceInfo;
 import org.restlet.ext.wadl.WadlDescribable;
 
 /**
+ * <p>GenericDBResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class GenericDBResource extends BasicRestlet implements WadlDescribable {
 
+    /**
+     * <p>Constructor for GenericDBResource.</p>
+     *
+     * @param context a {@link org.restlet.Context} object.
+     */
     public GenericDBResource(Context context) {
         super(context);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void handle(Request request, Response response) {
         authenticate(request.getChallengeResponse().getIdentifier());
@@ -108,6 +116,7 @@ public class GenericDBResource extends BasicRestlet implements WadlDescribable {
         return s.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ResourceInfo getResourceInfo(ApplicationInfo ai) {
         ResourceInfo ri = new ResourceInfo();

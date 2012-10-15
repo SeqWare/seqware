@@ -19,12 +19,15 @@ package com.github.seqware.queryengine.model.interfaces;
 /**
  * An interface for the various builders that we will use to construct
  * models for managed objects
+ *
  * @author dyuen
+ * @version $Id: $Id
  */
 public interface Buildable<T extends BaseBuilder> {
     
     /**
      * Creates a new builder initialized with the fields of an existing object
+     *
      * @return A builder initialized with this
      */
     public T toBuilder();

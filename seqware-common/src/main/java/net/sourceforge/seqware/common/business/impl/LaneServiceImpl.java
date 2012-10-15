@@ -27,6 +27,12 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * <p>LaneServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class LaneServiceImpl implements LaneService {
 
   private LaneDAO laneDAO = null;
@@ -35,16 +41,18 @@ public class LaneServiceImpl implements LaneService {
   private IUSDAO IUSDAO = null;
   private Logger log = Logger.getLogger(LaneServiceImpl.class);
 
+  /**
+   * <p>Constructor for LaneServiceImpl.</p>
+   */
   public LaneServiceImpl() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Sets a private member variable with an instance of an implementation of
    * LaneDAO. This method is called by the Spring framework at run time.
-   * 
-   * @param laneDAO
-   *          implementation of LaneDAO
    * @see LaneDAO
    */
   public void setLaneDAO(LaneDAO laneDAO) {
@@ -54,7 +62,7 @@ public class LaneServiceImpl implements LaneService {
   /**
    * Sets a private member variable with an instance of an implementation of
    * ProcessingDAO. This method is called by the Spring framework at run time.
-   * 
+   *
    * @param processingDAO
    *          implementation of ProcessingDAO
    * @see ProcessingDAO
@@ -66,7 +74,7 @@ public class LaneServiceImpl implements LaneService {
   /**
    * Sets a private member variable with an instance of an implementation of
    * FileDAO. This method is called by the Spring framework at run time.
-   * 
+   *
    * @param fileDAO
    *          implementation of FileDAO
    * @see fileDAO
@@ -78,31 +86,35 @@ public class LaneServiceImpl implements LaneService {
   /**
    * Sets a private member variable with an instance of an implementation of
    * IUSDAO. This method is called by the Spring framework at run time.
-   * 
-   * @param iusDAO
-   *          implementation of IUSDAO
+   *
    * @see iusDAO
+   * @param IUSDAO a {@link net.sourceforge.seqware.common.dao.IUSDAO} object.
    */
   public void setIUSDAO(IUSDAO IUSDAO) {
     this.IUSDAO = IUSDAO;
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer laneId) {
     return laneDAO.getFiles(laneId);
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer studyId, String metaType) {
     return laneDAO.getFiles(studyId, metaType);
   }
 
+  /** {@inheritDoc} */
   public boolean isHasFile(Integer studyId, String metaType) {
     return laneDAO.isHasFile(studyId, metaType);
   }
 
+  /** {@inheritDoc} */
   public boolean isHasFile(Integer laneId) {
     return laneDAO.isHasFile(laneId);
   }
 
+  /** {@inheritDoc} */
   public SortedSet<Lane> setWithHasFile(SortedSet<Lane> list) {
     for (Lane lane : list) {
       lane.setIsHasFile(isHasFile(lane.getLaneId()));
@@ -110,6 +122,7 @@ public class LaneServiceImpl implements LaneService {
     return list;
   }
 
+  /** {@inheritDoc} */
   public SortedSet<Lane> listWithHasFile(SortedSet<Lane> list, String metaType) {
     SortedSet<Lane> result = new TreeSet<Lane>();
     for (Lane lane : list) {
@@ -125,6 +138,7 @@ public class LaneServiceImpl implements LaneService {
     return result;
   }
 
+  /** {@inheritDoc} */
   public Integer insertLane(Registration registration, Sample sample, UploadSequence uploadSeqence, FileType fileType)
       throws Exception {
     Set<File> files = new TreeSet<File>();
@@ -230,6 +244,18 @@ public class LaneServiceImpl implements LaneService {
     return newProcessing.getProcessingId();
   }
 
+  /**
+   * <p>updateLane.</p>
+   *
+   * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+   * @param fileOne a {@link org.springframework.web.multipart.MultipartFile} object.
+   * @param fileTwo a {@link org.springframework.web.multipart.MultipartFile} object.
+   * @param typeFile a {@link java.lang.String} object.
+   * @param folderStore a {@link java.lang.String} object.
+   * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+   * @return a {@link java.lang.Integer} object.
+   * @throws java.lang.Exception if any.
+   */
   public Integer updateLane(Sample sample, MultipartFile fileOne, MultipartFile fileTwo, String typeFile,
       String folderStore, Registration registration) throws Exception {
     /*
@@ -311,6 +337,7 @@ public class LaneServiceImpl implements LaneService {
     return lane;
   }
 
+  /** {@inheritDoc} */
   public List<Lane> list(List<Integer> laneIds) {
     if (laneIds == null || laneIds.size() == 0)
       return new ArrayList<Lane>();
@@ -319,10 +346,9 @@ public class LaneServiceImpl implements LaneService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of Lane into the database.
-   * 
-   * @param laneDAO
-   *          instance of LaneDAO
    */
   public void insert(Lane lane) {
     // lane.setExperimentId(exp.getExperimentId());
@@ -331,20 +357,18 @@ public class LaneServiceImpl implements LaneService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of Lane in the database.
-   * 
-   * @param lane
-   *          instance of Lane
    */
   public void update(Lane lane) {
     laneDAO.update(lane);
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Deletes an instance of Lane in the database.
-   * 
-   * @param lane
-   *          instance of Lane
    */
   public void delete(Lane lane, String deleteRealFiles) {
     List<File> deleteFiles = null;
@@ -360,13 +384,10 @@ public class LaneServiceImpl implements LaneService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of Lane in the database by the Lane emailAddress, and
    * copies the Lane properties to an instance of Lane.
-   * 
-   * @param emailAddress
-   *          emailAddress of the Lane
-   * 
-   * @return instance of Lane, or null if a Lane cannot be found
    */
   public Lane findByName(String name) {
     Lane lane = null;
@@ -380,6 +401,7 @@ public class LaneServiceImpl implements LaneService {
     return lane;
   }
 
+  /** {@inheritDoc} */
   public Lane findByID(Integer laneID) {
     Lane lane = null;
     if (laneID != null) {
@@ -394,6 +416,7 @@ public class LaneServiceImpl implements LaneService {
     return lane;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Lane findBySWAccession(Integer swAccession) {
     Lane lane = null;
@@ -409,6 +432,7 @@ public class LaneServiceImpl implements LaneService {
     return lane;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Lane> findByOwnerID(Integer registrationId) {
     List<Lane> lanes = null;
@@ -424,16 +448,9 @@ public class LaneServiceImpl implements LaneService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Determines if an email address has already been used.
-   * 
-   * @param oldEmail
-   *          The previous email address, or null if this method is being called
-   *          for a new email address
-   * 
-   * @param newEmail
-   *          The email address that is being checked
-   * 
-   * @return true if the newEmail has already been used, and false otherwise
    */
   public boolean hasNameBeenUsed(String oldName, String newName) {
     boolean nameUsed = false;
@@ -459,6 +476,16 @@ public class LaneServiceImpl implements LaneService {
     return nameUsed;
   }
 
+  /**
+   * <p>listFile.</p>
+   *
+   * @param reqistration a {@link net.sourceforge.seqware.common.model.Registration} object.
+   * @param typeNode a {@link java.lang.String} object.
+   * @param list a {@link java.util.List} object.
+   * @param ids an array of {@link java.lang.String} objects.
+   * @param statuses an array of {@link java.lang.String} objects.
+   * @return a {@link java.util.List} object.
+   */
   public List<File> listFile(Registration reqistration, String typeNode, List<File> list, String[] ids,
       String[] statuses) {
     for (int i = 0; i < ids.length; i++) {
@@ -574,37 +601,44 @@ public class LaneServiceImpl implements LaneService {
     return file;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Lane> findByCriteria(String criteria, boolean isCaseSens) {
     return laneDAO.findByCriteria(criteria, isCaseSens);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Lane updateDetached(Lane lane) {
     return laneDAO.updateDetached(lane);
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ReturnValue> findFiles(Integer swAccession) {
         return laneDAO.findFiles(swAccession);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Lane> list() {
         return laneDAO.list();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(Registration registration, Lane lane) {
         laneDAO.update(registration, lane);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void insert(Registration registration, Lane lane) {
         lane.setCreateTimestamp(new Date());
 	laneDAO.insert(registration, lane);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Lane updateDetached(Registration registration, Lane lane) {
         return laneDAO.updateDetached(registration, lane);

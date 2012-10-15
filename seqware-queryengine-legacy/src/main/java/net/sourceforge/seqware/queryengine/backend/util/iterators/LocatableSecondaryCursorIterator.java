@@ -17,27 +17,57 @@ import com.sleepycat.db.OperationStatus;
 import com.sleepycat.db.SecondaryCursor;
 
 /**
+ * <p>LocatableSecondaryCursorIterator class.</p>
+ *
  * @author boconnor
- *  
+ * @version $Id: $Id
  */
 public class LocatableSecondaryCursorIterator extends SecondaryCursorIterator implements SeqWareIterator {
 
   ContigPosition cp = null;
 
+  /**
+   * <p>Constructor for LocatableSecondaryCursorIterator.</p>
+   *
+   * @param cursor a {@link com.sleepycat.db.SecondaryCursor} object.
+   * @param searchKey a {@link com.sleepycat.db.DatabaseEntry} object.
+   * @param tb a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @throws java.lang.Exception if any.
+   */
   public LocatableSecondaryCursorIterator(SecondaryCursor cursor, DatabaseEntry searchKey, TupleBinding tb) throws Exception {
     super(cursor, searchKey, tb);
     throw new Exception("Constructor not implemented, must provide a contigPosition.");
   }
 
+  /**
+   * <p>Constructor for LocatableSecondaryCursorIterator.</p>
+   *
+   * @param cursor a {@link com.sleepycat.db.SecondaryCursor} object.
+   * @param searchKey a {@link com.sleepycat.db.DatabaseEntry} object.
+   * @param cp a {@link net.sourceforge.seqware.queryengine.backend.model.ContigPosition} object.
+   * @param tb a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @throws java.lang.Exception if any.
+   */
   public LocatableSecondaryCursorIterator(SecondaryCursor cursor, DatabaseEntry searchKey, ContigPosition cp, TupleBinding tb) throws Exception {
     super(cursor, searchKey, tb);
     this.cp = cp;
   }
 
+  /**
+   * <p>nextSecondaryKey.</p>
+   *
+   * @return a {@link java.lang.Object} object.
+   * @throws java.io.UnsupportedEncodingException if any.
+   */
   public Object nextSecondaryKey() throws UnsupportedEncodingException {
 	  return(null);
   }
   
+  /**
+   * <p>hasNext.</p>
+   *
+   * @return a boolean.
+   */
   public boolean hasNext() {
     try {
       if (first) {

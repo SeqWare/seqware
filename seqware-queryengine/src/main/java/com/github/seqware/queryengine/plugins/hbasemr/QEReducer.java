@@ -20,10 +20,11 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 /**
  * Base reducer class used by all plug-ins.
- * Should be populated similar to {@link QEMapper} when parameters are needed for
+ * Should be populated similar to {@link com.github.seqware.queryengine.plugins.hbasemr.QEMapper} when parameters are needed for
  * Reducers for plugins.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class QEReducer<KEYIN,VALUEIN,KEYOUT,VALUEOUT> extends Reducer<KEYIN,VALUEIN,KEYOUT,VALUEOUT> {
     

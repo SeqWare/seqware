@@ -31,10 +31,19 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 /**
- * 
+ * <p>DaxgeneratorV2 class.</p>
+ *
  * @author yongliang
+ * @version $Id: $Id
  */
 public class DaxgeneratorV2 {
+    /**
+     * <p>generateDax.</p>
+     *
+     * @param workflow a {@link net.sourceforge.seqware.pipeline.workflowV2.model.Workflow} object.
+     * @param output a {@link java.lang.String} object.
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
     public ReturnValue generateDax(Workflow workflow, String output) {
 	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 	// Map<String, Object> newMap = MapTools.mapString2Int(map);

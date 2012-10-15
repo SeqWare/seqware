@@ -35,18 +35,26 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
 /**
+ * <p>WorkflowRunReportResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class WorkflowRunReportResource
         extends BasicRestlet {
 
     private Logger logger = Logger.getLogger(WorkflowRunReportResource.class);
 
+    /**
+     * <p>Constructor for WorkflowRunReportResource.</p>
+     *
+     * @param context a {@link org.restlet.Context} object.
+     */
     public WorkflowRunReportResource(Context context) {
         super(context);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void handle(Request request, Response response) {
         boolean showStdErr = false;
@@ -127,6 +135,11 @@ public class WorkflowRunReportResource
         }
     }
 
+    /**
+     * <p>getHeader.</p>
+     *
+     * @return a {@link java.lang.StringBuilder} object.
+     */
     public StringBuilder getHeader() {
         StringBuilder builder = new StringBuilder();
         builder.append("Workflow").append("\t");
@@ -149,6 +162,14 @@ public class WorkflowRunReportResource
         return builder;
     }
 
+    /**
+     * <p>outputLogString.</p>
+     *
+     * @param stdErr a boolean.
+     * @param wrrr a {@link net.sourceforge.seqware.common.hibernate.reports.WorkflowRunReportRow} object.
+     * @param builder a {@link java.lang.StringBuilder} object.
+     * @return a {@link java.lang.String} object.
+     */
     public String outputLogString(boolean stdErr, WorkflowRunReportRow wrrr, StringBuilder builder) {
         if(stdErr) {
           builder.append(wrrr.getWorkflowRun().getStdErr());
@@ -160,6 +181,13 @@ public class WorkflowRunReportResource
 
     }
     
+    /**
+     * <p>toString.</p>
+     *
+     * @param wrrr a {@link net.sourceforge.seqware.common.hibernate.reports.WorkflowRunReportRow} object.
+     * @param builder a {@link java.lang.StringBuilder} object.
+     * @return a {@link java.lang.String} object.
+     */
     public String toString(WorkflowRunReportRow wrrr, StringBuilder builder) {
         builder.append(wrrr.getWorkflowRun().getWorkflow().getName()).append(" ").append(wrrr.getWorkflowRun().getWorkflow().getVersion()).append("\t");
         builder.append(wrrr.getWorkflowRun().getSwAccession()).append("\t");

@@ -7,16 +7,18 @@ import com.github.seqware.queryengine.model.interfaces.Taggable;
 import com.github.seqware.queryengine.model.interfaces.Taggable.NestedLevel;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
-import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.*;
 import junit.framework.Assert;
+import static org.junit.Assert.fail;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Unit tests of {@link Taggable}.
+ * Unit tests of {@link com.github.seqware.queryengine.model.interfaces.Taggable}.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class TaggableTest {
 
@@ -32,6 +34,9 @@ public class TaggableTest {
     private static Tag ts1, ts2, ts3;
     private static Tag t1a, t1b, t1c, t2a, t2b, t2c, t3a;
 
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -91,6 +96,9 @@ public class TaggableTest {
         mManager.close();
     }
 
+    /**
+     * <p>testAddingAndRemovingTagSpecsFromTagSets.</p>
+     */
     @Test
     public void testAddingAndRemovingTagSpecsFromTagSets() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -130,6 +138,9 @@ public class TaggableTest {
         Assert.assertTrue(testSet.getPrecedingVersion().getCount() == 3);
     }
 
+    /**
+     * <p>testClassesThatCannotBeTagged.</p>
+     */
     @Test
     public void testClassesThatCannotBeTagged() {
         // practically everything can be tagged, except for plugins and tags
@@ -148,6 +159,9 @@ public class TaggableTest {
         Assert.assertTrue(SWQEFactory.getQueryInterface().getAnalysisPlugins().getCount() > 0);
     }
 
+    /**
+     * <p>testTagAddingAndRemoval.</p>
+     */
     @Test
     public void testTagAddingAndRemoval() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -158,13 +172,16 @@ public class TaggableTest {
         User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
         u.associateTag(tag1a);
         long version1 = u.getVersion();
-        Assert.assertTrue(u.getTags().getCount() == 1);
+        Assert.assertTrue("found " + u.getTags().getCount() + " tags, expected " + 1, u.getTags().getCount() == 1);
         u.dissociateTag(tag1a);
-        Assert.assertTrue(u.getTags().getCount() == 0);
+        Assert.assertTrue("found " + u.getTags().getCount() + " tags, expected " + 0, u.getTags().getCount() == 0);
         long version2 = u.getVersion();
         Assert.assertTrue(version1 == version2);
     }
 
+    /**
+     * <p>testTagQueries.</p>
+     */
     @Test
     public void testTagQueries() {
         // three features in the set
@@ -192,6 +209,77 @@ public class TaggableTest {
 
     }
 
+    /**
+     * <p>testFlushingTagsWithoutSets.</p>
+     */
+    @Test
+    public void testFlushingTagsWithoutSets() {
+        try {
+            CreateUpdateManager mManager = SWQEFactory.getModelManager();
+            Tag ta = Tag.newBuilder().setValue("Test_String").build();
+            User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
+            u.associateTag(ta);
+
+            mManager.close();
+            fail("close() should've thrown an exception since there are unattached tags");
+        } catch (RuntimeException e) {
+            // we expect an exception to be thrown when we try to persist a Tag without a parental TagSet
+        }
+        
+        try {
+            CreateUpdateManager mManager = SWQEFactory.getModelManager();
+            Tag ta = mManager.buildTag().setValue("Test_String").build();
+            mManager.close();
+            fail("close() should've thrown an exception since there are unattached tags");
+        } catch (RuntimeException e) {
+            // we expect an exception to be thrown when we try to persist a Tag without a parental TagSet
+        }
+    }
+    
+    /**
+     * <p>testSameTagInTwoDifferentTagSets.</p>
+     */
+    @Test 
+    public void testSameTagInTwoDifferentTagSets() {
+        CreateUpdateManager mManager = SWQEFactory.getModelManager();
+        // create an "ontology" tag set
+        TagSet tolkienSet = mManager.buildTagSet().setName("tolkien").build();
+        // add a few tag "specifications" to the tag set
+        Tag dwarfTag = mManager.buildTag().setKey("dwarf").build();
+        Tag elvenTag = mManager.buildTag().setKey("elven").build();
+        Tag humanTag = mManager.buildTag().setKey("human").build();
+        tolkienSet.add(dwarfTag, elvenTag, humanTag);
+        
+        TagSet elderSet = mManager.buildTagSet().setName("elder scrolls").build();
+        // add a few tag "specifications" to the tag set
+        Tag dwarfTag2 = mManager.buildTag().setKey("dwarf").build();
+        Tag elvenTag2 = mManager.buildTag().setKey("elven").build();
+        Tag humanTag2 = mManager.buildTag().setKey("human").build();
+        elderSet.add(dwarfTag2, elvenTag2, humanTag2);
+        
+        User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
+        u.associateTag(dwarfTag); 
+        u.associateTag(elvenTag);
+        u.associateTag(humanTag);
+        u.associateTag(dwarfTag2); 
+        u.associateTag(elvenTag2);
+        u.associateTag(humanTag2);
+        mManager.flush();
+        
+        User u2 = SWQEFactory.getQueryInterface().getAtomBySGID(User.class, u.getSGID());
+        Assert.assertTrue("expected 6 tags, found " + u.getTags().getCount(), u.getTags().getCount() == 6);
+        Assert.assertTrue("expected 6 tags, found " + u2.getTags().getCount(), u2.getTags().getCount() == 6);
+        Assert.assertTrue("could not find dwarf tag ", u.getTagByKey(tolkienSet, "dwarf") != null);
+        Assert.assertTrue("could not find dwarf tag ", u2.getTagByKey(elderSet, "dwarf") != null);
+        Assert.assertTrue("could not find elven tag ", u.getTagByKey(tolkienSet, "elven") != null);
+        Assert.assertTrue("could not find elven tag ", u2.getTagByKey(elderSet, "elven") != null);
+        Assert.assertTrue("could not find human tag ", u.getTagByKey(tolkienSet, "human") != null);
+        Assert.assertTrue("could not find human tag ", u2.getTagByKey(elderSet, "human") != null);
+    }
+
+    /**
+     * <p>tagWithDifferentTypes.</p>
+     */
     @Test
     public void tagWithDifferentTypes() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -229,6 +317,9 @@ public class TaggableTest {
         }
     }
 
+    /**
+     * <p>testTagSetParentReferences.</p>
+     */
     @Test
     public void testTagSetParentReferences() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -287,12 +378,17 @@ public class TaggableTest {
         Assert.assertTrue("persisted tags do not have proper parents", correctParent);
     }
 
+    /**
+     * <p>testNestedHashes.</p>
+     */
     @Test
     public void testNestedHashes() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
+        TagSet tagset = mManager.buildTagSet().build();
         Tag ta = mManager.buildTag().setKey("MTTS::dbSNP::ID").setValue("rs123").build();
         Tag tb = mManager.buildTag().setKey("MTTS::dbSNP::pop_freq").setValue(0.70f).build();
         User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
+        tagset.add(ta, tb);
         u.associateTag(ta);
         u.associateTag(tb);
 
@@ -307,6 +403,8 @@ public class TaggableTest {
         Tag t9 = mManager.buildTag().setKey("TS::Z2").setValue(9).build();
         Tag t10 = mManager.buildTag().setKey("TQ::A").setValue(10).build();
 
+        tagset.add(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10);
+
         User u2 = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
         u2.associateTag(t1);
         u2.associateTag(t2);
@@ -317,29 +415,29 @@ public class TaggableTest {
         u2.associateTag(t7);
         u2.associateTag(t8);
         u2.associateTag(t9);
-        u2.associateTag(t10); 
+        u2.associateTag(t10);
         mManager.flush();
 
         // do our checking on the objects after we retrieve them
         User userPersisted1 = SWQEFactory.getQueryInterface().getAtomBySGID(User.class, u.getSGID());
         User userPersisted2 = SWQEFactory.getQueryInterface().getAtomBySGID(User.class, u2.getSGID());
-        
+
         // check the first nested hash and check the values while we're at it
-        NestedLevel nestedTags = userPersisted1.getNestedTags();
+        NestedLevel nestedTags = userPersisted1.getNestedTags(tagset);
         Assert.assertTrue("root level ok", nestedTags.getChildTags().isEmpty() && nestedTags.getChildMaps().size() == 1);
         nestedTags = nestedTags.getChildMaps().get("MTTS");
         Assert.assertTrue("MTTS level ok", nestedTags.getChildTags().isEmpty() && nestedTags.getChildMaps().size() == 1);
         nestedTags = nestedTags.getChildMaps().get("dbSNP");
         Assert.assertTrue("dbSNP level ok", nestedTags.getChildTags().size() == 2 && nestedTags.getChildMaps().isEmpty());
         Assert.assertTrue("ID Tag ok", nestedTags.getChildTags().get("ID").getValue().equals("rs123"));
-        Assert.assertTrue("pop_freq Tag ok", (Float)nestedTags.getChildTags().get("pop_freq").getValue() == 0.70f);
-        
+        Assert.assertTrue("pop_freq Tag ok", (Float) nestedTags.getChildTags().get("pop_freq").getValue() == 0.70f);
+
         // check the second one, just level numbers
-        nestedTags = userPersisted2.getNestedTags();
+        nestedTags = userPersisted2.getNestedTags(tagset);
         Assert.assertTrue("root level ok", nestedTags.getChildTags().isEmpty() && nestedTags.getChildMaps().size() == 2);
         nestedTags = nestedTags.getChildMaps().get("TS");
         Assert.assertTrue("TS level ok", nestedTags.getChildTags().size() == 4 && nestedTags.getChildMaps().size() == 2);
-        nestedTags = userPersisted2.getNestedTags().getChildMaps().get("TQ");
-        Assert.assertTrue("TQ level ok", nestedTags.getChildTags().size() == 1 && nestedTags.getChildMaps().isEmpty());     
+        nestedTags = userPersisted2.getNestedTags(tagset).getChildMaps().get("TQ");
+        Assert.assertTrue("TQ level ok", nestedTags.getChildTags().size() == 1 && nestedTags.getChildMaps().isEmpty());
     }
 }

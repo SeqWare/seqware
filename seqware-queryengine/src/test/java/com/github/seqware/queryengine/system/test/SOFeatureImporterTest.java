@@ -31,6 +31,8 @@ import org.junit.Test;
  * System tests for importing and exporting VCF files while being aware of SO
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class SOFeatureImporterTest {
 
@@ -41,8 +43,12 @@ public class SOFeatureImporterTest {
     private static TagSet sequenceOntology = null;
     private static Reference reference = null;
     private static TagSet adHocSet = null;
+    /** Constant <code>REFERENCE="hg_42"</code> */
     public static final String REFERENCE = "hg_42";
 
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
         // we will need a loaded SO, a reference, and an adhoc tag set to test this sucker
@@ -77,6 +83,11 @@ public class SOFeatureImporterTest {
         testVCFFile_invalid = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/test_invalid.vcf");
     }
 
+    /**
+     * <p>testVCFImportParam.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     @Test
     public void testVCFImportParam() throws IOException {
         BufferedReader in = null;
@@ -108,22 +119,34 @@ public class SOFeatureImporterTest {
         }
     }
 
+    /**
+     * <p>testNormalVCFImport.</p>
+     */
     @Test
     public void testNormalVCFImport() {
         testFile(testVCFFile, true, false);
     }
 
+    /**
+     * <p>testZippedVCFImport.</p>
+     */
     @Test
     public void testZippedVCFImport() {
         testFile(testVCFFile_zipped, true, true);
     }
 
+    /**
+     * <p>testMissingValueVCFImport.</p>
+     */
     @Test
     public void testMissingValueVCFImport() {
         // should handle this normally, all columns but POS look like they could use the missing value (".") according to the VCF specification
         testFile(testVCFFile_missingValues, true, false);
     }
 
+    /**
+     * <p>testInvalidVCFImport.</p>
+     */
     @Test
     public void testInvalidVCFImport() {
         // should bug out
@@ -158,6 +181,14 @@ public class SOFeatureImporterTest {
         matchOutputToControl(createTempFile, compressed, testFile);    
     }
 
+    /**
+     * <p>matchOutputToControl.</p>
+     *
+     * @param outputFile a {@link java.io.File} object.
+     * @param compressed a boolean.
+     * @param controlFile a {@link java.io.File} object.
+     * @return a boolean.
+     */
     public static boolean matchOutputToControl(File outputFile, boolean compressed, File controlFile) {
         BufferedReader in = null;
         BufferedReader controlIn = null;

@@ -19,17 +19,15 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Collecting flag information per lane
- *  
- * Underlying script:  sw_module_extractFlag.pl
- *                
- * Necessary programs:  perl 
- *  
- * Expected output:  flowcell.lane.flagCollection.txt
- * 
- * 
- * 
- * @author jyli@med.unc.edu
  *
+ * Underlying script:  sw_module_extractFlag.pl
+ *
+ * Necessary programs:  perl
+ *
+ * Expected output:  flowcell.lane.flagCollection.txt
+ *
+ * @author jyli@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class collectFlags extends Module {
@@ -39,9 +37,9 @@ public class collectFlags extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("perl", "Path to perl").withRequiredArg();
@@ -54,8 +52,9 @@ public class collectFlags extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -71,11 +70,11 @@ public class collectFlags extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -110,9 +109,9 @@ public class collectFlags extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -134,9 +133,9 @@ public class collectFlags extends Module {
     return ret;
   }
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
 
@@ -189,9 +188,9 @@ public class collectFlags extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known data set.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -201,6 +200,7 @@ public class collectFlags extends Module {
   }
   
   
+  /** {@inheritDoc} */
   @Override
 public ReturnValue do_run() {
     
@@ -230,15 +230,17 @@ public ReturnValue do_run() {
     return(ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     // just make sure the file exists
     return(FileTools.fileExistsAndReadable(new File((String)options.valueOf("outfile"))));
   }
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.  Remove tempDir.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

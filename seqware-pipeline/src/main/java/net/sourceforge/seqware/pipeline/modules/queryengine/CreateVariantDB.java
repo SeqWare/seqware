@@ -27,7 +27,7 @@ import org.openide.util.lookup.ServiceProvider;
  * Query Engine project that contains SNVs, small indels, and
  * coverage. The backend here is based on BerkeleyDB, eventually this
  * will use the HBase backend instead which is more distributable.
- * 
+ *
  * The overall flow for this module is to call
  * <ul>
  *   <li>VariantImporter</li>
@@ -35,24 +35,25 @@ import org.openide.util.lookup.ServiceProvider;
  *   <li>AnnotateVariantsWithContigAndZygosity</li>
  *   <li>checkpoint, clean and zip the database</li>
  * </ul>
- * 
+ *
  * The input is essentially a pileup file and the output is a variant DB directory.
- * 
+ *
  * Sample of commands this actually runs:
- * 
- * /home/solexa/programs/jdk1.6.0_13/bin/java -Djava.library.path=/home/solexa/programs/BerkeleyDB.4.7/lib -cp /home/solexa/svnroot/seqware-complete/trunk/seqware-queryengine/backend/lib/db.jar:/home/solexa/svnroot/seqware-complete/trunk/seqware-queryengine/backend/dist/seqware-qe-0.4.0.jar net.sourceforge.seqware.queryengine.tools.importers.VariantImporter PileupImportWorker /state/partition1/tmp/solexa/HuRef/bestscore_no_pcr_duplicates_20091020/20100104.bbed.0.4.0 true 1 100000 10 true true true 33 17179869184 10000000 8 /scratch0/tmp/solexa/HuRef/pileup_by_chr/*.pileup.gz 
+ *
+ * /home/solexa/programs/jdk1.6.0_13/bin/java -Djava.library.path=/home/solexa/programs/BerkeleyDB.4.7/lib -cp /home/solexa/svnroot/seqware-complete/trunk/seqware-queryengine/backend/lib/db.jar:/home/solexa/svnroot/seqware-complete/trunk/seqware-queryengine/backend/dist/seqware-qe-0.4.0.jar net.sourceforge.seqware.queryengine.tools.importers.VariantImporter PileupImportWorker /state/partition1/tmp/solexa/HuRef/bestscore_no_pcr_duplicates_20091020/20100104.bbed.0.4.0 true 1 100000 10 true true true 33 17179869184 10000000 8 /scratch0/tmp/solexa/HuRef/pileup_by_chr/*.pileup.gz
  * /home/solexa/programs/jdk1.6.0_13/bin/java -Djava.library.path=/home/solexa/programs/BerkeleyDB.4.7/lib -cp /home/solexa/svnroot/solexatools/solexa-queryengine/backend/lib/db.jar:/home/solexa/svnroot/solexatools/solexa-queryengine/backend/dist/seqware-qe-0.3.0.jar net.sourceforge.seqware.queryengine.tools.importers.PileupCoverageImporter /state/partition1/tmp/solexa/HuRef/bestscore_no_pcr_duplicates_20091020/20091021.bbed.coverage.0.3.0 17179869184 10000000 true 1000 /scratch0/tmp/solexa/HuRef/pileup_by_chr/*.pileup.gz
  * /home/solexa/programs/jdk1.6.0_13/bin/java -Djava.library.path=/home/solexa/programs/BerkeleyDB.4.7/lib -cp /home/solexa/svnroot/seqware-complete/trunk/seqware-queryengine/backend/lib/db.jar:/home/solexa/svnroot/seqware-complete/trunk/seqware-queryengine/backend/dist/seqware-qe-0.4.0.jar net.sourceforge.seqware.queryengine.tools.annotators.AnnotateVariantsWithContigAndZygosity /state/partition1/tmp/solexa/HuRef/bestscore_no_pcr_duplicates_20091020/20100104.bbed.0.4.0 17179869184 10000000
  * ./programs/BerkeleyDB.4.7/bin/db_checkpoint -1 -h /state/partition1/tmp/solexa/HuRef/bestscore_no_pcr_duplicates_20091020/20100104.bbed.0.4.0.clean
  * ./programs/BerkeleyDB.4.7/bin/db_archive -d -h /state/partition1/tmp/solexa/HuRef/bestscore_no_pcr_duplicates_20091020/20100104.bbed.0.4.0.clean
  *
  * Notes/TODO/FIXME:
- * 
- * * There are assumptions about some of the parameters, for example, assumption that pileups are all gz, that there are 8 cores for loading etc
- * * Need to parameterize and add more checking code.  
- * * FIXME: Need to create db in local temp path then copy it to final output. See if Pegasus can do this instead (so tempDir would be /state/partition1/tmp... and Pegasus would stage out of this to /scratch/...)
- * @author boconnor
  *
+ * * There are assumptions about some of the parameters, for example, assumption that pileups are all gz, that there are 8 cores for loading etc
+ * * Need to parameterize and add more checking code.
+ * * FIXME: Need to create db in local temp path then copy it to final output. See if Pegasus can do this instead (so tempDir would be /state/partition1/tmp... and Pegasus would stage out of this to /scratch/...)
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class CreateVariantDB extends Module {
@@ -60,6 +61,11 @@ public class CreateVariantDB extends Module {
   private OptionSet options = null;
   private File tempDir = null;
   
+  /**
+   * <p>getOptionParser.</p>
+   *
+   * @return a {@link joptsimple.OptionParser} object.
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("local-temp-path").withRequiredArg();
@@ -86,6 +92,11 @@ public class CreateVariantDB extends Module {
     return(parser);
   }
   
+  /**
+   * <p>get_syntax.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String get_syntax() {
     OptionParser parser = getOptionParser();
     StringWriter output = new StringWriter();
@@ -98,6 +109,7 @@ public class CreateVariantDB extends Module {
     }
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue init() {
     
@@ -133,8 +145,10 @@ public class CreateVariantDB extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Things to check:
-   * * 
+   * *
    */
   @Override
   public ReturnValue do_test() {
@@ -157,6 +171,7 @@ public class CreateVariantDB extends Module {
     
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
 
@@ -174,6 +189,7 @@ public class CreateVariantDB extends Module {
     
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
     
@@ -213,6 +229,7 @@ public class CreateVariantDB extends Module {
  
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
 
@@ -311,6 +328,7 @@ public class CreateVariantDB extends Module {
     return(ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     
@@ -339,6 +357,7 @@ public class CreateVariantDB extends Module {
   }
   
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue clean_up() {
     // need to get the cleaned DB to destination then delete temp dir

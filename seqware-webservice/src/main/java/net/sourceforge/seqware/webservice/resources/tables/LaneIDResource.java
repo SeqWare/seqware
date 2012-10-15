@@ -40,18 +40,26 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>LaneIDResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class LaneIDResource extends DatabaseIDResource {
 
     private Logger logger;
 
+    /**
+     * <p>Constructor for LaneIDResource.</p>
+     */
     public LaneIDResource() {
         super("laneId");
         logger = Logger.getLogger(LaneIDResource.class);
     }
 
+    /**
+     * <p>getXml.</p>
+     */
     @Get
     public void getXml() {
         JaxbObject<Lane> jaxbTool = new JaxbObject<Lane>();
@@ -88,6 +96,7 @@ public class LaneIDResource extends DatabaseIDResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
+    /** {@inheritDoc} */
     @Override
     @Put
     public Representation put(Representation entity) {

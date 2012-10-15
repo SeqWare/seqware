@@ -14,17 +14,27 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 
+/**
+ * <p>RegistrationServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class RegistrationServiceImpl implements RegistrationService {
   private RegistrationDAO registrationDAO = null;
 
+  /**
+   * <p>Constructor for RegistrationServiceImpl.</p>
+   */
   public RegistrationServiceImpl() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Sets a private member variable with an instance of an implementation of
    * RegistrationDAO. This method is called by the Spring framework at run time.
-   * 
    * @see RegistrationDAO
    */
   public void setRegistrationDAO(RegistrationDAO registrationDAO) {
@@ -33,6 +43,7 @@ public class RegistrationServiceImpl implements RegistrationService {
   }
 
   /* Inserts an instance of Registration into the database. */
+  /** {@inheritDoc} */
   public void insert(RegistrationDTO registrationDTO) {
     Registration registration = this.populateRegistration(registrationDTO);
     registration.setCreateTimestamp(new Date());
@@ -40,11 +51,13 @@ public class RegistrationServiceImpl implements RegistrationService {
   }
 
   /* Updates an instance of Registration in the database. */
+  /** {@inheritDoc} */
   public void update(RegistrationDTO registrationDTO) {
     Registration registration = this.populateRegistration(registrationDTO);
     registrationDAO.update(registration);
   }
 
+  /** {@inheritDoc} */
   public void insert(String[] emails, InvitationParams invitationParams, MailSender sender) {
     String isInvitatonCode = invitationParams.getIsInvitationCode();
     String subjectEmail = invitationParams.getSubjectEmail();
@@ -120,15 +133,11 @@ public class RegistrationServiceImpl implements RegistrationService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of Registration in the database by the Registration
    * emailAddress, and copies the Registration properties to an instance of
    * RegistrationDTO.
-   * 
-   * @param emailAddress
-   *          emailAddress of the Registration
-   * 
-   * @return instance of RegistrationDTO, or null if a Registration cannot be
-   *         found
    */
   public RegistrationDTO findByEmailAddress(String emailAddress) {
 
@@ -152,16 +161,11 @@ public class RegistrationServiceImpl implements RegistrationService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of Registration in the database by the Registration
    * emailAddress and password, and copies the Registration properties to an
    * instance of RegistrationDTO.
-   * 
-   * @param emailAddress
-   *          emailAddress of the Registration
-   * @param password
-   *          password of the Registration
-   * @return instance of RegistrationDTO, or null if a Registration cannot be
-   *         found
    */
   public RegistrationDTO findByEmailAddressAndPassword(String emailAddress, String password) {
     RegistrationDTO registrationDTO = null;
@@ -180,14 +184,9 @@ public class RegistrationServiceImpl implements RegistrationService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Determines if an email address has already been used.
-   * 
-   * @param oldEmail
-   *          The previous email address, or null if this method is being called
-   *          for a new email address.
-   * @param newEmail
-   *          The email address that is being checked.
-   * @return true if newEmail is in use, false otherwise.
    */
   public boolean hasEmailAddressBeenUsed(String email) {
     /**
@@ -238,6 +237,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     return registrationDTO;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Registration updateDetached(Registration registration) {
     return registrationDAO.updateDetached(registration);

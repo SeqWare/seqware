@@ -9,15 +9,20 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Unit tests of {@link User} and {@link Group}.
+ * Unit tests of {@link com.github.seqware.queryengine.model.User} and {@link com.github.seqware.queryengine.model.Group}.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class UserGroupTest {
 
     private static User a1, a2, a3;
     private static Group g1,g2; 
 
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
 //        Logger.getLogger(UserGroupTest.class.getName()).info( "@BeforeClass");
@@ -33,6 +38,9 @@ public class UserGroupTest {
         mManager.close();
     }
 
+    /**
+     * <p>testUserCreation.</p>
+     */
     @Test
     public void testUserCreation() {
 //        Logger.getLogger(UserGroupTest.class.getName()).info( "@Test");
@@ -52,6 +60,9 @@ public class UserGroupTest {
         Assert.assertTrue(b1 && b2 && b3);
     }
     
+    /**
+     * <p>testGroupCreation.</p>
+     */
     @Test
     public void testGroupCreation() {
 //       Logger.getLogger(UserGroupTest.class.getName()).info( "@Test");
@@ -65,6 +76,9 @@ public class UserGroupTest {
         Assert.assertTrue(b1);
     }
 
+    /**
+     * <p>testUserPasswordChanging.</p>
+     */
     @Test
     public void testUserPasswordChanging(){
 //        Logger.getLogger(UserGroupTest.class.getName()).info( "@Test");

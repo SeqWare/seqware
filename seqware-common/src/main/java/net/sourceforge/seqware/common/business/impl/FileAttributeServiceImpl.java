@@ -14,6 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+/**
+ * <p>FileAttributeServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 @Transactional
 public class FileAttributeServiceImpl implements FileAttributeService {
 
@@ -23,6 +29,7 @@ public class FileAttributeServiceImpl implements FileAttributeService {
   @Autowired
   private FileDAO fileDao;
 
+  /** {@inheritDoc} */
   @Override
   public Set<FileAttribute> getFileAttributes(Integer fileSwa) {
     File file = fileDao.findBySWAccession(fileSwa);
@@ -32,6 +39,7 @@ public class FileAttributeServiceImpl implements FileAttributeService {
     return file.getFileAttributes();
   }
 
+  /** {@inheritDoc} */
   @Override
   public FileAttribute get(Integer fileSwa, Integer id) {
     File file = fileDao.findBySWAccession(fileSwa);
@@ -41,6 +49,7 @@ public class FileAttributeServiceImpl implements FileAttributeService {
     return fileAttributeDao.get(id);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer add(Integer fileSwa, FileAttribute fileAttribute) {
     File file = fileDao.findBySWAccession(fileSwa);
@@ -51,6 +60,7 @@ public class FileAttributeServiceImpl implements FileAttributeService {
     return fileAttributeDao.add(fileAttribute);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(Integer fileSwa, FileAttribute fileAttribute) {
     File file = fileDao.findBySWAccession(fileSwa);
@@ -68,6 +78,7 @@ public class FileAttributeServiceImpl implements FileAttributeService {
     fileAttributeDao.update(fileAttribute);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void delete(Integer fileSwa, Integer fileAttributeId) {
     File file = fileDao.findBySWAccession(fileSwa);

@@ -14,8 +14,21 @@ import java.io.File;
  * User: Xiaoshu Wang (xiao@renci.org)
  * Date: 8/22/11
  * Time: 3:08 PM
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public interface RedirectAware {
+    /**
+     * <p>setStdout.</p>
+     *
+     * @param stdout a {@link java.io.File} object.
+     */
     void setStdout(File stdout);
+    /**
+     * <p>setStderr.</p>
+     *
+     * @param stderr a {@link java.io.File} object.
+     */
     void setStderr(File stderr);
 }

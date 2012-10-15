@@ -33,6 +33,7 @@ import com.github.seqware.queryengine.model.*;
  * regardless of underlying implementation.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public interface CreateUpdateManager {
 
@@ -63,10 +64,11 @@ public interface CreateUpdateManager {
     };
     
     /**
-     * Accessor method for the back-end. It can be useful to assert or debug what state 
+     * Accessor method for the back-end. It can be useful to assert or debug what state
      * an atom currently is in
-     * @param a
-     * @return 
+     *
+     * @param a a {@link com.github.seqware.queryengine.model.Atom} object.
+     * @return a {@link com.github.seqware.queryengine.factory.CreateUpdateManager.State} object.
      */
     public State getState(Atom a);
 
@@ -80,7 +82,7 @@ public interface CreateUpdateManager {
      * Start managing a Atom that has been dirtied, for example, a Atom returned
      * from a query
      *
-     * @param p
+     * @param p a {@link com.github.seqware.queryengine.model.Atom} object.
      */
     public void persist(Atom p);
 
@@ -141,28 +143,28 @@ public interface CreateUpdateManager {
     /**
      * Build a user
      *
-     * @return
+     * @return a {@link com.github.seqware.queryengine.model.User.Builder} object.
      */
     public User.Builder buildUser();
 
     /**
      * Build a group
      *
-     * @return
+     * @return a {@link com.github.seqware.queryengine.model.Group.Builder} object.
      */
     public Group.Builder buildGroup();
 
     /**
      * Build a Tag
      *
-     * @return
+     * @return a {@link com.github.seqware.queryengine.model.Tag.Builder} object.
      */
     public Tag.Builder buildTag();
 
     /**
      * Build a feature
      *
-     * @return
+     * @return a {@link com.github.seqware.queryengine.model.Feature.Builder} object.
      */
     public Feature.Builder buildFeature();
 
@@ -178,8 +180,8 @@ public interface CreateUpdateManager {
      * Called by Atoms when they need to change state (for example, to notify
      * that they have become a dirty new version)
      *
-     * @param source
-     * @param state
+     * @param source a {@link com.github.seqware.queryengine.model.Atom} object.
+     * @param state a {@link com.github.seqware.queryengine.factory.CreateUpdateManager.State} object.
      */
     public void atomStateChange(Atom source, State state);
 }

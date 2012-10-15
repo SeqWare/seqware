@@ -25,17 +25,26 @@ import org.junit.runner.RunWith;
 
 /**
  * Test using the simplest version of everything.
+ *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 @RunWith(DynamicSuite.class)
 public class NonPersistentTestSuite {
 
+    /**
+     * <p>setupSuite.</p>
+     */
     @BeforeClass
     public static void setupSuite() {
         Logger.getLogger(NonPersistentTestSuite.class.getName()).info("Running test suite with Apache serialization to a non-persistent back-end");
         SWQEFactory.setFactoryBackendType(SWQEFactory.Model_Type.IN_MEMORY, SWQEFactory.Storage_Type.IN_MEMORY, SWQEFactory.Serialization_Type.APACHE);
     }
     
+    /**
+     * <p>tearDownSuite.</p>
+     */
     @AfterClass
     public static void tearDownSuite(){
         Logger.getLogger(NonPersistentTestSuite.class.getName()).info("Ending test suite and resetting");

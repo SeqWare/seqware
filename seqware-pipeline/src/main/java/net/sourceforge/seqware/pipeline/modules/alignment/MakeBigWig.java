@@ -19,20 +19,20 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Generate bigWig file from a BAM file.
- * 
- * This module takes as input a BAM file of aligned reads (sorted, aligned to genomic 
- * coordinates).  It uses samtools pileup to get counts per genomic position, builds a 
+ *
+ * This module takes as input a BAM file of aligned reads (sorted, aligned to genomic
+ * coordinates).  It uses samtools pileup to get counts per genomic position, builds a
  * bedGraph file, then converts the bedGraph to a bigWig file.
- * 
+ *
  * Underlying script:  sw_module_MakeBigWig.pl
  * Necessary programs:  perl, samtools, bedGraphToBigWig
- * 
- * Input:  BAM file, chrom.sizes (output of UCSC binary tool 'fetchChromSizes')
- * 
- * Expected output:  outfile
- * 
- * @author sacheek@med.unc.edu
  *
+ * Input:  BAM file, chrom.sizes (output of UCSC binary tool 'fetchChromSizes')
+ *
+ * Expected output:  outfile
+ *
+ * @author sacheek@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class MakeBigWig extends Module {
@@ -42,9 +42,9 @@ public class MakeBigWig extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("bamfile", "input: sorted BAM, reads aligned to genomic coordinates").withRequiredArg();
@@ -59,8 +59,9 @@ public class MakeBigWig extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -76,11 +77,11 @@ public class MakeBigWig extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -115,9 +116,9 @@ public class MakeBigWig extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -140,9 +141,9 @@ public class MakeBigWig extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -204,9 +205,9 @@ public class MakeBigWig extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known dataset.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -216,10 +217,10 @@ public class MakeBigWig extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Run core of module.
    * Based on script sw_module_MakeBigWig.pl
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_run() {
@@ -249,9 +250,9 @@ public class MakeBigWig extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Check to make sure the output was created correctly.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -259,10 +260,11 @@ public class MakeBigWig extends Module {
     return(FileTools.fileExistsAndReadable(new File((String)options.valueOf("outfile"))));
   }
   
-    /**
+  /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.  Remove tempDir.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

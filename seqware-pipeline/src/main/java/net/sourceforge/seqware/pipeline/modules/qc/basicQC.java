@@ -19,17 +19,22 @@ import org.openide.util.lookup.ServiceProvider;
  * Purpose:
  *
  * This module generates pre and post alignment QC reports using
- * dqc from the DNAA package. 
+ * dqc from the DNAA package.
  *
  * FIXME: Sample of commands this actually runs:
- * 
- * @author jmendler
  *
+ * @author jmendler
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class basicQC extends Module {
   private OptionSet options = null;
   
+  /**
+   * <p>getOptionParser.</p>
+   *
+   * @return a {@link joptsimple.OptionParser} object.
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.acceptsAll( Arrays.asList("pre"), "Do pre-alignment QC");
@@ -53,6 +58,11 @@ public class basicQC extends Module {
 
   
   
+  /**
+   * <p>get_syntax.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String get_syntax() {
     OptionParser parser = getOptionParser();
     StringWriter output = new StringWriter();
@@ -67,8 +77,10 @@ public class basicQC extends Module {
   
   
   /**
+   * {@inheritDoc}
+   *
    * Things to check:
-   * * 
+   * *
    */
   @Override
   public ReturnValue do_test() {
@@ -76,6 +88,7 @@ public class basicQC extends Module {
     return new ReturnValue(ReturnValue.NOTIMPLEMENTED);    
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
     ReturnValue ret = new ReturnValue();
@@ -126,16 +139,19 @@ public class basicQC extends Module {
   }
 
   // FIXME: Got until here with wrapping, still need to do the rest
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
     return new ReturnValue(ReturnValue.NOTIMPLEMENTED);
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
     return new ReturnValue(ReturnValue.NOTIMPLEMENTED);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     return new ReturnValue(ReturnValue.NOTIMPLEMENTED); 

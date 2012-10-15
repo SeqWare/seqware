@@ -61,9 +61,8 @@ Sometimes we run into problems when building, strange missing dependency issues
 and broken packages. A lot of the time this is an issue with Maven, try
 deleting your ~/.m2 directory and running the build process again.
 
-
 PREREQUISITES ON Mac OS
------------------------
+--------------------
 
 ###SeqWare Query Engine
 
@@ -183,6 +182,18 @@ In particular, recent versions of Debian (including Ubuntu and Linux Mint) have 
 You can find the original bug report showing that this was done on purpose here: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=316099
 
 I don't think RedHat-based distributions use this same convention.
+
+If you run into the following error when the hbase-plugin starts up, please check for an incorrect entry in your <code>/etc/hosts</code> file.
+    
+    org.apache.hadoop.hbase.client.NoServerForRegionException: Unable to find region for  after 10 tries.
+    at org.apache.hadoop.hbase.client.HConnectionManager$HConnectionImplementation.locateRegionInMeta(HConnectionManager.java:908)
+    at org.apache.hadoop.hbase.client.HConnectionManager$HConnectionImplementation.locateRegion(HConnectionManager.java:814)
+    at org.apache.hadoop.hbase.client.HConnectionManager$HConnectionImplementation.locateRegion(HConnectionManager.java:782)
+    at org.apache.hadoop.hbase.client.HTable.finishSetup(HTable.java:249)
+    at org.apache.hadoop.hbase.client.HTable.<init>(HTable.java:213)
+    at org.apache.hadoop.hbase.HBaseTestingUtility.startMiniHBaseCluster(HBaseTestingUtility.java:526)
+
+In particular, the latest (v. 13) version of Linux Mint has on the second line <code>127.0.1.1  \<your hostname\></code> which should be modified to <code>127.0.0.1  \<your hostname\></code>  
 
 INSTALLING
 ====================

@@ -4,21 +4,30 @@ import net.sourceforge.seqware.common.model.SequencerRunWizardDTO;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
+/**
+ * <p>SequencerRunWizardValidator class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SequencerRunWizardValidator extends SequencerRunValidator {
 	
+	/**
+	 * <p>Constructor for SequencerRunWizardValidator.</p>
+	 */
 	public SequencerRunWizardValidator () {
 		super();
 	}
 	
+	/** {@inheritDoc} */
 	public boolean supports(Class clazz) {
 		return SequencerRunWizardDTO.class.equals(clazz);
 	}
 
 	/**
-	 * Validates the specified Object.
+	 * {@inheritDoc}
 	 *
-	 * @param obj the Object to validate
-	 * @param errors Errors object for validation errors
+	 * Validates the specified Object.
 	 */
 	public void validate(Object obj, Errors errors) {
 		SequencerRunWizardDTO sequencerRunWizardDTO = (SequencerRunWizardDTO) obj;
@@ -28,6 +37,12 @@ public class SequencerRunWizardValidator extends SequencerRunValidator {
 		this.validateLaneCount(sequencerRunWizardDTO, errors);
 	}
 
+	/**
+	 * <p>validateLaneCount.</p>
+	 *
+	 * @param sequencerRunWizardDTO a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
+	 * @param errors a {@link org.springframework.validation.Errors} object.
+	 */
 	public void validateLaneCount(SequencerRunWizardDTO sequencerRunWizardDTO, Errors errors) {
 		if (errors.getFieldError("strLaneCount") == null) {
 			boolean isHasError = false;

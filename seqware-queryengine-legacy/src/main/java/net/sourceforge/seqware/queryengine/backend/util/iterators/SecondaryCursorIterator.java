@@ -17,8 +17,10 @@ import com.sleepycat.db.OperationStatus;
 import com.sleepycat.db.SecondaryCursor;
 
 /**
- * @author boconnor
+ * <p>SecondaryCursorIterator class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class SecondaryCursorIterator implements SeqWareIterator {
 
@@ -36,10 +38,11 @@ public class SecondaryCursorIterator implements SeqWareIterator {
   
   /**
    * Used to iterate over an entire secondary table with or without duplicates reported
-   * @param cursor
-   * @param tb
-   * @param reportDuplicates
-   * @throws Exception
+   *
+   * @param cursor a {@link com.sleepycat.db.SecondaryCursor} object.
+   * @param tb a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @param reportDuplicates a boolean.
+   * @throws java.lang.Exception if any.
    */
   public SecondaryCursorIterator(SecondaryCursor cursor, TupleBinding tb, boolean reportDuplicates) throws Exception {
     this.cursor = cursor;
@@ -50,10 +53,11 @@ public class SecondaryCursorIterator implements SeqWareIterator {
   
   /**
    * Used to search the secondary table with only duplicates reported back
-   * @param cursor
-   * @param searchKey
-   * @param tb
-   * @throws Exception
+   *
+   * @param cursor a {@link com.sleepycat.db.SecondaryCursor} object.
+   * @param searchKey a {@link com.sleepycat.db.DatabaseEntry} object.
+   * @param tb a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @throws java.lang.Exception if any.
    */
   public SecondaryCursorIterator(SecondaryCursor cursor, DatabaseEntry searchKey, TupleBinding tb) throws Exception {
     this.cursor = cursor;
@@ -61,6 +65,11 @@ public class SecondaryCursorIterator implements SeqWareIterator {
     this.tb = tb;
   }
 
+  /**
+   * <p>hasNext.</p>
+   *
+   * @return a boolean.
+   */
   public boolean hasNext() {
     try {
       if (first) {
@@ -98,6 +107,12 @@ public class SecondaryCursorIterator implements SeqWareIterator {
     }
   }
 
+  /**
+   * <p>getCount.</p>
+   *
+   * @return a int.
+   * @throws java.lang.Exception if any.
+   */
   public int getCount() throws Exception {
     if (status == OperationStatus.SUCCESS) {
       return(cursor.count());
@@ -106,6 +121,11 @@ public class SecondaryCursorIterator implements SeqWareIterator {
     }
   }
 
+  /**
+   * <p>next.</p>
+   *
+   * @return a {@link java.lang.Object} object.
+   */
   public Object next() {
     if (status == OperationStatus.SUCCESS && result != null) {
       model = (Model) tb.entryToObject(result);
@@ -118,6 +138,9 @@ public class SecondaryCursorIterator implements SeqWareIterator {
   /**
    * Used to get the keys in this secondary table as strings
    * (won't work for non string keys!).
+   *
+   * @return a {@link java.lang.Object} object.
+   * @throws java.io.UnsupportedEncodingException if any.
    */
   public Object nextSecondaryKey() throws UnsupportedEncodingException {
     if (status == OperationStatus.SUCCESS && searchKey != null) {
@@ -128,14 +151,27 @@ public class SecondaryCursorIterator implements SeqWareIterator {
     }
   }
 
+  /**
+   * <p>close.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   public void close() throws Exception {
     cursor.close();
   }
 
+  /**
+   * <p>remove.</p>
+   */
   public void remove() {
     // FIXME: this doesn't do anything!
   }
 
+  /**
+   * <p>Getter for the field <code>cursor</code>.</p>
+   *
+   * @return a {@link com.sleepycat.db.Cursor} object.
+   */
   public Cursor getCursor() {
     return(cursor);
   }

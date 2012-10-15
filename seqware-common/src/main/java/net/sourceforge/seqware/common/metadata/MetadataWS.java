@@ -93,8 +93,8 @@ import org.xml.sax.SAXException;
 /**
  * TODO: this needs to setup rows in experiment_library_design and
  * experiment_spot_design
- * 
- * @author mtaschuk, boconnor
+ *
+ * @version $Id: $Id
  */
 public class MetadataWS extends Metadata {
 
@@ -103,11 +103,15 @@ public class MetadataWS extends Metadata {
   private char[] pass;
   private LowLevel ll;
 
+  /**
+   * <p>Constructor for MetadataWS.</p>
+   */
   public MetadataWS() {
     super();
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue addWorkflow(String name, String version, String description, String baseCommand,
       String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip,
@@ -183,6 +187,7 @@ public class MetadataWS extends Metadata {
     return (ret);
   }
 
+  /** {@inheritDoc} */
   public ReturnValue addStudy(String title, String description, String accession, StudyType studyType,
       String centerName, String centerProjectName, Integer studyTypeId) {
 
@@ -214,6 +219,8 @@ public class MetadataWS extends Metadata {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * TODO: this needs to setup rows in experiment_library_design and
    * experiment_spot_design
    */
@@ -253,6 +260,8 @@ public class MetadataWS extends Metadata {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * TODO: this needs to setup rows in experiment_library_design and
    * experiment_spot_design
    */
@@ -426,6 +435,7 @@ public class MetadataWS extends Metadata {
     return new ReturnValue(ReturnValue.SUCCESS);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue add_empty_processing_event(int[] parentIDs) {
     // FIXME: Add a new processing entry
@@ -436,6 +446,7 @@ public class MetadataWS extends Metadata {
     return addProcessingEventWithParentsAndChildren(processing, convertIDs(parentIDs, "?id="), null);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue add_empty_processing_event_by_parent_accession(int[] parentAccessions) {
     // FIXME: Add a new processing entry
@@ -474,6 +485,7 @@ public class MetadataWS extends Metadata {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue add_task_group(int[] parentIDs, int[] childIDs, String algorithm, String description) {
     Processing processing = new Processing();
@@ -486,6 +498,7 @@ public class MetadataWS extends Metadata {
         convertIDs(childIDs, "?id="));
   }
 
+  /** {@inheritDoc} */
   @Override
   public int add_workflow_run(int workflowAccession) {
     WorkflowRun wr = new WorkflowRun();
@@ -506,6 +519,7 @@ public class MetadataWS extends Metadata {
     return (wr.getWorkflowRunId());
   }
 
+  /** {@inheritDoc} */
   @Override
   public void add_workflow_run_ancestor(int workflowRunAccession, int processingId) {
     try {
@@ -524,6 +538,7 @@ public class MetadataWS extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue associate_processing_event_with_parents_and_child(int processingID, int[] parentIDs, int[] childIDs) {
     ReturnValue ret = new ReturnValue();
@@ -541,12 +556,14 @@ public class MetadataWS extends Metadata {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue clean_up() {
     ll.clean_up();
     return new ReturnValue(ReturnValue.SUCCESS);
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<ReturnValue> findFilesAssociatedWithASample(String sampleName) {
     ReturnValueList rv = new ReturnValueList();
@@ -562,6 +579,7 @@ public class MetadataWS extends Metadata {
     return rv.getList();
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName) {
     ReturnValueList rv = new ReturnValueList();
@@ -577,6 +595,7 @@ public class MetadataWS extends Metadata {
     return rv.getList();
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<ReturnValue> findFilesAssociatedWithASequencerRun(String runName) {
     ReturnValueList rv = new ReturnValueList();
@@ -593,17 +612,13 @@ public class MetadataWS extends Metadata {
     return rv.getList();
   }
 
+  /** {@inheritDoc} */
   @Override
   public ArrayList<String> fix_file_paths(String prefix, ArrayList<String> files) {
     throw new UnsupportedOperationException("Not supported yet.");
   }
 
-  /**
-   * 
-   * @param workflowAccession
-   *          the SW accession
-   * @return
-   */
+  /** {@inheritDoc} */
   @Override
   public Map<String, String> get_workflow_info(int workflowAccession) {
     Map<String, String> map = new HashMap<String, String>();
@@ -638,6 +653,7 @@ public class MetadataWS extends Metadata {
     return object;
   }
 
+  /** {@inheritDoc} */
   @Override
   public int get_workflow_run_accession(int workflowRunId) {
     int accession = 0;
@@ -651,6 +667,7 @@ public class MetadataWS extends Metadata {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public WorkflowRun getWorkflowRun(int workflowRunAccession) {
     WorkflowRun wr = null;
@@ -662,6 +679,7 @@ public class MetadataWS extends Metadata {
     return (wr);
   }
 
+  /** {@inheritDoc} */
   @Override
   public int get_workflow_run_id(int workflowRunAccession) {
     int id = 0;
@@ -675,12 +693,14 @@ public class MetadataWS extends Metadata {
     return id;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue init(String database, String username, String password) {
     ll = new LowLevel(database, username, password);
     return new ReturnValue(ReturnValue.SUCCESS);
   }
 
+  /** {@inheritDoc} */
   @Override
   public boolean linkWorkflowRunAndParent(int workflowRunId, int parentAccession) throws SQLException {
     JaxbObject<WorkflowRun> jow = new JaxbObject<WorkflowRun>();
@@ -723,6 +743,7 @@ public class MetadataWS extends Metadata {
     return (true);
   }
 
+  /** {@inheritDoc} */
   @Override
   public int mapProcessingIdToAccession(int processingId) {
     int accession = 0;
@@ -735,6 +756,7 @@ public class MetadataWS extends Metadata {
     return accession;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue processing_event_to_task_group(int processingID, int[] parentIDs, int[] childIDs,
       String algorithm, String description) {
@@ -763,6 +785,7 @@ public class MetadataWS extends Metadata {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue update_processing_event(int processingID, ReturnValue retval) {
     try {
@@ -827,6 +850,7 @@ public class MetadataWS extends Metadata {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue update_processing_status(int processingID, String status) {
     try {
@@ -849,6 +873,7 @@ public class MetadataWS extends Metadata {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue update_processing_workflow_run(int processingID, int workflowRunAccession) {
     try {
@@ -873,19 +898,7 @@ public class MetadataWS extends Metadata {
     return ret;
   }
 
-  /**
-   * 
-   * @param workflowRunId
-   * @param pegasusCmd
-   * @param workflowTemplate
-   * @param status
-   * @param statusCmd
-   * @param workingDirectory
-   * @param dax
-   * @param ini
-   * @return a ReturnValue with returnValue of the sw_accession and exit status
-   *         of 0 (for success).
-   */
+  /** {@inheritDoc} */
   @Override
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
       String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
@@ -936,16 +949,19 @@ public class MetadataWS extends Metadata {
     return stringIds;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue saveFileForIus(int workflowRunId, int iusAccession, FileMetadata file) {
     throw new UnsupportedOperationException("Not supported yet.");
   }
 
+  /** {@inheritDoc} */
   @Override
   public Boolean isDuplicateFile(String filepath) {
     throw new UnsupportedOperationException("Not supported yet.");
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue updateWorkflow(int workflowId, String permanentBundleLocation) {
     ReturnValue rv = new ReturnValue();
@@ -964,6 +980,7 @@ public class MetadataWS extends Metadata {
     return rv;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String listInstalledWorkflows() {
 
@@ -986,6 +1003,7 @@ public class MetadataWS extends Metadata {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public String listInstalledWorkflowParams(String workflowAccession) {
 
@@ -1033,6 +1051,7 @@ public class MetadataWS extends Metadata {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public SortedSet<WorkflowParam> getWorkflowParams(String workflowAccession) {
     SortedSet<WorkflowParam> params = null;
@@ -1049,6 +1068,7 @@ public class MetadataWS extends Metadata {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public int getWorkflowAccession(String name, String version) {
 
@@ -1064,11 +1084,7 @@ public class MetadataWS extends Metadata {
     return workflowAccession;
   }
 
-  /**
-   * 
-   * @param status
-   * @return
-   */
+  /** {@inheritDoc} */
   @Override
   public List<WorkflowRun> getWorkflowRunsByStatus(String status) {
     try {
@@ -1082,11 +1098,7 @@ public class MetadataWS extends Metadata {
     return new ArrayList<WorkflowRun>();
   }
 
-  /**
-   * 
-   * @param host
-   * @return
-   */
+  /** {@inheritDoc} */
   @Override
   public List<WorkflowRun> getWorkflowRunsByHost(String host) {
     try {
@@ -1100,11 +1112,7 @@ public class MetadataWS extends Metadata {
     return new ArrayList<WorkflowRun>();
   }
 
-  /**
-   * 
-   * @param workflowRunAccession
-   * @return
-   */
+  /** {@inheritDoc} */
   @Override
   public WorkflowRun getWorkflowRunWithWorkflow(String workflowRunAccession) {
     try {
@@ -1121,6 +1129,11 @@ public class MetadataWS extends Metadata {
     return (null);
   }
 
+  /**
+   * <p>getAllStudies.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<Study> getAllStudies() {
     try {
       return ll.findStudies();
@@ -1133,17 +1146,18 @@ public class MetadataWS extends Metadata {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * FIXME: this is a hack, will need to add an object layer between this
    * metadata object and the response
-   * 
    * @author boconnor
-   * 
    */
   @Override
   public String getSequencerRunReport() {
     return (ll.getString("/reports/sequencerruns"));
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateLane(int laneSWID, LaneAttribute laneAtt, Boolean skip) {
     try {
@@ -1171,6 +1185,7 @@ public class MetadataWS extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateIUS(int iusSWID, IUSAttribute iusAtt, Boolean skip) {
     try {
@@ -1198,6 +1213,7 @@ public class MetadataWS extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateSequencerRun(int sequencerRunSWID, SequencerRunAttribute sequencerRunAtt, Boolean skip) {
     try {
@@ -1226,6 +1242,7 @@ public class MetadataWS extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateExperiment(int experimentSWID, ExperimentAttribute att, Boolean skip) {
     try {
@@ -1254,6 +1271,7 @@ public class MetadataWS extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateProcessing(int swid, ProcessingAttribute att, Boolean skip) {
     try {
@@ -1282,6 +1300,7 @@ public class MetadataWS extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateSample(int swid, SampleAttribute att, Boolean skip) {
     try {
@@ -1309,6 +1328,7 @@ public class MetadataWS extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateStudy(int swid, StudyAttribute att, Boolean skip) {
     try {
@@ -1337,12 +1357,14 @@ public class MetadataWS extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getWorkflowRunReport(int workflowRunSWID) {
     String report = (String) ll.getString("/reports/workflowruns/" + workflowRunSWID);
     return report;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getWorkflowRunReport(int workflowSWID, Date earliestDate, Date latestDate) {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -1362,6 +1384,7 @@ public class MetadataWS extends Metadata {
     return report;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getWorkflowRunReport(Date earliestDate, Date latestDate) {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -1382,6 +1405,7 @@ public class MetadataWS extends Metadata {
     return report;
   }
 
+  /** {@inheritDoc} */
   public File getFile(int swAccession) {
     try {
       return ll.findFile("/" + swAccession);
@@ -1893,6 +1917,7 @@ public class MetadataWS extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateWorkflow(int workflowSWID, WorkflowAttribute att, Boolean skip) {
     try {
@@ -1922,6 +1947,7 @@ public class MetadataWS extends Metadata {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateWorkflowRun(int workflowrunSWID, WorkflowRunAttribute att, Boolean skip) {
     try {
@@ -1950,6 +1976,7 @@ public class MetadataWS extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateIUS(int iusSWID, Set<IUSAttribute> iusAtts) {
     try {
@@ -1971,6 +1998,7 @@ public class MetadataWS extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateLane(int laneSWID, Set<LaneAttribute> laneAtts) {
     try {
@@ -1992,6 +2020,7 @@ public class MetadataWS extends Metadata {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateSequencerRun(int sequencerRunSWID, Set<SequencerRunAttribute> sequencerRunAtts) {
     try {
@@ -2013,6 +2042,7 @@ public class MetadataWS extends Metadata {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateExperiment(int experimentSWID, Set<ExperimentAttribute> atts) {
     try {
@@ -2034,6 +2064,7 @@ public class MetadataWS extends Metadata {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateProcessing(int processingSWID, Set<ProcessingAttribute> atts) {
     try {
@@ -2055,6 +2086,7 @@ public class MetadataWS extends Metadata {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateSample(int sampleSWID, Set<SampleAttribute> atts) {
     try {
@@ -2076,6 +2108,7 @@ public class MetadataWS extends Metadata {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateStudy(int studySWID, Set<StudyAttribute> atts) {
     try {
@@ -2096,6 +2129,7 @@ public class MetadataWS extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateWorkflow(int workflowSWID, Set<WorkflowAttribute> atts) {
     try {
@@ -2116,6 +2150,7 @@ public class MetadataWS extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateWorkflowRun(int workflowrunSWID, Set<WorkflowRunAttribute> atts) {
     try {

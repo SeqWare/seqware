@@ -43,11 +43,17 @@ import org.apache.hadoop.hbase.client.HBaseAdmin;
  * our Genome Informatics poster.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class GITest {
 
     private String[] args;
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         GITest dumper = new GITest(args);
         try {
@@ -59,6 +65,12 @@ public class GITest {
         }
     }
 
+    /**
+     * <p>export.</p>
+     *
+     * @throws java.io.FileNotFoundException if any.
+     * @throws java.io.IOException if any.
+     */
     public void export() throws FileNotFoundException, IOException {
         
          Configuration config = HBaseConfiguration.create();
@@ -158,6 +170,11 @@ public class GITest {
 //        }
     }
 
+    /**
+     * <p>Constructor for GITest.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public GITest(String[] args) {
         this.args = args;
     }

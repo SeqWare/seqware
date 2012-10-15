@@ -55,8 +55,9 @@ import org.apache.log4j.Logger;
  * Should only be used for one query and then discarded and re-instantiated. The
  * Session needs to be open for it to work (InSessionExecution). The list of
  * files is returned as-is, so I make no guarantees on constancy.
- * 
+ *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class FindAllTheFiles {
 
@@ -86,47 +87,89 @@ public class FindAllTheFiles {
   }
 
   private List<ReturnValue> returnValues = new ArrayList<ReturnValue>();
+  /** Constant <code>STUDY_TITLE="Header.STUDY_TITLE.getTitle()"</code> */
   public static String STUDY_TITLE = Header.STUDY_TITLE.getTitle();
+  /** Constant <code>STUDY_SWA="Header.STUDY_SWA.getTitle()"</code> */
   public static String STUDY_SWA = Header.STUDY_SWA.getTitle();
+  /** Constant <code>STUDY_TAG_PREFIX="Header.STUDY_TAG_PREFIX.getTitle()"</code> */
   public static String STUDY_TAG_PREFIX = Header.STUDY_TAG_PREFIX.getTitle();
+  /** Constant <code>STUDY_ATTRIBUTES="Header.STUDY_ATTRIBUTES.getTitle()"</code> */
   public static String STUDY_ATTRIBUTES = Header.STUDY_ATTRIBUTES.getTitle();
+  /** Constant <code>EXPERIMENT_NAME="Header.EXPERIMENT_NAME.getTitle()"</code> */
   public static String EXPERIMENT_NAME = Header.EXPERIMENT_NAME.getTitle();
+  /** Constant <code>EXPERIMENT_SWA="Header.EXPERIMENT_SWA.getTitle()"</code> */
   public static String EXPERIMENT_SWA = Header.EXPERIMENT_SWA.getTitle();
+  /** Constant <code>EXPERIMENT_TAG_PREFIX="Header.EXPERIMENT_TAG_PREFIX.getTitle()"</code> */
   public static String EXPERIMENT_TAG_PREFIX = Header.EXPERIMENT_TAG_PREFIX.getTitle();
+  /** Constant <code>EXPERIMENT_ATTRIBUTES="Header.EXPERIMENT_ATTRIBUTES.getTitle()"</code> */
   public static String EXPERIMENT_ATTRIBUTES = Header.EXPERIMENT_ATTRIBUTES.getTitle();
+  /** Constant <code>PARENT_SAMPLE_NAME="Header.PARENT_SAMPLE_NAME.getTitle()"</code> */
   public static String PARENT_SAMPLE_NAME = Header.PARENT_SAMPLE_NAME.getTitle();
+  /** Constant <code>PARENT_SAMPLE_SWA="Header.PARENT_SAMPLE_SWA.getTitle()"</code> */
   public static String PARENT_SAMPLE_SWA = Header.PARENT_SAMPLE_SWA.getTitle();
+  /** Constant <code>PARENT_SAMPLE_TAG_PREFIX="Header.PARENT_SAMPLE_TAG_PREFIX.getTitl"{trunked}</code> */
   public static String PARENT_SAMPLE_TAG_PREFIX = Header.PARENT_SAMPLE_TAG_PREFIX.getTitle();
+  /** Constant <code>PARENT_SAMPLE_ATTRIBUTES="Header.PARENT_SAMPLE_ATTRIBUTES.getTitl"{trunked}</code> */
   public static String PARENT_SAMPLE_ATTRIBUTES = Header.PARENT_SAMPLE_ATTRIBUTES.getTitle();
+  /** Constant <code>SAMPLE_NAME="Header.SAMPLE_NAME.getTitle()"</code> */
   public static String SAMPLE_NAME = Header.SAMPLE_NAME.getTitle();
+  /** Constant <code>SAMPLE_SWA="Header.SAMPLE_SWA.getTitle()"</code> */
   public static String SAMPLE_SWA = Header.SAMPLE_SWA.getTitle();
+  /** Constant <code>SAMPLE_TAG_PREFIX="Header.SAMPLE_TAG_PREFIX.getTitle()"</code> */
   public static String SAMPLE_TAG_PREFIX = Header.SAMPLE_TAG_PREFIX.getTitle();
+  /** Constant <code>SAMPLE_ATTRIBUTES="Header.SAMPLE_ATTRIBUTES.getTitle()"</code> */
   public static String SAMPLE_ATTRIBUTES = Header.SAMPLE_ATTRIBUTES.getTitle();
+  /** Constant <code>IUS_SWA="Header.IUS_SWA.getTitle()"</code> */
   public static String IUS_SWA = Header.IUS_SWA.getTitle();
+  /** Constant <code>IUS_TAG="Header.IUS_TAG.getTitle()"</code> */
   public static String IUS_TAG = Header.IUS_TAG.getTitle();
+  /** Constant <code>IUS_TAG_PREFIX="Header.IUS_TAG_PREFIX.getTitle()"</code> */
   public static String IUS_TAG_PREFIX = Header.IUS_TAG_PREFIX.getTitle();
+  /** Constant <code>IUS_ATTRIBUTES="Header.IUS_ATTRIBUTES.getTitle()"</code> */
   public static String IUS_ATTRIBUTES = Header.IUS_ATTRIBUTES.getTitle();
+  /** Constant <code>LANE_NAME="Header.LANE_NAME.getTitle()"</code> */
   public static String LANE_NAME = Header.LANE_NAME.getTitle();
+  /** Constant <code>LANE_SWA="Header.LANE_SWA.getTitle()"</code> */
   public static String LANE_SWA = Header.LANE_SWA.getTitle();
+  /** Constant <code>LANE_NUM="Header.LANE_NUM.getTitle()"</code> */
   public static String LANE_NUM = Header.LANE_NUM.getTitle();
+  /** Constant <code>LANE_TAG_PREFIX="Header.LANE_TAG_PREFIX.getTitle()"</code> */
   public static String LANE_TAG_PREFIX = Header.LANE_TAG_PREFIX.getTitle();
+  /** Constant <code>LANE_ATTRIBUTES="Header.LANE_ATTRIBUTES.getTitle()"</code> */
   public static String LANE_ATTRIBUTES = Header.LANE_ATTRIBUTES.getTitle();
+  /** Constant <code>SEQUENCER_RUN_NAME="Header.SEQUENCER_RUN_NAME.getTitle()"</code> */
   public static String SEQUENCER_RUN_NAME = Header.SEQUENCER_RUN_NAME.getTitle();
+  /** Constant <code>SEQUENCER_RUN_SWA="Header.SEQUENCER_RUN_SWA.getTitle()"</code> */
   public static String SEQUENCER_RUN_SWA = Header.SEQUENCER_RUN_SWA.getTitle();
+  /** Constant <code>SEQUENCER_RUN_TAG_PREFIX="Header.SEQUENCER_RUN_TAG_PREFIX.getTitl"{trunked}</code> */
   public static String SEQUENCER_RUN_TAG_PREFIX = Header.SEQUENCER_RUN_TAG_PREFIX.getTitle();
+  /** Constant <code>SEQUENCER_RUN_ATTRIBUTES="Header.SEQUENCER_RUN_ATTRIBUTES.getTitl"{trunked}</code> */
   public static String SEQUENCER_RUN_ATTRIBUTES = Header.SEQUENCER_RUN_ATTRIBUTES.getTitle();
+  /** Constant <code>WORKFLOW_RUN_NAME="Header.WORKFLOW_RUN_NAME.getTitle()"</code> */
   public static String WORKFLOW_RUN_NAME = Header.WORKFLOW_RUN_NAME.getTitle();
+  /** Constant <code>WORKFLOW_RUN_SWA="Header.WORKFLOW_RUN_SWA.getTitle()"</code> */
   public static String WORKFLOW_RUN_SWA = Header.WORKFLOW_RUN_SWA.getTitle();
+  /** Constant <code>WORKFLOW_RUN_STATUS="Header.WORKFLOW_RUN_STATUS.getTitle()"</code> */
   public static String WORKFLOW_RUN_STATUS = Header.WORKFLOW_RUN_STATUS.getTitle();
+  /** Constant <code>WORKFLOW_NAME="Header.WORKFLOW_NAME.getTitle()"</code> */
   public static String WORKFLOW_NAME = Header.WORKFLOW_NAME.getTitle();
+  /** Constant <code>WORKFLOW_SWA="Header.WORKFLOW_SWA.getTitle()"</code> */
   public static String WORKFLOW_SWA = Header.WORKFLOW_SWA.getTitle();
+  /** Constant <code>WORKFLOW_VERSION="Header.WORKFLOW_VERSION.getTitle()"</code> */
   public static String WORKFLOW_VERSION = Header.WORKFLOW_VERSION.getTitle();
+  /** Constant <code>FILE_SWA="Header.FILE_SWA.getTitle()"</code> */
   public static String FILE_SWA = Header.FILE_SWA.getTitle();
+  /** Constant <code>PROCESSING_DATE="Header.PROCESSING_DATE.getTitle()"</code> */
   public static String PROCESSING_DATE = Header.PROCESSING_DATE.getTitle();
+  /** Constant <code>PROCESSING_SWID="Header.PROCESSING_SWID.getTitle()"</code> */
   public static String PROCESSING_SWID = Header.PROCESSING_SWID.getTitle();
+  /** Constant <code>PROCESSING_ALGO="Header.PROCESSING_ALGO.getTitle()"</code> */
   public static String PROCESSING_ALGO = Header.PROCESSING_ALGO.getTitle();
+  /** Constant <code>PROCESSING_TAG_PREFIX="Header.PROCESSING_TAG_PREFIX.getTitle()"</code> */
   public static String PROCESSING_TAG_PREFIX = Header.PROCESSING_TAG_PREFIX.getTitle();
+  /** Constant <code>PROCESSING_ATTRIBUTES="Header.PROCESSING_ATTRIBUTES.getTitle()"</code> */
   public static String PROCESSING_ATTRIBUTES = Header.PROCESSING_ATTRIBUTES.getTitle();
+  /** Constant <code>FILETYPE_ALL="all"</code> */
   public static final String FILETYPE_ALL = "all";
   private Set<Integer> fileSwas = new HashSet<Integer>();
   private Set<Integer> usefulProcessings = new TreeSet<Integer>();
@@ -137,9 +180,9 @@ public class FindAllTheFiles {
 
   /**
    * FIXME: notice processings directly attached to study aren't examined!
-   * 
-   * @param study
-   * @return
+   *
+   * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
+   * @return a {@link java.util.List} object.
    */
   public List<ReturnValue> filesFromStudy(Study study) {
     logger.debug("filesFromStudy. There are " + study.getExperiments().size() + " experiments.");
@@ -151,10 +194,10 @@ public class FindAllTheFiles {
 
   /**
    * FIXME: notice processings directly attached to study aren't examined!
-   * 
-   * @param e
-   * @param study
-   * @return
+   *
+   * @param e a {@link net.sourceforge.seqware.common.model.Experiment} object.
+   * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
+   * @return a {@link java.util.List} object.
    */
   public List<ReturnValue> filesFromExperiment(Experiment e, Study study) {
     logger.debug("filesFromExperiment. There are " + e.getSamples().size() + " samples.");
@@ -164,6 +207,14 @@ public class FindAllTheFiles {
     return returnValues;
   }
 
+  /**
+   * <p>filesFromSample.</p>
+   *
+   * @param parentSample a {@link net.sourceforge.seqware.common.model.Sample} object.
+   * @param e a {@link net.sourceforge.seqware.common.model.Experiment} object.
+   * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
+   * @return a {@link java.util.List} object.
+   */
   public List<ReturnValue> filesFromSample(Sample parentSample, Experiment e, Study study) {
     Stack<Sample> sampleStack = new Stack<Sample>();
     sampleStack.add(parentSample);
@@ -221,6 +272,15 @@ public class FindAllTheFiles {
     return returnValues;
   }
 
+  /**
+   * <p>filesFromIUS.</p>
+   *
+   * @param ius a {@link net.sourceforge.seqware.common.model.IUS} object.
+   * @param e a {@link net.sourceforge.seqware.common.model.Experiment} object.
+   * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+   * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
+   * @return a {@link java.util.List} object.
+   */
   public List<ReturnValue> filesFromIUS(IUS ius, Experiment e, Sample sample, Study study) {
     Lane lane = ius.getLane();
     SequencerRun sequencerRun = lane.getSequencerRun();
@@ -245,6 +305,14 @@ public class FindAllTheFiles {
     return returnValues;
   }
 
+  /**
+   * <p>filesFromLane.</p>
+   *
+   * @param lane a {@link net.sourceforge.seqware.common.model.Lane} object.
+   * @param e a {@link net.sourceforge.seqware.common.model.Experiment} object.
+   * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
+   * @return a {@link java.util.List} object.
+   */
   public List<ReturnValue> filesFromLane(Lane lane, Experiment e, Study study) {
     SortedSet<IUS> ius = lane.getIUS();
     // logger.debug("filesFromLane. There are " + ius.size() + " IUSes");
@@ -593,18 +661,45 @@ public class FindAllTheFiles {
     return ret;
   }
 
+  /**
+   * <p>Getter for the field <code>returnValues</code>.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<ReturnValue> getReturnValues() {
     return returnValues;
   }
 
+  /**
+   * <p>isRequireFiles.</p>
+   *
+   * @return a boolean.
+   */
   public boolean isRequireFiles() {
     return requireFiles;
   }
 
+  /**
+   * <p>Setter for the field <code>requireFiles</code>.</p>
+   *
+   * @param requireFiles a boolean.
+   */
   public void setRequireFiles(boolean requireFiles) {
     this.requireFiles = requireFiles;
   }
 
+  /**
+   * <p>filterReturnValuesV2.</p>
+   *
+   * @param out a {@link java.io.Writer} object.
+   * @param returnValues a {@link java.util.List} object.
+   * @param studyName a {@link java.lang.String} object.
+   * @param fileType a {@link java.lang.String} object.
+   * @param duplicates a boolean.
+   * @param showFailedAndRunning a boolean.
+   * @param showStatus a boolean.
+   * @throws java.io.IOException if any.
+   */
   public static void filterReturnValuesV2(Writer out, List<ReturnValue> returnValues, String studyName,
       String fileType, boolean duplicates, boolean showFailedAndRunning, boolean showStatus) throws IOException {
 
@@ -677,6 +772,18 @@ public class FindAllTheFiles {
     Log.info("There are " + newReturnValues.size() + " files in total after filtering");
   }
 
+  /**
+   * <p>filterReturnValues.</p>
+   *
+   * @param returnValues a {@link java.util.List} object.
+   * @param studyName a {@link java.lang.String} object.
+   * @param fileType a {@link java.lang.String} object.
+   * @param duplicates a boolean.
+   * @param showFailedAndRunning a boolean.
+   * @param showStatus a boolean.
+   * @return a {@link java.util.List} object.
+   * @throws java.io.IOException if any.
+   */
   public static List<ReturnValue> filterReturnValues(List<ReturnValue> returnValues, String studyName, String fileType,
       boolean duplicates, boolean showFailedAndRunning, boolean showStatus) throws IOException {
 
@@ -745,6 +852,15 @@ public class FindAllTheFiles {
     return newReturnValues;
   }
 
+  /**
+   * <p>printTSVFile.</p>
+   *
+   * @param writer a {@link java.io.Writer} object.
+   * @param showStatus a boolean.
+   * @param returnValues a {@link java.util.List} object.
+   * @param studyName a {@link java.lang.String} object.
+   * @throws java.io.IOException if any.
+   */
   public static void printTSVFile(Writer writer, boolean showStatus, List<ReturnValue> returnValues, String studyName)
       throws IOException {
     Log.info("Creating TSV file");
@@ -767,8 +883,13 @@ public class FindAllTheFiles {
 
   /**
    * Prints a line to the Excel spreadsheet.
-   * 
-   * @throws IOException
+   *
+   * @throws java.io.IOException if any.
+   * @param writer a {@link java.io.Writer} object.
+   * @param ret a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   * @param studyName a {@link java.lang.String} object.
+   * @param showStatus a boolean.
+   * @param fm a {@link net.sourceforge.seqware.common.module.FileMetadata} object.
    */
   public static void print(Writer writer, ReturnValue ret, String studyName, boolean showStatus, FileMetadata fm)
       throws IOException {
@@ -845,8 +966,10 @@ public class FindAllTheFiles {
 
   /**
    * Print the header of the Excel spreadsheet to file.
-   * 
-   * @throws IOException
+   *
+   * @throws java.io.IOException if any.
+   * @param writer a {@link java.io.Writer} object.
+   * @param showStatus a boolean.
    */
   public static void printHeader(Writer writer, boolean showStatus) throws IOException {
     StringBuilder sb = new StringBuilder();

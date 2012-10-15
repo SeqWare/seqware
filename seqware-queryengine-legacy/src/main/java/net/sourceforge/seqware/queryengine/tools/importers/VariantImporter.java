@@ -32,15 +32,19 @@ import net.sourceforge.seqware.queryengine.tools.importers.workers.PileupVariant
 import net.sourceforge.seqware.queryengine.tools.iterators.processors.VariantProcessor;
 
 /**
+ * <p>VariantImporter class.</p>
+ *
  * @author boconnor
  *
  * TODO:
- * 
+ * @version $Id: $Id
  */
 public class VariantImporter extends Importer {
   
   /**
-   * @param args
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
    */
   public static void main(String[] args) {
       
@@ -197,6 +201,11 @@ public class VariantImporter extends Importer {
       }
   }
 
+  /**
+   * <p>Constructor for VariantImporter.</p>
+   *
+   * @param threadCount a int.
+   */
   public VariantImporter(int threadCount) {
     super(threadCount);
   }

@@ -40,12 +40,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author boconnor
+ * <p>MismatchResource class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class MismatchResource extends ServerResource {
 
   //Get("text/html")
+  /**
+   * <p>represent.</p>
+   *
+   * @return a {@link org.restlet.representation.Representation} object.
+   */
   @Get
   public Representation represent() {  
 

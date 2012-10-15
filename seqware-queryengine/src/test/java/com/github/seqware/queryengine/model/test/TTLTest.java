@@ -11,9 +11,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Unit tests of {@link TTLable}.
+ * Unit tests of {@link com.github.seqware.queryengine.model.interfaces.TTLable}.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class TTLTest {
 
@@ -27,6 +29,9 @@ public class TTLTest {
     private static AnalysisSet aSet;
     private static Analysis a1;
 
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -60,6 +65,9 @@ public class TTLTest {
         mManager.close();
     }
 
+    /**
+     * <p>testTTLOnSets.</p>
+     */
     @Test
     public void testTTLOnSets() {
         // do complete tests on FeatureSet
@@ -91,6 +99,9 @@ public class TTLTest {
         Assert.assertTrue("group isExpires wrong", g1.isExpires() == false);
     }
 
+    /**
+     * <p>testTTLOnElements.</p>
+     */
     @Test
     public void testTTLOnElements() {
         User mUser = SWQEFactory.getQueryInterface().getAtomBySGID(User.class, marshmallowUser.getSGID());

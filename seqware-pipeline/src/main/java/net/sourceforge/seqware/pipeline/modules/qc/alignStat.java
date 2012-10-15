@@ -19,18 +19,17 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Performing post alignment per lane based counting
- *  
- *  
- * Underlying script:  sw_module_alignStat.pl
- * 
- * Necessary programs:  perl, java, Picard (SamFormatConverter.jar)
- * 
- * Output:  ~.mapped.txt tab-delimited files in four columns: bam file name, raw read count, 
- *              mapped read count and aligned percentage (%)
- * 
- * 
- * @author jyli@med.unc.edu
  *
+ *
+ * Underlying script:  sw_module_alignStat.pl
+ *
+ * Necessary programs:  perl, java, Picard (SamFormatConverter.jar)
+ *
+ * Output:  ~.mapped.txt tab-delimited files in four columns: bam file name, raw read count,
+ *              mapped read count and aligned percentage (%)
+ *
+ * @author jyli@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class alignStat extends Module {
@@ -40,9 +39,9 @@ public class alignStat extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("infile", "Input BAM file.").withRequiredArg();
@@ -55,8 +54,9 @@ public class alignStat extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -72,11 +72,11 @@ public class alignStat extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -111,9 +111,9 @@ public class alignStat extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -136,9 +136,9 @@ public class alignStat extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -194,9 +194,9 @@ public class alignStat extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known dataset.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -206,10 +206,10 @@ public class alignStat extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Run core of module.
    * Based on script sw_module_GeneCountsRPKM.pl
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_run() {
@@ -238,9 +238,9 @@ public class alignStat extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Check to make sure the output was created correctly.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -255,10 +255,11 @@ public class alignStat extends Module {
     return(ret);
   }
   
-    /**
+  /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.  Remove tempDir.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

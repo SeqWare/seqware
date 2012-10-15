@@ -15,13 +15,23 @@ import net.sourceforge.solexatools.validation.LoginValidator;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>InviteNewUserValidatorController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class InviteNewUserValidatorController extends BaseCommandController {
 	private RegistrationService registrationService;
+	/**
+	 * <p>Constructor for InviteNewUserValidatorController.</p>
+	 */
 	public InviteNewUserValidatorController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -86,10 +96,20 @@ public class InviteNewUserValidatorController extends BaseCommandController {
 		return str;
 	}
 
+	/**
+	 * <p>Getter for the field <code>registrationService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+	 */
 	public RegistrationService getRegistrationService() {
 		return registrationService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>registrationService</code>.</p>
+	 *
+	 * @param registrationService a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+	 */
 	public void setRegistrationService(RegistrationService registrationService) {
 		this.registrationService = registrationService;
 	}

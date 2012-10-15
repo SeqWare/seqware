@@ -10,13 +10,23 @@ import net.sourceforge.solexatools.util.LaunchWorkflowUtil;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>CancelInputDownloaderController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class CancelInputDownloaderController extends BaseCommandController {
     
+	/**
+	 * <p>Constructor for CancelInputDownloaderController.</p>
+	 */
 	public CancelInputDownloaderController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)

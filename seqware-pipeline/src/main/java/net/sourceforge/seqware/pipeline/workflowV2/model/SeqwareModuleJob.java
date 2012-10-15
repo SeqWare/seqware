@@ -17,24 +17,50 @@
 package net.sourceforge.seqware.pipeline.workflowV2.model;
 
 /**
- * 
+ * <p>SeqwareModuleJob class.</p>
+ *
  * @author yongliang
+ * @version $Id: $Id
  */
 public class SeqwareModuleJob extends Job {
     private Module module;
 
+    /**
+     * <p>Constructor for SeqwareModuleJob.</p>
+     *
+     * @param algo a {@link java.lang.String} object.
+     */
     public SeqwareModuleJob(String algo) {
 	this(algo, Module.GenericCommandRunner);
     }
 
+    /**
+     * <p>Constructor for SeqwareModuleJob.</p>
+     *
+     * @param algo a {@link java.lang.String} object.
+     * @param local a boolean.
+     */
     public SeqwareModuleJob(String algo, boolean local) {
 	this(algo, Module.GenericCommandRunner, local);
     }
 
+    /**
+     * <p>Constructor for SeqwareModuleJob.</p>
+     *
+     * @param algo a {@link java.lang.String} object.
+     * @param module a {@link net.sourceforge.seqware.pipeline.workflowV2.model.Module} object.
+     */
     public SeqwareModuleJob(String algo, Module module) {
 	this(algo, module, false);
     }
 
+    /**
+     * <p>Constructor for SeqwareModuleJob.</p>
+     *
+     * @param algo a {@link java.lang.String} object.
+     * @param module a {@link net.sourceforge.seqware.pipeline.workflowV2.model.Module} object.
+     * @param local a boolean.
+     */
     public SeqwareModuleJob(String algo, Module module, boolean local) {
 	super(algo);
 	this.name = local ? "java_local" : "seqware";
@@ -42,6 +68,11 @@ public class SeqwareModuleJob extends Job {
 	this.module = module;
     }
 
+    /**
+     * <p>Getter for the field <code>module</code>.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.pipeline.workflowV2.model.Module} object.
+     */
     public Module getModule() {
 	return this.module;
     }

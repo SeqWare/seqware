@@ -5,28 +5,25 @@ import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.HBasePersistentBackEnd;
 import com.github.seqware.queryengine.impl.MRHBaseModelManager;
-import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
-import com.github.seqware.queryengine.impl.test.SimplePersistentBackEndTest;
 import com.github.seqware.queryengine.kernel.Compression;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.Constant;
 import com.github.seqware.queryengine.kernel.RPNStack.FeatureAttribute;
 import com.github.seqware.queryengine.kernel.RPNStack.Operation;
+import com.github.seqware.queryengine.kernel.RPNStack.TagHierarchicalOccurrence;
 import com.github.seqware.queryengine.kernel.RPNStack.TagOccurrence;
 import com.github.seqware.queryengine.kernel.RPNStack.TagValuePresence;
-import com.github.seqware.queryengine.kernel.RPNStack.TagHierarchicalOccurrence;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 import com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesByAttributesPlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByAttributesPlugin;
-
-import java.io.File;
-import java.util.Iterator;
-
 import com.github.seqware.queryengine.system.importers.OBOImporter;
 import com.github.seqware.queryengine.util.SGID;
-import org.apache.log4j.Logger;
+import java.io.File;
+import java.util.Iterator;
+import org.antlr.runtime.RecognitionException;
 import org.junit.Assert;
+import static org.junit.Assert.fail;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -35,12 +32,19 @@ import org.junit.Test;
  *
  * @author dyuen
  * @author jbaran
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class QueryInterfaceTest implements Benchmarking {
 
-    private static FeatureSet aSet, bSet, benchmarkSet;
+    private static FeatureSet aSet, bSet, benchmarkSet, cSet;
     private static Feature a1, a2, a3, a4;
+    private static TagSet b_tagset;
+    private static TagSet c_tagset;
 
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -55,8 +59,11 @@ public class QueryInterfaceTest implements Benchmarking {
         aSet.add(a2);
         aSet.add(a3);
         aSet.add(a4);
-
-        bSet = FeatureStoreInterfaceTest.diverseBSet(mManager);
+        b_tagset = mManager.buildTagSet().build();
+        bSet = FeatureStoreInterfaceTest.diverseBSet(mManager, b_tagset);
+        c_tagset = mManager.buildTagSet().build();
+        cSet = FeatureStoreInterfaceTest.diverseCSet(mManager, c_tagset);
+        mManager.flush();
 
         if (BENCHMARK) {
             benchmarkSet = FeatureStoreInterfaceTest.largeTestSet(mManager, BENCHMARK_FEATURES);
@@ -66,6 +73,9 @@ public class QueryInterfaceTest implements Benchmarking {
         mManager.flush();
     }
 
+    /**
+     * <p>testGetFeatures.</p>
+     */
     @Test
     public void testGetFeatures() {
         // get a FeatureSet from the back-end without creating a new set
@@ -145,6 +155,9 @@ public class QueryInterfaceTest implements Benchmarking {
         System.out.println(" total runtime: " + totalRunTime);
     }
 
+    /**
+     * <p>testGetFeaturesByRange.</p>
+     */
     @Test
     public void testGetFeaturesByRange() {
         // get a FeatureSet from the back-end
@@ -152,7 +165,7 @@ public class QueryInterfaceTest implements Benchmarking {
         int start = 1000000;
         int stop = 1000105;
         QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeaturesByRange(0, bSet, QueryInterface.Location.INCLUDES, structure, start, stop);
-                
+
         int featuresInRange = 0;
         for (Feature feature : bSet) {
             if (feature.getSeqid().equals(structure) && feature.getStart() >= start && feature.getStop() <= stop) {
@@ -171,6 +184,9 @@ public class QueryInterfaceTest implements Benchmarking {
         }
     }
 
+    /**
+     * <p>testTypeQuery.</p>
+     */
     @Test
     public void testTypeQuery() {
         // get a FeatureSet from the back-end
@@ -185,6 +201,9 @@ public class QueryInterfaceTest implements Benchmarking {
         Assert.assertTrue("Query results wrong, expected 1 and found " + count, count == 1);
     }
 
+    /**
+     * <p>testInstallAndRunArbitraryPlugin.</p>
+     */
     @Test
     public void testInstallAndRunArbitraryPlugin() {
         Class<? extends AnalysisPluginInterface> arbitraryPlugin;
@@ -208,17 +227,20 @@ public class QueryInterfaceTest implements Benchmarking {
         Assert.assertTrue("Query results wrong, expected 1 and found " + count, count == 1);
     }
 
+    /**
+     * <p>complexQueryTest.</p>
+     */
     @Test
     public void complexQueryTest() {
         // This version of complexQueryTest is model-agnostic and will run on all back-ends.
-
-        CreateUpdateManager mManager = SWQEFactory.getModelManager();
-        try {
-            mManager.persist(bSet);
-        } catch (Exception e) {
-            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).fatal("Exception", e);
-            junit.framework.Assert.assertTrue("Backend could not store the given FeatureSet.", false);
-        }
+//
+//        CreateUpdateManager mManager = SWQEFactory.getModelManager();
+//        try {
+//            mManager.persist(bSet);
+//        } catch (Exception e) {
+//            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).fatal("Exception", e);
+//            Assert.assertTrue("Backend could not store the given FeatureSet.", false);
+//        }
 
         QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant("chr16"),
@@ -226,7 +248,7 @@ public class QueryInterfaceTest implements Benchmarking {
                 Operation.EQUAL));
         FeatureSet resultSet = queryFuture.get();
         int count = (int) resultSet.getCount();
-        junit.framework.Assert.assertTrue("Setting a query constraints with 1 operation on 'id' failed, expected 10 and found " + count, count == 10);
+        Assert.assertTrue("Setting a query constraints with 1 operation on 'id' failed, expected 10 and found " + count, count == 10);
 
         queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant(Feature.Strand.NEGATIVE),
@@ -234,7 +256,7 @@ public class QueryInterfaceTest implements Benchmarking {
                 Operation.EQUAL));
         resultSet = queryFuture.get();
         count = (int) resultSet.getCount();
-        junit.framework.Assert.assertTrue("Setting a query constraints with 1 operation on 'strand' failed, expected 3 and found " + count, count == 3);
+        Assert.assertTrue("Setting a query constraints with 1 operation on 'strand' failed, expected 3 and found " + count, count == 3);
 
         queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant(Feature.Strand.NEGATIVE),
@@ -246,38 +268,38 @@ public class QueryInterfaceTest implements Benchmarking {
                 Operation.AND));
         resultSet = queryFuture.get();
         count = (int) resultSet.getCount();
-        junit.framework.Assert.assertTrue("Setting a query constraints with 3 operations failed, expected 2 and found " + count, count == 2);
+        Assert.assertTrue("Setting a query constraints with 3 operations failed, expected 2 and found " + count, count == 2);
 
         queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant(Feature.Strand.POSITIVE),
                 new FeatureAttribute("strand"),
                 Operation.EQUAL,
-                new TagOccurrence("SO_term"),
+                new TagOccurrence(b_tagset.getSGID().getRowKey(), "SO_term"),
                 Operation.AND));
         resultSet = queryFuture.get();
         count = (int) resultSet.getCount();
-        junit.framework.Assert.assertTrue("Setting a query constraints over one feature attribute and testing for presence of a specific tag failed, expected 3 and found " + count, count == 3);
+        Assert.assertTrue("Setting a query constraints over one feature attribute and testing for presence of a specific tag failed, expected 3 and found " + count, count == 3);
 
         queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant(Feature.Strand.POSITIVE),
                 new FeatureAttribute("strand"),
                 Operation.EQUAL,
-                new TagValuePresence("SO_id", Tag.ValueType.STRING, Compression.getSequenceOntologyAccessionSurrogate("SO:0000149")),
+                new TagValuePresence(b_tagset.getSGID().getRowKey(), "SO_id", Tag.ValueType.STRING, Compression.getSequenceOntologyAccessionSurrogate("SO:0000149")),
                 Operation.AND));
         resultSet = queryFuture.get();
         count = (int) resultSet.getCount();
-        junit.framework.Assert.assertTrue("Setting a query constraints over one feature attribute and testing the value of a specific tag failed, expected 2 and found " + count, count == 2);
+        Assert.assertTrue("Setting a query constraints over one feature attribute and testing the value of a specific tag failed, expected 2 and found " + count, count == 2);
 
-        if (!(SWQEFactory.getBackEnd() instanceof HBasePersistentBackEnd)){
+        if (!(SWQEFactory.getBackEnd() instanceof HBasePersistentBackEnd)) {
             // in-memory models are too slow for the following test
             return;
         }
-        
+
         // Load the Sequence Ontology first:
         String curDir = System.getProperty("user.dir");
         File file = new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/so.obo");
         SGID sequenceOntologyTagSetID = OBOImporter.mainMethod(new String[]{file.getAbsolutePath()});
-        
+
         TagSet tagset = SWQEFactory.getQueryInterface().getAtomBySGID(TagSet.class, sequenceOntologyTagSetID);
         CreateUpdateManager modelManager = SWQEFactory.getModelManager();
         modelManager.persist(tagset);
@@ -297,19 +319,277 @@ public class QueryInterfaceTest implements Benchmarking {
                 + Compression.getSequenceOntologyAccessionSurrogate("SO:0000353").replaceFirst("^SO:", "")
                 + " "
                 + Compression.getSequenceOntologyAccessionSurrogate("SO:0000149").replaceFirst("^SO:", "");
-        
+
         Tag build = modelManager.buildTag().setKey(key2).build();
         tagset.add(build);
-        modelManager.close();  
-        
+        modelManager.close();
+
         queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, new RPNStack(
                 new Constant("chr16"),
                 new FeatureAttribute("seqid"),
                 Operation.EQUAL,
-                new TagHierarchicalOccurrence(Compression.getSequenceOntologyAccessionSurrogate("SO:0001410"), sequenceOntologyTagSetID.getRowKey()),
+                new TagHierarchicalOccurrence(sequenceOntologyTagSetID.getRowKey(), Compression.getSequenceOntologyAccessionSurrogate("SO:0001410")),
                 Operation.AND));
         resultSet = queryFuture.get();
         count = (int) resultSet.getCount();
-        junit.framework.Assert.assertTrue("Setting a query constraints over one feature attribute and for a (possibly parent) term in a tree hierarchy failed, expected 2 and found " + count, count == 2);
+        Assert.assertTrue("Setting a query constraints over one feature attribute and for a (possibly parent) term in a tree hierarchy failed, expected 2 and found " + count, count == 2);
+    }
+
+    /**
+     * <p>queryLanguageTest.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
+    @Test
+    public void queryLanguageTest() throws RecognitionException {
+//        CreateUpdateManager mManager = SWQEFactory.getModelManager();
+//        try {
+//            mManager.persist(bSet);
+//        } catch (Exception e) {
+//            Logger.getLogger(SimplePersistentBackEndTest.class.getName()).fatal("Exception", e);
+//            Assert.assertTrue("Backend could not store the given FeatureSet.", false);
+//        }
+
+        QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, RPNStack.compileQuery("seqid==\"chr16\""));
+        FeatureSet resultSet = queryFuture.get();
+        int count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with 1 operation on 'id' failed, expected 10 and found " + count, count == 10);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, RPNStack.compileQuery("strand==NEGATIVE_STRAND"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with 1 operation on 'strand' failed, expected 3 and found " + count, count == 3);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, RPNStack.compileQuery("seqid==\"chr16\"&&strand==NEGATIVE_STRAND"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with 3 operations failed, expected 2 and found " + count, count == 2);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, RPNStack.compileQuery("seqid!=\"chr16\""));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraint with a != operation failed, expected 7 and found " + count, count == 7);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, RPNStack.compileQuery("!(tagOccurrence(\"" + b_tagset.getSGID().getRowKey() + "\",\"SO::sequence_variant::functional_variant::transcript_function_variant::transcript_processing_variant\"))"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraint with a ! operation failed, expected 15 and found " + count, count == 15);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, RPNStack.compileQuery(
+                "!(" + "tagOccurrence(\"" + b_tagset.getSGID().getRowKey() + "\",\"" + FeatureStoreInterfaceTest.SOSEQUENCE_VARIANTFUNCTIONAL_VARIANT + "\")"
+                + " || tagOccurrence(\"" + b_tagset.getSGID().getRowKey() + "\",\"" + FeatureStoreInterfaceTest.SOSEQUENCE_VARIANTFUNCTIONAL_VARIANT2 + "\")"
+                + " || tagOccurrence(\"" + b_tagset.getSGID().getRowKey() + "\",\"" + FeatureStoreInterfaceTest.SOSEQUENCE_VARIANTSTRUCTURAL_VARIANT + "\")"
+                + ")"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraint with a complex ! operation failed, expected 13 and found " + count, count == 13);
+    }
+
+    /**
+     * <p>queryLanguageTagValuePresenceTest.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
+    @Test
+    public void queryLanguageTagValuePresenceTest() throws RecognitionException {
+        QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, RPNStack.compileQuery("tagValuePresence(\"" + b_tagset.getSGID().getRowKey() + "\",\"SO_term\",\"region\")"));
+        FeatureSet resultSet = queryFuture.get();
+        int count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 1 and found " + count, count == 1);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, bSet, RPNStack.compileQuery("tagValuePresence(\"" + b_tagset.getSGID().getRowKey() + "\",\"SO_term\",\"region42\")"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 0 and found " + count, count == 0);
+    }
+
+    /**
+     * <p>queryLanguageTagValue_GT_R_Test.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
+    @Test
+    public void queryLanguageTagValue_GT_R_Test() throws RecognitionException {
+        // test > on right
+        QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\") > 0"));
+        FeatureSet resultSet = queryFuture.get();
+        int count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 3 and found " + count, count == 3);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\") > 1"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 2 and found " + count, count == 2);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\") > 2"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 1 and found " + count, count == 1);
+
+        // test >= on right
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\") >= 0"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 4 and found " + count, count == 4);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\") >= 1"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 3 and found " + count, count == 3);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\") >= 2"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 2 and found " + count, count == 2);
+    }
+
+    /**
+     * <p>queryLanguageTagValue_GT_L_Test.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
+    @Test
+    public void queryLanguageTagValue_GT_L_Test() throws RecognitionException {
+        // test > on left
+        QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("0 > tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\")"));
+        FeatureSet resultSet = queryFuture.get();
+        int count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 1 and found " + count, count == 1);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("1 > tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\")"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 2 and found " + count, count == 2);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("2 > tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\")"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 3 and found " + count, count == 3);
+
+        // test >= on left
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("0 >= tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\")"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 2 and found " + count, count == 2);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("1 >= tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\")"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 3 and found " + count, count == 3);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("2 >= tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\")"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 4 and found " + count, count == 4);
+    }
+
+    /**
+     * <p>queryLanguageTagValue_LS_R_Test.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
+    @Test
+    public void queryLanguageTagValue_LS_R_Test() throws RecognitionException {
+        // test < on right
+        QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\") < 0"));
+        FeatureSet resultSet = queryFuture.get();
+        int count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 1 and found " + count, count == 1);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\") < 1"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 2 and found " + count, count == 2);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\") < 2"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 3 and found " + count, count == 3);
+
+        // test <= on right
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\") <= 0"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 2 and found " + count, count == 2);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\") <= 1"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 3 and found " + count, count == 3);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\") <= 2"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 4 and found " + count, count == 4);
+    }
+
+    /**
+     * <p>queryLanguageTagValue_LS_L_Test.</p>
+     *
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
+    @Test
+    public void queryLanguageTagValue_LS_L_Test() throws RecognitionException {
+        // test < on left
+        QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("0 < tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\")"));
+        FeatureSet resultSet = queryFuture.get();
+        int count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 3 and found " + count, count == 3);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("1 < tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\")"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 2 and found " + count, count == 2);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("2 < tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\")"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 1 and found " + count, count == 1);
+
+        // test <= on left
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("0 <= tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\")"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 4 and found " + count, count == 4);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("1 <= tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\")"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 3 and found " + count, count == 3);
+
+        queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("2 <= tagValue(\"" + c_tagset.getSGID().getRowKey() + "\",\"SO_id\")"));
+        resultSet = queryFuture.get();
+        count = (int) resultSet.getCount();
+        Assert.assertTrue("Setting a query constraints with tagValuePresence, expected 2 and found " + count, count == 2);
+    }
+
+    /**
+     * <p>testMalformedQueries.</p>
+     */
+    @Test
+    public void testMalformedQueries() {
+        try {
+            QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("0 <="));
+            FeatureSet resultSet = queryFuture.get();
+            fail("should've thrown an exception since the query is screwed up");
+        } catch (RecognitionException e) {
+            // we expect an exception to be thrown when the query is faulty
+        }
+
+        try {
+            QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("2 <= tagValue(,)"));
+            FeatureSet resultSet = queryFuture.get();
+            fail("should've thrown an exception since the query is screwed up");
+        } catch (RecognitionException e) {
+            // we expect an exception to be thrown when the query is faulty
+        }
+
+        try {
+            QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, cSet, RPNStack.compileQuery("2 <= tagWhacked(\"SO\",\"SO\")"));
+            FeatureSet resultSet = queryFuture.get();
+            fail("should've thrown an exception since the query is screwed up");
+        } catch (RecognitionException e) {
+            // we expect an exception to be thrown when the query is faulty    
+        }
     }
 }

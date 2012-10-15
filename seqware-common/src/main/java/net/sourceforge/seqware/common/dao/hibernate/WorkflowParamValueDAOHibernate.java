@@ -16,26 +16,39 @@ import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>WorkflowParamValueDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implements WorkflowParamValueDAO {
 
+    /**
+     * <p>Constructor for WorkflowParamValueDAOHibernate.</p>
+     */
     public WorkflowParamValueDAOHibernate() {
         super();
     }
 
+    /** {@inheritDoc} */
     public Integer insert(WorkflowParamValue workflowParamValue) {
         // this.getSession().evict(workflowParam.getWorkflow());
         return (Integer) this.getHibernateTemplate().save(workflowParamValue);
     }
 
+    /** {@inheritDoc} */
     public void update(WorkflowParamValue workflowParamValue) {
         getHibernateTemplate().update(workflowParamValue);
         getSession().flush();
     }
 
+    /** {@inheritDoc} */
     public void delete(WorkflowParamValue workflowParamValue) {
         getHibernateTemplate().delete(workflowParamValue);
     }
 
+    /** {@inheritDoc} */
     public WorkflowParamValue findByID(Integer id) {
         String query = "from WorkflowParamValue as workflowParamValue where workflowParamValue.workflowParamValueId = ?";
         WorkflowParamValue workflowParamValue = null;
@@ -47,6 +60,7 @@ public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implemen
         return workflowParamValue;
     }
 
+    /** {@inheritDoc} */
     @Override
     public WorkflowParamValue updateDetached(WorkflowParamValue workflowParamValue) {
         WorkflowParamValue dbObject = reattachWorkflowParamValue(workflowParamValue);
@@ -62,6 +76,7 @@ public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implemen
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<WorkflowParamValue> list() {
         ArrayList<WorkflowParamValue> l = new ArrayList<WorkflowParamValue>();
@@ -77,6 +92,7 @@ public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implemen
         return l;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(Registration registration, WorkflowParamValue workflowParamValue) {
         WorkflowParamValue dbObject = reattachWorkflowParamValue(workflowParamValue);
@@ -92,6 +108,7 @@ public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implemen
              logger.error("WorkflowParamValueDAOHibernate update not authorized");
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer insert(Registration registration, WorkflowParamValue workflowParamValue) {
         Logger logger = Logger.getLogger(WorkflowParamValueDAOHibernate.class);
@@ -106,6 +123,7 @@ public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implemen
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public WorkflowParamValue updateDetached(Registration registration, WorkflowParamValue workflowParamValue) {
         WorkflowParamValue dbObject = reattachWorkflowParamValue(workflowParamValue);
