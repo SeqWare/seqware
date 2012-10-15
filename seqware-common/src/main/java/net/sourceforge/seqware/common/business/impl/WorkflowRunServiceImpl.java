@@ -32,6 +32,12 @@ import net.sourceforge.seqware.common.util.workflowtools.WorkflowManager;
 
 import org.apache.log4j.Logger;
 
+/**
+ * <p>WorkflowRunServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class WorkflowRunServiceImpl implements WorkflowRunService {
 
   private WorkflowRunDAO workflowRunDAO = null;
@@ -40,27 +46,39 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   private FileDAO fileDAO = null;
   private Logger log;
 
+  /**
+   * <p>Constructor for WorkflowRunServiceImpl.</p>
+   */
   public WorkflowRunServiceImpl() {
     super();
     log = Logger.getLogger(WorkflowRunServiceImpl.class);
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Sets a private member variable with an instance of an implementation of
    * WorkflowRunDAO. This method is called by the Spring framework at run time.
-   * 
-   * @param WorkflowRunDAO
-   *          implementation of WorkflowRunDAO
    * @see WorkflowRunDAO
    */
   public void setWorkflowRunDAO(WorkflowRunDAO workflowRunDAO) {
     this.workflowRunDAO = workflowRunDAO;
   }
 
+  /**
+   * <p>Setter for the field <code>processingDAO</code>.</p>
+   *
+   * @param processingDAO a {@link net.sourceforge.seqware.common.dao.ProcessingDAO} object.
+   */
   public void setProcessingDAO(ProcessingDAO processingDAO) {
     this.processingDAO = processingDAO;
   }
 
+  /**
+   * <p>Setter for the field <code>workflowRunParamDAO</code>.</p>
+   *
+   * @param workflowRunParamDAO a {@link net.sourceforge.seqware.common.dao.WorkflowRunParamDAO} object.
+   */
   public void setWorkflowRunParamDAO(WorkflowRunParamDAO workflowRunParamDAO) {
     this.workflowRunParamDAO = workflowRunParamDAO;
   }
@@ -68,7 +86,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   /**
    * Sets a private member variable with an instance of an implementation of
    * FileDAO. This method is called by the Spring framework at run time.
-   * 
+   *
    * @param fileDAO
    *          implementation of FileDAO
    * @see FileDAO
@@ -77,12 +95,14 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     this.fileDAO = fileDAO;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer insert(WorkflowRun workflowRun) {
     workflowRun.setCreateTimestamp(new Date());
     return workflowRunDAO.insert(workflowRun);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer insert(WorkflowRun workflowRun, SortedSet<WorkflowRunParam> workflowRunParams,
       Map<String, List<File>> allSelectedFiles) {
@@ -109,6 +129,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer insert(Registration registration, WorkflowRun workflowRun,
       SortedSet<WorkflowRunParam> workflowRunParams, Map<String, List<File>> allSelectedFiles) {
@@ -134,14 +155,17 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     return id;
   }
 
+  /** {@inheritDoc} */
   public void update(WorkflowRun workflowRun) {
     workflowRunDAO.update(workflowRun);
   }
 
+  /** {@inheritDoc} */
   public void update(WorkflowRun workflowRun, List<Integer> laneIds) {
     workflowRunDAO.update(workflowRun, laneIds);
   }
 
+  /** {@inheritDoc} */
   public void delete(WorkflowRun workflowRun, String deleteRealFiles) {
     Set<Processing> processings = workflowRun.getProcessings();
 
@@ -189,6 +213,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     }
   }
 
+  /** {@inheritDoc} */
   public Processing getRootProcessing(Integer wfrId) {
     Processing proc = new Processing();
     Set<Processing> processings = findByID(wfrId).getProcessings();
@@ -199,6 +224,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     return proc;
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer wfrId) {
     List<File> files = new LinkedList<File>();
     WorkflowRun workflowRun = findByID(wfrId);
@@ -209,6 +235,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     return files;
   }
 
+  /** {@inheritDoc} */
   public List<WorkflowRun> listWithHasFile(List<WorkflowRun> list) {
     for (WorkflowRun workflowRun : list) {
       // Processing processing = getProcessing(workflowRun);
@@ -229,55 +256,70 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     return list;
   }
 
+  /**
+   * <p>list.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<WorkflowRun> list() {
     return workflowRunDAO.list();
   }
 
+  /** {@inheritDoc} */
   public List<WorkflowRun> list(Registration registration) {
     return workflowRunDAO.list(registration, true);
   }
 
+  /** {@inheritDoc} */
   public List<WorkflowRun> listMyShared(Registration registration) {
     List<WorkflowRun> sharedWorkflowRuns = new ArrayList<WorkflowRun>();
     sharedWorkflowRuns = workflowRunDAO.listMyShared(registration, true);
     return sharedWorkflowRuns;
   }
 
+  /** {@inheritDoc} */
   public List<WorkflowRun> listSharedWithMe(Registration registration) {
     List<WorkflowRun> sharedWithMeWorkflowRuns = new ArrayList<WorkflowRun>();
     sharedWithMeWorkflowRuns = workflowRunDAO.listSharedWithMe(registration, true);
     return sharedWithMeWorkflowRuns;
   }
 
+  /** {@inheritDoc} */
   public List<WorkflowRun> listRunning(Registration registration) {
     return workflowRunDAO.listRunning(registration, true);
   }
 
+  /** {@inheritDoc} */
   public List<WorkflowRun> list(Registration registration, Boolean isAsc) {
     return workflowRunDAO.list(registration, isAsc);
   }
 
+  /** {@inheritDoc} */
   public List<WorkflowRun> listMyShared(Registration registration, Boolean isAsc) {
     List<WorkflowRun> sharedWorkflowRuns = new ArrayList<WorkflowRun>();
     sharedWorkflowRuns = workflowRunDAO.listMyShared(registration, isAsc);
     return sharedWorkflowRuns;
   }
 
+  /** {@inheritDoc} */
   public List<WorkflowRun> listSharedWithMe(Registration registration, Boolean isAsc) {
     List<WorkflowRun> sharedWithMeWorkflowRuns = new ArrayList<WorkflowRun>();
     sharedWithMeWorkflowRuns = workflowRunDAO.listSharedWithMe(registration, isAsc);
     return sharedWithMeWorkflowRuns;
   }
 
+  /** {@inheritDoc} */
   public List<WorkflowRun> listRunning(Registration registration, Boolean isAsc) {
     return workflowRunDAO.listRunning(registration, isAsc);
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Workflow> listRelatedWorkflows(Registration registration) {
     return workflowRunDAO.listRelatedWorkflows(registration);
   }
 
+  /** {@inheritDoc} */
   public WorkflowRun findByName(String name) {
     WorkflowRun workflowRun = null;
     if (name != null) {
@@ -290,6 +332,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     return workflowRun;
   }
 
+  /** {@inheritDoc} */
   public WorkflowRun findByID(Integer wfrID) {
     WorkflowRun workflowRun = null;
     if (wfrID != null) {
@@ -303,6 +346,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     return workflowRun;
   }
 
+  /** {@inheritDoc} */
   @Override
   public WorkflowRun findBySWAccession(Integer swAccession) {
     WorkflowRun workflowRun = null;
@@ -317,6 +361,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     return workflowRun;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<WorkflowRun> findByOwnerID(Integer registrationID) {
     List<WorkflowRun> workflowRuns = null;
@@ -331,6 +376,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     return workflowRuns;
   }
 
+  /** {@inheritDoc} */
   public WorkflowRun findByIDWithIUS(Integer wfrID) {
     WorkflowRun workflowRun = findByID(wfrID);
 
@@ -344,6 +390,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     return workflowRun;
   }
 
+  /** {@inheritDoc} */
   public WorkflowRun findByIDWithIUSAndRunningWR(Integer wfrID) {
     WorkflowRun workflowRun = findByID(wfrID);
 
@@ -378,6 +425,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
    * getSamples(workflowRun); workflowRun.setSamples(samples); return
    * workflowRun; }
    */
+  /** {@inheritDoc} */
   public List<WorkflowRun> listSharedWithMeWithSample(Registration registration) {
     List<WorkflowRun> list = listSharedWithMe(registration);
     for (WorkflowRun workflowRun : list) {
@@ -449,26 +497,31 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     return samples;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<WorkflowRun> findByCriteria(String criteria, boolean isCaseSens) {
     return workflowRunDAO.findByCriteria(criteria, isCaseSens);
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<WorkflowRun> findByCriteria(String criteria) {
     return workflowRunDAO.findByCriteria(criteria);
   }
 
+  /** {@inheritDoc} */
   @Override
   public WorkflowRun updateDetached(WorkflowRun workflowRun) {
     return workflowRunDAO.updateDetached(workflowRun);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Set<WorkflowRun> findRunsForIUS(IUS ius) {
     return workflowRunDAO.findRunsForIUS(ius);
   }
 
+  /** {@inheritDoc} */
   public List<File> findFiles(Integer swAccession) {
     WorkflowRun wr = findBySWAccession(swAccession);
     Set<File> files = new HashSet<File>();
@@ -499,6 +552,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     return new ArrayList<File>(files);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Set<WorkflowRun> findRunsForSample(Sample sample) {
     Set<WorkflowRun> runs = new HashSet<WorkflowRun>();
@@ -522,6 +576,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     return runs;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue runWorkflow(WorkflowInfo wi, String workflowRunAccession, String iniFilesStr, boolean noMetadata,
       String parentAccessionsStr, ArrayList<String> parentsLinkedToWR, Registration owner) {
@@ -529,17 +584,20 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
         parentsLinkedToWR, owner);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(Registration registration, WorkflowRun workflowRun) {
     workflowRunDAO.update(registration, workflowRun);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer insert(Registration registration, WorkflowRun workflowRun) {
     workflowRun.setCreateTimestamp(new Date());
     return workflowRunDAO.insert(registration, workflowRun);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(Registration registration, WorkflowRun workflowRun, List<Integer> laneIds) {
     workflowRunDAO.updateDetached(registration, workflowRun);

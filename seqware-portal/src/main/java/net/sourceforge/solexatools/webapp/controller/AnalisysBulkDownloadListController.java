@@ -14,14 +14,24 @@ import net.sourceforge.solexatools.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>AnalisysBulkDownloadListController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class AnalisysBulkDownloadListController extends BaseCommandController {
 	private WorkflowRunService workflowRunService;
 	
+	/**
+	 * <p>Constructor for AnalisysBulkDownloadListController.</p>
+	 */
 	public AnalisysBulkDownloadListController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)
@@ -65,10 +75,20 @@ public class AnalisysBulkDownloadListController extends BaseCommandController {
 		}
 	}
 
+	/**
+	 * <p>Getter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public WorkflowRunService getWorkflowRunService() {
 		return workflowRunService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @param workflowRunService a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public void setWorkflowRunService(WorkflowRunService workflowRunService) {
 		this.workflowRunService = workflowRunService;
 	}

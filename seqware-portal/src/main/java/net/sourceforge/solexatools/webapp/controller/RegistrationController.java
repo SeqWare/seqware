@@ -20,6 +20,12 @@ import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
+/**
+ * <p>RegistrationController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class RegistrationController extends MultiActionController {
 	private RegistrationService	registrationService;
 	private Validator			validator;
@@ -29,6 +35,10 @@ public class RegistrationController extends MultiActionController {
 	 * Handles the user's request to submit a new registration.
 	 *
 	 * @param command RegistrationDTO command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleSubmit(HttpServletRequest		request,
 									 HttpServletResponse	response,
@@ -99,6 +109,10 @@ public class RegistrationController extends MultiActionController {
 	 * update registration.
 	 *
 	 * @param command RegistrationDTO command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleReset(HttpServletRequest	request,
 									HttpServletResponse	response,
@@ -121,6 +135,10 @@ public class RegistrationController extends MultiActionController {
 	 * or the registration update page.
 	 *
 	 * @param command RegistrationDTO command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleCancel(HttpServletRequest request,
 									 HttpServletResponse response,
@@ -133,6 +151,10 @@ public class RegistrationController extends MultiActionController {
 	 * Handles the user's request to update their registration.
 	 *
 	 * @param command RegistrationDTO command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleUpdate(HttpServletRequest request,
 									 HttpServletResponse response,
@@ -315,28 +337,56 @@ public class RegistrationController extends MultiActionController {
 
 	/* ********************************************************************** */
 	/* Constructors */
+	/**
+	 * <p>Constructor for RegistrationController.</p>
+	 */
 	public RegistrationController() {
 		super();
 	}
 
+	/**
+	 * <p>Constructor for RegistrationController.</p>
+	 *
+	 * @param delegate a {@link java.lang.Object} object.
+	 */
 	public RegistrationController(Object delegate) {
 		super(delegate);
 	}
 
 	/* ********************************************************************** */
 	/* Property SETters and GETters */
+	/**
+	 * <p>Getter for the field <code>registrationService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+	 */
 	public RegistrationService getRegistrationService() {
 		return registrationService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>registrationService</code>.</p>
+	 *
+	 * @param registrationService a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+	 */
 	public void setRegistrationService(RegistrationService registrationService) {
 		this.registrationService = registrationService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>validator</code>.</p>
+	 *
+	 * @return a {@link org.springframework.validation.Validator} object.
+	 */
 	public Validator getValidator() {
 		return validator;
 	}
 
+	/**
+	 * <p>Setter for the field <code>validator</code>.</p>
+	 *
+	 * @param validator a {@link org.springframework.validation.Validator} object.
+	 */
 	public void setValidator(Validator validator) {
 		this.validator = validator;
 	}

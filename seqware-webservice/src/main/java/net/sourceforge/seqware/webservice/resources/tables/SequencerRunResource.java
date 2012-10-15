@@ -29,15 +29,23 @@ import org.restlet.resource.Get;
 import org.w3c.dom.Document;
 
 /**
+ * <p>SequencerRunResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class SequencerRunResource extends DatabaseResource {
 
+    /**
+     * <p>Constructor for SequencerRunResource.</p>
+     */
     public SequencerRunResource() {
         super("sequencer_run");
     }
 
+    /**
+     * <p>getXml.</p>
+     */
     @Get
     public void getXml() {
         authenticate();

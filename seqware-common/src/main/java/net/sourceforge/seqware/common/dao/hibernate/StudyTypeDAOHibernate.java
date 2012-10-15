@@ -12,19 +12,31 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>StudyTypeDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyTypeDAO {
+  /**
+   * <p>Constructor for StudyTypeDAOHibernate.</p>
+   */
   public StudyTypeDAOHibernate() {
     super();
   }
 
+  /** {@inheritDoc} */
   public void insert(StudyType studyType) {
     this.getHibernateTemplate().save(studyType);
   }
 
+  /** {@inheritDoc} */
   public void update(StudyType studyType) {
     this.getHibernateTemplate().update(studyType);
   }
 
+  /** {@inheritDoc} */
   public List<StudyType> list(Registration registration) {
     ArrayList<StudyType> studyTypes = new ArrayList<StudyType>();
     if (registration == null)
@@ -42,11 +54,9 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of StudyType in the database by the StudyType name.
-   * 
-   * @param name
-   *          name of the StudyType
-   * @return StudyType or null if not found
    */
   public StudyType findByName(String name) {
     String query = "from studyType as studyType where studyType.name = ?";
@@ -60,11 +70,9 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of StudyType in the database by the StudyType ID.
-   * 
-   * @param expID
-   *          ID of the StudyType
-   * @return StudyType or null if not found
    */
   @SuppressWarnings("rawtypes")
   public StudyType findByID(Integer expID) {
@@ -78,6 +86,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
     return studyType;
   }
 
+  /** {@inheritDoc} */
   @Override
   public StudyType updateDetached(StudyType studyType) {
     StudyType dbObject = findByID(studyType.getStudyTypeId());
@@ -93,6 +102,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<StudyType> list() {
         throw new UnsupportedOperationException("Not supported yet.");

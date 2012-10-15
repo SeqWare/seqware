@@ -23,25 +23,45 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import net.sourceforge.seqware.common.model.Processing;
 
 /**
+ * <p>ProcessingList class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class ProcessingList  {
 
     protected List<Processing> tList;
 
+    /**
+     * <p>Constructor for ProcessingList.</p>
+     */
     public ProcessingList() {
         tList = new ArrayList<Processing>();
     }
 
+    /**
+     * <p>getList.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Processing> getList() {
         return tList;
     }
 
+    /**
+     * <p>setList.</p>
+     *
+     * @param list a {@link java.util.List} object.
+     */
     public void setList(List<Processing> list) {
         this.tList = list;
     }
 
+    /**
+     * <p>add.</p>
+     *
+     * @param ex a {@link net.sourceforge.seqware.common.model.Processing} object.
+     */
     public void add(Processing ex) {
         tList.add(ex);
     }

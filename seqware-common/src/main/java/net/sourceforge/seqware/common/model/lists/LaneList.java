@@ -21,25 +21,45 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.Lane;
 
 /**
+ * <p>LaneList class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class LaneList {
 
     protected List<Lane> tList;
 
+    /**
+     * <p>Constructor for LaneList.</p>
+     */
     public LaneList() {
         tList = new ArrayList<Lane>();
     }
 
+    /**
+     * <p>getList.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Lane> getList() {
         return tList;
     }
 
+    /**
+     * <p>setList.</p>
+     *
+     * @param list a {@link java.util.List} object.
+     */
     public void setList(List<Lane> list) {
         this.tList = list;
     }
 
+    /**
+     * <p>add.</p>
+     *
+     * @param ex a {@link net.sourceforge.seqware.common.model.Lane} object.
+     */
     public void add(Lane ex) {
         tList.add(ex);
     }

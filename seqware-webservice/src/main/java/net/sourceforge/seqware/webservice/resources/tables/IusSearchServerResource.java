@@ -19,12 +19,21 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 
 
+/**
+ * <p>IusSearchServerResource class.</p>
+ *
+ * @author morgantaschuk
+ * @version $Id: $Id
+ */
 public class IusSearchServerResource extends BasicResource implements IusSearchResource {
 
   private static IUSService iusService;
   
   private Form form;
 
+  /**
+   * <p>Constructor for IusSearchServerResource.</p>
+   */
   public IusSearchServerResource() {
     super();
     IusSearchServerResource.initialiseIusService();
@@ -48,6 +57,7 @@ public class IusSearchServerResource extends BasicResource implements IusSearchR
   
   
   
+  /** {@inheritDoc} */
   @Override
   protected void doInit() throws ResourceException {
     super.doInit();
@@ -63,6 +73,7 @@ public class IusSearchServerResource extends BasicResource implements IusSearchR
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public IusDto findIus() {
     authenticate();

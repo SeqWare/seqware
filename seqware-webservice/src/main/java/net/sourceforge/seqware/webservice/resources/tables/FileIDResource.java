@@ -34,15 +34,23 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>FileIDResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class FileIDResource extends DatabaseIDResource {
 
+    /**
+     * <p>Constructor for FileIDResource.</p>
+     */
     public FileIDResource() {
         super("fileId");
     }
 
+    /**
+     * <p>getXml.</p>
+     */
     @Get
     public void getXml() {
         FileService ss = BeanFactory.getFileServiceBean();
@@ -57,6 +65,7 @@ public class FileIDResource extends DatabaseIDResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
+    /** {@inheritDoc} */
     @Override
     @Put
     public Representation put(Representation entity) {

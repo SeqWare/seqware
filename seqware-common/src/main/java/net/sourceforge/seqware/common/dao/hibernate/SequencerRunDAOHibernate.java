@@ -18,30 +18,47 @@ import org.hibernate.Query;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>SequencerRunDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SequencerRunDAOHibernate extends HibernateDaoSupport implements SequencerRunDAO {
 
     private Logger logger;
 
+    /**
+     * <p>Constructor for SequencerRunDAOHibernate.</p>
+     */
     public SequencerRunDAOHibernate() {
         super();
         logger = Logger.getLogger(SequencerRunDAOHibernate.class);
     }
 
+    /** {@inheritDoc} */
     public void insert(SequencerRun sequencerRun) {
         this.getHibernateTemplate().save(sequencerRun);
         getSession().flush();
     }
 
+    /**
+     * <p>insert.</p>
+     *
+     * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
+     */
     public void insert(SequencerRunWizardDTO sequencerRun) {
         this.getHibernateTemplate().save(sequencerRun);
         getSession().flush();
     }
 
+    /** {@inheritDoc} */
     public void update(SequencerRun sequencerRun) {
         this.getHibernateTemplate().update(sequencerRun);
         getSession().flush();
     }
 
+    /** {@inheritDoc} */
     public void delete(SequencerRun sequencerRun) {
         this.getHibernateTemplate().delete(sequencerRun);
     }
@@ -53,6 +70,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
      * public Integer getProcessingCnt(SequencerRun sequencerRun){ Integer
      * processingCount = 0; return processingCount; }
      */
+    /** {@inheritDoc} */
     public List<Integer> getProcStatuses(SequencerRun sequencerRun) {
         List<Integer> procStatuses = Arrays.asList(0, 0, 0);
 
@@ -114,6 +132,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         return procStatuses;
     }
 
+    /** {@inheritDoc} */
     public Integer getProcessedCnt(SequencerRun sequencerRun) {
         Integer processedCount = 0;
 
@@ -143,6 +162,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         return processedCount;
     }
 
+    /** {@inheritDoc} */
     public Integer getProcessingCnt(SequencerRun sequencerRun) {
         Integer processingCount = 0;
 
@@ -170,6 +190,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         return processingCount;
     }
 
+    /** {@inheritDoc} */
     public Integer getErrorCnt(SequencerRun sequencerRun) {
         Integer errorCount = 0;
 
@@ -197,6 +218,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         return errorCount;
     }
 
+    /** {@inheritDoc} */
     public List<SequencerRun> list(Registration registration, Boolean isAsc) {
         ArrayList<SequencerRun> sequencerRuns = new ArrayList<SequencerRun>();
         if (registration == null) {
@@ -278,11 +300,10 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Finds an instance of SequencerRun in the database by the SequencerRun
      * name.
-     *
-     * @param name name of the SequencerRun
-     * @return SequencerRun or null if not found
      */
     public SequencerRun findByName(String name) {
         String query = "from SequencerRun as sequencerRun where sequencerRun.name = ?";
@@ -296,10 +317,9 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
     }
 
     /**
-     * Finds an instance of SequencerRun in the database by the SequencerRun ID.
+     * {@inheritDoc}
      *
-     * @param expID ID of the SequencerRun
-     * @return SequencerRun or null if not found
+     * Finds an instance of SequencerRun in the database by the SequencerRun ID.
      */
     public SequencerRun findByID(Integer expID) {
         String query = "from SequencerRun as sequencerRun where sequencerRun.sequencerRunId = ?";
@@ -312,6 +332,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         return sequencerRun;
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public SequencerRun findBySWAccession(Integer swAccession) {
@@ -325,6 +346,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         return sequencerRun;
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public List<SequencerRun> findByOwnerID(Integer registrationId) {
@@ -333,6 +355,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         return this.getHibernateTemplate().find(query, parameters);
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public List<SequencerRun> findByCriteria(String criteria, boolean isCaseSens) {
@@ -369,6 +392,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public SequencerRun updateDetached(SequencerRun sequencerRun) {
         SequencerRun dbObject = reattachSequencerRun(sequencerRun);
@@ -384,6 +408,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<SequencerRun> list() {
         ArrayList<SequencerRun> sequencerRuns = new ArrayList<SequencerRun>();
@@ -400,6 +425,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(Registration registration, SequencerRun sequencerRun) {
          SequencerRun dbObject = reattachSequencerRun(sequencerRun);
@@ -420,6 +446,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void insert(Registration registration, SequencerRun sequencerRun) {
         Logger logger = Logger.getLogger(SequencerRunDAOHibernate.class);
@@ -438,6 +465,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void insert(Registration registration, SequencerRunWizardDTO sequencerRun) {
          Logger logger = Logger.getLogger(SequencerRunDAOHibernate.class);
@@ -456,6 +484,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public SequencerRun updateDetached(Registration registration, SequencerRun sequencerRun) {
          SequencerRun dbObject = reattachSequencerRun(sequencerRun);

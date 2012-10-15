@@ -43,6 +43,12 @@ import java.io.*;
 import javax.crypto.CipherInputStream;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>ProvisionFilesUtil class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ProvisionFilesUtil {
 
   protected final int READ_ATTEMPTS = 1000;
@@ -69,8 +75,8 @@ public class ProvisionFilesUtil {
 
   /**
    * Set verbose mode ctor.
-   * 
-   * @param verbose
+   *
+   * @param verbose a boolean.
    */
   public ProvisionFilesUtil(boolean verbose) {
     this.setVerbose(true);
@@ -88,9 +94,9 @@ public class ProvisionFilesUtil {
   /**
    * Creates symlink of input to output.
    *
-   * @param output
-   * @param input
-   * @return
+   * @param output a {@link java.lang.String} object.
+   * @param input a {@link java.lang.String} object.
+   * @return a boolean.
    */
   public boolean createSymlink(String output, String input) {
     boolean retry = true;
@@ -137,7 +143,7 @@ public class ProvisionFilesUtil {
   /**
    * Gets cipher by DecryptKey.
    *
-   * @param decryptKey
+   * @param decryptKey a {@link java.lang.String} object.
    * @return Cipher object
    */
   public Cipher getDecryptCipher(String decryptKey) {
@@ -155,7 +161,7 @@ public class ProvisionFilesUtil {
   /**
    * Gets cipher by EncryptKey.
    *
-   * @param encryptKey
+   * @param encryptKey a {@link java.lang.String} object.
    * @return Cipher object
    */
   public Cipher getEncryptCipher(String encryptKey) {
@@ -173,10 +179,10 @@ public class ProvisionFilesUtil {
   /**
    * Copy reader into output.
    *
-   * @param reader
-   * @param output
-   * @param bufLen
-   * @param input
+   * @param reader a {@link java.io.BufferedInputStream} object.
+   * @param output a {@link java.lang.String} object.
+   * @param bufLen a int.
+   * @param input a {@link java.lang.String} object.
    * @return written File object
    */
   public File copyToFile(BufferedInputStream reader, String output, int bufLen, String input) {
@@ -186,12 +192,13 @@ public class ProvisionFilesUtil {
   /**
    * Copy reader into output using Cipher.
    *
-   * @param reader
-   * @param output
-   * @param bufLen
-   * @param input
-   * @param cipher
+   * @param reader a {@link java.io.BufferedInputStream} object.
+   * @param output a {@link java.lang.String} object.
+   * @param bufLen a int.
+   * @param input a {@link java.lang.String} object.
    * @return written File object
+   * @param decryptCipher a {@link javax.crypto.Cipher} object.
+   * @param encryptCipher a {@link javax.crypto.Cipher} object.
    */
   public File copyToFile(BufferedInputStream reader, String output, int bufLen, String input, Cipher decryptCipher, Cipher encryptCipher) {
 
@@ -328,7 +335,7 @@ public class ProvisionFilesUtil {
   /**
    * Not supported yet.
    *
-   * @return
+   * @return a boolean.
    */
   public boolean putToHttp() {
     // TODO: not going to support HTTP PUT initially
@@ -339,8 +346,8 @@ public class ProvisionFilesUtil {
   /**
    * Copy file using reader into output.
    *
-   * @param reader
-   * @param output
+   * @param reader a {@link java.io.BufferedInputStream} object.
+   * @param output a {@link java.lang.String} object.
    * @return true if OK
    */
   public boolean putToS3(BufferedInputStream reader, String output) {
@@ -350,10 +357,10 @@ public class ProvisionFilesUtil {
   /**
    * Copy file using reader into output.
    *
-   * @param reader
-   * @param output
-   * @param decryptCipher
-   * @param encryptCipher
+   * @param reader a {@link java.io.InputStream} object.
+   * @param output a {@link java.lang.String} object.
+   * @param decryptCipher a {@link javax.crypto.Cipher} object.
+   * @param encryptCipher a {@link javax.crypto.Cipher} object.
    * @return true if OK
    */
   public boolean putToS3(InputStream reader, String output, Cipher decryptCipher, Cipher encryptCipher) {
@@ -514,6 +521,12 @@ public class ProvisionFilesUtil {
     return (success);
   }
 
+  /**
+   * <p>getS3Url.</p>
+   *
+   * @param input a {@link java.lang.String} object.
+   * @return a {@link java.net.URL} object.
+   */
   public URL getS3Url(String input) {
     URL url = null;
     if (input.startsWith("s3://")) {
@@ -559,6 +572,14 @@ public class ProvisionFilesUtil {
     return url;
   }
 
+  /**
+   * <p>getS3Url.</p>
+   *
+   * @param input a {@link java.lang.String} object.
+   * @param accessKey a {@link java.lang.String} object.
+   * @param secretKey a {@link java.lang.String} object.
+   * @return a {@link java.net.URL} object.
+   */
   public URL getS3Url(String input, String accessKey, String secretKey) {
 
     URL url = null;
@@ -590,9 +611,9 @@ public class ProvisionFilesUtil {
   /**
    * This attempts to resume if passed in startPosition > 0.
    *
-   * @param input
-   * @param bufLen
-   * @param startPosition
+   * @param input a {@link java.lang.String} object.
+   * @param bufLen a int.
+   * @param startPosition a long.
    * @return reader of input file
    */
   public BufferedInputStream getSourceReader(String input, int bufLen, long startPosition) {
@@ -637,6 +658,14 @@ public class ProvisionFilesUtil {
     return reader;
   }
 
+  /**
+   * <p>getHttpInputStream.</p>
+   *
+   * @param input a {@link java.lang.String} object.
+   * @param bufLen a int.
+   * @param startPosition a long.
+   * @return a {@link java.io.BufferedInputStream} object.
+   */
   public BufferedInputStream getHttpInputStream(String input, int bufLen, long startPosition) {
     BufferedInputStream reader = null;
     Pattern p = Pattern.compile("(https*)://(\\S+):(\\S+)@(\\S+)");
@@ -689,6 +718,16 @@ public class ProvisionFilesUtil {
     return reader;
   }
 
+  /**
+   * <p>getS3InputStream.</p>
+   *
+   * @param input a {@link java.lang.String} object.
+   * @param bufLen a int.
+   * @param startPosition a long.
+   * @param accessKey a {@link java.lang.String} object.
+   * @param secretKey a {@link java.lang.String} object.
+   * @return a {@link java.io.BufferedInputStream} object.
+   */
   public BufferedInputStream getS3InputStream(String input, int bufLen, long startPosition, String accessKey,
           String secretKey) {
 
@@ -732,6 +771,14 @@ public class ProvisionFilesUtil {
     return reader;
   }
 
+  /**
+   * <p>getS3InputStream.</p>
+   *
+   * @param input a {@link java.lang.String} object.
+   * @param bufLen a int.
+   * @param startPosition a long.
+   * @return a {@link java.io.BufferedInputStream} object.
+   */
   public BufferedInputStream getS3InputStream(String input, int bufLen, long startPosition) {
 
     String accessKey = null;
@@ -796,6 +843,11 @@ public class ProvisionFilesUtil {
     return new Base64(Integer.MAX_VALUE, new byte[0]);
   }
 
+  /**
+   * <p>isVerbose.</p>
+   *
+   * @return a boolean.
+   */
   public boolean isVerbose() {
     return verbose;
   }
@@ -803,7 +855,7 @@ public class ProvisionFilesUtil {
   /**
    * Enable class verbose mode.
    *
-   * @param verbose
+   * @param verbose a boolean.
    */
   public void setVerbose(boolean verbose) {
     this.verbose = verbose;
@@ -824,10 +876,10 @@ public class ProvisionFilesUtil {
   /**
    * Creates abstract pathname.
    *
-   * @param folderStore
-   * @param email
-   * @param fileName
-   * @return
+   * @param folderStore a {@link java.lang.String} object.
+   * @param email a {@link java.lang.String} object.
+   * @param fileName a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
    */
   public static String createTargetPath(String folderStore, String email, String fileName) {
     String fileDownlodName = fileName.trim();
@@ -847,10 +899,9 @@ public class ProvisionFilesUtil {
   /**
    * Creates abstract pathname.
    *
-   * @param folderStore
-   * @param email
-   * @param fileName
-   * @return
+   * @param folderStore a {@link java.lang.String} object.
+   * @param email a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
    */
   public static String createTargetDirectory(String folderStore, String email) {
     String separator = java.io.File.separator;
@@ -866,6 +917,13 @@ public class ProvisionFilesUtil {
     return targetPath;
   }
 
+  /**
+   * <p>getFileSize.</p>
+   *
+   * @param path a {@link java.lang.String} object.
+   * @return a long.
+   * @throws java.lang.Exception if any.
+   */
   public static long getFileSize(String path) throws Exception {
     if (path.startsWith("http://") || path.startsWith("https://")) {
       Pattern p = Pattern.compile("(https*)://(\\S+):(\\S+)@(\\S+)");
@@ -962,10 +1020,20 @@ public class ProvisionFilesUtil {
     }
   }
 
+  /**
+   * <p>Getter for the field <code>originalFileName</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getOriginalFileName() {
     return originalFileName;
   }
 
+  /**
+   * <p>Setter for the field <code>originalFileName</code>.</p>
+   *
+   * @param originalFileName a {@link java.lang.String} object.
+   */
   public void setOriginalFileName(String originalFileName) {
     this.originalFileName = originalFileName;
   }

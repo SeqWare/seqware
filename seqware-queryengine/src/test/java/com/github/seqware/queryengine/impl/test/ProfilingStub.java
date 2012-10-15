@@ -20,10 +20,18 @@ import org.junit.runner.JUnitCore;
 
 /**
  * Small hack, allows us to profile test suites for performance.
+ *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class ProfilingStub {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         JUnitCore runner = new JUnitCore();
         runner.run(ImplTestSuite.class);

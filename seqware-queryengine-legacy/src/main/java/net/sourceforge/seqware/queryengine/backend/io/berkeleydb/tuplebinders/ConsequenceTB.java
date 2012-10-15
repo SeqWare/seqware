@@ -14,13 +14,16 @@ import net.sourceforge.seqware.queryengine.backend.model.Consequence;
 import net.sourceforge.seqware.queryengine.backend.model.Model;
 
 /**
+ * <p>ConsequenceTB class.</p>
+ *
  * @author boconnor
  *
  * FIXME: this may need full tag support at some point
- * 
+ * @version $Id: $Id
  */
 public class ConsequenceTB extends TupleBinding {
 
+  /** {@inheritDoc} */
   @Override
   public void objectToEntry(Object object, TupleOutput to) {
     Consequence c = (Consequence)object;
@@ -58,6 +61,7 @@ public class ConsequenceTB extends TupleBinding {
    
   }
 
+  /** {@inheritDoc} */
   @Override
   public Object entryToObject(TupleInput ti) {
       Consequence c = new Consequence();

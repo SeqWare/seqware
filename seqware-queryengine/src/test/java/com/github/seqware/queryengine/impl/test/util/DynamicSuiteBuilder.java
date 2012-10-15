@@ -21,7 +21,10 @@ import org.junit.runner.RunWith;
 
 /**
  * Add tests here to run them via the test suites
+ *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 @RunWith(DynamicSuite.class)
 public class DynamicSuiteBuilder {
@@ -29,6 +32,11 @@ public class DynamicSuiteBuilder {
     private static Class[] ImplTests = {SimplePersistentBackEndTest.class, FactoryStaticInitializerTest.class, FactoryConstructorTest.class
         , ApacheConstructorTest.class, ApacheStaticInitializerTest.class, HBaseTest.class, RowKeyFeatureSetTest.class};
     
+    /**
+     * <p>implSuite.</p>
+     *
+     * @return an array of {@link java.lang.Class} objects.
+     */
     public static Class[] implSuite(){
         return DynamicSuiteBuilder.ImplTests;
     }

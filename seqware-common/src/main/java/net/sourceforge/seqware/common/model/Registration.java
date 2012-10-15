@@ -14,13 +14,26 @@ import org.apache.log4j.Logger;
 
 /**
  * Registration
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class Registration implements Serializable, PermissionsAware, Comparable<Registration> {
 
+    /**
+     * <p>Getter for the field <code>institution</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getInstitution() {
         return institution;
     }
 
+    /**
+     * <p>Setter for the field <code>institution</code>.</p>
+     *
+     * @param institution a {@link java.lang.String} object.
+     */
     public void setInstitution(String institution) {
         this.institution = institution;
     }
@@ -40,30 +53,63 @@ public class Registration implements Serializable, PermissionsAware, Comparable<
     private boolean joinUsersMailingList;
     private boolean joinDevelopersMailingList;
 
+    /**
+     * <p>isJoinDevelopersMailingList.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isJoinDevelopersMailingList() {
         return joinDevelopersMailingList;
     }
 
+    /**
+     * <p>Getter for the field <code>joinDevelopersMailingList</code>.</p>
+     *
+     * @return a boolean.
+     */
     public boolean getJoinDevelopersMailingList() {
         return joinDevelopersMailingList;
     }
 
+    /**
+     * <p>Setter for the field <code>joinDevelopersMailingList</code>.</p>
+     *
+     * @param b a boolean.
+     */
     public void setJoinDevelopersMailingList(boolean b) {
         this.joinDevelopersMailingList = b;
     }
 
+    /**
+     * <p>isJoinUsersMailingList.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isJoinUsersMailingList() {
         return joinUsersMailingList;
     }
 
+    /**
+     * <p>Getter for the field <code>joinUsersMailingList</code>.</p>
+     *
+     * @return a boolean.
+     */
     public boolean getJoinUsersMailingList() {
         return joinUsersMailingList;
     }
 
+    /**
+     * <p>Setter for the field <code>joinUsersMailingList</code>.</p>
+     *
+     * @param b a boolean.
+     */
     public void setJoinUsersMailingList(boolean b) {
         this.joinUsersMailingList = b;
     }
 
+    /**
+     * <p>Constructor for Registration.</p>
+     */
     public Registration() {
         super();
     }
@@ -84,6 +130,7 @@ public class Registration implements Serializable, PermissionsAware, Comparable<
 //        }
 //        return (result);
 //    }
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -103,11 +150,17 @@ public class Registration implements Serializable, PermissionsAware, Comparable<
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int compareTo(Registration t) {
         return emailAddress.compareTo(t.getEmailAddress());
     }
 
+    /**
+     * <p>hashCode.</p>
+     *
+     * @return a int.
+     */
     public int hashCode() {
         return new HashCodeBuilder().append(getEmailAddress()).append(getPassword()).toHashCode();
     }
@@ -122,95 +175,208 @@ public class Registration implements Serializable, PermissionsAware, Comparable<
      * public int hashCode() { return	getEmailAddress().hashCode() ^
      * getPassword().hashCode(); }
      */
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "Registration{" + "registrationId=" + registrationId + ", emailAddress=" + emailAddress + ", passwordHint=" + passwordHint + ", firstName=" + firstName + ", lastName=" + lastName + ", institution=" + institution + ", limsAdmin=" + limsAdmin + ", createTimestamp=" + createTimestamp + ", updateTimestamp=" + updateTimestamp + ", invitationCode=" + invitationCode + ", joinUsersMailingList=" + joinUsersMailingList + ", joinDevelopersMailingList=" + joinDevelopersMailingList + '}';
     }
 
+    /**
+     * <p>Getter for the field <code>createTimestamp</code>.</p>
+     *
+     * @return a {@link java.util.Date} object.
+     */
     public Date getCreateTimestamp() {
         return createTimestamp;
     }
 
+    /**
+     * <p>Setter for the field <code>createTimestamp</code>.</p>
+     *
+     * @param createTimestamp a {@link java.util.Date} object.
+     */
     public void setCreateTimestamp(Date createTimestamp) {
         this.createTimestamp = createTimestamp;
     }
 
+    /**
+     * <p>Getter for the field <code>emailAddress</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getEmailAddress() {
         return emailAddress;
     }
 
+    /**
+     * <p>Setter for the field <code>emailAddress</code>.</p>
+     *
+     * @param emailAddress a {@link java.lang.String} object.
+     */
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
 
+    /**
+     * <p>Getter for the field <code>firstName</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     * <p>Setter for the field <code>firstName</code>.</p>
+     *
+     * @param firstName a {@link java.lang.String} object.
+     */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    /**
+     * <p>Getter for the field <code>lastName</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getLastName() {
         return lastName;
     }
 
+    /**
+     * <p>Setter for the field <code>lastName</code>.</p>
+     *
+     * @param lastName a {@link java.lang.String} object.
+     */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
+    /**
+     * <p>Getter for the field <code>password</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * <p>Setter for the field <code>password</code>.</p>
+     *
+     * @param password a {@link java.lang.String} object.
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * <p>Getter for the field <code>passwordHint</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getPasswordHint() {
         return passwordHint;
     }
 
+    /**
+     * <p>Setter for the field <code>passwordHint</code>.</p>
+     *
+     * @param passwordHint a {@link java.lang.String} object.
+     */
     public void setPasswordHint(String passwordHint) {
         this.passwordHint = passwordHint;
     }
 
+    /**
+     * <p>Getter for the field <code>registrationId</code>.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     public Integer getRegistrationId() {
         return registrationId;
     }
 
+    /**
+     * <p>Setter for the field <code>registrationId</code>.</p>
+     *
+     * @param registrationId a {@link java.lang.Integer} object.
+     */
     public void setRegistrationId(Integer registrationId) {
         this.registrationId = registrationId;
     }
 
+    /**
+     * <p>Getter for the field <code>updateTimestamp</code>.</p>
+     *
+     * @return a {@link java.util.Date} object.
+     */
     public Date getUpdateTimestamp() {
         return updateTimestamp;
     }
 
+    /**
+     * <p>Setter for the field <code>updateTimestamp</code>.</p>
+     *
+     * @param updateTimestamp a {@link java.util.Date} object.
+     */
     public void setUpdateTimestamp(Date updateTimestamp) {
         this.updateTimestamp = updateTimestamp;
     }
 
+    /**
+     * <p>isLIMSAdmin.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isLIMSAdmin() {
         return limsAdmin;
     }
 
+    /**
+     * <p>setLIMSAdmin.</p>
+     *
+     * @param b a boolean.
+     */
     public void setLIMSAdmin(boolean b) {
         this.limsAdmin = b;
     }
 
+    /**
+     * <p>Getter for the field <code>invitationCode</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getInvitationCode() {
         return invitationCode;
     }
 
+    /**
+     * <p>Setter for the field <code>invitationCode</code>.</p>
+     *
+     * @param invitationCode a {@link java.lang.String} object.
+     */
     public void setInvitationCode(String invitationCode) {
         this.invitationCode = invitationCode;
     }
 
+    /**
+     * <p>isTechnician.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isTechnician() {
         return false;
     }
 
+    /**
+     * <p>cloneFromDB.</p>
+     *
+     * @param ownerId a int.
+     * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
+     * @throws java.sql.SQLException if any.
+     */
     public static Registration cloneFromDB(int ownerId) throws SQLException {
         Registration registration = null;
         try {
@@ -237,6 +403,7 @@ public class Registration implements Serializable, PermissionsAware, Comparable<
         return registration;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean givesPermission(Registration registration) {
         boolean hasPermission = false;
@@ -255,10 +422,20 @@ public class Registration implements Serializable, PermissionsAware, Comparable<
 
     }
 
+    /**
+     * <p>isPayee.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isPayee() {
         return payee;
     }
 
+    /**
+     * <p>Setter for the field <code>payee</code>.</p>
+     *
+     * @param payee a boolean.
+     */
     public void setPayee(boolean payee) {
         this.payee = payee;
     }

@@ -53,33 +53,35 @@ import com.sleepycat.db.DatabaseEntry;
 import com.sleepycat.db.DatabaseException;
 
 /**
+ * <p>HBaseStore class.</p>
+ *
  * @author boconnor This is the backend implementation that uses HBase to store.
- * 
+ *
  *         FIXME: if I'm going to use Genome<genomeId>TagIndexTable to store all
  *         sorts of tagged indexed items a given row may really point to family
  *         values of feature, consequence, variant, etc. There's no way of
  *         telling what family it should point to currently, should probably
  *         include this as a "family" field to make this clear.
- * 
+ *
  *         FIXME: there will be issues that become apparent when trying to store
  *         multiple genomes in the same DB
- * 
+ *
  *         FIXME: will need to alter all put methods to support passing in full
  *         ID with timestamp in order to do updates
- * 
+ *
  *         FIXME: need to add methods to support variants, features, reference,
  *         etc
- * 
+ *
  *         FIXME: going to have to deal with tags like nonsynachr:1243
  *         nonsynchr:1243 where does nonsyn then sort? I think before either of
  *         these which could lead to problems detecting the matches in the scan
- * 
+ *
  *         FIXME: I will have to deal with tag table updates, currently I
  *         overwrite old data
- * 
+ *
  *         FIXME: there may be queries below that return an unbounded iterator,
  *         see getModel below for how to fix this using a filter list
- * 
+ *
  *         FIXME: turning autoflush on gives a 2x improvement in load speed
  *         however any locations where two variants occupy the same location are
  *         problematic because the timestamp won't be incremented properly. So
@@ -87,22 +89,23 @@ import com.sleepycat.db.DatabaseException;
  *         this so that it could increment the timestamp manually if it loads
  *         the same position. This is complicated by the need for multithread
  *         support
- * 
+ *
  *         TODO: To speed up the inserts in a non critical job (like an import
  *         job), you can use Put.writeToWAL(false) to bypass writing to the
  *         write ahead log.
- * 
+ *
  *         Notes about ID: since this backend has no unique key generator I have
  *         to create unique IDs manually I've tried to do this using a
  *         consistent syntax. It's important that everything use this common
  *         syntax below otherwise info won't be retrievable.
- * 
+ *
  **         java -cp $CLASSPATH:dist/seqware-qe-0.4.0.jar:lib/db.jar
  *         net.sourceforge.seqware.queryengine.prototypes.hadoop.HBaseWrite <chr
  *         [chr22]> <start_position [1234]> <count [1]> java -cp
  *         $CLASSPATH:dist/seqware-qe-0.4.0.jar:lib/db.jar
  *         net.sourceforge.seqware.queryengine.prototypes.hadoop.HBaseRead
  *         <id_from_above>
+ * @version $Id: $Id
  */
 public class HBaseStore extends Store {
 
@@ -117,8 +120,11 @@ public class HBaseStore extends Store {
 
 	// constants
 	// FIXME: these should be settings somewhere
+	/** Constant <code>PAD=15</code> */
 	public static final int PAD = 15;
+	/** Constant <code>MAXVERSIONS=1000</code> */
 	public static final int MAXVERSIONS = 1000;
+	/** Constant <code>AUTOFLUSH=false</code> */
 	public static final boolean AUTOFLUSH = false;
 
 	// settings object
@@ -148,6 +154,7 @@ public class HBaseStore extends Store {
 	// SETUP AND UTILITY METHODS
 
 	// FIXME: may want to have an option for autoflush
+	/** {@inheritDoc} */
 	public void setup(SeqWareSettings settings) throws FileNotFoundException,
 			DatabaseException, Exception {
 
@@ -253,6 +260,11 @@ public class HBaseStore extends Store {
 
 	}
 
+	/**
+	 * <p>close.</p>
+	 *
+	 * @throws java.io.IOException if any.
+	 */
 	public void close() throws IOException {
 		genomeTable.flushCommits();
 		genomeTable.close();
@@ -262,37 +274,71 @@ public class HBaseStore extends Store {
 		currGenomeTagIndexTable.close();
 	}
 
+	/**
+	 * <p>Getter for the field <code>settings</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.queryengine.backend.util.SeqWareSettings} object.
+	 */
 	public SeqWareSettings getSettings() {
 		return (settings);
 	}
 
+	/** {@inheritDoc} */
 	public void setSettings(SeqWareSettings settings) {
 		this.settings = settings;
 	}
 
+	/**
+	 * <p>startTransaction.</p>
+	 *
+	 * @throws com.sleepycat.db.DatabaseException if any.
+	 */
 	public void startTransaction() throws DatabaseException {
 		// ignore
 		// throw new
 		// DatabaseException("HBaseStore doesn't support transactions currently.");
 	}
 
+	/**
+	 * <p>finishTransaction.</p>
+	 *
+	 * @throws com.sleepycat.db.DatabaseException if any.
+	 */
 	public void finishTransaction() throws DatabaseException {
 		// ignore
 		// throw new
 		// DatabaseException("HBaseStore doesn't support transactions currently.");
 	}
 
+	/**
+	 * <p>isActiveTransaction.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isActiveTransaction() {
 		// HBaseStore doesn't support transactions currently
 		return (false);
 	}
 
+	/**
+	 * <p>abortTransaction.</p>
+	 *
+	 * @throws com.sleepycat.db.DatabaseException if any.
+	 */
 	public void abortTransaction() throws DatabaseException {
 		// ignore
 		// throw new
 		// DatabaseException("HBaseStore doesn't support transactions currently.");
 	}
 
+	/**
+	 * <p>padZeros.</p>
+	 *
+	 * @param input a int.
+	 * @param totalPlaces a int.
+	 * @return a {@link java.lang.String} object.
+	 * @throws java.lang.Exception if any.
+	 */
 	public static String padZeros(int input, int totalPlaces) throws Exception {
 		String strInput = new Integer(input).toString();
 		if (strInput.length() > totalPlaces) {
@@ -316,12 +362,22 @@ public class HBaseStore extends Store {
 
 	// FEATURE METHODS
 
+	/**
+	 * <p>getFeaturesUnordered.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator} object.
+	 */
 	public SeqWareIterator getFeaturesUnordered() {
 
 		return (getFeatures());
 
 	}
 
+	/**
+	 * <p>getFeatures.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator} object.
+	 */
 	public SeqWareIterator getFeatures() {
 
 		return (getModels(genomeTable, null, ftb, "feature", "Genome"
@@ -330,6 +386,8 @@ public class HBaseStore extends Store {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * This doesn't do bounds checking on the stop, the client will need to
 	 * close the iterator when it reaches the requested end!
 	 */
@@ -353,6 +411,8 @@ public class HBaseStore extends Store {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * The featureID should be of the form:
 	 * "<ref_genome>.<ref_genome_location>.feature.<genome_ID>.v<version_aka_timestamp>"
 	 * for example "hg18.chr12:00230.feature.genome1212.v1"
@@ -367,6 +427,7 @@ public class HBaseStore extends Store {
 
 	}
 
+	/** {@inheritDoc} */
 	public SeqWareIterator getFeaturesByTag(String tag) {
 
 		return (getModelsByTag(tag, tagIndexTable, genomeTable, ftb, "feature",
@@ -375,23 +436,27 @@ public class HBaseStore extends Store {
 	}
 
 	// TODO
+	/**
+	 * <p>getFeaturesTags.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator} object.
+	 */
 	public SeqWareIterator getFeaturesTags() {
 
 		return (null);
 
 	}
 
+	/** {@inheritDoc} */
 	public SeqWareIterator getFeatureTagsBySearch(String tagSearchStr) {
 		return (null);
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * This is really a pass through for putFeature(Feature feature) since the
 	 * HBase backend doesn't support transactions.
-	 * 
-	 * @param feature
-	 * @param it
-	 * @param transactional
 	 */
 	public String putFeature(Feature feature, SeqWareIterator it,
 			boolean transactional) {
@@ -401,6 +466,8 @@ public class HBaseStore extends Store {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * This constructs an identifier such as:
 	 * "hg18.chr12:00230.feature.genome1212", figures out the version to add
 	 * e.g. "hg18.chr12:00230.feature.genome1212.v1", saves this as featureId,
@@ -425,12 +492,22 @@ public class HBaseStore extends Store {
 
 	// VARIANT METHODS
 
+	/**
+	 * <p>getMismatchesUnordered.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator} object.
+	 */
 	public SeqWareIterator getMismatchesUnordered() {
 
 		return (getMismatches());
 
 	}
 
+	/**
+	 * <p>getMismatches.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator} object.
+	 */
 	public SeqWareIterator getMismatches() {
 
 		return (getModels(genomeTable, null, mtb, "variant", "Genome"
@@ -439,6 +516,8 @@ public class HBaseStore extends Store {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * This doesn't do bounds checking on the stop, the client will need to
 	 * close the iterator when it reaches the requested end!
 	 */
@@ -468,6 +547,7 @@ public class HBaseStore extends Store {
 
 	}
 
+	/** {@inheritDoc} */
 	public SeqWareIterator getMismatches(String contig) {
 
 		return (getMismatches(contig, 0, Integer.MAX_VALUE));
@@ -475,6 +555,8 @@ public class HBaseStore extends Store {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * The mismatchID should be of the form:
 	 * "<ref_genome>.<ref_genome_location>.variant.<genome_ID>.<consensus_base>.v<version_aka_timestamp>"
 	 * for example "hg18.chr12:00230.variant.genome1212.G.v1"
@@ -498,6 +580,7 @@ public class HBaseStore extends Store {
 
 	}
 
+	/** {@inheritDoc} */
 	public SeqWareIterator getMismatchesByTag(String tag) {
 
 		return (getModelsByTag(tag, tagIndexTable, genomeTable, mtb, "variant",
@@ -506,17 +589,25 @@ public class HBaseStore extends Store {
 	}
 
 	// TODO
+	/**
+	 * <p>getMismatchesTags.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator} object.
+	 */
 	public SeqWareIterator getMismatchesTags() {
 
 		return (null);
 
 	}
 
+	/** {@inheritDoc} */
 	public SeqWareIterator getMismatchTagsBySearch(String tagSearchStr) {
 		return (null);
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * This constructs an identifier such as:
 	 * "hg18.chr12:00230.variant.genome1212.G", figures out the version to add
 	 * e.g. "hg18.chr12:00230.variant.genome1212.G.v1", saves this as id, and
@@ -544,12 +635,10 @@ public class HBaseStore extends Store {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * This is really a pass through for putMismatch(Variant variant) since the
 	 * HBase backend doesn't support transactions.
-	 * 
-	 * @param feature
-	 * @param it
-	 * @param transactional
 	 */
 	public String putMismatch(Variant variant, SeqWareIterator it,
 			boolean transactional) {
@@ -560,6 +649,7 @@ public class HBaseStore extends Store {
 
 	// COVERAGE METHODS
 
+	/** {@inheritDoc} */
 	public SeqWareIterator getCoverages(String contig, int start, int stop) {
 
 		SeqWareIterator iterator = null;
@@ -591,6 +681,7 @@ public class HBaseStore extends Store {
 		return (iterator);
 	}
 
+	/** {@inheritDoc} */
 	public SeqWareIterator getCoverages(String contig) {
 
 		return (getCoverages(contig, 0, Integer.MAX_VALUE));
@@ -598,6 +689,8 @@ public class HBaseStore extends Store {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * This constructs an identifier such as:
 	 * "hg18.chr12:00230.coverage.genome1212", figures out the version to add
 	 * e.g. "hg18.chr12:00230.coverage.genome1212.v1", saves this as id, and
@@ -620,6 +713,7 @@ public class HBaseStore extends Store {
 
 	}
 
+	/** {@inheritDoc} */
 	public String putCoverage(Coverage coverage, boolean transactional) {
 
 		return (putCoverage(coverage));
@@ -628,11 +722,11 @@ public class HBaseStore extends Store {
 
 	// CONSEQUENCE METHODS
 	/**
+	 * {@inheritDoc}
+	 *
 	 * TODO: I think I should store each consequence as
 	 * "Genome"+genomeId+"Gene"+consequence.getGeneId()
-	 * 
 	 */
-
 	public String putConsequence(Consequence consequence, boolean transactional) {
 
 		return (putConsequence(consequence));
@@ -640,12 +734,14 @@ public class HBaseStore extends Store {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * This constructs an identifier such as:
 	 * "hg18.chr12:00230.consequence.genome1212.G.ak21219", figures out the
 	 * version to add e.g.
 	 * "hg18.chr12:00230.consequence.genome1212.G.ak21219.v1", saves this as
 	 * consequenceId, and save the whole thing to the DB.
-	 * 
+	 *
 	 * FIXME: The consensusBaseCall needs to be added directly to the
 	 * consequence object to avoid parsing it from the variant ID string which
 	 * is error prone!
@@ -674,6 +770,8 @@ public class HBaseStore extends Store {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * The consequenceID should be of the form:
 	 * "<ref_genome>.<ref_genome_location>.consequence.<genome_ID>.<variant_consensus_base>.<gene_model_name>.v<version_aka_timestamp>"
 	 * for example "hg18.chr12:00230.consequence.genome1212.G.ak21219.v1"
@@ -689,6 +787,7 @@ public class HBaseStore extends Store {
 
 	}
 
+	/** {@inheritDoc} */
 	public SeqWareIterator getConsequencesByTag(String tag) {
 
 		return (getModelsByTag(tag, tagIndexTable, genomeTable, ctb,
@@ -696,12 +795,15 @@ public class HBaseStore extends Store {
 
 	}
 
+	/** {@inheritDoc} */
 	public SeqWareIterator getConsequenceTagsBySearch(String tagSearchStr) {
 		return (null);
 	}
 
 	// TODO
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Since both variants and consequences are stored under the same ID based
 	 * on location this really doesn't make a lot of sense. This is only used by
 	 * MismatchConsequenceReportProcessor and ConsequenceResource, can this be
@@ -716,6 +818,17 @@ public class HBaseStore extends Store {
 	// GENERIC METHODS
 	// the generic methods that everything uses
 
+	/**
+	 * <p>getModels.</p>
+	 *
+	 * @param table a {@link org.apache.hadoop.hbase.client.HTable} object.
+	 * @param filter a {@link org.apache.hadoop.hbase.filter.Filter} object.
+	 * @param binder a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+	 * @param family a {@link java.lang.String} object.
+	 * @param label a {@link java.lang.String} object.
+	 * @param returnAllVersions a boolean.
+	 * @return a {@link net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator} object.
+	 */
 	protected SeqWareIterator getModels(HTable table, Filter filter,
 			TupleBinding binder, String family, String label,
 			boolean returnAllVersions) {
@@ -751,6 +864,18 @@ public class HBaseStore extends Store {
 
 	}
 
+	/**
+	 * <p>getModels.</p>
+	 *
+	 * @param table a {@link org.apache.hadoop.hbase.client.HTable} object.
+	 * @param scan a {@link org.apache.hadoop.hbase.client.Scan} object.
+	 * @param filter a {@link org.apache.hadoop.hbase.filter.Filter} object.
+	 * @param binder a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+	 * @param family a {@link java.lang.String} object.
+	 * @param label a {@link java.lang.String} object.
+	 * @param returnAllVersions a boolean.
+	 * @return a {@link net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator} object.
+	 */
 	protected SeqWareIterator getModels(HTable table, Scan scan, Filter filter,
 			TupleBinding binder, String family, String label,
 			boolean returnAllVersions) {
@@ -784,6 +909,17 @@ public class HBaseStore extends Store {
 
 	// FIXME: HBaseTagModelIterator will need to be updated to support storing
 	// timestamp
+	/**
+	 * <p>getModelsByTag.</p>
+	 *
+	 * @param tag a {@link java.lang.String} object.
+	 * @param tagTable a {@link org.apache.hadoop.hbase.client.HTable} object.
+	 * @param table a {@link org.apache.hadoop.hbase.client.HTable} object.
+	 * @param binder a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+	 * @param family a {@link java.lang.String} object.
+	 * @param label a {@link java.lang.String} object.
+	 * @return a {@link net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator} object.
+	 */
 	protected SeqWareIterator getModelsByTag(String tag, HTable tagTable,
 			HTable table, TupleBinding binder, String family, String label) {
 
@@ -813,9 +949,9 @@ public class HBaseStore extends Store {
 
 	/**
 	 * Other methods expect this to return a SeqWareIterator and not a HashMap.
-	 * 
-	 * @param tagTable
-	 * @return
+	 *
+	 * @param tagTable a {@link org.apache.hadoop.hbase.client.HTable} object.
+	 * @return a {@link java.util.HashMap} object.
 	 */
 	protected HashMap<String, Integer> getModelTags(HTable tagTable) {
 
@@ -845,6 +981,17 @@ public class HBaseStore extends Store {
 	}
 
 	// FIXME: this will need to parameterize version!
+	/**
+	 * <p>getModel.</p>
+	 *
+	 * @param modelId a {@link java.lang.String} object.
+	 * @param binder a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+	 * @param table a {@link org.apache.hadoop.hbase.client.HTable} object.
+	 * @param family a {@link java.lang.String} object.
+	 * @param label a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.Long} object.
+	 * @return a {@link net.sourceforge.seqware.queryengine.backend.model.Model} object.
+	 */
 	protected Model getModel(String modelId, TupleBinding binder, HTable table,
 			String family, String label, Long version) {
 
@@ -900,13 +1047,13 @@ public class HBaseStore extends Store {
 	 * This is actually a pretty dangerous method since just the most recent
 	 * biallelic variant will be returned. It will seem to work for the vast
 	 * majority of variants but fail for bi/triallelic locations
-	 * 
-	 * @param modelId
-	 * @param binder
-	 * @param table
-	 * @param family
-	 * @param label
-	 * @return
+	 *
+	 * @param modelId a {@link java.lang.String} object.
+	 * @param binder a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+	 * @param table a {@link org.apache.hadoop.hbase.client.HTable} object.
+	 * @param family a {@link java.lang.String} object.
+	 * @param label a {@link java.lang.String} object.
+	 * @return a {@link net.sourceforge.seqware.queryengine.backend.model.Model} object.
 	 */
 	protected Model getLatestModel(String modelId, TupleBinding binder,
 			HTable table, String family, String label) {
@@ -954,6 +1101,16 @@ public class HBaseStore extends Store {
 	 * timestamp that exists already? may need to look at transaction support or
 	 * making this syncronized (won't matter if other client on other machine
 	 * overwrites this timestamp!)
+	 *
+	 * @param modelId a {@link java.lang.String} object.
+	 * @param model a {@link net.sourceforge.seqware.queryengine.backend.model.LocatableModel} object.
+	 * @param binder a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+	 * @param table a {@link org.apache.hadoop.hbase.client.HTable} object.
+	 * @param commonTagIndexTable a {@link org.apache.hadoop.hbase.client.HTable} object.
+	 * @param specificTagIndexTable a {@link org.apache.hadoop.hbase.client.HTable} object.
+	 * @param family a {@link java.lang.String} object.
+	 * @param label a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	protected String putModel(String modelId, LocatableModel model,
 			TupleBinding binder, HTable table, HTable commonTagIndexTable,

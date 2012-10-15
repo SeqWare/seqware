@@ -21,8 +21,10 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 /**
+ * <p>FilteredExperimentResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class FilteredExperimentResource {
 

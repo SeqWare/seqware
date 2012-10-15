@@ -28,17 +28,23 @@ import org.restlet.resource.Get;
 import org.w3c.dom.Document;
 
 /**
+ * <p>SampleIDFilter class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class SampleIDFilter extends SampleIDResource {
 
+    /** {@inheritDoc} */
     @Override
     public void doInit() {
         super.doInit();
 
     }
 
+    /**
+     * <p>getXml.</p>
+     */
     @Get
     public void getXml() {
         SampleService ss = BeanFactory.getSampleServiceBean();

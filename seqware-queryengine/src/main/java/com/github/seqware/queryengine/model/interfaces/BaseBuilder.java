@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
  * Builders are used to construct Atom.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public abstract class BaseBuilder<S, T extends BaseBuilder> {
 
@@ -37,7 +38,7 @@ public abstract class BaseBuilder<S, T extends BaseBuilder> {
     /**
      * Set a manager for this Atom
      *
-     * @param aThis
+     * @param aThis a {@link com.github.seqware.queryengine.factory.CreateUpdateManager} object.
      * @return the base-builder itself
      */
     public abstract T setManager(CreateUpdateManager aThis);
@@ -46,13 +47,16 @@ public abstract class BaseBuilder<S, T extends BaseBuilder> {
      * Set a friendly rowKey for the atom to be built. Developer should check
      * whether the row key is already in use.
      *
-     * @param rowKey
+     * @param rowKey a {@link java.lang.String} object.
+     * @return a T object.
      */
     public abstract T setFriendlyRowKey(String rowKey);
     
     /**
      * Check a row key
-     * @param rowKey 
+     *
+     * @param rowKey a {@link java.lang.String} object.
+     * @return a boolean.
      */
     protected boolean checkFriendlyRowKey(String rowKey){
         if (rowKey == null || !Pattern.matches(Constants.refRegex, rowKey)) {

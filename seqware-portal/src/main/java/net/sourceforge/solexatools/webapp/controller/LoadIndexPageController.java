@@ -28,6 +28,12 @@ import ch.enterag.utils.zip.FileEntry;
 import ch.enterag.utils.zip.Zip64File;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>LoadIndexPageController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class LoadIndexPageController extends BaseCommandController {
 	private FileService fileService;
 
@@ -38,6 +44,9 @@ public class LoadIndexPageController extends BaseCommandController {
 
 	private HTMLTagValidator htmlTagValidator = new HTMLTagValidator();
 
+	/**
+	 * <p>Constructor for LoadIndexPageController.</p>
+	 */
 	public LoadIndexPageController() {
 		super();
 		setSupportedMethods(new String[] { METHOD_GET });
@@ -173,6 +182,7 @@ public class LoadIndexPageController extends BaseCommandController {
 	 * = true; return isTimeOut; }
 	 */
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -646,6 +656,12 @@ public class LoadIndexPageController extends BaseCommandController {
 		return strDate.toString();
 	}
 
+	/**
+	 * <p>getFileName.</p>
+	 *
+	 * @param path a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getFileName(String path) {
 		return (path.substring(path.lastIndexOf('/') + 1));
 	}
@@ -704,10 +720,20 @@ public class LoadIndexPageController extends BaseCommandController {
 		return Boolean.parseBoolean(request.getParameter("isCanAborted"));
 	}
 
+	/**
+	 * <p>Getter for the field <code>fileService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
+	 */
 	public FileService getFileService() {
 		return fileService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>fileService</code>.</p>
+	 *
+	 * @param FileService a {@link net.sourceforge.seqware.common.business.FileService} object.
+	 */
 	public void setFileService(FileService FileService) {
 		this.fileService = FileService;
 	}

@@ -16,14 +16,24 @@ import org.restlet.resource.Get;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+/**
+ * <p>FileLinkReportResource class.</p>
+ *
+ * @author morgantaschuk
+ * @version $Id: $Id
+ */
 public class FileLinkReportResource extends DatabaseResource {
 
   private List<Integer> swas = Lists.newArrayList();
 
+  /**
+   * <p>Constructor for FileLinkReportResource.</p>
+   */
   public FileLinkReportResource() {
     super("fileLinkReportResource");
   }
 
+  /** {@inheritDoc} */
   @Override
   public void doInit() {
     String swasString = (String) getRequestAttributes().get("swas");
@@ -35,6 +45,11 @@ public class FileLinkReportResource extends DatabaseResource {
     }
   }
 
+  /**
+   * <p>validate.</p>
+   *
+   * @return a {@link org.restlet.representation.Representation} object.
+   */
   @Get("text")
   public Representation validate() {
     List<ReportEntry> report = Lists.newArrayList();

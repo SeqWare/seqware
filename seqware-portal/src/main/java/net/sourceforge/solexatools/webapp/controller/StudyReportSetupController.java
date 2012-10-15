@@ -13,14 +13,26 @@ import net.sourceforge.solexatools.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>StudyReportSetupController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class StudyReportSetupController extends BaseCommandController {
 	
 	private StudyService studyService;
 	
+	/**
+	 * <p>Setter for the field <code>studyService</code>.</p>
+	 *
+	 * @param studyService a {@link net.sourceforge.seqware.common.business.StudyService} object.
+	 */
 	public void setStudyService(StudyService studyService) {
 		this.studyService = studyService;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

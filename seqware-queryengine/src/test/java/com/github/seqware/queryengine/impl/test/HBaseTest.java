@@ -53,6 +53,8 @@ import org.objenesis.strategy.SerializingInstantiatorStrategy;
  * the effect of batching on performance. (i.e. a large performance improvement)
  *
  * @author jbaran
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class HBaseTest implements Benchmarking {
 
@@ -100,7 +102,8 @@ public class HBaseTest implements Benchmarking {
      * Create a fresh HBase table (drop existing one) and serialize/deserialize
      * some Feature objects using Kryo.
      *
-     * @throws IOException
+     * @throws java.io.IOException if any.
+     * @throws java.lang.InterruptedException if any.
      */
     @Test
     public void testHBaseTableWithKryo() throws IOException, InterruptedException {
@@ -122,7 +125,8 @@ public class HBaseTest implements Benchmarking {
      * Create a fresh HBase table (drop existing one) and serialize/deserialize
      * a Feature objects using Protobuf.
      *
-     * @throws IOException
+     * @throws java.io.IOException if any.
+     * @throws java.lang.InterruptedException if any.
      */
     @Test
     public void testHBaseTableWithProtobuf() throws IOException, InterruptedException {
@@ -136,7 +140,8 @@ public class HBaseTest implements Benchmarking {
      * Create a fresh HBase table (drop existing one) and serialize/deserialize
      * a Feature objects using Apache Serialization.
      *
-     * @throws IOException
+     * @throws java.io.IOException if any.
+     * @throws java.lang.InterruptedException if any.
      */
     @Test
     public void testHBaseTableWithApache() throws IOException, InterruptedException {
@@ -149,7 +154,7 @@ public class HBaseTest implements Benchmarking {
      * Create a fresh HBase table (drop existing one) and serialize/deserialize
      * a Feature objects using BerkeleyDB tuple binders.
      *
-     * @throws IOException
+     * @throws java.io.IOException if any.
      */
     @Test
     public void testHBaseTableWithTuple() throws IOException {

@@ -37,15 +37,23 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>StudyIDResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class StudyIDResource extends DatabaseIDResource {
 
+    /**
+     * <p>Constructor for StudyIDResource.</p>
+     */
     public StudyIDResource() {
         super("studyId");
     }
 
+        /**
+         * <p>getXml.</p>
+         */
         @Get
     public void getXml() {
         authenticate();
@@ -70,6 +78,7 @@ public class StudyIDResource extends DatabaseIDResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
+	/** {@inheritDoc} */
 	@Override
     @Put
     public Representation put(Representation entity) {

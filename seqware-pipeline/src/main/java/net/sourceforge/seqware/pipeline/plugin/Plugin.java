@@ -11,10 +11,20 @@ import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>Abstract Plugin class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public abstract class Plugin implements PluginInterface {
+  /** Constant <code>SUCCESS="success"</code> */
   public static final String SUCCESS = "success";
+  /** Constant <code>FAILED="failed"</code> */
   public static final String FAILED = "failed";
+  /** Constant <code>PENDING="pending"</code> */
   public static final String PENDING = "pending";
+  /** Constant <code>RUNNING="running"</code> */
   public static final String RUNNING = "running";
   
   protected OptionParser parser = new OptionParser();
@@ -23,6 +33,9 @@ public abstract class Plugin implements PluginInterface {
   protected Metadata metadata = null;
   protected Map<String, String> config = null;
   
+  /**
+   * <p>Constructor for Plugin.</p>
+   */
   public Plugin() {
     super();
   }
@@ -30,6 +43,7 @@ public abstract class Plugin implements PluginInterface {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#setConfig(java.util.Map)
    */
+  /** {@inheritDoc} */
   @Override
   public void setConfig(Map<String, String> config) {
     this.config = config;
@@ -43,6 +57,7 @@ public abstract class Plugin implements PluginInterface {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#setParams(java.util.List)
    */
+  /** {@inheritDoc} */
   @Override
   public void setParams(List<String> params) {
     Log.info("Setting Params: "+params);
@@ -52,6 +67,7 @@ public abstract class Plugin implements PluginInterface {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#setMetadata(net.sourceforge.seqware.pipeline.metadata.Metadata)
    */
+  /** {@inheritDoc} */
   @Override
   public void setMetadata(Metadata metadata) {
     Log.info("Setting Metadata: "+metadata);
@@ -61,6 +77,7 @@ public abstract class Plugin implements PluginInterface {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#get_syntax()
    */
+  /** {@inheritDoc} */
   @Override
   public String get_syntax() {
     
@@ -73,6 +90,7 @@ public abstract class Plugin implements PluginInterface {
     return ("");
   }
   
+  /** {@inheritDoc} */
   @Override
   public String get_description() {
     return("");
@@ -81,6 +99,7 @@ public abstract class Plugin implements PluginInterface {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#parse_parameters()
    */
+  /** {@inheritDoc} */
   @Override
   public ReturnValue parse_parameters() {
     
@@ -96,6 +115,11 @@ public abstract class Plugin implements PluginInterface {
     return ret;
   }
   
+  /**
+   * <p>print.</p>
+   *
+   * @param output a {@link java.lang.String} object.
+   */
   public void print(String output) {
       
       // FIXME: Yong, do something cleaver here, for now I'm using System.out
@@ -103,6 +127,11 @@ public abstract class Plugin implements PluginInterface {
       
   }
   
+  /**
+   * <p>println.</p>
+   *
+   * @param output a {@link java.lang.String} object.
+   */
   public void println(String output) {
       
       // FIXME: Yong, do something cleaver here, for now I'm using System.out

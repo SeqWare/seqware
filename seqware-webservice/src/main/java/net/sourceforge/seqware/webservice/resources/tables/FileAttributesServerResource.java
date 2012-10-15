@@ -18,10 +18,19 @@ import org.restlet.resource.ResourceException;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 
+/**
+ * <p>FileAttributesServerResource class.</p>
+ *
+ * @author morgantaschuk
+ * @version $Id: $Id
+ */
 public class FileAttributesServerResource extends BasicResource implements FileAttributesResource {
 
   private static FileAttributeService fileAttributeService;
 
+  /**
+   * <p>Constructor for FileAttributesServerResource.</p>
+   */
   public FileAttributesServerResource() {
     super();
     FileAttributesServerResource.initialiseFileAttributeService();
@@ -43,6 +52,7 @@ public class FileAttributesServerResource extends BasicResource implements FileA
     BasicResource.setRegistrationService(registrationService);
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<AttributeDto> getFileAttributes() {
     authenticate();

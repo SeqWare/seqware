@@ -14,7 +14,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <seqware-version>0.12.5.1</seqware-version>
+    <seqware-version>0.13.3</seqware-version>
   </properties>
 
   <build>
@@ -39,7 +39,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>net.sourceforge.seqware</groupId>
+      <groupId>com.github.seqware</groupId>
       <artifactId>seqware-pipeline</artifactId>
       <version>${seqware-version}</version>
       <scope>provided</scope>

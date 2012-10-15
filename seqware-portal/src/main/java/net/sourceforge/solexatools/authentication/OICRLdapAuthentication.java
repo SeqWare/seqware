@@ -20,17 +20,21 @@ import com.google.common.collect.Lists;
 /**
  * This authentication plugin allows the SeqWare Portal to authenticate against
  * the Ontario Institute for Cancer Research (OICR) LDAP server.
- * 
+ *
  * Users will pass in an email address and password. An associated list of uids
  * that match the email address will be retrieved via an LDAP directory search.
  * More than one uid will be returned for users who have multiple credentials.
  * This plugin will loop through the uids and attempt to authenticate with the
  * provided password.
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class OICRLdapAuthentication extends Authentication {
 
   static Logger log = Logger.getLogger(OICRLdapAuthentication.class);
 
+  /** {@inheritDoc} */
   @Override
   public boolean loginSuccess(String uid, String password) {
     // uid value is an email address.
@@ -90,6 +94,12 @@ public class OICRLdapAuthentication extends Authentication {
     return result;
   }
 
+  /**
+   * <p>getDirContext.</p>
+   *
+   * @return a {@link javax.naming.directory.DirContext} object.
+   * @throws javax.naming.NamingException if any.
+   */
   public DirContext getDirContext() throws NamingException {
     Hashtable<String, String> env = new Hashtable<String, String>(11);
     env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
@@ -98,6 +108,13 @@ public class OICRLdapAuthentication extends Authentication {
     return ctx;
   }
 
+  /**
+   * <p>getUids.</p>
+   *
+   * @param searchResultEnum a {@link javax.naming.NamingEnumeration} object.
+   * @return a {@link java.util.List} object.
+   * @throws javax.naming.NamingException if any.
+   */
   public List<String> getUids(NamingEnumeration<SearchResult> searchResultEnum) throws NamingException {
     List<String> uids = Lists.newArrayList();
     while (searchResultEnum.hasMore()) {

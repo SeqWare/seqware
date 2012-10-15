@@ -12,22 +12,32 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ProcessingSamplesDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ProcessingSamplesDAOHibernate extends HibernateDaoSupport implements ProcessingSamplesDAO {
+  /** {@inheritDoc} */
   @Override
   public void insert(ProcessingSamples processingSamples) {
     this.getHibernateTemplate().save(processingSamples);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(ProcessingSamples processingSamples) {
     this.getHibernateTemplate().update(processingSamples);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void delete(ProcessingSamples processingSamples) {
     this.getHibernateTemplate().delete(processingSamples);
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("rawtypes")
   public ProcessingSamples findByProcessingSample(Processing processing, Sample sample) {
@@ -41,6 +51,7 @@ public class ProcessingSamplesDAOHibernate extends HibernateDaoSupport implement
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ProcessingSamples updateDetached(ProcessingSamples processingSamples) {
     ProcessingSamples dbObject = findByProcessingSample(processingSamples.getProcessing(),
@@ -57,6 +68,7 @@ public class ProcessingSamplesDAOHibernate extends HibernateDaoSupport implement
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ProcessingSamples> list() {
         throw new UnsupportedOperationException("Not supported yet.");

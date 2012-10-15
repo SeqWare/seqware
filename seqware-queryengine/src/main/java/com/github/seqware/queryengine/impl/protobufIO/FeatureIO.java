@@ -26,11 +26,14 @@ import org.apache.log4j.Logger;
 ;
 
 /**
+ * <p>FeatureIO class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class FeatureIO implements ProtobufTransferInterface<FeaturePB, Feature> {
 
+    /** {@inheritDoc} */
     @Override
     public Feature pb2m(FeaturePB feature) {
         Feature.Builder builder = Feature.newBuilder();
@@ -51,6 +54,7 @@ public class FeatureIO implements ProtobufTransferInterface<FeaturePB, Feature> 
         return fMesg;
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeaturePB m2pb(Feature feature) {
         assert(feature.getSGID() instanceof FSGID);
@@ -71,6 +75,7 @@ public class FeatureIO implements ProtobufTransferInterface<FeaturePB, Feature> 
         return fMesg;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Feature byteArr2m(byte[] arr) {
         try {

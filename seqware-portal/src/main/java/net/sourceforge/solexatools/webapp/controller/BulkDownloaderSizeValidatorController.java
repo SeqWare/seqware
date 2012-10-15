@@ -14,9 +14,16 @@ import net.sourceforge.solexatools.util.BulkUtil;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>BulkDownloaderSizeValidatorController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class BulkDownloaderSizeValidatorController extends
 		BaseCommandController {
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

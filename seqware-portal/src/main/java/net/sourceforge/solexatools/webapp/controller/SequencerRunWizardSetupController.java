@@ -20,6 +20,9 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 /**
  * RegistrationSetupController
  * This is invoked upon entry to Registration.jsp or RegistrationUpdate.jsp
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class SequencerRunWizardSetupController extends BaseCommandController {
 
@@ -27,11 +30,15 @@ public class SequencerRunWizardSetupController extends BaseCommandController {
   private PlatformService platformService;
 
 
+  /**
+   * <p>Constructor for SequencerRunWizardSetupController.</p>
+   */
   public SequencerRunWizardSetupController() {
     super();
     setSupportedMethods(new String[] {METHOD_GET});
   }
 
+  /** {@inheritDoc} */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request,
       HttpServletResponse response)
@@ -89,17 +96,37 @@ public class SequencerRunWizardSetupController extends BaseCommandController {
     return(sequencerRun);
   }
 
+  /**
+   * <p>Getter for the field <code>sequencerRunService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+   */
   public SequencerRunService getSequencerRunService() {
     return sequencerRunService;
   }
 
+  /**
+   * <p>Setter for the field <code>sequencerRunService</code>.</p>
+   *
+   * @param sequencerRunService a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+   */
   public void setSequencerRunService(SequencerRunService sequencerRunService) {
     this.sequencerRunService = sequencerRunService;
   }
+  /**
+   * <p>Getter for the field <code>platformService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.PlatformService} object.
+   */
   public PlatformService getPlatformService() {
     return platformService;
   }
 
+  /**
+   * <p>Setter for the field <code>platformService</code>.</p>
+   *
+   * @param platformService a {@link net.sourceforge.seqware.common.business.PlatformService} object.
+   */
   public void setPlatformService(PlatformService platformService) {
     this.platformService = platformService;
   }

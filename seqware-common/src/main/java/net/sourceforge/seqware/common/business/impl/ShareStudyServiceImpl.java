@@ -10,21 +10,29 @@ import net.sourceforge.seqware.common.model.ShareStudy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>ShareStudyServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ShareStudyServiceImpl implements ShareStudyService {
 
   private ShareStudyDAO dao = null;
   private static final Log log = LogFactory.getLog(ShareStudyServiceImpl.class);
 
+  /**
+   * <p>Constructor for ShareStudyServiceImpl.</p>
+   */
   public ShareStudyServiceImpl() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Sets a private member variable with an instance of an implementation of
    * ShareStudyDAO. This method is called by the Spring framework at run time.
-   * 
-   * @param ShareStudyDAO
-   *          implementation of ShareStudyDAO
    * @see ShareStudyDAO
    */
   public void setShareStudyDAO(ShareStudyDAO dao) {
@@ -32,10 +40,9 @@ public class ShareStudyServiceImpl implements ShareStudyService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of ShareStudy into the database.
-   * 
-   * @param ShareStudyDAO
-   *          instance of ShareStudyDAO
    */
   public void insert(ShareStudy shareStudy) {
     // shareStudy.setEmail(shareStudy.getEmail().trim().toLowerCase());
@@ -45,19 +52,20 @@ public class ShareStudyServiceImpl implements ShareStudyService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of ShareStudy in the database.
-   * 
-   * @param ShareStudy
-   *          instance of ShareStudy
    */
   public void update(ShareStudy shareStudy) {
     dao.update(shareStudy);
   }
 
+  /** {@inheritDoc} */
   public void delete(ShareStudy shareStudy) {
     dao.delete(shareStudy);
   }
 
+  /** {@inheritDoc} */
   public boolean isExistsShare(Integer studyId, Integer registrationId) {
     boolean isExists = false;
     if (findByStudyIdAndRegistrationId(studyId, registrationId) != null) {
@@ -66,6 +74,7 @@ public class ShareStudyServiceImpl implements ShareStudyService {
     return isExists;
   }
 
+  /** {@inheritDoc} */
   public ShareStudy findByStudyIdAndRegistrationId(Integer studyId, Integer registrationId) {
     ShareStudy shareStudy = null;
     if (studyId != null && registrationId != null) {
@@ -79,6 +88,7 @@ public class ShareStudyServiceImpl implements ShareStudyService {
     return shareStudy;
   }
 
+  /** {@inheritDoc} */
   public ShareStudy findByID(Integer shareStudyId) {
     ShareStudy shareStudy = null;
     if (shareStudyId != null) {
@@ -92,6 +102,7 @@ public class ShareStudyServiceImpl implements ShareStudyService {
     return shareStudy;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ShareStudy findBySWAccession(Integer swAccession) {
     ShareStudy shareStudy = null;
@@ -106,11 +117,13 @@ public class ShareStudyServiceImpl implements ShareStudyService {
     return shareStudy;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ShareStudy updateDetached(ShareStudy shareStudy) {
     return dao.updateDetached(shareStudy);
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ShareStudy> list() {
         return dao.list();

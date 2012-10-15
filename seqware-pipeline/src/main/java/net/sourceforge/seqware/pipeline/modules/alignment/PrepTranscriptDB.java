@@ -21,16 +21,16 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Given a set of database tables, construct a reference set of transcripts.
- * 
+ *
  * This module generates a transcript reference set given a set of specifically formatted database tables.  In order
  * for a transcript to be included in the reference set, an accession & a sequence must be available for extraction.
- * Pairwise mapping (transcript vs genome) [for exon coverage & splice junction counts] and gene association 
+ * Pairwise mapping (transcript vs genome) [for exon coverage & splice junction counts] and gene association
  * information [for gene-level RPKM] are encouraged but not required.
- * 
+ *
  * Underlying script:  sw_module_PrepTranscriptDB.pl
- * 
+ *
  * Necessary programs:  perl, BWA
- * 
+ *
  * Input criteria:  Four (or five) tables are required.  All follow UCSC standards.  Please reference the example
  * tables for details such as column names, format, etc.
  * 1. BlatTable - contains blat results for mapping of transcripts to genome; Example = hg19.kgTargetAli; REQUIRED
@@ -40,7 +40,7 @@ import org.openide.util.lookup.ServiceProvider;
  * 5. RefLink - gives information linking genes, protein transcript, mRNA transcript, etc.  The file is only used
  * convert LocusLink/EntrezIDs to Entrez Gene Symbols.; Example = hg19.refLink; If the gene type is "entrez", this
  * table is REQUIRED. Otherwise, this table is not used.
- * 
+ *
  * The following list describes the mySQL queries that are used in the script.  You will notice that not all columns
  * in all tables are used.  As long as the following queries are successful, any missing data is the extraneous columns
  * is not problematic.
@@ -53,24 +53,24 @@ import org.openide.util.lookup.ServiceProvider;
  * 4b. If the gene type is "other"...
  *     SELECT name,value FROM $GeneTable
  * (Note: txStart & txEnd from $ExonTable are only used in UNC hacked/custom version.)
- * 
+ *
  * Expected output:  6 output files are generated.  BWA index files are also generated, although this step may move
  * to some other module later on.
- * 1. A tab-delimited file of trascript/gene assocations & mapping info: transcript accession, associated gene, 
- * transcript length in bases, genomic coordinates in pairwise alignment (e.g. "chrX:100-50,30-20:-"), transcript 
- * coordinates in pairwise alignment (e.g. "1-51,52-62"), cds start in transcript coordinates, and cds stop in 
+ * 1. A tab-delimited file of trascript/gene assocations & mapping info: transcript accession, associated gene,
+ * transcript length in bases, genomic coordinates in pairwise alignment (e.g. "chrX:100-50,30-20:-"), transcript
+ * coordinates in pairwise alignment (e.g. "1-51,52-62"), cds start in transcript coordinates, and cds stop in
  * transcript coordinates.
  * 2. The transcript sequences in fasta format.
- * 3. A tab-delimited file of composite transcripts: composite ID, genomic coordinates in pairwise alignment (e.g. 
+ * 3. A tab-delimited file of composite transcripts: composite ID, genomic coordinates in pairwise alignment (e.g.
  * "chrX:100-50,30-20:-"), transcript coordinates in pairwise alignment (e.g. "1-51,52-62"), transcript list
  * 4. A tab-delimited file of composite exons: genomic coordinates (e.g. "chr1:17055-16858:-"), gene list, transcript list if gene is "null"
- * 5. A tab-delimited file of known splice junctions: genomic coordinates (e.g. "chr1:12227:+,chr1:12595:+"), gene list, 
+ * 5. A tab-delimited file of known splice junctions: genomic coordinates (e.g. "chr1:12227:+,chr1:12595:+"), gene list,
  * number of transcripts, transcript list
  * 6. Composite transcripts in GTF format.
  * 7. BWA index files ~.abm, ~.ann, ~.bwt, ~.pac, ~.rbwt, ~.rpac, ~.rsa, ~.sa
- * 
- * @author sacheek@med.unc.edu
  *
+ * @author sacheek@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class PrepTranscriptDB extends Module {
@@ -79,9 +79,9 @@ public class PrepTranscriptDB extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line option
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("DBname", "Database name for database connection (e.g. dbi:mysql:DBname:DBhost)").withRequiredArg();
@@ -115,8 +115,9 @@ public class PrepTranscriptDB extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -132,11 +133,11 @@ public class PrepTranscriptDB extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -173,9 +174,9 @@ public class PrepTranscriptDB extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -225,9 +226,9 @@ public class PrepTranscriptDB extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -304,9 +305,9 @@ public class PrepTranscriptDB extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known dataset.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -316,10 +317,10 @@ public class PrepTranscriptDB extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Run core of module.
    * Based on script sw_module_PrepTranscriptDB.pl
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_run() {
@@ -458,9 +459,9 @@ public class PrepTranscriptDB extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Check to make sure the output was created correctly.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -479,10 +480,11 @@ public class PrepTranscriptDB extends Module {
     return(ret);
   }
   
-    /**
+  /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

@@ -17,9 +17,15 @@ import org.apache.log4j.Logger;
  * TODO: merge back-end with ReferenceCreator
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class TagSetCreator {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         try {
             SGID mainMethod = TagSetCreator.mainMethod(args);
@@ -35,8 +41,9 @@ public class TagSetCreator {
     /**
      * Create a reference given just a name for the new reference to be created.
      *
-     * @param args
-     * @return
+     * @param args an array of {@link java.lang.String} objects.
+     * @return a {@link com.github.seqware.queryengine.util.SGID} object.
+     * @throws java.lang.IllegalArgumentException if any.
      */
     public static SGID mainMethod(String[] args) throws IllegalArgumentException {
 
@@ -78,6 +85,9 @@ public class TagSetCreator {
         return null;
     }
 
+    /**
+     * <p>Constructor for TagSetCreator.</p>
+     */
     public TagSetCreator() {
         /**
          * do nothing

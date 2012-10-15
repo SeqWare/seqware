@@ -22,7 +22,7 @@ import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
  * This is a utility class that lets you manipulate a workflow bundle.
  *
  * @author briandoconnor@gmail.com
- *
+ * @version $Id: $Id
  */
 public class Bundle {
 
@@ -37,10 +37,19 @@ public class Bundle {
   protected String outputZip = null;
   protected ArrayList<File> filesArray = new ArrayList<File>();
 
+  /**
+   * <p>Constructor for Bundle.</p>
+   */
   public Bundle() {
     super();
   }
 
+  /**
+   * <p>Constructor for Bundle.</p>
+   *
+   * @param metadata a {@link net.sourceforge.seqware.common.metadata.Metadata} object.
+   * @param config a {@link java.util.Map} object.
+   */
   public Bundle(Metadata metadata, Map<String, String> config) {
     super();
     this.metadata = metadata;
@@ -49,6 +58,13 @@ public class Bundle {
     bundleDir = config.get("SW_BUNDLE_DIR");
   }
 
+  /**
+   * <p>getBundleInfo.</p>
+   *
+   * @param bundle a {@link java.io.File} object.
+   * @param metadataFile a {@link java.io.File} object.
+   * @return a {@link net.sourceforge.seqware.pipeline.bundle.BundleInfo} object.
+   */
   public BundleInfo getBundleInfo(File bundle, File metadataFile) {
 
     if (bundle == null || !bundle.exists()) {
@@ -87,6 +103,12 @@ public class Bundle {
     return (bi);
   }
 
+  /**
+   * <p>unpackageBundle.</p>
+   *
+   * @param bundle a {@link java.io.File} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue unpackageBundle(File bundle) {
 
     ret.setExitStatus(ReturnValue.SUCCESS);
@@ -116,6 +138,12 @@ public class Bundle {
     return (ret);
   }
 
+  /**
+   * <p>unpackageBundleFromS3.</p>
+   *
+   * @param bundleURL a {@link java.lang.String} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue unpackageBundleFromS3(String bundleURL) {
 
     ret.setExitStatus(ReturnValue.SUCCESS);
@@ -173,6 +201,13 @@ public class Bundle {
     return (ret);
   }
 
+  /**
+   * <p>packageBundle.</p>
+   *
+   * @param bundlePath a {@link java.io.File} object.
+   * @param bundleOutput a {@link java.io.File} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue packageBundle(File bundlePath, File bundleOutput) {
     ret.setExitStatus(ReturnValue.SUCCESS);
 
@@ -196,6 +231,13 @@ public class Bundle {
     return (ret);
   }
 
+  /**
+   * <p>packageBundleToS3.</p>
+   *
+   * @param bundlePath a {@link java.io.File} object.
+   * @param bundleOutputPrefix a {@link java.lang.String} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue packageBundleToS3(File bundlePath, String bundleOutputPrefix) {
     ret.setExitStatus(ReturnValue.SUCCESS);
 
@@ -245,6 +287,13 @@ public class Bundle {
     return (ret);
   }
 
+  /**
+   * <p>copyBundleToS3.</p>
+   *
+   * @param bundle a {@link java.io.File} object.
+   * @param bundleOutputPrefix a {@link java.lang.String} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue copyBundleToS3(File bundle, String bundleOutputPrefix) {
     ret.setExitStatus(ReturnValue.SUCCESS);
     if (bundle == null || !bundle.isFile() || !bundle.getName().endsWith(".zip")) {
@@ -276,6 +325,13 @@ public class Bundle {
     return (ret);
   }
 
+  /**
+   * <p>copyBundle.</p>
+   *
+   * @param sourceFile a {@link java.lang.String} object.
+   * @param targetDir a {@link java.lang.String} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue copyBundle(String sourceFile, String targetDir) {
     ReturnValue result = new ReturnValue(ReturnValue.SUCCESS);
     File source = new File(sourceFile);
@@ -293,6 +349,12 @@ public class Bundle {
     return result;
   }
 
+  /**
+   * <p>validateBundle.</p>
+   *
+   * @param bundle a {@link java.io.File} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue validateBundle(File bundle) {
 
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
@@ -332,6 +394,13 @@ public class Bundle {
     return (ret);
   }
 
+  /**
+   * <p>testBundle.</p>
+   *
+   * @param bundle a {@link java.io.File} object.
+   * @param metadataFile a {@link java.io.File} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue testBundle(File bundle, File metadataFile) {
     return (testBundle(bundle, metadataFile, null, null));
   }
@@ -339,8 +408,11 @@ public class Bundle {
   /**
    * A bundle test occurs without metadata writeback
    *
-   * @param bundle
+   * @param bundle a {@link java.io.File} object.
    * @return ReturnValue
+   * @param metadataFile a {@link java.io.File} object.
+   * @param workflow a {@link java.lang.String} object.
+   * @param version a {@link java.lang.String} object.
    */
   public ReturnValue testBundle(File bundle, File metadataFile, String workflow, String version) {
 
@@ -406,14 +478,35 @@ public class Bundle {
     return (ret);
   }
 
+  /**
+   * <p>installBundleZipOnly.</p>
+   *
+   * @param bundle a {@link java.io.File} object.
+   * @param metadataFile a {@link java.io.File} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue installBundleZipOnly(File bundle, File metadataFile) {
     return (installBundle(bundle, metadataFile, true, false));
   }
 
+  /**
+   * <p>installBundleDirOnly.</p>
+   *
+   * @param bundle a {@link java.io.File} object.
+   * @param metadataFile a {@link java.io.File} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue installBundleDirOnly(File bundle, File metadataFile) {
     return (installBundle(bundle, metadataFile, false, true));
   }
 
+  /**
+   * <p>installBundle.</p>
+   *
+   * @param bundle a {@link java.io.File} object.
+   * @param metadataFile a {@link java.io.File} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue installBundle(File bundle, File metadataFile) {
     return (installBundle(bundle, metadataFile, true, true));
   }
@@ -423,11 +516,11 @@ public class Bundle {
    * optionally building a zip file along the way and archiving it to a safe
    * location.
    *
-   * @param bundle
-   * @param metadataFile
-   * @param packageIntoZip
-   * @param unzipIntoDir
-   * @return
+   * @param bundle a {@link java.io.File} object.
+   * @param metadataFile a {@link java.io.File} object.
+   * @param packageIntoZip a boolean.
+   * @param unzipIntoDir a boolean.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
   protected ReturnValue installBundle(File bundle, File metadataFile, boolean packageIntoZip, boolean unzipIntoDir) {
 
@@ -500,26 +593,56 @@ public class Bundle {
     return (ret);
   }
 
+  /**
+   * <p>Getter for the field <code>metadata</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.metadata.Metadata} object.
+   */
   public Metadata getMetadata() {
     return metadata;
   }
 
+  /**
+   * <p>Setter for the field <code>metadata</code>.</p>
+   *
+   * @param metadata a {@link net.sourceforge.seqware.common.metadata.Metadata} object.
+   */
   public void setMetadata(Metadata metadata) {
     this.metadata = metadata;
   }
 
+  /**
+   * <p>Getter for the field <code>outputDir</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getOutputDir() {
     return outputDir;
   }
 
+  /**
+   * <p>Setter for the field <code>outputDir</code>.</p>
+   *
+   * @param outputDir a {@link java.lang.String} object.
+   */
   public void setOutputDir(String outputDir) {
     this.outputDir = outputDir;
   }
 
+  /**
+   * <p>Getter for the field <code>filesArray</code>.</p>
+   *
+   * @return a {@link java.util.ArrayList} object.
+   */
   public ArrayList<File> getFilesArray() {
     return filesArray;
   }
 
+  /**
+   * <p>Setter for the field <code>filesArray</code>.</p>
+   *
+   * @param filesArray a {@link java.util.ArrayList} object.
+   */
   public void setFilesArray(ArrayList<File> filesArray) {
     this.filesArray = filesArray;
   }
