@@ -82,12 +82,13 @@ public class WorkflowDataModelFactory {
 
 		//Java object or FTL
 		AbstractWorkflowDataModel ret = null;
+		Class<?> clazz = null;
 		if(workflow_java) {
 			String clazzPath = metaInfo.get("classes");
 			Log.info("CLASSPATH: " + clazzPath);
 	    	// get user defined classes
 	    	WorkflowClassFinder finder = new WorkflowClassFinder();
-	    	Class<?> clazz = finder.findFirstWorkflowClass(clazzPath);
+	    	clazz = finder.findFirstWorkflowClass(clazzPath);
 	    	if (null != clazz) {
 	    	    Log.debug("using java object");
 	    	    try {
@@ -146,6 +147,30 @@ public class WorkflowDataModelFactory {
 		
 		//parse XML or Java Object for
 		if(workflow_java) {
+	        try {
+	        	Method m = null;
+	        	//Method m = clazz.getDeclaredMethod("setupFiles");
+	        	//m.invoke(ret);
+	/*        	m = clazz.getDeclaredMethod("setupWorkflow");
+	        	m.invoke(res);
+	        	m = clazz.getDeclaredMethod("setupEnvironment");
+	        	m.invoke(res);*/
+				m = clazz.getDeclaredMethod("buildWorkflow");
+				m.invoke(ret);
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+
+			//setup files
+			//build workflow
 			
 		} else {
 			WorkflowXmlParser xmlParser = new WorkflowXmlParser();
@@ -251,10 +276,10 @@ public class WorkflowDataModelFactory {
     		if (options.has("parent-accessions")) {
     		    List opts = options.valuesOf("parent-accessions");
     		    for (Object opt : opts) {
-    			String[] tokens = ((String) opt).split(",");
-    			for (String t : tokens) {
-    			    parentAccessions.add(t);
-    			}
+	    			String[] tokens = ((String) opt).split(",");
+	    			for (String t : tokens) {
+	    			    parentAccessions.add(t);
+	    			}
     		    }
     		}
     		map.put("parent-accessions", org.apache.commons.lang.StringUtils.join(parentAccessions,","));
