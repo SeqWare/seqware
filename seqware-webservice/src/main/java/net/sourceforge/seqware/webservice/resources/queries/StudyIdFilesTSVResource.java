@@ -37,15 +37,23 @@ import org.restlet.representation.OutputRepresentation;
 import org.restlet.representation.StringRepresentation;
 
 /**
+ * <p>StudyIdFilesTSVResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class StudyIdFilesTSVResource extends BasicRestlet {
 
+    /**
+     * <p>Constructor for StudyIdFilesTSVResource.</p>
+     *
+     * @param context a {@link org.restlet.Context} object.
+     */
     public StudyIdFilesTSVResource(Context context) {
         super(context);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void handle(Request request, Response response) {
         authenticate(request.getChallengeResponse().getIdentifier());

@@ -23,9 +23,16 @@ import org.junit.runner.Result;
  * Small hack, allows us to profile test suites for performance.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class ProfilingStub {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         JUnitCore runner = new JUnitCore();
         Result run = runner.run(InMemoryFileStoragePBSerializationSuite.class);

@@ -38,20 +38,29 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>ProcessResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class ProcessResource extends DatabaseResource {
 
+    /**
+     * <p>Constructor for ProcessResource.</p>
+     */
     public ProcessResource() {
         super("processing");
     }
 
+    /** {@inheritDoc} */
     @Override
     public Representation post(Representation entity) {
         return super.post(entity);
     }
 
+    /**
+     * <p>getXml.</p>
+     */
     @Get
     public void getXml() {
         authenticate();
@@ -91,6 +100,11 @@ public class ProcessResource extends DatabaseResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
+    /**
+     * <p>postJaxb.</p>
+     *
+     * @param entity a {@link org.restlet.representation.Representation} object.
+     */
     @Post("xml")
     public void postJaxb(Representation entity) {
         authenticate();

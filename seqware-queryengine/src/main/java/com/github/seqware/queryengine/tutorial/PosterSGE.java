@@ -37,24 +37,43 @@ import org.apache.hadoop.fs.ContentSummary;
  * Poster testing.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class PosterSGE {
 
+    /** Constant <code>HG_19="hg_19"</code> */
     public static final String HG_19 = "hg_19";
 //    public static final int CUT_OFF = 1000;
+    /** Constant <code>BENCHMARKING_BATCH_SIZE=20000</code> */
     public static final int BENCHMARKING_BATCH_SIZE = 20000;
     private String[] args;
     Map<String, String> keyValues = new HashMap<String, String>();
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.io.IOException if any.
+     */
     public static void main(String[] args) throws IOException {
         PosterSGE dumper = new PosterSGE(args);
         dumper.benchmark();
     }
 
+    /**
+     * <p>Constructor for PosterSGE.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public PosterSGE(String[] args) {
         this.args = args;
     }
 
+    /**
+     * <p>benchmark.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     public void benchmark() throws IOException {
         if (args.length != 3) {
             System.err.println(args.length + " arguments found");

@@ -25,10 +25,13 @@ import org.apache.log4j.Logger;
 
 /**
  * Place-holder
+ *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class AnalysisIO implements ProtobufTransferInterface<AnalysisPB, Analysis>{
 
+    /** {@inheritDoc} */
     @Override
     public Analysis pb2m(AnalysisPB pb) {
         Analysis.Builder builder = InMemoryQueryFutureImpl.newBuilder();
@@ -46,6 +49,7 @@ public class AnalysisIO implements ProtobufTransferInterface<AnalysisPB, Analysi
     }
     
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPB m2pb(Analysis atom) {
         QueryEngine.AnalysisPB.Builder builder = QueryEngine.AnalysisPB.newBuilder();
@@ -62,6 +66,7 @@ public class AnalysisIO implements ProtobufTransferInterface<AnalysisPB, Analysi
         return userpb;
     }
     
+    /** {@inheritDoc} */
     @Override
     public Analysis byteArr2m(byte[] arr) {
         try {

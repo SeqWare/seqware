@@ -12,10 +12,20 @@ import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>Abstract Decider class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public abstract class Decider implements DeciderInterface {
+  /** Constant <code>SUCCESS="success"</code> */
   public static final String SUCCESS = "success";
+  /** Constant <code>FAILED="failed"</code> */
   public static final String FAILED = "failed";
+  /** Constant <code>PENDING="pending"</code> */
   public static final String PENDING = "pending";
+  /** Constant <code>RUNNING="running"</code> */
   public static final String RUNNING = "running";
   
   protected OptionParser parser = new OptionParser();
@@ -26,18 +36,16 @@ public abstract class Decider implements DeciderInterface {
   
   /**
    * Notes:
-   * 
+   *
    * Things I would like taken care of for me:
-   * 
+   *
    * * all params in a hash (from both DB and ini file provided)
    * * a list of hashmap that represent a filtered list of files by sample, study, experiment, workflow, etc
    * * a list of files that represent the output from this workflow
-   * * a hash that joins the output of this workflow to their parents 
+   * * a hash that joins the output of this workflow to their parents
    * * the master list of results should be configurable, either to have
    * all the processing events removed where this workflow has already been run
    * or to include these
-   * 
-   * 
    */
   public Decider() {
     super();
@@ -46,6 +54,7 @@ public abstract class Decider implements DeciderInterface {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#setConfig(java.util.Map)
    */
+  /** {@inheritDoc} */
   @Override
   public void setConfig(Map<String, String> config) {
     this.config = config;
@@ -59,6 +68,7 @@ public abstract class Decider implements DeciderInterface {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#setParams(java.util.List)
    */
+  /** {@inheritDoc} */
   @Override
   public void setParams(List<String> params) {
     Log.info("Setting Params: "+params);
@@ -68,6 +78,7 @@ public abstract class Decider implements DeciderInterface {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#setMetadata(net.sourceforge.seqware.pipeline.metadata.Metadata)
    */
+  /** {@inheritDoc} */
   @Override
   public void setMetadata(Metadata metadata) {
     Log.info("Setting Metadata: "+metadata);
@@ -77,6 +88,7 @@ public abstract class Decider implements DeciderInterface {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#get_syntax()
    */
+  /** {@inheritDoc} */
   @Override
   public String get_syntax() {
     
@@ -89,6 +101,7 @@ public abstract class Decider implements DeciderInterface {
     return ("");
   }
   
+  /** {@inheritDoc} */
   @Override
   public String get_description() {
     return("");
@@ -97,6 +110,7 @@ public abstract class Decider implements DeciderInterface {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#parse_parameters()
    */
+  /** {@inheritDoc} */
   @Override
   public ReturnValue parse_parameters() {
     
@@ -112,6 +126,11 @@ public abstract class Decider implements DeciderInterface {
     return ret;
   }
   
+  /**
+   * <p>filterFiles.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   protected List<Map<String, String>> filterFiles() {
     List<Map<String, String>> ret = new ArrayList<Map<String, String>>();
 

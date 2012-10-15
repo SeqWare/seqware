@@ -21,8 +21,10 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jdom.Element;
 
 /**
- * 
+ * <p>WorkflowExecutable class.</p>
+ *
  * @author yongliang
+ * @version $Id: $Id
  */
 public class WorkflowExecutable extends PegasusAbstract {
 
@@ -35,54 +37,115 @@ public class WorkflowExecutable extends PegasusAbstract {
   private String arch;
   private boolean installed;
 
+  /**
+   * <p>Getter for the field <code>namespace</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getNamespace() {
     return namespace;
   }
 
+  /**
+   * <p>Setter for the field <code>namespace</code>.</p>
+   *
+   * @param namespace a {@link java.lang.String} object.
+   */
   public void setNamespace(String namespace) {
     this.namespace = namespace;
   }
 
+  /**
+   * <p>Getter for the field <code>name</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * <p>Setter for the field <code>name</code>.</p>
+   *
+   * @param name a {@link java.lang.String} object.
+   */
   public void setName(String name) {
     this.name = name;
   }
 
+  /**
+   * <p>Getter for the field <code>version</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getVersion() {
     return version;
   }
 
+  /**
+   * <p>Setter for the field <code>version</code>.</p>
+   *
+   * @param version a {@link java.lang.String} object.
+   */
   public void setVersion(String version) {
     this.version = version;
   }
 
+  /**
+   * <p>Getter for the field <code>os</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getOs() {
     return os;
   }
 
+  /**
+   * <p>Setter for the field <code>os</code>.</p>
+   *
+   * @param os a {@link java.lang.String} object.
+   */
   public void setOs(String os) {
     this.os = os;
   }
 
+  /**
+   * <p>Getter for the field <code>arch</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getArch() {
     return arch;
   }
 
+  /**
+   * <p>Setter for the field <code>arch</code>.</p>
+   *
+   * @param arch a {@link java.lang.String} object.
+   */
   public void setArch(String arch) {
     this.arch = arch;
   }
 
+  /**
+   * <p>isInstalled.</p>
+   *
+   * @return a boolean.
+   */
   public boolean isInstalled() {
     return installed;
   }
 
+  /**
+   * <p>Setter for the field <code>installed</code>.</p>
+   *
+   * @param installed a boolean.
+   */
   public void setInstalled(boolean installed) {
     this.installed = installed;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Element serializeXML() {
     Element element = new Element("executable", NAMESPACE);
@@ -97,6 +160,7 @@ public class WorkflowExecutable extends PegasusAbstract {
     return element;
   }
 
+  /** {@inheritDoc} */
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof WorkflowExecutable == false)
@@ -108,15 +172,26 @@ public class WorkflowExecutable extends PegasusAbstract {
     return new EqualsBuilder().appendSuper(super.equals(obj)).append(name, ex.name).isEquals();
   }
 
+  /** {@inheritDoc} */
   @Override
   public int hashCode() {
     return new HashCodeBuilder(17, 37).append(name).hashCode();
   }
 
+  /**
+   * <p>Getter for the field <code>pfn</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.Pfn} object.
+   */
   public Pfn getPfn() {
     return pfn;
   }
 
+  /**
+   * <p>Setter for the field <code>pfn</code>.</p>
+   *
+   * @param pfn a {@link net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.Pfn} object.
+   */
   public void setPfn(Pfn pfn) {
     this.pfn = pfn;
   }

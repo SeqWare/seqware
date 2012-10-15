@@ -12,23 +12,33 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ProcessingExperimentsDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ProcessingExperimentsDAOHibernate extends HibernateDaoSupport implements ProcessingExperimentsDAO {
 
+  /** {@inheritDoc} */
   @Override
   public void insert(ProcessingExperiments processingExperiments) {
     this.getHibernateTemplate().save(processingExperiments);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(ProcessingExperiments processingExperiments) {
     this.getHibernateTemplate().update(processingExperiments);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void delete(ProcessingExperiments processingExperiments) {
     this.getHibernateTemplate().delete(processingExperiments);
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("rawtypes")
   public ProcessingExperiments findByProcessingExperiment(Processing processing, Experiment experiment) {
@@ -42,6 +52,7 @@ public class ProcessingExperimentsDAOHibernate extends HibernateDaoSupport imple
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ProcessingExperiments updateDetached(ProcessingExperiments processingExperiments) {
     ProcessingExperiments dbObject = findByProcessingExperiment(processingExperiments.getProcessing(),
@@ -58,6 +69,7 @@ public class ProcessingExperimentsDAOHibernate extends HibernateDaoSupport imple
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ProcessingExperiments> list() {
         throw new UnsupportedOperationException("Not supported yet.");

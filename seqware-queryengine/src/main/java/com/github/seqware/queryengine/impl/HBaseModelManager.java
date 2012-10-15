@@ -31,15 +31,15 @@ import org.apache.log4j.Logger;
  * using Hibernate/JPA-like semantics
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class HBaseModelManager extends SimpleModelManager {
 
     /**
+     * {@inheritDoc}
+     *
      * Normally, when doing a flush, we want to maintain the state of objects
      * that
-     *
-     * @param maintainState update flushed objects with the current state of
-     * things
      */
     @Override
     protected void flush(boolean maintainState) {

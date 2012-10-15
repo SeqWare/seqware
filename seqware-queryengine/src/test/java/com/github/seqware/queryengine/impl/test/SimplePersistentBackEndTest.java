@@ -17,13 +17,18 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 /**
- * Tests for the {@link SimplePersistentBackEnd}. This also tests the complex 
+ * Tests for the {@link com.github.seqware.queryengine.impl.SimplePersistentBackEnd}. This also tests the complex
  * attribute query.
  *
  * @author jbaran
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
     
+    /**
+     * <p>storageAndRetrievalTest.</p>
+     */
     @Test
     public void storageAndRetrievalTest() {
         UUID testID = UUID.randomUUID();
@@ -59,6 +64,9 @@ public class SimplePersistentBackEndTest extends FeatureStoreInterfaceTest {
         //System.out.println("ending subclass test in testID: " + testID.toString());
     }
 
+    /**
+     * <p>complexQueryTest.</p>
+     */
     @Test
     public void complexQueryTest() {
         SimplePersistentBackEnd backend = new SimplePersistentBackEnd(SWQEFactory.getStorage());

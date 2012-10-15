@@ -28,16 +28,24 @@ import org.junit.runner.RunWith;
  * and models that are aware of (and can optimize) against a HBase back-end.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 @RunWith(DynamicSuite.class)
 public class HBaseModelHBaseStoragePBSerializationSuite {
 
+    /**
+     * <p>setupSuite.</p>
+     */
     @BeforeClass
     public static void setupSuite() {
         Logger.getLogger(HBaseModelHBaseStoragePBSerializationSuite.class.getName()).info( "Running test suite with HBase-aware objects using Protobuf serialization to HBase");
         SWQEFactory.setFactoryBackendType(SWQEFactory.Model_Type.HBASE, SWQEFactory.Storage_Type.HBASE_STORAGE, SWQEFactory.Serialization_Type.PROTOBUF);
     }
 
+    /**
+     * <p>tearDownSuite.</p>
+     */
     @AfterClass
     public static void tearDownSuite() {
         Logger.getLogger(HBaseModelHBaseStoragePBSerializationSuite.class.getName()).info( "Ending test suite and resetting");

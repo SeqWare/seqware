@@ -12,23 +12,33 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ProcessingLanesDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ProcessingLanesDAOHibernate extends HibernateDaoSupport implements ProcessingLanesDAO {
 
+  /** {@inheritDoc} */
   @Override
   public void insert(ProcessingLanes processingLanes) {
     this.getHibernateTemplate().save(processingLanes);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(ProcessingLanes processingLanes) {
     this.getHibernateTemplate().update(processingLanes);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void delete(ProcessingLanes processingLanes) {
     this.getHibernateTemplate().delete(processingLanes);
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("rawtypes")
   public ProcessingLanes findByProcessingLane(Processing processing, Lane lane) {
@@ -42,6 +52,7 @@ public class ProcessingLanesDAOHibernate extends HibernateDaoSupport implements 
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ProcessingLanes updateDetached(ProcessingLanes processingLanes) {
     ProcessingLanes dbObject = findByProcessingLane(processingLanes.getProcessing(), processingLanes.getLane());
@@ -57,6 +68,7 @@ public class ProcessingLanesDAOHibernate extends HibernateDaoSupport implements 
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ProcessingLanes> list() {
         throw new UnsupportedOperationException("Not supported yet.");

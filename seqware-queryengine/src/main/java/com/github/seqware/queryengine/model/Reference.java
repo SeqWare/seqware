@@ -13,8 +13,10 @@ import java.util.Iterator;
  *
  * @author dyuen
  * @author jbaran
+ * @version $Id: $Id
  */
 public interface Reference extends MolSetInterface<Reference, FeatureSet> {
+    /** Constant <code>prefix="Reference"</code> */
     public final static String prefix = "Reference";
 
     /**
@@ -32,9 +34,9 @@ public interface Reference extends MolSetInterface<Reference, FeatureSet> {
     public String getName();
 
     /**
-     * Create an ACL builder started with a copy of this
+     * {@inheritDoc}
      *
-     * @return
+     * Create an ACL builder started with a copy of this
      */
     @Override
     public abstract Reference.Builder toBuilder();

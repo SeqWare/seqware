@@ -11,15 +11,26 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>DeleteLoadedIndexPageController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class DeleteLoadedIndexPageController extends BaseCommandController {
 	
+	/** Constant <code>SEPARATOR="java.io.File.separator"</code> */
 	public final static String SEPARATOR = java.io.File.separator;
 	
+	/**
+	 * <p>Constructor for DeleteLoadedIndexPageController.</p>
+	 */
 	public DeleteLoadedIndexPageController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)

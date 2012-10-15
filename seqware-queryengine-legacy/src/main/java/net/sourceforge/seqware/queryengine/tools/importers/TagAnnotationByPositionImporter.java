@@ -28,16 +28,21 @@ import net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareSettings;
 
 /**
+ * <p>TagAnnotationByPositionImporter class.</p>
+ *
  * @author boconnor
- * 
+ *
  * This is a simple script that annotates DB records with tags.
  *
  * TODO: I should try to merge this with the mismatchId-based import program
+ * @version $Id: $Id
  */
 public class TagAnnotationByPositionImporter {
 
   /**
-   * @param args
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
    */
   public static void main(String[] args) {
 

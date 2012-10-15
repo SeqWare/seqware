@@ -19,14 +19,17 @@ package com.github.seqware.queryengine.impl;
 import com.github.seqware.queryengine.model.Atom;
 
 /**
- * This interface specifies operations to persist, update, and add objects to 
+ * This interface specifies operations to persist, update, and add objects to
  * the back-end without knowing about the specific database back-end.
+ *
  * @author dyuen
+ * @version $Id: $Id
  */
 public interface BackEndInterface {
          
     /**
      * Store obj in the back-end.
+     *
      * @param obj Object to be created
      */
     public void store(Atom ... obj);
@@ -34,14 +37,16 @@ public interface BackEndInterface {
     
     /**
      * Crawl through obj and update changes in the back-end.
+     *
      * @param obj Object to be updated in the back-end
      */
     public void update(Atom ... obj);
     
     /**
      * Update the obj using the latest information from the back-end
+     *
      * @param obj Object to be refreshed from the back-end
-     * @return Due to copy-on-write, this may return a new object with 
+     * @return Due to copy-on-write, this may return a new object with
      * updated information
      */
     public Atom refresh(Atom obj) ;

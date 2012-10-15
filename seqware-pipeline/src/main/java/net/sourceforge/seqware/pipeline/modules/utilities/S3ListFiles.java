@@ -34,15 +34,15 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import net.sourceforge.seqware.common.util.Log;
 
 /**
- * 
+ *
  * Purpose:
- * 
+ *
  * This module simply lists files at the S3 URL you provide.  It's less useful
  * in workflows and more likely to be used by end-users to see what's in S3.
- * 
+ *
  * @author boconnor
  * @since 20110928
- * 
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class S3ListFiles extends Module {
@@ -58,6 +58,11 @@ public class S3ListFiles extends Module {
   private static final String[] Q = new String[]{"", "K", "M", "G", "T", "P", "E"};
 
 
+  /**
+   * <p>getOptionParser.</p>
+   *
+   * @return a {@link joptsimple.OptionParser} object.
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser
@@ -71,6 +76,11 @@ public class S3ListFiles extends Module {
     return (parser);
   }
 
+  /**
+   * <p>get_syntax.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String get_syntax() {
     OptionParser parser = getOptionParser();
     StringWriter output = new StringWriter();
@@ -84,6 +94,8 @@ public class S3ListFiles extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Not implemented
    */
   @Override
@@ -91,7 +103,9 @@ public class S3ListFiles extends Module {
     return new ReturnValue(ReturnValue.SUCCESS);
   }
 
-  /** 
+  /**
+   * {@inheritDoc}
+   *
    * Just makes sure the param was passed in.
    */
   @Override
@@ -121,6 +135,7 @@ public class S3ListFiles extends Module {
     return (ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
 
@@ -161,6 +176,7 @@ public class S3ListFiles extends Module {
     return (ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
 
@@ -442,6 +458,7 @@ public class S3ListFiles extends Module {
   }
 
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     // TODO: should verify output, especially is they are local files!
@@ -450,6 +467,11 @@ public class S3ListFiles extends Module {
     return (ret);
   }
 
+  /**
+   * <p>init.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue init() {
     ReturnValue ret = new ReturnValue();
     ret.setReturnValue(ReturnValue.SUCCESS);
@@ -458,6 +480,11 @@ public class S3ListFiles extends Module {
     return(ret);
   }
 
+  /**
+   * <p>clean_up.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue clean_up() {
     ReturnValue ret = new ReturnValue();
     ret.setReturnValue(ReturnValue.SUCCESS);

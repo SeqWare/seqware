@@ -10,8 +10,15 @@ import org.restlet.security.SecretVerifier;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 
+/**
+ * <p>SeqWareVerifier class.</p>
+ *
+ * @author morgantaschuk
+ * @version $Id: $Id
+ */
 public class SeqWareVerifier extends SecretVerifier {
 
+    /** {@inheritDoc} */
     @Override
     public int verify(String identifier, char[] secret) {
         RegistrationService registrationService = BeanFactory.getRegistrationServiceBean();

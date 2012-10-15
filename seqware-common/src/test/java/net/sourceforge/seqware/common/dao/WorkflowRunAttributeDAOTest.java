@@ -17,6 +17,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <p>WorkflowRunAttributeDAOTest class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:dao-test-context.xml" })
 @Transactional
@@ -25,6 +32,9 @@ public class WorkflowRunAttributeDAOTest {
   @Autowired
   private WorkflowRunAttributeDAO workflowRunAttributeDao;
 
+  /**
+   * <p>test_add_missing_required_fields_fails.</p>
+   */
   @Test(expected = DataIntegrityViolationException.class)
   public void test_add_missing_required_fields_fails() {
     WorkflowRunAttribute workflowRunAttribute = new WorkflowRunAttribute();
@@ -32,6 +42,9 @@ public class WorkflowRunAttributeDAOTest {
     workflowRunAttributeDao.add(workflowRunAttribute);
   }
 
+  /**
+   * <p>test_add_missing_required_workflowRun_field_fails.</p>
+   */
   @Test(expected = DataIntegrityViolationException.class)
   public void test_add_missing_required_workflowRun_field_fails() {
     WorkflowRunAttribute workflowRunAttribute = new WorkflowRunAttribute();
@@ -40,6 +53,11 @@ public class WorkflowRunAttributeDAOTest {
     workflowRunAttributeDao.add(workflowRunAttribute);
   }
 
+  /**
+   * <p>test_add_with_all_required_fields_succeeds.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @Test
   public void test_add_with_all_required_fields_succeeds() throws Exception {
     WorkflowRunAttribute workflowRunAttribute = new WorkflowRunAttribute();

@@ -15,9 +15,16 @@ import net.sourceforge.seqware.common.util.Log;
 
 import org.openide.util.lookup.ServiceProvider;
 
+/**
+ * <p>srf2fastq class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 @ServiceProvider(service=ModuleInterface.class)
 public class srf2fastq extends Module {
   private static String[] aligners = { "bfast" }; // maq, bwa
+  /** Constant <code>sequencers="{ illumina-ga2, solid-3 }"</code> */
   public static String[] sequencers = { "illumina-ga2", "solid-3" }; // 454, etc
 
   String aligner = null;
@@ -28,6 +35,7 @@ public class srf2fastq extends Module {
   int numOut = 1;
   ArrayList<File> outputFiles = new ArrayList<File>();
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue init() {
     ReturnValue ret = new ReturnValue();
@@ -109,6 +117,7 @@ public class srf2fastq extends Module {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
     // Aligner: Look at each supported method to make sure there is a match
@@ -159,6 +168,7 @@ public class srf2fastq extends Module {
     return new ReturnValue();
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
     ReturnValue ret = new ReturnValue();
@@ -245,6 +255,7 @@ public class srf2fastq extends Module {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
     if (input.endsWith(".srf")) {
@@ -257,6 +268,7 @@ public class srf2fastq extends Module {
     return new ReturnValue(null, null, 0);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_test() {
     // FIXME
@@ -264,6 +276,7 @@ public class srf2fastq extends Module {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     for (int i = 0; i < outputFiles.size(); i++) {
@@ -276,6 +289,7 @@ public class srf2fastq extends Module {
     return new ReturnValue(null, null, 0);
   }
 
+  /** {@inheritDoc} */
   @Override
   public String get_syntax() {
     StringBuffer ReturnString = new StringBuffer(
@@ -335,18 +349,40 @@ public class srf2fastq extends Module {
     return ReturnString.toString();
   }
 
+  /**
+   * <p>Getter for the field <code>aligners</code>.</p>
+   *
+   * @return an array of {@link java.lang.String} objects.
+   */
   public static String[] getAligners() {
     return aligners;
   }
 
+  /**
+   * <p>Getter for the field <code>aligners</code>.</p>
+   *
+   * @param i a int.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getAligners(int i) {
     return aligners[i];
   }
 
+  /**
+   * <p>Getter for the field <code>sequencers</code>.</p>
+   *
+   * @return an array of {@link java.lang.String} objects.
+   */
   public static String[] getSequencers() {
     return sequencers;
   }
 
+  /**
+   * <p>Getter for the field <code>sequencers</code>.</p>
+   *
+   * @param i a int.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getSequencers(int i) {
     return sequencers[i];
   }

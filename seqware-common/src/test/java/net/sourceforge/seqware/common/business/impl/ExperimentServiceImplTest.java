@@ -21,16 +21,36 @@ import org.hibernate.Session;
 import org.junit.AfterClass;
 import org.junit.Test;
 
+/**
+ * <p>ExperimentServiceImplTest class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
+ */
 public class ExperimentServiceImplTest extends BaseUnit {
 
+  /**
+   * <p>Constructor for ExperimentServiceImplTest.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   public ExperimentServiceImplTest() throws Exception {
     super();
   }
 
+  /**
+   * <p>tearDown.</p>
+   *
+   * @throws javax.naming.NamingException if any.
+   */
   @AfterClass
   public static void tearDown() throws NamingException {
   }
 
+  /**
+   * <p>testFindByTitle.</p>
+   */
   @Test
   public void testFindByTitle() {
 
@@ -54,6 +74,9 @@ public class ExperimentServiceImplTest extends BaseUnit {
 //    assertEquals("Expected 3, got "+experiments.size(), 3, experiments.size());
 //  }
 
+  /**
+   * <p>testFindBySWAccession.</p>
+   */
   @Test
   public void testFindBySWAccession() {
     Experiment experiment = BeanFactory.getExperimentServiceBean().findBySWAccession(834);
@@ -61,6 +84,9 @@ public class ExperimentServiceImplTest extends BaseUnit {
     assertEquals("Sample_Exome_ABC015068", experiment.getTitle());
   }
 
+  /**
+   * <p>testNoLazyInitializationException.</p>
+   */
   @Test
   public void testNoLazyInitializationException() {
     // Bind Session to the thread to prevent LazyInitializationException
@@ -70,6 +96,9 @@ public class ExperimentServiceImplTest extends BaseUnit {
     InSessionExecutions.unBindSessionFromTheThread();
   }
 
+  /**
+   * <p>testUpdateDetached.</p>
+   */
   @Test
   public void testUpdateDetached() {
     Session session = getSession();
@@ -98,6 +127,9 @@ public class ExperimentServiceImplTest extends BaseUnit {
     DatabaseCreator.markDatabaseChanged();
   }
 
+  /**
+   * <p>testFindByCriteria.</p>
+   */
   @Test
   public void testFindByCriteria() {
     ExperimentService experimentService = BeanFactory.getExperimentServiceBean();

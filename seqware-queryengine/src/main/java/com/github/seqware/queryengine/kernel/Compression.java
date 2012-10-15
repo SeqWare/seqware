@@ -6,9 +6,11 @@ import org.apache.commons.lang.StringUtils;
  * Static methods for compressing/decompressing user data.
  *
  * @author jbaran
+ * @version $Id: $Id
  */
 public class Compression {
 
+    /** Constant <code>MAX_BASE=94</code> */
     public static final int MAX_BASE = 94;
 
     /**
@@ -25,6 +27,12 @@ public class Compression {
         return "SO:" + toBaseN(Integer.parseInt(sequenceOntologyAccession.replaceFirst("^SO:", "")), MAX_BASE);
     }
 
+    /**
+     * <p>getSequenceOntologyAccession.</p>
+     *
+     * @param surrogate a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String getSequenceOntologyAccession(String surrogate) {
         if (!surrogate.startsWith("SO:"))
             throw new IllegalArgumentException("Argument is not an SO accession.");

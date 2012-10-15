@@ -6,6 +6,12 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 
+/**
+ * <p>LibrarySelection class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class LibrarySelection implements Serializable, Comparable<LibrarySelection> {
 	private static final long serialVersionUID = 3611345318915990568L;
 	
@@ -13,10 +19,14 @@ public class LibrarySelection implements Serializable, Comparable<LibrarySelecti
 	private String 		name;
 	private String 		description;
 
+	/**
+	 * <p>Constructor for LibrarySelection.</p>
+	 */
 	public LibrarySelection() {
 		super();
 	}
 
+    /** {@inheritDoc} */
     @Override
 	public int compareTo(LibrarySelection that) {
 		if(that == null)
@@ -31,6 +41,7 @@ public class LibrarySelection implements Serializable, Comparable<LibrarySelecti
 		return(that.getName().compareTo(this.getName()));
 	}
 
+    /** {@inheritDoc} */
     @Override
 	public String toString() {
 		return new ToStringBuilder(this)
@@ -38,6 +49,7 @@ public class LibrarySelection implements Serializable, Comparable<LibrarySelecti
 			.toString();
 	}
 
+    /** {@inheritDoc} */
     @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;
@@ -48,6 +60,7 @@ public class LibrarySelection implements Serializable, Comparable<LibrarySelecti
 			.isEquals();
 	}
 
+    /** {@inheritDoc} */
     @Override
 	public int hashCode() {
 		return new HashCodeBuilder()
@@ -57,26 +70,56 @@ public class LibrarySelection implements Serializable, Comparable<LibrarySelecti
 
 
 
+	/**
+	 * <p>Getter for the field <code>librarySelectionId</code>.</p>
+	 *
+	 * @return a {@link java.lang.Integer} object.
+	 */
 	public Integer getLibrarySelectionId() {
 		return librarySelectionId;
 	}
 
+	/**
+	 * <p>Setter for the field <code>librarySelectionId</code>.</p>
+	 *
+	 * @param librarySelectionId a {@link java.lang.Integer} object.
+	 */
 	public void setLibrarySelectionId(Integer librarySelectionId) {
 		this.librarySelectionId = librarySelectionId;
 	}
 
+	/**
+	 * <p>Getter for the field <code>name</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * <p>Setter for the field <code>name</code>.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * <p>Getter for the field <code>description</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getDescription() {
 		return description;
 	}
 
+	/**
+	 * <p>Setter for the field <code>description</code>.</p>
+	 *
+	 * @param description a {@link java.lang.String} object.
+	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}

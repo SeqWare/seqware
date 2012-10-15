@@ -26,21 +26,22 @@ import net.sourceforge.seqware.common.util.Log;
 import org.openide.util.Lookup;
 
 /**
- * 
+ * <p>PluginRunner class.</p>
+ *
  * @author briandoconnor@gmail.com
  * @since 20110925
  *
- * The PluginRunner is a command line utility that will provide a mechanism to extend the core functionality of SeqWare Pipeline in 
- * a more organized way then the current collection of Perl and other utilities used haphazardly in this subproject.  The idea is 
+ * The PluginRunner is a command line utility that will provide a mechanism to extend the core functionality of SeqWare Pipeline in
+ * a more organized way then the current collection of Perl and other utilities used haphazardly in this subproject.  The idea is
  * that core SeqWare Pipeline functionality should be implemented in Java and packaged as a single jar file making the code more
  * self-contained and easier to package up and install.  This class is the browser and caller for plugins that are designed to
- * extend the functionality of SeqWare pipeline.  These include everything from utilities that uncompress and install workflow 
+ * extend the functionality of SeqWare pipeline.  These include everything from utilities that uncompress and install workflow
  * bundles, to the runner that calls modules, and to utilities designed to query the metadb and perform some utility such as deleting
- * processing events and cleaning up files.  Unlike the modules ({@link ModuleInterface}), plugins are intended to be written by core
+ * processing events and cleaning up files.  Unlike the modules ({@link net.sourceforge.seqware.pipeline.module.ModuleInterface}), plugins are intended to be written by core
  * SeqWare Pipeline developers and to exist within the source repository of the project not loaded from external jar files.  Also
- * unlike the module runner ({@link Runner}) this plugin runner does not save any state to the MetaDB, it's up to the plugin 
+ * unlike the module runner ({@link net.sourceforge.seqware.pipeline.runner.Runner}) this plugin runner does not save any state to the MetaDB, it's up to the plugin
  * to do that but a metadata object (of the type specified in the users SEQWARE_SETTINGS file) is handed off to the plugin for its use.
- *
+ * @version $Id: $Id
  */
 public class PluginRunner {
 
@@ -51,10 +52,20 @@ public class PluginRunner {
   private Metadata meta = null;
   private HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
 
+  /**
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
+   */
   public static void main(String[] args) {
     new PluginRunner().run(args);
   }
 
+  /**
+   * <p>run.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
+   */
   public void run(String[] args) {
 
     // Specific to the Plugin Runner

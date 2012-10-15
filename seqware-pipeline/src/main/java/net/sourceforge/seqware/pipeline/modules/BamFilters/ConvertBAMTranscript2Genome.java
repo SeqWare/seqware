@@ -19,24 +19,24 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Translate reads mapped to transcripts to genomic coordinates.
- * 
+ *
  * This module translates each read to genomic coordinates, carries over any
- * paired end data to the corresponding read, updates the header with genomic 
+ * paired end data to the corresponding read, updates the header with genomic
  * SQ lines, and then and sorts the entries by coordinate.  Index (bai) file
  * is also generated.
- * 
+ *
  * Underlying script:  sw_module_ConvertBAMTranscript2Genome.pl
  * Necessary programs:  perl, java, Picard (SamFormatConverter.jar & SortSam.jar), samtools
- * Necessary data files:  'TranscriptDB', which is the flat file output of module PrepTranscriptDB. 
+ * Necessary data files:  'TranscriptDB', which is the flat file output of module PrepTranscriptDB.
  * (e.g. ~/seqware-pipeline/data/annotation_reference/hg19_transcripts.hg19.20091027.trmap)
  *    and 'SQheader' (e.g. ~/seqware-pipeline/data/annotation_reference/headerSQ.hg19.txt)
- * 
- * Expected output:  outfile and outfile.bai
- * 
- * STILL TO DO:  Try to remove use of samtools.
- * 
- * @author sacheek@med.unc.edu
  *
+ * Expected output:  outfile and outfile.bai
+ *
+ * STILL TO DO:  Try to remove use of samtools.
+ *
+ * @author sacheek@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class ConvertBAMTranscript2Genome extends Module {
@@ -46,9 +46,9 @@ public class ConvertBAMTranscript2Genome extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("infile", "Input BAM file with reads mapped to transcript coordinates").withRequiredArg();
@@ -68,8 +68,9 @@ public class ConvertBAMTranscript2Genome extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -85,11 +86,11 @@ public class ConvertBAMTranscript2Genome extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -124,9 +125,9 @@ public class ConvertBAMTranscript2Genome extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -149,9 +150,9 @@ public class ConvertBAMTranscript2Genome extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -232,9 +233,9 @@ public class ConvertBAMTranscript2Genome extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known dataset.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -244,10 +245,10 @@ public class ConvertBAMTranscript2Genome extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Run core of module.
    * Based on script sw_module_ConvertBAMTranscript2Genome.pl
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_run() {
@@ -286,9 +287,9 @@ public class ConvertBAMTranscript2Genome extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Check to make sure the output was created correctly.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -296,10 +297,11 @@ public class ConvertBAMTranscript2Genome extends Module {
     return(FileTools.fileExistsAndNotEmpty(new File((String)options.valueOf("outfile"))));
   }
   
-    /**
+  /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.  Remove tempDir.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

@@ -12,18 +12,37 @@ import java.util.*;
  * User: Xiaoshu Wang (xiao@renci.org)
  * Date: 8/11/11
  * Time: 2:48 PM
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class RunnerParams {
 
     private Map<String, List<String>> params = new HashMap<String, List<String>>();
 
+    /**
+     * <p>Constructor for RunnerParams.</p>
+     */
     public RunnerParams() {
     }
 
+    /**
+     * <p>getArgs.</p>
+     *
+     * @param namespace a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<String> getArgs(String namespace) {
         return getArgs(namespace, true);
     }
 
+    /**
+     * <p>getArgs.</p>
+     *
+     * @param namespace a {@link java.lang.String} object.
+     * @param create a boolean.
+     * @return a {@link java.util.List} object.
+     */
     public List<String> getArgs(String namespace, boolean create) {
         if (params.containsKey(namespace)) {
             return params.get(namespace);
@@ -38,6 +57,14 @@ public class RunnerParams {
         }
     }
 
+    /**
+     * <p>get.</p>
+     *
+     * @param namespace a {@link java.lang.String} object.
+     * @param key a {@link java.lang.String} object.
+     * @param remove a boolean.
+     * @return a {@link java.lang.String} object.
+     */
     public String get(String namespace, String key, boolean remove){
         String value = null;
         List<String> args = getArgs(namespace);
@@ -54,10 +81,21 @@ public class RunnerParams {
         return value;
     }
 
+    /**
+     * <p>add.</p>
+     *
+     * @param namespace a {@link java.lang.String} object.
+     * @param item a {@link java.lang.String} object.
+     */
     public void add(String namespace, String item){
         getArgs(namespace).add(item);
     }
 
+    /**
+     * <p>keys.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<String> keys() {
         return params.keySet();
     }

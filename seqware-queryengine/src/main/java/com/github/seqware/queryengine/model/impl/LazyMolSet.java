@@ -19,8 +19,10 @@ package com.github.seqware.queryengine.model.impl;
 import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 
 /**
+ * <p>LazyMolSet interface.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public interface LazyMolSet<S extends MolSetInterface, T> extends MolSetInterface<S, T> {
     

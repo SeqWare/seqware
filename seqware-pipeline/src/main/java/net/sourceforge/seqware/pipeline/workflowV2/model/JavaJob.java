@@ -17,10 +17,17 @@
 package net.sourceforge.seqware.pipeline.workflowV2.model;
 
 /**
+ * <p>JavaJob class.</p>
  *
  * @author yongliang
+ * @version $Id: $Id
  */
 public class JavaJob extends Job {
+	/**
+	 * <p>Constructor for JavaJob.</p>
+	 *
+	 * @param algo a {@link java.lang.String} object.
+	 */
 	public JavaJob(String algo) {
 		super(algo);
 		this.name = "java";

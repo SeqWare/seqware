@@ -28,20 +28,29 @@ import org.apache.commons.lang.SerializationUtils;
  * Features that "pass" the mapper
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public abstract class AbstractMRHBaseBatchedPlugin extends AbstractMRHBasePlugin<FeatureSet> {
     
+    /** {@inheritDoc} */
     @Override
     public byte[] handleSerialization(Object... parameters) {
         byte[] serialize = SerializationUtils.serialize(parameters);
         return serialize;
     }
     
+    /**
+     * <p>handleDeserialization.</p>
+     *
+     * @param data an array of byte.
+     * @return an array of {@link java.lang.Object} objects.
+     */
     public static Object[] handleDeserialization(byte[] data){
         Object[] result = (Object[]) SerializationUtils.deserialize(data);
         return result;
     }
     
+    /** {@inheritDoc} */
     @Override
     public FeatureSet variableResult() {
         // after processing, outputSet will actually have been versioned several times, we need the latest one

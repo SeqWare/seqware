@@ -11,6 +11,12 @@ import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>TreeNodeHtmlUtil class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class TreeNodeHtmlUtil {
 	
 	private static final String htmlEmptyNode = 
@@ -18,6 +24,14 @@ public class TreeNodeHtmlUtil {
 	private static final String endHtmlEmptyNode = 
 		"<ul style='display: none;'><li id='placeholder' class='last'>placeholder</li></ul></li>";
 	
+	/**
+	 * <p>getHtml.</p>
+	 *
+	 * @param obj a {@link java.lang.Object} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @param treeType a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getHtml(Object obj, Registration registration, String treeType){
 		String html = "";
 		if(obj instanceof Study){
@@ -39,10 +53,27 @@ public class TreeNodeHtmlUtil {
 		return html;
 	}
 	
+	/**
+	 * <p>getAllHtml.</p>
+	 *
+	 * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @param treeType a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getAllHtml(Study study, Registration registration, String treeType){
 		return  getStydyHtml(study, registration, null, treeType);
 	}
 	
+	/**
+	 * <p>getAllHtml.</p>
+	 *
+	 * @param experiment a {@link net.sourceforge.seqware.common.model.Experiment} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @param openingNodeId a {@link java.lang.Integer} object.
+	 * @param treeType a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getAllHtml(Experiment experiment, Registration registration, Integer openingNodeId, String treeType){
 		String childHtml = getExperimentHtml(experiment, registration, openingNodeId);
 		String parentHtml = getStydyHtml(experiment.getStudy(), registration, experiment.getExperimentId(), treeType);
@@ -50,6 +81,15 @@ public class TreeNodeHtmlUtil {
 		return pasteHtmlIntoParentNode(childHtml, parentHtml, parentId);
 	}
 	
+	/**
+	 * <p>getAllHtml.</p>
+	 *
+	 * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @param openingNodeId a {@link java.lang.Integer} object.
+	 * @param treeType a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getAllHtml(Sample sample, Registration registration, Integer openingNodeId, String treeType){
 		String childHtml = getSampleHtml(sample, registration, openingNodeId);
 		String parentHtml = getAllHtml(sample.getExperiment(), registration, sample.getSampleId(), treeType);
@@ -57,6 +97,15 @@ public class TreeNodeHtmlUtil {
 		return pasteHtmlIntoParentNode(childHtml, parentHtml, parentId);
 	}
 	
+	/**
+	 * <p>getAllHtml.</p>
+	 *
+	 * @param lane a {@link net.sourceforge.seqware.common.model.Lane} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @param openingNodeId a {@link java.lang.Integer} object.
+	 * @param treeType a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getAllHtml(Lane lane, Registration registration, Integer openingNodeId, String treeType){
 		String childHtml = getLaneHtml(lane, registration, openingNodeId);
 		String parentHtml = getAllHtml(lane.getSample(), registration, lane.getLaneId(), treeType);
@@ -106,6 +155,13 @@ public class TreeNodeHtmlUtil {
 	}
 	
 	// get html code all Processing in one Lane
+	/**
+	 * <p>getNodeHtml.</p>
+	 *
+	 * @param processing a {@link net.sourceforge.seqware.common.model.Processing} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getNodeHtml(Processing processing, Registration registration){
 		String html = "";
 		
@@ -149,12 +205,28 @@ public class TreeNodeHtmlUtil {
 	}
 	
 	// get html code all Processing in one Lane
+	/**
+	 * <p>getLaneHtml.</p>
+	 *
+	 * @param lane a {@link net.sourceforge.seqware.common.model.Lane} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @param openingNodeId a {@link java.lang.Integer} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getLaneHtml(Lane lane, Registration registration, Integer openingNodeId){
 		String html = "";
 		return html;
 	}
 	
 	// get html code all Lane in one Sample
+	/**
+	 * <p>getSampleHtml.</p>
+	 *
+	 * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @param openingNodeId a {@link java.lang.Integer} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getSampleHtml(Sample sample, Registration registration, Integer openingNodeId){
 		String html = "";
 		SortedSet<Lane> lanes = sample.getLanes();
@@ -254,6 +326,15 @@ public class TreeNodeHtmlUtil {
 		return html;
 	}
 	// get html code all Experiment in one Study
+	/**
+	 * <p>getStydyHtml.</p>
+	 *
+	 * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @param openingNodeId a {@link java.lang.Integer} object.
+	 * @param treeType a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getStydyHtml(Study study, Registration registration, Integer openingNodeId, String treeType){
 		String html = "";
 		SortedSet<Experiment> experiments = study.getExperiments();

@@ -19,10 +19,26 @@ import net.sourceforge.seqware.common.util.Log;
 import org.apache.log4j.Logger;
 import org.hibernate.ObjectNotFoundException;
 
+/**
+ * <p>NodeHtmlUtil class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class NodeHtmlUtil {
   private static final String END_HTML_EMPTY_NODE = "<ul style='display: none;'></ul></li>";
   private static Logger log = Logger.getLogger(NodeHtmlUtil.class);
 
+  /**
+   * <p>getWorkflowRunHtml.</p>
+   *
+   * @param workflowRun a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+   * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+   * @param typeTree a {@link java.lang.String} object.
+   * @param openingNodeId a {@link java.lang.String} object.
+   * @param treeType a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getWorkflowRunHtml(WorkflowRun workflowRun, Registration registration, String typeTree,
       String openingNodeId, String treeType) {
     String html = "";
@@ -59,6 +75,16 @@ public class NodeHtmlUtil {
     return html;
   }
 
+  /**
+   * <p>getWorkflowRunHtmlWithIUSs.</p>
+   *
+   * @param workflowRun a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+   * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+   * @param typeTree a {@link java.lang.String} object.
+   * @param openingNodeId a {@link java.lang.String} object.
+   * @param treeType a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getWorkflowRunHtmlWithIUSs(WorkflowRun workflowRun, Registration registration, String typeTree,
       String openingNodeId, String treeType) {
     String html = "";
@@ -93,6 +119,16 @@ public class NodeHtmlUtil {
   }
 
   // get html code all Processing in one Lane
+  /**
+   * <p>getProcessingHtml.</p>
+   *
+   * @param processing a {@link net.sourceforge.seqware.common.model.Processing} object.
+   * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+   * @param typeTree a {@link java.lang.String} object.
+   * @param openingNodeId a {@link java.lang.String} object.
+   * @param treeType a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getProcessingHtml(Processing processing, Registration registration, String typeTree,
       String openingNodeId, String treeType) {
     String html = "";
@@ -176,6 +212,17 @@ public class NodeHtmlUtil {
     return html;
   }
 
+  /**
+   * <p>getAnalysisWorkflowHtml.</p>
+   *
+   * @param workflowRun a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+   * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+   * @param typeTree a {@link java.lang.String} object.
+   * @param isOpen a boolean.
+   * @param isLast a boolean.
+   * @param treeType a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getAnalysisWorkflowHtml(WorkflowRun workflowRun, Registration registration, String typeTree,
       boolean isOpen, boolean isLast, String treeType) {
     String html = "";
@@ -229,6 +276,20 @@ public class NodeHtmlUtil {
   }
 
   // get html code all Processing in one Lane
+  /**
+   * <p>getNodeHtml.</p>
+   *
+   * @param processing a {@link net.sourceforge.seqware.common.model.Processing} object.
+   * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+   * @param typeTree a {@link java.lang.String} object.
+   * @param isOpenWfr a boolean.
+   * @param isOpenProc a boolean.
+   * @param isVisibleProc a boolean.
+   * @param isInnerWFR a boolean.
+   * @param isLastNode a boolean.
+   * @param treeType a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getNodeHtml(Processing processing, Registration registration, String typeTree,
       boolean isOpenWfr, boolean isOpenProc, boolean isVisibleProc, boolean isInnerWFR, boolean isLastNode,
       String treeType) {
@@ -311,6 +372,18 @@ public class NodeHtmlUtil {
   }
 
   // get html code all Processing in one Lane
+  /**
+   * <p>getIUSHtml.</p>
+   *
+   * @param ius a {@link net.sourceforge.seqware.common.model.IUS} object.
+   * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+   * @param typeTree a {@link java.lang.String} object.
+   * @param openingNodeId a {@link java.lang.String} object.
+   * @param isOpenProc a boolean.
+   * @param isVisibleProc a boolean.
+   * @param treeType a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getIUSHtml(IUS ius, Registration registration, String typeTree, String openingNodeId,
       boolean isOpenProc, boolean isVisibleProc, String treeType) {
     String html = "";
@@ -415,6 +488,16 @@ public class NodeHtmlUtil {
    * html = html + getNodeHtml(processing, registration, typeTree, isOpenWfr,
    * isOpenProc, isVisibleProc, true, isLast); } return html; }
    */
+  /**
+   * <p>getLaneHtml.</p>
+   *
+   * @param lane a {@link net.sourceforge.seqware.common.model.Lane} object.
+   * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+   * @param typeTree a {@link java.lang.String} object.
+   * @param openingNodeId a {@link java.lang.String} object.
+   * @param treeType a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getLaneHtml(Lane lane, Registration registration, String typeTree, String openingNodeId,
       String treeType) {
     String html = "";
@@ -447,6 +530,18 @@ public class NodeHtmlUtil {
   }
 
   // get html code all Lane in one Sample
+  /**
+   * <p>getSampleHtml.</p>
+   *
+   * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+   * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+   * @param typeTree a {@link java.lang.String} object.
+   * @param openingNodeId a {@link java.lang.String} object.
+   * @param isEnd a boolean.
+   * @param isOpenProc a boolean.
+   * @param treeType a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getSampleHtml(Sample sample, Registration registration, String typeTree, String openingNodeId,
       boolean isEnd, boolean isOpenProc, String treeType) {
     String html = "";
@@ -543,6 +638,17 @@ public class NodeHtmlUtil {
   }
 
   // get html code all Sample in one Experiment
+  /**
+   * <p>getExperimentHtml.</p>
+   *
+   * @param experiment a {@link net.sourceforge.seqware.common.model.Experiment} object.
+   * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+   * @param typeTree a {@link java.lang.String} object.
+   * @param openingNodeId a {@link java.lang.String} object.
+   * @param isOpenProc a boolean.
+   * @param treeType a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getExperimentHtml(Experiment experiment, Registration registration, String typeTree,
       String openingNodeId, boolean isOpenProc, String treeType) {
     String html = "";
@@ -571,6 +677,16 @@ public class NodeHtmlUtil {
   }
 
   // get html code all Experiment in one Study
+  /**
+   * <p>getStydyHtml.</p>
+   *
+   * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
+   * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+   * @param openingNodeId a {@link java.lang.String} object.
+   * @param isOpenProc a boolean.
+   * @param treeType a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getStydyHtml(Study study, Registration registration, String openingNodeId, boolean isOpenProc,
       String treeType) {
     String html = "";
@@ -696,6 +812,15 @@ public class NodeHtmlUtil {
   }
 
   // get html code all Lane in one Sample
+  /**
+   * <p>getSequencerRunHtml.</p>
+   *
+   * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
+   * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+   * @param openingNodeId a {@link java.lang.String} object.
+   * @param treeType a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getSequencerRunHtml(SequencerRun sequencerRun, Registration registration, String openingNodeId,
       String treeType) {
     String html = "";
@@ -783,6 +908,15 @@ public class NodeHtmlUtil {
     return html;
   }
 
+  /**
+   * <p>pasteHtmlIntoParentNode.</p>
+   *
+   * @param childHtml a {@link java.lang.String} object.
+   * @param parentHtml a {@link java.lang.String} object.
+   * @param parentId a {@link java.lang.String} object.
+   * @param isChildVisible a boolean.
+   * @return a {@link java.lang.String} object.
+   */
   public static String pasteHtmlIntoParentNode(String childHtml, String parentHtml, String parentId,
       boolean isChildVisible) {
     // opening parent node
