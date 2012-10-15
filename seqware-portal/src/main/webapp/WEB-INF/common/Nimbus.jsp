@@ -809,6 +809,16 @@
 		return false;
 	});
 
+	 // set action in the stderr popup window
+	$("a[popup-stderr='true']").live('click', function(){ 
+		var stdOut = $(this).attr('stdout');
+		var stdErr = $(this).attr('stderr');
+    	        $("#stderr-popup textarea#stdoutTA").text(stdOut);
+    	        $("#stderr-popup textarea#stderrTA").text(stdErr);
+                $("#stderr-popup").togglePopup();
+		return false;
+	});
+
 	 // set action in the Share popup window
 	$("a[popup-share='true']").live('click', function(){ 
 		var formAction = $(this).attr('form-action');

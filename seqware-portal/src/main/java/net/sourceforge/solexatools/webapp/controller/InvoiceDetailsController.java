@@ -94,7 +94,14 @@ public class InvoiceDetailsController  extends BaseCommandController {
                 
                 model.put("total_due_currency", round(totalDue));
 
-		modelAndView = new ModelAndView("invoiceDetails", model);
+                if ("tsv".equals(request.getParameter("format"))) {
+                  modelAndView = new ModelAndView("invoiceDetailsTsv", model);
+		  response.setContentType("text/tab-separated-values");
+		  response.setHeader("Content-Disposition", "attachment; filename=\"NimbusInvoice_SWID"+request.getParameter("invoiceSwAccession")+".tsv\"");
+                }
+                else {
+		  modelAndView = new ModelAndView("invoiceDetails", model);
+                }
 		
 		return modelAndView;
 	}
