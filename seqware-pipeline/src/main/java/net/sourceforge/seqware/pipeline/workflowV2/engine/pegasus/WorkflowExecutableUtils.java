@@ -1,7 +1,5 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus;
 
-import java.util.Map;
-
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Pfn;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.WorkflowExecutable;

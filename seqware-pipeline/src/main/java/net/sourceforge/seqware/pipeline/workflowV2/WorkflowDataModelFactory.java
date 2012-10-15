@@ -142,6 +142,8 @@ public class WorkflowDataModelFactory {
 		if(workflow_java) {
 	        try {
 	        	Method m = null;
+	        	m = clazz.getMethod("setupDirectory");
+	        	m.invoke(ret);
 	        	m = clazz.getMethod("setupFiles");
 	        	m.invoke(ret);
 	        	//Method m = clazz.getDeclaredMethod("setupFiles");

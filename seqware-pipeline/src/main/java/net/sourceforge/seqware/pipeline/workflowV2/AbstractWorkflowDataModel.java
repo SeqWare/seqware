@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,7 @@ public abstract class AbstractWorkflowDataModel  {
     private boolean wait;
     private boolean metadataWriteBack;
     private Map<String,SqwFile> files;
+    private Collection<String> dirs;
 	/**
 	 * 	extra params, these will be passed directly to the Java Object/FTL, 
 	 *  so you can use this to override key/values from the ini files
@@ -36,6 +38,7 @@ public abstract class AbstractWorkflowDataModel  {
     	this.setTags(new HashMap<String,String>());
     	this.configs = new HashMap<String,String>();
     	this.workflow = new Workflow();
+    	this.dirs = new ArrayList<String>();
     }
     
     public void setupDirectory() {
@@ -163,7 +166,20 @@ public abstract class AbstractWorkflowDataModel  {
 	public Environment getEnv() {
 		return env;
 	}
-
-
+	/**
+	 * create a user defined directory before all jobs started
+	 * @param name:  directory name
+	 * @return 
+	 */
+	public void addDirectory(String name) {
+		this.dirs.add(name);
+	}
+	/**
+	 * 
+	 * @return user defined directories
+	 */
+	public Collection<String> getDirectories() {
+		return this.dirs;
+	}
 	
 }
