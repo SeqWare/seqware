@@ -25,6 +25,9 @@ import net.sourceforge.seqware.common.util.Log;
  * User: Xiaoshu Wang (xiao@renci.org)
  * Date: 8/12/11
  * Time: 2:04 PM
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 @Aspect
 public class RedirectAspect {
@@ -34,9 +37,17 @@ public class RedirectAspect {
     @Option(name = "--stdout", aliases = {"-o"}, usage = "Files for redirecting stdout")
     private File stdout;
 
+    /**
+     * <p>doRun.</p>
+     */
     @Pointcut("bean(module) && execution(* net.sourceforge.seqware.pipeline.module.ModuleInterface.do_run(..))")
     public void doRun() {}
 
+    /**
+     * <p>watchModuleRun2.</p>
+     *
+     * @param joinPoint a {@link org.aspectj.lang.ProceedingJoinPoint} object.
+     */
     @Around("doRun()")
     public void watchModuleRun2(ProceedingJoinPoint joinPoint) {
         Log.info("RedirectAspect.watchModuleRun2");

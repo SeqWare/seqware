@@ -12,9 +12,16 @@ import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 import org.apache.commons.lang.StringUtils;
 import org.openide.util.lookup.ServiceProvider;
 
+/**
+ * <p>Picard class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 @ServiceProvider(service=ModuleInterface.class)
 public class Picard extends Module {
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue init() {
     // Picard has different modules, so first figure out which was requested. Strip off leading path and trailing '.jar'
@@ -37,12 +44,14 @@ public class Picard extends Module {
           "Picard requires an arg[0] to specify which jar to run", 2);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
     //FIXME: Need to verify parameters for each supported picard operation
     return new ReturnValue();
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
     // Prepare argument array
@@ -60,18 +69,21 @@ public class Picard extends Module {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
     // FIXME: Need to implement
     return new ReturnValue();
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_test() {
     // FIXME: Need to implement
     return new ReturnValue();
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     ReturnValue ret = new ReturnValue();
@@ -106,6 +118,7 @@ public class Picard extends Module {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public String get_syntax() {
     // FIXME: Need to implement

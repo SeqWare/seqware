@@ -14,9 +14,11 @@ import java.util.List;
  * would be a coding consequence plug-in.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public abstract class Analysis<ReturnType> extends MoleculeImpl<Analysis> implements QueryFuture<ReturnType> {
 
+    /** Constant <code>prefix="Analysis"</code> */
     public final static String prefix = "Analysis";
     private List<Object> parameters = new ArrayList<Object>();
 
@@ -44,12 +46,15 @@ public abstract class Analysis<ReturnType> extends MoleculeImpl<Analysis> implem
      */
     public abstract AnalysisPluginInterface getPlugin();
 
+    /** {@inheritDoc} */
     @Override
     public abstract ReturnType get();
 
+    /** {@inheritDoc} */
     @Override
     public abstract boolean isDone();
 
+    /** {@inheritDoc} */
     @Override
     public abstract Analysis.Builder toBuilder();
 

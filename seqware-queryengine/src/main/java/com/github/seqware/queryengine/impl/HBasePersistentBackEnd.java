@@ -25,13 +25,20 @@ import com.github.seqware.queryengine.util.SeqWareIterable;
  * Implement HBase optimizations for the back-end
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
 
+    /**
+     * <p>Constructor for HBasePersistentBackEnd.</p>
+     *
+     * @param i a {@link com.github.seqware.queryengine.impl.StorageInterface} object.
+     */
     public HBasePersistentBackEnd(StorageInterface i) {
         super(i);
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<User> getUsers() {
         if (storage instanceof HBaseStorage) {
@@ -49,6 +56,7 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
         return new SGIDIterable(allAtomsForTable, t);
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<Group> getGroups() {
         if (storage instanceof HBaseStorage) {
@@ -57,6 +65,7 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
         return super.getGroups();
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<ReferenceSet> getReferenceSets() {
         if (storage instanceof HBaseStorage) {
@@ -65,6 +74,7 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
         return super.getReferenceSets();
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<FeatureSet> getFeatureSets() {
         if (storage instanceof HBaseStorage) {
@@ -73,6 +83,7 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
         return super.getFeatureSets();
     }
     
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<Reference> getReferences(){
         if (storage instanceof HBaseStorage) {
@@ -81,6 +92,7 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
         return super.getReferences();
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<TagSet> getTagSets() {
         if (storage instanceof HBaseStorage) {
@@ -89,6 +101,7 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
         return super.getTagSets();
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<Tag> getTags() {
         if (storage instanceof HBaseStorage) {
@@ -97,6 +110,7 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
         return super.getTags();
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<AnalysisSet> getAnalysisSets() {
         if (storage instanceof HBaseStorage) {

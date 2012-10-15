@@ -10,15 +10,22 @@ import javax.naming.NamingException;
 
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 
+/**
+ * <p>ConfigTools class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ConfigTools {
 
+  /** Constant <code>SEQWARE_SETTINGS_PROPERTY="SEQWARE_SETTINGS"</code> */
   public static final String SEQWARE_SETTINGS_PROPERTY = "SEQWARE_SETTINGS";
 
   /**
    * The output keys are always uppercase!
-   * 
-   * @return Map<String, String> settingsMap
-   * @throws Exception
+   *
+   * @throws java.lang.Exception if any.
+   * @return a {@link java.util.Map} object.
    */
   public static Map<String, String> getSettings() throws Exception {
 
@@ -57,6 +64,12 @@ public class ConfigTools {
     return (hm);
   }
 
+  /**
+   * <p>getProperty.</p>
+   *
+   * @param name a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getProperty(String name) {
 
     String value = null;

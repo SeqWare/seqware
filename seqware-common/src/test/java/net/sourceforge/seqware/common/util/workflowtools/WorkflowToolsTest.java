@@ -25,26 +25,48 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
+ * <p>WorkflowToolsTest class.</p>
  *
  * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class WorkflowToolsTest {
   
+  /**
+   * <p>Constructor for WorkflowToolsTest.</p>
+   */
   public WorkflowToolsTest() {
   }
 
+  /**
+   * <p>setUpClass.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @BeforeClass
   public static void setUpClass() throws Exception {
   }
 
+  /**
+   * <p>tearDownClass.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @AfterClass
   public static void tearDownClass() throws Exception {
   }
   
+  /**
+   * <p>setUp.</p>
+   */
   @Before
   public void setUp() {
   }
   
+  /**
+   * <p>tearDown.</p>
+   */
   @After
   public void tearDown() {
   }

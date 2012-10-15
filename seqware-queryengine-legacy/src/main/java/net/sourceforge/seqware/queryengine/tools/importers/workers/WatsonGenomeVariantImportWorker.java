@@ -18,49 +18,57 @@ import net.sourceforge.seqware.queryengine.backend.store.impl.BerkeleyDBStore;
 import net.sourceforge.seqware.queryengine.tools.importers.VariantImporter;
 
 /**
+ * <p>WatsonGenomeVariantImportWorker class.</p>
+ *
  * @author boconnor
  *
  * A simple worker thread to parse the file ftp://jimwatsonsequence.cshl.edu/jimwatsonsequence/watson-454-snp-v01.txt.gz
  * These are the SNV calls from the Watson genome, see http://jimwatsonsequence.cshl.edu for more information
  * From their README:
- * 
+ *
  * "watson-454-snp-v01.txt.gz" -- SNP mapping coordinates, with "genotypes". Looks like...
-BJW-1117373     chr1    41921   G       C       .       novel   .       2      0       4      het
-BJW-1117523     chr1    42101   T       G       Y       rs2691277.1     .      1       0       1
-BJW-1119675     chr1    45408   C       T       Y       rs28396308      .      3       0       3
-
-The columns are: 
-BCM_local_SNP_ID -- unique ID for referring to the SNPs ahead of submission to dbSNP (we can talk about what and when to submit to dbSNP). 
-
-chromosome --  (self explanatory)
-
-coordinate -- (self explanatory)
-
-reference_allele -- plus strand reference base
-
-variant_allele -- plus strand variant base 
-
-match_status -- a Y, N or "." if a dbSNP allele, Y if the variant matches the dbSNP allele, or N if it doesn't; a "." if it's a novel SNP.
-
-rs# -- the rsid if dbSNP, "novel" otherwise.
-
-alternate_allele -- usually a "." (surrogate for null). A, C, T or G if a third allele is seen in the reads at the given position, it's listed here.  I'm don't expect you to display 3d allele information. 
-
-variant_count -- number of reads in which variant allele was seen. Can be 1 variants matching dbSNP alleles ("Y" in match_status column), must be 2 for novel alleles, for dbSNP positions that don't match the dbSNP alleles ("N" in match_status column) or for dbSNP positions where there is an alternate allele. 
-
-alternate_allele_count -- number of reads in which an alternate_allele is seen. Generally these are seen in only one read and are probably errors, and should not be mentioned. In some rare instances (134 times), both the variant allele and the alternate allele are seen multiple times.
-
-total_coverage -- the total number of reads at a given SNP position. 
-
-"genotype" -- "het" if the reference allele is seen at least once. "." (null) if not. These are the sites that are confidently heterozygotes. The others provisionally homozygotes, and in cases where the coverage is deep enough probably they are.
- * 
+ *BJW-1117373     chr1    41921   G       C       .       novel   .       2      0       4      het
+ *BJW-1117523     chr1    42101   T       G       Y       rs2691277.1     .      1       0       1
+ *BJW-1119675     chr1    45408   C       T       Y       rs28396308      .      3       0       3
+ *
+ *The columns are:
+ *BCM_local_SNP_ID -- unique ID for referring to the SNPs ahead of submission to dbSNP (we can talk about what and when to submit to dbSNP).
+ *
+ *chromosome --  (self explanatory)
+ *
+ *coordinate -- (self explanatory)
+ *
+ *reference_allele -- plus strand reference base
+ *
+ *variant_allele -- plus strand variant base
+ *
+ *match_status -- a Y, N or "." if a dbSNP allele, Y if the variant matches the dbSNP allele, or N if it doesn't; a "." if it's a novel SNP.
+ *
+ *rs# -- the rsid if dbSNP, "novel" otherwise.
+ *
+ *alternate_allele -- usually a "." (surrogate for null). A, C, T or G if a third allele is seen in the reads at the given position, it's listed here.  I'm don't expect you to display 3d allele information.
+ *
+ *variant_count -- number of reads in which variant allele was seen. Can be 1 variants matching dbSNP alleles ("Y" in match_status column), must be 2 for novel alleles, for dbSNP positions that don't match the dbSNP alleles ("N" in match_status column) or for dbSNP positions where there is an alternate allele.
+ *
+ *alternate_allele_count -- number of reads in which an alternate_allele is seen. Generally these are seen in only one read and are probably errors, and should not be mentioned. In some rare instances (134 times), both the variant allele and the alternate allele are seen multiple times.
+ *
+ *total_coverage -- the total number of reads at a given SNP position.
+ *
+ *"genotype" -- "het" if the reference allele is seen at least once. "." (null) if not. These are the sites that are confidently heterozygotes. The others provisionally homozygotes, and in cases where the coverage is deep enough probably they are.
+ * @version $Id: $Id
  */
 public class WatsonGenomeVariantImportWorker extends ImportWorker {
 
 
+  /**
+   * <p>Constructor for WatsonGenomeVariantImportWorker.</p>
+   */
   public WatsonGenomeVariantImportWorker() { }
 
 
+  /**
+   * <p>run.</p>
+   */
   public void run() {
 
     // open the file

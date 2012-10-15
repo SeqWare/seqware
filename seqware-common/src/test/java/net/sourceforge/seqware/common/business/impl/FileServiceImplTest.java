@@ -12,16 +12,26 @@ import net.sourceforge.seqware.common.model.File;
 import org.junit.Test;
 
 /**
- * 
+ * <p>FileServiceImplTest class.</p>
+ *
  * @author Oleg Lopatin
- * 
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class FileServiceImplTest extends BaseUnit {
 
+  /**
+   * <p>Constructor for FileServiceImplTest.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   public FileServiceImplTest() throws Exception {
     super();
   }
 
+  /**
+   * <p>testFindByCriteria.</p>
+   */
   @Test
   public void testFindByCriteria() {
     FileService fileService = BeanFactory.getFileServiceBean();

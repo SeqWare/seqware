@@ -40,15 +40,22 @@ import org.biojava.ontology.Term;
  *
  * @author dyuen
  * @author jbaran
+ * @version $Id: $Id
  */
 public class OBOImporter {
 
+    /** Constant <code>TAG_CHAR='n'</code> */
     public static final char TAG_CHAR = 'n';
     /**
      * Determines whether we use "acccession-only" tags.
      */
     public static final boolean ACCESSION_ONLY = false;
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         SGID mainMethod = OBOImporter.mainMethod(args);
         if (mainMethod == null) {
@@ -59,8 +66,8 @@ public class OBOImporter {
     /**
      * Import a set of Tag specifications into a new TagSet.
      *
-     * @param args
-     * @return
+     * @param args an array of {@link java.lang.String} objects.
+     * @return a {@link com.github.seqware.queryengine.util.SGID} object.
      */
     public static SGID mainMethod(String[] args) {
 
@@ -190,6 +197,9 @@ public class OBOImporter {
         return null;
     }
 
+    /**
+     * <p>Constructor for OBOImporter.</p>
+     */
     public OBOImporter() {
         /**
          * do nothing

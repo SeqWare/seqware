@@ -28,15 +28,19 @@ import net.sourceforge.seqware.queryengine.tools.importers.workers.PileupVariant
 import net.sourceforge.seqware.queryengine.tools.iterators.processors.VariantProcessor;
 
 /**
+ * <p>FeatureImporter class.</p>
+ *
  * @author boconnor
  *
  * TODO:
- * 
+ * @version $Id: $Id
  */
 public class FeatureImporter extends Importer {
   
   /**
-   * @param args
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
    */
   public static void main(String[] args) {
       
@@ -138,6 +142,11 @@ public class FeatureImporter extends Importer {
       }
   }
   
+  /**
+   * <p>Constructor for FeatureImporter.</p>
+   *
+   * @param threadCount a int.
+   */
   public FeatureImporter(int threadCount) {
     super(threadCount);
   }

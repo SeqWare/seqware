@@ -34,15 +34,23 @@ import org.restlet.data.Status;
 import org.w3c.dom.Document;
 
 /**
+ * <p>WorkflowRunIDProcessingsResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class WorkflowRunIDProcessingsResource extends BasicRestlet {
 
+    /**
+     * <p>Constructor for WorkflowRunIDProcessingsResource.</p>
+     *
+     * @param context a {@link org.restlet.Context} object.
+     */
     public WorkflowRunIDProcessingsResource(Context context) {
         super(context);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void handle(Request request, Response response) {
         authenticate(request.getChallengeResponse().getIdentifier());
@@ -65,6 +73,13 @@ public class WorkflowRunIDProcessingsResource extends BasicRestlet {
         }
     }
 
+    /**
+     * <p>collectProcessingList.</p>
+     *
+     * @param wrSWA a int.
+     * @return a {@link java.util.List} object.
+     * @throws java.sql.SQLException if any.
+     */
     public List<Processing> collectProcessingList(int wrSWA) throws SQLException {
         WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
         WorkflowRun run = (WorkflowRun)testIfNull(wrs.findBySWAccession(wrSWA));

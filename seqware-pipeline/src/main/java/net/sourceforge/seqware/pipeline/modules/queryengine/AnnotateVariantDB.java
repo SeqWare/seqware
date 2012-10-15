@@ -19,24 +19,24 @@ import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * 
+ *
  * Purpose:
- * 
+ *
  * This module uses the VariantConsequenceImporter and
  * TagAnnotationImporter from the SeqWare QueryEngine Backend project
  * to annotate with coding consequence and dbSNP status. The input
  * for this program is a zip BerkeleyDB and various annotation files.
  * The output is an annotated database that is zipped up again.
- * 
+ *
  * The overall flow for this module is to call:
  * <ul>
  *   <li>VariantConsequenceImporter (Java program)</li>
  *   <li>TagAnnotationImporter (Java program)</li>
  *   <li>checkpoint, clean and zip the database</li>
  * </ul>
- * 
+ *
  * Sample of commands this actually runs:
- * 
+ *
  * # consequence import
  * java -cp lib/db.jar:dist/seqware-qe-0.1.1.jar net.sourceforge.seqware.queryengine.tools.MutationImporter
  *  data/test/tools/MutationImporter/working/database true 2 50000 10 false true true 33 536870912
@@ -44,11 +44,11 @@ import org.openide.util.lookup.ServiceProvider;
  *  net.sourceforge.seqware.queryengine.tools.ConsequenceImporter data/test/tools/MutationImporter/working/database 536870912
  *  data/test/tools/MutationConsequenceImporter/MutationConsequenceImporter_Sample.txt
  * # dbSNP import
- * 
- * FIXME/TODO:
- * 
- * @author boconnor
  *
+ * FIXME/TODO:
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class AnnotateVariantDB extends Module {
@@ -58,6 +58,11 @@ public class AnnotateVariantDB extends Module {
   private File tempDBDir = null;
   
   //@Override
+  /**
+   * <p>init.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue init() {
     
     ReturnValue ret = new ReturnValue();
@@ -85,6 +90,11 @@ public class AnnotateVariantDB extends Module {
    
   }
   
+  /**
+   * <p>getOptionParser.</p>
+   *
+   * @return a {@link joptsimple.OptionParser} object.
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("consequence-file").withRequiredArg().describedAs("Consequence files produced by sw_map_snps_to_fxn_genomic_alignment.pl");
@@ -107,6 +117,11 @@ public class AnnotateVariantDB extends Module {
     return(parser);
   }
   
+  /**
+   * <p>get_syntax.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String get_syntax() {
     OptionParser parser = getOptionParser();
     StringWriter output = new StringWriter();
@@ -119,6 +134,7 @@ public class AnnotateVariantDB extends Module {
     }
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_test() {
     
@@ -129,6 +145,7 @@ public class AnnotateVariantDB extends Module {
     
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
 
@@ -178,6 +195,7 @@ public class AnnotateVariantDB extends Module {
     return(ret);
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
     
@@ -243,6 +261,7 @@ public class AnnotateVariantDB extends Module {
     return (ret);
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
     
@@ -341,6 +360,7 @@ public class AnnotateVariantDB extends Module {
     return(ret);
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     
@@ -349,6 +369,7 @@ public class AnnotateVariantDB extends Module {
     
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue clean_up() {
     ReturnValue ret = new ReturnValue();

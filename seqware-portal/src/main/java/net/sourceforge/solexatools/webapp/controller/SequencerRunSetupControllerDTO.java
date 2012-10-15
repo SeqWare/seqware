@@ -16,16 +16,22 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
  * SequencingRunSetupController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class SequencerRunSetupControllerDTO extends BaseCommandController {
 	private SequencerRunService sequencerRunService;
 
+	/**
+	 * <p>Constructor for SequencerRunSetupControllerDTO.</p>
+	 */
 	public SequencerRunSetupControllerDTO() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -87,10 +93,20 @@ public class SequencerRunSetupControllerDTO extends BaseCommandController {
 		return sequencerRun;
 	}
 
+	/**
+	 * <p>Getter for the field <code>sequencerRunService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+	 */
 	public SequencerRunService getSequencerRunService() {
 		return sequencerRunService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sequencerRunService</code>.</p>
+	 *
+	 * @param sequencerRunService a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+	 */
 	public void setSequencerRunService(SequencerRunService sequencerRunService) {
 		this.sequencerRunService = sequencerRunService;
 	}

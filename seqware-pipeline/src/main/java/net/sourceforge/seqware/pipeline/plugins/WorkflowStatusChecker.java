@@ -40,6 +40,7 @@ import org.openide.util.lookup.ServiceProvider;
  * metadata object with their status.
  *
  * @author boconnor
+ * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
 public class WorkflowStatusChecker extends Plugin {
@@ -48,6 +49,9 @@ public class WorkflowStatusChecker extends Plugin {
     // NOTE: this is shared with WorkflowLauncher so only one can run at a time
     String appID = "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusCheckerOrLauncher";
 
+    /**
+     * <p>Constructor for WorkflowStatusChecker.</p>
+     */
     public WorkflowStatusChecker() {
         super();
         parser.acceptsAll(Arrays.asList("status-cmd", "s"),
@@ -58,6 +62,7 @@ public class WorkflowStatusChecker extends Plugin {
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue init() {
 
@@ -73,11 +78,13 @@ public class WorkflowStatusChecker extends Plugin {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_test() {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_run() {
 
@@ -147,11 +154,13 @@ public class WorkflowStatusChecker extends Plugin {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue clean_up() {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String get_description() {
         return "This plugin lets you monitor the status of running workflows and updates"

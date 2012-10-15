@@ -29,8 +29,10 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 /**
  * StudyController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class StudyController extends MultiActionController {
   private StudyService studyService;
   private StudyTypeService studyTypeService;
@@ -40,71 +42,132 @@ public class StudyController extends MultiActionController {
   private Validator studyNewValidator;
   private Validator studyUpdateValidator;
 
+  /**
+   * <p>Constructor for StudyController.</p>
+   */
   public StudyController() {
     super();
   }
 
+  /**
+   * <p>Constructor for StudyController.</p>
+   *
+   * @param delegate a {@link java.lang.Object} object.
+   */
   public StudyController(Object delegate) {
     super(delegate);
   }
 
+  /**
+   * <p>Getter for the field <code>studyService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.StudyService} object.
+   */
   public StudyService getStudyService() {
     return studyService;
   }
 
+  /**
+   * <p>Setter for the field <code>studyService</code>.</p>
+   *
+   * @param studyService a {@link net.sourceforge.seqware.common.business.StudyService} object.
+   */
   public void setStudyService(StudyService studyService) {
     this.studyService = studyService;
   }
 
+  /**
+   * <p>Getter for the field <code>shareStudyService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.ShareStudyService} object.
+   */
   public ShareStudyService getShareStudyService() {
     return shareStudyService;
   }
 
+  /**
+   * <p>Setter for the field <code>shareStudyService</code>.</p>
+   *
+   * @param shareStudyService a {@link net.sourceforge.seqware.common.business.ShareStudyService} object.
+   */
   public void setShareStudyService(ShareStudyService shareStudyService) {
     this.shareStudyService = shareStudyService;
   }
 
+  /**
+   * <p>Setter for the field <code>registrationService</code>.</p>
+   *
+   * @param registrationService a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+   */
   public void setRegistrationService(RegistrationService registrationService) {
     this.registrationService = registrationService;
   }
 
+  /**
+   * <p>getValidator.</p>
+   *
+   * @return a {@link org.springframework.validation.Validator} object.
+   */
   public Validator getValidator() {
     return studyNewValidator;
   }
 
+  /**
+   * <p>setValidator.</p>
+   *
+   * @param validator a {@link org.springframework.validation.Validator} object.
+   */
   public void setValidator(Validator validator) {
     this.studyNewValidator = validator;
   }
 
+  /**
+   * <p>getUpdateValidator.</p>
+   *
+   * @return a {@link org.springframework.validation.Validator} object.
+   */
   public Validator getUpdateValidator() {
     return studyUpdateValidator;
   }
 
+  /**
+   * <p>setUpdateValidator.</p>
+   *
+   * @param validator a {@link org.springframework.validation.Validator} object.
+   */
   public void setUpdateValidator(Validator validator) {
     this.studyUpdateValidator = validator;
   }
 
+  /**
+   * <p>Getter for the field <code>studyTypeService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.StudyTypeService} object.
+   */
   public StudyTypeService getStudyTypeService() {
     return studyTypeService;
   }
 
+  /**
+   * <p>Setter for the field <code>studyTypeService</code>.</p>
+   *
+   * @param studyTypeService a {@link net.sourceforge.seqware.common.business.StudyTypeService} object.
+   */
   public void setStudyTypeService(StudyTypeService studyTypeService) {
     this.studyTypeService = studyTypeService;
   }
 
   /**
    * Handles the user's request to submit a new study.
-   * 
+   *
    * @param request
    *          HttpServletRequest
    * @param response
    *          HttpServletResponse
    * @param command
    *          Study command object
-   * 
    * @return ModelAndView
-   * 
-   * @throws Exception
+   * @throws java.lang.Exception if any.
    */
   public ModelAndView handleSubmit(HttpServletRequest request, HttpServletResponse response, Study command)
       throws Exception {
@@ -139,9 +202,13 @@ public class StudyController extends MultiActionController {
   /**
    * Handles the user's request to reset the study page during a new or update
    * study.
-   * 
+   *
    * @param command
    *          Study command object
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+   * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+   * @throws java.lang.Exception if any.
    */
   public ModelAndView handleReset(HttpServletRequest request, HttpServletResponse response, Study command)
       throws Exception {
@@ -169,9 +236,13 @@ public class StudyController extends MultiActionController {
 
   /**
    * Handles the user's request to cancel the study or the study update page.
-   * 
+   *
    * @param command
    *          Study command object
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+   * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+   * @throws java.lang.Exception if any.
    */
   public ModelAndView handleCancel(HttpServletRequest request, HttpServletResponse response, Study command)
       throws Exception {
@@ -181,9 +252,13 @@ public class StudyController extends MultiActionController {
 
   /**
    * Handles the user's request to update their study.
-   * 
+   *
    * @param command
    *          Study command object
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+   * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+   * @throws java.lang.Exception if any.
    */
   public ModelAndView handleUpdate(HttpServletRequest request, HttpServletResponse response, Study command)
       throws Exception {
@@ -230,9 +305,13 @@ public class StudyController extends MultiActionController {
 
   /**
    * Handles the user's request to delete their study.
-   * 
+   *
    * @param command
    *          Study command object
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+   * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+   * @throws java.lang.Exception if any.
    */
   public ModelAndView handleDelete(HttpServletRequest request, HttpServletResponse response, Study command)
       throws Exception {
@@ -259,9 +338,13 @@ public class StudyController extends MultiActionController {
 
   /**
    * Handles the user's request to share their study.
-   * 
+   *
    * @param command
    *          Study command object
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+   * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+   * @throws java.lang.Exception if any.
    */
   public ModelAndView handleShare(HttpServletRequest request, HttpServletResponse response, Study command)
       throws Exception {

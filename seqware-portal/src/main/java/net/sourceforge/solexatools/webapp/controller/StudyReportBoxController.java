@@ -29,15 +29,27 @@ import net.sourceforge.solexatools.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>StudyReportBoxController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 @SuppressWarnings("deprecation")
 public class StudyReportBoxController extends BaseCommandController {
 
   private static final String NOT_STARTED = "notstarted";
+  /** Constant <code>STUDY_ID="study_id"</code> */
   public final static String STUDY_ID = "study_id";
+  /** Constant <code>JSON="json"</code> */
   public final static String JSON = "json";
+  /** Constant <code>SORT_NAME="sortname"</code> */
   public final static String SORT_NAME = "sortname";
+  /** Constant <code>SORT_ORDER="sortorder"</code> */
   public final static String SORT_ORDER = "sortorder";
+  /** Constant <code>CSV_TYPE="csvtype"</code> */
   public final static String CSV_TYPE = "csvtype";
+  /** Constant <code>CHECK="check"</code> */
   public final static String CHECK = "check";
 
   // Statuses
@@ -54,22 +66,43 @@ public class StudyReportBoxController extends BaseCommandController {
   private boolean isSampleDownloaded;
   private boolean isFileDownloaded;
 
+  /**
+   * <p>Setter for the field <code>studyService</code>.</p>
+   *
+   * @param studyService a {@link net.sourceforge.seqware.common.business.StudyService} object.
+   */
   public void setStudyService(StudyService studyService) {
     this.studyService = studyService;
   }
 
+  /**
+   * <p>Setter for the field <code>sampleService</code>.</p>
+   *
+   * @param service a {@link net.sourceforge.seqware.common.business.SampleService} object.
+   */
   public void setSampleService(SampleService service) {
     this.sampleService = service;
   }
 
+  /**
+   * <p>Setter for the field <code>fileReportService</code>.</p>
+   *
+   * @param service a {@link net.sourceforge.seqware.common.business.FileReportService} object.
+   */
   public void setFileReportService(FileReportService service) {
     this.fileReportService = service;
   }
 
+  /**
+   * <p>Setter for the field <code>sampleReportService</code>.</p>
+   *
+   * @param service a {@link net.sourceforge.seqware.common.business.SampleReportService} object.
+   */
   public void setSampleReportService(SampleReportService service) {
     this.sampleReportService = service;
   }
 
+  /** {@inheritDoc} */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
       throws Exception {

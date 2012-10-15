@@ -25,6 +25,7 @@ import org.apache.commons.lang.SerializationUtils;
  *
  * @author dyuen
  * @author jbaran
+ * @version $Id: $Id
  */
 public class ACL implements Serializable {
 
@@ -60,7 +61,7 @@ public class ACL implements Serializable {
         return group.get();
     }
     
-        /**
+    /**
      * Get the owner for the object
      *
      * @return User that owns the object
@@ -90,6 +91,7 @@ public class ACL implements Serializable {
 
     /**
      * Create a new ACL builder, this is needed to add ne
+     *
      * @return a new builder for new ACL instances
      */
     public static Builder newBuilder() {
@@ -98,7 +100,8 @@ public class ACL implements Serializable {
     
     /**
      * Create an ACL builder started with a copy of this
-     * @return 
+     *
+     * @return a {@link com.github.seqware.queryengine.model.interfaces.ACL.Builder} object.
      */
     public Builder toBuilder(){
         Builder b = new Builder();

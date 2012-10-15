@@ -48,6 +48,12 @@ import net.sourceforge.seqware.pipeline.module.StdoutRedirect;
  *   Return of -1 implies the method was not implemented for that Module, AND IS NOT AN ERROR!!! By default the runner will continue on with steps as if it succeeded!  
  */
 //Create a main() function here, which will be compiled in, to parse input and run all steps
+/**
+ * <p>Runner class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class Runner {
 
   private int processingID = 0;
@@ -211,6 +217,12 @@ public class Runner {
         "Optional: For debugging, hide warnings about unimplemented methods");
   }
 
+  /**
+   * <p>getSyntax.</p>
+   *
+   * @param parser a {@link joptsimple.OptionParser} object.
+   * @param errorMessage a {@link java.lang.String} object.
+   */
   public static void getSyntax(OptionParser parser, String errorMessage) {
     if (errorMessage != null && errorMessage.length() > 0) {
       Log.stderr("ERROR: " + errorMessage);
@@ -231,11 +243,21 @@ public class Runner {
     System.exit(-1);
   }
 
+  /**
+   * <p>printAndAppendtoStderr.</p>
+   *
+   * @param buffer a {@link java.lang.String} object.
+   */
   public void printAndAppendtoStderr(String buffer) {
     stderr.append(buffer + "\n");
     System.err.print(buffer + "\n");
   }
 
+  /**
+   * <p>printAndAppendtoStdout.</p>
+   *
+   * @param buffer a {@link java.lang.String} object.
+   */
   public void printAndAppendtoStdout(String buffer) {
     stdout.append(buffer + "\n");
     System.out.print(buffer + "\n");
@@ -245,6 +267,12 @@ public class Runner {
   // FIXME: this method is doing a poor job of trapping errors, needs to be
   // cleaned up, the runner should not try to continue with subsequent steps if
   // one fails!
+  /**
+   * <p>evaluateReturn.</p>
+   *
+   * @param app a {@link net.sourceforge.seqware.pipeline.module.Module} object.
+   * @param methodName a {@link java.lang.String} object.
+   */
   public void evaluateReturn(Module app, String methodName) {
     printAndAppendtoStderr(app.getClass().getName() + "." + methodName);
 
@@ -344,10 +372,10 @@ public class Runner {
   /**
    * FIXME: this needs to be migrated to something that is ZIP64 aware. Try
    * using the unzip feature of FileTools.java
-   * 
-   * @param zipFile
-   * @throws ZipException
-   * @throws IOException
+   *
+   * @param zipFile a {@link java.lang.String} object.
+   * @throws java.util.zip.ZipException if any.
+   * @throws java.io.IOException if any.
    */
   public static void unzipPkg(String zipFile) throws ZipException, IOException {
 
@@ -405,6 +433,11 @@ public class Runner {
     }
   }
 
+  /**
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
+   */
   public static void main(String[] args) {
     new Runner().run(args);
   }
@@ -938,6 +971,11 @@ public class Runner {
     }
   }
 
+  /**
+   * <p>run.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
+   */
   public void run(String[] args) {
     // 1. Parse the options
     try {

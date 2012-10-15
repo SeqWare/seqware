@@ -22,6 +22,12 @@ import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
+/**
+ * <p>SequencerRunWizardController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SequencerRunWizardController extends MultiActionController {
 	private SequencerRunService	sequencerRunService;
 	private PlatformService platformService;
@@ -31,6 +37,10 @@ public class SequencerRunWizardController extends MultiActionController {
 	 * Handles the user's request to submit a new registration.
 	 *
 	 * @param command RegistrationDTO command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleSubmit(HttpServletRequest		request,
 									 HttpServletResponse	response,
@@ -73,6 +83,10 @@ public class SequencerRunWizardController extends MultiActionController {
 	 * update registration.
 	 *
 	 * @param command RegistrationDTO command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleReset(HttpServletRequest		request,
 									HttpServletResponse		response,
@@ -106,6 +120,10 @@ public class SequencerRunWizardController extends MultiActionController {
 	 * or the registration update page.
 	 *
 	 * @param command RegistrationDTO command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleCancel(HttpServletRequest request,
 									 HttpServletResponse response,
@@ -118,6 +136,10 @@ public class SequencerRunWizardController extends MultiActionController {
 	 * Handles the user's request to update their registration.
 	 *
 	 * @param command RegistrationDTO command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleUpdate(HttpServletRequest request,
 									 HttpServletResponse response,
@@ -176,6 +198,10 @@ public class SequencerRunWizardController extends MultiActionController {
 	 * Handles the user's request to delete their study.
 	 *
 	 * @param command Study command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleDelete(HttpServletRequest		request,
 									 HttpServletResponse	response,
@@ -252,10 +278,18 @@ public class SequencerRunWizardController extends MultiActionController {
 	
 	/* ********************************************************************** */
 	/* Constructors */
+	/**
+	 * <p>Constructor for SequencerRunWizardController.</p>
+	 */
 	public SequencerRunWizardController() {
 		super();
 	}
 
+	/**
+	 * <p>Constructor for SequencerRunWizardController.</p>
+	 *
+	 * @param delegate a {@link java.lang.Object} object.
+	 */
 	public SequencerRunWizardController(Object delegate) {
 		super(delegate);
 	}
@@ -263,34 +297,74 @@ public class SequencerRunWizardController extends MultiActionController {
 	/* ********************************************************************** */
 	/* Property SETters and GETters */
 
+  /**
+   * <p>Getter for the field <code>sequencerRunService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+   */
   public SequencerRunService getSequencerRunService() {
     return sequencerRunService;
   }
 
+  /**
+   * <p>Setter for the field <code>sequencerRunService</code>.</p>
+   *
+   * @param sequencerRunService a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+   */
   public void setSequencerRunService(SequencerRunService sequencerRunService) {
     this.sequencerRunService = sequencerRunService;
   }
 
+  /**
+   * <p>Getter for the field <code>platformService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.PlatformService} object.
+   */
   public PlatformService getPlatformService() {
     return platformService;
   }
 
+  /**
+   * <p>Setter for the field <code>platformService</code>.</p>
+   *
+   * @param platformService a {@link net.sourceforge.seqware.common.business.PlatformService} object.
+   */
   public void setPlatformService(PlatformService platformService) {
     this.platformService = platformService;
   }
 
+  /**
+   * <p>Getter for the field <code>sequencerRunValidator</code>.</p>
+   *
+   * @return a {@link org.springframework.validation.Validator} object.
+   */
   public Validator getSequencerRunValidator() {
 	return sequencerRunValidator;
   }
 
+  /**
+   * <p>Setter for the field <code>sequencerRunValidator</code>.</p>
+   *
+   * @param sequencerRunValidator a {@link org.springframework.validation.Validator} object.
+   */
   public void setSequencerRunValidator(Validator sequencerRunValidator) {
 	this.sequencerRunValidator = sequencerRunValidator;
   }
 
+  /**
+   * <p>Getter for the field <code>sequencerRunWizardValidator</code>.</p>
+   *
+   * @return a {@link org.springframework.validation.Validator} object.
+   */
   public Validator getSequencerRunWizardValidator() {
 	return sequencerRunWizardValidator;
   }
 
+  /**
+   * <p>Setter for the field <code>sequencerRunWizardValidator</code>.</p>
+   *
+   * @param sequencerRunWizardValidator a {@link org.springframework.validation.Validator} object.
+   */
   public void setSequencerRunWizardValidator(Validator sequencerRunWizardValidator) {
 	this.sequencerRunWizardValidator = sequencerRunWizardValidator;
   }

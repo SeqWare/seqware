@@ -15,21 +15,29 @@ import net.sourceforge.seqware.common.model.Registration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>FileServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class FileServiceImpl implements FileService {
 
   private FileDAO fileDAO = null;
   private static final Log log = LogFactory.getLog(FileServiceImpl.class);
 
+  /**
+   * <p>Constructor for FileServiceImpl.</p>
+   */
   public FileServiceImpl() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Sets a private member variable with an instance of an implementation of
    * FileDAO. This method is called by the Spring framework at run time.
-   * 
-   * @param fileDAO
-   *          implementation of FileDAO
    * @see FileDAO
    */
   public void setFileDAO(FileDAO dao) {
@@ -37,25 +45,24 @@ public class FileServiceImpl implements FileService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of File into the database.
-   * 
-   * @param fileDAO
-   *          instance of FileDAO
    */
   public void insert(File file) {
     fileDAO.insert(file);
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of File in the database.
-   * 
-   * @param file
-   *          instance of File
    */
   public void update(File file) {
     fileDAO.update(file);
   }
 
+  /** {@inheritDoc} */
   public void delete(File file, String deleteRealFiles) {
     Set<Processing> processings = file.getProcessings();
 
@@ -75,6 +82,7 @@ public class FileServiceImpl implements FileService {
 
   }
 
+  /** {@inheritDoc} */
   public void deleteAll(List<File> files, String deleteRealFiles) {
     fileDAO.deleteAll(files);
     if ("yes".equals(deleteRealFiles)) {
@@ -82,6 +90,7 @@ public class FileServiceImpl implements FileService {
     }
   }
 
+  /** {@inheritDoc} */
   public boolean isExists(String fileName, String folderStore) {
     boolean isExists = false;
     String path = folderStore + fileName;
@@ -91,6 +100,7 @@ public class FileServiceImpl implements FileService {
     return isExists;
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer fileId) {
     File file = findByID(fileId);
     List<File> files = new ArrayList<File>();
@@ -98,6 +108,7 @@ public class FileServiceImpl implements FileService {
     return files;
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer fileId, String metaType) {
     File file = findByID(fileId);
     List<File> files = new ArrayList<File>();
@@ -107,6 +118,7 @@ public class FileServiceImpl implements FileService {
     return files;
   }
 
+  /** {@inheritDoc} */
   public Set<File> setWithHasFile(Set<File> list, String metaType) {
     Set<File> result = new TreeSet<File>();
     for (File file : list) {
@@ -117,6 +129,7 @@ public class FileServiceImpl implements FileService {
     return result;
   }
 
+  /** {@inheritDoc} */
   public File findByPath(String path) {
     File file = null;
     if (path != null) {
@@ -129,6 +142,7 @@ public class FileServiceImpl implements FileService {
     return file;
   }
 
+  /** {@inheritDoc} */
   public File findByID(Integer fileId) {
     File file = null;
     if (fileId != null) {
@@ -142,6 +156,7 @@ public class FileServiceImpl implements FileService {
     return file;
   }
 
+  /** {@inheritDoc} */
   @Override
   public File findBySWAccession(Integer swAccession) {
     File file = null;
@@ -156,16 +171,19 @@ public class FileServiceImpl implements FileService {
     return file;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<File> findByCriteria(String criteria, boolean isCaseSens) {
     return fileDAO.findByCriteria(criteria, isCaseSens);
   }
 
+  /** {@inheritDoc} */
   @Override
   public File updateDetached(File file) {
     return fileDAO.updateDetached(file);
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<File> findByOwnerId(Integer registrationId) {
     List<File> files = null;
@@ -180,21 +198,25 @@ public class FileServiceImpl implements FileService {
     return files;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<File> list() {
         return fileDAO.list();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(Registration registration, File file) {
         fileDAO.update(registration, file);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void insert(Registration registration, File file) {
         fileDAO.insert(registration, file);
     }
 
+    /** {@inheritDoc} */
     @Override
     public File updateDetached(Registration registration, File file) {
         return fileDAO.updateDetached(registration, file);

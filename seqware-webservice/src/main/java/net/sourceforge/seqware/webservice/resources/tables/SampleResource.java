@@ -38,20 +38,29 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>SampleResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class SampleResource extends DatabaseResource {
 
+    /**
+     * <p>Constructor for SampleResource.</p>
+     */
     public SampleResource() {
         super("sample");
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
     }
 
+    /**
+     * <p>getXml.</p>
+     */
     @Get
     public void getXml() {
         authenticate();
@@ -92,6 +101,12 @@ public class SampleResource extends DatabaseResource {
         }
     }
 
+    /**
+     * <p>postJaxb.</p>
+     *
+     * @param entity a {@link org.restlet.representation.Representation} object.
+     * @throws org.restlet.resource.ResourceException if any.
+     */
     @Post("xml")
     public void postJaxb(Representation entity) throws ResourceException {
         try {

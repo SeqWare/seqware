@@ -14,20 +14,21 @@ import net.sourceforge.seqware.queryengine.backend.util.iterators.LocatableSecon
 import net.sourceforge.seqware.queryengine.backend.util.iterators.SecondaryCursorIterator;
 
 /**
- * 
+ * <p>CompareDatabasesWithROCOld class.</p>
+ *
  * @author boconnor
  *
  * Purpose:
- * 
+ *
  * This is an example only and not a supported program.
- * 
+ *
  * This is an example program that compares two databases and uses one as the
  * known good to compute true and false positive rates at different coverage
  * cutoffs.  It's useful when evaluating the performance of variant calling
  * while comparing to a known answer (such as Sanger sequencing or SNP chip).
- * 
+ *
  * The process works like this:
- * 
+ *
  * # identify each 300 base window around heterozygous SNVs (+/-150 bases) in the known good database (or whatever range you specify)
  * # for each of these windows, pull this region back from the unknown database
  * # for each of the SNV positions within this window in unknown database meeting criteria check to see if the variant is seen in known good variants and bin the result as appropriate
@@ -37,7 +38,7 @@ import net.sourceforge.seqware.queryengine.backend.util.iterators.SecondaryCurso
  * # generate table that can be used to create a ROC curve for these TPR/FPR as a function of coverage (or some other criteria)
  *
  * FIXME: is this filtering by SNV type correctly?  Don't want to compare to indels for example!
- *
+ * @version $Id: $Id
  */
 public class CompareDatabasesWithROCOld {
   
@@ -45,6 +46,8 @@ public class CompareDatabasesWithROCOld {
 
   /**
    * A simple program that takes a list of posit
+   *
+   * @param args an array of {@link java.lang.String} objects.
    */
   public static void main(String[] args) {
 

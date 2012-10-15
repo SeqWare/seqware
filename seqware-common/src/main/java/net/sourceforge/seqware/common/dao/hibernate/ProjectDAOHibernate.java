@@ -12,19 +12,31 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ProjectDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ProjectDAOHibernate extends HibernateDaoSupport implements ProjectDAO {
+  /**
+   * <p>Constructor for ProjectDAOHibernate.</p>
+   */
   public ProjectDAOHibernate() {
     super();
   }
 
+  /** {@inheritDoc} */
   public void insert(Project project) {
     this.getHibernateTemplate().save(project);
   }
 
+  /** {@inheritDoc} */
   public void update(Project project) {
     this.getHibernateTemplate().update(project);
   }
 
+  /** {@inheritDoc} */
   public List<Project> list(Registration registration) {
     ArrayList<Project> projects = new ArrayList<Project>();
     if (registration == null)
@@ -48,11 +60,9 @@ public class ProjectDAOHibernate extends HibernateDaoSupport implements ProjectD
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of Project in the database by the Project name.
-   * 
-   * @param name
-   *          name of the Project
-   * @return Project or null if not found
    */
   public Project findByName(String name) {
     String query = "from project as project where project.name = ?";
@@ -66,11 +76,9 @@ public class ProjectDAOHibernate extends HibernateDaoSupport implements ProjectD
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of Project in the database by the Project ID.
-   * 
-   * @param expID
-   *          ID of the Project
-   * @return Project or null if not found
    */
   public Project findByID(Integer expID) {
     String query = "from Project as project where project.projectId = ?";
@@ -83,6 +91,7 @@ public class ProjectDAOHibernate extends HibernateDaoSupport implements ProjectD
     return project;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Project updateDetached(Project project) {
     Project dbObject = findByID(project.getProjectId());
@@ -98,6 +107,7 @@ public class ProjectDAOHibernate extends HibernateDaoSupport implements ProjectD
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<Project> list() {
         throw new UnsupportedOperationException("Not supported yet.");

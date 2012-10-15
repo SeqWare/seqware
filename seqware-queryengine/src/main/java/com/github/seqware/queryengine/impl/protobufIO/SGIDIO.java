@@ -21,15 +21,29 @@ import com.github.seqware.queryengine.dto.QESupporting.SGIDPB;
 import com.github.seqware.queryengine.util.SGID;
 
 /**
+ * <p>SGIDIO class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class SGIDIO {
 
+    /**
+     * <p>pb2m.</p>
+     *
+     * @param sgidpg a {@link com.github.seqware.queryengine.dto.QESupporting.SGIDPB} object.
+     * @return a {@link com.github.seqware.queryengine.util.SGID} object.
+     */
     public static SGID pb2m(SGIDPB sgidpg) {
         return new SGID(sgidpg.getMostSigBits(), sgidpg.getLeastSigBits(), sgidpg.getTimestamp(), sgidpg.hasFriendlyRowkey() ? sgidpg.getFriendlyRowkey() : null);
     }
 
+    /**
+     * <p>m2pb.</p>
+     *
+     * @param sgid a {@link com.github.seqware.queryengine.util.SGID} object.
+     * @return a {@link com.github.seqware.queryengine.dto.QESupporting.SGIDPB} object.
+     */
     public static SGIDPB m2pb(SGID sgid) {
         QESupporting.SGIDPB.Builder builder = QESupporting.SGIDPB.newBuilder().setLeastSigBits(sgid.getUuid().getLeastSignificantBits());
         builder.setMostSigBits(sgid.getUuid().getMostSignificantBits());

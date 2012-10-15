@@ -32,40 +32,79 @@ import com.github.seqware.queryengine.model.FeatureSet;
  * return (just using ReturnValue as placeholder).
  *
  * @author boconnor
+ * @version $Id: $Id
  */
 public interface AnalysisPluginInterface<T> {
 
     /**
      * Initialize this plug-in, this is called once when the plug-in is starting
      * a job
+     *
      * @param set input feature set that we will be operating on
      * @param parameters parameters that the plug-in will require
-     * @return 
+     * @return a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue} object.
      */
     public ReturnValue init(FeatureSet set, Object ... parameters);
 
+    /**
+     * <p>test.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue} object.
+     */
     public ReturnValue test();
 
+    /**
+     * <p>verifyParameters.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue} object.
+     */
     public ReturnValue verifyParameters();
 
+    /**
+     * <p>verifyInput.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue} object.
+     */
     public ReturnValue verifyInput();
 
+    /**
+     * <p>filterInit.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue} object.
+     */
     public ReturnValue filterInit();
 
+    /**
+     * <p>filter.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue} object.
+     */
     public ReturnValue filter();
 
+    /**
+     * <p>verifyOutput.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue} object.
+     */
     public ReturnValue verifyOutput();
 
+    /**
+     * <p>cleanup.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue} object.
+     */
     public ReturnValue cleanup();
     
     /**
      * Non-blocking call to determine whether the result is ready
-     * @return 
+     *
+     * @return a boolean.
      */
     public boolean isComplete();
     
     /**
      * Blocking call to get the final result of the plug-in
+     *
      * @return T containing results of the analysis
      */
     public T getFinalResult();

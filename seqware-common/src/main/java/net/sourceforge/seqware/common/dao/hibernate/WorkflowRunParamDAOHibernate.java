@@ -11,25 +11,37 @@ import org.apache.log4j.Logger;
 import org.hibernate.SQLQuery;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>WorkflowRunParamDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements WorkflowRunParamDAO {
 
     private Logger logger;
 
+    /**
+     * <p>Constructor for WorkflowRunParamDAOHibernate.</p>
+     */
     public WorkflowRunParamDAOHibernate() {
         super();
         logger = Logger.getLogger(WorkflowRunParamDAOHibernate.class);
     }
 
+    /** {@inheritDoc} */
     public void insert(WorkflowRunParam workflowRunParam) {
         this.getHibernateTemplate().save(workflowRunParam);
         getSession().flush();
     }
 
+    /** {@inheritDoc} */
     public void update(WorkflowRunParam workflowRunParam) {
         getHibernateTemplate().update(workflowRunParam);
         getSession().flush();
     }
 
+    /** {@inheritDoc} */
     public void delete(WorkflowRunParam workflowRunParam) {
         getHibernateTemplate().delete(workflowRunParam);
     }
@@ -44,6 +56,7 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
         return swid;
     }
 
+    /** {@inheritDoc} */
     public void insertFilesAsWorkflowRunParam(WorkflowRun workflowRun, Map<String, List<File>> paramNameFileHash) {
         logger.debug("Start insert files ...");
         for (String paramName : paramNameFileHash.keySet()) {
@@ -95,11 +108,13 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public WorkflowRunParam updateDetached(WorkflowRunParam workflowRunParam) {
         return (WorkflowRunParam) this.getHibernateTemplate().merge(workflowRunParam);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<WorkflowRunParam> list() {
         ArrayList<WorkflowRunParam> l = new ArrayList<WorkflowRunParam>();
@@ -115,6 +130,7 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
         return l;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(Registration registration, WorkflowRunParam workflowRunParam) {
         Logger logger = Logger.getLogger(WorkflowRunParamDAOHibernate.class);
@@ -129,6 +145,7 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void insert(Registration registration, WorkflowRunParam workflowRunParam) {
         Logger logger = Logger.getLogger(WorkflowRunParamDAOHibernate.class);
@@ -142,6 +159,7 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void insertFilesAsWorkflowRunParam(Registration registration, WorkflowRun workflowRun, Map<String, List<File>> files) {
       Logger logger = Logger.getLogger(WorkflowRunParamDAOHibernate.class);
@@ -155,6 +173,7 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public WorkflowRunParam updateDetached(Registration registration, WorkflowRunParam workflowRunParam) {
         //Should probably grab an instance of this object from the database, but

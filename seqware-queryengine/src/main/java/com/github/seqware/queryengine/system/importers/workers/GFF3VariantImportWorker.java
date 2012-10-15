@@ -1,14 +1,14 @@
 package com.github.seqware.queryengine.system.importers.workers;
 
-import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
+import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Tag;
+import com.github.seqware.queryengine.model.TagSet;
 import java.util.HashSet;
 import java.util.Set;
 import org.apache.log4j.Logger;
-
 import org.biojava3.genome.parsers.gff.FeatureI;
 import org.biojava3.genome.parsers.gff.FeatureList;
 import org.biojava3.genome.parsers.gff.GFF3Reader;
@@ -21,10 +21,10 @@ import org.biojava3.genome.parsers.gff.GFF3Reader;
  * documentation refers to the previous prototype and has not been verified on
  * the current one. It seems that GVF is backwards compatible with GFF3 parsers
  * so let's hope this works.
- * 
+ *
  * This does not support multi-individual files yet.
- * 
- * The other issue is that the old converter only picked up specific tags. Other datasets like the 
+ *
+ * The other issue is that the old converter only picked up specific tags. Other datasets like the
  * 10Gen Data set seem to use pretty different tags. Maybe we should automatically load tags on the fly?
  *
  * @author boconnor
@@ -147,22 +147,38 @@ import org.biojava3.genome.parsers.gff.GFF3Reader;
  * use. Attributes that begin with a lowercase letter can be used freely by
  * applications. You can stash any semi-structured data into the database by
  * using one or more unreserved (lowercase) tags.
- *
- *
+ * @version $Id: $Id
  */
 public class GFF3VariantImportWorker extends ImportWorker {
+    private TagSet gff3TagSet;
+    private static final String GFF3 = "GFF3";
+    private CreateUpdateManager mManager;
 
+    /**
+     * <p>Constructor for GFF3VariantImportWorker.</p>
+     */
     public GFF3VariantImportWorker() {
     }
-
+    
+    private Tag processVCFTagSpec(String key){
+        return VCFVariantImportWorker.processVCFTagSpec(key, this.gff3TagSet, this.mManager);
+    }
+    
+    /** {@inheritDoc} */
     @Override
     public void run() {
         // grab FeatureSet reference
         // FeatureSets are totally new, hope this doesn't slow things too much
         FeatureSet fSet = SWQEFactory.getQueryInterface().getAtomBySGID(FeatureSet.class, this.featureSetID);
         
-        CreateUpdateManager mManager = SWQEFactory.getModelManager();
+        this.mManager = SWQEFactory.getModelManager();
         mManager.persist(fSet);
+        
+        // setup the "GFF3" TagSet 
+        this.gff3TagSet = SWQEFactory.getQueryInterface().getLatestAtomByRowKey(GFF3, TagSet.class);
+        if (gff3TagSet == null) {
+            gff3TagSet = mManager.buildTagSet().setName(GFF3).setFriendlyRowKey(GFF3).build();
+        }
         
         try {
             // first ask for a token from semaphore
@@ -212,7 +228,7 @@ public class GFF3VariantImportWorker extends ImportWorker {
                     fBuilder.setType(ImportConstants.GFF3_UNKNOWN_TYPE);
                     //m.setType(m.GFF3_UNKNOWN_TYPE);
                 }
-                tagSet.add(Tag.newBuilder().setKey(f.type()).build());
+                tagSet.add(processVCFTagSpec(f.type()));
                 //m.addTag(f.type(), null);
                 // coord
                 fBuilder.setSeqid(f.seqname());
@@ -226,27 +242,27 @@ public class GFF3VariantImportWorker extends ImportWorker {
                 //m.setConsensusCallQuality(0);
                 // dbSNP
                 if (f.hasAttribute("isDbSNP")) {
-                    tagSet.add(Tag.newBuilder().setKey("is_dbSNP").setValue("isDbSNP").build());
+                    tagSet.add(processVCFTagSpec("is_dbSNP").toBuilder().setValue("isDbSNP").build());
                     //m.addTag("is_dbSNP", f.getAttribute("isDbSNP"));
-                    tagSet.add(Tag.newBuilder().setKey(f.getAttribute("isDbSNP")).build());
+                    tagSet.add(processVCFTagSpec(f.getAttribute("isDbSNP")).toBuilder().build());
                     //m.addTag(f.getAttribute("isDbSNP"), null);
                 } else {
-                    tagSet.add(Tag.newBuilder().setKey("not_dbSNP").build());
+                    tagSet.add(processVCFTagSpec("not_dbSNP").toBuilder().build());
                     //m.addTag("not_dbSNP", null);
                 }
                 // zygosity
                 String zygosity;
                 if (ImportConstants.VCF_HETEROZYGOUS.equals(f.getAttribute("zygosity"))) {
                     zygosity = ImportConstants.VCF_HETEROZYGOUS;
-                    tagSet.add(Tag.newBuilder().setKey(zygosity).build());
+                    tagSet.add(processVCFTagSpec((zygosity)));
 //                    m.setZygosity(m.VCF_HETEROZYGOUS);
                 } else if (ImportConstants.VCF_HOMOZYGOUS.equals(f.getAttribute("zygosity"))) {
                     zygosity = ImportConstants.VCF_HOMOZYGOUS;
-                    tagSet.add(Tag.newBuilder().setKey(zygosity).build());
+                    tagSet.add(processVCFTagSpec((zygosity)));
 //                    m.setZygosity(m.VCF_HOMOZYGOUS);
                 } else {
                     zygosity = ImportConstants.GFF3_UNKNOWN_TYPE;
-                    tagSet.add(Tag.newBuilder().setKey(zygosity).build());
+                    tagSet.add(processVCFTagSpec((zygosity)));
 //                    m.setZygosity(m.UNKNOWN_ZYGOSITY);
                 }
                 // GVF compatbility has been added by the following bunch of additions
@@ -254,23 +270,23 @@ public class GFF3VariantImportWorker extends ImportWorker {
                 // According to the doc, they should be backwards compatible
                 /** GVF additions start */
                 if(f.hasAttribute(ImportConstants.GVF_ALIAS)){
-                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.GVF_DBXREF).setValue(f.getAttribute(ImportConstants.GVF_DBXREF)).build());
+                    tagSet.add(processVCFTagSpec(ImportConstants.GVF_DBXREF).toBuilder().setValue(f.getAttribute(ImportConstants.GVF_DBXREF)).build());
                 }
                 for(String attr : ImportConstants.UNPROCESSED_ATTRIBUTES){
                     if (f.hasAttribute(attr)){
-                        tagSet.add(Tag.newBuilder().setKey(attr).setValue(f.getAttribute(attr)).build());
+                        tagSet.add(processVCFTagSpec(attr).toBuilder().setValue(f.getAttribute(attr)).build());
                     }
                 }
                 if(f.hasAttribute(ImportConstants.GVF_ZYGOSITY)){
                     if (f.getAttribute(ImportConstants.GVF_ZYGOSITY).equals(ImportConstants.GVF_HETEROZYGOUS)){
                         zygosity = ImportConstants.GVF_HETEROZYGOUS;
-                        tagSet.add(Tag.newBuilder().setKey(zygosity).build());
+                        tagSet.add(processVCFTagSpec(zygosity));
                     } else if (f.getAttribute(ImportConstants.GVF_ZYGOSITY).equals(ImportConstants.GVF_HOMOZYGOUS)){
                         zygosity = ImportConstants.GVF_HOMOZYGOUS;
-                        tagSet.add(Tag.newBuilder().setKey(zygosity).build());
+                        tagSet.add(processVCFTagSpec(zygosity));
                     } else if(f.getAttribute(ImportConstants.GVF_ZYGOSITY).equals(ImportConstants.GVF_HEMIZYGOUS)){
                         zygosity = ImportConstants.GVF_HEMIZYGOUS;
-                        tagSet.add(Tag.newBuilder().setKey(zygosity).build());
+                        tagSet.add(processVCFTagSpec(zygosity));
                     }
                 }
                 /** GVF additions end */
@@ -280,9 +296,9 @@ public class GFF3VariantImportWorker extends ImportWorker {
                 if (f.hasAttribute("variant")) {
                     String variant = f.getAttribute("variant");
                     String[] varArray = variant.split("->");
-                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_REFERENCE_BASE).setValue(varArray[0]).build());
-                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_CONSENSUS_BASE).setValue(varArray[1]).build());
-                    tagSet.add(Tag.newBuilder().setKey(ImportConstants.VCF_CALLED_BASE).setValue(varArray[1]).build());
+                    tagSet.add(processVCFTagSpec(ImportConstants.VCF_REFERENCE_BASE).toBuilder().setValue(varArray[0]).build());
+                    tagSet.add(processVCFTagSpec(ImportConstants.VCF_CONSENSUS_BASE).toBuilder().setValue(varArray[1]).build());
+                    tagSet.add(processVCFTagSpec(ImportConstants.VCF_CALLED_BASE).toBuilder().setValue(varArray[1]).build());
 //                m.setReferenceBase(varArray[0]);
 //                m.setCalledBase(varArray[1]);
 //                m.setConsensusBase(varArray[1]);
@@ -293,61 +309,61 @@ public class GFF3VariantImportWorker extends ImportWorker {
                 Tag location = null;
                 if (f.hasAttribute("location")) {
                     for (String loc : f.getAttribute("location").split(",")) {
-                        location = Tag.newBuilder().setKey("location").setValue(f.getAttribute("location")).build();
+                        location = processVCFTagSpec("location").toBuilder().setValue(f.getAttribute("location")).build();
                         tagSet.add(location);
 //                        m.addTag("location", f.getAttribute("location"));
-                        tagSet.add(Tag.newBuilder().setKey(loc).build());
+                        tagSet.add(processVCFTagSpec(loc).toBuilder().build());
 //                        m.addTag(loc, null);
                     }
                 }
                 // gene name
                 if (f.hasAttribute("gene")) {
-                    tagSet.add(Tag.newBuilder().setKey("gene").setValue(f.getAttribute("gene")).build());
-                    tagSet.add(Tag.newBuilder().setKey(f.getAttribute("gene")).build());
+                    tagSet.add(processVCFTagSpec("gene").toBuilder().setValue(f.getAttribute("gene")).build());
+                    tagSet.add(processVCFTagSpec(f.getAttribute("gene")));
 //                    m.addTag("gene", f.getAttribute("gene"));
 //                    m.addTag(f.getAttribute("gene"), null);
                 }
                 // go
                 if (f.hasAttribute("go")) {
                     String go = f.getAttribute("go");
-                    tagSet.add(Tag.newBuilder().setKey("GO_terms").setValue(go).build());
+                    tagSet.add(processVCFTagSpec("GO_terms").toBuilder().setValue(go).build());
 //                    m.addTag("GO_terms", go);
                     String[] goArray = go.split(",");
                     for (String termPair : goArray) {
                         String[] termArray = termPair.split("|");
                         String accession = termArray[0];
-                        tagSet.add(Tag.newBuilder().setKey(accession).build());
+                        tagSet.add(processVCFTagSpec(accession));
 //                        m.addTag(accession, null);
                         String desc = termArray[1];
                         // may have to leave this out but for now adding all terms from GO descriptors as tags
                         for (String word : desc.split(" ")) {
-                            tagSet.add(Tag.newBuilder().setKey(word).build());
+                            tagSet.add(processVCFTagSpec(word));
 //                            m.addTag(word, null);
                         }
                     }
                 }
                 // kegg
                 if (f.hasAttribute("kegg")) {
-                    tagSet.add(Tag.newBuilder().setKey("kegg_pathways").setValue("kegg").build());
+                    tagSet.add(processVCFTagSpec("kegg_pathways").toBuilder().setValue("kegg").build());
                     //m.addTag("kegg_pathways", f.getAttribute("kegg"));
                     for (String keggId : f.getAttribute("kegg").split(",")) {
-                        tagSet.add(Tag.newBuilder().setKey(keggId).build());
+                        tagSet.add(processVCFTagSpec(keggId));
                         //m.addTag(keggId, null);
                     }
                 }
                 // omim
                 if (f.hasAttribute("omim")) {
                     //m.addTag("omim_id", f.getAttribute("omim"));
-                    tagSet.add(Tag.newBuilder().setKey("omim_id").setValue(f.getAttribute("omim")).build());
+                    tagSet.add(processVCFTagSpec("omim_id").toBuilder().setValue(f.getAttribute("omim")).build());
                     //m.addTag(f.getAttribute("omim"), null);
-                    tagSet.add(Tag.newBuilder().setKey(f.getAttribute("omim")).build());
+                    tagSet.add(processVCFTagSpec(f.getAttribute("omim")));
                 }
                 // consequence
                 if (f.hasAttribute("consequence")) {
-                    tagSet.add(Tag.newBuilder().setKey("consequence").setValue(f.getAttribute("consequence")).build());
+                    tagSet.add(processVCFTagSpec("consequence").toBuilder().setValue(f.getAttribute("consequence")).build());
                     //m.addTag(f.getAttribute("consequence"), null);
                     //m.addTag("consequence", f.getAttribute("consequence"));
-                    tagSet.add(Tag.newBuilder().setKey(f.getAttribute("consequence")).build());
+                    tagSet.add(processVCFTagSpec(f.getAttribute("consequence")).toBuilder().build());
                 }
                 // severity
                 // this is calculated here based on a few factors
@@ -370,13 +386,13 @@ public class GFF3VariantImportWorker extends ImportWorker {
 //                if (m.getTagByKey("is_dbSNP") == null) {
 //                    severity++;
 //                }
-                if (location != null && "exonic".equals(location.getTagByKey("location"))) {
+                if (location != null && "exonic".equals(location.getValue())) {
                     severity++;
                 }
-                if (location != null && "exonic,splicing".equals(location.getTagByKey("location"))) {
+                if (location != null && "exonic,splicing".equals(location.getValue())) {
                     severity++;
                 }
-                if (location != null && !"intergenic".equals(location.getTagByKey("location"))) {
+                if (location != null && !"intergenic".equals(location.getValue())) {
                     severity++;
                 }
 //                if ("exonic".equals(m.getTagByKey("location"))) {
@@ -397,7 +413,7 @@ public class GFF3VariantImportWorker extends ImportWorker {
                 if (f.hasAttribute("consequence") && "frameshift".equals(f.getAttribute("consequence"))) {
                     severity += 2;
                 }
-                tagSet.add(Tag.newBuilder().setKey("priority").setValue(severity).build());
+                tagSet.add(processVCFTagSpec("priority").toBuilder().setValue(severity).build());
                 //m.addTag("priority", severity);
                 //m.addTag("priority", (new Integer(severity)).toString());
                 // look at navigenics, decode me, 23andme

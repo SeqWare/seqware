@@ -48,7 +48,7 @@ import org.openide.util.lookup.ServiceProvider;
  * http://en.wikipedia.org/wiki/Javadoc for more information.
  *
  * @author briandoconnor@gmail.com
- *
+ * @version $Id: $Id
  */
 @ServiceProvider(service = ModuleInterface.class)
 public class GenericCommandRunner extends Module {
@@ -85,9 +85,9 @@ public class GenericCommandRunner extends Module {
     }
 
     /**
-     * A method used to return the syntax for this module
+     * {@inheritDoc}
      *
-     * @return a string describing the syntax
+     * A method used to return the syntax for this module
      */
     @Override
     public String get_syntax() {
@@ -103,15 +103,14 @@ public class GenericCommandRunner extends Module {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * The init method is where you put any code needed to setup your module.
      * Here I set some basic information in the ReturnValue object which will
      * eventually populate the "processing" table in seqware_meta_db. I also
      * create a temporary directory using the FileTools object.
      *
      * init is optional
-     *
-     * @return A ReturnValue object that contains information about the status
-     * of init
      */
     @Override
     public ReturnValue init() {
@@ -185,9 +184,9 @@ public class GenericCommandRunner extends Module {
     }
 
     /**
-     * Verifies that the parameters make sense
+     * {@inheritDoc}
      *
-     * @return a ReturnValue object
+     * Verifies that the parameters make sense
      */
     @Override
     public ReturnValue do_verify_parameters() {
@@ -209,11 +208,11 @@ public class GenericCommandRunner extends Module {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * The do_verify_input method ensures that the input is reasonable and valid
      * for this tool. For this generic command runner we really can't tell if
      * the
-     *
-     * @return a ReturnValue object
      */
     @Override
     public ReturnValue do_verify_input() {
@@ -234,12 +233,12 @@ public class GenericCommandRunner extends Module {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * This is really an optional method but a very good idea. You would test
      * the programs your calling here by running them on a "known good" test
      * dataset and then compare the new answer with the previous known good
      * answer. Other forms of testing could be encapsulated here as well.
-     *
-     * @return a ReturnValue object
      */
     @Override
     public ReturnValue do_test() {
@@ -254,6 +253,8 @@ public class GenericCommandRunner extends Module {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * This is the core of a module. While some modules may be written in pure
      * Java or use various third-party Java APIs, the vast majority of modules
      * will use this method to make calls out to the shell (typically the BASH
@@ -277,8 +278,6 @@ public class GenericCommandRunner extends Module {
      * inputs and outputs based, whenever possible, on standardized file types.
      * This makes it easy to use modules in novel workflows, rearranging them as
      * needed. Make every effort to make your modules self-contained and robust!
-     *
-     * @return a ReturnValue object
      */
     @Override
     public ReturnValue do_run() {
@@ -362,9 +361,9 @@ public class GenericCommandRunner extends Module {
     }
 
     /**
-     * A method to check to make sure the output was created correctly
+     * {@inheritDoc}
      *
-     * @return a ReturnValue object
+     * A method to check to make sure the output was created correctly
      */
     @Override
     public ReturnValue do_verify_output() {
@@ -394,6 +393,8 @@ public class GenericCommandRunner extends Module {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * A cleanup method, make sure you cleanup files that are outside the
      * current working directory since Pegasus won't clean those for you.
      *

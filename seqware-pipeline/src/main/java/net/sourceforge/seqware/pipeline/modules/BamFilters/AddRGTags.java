@@ -19,17 +19,17 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Annotate BAM file with read group tags.
- * 
- * This module adds the read group (RG) tag to every read in a BAM file, 
+ *
+ * This module adds the read group (RG) tag to every read in a BAM file,
  * updates the header info, and sorts the entries by coordinate.
- * 
+ *
  * Underlying script:  sw_module_AddRGTags.pl
  * Necessary programs:  perl, java, Picard (SamFormatConverter.jar & SortSam.jar), samtools
- * 
- * Expected output:  outfile
- * 
- * @author sacheek@med.unc.edu
  *
+ * Expected output:  outfile
+ *
+ * @author sacheek@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class AddRGTags extends Module {
@@ -39,9 +39,9 @@ public class AddRGTags extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("infile", "Input BAM file").withRequiredArg();
@@ -57,8 +57,9 @@ public class AddRGTags extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -74,11 +75,11 @@ public class AddRGTags extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -113,9 +114,9 @@ public class AddRGTags extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -138,9 +139,9 @@ public class AddRGTags extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -209,9 +210,9 @@ public class AddRGTags extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known dataset.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -221,10 +222,10 @@ public class AddRGTags extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Run core of module.
    * Based on script sw_module_AddRGtag.pl
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_run() {
@@ -262,9 +263,9 @@ public class AddRGTags extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Check to make sure the output was created correctly.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -272,10 +273,11 @@ public class AddRGTags extends Module {
     return(FileTools.fileExistsAndNotEmpty(new File((String)options.valueOf("outfile"))) );
   }
   
-    /**
+  /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.  Remove tempDir.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {
