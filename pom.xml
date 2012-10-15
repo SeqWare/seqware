@@ -71,7 +71,7 @@
     <artifactId>seqware</artifactId>
     <packaging>pom</packaging>
     <groupId>com.github.seqware</groupId>
-    <version>0.13.3-SNAPSHOT</version>
+    <version>0.13.3</version>
 
     <repositories>
 	 <repository>
@@ -153,6 +153,54 @@
 
     <dependencyManagement>
             <dependencies>
+	 <!-- while moving to HubFlow, the combination of HubFlow and maven:prepare is causing problems.
+		release:update-versions seems to have an easier time with versions defined here -->
+	    <dependency>
+		<groupId>com.github.seqware</groupId>
+		<artifactId>seqware-queryengine</artifactId>
+		<version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+		<groupId>com.github.seqware</groupId>
+		<artifactId>seqware-queryengine-legacy</artifactId>
+		<version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+		<groupId>com.github.seqware</groupId>
+		<artifactId>seqware-meta-db</artifactId>
+		<version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+		<groupId>com.github.seqware</groupId>
+		<artifactId>seqware-common</artifactId>
+		<version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+		<groupId>com.github.seqware</groupId>
+		<artifactId>seqware-pipeline</artifactId>
+		<version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+		<groupId>com.github.seqware</groupId>
+		<artifactId>seqware-webservice-dto</artifactId>
+		<version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+		<groupId>com.github.seqware</groupId>
+		<artifactId>seqware-webservice</artifactId>
+		<version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+		<groupId>com.github.seqware</groupId>
+		<artifactId>seqware-portal</artifactId>
+		<version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+		<groupId>com.github.seqware</groupId>
+		<artifactId>seqware-distribution</artifactId>
+		<version>${project.version}</version>
+	    </dependency>
+
          <!-- Amazon Web Services SDK dependencies -->
             <dependency>
                 <groupId>com.amazonaws</groupId>
