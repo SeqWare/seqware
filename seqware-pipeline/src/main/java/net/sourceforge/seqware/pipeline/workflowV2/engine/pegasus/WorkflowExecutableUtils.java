@@ -8,7 +8,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Workflo
 
 public class WorkflowExecutableUtils {
     private static String URL_JAVA = "file:///${basedir}/bin/jre1.6.0_29/bin/java";
-    private static String URL_PERL = "file:///${basedir}/bin/bin/perl-5.14.1/perl";
+    private static String URL_PERL = "file:///${basedir}/bin/perl-5.14.1/perl";
     private static String URL_DIRMANAGER = "file:///${basedir}/bin/globus/pegasus-dirmanager";
 
     public static WorkflowExecutable getDefaultJavaExcutable(AbstractWorkflowDataModel datamodel) {
