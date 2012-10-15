@@ -16,18 +16,26 @@ import net.sourceforge.seqware.queryengine.backend.model.Coverage;
 import net.sourceforge.seqware.queryengine.backend.model.Variant;
 
 /**
- * @author boconnor
- * 
- * FIXME: need to support indels
- * FIXME: need to support alternative alleles, each should get its own variant object I think 
+ * <p>VCFVariantImportWorker class.</p>
  *
+ * @author boconnor
+ *
+ * FIXME: need to support indels
+ * FIXME: need to support alternative alleles, each should get its own variant object I think
+ * @version $Id: $Id
  */
 public class VCFVariantImportWorker extends ImportWorker {
 
 
+  /**
+   * <p>Constructor for VCFVariantImportWorker.</p>
+   */
   public VCFVariantImportWorker() { }
 
 
+  /**
+   * <p>run.</p>
+   */
   public void run() {
 
     // open the file

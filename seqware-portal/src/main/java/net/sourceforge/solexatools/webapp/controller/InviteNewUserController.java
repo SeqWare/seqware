@@ -18,23 +18,43 @@ import org.springframework.mail.MailSender;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>InviteNewUserController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class InviteNewUserController extends BaseCommandController {
 	private RegistrationService registrationService;
 	private MailSender sender;
 	
+	/**
+	 * <p>Getter for the field <code>sender</code>.</p>
+	 *
+	 * @return a {@link org.springframework.mail.MailSender} object.
+	 */
 	public MailSender getSender() {
 		return sender;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sender</code>.</p>
+	 *
+	 * @param sender a {@link org.springframework.mail.MailSender} object.
+	 */
 	public void setSender(MailSender sender) {
 		this.sender = sender;
 	}
 	
+	/**
+	 * <p>Constructor for InviteNewUserController.</p>
+	 */
 	public InviteNewUserController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET, METHOD_POST});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	request,
 									HttpServletResponse	response) 
@@ -127,10 +147,20 @@ public class InviteNewUserController extends BaseCommandController {
 		return str;
 	}
 
+	/**
+	 * <p>Getter for the field <code>registrationService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+	 */
 	public RegistrationService getRegistrationService() {
 		return registrationService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>registrationService</code>.</p>
+	 *
+	 * @param registrationService a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+	 */
 	public void setRegistrationService(RegistrationService registrationService) {
 		this.registrationService = registrationService;
 	}

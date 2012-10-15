@@ -33,14 +33,19 @@ import net.sourceforge.seqware.common.util.Log;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * <p>FileLinker class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
 public class FileLinker extends Plugin {
 
     ReturnValue ret = new ReturnValue();
 
+    /**
+     * <p>Constructor for FileLinker.</p>
+     */
     public FileLinker() {
         super();
         parser.acceptsAll(Arrays.asList("file-list-file"), "A file containing the necessary information, with each line in the format parent_sw_accession, file path and mime-type. parent_sw_accession is either an IUS or a Lane.").withRequiredArg();
@@ -48,17 +53,20 @@ public class FileLinker extends Plugin {
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue init() {
 
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_test() {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_run() {
         String currentDir = new File(".").getAbsolutePath();
@@ -154,11 +162,13 @@ public class FileLinker extends Plugin {
         return set;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue clean_up() {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String get_description() {
         return "Takes a list of files and enters them into the database, linking "

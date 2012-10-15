@@ -17,30 +17,48 @@ import org.hibernate.*;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>WorkflowRunDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements WorkflowRunDAO {
 
     private Logger logger;
 
+    /**
+     * <p>Constructor for WorkflowRunDAOHibernate.</p>
+     */
     public WorkflowRunDAOHibernate() {
         super();
         logger = Logger.getLogger(WorkflowRunDAOHibernate.class);
     }
 
+    /** {@inheritDoc} */
     public Integer insert(WorkflowRun workflowRun) {
         this.getHibernateTemplate().save(workflowRun);
         this.getSession().flush();
         return (Integer) workflowRun.getSwAccession();
     }
 
+    /** {@inheritDoc} */
     public void update(WorkflowRun workflowRun) {
         getHibernateTemplate().update(workflowRun);
         getSession().flush();
     }
 
+    /** {@inheritDoc} */
     public void delete(WorkflowRun workflowRun) {
         getHibernateTemplate().delete(workflowRun);
     }
 
+    /**
+     * <p>update.</p>
+     *
+     * @param workflowRun a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+     * @param laneIds a {@link java.util.List} object.
+     */
     public void update(WorkflowRun workflowRun, List<Integer> laneIds) {
         String paramQuery = "";
         for (int i = 0; i < laneIds.size() - 1; i++) {
@@ -62,6 +80,11 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         getSession().flush();
     }
 
+    /**
+     * <p>list.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<WorkflowRun> list() {
         ArrayList<WorkflowRun> workflowRuns = new ArrayList<WorkflowRun>();
         // Limit the workflows to those owned by the user
@@ -86,6 +109,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     }
 
     
+    /** {@inheritDoc} */
     public List<WorkflowRun> list(Registration registration, Boolean isAsc) {
         ArrayList<WorkflowRun> workflowRuns = new ArrayList<WorkflowRun>();
         logger.debug("Get WFR LIST. " + registration.getEmailAddress());
@@ -119,6 +143,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         return workflowRuns;
     }
 
+    /** {@inheritDoc} */
     public List<Workflow> listRelatedWorkflows(Registration registration) {
         String querySQL = "select distinct wr.workflow from WorkflowRun as wr where wr.owner.registrationId = ?";
         Object[] parameters = {registration.getRegistrationId()};
@@ -130,6 +155,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         return workflows;
     }
 
+    /** {@inheritDoc} */
     public List<WorkflowRun> listMyShared(Registration registration, Boolean isAsc) {
         List<WorkflowRun> sharedWorkflowRuns = new ArrayList<WorkflowRun>();
 
@@ -146,6 +172,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         return sharedWorkflowRuns;
     }
 
+    /** {@inheritDoc} */
     public List<WorkflowRun> listSharedWithMe(Registration registration, Boolean isAsc) {
         List<WorkflowRun> sharedWithMeWorkflowRuns = new ArrayList<WorkflowRun>();
         if (registration == null) {
@@ -165,6 +192,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         return sharedWithMeWorkflowRuns;
     }
 
+    /** {@inheritDoc} */
     public List<WorkflowRun> listRunning(Registration registration, Boolean isAsc) {
         List<WorkflowRun> runningWorkflowRuns = new ArrayList<WorkflowRun>();
         String query = "";
@@ -187,6 +215,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         return runningWorkflowRuns;
     }
 
+    /** {@inheritDoc} */
     public WorkflowRun findByName(String name) {
         String query = "from WorkflowRun as workflowRun where workflowRun.name = ?";
         WorkflowRun workflowRun = null;
@@ -198,6 +227,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         return workflowRun;
     }
 
+    /** {@inheritDoc} */
     public WorkflowRun findByID(Integer wfrID) {
         String query = "from WorkflowRun as workflowRun where workflowRun.workflowRunId = ?";
         WorkflowRun workflowRun = null;
@@ -209,6 +239,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         return workflowRun;
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public WorkflowRun findBySWAccession(Integer swAccession) {
@@ -222,6 +253,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         return workflowRun;
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public List<WorkflowRun> findByOwnerID(Integer registrationID) {
@@ -230,6 +262,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         return this.getHibernateTemplate().find(query, parameters);
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public List<WorkflowRun> findByCriteria(String criteria, boolean isCaseSens) {
@@ -249,6 +282,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         return query.list();
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("rawtypes")
     @Override
     public Set<WorkflowRun> findRunsForIUS(IUS ius) {
@@ -292,6 +326,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         return wfRuns;
     }
 
+    /** {@inheritDoc} */
     @Override
     public WorkflowRun updateDetached(WorkflowRun workflowRun) {
         WorkflowRun dbWf = reattachWorkflowRun(workflowRun);
@@ -307,6 +342,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<WorkflowRun> findByCriteria(String criteria) {
         
@@ -321,6 +357,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         return query.list();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(Registration registration, WorkflowRun workflowRun) {
         WorkflowRun dbWf = reattachWorkflowRun(workflowRun);
@@ -336,6 +373,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer insert(Registration registration, WorkflowRun workflowRun) {
         Logger logger = Logger.getLogger(WorkflowRunDAOHibernate.class);
@@ -350,6 +388,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public WorkflowRun updateDetached(Registration registration, WorkflowRun workflowRun) {
         WorkflowRun dbWf = reattachWorkflowRun(workflowRun);

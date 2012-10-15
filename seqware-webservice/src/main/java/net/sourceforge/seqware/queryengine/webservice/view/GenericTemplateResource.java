@@ -24,8 +24,11 @@ import freemarker.template.Template;
 import org.restlet.ext.wadl.WadlServerResource;
 
 /**
+ * <p>GenericTemplateResource class.</p>
+ *
  * @author boconnor
  * FIXME: all the db connection code below can be replaced with the db object
+ * @version $Id: $Id
  */
 public class GenericTemplateResource extends WadlServerResource {
   
@@ -38,35 +41,67 @@ public class GenericTemplateResource extends WadlServerResource {
   protected StringWriter sw = null;
   protected Configuration cfg = null;
   
+  /**
+   * <p>Getter for the field <code>templateFile</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getTemplateFile() {
     return templateFile;
   }
 
+  /**
+   * <p>Setter for the field <code>templateFile</code>.</p>
+   *
+   * @param templateFile a {@link java.lang.String} object.
+   * @throws java.lang.Exception if any.
+   */
   public void setTemplateFile(String templateFile) throws Exception {
     this.templateFile = templateFile;
     cfg.getTemplate(templateFile);
   }
 
+  /**
+   * <p>Getter for the field <code>urlString</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getUrlString() {
     return urlString;
   }
 
+  /**
+   * <p>Setter for the field <code>urlString</code>.</p>
+   *
+   * @param urlString a {@link java.lang.String} object.
+   */
   public void setUrlString(String urlString) {
     this.urlString = urlString;
   }
   
+  /**
+   * <p>Getter for the field <code>data</code>.</p>
+   *
+   * @return a {@link java.util.ArrayList} object.
+   */
   public ArrayList getData() {
     return data;
   }
 
+  /**
+   * <p>Setter for the field <code>data</code>.</p>
+   *
+   * @param data a {@link java.util.ArrayList} object.
+   */
   public void setData(ArrayList data) {
     this.data = data;
   }
   
   /**
    * This allows you to search for different types of data in the metadb not just query engine databases
-   * @param type
-   * @throws Exception
+   *
+   * @param type a {@link java.lang.String} object.
+   * @throws java.lang.Exception if any.
    */
   public void setup(String type) throws Exception {
     MetadataDB metadata = new MetadataDB();
@@ -82,11 +117,22 @@ public class GenericTemplateResource extends WadlServerResource {
     }
   }
 
+  /**
+   * <p>setup.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   public void setup() throws Exception {
     MetadataDB metadata = new MetadataDB();
     setup(metadata.getMetadata());
   }
   
+  /**
+   * <p>setup.</p>
+   *
+   * @param data a {@link java.util.ArrayList} object.
+   * @throws java.lang.Exception if any.
+   */
   public void setup(ArrayList data) throws Exception { 
     
     r = this.getRequest();

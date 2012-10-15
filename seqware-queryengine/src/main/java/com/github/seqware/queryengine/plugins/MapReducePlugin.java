@@ -10,6 +10,7 @@ import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
  * Implementation orients itself on HBase's TableMapper, TableReduce.
  *
  * @author jbaran
+ * @version $Id: $Id
  */
 public interface MapReducePlugin<T extends Atom, S extends MolSetInterface> extends AnalysisPluginInterface {
 
@@ -19,6 +20,7 @@ public interface MapReducePlugin<T extends Atom, S extends MolSetInterface> exte
      * @param atom Atom that is to be either dropped, or added to mappedSet.
      * @param mappedSet Set of atoms that are passed to the reduce
      * implementation.
+     * @return a ReturnValue object.
      */
     public abstract ReturnValue map(T atom, S mappedSet);
 
@@ -27,10 +29,21 @@ public interface MapReducePlugin<T extends Atom, S extends MolSetInterface> exte
      *
      * @param mappedSet Atoms that were selected during the mapping step.
      * @param resultSet Atoms that are created as a result of the reduce step.
+     * @return a ReturnValue object.
      */
     public abstract ReturnValue reduce(S mappedSet, S resultSet);
 
+    /**
+     * <p>reduceInit.</p>
+     *
+     * @return a ReturnValue object.
+     */
     public abstract ReturnValue reduceInit();
 
+    /**
+     * <p>mapInit.</p>
+     *
+     * @return a ReturnValue object.
+     */
     public abstract ReturnValue mapInit();
 }

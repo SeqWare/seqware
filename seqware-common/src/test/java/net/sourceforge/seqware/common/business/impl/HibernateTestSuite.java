@@ -28,8 +28,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * 
+ * <p>HibernateTestSuite class.</p>
+ *
  * @author mtaschuk
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ net.sourceforge.seqware.common.business.impl.IusServiceImplTest.class,
@@ -44,21 +47,41 @@ import org.junit.runners.Suite;
     net.sourceforge.seqware.database.QueryTest.class })
 public class HibernateTestSuite extends TestCase {
 
+  /**
+   * <p>setUpClass.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @BeforeClass
   public static void setUpClass() throws Exception {
     DatabaseCreator.createDatabase();
     JndiDatasourceCreator.create();
   }
 
+  /**
+   * <p>tearDownClass.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @AfterClass
   public static void tearDownClass() throws Exception {
     DatabaseCreator.dropDatabase();
   }
 
+  /**
+   * <p>setUp.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @Before
   public void setUp() throws Exception {
   }
 
+  /**
+   * <p>tearDown.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   @After
   public void tearDown() throws Exception {
   }

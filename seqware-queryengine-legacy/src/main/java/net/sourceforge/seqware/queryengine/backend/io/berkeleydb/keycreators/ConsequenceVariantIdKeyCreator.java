@@ -28,17 +28,25 @@ import com.sleepycat.db.SecondaryKeyCreator;
 import com.sleepycat.db.SecondaryMultiKeyCreator;
 
 /**
- * @author boconnor
+ * <p>ConsequenceVariantIdKeyCreator class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class ConsequenceVariantIdKeyCreator implements SecondaryKeyCreator {
     
     private TupleBinding binding;
     
+    /**
+     * <p>Constructor for ConsequenceVariantIdKeyCreator.</p>
+     *
+     * @param binding a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+     */
     public ConsequenceVariantIdKeyCreator(TupleBinding binding) {
       this.binding = binding;
     }
     
+    /** {@inheritDoc} */
     public boolean createSecondaryKey(SecondaryDatabase secDb,
                                       DatabaseEntry key,
                                       DatabaseEntry value,

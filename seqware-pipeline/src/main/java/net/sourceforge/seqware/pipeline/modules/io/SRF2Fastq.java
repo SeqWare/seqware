@@ -16,9 +16,16 @@ import net.sourceforge.seqware.common.util.Log;
 
 import org.openide.util.lookup.ServiceProvider;
 
+/**
+ * <p>SRF2Fastq class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 @ServiceProvider(service=ModuleInterface.class)
 public class SRF2Fastq extends Module {
   private static String[] aligners = { "bfast", "bwa" }; // add aligners as we support more
+  /** Constant <code>sequencers="{ Solexa_1G_Genome_Analyzer, Illumina_G"{trunked}</code> */
   public static String[] sequencers = { "Solexa_1G_Genome_Analyzer", "Illumina_Genome_Analyzer", "Illumina_Genome_Analyzer_II", "Illumina_Genome_Analyzer_IIx", "Illumina_HiSeq_2000", "Illumina_HiScan_SQ", "Illumina_HiSeq_1000",  "AB_SOLiD_System", "AB_SOLiD_System_2.0", "AB_SOLiD_System_3.0", "AB_SOLiD_System_3_Plus", "AB_SOLiD_System_4", "AB_SOLiD_System_PI", "AB_SOLiD_5500xl", "AB_SOLiD_5500" }; // 454, etc
 
   /*
@@ -38,6 +45,7 @@ public class SRF2Fastq extends Module {
   String srf2FastqPath;
   ArrayList<File> outputFiles = new ArrayList<File>();
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue init() {
     ReturnValue ret = new ReturnValue();
@@ -146,6 +154,7 @@ public class SRF2Fastq extends Module {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
     // Aligner: Look at each supported method to make sure there is a match
@@ -202,6 +211,7 @@ public class SRF2Fastq extends Module {
     return new ReturnValue();
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
     ReturnValue ret = new ReturnValue();
@@ -307,6 +317,7 @@ public class SRF2Fastq extends Module {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
     if (input.endsWith(".srf")) {
@@ -319,6 +330,7 @@ public class SRF2Fastq extends Module {
     return new ReturnValue(null, null, 0);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_test() {
     // FIXME
@@ -326,6 +338,7 @@ public class SRF2Fastq extends Module {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     // FIXME: need to deal with paired end output for BWA
@@ -347,6 +360,7 @@ public class SRF2Fastq extends Module {
     return new ReturnValue(null, null, 0);
   }
 
+  /** {@inheritDoc} */
   @Override
   public String get_syntax() {
     StringBuffer ReturnString = new StringBuffer(
@@ -412,18 +426,40 @@ public class SRF2Fastq extends Module {
     return ReturnString.toString();
   }
 
+  /**
+   * <p>Getter for the field <code>aligners</code>.</p>
+   *
+   * @return an array of {@link java.lang.String} objects.
+   */
   public static String[] getAligners() {
     return aligners;
   }
 
+  /**
+   * <p>Getter for the field <code>aligners</code>.</p>
+   *
+   * @param i a int.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getAligners(int i) {
     return aligners[i];
   }
 
+  /**
+   * <p>Getter for the field <code>sequencers</code>.</p>
+   *
+   * @return an array of {@link java.lang.String} objects.
+   */
   public static String[] getSequencers() {
     return sequencers;
   }
 
+  /**
+   * <p>Getter for the field <code>sequencers</code>.</p>
+   *
+   * @param i a int.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getSequencers(int i) {
     return sequencers[i];
   }

@@ -39,6 +39,7 @@ import org.openide.util.lookup.ServiceProvider;
  * better support for lookup tables rather than just hard-coding
  *
  * @author Brian O'Connor <briandoconnor@gmail.com>
+ * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
 public class Metadata extends Plugin {
@@ -47,6 +48,9 @@ public class Metadata extends Plugin {
   BufferedWriter bw = null;
   HashMap<String, String> fields = new HashMap<String, String>();
 
+  /**
+   * <p>Constructor for Metadata.</p>
+   */
   public Metadata() {
     super();
     parser.acceptsAll(Arrays.asList("list-tables", "lt"), "Optional: if provided will list out the tables this tools knows how to read and/or write to.");
@@ -60,16 +64,19 @@ public class Metadata extends Plugin {
     ret.setExitStatus(ReturnValue.SUCCESS);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue init() {
     return parseFields();
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_test() {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
 
@@ -199,6 +206,7 @@ public class Metadata extends Plugin {
     return(ret);
   }
 
+  /** {@inheritDoc} */
   public void print(String string) {
     if (bw != null) {
       try {
@@ -228,11 +236,13 @@ public class Metadata extends Plugin {
     return (ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue clean_up() {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String get_description() {
     return "This plugin lets you list, read, and write to a collection of tables in the underlying MetaDB. "

@@ -20,22 +20,31 @@ import com.github.seqware.queryengine.model.Analysis;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 
 /**
+ * <p>InMemoryQueryFutureImpl class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class InMemoryQueryFutureImpl<T> extends Analysis {
     
+    private static final long serialVersionUID = 1L;
+    
     private transient AnalysisPluginInterface<T> plugin;
 
+    /**
+     * <p>Constructor for InMemoryQueryFutureImpl.</p>
+     */
     public InMemoryQueryFutureImpl() {
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public T get() {
         return getPlugin().getFinalResult();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isDone() {
         return getPlugin().isComplete();
@@ -44,12 +53,13 @@ public class InMemoryQueryFutureImpl<T> extends Analysis {
     /**
      * Create a new AnalysisSet builder
      *
-     * @return
+     * @return a {@link com.github.seqware.queryengine.model.Analysis.Builder} object.
      */
     public static Analysis.Builder newBuilder() {
         return new InMemoryQueryFutureImpl.Builder();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Analysis.Builder toBuilder() {
         InMemoryQueryFutureImpl.Builder b = new InMemoryQueryFutureImpl.Builder();
@@ -58,21 +68,25 @@ public class InMemoryQueryFutureImpl<T> extends Analysis {
         return b;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface<T> getPlugin() {
         return plugin;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void setPlugin(AnalysisPluginInterface plugin) {
         this.plugin = plugin;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Class getHBaseClass() {
         return Analysis.class;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getHBasePrefix() {
         return Analysis.prefix;

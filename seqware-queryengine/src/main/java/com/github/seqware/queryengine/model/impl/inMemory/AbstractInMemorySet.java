@@ -10,20 +10,26 @@ import java.util.*;
  * An in-memory representation of a MolSetInterface.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public abstract class AbstractInMemorySet<S extends MolSetInterface, T> extends AbstractMolSet<S> implements MolSetInterface<S, T>, Taggable{
     
     protected Set<T> set = new HashSet<T>();
     
+    /**
+     * <p>Constructor for AbstractInMemorySet.</p>
+     */
     protected AbstractInMemorySet(){
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<T> iterator() {
         return set.iterator();
     }
 
+    /** {@inheritDoc} */
     @Override
     public S add(T element) {
         set.add(element);
@@ -33,6 +39,7 @@ public abstract class AbstractInMemorySet<S extends MolSetInterface, T> extends 
         return (S) this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public S add(Collection<T> elements) {
         this.set.addAll(elements);
@@ -42,6 +49,7 @@ public abstract class AbstractInMemorySet<S extends MolSetInterface, T> extends 
         return (S) this;
     }
     
+    /** {@inheritDoc} */
     @Override
     public S add(T ... elements) {
         this.set.addAll(Arrays.asList(elements));
@@ -51,6 +59,7 @@ public abstract class AbstractInMemorySet<S extends MolSetInterface, T> extends 
         return (S) this;
     }
     
+    /** {@inheritDoc} */
     @Override
     public S remove(T element) {
         this.set.remove(element);
@@ -60,6 +69,7 @@ public abstract class AbstractInMemorySet<S extends MolSetInterface, T> extends 
         return (S) this;
     }
     
+    /** {@inheritDoc} */
     @Override
     public void rebuild() {
         //TODO: this kind of sucks and will tank our benchmarks, fix this
@@ -70,6 +80,7 @@ public abstract class AbstractInMemorySet<S extends MolSetInterface, T> extends 
         this.set = newSet;
     }
 
+    /** {@inheritDoc} */
     @Override
     public long getCount() {
         return set.size();

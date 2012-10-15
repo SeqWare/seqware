@@ -24,13 +24,12 @@ import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
-import com.github.seqware.queryengine.plugins.hbasemr.QEMapper;
 import com.github.seqware.queryengine.system.importers.FeatureImporter;
 import com.github.seqware.queryengine.util.FSGID;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.IOException;
-import java.util.Map.Entry;
 import java.util.*;
+import java.util.Map.Entry;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
@@ -41,26 +40,36 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 
 /**
+ * <p>HBaseStorage class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class HBaseStorage extends StorageInterface {
 
     private static final String TEST_COLUMN = "d";
-    public static final byte[] TEST_FAMILY_INBYTES = Bytes.toBytes(TEST_COLUMN); // Try to keep the ColumnFamily names as small as possible, preferably one character (e.g. "d" for data/default). 
-    public static final byte[] TEST_QUALIFIER_INBYTES = Bytes.toBytes("qualifier");
+    private static final byte[] TEST_FAMILY_INBYTES = Bytes.toBytes(TEST_COLUMN); // Try to keep the ColumnFamily names as small as possible, preferably one character (e.g. "d" for data/default). 
+    private static final byte[] TEST_QUALIFIER_INBYTES = Bytes.toBytes("qualifier");
     private boolean inefficiencyWarning = false;
+    /** Constant <code>PAD=15</code> */
     public static final int PAD = 15;
+    /** Constant <code>TEST_TABLE_PREFIX="Constants.Term.NAMESPACE.getTermValue(S"{trunked}</code> */
     public static final String TEST_TABLE_PREFIX = Constants.Term.NAMESPACE.getTermValue(String.class) + StorageInterface.SEPARATOR + "hbaseTestTable_v2";
     private static final boolean PERSIST = Constants.Term.PERSIST.getTermValue(Boolean.class);
     private Configuration config;
     private SerializationInterface serializer;
     private Map<String, HTable> tableMap = new HashMap<String, HTable>();
+    /** Constant <code>DEBUG=true</code> */
     public final static boolean DEBUG = true;
     private Map<String, Integer> minMap = null;
     private Map<String, Integer> maxMap = null;
     private Map<String, Long> countMap = null;
 
+    /**
+     * <p>Constructor for HBaseStorage.</p>
+     *
+     * @param i a {@link com.github.seqware.queryengine.impl.SerializationInterface} object.
+     */
     public HBaseStorage(SerializationInterface i) {
         if (DEBUG) {
             minMap = new HashMap<String, Integer>();
@@ -126,7 +135,7 @@ public class HBaseStorage extends StorageInterface {
     /**
      * Configure a HBaseConfiguration with a given set of properties
      *
-     * @param config
+     * @param config a {@link org.apache.hadoop.conf.Configuration} object.
      */
     public static void configureHBaseConfig(Configuration config) {
         if (Constants.Term.HBASE_REMOTE_TESTING.getTermValue(Boolean.class)) {
@@ -138,6 +147,7 @@ public class HBaseStorage extends StorageInterface {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Atom> void serializeAtomsToTarget(T... objArr) {
         if (objArr.length == 0) {
@@ -217,11 +227,13 @@ public class HBaseStorage extends StorageInterface {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void serializeAtomToTarget(Atom obj) {
         serializeAtomsToTarget(obj);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Atom deserializeTargetToAtom(SGID sgid) {
         return deserializeTargetToAtom(sgid, true);
@@ -304,6 +316,7 @@ public class HBaseStorage extends StorageInterface {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public final void clearStorage() {
         for (String s : tableMap.keySet()) {
@@ -320,11 +333,12 @@ public class HBaseStorage extends StorageInterface {
                 tableMap.put(s, new HTable(config, tableName));
             } catch (IOException ex) {
                 Logger.getLogger(HBaseStorage.class.getName()).fatal("Big problem with HBase, abort!", ex);
-                System.exit(-1);
+                throw new RuntimeException("Big problem with HBase shutdown, abort!");
             }
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterable<SGID> getAllAtoms() {
         if (!inefficiencyWarning) {
@@ -341,6 +355,12 @@ public class HBaseStorage extends StorageInterface {
         return list;
     }
 
+    /**
+     * <p>getAllAtomsForTable.</p>
+     *
+     * @param prefix a {@link java.lang.String} object.
+     * @return a {@link java.lang.Iterable} object.
+     */
     public Iterable<SGID> getAllAtomsForTable(String prefix) {
         HTable table = tableMap.get(prefix);
         Class cl = super.directBIMap.inverse().get(prefix);
@@ -358,6 +378,7 @@ public class HBaseStorage extends StorageInterface {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterable<FeatureList> getAllFeatureListsForFeatureSet(FeatureSet fSet) {
         assert (fSet instanceof LazyFeatureSet);
@@ -431,21 +452,25 @@ public class HBaseStorage extends StorageInterface {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Atom deserializeTargetToLatestAtom(SGID sgid) {
         return deserializeTargetToAtom(sgid, false);
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Atom> T deserializeTargetToLatestAtom(SGID sgid, Class<T> t) {
         return (T) deserializeTargetToAtom(sgid, t, false);
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Atom> T deserializeTargetToAtom(Class<T> t, SGID sgid) {
         return (T) deserializeTargetToAtom(sgid, t, true);
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Atom> List<T> deserializeTargetToAtoms(Class<T> t, SGID... sgid) {
         if (t == Feature.class) {
@@ -479,6 +504,7 @@ public class HBaseStorage extends StorageInterface {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void closeStorage() {
         for (HTable table : tableMap.values()) {
@@ -682,6 +708,14 @@ public class HBaseStorage extends StorageInterface {
         }
     }
 
+    /**
+     * <p>grabFeatureListsGivenRow.</p>
+     *
+     * @param result a {@link org.apache.hadoop.hbase.client.Result} object.
+     * @param featureSetID a {@link com.github.seqware.queryengine.util.SGID} object.
+     * @param serializer a {@link com.github.seqware.queryengine.impl.SerializationInterface} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<FeatureList> grabFeatureListsGivenRow(Result result, SGID featureSetID, SerializationInterface serializer) {
         byte[] qualifier = Bytes.toBytes(featureSetID.getUuid().toString());
         List<FeatureList> cachedPayloads = new ArrayList<FeatureList>();
@@ -705,5 +739,16 @@ public class HBaseStorage extends StorageInterface {
             cachedPayloads.add(list);
         }
         return cachedPayloads;
+    }
+    
+    
+    /**
+     * <p>getTEST_FAMILY_INBYTES.</p>
+     *
+     * @return an array of byte.
+     */
+    public static byte[] getTEST_FAMILY_INBYTES() {
+        // defensive copy
+        return Arrays.copyOf(TEST_FAMILY_INBYTES, TEST_FAMILY_INBYTES.length);
     }
 }

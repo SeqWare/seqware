@@ -33,12 +33,19 @@ import freemarker.template.Template;
 
 
 /**
- * @author boconnor
+ * <p>LiveTagResource class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class LiveTagResource extends ServerResource {
 
   //Get("text/html")
+  /**
+   * <p>represent.</p>
+   *
+   * @return a {@link org.restlet.representation.Representation} object.
+   */
   @Get
   public Representation represent() {  
 

@@ -17,13 +17,30 @@ import net.sourceforge.seqware.queryengine.backend.store.impl.BerkeleyDBStore;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareSettings;
 import net.sourceforge.seqware.queryengine.webservice.util.EnvUtil;
 
+/**
+ * <p>BackendPool class.</p>
+ *
+ * @author morgantaschuk
+ * @version $Id: $Id
+ */
 public class BackendPool {
 
 	private static BerkeleyDBFactory factory = new BerkeleyDBFactory();
 	private static HashMap<String, BerkeleyDBStore> stores = new HashMap<String, BerkeleyDBStore>();
 	private static HashMap<String, Semaphore> storeSemaphores = new HashMap<String, Semaphore>();
+	/** Constant <code>maxThreads=Integer.parseInt(EnvUtil.getProperty("maxconnections"))</code> */
 	protected static int maxThreads = Integer.parseInt(EnvUtil.getProperty("maxconnections"));
 
+	/**
+	 * <p>getStore.</p>
+	 *
+	 * @param filePath a {@link java.lang.String} object.
+	 * @param cacheSize a {@link java.lang.Long} object.
+	 * @param locks a int.
+	 * @return a {@link net.sourceforge.seqware.queryengine.backend.store.impl.BerkeleyDBStore} object.
+	 * @throws java.lang.InterruptedException if any.
+	 * @throws java.lang.Exception if any.
+	 */
 	public synchronized static BerkeleyDBStore getStore(String filePath, Long cacheSize, int locks) throws InterruptedException, Exception {
 		Semaphore s = storeSemaphores.get(filePath);
 		BerkeleyDBStore store = stores.get(filePath);
@@ -54,6 +71,12 @@ public class BackendPool {
 		return(store);
 	}
 
+	/**
+	 * <p>releaseStore.</p>
+	 *
+	 * @param filePath a {@link java.lang.String} object.
+	 * @throws java.lang.Exception if any.
+	 */
 	public synchronized static void releaseStore(String filePath) throws Exception {
 		Semaphore s = storeSemaphores.get(filePath);
 		BerkeleyDBStore store = stores.get(filePath);

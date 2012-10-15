@@ -26,15 +26,23 @@ import net.sourceforge.seqware.pipeline.workflowV2.pegasus.ArgumentUtils;
 import org.jdom.Element;
 
 /**
- * 
+ * <p>PegasusSeqwareModuleJob class.</p>
+ *
  * @author yongliang
+ * @version $Id: $Id
  */
 public class PegasusSeqwareModuleJob extends PegasusJob {
 
+    /**
+     * <p>Constructor for PegasusSeqwareModuleJob.</p>
+     *
+     * @param job a {@link net.sourceforge.seqware.pipeline.workflowV2.model.Job} object.
+     */
     public PegasusSeqwareModuleJob(Job job) {
 	super(job);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Element serializeXML() {
 	Element element = new Element("job", NAMESPACE);
@@ -106,6 +114,7 @@ public class PegasusSeqwareModuleJob extends PegasusJob {
 	this.argument.addModuleOption("--gcr-command", cmd.toString());
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void setJobContext() {
 	super.setJobContext();
@@ -132,6 +141,7 @@ public class PegasusSeqwareModuleJob extends PegasusJob {
 	    this.argument.addSysOption("--no-metadata", null);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean hasProvisionFilesDependent() {
 	Module module = this.getModule();
@@ -140,18 +150,34 @@ public class PegasusSeqwareModuleJob extends PegasusJob {
 		&& Module.ProvisionFiles != module;
     }
 
+    /**
+     * <p>getModule.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.pipeline.workflowV2.model.Module} object.
+     */
     public Module getModule() {
 	return ((SeqwareModuleJob) this.jobObj).getModule();
     }
 
+    /**
+     * <p>getInputFile.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getInputFile() {
 	return this.jobObj.getInputFile();
     }
 
+    /**
+     * <p>getOutputDir.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getOutputDir() {
 	return this.jobObj.getOutputDir();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isProvisionFilesJob() {
 	return Module.ProvisionFiles == this.getModule();

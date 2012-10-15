@@ -25,11 +25,14 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import org.apache.log4j.Logger;
 
 /**
+ * <p>TagIO class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class TagIO implements ProtobufTransferInterface<TagPB, Tag> {
 
+    /** {@inheritDoc} */
     @Override
     public Tag pb2m(TagPB tag) {
         Tag.Builder builder = Tag.newBuilder().setKey(tag.getKey());
@@ -61,10 +64,16 @@ public class TagIO implements ProtobufTransferInterface<TagPB, Tag> {
         return rTag;
     }
 
+    /** {@inheritDoc} */
     @Override
     public TagPB m2pb(Tag tag) {
         QESupporting.TagPB.Builder builder = QESupporting.TagPB.newBuilder().setKey(tag.getKey());
         builder = tag.getPredicate() != null ? builder.setPredicate(tag.getPredicate()) : builder;
+        // ensure that parent is properly set
+        if (tag.getTagSetSGID() == null){
+            Logger.getLogger(TagIO.class.getName()).fatal("Tag " + tag.getKey() + " is not owned by a tagset");
+            throw new RuntimeException("Tag cannot be flushed without a TagSet");
+        }
         // tag value
         if (tag.getValue() != null) {
             if (tag.getvType() == Tag.ValueType.BYTEARR) {
@@ -94,6 +103,7 @@ public class TagIO implements ProtobufTransferInterface<TagPB, Tag> {
         return fMesg;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Tag byteArr2m(byte[] arr) {
         try {

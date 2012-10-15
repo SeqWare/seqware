@@ -14,7 +14,9 @@ import javax.persistence.UniqueConstraint;
 
 /**
  * Attributes that are part of a sample search.
- * 
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 @Entity
 @Table(name = "sample_search_attribute", uniqueConstraints = { @UniqueConstraint(columnNames = { "sample_search_id",
@@ -37,48 +39,74 @@ public class SampleSearchAttribute implements Attribute {
   @Column(nullable = false)
   private String value;
 
+  /**
+   * <p>Getter for the field <code>sampleSearchAttributeId</code>.</p>
+   *
+   * @return a {@link java.lang.Integer} object.
+   */
   public Integer getSampleSearchAttributeId() {
     return sampleSearchAttributeId;
   }
 
+  /**
+   * <p>Setter for the field <code>sampleSearchAttributeId</code>.</p>
+   *
+   * @param sampleSearchAttributeId a {@link java.lang.Integer} object.
+   */
   public void setSampleSearchAttributeId(Integer sampleSearchAttributeId) {
     this.sampleSearchAttributeId = sampleSearchAttributeId;
   }
 
+  /**
+   * <p>Getter for the field <code>sampleSearch</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.SampleSearch} object.
+   */
   public SampleSearch getSampleSearch() {
     return sampleSearch;
   }
 
+  /**
+   * <p>Setter for the field <code>sampleSearch</code>.</p>
+   *
+   * @param sampleSearch a {@link net.sourceforge.seqware.common.model.SampleSearch} object.
+   */
   public void setSampleSearch(SampleSearch sampleSearch) {
     this.sampleSearch = sampleSearch;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getTag() {
     return this.tag;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void setTag(String tag) {
     this.tag = tag;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getValue() {
     return this.value;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void setValue(String value) {
     this.value = value;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getUnit() {
     // Sample Search Attributes have no units.
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void setUnit(String unit) {
     throw new UnsupportedOperationException("SampleSearchAttributes have no units.");

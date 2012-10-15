@@ -17,16 +17,23 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
  * RegistrationSetupController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class ProcessingSetupController extends BaseCommandController {
 	private SequencerRunService sequencerRunService;
 	private ProcessingService processingService;
 
+	/**
+	 * <p>Constructor for ProcessingSetupController.</p>
+	 */
 	public ProcessingSetupController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)
@@ -95,19 +102,39 @@ public class ProcessingSetupController extends BaseCommandController {
 		return processing;
 	}
 
+	/**
+	 * <p>Getter for the field <code>sequencerRunService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+	 */
 	public SequencerRunService getSequencerRunService() {
 		return sequencerRunService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sequencerRunService</code>.</p>
+	 *
+	 * @param sequencerRunService a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+	 */
 	public void setSequencerRunService(SequencerRunService sequencerRunService) {
 		this.sequencerRunService = sequencerRunService;
 	}
 
 
+	/**
+	 * <p>Getter for the field <code>processingService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+	 */
 	public ProcessingService getProcessingService() {
 		return processingService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>processingService</code>.</p>
+	 *
+	 * @param processingService a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+	 */
 	public void setProcessingService(ProcessingService processingService) {
 		this.processingService = processingService;
 	}

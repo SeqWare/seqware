@@ -12,6 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
+/**
+ * <p>SampleSearchDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SampleSearchDAOHibernate implements SampleSearchDAO {
 
   @Autowired
@@ -21,6 +27,7 @@ public class SampleSearchDAOHibernate implements SampleSearchDAO {
     return sessionFactory.getCurrentSession();
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<SampleSearch> list() {
     String queryStringCase = "from SampleSearch";
@@ -33,6 +40,7 @@ public class SampleSearchDAOHibernate implements SampleSearchDAO {
     return records;
   }
 
+  /** {@inheritDoc} */
   @Override
   public SampleSearch findById(Integer id) {
     String queryStringCase = "from SampleSearch as s where s.sampleSearchId = :id";
@@ -42,6 +50,7 @@ public class SampleSearchDAOHibernate implements SampleSearchDAO {
     return (SampleSearch) query.uniqueResult();
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer create(SampleSearch sampleSearch) {
     return (Integer) currentSession().save(sampleSearch);

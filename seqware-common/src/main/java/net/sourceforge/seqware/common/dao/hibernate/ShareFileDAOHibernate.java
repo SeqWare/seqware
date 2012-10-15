@@ -10,23 +10,33 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ShareFileDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ShareFileDAOHibernate extends HibernateDaoSupport implements ShareFileDAO {
 
+  /** {@inheritDoc} */
   @Override
   public void insert(ShareFile shareFile) {
     this.getHibernateTemplate().save(shareFile);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(ShareFile shareFile) {
     this.getHibernateTemplate().update(shareFile);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void delete(ShareFile shareFile) {
     this.getHibernateTemplate().delete(shareFile);
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("rawtypes")
   public ShareFile findByID(Integer shareFileID) {
@@ -40,6 +50,7 @@ public class ShareFileDAOHibernate extends HibernateDaoSupport implements ShareF
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("unchecked")
   public List<ShareFile> findByOwnerID(Integer registrationID) {
@@ -48,6 +59,7 @@ public class ShareFileDAOHibernate extends HibernateDaoSupport implements ShareF
     return this.getHibernateTemplate().find(query, parameters);
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings({ "unchecked" })
   public ShareFile findBySWAccession(Integer swAccession) {
@@ -61,6 +73,7 @@ public class ShareFileDAOHibernate extends HibernateDaoSupport implements ShareF
     return shareFile;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ShareFile updateDetached(ShareFile shareFile) {
     ShareFile dbObject = findByID(shareFile.getShareFileId());
@@ -76,6 +89,7 @@ public class ShareFileDAOHibernate extends HibernateDaoSupport implements ShareF
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ShareFile> list() {
         throw new UnsupportedOperationException("Not supported yet.");

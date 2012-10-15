@@ -32,6 +32,8 @@ import org.junit.Test;
  * Unit Tests for how a user would interact with friendly row keys.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class FriendlyNameTest {
 
@@ -41,6 +43,9 @@ public class FriendlyNameTest {
     private static String randomRef4 = null;
 
 
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
         randomRef1 = "Random_ref_" + new BigInteger(20, new SecureRandom()).toString(32);
@@ -49,6 +54,9 @@ public class FriendlyNameTest {
         randomRef4 = "Random_ref_" + new BigInteger(20, new SecureRandom()).toString(32);
     }
     
+    /**
+     * <p>createFriendlyKeysTest.</p>
+     */
     @Test
     public void createFriendlyKeysTest(){
         // create friendly keys for all applicable objects

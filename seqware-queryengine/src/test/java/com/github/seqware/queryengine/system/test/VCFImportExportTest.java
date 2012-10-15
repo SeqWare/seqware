@@ -25,6 +25,8 @@ import org.junit.Test;
  * System tests for importing and exporting VCF files.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class VCFImportExportTest {
 
@@ -33,6 +35,9 @@ public class VCFImportExportTest {
     private static File testVCFFile_invalid = null;
     private static String randomRef= null; 
     
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
         String curDir = System.getProperty("user.dir");
@@ -44,6 +49,11 @@ public class VCFImportExportTest {
         randomRef = "Random_ref_" + new BigInteger(20, random).toString(32);
     }
     
+    /**
+     * <p>testVCFImportParam.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     @Test
     public void testVCFImportParam() throws IOException{
         File createTempFile = File.createTempFile("output", "txt");
@@ -63,17 +73,26 @@ public class VCFImportExportTest {
         Assert.assertTrue("incorrect number of features in imported VCF, found " + count + " expected 93", count == 93);
     }
     
+    /**
+     * <p>testNormalVCFImport.</p>
+     */
     @Test
     public void testNormalVCFImport(){
         testFile(testVCFFile, true);
     }
     
+    /**
+     * <p>testMissingValueVCFImport.</p>
+     */
     @Test
     public void testMissingValueVCFImport(){
         // should handle this normally, all columns but POS look like they could use the missing value (".") according to the VCF specification
         testFile(testVCFFile_missingValues, true);
     }
     
+    /**
+     * <p>testInvalidVCFImport.</p>
+     */
     @Test
     public void testInvalidVCFImport(){
         // should bug out

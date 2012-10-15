@@ -32,8 +32,10 @@ import net.sourceforge.seqware.pipeline.workflowV2.pegasus.WorkflowExecutableUti
 import org.jdom.Element;
 
 /**
- * 
+ * <p>Adag class.</p>
+ *
  * @author yongliang
+ * @version $Id: $Id
  */
 public class Adag extends PegasusAbstract {
     private Collection<WorkflowExecutable> executables;
@@ -44,6 +46,11 @@ public class Adag extends PegasusAbstract {
     private String count = "1";
     private String index = "0";
 
+    /**
+     * <p>Constructor for Adag.</p>
+     *
+     * @param wf a {@link net.sourceforge.seqware.pipeline.workflowV2.model.Workflow} object.
+     */
     public Adag(Workflow wf) {
 	this.jobs = new LinkedHashMap<String, PegasusJob>();
 	this.parseWorkflow(wf);
@@ -66,6 +73,7 @@ public class Adag extends PegasusAbstract {
 			.getWorkflow().getProperties()));
     }
 
+    /** {@inheritDoc} */
     @Override
     public Element serializeXML() {
 	Element adag = new Element("adag", NAMESPACE);
@@ -133,6 +141,11 @@ public class Adag extends PegasusAbstract {
 	return pjob;
     }
 
+    /**
+     * <p>addJob.</p>
+     *
+     * @param job a {@link net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.PegasusJob} object.
+     */
     public void addJob(PegasusJob job) {
 	this.jobs.put(job.getId(), job);
     }

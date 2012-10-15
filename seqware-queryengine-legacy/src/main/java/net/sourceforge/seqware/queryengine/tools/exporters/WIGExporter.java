@@ -23,13 +23,18 @@ import net.sourceforge.seqware.queryengine.backend.util.SeqWareException;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareSettings;
 /**
+ * <p>WIGExporter class.</p>
+ *
  * @author boconnor
  * FIXME: the sorted output orders by start and not chr then start
  * TODO: most of this code should be migrated to the more flexible VariantIteratorProcessor
+ * @version $Id: $Id
  */
 public class WIGExporter {
 
   /**
+   * <p>main.</p>
+   *
    * @param args
    * LEFT OFF WITH: need to figure out why ID is null
    */

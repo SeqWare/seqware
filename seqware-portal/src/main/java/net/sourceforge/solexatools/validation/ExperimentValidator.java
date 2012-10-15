@@ -7,25 +7,32 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+/**
+ * <p>ExperimentValidator class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ExperimentValidator implements Validator {
   private ExperimentService experimentService;
 
+  /**
+   * <p>Constructor for ExperimentValidator.</p>
+   */
   public ExperimentValidator() {
     super();
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   public boolean supports(Class clazz) {
     return Experiment.class.equals(clazz);
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Validates the specified Object.
-   * 
-   * @param obj
-   *          the Object to validate
-   * @param errors
-   *          Errors object for validation errors
    */
   public void validate(Object obj, Errors errors) {
     Experiment experiment = (Experiment) obj;
@@ -44,6 +51,12 @@ public class ExperimentValidator implements Validator {
     this.validateExpectedNumberReads(experiment, errors);
   }
 
+  /**
+   * <p>validateExpectedNumberRuns.</p>
+   *
+   * @param experiment a {@link net.sourceforge.seqware.common.model.Experiment} object.
+   * @param errors a {@link org.springframework.validation.Errors} object.
+   */
   public void validateExpectedNumberRuns(Experiment experiment, Errors errors) {
     if (errors.getFieldError("strExpectedNumberRuns") == null) {
       boolean isHasError = false;
@@ -69,6 +82,12 @@ public class ExperimentValidator implements Validator {
     }
   }
 
+  /**
+   * <p>validateExpectedNumberReads.</p>
+   *
+   * @param experiment a {@link net.sourceforge.seqware.common.model.Experiment} object.
+   * @param errors a {@link org.springframework.validation.Errors} object.
+   */
   public void validateExpectedNumberReads(Experiment experiment, Errors errors) {
     if (errors.getFieldError("strExpectedNumberReads") == null) {
       boolean isHasError = false;
@@ -97,9 +116,10 @@ public class ExperimentValidator implements Validator {
   /**
    * Determines if the experiment's email address and confirm email address
    * match.
-   * 
+   *
    * @param errors
    *          Errors object for validation errors
+   * @param experiment a {@link net.sourceforge.seqware.common.model.Experiment} object.
    */
   public void validateTitle(Experiment experiment, Errors errors) {
 
@@ -111,10 +131,20 @@ public class ExperimentValidator implements Validator {
     }
   }
 
+  /**
+   * <p>Getter for the field <code>experimentService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+   */
   public ExperimentService getExperimentService() {
     return experimentService;
   }
 
+  /**
+   * <p>Setter for the field <code>experimentService</code>.</p>
+   *
+   * @param experimentService a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+   */
   public void setExperimentService(ExperimentService experimentService) {
     this.experimentService = experimentService;
   }

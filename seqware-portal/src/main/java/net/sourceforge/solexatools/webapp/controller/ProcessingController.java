@@ -28,41 +28,81 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 /**
  * SequencerRunController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class ProcessingController extends MultiActionController {
 	private SequencerRunService	sequencerRunService;
 	private ProcessingService	processingService;
 	private Validator			validator;
 
+	/**
+	 * <p>Constructor for ProcessingController.</p>
+	 */
 	public ProcessingController() {
 		super();
 	}
 
+	/**
+	 * <p>Constructor for ProcessingController.</p>
+	 *
+	 * @param delegate a {@link java.lang.Object} object.
+	 */
 	public ProcessingController(Object delegate) {
 		super(delegate);
 	}
 
+	/**
+	 * <p>Getter for the field <code>sequencerRunService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+	 */
 	public SequencerRunService getSequencerRunService() {
 		return sequencerRunService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sequencerRunService</code>.</p>
+	 *
+	 * @param sequencerRunService a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+	 */
 	public void setSequencerRunService(SequencerRunService sequencerRunService) {
 		this.sequencerRunService = sequencerRunService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>processingService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+	 */
 	public ProcessingService getProcessingService() {
 		return processingService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>processingService</code>.</p>
+	 *
+	 * @param processingService a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+	 */
 	public void setProcessingService(ProcessingService processingService) {
 		this.processingService = processingService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>validator</code>.</p>
+	 *
+	 * @return a {@link org.springframework.validation.Validator} object.
+	 */
 	public Validator getValidator() {
 		return validator;
 	}
 
+	/**
+	 * <p>Setter for the field <code>validator</code>.</p>
+	 *
+	 * @param validator a {@link org.springframework.validation.Validator} object.
+	 */
 	public void setValidator(Validator validator) {
 		this.validator = validator;
 	}
@@ -73,10 +113,8 @@ public class ProcessingController extends MultiActionController {
 	 * @param request HttpServletRequest
 	 * @param response HttpServletResponse
 	 * @param command SequencerRun command object
-	 *
 	 * @return ModelAndView
-	 *
-	 * @throws Exception
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleSubmit(HttpServletRequest request,
 									 HttpServletResponse response,
@@ -111,6 +149,10 @@ public class ProcessingController extends MultiActionController {
 	 * update sequencerRun.
 	 *
 	 * @param command SequencerRun command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleReset(HttpServletRequest	request,
 									HttpServletResponse	response,
@@ -134,10 +176,10 @@ public class ProcessingController extends MultiActionController {
 	 * or the sequencerRun update page.
 	 *
 	 * @param command SequencerRun command object
-	 *
 	 * @return ModelAndView
-	 *
-	 * @throws Exception
+	 * @throws java.lang.Exception if any.
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
 	 */
 	public ModelAndView handleCancel(HttpServletRequest request,
 									 HttpServletResponse response,
@@ -151,10 +193,8 @@ public class ProcessingController extends MultiActionController {
 	 * @param request HttpServletRequest
 	 * @param response HttpServletResponse
 	 * @param command SequencerRun command object
-	 *
 	 * @return ModelAndView
-	 *
-	 * @throws Exception
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleUpdate(HttpServletRequest request,
 									 HttpServletResponse response,
@@ -196,6 +236,10 @@ public class ProcessingController extends MultiActionController {
 	 * Handles the user's request to delete their processing.
 	 *
 	 * @param command Processing command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleDelete(HttpServletRequest		request,
 									 HttpServletResponse	response,
