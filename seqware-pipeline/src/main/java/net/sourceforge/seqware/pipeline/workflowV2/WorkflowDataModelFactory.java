@@ -83,7 +83,7 @@ public class WorkflowDataModelFactory {
 		//Java object or FTL
 		AbstractWorkflowDataModel ret = null;
 		if(workflow_java) {
-			String clazzPath = "";
+			String clazzPath = metaInfo.get("classes");
 			Log.info("CLASSPATH: " + clazzPath);
 	    	// get user defined classes
 	    	WorkflowClassFinder finder = new WorkflowClassFinder();
@@ -125,7 +125,9 @@ public class WorkflowDataModelFactory {
 		Log.error("basedir " + basedir);
 		
 		//merge command line option with configs
+		this.mergeCmdOptions(configs);
 		//merge version, and name ??? TODO 
+		
 		//set random, date, wait
         // magic variables always set
         Date date = new Date();
@@ -139,6 +141,7 @@ public class WorkflowDataModelFactory {
         ret.getEnv().setPegasusConfigDir(config.get("SW_PEGASUS_CONFIG_DIR"));
         ret.getEnv().setDaxDir(config.get("SW_DAX_DIR"));
         ret.getEnv().setSwCluster(config.get("SW_CLUSTER"));
+        
 		ret.setConfigs(configs);
 		
 		//parse XML or Java Object for
@@ -237,6 +240,64 @@ public class WorkflowDataModelFactory {
         
         ret = this.resolveMap(map);
     	return ret;
+    }
+    
+    //FIXME should iterate all options automatically
+    private void mergeCmdOptions(Map<String,String> map) {
+    	//merge parent-accessions
+    	if (options.has("parent-accessions")) {
+    		// parent accessions
+    		ArrayList<String> parentAccessions = new ArrayList<String>();
+    		if (options.has("parent-accessions")) {
+    		    List opts = options.valuesOf("parent-accessions");
+    		    for (Object opt : opts) {
+    			String[] tokens = ((String) opt).split(",");
+    			for (String t : tokens) {
+    			    parentAccessions.add(t);
+    			}
+    		    }
+    		}
+    		map.put("parent-accessions", org.apache.commons.lang.StringUtils.join(parentAccessions,","));
+    	}
+    	//merge 
+    	// link-workflow-run-to-parents
+    	if (options.has("link-workflow-run-to-parents")) {
+        	ArrayList<String> parentsLinkedToWR = new ArrayList<String>();
+    	    List opts = options.valuesOf("link-workflow-run-to-parents");
+    	    for (Object opt : opts) {
+	    		String[] tokens = ((String) opt).split(",");
+	    		for (String t : tokens) {
+	    		    parentsLinkedToWR.add(t);
+	    		}
+    	    }
+    	    map.put("link-workflow-run-to-parents", org.apache.commons.lang.StringUtils.join(parentsLinkedToWR,","));
+    	}
+    	//merge workflow-accession
+    	if(options.has("workflow-accession")) {
+    		map.put("workflow-accession", (String) options.valueOf("workflow-accession"));
+    	}
+    	//merge "workflow-run-accession"
+    	if(options.has("workflow-run-accession")) {
+    		map.put("workflow-run-accession", (String) options.valueOf("workflow-run-accession"));
+    	}
+    	//merge schedule
+    	if(options.has("schedule")) {
+    		map.put("schedule", "true");
+    	}
+    	//merge bundle
+    	if(options.has("bundle")) {
+    		map.put("bundle", (String) options.valueOf("bundle"));
+    	}
+    	//bundle "provisioned-bundle-dir"
+    	if(options.has("provisioned-bundle-dir")) {
+    		map.put("provisioned-bundle-dir", (String) options.valueOf("provisioned-bundle-dir"));
+    	}
+    	if (options.has("launch-scheduled")) {
+    		 List<String> scheduledAccessions = (List<String>) options
+    				    .valuesOf("launch-scheduled");
+    		 map.put("launch-scheduled", org.apache.commons.lang.StringUtils.join(scheduledAccessions,","));
+    	}
+
     }
 
 }
