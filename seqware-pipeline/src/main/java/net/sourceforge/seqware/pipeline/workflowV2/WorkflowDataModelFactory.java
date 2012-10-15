@@ -292,10 +292,15 @@ public class WorkflowDataModelFactory {
     	if(options.has("provisioned-bundle-dir")) {
     		map.put("provisioned-bundle-dir", (String) options.valueOf("provisioned-bundle-dir"));
     	}
+    	//launch-scheduled
     	if (options.has("launch-scheduled")) {
     		 List<String> scheduledAccessions = (List<String>) options
     				    .valuesOf("launch-scheduled");
     		 map.put("launch-scheduled", org.apache.commons.lang.StringUtils.join(scheduledAccessions,","));
+    	}
+    	//host
+    	if(options.has("host")) {
+    		map.put("host", (String) options.valueOf("host"));
     	}
 
     }
