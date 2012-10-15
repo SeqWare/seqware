@@ -20,7 +20,7 @@ public class FileMetadata {
    String metaType;
    String description;
    private String md5sum;
-   private Integer size;
+   private Long size;
 
    // Default constructor initializes everything to empty strings,
    public FileMetadata() {
@@ -118,11 +118,11 @@ public class FileMetadata {
       this.md5sum = md5sum;
    }
 
-   public Integer getSize() {
+   public Long getSize() {
       return size;
    }
 
-   public void setSize(Integer size) {
+   public void setSize(Long size) {
       this.size = size;
    }
 

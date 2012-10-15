@@ -928,7 +928,7 @@ public class MetadataDB extends Metadata {
     return value == null ? "null" : "'" + value + "'";
   }
   
-  private String sqlQuote(Integer value) {
+  private String sqlQuote(Long value) {
      return value == null ? "null" : value.toString();
    }
 
