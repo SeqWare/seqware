@@ -8,6 +8,9 @@ package net.sourceforge.seqware.pipeline.module;
  * Date: 7/25/11
  * Time: 10:16 PM
  * To change this template use File | Settings | File Templates.
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public enum ModuleMethod {
     init,

@@ -26,11 +26,14 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import org.apache.log4j.Logger;
 
 /**
+ * <p>ReferenceIO class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class ReferenceIO implements ProtobufTransferInterface<ReferencePB, Reference>{
 
+    /** {@inheritDoc} */
     @Override
     public Reference pb2m(ReferencePB userpb) {
         Reference.Builder builder = InMemoryReference.newBuilder();
@@ -45,6 +48,7 @@ public class ReferenceIO implements ProtobufTransferInterface<ReferencePB, Refer
     }
     
 
+    /** {@inheritDoc} */
     @Override
     public ReferencePB m2pb(Reference sgid) {
         QueryEngine.ReferencePB.Builder builder = QueryEngine.ReferencePB.newBuilder();
@@ -58,6 +62,7 @@ public class ReferenceIO implements ProtobufTransferInterface<ReferencePB, Refer
         return refpb;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Reference byteArr2m(byte[] arr) {
         try {

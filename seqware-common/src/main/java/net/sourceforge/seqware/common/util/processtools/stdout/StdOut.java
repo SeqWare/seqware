@@ -14,8 +14,23 @@ import java.util.ArrayList;
 import java.lang.UnsupportedOperationException;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>StdOut class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class StdOut {
 // FIXME: This method is temporary until srf2fastq fixes issue with appended primer to quality
+  /**
+   * <p>stdout2fileEncodedStripQualPrimer.</p>
+   *
+   * @param p a {@link java.lang.Process} object.
+   * @param files a {@link java.util.ArrayList} object.
+   * @param linesPerStripe a int.
+   * @return a long.
+   * @throws java.io.IOException if any.
+   */
   public static long stdout2fileEncodedStripQualPrimer(Process p, ArrayList<File> files, int linesPerStripe) throws IOException {
     long linesProcessed = 0; // Has to be a long, or else it will wrap on large files with more than 2.1 billion lines
     int numFiles = files.size();
@@ -75,6 +90,15 @@ public class StdOut {
 // END FIXME
   
   
+  /**
+   * <p>stdout2file.</p>
+   *
+   * @param p a {@link java.lang.Process} object.
+   * @param file a {@link java.io.File} object.
+   * @param binary a boolean.
+   * @return a long.
+   * @throws java.io.IOException if any.
+   */
   public static long stdout2file(Process p, File file, boolean binary)
       throws IOException {
     if (binary) {
@@ -84,6 +108,16 @@ public class StdOut {
     }
   }
 
+  /**
+   * <p>stdout2file.</p>
+   *
+   * @param p a {@link java.lang.Process} object.
+   * @param files a {@link java.util.ArrayList} object.
+   * @param binary a boolean.
+   * @param stripeSize a int.
+   * @return a long.
+   * @throws java.io.IOException if any.
+   */
   public static long stdout2file(Process p, ArrayList<File> files,
       boolean binary, int stripeSize) throws IOException {
     if (binary) {
@@ -93,6 +127,14 @@ public class StdOut {
     }
   }
 
+  /**
+   * <p>stdout2fileBinary.</p>
+   *
+   * @param p a {@link java.lang.Process} object.
+   * @param file a {@link java.io.File} object.
+   * @return a long.
+   * @throws java.io.IOException if any.
+   */
   public static long stdout2fileBinary(Process p, File file) throws IOException {
     long bytesProcessed = 0;
 
@@ -122,6 +164,14 @@ public class StdOut {
     return bytesProcessed;
   }
 
+  /**
+   * <p>stdout2fileEncoded.</p>
+   *
+   * @param p a {@link java.lang.Process} object.
+   * @param file a {@link java.io.File} object.
+   * @return a long.
+   * @throws java.io.IOException if any.
+   */
   public static long stdout2fileEncoded(Process p, File file) throws IOException {
     long linesProcessed = 0; // Has to be a long, or else it will wrap on large files with more than 2.1 billion lines
 
@@ -148,6 +198,15 @@ public class StdOut {
    * Takes output from stdout and stripes across all files in an
    * ArrayList<File>. Writer linesPerStripe to each file before moving to the
    * next, and writes to each file in round-robbin order
+   */
+  /**
+   * <p>stdout2fileEncoded.</p>
+   *
+   * @param p a {@link java.lang.Process} object.
+   * @param files a {@link java.util.ArrayList} object.
+   * @param linesPerStripe a int.
+   * @return a long.
+   * @throws java.io.IOException if any.
    */
   public static long stdout2fileEncoded(Process p, ArrayList<File> files,
       int linesPerStripe) throws IOException {
@@ -191,6 +250,14 @@ public class StdOut {
     return linesProcessed;
   }
 
+  /**
+   * <p>stdout2fileBinary.</p>
+   *
+   * @param p a {@link java.lang.Process} object.
+   * @param files a {@link java.util.ArrayList} object.
+   * @param bytesPerStripe a int.
+   * @return a int.
+   */
   public static int stdout2fileBinary(Process p, ArrayList<File> files,
       int bytesPerStripe) {
     // FIXME: Needs to be implements

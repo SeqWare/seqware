@@ -19,18 +19,18 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Trim all reads down to a user-defined length.
- * 
+ *
  * This modules takes a given fastq file and trims all reads down to a specific length.
- * Note that if the specified length is greater than the length of the input read, then 
+ * Note that if the specified length is greater than the length of the input read, then
  * the entire read will be retained.
- * 
+ *
  * Underlying script:  sw_module_TrimAllReads.pl
  * Necessary programs:  perl
- * 
- * Expected output:  outfastq
- * 
- * @author sacheek@med.unc.edu
  *
+ * Expected output:  outfastq
+ *
+ * @author sacheek@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class TrimAllReads extends Module {
@@ -39,9 +39,9 @@ public class TrimAllReads extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("infastq", "input: reads in fastq format").withRequiredArg();
@@ -53,8 +53,9 @@ public class TrimAllReads extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -70,11 +71,11 @@ public class TrimAllReads extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -109,9 +110,9 @@ public class TrimAllReads extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -134,9 +135,9 @@ public class TrimAllReads extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -174,9 +175,9 @@ public class TrimAllReads extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known dataset.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -186,10 +187,10 @@ public class TrimAllReads extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Run core of module.
    * Based on script sw_module_TrimAllReads.pl
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_run() {
@@ -218,9 +219,9 @@ public class TrimAllReads extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Check to make sure the output was created correctly.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -228,10 +229,11 @@ public class TrimAllReads extends Module {
     return(FileTools.fileExistsAndReadable(new File((String)options.valueOf("outfastq"))));
   }
   
-    /**
+  /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.  Remove tempDir.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

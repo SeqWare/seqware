@@ -14,16 +14,30 @@ import org.joda.time.format.ISODateTimeFormat;
 
 /**
  * Methods to convert between domain objects and dtos.
- * 
+ *
+ * @author tdebat
+ * @version $Id: $Id
  */
 public final class Dtos {
 
+	/**
+	 * <p>asDto.</p>
+	 *
+	 * @param from a {@link net.sourceforge.seqware.common.model.SampleSearch} object.
+	 * @return a {@link net.sourceforge.seqware.webservice.dto.SampleSearchDto} object.
+	 */
 	public static SampleSearchDto asDto(SampleSearch from) {
 		SampleSearchDto dto = new SampleSearchDto();
 		return dto;
 	}
 
 	// Todo remove this one after changing units method name.
+	/**
+	 * <p>sampleAttributeAsDto.</p>
+	 *
+	 * @param from a {@link net.sourceforge.seqware.common.model.SampleAttribute} object.
+	 * @return a {@link net.sourceforge.seqware.webservice.dto.AttributeDto} object.
+	 */
 	public static AttributeDto sampleAttributeAsDto(SampleAttribute from) {
 		AttributeDto dto = new AttributeDto();
 		dto.setName(from.getTag());
@@ -32,6 +46,12 @@ public final class Dtos {
 		return dto;
 	}
 
+	/**
+	 * <p>asDto.</p>
+	 *
+	 * @param from a {@link net.sourceforge.seqware.common.model.Attribute} object.
+	 * @return a {@link net.sourceforge.seqware.webservice.dto.AttributeDto} object.
+	 */
 	public static AttributeDto asDto(Attribute from) {
 		AttributeDto dto = new AttributeDto();
 		dto.setName(from.getTag());
@@ -40,6 +60,16 @@ public final class Dtos {
 		return dto;
 	}
 
+	/**
+	 * <p>fromDto.</p>
+	 *
+	 * @param attributeDto a {@link net.sourceforge.seqware.webservice.dto.AttributeDto} object.
+	 * @param clazz a {@link java.lang.Class} object.
+	 * @param <T> a T object.
+	 * @return a T object.
+	 * @throws java.lang.InstantiationException if any.
+	 * @throws java.lang.IllegalAccessException if any.
+	 */
 	public static <T extends Attribute> T fromDto(AttributeDto attributeDto, Class<T> clazz)
 			throws InstantiationException, IllegalAccessException {
 		T attribute = clazz.newInstance();
@@ -51,6 +81,12 @@ public final class Dtos {
 		return attribute;
 	}
 
+	/**
+	 * <p>asDto.</p>
+	 *
+	 * @param from a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @return a {@link net.sourceforge.seqware.webservice.dto.OwnerDto} object.
+	 */
 	public static OwnerDto asDto(Registration from) {
 		OwnerDto dto = new OwnerDto();
 		dto.setEmail(from.getEmailAddress());
@@ -60,6 +96,12 @@ public final class Dtos {
 		return dto;
 	}
 
+	/**
+	 * <p>atDto.</p>
+	 *
+	 * @param from a {@link net.sourceforge.seqware.common.model.Organism} object.
+	 * @return a {@link net.sourceforge.seqware.webservice.dto.OrganismDto} object.
+	 */
 	public static OrganismDto atDto(Organism from) {
 		OrganismDto dto = new OrganismDto();
 		dto.setName(from.getName());
@@ -68,6 +110,12 @@ public final class Dtos {
 		return dto;
 	}
 
+	/**
+	 * <p>asDto.</p>
+	 *
+	 * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+	 * @return a {@link net.sourceforge.seqware.webservice.dto.LibraryDto} object.
+	 */
 	public static LibraryDto asDto(Sample sample) {
 		DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.dateTimeNoMillis();
 		LibraryDto dto = new LibraryDto();
@@ -81,6 +129,12 @@ public final class Dtos {
 		return dto;
 	}
 
+	/**
+	 * <p>asDto.</p>
+	 *
+	 * @param ius a {@link net.sourceforge.seqware.common.model.IUS} object.
+	 * @return a {@link net.sourceforge.seqware.webservice.dto.IusDto} object.
+	 */
 	public static IusDto asDto(IUS ius) {
 		DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.dateTimeNoMillis();
 		IusDto dto = new IusDto();
@@ -94,6 +148,12 @@ public final class Dtos {
 		return dto;
 	}
 
+	/**
+	 * <p>asDto.</p>
+	 *
+	 * @param file a {@link net.sourceforge.seqware.common.model.File} object.
+	 * @return a {@link net.sourceforge.seqware.webservice.dto.FileDto} object.
+	 */
 	public static FileDto asDto(File file) {
 		FileDto dto = new FileDto();
 		dto.setFilePath(file.getFilePath());

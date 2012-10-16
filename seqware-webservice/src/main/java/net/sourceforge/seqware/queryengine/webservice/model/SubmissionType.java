@@ -20,15 +20,15 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 
 /**
- * 
+ *
  *        A Submission type is used to describe an object that contains submission information, contacts for
  *        the submission, actions to be performed by the Archive, and file manifest.
- *     
- * 
+ *
+ *
  * <p>Java class for SubmissionType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="SubmissionType">
  *   &lt;complexContent>
@@ -203,8 +203,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ * @author morgantaschuk
+ * @version $Id: $Id
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SubmissionType", propOrder = {
@@ -245,11 +246,8 @@ public class SubmissionType {
 
     /**
      * Gets the value of the title property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getTITLE() {
         return title;
@@ -257,11 +255,10 @@ public class SubmissionType {
 
     /**
      * Sets the value of the title property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setTITLE(String value) {
         this.title = value;
@@ -269,11 +266,8 @@ public class SubmissionType {
 
     /**
      * Gets the value of the contacts property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SubmissionType.CONTACTS }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.SubmissionType.CONTACTS} object.
      */
     public SubmissionType.CONTACTS getCONTACTS() {
         return contacts;
@@ -281,11 +275,10 @@ public class SubmissionType {
 
     /**
      * Sets the value of the contacts property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link SubmissionType.CONTACTS }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.SubmissionType.CONTACTS}
      */
     public void setCONTACTS(SubmissionType.CONTACTS value) {
         this.contacts = value;
@@ -293,11 +286,8 @@ public class SubmissionType {
 
     /**
      * Gets the value of the actions property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SubmissionType.ACTIONS }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.SubmissionType.ACTIONS} object.
      */
     public SubmissionType.ACTIONS getACTIONS() {
         return actions;
@@ -305,11 +295,10 @@ public class SubmissionType {
 
     /**
      * Sets the value of the actions property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link SubmissionType.ACTIONS }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.SubmissionType.ACTIONS}
      */
     public void setACTIONS(SubmissionType.ACTIONS value) {
         this.actions = value;
@@ -317,11 +306,8 @@ public class SubmissionType {
 
     /**
      * Gets the value of the files property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SubmissionType.FILES }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.SubmissionType.FILES} object.
      */
     public SubmissionType.FILES getFILES() {
         return files;
@@ -329,11 +315,10 @@ public class SubmissionType {
 
     /**
      * Sets the value of the files property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link SubmissionType.FILES }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.SubmissionType.FILES}
      */
     public void setFILES(SubmissionType.FILES value) {
         this.files = value;
@@ -341,11 +326,8 @@ public class SubmissionType {
 
     /**
      * Gets the value of the accession property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getAccession() {
         return accession;
@@ -353,11 +335,10 @@ public class SubmissionType {
 
     /**
      * Sets the value of the accession property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setAccession(String value) {
         this.accession = value;
@@ -365,11 +346,8 @@ public class SubmissionType {
 
     /**
      * Gets the value of the alias property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getAlias() {
         return alias;
@@ -377,11 +355,10 @@ public class SubmissionType {
 
     /**
      * Sets the value of the alias property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setAlias(String value) {
         this.alias = value;
@@ -389,11 +366,8 @@ public class SubmissionType {
 
     /**
      * Gets the value of the submissionId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getSubmissionId() {
         return submissionId;
@@ -401,11 +375,10 @@ public class SubmissionType {
 
     /**
      * Sets the value of the submissionId property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setSubmissionId(String value) {
         this.submissionId = value;
@@ -413,11 +386,8 @@ public class SubmissionType {
 
     /**
      * Gets the value of the submissionDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
-     *     
+     *
+     * @return a {@link javax.xml.datatype.XMLGregorianCalendar} object.
      */
     public XMLGregorianCalendar getSubmissionDate() {
         return submissionDate;
@@ -425,11 +395,10 @@ public class SubmissionType {
 
     /**
      * Sets the value of the submissionDate property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link XMLGregorianCalendar }
-     *     
+     *     {@link javax.xml.datatype.XMLGregorianCalendar}
      */
     public void setSubmissionDate(XMLGregorianCalendar value) {
         this.submissionDate = value;
@@ -437,11 +406,8 @@ public class SubmissionType {
 
     /**
      * Gets the value of the submissionComment property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getSubmissionComment() {
         return submissionComment;
@@ -449,11 +415,10 @@ public class SubmissionType {
 
     /**
      * Sets the value of the submissionComment property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setSubmissionComment(String value) {
         this.submissionComment = value;
@@ -461,11 +426,8 @@ public class SubmissionType {
 
     /**
      * Gets the value of the centerName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getCenterName() {
         return centerName;
@@ -473,11 +435,10 @@ public class SubmissionType {
 
     /**
      * Sets the value of the centerName property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setCenterName(String value) {
         this.centerName = value;
@@ -485,11 +446,8 @@ public class SubmissionType {
 
     /**
      * Gets the value of the labName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getLabName() {
         return labName;
@@ -497,11 +455,10 @@ public class SubmissionType {
 
     /**
      * Sets the value of the labName property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setLabName(String value) {
         this.labName = value;
@@ -509,11 +466,8 @@ public class SubmissionType {
 
     /**
      * Gets the value of the brokerName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getBrokerName() {
         return brokerName;
@@ -521,11 +475,10 @@ public class SubmissionType {
 
     /**
      * Sets the value of the brokerName property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setBrokerName(String value) {
         this.brokerName = value;
@@ -533,11 +486,8 @@ public class SubmissionType {
 
     /**
      * Gets the value of the handle property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getHandle() {
         return handle;
@@ -545,11 +495,10 @@ public class SubmissionType {
 
     /**
      * Sets the value of the handle property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setHandle(String value) {
         this.handle = value;

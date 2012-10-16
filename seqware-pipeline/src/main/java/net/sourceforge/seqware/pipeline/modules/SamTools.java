@@ -17,13 +17,14 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * FIXME: if creating pileup requres a .fai file!
- * 
- * @author boconnor
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class SamTools extends Module {
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue init() {
     // Samtools has different modules (i.e. match, localalign), so first figure
@@ -38,6 +39,7 @@ public class SamTools extends Module {
           "Samtools requires an arg[1] to specify which module to run", 2);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
     ReturnValue ret = new ReturnValue();
@@ -182,6 +184,7 @@ public class SamTools extends Module {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
     
@@ -233,6 +236,7 @@ public class SamTools extends Module {
     return(ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
     // import takes in a fai and sam files
@@ -284,6 +288,7 @@ public class SamTools extends Module {
     return new ReturnValue(null, null, 0);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_test() {
     ReturnValue ret = new ReturnValue();
@@ -309,6 +314,7 @@ public class SamTools extends Module {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     // import, rmdup produces a .bam that is the last argument
@@ -372,6 +378,7 @@ public class SamTools extends Module {
     return new ReturnValue(null, null, 0);
   }
 
+  /** {@inheritDoc} */
   @Override
   public String get_syntax() {
     StringBuffer ReturnString = new StringBuffer(

@@ -22,9 +22,11 @@ import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByTagPlug
  * Implements queries by range operations
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class MRFeaturesByTagsPlugin extends MRFeaturesByFilterPlugin {
 
+    /** {@inheritDoc} */
     @Override
     public Object[] getInternalParameters() {
         return new Object[]{new InMemoryFeaturesByTagPlugin.FeaturesByTagFilter()};

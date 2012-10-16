@@ -31,6 +31,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
 
+/**
+ * <p>SequencerRunListDetailsController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SequencerRunListDetailsController extends BaseCommandController {
 	private SequencerRunService sequencerRunService;
 	private LaneService laneService;
@@ -39,6 +45,9 @@ public class SequencerRunListDetailsController extends BaseCommandController {
 	
 	private Logger log = Logger.getLogger(this.getClass());
 	
+	/**
+	 * <p>Constructor for SequencerRunListDetailsController.</p>
+	 */
 	public SequencerRunListDetailsController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
@@ -73,6 +82,7 @@ public class SequencerRunListDetailsController extends BaseCommandController {
 		return isAsc;
 	}
 
+	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -301,41 +311,91 @@ public class SequencerRunListDetailsController extends BaseCommandController {
 		return typeList;
 	}
 
+	/**
+	 * <p>Getter for the field <code>sequencerRunService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+	 */
 	public SequencerRunService getSequencerRunService() {
 		return sequencerRunService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sequencerRunService</code>.</p>
+	 *
+	 * @param sequencerRunService a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+	 */
 	public void setSequencerRunService(SequencerRunService sequencerRunService) {
 		this.sequencerRunService = sequencerRunService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>laneService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	 */
 	public LaneService getLaneService() {
 		return laneService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>laneService</code>.</p>
+	 *
+	 * @param laneService a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	 */
 	public void setLaneService(LaneService laneService) {
 		this.laneService = laneService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>processingService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+	 */
 	public ProcessingService getProcessingService() {
 		return processingService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>processingService</code>.</p>
+	 *
+	 * @param processingService a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+	 */
 	public void setProcessingService(ProcessingService processingService) {
 		this.processingService = processingService;
 	}
+	/**
+	 * <p>Getter for the field <code>iusService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.IUSService} object.
+	 */
 	public IUSService getIusService() {
 		return iusService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>iusService</code>.</p>
+	 *
+	 * @param iusService a {@link net.sourceforge.seqware.common.business.IUSService} object.
+	 */
 	public void setIusService(IUSService iusService) {
 		this.iusService = iusService;
 	}
 			  
+	/**
+	 * <p>getIUSService.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.IUSService} object.
+	 */
 	public IUSService getIUSService() {
 		return iusService;
 	}
 
+	/**
+	 * <p>setIUSService.</p>
+	 *
+	 * @param iusService a {@link net.sourceforge.seqware.common.business.IUSService} object.
+	 */
 	public void setIUSService(IUSService iusService) {
 		this.iusService = iusService;
 	}

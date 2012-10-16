@@ -19,38 +19,73 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 /**
  * StudyController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class AnalisysEventController extends MultiActionController {
     private WorkflowRunService workflowRunService;
     private ShareWorkflowRunService shareWorkflowRunService;
     private RegistrationService registrationService;
 
+	/**
+	 * <p>Constructor for AnalisysEventController.</p>
+	 */
 	public AnalisysEventController() {
 		super();
 	}
 
+	/**
+	 * <p>Constructor for AnalisysEventController.</p>
+	 *
+	 * @param delegate a {@link java.lang.Object} object.
+	 */
 	public AnalisysEventController(Object delegate) {
 		super(delegate);
 	}
 
+    /**
+     * <p>Getter for the field <code>shareWorkflowRunService</code>.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.common.business.ShareWorkflowRunService} object.
+     */
     public ShareWorkflowRunService getShareWorkflowRunService() {
 		return shareWorkflowRunService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>shareWorkflowRunService</code>.</p>
+	 *
+	 * @param shareWorkflowRunService a {@link net.sourceforge.seqware.common.business.ShareWorkflowRunService} object.
+	 */
 	public void setShareWorkflowRunService(
 			ShareWorkflowRunService shareWorkflowRunService) {
 		this.shareWorkflowRunService = shareWorkflowRunService;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public WorkflowRunService getWorkflowRunService() {
 		return workflowRunService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @param workflowRunService a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public void setWorkflowRunService(WorkflowRunService workflowRunService) {
 		this.workflowRunService = workflowRunService;
 	}
 	
+	/**
+	 * <p>Setter for the field <code>registrationService</code>.</p>
+	 *
+	 * @param registrationService a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+	 */
 	public void setRegistrationService(RegistrationService registrationService) {
 		this.registrationService = registrationService;
 	}
@@ -59,6 +94,10 @@ public class AnalisysEventController extends MultiActionController {
 	 * Handles the user's request to delete their study.
 	 *
 	 * @param command Study command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleDelete(HttpServletRequest		request,
 									 HttpServletResponse	response,
@@ -89,6 +128,10 @@ public class AnalisysEventController extends MultiActionController {
 	 * Handles the user's request to share their WorkflowRun.
 	 *
 	 * @param command WorkflowRun command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleShare(HttpServletRequest		request,
 									 HttpServletResponse	response,
@@ -130,6 +173,10 @@ public class AnalisysEventController extends MultiActionController {
 	 * Handles the user's request to delete their study.
 	 *
 	 * @param command Study command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleCancel(HttpServletRequest		request,
 									 HttpServletResponse	response,

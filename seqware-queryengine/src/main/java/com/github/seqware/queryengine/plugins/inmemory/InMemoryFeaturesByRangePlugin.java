@@ -24,9 +24,11 @@ import com.github.seqware.queryengine.model.QueryInterface.Location;
  * Retrieves features based on their chromosomal location.
  *
  * @author jbaran
+ * @version $Id: $Id
  */
 public class InMemoryFeaturesByRangePlugin extends InMemoryFeaturesByFilterPlugin {
 
+     /** {@inheritDoc} */
      @Override
     protected FeatureFilter getFilter() {
         return new InMemoryFeaturesByRangePlugin.FeaturesByRangeFilter();

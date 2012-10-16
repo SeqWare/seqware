@@ -21,25 +21,45 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.IUS;
 
 /**
+ * <p>IUSList class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class IUSList{
 
     protected List<IUS> tList;
 
+    /**
+     * <p>Constructor for IUSList.</p>
+     */
     public IUSList() {
         tList = new ArrayList<IUS>();
     }
 
+    /**
+     * <p>getList.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<IUS> getList() {
         return tList;
     }
 
+    /**
+     * <p>setList.</p>
+     *
+     * @param list a {@link java.util.List} object.
+     */
     public void setList(List<IUS> list) {
         this.tList = list;
     }
 
+    /**
+     * <p>add.</p>
+     *
+     * @param ex a {@link net.sourceforge.seqware.common.model.IUS} object.
+     */
     public void add(IUS ex) {
         tList.add(ex);
     }

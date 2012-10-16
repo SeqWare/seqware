@@ -25,11 +25,19 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
 /**
+ * <p>WorkflowReport class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class WorkflowReport {
 
+    /**
+     * <p>fromWorkflow.</p>
+     *
+     * @param workflowSWA a {@link java.lang.Integer} object.
+     * @return a {@link java.lang.String} object.
+     */
     public String fromWorkflow(Integer workflowSWA) {
         StringBuilder result = new StringBuilder();
         WorkflowService ws = BeanFactory.getWorkflowServiceBean();

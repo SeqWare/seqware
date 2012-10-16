@@ -35,13 +35,16 @@ import org.apache.log4j.Logger;
 ;
 
 /**
+ * <p>FeatureSetIO class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class FeatureSetIO implements ProtobufTransferInterface<FeatureSetPB, FeatureSet> {
     
     SimpleModelManager manager = null;
     
+    /** {@inheritDoc} */
     @Override
     public FeatureSet pb2m(FeatureSetPB userpb) {
         /**
@@ -71,6 +74,7 @@ public class FeatureSetIO implements ProtobufTransferInterface<FeatureSetPB, Fea
         return user;
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeatureSetPB m2pb(FeatureSet sgid) {
         QueryEngine.FeatureSetPB.Builder builder = QueryEngine.FeatureSetPB.newBuilder();
@@ -90,6 +94,7 @@ public class FeatureSetIO implements ProtobufTransferInterface<FeatureSetPB, Fea
         return userpb;
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeatureSet byteArr2m(byte[] arr) {
         try {

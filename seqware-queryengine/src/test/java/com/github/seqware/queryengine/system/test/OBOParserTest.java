@@ -29,11 +29,17 @@ import org.junit.Test;
  * Let's try parsing OBO files and loading them into our back-end.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class OBOParserTest {
 
+    /** Constant <code>NUMBER_TERMS=OBOImporter.ACCESSION_ONLY ? 1935 : 6861</code> */
     public static final int NUMBER_TERMS = OBOImporter.ACCESSION_ONLY ? 1935 : 6861;
 
+    /**
+     * <p>importOBOTest.</p>
+     */
     @Test
     public void importOBOTest() {
         String curDir = System.getProperty("user.dir");

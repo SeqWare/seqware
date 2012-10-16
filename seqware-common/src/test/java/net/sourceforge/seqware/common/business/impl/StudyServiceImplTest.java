@@ -20,10 +20,22 @@ import net.sourceforge.seqware.common.util.Log;
 import org.hibernate.Session;
 import org.junit.Test;
 
+/**
+ * <p>StudyServiceImplTest class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
+ */
 public class StudyServiceImplTest extends BaseUnit {
 
   private static StudyService ss;
 
+  /**
+   * <p>Constructor for StudyServiceImplTest.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   public StudyServiceImplTest() throws Exception {
     super();
     ss = BeanFactory.getStudyServiceBean();
@@ -34,6 +46,9 @@ public class StudyServiceImplTest extends BaseUnit {
   // DatabaseCreator.markDatabaseChanged();
   // }
 
+  /**
+   * <p>testFindByTitle.</p>
+   */
   @Test
   public void testFindByTitle() {
 
@@ -60,6 +75,9 @@ public class StudyServiceImplTest extends BaseUnit {
 //    assertEquals("Expected 2, got "+studies.size(), 2, studies.size());
 //  }
 
+  /**
+   * <p>testFindBySWAccession.</p>
+   */
   @Test
   public void testFindBySWAccession() {
     Study study = ss.findBySWAccession(120);
@@ -67,6 +85,9 @@ public class StudyServiceImplTest extends BaseUnit {
     assertEquals("AbcCo_Exome_Sequencing", study.getTitle());
   }
 
+  /**
+   * <p>testUpdateDetached.</p>
+   */
   @Test
   public void testUpdateDetached() {
     Session session = getSession();
@@ -93,6 +114,9 @@ public class StudyServiceImplTest extends BaseUnit {
     removeSession(session);
   }
 
+  /**
+   * <p>testNoLazyInitializationException.</p>
+   */
   @Test
   public void testNoLazyInitializationException() {
     // Bind Session to the thread to prevent LazyInitializationException
@@ -104,6 +128,9 @@ public class StudyServiceImplTest extends BaseUnit {
     InSessionExecutions.unBindSessionFromTheThread();
   }
 
+  /**
+   * <p>testFindByCriteria.</p>
+   */
   @Test
   public void testFindByCriteria() {
     StudyService studyService = BeanFactory.getStudyServiceBean();

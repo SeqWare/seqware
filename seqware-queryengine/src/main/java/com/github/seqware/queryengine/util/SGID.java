@@ -37,6 +37,7 @@ import java.util.UUID;
  * version using only the primary key.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class SGID implements Serializable, KryoSerializable {
 
@@ -68,7 +69,7 @@ public class SGID implements Serializable, KryoSerializable {
     /**
      * Generate a SGID that can look up things given only a rowKey.
      *
-     * @param rowKey
+     * @param rowKey a {@link java.lang.String} object.
      */
     public SGID(String rowKey) {
         friendlyRowKey = rowKey;
@@ -78,7 +79,7 @@ public class SGID implements Serializable, KryoSerializable {
     /**
      * Clone a given SGID
      *
-     * @param sgid
+     * @param sgid a {@link com.github.seqware.queryengine.util.SGID} object.
      */
     public SGID(SGID sgid) {
         uuid = new UUID(sgid.uuid.getMostSignificantBits(), sgid.uuid.getLeastSignificantBits());
@@ -88,6 +89,11 @@ public class SGID implements Serializable, KryoSerializable {
 
     /**
      * Back-end constructor, create a fully functional SGID
+     *
+     * @param mostSig a long.
+     * @param leastSig a long.
+     * @param timestamp a long.
+     * @param friendlyRowKey a {@link java.lang.String} object.
      */
     public SGID(long mostSig, long leastSig, long timestamp, String friendlyRowKey) {
         uuid = new UUID(mostSig, leastSig);
@@ -95,6 +101,7 @@ public class SGID implements Serializable, KryoSerializable {
         this.friendlyRowKey = friendlyRowKey;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object other) {
         if (other instanceof SGID) {
@@ -108,11 +115,13 @@ public class SGID implements Serializable, KryoSerializable {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return uuid.hashCode() + backendTimestamp.hashCode();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         //throw new UnsupportedOperationException();
@@ -125,6 +134,8 @@ public class SGID implements Serializable, KryoSerializable {
     /**
      * Get underlying UUID implementation, should only be called within the
      * back-end
+     *
+     * @return a {@link java.util.UUID} object.
      */
     public UUID getUuid() {
         return uuid;
@@ -133,7 +144,7 @@ public class SGID implements Serializable, KryoSerializable {
     /**
      * Output the portion of the SGID that is used as a rowKey
      *
-     * @return
+     * @return a {@link java.lang.String} object.
      */
     public String getRowKey() {
         if (this.friendlyRowKey != null) {
@@ -142,10 +153,16 @@ public class SGID implements Serializable, KryoSerializable {
         return uuid.toString();
     }
 
+    /**
+     * <p>Getter for the field <code>backendTimestamp</code>.</p>
+     *
+     * @return a {@link java.util.Date} object.
+     */
     public Date getBackendTimestamp() {
-        return backendTimestamp;
+        return new Date(backendTimestamp.getTime());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void write(Kryo kryo, Output output) {
         output.writeLong(uuid.getLeastSignificantBits());
@@ -154,6 +171,7 @@ public class SGID implements Serializable, KryoSerializable {
         output.writeString(friendlyRowKey);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void read(Kryo kryo, Input input) {
         long leastSig = input.readLong();
@@ -164,18 +182,38 @@ public class SGID implements Serializable, KryoSerializable {
         friendlyRowKey = key;
     }
 
+    /**
+     * <p>Setter for the field <code>uuid</code>.</p>
+     *
+     * @param uuiD a {@link java.util.UUID} object.
+     */
     protected void setUuid(UUID uuiD) {
         this.uuid = uuiD;
     }
 
+    /**
+     * <p>Setter for the field <code>backendTimestamp</code>.</p>
+     *
+     * @param date a {@link java.util.Date} object.
+     */
     public void setBackendTimestamp(Date date) {
-        this.backendTimestamp = date;
+        this.backendTimestamp = new Date(date.getTime());
     }
 
+    /**
+     * <p>Getter for the field <code>friendlyRowKey</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getFriendlyRowKey() {
         return friendlyRowKey;
     }
 
+    /**
+     * <p>Setter for the field <code>friendlyRowKey</code>.</p>
+     *
+     * @param friendlyRowKey a {@link java.lang.String} object.
+     */
     public void setFriendlyRowKey(String friendlyRowKey) {
         this.friendlyRowKey = friendlyRowKey;
     }

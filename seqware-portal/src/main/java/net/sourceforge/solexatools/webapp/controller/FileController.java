@@ -22,32 +22,62 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 /**
  * LaneController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class FileController extends MultiActionController {
 	private FileService fileService;
 	private Validator validator;
 
+	/**
+	 * <p>Constructor for FileController.</p>
+	 */
 	public FileController() {
 		super();
 	}
 
+	/**
+	 * <p>Constructor for FileController.</p>
+	 *
+	 * @param delegate a {@link java.lang.Object} object.
+	 */
 	public FileController(Object delegate) {
 		super(delegate);
 	}
 
+	/**
+	 * <p>Getter for the field <code>fileService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
+	 */
 	public FileService getFileService() {
 		return fileService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>fileService</code>.</p>
+	 *
+	 * @param fileService a {@link net.sourceforge.seqware.common.business.FileService} object.
+	 */
 	public void setFileService(FileService fileService) {
 		this.fileService = fileService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>validator</code>.</p>
+	 *
+	 * @return a {@link org.springframework.validation.Validator} object.
+	 */
 	public Validator getValidator() {
 		return validator;
 	}
 
+	/**
+	 * <p>Setter for the field <code>validator</code>.</p>
+	 *
+	 * @param validator a {@link org.springframework.validation.Validator} object.
+	 */
 	public void setValidator(Validator validator) {
 		this.validator = validator;
 	}
@@ -58,10 +88,8 @@ public class FileController extends MultiActionController {
 	 * @param request HttpServletRequest
 	 * @param response HttpServletResponse
 	 * @param command Lane command object
-	 *
 	 * @return ModelAndView
-	 *
-	 * @throws Exception
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleSubmit(HttpServletRequest request,
 									 HttpServletResponse response,
@@ -77,10 +105,8 @@ public class FileController extends MultiActionController {
 	 * @param request HttpServletRequest
 	 * @param response HttpServletResponse
 	 * @param command Lane command object
-	 *
 	 * @return ModelAndView
-	 *
-	 * @throws Exception
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleReset(HttpServletRequest request,
 									HttpServletResponse response,
@@ -97,10 +123,8 @@ public class FileController extends MultiActionController {
 	 * @param request HttpServletRequest
 	 * @param response HttpServletResponse
 	 * @param command Lane command object
-	 *
 	 * @return ModelAndView
-	 *
-	 * @throws Exception
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleCancel(HttpServletRequest request,
 									 HttpServletResponse response,
@@ -114,10 +138,8 @@ public class FileController extends MultiActionController {
 	 * @param request HttpServletRequest
 	 * @param response HttpServletResponse
 	 * @param command Lane command object
-	 *
 	 * @return ModelAndView
-	 *
-	 * @throws Exception
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleUpdate(HttpServletRequest request,
 									 HttpServletResponse response,
@@ -153,6 +175,10 @@ public class FileController extends MultiActionController {
 	 * Handles the user's request to delete their file.
 	 *
 	 * @param command file command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleDelete(HttpServletRequest		request,
 									 HttpServletResponse	response,

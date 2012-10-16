@@ -20,7 +20,9 @@ import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
 
 /**
  * Implements TTL behaviour for sets
+ *
  * @author dyuen
+ * @version $Id: $Id
  */
 public abstract class AbstractMolSet<S extends MolSetInterface> extends MoleculeImpl<S> {
 
@@ -29,21 +31,27 @@ public abstract class AbstractMolSet<S extends MolSetInterface> extends Molecule
      */
     private boolean cascade = false;
     
+    /**
+     * <p>Constructor for AbstractMolSet.</p>
+     */
     public AbstractMolSet() {
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean getCascade() {
         return cascade;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setTTL(long time, boolean cascade) {
         super.setTTL(time, cascade);
         this.cascade = cascade;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setTTL(int hours, boolean cascade) {
         super.setTTL(hours, cascade);

@@ -16,6 +16,9 @@ import net.sourceforge.seqware.common.util.Log;
  * User: Xiaoshu Wang (xiao@renci.org)
  * Date: 8/10/11
  * Time: 10:02 PM
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 @Aspect
 public class LogAspect {
@@ -23,10 +26,21 @@ public class LogAspect {
     private SimpleJdbcTemplate jdbcTemplate;
     private final static String processing_sequence = "'processing_processing_id_seq'";
 
+    /**
+     * <p>Setter for the field <code>jdbcTemplate</code>.</p>
+     *
+     * @param jdbcTemplate a {@link org.springframework.jdbc.core.simple.SimpleJdbcTemplate} object.
+     */
     public void setJdbcTemplate(SimpleJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    /**
+     * <p>watchRunner.</p>
+     *
+     * @param joinPoint a {@link org.aspectj.lang.ProceedingJoinPoint} object.
+     * @throws java.lang.Throwable if any.
+     */
     @Around("bean(run) && execution(* net.sourceforge.seqware.pipeline.runner.Runner2.run(..))")
     public void watchRunner(ProceedingJoinPoint joinPoint) throws Throwable {
         Log.info("LogAspect.watchRunner");
@@ -39,9 +53,18 @@ public class LogAspect {
         }
     }
 
+    /**
+     * <p>doRun.</p>
+     */
     @Pointcut("bean(module) && execution(* net.sourceforge.seqware.pipeline.module.ModuleInterface.do_run(..))")
     public void doRun() {}
 
+    /**
+     * <p>watchModuleRun.</p>
+     *
+     * @param joinPoint a {@link org.aspectj.lang.ProceedingJoinPoint} object.
+     * @throws java.lang.Throwable if any.
+     */
     @Around("doRun()")
     public void watchModuleRun(ProceedingJoinPoint joinPoint) throws Throwable{
         Log.info("proId2accId(10) = " + proId2accId(10));

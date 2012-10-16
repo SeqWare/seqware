@@ -28,27 +28,35 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This is a quick and sample application built on top of our API, created during the August 9th Hackathon. 
+ * This is a quick and sample application built on top of our API, created during the August 9th Hackathon.
  * It demonstrates query restrictions and exporting.
  * Based on VCFDumper. This will dump VCF files given a FeatureSet that was originally imported from
  * a VCF file.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class BrianTest {
 
     private String[] args;
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         BrianTest dumper = new BrianTest(args);
         dumper.export();
     }
 
+    /**
+     * <p>export.</p>
+     */
     public void export() {
 
         if (args.length < 1 || args.length > 2) {
@@ -90,17 +98,17 @@ public class BrianTest {
             boolean caughtNonVCF = false;
             for (Feature feature : featuresByTag.get()) {
                 outputStream.append(feature.getSeqid() + "\t" + (feature.getStart() + 1) + "\t");
-                if (feature.getTagByKey(ImportConstants.VCF_SECOND_ID) == null) {
+                if (feature.getTagByKey("VCF", ImportConstants.VCF_SECOND_ID) == null) {
                     outputStream.append(".\t");
                 } else {
-                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_SECOND_ID).getValue().toString() + "\t");
+                    outputStream.append(feature.getTagByKey("VCF", ImportConstants.VCF_SECOND_ID).getValue().toString() + "\t");
                 }
                 try {
-                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_REFERENCE_BASE).getValue().toString() + "\t");
-                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_CALLED_BASE).getValue().toString() + "\t");
+                    outputStream.append(feature.getTagByKey("VCF", ImportConstants.VCF_REFERENCE_BASE).getValue().toString() + "\t");
+                    outputStream.append(feature.getTagByKey("VCF", ImportConstants.VCF_CALLED_BASE).getValue().toString() + "\t");
                     outputStream.append(feature.getScore() + "\t");
-                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_FILTER).getValue().toString() + "\t");
-                    outputStream.append(feature.getTagByKey(ImportConstants.VCF_INFO).getValue().toString());
+                    outputStream.append(feature.getTagByKey("VCF", ImportConstants.VCF_FILTER).getValue().toString() + "\t");
+                    outputStream.append(feature.getTagByKey("VCF", ImportConstants.VCF_INFO).getValue().toString());
                 } catch (NullPointerException npe) {
                     if (!caughtNonVCF) {
                         Logger.getLogger(BrianTest.class.getName()).log(Level.INFO, "VCF exporting non-VCF feature");
@@ -126,6 +134,11 @@ public class BrianTest {
         }
     }
 
+    /**
+     * <p>Constructor for BrianTest.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public BrianTest(String[] args) {
         this.args = args;
     }

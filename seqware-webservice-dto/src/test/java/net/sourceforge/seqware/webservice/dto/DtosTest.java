@@ -8,8 +8,20 @@ import net.sourceforge.seqware.common.model.WorkflowAttribute;
 
 import org.junit.Test;
 
+/**
+ * <p>DtosTest class.</p>
+ *
+ * @author tdebat
+ * @version $Id: $Id
+ * @since 0.13.3
+ */
 public class DtosTest {
 
+	/**
+	 * <p>test_FileAttribute_to_AttributeDto.</p>
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
 	@Test
 	public void test_FileAttribute_to_AttributeDto() throws Exception {
 		FileAttribute fileAttribute = new FileAttribute();
@@ -21,6 +33,11 @@ public class DtosTest {
 		assertThat(attributeDto.getUnit(), nullValue());
 	}
 
+	/**
+	 * <p>test_WorkflowAttribute_to_AttributeDto.</p>
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
 	@Test
 	public void test_WorkflowAttribute_to_AttributeDto() throws Exception {
 		WorkflowAttribute workflowAttribute = new WorkflowAttribute();
@@ -32,6 +49,11 @@ public class DtosTest {
 		assertThat(attributeDto.getUnit(), nullValue());
 	}
 	
+	/**
+	 * <p>test_AttributeDto_to_FileAttribute.</p>
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
 	@Test
 	public void test_AttributeDto_to_FileAttribute() throws Exception {
 		AttributeDto attributeDto = new AttributeDto();
@@ -44,6 +66,11 @@ public class DtosTest {
 		assertThat(fileAttribute instanceof FileAttribute, is(true));
 	}
 	
+	/**
+	 * <p>test_AttributeDto_to_WorkflowAttribute.</p>
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
 	@Test
 	public void test_AttributeDto_to_WorkflowAttribute() throws Exception {
 		AttributeDto attributeDto = new AttributeDto();

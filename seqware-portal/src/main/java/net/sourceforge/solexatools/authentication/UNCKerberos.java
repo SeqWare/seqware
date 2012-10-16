@@ -14,14 +14,19 @@ import javax.security.auth.login.LoginException;
 import com.sun.security.auth.module.Krb5LoginModule;
 
 
+/**
+ * <p>UNCKerberos class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class UNCKerberos extends Authentication
 {
   
   /**
+   * {@inheritDoc}
+   *
    * Get boolean true/false based on onyen/password pair.  No exception is thrown.
-   * @param uid
-   * @param password
-   * @return
    */
   public boolean loginSuccess(String uid, String password)
   {
@@ -40,6 +45,15 @@ public class UNCKerberos extends Authentication
   }
 
   // does the heavy-lifting for methods, above
+  /**
+   * <p>getSubject.</p>
+   *
+   * @param uid a {@link java.lang.String} object.
+   * @param password a {@link java.lang.String} object.
+   * @param keytabfile a {@link java.lang.String} object.
+   * @return a {@link javax.security.auth.Subject} object.
+   * @throws javax.security.auth.login.LoginException if any.
+   */
   protected Subject getSubject(String uid, String password, String keytabfile) throws LoginException
   {
     try
@@ -88,6 +102,12 @@ public class UNCKerberos extends Authentication
     }
   }
 
+  /**
+   * <p>isConfigError.</p>
+   *
+   * @param e a {@link java.lang.Throwable} object.
+   * @return a boolean.
+   */
   protected boolean isConfigError(Throwable e)
   {
     boolean rval = false;

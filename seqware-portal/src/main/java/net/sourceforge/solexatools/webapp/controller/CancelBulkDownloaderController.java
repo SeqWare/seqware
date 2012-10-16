@@ -9,13 +9,23 @@ import net.sourceforge.solexatools.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>CancelBulkDownloaderController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class CancelBulkDownloaderController extends BaseCommandController {
     
+	/**
+	 * <p>Constructor for CancelBulkDownloaderController.</p>
+	 */
 	public CancelBulkDownloaderController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)

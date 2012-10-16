@@ -14,11 +14,14 @@ import net.sourceforge.seqware.queryengine.backend.model.Feature;
 import net.sourceforge.seqware.queryengine.backend.model.Model;
 
 /**
- * @author boconnor
+ * <p>FeatureTB class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class FeatureTB extends TupleBinding {
 
+  /** {@inheritDoc} */
   @Override
   public void objectToEntry(Object object, TupleOutput to) {
     Feature f = (Feature)object;
@@ -72,6 +75,7 @@ public class FeatureTB extends TupleBinding {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public Object entryToObject(TupleInput ti) {
       Feature f = new Feature();
