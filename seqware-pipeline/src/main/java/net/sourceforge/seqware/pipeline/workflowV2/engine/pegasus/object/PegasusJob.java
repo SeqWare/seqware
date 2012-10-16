@@ -22,6 +22,8 @@ public class PegasusJob {
 	protected static String NS = "seqware";
 	private boolean metadataWriteback;
 	private String parentAccession;
+	protected String wfrAccession;
+	protected boolean wfrAncesstor;
 	
 	public PegasusJob(AbstractJob job, String basedir) {
 		this.jobObj = job;
@@ -89,8 +91,17 @@ public class PegasusJob {
 		} else {
 			sb.append("--no-metadata").append("\n");
 		}
-		if(this.parentAccession!=null){
-			sb.append("--parent-accessions " + this.parentAccession).append("\n");
+		if(this.hasMetadataWriteback()) {
+			if(this.parentAccession!=null){
+				sb.append("--metadata-parent-accession " + this.parentAccession).append("\n");
+			}
+			if(this.wfrAccession!=null) {
+				if(this.wfrAncesstor) {
+					sb.append("--metadata-workflow-run-ancestor-accession " + this.wfrAccession).append("\n");
+				} else {
+					sb.append("--metadata-workflow-run-accession " + this.wfrAccession).append("\n");
+				}
+			}
 		}
 		sb.append("--module net.sourceforge.seqware.pipeline.modules.GenericCommandRunner").append("\n");
 		sb.append("--").append("\n");
@@ -157,5 +168,21 @@ public class PegasusJob {
 
 	public void setParentAccession(String parentAccession) {
 		this.parentAccession = parentAccession;
+	}
+
+	public String getWorkflowRunAccession() {
+		return wfrAccession;
+	}
+
+	public void setWorkflowRunAccession(String wfrAccession) {
+		this.wfrAccession = wfrAccession;
+	}
+
+	public boolean isWorkflowRunAncesstor() {
+		return wfrAncesstor;
+	}
+
+	public void setWorkflowRunAncesstor(boolean wfrAncesstor) {
+		this.wfrAncesstor = wfrAncesstor;
 	}
 }

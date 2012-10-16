@@ -24,6 +24,16 @@ public class ProvisionFilesJob extends PegasusJob {
 			sb.append("--no-metadata").append("\n");
 		}
 
+		if(this.hasMetadataWriteback()) {
+			if(this.wfrAccession!=null) {
+				if(this.wfrAncesstor) {
+					sb.append("--metadata-workflow-run-ancestor-accession " + this.wfrAccession).append("\n");
+				} else {
+					sb.append("--metadata-workflow-run-accession " + this.wfrAccession).append("\n");
+				}
+			}
+		}
+
 		sb.append("--module module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles").append("\n");
 		sb.append("--").append("\n");
 		
