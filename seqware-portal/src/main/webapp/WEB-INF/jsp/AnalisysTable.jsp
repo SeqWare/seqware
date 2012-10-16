@@ -19,18 +19,25 @@
                 url: 'myAnalisysTableDetails.htm',
                 dataType: 'json',
                 colModel : [
-                        {display: 'Date', name : 'date', width : 150, sortable : true, align: 'left'},
-			{display: 'Name', name : 'name', width : 150, sortable : true, align: 'left'},
-                        {display: 'Version', name : 'version', width : 150, sortable : true, align: 'left'},
-                        {display: 'Status', name : 'status', width : 150, sortable : true, align: 'left'},
-                        {display: 'SWID', name : 'swid', width : 150, sortable : true, align: 'left'},
+                        {display: 'Date', name : 'createTimestamp', width : 130, sortable : true, align: 'left'},
+			{display: 'Name', name : 'workflow.name', width : 250, sortable : true, align: 'left'},
+                        {display: 'Version', name : 'workflow.version', width : 50, sortable : true, align: 'left'},
+                        {display: 'Status', name : 'status', width : 50, sortable : true, align: 'left'},
+                        {display: 'SWID', name : 'swAccession', width : 50, sortable : true, align: 'left'},
+                        //{display: 'Sample(s)', name : 'samples', width : 50, sortable : true, align: 'left'},
+                        //{display: 'IUS(s)', name : 'ius', width : 50, sortable : true, align: 'left'},
+                        //{display: 'Lanes(s)', name : 'lanes', width : 50, sortable : true, align: 'left'},
 			{display: 'Host', name : 'host', width : 150, sortable : true, align: 'left'},
-			{display: 'Errors', name : 'name', width : 150, sortable : true, align: 'left'},
+			{display: 'Logs', name : 'logs', width : 80, sortable : true, align: 'left'},
+			{display: 'Parameters', name : 'iniFile', width : 80, sortable : true, align: 'left'},
                 ],
                 searchitems : [
+		        {display: 'Name', name : 'workflow.name', isdefault: true},
                         {display: 'Status', name : 'status'},
-                        {display: 'SWID', name : 'swid', isdefault: true},
-                        {display: 'Date', name : 'date'}
+                        {display: 'SWID', name : 'swAccession'},
+			{display: 'Version', name : 'workflow.version'},
+			{display: 'Host', name : 'host'},
+                        {display: 'Date', name : 'createTimestamp'}
                 ],
                 sortname: "date",
                 sortorder: "desc",
@@ -53,18 +60,25 @@
                 url: 'myAnalisysTableDetails.htm?filter=canceled',
                 dataType: 'json',
                 colModel : [
-                        {display: 'Date', name : 'date', width : 150, sortable : true, align: 'left'},
-			{display: 'Name', name : 'name', width : 225, sortable : true, align: 'left'},
-                        {display: 'Version', name : 'version', width : 50, sortable : true, align: 'left'},
+                        {display: 'Date', name : 'createTimestamp', width : 130, sortable : true, align: 'left'},
+			{display: 'Name', name : 'workflow.name', width : 250, sortable : true, align: 'left'},
+                        {display: 'Version', name : 'workflow.version', width : 50, sortable : true, align: 'left'},
                         {display: 'Status', name : 'status', width : 50, sortable : true, align: 'left'},
-                        {display: 'SWID', name : 'swid', width : 50, sortable : true, align: 'left'},
-			{display: 'Host', name : 'host', width : 200, sortable : true, align: 'left'},
-			{display: 'Output', name : 'name', width : 150, sortable : true, align: 'left'},
+                        {display: 'SWID', name : 'swAccession', width : 50, sortable : true, align: 'left'},
+                        //{display: 'Sample(s)', name : 'samples', width : 50, sortable : true, align: 'left'},
+                        //{display: 'IUS(s)', name : 'ius', width : 50, sortable : true, align: 'left'},
+                        //{display: 'Lanes(s)', name : 'lanes', width : 50, sortable : true, align: 'left'},
+			{display: 'Host', name : 'host', width : 150, sortable : true, align: 'left'},
+			{display: 'Logs', name : 'logs', width : 80, sortable : true, align: 'left'},
+			{display: 'Parameters', name : 'iniFile', width : 80, sortable : true, align: 'left'},
                 ],
                 searchitems : [
+		        {display: 'Name', name : 'workflow.name', isdefault: true},
                         {display: 'Status', name : 'status'},
-                        {display: 'SWID', name : 'swid', isdefault: true},
-                        {display: 'Date', name : 'date'}
+                        {display: 'SWID', name : 'swAccession'},
+			{display: 'Version', name : 'workflow.version'},
+			{display: 'Host', name : 'host'},
+                        {display: 'Date', name : 'createTimestamp'}
                 ],
                 sortname: "date",
                 sortorder: "desc",
@@ -81,24 +95,33 @@
    });
 </script>
 
+<!-- TODO: would be really nice to search on sample! -->
+
 <script type="text/javascript">
     $(function() {
         $("#flex3").flexigrid({
                 url: 'myAnalisysTableDetails.htm?filter=failed',
                 dataType: 'json',
                 colModel : [
-                        {display: 'Date', name : 'date', width : 150, sortable : true, align: 'left'},
-			{display: 'Name', name : 'name', width : 150, sortable : true, align: 'left'},
-                        {display: 'Version', name : 'version', width : 150, sortable : true, align: 'left'},
-                        {display: 'Status', name : 'status', width : 150, sortable : true, align: 'left'},
-                        {display: 'SWID', name : 'swid', width : 150, sortable : true, align: 'left'},
+                        {display: 'Date', name : 'createTimestamp', width : 130, sortable : true, align: 'left'},
+			{display: 'Name', name : 'workflow.name', width : 250, sortable : true, align: 'left'},
+                        {display: 'Version', name : 'workflow.version', width : 50, sortable : true, align: 'left'},
+                        {display: 'Status', name : 'status', width : 50, sortable : true, align: 'left'},
+                        {display: 'SWID', name : 'swAccession', width : 50, sortable : true, align: 'left'},
+                        //{display: 'Sample(s)', name : 'samples', width : 50, sortable : true, align: 'left'},
+                        //{display: 'IUS(s)', name : 'ius', width : 50, sortable : true, align: 'left'},
+                        //{display: 'Lanes(s)', name : 'lanes', width : 50, sortable : true, align: 'left'},
 			{display: 'Host', name : 'host', width : 150, sortable : true, align: 'left'},
-                        {display: 'Output', name : 'version', width : 150, sortable : true, align: 'left'},
+			{display: 'Logs', name : 'logs', width : 80, sortable : true, align: 'left'},
+			{display: 'Parameters', name : 'iniFile', width : 80, sortable : true, align: 'left'},
                 ],
                 searchitems : [
+		        {display: 'Name', name : 'workflow.name', isdefault: true},
                         {display: 'Status', name : 'status'},
-                        {display: 'SWID', name : 'swid', isdefault: true},
-                        {display: 'Date', name : 'date'}
+                        {display: 'SWID', name : 'swAccession'},
+			{display: 'Version', name : 'workflow.version'},
+			{display: 'Host', name : 'host'},
+                        {display: 'Date', name : 'createTimestamp'}
                 ],
                 sortname: "date",
                 sortorder: "desc",
@@ -121,18 +144,25 @@
                 url: 'myAnalisysTableDetails.htm?filter=running',
                 dataType: 'json',
                 colModel : [
-                        {display: 'Date', name : 'date', width : 150, sortable : true, align: 'left'},
-			{display: 'Name', name : 'name', width : 150, sortable : true, align: 'left'},
-                        {display: 'Version', name : 'version', width : 150, sortable : true, align: 'left'},
-                        {display: 'Status', name : 'status', width : 150, sortable : true, align: 'left'},
-                        {display: 'SWID', name : 'swid', width : 150, sortable : true, align: 'left'},
+                        {display: 'Date', name : 'createTimestamp', width : 130, sortable : true, align: 'left'},
+			{display: 'Name', name : 'workflow.name', width : 250, sortable : true, align: 'left'},
+                        {display: 'Version', name : 'workflow.version', width : 50, sortable : true, align: 'left'},
+                        {display: 'Status', name : 'status', width : 50, sortable : true, align: 'left'},
+                        {display: 'SWID', name : 'swAccession', width : 50, sortable : true, align: 'left'},
+                        //{display: 'Sample(s)', name : 'samples', width : 50, sortable : true, align: 'left'},
+                        //{display: 'IUS(s)', name : 'ius', width : 50, sortable : true, align: 'left'},
+                        //{display: 'Lanes(s)', name : 'lanes', width : 50, sortable : true, align: 'left'},
 			{display: 'Host', name : 'host', width : 150, sortable : true, align: 'left'},
-                        {display: 'Output', name : 'version', width : 150, sortable : true, align: 'left'},
+			{display: 'Logs', name : 'logs', width : 80, sortable : true, align: 'left'},
+			{display: 'Parameters', name : 'iniFile', width : 80, sortable : true, align: 'left'},
                 ],
                 searchitems : [
+		        {display: 'Name', name : 'workflow.name', isdefault: true},
                         {display: 'Status', name : 'status'},
-                        {display: 'SWID', name : 'swid', isdefault: true},
-                        {display: 'Date', name : 'date'}
+                        {display: 'SWID', name : 'swAccession'},
+			{display: 'Version', name : 'workflow.version'},
+			{display: 'Host', name : 'host'},
+                        {display: 'Date', name : 'createTimestamp'}
                 ],
                 sortname: "date",
                 sortorder: "desc",

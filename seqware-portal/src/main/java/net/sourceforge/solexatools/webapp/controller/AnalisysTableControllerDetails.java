@@ -5,13 +5,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.business.WorkflowService;
+import net.sourceforge.seqware.common.model.IUS;
+import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Registration;
+import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.solexatools.Security;
 import net.sourceforge.solexatools.util.PaginationUtil;
@@ -62,6 +66,8 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
 	String pageStr = request.getParameter("page");
 	String rowsPagesStr = request.getParameter("rp");
 	String filter = request.getParameter("filter");
+	String qtype = request.getParameter("qtype");
+	String query = request.getParameter("query");
 
 	int page = 1;
 	int rowsPages = 15;
@@ -81,18 +87,23 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
 	    response.setContentType("application/json");
 
 	    List<WorkflowRun> workflowRuns = null;
-	    
+
+	    String search_query = "";
+	    if (qtype != null && !"".equals(qtype) && query != null && !"".equals(query)) {
+		search_query = " and cast(wr." + qtype + " as string) like '%" + query + "%'";
+	    }
+
 	    if ("canceled".equals(filter)) {
-		workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = "+registration.getRegistrationId()
-			+" and ( wr.status = 'canceled' or wr.status = 'cancelled')");
+		workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
+			+ " and ( wr.status = 'canceled' or wr.status = 'cancelled')" + search_query);
 	    } else if ("failed".equals(filter)) {
-		workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = "+registration.getRegistrationId()
-			+" and (wr.status = 'failed' or wr.status = 'failed-testing')");
+		workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
+			+ " and (wr.status = 'failed' or wr.status = 'failed-testing')" + search_query);
 	    } else if ("running".equals(filter)) {
-		workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = "+registration.getRegistrationId()
-			+" and ( wr.status = 'runnning' or wr.status = 'pending')");
+		workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
+			+ " and ( wr.status = 'runnning' or wr.status = 'pending')" + search_query);
 	    } else {
-		workflowRuns = workflowRunService.findByOwnerID(registration.getRegistrationId());
+		workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId() + search_query);
 	    }
 
 	    String json = createSampleTableJson(workflowRuns, page, rowsPages, sortName, sortOrder);
@@ -146,19 +157,66 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
 	    cellsModel.add(workflowRun.getWorkflow().getVersion());
 	    cellsModel.add(workflowRun.getStatus());
 	    cellsModel.add(workflowRun.getSwAccession().toString());
+	    //cellsModel.add(sampleToHtml(workflowRun.getSamples()));
+	    //cellsModel.add(iUSToHtml(workflowRun.getIus()));
+	    //cellsModel.add(laneToHtml(workflowRun.getLanes()));
 	    cellsModel.add(workflowRun.getHost());
 	    if ("failed".equals(workflowRun.getStatus())) {
-		cellsModel.add("<a href='#' popup-stderr='true' tt='wfr' stdout='"+workflowRun.getStdOut()+"' stderr='"+workflowRun.getStdErr()+"' >share</a>");
-		cellsModel.add(workflowRun.getStdErr());
+		cellsModel.add("<a href='#' popup-stdout='true' tt='wfr' stdout='" + workflowRun.getStdOut() + "'>output</a> / <a href='#' popup-stderr='true' tt='wfr' stderr='" + workflowRun.getStdErr() + "' >errors</a>");
 	    } else {
 		cellsModel.add("");
-		cellsModel.add("");
 	    }
+	    cellsModel.add("<a href='#' popup-stdout='true' tt='wfr' stdout='" + workflowRun.getIniFile() + "'>parameters</a>");
 
 	    Flexigrid.Cells cells = flexigrid.new Cells(cellsModel);
 	    flexigrid.addRow(cells);
 	}
 	return flexigrid;
+    }
+
+    private String sampleToHtml(Set<Sample> samples) {
+	StringBuilder sb = new StringBuilder();
+	boolean first = true;
+	if (samples != null) {
+	    for (Sample s : samples) {
+		if (!first) {
+		    sb.append(", ");
+		}
+		sb.append(s.getTitle() + " (SWID:" + s.getSwAccession() + ")");
+		first = false;
+	    }
+	}
+	return (sb.toString());
+    }
+
+    private String iUSToHtml(Set<IUS> ius) {
+	StringBuilder sb = new StringBuilder();
+	boolean first = true;
+	if (ius != null) {
+	    for (IUS s : ius) {
+		if (!first) {
+		    sb.append(", ");
+		}
+		sb.append(s.getName() + " (SWID:" + s.getSwAccession() + ")");
+		first = false;
+	    }
+	}
+	return (sb.toString());
+    }
+
+    private String laneToHtml(Set<Lane> lanes) {
+	StringBuilder sb = new StringBuilder();
+	boolean first = true;
+	if (lanes != null) {
+	    for (Lane s : lanes) {
+		if (!first) {
+		    sb.append(", ");
+		}
+		sb.append(s.getName() + " (SWID:" + s.getSwAccession() + ")");
+		first = false;
+	    }
+	}
+	return (sb.toString());
     }
 
     private void sortRows(List<Cells> rowsAll, String sortOrder, String sortName) {
