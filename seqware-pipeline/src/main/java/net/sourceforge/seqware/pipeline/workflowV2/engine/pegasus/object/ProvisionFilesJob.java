@@ -8,9 +8,11 @@ public class ProvisionFilesJob extends PegasusJob {
 
 	private String metadataOutputPrefix;
 	private String outputDir;
+	private SqwFile file;
 	
-	public ProvisionFilesJob(AbstractJob job, String basedir) {
+	public ProvisionFilesJob(AbstractJob job, String basedir, SqwFile file) {
 		super(job, basedir);
+		this.file = file;
 	}
 
 	@Override
@@ -45,13 +47,14 @@ public class ProvisionFilesJob extends PegasusJob {
 			sb.append(this.jobObj.getCommand().toString()).append("\n");	
 		}
 		// set input, output
-		SqwFile file = this.jobObj.getFiles().iterator().next();
 		String inputType = "--input-file ";
-		if(file.isOutput()) {
-			inputType = "--input-file-metadata "+ file.getType() + "/";
+		String output = this.outputDir;
+		if(this.file.isOutput()) {
+			inputType = "--input-file-metadata "+ this.file.getType() + "/";
+			output = this.metadataOutputPrefix + "/" + this.outputDir;
 		}
-		sb.append(inputType).append(this.jobObj.getFiles().iterator().next().getLocation()).append("\n");
-		sb.append("--output-dir " + this.metadataOutputPrefix + "/" + this.outputDir).append("\n");
+		sb.append(inputType).append(this.file.getLocation()).append("\n");
+		sb.append("--output-dir " + output).append("\n");
 		
 		return sb.toString();
 	}
