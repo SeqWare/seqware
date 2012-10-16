@@ -33,17 +33,15 @@ public class PegasusJob {
 	}
 	
 	public Element serializeXML() {
-		String name = "bash";
+		String name = "java";
 		//FIXME should not hardcode here
 		String version = "1.6.0";
 		if(this.jobObj instanceof PerlJob) {
 			name = "perl";
 			//FIXME should put in property file
 			version = "5.14.1";
-		} else if (this.jobObj instanceof JavaJob) {
-			name = "java";
-			version = "1.6.0";
 		} 
+		
 		Element element = new Element("job", Adag.NAMESPACE);
 		element.setAttribute("id", this.jobObj.getAlgo()+"_"+this.id);
 		element.setAttribute("name", name);
@@ -96,7 +94,7 @@ public class PegasusJob {
 				sb.append("--metadata-parent-accession " + this.parentAccession).append("\n");
 			}
 			if(this.wfrAccession!=null) {
-				if(this.wfrAncesstor) {
+				if(!this.wfrAncesstor) {
 					sb.append("--metadata-workflow-run-ancestor-accession " + this.wfrAccession).append("\n");
 				} else {
 					sb.append("--metadata-workflow-run-accession " + this.wfrAccession).append("\n");

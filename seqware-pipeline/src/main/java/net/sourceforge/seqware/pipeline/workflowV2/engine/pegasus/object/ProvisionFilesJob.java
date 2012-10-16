@@ -6,6 +6,9 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 
 public class ProvisionFilesJob extends PegasusJob {
 
+	private String metadataOutputPrefix;
+	private String outputDir;
+	
 	public ProvisionFilesJob(AbstractJob job, String basedir) {
 		super(job, basedir);
 	}
@@ -24,15 +27,15 @@ public class ProvisionFilesJob extends PegasusJob {
 			sb.append("--no-metadata").append("\n");
 		}
 
-		if(this.hasMetadataWriteback()) {
-			if(this.wfrAccession!=null) {
-				if(this.wfrAncesstor) {
-					sb.append("--metadata-workflow-run-ancestor-accession " + this.wfrAccession).append("\n");
-				} else {
-					sb.append("--metadata-workflow-run-accession " + this.wfrAccession).append("\n");
-				}
+		
+		if(this.wfrAccession!=null) {
+			if(this.wfrAncesstor) {
+				sb.append("--metadata-workflow-run-ancestor-accession " + this.wfrAccession).append("\n");
+			} else {
+				sb.append("--metadata-workflow-run-accession " + this.wfrAccession).append("\n");
 			}
 		}
+		
 
 		sb.append("--module module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles").append("\n");
 		sb.append("--").append("\n");
@@ -44,13 +47,29 @@ public class ProvisionFilesJob extends PegasusJob {
 		// set input, output
 		SqwFile file = this.jobObj.getFiles().iterator().next();
 		String inputType = "--input-file ";
-		if(file.getType().indexOf("::")>=0) {
+		if(file.isOutput()) {
 			inputType = "--input-file-metadata "+ file.getType() + "/";
 		}
 		sb.append(inputType).append(this.jobObj.getFiles().iterator().next().getLocation()).append("\n");
-		sb.append("--output-dir provisionfiles").append("\n");
+		sb.append("--output-dir " + this.metadataOutputPrefix + "/" + this.outputDir).append("\n");
 		
 		return sb.toString();
+	}
+
+	public String getMetadataOutputPrefix() {
+		return metadataOutputPrefix;
+	}
+
+	public void setMetadataOutputPrefix(String metadataOutputPrefix) {
+		this.metadataOutputPrefix = metadataOutputPrefix;
+	}
+
+	public String getOutputDir() {
+		return outputDir;
+	}
+
+	public void setOutputDir(String outputDir) {
+		this.outputDir = outputDir;
 	}
 
 }
