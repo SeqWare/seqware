@@ -123,6 +123,11 @@ public class FileLinker extends Plugin {
                ret.setExitStatus(rv.getExitStatus());
                result = false;
                break;
+            } else {
+               Log.info("Successfully added file [" + entry.getValue().getFilePath() + "] with meta data type ["
+                     + entry.getValue().getMetaType()
+                     + "] to database. SeqWare Accession [" + entry.getKey()
+                     + "].");
             }
          } else {
             Log.error("Ignored file [" + entry.getValue().getFilePath() + "]. Already exists in database.");

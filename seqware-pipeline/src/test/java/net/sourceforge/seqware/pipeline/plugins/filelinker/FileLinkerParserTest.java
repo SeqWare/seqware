@@ -31,7 +31,7 @@ public class FileLinkerParserTest {
       assertThat(lines.size(), is(2));
       assertThat(lines.get(1).getFilename(), is("/file2"));
       assertThat(lines.get(1).getSequencerRun(), is("110316_I580_00038_612RG_LT"));
-      assertThat(lines.get(0).getSize(), is(1024));
+      assertThat(lines.get(0).getSize(), is(1024L));
    }
 
    @Test
