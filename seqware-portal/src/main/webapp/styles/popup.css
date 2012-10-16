@@ -102,13 +102,13 @@
   div.bug textarea{
   border: 1px solid #83D1EB;
   width: 220px;
-  height:100px;
+  height:500px;
   }
   
 
 .m-report-bundle div.bug{ padding:0 0 20px 0;}  
   
-.b-popup-content{font-size:12px; height:300px; overflow:auto; width:800px; margin:30px; margin-top:0px; padding:15px; border:1px solid #eeede5; background-color:#f7f6f2;}
+.b-popup-content{font-size:12px; height:800px; overflow:auto; width:800px; margin:30px; margin-top:0px; padding:15px; border:1px solid #eeede5; background-color:#f7f6f2;}
 .b-popup-content table{ width: 100%; border-collapse:collapse;}
 .b-popup-content table th{ font-weight:bold; padding:3px 10px; white-space:nowrap;}
 .b-popup-content table td{ padding:3px 10px; white-space:nowrap;} 
