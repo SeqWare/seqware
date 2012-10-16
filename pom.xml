@@ -53,21 +53,6 @@
        </repository>
     </distributionManagement>
 
-<!-- old parameters
-    <scm>
-        <connection>scm:svn:https://seqware.svn.sourceforge.net/svnroot/seqware/trunk</connection>
-        <developerConnection>scm:svn:https://seqware.svn.sourceforge.net/svnroot/seqware/trunk</developerConnection>
-    </scm>
-    <distributionManagement>
-        <repository>
-            <id>wrench.res.oicr.on.ca</id>
-            <name>wrench.res.oicr.on.ca-releases</name>
-            <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-release</url>
-            <uniqueVersion>false</uniqueVersion>
-        </repository>
-    </distributionManagement>
--->
-
     <artifactId>seqware</artifactId>
     <packaging>pom</packaging>
     <groupId>com.github.seqware</groupId>
