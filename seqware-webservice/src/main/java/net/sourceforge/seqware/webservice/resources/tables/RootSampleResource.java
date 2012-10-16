@@ -34,18 +34,26 @@ import org.w3c.dom.Document;
  * This resource should pull back only samples without parents
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class RootSampleResource extends DatabaseResource {
 
+    /**
+     * <p>Constructor for RootSampleResource.</p>
+     */
     public RootSampleResource() {
         super("sample");
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
     }
 
+    /**
+     * <p>getXml.</p>
+     */
     @Get
     public void getXml() {
         authenticate();

@@ -50,7 +50,7 @@ This is a sample HelloWorld workflow. Use it as a template to build your own wor
   
   Add to the pom.xml:
   <dependency>
-    <groupid>net.sourceforge.seqware</groupid>
+    <groupId>net.sourceforge.seqware</groupId>
     <artifactId>module-helloworld-example</artifactId>
     <version>1.0</version>
   </dependency>  

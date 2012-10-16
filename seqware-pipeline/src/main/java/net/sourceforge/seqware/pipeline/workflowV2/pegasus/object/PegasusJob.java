@@ -13,8 +13,15 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jdom.Element;
 
+/**
+ * <p>PegasusJob class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class PegasusJob extends PegasusAbstract {
 
+    /** Constant <code>NS="seqware"</code> */
     protected static String NS = "seqware";
     protected Job jobObj;
     protected Arguments argument;
@@ -23,6 +30,11 @@ public class PegasusJob extends PegasusAbstract {
     protected String parentAccessionId;
     protected Collection<String> inputs;
 
+    /**
+     * <p>Constructor for PegasusJob.</p>
+     *
+     * @param job a {@link net.sourceforge.seqware.pipeline.workflowV2.model.Job} object.
+     */
     public PegasusJob(Job job) {
 	this.jobObj = job;
 	this.parents = new ArrayList<PegasusJob>();
@@ -36,6 +48,7 @@ public class PegasusJob extends PegasusAbstract {
 	this.setJobContext();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Element serializeXML() {
 	Element element = new Element("job", NAMESPACE);
@@ -84,6 +97,11 @@ public class PegasusJob extends PegasusAbstract {
 	return element;
     }
 
+    /**
+     * <p>generateDefaultProfileElements.</p>
+     *
+     * @return a {@link java.util.Collection} object.
+     */
     protected Collection<Element> generateDefaultProfileElements() {
 	List<Element> res = new ArrayList<Element>();
 	Element e1 = new Element("profile", NAMESPACE);
@@ -147,6 +165,12 @@ public class PegasusJob extends PegasusAbstract {
 	}
     }
 
+    /**
+     * <p>getDependentElement.</p>
+     *
+     * @param parent a {@link net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.PegasusJob} object.
+     * @return a {@link org.jdom.Element} object.
+     */
     public Element getDependentElement(PegasusJob parent) {
 	Element element = new Element("child", NAMESPACE);
 	element.setAttribute("ref", this.jobObj.getId());
@@ -169,6 +193,11 @@ public class PegasusJob extends PegasusAbstract {
 	}
     }
 
+    /**
+     * <p>Getter for the field <code>parentAccessionId</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getParentAccessionId() {
 	if (this.getParents().isEmpty()) {
 	    // return this.getParent().get
@@ -181,14 +210,29 @@ public class PegasusJob extends PegasusAbstract {
 	return "";
     }
 
+    /**
+     * <p>getId.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getId() {
 	return this.jobObj.getId();
     }
 
+    /**
+     * <p>getJobObject.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.pipeline.workflowV2.model.Job} object.
+     */
     public Job getJobObject() {
 	return this.jobObj;
     }
 
+    /**
+     * <p>addParent.</p>
+     *
+     * @param parent a {@link net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.PegasusJob} object.
+     */
     public void addParent(PegasusJob parent) {
 	if (!this.parents.contains(parent)) {
 	    this.parents.add(parent);
@@ -196,14 +240,25 @@ public class PegasusJob extends PegasusAbstract {
 	}
     }
 
+    /**
+     * <p>Getter for the field <code>parents</code>.</p>
+     *
+     * @return a {@link java.util.Collection} object.
+     */
     public Collection<PegasusJob> getParents() {
 	return this.parents;
     }
 
+    /**
+     * <p>hasProcessingFile.</p>
+     *
+     * @return a boolean.
+     */
     public boolean hasProcessingFile() {
 	return this.jobObj.hasProcessingFile();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
 	if (obj instanceof PegasusJob == false)
@@ -214,6 +269,7 @@ public class PegasusJob extends PegasusAbstract {
 	return new EqualsBuilder().append(this.getId(), rhs.getId()).isEquals();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
 	return new HashCodeBuilder(17, 37).append(this.getId()).toHashCode();
@@ -223,36 +279,74 @@ public class PegasusJob extends PegasusAbstract {
 	this.childrens.add(child);
     }
 
+    /**
+     * <p>getChildren.</p>
+     *
+     * @return a {@link java.util.Collection} object.
+     */
     public Collection<PegasusJob> getChildren() {
 	return this.childrens;
     }
 
+    /**
+     * <p>Setter for the field <code>parentAccessionId</code>.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public void setParentAccessionId(String id) {
 	this.parentAccessionId = id;
     }
 
+    /**
+     * <p>setJobContext.</p>
+     */
     protected void setJobContext() {
 	for (Argument arg : this.jobObj.getModuleArguments()) {
 	    this.argument.addModuleOption(arg);
 	}
     }
 
+    /**
+     * <p>hasProvisionFilesDependent.</p>
+     *
+     * @return a boolean.
+     */
     public boolean hasProvisionFilesDependent() {
 	return false;
     }
 
+    /**
+     * <p>getAlgorithm.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getAlgorithm() {
 	return this.jobObj.getAlgorithm();
     }
 
+    /**
+     * <p>isProvisionFilesJob.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isProvisionFilesJob() {
 	return false;
     }
 
+    /**
+     * <p>checkCommandIO.</p>
+     *
+     * @return a boolean.
+     */
     public boolean checkCommandIO() {
 	return this.jobObj.checkCommandIO();
     }
 
+    /**
+     * <p>hasCommandOutput.</p>
+     *
+     * @return a boolean.
+     */
     public boolean hasCommandOutput() {
 	String[] commands = this.jobObj.getCommand().split("\\s+");
 	for (String c : commands) {
@@ -264,6 +358,11 @@ public class PegasusJob extends PegasusAbstract {
 	return false;
     }
 
+    /**
+     * <p>getCommandOutput.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getCommandOutput() {
 	String[] commands = this.jobObj.getCommand().split("\\s+");
 	for (int i = 0; i < commands.length; i++) {
@@ -279,10 +378,16 @@ public class PegasusJob extends PegasusAbstract {
 	return null;
     }
 
+    /**
+     * <p>addCommandInput.</p>
+     *
+     * @param input a {@link java.lang.String} object.
+     */
     public void addCommandInput(String input) {
 	this.inputs.add("INPUT=" + input);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
 	return this.jobObj.getAlgorithm() + "--" + this.jobObj.getId();

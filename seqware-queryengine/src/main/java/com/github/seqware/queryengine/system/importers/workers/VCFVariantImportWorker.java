@@ -34,11 +34,13 @@ import org.apache.log4j.Logger;
  *
  * FIXME: need to support indels FIXME: need to support alternative alleles,
  * each should get its own variant object I think
- *
+ * @version $Id: $Id
  */
 public class VCFVariantImportWorker extends ImportWorker {
 
+    /** Constant <code>SECONDARY_INDEX="sIndex.out"</code> */
     public static final String SECONDARY_INDEX = "sIndex.out";
+    /** Constant <code>VCF="VCF"</code> */
     public static final String VCF = "VCF";
     private CreateUpdateManager modelManager;
     private List<TagSet> potentialTagSets = new ArrayList<TagSet>();
@@ -47,6 +49,9 @@ public class VCFVariantImportWorker extends ImportWorker {
     private PrintWriter out = null;
     private TagSet vcfTagSet;
 
+    /**
+     * <p>Constructor for VCFVariantImportWorker.</p>
+     */
     public VCFVariantImportWorker() {
         if (SOFeatureImporter.SECONDARY_INDEX_HACK) {
             try {
@@ -64,11 +69,8 @@ public class VCFVariantImportWorker extends ImportWorker {
      *
      * Looking through full list each time is slow, using a local cache
      *
-     * @param manager
-     * @param potentialTagSets
-     * @param adhocSet
-     * @param key
-     * @return
+     * @param key a {@link java.lang.String} object.
+     * @return a {@link com.github.seqware.queryengine.model.Tag} object.
      */
     public Tag getTagSpec(String key) {
         Logger.getLogger(VCFVariantImportWorker.class.getName()).trace("getTagSpec() called on " + key);
@@ -106,9 +108,12 @@ public class VCFVariantImportWorker extends ImportWorker {
     }
     
     /**
+     * <p>processVCFTagSpec.</p>
      *
-     * @param key
-     * @return
+     * @param key a {@link java.lang.String} object.
+     * @param tagset a {@link com.github.seqware.queryengine.model.TagSet} object.
+     * @param modelManager a {@link com.github.seqware.queryengine.factory.CreateUpdateManager} object.
+     * @return a {@link com.github.seqware.queryengine.model.Tag} object.
      */
     public static Tag processVCFTagSpec(String key, TagSet tagset, CreateUpdateManager modelManager) {
         Logger.getLogger(VCFVariantImportWorker.class.getName()).trace("processVCFTagSpec() called on " + key);
@@ -124,6 +129,7 @@ public class VCFVariantImportWorker extends ImportWorker {
         return build;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void run() {
         // grab FeatureSet reference
@@ -432,6 +438,14 @@ public class VCFVariantImportWorker extends ImportWorker {
         }
     }
 
+    /**
+     * <p>handleCompressedInput.</p>
+     *
+     * @param input a {@link java.lang.String} object.
+     * @return a {@link java.io.BufferedReader} object.
+     * @throws org.apache.commons.compress.compressors.CompressorException if any.
+     * @throws java.io.FileNotFoundException if any.
+     */
     public static BufferedReader handleCompressedInput(String input) throws CompressorException, FileNotFoundException {
         BufferedReader inputStream;
         if (input.endsWith("bz2") || input.endsWith("bzip2")) {

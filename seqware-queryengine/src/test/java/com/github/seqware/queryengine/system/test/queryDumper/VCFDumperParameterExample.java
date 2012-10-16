@@ -26,16 +26,21 @@ import com.github.seqware.queryengine.system.test.QueryVCFDumperTest;
 
 /**
  * An example of a parameter file. See more possible Queries in {@link QueryInterfaceTest}.
+ *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class VCFDumperParameterExample implements QueryDumperInterface{
 
+    /** {@inheritDoc} */
     @Override
     public int getNumQueries() {
         // we will run three queries
         return 3;
     }
 
+    /** {@inheritDoc} */
     @Override
     public QueryFuture<FeatureSet> getQuery(FeatureSet set, int queryNum) {
         if (queryNum == 0){

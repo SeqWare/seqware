@@ -19,12 +19,21 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 
 
+/**
+ * <p>IusFilesServerResource class.</p>
+ *
+ * @author morgantaschuk
+ * @version $Id: $Id
+ */
 public class IusFilesServerResource extends BasicResource implements IusFilesResource {
 
   private static IUSService iusService;
   
   private Form form;
 
+  /**
+   * <p>Constructor for IusFilesServerResource.</p>
+   */
   public IusFilesServerResource() {
     super();
     IusFilesServerResource.initialiseIusService();
@@ -48,6 +57,7 @@ public class IusFilesServerResource extends BasicResource implements IusFilesRes
   
   
   
+  /** {@inheritDoc} */
   @Override
   protected void doInit() throws ResourceException {
     super.doInit();
@@ -63,6 +73,7 @@ public class IusFilesServerResource extends BasicResource implements IusFilesRes
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<FileDto> getIusFiles() {
     authenticate();

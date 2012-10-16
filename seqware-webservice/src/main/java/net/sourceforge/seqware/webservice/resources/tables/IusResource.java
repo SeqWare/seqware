@@ -29,15 +29,25 @@ import org.restlet.resource.Get;
 import org.w3c.dom.Document;
 
 /**
+ * <p>IusResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class IusResource extends DatabaseResource {
 
+    /**
+     * <p>Constructor for IusResource.</p>
+     */
     public IusResource() {
         super("ius");
     }
 
+    /**
+     * <p>getXml.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     @Get
     public void getXml() throws IOException {
         authenticate();

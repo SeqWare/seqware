@@ -13,8 +13,11 @@ import net.sourceforge.seqware.queryengine.backend.model.Variant;
 import net.sourceforge.seqware.queryengine.backend.store.impl.BerkeleyDBStore;
 
 /**
+ * <p>CoverageStatsProcessor class.</p>
+ *
  * @author boconnor
  *net.sourceforge.seqware.queryengine.tools.iterators.processors.CoverageStatsProcessor
+ * @version $Id: $Id
  */
 public class CoverageStatsProcessor extends CoverageProcessor implements ProcessorInterface {
 
@@ -23,6 +26,7 @@ public class CoverageStatsProcessor extends CoverageProcessor implements Process
   private long totalPositions = 0;
   private long largestCov = 0;
   
+  /** {@inheritDoc} */
   public Object process (Object obj) {
 
     Coverage c = (Coverage) obj;
@@ -60,6 +64,7 @@ public class CoverageStatsProcessor extends CoverageProcessor implements Process
     return(null);
   }
   
+  /** {@inheritDoc} */
   public String report(Object obj) {
     
     StringBuffer sb = new StringBuffer();

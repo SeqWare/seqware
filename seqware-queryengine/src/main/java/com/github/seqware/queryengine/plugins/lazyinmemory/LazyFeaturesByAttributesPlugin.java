@@ -35,6 +35,7 @@ import java.util.Map;
  *
  * @author dyuen
  * @author jbaran
+ * @version $Id: $Id
  */
 public class LazyFeaturesByAttributesPlugin extends AbstractMRInMemoryPlugin {
 
@@ -44,6 +45,7 @@ public class LazyFeaturesByAttributesPlugin extends AbstractMRInMemoryPlugin {
     private FeatureSet set;
     private CreateUpdateManager manager;
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue init(FeatureSet inputSet, Object ... parameters) {
         this.manager = SWQEFactory.getModelManager();
@@ -60,12 +62,14 @@ public class LazyFeaturesByAttributesPlugin extends AbstractMRInMemoryPlugin {
         return new ReturnValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue mapInit() {
         /** do nothing */
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue map(Feature feature, FeatureSet mappedSet) {
         // Get the parameters from the RPN stack and replace them with concrete values:
@@ -80,18 +84,21 @@ public class LazyFeaturesByAttributesPlugin extends AbstractMRInMemoryPlugin {
         return new ReturnValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue reduceInit() {
         /** do nothing */
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue reduce(FeatureSet mappedSet, FeatureSet resultSet) {
         // doesn't really do anything
         return new ReturnValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeatureSet getFinalResult() {
         super.performInMemoryRun();

@@ -25,11 +25,19 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import org.apache.log4j.Logger;
 
 /**
+ * <p>SequencerRunReport class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class SequencerRunReport {
     private Logger logger = Logger.getLogger(SequencerRunReport.class);
+    /**
+     * <p>makeReport.</p>
+     *
+     * @param identity a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public String makeReport(String identity) {
 
         StringBuilder s = new StringBuilder();

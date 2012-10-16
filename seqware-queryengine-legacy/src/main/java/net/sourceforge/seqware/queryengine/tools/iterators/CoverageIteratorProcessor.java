@@ -25,18 +25,22 @@ import net.sourceforge.seqware.queryengine.tools.iterators.processors.VariantPro
 import net.sourceforge.seqware.queryengine.tools.iterators.processors.VariantStatsProcessor;
 
 /**
+ * <p>CoverageIteratorProcessor class.</p>
+ *
  * @author boconnor
  *
  * A very simple iterator that takes a list of positions, gets the coverage objects for those positions, and feeds
  * them to whatever processor is specified.
- * 
+ *
  * The list input should look like "contig\tstart\tstop\n"
- * 
+ * @version $Id: $Id
  */
 public class CoverageIteratorProcessor {
 
   /**
-   * @param args
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
    */
   public static void main(String[] args) {
 

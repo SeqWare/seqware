@@ -47,10 +47,13 @@ import org.apache.log4j.Logger;
  * map/reduce operations with the HBase map/reduce signatures.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlugin<Feature, FeatureSet> {
 
+    /** Constant <code>INT_PARAMETERS="int_parameters"</code> */
     public static final String INT_PARAMETERS = "int_parameters";
+    /** Constant <code>EXT_PARAMETERS="ext_parameters"</code> */
     public static final String EXT_PARAMETERS = "ext_parameters";
     protected Job job;
     protected FeatureSet outputSet;
@@ -58,10 +61,12 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
     /**
      * Internal parameters that can be used to pass information to the
      * Mapper and Reducers.
-     * @return 
+     *
+     * @return an array of {@link java.lang.Object} objects.
      */
     public abstract Object[] getInternalParameters(); 
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue init(FeatureSet inputSet, Object... parameters) {
         try {
@@ -141,9 +146,10 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
 
     /**
      * Handle serialization of parameters. Custom plug-ins may implement their own serialization
-     * routines. 
+     * routines.
+     *
      * @param parameters parameters used by the plug-in during init() and passed to the Map/Reduce tasks
-     * @return 
+     * @return an array of byte.
      */
     public abstract byte[] handleSerialization(Object... parameters);
     
@@ -154,6 +160,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
         return tableName;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue test() {
         /**
@@ -162,6 +169,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue verifyParameters() {
         /**
@@ -170,6 +178,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue verifyInput() {
         /**
@@ -178,6 +187,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue filterInit() {
         /**
@@ -186,6 +196,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue filter() {
         /**
@@ -194,6 +205,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue mapInit() {
         /**
@@ -202,6 +214,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue reduceInit() {
         /**
@@ -210,6 +223,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue verifyOutput() {
         /**
@@ -218,6 +232,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalysisPluginInterface.ReturnValue cleanup() {
         /**
@@ -226,6 +241,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnType getFinalResult() {
         try {
@@ -241,18 +257,21 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue map(Feature atom, FeatureSet mappedSet) {
         // doesn't really do anything
         return new AnalysisPluginInterface.ReturnValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue reduce(FeatureSet mappedSet, FeatureSet resultSet) {
         // doesn't really do anything
         return new AnalysisPluginInterface.ReturnValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isComplete() {
         try {
@@ -266,13 +285,17 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
     /**
      * This should be overridden by implementing classes with code that changes
      * from map/reduce to map/reduce
+     *
+     * @param inputTableName a {@link java.lang.String} object.
+     * @param outputTableName a {@link java.lang.String} object.
+     * @param scan a {@link org.apache.hadoop.hbase.client.Scan} object.
      */
     public abstract void performVariableInit(String inputTableName, String outputTableName, Scan scan);
 
     /**
      * This should be overridden with the result.
      *
-     * @return
+     * @return a ReturnType object.
      */
     public abstract ReturnType variableResult();
 }

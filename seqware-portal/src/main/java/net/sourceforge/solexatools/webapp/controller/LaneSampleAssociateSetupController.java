@@ -17,17 +17,24 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 /**
  * RegistrationSetupController
  * This is invoked upon entry to Registration.jsp or RegistrationUpdate.jsp
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class LaneSampleAssociateSetupController extends BaseCommandController {
   
   SampleService sampleService = null;
   LaneService laneService = null;
   
+  /**
+   * <p>Constructor for LaneSampleAssociateSetupController.</p>
+   */
   public LaneSampleAssociateSetupController() {
     super();
     setSupportedMethods(new String[] {METHOD_GET});
   }
 
+  /** {@inheritDoc} */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request,
       HttpServletResponse response)
@@ -77,18 +84,38 @@ public class LaneSampleAssociateSetupController extends BaseCommandController {
     return(lane);
   }
 
+  /**
+   * <p>Getter for the field <code>sampleService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.SampleService} object.
+   */
   public SampleService getSampleService() {
     return sampleService;
   }
 
+  /**
+   * <p>Setter for the field <code>sampleService</code>.</p>
+   *
+   * @param sampleService a {@link net.sourceforge.seqware.common.business.SampleService} object.
+   */
   public void setSampleService(SampleService sampleService) {
     this.sampleService = sampleService;
   }
 
+  /**
+   * <p>Getter for the field <code>laneService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.LaneService} object.
+   */
   public LaneService getLaneService() {
     return laneService;
   }
 
+  /**
+   * <p>Setter for the field <code>laneService</code>.</p>
+   *
+   * @param laneService a {@link net.sourceforge.seqware.common.business.LaneService} object.
+   */
   public void setLaneService(LaneService laneService) {
     this.laneService = laneService;
   }

@@ -21,13 +21,20 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;  
 
 /**
- * @author boconnor
- * 
- * DEPRECATED: using the TemplateResource now instead
+ * <p>MismatchesResource class.</p>
  *
+ * @author boconnor
+ *
+ * DEPRECATED: using the TemplateResource now instead
+ * @version $Id: $Id
  */
 public class MismatchesResource extends ServerResource {
 
+  /**
+   * <p>represent.</p>
+   *
+   * @return a {@link org.restlet.representation.Representation} object.
+   */
   @Get
   public Representation represent() { 
 

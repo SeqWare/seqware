@@ -38,6 +38,12 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>DownloadFileListController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class DownloadFileListController extends BaseCommandController {
 	private StudyService studyService;
 	private ExperimentService experimentService;
@@ -48,6 +54,9 @@ public class DownloadFileListController extends BaseCommandController {
 	private WorkflowRunService workflowRunService;
 		
  
+	/**
+	 * <p>Constructor for DownloadFileListController.</p>
+	 */
 	public DownloadFileListController() {
 		super();
 	//	setSupportedMethods(new String[] {METHOD_GET});
@@ -106,6 +115,7 @@ public class DownloadFileListController extends BaseCommandController {
 		return nameListInSession;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)
@@ -305,58 +315,128 @@ public class DownloadFileListController extends BaseCommandController {
 		session.setAttribute(nameList, list);
 	}
 
+	/**
+	 * <p>Getter for the field <code>studyService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.StudyService} object.
+	 */
 	public StudyService getStudyService() {
 		return studyService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>studyService</code>.</p>
+	 *
+	 * @param studyService a {@link net.sourceforge.seqware.common.business.StudyService} object.
+	 */
 	public void setStudyService(StudyService studyService) {
 		this.studyService = studyService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>experimentService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+	 */
 	public ExperimentService getExperimentService() {
 		return experimentService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>experimentService</code>.</p>
+	 *
+	 * @param experimentService a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+	 */
 	public void setExperimentService(ExperimentService experimentService) {
 		this.experimentService = experimentService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>sampleService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	 */
 	public SampleService getSampleService() {
 		return sampleService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sampleService</code>.</p>
+	 *
+	 * @param sampleService a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	 */
 	public void setSampleService(SampleService sampleService) {
 		this.sampleService = sampleService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>laneService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	 */
 	public LaneService getLaneService() {
 		return laneService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>laneService</code>.</p>
+	 *
+	 * @param laneService a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	 */
 	public void setLaneService(LaneService laneService) {
 		this.laneService = laneService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>processingService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+	 */
 	public ProcessingService getProcessingService() {
 		return processingService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>processingService</code>.</p>
+	 *
+	 * @param processingService a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+	 */
 	public void setProcessingService(ProcessingService processingService) {
 		this.processingService = processingService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>fileService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
+	 */
 	public FileService getFileService() {
 		return fileService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>fileService</code>.</p>
+	 *
+	 * @param fileService a {@link net.sourceforge.seqware.common.business.FileService} object.
+	 */
 	public void setFileService(FileService fileService) {
 		this.fileService = fileService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public WorkflowRunService getWorkflowRunService() {
 		return workflowRunService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @param workflowRunService a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public void setWorkflowRunService(WorkflowRunService workflowRunService) {
 		this.workflowRunService = workflowRunService;
 	}

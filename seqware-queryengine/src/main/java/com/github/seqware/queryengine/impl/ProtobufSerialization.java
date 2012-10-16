@@ -26,8 +26,10 @@ import com.google.protobuf.Message;
 import org.apache.hadoop.hbase.util.Bytes;
 
 /**
+ * <p>ProtobufSerialization class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class ProtobufSerialization implements SerializationInterface {
 
@@ -37,6 +39,7 @@ public class ProtobufSerialization implements SerializationInterface {
             .put(TagSet.class, new TagSetIO()).put(User.class, new UserIO()).put(Group.class, new GroupIO())
             .build();
 
+    /** {@inheritDoc} */
     @Override
     public byte[] serialize(Atom atom) {
         Class cl = ((AtomImpl)atom).getHBaseClass();
@@ -45,6 +48,7 @@ public class ProtobufSerialization implements SerializationInterface {
         return Bytes.add(Bytes.toBytes(getSerializationConstant()), m2pb.toByteArray());
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends AtomImpl> T deserialize(byte[] bytes, Class<T> type) {
         int serialConstant = Bytes.toInt(Bytes.head(bytes, 4));
@@ -56,6 +60,7 @@ public class ProtobufSerialization implements SerializationInterface {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getSerializationConstant() {
         return 10000;

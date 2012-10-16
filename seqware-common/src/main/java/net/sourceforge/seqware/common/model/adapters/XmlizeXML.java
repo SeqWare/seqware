@@ -20,11 +20,14 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import org.apache.commons.lang.StringEscapeUtils;
 
 /**
+ * <p>XmlizeXML class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class XmlizeXML extends XmlAdapter<String, String> {
 
+    /** {@inheritDoc} */
     @Override
     public String unmarshal(String vt) throws Exception {
 //        String out = vt.replace("&amp;", "&");
@@ -34,6 +37,7 @@ public class XmlizeXML extends XmlAdapter<String, String> {
         return out;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String marshal(String bt) throws Exception {
         String out = StringEscapeUtils.escapeXml(bt);	

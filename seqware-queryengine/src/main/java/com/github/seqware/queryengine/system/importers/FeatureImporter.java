@@ -26,27 +26,35 @@ import org.apache.log4j.Logger;
  *
  * @author boconnor
  * @author dyuen
+ * @version $Id: $Id
  */
 public class FeatureImporter extends Importer {
     
+    /** Constant <code>EXIT_CODE_INVALID_ARGS=1</code> */
     public final static int EXIT_CODE_INVALID_ARGS = 1;
+    /** Constant <code>EXIT_CODE_EXISTING_NAME=5</code> */
     public final static int EXIT_CODE_EXISTING_NAME = 5;
+    /** Constant <code>EXIT_CODE_INVALID_FILE=10</code> */
     public final static int EXIT_CODE_INVALID_FILE = 10;
+    /** Constant <code>FEATURE_SET_ID="FeatureSetID"</code> */
     public final static String FEATURE_SET_ID = "FeatureSetID";
 
     /**
      * This method does the actual work of importing given properly parsed
      * parameters
-     * @param referenceID
-     * @param threadCount
-     * @param inputFiles
-     * @param workerModule
-     * @param compressed
-     * @param outputFile
-     * @param tagSetSGIDs
-     * @param adhocTagSet
-     * @param batch_size
+     *
+     * @param referenceID a {@link com.github.seqware.queryengine.util.SGID} object.
+     * @param threadCount a int.
+     * @param inputFiles a {@link java.util.List} object.
+     * @param workerModule a {@link java.lang.String} object.
+     * @param compressed a boolean.
+     * @param outputFile a {@link java.io.File} object.
+     * @param tagSetSGIDs a {@link java.util.List} object.
+     * @param batch_size a int.
      * @return SGID if successful, null if not
+     * @param adhocTagSetID a {@link com.github.seqware.queryengine.util.SGID} object.
+     * @param existingfeatureSet a {@link com.github.seqware.queryengine.util.SGID} object.
+     * @param secondaryIndex a {@link java.lang.String} object.
      */
     protected static SGID performImport(SGID referenceID, int threadCount, List<String> inputFiles, String workerModule, boolean compressed, 
             File outputFile, List<SGID> tagSetSGIDs, SGID adhocTagSetID, int batch_size, SGID existingfeatureSet,
@@ -194,6 +202,11 @@ public class FeatureImporter extends Importer {
     
     private List<ImportWorker> failedWorkers = new ArrayList<ImportWorker>();
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         SGID mainMethod = FeatureImporter.naiveRun(args);
         if (mainMethod == null) {
@@ -205,8 +218,8 @@ public class FeatureImporter extends Importer {
      * Import a set of Features into a particular specified reference. The ID
      * for the FeatureSet we use is returned.
      *
-     * @param args
-     * @return
+     * @param args an array of {@link java.lang.String} objects.
+     * @return a {@link com.github.seqware.queryengine.util.SGID} object.
      */
     public static SGID naiveRun(String[] args) {
 
@@ -260,10 +273,20 @@ public class FeatureImporter extends Importer {
 
     
 
+    /**
+     * <p>Constructor for FeatureImporter.</p>
+     *
+     * @param threadCount a int.
+     */
     public FeatureImporter(int threadCount) {
         super(threadCount);
     }
 
+    /**
+     * <p>reportException.</p>
+     *
+     * @param aThis a {@link com.github.seqware.queryengine.system.importers.workers.ImportWorker} object.
+     */
     public void reportException(ImportWorker aThis) {
         this.failedWorkers.add(aThis);
     }

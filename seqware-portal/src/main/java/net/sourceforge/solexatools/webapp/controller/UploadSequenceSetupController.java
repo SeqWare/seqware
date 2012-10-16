@@ -21,15 +21,25 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>UploadSequenceSetupController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class UploadSequenceSetupController extends BaseCommandController{
 	private SampleService sampleService;
 	private FileTypeService fileTypeService;
 
+	/**
+	 * <p>Constructor for UploadSequenceSetupController.</p>
+	 */
 	public UploadSequenceSetupController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -124,18 +134,38 @@ public class UploadSequenceSetupController extends BaseCommandController{
 		return sample;
 	}
 
+    /**
+     * <p>Getter for the field <code>sampleService</code>.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.common.business.SampleService} object.
+     */
     public SampleService getSampleService() {
 		return sampleService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sampleService</code>.</p>
+	 *
+	 * @param sampleService a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	 */
 	public void setSampleService(SampleService sampleService) {
 		this.sampleService = sampleService;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>fileTypeService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.FileTypeService} object.
+	 */
 	public FileTypeService getFileTypeService() {
 		return fileTypeService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>fileTypeService</code>.</p>
+	 *
+	 * @param fileTypeService a {@link net.sourceforge.seqware.common.business.FileTypeService} object.
+	 */
 	public void setFileTypeService(FileTypeService fileTypeService) {
 		this.fileTypeService = fileTypeService;
 	}

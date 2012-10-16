@@ -22,15 +22,23 @@ import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.TokenStream;
 
 /**
+ * <p>SeqWareQueryLanguageParserWrapper class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class SeqWareQueryLanguageParserWrapper extends SeqWareQueryLanguageParser {
 
+    /**
+     * <p>Constructor for SeqWareQueryLanguageParserWrapper.</p>
+     *
+     * @param input a {@link org.antlr.runtime.TokenStream} object.
+     */
     public SeqWareQueryLanguageParserWrapper(TokenStream input) {
         super(input, new RecognizerSharedState());
     }
     
+    /** {@inheritDoc} */
     @Override
     public void reportError(RecognitionException e) {
         throw new IllegalArgumentException(e);

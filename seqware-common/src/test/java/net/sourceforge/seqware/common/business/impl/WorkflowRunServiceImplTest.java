@@ -19,12 +19,27 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
 
 import org.junit.Test;
 
+/**
+ * <p>WorkflowRunServiceImplTest class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
+ */
 public class WorkflowRunServiceImplTest extends BaseUnit {
 
+  /**
+   * <p>Constructor for WorkflowRunServiceImplTest.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   public WorkflowRunServiceImplTest() throws Exception {
     super();
   }
 
+  /**
+   * <p>testParentLanes.</p>
+   */
   @Test
   public void testParentLanes() {
     InSessionExecutions.bindSessionToThread();
@@ -52,6 +67,9 @@ public class WorkflowRunServiceImplTest extends BaseUnit {
     InSessionExecutions.unBindSessionFromTheThread();
   }
 
+  /**
+   * <p>testParentIus.</p>
+   */
   @Test
   public void testParentIus() {
     InSessionExecutions.bindSessionToThread();
@@ -78,6 +96,9 @@ public class WorkflowRunServiceImplTest extends BaseUnit {
     InSessionExecutions.unBindSessionFromTheThread();
   }
 
+  /**
+   * <p>testAttachNewlyCreatedWorkflowRun.</p>
+   */
   @Test
   public void testAttachNewlyCreatedWorkflowRun() {
     // Suppose we created or get WorkflowRun object which is hibernate outbound
@@ -100,6 +121,9 @@ public class WorkflowRunServiceImplTest extends BaseUnit {
     InSessionExecutions.unBindSessionFromTheThread();
   }
 
+  /**
+   * <p>testFindByCriteria.</p>
+   */
   @Test
   public void testFindByCriteria() {
     WorkflowRunService wfService = BeanFactory.getWorkflowRunServiceBean();

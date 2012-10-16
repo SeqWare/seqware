@@ -21,16 +21,30 @@ import com.github.seqware.queryengine.dto.QESupporting.FSGIDPB;
 import com.github.seqware.queryengine.util.FSGID;
 
 /**
+ * <p>FSGIDIO class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class FSGIDIO {
 
+    /**
+     * <p>pb2m.</p>
+     *
+     * @param pb a {@link com.github.seqware.queryengine.dto.QESupporting.FSGIDPB} object.
+     * @return a {@link com.github.seqware.queryengine.util.FSGID} object.
+     */
     public static FSGID pb2m(FSGIDPB pb) {  
         FSGID sgid = new FSGID(pb.getSgid().getMostSigBits(), pb.getSgid().getLeastSigBits(), pb.getSgid().getTimestamp(), pb.getRowKey(), pb.getRefName(), SGIDIO.pb2m(pb.getFeatureSet()), pb.getTombstone());
         return sgid;
     }
 
+    /**
+     * <p>m2pb.</p>
+     *
+     * @param sgid a {@link com.github.seqware.queryengine.util.FSGID} object.
+     * @return a {@link com.github.seqware.queryengine.dto.QESupporting.FSGIDPB} object.
+     */
     public static FSGIDPB m2pb(FSGID sgid) {
         QESupporting.FSGIDPB.Builder builder = QESupporting.FSGIDPB.newBuilder();
         builder.setSgid(SGIDIO.m2pb(sgid));

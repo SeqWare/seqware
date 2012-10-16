@@ -5,6 +5,7 @@ import java.util.Iterator;
  * An in-memory iterator for unit testing of SeqWareIterator.
  *
  * @author jbaran
+ * @version $Id: $Id
  */
 public class InMemoryIterator<T> extends SeqWareIterator<T> {
     private Iterator<T> iterator;
@@ -18,15 +19,18 @@ public class InMemoryIterator<T> extends SeqWareIterator<T> {
         this.iterator = iterator;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void closeImpl() {
     }
 
+    /** {@inheritDoc} */
     @Override
     protected boolean hasNextImpl() {
         return iterator.hasNext();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected T nextImpl() {
         return iterator.next();

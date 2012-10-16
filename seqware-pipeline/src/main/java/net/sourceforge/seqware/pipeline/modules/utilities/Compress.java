@@ -24,16 +24,22 @@ import org.openide.util.lookup.ServiceProvider;
  * It is designed to be an abstraction from pbzip2, bzip2, gzip, pigz, etc.
  *
  * Notes/TODO/FIXME:
- * 
- * * For now it has only been tested with pbzip2
- * @author jmendler
  *
+ * * For now it has only been tested with pbzip2
+ *
+ * @author jmendler
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class Compress extends Module {
 
   private OptionSet options = null;
   
+  /**
+   * <p>getOptionParser.</p>
+   *
+   * @return a {@link joptsimple.OptionParser} object.
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.acceptsAll( Arrays.asList("input", "i"), "Required: input file location" ).withRequiredArg().describedAs("input file path");
@@ -46,6 +52,11 @@ public class Compress extends Module {
     return(parser);
   }
   
+  /**
+   * <p>get_syntax.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String get_syntax() {
     OptionParser parser = getOptionParser();
     StringWriter output = new StringWriter();
@@ -59,6 +70,8 @@ public class Compress extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Things to check:
    * * FIXME
    */
@@ -67,6 +80,7 @@ public class Compress extends Module {
     return new ReturnValue(ReturnValue.NOTIMPLEMENTED);    
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
 
@@ -111,6 +125,7 @@ public class Compress extends Module {
     return(ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
     
@@ -136,6 +151,7 @@ public class Compress extends Module {
     return (ret);
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
     // Start with binary
@@ -159,6 +175,7 @@ public class Compress extends Module {
     return RunTools.runCommand( new String[] { "bash", "-c", cmd.toString() } );
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     return(FileTools.verifyFile(new File((String) options.valueOf("output"))));

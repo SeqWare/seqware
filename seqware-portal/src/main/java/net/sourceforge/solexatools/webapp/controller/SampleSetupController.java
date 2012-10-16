@@ -18,8 +18,10 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
  * RegistrationSetupController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class SampleSetupController extends BaseCommandController {
     
 	private ExperimentService experimentService;
@@ -27,11 +29,15 @@ public class SampleSetupController extends BaseCommandController {
 	private LaneService laneService;
 	private OrganismService organismService;
 
+	/**
+	 * <p>Constructor for SampleSetupController.</p>
+	 */
 	public SampleSetupController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -146,34 +152,74 @@ public class SampleSetupController extends BaseCommandController {
 		return sample;
 	}
 
+	/**
+	 * <p>Getter for the field <code>organismService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.OrganismService} object.
+	 */
 	public OrganismService getOrganismService() {
 		return organismService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>organismService</code>.</p>
+	 *
+	 * @param organismService a {@link net.sourceforge.seqware.common.business.OrganismService} object.
+	 */
 	public void setOrganismService(OrganismService organismService) {
 		this.organismService = organismService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>sampleService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	 */
 	public SampleService getSampleService() {
 		return sampleService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sampleService</code>.</p>
+	 *
+	 * @param sampleService a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	 */
 	public void setSampleService(SampleService sampleService) {
 		this.sampleService = sampleService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>experimentService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+	 */
 	public ExperimentService getExperimentService() {
 		return experimentService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>experimentService</code>.</p>
+	 *
+	 * @param experimentService a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+	 */
 	public void setExperimentService(ExperimentService experimentService) {
 		this.experimentService = experimentService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>laneService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	 */
 	public LaneService getLaneService() {
 		return laneService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>laneService</code>.</p>
+	 *
+	 * @param laneService a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	 */
 	public void setLaneService(LaneService laneService) {
 		this.laneService = laneService;
 	}

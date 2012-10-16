@@ -16,17 +16,23 @@ import org.springframework.web.servlet.mvc.SimpleFormController;
 
 /**
  * LoginController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class LoginController extends SimpleFormController {
   private RegistrationService registrationService;
 
+  /**
+   * <p>Constructor for LoginController.</p>
+   */
   public LoginController() {
     super();
     setSupportedMethods(new String[] { METHOD_GET, METHOD_POST });
     setCommandClass(RegistrationDTO.class);
   }
 
+  /** {@inheritDoc} */
   @Override
   protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command,
       BindException errors) throws Exception {
@@ -81,6 +87,12 @@ public class LoginController extends SimpleFormController {
     return modelAndView;
   }
 
+  /**
+   * <p>DeleteTempFile.</p>
+   *
+   * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+   * @throws java.lang.Exception if any.
+   */
   public void DeleteTempFile(Registration registration) throws Exception {
     String contextPath = this.getServletContext().getContextPath();
     String pathToTempStore = "webapps" + contextPath + java.io.File.separator + "temp" + java.io.File.separator
@@ -92,10 +104,20 @@ public class LoginController extends SimpleFormController {
     }
   }
 
+  /**
+   * <p>Getter for the field <code>registrationService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+   */
   public RegistrationService getRegistrationService() {
     return registrationService;
   }
 
+  /**
+   * <p>Setter for the field <code>registrationService</code>.</p>
+   *
+   * @param registrationService a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+   */
   public void setRegistrationService(RegistrationService registrationService) {
     this.registrationService = registrationService;
   }

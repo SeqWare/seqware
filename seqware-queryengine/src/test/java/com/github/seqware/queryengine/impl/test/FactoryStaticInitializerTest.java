@@ -11,6 +11,8 @@ import org.junit.Test;
  * Tests with a static initializer block.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class FactoryStaticInitializerTest {
     
@@ -34,6 +36,9 @@ public class FactoryStaticInitializerTest {
         //System.out.println("ending static init in testID: " + testID.toString());
     }
     
+    /**
+     * <p>testFeatureCreationAndIterate.</p>
+     */
     @Test
     public void testFeatureCreationAndIterate() {
         //System.out.println("running base test in testID: " + testID.toString());

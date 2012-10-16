@@ -26,6 +26,8 @@ import org.junit.Test;
  * interface to do a few queries
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class QueryVCFDumperTest {
 
@@ -33,10 +35,15 @@ public class QueryVCFDumperTest {
     private static TagSet sequenceOntology = null;
     private static Reference reference = null;
     private static TagSet adHocSet = null;
+    /** Constant <code>REFERENCE="hg_42"</code> */
     public static final String REFERENCE = "hg_42";
     private static File outputFile;
+    /** Constant <code>AD_HOC_TAG_SET="ad_hoc_tagSet"</code> */
     public static final String AD_HOC_TAG_SET = "ad_hoc_tagSet";
 
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
         // we will need a loaded SO, a reference, and an adhoc tag set to test this sucker
@@ -83,6 +90,9 @@ public class QueryVCFDumperTest {
         Assert.assertTrue("Could not import VCF for test", originalSet != null);
     }
 
+    /**
+     * <p>testQueryVCFDumperByClass.</p>
+     */
     @Test
     public void testQueryVCFDumperByClass() {
         File keyValueFile = null;
@@ -111,6 +121,9 @@ public class QueryVCFDumperTest {
         SOFeatureImporterTest.matchOutputToControl(outputFile, false, new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated_dumperControl.vcf"));
     }
 
+    /**
+     * <p>testFirstVCFQueryDumper.</p>
+     */
     @Test
     public void testFirstVCFQueryDumper() {
         File keyValueFile = null;
@@ -137,6 +150,9 @@ public class QueryVCFDumperTest {
         //SOFeatureImporterTest.matchOutputToControl(outputFile, false, new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated_dumperControl.vcf"));
     }
     
+    /**
+     * <p>testSecondVCFQueryDumper.</p>
+     */
     @Test
     public void testSecondVCFQueryDumper() {
         File keyValueFile = null;
@@ -164,6 +180,9 @@ public class QueryVCFDumperTest {
         //SOFeatureImporterTest.matchOutputToControl(outputFile, false, new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated_dumperControl.vcf"));
     }
     
+    /**
+     * <p>testThirdVCFQueryDumper.</p>
+     */
     @Test
     public void testThirdVCFQueryDumper() {
         File keyValueFile = null;

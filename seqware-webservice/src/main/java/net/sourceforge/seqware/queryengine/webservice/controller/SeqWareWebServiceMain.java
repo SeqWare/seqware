@@ -8,8 +8,10 @@ import org.restlet.Component;
 import org.restlet.data.Protocol;
 
 /**
- * @author boconnor
+ * <p>SeqWareWebServiceMain class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class SeqWareWebServiceMain {
 
@@ -36,6 +38,11 @@ public class SeqWareWebServiceMain {
         component.start();
     }
 
+    /**
+     * <p>stop.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     public static void stop() throws Exception {
         component.stop();
         while (!component.isStopped()) {
@@ -43,6 +50,11 @@ public class SeqWareWebServiceMain {
         }
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         try {
             new SeqWareWebServiceMain();

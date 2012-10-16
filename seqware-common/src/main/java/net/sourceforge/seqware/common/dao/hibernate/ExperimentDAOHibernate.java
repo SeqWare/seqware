@@ -17,31 +17,45 @@ import org.hibernate.Query;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ExperimentDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ExperimentDAOHibernate extends HibernateDaoSupport implements ExperimentDAO {
 
+  /**
+   * <p>Constructor for ExperimentDAOHibernate.</p>
+   */
   public ExperimentDAOHibernate() {
     super();
   }
 
+  /** {@inheritDoc} */
   public Integer insert(Experiment experiment) {
     this.getHibernateTemplate().save(experiment);
     this.getSession().flush();
     return experiment.getSwAccession();
   }
 
+  /** {@inheritDoc} */
   public void update(Experiment experiment) {
     this.getHibernateTemplate().update(experiment);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void merge(Experiment experiment) {
     this.getHibernateTemplate().merge(experiment);
   }
 
+  /** {@inheritDoc} */
   public void delete(Experiment experiment) {
     this.getHibernateTemplate().delete(experiment);
   }
 
+  /** {@inheritDoc} */
   public List<Experiment> list(Registration registration) {
     ArrayList<Experiment> experiments = new ArrayList<Experiment>();
     if (registration == null) {
@@ -66,6 +80,12 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     return experiments;
   }
 
+  /**
+   * <p>list.</p>
+   *
+   * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
+   * @return a {@link java.util.List} object.
+   */
   public List<Experiment> list(Study study) {
     ArrayList<Experiment> experiments = new ArrayList<Experiment>();
     if (study == null) {
@@ -85,6 +105,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     return experiments;
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer experimentId) {
     List<File> files = new ArrayList<File>();
     String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -189,6 +210,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     return files;
   }
 
+  /** {@inheritDoc} */
   public boolean isHasFile(Integer experimentId) {
     boolean isHasFile = false;
     /*
@@ -331,6 +353,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     return isHasFile;
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer experimentId, String metaType) {
     List<File> files = new ArrayList<File>();
     String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -435,6 +458,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     return files;
   }
 
+  /** {@inheritDoc} */
   public boolean isHasFile(Integer experimentId, String metaType) {
     boolean isHasFile = false;
     String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -537,11 +561,9 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of Experiment in the database by the Experiment name.
-   * 
-   * @param name
-   *          name of the Experiment
-   * @return Experiment or null if not found
    */
   public Experiment findByTitle(String title) {
     String query = "from Experiment as experiment where lower(experiment.title) = ?";
@@ -555,11 +577,9 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of Experiment in the database by the Experiment ID.
-   * 
-   * @param expID
-   *          ID of the Experiment
-   * @return Experiment or null if not found
    */
   public Experiment findByID(Integer expID) {
     String query = "from Experiment as experiment where experiment.experimentId = ?";
@@ -572,6 +592,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     return experiment;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings({ "unchecked" })
   @Override
   public Experiment findBySWAccession(Integer swAccession) {
@@ -585,6 +606,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     return experiment;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Experiment updateDetached(Experiment experiment) {
     Experiment dbObject = findByID(experiment.getExperimentId());
@@ -600,6 +622,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     return null;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
   public List<Experiment> findByOwnerID(Integer registrationID) {
@@ -608,6 +631,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     return this.getHibernateTemplate().find(query, parameters);
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
   public List<Experiment> findByCriteria(String criteria, boolean isCaseSens) {
@@ -631,6 +655,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     return query.list();
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Experiment> list() {
     ArrayList<Experiment> l = new ArrayList<Experiment>();
@@ -646,6 +671,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     return l;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(Registration registration, Experiment experiment) {
     Experiment dbObject = reattachExperiment(experiment);
@@ -662,6 +688,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer insert(Registration registration, Experiment experiment) {
     Integer swAccession = 0;
@@ -678,6 +705,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     return (swAccession);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Experiment updateDetached(Registration registration, Experiment experiment) {
     Experiment dbObject = reattachExperiment(experiment);
