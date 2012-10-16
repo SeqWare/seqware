@@ -285,10 +285,10 @@ public class TaggableTest {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         Tag ta = ts1.toBuilder().setValue("Test_String").build();
         Tag tb = ts1.toBuilder().setValue("Test_String".getBytes()).build();
-        Tag tc = ts1.toBuilder().setValue(new Float(0.1f)).build();
-        Tag td = ts1.toBuilder().setValue(new Double(0.1)).build();
-        Tag te = ts1.toBuilder().setValue(new Long(1)).build();
-        Tag tf = ts1.toBuilder().setValue(new Integer(10)).build();
+        Tag tc = ts1.toBuilder().setValue(Float.valueOf(0.1f)).build();
+        Tag td = ts1.toBuilder().setValue(Double.valueOf(0.1)).build();
+        Tag te = ts1.toBuilder().setValue(Long.valueOf(1)).build();
+        Tag tf = ts1.toBuilder().setValue(Integer.valueOf(10)).build();
         Tag tg = ts1.toBuilder().setValue(fSet.getSGID()).build();
         User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
         u.associateTag(ta);
