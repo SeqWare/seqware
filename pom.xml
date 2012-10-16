@@ -26,6 +26,7 @@
         <postgresql.version>9.1-901.jdbc3</postgresql.version>
         <guava.version>11.0.2</guava.version>
         <restlet.version>2.1-RC5</restlet.version>
+        <opencsv.version>2.3</opencsv.version>
         <maven-assembly-plugin.version>2.3</maven-assembly-plugin.version>
         <jetty-maven-plugin.version>7.0.0.pre5</jetty-maven-plugin.version>
         <github.url>scm:git:git@github.com:SeqWare/seqware.git</github.url>
@@ -457,6 +458,11 @@
                         <artifactId>org.restlet.ext.jibx</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.opencsv</groupId>
+                <artifactId>opencsv</artifactId>
+                <version>${opencsv.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
