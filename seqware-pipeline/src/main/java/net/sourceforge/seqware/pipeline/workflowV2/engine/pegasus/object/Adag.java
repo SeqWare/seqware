@@ -126,6 +126,11 @@ public class Adag  {
 		if(parentAccession!=null && !parentAccession.isEmpty()) {
 			pjob0.setParentAccession(parentAccession);
 		}
+		String workflowRunAccession = wfdm.getConfigs().get("workflow-run-accession");
+		if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
+			pjob0.setWorkflowRunAccession(workflowRunAccession);
+			pjob0.setWorkflowRunAncesstor(true);
+		}
 		
 		this.jobs.add(pjob0);
 		parents.add(pjob0);
@@ -141,6 +146,9 @@ public class Adag  {
 			PegasusJob pjobdir = new PegasusJob(dirJob, wfdm.getConfigs().get("basedir"));
 			pjobdir.setId(this.jobs.size());
 			pjobdir.setMetadataWriteback(metadatawriteback);
+			if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
+				pjobdir.setWorkflowRunAccession(workflowRunAccession);
+			}
 			this.jobs.add(pjobdir);
 			pjobdir.addParent(pjob0);
 			parents.add(pjobdir);
@@ -154,6 +162,9 @@ public class Adag  {
 				PegasusJob pjob = new ProvisionFilesJob(job,wfdm.getConfigs().get("basedir"));
 				pjob.setId(this.jobs.size());
 				pjob.setMetadataWriteback(metadatawriteback);
+				if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
+					pjob.setWorkflowRunAccession(workflowRunAccession);
+				}
 				this.jobs.add(pjob);
 				this.fileJobMap.put(entry.getValue(), pjob);
 	
@@ -177,6 +188,9 @@ public class Adag  {
 			PegasusJob pjob = this.createPegasusJobObject(job, wfdm);
 			pjob.setId(idCount);
 			pjob.setMetadataWriteback(metadatawriteback);
+			if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
+				pjob.setWorkflowRunAccession(workflowRunAccession);
+			}
 			this.jobs.add(pjob);
 			for(Job parent: job.getParents()) {
 				pjob.addParent(this.getPegasusJobObject((AbstractJob)parent));
@@ -196,6 +210,9 @@ public class Adag  {
 							parentPfjob.setId(this.jobs.size());
 							parentPfjob.addParent(pjob0);
 							parentPfjob.setMetadataWriteback(metadatawriteback);
+							if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
+								parentPfjob.setWorkflowRunAccession(workflowRunAccession);
+							}
 							this.jobs.add(parentPfjob);
 							pjob.addParent(parentPfjob);						
 					} else {
@@ -206,6 +223,9 @@ public class Adag  {
 							parentPfjob.setId(this.jobs.size());
 							parentPfjob.addParent(pjob);
 							parentPfjob.setMetadataWriteback(metadatawriteback);
+							if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
+								parentPfjob.setWorkflowRunAccession(workflowRunAccession);
+							}
 							this.jobs.add(parentPfjob);
 							hasProvisionOut.put(pjob, parentPfjob);
 					}
