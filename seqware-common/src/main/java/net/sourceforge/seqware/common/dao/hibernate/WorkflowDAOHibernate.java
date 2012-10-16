@@ -17,12 +17,22 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>WorkflowDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class WorkflowDAOHibernate extends HibernateDaoSupport implements WorkflowDAO {
 
+  /**
+   * <p>Constructor for WorkflowDAOHibernate.</p>
+   */
   public WorkflowDAOHibernate() {
     super();
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer insert(Workflow workflow) {
     this.getHibernateTemplate().save(workflow);
@@ -30,15 +40,22 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     return workflow.getSwAccession();
   }
 
+  /** {@inheritDoc} */
   public void update(Workflow workflow) {
     getHibernateTemplate().update(workflow);
     getSession().flush();
   }
 
+  /** {@inheritDoc} */
   public void delete(Workflow workflow) {
     getHibernateTemplate().delete(workflow);
   }
 
+  /**
+   * <p>list.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<Workflow> list() {
     ArrayList<Workflow> workflows = new ArrayList<Workflow>();
 
@@ -56,6 +73,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     return workflows;
   }
 
+  /** {@inheritDoc} */
   public List<Workflow> list(Registration registration) {
     ArrayList<Workflow> workflows = new ArrayList<Workflow>();
 
@@ -78,6 +96,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     return workflows;
   }
 
+  /** {@inheritDoc} */
   public List<Workflow> listMyShared(Registration registration) {
     List<Workflow> sharedWorkflows = new ArrayList<Workflow>();
     List<Workflow> workflows = list(registration);
@@ -90,10 +109,12 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     return sharedWorkflows;
   }
 
+  /** {@inheritDoc} */
   public List<Workflow> listSharedWithMe(Registration registration) {
     return new ArrayList<Workflow>();
   }
 
+  /** {@inheritDoc} */
   public List<Workflow> findByName(String name) {
     String query = "from Workflow as workflow where workflow.name = ?";
     Object[] parameters = { name };
@@ -101,6 +122,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     return list;
   }
 
+  /** {@inheritDoc} */
   public Workflow findByID(Integer wfID) {
     String query = "from Workflow as workflow where workflow.workflowId = ?";
     Workflow workflow = null;
@@ -112,6 +134,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     return workflow;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Workflow findBySWAccession(Integer swAccession) {
     String query = "from Workflow as workflow where workflow.swAccession = ?";
@@ -127,6 +150,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     return workflow;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
   public List<Workflow> findByCriteria(String criteria, boolean isCaseSens) {
@@ -147,6 +171,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     return query.list();
   }
 
+  /** {@inheritDoc} */
   @Override
   public Workflow updateDetached(Workflow workflow) {
     Workflow dbObject = findByID(workflow.getWorkflowId());
@@ -162,6 +187,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(Registration registration, Workflow workflow) {
     Workflow dbObject = reattachWorkflow(workflow);
@@ -177,6 +203,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer insert(Registration registration, Workflow workflow) {
     Logger logger = Logger.getLogger(WorkflowDAOHibernate.class);
@@ -196,6 +223,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Workflow> listWorkflows(SequencerRun sr) {
     String query = null;
@@ -235,6 +263,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     return workflows;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Workflow updateDetached(Registration registration, Workflow workflow) {
     Workflow dbObject = reattachWorkflow(workflow);

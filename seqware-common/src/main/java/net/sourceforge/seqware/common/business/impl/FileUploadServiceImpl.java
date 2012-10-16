@@ -30,6 +30,12 @@ import net.sourceforge.seqware.common.model.Study;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>FileUploadServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class FileUploadServiceImpl implements FileUploadService {
   private StudyDAO studyDAO = null;
   private ExperimentDAO experimentDAO = null;
@@ -42,38 +48,81 @@ public class FileUploadServiceImpl implements FileUploadService {
   private FileDAO fileDAO = null;
   private static final Log log = LogFactory.getLog(FileTypeServiceImpl.class);
 
+  /**
+   * <p>Constructor for FileUploadServiceImpl.</p>
+   */
   public FileUploadServiceImpl() {
     super();
   }
 
+  /**
+   * <p>Setter for the field <code>studyDAO</code>.</p>
+   *
+   * @param studyDAO a {@link net.sourceforge.seqware.common.dao.StudyDAO} object.
+   */
   public void setStudyDAO(StudyDAO studyDAO) {
     this.studyDAO = studyDAO;
   }
 
+  /**
+   * <p>Setter for the field <code>experimentDAO</code>.</p>
+   *
+   * @param experimentDAO a {@link net.sourceforge.seqware.common.dao.ExperimentDAO} object.
+   */
   public void setExperimentDAO(ExperimentDAO experimentDAO) {
     this.experimentDAO = experimentDAO;
   }
 
+  /**
+   * <p>Setter for the field <code>sampleDAO</code>.</p>
+   *
+   * @param sampleDAO a {@link net.sourceforge.seqware.common.dao.SampleDAO} object.
+   */
   public void setSampleDAO(SampleDAO sampleDAO) {
     this.sampleDAO = sampleDAO;
   }
 
+  /**
+   * <p>Setter for the field <code>laneDAO</code>.</p>
+   *
+   * @param laneDAO a {@link net.sourceforge.seqware.common.dao.LaneDAO} object.
+   */
   public void setLaneDAO(LaneDAO laneDAO) {
     this.laneDAO = laneDAO;
   }
 
+  /**
+   * <p>Setter for the field <code>processingDAO</code>.</p>
+   *
+   * @param processingDAO a {@link net.sourceforge.seqware.common.dao.ProcessingDAO} object.
+   */
   public void setProcessingDAO(ProcessingDAO processingDAO) {
     this.processingDAO = processingDAO;
   }
 
+  /**
+   * <p>Setter for the field <code>sequencerRunDAO</code>.</p>
+   *
+   * @param sequencerRunDAO a {@link net.sourceforge.seqware.common.dao.SequencerRunDAO} object.
+   */
   public void setSequencerRunDAO(SequencerRunDAO sequencerRunDAO) {
     this.sequencerRunDAO = sequencerRunDAO;
   }
 
+  /**
+   * <p>setIUSDAO.</p>
+   *
+   * @param IUSDAO a {@link net.sourceforge.seqware.common.dao.IUSDAO} object.
+   */
   public void setIUSDAO(IUSDAO IUSDAO) {
     this.IUSDAO = IUSDAO;
   }
 
+  /**
+   * <p>Setter for the field <code>fileTypeDAO</code>.</p>
+   *
+   * @param fileTypeDAO a {@link net.sourceforge.seqware.common.dao.FileTypeDAO} object.
+   */
   public void setFileTypeDAO(FileTypeDAO fileTypeDAO) {
     this.fileTypeDAO = fileTypeDAO;
   }
@@ -81,7 +130,7 @@ public class FileUploadServiceImpl implements FileUploadService {
   /**
    * Sets a private member variable with an instance of an implementation of
    * FileDAO. This method is called by the Spring framework at run time.
-   * 
+   *
    * @param fileDAO
    *          implementation of FileDAO
    * @see fileDAO
@@ -135,6 +184,7 @@ public class FileUploadServiceImpl implements FileUploadService {
     return newProcessing;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void uploadFile(Study study, UploadFile uploadFile, FileType fileType, Registration registration)
       throws Exception {
@@ -154,6 +204,7 @@ public class FileUploadServiceImpl implements FileUploadService {
     studyDAO.update(study);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void uploadFile(Experiment experiment, UploadFile uploadFile, FileType fileType, Registration registration)
       throws Exception {
@@ -173,6 +224,7 @@ public class FileUploadServiceImpl implements FileUploadService {
     experimentDAO.update(experiment);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void uploadFile(Sample sample, UploadFile uploadFile, FileType fileType, Registration registration)
       throws Exception {
@@ -192,6 +244,7 @@ public class FileUploadServiceImpl implements FileUploadService {
     sampleDAO.update(sample);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void uploadFile(Lane lane, UploadFile uploadFile, FileType fileType, Registration registration)
       throws Exception {
@@ -211,6 +264,7 @@ public class FileUploadServiceImpl implements FileUploadService {
     laneDAO.update(lane);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void uploadFile(IUS ius, UploadFile uploadFile, FileType fileType, Registration registration) throws Exception {
     // create new processing
@@ -229,6 +283,7 @@ public class FileUploadServiceImpl implements FileUploadService {
     IUSDAO.update(ius);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void uploadFile(Processing processing, UploadFile uploadFile, FileType fileType, Registration registration)
       throws Exception {
@@ -248,6 +303,7 @@ public class FileUploadServiceImpl implements FileUploadService {
     processingDAO.update(processing);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void uploadFile(SequencerRun sequencerRun, UploadFile uploadFile, FileType fileType, Registration registration)
       throws Exception {

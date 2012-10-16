@@ -18,12 +18,19 @@ import org.restlet.resource.ServerResource;
 
 
 /**
- * @author boconnor
+ * <p>VersionResource class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class VersionResource extends ServerResource {
 
   //Get("text/html")
+  /**
+   * <p>represent.</p>
+   *
+   * @return a {@link org.restlet.representation.Representation} object.
+   */
   @Get
   public Representation represent() {  
 

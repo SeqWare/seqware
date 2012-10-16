@@ -22,11 +22,17 @@ import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import org.junit.Test;
 
 /**
- * 
+ * <p>CommandLineToolTest class.</p>
+ *
  * @author yongliang
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class CommandLineToolTest {
 
+  /**
+   * <p>listTable.</p>
+   */
   @Test
   public void listTable() {
     PluginRunner runner = new PluginRunner();
@@ -36,6 +42,9 @@ public class CommandLineToolTest {
     assertTrue(true);
   }
 
+  /**
+   * <p>listField.</p>
+   */
   @Test
   public void listField() {
     PluginRunner runner = new PluginRunner();
@@ -45,6 +54,9 @@ public class CommandLineToolTest {
     assertTrue(true);
   }
 
+  /**
+   * <p>addStudy.</p>
+   */
   @Test
   public void addStudy() {
     PluginRunner runner = new PluginRunner();
@@ -56,6 +68,9 @@ public class CommandLineToolTest {
     assertTrue(true);
   }
 
+  /**
+   * <p>addExperiment.</p>
+   */
   @Test
   public void addExperiment() {
     PluginRunner runner = new PluginRunner();
@@ -66,6 +81,9 @@ public class CommandLineToolTest {
     assertTrue(true);
   }
 
+  /**
+   * <p>addSample.</p>
+   */
   @Test
   public void addSample() {
     PluginRunner runner = new PluginRunner();
@@ -77,6 +95,9 @@ public class CommandLineToolTest {
     assertTrue(true);
   }
 
+  /**
+   * <p>provisionFiles.</p>
+   */
   @Test
   public void provisionFiles() {
     // -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module
@@ -94,6 +115,9 @@ public class CommandLineToolTest {
     assertTrue(true);
   }
 
+  /**
+   * <p>genericMetadataSaver.</p>
+   */
   @Test
   public void genericMetadataSaver() {
     // java -jar seqware-pipeline-0.11.4-r4770.jar -p
@@ -112,6 +136,9 @@ public class CommandLineToolTest {
 
   }
 
+  /**
+   * <p>listInstall.</p>
+   */
   @Test
   public void listInstall() {
     PluginRunner runner = new PluginRunner();
@@ -122,6 +149,9 @@ public class CommandLineToolTest {
     assertTrue(true);
   }
 
+  /**
+   * <p>workflowrunReport.</p>
+   */
   @Test
   public void workflowrunReport() {
     // -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter --
@@ -134,6 +164,9 @@ public class CommandLineToolTest {
 
   }
 
+  /**
+   * <p>sequencerRunReport.</p>
+   */
   @Test
   public void sequencerRunReport() {
     PluginRunner runner = new PluginRunner();
@@ -144,6 +177,9 @@ public class CommandLineToolTest {
 
   }
 
+  /**
+   * <p>symlinkReport.</p>
+   */
   @Test
   public void symlinkReport() {
     PluginRunner runner = new PluginRunner();
@@ -153,6 +189,9 @@ public class CommandLineToolTest {
     assertTrue(true);
   }
 
+  /**
+   * <p>listworkflowparams.</p>
+   */
   @Test
   public void listworkflowparams() {
     PluginRunner runner = new PluginRunner();

@@ -3,15 +3,14 @@ package net.sourceforge.seqware.common.module;
 import java.io.File;
 
 /**
- * 
+ *
  * This is a simple data structure to represent a file and it's metadata. It
  * should roughly match the DB schema. FIXME: Instead of doing this, should be
  * using something like Hibernate to represent database schema in objects?
- * 
+ *
  * @author jmendler
- * 
+ * @version $Id: $Id
  */
-
 public class FileMetadata {
    String url;
    String urlLabel;
@@ -125,5 +124,4 @@ public class FileMetadata {
    public void setSize(Long size) {
       this.size = size;
    }
-
 }

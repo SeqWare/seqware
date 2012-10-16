@@ -10,12 +10,23 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ShareStudyDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ShareStudyDAOHibernate extends HibernateDaoSupport implements ShareStudyDAO {
+  /**
+   * <p>Constructor for ShareStudyDAOHibernate.</p>
+   */
   public ShareStudyDAOHibernate() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of ShareStudy into the database.
    */
   public void insert(ShareStudy shareStudy) {
@@ -23,6 +34,8 @@ public class ShareStudyDAOHibernate extends HibernateDaoSupport implements Share
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of ShareStudy in the database.
    */
   public void update(ShareStudy shareStudy) {
@@ -31,6 +44,8 @@ public class ShareStudyDAOHibernate extends HibernateDaoSupport implements Share
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of ShareStudy in the database.
    */
   public void delete(ShareStudy shareStudy) {
@@ -39,13 +54,10 @@ public class ShareStudyDAOHibernate extends HibernateDaoSupport implements Share
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of ShareStudy in the database by the ShareStudy ID.
-   * 
-   * @param expID
-   *          ID of the ShareStudy
-   * @return ShareStudy or null if not found
    */
-
   public ShareStudy findByStudyIdAndRegistrationId(Integer studyId, Integer registrationId) {
     String query = "from ShareStudy as shareStudy where shareStudy.studyId = ? and shareStudy.registration.registrationId = ?";
     ShareStudy shareStudy = null;
@@ -58,11 +70,9 @@ public class ShareStudyDAOHibernate extends HibernateDaoSupport implements Share
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of ShareStudy in the database by the ShareStudy ID.
-   * 
-   * @param expID
-   *          ID of the ShareStudy
-   * @return ShareStudy or null if not found
    */
   public ShareStudy findByID(Integer id) {
     String query = "from ShareStudy as shareStudy where shareStudy.shareStudyId = ?";
@@ -75,6 +85,7 @@ public class ShareStudyDAOHibernate extends HibernateDaoSupport implements Share
     return shareStudy;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ShareStudy updateDetached(ShareStudy shareStudy) {
     ShareStudy dbObject = findByID(shareStudy.getShareStudyId());
@@ -90,6 +101,7 @@ public class ShareStudyDAOHibernate extends HibernateDaoSupport implements Share
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ShareStudy> list() {
         throw new UnsupportedOperationException("Not supported yet.");

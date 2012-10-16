@@ -13,10 +13,19 @@ import javax.activation.DataSource;
  * User: Xiaoshu Wang (xiao@renci.org)
  * Date: 8/10/11
  * Time: 9:01 PM
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 @Configuration
 public class DefaultConfig {
 
+    /**
+     * <p>logging.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.pipeline.runner.LogAspect} object.
+     * @throws java.lang.Throwable if any.
+     */
     @Bean(name = RunnerParams.Bean.LOG)
     public LogAspect logging() throws Throwable {
         LogAspect log = new LogAspect();
@@ -24,11 +33,22 @@ public class DefaultConfig {
         return log;
     }
 
+    /**
+     * <p>redirect.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.pipeline.runner.RedirectAspect} object.
+     * @throws java.lang.Throwable if any.
+     */
     @Bean(name = RunnerParams.Bean.REDIRECT)
     public RedirectAspect redirect() throws Throwable {
         return new RedirectAspect();
     }
 
+    /**
+     * <p>dataSource.</p>
+     *
+     * @return a {@link org.springframework.jdbc.datasource.SingleConnectionDataSource} object.
+     */
     @Bean
     public SingleConnectionDataSource dataSource() {
         SingleConnectionDataSource dataSource = new SingleConnectionDataSource();
@@ -39,6 +59,11 @@ public class DefaultConfig {
         return dataSource;
     }
 
+    /**
+     * <p>jdbcTemplate.</p>
+     *
+     * @return a {@link org.springframework.jdbc.core.simple.SimpleJdbcTemplate} object.
+     */
     @Bean
     public SimpleJdbcTemplate jdbcTemplate(){
         return new SimpleJdbcTemplate(dataSource());

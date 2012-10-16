@@ -25,22 +25,22 @@ import org.openide.util.lookup.ServiceProvider;
  * it finds there into one SRF per lane. Really, this needs to do a little more,
  * I want one SRF file per Indivisible Unit of Sequence (IUS). What I mean by IUS
  * is the subset of reads that all share a common prefix e.g. barcode. So a given
- * lane without barcodes/multiplexed samples would be one IUS but a lane with 
- * multiplexed samples each with their own barcode would have >1 IUS, one per 
+ * lane without barcodes/multiplexed samples would be one IUS but a lane with
+ * multiplexed samples each with their own barcode would have >1 IUS, one per
  * barcode used.
- * 
+ *
  * Keep in mind this module will check if the file Status.xml
  * and then look inside for a line that looks like the following:
- * 
+ *
  * <Software>Illumina RTA 1.6.*.*</Software>
- * 
+ *
  * This module will error out if the string does not match "^Illumina RTA 1.6."
  * so currently this module is only helpful for non-historic Illumina run folders.
- * 
- * TODO: add IUS support
- * 
- * @author briandoconnor@gmail.com
  *
+ * TODO: add IUS support
+ *
+ * @author briandoconnor@gmail.com
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class Illumina2SRF extends Module {
@@ -51,7 +51,7 @@ public class Illumina2SRF extends Module {
 
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
    */
   protected OptionParser getOptionParser() {
@@ -69,14 +69,14 @@ public class Illumina2SRF extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * The init method is where you put any code needed to setup your module.
    * Here I set some basic information in the ReturnValue object which will eventually
    * populate the "processing" table in seqware_meta_db. I also create a temporary
    * directory using the FileTools object.
-   * 
+   *
    * init is optional
-   * 
-   * @return A ReturnValue object that contains information about the status of init
    */
   @Override
   public ReturnValue init() {
@@ -122,9 +122,9 @@ public class Illumina2SRF extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Verifies that the required parameters are present
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -149,6 +149,8 @@ public class Illumina2SRF extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * The do_verify_input method ensures that the input files exist. It
    * may also do validation of the input files or anything that is needed
    * to make sure the module has everything it needs to run. There is some
@@ -157,8 +159,6 @@ public class Illumina2SRF extends Module {
    * connected to etc.  While do_verify_parameters is primarily used to
    * validate that the minimal parameters are passed in. The overlap between
    * these two methods is at the discretion of the developer
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -273,13 +273,13 @@ public class Illumina2SRF extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * This is really an optional method but a very good idea. You
    * would test the programs your calling here by running them on
    * a "known good" test dataset and then compare the new answer
    * with the previous known good answer. Other forms of testing could be
    * encapsulated here as well.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -294,28 +294,28 @@ public class Illumina2SRF extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * This is the core of a module. While some modules may be written in pure Java or use
-   * various third-party Java APIs, the vast majority of modules will use this method to 
+   * various third-party Java APIs, the vast majority of modules will use this method to
    * make calls out to the shell (typically the BASH shell in Linux) and use that shell
-   * to execute various commands.  In an ideal world this would never happen, we would all 
+   * to execute various commands.  In an ideal world this would never happen, we would all
    * write out code with a language-agnostic, network-aware API (e.g. thrift, SOAP, etc).
    * But until that day comes most programs in bioinformatics are command line tools
    * (or websites). So the heart of the module is it acts as a way for us to treat the
    * disparate tools as well-behaved modules that present a standard interface
    * and report back their metadata in well-defined ways. That's, ultimately, what this
    * object and, in particular this method, are all about.
-   * 
+   *
    * There are other alternatives out there, such as Galaxy, that may provide an XML
    * syntax for accomplishing much of the same thing. For example, they make disparate tools
-   * appear to function the same because the inputs/outputs are all described using a standardized 
+   * appear to function the same because the inputs/outputs are all described using a standardized
    * language. We chose Java because it was more expressive than XML as a module running
    * descriptor. But clearly there are a lot of ways to solve this problem. The key concern,
    * though, is that a module should present very clear inputs and outputs based,
    * whenever possible, on standardized file types. This makes it easy to use modules in
    * novel workflows, rearranging them as needed.  Make every effort to make your modules
    * self-contained and robust!
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_run() {
@@ -343,9 +343,9 @@ public class Illumina2SRF extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * A method to check to make sure the output was created correctly
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -356,9 +356,11 @@ public class Illumina2SRF extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A cleanup method, make sure you cleanup files that are outside the current working directory
    * since Pegasus won't clean those for you.
-   * 
+   *
    * clean_up is optional
    */
   @Override

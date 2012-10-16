@@ -17,16 +17,20 @@ import net.sourceforge.seqware.queryengine.tools.iterators.processors.VariantPro
 import net.sourceforge.seqware.queryengine.tools.iterators.processors.VariantStatsProcessor;
 
 /**
+ * <p>VariantIteratorProcessor class.</p>
+ *
  * @author boconnor
  *
  * TODO: this should replace most of the code in BEDExporter
  * FIXME: need to support passing zygosity filter to processor
- * 
+ * @version $Id: $Id
  */
 public class VariantIteratorProcessor {
 
   /**
-   * @param args
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
    */
   public static void main(String[] args) {
 

@@ -36,11 +36,19 @@ import net.sourceforge.seqware.pipeline.workflowV2.WorkflowClassFinder;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 
 /**
- * 
+ * <p>PegasusWorkflowEngine class.</p>
+ *
  * @author yongliang
+ * @version $Id: $Id
  */
 public class PegasusWorkflowEngine extends BasicWorkflow {
 
+    /**
+     * <p>Constructor for PegasusWorkflowEngine.</p>
+     *
+     * @param metadata a {@link net.sourceforge.seqware.common.metadata.Metadata} object.
+     * @param config a {@link java.util.Map} object.
+     */
     public PegasusWorkflowEngine(Metadata metadata, Map<String, String> config) {
 	super(metadata, config);
     }
@@ -99,6 +107,7 @@ public class PegasusWorkflowEngine extends BasicWorkflow {
 	return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected ReturnValue generateDaxFile(WorkflowInfo wi, File dax,
 	    String iniFilesStr, Map<String, String> map,
@@ -145,6 +154,7 @@ public class PegasusWorkflowEngine extends BasicWorkflow {
 
     }
 
+    /** {@inheritDoc} */
     protected Map<String, String> prepareData(WorkflowInfo wi,
 	    String workflowRunAccession, ArrayList<String> iniFiles,
 	    Map<String, String> preParsedIni, boolean metadataWriteback,

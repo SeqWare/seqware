@@ -72,21 +72,23 @@ import java.util.HashMap;
 
 
 /**
+ * <p>PostgreSQLBulkWriterStore class.</p>
+ *
  * @author boconnor
- * 
+ *
  * This is a simple first pass at a bulk loader for the PostgreSQL backend type. Note that only
  * variants and tags are currently implemented and only some of the fields in variants.  This is
  * really more of a proof of concept to see if there are speed gains when loading whole genomes
  * worth of variants.
- * 
- * In it's current form this bulk loader stores the tags in memory while writing two temp files 
+ *
+ * In it's current form this bulk loader stores the tags in memory while writing two temp files
  * out to disk, one for the variant_tags table and the other for the variant. When the user
  * calls close the tags are then written out too.  The user then needs to load these bulk load
  * files into the database.  By default the files are /tmp/variant.sql, /tmp/variant_tag.sql
  * and /tmp/tag.sql.
- * 
+ *
  * TODO: need to complete the implementation of this...
- * 
+ * @version $Id: $Id
  */
 public class PostgreSQLBulkWriterStore extends Store {
 
@@ -107,10 +109,13 @@ public class PostgreSQLBulkWriterStore extends Store {
   Long currCoverageId = null;
   
   // static variables
+  /** Constant <code>OID=0</code> */
   static public int OID = 0;
+  /** Constant <code>BYTEA=1</code> */
   static public int BYTEA = 1;
   // if the particular object type doesn't support direclty writing to an object-specific table then 
   // it will use the OID approach instead
+  /** Constant <code>FIELDS=2</code> */
   static public int FIELDS = 2;
   
   // preferred method for persistence
@@ -129,6 +134,7 @@ public class PostgreSQLBulkWriterStore extends Store {
   
   // UTIL METHODS
 
+  /** {@inheritDoc} */
   public void setup(SeqWareSettings settings) throws FileNotFoundException, DatabaseException, Exception {
 
     super.setup(settings);
@@ -148,6 +154,11 @@ public class PostgreSQLBulkWriterStore extends Store {
     variantTagWriter.newLine();
   }
 
+  /**
+   * <p>close.</p>
+   *
+   * @throws com.sleepycat.db.DatabaseException if any.
+   */
   public void close() throws DatabaseException {
     try {
 
@@ -174,50 +185,83 @@ public class PostgreSQLBulkWriterStore extends Store {
   
   
   
+  /**
+   * <p>addTags.</p>
+   *
+   * @param model a {@link net.sourceforge.seqware.queryengine.backend.model.Model} object.
+   * @param table a {@link java.lang.String} object.
+   */
   public void addTags(Model model, String table) {
     
   }
   
   // FIXME: make generic, tied to variant table for now
+  /**
+   * <p>readTags.</p>
+   *
+   * @param model a {@link net.sourceforge.seqware.queryengine.backend.model.Model} object.
+   * @param table a {@link java.lang.String} object.
+   */
   public void readTags(Model model, String table) {
     
   }
   
   // FEATURE METHODS
   
+  /**
+   * <p>getFeaturesUnordered.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.PostgresModelIterator} object.
+   */
   public PostgresModelIterator getFeaturesUnordered() {
     return(null);
   }
   
+  /**
+   * <p>getFeatures.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.PostgresModelIterator} object.
+   */
   public PostgresModelIterator getFeatures() {
     return(null);
   }
   
+  /** {@inheritDoc} */
   public PostgresModelIterator getFeatures(String contig, int start, int stop) {
     return(null);
   }
   
+  /** {@inheritDoc} */
   public Feature getFeature(String featureId) throws Exception {
     return(null);
   }
   
+  /** {@inheritDoc} */
   public PostgresModelIterator getFeaturesByTag(String tag) {
     return(null);
   }
   
+  /**
+   * <p>getFeaturesTags.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.PostgresTagModelIterator} object.
+   */
   public PostgresTagModelIterator getFeaturesTags() {
     return(null);
   }
   
+  /** {@inheritDoc} */
   public SeqWareIterator getFeatureTagsBySearch(String tagSearchStr) {
     return(null);
   }
   
+  /** {@inheritDoc} */
   public synchronized String putFeature(Feature feature, SeqWareIterator it, boolean transactional) {
     
     return(null);
   }
  
+  /** {@inheritDoc} */
   public synchronized String putFeature(Feature feature) {
     
     return(null);
@@ -225,27 +269,41 @@ public class PostgreSQLBulkWriterStore extends Store {
   
   // VARIANT METHODS
 
+ /**
+  * <p>getMismatchesUnordered.</p>
+  *
+  * @return a {@link net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator} object.
+  */
  public SeqWareIterator getMismatchesUnordered() {
     return(null);
   }
 
+  /**
+   * <p>getMismatches.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator} object.
+   */
   public SeqWareIterator getMismatches() {
     return(getMismatchesUnordered());
   }
 
+  /** {@inheritDoc} */
   public SeqWareIterator getMismatches(String contig, int start, int stop) {
     return(null);
   }
 
+  /** {@inheritDoc} */
   public SeqWareIterator getMismatches(String contig) {
     // basically setting this to the largest value possible
     return(getMismatches(contig, 1, Integer.MAX_VALUE));
   }
 
+  /** {@inheritDoc} */
   public Variant getMismatch(String mismatchId) throws Exception {
     return(null);
   }
 
+  /** {@inheritDoc} */
   public SeqWareIterator getMismatchesByTag(String tag) {
     
     return(null);
@@ -253,20 +311,23 @@ public class PostgreSQLBulkWriterStore extends Store {
 
   /**
    * Get access to an iterator containing all the mismatch tags.
-   * @return
+   *
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.PostgresTagModelIterator} object.
    */
   public PostgresTagModelIterator getMismatchesTags() {
     return(null);
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Get access to an iterator containing all the mismatch tags.
-   * @return
    */
   public PostgresTagModelIterator getMismatchTagsBySearch(String tagSearchStr) {
     return(null);
   }
 
+  /** {@inheritDoc} */
   public synchronized String putMismatch(Variant variant) {
     
     // first increment the universal ID
@@ -344,6 +405,7 @@ public class PostgreSQLBulkWriterStore extends Store {
     return(new Integer(variantId).toString());
   }
 
+  /** {@inheritDoc} */
   public synchronized String putMismatch(Variant variant, SeqWareIterator it, boolean transactional) {
     return(putMismatch(variant));
   }
@@ -351,59 +413,71 @@ public class PostgreSQLBulkWriterStore extends Store {
   // COVERAGE METHODS
   
   /**
+   * {@inheritDoc}
+   *
    * Calling function will get back the coverage blocks that are contained within the range of interest
    * so make sure it pads +/- the bin size in the requested range otherwise may miss data!
-   * @param contig
-   * @param start
-   * @param stop
-   * @return
    */
   public LocatableSecondaryCursorIterator getCoverages(String contig, int start, int stop) {
     LocatableSecondaryCursorIterator cci = null;
     return(cci);
   }
   
+  /** {@inheritDoc} */
   public LocatableSecondaryCursorIterator getCoverages(String contig) {
     return(getCoverages(contig, 1, Integer.MAX_VALUE)); // basically setting this to the largest value possible
   }
 
+  /** {@inheritDoc} */
   public synchronized String putCoverage(Coverage coverage) {
     return(putCoverage(coverage, true));
   }
 
   // FIXME: this should be redone to use putModel
+  /** {@inheritDoc} */
   public synchronized String putCoverage(Coverage coverage, boolean transactional) {
     return(null);
   }
 
   // CONSEQUENCE METHODS
   
+  /** {@inheritDoc} */
   public synchronized String putConsequence(Consequence consequence) {
     return(putConsequence(consequence, true));
   }
   
+  /** {@inheritDoc} */
   public synchronized String putConsequence(Consequence consequence, boolean transactional) {
     return(null);
   }
 
+  /** {@inheritDoc} */
   public Consequence getConsequence(String consequenceId) throws Exception {
     return(null);
   }
 
+  /** {@inheritDoc} */
   public SecondaryCursorIterator getConsequencesByTag(String tag) {
     SecondaryCursorIterator i = null;
     return(i);
   }
 
+  /** {@inheritDoc} */
   public SeqWareIterator getConsequenceTagsBySearch(String tagSearchStr) {
     return(null);
   }  
   
+  /** {@inheritDoc} */
   public SecondaryCursorIterator getConsequencesByMismatch(String mismatchId) {
     SecondaryCursorIterator i = null;
     return(i);
   }
   
+  /**
+   * <p>nextId.</p>
+   *
+   * @return a int.
+   */
   protected int nextId() {
    
     uid++;

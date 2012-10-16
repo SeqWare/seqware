@@ -6,10 +6,19 @@ import net.sourceforge.seqware.common.util.filetools.lock.LockingFileTools;
 import net.sourceforge.seqware.common.util.processtools.ProcessTools;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>LockfileTests class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
+ */
 public class LockfileTests {
 
   /**
-   * @param args
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
    */
   public static void main(String[] args) {
     // TODO Auto-generated method stub

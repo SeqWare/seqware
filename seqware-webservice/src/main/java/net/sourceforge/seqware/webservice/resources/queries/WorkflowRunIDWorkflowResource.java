@@ -36,15 +36,23 @@ import org.restlet.data.Status;
 import org.w3c.dom.Document;
 
 /**
+ * <p>WorkflowRunIDWorkflowResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class WorkflowRunIDWorkflowResource extends BasicRestlet {
 
+    /**
+     * <p>Constructor for WorkflowRunIDWorkflowResource.</p>
+     *
+     * @param context a {@link org.restlet.Context} object.
+     */
     public WorkflowRunIDWorkflowResource(Context context) {
         super(context);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void handle(Request request, Response response) {
         authenticate(request.getChallengeResponse().getIdentifier());

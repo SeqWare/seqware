@@ -11,11 +11,14 @@ import net.sourceforge.seqware.queryengine.backend.model.Model;
 import net.sourceforge.seqware.queryengine.backend.model.Tag;
 
 /**
- * @author boconnor
+ * <p>TagTB class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class TagTB extends TupleBinding {
 
+  /** {@inheritDoc} */
   @Override
   public void objectToEntry(Object object, TupleOutput to) {
     Tag tag = (Tag)object;
@@ -24,6 +27,7 @@ public class TagTB extends TupleBinding {
     to.writeString(tag.getValue());
   }
 
+  /** {@inheritDoc} */
   @Override
   public Object entryToObject(TupleInput ti) {
     Tag t = new Tag();

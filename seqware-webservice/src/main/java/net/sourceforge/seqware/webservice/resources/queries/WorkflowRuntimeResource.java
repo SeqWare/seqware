@@ -30,8 +30,10 @@ import org.restlet.data.Method;
 import org.restlet.data.Status;
 
 /**
+ * <p>WorkflowRuntimeResource class.</p>
  *
  * @author boconnor
+ * @version $Id: $Id
  */
 public class WorkflowRuntimeResource
         extends BasicRestlet {
@@ -45,10 +47,16 @@ public class WorkflowRuntimeResource
     // workflow run IDs
     HashMap<Integer, Boolean> wrIds = new HashMap<Integer, Boolean>();
 
+    /**
+     * <p>Constructor for WorkflowRuntimeResource.</p>
+     *
+     * @param context a {@link org.restlet.Context} object.
+     */
     public WorkflowRuntimeResource(Context context) {
         super(context);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void handle(Request request, Response response) {
         authenticate(request.getChallengeResponse().getIdentifier());

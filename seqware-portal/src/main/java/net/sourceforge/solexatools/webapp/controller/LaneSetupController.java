@@ -19,12 +19,17 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
  * RegistrationSetupController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class LaneSetupController extends BaseCommandController {
 
   private LaneService laneService = null;
   
+	/**
+	 * <p>Constructor for LaneSetupController.</p>
+	 */
 	public LaneSetupController() {
 		super();
 		this.setCommandName("command");
@@ -32,6 +37,7 @@ public class LaneSetupController extends BaseCommandController {
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response)
@@ -107,10 +113,20 @@ public class LaneSetupController extends BaseCommandController {
     return lane;
   }
   
+  /**
+   * <p>Getter for the field <code>laneService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.LaneService} object.
+   */
   public LaneService getLaneService() {
     return laneService;
   }
 
+  /**
+   * <p>Setter for the field <code>laneService</code>.</p>
+   *
+   * @param laneService a {@link net.sourceforge.seqware.common.business.LaneService} object.
+   */
   public void setLaneService(LaneService laneService) {
     this.laneService = laneService;
   }

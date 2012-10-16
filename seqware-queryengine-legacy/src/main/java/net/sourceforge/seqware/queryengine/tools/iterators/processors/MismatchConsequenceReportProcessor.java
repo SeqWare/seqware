@@ -12,9 +12,12 @@ import net.sourceforge.seqware.queryengine.backend.store.impl.BerkeleyDBStore;
 import net.sourceforge.seqware.queryengine.backend.util.iterators.SecondaryCursorIterator;
 
 /**
+ * <p>MismatchConsequenceReportProcessor class.</p>
+ *
  * @author boconnor
- * A simple iterator processor that iterates over a set of mismatches and 
+ * A simple iterator processor that iterates over a set of mismatches and
  * looks up their consequence entries and dumps a report
+ * @version $Id: $Id
  */
 public class MismatchConsequenceReportProcessor extends VariantProcessor implements ProcessorInterface {
 
@@ -22,15 +25,19 @@ public class MismatchConsequenceReportProcessor extends VariantProcessor impleme
   StringBuffer sb = new StringBuffer();
 
   /**
-   * @param outputFilename
-   * @param includeIndels
-   * @param includeSNVs
-   * @param minCoverage
-   * @param maxCoverage
+   * <p>Constructor for MismatchConsequenceReportProcessor.</p>
+   *
+   * @param outputFilename a {@link java.lang.String} object.
+   * @param includeIndels a boolean.
+   * @param includeSNVs a boolean.
+   * @param minCoverage a int.
+   * @param maxCoverage a int.
    * @param minObservations
    * @param minObservationsPerStrand
-   * @param minSNVPhred
-   * @param minPercent
+   * @param minObservationsPerStrand a int.
+   * @param minSNVPhred a int.
+   * @param minPercent a int.
+   * @param store a {@link net.sourceforge.seqware.queryengine.backend.store.Store} object.
    */
   public MismatchConsequenceReportProcessor(String outputFilename, Store store, boolean includeIndels,
       boolean includeSNVs, int minCoverage, int maxCoverage,
@@ -41,8 +48,12 @@ public class MismatchConsequenceReportProcessor extends VariantProcessor impleme
     // TODO Auto-generated constructor stub
   }
   
+  /**
+   * <p>Constructor for MismatchConsequenceReportProcessor.</p>
+   */
   public MismatchConsequenceReportProcessor() { }
 
+  /** {@inheritDoc} */
   public Object process (Object obj) {
 
     // the mismatch object
@@ -81,6 +92,11 @@ public class MismatchConsequenceReportProcessor extends VariantProcessor impleme
     return(null);
   }
   
+  /**
+   * <p>report.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String report() {
     
     return(sb.toString());

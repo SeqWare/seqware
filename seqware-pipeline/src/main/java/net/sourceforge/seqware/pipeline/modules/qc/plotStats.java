@@ -18,20 +18,21 @@ import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Depends on qualStat module, parse sample_stat.txt and 
- * generates boxplot sample_bxp.png for base calling scores 
+ * Depends on qualStat module, parse sample_stat.txt and
+ * generates boxplot sample_bxp.png for base calling scores
  * and per base/cycle % nucleotide distribution sample_nt_distr.png
- *  
+ *
  * Underlying script:  /usr/bin/fastq_nucleotide_distribution_graph.sh
  *                     /usr/bin/fastq_quality_boxplot_graph.sh
- *                     
- * Dependency:  fastx_toolkits from http://hannonlab.cshl.edu/fastx_toolkit/commandline.html
- *  
- * Expected output:  sample_bxp.png & sample_nt_distr.png
- * 
- *  * 
- * @author jyli@med.unc.edu
  *
+ * Dependency:  fastx_toolkits from http://hannonlab.cshl.edu/fastx_toolkit/commandline.html
+ *
+ * Expected output:  sample_bxp.png & sample_nt_distr.png
+ *
+ *  *
+ *
+ * @author jyli@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class plotStats extends Module {
@@ -41,9 +42,9 @@ public class plotStats extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("fastxBoxplot", "/usr/bin/fastq_quality_boxplot_graph.sh").withRequiredArg();
@@ -55,8 +56,9 @@ public class plotStats extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -72,11 +74,11 @@ public class plotStats extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -111,9 +113,9 @@ public class plotStats extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -135,9 +137,9 @@ public class plotStats extends Module {
     return ret;
   }
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
 
@@ -190,9 +192,9 @@ public class plotStats extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known data set.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -202,6 +204,7 @@ public class plotStats extends Module {
   }
   
   
+  /** {@inheritDoc} */
   @Override
 public ReturnValue do_run() {
     
@@ -241,6 +244,7 @@ public ReturnValue do_run() {
     return(ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     ReturnValue ret = new ReturnValue();
@@ -254,9 +258,10 @@ public ReturnValue do_run() {
     
   }
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.  Remove tempDir.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

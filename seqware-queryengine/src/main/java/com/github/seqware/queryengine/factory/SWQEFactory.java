@@ -25,6 +25,7 @@ import com.github.seqware.queryengine.model.QueryInterface;
  * back-ends directly if you want to work on implementation-specific classes.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class SWQEFactory {
 
@@ -134,7 +135,7 @@ public class SWQEFactory {
     /**
      * Get a reference to the current operating serialization method
      *
-     * @return
+     * @return a {@link com.github.seqware.queryengine.impl.SerializationInterface} object.
      */
     public static SerializationInterface getSerialization() {
         if (serialInstance == null) {
@@ -146,7 +147,7 @@ public class SWQEFactory {
     /**
      * Get a reference to the currently operating storage method
      *
-     * @return
+     * @return a {@link com.github.seqware.queryengine.impl.StorageInterface} object.
      */
     public static StorageInterface getStorage() {
         if (storeInstance == null) {
@@ -157,8 +158,6 @@ public class SWQEFactory {
 
     /**
      * Close the currently operating storage method
-     *
-     * @return
      */
     public static void closeStorage() {
         if (storeInstance != null) {
@@ -197,7 +196,7 @@ public class SWQEFactory {
     /**
      * Return a new model manager to create and keep track of entities
      *
-     * @return
+     * @return a {@link com.github.seqware.queryengine.factory.CreateUpdateManager} object.
      */
     public static CreateUpdateManager getModelManager() {
         if (current_backend == Model_Type.MRHBASE){
@@ -215,9 +214,7 @@ public class SWQEFactory {
      * null, we deallocate the back-end
      * @param storageType setup storage with a specific type, if either
      * parameter is null, we deallocate the back-end
-     * @param serialType setup serialization with a specific type, if either
-     * parameter is null, we deallocate the back-end
-     *
+     * @param serializationType a {@link com.github.seqware.queryengine.factory.SWQEFactory.Serialization_Type} object.
      */
     public static void setFactoryBackendType(Model_Type bType, Storage_Type storageType, Serialization_Type serializationType) {
         instance = null;

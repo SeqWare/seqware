@@ -39,24 +39,33 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>ExperimentResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class ExperimentResource extends DatabaseResource {
 
     private Logger logger;
 
+    /**
+     * <p>Constructor for ExperimentResource.</p>
+     */
     public ExperimentResource() {
         super("experiment");
         logger = Logger.getLogger(ExperimentResource.class);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
         authenticate();
     }
 
+    /**
+     * <p>getXml.</p>
+     */
     @Get
     public void getXml() {
         ExperimentService ss = BeanFactory.getExperimentServiceBean();
@@ -80,6 +89,12 @@ public class ExperimentResource extends DatabaseResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
+    /**
+     * <p>postJaxb.</p>
+     *
+     * @param entity a {@link org.restlet.representation.Representation} object.
+     * @throws org.restlet.resource.ResourceException if any.
+     */
     @Post("xml")
     public void postJaxb(Representation entity) throws ResourceException {
         authenticate();

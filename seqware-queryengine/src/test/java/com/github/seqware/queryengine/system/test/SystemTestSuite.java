@@ -25,16 +25,25 @@ import org.junit.runner.RunWith;
 
 /**
  * Run all the tests that are for our command-line utilities.
+ *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 @RunWith(DynamicSuite.class)
 public class SystemTestSuite {
 
+    /**
+     * <p>setupSuite.</p>
+     */
     @BeforeClass
     public static void setupSuite() {
         Logger.getLogger(SystemTestSuite.class.getName()).info( "Running system test suite with defaults");
     }
     
+    /**
+     * <p>tearDownSuite.</p>
+     */
     @AfterClass
     public static void tearDownSuite(){
         Logger.getLogger(SystemTestSuite.class.getName()).info( "Ending test suite and resetting");

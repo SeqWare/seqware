@@ -33,18 +33,22 @@ import net.sourceforge.seqware.queryengine.backend.util.iterators.LocatableSecon
 import net.sourceforge.seqware.queryengine.backend.util.iterators.SecondaryCursorIterator;
 
 /**
+ * <p>TagDumper class.</p>
+ *
  * @author boconnor
  *
  * A very simple program that will iterate over the mismatches
  *  and display info about each one for testing.
  *
  * FIXME: this object should actually become a regression test not a tool, I should also provide a dumper util, though, that can dump based on chr, start, and stop.
- * 
+ * @version $Id: $Id
  */
 public class TagDumper {
 
   /**
-   * @param args
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
    */
   public static void main(String[] args) {
 

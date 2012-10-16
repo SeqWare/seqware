@@ -20,24 +20,27 @@ import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
 
 /**
- * This interface should be extended by a class that a developer wishes to use as 
+ * This interface should be extended by a class that a developer wishes to use as
  * input to the QueryVCFDumper. This will run query after query on the input featureset
  * basically filtering the input featureset by each of the queries
- * 
+ *
  * @author dyuen
+ * @version $Id: $Id
  */
 public interface QueryDumperInterface {
     /**
-     * Return the number of queries that we wish to run consecutively 
-     * @return 
+     * Return the number of queries that we wish to run consecutively
+     *
+     * @return a int.
      */
     public int getNumQueries();
     
     /**
      * Return each of the getNumQueries
-     * @param set
-     * @param queryNum
-     * @return 
+     *
+     * @param set a {@link com.github.seqware.queryengine.model.FeatureSet} object.
+     * @param queryNum a int.
+     * @return a {@link com.github.seqware.queryengine.model.QueryFuture} object.
      */
     public QueryFuture<FeatureSet> getQuery(FeatureSet set, int queryNum);
 }

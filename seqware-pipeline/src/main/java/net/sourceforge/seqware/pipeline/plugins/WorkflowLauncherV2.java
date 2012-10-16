@@ -22,16 +22,22 @@ import net.sourceforge.seqware.pipeline.workflowV2.pegasus.PegasusWorkflowEngine
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * <p>WorkflowLauncherV2 class.</p>
+ *
  * @author yongliang ProviderFor(PluginInterface.class)
  *
  * TODO: validate at all the option below (especially
  * link-parent-to-workflow-run) actually work!
+ * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
 public class WorkflowLauncherV2 extends Plugin {
 
     ReturnValue ret = new ReturnValue();
 
+    /**
+     * <p>Constructor for WorkflowLauncherV2.</p>
+     */
     public WorkflowLauncherV2() {
         super();
         /*
@@ -60,6 +66,7 @@ public class WorkflowLauncherV2 extends Plugin {
      * (non-Javadoc) @see
      * net.sourceforge.seqware.pipeline.plugin.PluginInterface#init()
      */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue init() {
         return ret;
@@ -69,6 +76,7 @@ public class WorkflowLauncherV2 extends Plugin {
      * (non-Javadoc) @see
      * net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_test()
      */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_test() {
         // TODO Auto-generated method stub
@@ -79,6 +87,7 @@ public class WorkflowLauncherV2 extends Plugin {
      * (non-Javadoc) @see
      * net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_run()
      */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_run() {
 
@@ -184,12 +193,18 @@ public class WorkflowLauncherV2 extends Plugin {
      * (non-Javadoc) @see
      * net.sourceforge.seqware.pipeline.plugin.PluginInterface#clean_up()
      */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue clean_up() {
         // TODO Auto-generated method stub
         return ret;
     }
 
+    /**
+     * <p>get_description.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String get_description() {
         return ("A plugin that lets you launch workflow bundles once you have installed them via the BundleManager.");
     }

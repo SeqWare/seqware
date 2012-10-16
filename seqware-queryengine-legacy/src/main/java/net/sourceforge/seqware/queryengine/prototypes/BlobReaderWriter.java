@@ -17,7 +17,18 @@ import net.sourceforge.seqware.queryengine.backend.store.impl.PostgreSQLStore;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareSettings;
 
+/**
+ * <p>BlobReaderWriter class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class BlobReaderWriter {
+  /**
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
+   */
   public static void main(String [] args)
   {
     try {
