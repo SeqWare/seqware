@@ -10,20 +10,28 @@ import net.sourceforge.seqware.common.model.StudyType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>StudyTypeServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class StudyTypeServiceImpl implements StudyTypeService {
   private StudyTypeDAO studyTypeDAO = null;
   private static final Log log = LogFactory.getLog(StudyTypeServiceImpl.class);
 
+  /**
+   * <p>Constructor for StudyTypeServiceImpl.</p>
+   */
   public StudyTypeServiceImpl() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Sets a private member variable with an instance of an implementation of
    * StudyTypeDAO. This method is called by the Spring framework at run time.
-   * 
-   * @param studyTypeDAO
-   *          implementation of StudyTypeDAO
    * @see StudyTypeDAO
    */
   public void setStudyTypeDAO(StudyTypeDAO studyTypeDAO) {
@@ -31,10 +39,9 @@ public class StudyTypeServiceImpl implements StudyTypeService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of StudyType into the database.
-   * 
-   * @param studyTypeDAO
-   *          instance of StudyTypeDAO
    */
   public void insert(StudyType studyType) {
 
@@ -42,10 +49,9 @@ public class StudyTypeServiceImpl implements StudyTypeService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of StudyType in the database.
-   * 
-   * @param studyType
-   *          instance of StudyType
    */
   public void update(StudyType studyType) {
 
@@ -53,16 +59,17 @@ public class StudyTypeServiceImpl implements StudyTypeService {
 
   }
 
+  /** {@inheritDoc} */
   public List<StudyType> list(Registration registration) {
     return studyTypeDAO.list(registration);
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of StudyType in the database by the StudyType
    * emailAddress, and copies the StudyType properties to an instance of
    * StudyType.
-   * 
-   * @return instance of StudyType, or null if a StudyType cannot be found
    */
   public StudyType findByName(String name) {
     StudyType studyType = null;
@@ -76,6 +83,7 @@ public class StudyTypeServiceImpl implements StudyTypeService {
     return studyType;
   }
 
+  /** {@inheritDoc} */
   public StudyType findByID(Integer studyTypeID) {
     StudyType studyType = null;
     if (studyTypeID != null) {
@@ -89,11 +97,13 @@ public class StudyTypeServiceImpl implements StudyTypeService {
     return studyType;
   }
 
+  /** {@inheritDoc} */
   @Override
   public StudyType updateDetached(StudyType studyType) {
     return studyTypeDAO.updateDetached(studyType);
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<StudyType> list() {
         return studyTypeDAO.list();

@@ -18,15 +18,23 @@ import net.sourceforge.seqware.queryengine.backend.model.Coverage;
 import net.sourceforge.seqware.queryengine.backend.model.Variant;
 
 /**
- * @author boconnor
+ * <p>PileupVariantImportWorker class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class PileupVariantImportWorker extends ImportWorker {
 
 
+  /**
+   * <p>Constructor for PileupVariantImportWorker.</p>
+   */
   public PileupVariantImportWorker() { }
 
 
+  /**
+   * <p>run.</p>
+   */
   public void run() {
 
     // open the file

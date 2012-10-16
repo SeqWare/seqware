@@ -19,11 +19,19 @@ package net.sourceforge.seqware.common.security;
 import net.sourceforge.seqware.common.model.Registration;
 
 /**
+ * <p>PermissionsAware interface.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public interface PermissionsAware {
     
+    /**
+     * <p>givesPermission.</p>
+     *
+     * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+     * @return a boolean.
+     */
     public boolean givesPermission(Registration registration);
         
 }

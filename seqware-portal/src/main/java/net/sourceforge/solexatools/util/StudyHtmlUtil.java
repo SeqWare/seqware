@@ -11,9 +11,25 @@ import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>StudyHtmlUtil class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class StudyHtmlUtil {
+	/** Constant <code>TYPE_TREE="st"</code> */
 	public final static String  TYPE_TREE = "st"; 
 		
+	/**
+	 * <p>getHtml.</p>
+	 *
+	 * @param obj a {@link java.lang.Object} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @param listStudyNodeId a {@link java.util.List} object.
+	 * @param treeType a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getHtml(Object obj, Registration registration, List<String> listStudyNodeId, String treeType){
 		String html = "";
 		if(obj instanceof Study){
@@ -34,6 +50,15 @@ public class StudyHtmlUtil {
 		return html;
 	}
 	
+	/**
+	 * <p>getFileHtml.</p>
+	 *
+	 * @param proc a {@link net.sourceforge.seqware.common.model.Processing} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @param listStudyNodeId a {@link java.util.List} object.
+	 * @param treeType a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getFileHtml(Processing proc, Registration registration, List<String> listStudyNodeId, String treeType){
 		return getAllHtml(proc, registration, null, 1, listStudyNodeId, true, true, treeType);
 	}
@@ -99,6 +124,19 @@ public class StudyHtmlUtil {
 		}
 	}
 	
+	/**
+	 * <p>getAllHtml.</p>
+	 *
+	 * @param processing a {@link net.sourceforge.seqware.common.model.Processing} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @param openingNodeId a {@link java.lang.String} object.
+	 * @param currPosId a {@link java.lang.Integer} object.
+	 * @param listNodeId a {@link java.util.List} object.
+	 * @param isFirstCall a boolean.
+	 * @param isViewCurrentNode a boolean.
+	 * @param treeType a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getAllHtml(Processing processing, Registration registration, String openingNodeId, 
 			Integer currPosId, List<String> listNodeId, boolean isFirstCall, boolean isViewCurrentNode, String treeType)
 	{			
@@ -174,6 +212,19 @@ public class StudyHtmlUtil {
 		}
 	}
 
+	/**
+	 * <p>getAllHtml.</p>
+	 *
+	 * @param ius a {@link net.sourceforge.seqware.common.model.IUS} object.
+	 * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+	 * @param openingNodeId a {@link java.lang.String} object.
+	 * @param currPosId a {@link java.lang.Integer} object.
+	 * @param listNodeId a {@link java.util.List} object.
+	 * @param isOpenProc a boolean.
+	 * @param isVisibleProc a boolean.
+	 * @param treeType a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getAllHtml(IUS ius, Registration registration, String openingNodeId,
 			Integer currPosId, List<String> listNodeId, boolean isOpenProc, boolean isVisibleProc, String treeType)
 	{

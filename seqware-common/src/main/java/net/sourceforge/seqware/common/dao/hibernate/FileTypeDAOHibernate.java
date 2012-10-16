@@ -11,11 +11,25 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>FileTypeDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class FileTypeDAOHibernate extends HibernateDaoSupport implements FileTypeDAO {
+  /**
+   * <p>Constructor for FileTypeDAOHibernate.</p>
+   */
   public FileTypeDAOHibernate() {
     super();
   }
 
+  /**
+   * <p>list.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<FileType> list() {
     ArrayList<FileType> fileTypes = new ArrayList<FileType>();
 
@@ -28,6 +42,7 @@ public class FileTypeDAOHibernate extends HibernateDaoSupport implements FileTyp
     return fileTypes;
   }
 
+  /** {@inheritDoc} */
   public FileType findByID(Integer id) {
     String query = "from FileType as fileType where fileType.fileTypeId = ?";
     FileType obj = null;
@@ -39,6 +54,7 @@ public class FileTypeDAOHibernate extends HibernateDaoSupport implements FileTyp
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   public FileType updateDetached(FileType fileType) {
     FileType dbObject = findByID(fileType.getFileTypeId());

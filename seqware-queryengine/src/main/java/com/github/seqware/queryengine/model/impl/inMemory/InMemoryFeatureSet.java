@@ -14,6 +14,7 @@ import java.util.*;
  * An in-memory representation of a feature set.
  *
  * @author jbaran
+ * @version $Id: $Id
  */
 public class InMemoryFeatureSet extends FeatureSet {
 
@@ -40,15 +41,16 @@ public class InMemoryFeatureSet extends FeatureSet {
     }
 
     /**
-     * Get the reference for this featureSet
+     * {@inheritDoc}
      *
-     * @return reference for the feature set
+     * Get the reference for this featureSet
      */
     @Override
     public Reference getReference() {
         return this.reference.get();
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeatureSet add(Feature feature) {
         upgradeFeatureSGID(feature);
@@ -59,6 +61,11 @@ public class InMemoryFeatureSet extends FeatureSet {
         return this;
     }
 
+    /**
+     * <p>upgradeFeatureSGID.</p>
+     *
+     * @param feature a {@link com.github.seqware.queryengine.model.Feature} object.
+     */
     protected void upgradeFeatureSGID(Feature feature) {
         // try upgrading Feature IDs here, faster than in model manager and FeatureSets should be guaranteed to have references
         if (!(feature.getSGID() instanceof FSGID)){
@@ -70,6 +77,7 @@ public class InMemoryFeatureSet extends FeatureSet {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeatureSet add(Feature... elements) {
         for (Feature f : elements) {
@@ -82,6 +90,7 @@ public class InMemoryFeatureSet extends FeatureSet {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeatureSet remove(Feature feature) {
         features.remove(feature);
@@ -91,6 +100,7 @@ public class InMemoryFeatureSet extends FeatureSet {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeatureSet add(Collection<Feature> features) {
         for (Feature f : features) {
@@ -103,25 +113,34 @@ public class InMemoryFeatureSet extends FeatureSet {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<Feature> getFeatures() {
         return new InMemoryIterator<Feature>(features.iterator());
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<Feature> iterator() {
         return getFeatures();
     }
 
+    /** {@inheritDoc} */
     @Override
     public long getCount() {
         return features.size();
     }
 
+    /**
+     * <p>newBuilder.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.model.FeatureSet.Builder} object.
+     */
     public static FeatureSet.Builder newBuilder() {
         return new InMemoryFeatureSet.Builder();
     }
 
+    /** {@inheritDoc} */
     @Override
     public InMemoryFeatureSet.Builder toBuilder() {
         InMemoryFeatureSet.Builder b = new InMemoryFeatureSet.Builder();
@@ -129,26 +148,31 @@ public class InMemoryFeatureSet extends FeatureSet {
         return b;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return description;
     }
 
+    /** {@inheritDoc} */
     @Override
     public SGID getReferenceID() {
         return this.reference.getSGID();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Class getHBaseClass() {
         return FeatureSet.class;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getHBasePrefix() {
         return FeatureSet.prefix;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void rebuild() {
         Set<Feature> newSet = new HashSet<Feature>();

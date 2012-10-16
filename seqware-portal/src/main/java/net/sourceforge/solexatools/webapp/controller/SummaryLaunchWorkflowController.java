@@ -19,30 +19,64 @@ import net.sourceforge.solexatools.util.LaunchWorkflowUtil;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
+/**
+ * <p>SummaryLaunchWorkflowController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SummaryLaunchWorkflowController extends MultiActionController {
 	private WorkflowService workflowService;
 	private WorkflowRunService workflowRunService;
 	
+	/**
+	 * <p>Constructor for SummaryLaunchWorkflowController.</p>
+	 */
 	public SummaryLaunchWorkflowController() {
 		super();
 	}
 
+	/**
+	 * <p>Constructor for SummaryLaunchWorkflowController.</p>
+	 *
+	 * @param delegate a {@link java.lang.Object} object.
+	 */
 	public SummaryLaunchWorkflowController(Object delegate) {
 		super(delegate);
 	}
 
+    /**
+     * <p>Getter for the field <code>workflowService</code>.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.common.business.WorkflowService} object.
+     */
     public WorkflowService getWorkflowService() {
 		return workflowService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowService</code>.</p>
+	 *
+	 * @param workflowService a {@link net.sourceforge.seqware.common.business.WorkflowService} object.
+	 */
 	public void setWorkflowService(WorkflowService workflowService) {
 		this.workflowService = workflowService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public WorkflowRunService getWorkflowRunService() {
 		return workflowRunService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @param workflowRunService a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public void setWorkflowRunService(WorkflowRunService workflowRunService) {
 		this.workflowRunService = workflowRunService;
 	}
@@ -53,10 +87,8 @@ public class SummaryLaunchWorkflowController extends MultiActionController {
 	 * @param request HttpServletRequest
 	 * @param response HttpServletResponse
 	 * @param command Study command object
-	 *
 	 * @return ModelAndView
-	 *
-	 * @throws Exception
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleNext (HttpServletRequest		request,
 									HttpServletResponse	response,
@@ -99,6 +131,10 @@ public class SummaryLaunchWorkflowController extends MultiActionController {
 	 * or the study update page.
 	 *
 	 * @param command Study command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handlePrevious (HttpServletRequest request,
 									    HttpServletResponse response,
@@ -131,6 +167,10 @@ public class SummaryLaunchWorkflowController extends MultiActionController {
 	 * or the study update page.
 	 *
 	 * @param command Study command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleCancel (HttpServletRequest request,
 									    HttpServletResponse response,

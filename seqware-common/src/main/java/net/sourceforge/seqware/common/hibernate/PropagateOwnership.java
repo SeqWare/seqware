@@ -28,14 +28,23 @@ import net.sourceforge.seqware.common.util.Log;
  * files is returned as-is, so I make no guarantees on constancy.
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class PropagateOwnership {
 
    private StringBuilder out = new StringBuilder();
     
+    /**
+     * <p>Constructor for PropagateOwnership.</p>
+     */
     public PropagateOwnership() {
     }
 
+    /**
+     * <p>filesFromStudy.</p>
+     *
+     * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
+     */
     public void filesFromStudy(Study study) {
         for (Experiment e : study.getExperiments()) {
             for (Sample parentSample : e.getSamples()) {

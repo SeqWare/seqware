@@ -16,8 +16,10 @@ import com.sleepycat.db.LockMode;
 import com.sleepycat.db.OperationStatus;
 
 /**
- * @author boconnor
+ * <p>CursorIterator class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class CursorIterator implements SeqWareIterator {
 
@@ -29,11 +31,23 @@ public class CursorIterator implements SeqWareIterator {
   OperationStatus status = null;
   boolean first = true;
 
+  /**
+   * <p>Constructor for CursorIterator.</p>
+   *
+   * @param cursor a {@link com.sleepycat.db.Cursor} object.
+   * @param tb a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @throws java.lang.Exception if any.
+   */
   public CursorIterator(Cursor cursor, TupleBinding tb) throws Exception {
     this.cursor = cursor;
     this.tb = tb;
   }
 
+  /**
+   * <p>hasNext.</p>
+   *
+   * @return a boolean.
+   */
   public boolean hasNext() {
     try {
       if (first) {
@@ -63,6 +77,12 @@ public class CursorIterator implements SeqWareIterator {
     }
   }
 
+  /**
+   * <p>getCount.</p>
+   *
+   * @return a int.
+   * @throws java.lang.Exception if any.
+   */
   public int getCount() throws Exception {
     if (status == OperationStatus.SUCCESS) {
       return(cursor.count());
@@ -71,6 +91,11 @@ public class CursorIterator implements SeqWareIterator {
     }
   }
 
+  /**
+   * <p>next.</p>
+   *
+   * @return a {@link java.lang.Object} object.
+   */
   public Object next() {
     if (status == OperationStatus.SUCCESS && value != null) {
       model = (Model) tb.entryToObject(value);
@@ -80,18 +105,37 @@ public class CursorIterator implements SeqWareIterator {
     }
   }
 
+  /**
+   * <p>nextSecondaryKey.</p>
+   *
+   * @return a {@link java.lang.Object} object.
+   * @throws java.io.UnsupportedEncodingException if any.
+   */
   public Object nextSecondaryKey() throws UnsupportedEncodingException {
 	  return null;
   }
   
+  /**
+   * <p>close.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   public void close() throws Exception {
     cursor.close();
   }
 
+  /**
+   * <p>remove.</p>
+   */
   public void remove() {
     // FIXME
   }
 
+  /**
+   * <p>Getter for the field <code>cursor</code>.</p>
+   *
+   * @return a {@link com.sleepycat.db.Cursor} object.
+   */
   public Cursor getCursor() {
     return(cursor);
   }

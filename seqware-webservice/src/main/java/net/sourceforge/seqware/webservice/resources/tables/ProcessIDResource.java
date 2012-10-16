@@ -58,15 +58,23 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>ProcessIDResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class ProcessIDResource extends DatabaseIDResource {
 
+    /**
+     * <p>Constructor for ProcessIDResource.</p>
+     */
     public ProcessIDResource() {
         super("processId");
     }
 
+    /**
+     * <p>getXml.</p>
+     */
     @Get
     public void getXml() {
         JaxbObject<Lane> jaxbTool = new JaxbObject<Lane>();
@@ -103,6 +111,7 @@ public class ProcessIDResource extends DatabaseIDResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
+    /** {@inheritDoc} */
     @Override
     public Representation put(Representation rep) {
         authenticate();

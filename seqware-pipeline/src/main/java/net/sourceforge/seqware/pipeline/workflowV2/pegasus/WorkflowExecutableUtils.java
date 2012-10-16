@@ -5,11 +5,23 @@ import java.util.Map;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.Pfn;
 import net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.WorkflowExecutable;
 
+/**
+ * <p>WorkflowExecutableUtils class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class WorkflowExecutableUtils {
     private static String URL_JAVA = "file:///${basedir}/bin/jre1.6.0_29/bin/java";
     private static String URL_PERL = "file:///${basedir}/bin/bin/perl-5.14.1/perl";
     private static String URL_DIRMANAGER = "file:///${basedir}/bin/globus/pegasus-dirmanager";
 
+    /**
+     * <p>getDefaultJavaExcutable.</p>
+     *
+     * @param map a {@link java.util.Map} object.
+     * @return a {@link net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.WorkflowExecutable} object.
+     */
     public static WorkflowExecutable getDefaultJavaExcutable(
 	    Map<String, String> map) {
 	WorkflowExecutable ex_java = new WorkflowExecutable();
@@ -30,6 +42,12 @@ public class WorkflowExecutableUtils {
 	return ex_java;
     }
 
+    /**
+     * <p>getLocalJavaExcutable.</p>
+     *
+     * @param map a {@link java.util.Map} object.
+     * @return a {@link net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.WorkflowExecutable} object.
+     */
     public static WorkflowExecutable getLocalJavaExcutable(
 	    Map<String, String> map) {
 	WorkflowExecutable ex_java = new WorkflowExecutable();
@@ -50,6 +68,12 @@ public class WorkflowExecutableUtils {
 	return ex_java;
     }
 
+    /**
+     * <p>getDefaultPerlExcutable.</p>
+     *
+     * @param map a {@link java.util.Map} object.
+     * @return a {@link net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.WorkflowExecutable} object.
+     */
     public static WorkflowExecutable getDefaultPerlExcutable(
 	    Map<String, String> map) {
 	WorkflowExecutable ex_perl = new WorkflowExecutable();
@@ -69,6 +93,12 @@ public class WorkflowExecutableUtils {
 	return ex_perl;
     }
 
+    /**
+     * <p>getDefaultDirManagerExcutable.</p>
+     *
+     * @param map a {@link java.util.Map} object.
+     * @return a {@link net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.WorkflowExecutable} object.
+     */
     public static WorkflowExecutable getDefaultDirManagerExcutable(
 	    Map<String, String> map) {
 	WorkflowExecutable ex_dirmanager = new WorkflowExecutable();
@@ -88,6 +118,12 @@ public class WorkflowExecutableUtils {
 	return ex_dirmanager;
     }
 
+    /**
+     * <p>getDefaultSeqwareExecutable.</p>
+     *
+     * @param map a {@link java.util.Map} object.
+     * @return a {@link net.sourceforge.seqware.pipeline.workflowV2.pegasus.object.WorkflowExecutable} object.
+     */
     public static WorkflowExecutable getDefaultSeqwareExecutable(
 	    Map<String, String> map) {
 	WorkflowExecutable ex_seqware = new WorkflowExecutable();

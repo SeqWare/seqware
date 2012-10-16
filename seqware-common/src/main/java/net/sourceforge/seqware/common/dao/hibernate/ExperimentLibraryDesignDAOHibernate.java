@@ -12,20 +12,32 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ExperimentLibraryDesignDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ExperimentLibraryDesignDAOHibernate extends HibernateDaoSupport implements ExperimentLibraryDesignDAO {
 
+  /**
+   * <p>Constructor for ExperimentLibraryDesignDAOHibernate.</p>
+   */
   public ExperimentLibraryDesignDAOHibernate() {
     super();
   }
 
+  /** {@inheritDoc} */
   public void insert(ExperimentLibraryDesign obj) {
     this.getHibernateTemplate().save(obj);
   }
 
+  /** {@inheritDoc} */
   public void update(ExperimentLibraryDesign obj) {
     this.getHibernateTemplate().update(obj);
   }
 
+  /** {@inheritDoc} */
   public List<ExperimentLibraryDesign> list(Registration registration) {
 
     ArrayList<ExperimentLibraryDesign> objs = new ArrayList<ExperimentLibraryDesign>();
@@ -42,12 +54,10 @@ public class ExperimentLibraryDesignDAOHibernate extends HibernateDaoSupport imp
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of ExperimentLibraryDesign in the database by the
    * ExperimentLibraryDesign ID.
-   * 
-   * @param expID
-   *          ID of the ExperimentLibraryDesign
-   * @return ExperimentLibraryDesign or null if not found
    */
   public ExperimentLibraryDesign findByID(Integer id) {
     String query = "from ExperimentLibraryDesign as e where e.experimentLibraryDesignId = ?";
@@ -60,6 +70,7 @@ public class ExperimentLibraryDesignDAOHibernate extends HibernateDaoSupport imp
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ExperimentLibraryDesign updateDetached(ExperimentLibraryDesign eld) {
     ExperimentLibraryDesign dbObject = findByID(eld.getExperimentLibraryDesignId());
@@ -75,6 +86,7 @@ public class ExperimentLibraryDesignDAOHibernate extends HibernateDaoSupport imp
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ExperimentLibraryDesign> list() {
         throw new UnsupportedOperationException("Not supported yet.");

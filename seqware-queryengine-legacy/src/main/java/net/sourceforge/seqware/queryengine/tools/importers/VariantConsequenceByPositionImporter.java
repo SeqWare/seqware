@@ -26,16 +26,20 @@ import net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareSettings;
 
 /**
+ * <p>VariantConsequenceByPositionImporter class.</p>
+ *
  * @author boconnor
  *
  * TODO: I should try to merge this with the mismatchId-based importer
  * FIXME: this doesn't support parsing the sequences from the knownGene or refGene consequence files
- * 
+ * @version $Id: $Id
  */
 public class VariantConsequenceByPositionImporter {
 
   /**
-   * @param args
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
    */
   public static void main(String[] args) {
 

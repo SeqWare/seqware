@@ -16,6 +16,7 @@ import java.util.Date;
  *
  * @author jbaran
  * @author dyuen
+ * @version $Id: $Id
  */
 public interface Atom<T extends Atom> extends Taggable, Versionable<T>, Serializable, Buildable {
 
@@ -25,6 +26,7 @@ public interface Atom<T extends Atom> extends Taggable, Versionable<T>, Serializ
      *
      * @param newSGID whether or not to generate a new UUID and timestamp for
      * the new copy
+     * @return a T object.
      */
     public T copy(boolean newSGID);
 
@@ -38,7 +40,7 @@ public interface Atom<T extends Atom> extends Taggable, Versionable<T>, Serializ
 
     /**
      * Get a creation time for this resource. Associated resource timestamps for
-     * older versions can be accessed via the {@link Versionable} interface when
+     * older versions can be accessed via the {@link com.github.seqware.queryengine.model.interfaces.Versionable} interface when
      * applicable
      *
      * @return the creation time stamp for this particular instance of the
@@ -47,9 +49,10 @@ public interface Atom<T extends Atom> extends Taggable, Versionable<T>, Serializ
     public Date getTimestamp();
     
     /**
-     * Get the serializationVersion for this particular atom. Allows more advanced 
+     * Get the serializationVersion for this particular atom. Allows more advanced
      * operations for serialization-aware plug-ins.
-     * @return 
+     *
+     * @return a int.
      */
     public int getExternalSerializationVersion();
 

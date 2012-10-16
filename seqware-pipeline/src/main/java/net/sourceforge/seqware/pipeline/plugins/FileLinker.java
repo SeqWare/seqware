@@ -34,7 +34,10 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * 
+ * <p>FileLinker class.</p>
+ *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
 public class FileLinker extends Plugin {

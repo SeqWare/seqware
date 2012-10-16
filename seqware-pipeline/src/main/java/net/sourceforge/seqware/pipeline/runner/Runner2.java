@@ -89,6 +89,9 @@ import net.sourceforge.seqware.common.module.ReturnValue;
  * User: Xiaoshu Wang (xiao@renci.org)
  * Date: 9/8/11
  * Time: 8:54 AM
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class Runner2 {
 
@@ -97,10 +100,20 @@ public class Runner2 {
     private List<String> moduleParameter;
     private ApplicationContext appContext;
 
+    /**
+     * <p>Setter for the field <code>moduleParameter</code>.</p>
+     *
+     * @param moduleParameter a {@link java.util.List} object.
+     */
     public void setModuleParameter(List<String> moduleParameter) {
         this.moduleParameter = moduleParameter;
     }
 
+    /**
+     * <p>run.</p>
+     *
+     * @throws org.kohsuke.args4j.CmdLineException if any.
+     */
     public void run() throws CmdLineException {
 //        ModuleInterface module = appContext.getBean(ModuleInterface.class);
 //        module.setParameters(moduleParameter);
@@ -138,6 +151,11 @@ public class Runner2 {
         }
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         RunnerParams runnerParams = null;
         int exitCode = 0;
@@ -221,6 +239,12 @@ public class Runner2 {
     }
 
 
+    /**
+     * <p>normalizeOptions.</p>
+     *
+     * @param origOpt a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String normalizeOptions(String origOpt) {
         String normOpt = origOpt;
         Pattern optPattern = Pattern.compile("-*(.*)");
@@ -239,6 +263,12 @@ public class Runner2 {
     }
 
 //    @Override
+    /**
+     * <p>setApplicationContext.</p>
+     *
+     * @param applicationContext a {@link org.springframework.context.ApplicationContext} object.
+     * @throws org.springframework.beans.BeansException if any.
+     */
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.appContext = applicationContext;
     }

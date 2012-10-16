@@ -18,6 +18,12 @@ import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.db.Cursor;
 import com.sleepycat.db.DatabaseEntry;
 
+/**
+ * <p>HBaseTagModelIterator class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class HBaseTagModelIterator implements SeqWareIterator {
 
 	ResultScanner scanner = null;
@@ -29,6 +35,17 @@ public class HBaseTagModelIterator implements SeqWareIterator {
 	Iterator<Result> scannerIt = null;
 	Model currModel = null;
 
+	/**
+	 * <p>Constructor for HBaseTagModelIterator.</p>
+	 *
+	 * @param tag a {@link java.lang.String} object.
+	 * @param scanner a {@link org.apache.hadoop.hbase.client.ResultScanner} object.
+	 * @param table a {@link org.apache.hadoop.hbase.client.HTable} object.
+	 * @param binder a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+	 * @param family a {@link java.lang.String} object.
+	 * @param label a {@link java.lang.String} object.
+	 * @throws java.lang.Exception if any.
+	 */
 	public HBaseTagModelIterator(String tag, ResultScanner scanner,
 			HTable table, TupleBinding binder, String family, String label)
 			throws Exception {
@@ -44,12 +61,20 @@ public class HBaseTagModelIterator implements SeqWareIterator {
 	}
 
 	// so the iterator class provides: hasNext(), next(), remove()
+	/**
+	 * <p>close.</p>
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
 	public void close() throws Exception {
 		scanner.close();
 	}
 
 	/**
 	 * Not supported for HBase backend!
+	 *
+	 * @return a int.
+	 * @throws java.lang.Exception if any.
 	 */
 	public int getCount() throws Exception {
 		return (0);
@@ -58,6 +83,9 @@ public class HBaseTagModelIterator implements SeqWareIterator {
 	/**
 	 * Not applicable for HBase backend. FIXME: is there a way to get rid of
 	 * this?
+	 *
+	 * @return a {@link com.sleepycat.db.Cursor} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public Cursor getCursor() throws Exception {
 		return (null);
@@ -66,11 +94,19 @@ public class HBaseTagModelIterator implements SeqWareIterator {
 	/**
 	 * Not applicable for HBase backend. FIXME: this is a BerkeleyDB specific
 	 * method
+	 *
+	 * @return a {@link java.lang.Object} object.
+	 * @throws java.io.UnsupportedEncodingException if any.
 	 */
 	public Object nextSecondaryKey() throws UnsupportedEncodingException {
 		return (null);
 	}
 
+	/**
+	 * <p>hasNext.</p>
+	 *
+	 * @return a boolean.
+	 */
 	@SuppressWarnings("deprecation")
 	public boolean hasNext() {
 
@@ -147,6 +183,11 @@ public class HBaseTagModelIterator implements SeqWareIterator {
 
 	}
 
+	/**
+	 * <p>next.</p>
+	 *
+	 * @return a {@link java.lang.Object} object.
+	 */
 	public Object next() {
 		return (currModel);
 	}

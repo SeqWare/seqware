@@ -27,33 +27,57 @@ import static org.junit.Assert.*;
 import static net.sourceforge.seqware.common.util.configtools.ConfigTools.SEQWARE_SETTINGS_PROPERTY;
 
 /**
+ * <p>ConfigToolsTest class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class ConfigToolsTest {
 
+    /**
+     * <p>Constructor for ConfigToolsTest.</p>
+     */
     public ConfigToolsTest() {
     }
 
+    /**
+     * <p>setUpClass.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @BeforeClass
     public static void setUpClass() throws Exception {
     }
 
+    /**
+     * <p>tearDownClass.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
 
+    /**
+     * <p>setUp.</p>
+     */
     @Before
     public void setUp() {
     }
 
+    /**
+     * <p>tearDown.</p>
+     */
     @After
     public void tearDown() {
     }
 
-    /**
-     * Test of getSettings method, of class ConfigTools.
-     */
+  /**
+   * Test of getSettings method, of class ConfigTools.
+   *
+   * @throws java.lang.Exception if any.
+   */
   @Test
   public void testGetSettings() throws Exception {
     System.setProperty(SEQWARE_SETTINGS_PROPERTY, getClass().getResource("ConfigToolsTest_settings").getPath());

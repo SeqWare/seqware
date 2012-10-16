@@ -27,13 +27,11 @@ import com.github.seqware.queryengine.model.impl.hbasemrlazy.MRLazyFeatureSet;
  * using Hibernate/JPA-like semantics
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class MRHBaseModelManager extends HBaseModelManager {
     
-        /**
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public FeatureSet.Builder buildFeatureSetInternal() {
         FeatureSet.Builder fSet = MRLazyFeatureSet.newBuilder();

@@ -19,28 +19,28 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Calculate counts per junction given a BAM file of aligned reads and a list of splice junctions.
- * 
+ *
  * This module determines the raw read count for each given splice junction.
- * 
+ *
  * Underlying script:  sw_module_SpliceJunctionCounts.pl
- * 
+ *
  * Necessary programs:  perl, java, Picard (SamFormatConverter.jar)
- * 
+ *
  * Necessary data file:  'junclist', which is a tab-delimited text file containing the list of splice junctions to be evaluated.
  * Only the first column is used -- any additional columns (containing annotation, for example) are ignored by this module.
  * Expected format for an exon is "chrN:position1,chrN:position2" or "chrN:position1:strand,chrN:position2:strand".  The
  * strand information is optional and not used by this module. The script does not care if position1 is less than postion2
  * (or vice versa), it will handle either case.  The script is designed to handle only intra-chromosomal junctions.
  * (e.g. ~/seqware-pipeline/data/annotation_reference/hg19_transcripts.hg19.20091027.spljxn.txt)
- * 
+ *
  * Expected output:  ~.spljxn.quantification.txt
  * This is a tab-delimited files, 2 columns:  junction & counts.
- * 
+ *
  * LIMITATIONS: The BAM file must contain reads mapped to genomic coordinates.
  * LIMITATIONS: Is not designed to handle inter-chromosomal junctions.
- * 
- * @author sacheek@med.unc.edu
  *
+ * @author sacheek@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class SpliceJunctionCounts extends Module {
@@ -50,9 +50,9 @@ public class SpliceJunctionCounts extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("infile", "Input BAM file, expects reads aligned to genomic coordinates.").withRequiredArg();
@@ -68,8 +68,9 @@ public class SpliceJunctionCounts extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -85,11 +86,11 @@ public class SpliceJunctionCounts extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -124,9 +125,9 @@ public class SpliceJunctionCounts extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -149,9 +150,9 @@ public class SpliceJunctionCounts extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -213,9 +214,9 @@ public class SpliceJunctionCounts extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known dataset.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -225,10 +226,10 @@ public class SpliceJunctionCounts extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Run core of module.
    * Based on script sw_module_GeneCountsRPKM.pl
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_run() {
@@ -258,9 +259,9 @@ public class SpliceJunctionCounts extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Check to make sure the output was created correctly.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -274,10 +275,11 @@ public class SpliceJunctionCounts extends Module {
     return(ret);
   }
   
-    /**
+  /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.  Remove tempDir.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

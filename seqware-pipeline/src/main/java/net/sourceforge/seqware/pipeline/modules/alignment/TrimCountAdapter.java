@@ -20,26 +20,26 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Trim adapter segment (and any following sequence) from reads, and get count & % of reads
  * that contain adapter segment.
- * 
+ *
  * This module takes a given fastq file and trims all reads to eliminate any adapter
  * contamination.  The 'adapter' is the reverse complement of the sequencing primer,
  * which the user must provide.  A non-A/C/G/T base in the primer is converted to an N,
  * and all Ns in the adapter are considered matches to any base in the read.  (The opposite
  * case is not true -- Ns in read sequences are NOT considered matches to the adapter bases.)
  * Otherwise, no mis-matches are allowed.  The minimum length for an adapter/read match is
- * 5 bases.  The script checks for internal & terminal adapter segments.  The trimmed read 
- * (& trimmed base scores) are output in fastq format, unless the effective read length is 
- * zero [an adapter dimer]. 
+ * 5 bases.  The script checks for internal & terminal adapter segments.  The trimmed read
+ * (& trimmed base scores) are output in fastq format, unless the effective read length is
+ * zero [an adapter dimer].
  * The module also reports the count & percentage of reads that contain adapter.
  * A collection of basic trimming statistics is an optional output as well.
- * 
+ *
  * Underlying script:  sw_module_TrimCountAdapter.pl
  * Necessary programs:  perl
- * 
- * Expected output:  outfastq (required), outqc (required), outstats (optional)
- * 
- * @author sacheek@med.unc.edu
  *
+ * Expected output:  outfastq (required), outqc (required), outstats (optional)
+ *
+ * @author sacheek@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class TrimCountAdapter extends Module {
@@ -48,9 +48,9 @@ public class TrimCountAdapter extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("infastq", "input: fastq format of reads").withRequiredArg();
@@ -64,8 +64,9 @@ public class TrimCountAdapter extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -81,11 +82,11 @@ public class TrimCountAdapter extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -120,9 +121,9 @@ public class TrimCountAdapter extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -145,9 +146,9 @@ public class TrimCountAdapter extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -201,9 +202,9 @@ public class TrimCountAdapter extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known dataset.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -213,10 +214,10 @@ public class TrimCountAdapter extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Run core of module.
    * Based on script sw_module_TrimAdapter.pl
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_run() {
@@ -273,9 +274,9 @@ public class TrimCountAdapter extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Check to make sure the output was created correctly.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -294,10 +295,11 @@ public class TrimCountAdapter extends Module {
     return(ret);
   }
   
-    /**
+  /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.  Remove tempDir.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

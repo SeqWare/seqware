@@ -13,10 +13,20 @@ import net.sourceforge.solexatools.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>ChangeNumberPopupPageController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ChangeNumberPopupPageController  extends BaseCommandController {
 	
+	/** Constant <code>SEPARATOR="java.io.File.separator"</code> */
 	public final static String SEPARATOR = java.io.File.separator;
 	
+	/**
+	 * <p>Constructor for ChangeNumberPopupPageController.</p>
+	 */
 	public ChangeNumberPopupPageController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
@@ -101,6 +111,7 @@ public class ChangeNumberPopupPageController  extends BaseCommandController {
 		return currentPage;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)

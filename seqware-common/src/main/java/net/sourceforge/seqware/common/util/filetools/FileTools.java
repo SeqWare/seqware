@@ -32,10 +32,22 @@ import ch.enterag.utils.zip.EntryOutputStream;
 import ch.enterag.utils.zip.FileEntry;
 import ch.enterag.utils.zip.Zip64File;
 
+/**
+ * <p>FileTools class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class FileTools {
 
   /*
    * Get MD5 of a file
+   */
+  /**
+   * <p>md5sumFile.</p>
+   *
+   * @param filename a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
    */
   public static String md5sumFile(String filename) {
     DigestInputStream dis = null;
@@ -66,6 +78,12 @@ public class FileTools {
    * Convert byte array to string representing hex Taken from
    * http://www.rgagnon.com/javadetails/java-0416.html
    */
+  /**
+   * <p>byte2HexString.</p>
+   *
+   * @param b an array of byte.
+   * @return a {@link java.lang.String} object.
+   */
   public static String byte2HexString(byte[] b) {
     StringBuffer result = new StringBuffer();
     for (int i = 0; i < b.length; i++) {
@@ -79,6 +97,14 @@ public class FileTools {
    * Takes output from stdout and stripes across all files in an
    * ArrayList<File>. Writer linesPerStripe to each file before moving to the
    * next, and writes to each file in round-robbin order
+   */
+  /**
+   * <p>splitFile.</p>
+   *
+   * @param input a {@link java.io.File} object.
+   * @param files a {@link java.util.ArrayList} object.
+   * @param linesPerStripe a int.
+   * @return a long.
    */
   public static long splitFile(File input, ArrayList<File> files, int linesPerStripe) {
     long linesProcessed = 0; // Has to be a long, or else it will wrap on large
@@ -139,6 +165,12 @@ public class FileTools {
     return linesProcessed;
   }
 
+  /**
+   * <p>verifyFile.</p>
+   *
+   * @param file a {@link java.io.File} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public static ReturnValue verifyFile(File file) {
     // FIXME: For now, make sure it is readable and non-zero. Should have an
     // actual test.
@@ -158,6 +190,12 @@ public class FileTools {
     return new ReturnValue(null, file.getAbsolutePath() + " " + error, 1);
   }
 
+  /**
+   * <p>dirPathExistsAndWritable.</p>
+   *
+   * @param file a {@link java.io.File} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public static ReturnValue dirPathExistsAndWritable(File file) {
 
     ReturnValue ret = new ReturnValue();
@@ -168,6 +206,12 @@ public class FileTools {
     return (ret);
   }
 
+  /**
+   * <p>dirPathExistsAndReadable.</p>
+   *
+   * @param file a {@link java.io.File} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public static ReturnValue dirPathExistsAndReadable(File file) {
 
     ReturnValue ret = new ReturnValue();
@@ -178,6 +222,12 @@ public class FileTools {
     return (ret);
   }
 
+  /**
+   * <p>fileExistsAndReadable.</p>
+   *
+   * @param file a {@link java.io.File} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public static ReturnValue fileExistsAndReadable(File file) {
 
     ReturnValue ret = new ReturnValue();
@@ -197,6 +247,12 @@ public class FileTools {
     return (ret);
   }
 
+  /**
+   * <p>fileExistsAndExecutable.</p>
+   *
+   * @param file a {@link java.io.File} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public static ReturnValue fileExistsAndExecutable(File file) {
     ReturnValue ret = new ReturnValue();
     ret.setExitStatus(ReturnValue.SUCCESS);
@@ -208,6 +264,12 @@ public class FileTools {
 
   // FIXME: Instead of calling this function, we should call verifyFile, so that
   // we can ultimately add extension specific checks
+  /**
+   * <p>fileExistsAndNotEmpty.</p>
+   *
+   * @param file a {@link java.io.File} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public static ReturnValue fileExistsAndNotEmpty(File file) {
 
     ReturnValue ret = new ReturnValue();
@@ -218,10 +280,25 @@ public class FileTools {
     return (ret);
   }
 
+  /**
+   * <p>createTempDirectory.</p>
+   *
+   * @param parentDir a {@link java.io.File} object.
+   * @return a {@link java.io.File} object.
+   * @throws java.io.IOException if any.
+   */
   public static File createTempDirectory(File parentDir) throws IOException {
     return (createDirectoryWithUniqueName(parentDir, "temp"));
   }
 
+  /**
+   * <p>createDirectoryWithUniqueName.</p>
+   *
+   * @param parentDir a {@link java.io.File} object.
+   * @param prefix a {@link java.lang.String} object.
+   * @return a {@link java.io.File} object.
+   * @throws java.io.IOException if any.
+   */
   public static File createDirectoryWithUniqueName(File parentDir, String prefix) throws IOException {
 
     if (!parentDir.exists()) {
@@ -241,6 +318,14 @@ public class FileTools {
     return (tempDir);
   }
 
+  /**
+   * <p>createFileWithUniqueName.</p>
+   *
+   * @param parentDir a {@link java.io.File} object.
+   * @param prefix a {@link java.lang.String} object.
+   * @return a {@link java.io.File} object.
+   * @throws java.io.IOException if any.
+   */
   public static File createFileWithUniqueName(File parentDir, String prefix) throws IOException {
 
     if (!parentDir.exists()) {
@@ -251,6 +336,12 @@ public class FileTools {
     return (tempFile);
   }
 
+  /**
+   * <p>deleteDirectoryRecursive.</p>
+   *
+   * @param path a {@link java.io.File} object.
+   * @return a boolean.
+   */
   public static boolean deleteDirectoryRecursive(File path) {
     if (path.exists()) {
       File[] files = path.listFiles();
@@ -265,6 +356,16 @@ public class FileTools {
     return (path.delete());
   }
 
+  /**
+   * <p>zipDirectoryRecursive.</p>
+   *
+   * @param path a {@link java.io.File} object.
+   * @param zipFileName a {@link java.io.File} object.
+   * @param excludeRegEx a {@link java.lang.String} object.
+   * @param relative a boolean.
+   * @param compress a boolean.
+   * @return a boolean.
+   */
   public static boolean zipDirectoryRecursive(File path, File zipFileName, String excludeRegEx, boolean relative,
       boolean compress) {
     ArrayList<File> filesToZip = new ArrayList<File>();
@@ -337,6 +438,16 @@ public class FileTools {
     return (true);
   }
 
+  /**
+   * <p>zipDirectoryRecursiveOld.</p>
+   *
+   * @param path a {@link java.io.File} object.
+   * @param zipFileName a {@link java.io.File} object.
+   * @param excludeRegEx a {@link java.lang.String} object.
+   * @param relative a boolean.
+   * @param compress a boolean.
+   * @return a boolean.
+   */
   public static boolean zipDirectoryRecursiveOld(File path, File zipFileName, String excludeRegEx, boolean relative,
       boolean compress) {
     ArrayList<File> filesToZip = new ArrayList<File>();
@@ -405,6 +516,16 @@ public class FileTools {
     return (true);
   }
 
+  /**
+   * <p>zipListFileRecursiveOld.</p>
+   *
+   * @param filesToZip a {@link java.util.List} object.
+   * @param zipFileName a {@link java.io.File} object.
+   * @param cutPrefix a {@link java.lang.String} object.
+   * @param excludeRegEx a {@link java.lang.String} object.
+   * @param compress a boolean.
+   * @return a boolean.
+   */
   public static boolean zipListFileRecursiveOld(List<File> filesToZip, File zipFileName, String cutPrefix,
       String excludeRegEx,/* boolean relative, */boolean compress) {
 
@@ -470,10 +591,10 @@ public class FileTools {
 
   /**
    * FIXME: should make this optional to keep the original file
-   * 
-   * @param path
-   * @param outputDir
-   * @return
+   *
+   * @param path a {@link java.io.File} object.
+   * @param outputDir a {@link java.io.File} object.
+   * @return a boolean.
    */
   public static boolean unzipFile(File path, File outputDir) {
 
@@ -544,10 +665,10 @@ public class FileTools {
 
   /**
    * FIXME: should make this optional to keep the original file
-   * 
-   * @param path
-   * @param outputDir
-   * @return
+   *
+   * @param path a {@link java.io.File} object.
+   * @param outputDir a {@link java.io.File} object.
+   * @return a boolean.
    */
   public static boolean unzipFileOld(File path, File outputDir) {
 
@@ -613,6 +734,12 @@ public class FileTools {
     return (true);
   }
 
+  /**
+   * <p>listFilesRecursive.</p>
+   *
+   * @param path a {@link java.io.File} object.
+   * @param filesArray a {@link java.util.ArrayList} object.
+   */
   public static void listFilesRecursive(File path, ArrayList<File> filesArray) {
     if (path.exists()) {
       File[] files = path.listFiles();
@@ -626,6 +753,13 @@ public class FileTools {
     }
   }
 
+  /**
+   * <p>copyInputStream.</p>
+   *
+   * @param in a {@link java.io.InputStream} object.
+   * @param out a {@link java.io.OutputStream} object.
+   * @throws java.io.IOException if any.
+   */
   public static final void copyInputStream(InputStream in, OutputStream out) throws IOException {
     byte[] buffer = new byte[1024];
     int len;
@@ -637,6 +771,12 @@ public class FileTools {
     out.close();
   }
 
+  /**
+   * <p>getKeyValueFromFile.</p>
+   *
+   * @param path a {@link java.lang.String} object.
+   * @return a {@link java.util.Map} object.
+   */
   public static Map<String, String> getKeyValueFromFile(String path) {
     Map<String, String> ret = new LinkedHashMap<String, String>();
     File file = new File(path);

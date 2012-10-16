@@ -22,6 +22,12 @@ import net.sourceforge.solexatools.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>SampleWorkflowRunsController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SampleWorkflowRunsController extends BaseCommandController {
 
 	// Services
@@ -29,8 +35,10 @@ public class SampleWorkflowRunsController extends BaseCommandController {
 	private WorkflowRunService workflowRunService;
 
 	// URL Params
+	/** Constant <code>SAMPLE_SWID="sw"</code> */
 	public final static String SAMPLE_SWID = "sw";
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -87,10 +95,20 @@ public class SampleWorkflowRunsController extends BaseCommandController {
 		}
 	}
 
+	/**
+	 * <p>Setter for the field <code>sampleService</code>.</p>
+	 *
+	 * @param sampleService a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	 */
 	public void setSampleService(SampleService sampleService) {
 		this.sampleService = sampleService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @param workflowRunService a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public void setWorkflowRunService(WorkflowRunService workflowRunService) {
 		this.workflowRunService = workflowRunService;
 	}

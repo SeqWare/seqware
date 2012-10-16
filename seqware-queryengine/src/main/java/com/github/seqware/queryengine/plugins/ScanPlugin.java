@@ -10,6 +10,7 @@ import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
  * Implementation orients itself on HBase's Scan.
  *
  * @author jbaran
+ * @version $Id: $Id
  */
 public interface ScanPlugin<T extends Atom, S extends MolSetInterface> extends AnalysisPluginInterface{
     /**

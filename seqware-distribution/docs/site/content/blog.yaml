@@ -1,0 +1,4 @@
+title:                 "News"
+short_title:           "News"
+is_dynamic:            true
+toc_includes_children: true

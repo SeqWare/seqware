@@ -13,30 +13,60 @@ import net.sourceforge.solexatools.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>SearchController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SearchController extends BaseCommandController {
 	
+	/** Constant <code>SEARCH_CASE_SENSITIVE="search.checked"</code> */
 	public final static String SEARCH_CASE_SENSITIVE = "search.checked"; 
 	
 	private String criteria;
 	private String type;
 
+	/**
+	 * <p>Constructor for SearchController.</p>
+	 */
 	public SearchController(){
 		super();
 		setSupportedMethods(new String[] {METHOD_GET, METHOD_POST});
 	}
 		
+	/**
+	 * <p>Getter for the field <code>criteria</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getCriteria() {
 		return criteria;
 	}
 
+	/**
+	 * <p>Getter for the field <code>type</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getType() {
 		return type;
 	}
 
+	/**
+	 * <p>Setter for the field <code>type</code>.</p>
+	 *
+	 * @param type a {@link java.lang.String} object.
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * <p>Setter for the field <code>criteria</code>.</p>
+	 *
+	 * @param criteria a {@link java.lang.String} object.
+	 */
 	public void setCriteria(String criteria) {
 		this.criteria = criteria;
 	}
@@ -65,6 +95,7 @@ public class SearchController extends BaseCommandController {
 		return types;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest request,

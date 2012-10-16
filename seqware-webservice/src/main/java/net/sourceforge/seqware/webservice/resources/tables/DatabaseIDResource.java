@@ -29,26 +29,44 @@ import org.restlet.resource.Put;
 import org.w3c.dom.Document;
 
 /**
+ * <p>DatabaseIDResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class DatabaseIDResource extends BasicResource {
 
     private String id;
 
+    /**
+     * <p>Getter for the field <code>attribute</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getAttribute() {
         return attribute;
     }
 
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getId() {
         return id;
     }
     protected String attribute;
 
+    /**
+     * <p>Constructor for DatabaseIDResource.</p>
+     *
+     * @param attributeName a {@link java.lang.String} object.
+     */
     public DatabaseIDResource(String attributeName) {
         this.attribute = attributeName;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void doInit() {
         super.doInit();
@@ -65,6 +83,7 @@ public class DatabaseIDResource extends BasicResource {
 //        return repOutput;
 //    }
 
+    /** {@inheritDoc} */
     @Put
     @Override
     public Representation put(Representation rep) {
@@ -74,6 +93,7 @@ public class DatabaseIDResource extends BasicResource {
         return repOutput;
     }
 
+    /** {@inheritDoc} */
     @Delete
     @Override
     public Representation delete() {

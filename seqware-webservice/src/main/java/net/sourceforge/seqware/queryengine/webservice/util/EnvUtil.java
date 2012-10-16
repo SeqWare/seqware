@@ -8,11 +8,19 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 /**
- * @author boconnor
+ * <p>EnvUtil class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class EnvUtil {
 
+  /**
+   * <p>getProperty.</p>
+   *
+   * @param name a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   public static String getProperty(String name) {
     
     String value = null;

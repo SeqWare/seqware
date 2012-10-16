@@ -8,6 +8,7 @@ import com.github.seqware.queryengine.model.interfaces.TTLable;
  * by permissions and are atoms
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public interface Molecule<T extends Molecule> extends Atom<T>, ACLable, TTLable {
 

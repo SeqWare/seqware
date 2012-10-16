@@ -18,10 +18,17 @@ package net.sourceforge.seqware.pipeline.workflowV2;
 
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 /**
+ * <p>WorkflowInterface interface.</p>
  *
  * @author yongliang
+ * @version $Id: $Id
  */
 public interface WorkflowInterface {
+	/**
+	 * <p>generateWorkflow.</p>
+	 *
+	 * @param workflow a {@link net.sourceforge.seqware.pipeline.workflowV2.model.Workflow} object.
+	 */
 	public void generateWorkflow(Workflow workflow);
 
 }

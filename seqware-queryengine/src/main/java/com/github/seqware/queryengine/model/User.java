@@ -4,6 +4,7 @@ import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.log4j.Logger;
 
 /**
  * A user of the Generic Feature Store.
@@ -19,9 +21,11 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * may need a "persistent" ID that does not change between versions
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class User extends MoleculeImpl<User> {
 
+    /** Constant <code>prefix="User"</code> */
     public final static String prefix = "User";
     private String firstName;
     private String lastName;
@@ -83,6 +87,7 @@ public class User extends MoleculeImpl<User> {
         return Collections.unmodifiableList(groups);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -105,13 +110,17 @@ public class User extends MoleculeImpl<User> {
                 .isEquals();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 31 * hash + (this.firstName != null ? this.firstName.hashCode() : 0);
-        hash = 31 * hash + (this.lastName != null ? this.lastName.hashCode() : 0);
-        hash = 31 * hash + (this.emailAddress != null ? this.emailAddress.hashCode() : 0);
-        return hash;
+        // you pick a hard-coded, randomly chosen, non-zero, odd number
+        // ideally different for each class
+        return new HashCodeBuilder(17, 37).
+                append(super.getSGID().getRowKey()).
+                append(firstName).
+                append(lastName).
+                append(emailAddress).
+                toHashCode();
     }
 
     /**
@@ -123,14 +132,16 @@ public class User extends MoleculeImpl<User> {
      */
     private static String hashedPassword(String password) {
 //        return password;
-        String hashword = null;
+        String hashword;
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
-            md5.update(password.getBytes());
+            Charset charset = Charset.forName("UTF-8");
+            md5.update(password.getBytes(charset));
             BigInteger hash = new BigInteger(1, md5.digest());
             hashword = hash.toString(16);
-
         } catch (NoSuchAlgorithmException nsae) {
+            hashword = "testing";
+            Logger.getLogger(User.class.getClass()).info("algorithm error with password encryption");
         }
         return pad(hashword, 32, '0');
     }
@@ -146,7 +157,7 @@ public class User extends MoleculeImpl<User> {
     /**
      * Create a new ACL builder
      *
-     * @return
+     * @return a {@link com.github.seqware.queryengine.model.User.Builder} object.
      */
     public static User.Builder newBuilder() {
         return new User.Builder();
@@ -155,16 +166,16 @@ public class User extends MoleculeImpl<User> {
     /**
      * A hashed password for the user
      *
-     * @return
+     * @return a {@link java.lang.String} object.
      */
     public String getPassword() {
         return password;
     }
 
     /**
-     * Create an User builder started with a copy of this
+     * {@inheritDoc}
      *
-     * @return
+     * Create an User builder started with a copy of this
      */
     @Override
     public User.Builder toBuilder() {
@@ -173,11 +184,13 @@ public class User extends MoleculeImpl<User> {
         return b;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Class getHBaseClass() {
         return User.class;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getHBasePrefix() {
         return User.prefix;

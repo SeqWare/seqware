@@ -19,29 +19,63 @@ import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
+/**
+ * <p>IUSController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class IUSController extends MultiActionController {
 	private IUSService iusService;
 
+	/**
+	 * <p>Constructor for IUSController.</p>
+	 */
 	public IUSController() {
 	    super();
 	}
 
+	/**
+	 * <p>Constructor for IUSController.</p>
+	 *
+	 * @param delegate a {@link java.lang.Object} object.
+	 */
 	public IUSController(Object delegate) {
 		super(delegate);
 	}
   
+	/**
+	 * <p>Getter for the field <code>iusService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.IUSService} object.
+	 */
 	public IUSService getIusService() {
 		return iusService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>iusService</code>.</p>
+	 *
+	 * @param iusService a {@link net.sourceforge.seqware.common.business.IUSService} object.
+	 */
 	public void setIusService(IUSService iusService) {
 		this.iusService = iusService;
 	}
 					  
+	/**
+	 * <p>getIUSService.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.IUSService} object.
+	 */
 	public IUSService getIUSService() {
 		return iusService;
 	}
 
+	/**
+	 * <p>setIUSService.</p>
+	 *
+	 * @param iusService a {@link net.sourceforge.seqware.common.business.IUSService} object.
+	 */
 	public void setIUSService(IUSService iusService) {
 		this.iusService = iusService;
 	}
@@ -50,6 +84,10 @@ public class IUSController extends MultiActionController {
 	 * Handles the user's request to delete their ius.
 	 *
 	 * @param command IUS command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleDelete(HttpServletRequest		request,
 									 HttpServletResponse	response,
@@ -80,6 +118,10 @@ public class IUSController extends MultiActionController {
 	 * Handles the user's request to delete their ius.
 	 *
 	 * @param command IUS command object
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 * @throws java.lang.Exception if any.
 	 */
 	public ModelAndView handleUpdate(HttpServletRequest		request,
 									 HttpServletResponse	response,
@@ -111,10 +153,10 @@ public class IUSController extends MultiActionController {
 	 * Handles the user's request to cancel.
 	 *
 	 * @param command IUS command object
-	 *
 	 * @return ModelAndView
-	 *
-	 * @throws Exception
+	 * @throws java.lang.Exception if any.
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
 	 */
 	public ModelAndView handleCancel(HttpServletRequest request,
 									 HttpServletResponse response,

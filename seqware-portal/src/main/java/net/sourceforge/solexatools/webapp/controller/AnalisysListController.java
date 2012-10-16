@@ -13,17 +13,23 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
  * RegistrationSetupController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class AnalisysListController extends BaseCommandController {
 	private WorkflowService workflowService;
 	private WorkflowRunService workflowRunService;
 	
+	/**
+	 * <p>Constructor for AnalisysListController.</p>
+	 */
 	public AnalisysListController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)
@@ -60,18 +66,38 @@ public class AnalisysListController extends BaseCommandController {
 			session.setAttribute("ascMyRunningListAnalysis", true);
 		}
 	}
+	/**
+	 * <p>Getter for the field <code>workflowService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.WorkflowService} object.
+	 */
 	public WorkflowService getWorkflowService() {
 		return workflowService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowService</code>.</p>
+	 *
+	 * @param workflowService a {@link net.sourceforge.seqware.common.business.WorkflowService} object.
+	 */
 	public void setWorkflowService(WorkflowService workflowService) {
 		this.workflowService = workflowService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public WorkflowRunService getWorkflowRunService() {
 		return workflowRunService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @param workflowRunService a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public void setWorkflowRunService(WorkflowRunService workflowRunService) {
 		this.workflowRunService = workflowRunService;
 	}

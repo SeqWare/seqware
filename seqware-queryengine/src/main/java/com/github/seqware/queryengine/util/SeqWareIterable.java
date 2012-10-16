@@ -18,11 +18,14 @@ package com.github.seqware.queryengine.util;
 
 /**
  * All SeqWare iterable collections should be easily countable too
+ *
  * @author dyuen
+ * @version $Id: $Id
  */
 public interface SeqWareIterable<T> extends Iterable<T>{
     /**
      * Get number of elements in set
+     *
      * @return count of elements in the set
      */
     public long getCount();

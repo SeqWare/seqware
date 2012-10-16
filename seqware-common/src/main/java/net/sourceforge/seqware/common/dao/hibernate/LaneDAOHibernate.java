@@ -19,16 +19,27 @@ import org.hibernate.SQLQuery;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>LaneDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
     
     private Logger logger;
     
+    /**
+     * <p>Constructor for LaneDAOHibernate.</p>
+     */
     public LaneDAOHibernate() {
         super();
         logger = Logger.getLogger(LaneDAOHibernate.class);
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Inserts an instance of Lane into the database.
      */
     public void insert(Lane lane) {
@@ -37,6 +48,8 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Updates an instance of Lane in the database.
      */
     public void update(Lane lane) {
@@ -45,6 +58,8 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Deletes an instance of Lane in the database.
      */
     public void delete(Lane lane) {
@@ -58,6 +73,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         this.getHibernateTemplate().delete(lane);
     }
     
+    /** {@inheritDoc} */
     public List<File> getFiles(Integer laneId) {
         List<File> files = new ArrayList<File>();
         
@@ -86,6 +102,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         return files;
     }
     
+    /** {@inheritDoc} */
     public boolean isHasFile(Integer laneId) {
         boolean isHasFile = false;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -110,6 +127,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         return isHasFile;
     }
     
+    /** {@inheritDoc} */
     public List<File> getFiles(Integer laneId, String metaType) {
         List<File> files = new ArrayList<File>();
         
@@ -138,6 +156,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         return files;
     }
     
+    /** {@inheritDoc} */
     public boolean isHasFile(Integer laneId, String metaType) {
         boolean isHasFile = false;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -162,6 +181,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         return isHasFile;
     }
     
+    /** {@inheritDoc} */
     public List<Lane> list(List<Integer> laneIds) {
         List<Lane> lanes = new ArrayList<Lane>();
         
@@ -190,6 +210,11 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
     }
 
     // delete Only lane, without CASCADE delete processig
+    /**
+     * <p>delete.</p>
+     *
+     * @param lanes a {@link java.util.SortedSet} object.
+     */
     public void delete(SortedSet<Lane> lanes) {
         if (lanes == null || lanes.size() == 0) {
             return;
@@ -301,9 +326,9 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
     }
 
     /**
-     * Finds an instance of Lane in the database by the Lane emailAddress.
+     * {@inheritDoc}
      *
-     * @return Lane or null if not found
+     * Finds an instance of Lane in the database by the Lane emailAddress.
      */
     public Lane findByName(String name) {
         String query = "from lane as lane where lane.name = ?";
@@ -316,6 +341,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         return lane;
     }
     
+    /** {@inheritDoc} */
     public Lane findByID(Integer expID) {
         String query = "from Lane as lane where lane.laneId = ?";
         Lane lane = null;
@@ -327,6 +353,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         return lane;
     }
     
+    /** {@inheritDoc} */
     @Override
     public Lane findBySWAccession(Integer swAccession) {
         String query = "from Lane as lane where lane.swAccession = ?";
@@ -339,6 +366,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         return lane;
     }
     
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public List<Lane> findByOwnerID(Integer registrationId) {
@@ -347,6 +375,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         return this.getHibernateTemplate().find(query, parameters);
     }
     
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public List<Lane> findByCriteria(String criteria, boolean isCaseSens) {
@@ -367,6 +396,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         return query.list();
     }
     
+    /** {@inheritDoc} */
     @Override
     public Lane updateDetached(Lane lane) {
         Lane dbObject = findByID(lane.getLaneId());
@@ -382,6 +412,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         return null;
     }
     
+    /** {@inheritDoc} */
     @Override
     public List<ReturnValue> findFiles(Integer swAccession) {
         getSessionFactory().getCurrentSession().flush();
@@ -394,6 +425,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         return list;
     }
     
+    /** {@inheritDoc} */
     @Override
     public List<Lane> list() {
         ArrayList<Lane> l = new ArrayList<Lane>();
@@ -409,6 +441,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         return l;
     }
     
+    /** {@inheritDoc} */
     @Override
     public void update(Registration registration, Lane lane) {
         Lane dbObject = reattachLane(lane);
@@ -424,6 +457,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         }
     }
     
+    /** {@inheritDoc} */
     @Override
     public void insert(Registration registration, Lane lane) {
         Logger logger = Logger.getLogger(LaneDAOHibernate.class);
@@ -437,6 +471,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         }
     }
     
+    /** {@inheritDoc} */
     @Override
     public Lane updateDetached(Registration registration, Lane lane) {
         Lane dbObject = reattachLane(lane);
