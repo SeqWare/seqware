@@ -34,3 +34,6 @@ seqware-distribution/docs/site-prototype/output
 seqware-distribution/docs/site-prototype/tmp
 seqware-distribution/docs/site/output
 seqware-distribution/docs/site/tmp
+
+# Log files
+dao-test.log
