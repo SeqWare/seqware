@@ -146,14 +146,12 @@ public class WorkflowDataModelFactory {
 	        	m.invoke(ret);
 	        	m = clazz.getMethod("setupFiles");
 	        	m.invoke(ret);
-	        	//Method m = clazz.getDeclaredMethod("setupFiles");
-	        	//m.invoke(ret);
-	/*        	m = clazz.getDeclaredMethod("setupWorkflow");
-	        	m.invoke(res);
-	        	m = clazz.getDeclaredMethod("setupEnvironment");
-	        	m.invoke(res);*/
-				m = clazz.getDeclaredMethod("buildWorkflow");
-				m.invoke(ret);
+	        	m = clazz.getMethod("setupWorkflow");
+	        	m.invoke(ret);
+	        	m = clazz.getMethod("setupEnvironment");
+	        	m.invoke(ret);
+	        	m = clazz.getMethod("buildWorkflow");
+	        	m.invoke(ret);
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			} catch (NoSuchMethodException e) {
@@ -164,11 +162,7 @@ public class WorkflowDataModelFactory {
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
-			}
-
-			//setup files
-			//build workflow
-			
+			}			
 		} else {
 			WorkflowXmlParser xmlParser = new WorkflowXmlParser();
 			xmlParser.parseXml(ret, metaInfo.get("workflow_template"));
@@ -324,6 +318,12 @@ public class WorkflowDataModelFactory {
     	if(options.has("host")) {
     		map.put("host", (String) options.valueOf("host"));
     	}
+    	//metadatawriteback
+    	boolean metadataWriteback = true;
+    	if (options.has("no-metadata") || options.has("no-meta-db")) {
+    	    metadataWriteback = false;
+    	}
+    	map.put("metadata", Boolean.toString(metadataWriteback));
 
     }
 

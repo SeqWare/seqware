@@ -18,12 +18,16 @@ public class PegasusJob {
 	private int id;
 	protected String basedir;
 	private List<PegasusJob> parents;
+	private List<PegasusJob> children;
 	protected static String NS = "seqware";
+	private boolean metadataWriteback;
+	private String parentAccession;
 	
 	public PegasusJob(AbstractJob job, String basedir) {
 		this.jobObj = job;
 		this.basedir = basedir;
 		this.parents = new ArrayList<PegasusJob>();
+		this.children = new ArrayList<PegasusJob>();
 	}
 	
 	public Element serializeXML() {
@@ -76,15 +80,22 @@ public class PegasusJob {
 	protected String buildCommandString() {
 		StringBuilder sb = new StringBuilder();
 		//add memory, classpath, module for bash
-		if(this.jobObj instanceof BashJob) {
-			sb.append("-Xmx").append(this.jobObj.getCommand().getMaxMemory()).append("\n");
-			sb.append("-classpath ").append(basedir).append("/lib/").append(Adag.PIPELINE).append("\n");
-			sb.append("net.sourceforge.seqware.pipeline.runner.Runner").append("\n");
+		
+		sb.append("-Xmx").append(this.jobObj.getCommand().getMaxMemory()).append("\n");
+		sb.append("-classpath ").append(basedir).append("/lib/").append(Adag.PIPELINE).append("\n");
+		sb.append("net.sourceforge.seqware.pipeline.runner.Runner").append("\n");
+		if(this.hasMetadataWriteback()) {
+			sb.append("--metadata").append("\n");
+		} else {
 			sb.append("--no-metadata").append("\n");
-			sb.append("--module net.sourceforge.seqware.pipeline.modules.GenericCommandRunner").append("\n");
-			sb.append("--").append("\n");
-			sb.append("--gcr-algorithm ").append(this.jobObj.getAlgo()).append("\n");
 		}
+		if(this.parentAccession!=null){
+			sb.append("--parent-accessions " + this.parentAccession).append("\n");
+		}
+		sb.append("--module net.sourceforge.seqware.pipeline.modules.GenericCommandRunner").append("\n");
+		sb.append("--").append("\n");
+		sb.append("--gcr-algorithm ").append(this.jobObj.getAlgo()).append("\n");
+		
 		Command cmd = this.jobObj.getCommand();
 		if(cmd.toString().isEmpty() == false) {
 			//append these setting first
@@ -114,6 +125,15 @@ public class PegasusJob {
 		return this.parents;
 	}
 	
+	public Collection<PegasusJob> getChildren() {
+		return this.children;
+	}
+	
+	public void addParent(PegasusJob parent) {
+		this.parents.add(parent);
+		parent.getChildren().add(this);
+	}
+	
     public Element getDependentElement(PegasusJob parent) {
 		Element element = new Element("child", Adag.NAMESPACE);
 		element.setAttribute("ref", this.jobObj.getAlgo() + "_" + this.getId());
@@ -122,4 +142,20 @@ public class PegasusJob {
 		element.addContent(parentE);
 		return element;
     }
+
+	public boolean hasMetadataWriteback() {
+		return metadataWriteback;
+	}
+
+	public void setMetadataWriteback(boolean metadataWriteback) {
+		this.metadataWriteback = metadataWriteback;
+	}
+
+	public String getParentAccession() {
+		return parentAccession;
+	}
+
+	public void setParentAccession(String parentAccession) {
+		this.parentAccession = parentAccession;
+	}
 }
