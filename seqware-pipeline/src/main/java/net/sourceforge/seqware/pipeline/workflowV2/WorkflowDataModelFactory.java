@@ -324,7 +324,14 @@ public class WorkflowDataModelFactory {
     	    metadataWriteback = false;
     	}
     	map.put("metadata", Boolean.toString(metadataWriteback));
-
+    	//metadata-output-file-prefix
+    	if (options.has("metadata-output-file-prefix")) {
+    		map.put("metadata-output-file-prefix", (String) options.valueOf("metadata-output-file-prefix"));
+    	}
+    	//metadata-output-dir
+    	if (options.has("metadata-output-dir")) {
+    		map.put("metadata-output-dir", (String) options.valueOf("metadata-output-dir"));
+    	}
     }
 
 }
