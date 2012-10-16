@@ -933,13 +933,12 @@ public class MetadataDB extends Metadata {
    }
 
   private int insertFileRecord(FileMetadata file) throws SQLException {
-    String md5sum = getMD5Hash(file.getFilePath());
 
     String sql = "INSERT INTO FILE (file_path, meta_type, type, description, url, url_label, md5sum, size) "
         + " VALUES (%s, %s, %s, %s, %s, %s, %s, %s)";
 
     sql = String.format(sql, sqlQuote(file.getFilePath()), sqlQuote(file.getMetaType()), sqlQuote(file.getType()),
-        sqlQuote(file.getDescription()), sqlQuote(file.getUrl()), sqlQuote(file.getUrlLabel()), sqlQuote(md5sum),
+        sqlQuote(file.getDescription()), sqlQuote(file.getUrl()), sqlQuote(file.getUrlLabel()), sqlQuote(file.getMd5sum()),
         sqlQuote(file.getSize()));
 
     try {
