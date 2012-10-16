@@ -2,6 +2,12 @@ package net.sourceforge.seqware.common.invitation;
 
 import java.security.SecureRandom;
 
+/**
+ * <p>RandomInvitationCode class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class RandomInvitationCode {
   private static final int SIZE_BLOCK = 5;
   private static final int SIZE_SYMBOLS_IN_BLOCK = 5;
@@ -18,6 +24,9 @@ public class RandomInvitationCode {
   private SecureRandom random = new SecureRandom();
   private final char[] buf = new char[SIZE_SYMBOLS_IN_BLOCK];
 
+  /**
+   * <p>Constructor for RandomInvitationCode.</p>
+   */
   public RandomInvitationCode() { }
 
   private String nextString() {
@@ -26,6 +35,11 @@ public class RandomInvitationCode {
     return new String(buf);
   }
   
+  /**
+   * <p>nextInvitationCode.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String nextInvitationCode(){
 	String invitationCode = "";
 	for (int i = 0; i < SIZE_BLOCK; i++) {

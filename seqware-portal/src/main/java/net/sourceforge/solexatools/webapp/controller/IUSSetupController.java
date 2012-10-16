@@ -14,18 +14,35 @@ import net.sourceforge.solexatools.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>IUSSetupController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class IUSSetupController extends BaseCommandController {
 	
 	private IUSService iusService;
 
+	/**
+	 * <p>Getter for the field <code>iusService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.IUSService} object.
+	 */
 	public IUSService getIusService() {
 		return iusService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>iusService</code>.</p>
+	 *
+	 * @param iusService a {@link net.sourceforge.seqware.common.business.IUSService} object.
+	 */
 	public void setIusService(IUSService iusService) {
 		this.iusService = iusService;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest request,

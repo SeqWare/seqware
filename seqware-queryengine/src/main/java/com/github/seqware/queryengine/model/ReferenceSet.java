@@ -11,8 +11,10 @@ import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
  *
  * @author dyuen
  * @author jbaran
+ * @version $Id: $Id
  */
 public interface ReferenceSet extends MolSetInterface<ReferenceSet, Reference> {
+    /** Constant <code>prefix="ReferenceSet"</code> */
     public final static String prefix = "ReferenceSet";
 
     /**
@@ -24,13 +26,15 @@ public interface ReferenceSet extends MolSetInterface<ReferenceSet, Reference> {
     
     /**
      * Get the organism associated with this reference set
+     *
      * @return the organism associated with this reference set
      */
     public String getOrganism();
 
     /**
+     * {@inheritDoc}
+     *
      * Create a ReferenceSet builder started with a copy of this
-     * @return 
      */
     @Override
     public abstract ReferenceSet.Builder toBuilder();

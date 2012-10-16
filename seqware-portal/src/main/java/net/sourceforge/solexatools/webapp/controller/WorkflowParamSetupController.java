@@ -14,14 +14,24 @@ import net.sourceforge.solexatools.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>WorkflowParamSetupController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class WorkflowParamSetupController extends BaseCommandController {
 	private WorkflowParamService workflowParamService;
 
+	/**
+	 * <p>Constructor for WorkflowParamSetupController.</p>
+	 */
 	public WorkflowParamSetupController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -63,10 +73,20 @@ public class WorkflowParamSetupController extends BaseCommandController {
 		return workflowParam;
 	}
 
+	/**
+	 * <p>Getter for the field <code>workflowParamService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.WorkflowParamService} object.
+	 */
 	public WorkflowParamService getWorkflowParamService() {
 		return workflowParamService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowParamService</code>.</p>
+	 *
+	 * @param workflowParamService a {@link net.sourceforge.seqware.common.business.WorkflowParamService} object.
+	 */
 	public void setWorkflowParamService(WorkflowParamService workflowParamService) {
 		this.workflowParamService = workflowParamService;
 	}

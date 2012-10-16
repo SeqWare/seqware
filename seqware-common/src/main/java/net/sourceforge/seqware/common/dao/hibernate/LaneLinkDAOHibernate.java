@@ -7,24 +7,34 @@ import net.sourceforge.seqware.common.model.LaneAttribute;
 
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>LaneLinkDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class LaneLinkDAOHibernate extends HibernateDaoSupport implements LaneLinkDAO {
 
+  /** {@inheritDoc} */
   @Override
   public void insert(LaneAttribute laneAttribute) {
     this.getHibernateTemplate().save(laneAttribute);
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(LaneAttribute laneAttribute) {
     this.getHibernateTemplate().update(laneAttribute);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void delete(LaneAttribute laneAttribute) {
     this.getHibernateTemplate().delete(laneAttribute);
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("unchecked")
   public List<LaneAttribute> findAll(Lane lane) {

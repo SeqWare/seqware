@@ -17,16 +17,27 @@ import org.hibernate.Query;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>SampleDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO {
 
     private Logger logger;
 
+    /**
+     * <p>Constructor for SampleDAOHibernate.</p>
+     */
     public SampleDAOHibernate() {
         super();
         logger = Logger.getLogger(SampleDAOHibernate.class);
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Inserts an instance of Sample into the database.
      */
     public Integer insert(Sample sample) {
@@ -36,6 +47,8 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Updates an instance of Sample in the database.
      */
     public void update(Sample sample) {
@@ -45,6 +58,8 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Deletes an instance of Sample in the database.
      */
     public void delete(Sample sample) {
@@ -52,6 +67,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         this.getHibernateTemplate().delete(sample);
     }
 
+    /** {@inheritDoc} */
     public List<File> getFiles(Integer sampleId) {
         List<File> files = new ArrayList<File>();
 
@@ -138,6 +154,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return files;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isHasFile(Integer sampleId) {
         boolean isHasFile = false;
@@ -244,6 +261,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return isHasFile;
     }
 
+    /** {@inheritDoc} */
     public List<File> getFiles(Integer sampleId, String metaType) {
         List<File> files = new ArrayList<File>();
         /*
@@ -356,6 +374,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return files;
     }
 
+    /** {@inheritDoc} */
     public boolean isHasFile(Integer sampleId, String metaType) {
         boolean isHasFile = false;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -471,6 +490,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      *
      * return samples; }
      */
+    /** {@inheritDoc} */
     public Map<Integer, Integer> getCountFiles(Integer expId) {
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id, sample_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id, s.sample_id "
@@ -512,6 +532,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return countFiles;
     }
 
+    /** {@inheritDoc} */
     public Map<Integer, Integer> getCountFiles(Integer expId, String metaType) {
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id, sample_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id, s.sample_id "
@@ -552,10 +573,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     }
 
     /**
-     * Finds an instance of Sample in the database by the Experiment name.
+     * {@inheritDoc}
      *
-     * @param name name of the Sample
-     * @return Sample or null if not found
+     * Finds an instance of Sample in the database by the Experiment name.
      */
     public Sample findByTitle(String title) {
         String query = "from Sample as sample where lower(sample.title) = ?";
@@ -569,9 +589,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     }
 
     /**
-     * Finds an instance of Sample in the database by the Sample emailAddress.
+     * {@inheritDoc}
      *
-     * @return Sample or null if not found
+     * Finds an instance of Sample in the database by the Sample emailAddress.
      */
     public Sample findByName(String name) {
         String query = "from Sample as sample where sample.name = ?";
@@ -585,10 +605,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     }
 
     /**
-     * Finds an instance of Sample in the database by the Sample ID.
+     * {@inheritDoc}
      *
-     * @param expID ID of the Sample
-     * @return Sample or null if not found
+     * Finds an instance of Sample in the database by the Sample ID.
      */
     public Sample findByID(Integer id) {
         String query = "from Sample as sample where sample.sampleId = ?";
@@ -601,6 +620,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return sample;
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public Sample findBySWAccession(Integer swAccession) {
@@ -614,6 +634,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return sample;
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public List<Sample> findByOwnerID(Integer registrationId) {
@@ -622,6 +643,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return this.getHibernateTemplate().find(query, parameters);
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public List<Sample> findByCriteria(String criteria, boolean isCaseSens) {
@@ -645,6 +667,11 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return query.list();
     }
 
+    /**
+     * <p>listComplete.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Sample> listComplete() {
         List<Sample> list = null;
         List<Sample> filteredList = new ArrayList<Sample>();
@@ -664,6 +691,11 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return (filteredList);
     }
 
+    /**
+     * <p>listIncomplete.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Sample> listIncomplete() {
         List<Sample> list = null;
         List<Sample> filteredList = new ArrayList<Sample>();
@@ -679,6 +711,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return (filteredList);
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     public List<Sample> listSample(Registration registaration) {
         Integer ownerId = registaration.getRegistrationId();
@@ -695,6 +728,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return (list);
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public List<Sample> getRootSamples(Study study) {
@@ -705,6 +739,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return list;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Sample getRootSample(Sample sample) {
         Sample upSample = sample;
@@ -734,6 +769,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return upSample;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Sample updateDetached(Sample sample) {
         Sample dbObject = reattachSample(sample);
@@ -749,6 +785,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<ReturnValue> findFiles(Integer swAccession) {
         getSessionFactory().getCurrentSession().flush();
@@ -761,6 +798,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return list;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Sample> list() {
         ArrayList<Sample> l = new ArrayList<Sample>();
@@ -776,6 +814,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return l;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(Registration registration, Sample sample) {
         Sample dbObject = reattachSample(sample);
@@ -792,6 +831,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer insert(Registration registration, Sample sample) {
         Logger logger = Logger.getLogger(SampleDAOHibernate.class);
@@ -809,6 +849,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return(swAccession);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Sample updateDetached(Registration registration, Sample sample) {
         Sample dbObject = reattachSample(sample);

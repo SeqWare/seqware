@@ -32,17 +32,17 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import net.sourceforge.seqware.common.util.Log;
 
 /**
- * 
+ *
  * Purpose:
- * 
- * This module simply lists files at the S3 URL you provide and creates temporary URLs that can be shared 
+ *
+ * This module simply lists files at the S3 URL you provide and creates temporary URLs that can be shared
  * with others.  It's less useful in workflows and more likely to be used by end-users to share what's in S3.
  * Keep in mind these URLs allow anyone with the URL to access the files in S3 for as long as you set the lifetime
  * so be very careful with this tool.
- * 
+ *
  * @author boconnor
  * @since 20111110
- * 
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class S3CreateFileURLs extends Module {
@@ -58,6 +58,11 @@ public class S3CreateFileURLs extends Module {
   private static final String[] Q = new String[]{"", "K", "M", "G", "T", "P", "E"};
 
 
+  /**
+   * <p>getOptionParser.</p>
+   *
+   * @return a {@link joptsimple.OptionParser} object.
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser
@@ -69,6 +74,8 @@ public class S3CreateFileURLs extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Not implemented
    */
   @Override
@@ -76,7 +83,9 @@ public class S3CreateFileURLs extends Module {
     return new ReturnValue(ReturnValue.SUCCESS);
   }
 
-  /** 
+  /**
+   * {@inheritDoc}
+   *
    * Just makes sure the param was passed in.
    */
   @Override
@@ -104,6 +113,7 @@ public class S3CreateFileURLs extends Module {
     return (ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
 
@@ -150,6 +160,7 @@ public class S3CreateFileURLs extends Module {
     return (ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
 
@@ -257,6 +268,7 @@ public class S3CreateFileURLs extends Module {
 }
 
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     // TODO: should verify output, especially is they are local files!
@@ -265,6 +277,11 @@ public class S3CreateFileURLs extends Module {
     return (ret);
   }
 
+  /**
+   * <p>init.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue init() {
     ReturnValue ret = new ReturnValue();
     ret.setReturnValue(ReturnValue.SUCCESS);
@@ -273,6 +290,11 @@ public class S3CreateFileURLs extends Module {
     return(ret);
   }
 
+  /**
+   * <p>clean_up.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public ReturnValue clean_up() {
     ReturnValue ret = new ReturnValue();
     ret.setReturnValue(ReturnValue.SUCCESS);

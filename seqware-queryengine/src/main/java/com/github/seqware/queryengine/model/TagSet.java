@@ -11,8 +11,10 @@ import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
  *
  * @author dyuen
  * @author jbaran
+ * @version $Id: $Id
  */
 public interface TagSet extends MolSetInterface<TagSet, Tag> {
+    /** Constant <code>prefix="TagSet"</code> */
     public final static String prefix = "TagSet";
 
     /**
@@ -31,21 +33,25 @@ public interface TagSet extends MolSetInterface<TagSet, Tag> {
     public String getName();
     
     /**
-     * 
-     * @return true iff this set already contains the key for tag  
+     * <p>containsKey.</p>
+     *
+     * @return true iff this set already contains the key for tag
+     * @param tagKey a {@link java.lang.String} object.
      */
     public boolean containsKey(String tagKey);
     
     /**
-     * 
-     * @param tagKey
+     * <p>get.</p>
+     *
+     * @param tagKey a {@link java.lang.String} object.
      * @return a tag specification given a particular key
      */
     public Tag get(String tagKey);
 
     /**
+     * {@inheritDoc}
+     *
      * Create an FeatureSet builder started with a copy of this
-     * @return 
      */
     @Override
     public abstract TagSet.Builder toBuilder();

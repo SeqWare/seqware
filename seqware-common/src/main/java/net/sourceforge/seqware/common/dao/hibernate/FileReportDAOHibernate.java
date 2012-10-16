@@ -11,8 +11,15 @@ import net.sourceforge.seqware.common.model.Study;
 
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>FileReportDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class FileReportDAOHibernate extends HibernateDaoSupport implements FileReportDAO {
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public List<FileReportRow> getReportForStudy(Study study) {
@@ -26,6 +33,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
     return fileReport;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public List<FileReportRow> getReportForStudy(Study study, String orderField, String sortOrder, int offset, int limit) {
@@ -39,6 +47,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
     return fileReport;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public List<FileReportRow> getReportForSequencerRun(SequencerRun seqRun, String orderField, String sortOrder,
@@ -54,6 +63,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
     return fileReport;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public List<FileReportRow> getReportForSequencerRuns(String orderField, String sortOrder, int offset, int limit) {
@@ -67,6 +77,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
     return fileReport;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public List<FileReportRow> getReportForSequencerRun(SequencerRun seqRun) {
@@ -89,6 +100,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
     }
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public int countOfRows(Study study) {
@@ -101,6 +113,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
     return count;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public int countOfRows(SequencerRun sr) {

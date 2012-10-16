@@ -14,9 +14,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Unit tests of {@link Taggable}.
+ * Unit tests of {@link com.github.seqware.queryengine.model.interfaces.Taggable}.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class TaggableTest {
 
@@ -32,6 +34,9 @@ public class TaggableTest {
     private static Tag ts1, ts2, ts3;
     private static Tag t1a, t1b, t1c, t2a, t2b, t2c, t3a;
 
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -91,6 +96,9 @@ public class TaggableTest {
         mManager.close();
     }
 
+    /**
+     * <p>testAddingAndRemovingTagSpecsFromTagSets.</p>
+     */
     @Test
     public void testAddingAndRemovingTagSpecsFromTagSets() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -130,6 +138,9 @@ public class TaggableTest {
         Assert.assertTrue(testSet.getPrecedingVersion().getCount() == 3);
     }
 
+    /**
+     * <p>testClassesThatCannotBeTagged.</p>
+     */
     @Test
     public void testClassesThatCannotBeTagged() {
         // practically everything can be tagged, except for plugins and tags
@@ -148,6 +159,9 @@ public class TaggableTest {
         Assert.assertTrue(SWQEFactory.getQueryInterface().getAnalysisPlugins().getCount() > 0);
     }
 
+    /**
+     * <p>testTagAddingAndRemoval.</p>
+     */
     @Test
     public void testTagAddingAndRemoval() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -165,6 +179,9 @@ public class TaggableTest {
         Assert.assertTrue(version1 == version2);
     }
 
+    /**
+     * <p>testTagQueries.</p>
+     */
     @Test
     public void testTagQueries() {
         // three features in the set
@@ -192,6 +209,9 @@ public class TaggableTest {
 
     }
 
+    /**
+     * <p>testFlushingTagsWithoutSets.</p>
+     */
     @Test
     public void testFlushingTagsWithoutSets() {
         try {
@@ -216,6 +236,9 @@ public class TaggableTest {
         }
     }
     
+    /**
+     * <p>testSameTagInTwoDifferentTagSets.</p>
+     */
     @Test 
     public void testSameTagInTwoDifferentTagSets() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -254,6 +277,9 @@ public class TaggableTest {
         Assert.assertTrue("could not find human tag ", u2.getTagByKey(elderSet, "human") != null);
     }
 
+    /**
+     * <p>tagWithDifferentTypes.</p>
+     */
     @Test
     public void tagWithDifferentTypes() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -291,6 +317,9 @@ public class TaggableTest {
         }
     }
 
+    /**
+     * <p>testTagSetParentReferences.</p>
+     */
     @Test
     public void testTagSetParentReferences() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -349,6 +378,9 @@ public class TaggableTest {
         Assert.assertTrue("persisted tags do not have proper parents", correctParent);
     }
 
+    /**
+     * <p>testNestedHashes.</p>
+     */
     @Test
     public void testNestedHashes() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();

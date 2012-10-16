@@ -12,11 +12,21 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>LibraryStrategyDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class LibraryStrategyDAOHibernate extends HibernateDaoSupport implements LibraryStrategyDAO {
+  /**
+   * <p>Constructor for LibraryStrategyDAOHibernate.</p>
+   */
   public LibraryStrategyDAOHibernate() {
     super();
   }
 
+  /** {@inheritDoc} */
   public List<LibraryStrategy> list(Registration registration) {
     ArrayList<LibraryStrategy> objects = new ArrayList<LibraryStrategy>();
     if (registration == null)
@@ -31,6 +41,7 @@ public class LibraryStrategyDAOHibernate extends HibernateDaoSupport implements 
     return objects;
   }
 
+  /** {@inheritDoc} */
   public LibraryStrategy findByID(Integer id) {
     String query = "from LibraryStrategy as l where l.libraryStrategyId = ?";
     LibraryStrategy obj = null;
@@ -42,6 +53,7 @@ public class LibraryStrategyDAOHibernate extends HibernateDaoSupport implements 
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   public LibraryStrategy updateDetached(LibraryStrategy strategy) {
     LibraryStrategy dbObject = findByID(strategy.getLibraryStrategyId());
@@ -57,6 +69,7 @@ public class LibraryStrategyDAOHibernate extends HibernateDaoSupport implements 
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<LibraryStrategy> list() {
         throw new UnsupportedOperationException("Not supported yet.");

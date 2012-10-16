@@ -36,6 +36,8 @@ import org.junit.Test;
  * Simple tests for some simple utilities for the back-end
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class CommandLineUtilsTest {
 
@@ -44,6 +46,9 @@ public class CommandLineUtilsTest {
     private static String randomRef3 = null;
     private static String randomRef4 = null;
 
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
         randomRef1 = "Random_ref_" + new BigInteger(20, new SecureRandom()).toString(32);
@@ -52,6 +57,9 @@ public class CommandLineUtilsTest {
         randomRef4 = "Random_ref_" + new BigInteger(20, new SecureRandom()).toString(32);
     }
 
+    /**
+     * <p>createtagSetViaCommandLine.</p>
+     */
     @Test
     public void createtagSetViaCommandLine() {
         try {
@@ -65,6 +73,9 @@ public class CommandLineUtilsTest {
         }
     }
 
+    /**
+     * <p>createReferenceViaCommandLine.</p>
+     */
     @Test
     public void createReferenceViaCommandLine() {
         try {
@@ -78,6 +89,9 @@ public class CommandLineUtilsTest {
         }
     }
 
+    /**
+     * <p>checkExistingTagSetViaCommandLine.</p>
+     */
     @Test
     public void checkExistingTagSetViaCommandLine() {
         try {
@@ -101,6 +115,9 @@ public class CommandLineUtilsTest {
         }
     }
 
+    /**
+     * <p>checkExistingReferenceViaCommandLine.</p>
+     */
     @Test
     public void checkExistingReferenceViaCommandLine() {
         try {

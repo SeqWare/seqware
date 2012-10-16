@@ -32,8 +32,10 @@ import com.github.seqware.queryengine.util.SGID;
 import java.util.Iterator;
 
 /**
+ * <p>UtilIO class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class UtilIO {
 
@@ -42,8 +44,8 @@ public class UtilIO {
     /**
      * Handle de-serialization of the core atom
      *
-     * @param atompb
-     * @param atomImpl
+     * @param atompb a {@link com.github.seqware.queryengine.dto.QESupporting.AtomPB} object.
+     * @param atomImpl a {@link com.github.seqware.queryengine.model.impl.AtomImpl} object.
      */
     public static void handlePB2Atom(QESupporting.AtomPB atompb, AtomImpl atomImpl) {
         for (QESupporting.TagPB t : atompb.getTagsList()) {
@@ -57,9 +59,9 @@ public class UtilIO {
     /**
      * Handle serialization of the core atom
      *
-     * @param atompb
-     * @param atomImpl
-     * @return
+     * @param atompb a {@link com.github.seqware.queryengine.dto.QESupporting.AtomPB} object.
+     * @param atomImpl a {@link com.github.seqware.queryengine.model.impl.AtomImpl} object.
+     * @return a {@link com.github.seqware.queryengine.dto.QESupporting.AtomPB} object.
      */
     public static AtomPB handleAtom2PB(QESupporting.AtomPB atompb, AtomImpl atomImpl) {
         QESupporting.AtomPB.Builder builder = atompb.newBuilderForType();
@@ -81,8 +83,8 @@ public class UtilIO {
      * Handle de-serialization of the core atom just for Features FIXME: this
      * should be collapsible with normal atom
      *
-     * @param atompb
-     * @param feature
+     * @param atompb a {@link com.github.seqware.queryengine.dto.QESupporting.FeatureAtomPB} object.
+     * @param feature a {@link com.github.seqware.queryengine.model.Feature} object.
      */
     public static void handlePB2Atom(QESupporting.FeatureAtomPB atompb, Feature feature) {
         for (QESupporting.TagPB t : atompb.getTagsList()) {
@@ -94,11 +96,11 @@ public class UtilIO {
     }
 
     /**
-     * Handle serialization of the core atom just for Features 
+     * Handle serialization of the core atom just for Features
      *
-     * @param atompb
-     * @param feature
-     * @return
+     * @param atompb a {@link com.github.seqware.queryengine.dto.QESupporting.FeatureAtomPB} object.
+     * @param feature a {@link com.github.seqware.queryengine.model.Feature} object.
+     * @return a {@link com.github.seqware.queryengine.dto.QESupporting.FeatureAtomPB} object.
      */
     public static FeatureAtomPB handleAtom2PB(QESupporting.FeatureAtomPB atompb, Feature feature) {
         QESupporting.FeatureAtomPB.Builder builder = atompb.newBuilderForType();
@@ -120,8 +122,8 @@ public class UtilIO {
     /**
      * This should handle de-serialization of molecule
      *
-     * @param aclpb
-     * @param molImpl
+     * @param molImpl a {@link com.github.seqware.queryengine.model.impl.MoleculeImpl} object.
+     * @param molpb a {@link com.github.seqware.queryengine.dto.QueryEngine.MoleculePB} object.
      */
     public static void handlePB2Mol(QueryEngine.MoleculePB molpb, MoleculeImpl molImpl) {
         ACL.Builder builder = ACL.newBuilder();
@@ -144,9 +146,9 @@ public class UtilIO {
     /**
      * This should handle serialization of molecule
      *
-     * @param aclpb
-     * @param molImpl
-     * @return
+     * @param molImpl a {@link com.github.seqware.queryengine.model.impl.MoleculeImpl} object.
+     * @param molpb a {@link com.github.seqware.queryengine.dto.QueryEngine.MoleculePB} object.
+     * @return a {@link com.github.seqware.queryengine.dto.QueryEngine.MoleculePB} object.
      */
     public static MoleculePB handleMol2PB(QueryEngine.MoleculePB molpb, MoleculeImpl molImpl) {
         MoleculePB.Builder builder = molpb.newBuilderForType();

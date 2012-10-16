@@ -12,22 +12,32 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ProcessingStudiesDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ProcessingStudiesDAOHibernate extends HibernateDaoSupport implements ProcessingStudiesDAO {
+  /** {@inheritDoc} */
   @Override
   public void insert(ProcessingStudies processingStudies) {
     this.getHibernateTemplate().save(processingStudies);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(ProcessingStudies processingStudies) {
     this.getHibernateTemplate().update(processingStudies);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void delete(ProcessingStudies processingStudies) {
     this.getHibernateTemplate().delete(processingStudies);
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("rawtypes")
   public ProcessingStudies findByProcessingStudy(Processing processing, Study study) {
@@ -41,6 +51,7 @@ public class ProcessingStudiesDAOHibernate extends HibernateDaoSupport implement
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ProcessingStudies updateDetached(ProcessingStudies processingStudies) {
     ProcessingStudies dbObject = findByProcessingStudy(processingStudies.getProcessing(), processingStudies.getStudy());
@@ -56,6 +67,7 @@ public class ProcessingStudiesDAOHibernate extends HibernateDaoSupport implement
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ProcessingStudies> list() {
         throw new UnsupportedOperationException("Not supported yet.");

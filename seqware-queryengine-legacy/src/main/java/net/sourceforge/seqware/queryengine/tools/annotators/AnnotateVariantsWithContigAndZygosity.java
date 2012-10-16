@@ -10,18 +10,21 @@ import net.sourceforge.seqware.queryengine.backend.util.SeqWareSettings;
 import net.sourceforge.seqware.queryengine.backend.util.iterators.CursorIterator;
 
 /**
- * 
+ * <p>AnnotateVariantsWithContigAndZygosity class.</p>
+ *
  * @author boconnor
- * 
+ *
  *         A simple program to iterate over the mismatch entries, adding their
  *         contig and hetero/homo as a tag. This makes finding all mismatches on a given contig
  *         faster than searching by the location secondary index.
- * 
+ * @version $Id: $Id
  */
 public class AnnotateVariantsWithContigAndZygosity {
 
   /**
-   * @param args
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
    */
   public static void main(String[] args) {
 

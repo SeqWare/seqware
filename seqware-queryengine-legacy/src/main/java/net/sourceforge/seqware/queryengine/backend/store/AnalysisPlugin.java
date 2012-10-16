@@ -29,28 +29,88 @@ interface AnalysisPlugin {
   
      // need to think about settings, logger, and other util objects
 
+    /**
+     * <p>init.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.backend.store.ReturnValue} object.
+     */
     public ReturnValue init();
 
+    /**
+     * <p>test.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.backend.store.ReturnValue} object.
+     */
     public ReturnValue test();
 
+    /**
+     * <p>verifyParameters.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.backend.store.ReturnValue} object.
+     */
     public ReturnValue verifyParameters();
 
+    /**
+     * <p>verifyInput.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.backend.store.ReturnValue} object.
+     */
     public ReturnValue verifyInput();
 
+    /**
+     * <p>filterInit.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.backend.store.ReturnValue} object.
+     */
     public ReturnValue filterInit();
 
+    /**
+     * <p>filter.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.backend.store.ReturnValue} object.
+     */
     public ReturnValue filter();
 
+    /**
+     * <p>mapInit.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.backend.store.ReturnValue} object.
+     */
     public ReturnValue mapInit();
 
+    /**
+     * <p>map.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.backend.store.ReturnValue} object.
+     */
     public ReturnValue map();
 
+    /**
+     * <p>reduceInit.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.backend.store.ReturnValue} object.
+     */
     public ReturnValue reduceInit();
 
+    /**
+     * <p>reduce.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.backend.store.ReturnValue} object.
+     */
     public ReturnValue reduce();
 
+    /**
+     * <p>verifyOutput.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.backend.store.ReturnValue} object.
+     */
     public ReturnValue verifyOutput();
 
+    /**
+     * <p>cleanup.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.backend.store.ReturnValue} object.
+     */
     public ReturnValue cleanup();
   
 }

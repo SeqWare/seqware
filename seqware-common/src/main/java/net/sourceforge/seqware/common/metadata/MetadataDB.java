@@ -41,6 +41,12 @@ import org.apache.log4j.Logger;
 
 // FIXME: Have to record processing event (event), what the workflow it was, etc. 
 // FIXME: Need to add workflow table, and then have each processing event associated with a workflowID for this particular run of the workflow  
+/**
+ * <p>MetadataDB class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class MetadataDB extends Metadata {
 
   private Connection db; // A connection to the database
@@ -51,25 +57,32 @@ public class MetadataDB extends Metadata {
   private Statement sql;
   private Logger logger;
 
+  /**
+   * <p>Constructor for MetadataDB.</p>
+   */
   public MetadataDB() {
     super();
     logger = Logger.getLogger(MetadataDB.class);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue addStudy(String title, String description, String accession, StudyType studyType,
       String centerName, String centerProjectName, Integer studyTypeId) {
     return (new ReturnValue(ReturnValue.NOTIMPLEMENTED));
   }
 
+  /** {@inheritDoc} */
   public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title) {
     return (new ReturnValue(ReturnValue.NOTIMPLEMENTED));
   }
 
+  /** {@inheritDoc} */
   public ReturnValue addSample(Integer experimentAccession, Integer organismId, String description, String title) {
     return (new ReturnValue(ReturnValue.NOTIMPLEMENTED));
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName) {
     // String getStudyInfoFromStudyName =
@@ -131,6 +144,7 @@ public class MetadataDB extends Metadata {
     throw new NotImplementedException("Please use the SymLinker through the Web service.");
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<ReturnValue> findFilesAssociatedWithASample(String sampleName) {
     // StringBuffer buffer = new StringBuffer();
@@ -299,10 +313,11 @@ public class MetadataDB extends Metadata {
   /**
    * Find out the primary key for the last inserted record FIXME: This is
    * hardcoded for Postgres, need to make DB agnostic
-   * 
-   * @param SequenceID
-   * @return
-   * @throws SQLException
+   *
+   * @param SequenceID a {@link java.lang.String} object.
+   * @throws java.sql.SQLException if any.
+   * @param sqlQuery a {@link java.lang.String} object.
+   * @return a int.
    */
   public int InsertAndReturnNewPrimaryKey(String sqlQuery, String SequenceID) throws SQLException {
     executeUpdate(sqlQuery);
@@ -319,6 +334,7 @@ public class MetadataDB extends Metadata {
    * variant1 is process match -> variant is algorithm match -> match1, match2,
    * etc is subprocess
    */
+  /** {@inheritDoc} */
   @Override
   public ReturnValue add_empty_processing_event(int[] parentIDs) {
     int processingID;
@@ -361,6 +377,7 @@ public class MetadataDB extends Metadata {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue add_empty_processing_event_by_parent_accession(int[] parentAccessions) {
     int processingID;
@@ -402,10 +419,9 @@ public class MetadataDB extends Metadata {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * This maps processing_id to sw_accession for that event.
-   * 
-   * @param processingId
-   * @return sw_accession for that processingId
    */
   public int mapProcessingIdToAccession(int processingId) {
     int result = 0;
@@ -424,13 +440,10 @@ public class MetadataDB extends Metadata {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * TODO: needs to support more relationship types, but will need to add to the
    * SQL schema to support this
-   * 
-   * @param workflowRunId
-   * @param parentAccession
-   * @return
-   * @throws SQLException
    */
   public boolean linkWorkflowRunAndParent(int workflowRunId, int parentAccession) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -466,6 +479,14 @@ public class MetadataDB extends Metadata {
     return (true);
   }
 
+  /**
+   * <p>linkAccessionAndParent.</p>
+   *
+   * @param accession a int.
+   * @param processingID a int.
+   * @return a boolean.
+   * @throws java.sql.SQLException if any.
+   */
   public boolean linkAccessionAndParent(int accession, int processingID) throws SQLException {
     StringBuffer sql = new StringBuffer();
     Log.debug("Link Accession and Parent accession:" + accession + " processingId:" + processingID);
@@ -585,6 +606,7 @@ public class MetadataDB extends Metadata {
     return (result);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue processing_event_to_task_group(int processingID, int parentIDs[], int[] childIDs,
       String algorithm, String description) {
@@ -622,6 +644,7 @@ public class MetadataDB extends Metadata {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue add_task_group(int parentIDs[], int[] childIDs, String algorithm, String description) {
     int processingID;
@@ -654,6 +677,7 @@ public class MetadataDB extends Metadata {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   /*
    * FIXME: this should check if association is already made, to make duplicates
@@ -714,6 +738,7 @@ public class MetadataDB extends Metadata {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue update_processing_status(int processingID, String status) {
 
@@ -740,6 +765,7 @@ public class MetadataDB extends Metadata {
     return new ReturnValue();
   }
 
+  /** {@inheritDoc} */
   public int add_workflow_run(int workflowAccession) {
     int workflowId = 0;
     int id = 0;
@@ -758,6 +784,7 @@ public class MetadataDB extends Metadata {
     return (id);
   }
 
+  /** {@inheritDoc} */
   public int get_workflow_run_accession(int workflowRunId) {
     int result = 0;
 
@@ -775,6 +802,7 @@ public class MetadataDB extends Metadata {
     return (result);
   }
 
+  /** {@inheritDoc} */
   public int get_workflow_run_id(int workflowRunAccession) {
     int result = 0;
 
@@ -792,6 +820,7 @@ public class MetadataDB extends Metadata {
     return (result);
   }
 
+  /** {@inheritDoc} */
   @Override
   public WorkflowRun getWorkflowRun(int workflowRunAccession) {
 
@@ -827,6 +856,7 @@ public class MetadataDB extends Metadata {
 
   }
 
+  /** {@inheritDoc} */
   public void add_workflow_run_ancestor(int workflowRunAccession, int processingId) {
     int workflowRunId = 0;
     try {
@@ -842,6 +872,7 @@ public class MetadataDB extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue update_processing_workflow_run(int processingID, int workflowRunAccession) {
 
@@ -867,18 +898,7 @@ public class MetadataDB extends Metadata {
     return new ReturnValue();
   }
 
-  /**
-   * 
-   * @param workflowRunId
-   * @param pegasusCmd
-   * @param workflowTemplate
-   * @param status
-   * @param statusCmd
-   * @param workingDirectory
-   * @param dax
-   * @param ini
-   * @return a ReturnValue with returnValue and exit status of 0 (for success).
-   */
+  /** {@inheritDoc} */
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
       String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
       String stdErr, String stdOut) {
@@ -911,6 +931,13 @@ public class MetadataDB extends Metadata {
 
   }
 
+  /**
+   * <p>linkProcessingAndFile.</p>
+   *
+   * @param processingID a int.
+   * @param fileID a int.
+   * @throws java.sql.SQLException if any.
+   */
   public void linkProcessingAndFile(int processingID, int fileID) throws SQLException {
     StringBuffer sql;
     sql = new StringBuffer();
@@ -948,6 +975,7 @@ public class MetadataDB extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue update_processing_event(int processingID, ReturnValue retval) {
     // Create a SQL statement
@@ -1076,6 +1104,8 @@ public class MetadataDB extends Metadata {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Connect to a database for future use
    */
   @Override
@@ -1102,6 +1132,9 @@ public class MetadataDB extends Metadata {
 
   /**
    * Connect to a database for future use
+   *
+   * @param ds a {@link javax.sql.DataSource} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
   public ReturnValue init(DataSource ds) {
     try {
@@ -1151,6 +1184,7 @@ public class MetadataDB extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue clean_up() {
     ReturnValue ret = new ReturnValue();
@@ -1170,36 +1204,68 @@ public class MetadataDB extends Metadata {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ArrayList<String> fix_file_paths(String prefix, ArrayList<String> files) {
     // TODO Auto-generated method stub
     return null;
   }
 
+  /**
+   * <p>Getter for the field <code>db</code>.</p>
+   *
+   * @return a {@link java.sql.Connection} object.
+   */
   public Connection getDb() {
     return db;
   }
 
+  /**
+   * <p>Setter for the field <code>db</code>.</p>
+   *
+   * @param db a {@link java.sql.Connection} object.
+   */
   public void setDb(Connection db) {
     this.db = db;
   }
 
+  /**
+   * <p>Getter for the field <code>dbmd</code>.</p>
+   *
+   * @return a {@link java.sql.DatabaseMetaData} object.
+   */
   public DatabaseMetaData getDbmd() {
     return dbmd;
   }
 
+  /**
+   * <p>Setter for the field <code>dbmd</code>.</p>
+   *
+   * @param dbmd a {@link java.sql.DatabaseMetaData} object.
+   */
   public void setDbmd(DatabaseMetaData dbmd) {
     this.dbmd = dbmd;
   }
 
+  /**
+   * <p>Getter for the field <code>sql</code>.</p>
+   *
+   * @return a {@link java.sql.Statement} object.
+   */
   public Statement getSql() {
     return sql;
   }
 
+  /**
+   * <p>Setter for the field <code>sql</code>.</p>
+   *
+   * @param sql a {@link java.sql.Statement} object.
+   */
   public void setSql(Statement sql) {
     this.sql = sql;
   }
 
+  /** {@inheritDoc} */
   public ReturnValue addWorkflow(String name, String version, String description, String baseCommand,
       String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip,
       boolean storeArchiveZip) {
@@ -1307,6 +1373,7 @@ public class MetadataDB extends Metadata {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public Map<String, String> get_workflow_info(int workflowAccession) {
 
@@ -1338,6 +1405,7 @@ public class MetadataDB extends Metadata {
     return (map);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue saveFileForIus(int workflowRunId, int iusAccession, FileMetadata file) {
     ReturnValue returnVal = new ReturnValue(ReturnValue.SUCCESS);
@@ -1367,6 +1435,7 @@ public class MetadataDB extends Metadata {
     return returnVal;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Boolean isDuplicateFile(String filepath) {
 
@@ -1387,6 +1456,7 @@ public class MetadataDB extends Metadata {
     return false;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue updateWorkflow(int workflowId, String permanentBundleLocation) {
     String sql = "UPDATE workflow SET " + "permanent_bundle_location = '" + permanentBundleLocation + "',"
@@ -1403,6 +1473,11 @@ public class MetadataDB extends Metadata {
     return ret;
   }
 
+  /**
+   * <p>listInstalledWorkflows.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String listInstalledWorkflows() {
     String sql = "SELECT name, version, sw_accession, create_tstmp, permanent_bundle_location FROM workflow";
     StringBuffer sb = new StringBuffer();
@@ -1421,12 +1496,14 @@ public class MetadataDB extends Metadata {
     return (sb.toString());
   }
 
+  /** {@inheritDoc} */
   @Override
   // FIXME: need to implement this for this backend type
   public String listInstalledWorkflowParams(String workflowAccession) {
     return null;
   }
 
+  /** {@inheritDoc} */
   public int getWorkflowAccession(String name, String version) {
     int result = 0;
 
@@ -1444,21 +1521,37 @@ public class MetadataDB extends Metadata {
     return (result);
   }
 
+  /**
+   * <p>executeQuery.</p>
+   *
+   * @param s a {@link java.lang.String} object.
+   * @return a {@link java.sql.ResultSet} object.
+   * @throws java.sql.SQLException if any.
+   */
   public ResultSet executeQuery(String s) throws SQLException {
     logger.debug("MetadataDB executeQuery: " + s);
     return getSql().executeQuery(s);
   }
 
+  /**
+   * <p>executeUpdate.</p>
+   *
+   * @param s a {@link java.lang.String} object.
+   * @return a int.
+   * @throws java.sql.SQLException if any.
+   */
   public int executeUpdate(String s) throws SQLException {
     logger.debug("MetadataDB executeUpdate:" + s);
     return getSql().executeUpdate(s);
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName) {
     throw new NotImplementedException("Please use the Symlinker through the Web service.");
   }
 
+  /** {@inheritDoc} */
   public List<WorkflowRun> getWorkflowRunsByStatus(String status) {
 
     ArrayList<WorkflowRun> results = new ArrayList<WorkflowRun>();
@@ -1490,6 +1583,7 @@ public class MetadataDB extends Metadata {
     return (results);
   }
 
+  /** {@inheritDoc} */
   public List<WorkflowRun> getWorkflowRunsByHost(String host) {
     ArrayList<WorkflowRun> results = new ArrayList<WorkflowRun>();
 
@@ -1520,142 +1614,171 @@ public class MetadataDB extends Metadata {
     return (results);
   }
 
-  /**
-   * 
-   * @param workflowRunAccession
-   * @return
-   */
+  /** {@inheritDoc} */
   @Override
   public WorkflowRun getWorkflowRunWithWorkflow(String workflowRunAccession) {
     throw new NotImplementedException("This is currently not implemented for a direct DB connection!");
   }
 
+  /**
+   * <p>getAllStudies.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<Study> getAllStudies() {
     throw new NotImplementedException("All studies must be retrieved through webservice");
   }
 
+  /**
+   * <p>getSequencerRunReport.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getSequencerRunReport() {
     return (null);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateIUS(int iusSWID, IUSAttribute iusAtt, Boolean skip) {
     throw new NotImplementedException("Updating IUSes must be performed through webservice");
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateLane(int laneSWID, LaneAttribute laneAtt, Boolean skip) {
     throw new NotImplementedException("Updating Lanes must be performed through webservice");
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateSequencerRun(int sequencerRunSWID, SequencerRunAttribute sequencerRunAtt, Boolean skip) {
     throw new NotImplementedException("Updating Sequencer Runs must be performed through webservice");
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateExperiment(int experimentSWID, ExperimentAttribute att, Boolean skip) {
     throw new NotImplementedException("Updating Experiment annotation must be performed through webservice");
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateProcessing(int processingSWID, ProcessingAttribute att, Boolean skip) {
     throw new NotImplementedException("Updating processing attribute must be performed through webservice");
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateSample(int sampleSWID, SampleAttribute att, Boolean skip) {
     throw new NotImplementedException("Updating sample attribute must be performed through webservice");
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateStudy(int studySWID, StudyAttribute att, Boolean skip) {
     throw new NotImplementedException("Updating Study attribute must be performed through webservice");
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getWorkflowRunReport(int workflowRunSWID) {
     throw new NotImplementedException("Retrieving workflow run reports must be performed through webservice");
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getWorkflowRunReport(int workflowSWID, Date earliestDate, Date latestDate) {
     throw new NotImplementedException("Retrieving workflow run reports must be performed through webservice");
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getWorkflowRunReport(Date earliestDate, Date latestDate) {
     throw new NotImplementedException("Retrieving workflow run reports must be performed through webservice");
   }
 
+  /** {@inheritDoc} */
   @Override
   public net.sourceforge.seqware.common.model.File getFile(int swAccession) {
     throw new NotImplementedException("Retrieving files must be performed through the webservice");
   }
 
+  /** {@inheritDoc} */
   @Override
   public SortedSet<WorkflowParam> getWorkflowParams(String swAccession) {
     throw new NotImplementedException("Retrieving workflow params must be performed through the webservice");
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateWorkflow(int workflowSWID, WorkflowAttribute att, Boolean skip) {
     throw new NotImplementedException("Updating processing attribute must be performed through webservice");
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateWorkflowRun(int workflowrunSWID, WorkflowRunAttribute att, Boolean skip) {
     throw new NotImplementedException("Updating processing attribute must be performed through webservice");
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateIUS(int laneSWID, Set<IUSAttribute> iusAtts) {
     // TODO Auto-generated method stub
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateLane(int laneSWID, Set<LaneAttribute> laneAtts) {
     // TODO Auto-generated method stub
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateSequencerRun(int sequencerRunSWID, Set<SequencerRunAttribute> sequencerRunAtts) {
     // TODO Auto-generated method stub
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateExperiment(int experimentSWID, Set<ExperimentAttribute> atts) {
     // TODO Auto-generated method stub
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateProcessing(int processingSWID, Set<ProcessingAttribute> atts) {
     // TODO Auto-generated method stub
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateSample(int sampleSWID, Set<SampleAttribute> atts) {
     // TODO Auto-generated method stub
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateStudy(int studySWID, Set<StudyAttribute> atts) {
     // TODO Auto-generated method stub
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateWorkflow(int workflowSWID, Set<WorkflowAttribute> atts) {
     // TODO Auto-generated method stub
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void annotateWorkflowRun(int workflowSWID, Set<WorkflowRunAttribute> atts) {
     // TODO Auto-generated method stub

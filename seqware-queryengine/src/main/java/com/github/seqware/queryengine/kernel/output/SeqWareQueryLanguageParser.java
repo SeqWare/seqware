@@ -11,38 +11,74 @@ import java.util.ArrayList;
 import org.antlr.runtime.tree.*;
 
 
+/**
+ * <p>SeqWareQueryLanguageParser class.</p>
+ *
+ * @author dyuen
+ * @version $Id: $Id
+ */
 @SuppressWarnings({"all", "warnings", "unchecked"})
 public class SeqWareQueryLanguageParser extends Parser {
+    /** Constant <code>tokenNames="new String[] {<invalid>, <EOR>, <DOWN>,"{trunked}</code> */
     public static final String[] tokenNames = new String[] {
         "<invalid>", "<EOR>", "<DOWN>", "<UP>", "AND", "BRACKET_CLOSE", "BRACKET_OPEN", "COMMENT_EOL", "COMMENT_INLINE", "EQUALS", "FLOAT", "GT", "GTEQ", "ID", "INT", "LT", "LTEQ", "NAMED_CONSTANT", "NAMED_FUNCTION", "NAMED_THREE_PARAM_PREDICATE", "NAMED_TWO_PARAM_PREDICATE", "NOT", "NOTEQUALS", "OR", "STRING", "WHITESPACE", "','"
     };
 
+    /** Constant <code>EOF=-1</code> */
     public static final int EOF=-1;
+    /** Constant <code>T__26=26</code> */
     public static final int T__26=26;
+    /** Constant <code>AND=4</code> */
     public static final int AND=4;
+    /** Constant <code>BRACKET_CLOSE=5</code> */
     public static final int BRACKET_CLOSE=5;
+    /** Constant <code>BRACKET_OPEN=6</code> */
     public static final int BRACKET_OPEN=6;
+    /** Constant <code>COMMENT_EOL=7</code> */
     public static final int COMMENT_EOL=7;
+    /** Constant <code>COMMENT_INLINE=8</code> */
     public static final int COMMENT_INLINE=8;
+    /** Constant <code>EQUALS=9</code> */
     public static final int EQUALS=9;
+    /** Constant <code>FLOAT=10</code> */
     public static final int FLOAT=10;
+    /** Constant <code>GT=11</code> */
     public static final int GT=11;
+    /** Constant <code>GTEQ=12</code> */
     public static final int GTEQ=12;
+    /** Constant <code>ID=13</code> */
     public static final int ID=13;
+    /** Constant <code>INT=14</code> */
     public static final int INT=14;
+    /** Constant <code>LT=15</code> */
     public static final int LT=15;
+    /** Constant <code>LTEQ=16</code> */
     public static final int LTEQ=16;
+    /** Constant <code>NAMED_CONSTANT=17</code> */
     public static final int NAMED_CONSTANT=17;
+    /** Constant <code>NAMED_FUNCTION=18</code> */
     public static final int NAMED_FUNCTION=18;
+    /** Constant <code>NAMED_THREE_PARAM_PREDICATE=19</code> */
     public static final int NAMED_THREE_PARAM_PREDICATE=19;
+    /** Constant <code>NAMED_TWO_PARAM_PREDICATE=20</code> */
     public static final int NAMED_TWO_PARAM_PREDICATE=20;
+    /** Constant <code>NOT=21</code> */
     public static final int NOT=21;
+    /** Constant <code>NOTEQUALS=22</code> */
     public static final int NOTEQUALS=22;
+    /** Constant <code>OR=23</code> */
     public static final int OR=23;
+    /** Constant <code>STRING=24</code> */
     public static final int STRING=24;
+    /** Constant <code>WHITESPACE=25</code> */
     public static final int WHITESPACE=25;
 
     // delegates
+    /**
+     * <p>getDelegates.</p>
+     *
+     * @return an array of {@link org.antlr.runtime.Parser} objects.
+     */
     public Parser[] getDelegates() {
         return new Parser[] {};
     }
@@ -50,22 +86,53 @@ public class SeqWareQueryLanguageParser extends Parser {
     // delegators
 
 
+    /**
+     * <p>Constructor for SeqWareQueryLanguageParser.</p>
+     *
+     * @param input a {@link org.antlr.runtime.TokenStream} object.
+     */
     public SeqWareQueryLanguageParser(TokenStream input) {
         this(input, new RecognizerSharedState());
     }
+    /**
+     * <p>Constructor for SeqWareQueryLanguageParser.</p>
+     *
+     * @param input a {@link org.antlr.runtime.TokenStream} object.
+     * @param state a {@link org.antlr.runtime.RecognizerSharedState} object.
+     */
     public SeqWareQueryLanguageParser(TokenStream input, RecognizerSharedState state) {
         super(input, state);
     }
 
 protected TreeAdaptor adaptor = new CommonTreeAdaptor();
 
+/**
+ * <p>setTreeAdaptor.</p>
+ *
+ * @param adaptor a {@link org.antlr.runtime.tree.TreeAdaptor} object.
+ */
 public void setTreeAdaptor(TreeAdaptor adaptor) {
     this.adaptor = adaptor;
 }
+/**
+ * <p>getTreeAdaptor.</p>
+ *
+ * @return a {@link org.antlr.runtime.tree.TreeAdaptor} object.
+ */
 public TreeAdaptor getTreeAdaptor() {
     return adaptor;
 }
+    /**
+     * <p>Getter for the field <code>tokenNames</code>.</p>
+     *
+     * @return an array of {@link java.lang.String} objects.
+     */
     public String[] getTokenNames() { return SeqWareQueryLanguageParser.tokenNames; }
+    /**
+     * <p>getGrammarFileName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getGrammarFileName() { return "/home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g"; }
 
 
@@ -77,6 +144,12 @@ public TreeAdaptor getTreeAdaptor() {
 
     // $ANTLR start "query"
     // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:20:1: query : low_precedence_constraint ^ EOF !;
+    /**
+     * <p>query.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.kernel.output.SeqWareQueryLanguageParser.query_return} object.
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final SeqWareQueryLanguageParser.query_return query() throws RecognitionException {
         SeqWareQueryLanguageParser.query_return retval = new SeqWareQueryLanguageParser.query_return();
         retval.start = input.LT(1);
@@ -138,6 +211,12 @@ public TreeAdaptor getTreeAdaptor() {
 
     // $ANTLR start "low_precedence_constraint"
     // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:24:1: low_precedence_constraint : ( high_precedence_constraint ) ( OR ^ high_precedence_constraint )* ;
+    /**
+     * <p>low_precedence_constraint.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.kernel.output.SeqWareQueryLanguageParser.low_precedence_constraint_return} object.
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final SeqWareQueryLanguageParser.low_precedence_constraint_return low_precedence_constraint() throws RecognitionException {
         SeqWareQueryLanguageParser.low_precedence_constraint_return retval = new SeqWareQueryLanguageParser.low_precedence_constraint_return();
         retval.start = input.LT(1);
@@ -243,6 +322,12 @@ public TreeAdaptor getTreeAdaptor() {
 
     // $ANTLR start "high_precedence_constraint"
     // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:28:1: high_precedence_constraint : ( nested_constraint ) ( AND ^ nested_constraint )* ;
+    /**
+     * <p>high_precedence_constraint.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.kernel.output.SeqWareQueryLanguageParser.high_precedence_constraint_return} object.
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final SeqWareQueryLanguageParser.high_precedence_constraint_return high_precedence_constraint() throws RecognitionException {
         SeqWareQueryLanguageParser.high_precedence_constraint_return retval = new SeqWareQueryLanguageParser.high_precedence_constraint_return();
         retval.start = input.LT(1);
@@ -348,6 +433,12 @@ public TreeAdaptor getTreeAdaptor() {
 
     // $ANTLR start "nested_constraint"
     // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:32:1: nested_constraint : ( ( NOT ^)? BRACKET_OPEN ! low_precedence_constraint BRACKET_CLOSE !| constraint );
+    /**
+     * <p>nested_constraint.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.kernel.output.SeqWareQueryLanguageParser.nested_constraint_return} object.
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final SeqWareQueryLanguageParser.nested_constraint_return nested_constraint() throws RecognitionException {
         SeqWareQueryLanguageParser.nested_constraint_return retval = new SeqWareQueryLanguageParser.nested_constraint_return();
         retval.start = input.LT(1);
@@ -476,6 +567,12 @@ public TreeAdaptor getTreeAdaptor() {
 
     // $ANTLR start "constraint"
     // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:38:1: constraint : ( identifier comparison ^ constant | constant comparison ^ identifier | two_param_predicate | three_param_predicate );
+    /**
+     * <p>constraint.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.kernel.output.SeqWareQueryLanguageParser.constraint_return} object.
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final SeqWareQueryLanguageParser.constraint_return constraint() throws RecognitionException {
         SeqWareQueryLanguageParser.constraint_return retval = new SeqWareQueryLanguageParser.constraint_return();
         retval.start = input.LT(1);
@@ -658,6 +755,12 @@ public TreeAdaptor getTreeAdaptor() {
 
     // $ANTLR start "identifier"
     // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:45:1: identifier : ( ID | key_value_function );
+    /**
+     * <p>identifier.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.kernel.output.SeqWareQueryLanguageParser.identifier_return} object.
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final SeqWareQueryLanguageParser.identifier_return identifier() throws RecognitionException {
         SeqWareQueryLanguageParser.identifier_return retval = new SeqWareQueryLanguageParser.identifier_return();
         retval.start = input.LT(1);
@@ -752,6 +855,12 @@ public TreeAdaptor getTreeAdaptor() {
 
     // $ANTLR start "comparison"
     // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:50:1: comparison : ( EQUALS | NOTEQUALS | LT | LTEQ | GT | GTEQ );
+    /**
+     * <p>comparison.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.kernel.output.SeqWareQueryLanguageParser.comparison_return} object.
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final SeqWareQueryLanguageParser.comparison_return comparison() throws RecognitionException {
         SeqWareQueryLanguageParser.comparison_return retval = new SeqWareQueryLanguageParser.comparison_return();
         retval.start = input.LT(1);
@@ -817,6 +926,12 @@ public TreeAdaptor getTreeAdaptor() {
 
     // $ANTLR start "constant"
     // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:54:1: constant : ( literal | NAMED_CONSTANT );
+    /**
+     * <p>constant.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.kernel.output.SeqWareQueryLanguageParser.constant_return} object.
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final SeqWareQueryLanguageParser.constant_return constant() throws RecognitionException {
         SeqWareQueryLanguageParser.constant_return retval = new SeqWareQueryLanguageParser.constant_return();
         retval.start = input.LT(1);
@@ -911,6 +1026,12 @@ public TreeAdaptor getTreeAdaptor() {
 
     // $ANTLR start "literal"
     // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:59:1: literal : ( INT | FLOAT | STRING );
+    /**
+     * <p>literal.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.kernel.output.SeqWareQueryLanguageParser.literal_return} object.
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final SeqWareQueryLanguageParser.literal_return literal() throws RecognitionException {
         SeqWareQueryLanguageParser.literal_return retval = new SeqWareQueryLanguageParser.literal_return();
         retval.start = input.LT(1);
@@ -976,6 +1097,12 @@ public TreeAdaptor getTreeAdaptor() {
 
     // $ANTLR start "key_value_function"
     // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:63:1: key_value_function : NAMED_FUNCTION ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !;
+    /**
+     * <p>key_value_function.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.kernel.output.SeqWareQueryLanguageParser.key_value_function_return} object.
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final SeqWareQueryLanguageParser.key_value_function_return key_value_function() throws RecognitionException {
         SeqWareQueryLanguageParser.key_value_function_return retval = new SeqWareQueryLanguageParser.key_value_function_return();
         retval.start = input.LT(1);
@@ -1068,6 +1195,12 @@ public TreeAdaptor getTreeAdaptor() {
 
     // $ANTLR start "two_param_predicate"
     // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:67:1: two_param_predicate : NAMED_TWO_PARAM_PREDICATE ^ BRACKET_OPEN ! literal ',' literal BRACKET_CLOSE !;
+    /**
+     * <p>two_param_predicate.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.kernel.output.SeqWareQueryLanguageParser.two_param_predicate_return} object.
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final SeqWareQueryLanguageParser.two_param_predicate_return two_param_predicate() throws RecognitionException {
         SeqWareQueryLanguageParser.two_param_predicate_return retval = new SeqWareQueryLanguageParser.two_param_predicate_return();
         retval.start = input.LT(1);
@@ -1160,6 +1293,12 @@ public TreeAdaptor getTreeAdaptor() {
 
     // $ANTLR start "three_param_predicate"
     // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:71:1: three_param_predicate : NAMED_THREE_PARAM_PREDICATE ^ BRACKET_OPEN ! literal ',' literal ',' literal BRACKET_CLOSE !;
+    /**
+     * <p>three_param_predicate.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.kernel.output.SeqWareQueryLanguageParser.three_param_predicate_return} object.
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final SeqWareQueryLanguageParser.three_param_predicate_return three_param_predicate() throws RecognitionException {
         SeqWareQueryLanguageParser.three_param_predicate_return retval = new SeqWareQueryLanguageParser.three_param_predicate_return();
         retval.start = input.LT(1);
@@ -1270,6 +1409,12 @@ public TreeAdaptor getTreeAdaptor() {
 
     // $ANTLR start "comment"
     // /home/dyuen/seqware_github/seqware-queryengine/src/main/java/com/github/seqware/queryengine/kernel/SeqWareQueryLanguage.g:75:1: comment : ( COMMENT_EOL | COMMENT_INLINE );
+    /**
+     * <p>comment.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.kernel.output.SeqWareQueryLanguageParser.comment_return} object.
+     * @throws org.antlr.runtime.RecognitionException if any.
+     */
     public final SeqWareQueryLanguageParser.comment_return comment() throws RecognitionException {
         SeqWareQueryLanguageParser.comment_return retval = new SeqWareQueryLanguageParser.comment_return();
         retval.start = input.LT(1);
@@ -1331,50 +1476,95 @@ public TreeAdaptor getTreeAdaptor() {
 
  
 
+    /** Constant <code>FOLLOW_low_precedence_constraint_in_query75</code> */
     public static final BitSet FOLLOW_low_precedence_constraint_in_query75 = new BitSet(new long[]{0x0000000000000000L});
+    /** Constant <code>FOLLOW_EOF_in_query78</code> */
     public static final BitSet FOLLOW_EOF_in_query78 = new BitSet(new long[]{0x0000000000000002L});
+    /** Constant <code>FOLLOW_high_precedence_constraint_in_low_precedence_constraint91</code> */
     public static final BitSet FOLLOW_high_precedence_constraint_in_low_precedence_constraint91 = new BitSet(new long[]{0x0000000000800002L});
+    /** Constant <code>FOLLOW_OR_in_low_precedence_constraint95</code> */
     public static final BitSet FOLLOW_OR_in_low_precedence_constraint95 = new BitSet(new long[]{0x00000000013E6440L});
+    /** Constant <code>FOLLOW_high_precedence_constraint_in_low_precedence_constraint98</code> */
     public static final BitSet FOLLOW_high_precedence_constraint_in_low_precedence_constraint98 = new BitSet(new long[]{0x0000000000800002L});
+    /** Constant <code>FOLLOW_nested_constraint_in_high_precedence_constraint113</code> */
     public static final BitSet FOLLOW_nested_constraint_in_high_precedence_constraint113 = new BitSet(new long[]{0x0000000000000012L});
+    /** Constant <code>FOLLOW_AND_in_high_precedence_constraint117</code> */
     public static final BitSet FOLLOW_AND_in_high_precedence_constraint117 = new BitSet(new long[]{0x00000000013E6440L});
+    /** Constant <code>FOLLOW_nested_constraint_in_high_precedence_constraint120</code> */
     public static final BitSet FOLLOW_nested_constraint_in_high_precedence_constraint120 = new BitSet(new long[]{0x0000000000000012L});
+    /** Constant <code>FOLLOW_NOT_in_nested_constraint135</code> */
     public static final BitSet FOLLOW_NOT_in_nested_constraint135 = new BitSet(new long[]{0x0000000000000040L});
+    /** Constant <code>FOLLOW_BRACKET_OPEN_in_nested_constraint140</code> */
     public static final BitSet FOLLOW_BRACKET_OPEN_in_nested_constraint140 = new BitSet(new long[]{0x00000000013E6440L});
+    /** Constant <code>FOLLOW_low_precedence_constraint_in_nested_constraint143</code> */
     public static final BitSet FOLLOW_low_precedence_constraint_in_nested_constraint143 = new BitSet(new long[]{0x0000000000000020L});
+    /** Constant <code>FOLLOW_BRACKET_CLOSE_in_nested_constraint145</code> */
     public static final BitSet FOLLOW_BRACKET_CLOSE_in_nested_constraint145 = new BitSet(new long[]{0x0000000000000002L});
+    /** Constant <code>FOLLOW_constraint_in_nested_constraint151</code> */
     public static final BitSet FOLLOW_constraint_in_nested_constraint151 = new BitSet(new long[]{0x0000000000000002L});
+    /** Constant <code>FOLLOW_identifier_in_constraint163</code> */
     public static final BitSet FOLLOW_identifier_in_constraint163 = new BitSet(new long[]{0x0000000000419A00L});
+    /** Constant <code>FOLLOW_comparison_in_constraint165</code> */
     public static final BitSet FOLLOW_comparison_in_constraint165 = new BitSet(new long[]{0x0000000001024400L});
+    /** Constant <code>FOLLOW_constant_in_constraint168</code> */
     public static final BitSet FOLLOW_constant_in_constraint168 = new BitSet(new long[]{0x0000000000000002L});
+    /** Constant <code>FOLLOW_constant_in_constraint173</code> */
     public static final BitSet FOLLOW_constant_in_constraint173 = new BitSet(new long[]{0x0000000000419A00L});
+    /** Constant <code>FOLLOW_comparison_in_constraint175</code> */
     public static final BitSet FOLLOW_comparison_in_constraint175 = new BitSet(new long[]{0x0000000000042000L});
+    /** Constant <code>FOLLOW_identifier_in_constraint178</code> */
     public static final BitSet FOLLOW_identifier_in_constraint178 = new BitSet(new long[]{0x0000000000000002L});
+    /** Constant <code>FOLLOW_two_param_predicate_in_constraint183</code> */
     public static final BitSet FOLLOW_two_param_predicate_in_constraint183 = new BitSet(new long[]{0x0000000000000002L});
+    /** Constant <code>FOLLOW_three_param_predicate_in_constraint189</code> */
     public static final BitSet FOLLOW_three_param_predicate_in_constraint189 = new BitSet(new long[]{0x0000000000000002L});
+    /** Constant <code>FOLLOW_ID_in_identifier200</code> */
     public static final BitSet FOLLOW_ID_in_identifier200 = new BitSet(new long[]{0x0000000000000002L});
+    /** Constant <code>FOLLOW_key_value_function_in_identifier206</code> */
     public static final BitSet FOLLOW_key_value_function_in_identifier206 = new BitSet(new long[]{0x0000000000000002L});
+    /** Constant <code>FOLLOW_literal_in_constant249</code> */
     public static final BitSet FOLLOW_literal_in_constant249 = new BitSet(new long[]{0x0000000000000002L});
+    /** Constant <code>FOLLOW_NAMED_CONSTANT_in_constant254</code> */
     public static final BitSet FOLLOW_NAMED_CONSTANT_in_constant254 = new BitSet(new long[]{0x0000000000000002L});
+    /** Constant <code>FOLLOW_NAMED_FUNCTION_in_key_value_function285</code> */
     public static final BitSet FOLLOW_NAMED_FUNCTION_in_key_value_function285 = new BitSet(new long[]{0x0000000000000040L});
+    /** Constant <code>FOLLOW_BRACKET_OPEN_in_key_value_function288</code> */
     public static final BitSet FOLLOW_BRACKET_OPEN_in_key_value_function288 = new BitSet(new long[]{0x0000000001004400L});
+    /** Constant <code>FOLLOW_literal_in_key_value_function291</code> */
     public static final BitSet FOLLOW_literal_in_key_value_function291 = new BitSet(new long[]{0x0000000004000000L});
+    /** Constant <code>FOLLOW_26_in_key_value_function293</code> */
     public static final BitSet FOLLOW_26_in_key_value_function293 = new BitSet(new long[]{0x0000000001004400L});
+    /** Constant <code>FOLLOW_literal_in_key_value_function295</code> */
     public static final BitSet FOLLOW_literal_in_key_value_function295 = new BitSet(new long[]{0x0000000000000020L});
+    /** Constant <code>FOLLOW_BRACKET_CLOSE_in_key_value_function297</code> */
     public static final BitSet FOLLOW_BRACKET_CLOSE_in_key_value_function297 = new BitSet(new long[]{0x0000000000000002L});
+    /** Constant <code>FOLLOW_NAMED_TWO_PARAM_PREDICATE_in_two_param_predicate309</code> */
     public static final BitSet FOLLOW_NAMED_TWO_PARAM_PREDICATE_in_two_param_predicate309 = new BitSet(new long[]{0x0000000000000040L});
+    /** Constant <code>FOLLOW_BRACKET_OPEN_in_two_param_predicate312</code> */
     public static final BitSet FOLLOW_BRACKET_OPEN_in_two_param_predicate312 = new BitSet(new long[]{0x0000000001004400L});
+    /** Constant <code>FOLLOW_literal_in_two_param_predicate315</code> */
     public static final BitSet FOLLOW_literal_in_two_param_predicate315 = new BitSet(new long[]{0x0000000004000000L});
+    /** Constant <code>FOLLOW_26_in_two_param_predicate317</code> */
     public static final BitSet FOLLOW_26_in_two_param_predicate317 = new BitSet(new long[]{0x0000000001004400L});
+    /** Constant <code>FOLLOW_literal_in_two_param_predicate319</code> */
     public static final BitSet FOLLOW_literal_in_two_param_predicate319 = new BitSet(new long[]{0x0000000000000020L});
+    /** Constant <code>FOLLOW_BRACKET_CLOSE_in_two_param_predicate321</code> */
     public static final BitSet FOLLOW_BRACKET_CLOSE_in_two_param_predicate321 = new BitSet(new long[]{0x0000000000000002L});
+    /** Constant <code>FOLLOW_NAMED_THREE_PARAM_PREDICATE_in_three_param_predicate334</code> */
     public static final BitSet FOLLOW_NAMED_THREE_PARAM_PREDICATE_in_three_param_predicate334 = new BitSet(new long[]{0x0000000000000040L});
+    /** Constant <code>FOLLOW_BRACKET_OPEN_in_three_param_predicate337</code> */
     public static final BitSet FOLLOW_BRACKET_OPEN_in_three_param_predicate337 = new BitSet(new long[]{0x0000000001004400L});
+    /** Constant <code>FOLLOW_literal_in_three_param_predicate340</code> */
     public static final BitSet FOLLOW_literal_in_three_param_predicate340 = new BitSet(new long[]{0x0000000004000000L});
+    /** Constant <code>FOLLOW_26_in_three_param_predicate342</code> */
     public static final BitSet FOLLOW_26_in_three_param_predicate342 = new BitSet(new long[]{0x0000000001004400L});
+    /** Constant <code>FOLLOW_literal_in_three_param_predicate344</code> */
     public static final BitSet FOLLOW_literal_in_three_param_predicate344 = new BitSet(new long[]{0x0000000004000000L});
+    /** Constant <code>FOLLOW_26_in_three_param_predicate346</code> */
     public static final BitSet FOLLOW_26_in_three_param_predicate346 = new BitSet(new long[]{0x0000000001004400L});
+    /** Constant <code>FOLLOW_literal_in_three_param_predicate348</code> */
     public static final BitSet FOLLOW_literal_in_three_param_predicate348 = new BitSet(new long[]{0x0000000000000020L});
+    /** Constant <code>FOLLOW_BRACKET_CLOSE_in_three_param_predicate350</code> */
     public static final BitSet FOLLOW_BRACKET_CLOSE_in_three_param_predicate350 = new BitSet(new long[]{0x0000000000000002L});
 
 }

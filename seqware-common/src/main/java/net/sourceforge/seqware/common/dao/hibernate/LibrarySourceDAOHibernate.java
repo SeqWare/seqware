@@ -12,11 +12,21 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>LibrarySourceDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class LibrarySourceDAOHibernate extends HibernateDaoSupport implements LibrarySourceDAO {
+  /**
+   * <p>Constructor for LibrarySourceDAOHibernate.</p>
+   */
   public LibrarySourceDAOHibernate() {
     super();
   }
 
+  /** {@inheritDoc} */
   public List<LibrarySource> list(Registration registration) {
     ArrayList<LibrarySource> objects = new ArrayList<LibrarySource>();
     if (registration == null)
@@ -31,6 +41,7 @@ public class LibrarySourceDAOHibernate extends HibernateDaoSupport implements Li
     return objects;
   }
 
+  /** {@inheritDoc} */
   public LibrarySource findByID(Integer id) {
     String query = "from LibrarySource as l where l.librarySourceId = ?";
     LibrarySource obj = null;
@@ -42,6 +53,7 @@ public class LibrarySourceDAOHibernate extends HibernateDaoSupport implements Li
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   public LibrarySource updateDetached(LibrarySource librarySource) {
     LibrarySource dbObject = findByID(librarySource.getLibrarySourceId());
@@ -57,6 +69,7 @@ public class LibrarySourceDAOHibernate extends HibernateDaoSupport implements Li
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<LibrarySource> list() {
         throw new UnsupportedOperationException("Not supported yet.");

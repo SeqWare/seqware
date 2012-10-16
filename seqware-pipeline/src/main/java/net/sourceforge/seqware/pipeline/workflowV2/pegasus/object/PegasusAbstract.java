@@ -24,24 +24,47 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 /**
+ * <p>Abstract PegasusAbstract class.</p>
  *
  * @author yongliang
+ * @version $Id: $Id
  */
 public abstract class PegasusAbstract {
   protected Namespace NAMESPACE = Namespace.getNamespace("http://pegasus.isi.edu/schema/DAX");
   protected Namespace XSI = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
 
 
+  /**
+   * <p>serializeXML.</p>
+   *
+   * @return a {@link org.jdom.Element} object.
+   */
   public abstract Element serializeXML();
 
+  /**
+   * <p>getWorkflow.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.pipeline.workflowV2.model.Workflow} object.
+   */
   public Workflow getWorkflow() {
 	  return WorkflowContext.getInstance().getWorkflow();
   }
 
+  /**
+   * <p>setWorkflow.</p>
+   *
+   * @param wf a {@link net.sourceforge.seqware.pipeline.workflowV2.model.Workflow} object.
+   */
   public void setWorkflow(Workflow wf) {
 	  WorkflowContext.getInstance().setWorkflow(wf);
   }
 
+  /**
+   * <p>getWorkflowProperty.</p>
+   *
+   * @param key a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   public String getWorkflowProperty(String key) {
 	  return WorkflowContext.getInstance().getWorkflow().getProperty(key);
   }

@@ -19,18 +19,18 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Align reads via BWA.
- * 
+ *
  * This module launches a BWA alignment of given fastq file(s) against a given reference
  * sequence database.  This reference database is assumed to be already indexed.  Output
  * is a sorted BAM file of aligned reads.
- * 
+ *
  * Underlying script:  sw_module_BWA.pl
  * Necessary programs:  BWA, perl, java, Picard (SamFormatConverter.jar & SortSam.jar)
- * 
- * Expected output:  outfile
- * 
- * @author sacheek@med.unc.edu
  *
+ * Expected output:  outfile
+ *
+ * @author sacheek@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class BWA extends Module {
@@ -40,9 +40,9 @@ public class BWA extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("fastq1", "fastq format of input reads: first reads in pair if paired end; all reads if single end").withRequiredArg();
@@ -60,8 +60,9 @@ public class BWA extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -77,11 +78,11 @@ public class BWA extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -116,9 +117,9 @@ public class BWA extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -141,9 +142,9 @@ public class BWA extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -232,9 +233,9 @@ public class BWA extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known dataset.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -244,10 +245,10 @@ public class BWA extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Run core of module.
    * Based on script sw_module_BWA.pl
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_run() {
@@ -280,9 +281,9 @@ public class BWA extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Check to make sure the output was created correctly.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -290,10 +291,11 @@ public class BWA extends Module {
     return(FileTools.fileExistsAndNotEmpty(new File((String)options.valueOf("outfile"))));
   }
   
-    /**
+  /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.  Remove tempDir.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

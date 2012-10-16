@@ -19,14 +19,21 @@ package net.sourceforge.seqware.pipeline.workflowV2.pegasus;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 
 /**
+ * <p>WorkflowContext class.</p>
  *
  * @author yongliang
+ * @version $Id: $Id
  */
 public class WorkflowContext {
 	private static WorkflowContext instance;
 
 	private Workflow workflow;
 
+	/**
+	 * <p>Getter for the field <code>instance</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.pipeline.workflowV2.pegasus.WorkflowContext} object.
+	 */
 	public static WorkflowContext getInstance() {
 		if(null== instance) {
 			instance = new WorkflowContext();
@@ -38,10 +45,20 @@ public class WorkflowContext {
 
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflow</code>.</p>
+	 *
+	 * @param wf a {@link net.sourceforge.seqware.pipeline.workflowV2.model.Workflow} object.
+	 */
 	public void setWorkflow(Workflow wf) {
 		this.workflow = wf;
 	}
 
+	/**
+	 * <p>Getter for the field <code>workflow</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.pipeline.workflowV2.model.Workflow} object.
+	 */
 	public Workflow getWorkflow() {
 		return this.workflow;
 	}

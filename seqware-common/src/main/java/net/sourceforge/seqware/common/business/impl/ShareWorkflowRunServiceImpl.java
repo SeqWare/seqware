@@ -10,21 +10,29 @@ import net.sourceforge.seqware.common.model.ShareWorkflowRun;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>ShareWorkflowRunServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
   private ShareWorkflowRunDAO dao = null;
   private static final Log log = LogFactory.getLog(ShareWorkflowRunServiceImpl.class);
 
+  /**
+   * <p>Constructor for ShareWorkflowRunServiceImpl.</p>
+   */
   public ShareWorkflowRunServiceImpl() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Sets a private member variable with an instance of an implementation of
    * ShareWorkflowRunDAO. This method is called by the Spring framework at run
    * time.
-   * 
-   * @param ShareWorkflowRunDAO
-   *          implementation of ShareWorkflowRunDAO
    * @see ShareWorkflowRunDAO
    */
   public void setShareWorkflowRunDAO(ShareWorkflowRunDAO dao) {
@@ -32,10 +40,9 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of ShareWorkflowRun into the database.
-   * 
-   * @param ShareWorkflowRunDAO
-   *          instance of ShareWorkflowRunDAO
    */
   public void insert(ShareWorkflowRun shareWorkflowRun) {
     // shareWorkflowRun.setEmail(shareWorkflowRun.getEmail().trim().toLowerCase());
@@ -45,19 +52,20 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of ShareWorkflowRun in the database.
-   * 
-   * @param ShareWorkflowRunService
-   *          instance of ShareWorkflowRun
    */
   public void update(ShareWorkflowRun shareWorkflowRun) {
     dao.update(shareWorkflowRun);
   }
 
+  /** {@inheritDoc} */
   public void delete(ShareWorkflowRun shareWorkflowRun) {
     dao.delete(shareWorkflowRun);
   }
 
+  /** {@inheritDoc} */
   public boolean isExistsShare(Integer WorkflowRunId, Integer registrationId) {
     boolean isExists = false;
     if (findByWorkflowRunIdAndRegistrationId(WorkflowRunId, registrationId) != null) {
@@ -66,6 +74,7 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
     return isExists;
   }
 
+  /** {@inheritDoc} */
   public ShareWorkflowRun findByWorkflowRunIdAndRegistrationId(Integer workflowRunId, Integer registrationId) {
     ShareWorkflowRun shareWorkflowRun = null;
     if (workflowRunId != null && registrationId != null) {
@@ -80,6 +89,7 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
     return shareWorkflowRun;
   }
 
+  /** {@inheritDoc} */
   public ShareWorkflowRun findByID(Integer shareWorkflowRunId) {
     ShareWorkflowRun shareWorkflowRun = null;
     if (shareWorkflowRunId != null) {
@@ -93,6 +103,7 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
     return shareWorkflowRun;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ShareWorkflowRun findBySWAccession(Integer swAccession) {
     ShareWorkflowRun shareWorkflowRun = null;
@@ -107,11 +118,13 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
     return shareWorkflowRun;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ShareWorkflowRun updateDetached(ShareWorkflowRun shareWorkflowRun) {
     return dao.updateDetached(shareWorkflowRun);
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ShareWorkflowRun> list() {
         return dao.list();

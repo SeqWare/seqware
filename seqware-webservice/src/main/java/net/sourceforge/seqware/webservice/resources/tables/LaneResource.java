@@ -29,15 +29,25 @@ import org.restlet.resource.Get;
 import org.w3c.dom.Document;
 
 /**
+ * <p>LaneResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class LaneResource extends DatabaseResource {
 
+    /**
+     * <p>Constructor for LaneResource.</p>
+     */
     public LaneResource() {
         super("lane");
     }
 
+    /**
+     * <p>getXml.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     @Get
     public void getXml() throws IOException {
         authenticate();

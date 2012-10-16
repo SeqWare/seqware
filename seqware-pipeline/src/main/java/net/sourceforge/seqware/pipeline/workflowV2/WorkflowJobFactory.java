@@ -17,8 +17,10 @@
 package net.sourceforge.seqware.pipeline.workflowV2;
 
 /**
+ * <p>WorkflowJobFactory class.</p>
  *
  * @author yongliang
+ * @version $Id: $Id
  */
 public class WorkflowJobFactory {
 

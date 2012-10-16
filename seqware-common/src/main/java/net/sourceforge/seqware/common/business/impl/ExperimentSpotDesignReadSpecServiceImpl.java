@@ -8,42 +8,52 @@ import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>ExperimentSpotDesignReadSpecServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ExperimentSpotDesignReadSpecServiceImpl implements ExperimentSpotDesignReadSpecService {
   private ExperimentSpotDesignReadSpecDAO dao = null;
   private static final Log log = LogFactory.getLog(ExperimentSpotDesignReadSpecServiceImpl.class);
 
+  /**
+   * <p>Constructor for ExperimentSpotDesignReadSpecServiceImpl.</p>
+   */
   public ExperimentSpotDesignReadSpecServiceImpl() {
     super();
   }
 
+  /** {@inheritDoc} */
   public void setExperimentSpotDesignReadSpecDAO(ExperimentSpotDesignReadSpecDAO dao) {
     this.dao = dao;
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of ExperimentSpotDesignReadSpec into the database.
-   * 
-   * @param experimentDAO
-   *          instance of ExperimentSpotDesignReadSpecDAO
    */
   public void insert(ExperimentSpotDesignReadSpec obj) {
     dao.insert(obj);
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of ExperimentSpotDesignReadSpec in the database.
-   * 
-   * @param experiment
-   *          instance of ExperimentSpotDesignReadSpec
    */
   public void update(ExperimentSpotDesignReadSpec obj) {
     dao.update(obj);
   }
 
+  /** {@inheritDoc} */
   public void delete(ExperimentSpotDesignReadSpec obj) {
     dao.delete(obj);
   }
 
+  /** {@inheritDoc} */
   public ExperimentSpotDesignReadSpec findByID(Integer id) {
     ExperimentSpotDesignReadSpec obj = null;
     if (id != null) {
@@ -57,11 +67,13 @@ public class ExperimentSpotDesignReadSpecServiceImpl implements ExperimentSpotDe
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ExperimentSpotDesignReadSpec updateDetached(ExperimentSpotDesignReadSpec experiment) {
     return dao.updateDetached(experiment);
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ExperimentSpotDesignReadSpec> list() {
         return dao.list();

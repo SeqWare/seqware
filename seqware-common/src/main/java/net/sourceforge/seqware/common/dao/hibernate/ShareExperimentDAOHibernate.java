@@ -10,23 +10,33 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ShareExperimentDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ShareExperimentDAOHibernate extends HibernateDaoSupport implements ShareExperimentDAO {
 
+  /** {@inheritDoc} */
   @Override
   public void insert(ShareExperiment shareExperiment) {
     this.getHibernateTemplate().save(shareExperiment);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(ShareExperiment shareExperiment) {
     this.getHibernateTemplate().update(shareExperiment);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void delete(ShareExperiment shareExperiment) {
     this.getHibernateTemplate().delete(shareExperiment);
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("rawtypes")
   public ShareExperiment findByID(Integer shareExperimentID) {
@@ -40,6 +50,7 @@ public class ShareExperimentDAOHibernate extends HibernateDaoSupport implements 
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("unchecked")
   public List<ShareExperiment> findByOwnerID(Integer registrationID) {
@@ -48,6 +59,7 @@ public class ShareExperimentDAOHibernate extends HibernateDaoSupport implements 
     return this.getHibernateTemplate().find(query, parameters);
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings({ "unchecked" })
   public ShareExperiment findBySWAccession(Integer swAccession) {
@@ -61,6 +73,7 @@ public class ShareExperimentDAOHibernate extends HibernateDaoSupport implements 
     return shareExperiment;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ShareExperiment updateDetached(ShareExperiment shareExperiment) {
     ShareExperiment dbObject = findByID(shareExperiment.getShareExperimentId());
@@ -76,6 +89,7 @@ public class ShareExperimentDAOHibernate extends HibernateDaoSupport implements 
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ShareExperiment> list() {
         throw new UnsupportedOperationException("Not supported yet.");

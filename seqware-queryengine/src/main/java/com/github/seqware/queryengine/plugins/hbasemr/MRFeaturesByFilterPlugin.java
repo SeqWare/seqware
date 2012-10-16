@@ -41,9 +41,11 @@ import org.apache.log4j.Logger;
  * Feature is included in a result.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public abstract class MRFeaturesByFilterPlugin extends AbstractMRHBaseBatchedPlugin {
 
+    /** {@inheritDoc} */
     @Override
     public void performVariableInit(String inputTableName, String outputTableName, Scan scan) {
         try {

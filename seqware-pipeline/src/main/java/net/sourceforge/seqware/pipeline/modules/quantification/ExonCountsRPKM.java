@@ -19,30 +19,30 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Calculate base counts, coverage, & RPKM per exon given a BAM file of aligned reads and a list of exons.
- * 
+ *
  * This module determines the raw read count, coverage, and rpkm for each given exon.
  * Coverage calculation: AlignedBases/Length
  * RPKM calculation:  [(AlignedBases/MedianReadLength)*(10^9)]/[TotalReads*Length].
  * In both calculations, the length is the exon size in bases.  MedianReadLength is the median read length
  * of all reads in a lane after adapter-trimming.
- * 
+ *
  * Underlying script:  sw_module_ExonLevelSummary.pl
- * 
+ *
  * Necessary programs:  perl, java, samtools (pileup), Picard (SamFormatConverter.jar)
- * 
+ *
  * Necessary data file:  'exonlist', which is a tab-delimited text file containing the list of exons to be evaluated.
  * Only the first column is used -- any additional columns (containing annotation, for example) are ignored by this module.
  * Expected format for an exon is "chrN:position1-position2:strand".  The script does not care if position1 is less than
  * position2 (or vice versa), it will handle either case.
  * (e.g. ~/seqware-pipeline/data/annotation_reference/hg19_transcripts.hg19.20091027.exonlist.txt)
- * 
+ *
  * Expected output:  ~.exon.quantification.txt
  * This is a tab-delimited files, 4 columns:  ID, raw base count, coverage, rpkm.
- * 
- * LIMITATIONS: The BAM file must contain reads mapped to genomic coordinates.
- * 
- * @author sacheek@med.unc.edu
  *
+ * LIMITATIONS: The BAM file must contain reads mapped to genomic coordinates.
+ *
+ * @author sacheek@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class ExonCountsRPKM extends Module {
@@ -52,9 +52,9 @@ public class ExonCountsRPKM extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("infile", "Input BAM file, expects reads aligned to genomic coordinates.").withRequiredArg();
@@ -70,8 +70,9 @@ public class ExonCountsRPKM extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -87,11 +88,11 @@ public class ExonCountsRPKM extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -126,9 +127,9 @@ public class ExonCountsRPKM extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -151,9 +152,9 @@ public class ExonCountsRPKM extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -221,9 +222,9 @@ public class ExonCountsRPKM extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known dataset.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -233,10 +234,10 @@ public class ExonCountsRPKM extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Run core of module.
    * Based on script sw_module_GeneCountsRPKM.pl
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_run() {
@@ -266,9 +267,9 @@ public class ExonCountsRPKM extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Check to make sure the output was created correctly.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -282,10 +283,11 @@ public class ExonCountsRPKM extends Module {
     return(ret);
   }
   
-    /**
+  /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.  Remove tempDir.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

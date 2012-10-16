@@ -41,23 +41,31 @@ import org.apache.log4j.Logger;
  *
  * @author dyuen
  * @author jbaran
+ * @version $Id: $Id
  */
 public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface {
 
     private Map<Class, AnalysisPluginInterface> pluginMap = new HashMap<Class, AnalysisPluginInterface>();
     protected StorageInterface storage;
 
+    /**
+     * <p>Constructor for SimplePersistentBackEnd.</p>
+     *
+     * @param fsi a {@link com.github.seqware.queryengine.impl.StorageInterface} object.
+     */
     public SimplePersistentBackEnd(StorageInterface fsi) {
         this.storage = fsi;
         pluginMap.put(InMemoryFeaturesAllPlugin.class, new InMemoryFeaturesAllPlugin());
         pluginMap.put(LazyFeaturesByAttributesPlugin.class, new LazyFeaturesByAttributesPlugin());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void store(Atom... objArr) {
         storage.serializeAtomsToTarget(objArr);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(Atom... objList) {
         Atom[] storeAtom = new Atom[objList.length];
@@ -76,6 +84,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Atom refresh(Atom obj) {
         return obj;
@@ -85,11 +94,13 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
 //    public void delete(Atom obj) throws AccessControlException {
 //        listOfEverything.remove(obj);
 //    }
+    /** {@inheritDoc} */
     @Override
     public String getVersion() {
         return "In-memory back-end 0.1";
     }
 
+    /** {@inheritDoc} */
     @Override
     public Atom getAtomBySGID(SGID sgid) {
         Atom p = storage.deserializeTargetToAtom(sgid);
@@ -98,11 +109,13 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
         return p;
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Atom> List getAtomsBySGID(Class<T> t, SGID... sgid) {
         return storage.deserializeTargetToAtoms(t, sgid);
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Atom> T getAtomBySGID(Class<T> t, SGID sgid) {
         T p = storage.deserializeTargetToAtom(t, sgid);
@@ -111,6 +124,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
         return p;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Atom getLatestAtomBySGID(SGID sgid) {
         Atom p = storage.deserializeTargetToLatestAtom(sgid);
@@ -119,12 +133,14 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
         return p;
     }
     
+    /** {@inheritDoc} */
     @Override
     public <T extends Atom> T getLatestAtomByRowKey(String rowKey, Class<T> t) {
         SGID sgid = new SGID(rowKey);
         return this.getLatestAtomBySGID(sgid, t);
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Atom> T getLatestAtomBySGID(SGID sgid, Class<T> t) {
         T p = storage.deserializeTargetToLatestAtom(sgid, t);
@@ -133,51 +149,61 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
         return p;
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<User> getUsers() {
         return getAllOfClass(User.class);
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<Group> getGroups() {
         return getAllOfClass(Group.class);
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<ReferenceSet> getReferenceSets() {
         return getAllOfClass(ReferenceSet.class);
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<Reference> getReferences() {
         return getAllOfClass(Reference.class);
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<FeatureSet> getFeatureSets() {
         return getAllOfClass(FeatureSet.class);
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<TagSet> getTagSets() {
         return getAllOfClass(TagSet.class);
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<Tag> getTags() {
         return getAllOfClass(Tag.class);
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<AnalysisSet> getAnalysisSets() {
         return getAllOfClass(AnalysisSet.class);
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareIterable<AnalysisPluginInterface> getAnalysisPlugins() {
         return new InMemoryIterable(this.pluginMap.values());
     }
 
+    /** {@inheritDoc} */
     @Override
     public QueryFuture getFeaturesByAttributes(int hours, FeatureSet set, RPNStack constraints) {
         AnalysisPluginInterface plugin = new LazyFeaturesByAttributesPlugin();
@@ -193,6 +219,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
+    /** {@inheritDoc} */
     @Override
     public QueryFuture getFeatures(int hours, FeatureSet set) {
         AnalysisPluginInterface plugin = new InMemoryFeaturesAllPlugin();
@@ -200,6 +227,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
+    /** {@inheritDoc} */
     @Override
     public QueryFuture getFeaturesByRange(int hours, FeatureSet set, Location location, String structure, long start, long stop) {
         AnalysisPluginInterface plugin = new InMemoryFeaturesByRangePlugin();
@@ -207,6 +235,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
+    /** {@inheritDoc} */
     @Override
     public QueryFuture getFeaturesByTag(int hours, FeatureSet set, String subject, String predicate, String object) {
         AnalysisPluginInterface plugin = new InMemoryFeaturesByTagPlugin();
@@ -247,10 +276,11 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     
     /**
      * Given a collection of FeatureLists all with the same row key
-     * (and differing timestamps), create a consistent view of the features 
+     * (and differing timestamps), create a consistent view of the features
      * in the feature set corresponding effectively to the last timestamp
-     * @param fLists
-     * @return 
+     *
+     * @param fLists a {@link java.util.List} object.
+     * @return a {@link java.util.Collection} object.
      */
     public static Collection<Feature> consolidateRow(List<FeatureList> fLists){
        String rowKey = null;
@@ -288,11 +318,13 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
         return map.values();
     }
 
+    /** {@inheritDoc} */
     @Override
     public QueryFuture<Long> getFeatureSetCount(int hours, FeatureSet set) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /** {@inheritDoc} */
     @Override
     public <ReturnValue> QueryFuture<ReturnValue> getFeaturesByPlugin(int hours, Class<? extends AnalysisPluginInterface> pluginClass, FeatureSet set, Object... parameters) {
         try {
@@ -307,6 +339,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void installAnalysisPlugin(AnalysisPluginInterface plugin) {
         this.pluginMap.put(plugin.getClass(), plugin);

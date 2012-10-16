@@ -35,57 +35,107 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 import com.google.gson.Gson;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>StudyReportTableController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 @SuppressWarnings("deprecation")
 public class StudyReportTableController extends BaseCommandController {
 
+  /** Constant <code>STUDY_ID="study_id"</code> */
   public final static String STUDY_ID = "study_id";
+  /** Constant <code>JSON="json"</code> */
   public final static String JSON = "json";
+  /** Constant <code>SORT_NAME="sortname"</code> */
   public final static String SORT_NAME = "sortname";
+  /** Constant <code>SORT_ORDER="sortorder"</code> */
   public final static String SORT_ORDER = "sortorder";
+  /** Constant <code>SORT_ORDER_ASC="asc"</code> */
   public final static String SORT_ORDER_ASC = "asc";
+  /** Constant <code>SORT_ORDER_DESC="desc"</code> */
   public final static String SORT_ORDER_DESC = "desc";
+  /** Constant <code>PAGE_NUM="page"</code> */
   public final static String PAGE_NUM = "page";
+  /** Constant <code>ROWS_PER_PAGE="rp"</code> */
   public final static String ROWS_PER_PAGE = "rp";
+  /** Constant <code>TABLE_SEL="tablesel"</code> */
   public final static String TABLE_SEL = "tablesel";
+  /** Constant <code>TABLE_MODEL="tablemodel"</code> */
   public final static String TABLE_MODEL = "tablemodel";
 
   // Sortfields
+  /** Constant <code>FILE_SAMPLE="f_sample"</code> */
   public final static String FILE_SAMPLE = "f_sample";
+  /** Constant <code>FILE_TISSUE="f_tissue"</code> */
   public final static String FILE_TISSUE = "f_tissue";
+  /** Constant <code>FILE_LIBRARY="f_library"</code> */
   public final static String FILE_LIBRARY = "f_library";
+  /** Constant <code>FILE_TEMPLATE="f_template"</code> */
   public final static String FILE_TEMPLATE = "f_template";
+  /** Constant <code>FILE_IUS="f_ius"</code> */
   public final static String FILE_IUS = "f_ius";
+  /** Constant <code>FILE_LANE="f_lane"</code> */
   public final static String FILE_LANE = "f_lane";
+  /** Constant <code>FILE_FILE="f_file"</code> */
   public final static String FILE_FILE = "f_file";
 
   // New sort fields
+  /** Constant <code>FILE_STUDY_TITLE="f_study_title"</code> */
   public final static String FILE_STUDY_TITLE = "f_study_title";
+  /** Constant <code>FILE_STUDY_SWID="f_study_swid"</code> */
   public final static String FILE_STUDY_SWID = "f_study_swid";
+  /** Constant <code>FILE_EXPERIMENT_NAME="f_exp_name"</code> */
   public final static String FILE_EXPERIMENT_NAME = "f_exp_name";
+  /** Constant <code>FILE_EXPERIMENT_SWID="f_exp_swid"</code> */
   public final static String FILE_EXPERIMENT_SWID = "f_exp_swid";
+  /** Constant <code>FILE_PARENT_SAMPLE_NAME="f_sample_name"</code> */
   public final static String FILE_PARENT_SAMPLE_NAME = "f_sample_name";
+  /** Constant <code>FILE_PARENT_SAMPLE_SWID="f_sample_swid"</code> */
   public final static String FILE_PARENT_SAMPLE_SWID = "f_sample_swid";
+  /** Constant <code>FILE_SAMPLE_NAME="f_child_sample_name"</code> */
   public final static String FILE_SAMPLE_NAME = "f_child_sample_name";
+  /** Constant <code>FILE_SAMPLE_SWID="f_child_sample_swid"</code> */
   public final static String FILE_SAMPLE_SWID = "f_child_sample_swid";
+  /** Constant <code>FILE_SEQUENCER_NAME="f_seqrun_name"</code> */
   public final static String FILE_SEQUENCER_NAME = "f_seqrun_name";
+  /** Constant <code>FILE_SEQUENCER_SWID="f_seqrun_swid"</code> */
   public final static String FILE_SEQUENCER_SWID = "f_seqrun_swid";
+  /** Constant <code>FILE_LANE_NAME="f_lane_name"</code> */
   public final static String FILE_LANE_NAME = "f_lane_name";
+  /** Constant <code>FILE_LANE_NUMBER="f_lane_num"</code> */
   public final static String FILE_LANE_NUMBER = "f_lane_num";
+  /** Constant <code>FILE_LANE_SWID="f_lane_swid"</code> */
   public final static String FILE_LANE_SWID = "f_lane_swid";
+  /** Constant <code>FILE_IUS_TAG="f_ius_tag"</code> */
   public final static String FILE_IUS_TAG = "f_ius_tag";
+  /** Constant <code>FILE_IUS_SWID="f_ius_swid"</code> */
   public final static String FILE_IUS_SWID = "f_ius_swid";
+  /** Constant <code>FILE_WF_NAME="f_wf_name"</code> */
   public final static String FILE_WF_NAME = "f_wf_name";
+  /** Constant <code>FILE_WF_VERSION="f_wf_version"</code> */
   public final static String FILE_WF_VERSION = "f_wf_version";
+  /** Constant <code>FILE_WF_SWID="f_wf_swid"</code> */
   public final static String FILE_WF_SWID = "f_wf_swid";
+  /** Constant <code>FILE_RUN_NAME="f_run_name"</code> */
   public final static String FILE_RUN_NAME = "f_run_name";
+  /** Constant <code>FILE_RUN_SWID="f_run_swid"</code> */
   public final static String FILE_RUN_SWID = "f_run_swid";
+  /** Constant <code>FILE_PROCESSING_ALG="f_processing_alg"</code> */
   public final static String FILE_PROCESSING_ALG = "f_processing_alg";
+  /** Constant <code>FILE_PROCESSING_SWID="f_processing_swid"</code> */
   public final static String FILE_PROCESSING_SWID = "f_processing_swid";
+  /** Constant <code>FILE_META_TYPE="f_file_meta"</code> */
   public final static String FILE_META_TYPE = "f_file_meta";
+  /** Constant <code>FILE_SWID="f_file_swid"</code> */
   public final static String FILE_SWID = "f_file_swid";
+  /** Constant <code>FILE_PATH="f_file_path"</code> */
   public final static String FILE_PATH = "f_file_path";
 
+  /** Constant <code>SAMPLE_SAMPLE="s_sample"</code> */
   public final static String SAMPLE_SAMPLE = "s_sample";
+  /** Constant <code>SAMPLE_CHILD="s_child"</code> */
   public final static String SAMPLE_CHILD = "s_child";
 
   // Services
@@ -106,10 +156,14 @@ public class StudyReportTableController extends BaseCommandController {
   private Flexigrid fileFlexigrid;
   private Flexigrid sampleFlexigrid;
 
+  /**
+   * <p>Constructor for StudyReportTableController.</p>
+   */
   public StudyReportTableController() {
     super();
   }
 
+  /** {@inheritDoc} */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
@@ -545,18 +599,38 @@ public class StudyReportTableController extends BaseCommandController {
     return "<div class=\"overall\" />";
   }
 
+  /**
+   * <p>Setter for the field <code>studyService</code>.</p>
+   *
+   * @param studyService a {@link net.sourceforge.seqware.common.business.StudyService} object.
+   */
   public void setStudyService(StudyService studyService) {
     this.studyService = studyService;
   }
 
+  /**
+   * <p>Setter for the field <code>sampleService</code>.</p>
+   *
+   * @param service a {@link net.sourceforge.seqware.common.business.SampleService} object.
+   */
   public void setSampleService(SampleService service) {
     this.sampleService = service;
   }
 
+  /**
+   * <p>Setter for the field <code>fileReportService</code>.</p>
+   *
+   * @param service a {@link net.sourceforge.seqware.common.business.FileReportService} object.
+   */
   public void setFileReportService(FileReportService service) {
     this.fileReportService = service;
   }
 
+  /**
+   * <p>Setter for the field <code>sampleReportService</code>.</p>
+   *
+   * @param service a {@link net.sourceforge.seqware.common.business.SampleReportService} object.
+   */
   public void setSampleReportService(SampleReportService service) {
     this.sampleReportService = service;
   }

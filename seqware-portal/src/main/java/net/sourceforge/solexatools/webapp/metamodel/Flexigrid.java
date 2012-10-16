@@ -3,52 +3,107 @@ package net.sourceforge.solexatools.webapp.metamodel;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>Flexigrid class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class Flexigrid {
 
   private int total;
   private int page;
   private List<Cells> rows;
 
+  /**
+   * <p>Constructor for Flexigrid.</p>
+   *
+   * @param total a int.
+   * @param page a int.
+   */
   public Flexigrid(int total, int page) {
     this.total = total;
     this.page = page;
     rows = new ArrayList<Flexigrid.Cells>();
   }
 
+  /**
+   * <p>Constructor for Flexigrid.</p>
+   *
+   * @param total a int.
+   */
   public Flexigrid(int total) {
     this.total = total;
     rows = new ArrayList<Flexigrid.Cells>();
   }
 
+  /**
+   * <p>Constructor for Flexigrid.</p>
+   */
   public Flexigrid() {
     rows = new ArrayList<Flexigrid.Cells>();
   }
 
+  /**
+   * <p>addRow.</p>
+   *
+   * @param cells a {@link net.sourceforge.solexatools.webapp.metamodel.Flexigrid.Cells} object.
+   */
   public void addRow(Cells cells) {
     this.rows.add(cells);
     total = rows.size();
   }
 
+  /**
+   * <p>Getter for the field <code>rows</code>.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<Cells> getRows() {
     return rows;
   }
 
+  /**
+   * <p>Setter for the field <code>rows</code>.</p>
+   *
+   * @param rows a {@link java.util.List} object.
+   */
   public void setRows(List<Cells> rows) {
     this.rows = rows;
   }
 
+  /**
+   * <p>Getter for the field <code>page</code>.</p>
+   *
+   * @return a int.
+   */
   public int getPage() {
     return page;
   }
 
+  /**
+   * <p>Setter for the field <code>page</code>.</p>
+   *
+   * @param page a int.
+   */
   public void setPage(int page) {
     this.page = page;
   }
 
+  /**
+   * <p>Getter for the field <code>total</code>.</p>
+   *
+   * @return a int.
+   */
   public int getTotal() {
     return total;
   }
 
+  /**
+   * <p>Setter for the field <code>total</code>.</p>
+   *
+   * @param total a int.
+   */
   public void setTotal(int total) {
     this.total = total;
   }

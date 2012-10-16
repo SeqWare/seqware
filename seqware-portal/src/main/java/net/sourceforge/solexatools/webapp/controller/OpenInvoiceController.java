@@ -13,15 +13,25 @@ import net.sourceforge.solexatools.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>OpenInvoiceController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class OpenInvoiceController  extends BaseCommandController {
 
 	public InvoiceService invoiceService;
 	
+	/**
+	 * <p>Constructor for OpenInvoiceController.</p>
+	 */
 	public OpenInvoiceController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
         
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request, HttpServletResponse response)
 		throws Exception {
@@ -44,10 +54,20 @@ public class OpenInvoiceController  extends BaseCommandController {
         
         
 
+	/**
+	 * <p>Getter for the field <code>invoiceService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.InvoiceService} object.
+	 */
 	public InvoiceService getInvoiceService() {
 		return invoiceService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>invoiceService</code>.</p>
+	 *
+	 * @param invoiceService a {@link net.sourceforge.seqware.common.business.InvoiceService} object.
+	 */
 	public void setInvoiceService(InvoiceService invoiceService) {
 		this.invoiceService = invoiceService;
 	}

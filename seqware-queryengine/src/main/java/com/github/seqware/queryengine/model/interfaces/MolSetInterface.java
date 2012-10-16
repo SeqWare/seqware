@@ -26,38 +26,39 @@ import java.util.Collection;
  * AbstractSet lead to some hard to notice errors.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public interface MolSetInterface<S extends MolSetInterface, T> extends SeqWareIterable<T>, Molecule<S> {
 
     /**
      * Add one element to the set
      *
-     * @param element
-     * @return
+     * @param element a T object.
+     * @return a S object.
      */
     public abstract S add(T element);
 
     /**
      * Add numerous elements from within a set
      *
-     * @param elements
-     * @return
+     * @param elements a {@link java.util.Collection} object.
+     * @return a S object.
      */
     public abstract S add(Collection<T> elements);
 
     /**
      * Add an array of elements
      *
-     * @param elements
-     * @return
+     * @param elements a T object.
+     * @return a S object.
      */
     public abstract S add(T... elements);
 
     /**
      * Remove one element
      *
-     * @param element
-     * @return
+     * @param element a T object.
+     * @return a S object.
      */
     public abstract S remove(T element);
     

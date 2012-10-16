@@ -13,20 +13,28 @@ import net.sourceforge.seqware.common.model.Sample;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>ProjectServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ProjectServiceImpl implements ProjectService {
   private ProjectDAO projectDAO = null;
   private static final Log log = LogFactory.getLog(ProjectServiceImpl.class);
 
+  /**
+   * <p>Constructor for ProjectServiceImpl.</p>
+   */
   public ProjectServiceImpl() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Sets a private member variable with an instance of an implementation of
    * ProjectDAO. This method is called by the Spring framework at run time.
-   * 
-   * @param projectDAO
-   *          implementation of ProjectDAO
    * @see ProjectDAO
    */
   public void setProjectDAO(ProjectDAO projectDAO) {
@@ -34,10 +42,9 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of Project into the database.
-   * 
-   * @param projectDAO
-   *          instance of ProjectDAO
    */
   public void insert(Project project) {
     // FIXME: need to set the names of each sample!!
@@ -79,10 +86,9 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of Project in the database.
-   * 
-   * @param project
-   *          instance of Project
    */
   public void update(Project project) {
 
@@ -95,15 +101,16 @@ public class ProjectServiceImpl implements ProjectService {
 
   }
 
+  /** {@inheritDoc} */
   public List<Project> list(Registration registration) {
     return projectDAO.list(registration);
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of Project in the database by the Project emailAddress,
    * and copies the Project properties to an instance of Project.
-   * 
-   * @return instance of Project, or null if a Project cannot be found
    */
   public Project findByName(String name) {
     Project project = null;
@@ -117,6 +124,7 @@ public class ProjectServiceImpl implements ProjectService {
     return project;
   }
 
+  /** {@inheritDoc} */
   public Project findByID(Integer expID) {
     Project project = null;
     if (expID != null) {
@@ -132,16 +140,9 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Determines if an email address has already been used.
-   * 
-   * @param oldEmail
-   *          The previous email address, or null if this method is being called
-   *          for a new email address
-   * 
-   * @param newEmail
-   *          The email address that is being checked
-   * 
-   * @return true if the newEmail has already been used, and false otherwise
    */
   public boolean hasNameBeenUsed(String oldName, String newName) {
     boolean nameUsed = false;
@@ -182,11 +183,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public Project updateDetached(Project project) {
     return projectDAO.updateDetached(project);
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<Project> list() {
         return projectDAO.list();

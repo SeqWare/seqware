@@ -15,14 +15,19 @@ import net.sourceforge.seqware.common.util.Log;
  * Date: 7/21/11
  * Time: 3:53 PM
  * To change this template use File | Settings | File Templates.
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class TestModule extends Module {
 
+    /** {@inheritDoc} */
     @Override
     public String getAlgorithm() {
         return "TestModule";
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_run() {
         Log.info("stdout: TestModule.do_run");
@@ -30,6 +35,7 @@ public class TestModule extends Module {
         return new ReturnValue(ReturnValue.SUCCESS);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_test() {
         Log.info("stdout: TestModule.do_test");
@@ -37,6 +43,7 @@ public class TestModule extends Module {
         return new ReturnValue(ReturnValue.SUCCESS);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_verify_input() {
         Log.info("stdout: TestModule.do_verify_input");
@@ -44,6 +51,7 @@ public class TestModule extends Module {
         return new ReturnValue(ReturnValue.SUCCESS);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_verify_parameters() {
         Log.info("stdout: TestModule.do_verify_parameters");
@@ -51,6 +59,7 @@ public class TestModule extends Module {
         return new ReturnValue(ReturnValue.SUCCESS);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_verify_output() {
         Log.info("stdout: TestModule.do_verify_output");
@@ -58,6 +67,11 @@ public class TestModule extends Module {
         return new ReturnValue(ReturnValue.SUCCESS);
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         File file  = new File("/home/xiao/work/test/sysout.log");
         PrintStream printStream = null;

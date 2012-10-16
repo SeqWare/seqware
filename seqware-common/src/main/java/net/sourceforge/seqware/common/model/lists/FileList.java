@@ -21,25 +21,45 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.File;
 
 /**
+ * <p>FileList class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class FileList {
 
     protected List<File> tList;
 
+    /**
+     * <p>Constructor for FileList.</p>
+     */
     public FileList() {
         tList = new ArrayList<File>();
     }
 
+    /**
+     * <p>getList.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<File> getList() {
         return tList;
     }
 
+    /**
+     * <p>setList.</p>
+     *
+     * @param list a {@link java.util.List} object.
+     */
     public void setList(List<File> list) {
         this.tList = list;
     }
 
+    /**
+     * <p>add.</p>
+     *
+     * @param ex a {@link net.sourceforge.seqware.common.model.File} object.
+     */
     public void add(File ex) {
         tList.add(ex);
     }
