@@ -113,6 +113,7 @@ public class Adag  {
 	private void parseWorkflow(AbstractWorkflowDataModel wfdm) {
 		boolean metadatawriteback = Boolean.parseBoolean(wfdm.getConfigs().get("metadata"));
 		List<PegasusJob> parents = new ArrayList<PegasusJob>();
+		int provisionFileCount = 0;
 		//mkdir data job
 		AbstractJob job0 = new BashJob("createdirs");
 		job0.getCommand().addArgument("mkdir -p provisionfiles; ");
@@ -145,7 +146,7 @@ public class Adag  {
 			for(Map.Entry<String,SqwFile> entry: wfdm.getFiles().entrySet()) {
 				AbstractJob job = new BashJob("provisionFile_"+entry.getKey());
 				job.addFile(entry.getValue());
-				ProvisionFilesJob pjob = new ProvisionFilesJob(job,wfdm.getConfigs().get("basedir"));
+				ProvisionFilesJob pjob = new ProvisionFilesJob(job,wfdm.getConfigs().get("basedir"), entry.getValue());
 				pjob.setId(this.jobs.size());
 				pjob.setMetadataWriteback(metadatawriteback);
 				if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
@@ -160,9 +161,15 @@ public class Adag  {
 					for(PegasusJob parent: parents) {
 						pjob.addParent(parent);
 					}
+					//add mkdir to the first job, then set the file path
+					String outputDir = "provisionfiles/" + provisionFileCount ;
+					job0.getCommand().addArgument("mkdir -p " + outputDir + "; ");
+					pjob.setOutputDir(outputDir);
+					provisionFileCount ++;
 				} else {
 					pjob.setMetadataOutputPrefix(wfdm.getConfigs().get("metadata-output-file-prefix"));
 					pjob.setOutputDir(wfdm.getConfigs().get("metadata-output-dir"));
+					//set the filepath
 				}
 			}
 			//reset parents
@@ -196,7 +203,7 @@ public class Adag  {
 							//create a provisionFileJob;
 							AbstractJob pfjob = new BashJob("provisionFile_in");
 							pfjob.addFile(file);
-							PegasusJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getConfigs().get("basedir"));
+							PegasusJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getConfigs().get("basedir"), file);
 							parentPfjob.setId(this.jobs.size());
 							parentPfjob.addParent(pjob0);
 							parentPfjob.setMetadataWriteback(metadatawriteback);
@@ -204,12 +211,15 @@ public class Adag  {
 								parentPfjob.setWorkflowRunAccession(workflowRunAccession);
 							}
 							this.jobs.add(parentPfjob);
-							pjob.addParent(parentPfjob);						
+							pjob.addParent(parentPfjob);	
+							//add mkdir to the first job, then set the file path
+							job0.getCommand().addArgument("mkdir -p provisionfiles/" + provisionFileCount + "; ");
+							provisionFileCount ++;
 					} else {
 							//create a provisionFileJob;
 							AbstractJob pfjob = new BashJob("provisionFile_in");
 							pfjob.addFile(file);
-							ProvisionFilesJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getConfigs().get("basedir"));
+							ProvisionFilesJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getConfigs().get("basedir"), file);
 							parentPfjob.setId(this.jobs.size());
 							parentPfjob.addParent(pjob);
 							parentPfjob.setMetadataWriteback(metadatawriteback);

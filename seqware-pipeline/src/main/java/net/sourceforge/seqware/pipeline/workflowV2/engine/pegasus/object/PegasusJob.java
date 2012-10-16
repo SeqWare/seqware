@@ -21,7 +21,7 @@ public class PegasusJob {
 	private List<PegasusJob> children;
 	protected static String NS = "seqware";
 	private boolean metadataWriteback;
-	private String parentAccession;
+	protected String parentAccession;
 	protected String wfrAccession;
 	protected boolean wfrAncesstor;
 	
@@ -36,11 +36,11 @@ public class PegasusJob {
 		String name = "java";
 		//FIXME should not hardcode here
 		String version = "1.6.0";
-		if(this.jobObj instanceof PerlJob) {
+/*		if(this.jobObj instanceof PerlJob) {
 			name = "perl";
 			//FIXME should put in property file
 			version = "5.14.1";
-		} 
+		} */
 		
 		Element element = new Element("job", Adag.NAMESPACE);
 		element.setAttribute("id", this.jobObj.getAlgo()+"_"+this.id);

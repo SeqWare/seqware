@@ -19,6 +19,7 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 import joptsimple.OptionSet;
+import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.StringUtils;
@@ -28,11 +29,13 @@ public class WorkflowDataModelFactory {
 	private Map<String, String> config;
 	private OptionSet options;
 	private String[] params;
+	private Metadata metadata;
 	
-	public WorkflowDataModelFactory(OptionSet options, Map<String,String> config, String[] params) {
+	public WorkflowDataModelFactory(OptionSet options, Map<String,String> config, String[] params, Metadata metadata) {
 		this.options = options;
 		this.config = config;	
 		this.params = params;
+		this.metadata = metadata;
 	}
 	
 	public AbstractWorkflowDataModel getWorkflowDataModel() {	
@@ -136,6 +139,12 @@ public class WorkflowDataModelFactory {
         ret.getEnv().setDaxDir(config.get("SW_DAX_DIR"));
         ret.getEnv().setSwCluster(config.get("SW_CLUSTER"));
         
+        //get workflow-run-accession
+        if(options.has(("workflow-accession"))) {
+        	int workflowAccession = Integer.parseInt((String)options.valueOf("workflow-accession"));
+        	int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession);
+        	configs.put("workflow-run-accession", ""+workflowrunaccession);
+        }
 		ret.setConfigs(configs);
 		
 		//parse XML or Java Object for

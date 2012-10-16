@@ -8,6 +8,7 @@ public class SqwFile {
 	private String location;
 	private boolean input;
 	private boolean forceCopy;
+	private String path;
 	
 	public String getType() {
 		return type;
@@ -72,5 +73,11 @@ public class SqwFile {
 	 */
 	public void setForceCopy(boolean forceCopy) {
 		this.forceCopy = forceCopy;
+	}
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
 	}
 }
