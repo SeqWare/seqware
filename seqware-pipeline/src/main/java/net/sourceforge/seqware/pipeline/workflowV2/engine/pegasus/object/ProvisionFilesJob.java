@@ -18,7 +18,12 @@ public class ProvisionFilesJob extends PegasusJob {
 		sb.append("-Xmx").append(this.jobObj.getCommand().getMaxMemory()).append("\n");
 		sb.append("-classpath ").append(basedir).append("/lib/").append(Adag.PIPELINE).append("\n");
 		sb.append("net.sourceforge.seqware.pipeline.runner.Runner").append("\n");
-		sb.append("--no-metadata").append("\n");
+		if(this.hasMetadataWriteback()) {
+			sb.append("--metadata").append("\n");
+		} else {
+			sb.append("--no-metadata").append("\n");
+		}
+
 		sb.append("--module module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles").append("\n");
 		sb.append("--").append("\n");
 		
@@ -33,7 +38,7 @@ public class ProvisionFilesJob extends PegasusJob {
 			inputType = "--input-file-metadata "+ file.getType() + "/";
 		}
 		sb.append(inputType).append(this.jobObj.getFiles().iterator().next().getLocation()).append("\n");
-		sb.append("--output-dir data").append("\n");
+		sb.append("--output-dir provisionfiles").append("\n");
 		
 		return sb.toString();
 	}

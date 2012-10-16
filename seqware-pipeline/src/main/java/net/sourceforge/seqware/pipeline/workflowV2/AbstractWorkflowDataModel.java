@@ -182,4 +182,10 @@ public abstract class AbstractWorkflowDataModel  {
 		return this.dirs;
 	}
 	
+	public SqwFile createFile(String name) {
+		SqwFile file = new SqwFile();
+		this.files.put(name, file);
+		return file;		
+	}
+	
 }

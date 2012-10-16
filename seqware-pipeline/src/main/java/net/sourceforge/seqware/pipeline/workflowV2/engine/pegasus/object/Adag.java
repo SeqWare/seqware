@@ -70,7 +70,6 @@ public class Adag  {
     private void setDefaultExcutables() {
 		executables = new ArrayList<WorkflowExecutable>();
 		executables.add(WorkflowExecutableUtils.getDefaultJavaExcutable(this.wfdm));
-		executables.add(WorkflowExecutableUtils.getLocalJavaExcutable(this.wfdm));
 		executables.add(WorkflowExecutableUtils.getBashExcutable(this.wfdm));
 		executables.add(WorkflowExecutableUtils.getDefaultPerlExcutable(this.wfdm));
 		executables.add(WorkflowExecutableUtils.getDefaultDirManagerExcutable(this.wfdm));
@@ -96,8 +95,6 @@ public class Adag  {
 		}
 		// dependencies
 		for (PegasusJob pjob : this.jobs) {
-		    if (pjob.getParents().isEmpty())
-		    	continue;
 		    for (PegasusJob parent : pjob.getParents()) {	
 		    	adag.addContent(pjob.getDependentElement(parent));	
 		    }
@@ -116,12 +113,20 @@ public class Adag  {
 	}
 	
 	private void parseWorkflow(AbstractWorkflowDataModel wfdm) {
+		boolean metadatawriteback = Boolean.parseBoolean(wfdm.getConfigs().get("metadata"));
 		List<PegasusJob> parents = new ArrayList<PegasusJob>();
 		//mkdir data job
 		AbstractJob job0 = new BashJob("start");
 		job0.getCommand().addArgument("mkdir provisionfiles");
 		PegasusJob pjob0 = new PegasusJob(job0, wfdm.getConfigs().get("basedir"));
 		pjob0.setId(this.jobs.size());
+		pjob0.setMetadataWriteback(metadatawriteback);
+		//if has parent-accessions, assign it to first job
+		String parentAccession = wfdm.getConfigs().get("parent-accessions");
+		if(parentAccession!=null && !parentAccession.isEmpty()) {
+			pjob0.setParentAccession(parentAccession);
+		}
+		
 		this.jobs.add(pjob0);
 		parents.add(pjob0);
 		//directories
@@ -135,8 +140,9 @@ public class Adag  {
 			dirJob.getCommand().addArgument(sb.toString());
 			PegasusJob pjobdir = new PegasusJob(dirJob, wfdm.getConfigs().get("basedir"));
 			pjobdir.setId(this.jobs.size());
+			pjobdir.setMetadataWriteback(metadatawriteback);
 			this.jobs.add(pjobdir);
-			pjobdir.getParents().add(pjob0);
+			pjobdir.addParent(pjob0);
 			parents.add(pjobdir);
 		}
 		//sqwfiles
@@ -147,6 +153,7 @@ public class Adag  {
 				job.addFile(entry.getValue());
 				PegasusJob pjob = new ProvisionFilesJob(job,wfdm.getConfigs().get("basedir"));
 				pjob.setId(this.jobs.size());
+				pjob.setMetadataWriteback(metadatawriteback);
 				this.jobs.add(pjob);
 				this.fileJobMap.put(entry.getValue(), pjob);
 	
@@ -154,7 +161,7 @@ public class Adag  {
 				if(entry.getValue().isInput()) {
 					newParents.add(pjob);
 					for(PegasusJob parent: parents) {
-						pjob.getParents().add(parent);
+						pjob.addParent(parent);
 					}
 				} 
 			}
@@ -164,12 +171,15 @@ public class Adag  {
 		}
 		
 		int idCount = this.jobs.size();
+		//need to remember the provisionOut and reset the job's children to provisionout's children
+		Map<PegasusJob, PegasusJob> hasProvisionOut = new HashMap<PegasusJob, PegasusJob>();
 		for(AbstractJob job: wfdm.getWorkflow().getJobs()) {
 			PegasusJob pjob = this.createPegasusJobObject(job, wfdm);
 			pjob.setId(idCount);
-
+			pjob.setMetadataWriteback(metadatawriteback);
+			this.jobs.add(pjob);
 			for(Job parent: job.getParents()) {
-				pjob.getParents().add(this.getPegasusJobObject((AbstractJob)parent));
+				pjob.addParent(this.getPegasusJobObject((AbstractJob)parent));
 			}
 			
 			
@@ -177,42 +187,67 @@ public class Adag  {
 			// this based on the assumption that the provisionFiles job is always in the beginning or the end.
 			if(job.getFiles().isEmpty() == false) {
 				for(SqwFile file: job.getFiles()) {
-					//is the file belongs to global or job only
-					//if global, need to get the parent, 
-					//if local, create a provisionfile job\
-					if(file.isInput()) {
-						if(this.fileJobMap.containsKey(file)) {
-							pjob.getParents().add(this.fileJobMap.get(file));
-						} else {
+					//create a provisionfile job\
+					if(file.isInput()) {					
 							//create a provisionFileJob;
 							AbstractJob pfjob = new BashJob("provisionFile_in");
 							pfjob.addFile(file);
 							PegasusJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getConfigs().get("basedir"));
 							parentPfjob.setId(this.jobs.size());
-							parentPfjob.getParents().add(pjob0);
+							parentPfjob.addParent(pjob0);
+							parentPfjob.setMetadataWriteback(metadatawriteback);
 							this.jobs.add(parentPfjob);
-							pjob.getParents().add(parentPfjob);
-						}
+							pjob.addParent(parentPfjob);						
 					} else {
-						if(this.fileJobMap.containsKey(file)) {
-							this.fileJobMap.get(file).getParents().add(pjob);
-						} else {
 							//create a provisionFileJob;
 							AbstractJob pfjob = new BashJob("provisionFile_in");
 							pfjob.addFile(file);
 							PegasusJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getConfigs().get("basedir"));
 							parentPfjob.setId(this.jobs.size());
-							parentPfjob.getParents().add(pjob);
+							parentPfjob.addParent(pjob);
+							parentPfjob.setMetadataWriteback(metadatawriteback);
 							this.jobs.add(parentPfjob);
-						}
+							hasProvisionOut.put(pjob, parentPfjob);
 					}
 				}
 			}
 
-			//if no parent, set to parents, after provisionfiles
+			if(!hasProvisionOut.isEmpty()) {
+				for(Map.Entry<PegasusJob, PegasusJob> entry: hasProvisionOut.entrySet()) {
+					//get all children
+					Collection<PegasusJob> children = entry.getKey().getChildren();
+					if(children.size()<=1)
+						continue;
+					// and set other's parent as the value
+					for(PegasusJob child: children ) {
+						if(child == entry.getValue())
+							continue;
+						child.addParent(entry.getValue());
+					}
+				}
+			}
+			//if no parent, set parents after provisionfiles
 			if(pjob.getParents().isEmpty()) {
 				for(PegasusJob parent: parents) {
-					pjob.getParents().add(parent);
+					pjob.addParent(parent);
+				}
+			}
+			
+			//add all provision out job
+			//get all the leaf job
+			List<PegasusJob> leaves = new ArrayList<PegasusJob>();
+			for(PegasusJob _job: this.jobs) {
+				if(_job.getChildren().isEmpty()) {
+					leaves.add(_job);
+				}
+			}
+			for(Map.Entry<SqwFile, PegasusJob> entry: fileJobMap.entrySet()) {
+				if(entry.getKey().isOutput()) {
+					//set parents to all leaf jobs
+					for(PegasusJob leaf: leaves) {
+						if(leaf!=entry.getValue())
+							entry.getValue().addParent(leaf);
+					}
 				}
 			}
 			this.jobs.add(pjob);
