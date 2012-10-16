@@ -1,5 +1,6 @@
 package net.sourceforge.solexatools.webapp.controller;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.HashMap;
@@ -23,6 +24,8 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 /**
  * <p>InvoiceDetailsController class.</p>
  *
+ * TODO: need to switch totally to BigDecimal for rounding, see http://www.javapractices.com/topic/TopicAction.do?Id=13
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
@@ -63,25 +66,25 @@ public class InvoiceDetailsController  extends BaseCommandController {
                 filterExpenses(expenses, fixed, "fixed");
                 model.put("fixed", fixed);
                 model.put("fixed_size", fixed.size());
-                model.put("fixed_total_price", totalExpenses(fixed));
+                model.put("fixed_total_price", round(totalExpenses(fixed)));
                 
                 // consulting
                 Set<Expense> consulting = new TreeSet<Expense>();
                 filterExpenses(expenses, consulting, "consulting");
                 model.put("consulting_size", consulting.size());
                 model.put("consulting", consulting);
-                model.put("consulting_total_price", totalExpenses(consulting));
+                model.put("consulting_total_price", round(totalExpenses(consulting)));
 
                 // analysis
                 Set<Expense> analysis = new TreeSet<Expense>();
                 filterExpenses(expenses, analysis, "analysis");
                 model.put("analysis", analysis);
                 model.put("analysis_size", analysis.size());
-                model.put("analysis_total_price", totalExpenses(analysis));
+                model.put("analysis_total_price", round(totalExpenses(analysis)));
                 
                 // total price
-                model.put("total_price", this.totalPrice);
-                model.put("paid_amount", invoice.getPaidAmount());
+                model.put("total_price", round(this.totalPrice));
+                model.put("paid_amount", round(invoice.getPaidAmount()));
                 Double totalDue = this.totalPrice - invoice.getPaidAmount();
                 model.put("total_due", totalDue);
 
@@ -89,19 +92,31 @@ public class InvoiceDetailsController  extends BaseCommandController {
                 NumberFormat currencyFormatter = 
                     NumberFormat.getCurrencyInstance(Locale.US);
                 
-                model.put("total_due_currency", currencyFormatter.format(totalDue).toString());
+                model.put("total_due_currency", round(totalDue));
 
-		modelAndView = new ModelAndView("invoiceDetails", model);
+                if ("tsv".equals(request.getParameter("format"))) {
+                  modelAndView = new ModelAndView("invoiceDetailsTsv", model);
+		  response.setContentType("text/tab-separated-values");
+		  response.setHeader("Content-Disposition", "attachment; filename=\"NimbusInvoice_SWID"+request.getParameter("invoiceSwAccession")+".tsv\"");
+                }
+                else {
+		  modelAndView = new ModelAndView("invoiceDetails", model);
+                }
 		
 		return modelAndView;
 	}
         
-        private String totalExpenses(Set<Expense> expenses) {
+        private Double totalExpenses(Set<Expense> expenses) {
             Double total = 0.0;
             for(Expense e : expenses) {
                 total += e.getTotalPrice();
             }
-            return(total.toString());
+            return(total);
+        }
+        
+        private String round(Double input) {
+            BigDecimal bd = new BigDecimal(input);
+            return (bd.setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
         }
 
 	/**
