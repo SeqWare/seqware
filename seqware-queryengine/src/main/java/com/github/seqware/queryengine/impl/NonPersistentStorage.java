@@ -37,16 +37,23 @@ import java.util.Map.Entry;
  * totally inefficient and is meant only for testing and prototyping purposes
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class NonPersistentStorage extends StorageInterface {
 
     private Map<String, ByteTypePair> map = new HashMap<String, ByteTypePair>();
     private final SerializationInterface serializer;
 
+    /**
+     * <p>Constructor for NonPersistentStorage.</p>
+     *
+     * @param i a {@link com.github.seqware.queryengine.impl.SerializationInterface} object.
+     */
     public NonPersistentStorage(SerializationInterface i) {
         this.serializer = i;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void serializeAtomToTarget(Atom obj) {
         AtomImpl objImpl = (AtomImpl) obj;
@@ -58,6 +65,12 @@ public class NonPersistentStorage extends StorageInterface {
         map.put(createKey(obj), pair);
     }
 
+    /**
+     * <p>createKey.</p>
+     *
+     * @param obj a {@link com.github.seqware.queryengine.model.Atom} object.
+     * @return a {@link java.lang.String} object.
+     */
     protected static String createKey(Atom obj) {
         boolean test = !(obj instanceof FeatureList) && obj.getSGID() instanceof SGID || (obj instanceof FeatureList && obj.getSGID() instanceof FSGID);
         assert (test);
@@ -65,10 +78,23 @@ public class NonPersistentStorage extends StorageInterface {
         return createKey(sgid);
     }
 
+    /**
+     * <p>createKey.</p>
+     *
+     * @param sgid a {@link com.github.seqware.queryengine.util.SGID} object.
+     * @return a {@link java.lang.String} object.
+     */
     protected static String createKey(SGID sgid) {
         return createKey(sgid, true);
     }
 
+    /**
+     * <p>createKey.</p>
+     *
+     * @param sgid a {@link com.github.seqware.queryengine.util.SGID} object.
+     * @param useTimestamp a boolean.
+     * @return a {@link java.lang.String} object.
+     */
     protected static String createKey(SGID sgid, boolean useTimestamp) {
         StringBuilder buff = new StringBuilder();
         if (sgid instanceof FSGID) {
@@ -83,6 +109,7 @@ public class NonPersistentStorage extends StorageInterface {
         return buff.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Atom> void serializeAtomsToTarget(T... atomArr) {
         for (Atom obj : atomArr) {
@@ -90,6 +117,7 @@ public class NonPersistentStorage extends StorageInterface {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Atom deserializeTargetToAtom(SGID sgid) {
         if (!map.containsKey(createKey(sgid))) {
@@ -99,11 +127,13 @@ public class NonPersistentStorage extends StorageInterface {
         return a;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void clearStorage() {
         map.clear();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterable<SGID> getAllAtoms() {
         List<SGID> list = new ArrayList<SGID>();
@@ -114,11 +144,13 @@ public class NonPersistentStorage extends StorageInterface {
         return list;
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Atom> T deserializeTargetToAtom(Class<T> t, SGID sgid) {
         return (T) this.deserializeTargetToAtom(sgid);
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Atom> List<T> deserializeTargetToAtoms(Class<T> t, SGID... sgid) {
         List<T> list = new ArrayList<T>();
@@ -128,6 +160,7 @@ public class NonPersistentStorage extends StorageInterface {
         return list;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Atom deserializeTargetToLatestAtom(SGID sgid) {
         List<Atom> aList = new ArrayList<Atom>();
@@ -150,11 +183,13 @@ public class NonPersistentStorage extends StorageInterface {
         return latest;
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Atom> T deserializeTargetToLatestAtom(SGID sgid, Class<T> t) {
         return (T) this.deserializeTargetToLatestAtom(sgid);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void closeStorage() {
         /**
@@ -162,6 +197,7 @@ public class NonPersistentStorage extends StorageInterface {
          */
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterable<FeatureList> getAllFeatureListsForFeatureSet(FeatureSet fSet) {
         assert (fSet instanceof LazyFeatureSet);

@@ -37,15 +37,23 @@ import org.restlet.data.Status;
 import org.w3c.dom.Document;
 
 /**
+ * <p>SequencerRunIdFilesResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class SequencerRunIdFilesResource extends BasicRestlet {
 
+    /**
+     * <p>Constructor for SequencerRunIdFilesResource.</p>
+     *
+     * @param context a {@link org.restlet.Context} object.
+     */
     public SequencerRunIdFilesResource(Context context) {
         super(context);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void handle(Request request, Response response) {
         authenticate(request.getChallengeResponse().getIdentifier());
@@ -68,6 +76,13 @@ public class SequencerRunIdFilesResource extends BasicRestlet {
         }
     }
 
+    /**
+     * <p>hello.</p>
+     *
+     * @param srSWA a int.
+     * @return a {@link java.util.List} object.
+     * @throws java.sql.SQLException if any.
+     */
     public List<ReturnValue> hello(int srSWA) throws SQLException {
         List<ReturnValue> returnValues = new ArrayList<ReturnValue>();
         try {

@@ -22,15 +22,23 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.RecognizerSharedState;
 
 /**
+ * <p>SeqWareQueryLanguageLexerWrapper class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class SeqWareQueryLanguageLexerWrapper extends SeqWareQueryLanguageLexer {
 
+    /**
+     * <p>Constructor for SeqWareQueryLanguageLexerWrapper.</p>
+     *
+     * @param input a {@link org.antlr.runtime.CharStream} object.
+     */
     public SeqWareQueryLanguageLexerWrapper(CharStream input) {
         super(input, new RecognizerSharedState());
     }
     
+    /** {@inheritDoc} */
     @Override
     public void reportError(RecognitionException e) {
         throw new IllegalArgumentException(e);

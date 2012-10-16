@@ -27,8 +27,10 @@ import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * <p>WorkflowRunReporter class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
 public class WorkflowRunReporter extends Plugin {
@@ -42,6 +44,9 @@ public class WorkflowRunReporter extends Plugin {
     private Writer writer;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_kkmmss");
 
+    /**
+     * <p>Constructor for WorkflowRunReporter.</p>
+     */
     public WorkflowRunReporter() {
         super();
         parser.acceptsAll(Arrays.asList("workflow-run-accession", "wra"),
@@ -59,16 +64,19 @@ public class WorkflowRunReporter extends Plugin {
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue init() {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_test() {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_run() {
 
@@ -177,6 +185,7 @@ public class WorkflowRunReporter extends Plugin {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue clean_up() {
         try {
@@ -193,6 +202,7 @@ public class WorkflowRunReporter extends Plugin {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String get_description() {
         return "This plugin creates a tab-separated file that describes one or more "

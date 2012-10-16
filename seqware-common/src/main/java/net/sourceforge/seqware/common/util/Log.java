@@ -22,15 +22,17 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
 /**
+ * <p>Log class.</p>
  *
  * @author yongliang
+ * @version $Id: $Id
  */
 public class Log {
     
     private static boolean verbose;
-        /**
-     * See {@link Logger#debug(Object)}.
-     * 
+    /**
+     * See {@link org.apache.log4j.Logger#debug(Object)}.
+     *
      * @param message
      *            the message to log.
      */
@@ -42,8 +44,8 @@ public class Log {
     }
 
     /**
-     * See {@link Logger#debug(Object,Throwable)}.
-     * 
+     * See {@link org.apache.log4j.Logger#debug(Object,Throwable)}.
+     *
      * @param message
      *            the message to log.
      * @param t
@@ -57,8 +59,8 @@ public class Log {
     }
 
     /**
-     * See {@link Logger#debug(Object)}.
-     * 
+     * See {@link org.apache.log4j.Logger#debug(Object)}.
+     *
      * @param message
      *            the message to log.
      */
@@ -70,8 +72,8 @@ public class Log {
     }
 
     /**
-     * See {@link Logger#debug(Object,Throwable)}.
-     * 
+     * See {@link org.apache.log4j.Logger#debug(Object,Throwable)}.
+     *
      * @param message
      *            the message to log.
      * @param t
@@ -85,8 +87,8 @@ public class Log {
     }
 
     /**
-     * See {@link Logger#info(Object)}.
-     * 
+     * See {@link org.apache.log4j.Logger#info(Object)}.
+     *
      * @param message
      *            the message to log.
      */
@@ -98,8 +100,8 @@ public class Log {
    }
 
     /**
-     * See {@link Logger#info(Object,Throwable)}.
-     * 
+     * See {@link org.apache.log4j.Logger#info(Object,Throwable)}.
+     *
      * @param message
      *            the message to log.
      * @param t
@@ -113,8 +115,8 @@ public class Log {
     }
 
     /**
-     * See {@link Logger#warn(Object)}.
-     * 
+     * See {@link org.apache.log4j.Logger#warn(Object)}.
+     *
      * @param message
      *            the message to log.
      */
@@ -126,8 +128,8 @@ public class Log {
     }
 
     /**
-     * See {@link Logger#warn(Object,Throwable)}.
-     * 
+     * See {@link org.apache.log4j.Logger#warn(Object,Throwable)}.
+     *
      * @param message
      *            the message to log.
      * @param t
@@ -141,8 +143,8 @@ public class Log {
     }
 
     /**
-     * See {@link Logger#error(Object)}.
-     * 
+     * See {@link org.apache.log4j.Logger#error(Object)}.
+     *
      * @param message
      *            the message to log.
      */
@@ -154,8 +156,8 @@ public class Log {
     }
 
     /**
-     * See {@link Logger#error(Object,Throwable)}.
-     * 
+     * See {@link org.apache.log4j.Logger#error(Object,Throwable)}.
+     *
      * @param message
      *            the message to log.
      * @param t
@@ -169,8 +171,8 @@ public class Log {
     }
 
     /**
-     * See {@link Logger#fatal(Object)}.
-     * 
+     * See {@link org.apache.log4j.Logger#fatal(Object)}.
+     *
      * @param message
      *            the message to log.
      */
@@ -182,8 +184,8 @@ public class Log {
     }
 
     /**
-     * See {@link Logger#fatal(Object,Throwable)}.
-     * 
+     * See {@link org.apache.log4j.Logger#fatal(Object,Throwable)}.
+     *
      * @param message
      *            the message to log.
      * @param t
@@ -196,16 +198,28 @@ public class Log {
         logger.fatal(message, t);
     }
     
+    /**
+     * <p>stdout.</p>
+     *
+     * @param message a {@link java.lang.String} object.
+     */
     public static void stdout(final String message) {
 	    System.out.println(message);
     }
     
+    /**
+     * <p>stderr.</p>
+     *
+     * @param message a {@link java.lang.String} object.
+     */
     public static void stderr(final String message) {
 	    System.err.println(message);
     } 
     
     /**
-     * override the log4j.properties 
+     * override the log4j.properties
+     *
+     * @param b a boolean.
      */
     public static void setVerbose(boolean b) {
         Log.verbose = b;

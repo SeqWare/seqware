@@ -28,19 +28,25 @@ import org.restlet.resource.Get;
 import org.w3c.dom.Document;
 
 /**
+ * <p>ExperimentIDFilter class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class ExperimentIDFilter extends ExperimentIDResource {
 
     
 
+    /** {@inheritDoc} */
     @Override
     public void doInit() {
         super.doInit();
         
     }
 
+    /**
+     * <p>getXml.</p>
+     */
     @Get
     public void getXml() {
         ExperimentService ss = BeanFactory.getExperimentServiceBean();

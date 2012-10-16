@@ -2,7 +2,19 @@ package net.sourceforge.seqware.common.util.jsontools;
 
 import java.text.StringCharacterIterator;
 
+/**
+ * <p>JsonUtil class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class JsonUtil {
+    /**
+     * <p>forJSON.</p>
+     *
+     * @param aText a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String forJSON(String aText){
     	if(aText == null)
     		return aText;

@@ -15,12 +15,27 @@ import net.sourceforge.seqware.common.util.Log;
 
 import org.junit.Test;
 
+/**
+ * <p>IusServiceImplTest class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
+ */
 public class IusServiceImplTest extends BaseUnit {
 
+  /**
+   * <p>Constructor for IusServiceImplTest.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   public IusServiceImplTest() throws Exception {
     super();
   }
 
+  /**
+   * <p>testAssociatedWorkflowRuns.</p>
+   */
   @Test
   public void testAssociatedWorkflowRuns() {
     InSessionExecutions.bindSessionToThread();
@@ -31,6 +46,9 @@ public class IusServiceImplTest extends BaseUnit {
     InSessionExecutions.unBindSessionFromTheThread();
   }
 
+  /**
+   * <p>testFindByCriteria.</p>
+   */
   @Test
   public void testFindByCriteria() {
     IUSService iusService = BeanFactory.getIUSServiceBean();

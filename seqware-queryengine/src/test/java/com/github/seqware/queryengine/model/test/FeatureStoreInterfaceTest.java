@@ -19,18 +19,32 @@ import org.junit.Test;
  *
  * @author dyuen
  * @author jbaran
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class FeatureStoreInterfaceTest {
 
+    /** Constant <code>aSet</code> */
     protected static FeatureSet aSet;
+    /** Constant <code>bSet</code> */
     protected static FeatureSet bSet;
+    /** Constant <code>a1</code> */
+    /** Constant <code>a2</code> */
+    /** Constant <code>a3</code> */
     protected static Feature a1, a2, a3;
     private static TagSet tagSet;
+    /** Constant <code>SOSEQUENCE_VARIANTFUNCTIONAL_VARIANT="SO::sequence_variant::functional_varian"{trunked}</code> */
     public static final String SOSEQUENCE_VARIANTFUNCTIONAL_VARIANT = "SO::sequence_variant::functional_variant::transcript_function_variant::transcript_processing_variant";
+    /** Constant <code>SOSEQUENCE_VARIANTFUNCTIONAL_VARIANT2="SO::sequence_variant::functional_varian"{trunked}</code> */
     public static final String SOSEQUENCE_VARIANTFUNCTIONAL_VARIANT2 = "SO::sequence_variant::functional_variant::transcript_function_variant::transcript_stability_variant";
+    /** Constant <code>SOSEQUENCE_VARIANTSTRUCTURAL_VARIANT="SO::sequence_variant::structural_varian"{trunked}</code> */
     public static final String SOSEQUENCE_VARIANTSTRUCTURAL_VARIANT = "SO::sequence_variant::structural_variant::copy_number_change";
+    /** Constant <code>SEQUENCE_ONTOLOGY_ACCESSION_SURROGATE="Compression.getSequenceOntologyAccessio"{trunked}</code> */
     public static final String SEQUENCE_ONTOLOGY_ACCESSION_SURROGATE = Compression.getSequenceOntologyAccessionSurrogate("SO:0000149");
 
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
         UUID testID = UUID.randomUUID();
@@ -56,6 +70,7 @@ public class FeatureStoreInterfaceTest {
      *
      * @param mManager Entity manager for persisting atoms.
      * @return A feature set with somewhat diverse data values.
+     * @param tagset a {@link com.github.seqware.queryengine.model.TagSet} object.
      */
     public static FeatureSet diverseBSet(CreateUpdateManager mManager, TagSet tagset) {
         FeatureSet set = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Diverse_Set").build()).build();
@@ -137,6 +152,7 @@ public class FeatureStoreInterfaceTest {
      *
      * @param mManager Entity manager for persisting atoms.
      * @return A feature set with somewhat diverse data values.
+     * @param tagset a {@link com.github.seqware.queryengine.model.TagSet} object.
      */
     public static FeatureSet diverseCSet(CreateUpdateManager mManager, TagSet tagset) {
         FeatureSet set = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Diverse_Set").build()).build();
@@ -194,6 +210,7 @@ public class FeatureStoreInterfaceTest {
      *
      * @param mManager Entity manager for persisting atoms.
      * @return A large feature set populated with random features.
+     * @param size a int.
      */
     public static FeatureSet largeTestSet(CreateUpdateManager mManager, int size) {
         FeatureSet set = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Large_Set_" + size).build()).build();
@@ -213,6 +230,9 @@ public class FeatureStoreInterfaceTest {
         return set;
     }
 
+        /**
+         * <p>testFeatureCreationAndIterate.</p>
+         */
         @Test
     public void testFeatureCreationAndIterate() {
         UUID testID = UUID.randomUUID();

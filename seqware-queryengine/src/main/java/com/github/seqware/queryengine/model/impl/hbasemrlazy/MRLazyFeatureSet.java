@@ -12,6 +12,7 @@ import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
  * persist and manage their own membership. This version adds M/R for counting.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class MRLazyFeatureSet extends LazyFeatureSet implements LazyMolSet<FeatureSet, Feature> {
 
@@ -22,16 +23,23 @@ public class MRLazyFeatureSet extends LazyFeatureSet implements LazyMolSet<Featu
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public long getCount() {
         QueryFuture<Long> featureSetCount = SWQEFactory.getQueryInterface().getFeatureSetCount(0, this);
         return featureSetCount.get();
     }
 
+    /**
+     * <p>newBuilder.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.model.FeatureSet.Builder} object.
+     */
     public static FeatureSet.Builder newBuilder() {
         return new MRLazyFeatureSet.Builder();
     }
 
+    /** {@inheritDoc} */
     @Override
     public MRLazyFeatureSet.Builder toBuilder() {
         MRLazyFeatureSet.Builder b = new MRLazyFeatureSet.Builder();

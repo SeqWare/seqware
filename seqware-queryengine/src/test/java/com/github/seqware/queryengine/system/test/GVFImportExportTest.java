@@ -18,15 +18,20 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * This test demonstrates how one would import a GVF file and then export to a VCF file. 
+ * This test demonstrates how one would import a GVF file and then export to a VCF file.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class GVFImportExportTest {
 
     private static File testGVFFile = null;
     private static String randomRef= null; 
     
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
         String curDir = System.getProperty("user.dir");
@@ -36,6 +41,11 @@ public class GVFImportExportTest {
         Logger.getLogger(GVFImportExportTest.class.getName()).info("Using " + randomRef + " in " + GVFImportExportTest.class.getName());
     }
     
+    /**
+     * <p>testGVFImport.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     @Test
     public void testGVFImport() throws IOException{
         File createTempFile = File.createTempFile("output", "txt");

@@ -10,12 +10,17 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Unit tests of {@link ReferenceSet}.
+ * Unit tests of {@link com.github.seqware.queryengine.model.ReferenceSet}.
  *
  * @author jbaran
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class ReferenceSetTest {
 
+    /**
+     * <p>testConsistentStorageSingleFeatures.</p>
+     */
     @Test
     public void testConsistentStorageSingleFeatures() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -39,6 +44,9 @@ public class ReferenceSetTest {
         Assert.assertTrue("Reference set did not return all of the references that had been stored previously.", testReferences.isEmpty());
     }
 
+    /**
+     * <p>testVersioningAndFeatureSets.</p>
+     */
     @Test
     public void testVersioningAndFeatureSets() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();

@@ -37,6 +37,7 @@ import org.xml.sax.ContentHandler;
  * Convenience class for converting objects into JAXB XML.
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class JaxbObject<T> {
 
@@ -91,7 +92,7 @@ public class JaxbObject<T> {
      * @param t The object to XMLize.
      * @return the XML. The StreamResult was created with a StringWriter, which
      * can be used to retrieve the XML.
-     * @throws JAXBException
+     * @throws javax.xml.bind.JAXBException if any.
      */
     public Document marshalToDocument(T t) throws JAXBException {
         Document doc = null;
@@ -131,7 +132,7 @@ public class JaxbObject<T> {
      * @param t The object to XMLize.
      * @return the XML. The StreamResult was created with a StringWriter, which
      * can be used to retrieve the XML.
-     * @throws JAXBException
+     * @throws javax.xml.bind.JAXBException if any.
      */
     public String marshal(T t) throws JAXBException {
         String output = null;
@@ -166,9 +167,10 @@ public class JaxbObject<T> {
     /**
      * Turn an XML stream into an object, if possible.
      *
-     * @param expectedType
-     * @param reader
-     * @return
+     * @param expectedType a T object.
+     * @param reader a {@link java.io.Reader} object.
+     * @return a T object.
+     * @throws javax.xml.bind.JAXBException if any.
      */
     public T unMarshal(T expectedType, Reader reader) throws JAXBException {
         T object = null;
@@ -187,9 +189,10 @@ public class JaxbObject<T> {
     /**
      * Turn an XML stream into an object, if possible.
      *
-     * @param expectedType
-     * @param reader
-     * @return
+     * @param expectedType a T object.
+     * @param d a {@link org.w3c.dom.Document} object.
+     * @return a T object.
+     * @throws javax.xml.bind.JAXBException if any.
      */
     public T unMarshal(Document d, T expectedType) throws JAXBException {
         T object = null;

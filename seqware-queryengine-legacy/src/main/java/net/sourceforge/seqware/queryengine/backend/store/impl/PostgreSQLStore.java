@@ -72,14 +72,16 @@ import org.postgresql.largeobject.LargeObjectManager;
 
 
 /**
+ * <p>PostgreSQLStore class.</p>
+ *
  * @author boconnor
- * 
+ *
  * This is a simple first pass at a backend powered by a traditional relational DB. Note that only
  * generic features and variants are currently implemented.
- * 
+ *
  * ToDo:
  * * look into doing an update rather than delete followed by insert of a new record
- * 
+ * @version $Id: $Id
  */
 public class PostgreSQLStore extends Store {
 
@@ -119,10 +121,13 @@ public class PostgreSQLStore extends Store {
   PreparedStatement psVariantTag = null;
   
   // static variables
+  /** Constant <code>OID=0</code> */
   static public int OID = 0;
+  /** Constant <code>BYTEA=1</code> */
   static public int BYTEA = 1;
   // if the particular object type doesn't support direclty writing to an object-specific table then 
   // it will use the OID approach instead
+  /** Constant <code>FIELDS=2</code> */
   static public int FIELDS = 2;
   
   // preferred method for persistence
@@ -136,6 +141,7 @@ public class PostgreSQLStore extends Store {
   
   // UTIL METHODS
 
+  /** {@inheritDoc} */
   public void setup(SeqWareSettings settings) throws FileNotFoundException, DatabaseException, Exception {
 
     super.setup(settings);
@@ -220,6 +226,11 @@ public class PostgreSQLStore extends Store {
     
   }
 
+  /**
+   * <p>close.</p>
+   *
+   * @throws com.sleepycat.db.DatabaseException if any.
+   */
   public void close() throws DatabaseException {
     try {
       ps1.close();
@@ -249,6 +260,14 @@ public class PostgreSQLStore extends Store {
   
   // Generic Methods
   
+  /**
+   * <p>getModelsUnordered.</p>
+   *
+   * @param table a {@link java.lang.String} object.
+   * @param type a {@link java.lang.String} object.
+   * @param binding a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.PostgresModelIterator} object.
+   */
   protected PostgresModelIterator getModelsUnordered(String table, String type, TupleBinding binding) {
     
     try {
@@ -270,10 +289,29 @@ public class PostgreSQLStore extends Store {
     return(null);
   }
    
+  /**
+   * <p>getModels.</p>
+   *
+   * @param table a {@link java.lang.String} object.
+   * @param type a {@link java.lang.String} object.
+   * @param binding a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.PostgresModelIterator} object.
+   */
   protected PostgresModelIterator getModels(String table, String type, TupleBinding binding) {
       return(getModelsUnordered(table, type, binding));
   }
   
+  /**
+   * <p>getLocatableModels.</p>
+   *
+   * @param table a {@link java.lang.String} object.
+   * @param type a {@link java.lang.String} object.
+   * @param binding a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @param contig a {@link java.lang.String} object.
+   * @param start a int.
+   * @param stop a int.
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.PostgresModelIterator} object.
+   */
   protected PostgresModelIterator getLocatableModels(String table, String type, TupleBinding binding, String contig, int start, int stop) {
     try {
       PreparedStatement ps = null;
@@ -293,6 +331,16 @@ public class PostgreSQLStore extends Store {
     return(null);
   }
 
+  /**
+   * <p>getModelsByTag.</p>
+   *
+   * @param table a {@link java.lang.String} object.
+   * @param linkTable a {@link java.lang.String} object.
+   * @param type a {@link java.lang.String} object.
+   * @param tag a {@link java.lang.String} object.
+   * @param binding a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.PostgresModelIterator} object.
+   */
   protected PostgresModelIterator getModelsByTag(String table, String linkTable, String type, String tag, TupleBinding binding) {
     try {
       PreparedStatement ps = null;
@@ -313,6 +361,13 @@ public class PostgreSQLStore extends Store {
     return(null);
   }
   
+  /**
+   * <p>getModelsTags.</p>
+   *
+   * @param table a {@link java.lang.String} object.
+   * @param linkTable a {@link java.lang.String} object.
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.PostgresTagModelIterator} object.
+   */
   protected PostgresTagModelIterator getModelsTags(String table, String linkTable) {
     // FIXME: need to implement, is this tuple binder for tags?
     try {
@@ -332,6 +387,14 @@ public class PostgreSQLStore extends Store {
     
   }
   
+  /**
+   * <p>getModelsTags.</p>
+   *
+   * @param table a {@link java.lang.String} object.
+   * @param linkTable a {@link java.lang.String} object.
+   * @param tagSearchStr a {@link java.lang.String} object.
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.PostgresTagModelIterator} object.
+   */
   protected PostgresTagModelIterator getModelsTags(String table, String linkTable, String tagSearchStr) {
     // FIXME: need to implement, is this tuple binder for tags?
     try {
@@ -352,6 +415,16 @@ public class PostgreSQLStore extends Store {
     
   }
   
+  /**
+   * <p>getModel.</p>
+   *
+   * @param table a {@link java.lang.String} object.
+   * @param type a {@link java.lang.String} object.
+   * @param modelId a {@link java.lang.String} object.
+   * @param binding a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.model.Model} object.
+   * @throws java.lang.Exception if any.
+   */
   protected Model getModel(String table, String type, String modelId, TupleBinding binding) throws Exception {
 
     Model result = null;
@@ -391,6 +464,16 @@ public class PostgreSQLStore extends Store {
   }
   
   // FIXME: tag put is broken here 
+  /**
+   * <p>putModel.</p>
+   *
+   * @param table a {@link java.lang.String} object.
+   * @param linkTable a {@link java.lang.String} object.
+   * @param type a {@link java.lang.String} object.
+   * @param binding a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   * @param model a {@link net.sourceforge.seqware.queryengine.backend.model.LocatableModel} object.
+   * @return a {@link java.lang.Long} object.
+   */
   protected synchronized Long putModel(String table, String linkTable, String type, TupleBinding binding, LocatableModel model) {
     
     /*
@@ -512,6 +595,12 @@ public class PostgreSQLStore extends Store {
     
   }
   
+  /**
+   * <p>addTags.</p>
+   *
+   * @param model a {@link net.sourceforge.seqware.queryengine.backend.model.Model} object.
+   * @param table a {@link java.lang.String} object.
+   */
   public void addTags(Model model, String table) {
     
     try {
@@ -575,6 +664,12 @@ public class PostgreSQLStore extends Store {
   }
   
   // FIXME: make generic, tied to variant table for now
+  /**
+   * <p>readTags.</p>
+   *
+   * @param model a {@link net.sourceforge.seqware.queryengine.backend.model.Model} object.
+   * @param table a {@link java.lang.String} object.
+   */
   public void readTags(Model model, String table) {
     
     try {
@@ -603,39 +698,60 @@ public class PostgreSQLStore extends Store {
   
   // FEATURE METHODS
   
+  /**
+   * <p>getFeaturesUnordered.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.PostgresModelIterator} object.
+   */
   public PostgresModelIterator getFeaturesUnordered() {
     return(getModelsUnordered("feature", "feature", ftb));
   }
   
+  /**
+   * <p>getFeatures.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.PostgresModelIterator} object.
+   */
   public PostgresModelIterator getFeatures() {
     return(getModels("feature", "feature", ftb));
   }
   
+  /** {@inheritDoc} */
   public PostgresModelIterator getFeatures(String contig, int start, int stop) {
     return(getLocatableModels("feature", "feature", ftb, contig, start, stop));
   }
   
+  /** {@inheritDoc} */
   public Feature getFeature(String featureId) throws Exception {
     return((Feature)getModel("feature", "feature", featureId, ftb));
   }
   
+  /** {@inheritDoc} */
   public PostgresModelIterator getFeaturesByTag(String tag) {
     return(getModelsByTag("feature", "feature_tag", "feature", tag, ftb));
   }
   
+  /**
+   * <p>getFeaturesTags.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.PostgresTagModelIterator} object.
+   */
   public PostgresTagModelIterator getFeaturesTags() {
     return(getModelsTags("feature", "feature_tag"));
   }
   
+  /** {@inheritDoc} */
   public SeqWareIterator getFeatureTagsBySearch(String tagSearchStr) {
     return(null);
   }
   
+  /** {@inheritDoc} */
   public synchronized String putFeature(Feature feature, SeqWareIterator it, boolean transactional) {
     currFeatureId = putModel("feature", "feature_tag", "feature", ftb, feature);
     return(currFeatureId.toString());
   }
  
+  /** {@inheritDoc} */
   public synchronized String putFeature(Feature feature) {
     currFeatureId = putModel("feature", "feature_tag", "feature", ftb, feature);
     return(currFeatureId.toString());
@@ -643,6 +759,11 @@ public class PostgreSQLStore extends Store {
   
   // VARIANT METHODS
 
+ /**
+  * <p>getMismatchesUnordered.</p>
+  *
+  * @return a {@link net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator} object.
+  */
  public SeqWareIterator getMismatchesUnordered() {
     if (persistenceMethod == PostgreSQLStore.OID || persistenceMethod == PostgreSQLStore.BYTEA) {
       return(getModelsUnordered("feature", "variant", mtb));
@@ -661,10 +782,16 @@ public class PostgreSQLStore extends Store {
     return(null);
   }
 
+  /**
+   * <p>getMismatches.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator} object.
+   */
   public SeqWareIterator getMismatches() {
     return(getMismatchesUnordered());
   }
 
+  /** {@inheritDoc} */
   public SeqWareIterator getMismatches(String contig, int start, int stop) {
     if (persistenceMethod == PostgreSQLStore.OID || persistenceMethod == PostgreSQLStore.BYTEA) {
       return(getLocatableModels("feature", "variant", mtb, contig, start, stop));
@@ -686,11 +813,13 @@ public class PostgreSQLStore extends Store {
     return(null);
   }
 
+  /** {@inheritDoc} */
   public SeqWareIterator getMismatches(String contig) {
     // basically setting this to the largest value possible
     return(getMismatches(contig, 1, Integer.MAX_VALUE));
   }
 
+  /** {@inheritDoc} */
   public Variant getMismatch(String mismatchId) throws Exception {
     Variant v = null;
     if (persistenceMethod == PostgreSQLStore.OID || persistenceMethod == PostgreSQLStore.BYTEA) {
@@ -756,6 +885,7 @@ public class PostgreSQLStore extends Store {
     return(v);
   }
 
+  /** {@inheritDoc} */
   public SeqWareIterator getMismatchesByTag(String tag) {
     
     if (persistenceMethod == PostgreSQLStore.OID || persistenceMethod == PostgreSQLStore.BYTEA) {
@@ -779,20 +909,23 @@ public class PostgreSQLStore extends Store {
 
   /**
    * Get access to an iterator containing all the mismatch tags.
-   * @return
+   *
+   * @return a {@link net.sourceforge.seqware.queryengine.backend.util.iterators.PostgresTagModelIterator} object.
    */
   public PostgresTagModelIterator getMismatchesTags() {
     return(getModelsTags("variant", "variant_tag"));
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Get access to an iterator containing all the mismatch tags.
-   * @return
    */
   public PostgresTagModelIterator getMismatchTagsBySearch(String tagSearchStr) {
     return(getModelsTags("variant", "variant_tag", tagSearchStr));
   }
 
+  /** {@inheritDoc} */
   public synchronized String putMismatch(Variant variant) {
     
     if (persistenceMethod == PostgreSQLStore.OID || persistenceMethod == PostgreSQLStore.BYTEA) {
@@ -937,6 +1070,7 @@ public class PostgreSQLStore extends Store {
     return(variant.getId());
   }
 
+  /** {@inheritDoc} */
   public synchronized String putMismatch(Variant variant, SeqWareIterator it, boolean transactional) {
     return(putMismatch(variant));
   }
@@ -944,54 +1078,61 @@ public class PostgreSQLStore extends Store {
   // COVERAGE METHODS
   
   /**
+   * {@inheritDoc}
+   *
    * Calling function will get back the coverage blocks that are contained within the range of interest
    * so make sure it pads +/- the bin size in the requested range otherwise may miss data!
-   * @param contig
-   * @param start
-   * @param stop
-   * @return
    */
   public LocatableSecondaryCursorIterator getCoverages(String contig, int start, int stop) {
     LocatableSecondaryCursorIterator cci = null;
     return(cci);
   }
   
+  /** {@inheritDoc} */
   public LocatableSecondaryCursorIterator getCoverages(String contig) {
     return(getCoverages(contig, 1, Integer.MAX_VALUE)); // basically setting this to the largest value possible
   }
 
+  /** {@inheritDoc} */
   public synchronized String putCoverage(Coverage coverage) {
     return(putCoverage(coverage, true));
   }
 
   // FIXME: this should be redone to use putModel
+  /** {@inheritDoc} */
   public synchronized String putCoverage(Coverage coverage, boolean transactional) {
     return(null);
   }
 
   // CONSEQUENCE METHODS
   
+  /** {@inheritDoc} */
   public synchronized String putConsequence(Consequence consequence) {
     return(putConsequence(consequence, true));
   }
   
+  /** {@inheritDoc} */
   public synchronized String putConsequence(Consequence consequence, boolean transactional) {
     return(null);
   }
 
+  /** {@inheritDoc} */
   public Consequence getConsequence(String consequenceId) throws Exception {
     return(null);
   }
 
+  /** {@inheritDoc} */
   public SecondaryCursorIterator getConsequencesByTag(String tag) {
     SecondaryCursorIterator i = null;
     return(i);
   }
 
+  /** {@inheritDoc} */
   public SeqWareIterator getConsequenceTagsBySearch(String tagSearchStr) {
     return(null);
   }  
   
+  /** {@inheritDoc} */
   public SecondaryCursorIterator getConsequencesByMismatch(String mismatchId) {
     SecondaryCursorIterator i = null;
     return(i);

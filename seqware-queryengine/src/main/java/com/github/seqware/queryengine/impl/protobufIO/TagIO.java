@@ -25,11 +25,14 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import org.apache.log4j.Logger;
 
 /**
+ * <p>TagIO class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class TagIO implements ProtobufTransferInterface<TagPB, Tag> {
 
+    /** {@inheritDoc} */
     @Override
     public Tag pb2m(TagPB tag) {
         Tag.Builder builder = Tag.newBuilder().setKey(tag.getKey());
@@ -61,6 +64,7 @@ public class TagIO implements ProtobufTransferInterface<TagPB, Tag> {
         return rTag;
     }
 
+    /** {@inheritDoc} */
     @Override
     public TagPB m2pb(Tag tag) {
         QESupporting.TagPB.Builder builder = QESupporting.TagPB.newBuilder().setKey(tag.getKey());
@@ -99,6 +103,7 @@ public class TagIO implements ProtobufTransferInterface<TagPB, Tag> {
         return fMesg;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Tag byteArr2m(byte[] arr) {
         try {

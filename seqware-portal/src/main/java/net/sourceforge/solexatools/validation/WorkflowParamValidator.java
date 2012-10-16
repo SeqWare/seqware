@@ -6,21 +6,30 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+/**
+ * <p>WorkflowParamValidator class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class WorkflowParamValidator implements Validator{
 	
+	/**
+	 * <p>Constructor for WorkflowParamValidator.</p>
+	 */
 	public WorkflowParamValidator () {
 		super();
 	}
 	
+	/** {@inheritDoc} */
 	public boolean supports(Class clazz) {
 		return WorkflowParam.class.equals(clazz);
 	}
 
 	/**
-	 * Validates the specified Object.
+	 * {@inheritDoc}
 	 *
-	 * @param obj the Object to validate
-	 * @param errors Errors object for validation errors
+	 * Validates the specified Object.
 	 */
 	public void validate(Object obj, Errors errors) {
 	//	Workflow workflow = (Workflow) obj;

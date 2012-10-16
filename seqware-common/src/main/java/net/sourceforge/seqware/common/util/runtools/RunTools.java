@@ -8,37 +8,75 @@ import net.sourceforge.seqware.common.util.Log;
 
 import net.sourceforge.seqware.common.util.iotools.BufferedReaderThread;
 
+/**
+ * <p>RunTools class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class RunTools {
 
     /**
+     * <p>runCommand.</p>
      *
+     * @param env a {@link java.util.Map} object.
+     * @param command a {@link java.lang.String} object.
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public static ReturnValue runCommand(Map<String, String> env, String command) {
         return (RunTools.runCommand(env, splitCommandPreserveQuote(command)));
     }
 
+    /**
+     * <p>startCommand.</p>
+     *
+     * @param env a {@link java.util.Map} object.
+     * @param command a {@link java.lang.String} object.
+     * @return a {@link java.lang.Process} object.
+     * @throws java.io.IOException if any.
+     */
     public static Process startCommand(Map<String, String> env, String command) throws IOException {
         return (RunTools.startCommand(env, splitCommandPreserveQuote(command)));
     }
 
     /**
+     * <p>runCommand.</p>
      *
+     * @param command a {@link java.lang.String} object.
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public static ReturnValue runCommand(String command) {
         return (RunTools.runCommand(splitCommandPreserveQuote(command)));
     }
 
+    /**
+     * <p>startCommand.</p>
+     *
+     * @param command a {@link java.lang.String} object.
+     * @return a {@link java.lang.Process} object.
+     * @throws java.io.IOException if any.
+     */
     public static Process startCommand(String command) throws IOException {
         return (RunTools.startCommand(splitCommandPreserveQuote(command)));
     }
 
     /**
+     * <p>runCommand.</p>
      *
+     * @param command an array of {@link java.lang.String} objects.
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public static ReturnValue runCommand(String[] command) {
         return (RunTools.runCommand(null, command));
     }
 
+    /**
+     * <p>startCommand.</p>
+     *
+     * @param command an array of {@link java.lang.String} objects.
+     * @return a {@link java.lang.Process} object.
+     * @throws java.io.IOException if any.
+     */
     public static Process startCommand(String[] command) throws IOException {
         return (RunTools.startCommand(null, command));
     }
@@ -53,8 +91,9 @@ public class RunTools {
      * you'll run into problems, see
      * http://java.sun.com/javase/6/docs/api/java/lang/Process.html
      *
-     * @param command
-     * @return
+     * @param command an array of {@link java.lang.String} objects.
+     * @param env a {@link java.util.Map} object.
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public static ReturnValue runCommand(Map<String, String> env, String[] command) {
         ReturnValue ret = new ReturnValue();
@@ -94,6 +133,9 @@ public class RunTools {
 
     /**
      * Wait on a process to finish, then parse information into return value
+     *
+     * @param p a {@link java.lang.Process} object.
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public static ReturnValue waitAndGetReturn(Process p) {
         ReturnValue ret = new ReturnValue();
@@ -164,7 +206,10 @@ public class RunTools {
      * output stdout or stderr to a file in real-time, or if it will be too
      * large to buffer in RAM and return.
      *
-     * @throws IOException
+     * @throws java.io.IOException if any.
+     * @param env a {@link java.util.Map} object.
+     * @param command an array of {@link java.lang.String} objects.
+     * @return a {@link java.lang.Process} object.
      */
     // FIXME: This should instantiate the shell. Modules should not need to say
     // FIXME:     RunTools.runCommand( new String[] { "bash", "-c", cmd.toString() } );
@@ -184,6 +229,11 @@ public class RunTools {
         return pb.start();
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         StringBuffer sb = new StringBuffer();
         for (String token : args) {

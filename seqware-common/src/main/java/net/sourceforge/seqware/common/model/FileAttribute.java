@@ -13,6 +13,12 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
+/**
+ * <p>FileAttribute class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 @Table(name = "file_attribute", uniqueConstraints = { @UniqueConstraint(columnNames = { "file_id", "tag", "value" }) })
 public class FileAttribute implements Attribute {
 
@@ -34,56 +40,90 @@ public class FileAttribute implements Attribute {
 
   private String unit;
 
+  /**
+   * <p>Constructor for FileAttribute.</p>
+   */
   public FileAttribute() {
 
   }
 
+  /**
+   * <p>Constructor for FileAttribute.</p>
+   *
+   * @param fileAttributeId a {@link java.lang.Integer} object.
+   */
   public FileAttribute(Integer fileAttributeId) {
     this.fileAttributeId = fileAttributeId;
   }
 
+  /**
+   * <p>Getter for the field <code>file</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.File} object.
+   */
   public File getFile() {
     return file;
   }
 
+  /**
+   * <p>Setter for the field <code>file</code>.</p>
+   *
+   * @param file a {@link net.sourceforge.seqware.common.model.File} object.
+   */
   public void setFile(File file) {
     this.file = file;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getTag() {
     return tag;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void setTag(String tag) {
     this.tag = tag;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getValue() {
     return value;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void setValue(String value) {
     this.value = value;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getUnit() {
     return unit;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void setUnit(String unit) {
     this.unit = unit;
   }
 
+  /**
+   * <p>Getter for the field <code>fileAttributeId</code>.</p>
+   *
+   * @return a {@link java.lang.Integer} object.
+   */
   public Integer getFileAttributeId() {
     return fileAttributeId;
   }
 
+  /**
+   * <p>Setter for the field <code>fileAttributeId</code>.</p>
+   *
+   * @param fileAttributeId a {@link java.lang.Integer} object.
+   */
   public void setFileAttributeId(Integer fileAttributeId) {
     this.fileAttributeId = fileAttributeId;
   }

@@ -16,21 +16,29 @@ import net.sourceforge.seqware.common.model.Study;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>ExperimentServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ExperimentServiceImpl implements ExperimentService {
   private ExperimentDAO experimentDAO = null;
   private FileDAO fileDAO = null;
   private static final Log log = LogFactory.getLog(ExperimentServiceImpl.class);
 
+  /**
+   * <p>Constructor for ExperimentServiceImpl.</p>
+   */
   public ExperimentServiceImpl() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Sets a private member variable with an instance of an implementation of
    * ExperimentDAO. This method is called by the Spring framework at run time.
-   * 
-   * @param experimentDAO
-   *          implementation of ExperimentDAO
    * @see ExperimentDAO
    */
   public void setExperimentDAO(ExperimentDAO experimentDAO) {
@@ -40,7 +48,7 @@ public class ExperimentServiceImpl implements ExperimentService {
   /**
    * Sets a private member variable with an instance of an implementation of
    * FileDAO. This method is called by the Spring framework at run time.
-   * 
+   *
    * @param fileDAO
    *          implementation of FileDAO
    * @see FileDAO
@@ -50,10 +58,9 @@ public class ExperimentServiceImpl implements ExperimentService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of Experiment into the database.
-   * 
-   * @param experimentDAO
-   *          instance of ExperimentDAO
    */
   public Integer insert(Experiment experiment) {
     experiment.setCreateTimestamp(new Date());
@@ -61,20 +68,21 @@ public class ExperimentServiceImpl implements ExperimentService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of Experiment in the database.
-   * 
-   * @param experiment
-   *          instance of Experiment
    */
   public void update(Experiment experiment) {
     experimentDAO.update(experiment);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void merge(Experiment experiment) {
     experimentDAO.merge(experiment);
   }
 
+  /** {@inheritDoc} */
   public void delete(Experiment experiment, String deleteRealFiles) {
     List<File> deleteFiles = null;
     if ("yes".equals(deleteRealFiles)) {
@@ -88,30 +96,42 @@ public class ExperimentServiceImpl implements ExperimentService {
     }
   }
 
+  /** {@inheritDoc} */
   public List<Experiment> list(Registration registration) {
     return experimentDAO.list(registration);
   }
 
+  /**
+   * <p>list.</p>
+   *
+   * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
+   * @return a {@link java.util.List} object.
+   */
   public List<Experiment> list(Study study) {
     return experimentDAO.list(study);
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer experimentId) {
     return experimentDAO.getFiles(experimentId);
   }
 
+  /** {@inheritDoc} */
   public boolean isHasFile(Integer experimentId) {
     return experimentDAO.isHasFile(experimentId);
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer studyId, String metaType) {
     return experimentDAO.getFiles(studyId, metaType);
   }
 
+  /** {@inheritDoc} */
   public boolean isHasFile(Integer studyId, String metaType) {
     return experimentDAO.isHasFile(studyId, metaType);
   }
 
+  /** {@inheritDoc} */
   public SortedSet<Experiment> setWithHasFile(SortedSet<Experiment> list) {
     for (Experiment experiment : list) {
       experiment.setIsHasFile(isHasFile(experiment.getExperimentId()));
@@ -119,6 +139,7 @@ public class ExperimentServiceImpl implements ExperimentService {
     return list;
   }
 
+  /** {@inheritDoc} */
   public SortedSet<Experiment> listWithHasFile(SortedSet<Experiment> list, String metaType) {
     SortedSet<Experiment> result = new TreeSet<Experiment>();
     for (Experiment experiment : list) {
@@ -133,11 +154,11 @@ public class ExperimentServiceImpl implements ExperimentService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of Experiment in the database by the Experiment
    * emailAddress, and copies the Experiment properties to an instance of
    * Experiment.
-   * 
-   * @return instance of Experiment, or null if a Experiment cannot be found
    */
   public Experiment findByTitle(String title) {
     Experiment experiment = null;
@@ -151,6 +172,7 @@ public class ExperimentServiceImpl implements ExperimentService {
     return experiment;
   }
 
+  /** {@inheritDoc} */
   public Experiment findByID(Integer expID) {
     Experiment experiment = null;
     if (expID != null) {
@@ -164,6 +186,7 @@ public class ExperimentServiceImpl implements ExperimentService {
     return experiment;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Experiment findBySWAccession(Integer swAccession) {
     Experiment experiment = null;
@@ -179,16 +202,9 @@ public class ExperimentServiceImpl implements ExperimentService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Determines if an email address has already been used.
-   * 
-   * @param oldEmail
-   *          The previous email address, or null if this method is being called
-   *          for a new email address
-   * 
-   * @param newEmail
-   *          The email address that is being checked
-   * 
-   * @return true if the newEmail has already been used, and false otherwise
    */
   public boolean hasTitleBeenUsed(String oldTitle, String newTitle) {
     boolean titleUsed = false;
@@ -214,37 +230,44 @@ public class ExperimentServiceImpl implements ExperimentService {
     return titleUsed;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Experiment updateDetached(Experiment experiment) {
     return (Experiment) experimentDAO.updateDetached(experiment);
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Experiment> findByOwnerID(Integer registrationID) {
     return experimentDAO.findByOwnerID(registrationID);
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Experiment> findByCriteria(String criteria, boolean isCaseSens) {
     return experimentDAO.findByCriteria(criteria, isCaseSens);
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Experiment> list() {
     return experimentDAO.list();
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(Registration registration, Experiment experiment) {
     experimentDAO.update(registration, experiment);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer insert(Registration registration, Experiment experiment) {
     experiment.setCreateTimestamp(new Date());
     return (experimentDAO.insert(registration, experiment));
   }
 
+  /** {@inheritDoc} */
   @Override
   public Experiment updateDetached(Registration registration, Experiment experiment) {
     return experimentDAO.updateDetached(registration, experiment);

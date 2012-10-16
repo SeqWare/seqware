@@ -28,10 +28,15 @@ import org.junit.runner.RunWith;
  * ProtoBuffer serialization.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 @RunWith(DynamicSuite.class)
 public class InMemoryFileStoragePBSerializationSuite {
 
+    /**
+     * <p>setupSuite.</p>
+     */
     @BeforeClass
     public static void setupSuite() {
         Logger.getLogger(InMemoryFileStoragePBSerializationSuite.class.getName()).info( "Running test suite with in-memory objects and PB serialization to the filesystem");
@@ -39,6 +44,9 @@ public class InMemoryFileStoragePBSerializationSuite {
         SWQEFactory.getStorage().clearStorage();
     }
 
+    /**
+     * <p>tearDownSuite.</p>
+     */
     @AfterClass
     public static void tearDownSuite() {
         Logger.getLogger(InMemoryFileStoragePBSerializationSuite.class.getName()).info( "Ending test suite and resetting");

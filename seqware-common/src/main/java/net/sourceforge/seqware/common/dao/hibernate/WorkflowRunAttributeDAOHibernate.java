@@ -13,6 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
+/**
+ * <p>WorkflowRunAttributeDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class WorkflowRunAttributeDAOHibernate implements WorkflowRunAttributeDAO {
 
   @Autowired
@@ -22,6 +28,7 @@ public class WorkflowRunAttributeDAOHibernate implements WorkflowRunAttributeDAO
     return sessionFactory.getCurrentSession();
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<WorkflowRunAttribute> getAll() {
     Query query = currentSession().createQuery("from WorkflowRunAttribute");
@@ -30,6 +37,7 @@ public class WorkflowRunAttributeDAOHibernate implements WorkflowRunAttributeDAO
     return records;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<WorkflowRunAttribute> get(WorkflowRun workflowRun) {
     Query query = currentSession().createQuery("from WorkflowRunAttribute as f where f.workflowRun = :workflowRun");
@@ -39,21 +47,25 @@ public class WorkflowRunAttributeDAOHibernate implements WorkflowRunAttributeDAO
     return records;
   }
 
+  /** {@inheritDoc} */
   @Override
   public WorkflowRunAttribute get(Integer id) {
     return (WorkflowRunAttribute) currentSession().get(WorkflowRunAttribute.class, id);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer add(WorkflowRunAttribute workflowRunAttribute) {
     return (Integer) currentSession().save(workflowRunAttribute);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(WorkflowRunAttribute workflowRunAttribute) {
     currentSession().merge(workflowRunAttribute);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void delete(WorkflowRunAttribute workflowRunAttribute) {
     currentSession().delete(workflowRunAttribute);

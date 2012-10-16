@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
  *
  * #
  * # SEQWARE QUERY ENGINE SETTINGS # QE_NAMESPACE=IRON_MAN
- * QE_DEVELOPMENT_DEPENDENCY=file:/home/dyuen/seqware_github/seqware-distribution/target/seqware-queryengine-0.13.3-full.jar 
+ * QE_DEVELOPMENT_DEPENDENCY=file:/home/dyuen/seqware_github/seqware-distribution/target/seqware-queryengine-0.13.3-full.jar
  * QE_PERSIST=true QE_HBASE_REMOTE_TESTING=true # Connect to either HBOOT,
  * SQWDEV, or an implicit localhost QE_HBASE_PROPERTIES=HBOOT
  *
@@ -52,6 +52,7 @@ import org.apache.log4j.Logger;
  * QE_SQWDEV_FS_HDFS_IMPL=org.apache.hadoop.hdfs.DistributedFileSystem
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class Constants {
 
@@ -189,7 +190,7 @@ public class Constants {
     /**
      * Set the settings map, overriding hard-coded values for our constants.
      *
-     * @param SETTINGS_MAP
+     * @param SETTINGS_MAP a {@link java.util.Map} object.
      */
     public static void setSETTINGS_MAP(Map<String, String> SETTINGS_MAP) {
         Constants.SETTINGS_MAP = SETTINGS_MAP;
@@ -199,7 +200,7 @@ public class Constants {
     /**
      * Get the settings map.
      *
-     * @return
+     * @return a {@link java.util.Map} object.
      */
     public static Map<String, String> getSETTINGS_MAP() {
         return SETTINGS_MAP;

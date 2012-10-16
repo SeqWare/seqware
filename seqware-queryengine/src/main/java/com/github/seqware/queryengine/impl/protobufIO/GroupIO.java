@@ -34,11 +34,14 @@ import org.apache.log4j.Logger;
 ;
 
 /**
+ * <p>GroupIO class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class GroupIO implements ProtobufTransferInterface<GroupPB, Group>{
 
+    /** {@inheritDoc} */
     @Override
     public Group pb2m(GroupPB pb) {
         Group.Builder builder = InMemoryGroup.newBuilder();
@@ -60,6 +63,7 @@ public class GroupIO implements ProtobufTransferInterface<GroupPB, Group>{
     }
     
 
+    /** {@inheritDoc} */
     @Override
     public GroupPB m2pb(Group atom) {
         QueryEngine.GroupPB.Builder builder = QueryEngine.GroupPB.newBuilder();
@@ -77,6 +81,7 @@ public class GroupIO implements ProtobufTransferInterface<GroupPB, Group>{
         return userpb;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Group byteArr2m(byte[] arr) {
         try {

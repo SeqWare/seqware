@@ -34,8 +34,10 @@ import net.sourceforge.seqware.common.util.Log;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * <p>SymLinkFileReporter class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
 public class SymLinkFileReporter extends Plugin {
@@ -47,6 +49,9 @@ public class SymLinkFileReporter extends Plugin {
     private String csvFileName = null;
     private BufferedWriter writer;
     
+    /**
+     * <p>Constructor for SymLinkFileReporter.</p>
+     */
     public SymLinkFileReporter() {
         super();
         parser.acceptsAll(Arrays.asList("study"), "Make symlinks for a study").withRequiredArg();
@@ -66,17 +71,20 @@ public class SymLinkFileReporter extends Plugin {
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
     
+    /** {@inheritDoc} */
     @Override
     public ReturnValue init() {
         
         return ret;
     }
     
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_test() {
         return ret;
     }
     
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_run() {
         String currentDir = new File(".").getAbsolutePath();
@@ -356,11 +364,13 @@ public class SymLinkFileReporter extends Plugin {
         }
     }
     
+    /** {@inheritDoc} */
     @Override
     public ReturnValue clean_up() {
         return ret;
     }
     
+    /** {@inheritDoc} */
     @Override
     public String get_description() {
         return "Create a nested tree structure of all of the output files from a "

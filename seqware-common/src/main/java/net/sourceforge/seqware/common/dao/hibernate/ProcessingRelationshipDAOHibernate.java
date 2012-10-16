@@ -11,23 +11,33 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ProcessingRelationshipDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ProcessingRelationshipDAOHibernate extends HibernateDaoSupport implements ProcessingRelationshipDAO {
 
+  /** {@inheritDoc} */
   @Override
   public void insert(ProcessingRelationship processingRelationship) {
     this.getHibernateTemplate().save(processingRelationship);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(ProcessingRelationship processingRelationship) {
     this.getHibernateTemplate().update(processingRelationship);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void delete(ProcessingRelationship processingRelationship) {
     this.getHibernateTemplate().delete(processingRelationship);
   }
 
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("rawtypes")
   public ProcessingRelationship findByProcessings(Processing processingParent, Processing processingChild) {
@@ -41,6 +51,7 @@ public class ProcessingRelationshipDAOHibernate extends HibernateDaoSupport impl
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ProcessingRelationship updateDetached(ProcessingRelationship processingRelationship) {
     ProcessingRelationship dbObject = findByProcessings(processingRelationship.getProcessingByParentId(),
@@ -57,6 +68,7 @@ public class ProcessingRelationshipDAOHibernate extends HibernateDaoSupport impl
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ProcessingRelationship> list() {
         throw new UnsupportedOperationException("Not supported yet.");

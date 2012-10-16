@@ -18,15 +18,25 @@ import org.hibernate.Query;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ProcessingDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ProcessingDAOHibernate extends HibernateDaoSupport implements ProcessingDAO {
 
     private Logger logger;
 
+    /**
+     * <p>Constructor for ProcessingDAOHibernate.</p>
+     */
     public ProcessingDAOHibernate() {
         super();
         logger = Logger.getLogger(ProcessingDAOHibernate.class);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer insert(Processing processing) {
         if (processing.getCreateTimestamp() == null) {
@@ -38,6 +48,8 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Updates an instance of Processing in the database.
      */
     public void update(Processing processing) {
@@ -47,6 +59,8 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Updates an instance of Processing in the database.
      */
     public void delete(Processing processing) {
@@ -55,6 +69,8 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     }
 
     /**
+     * {@inheritDoc}
+     *
      * WITH RECURSIVE "processing_root_to_leaf" ("child_id", "parent_id") AS (
      * SELECT p."child_id" as "child_id", p."parent_id" FROM
      * "processing_relationship" p where p."parent_id" = 53851 UNION ALL SELECT
@@ -119,6 +135,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
         return files;
     }
 
+    /** {@inheritDoc} */
     public boolean isHasFile(Integer processingId) {
         boolean isHasFile = false;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -141,6 +158,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
         return isHasFile;
     }
 
+    /** {@inheritDoc} */
     public List<File> getFiles(Integer processingId, String metaType) {
         List<File> files = new ArrayList<File>();
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -168,6 +186,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
         return files;
     }
 
+    /** {@inheritDoc} */
     public boolean isHasFile(Integer processingId, String metaType) {
         boolean isHasFile = false;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -194,10 +213,10 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Finds an instance of Processing in the database by the Processing
      * emailAddress.
-     *
-     * @return Processing or null if not found
      */
     public Processing findByFilePath(String filePath) {
         String query = "from processing as processing where processing.file_path = ?";
@@ -211,9 +230,9 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     }
 
     /**
-     * Finds an instance of SequencerRun in the database by the SequencerRun ID.
+     * {@inheritDoc}
      *
-     * @return Processing or null if not found
+     * Finds an instance of SequencerRun in the database by the SequencerRun ID.
      */
     public Processing findByID(Integer id) {
         String query = "from Processing as processing where processing.processingId = ?";
@@ -226,6 +245,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
         return processing;
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public Processing findBySWAccession(Integer swAccession) {
@@ -239,6 +259,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
         return processing;
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public List<Processing> findByOwnerID(Integer registrationId) {
@@ -247,6 +268,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
         return this.getHibernateTemplate().find(query, parameters);
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public List<Processing> findByCriteria(String criteria, boolean isCaseSens) {
@@ -267,6 +289,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
         return query.list();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Processing updateDetached(Processing processing) {
         Processing dbObject = findByID(processing.getProcessingId());
@@ -282,6 +305,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Processing> list() {
         ArrayList<Processing> l = new ArrayList<Processing>();
@@ -297,6 +321,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
         return l;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(Registration registration, Processing processing) {
         Processing dbObject = reattachProcessing(processing);
@@ -312,6 +337,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer insert(Registration registration, Processing processing) {
         Logger logger = Logger.getLogger(ProcessingDAOHibernate.class);
@@ -326,6 +352,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Processing updateDetached(Registration registration, Processing processing) {
         Processing dbObject = reattachProcessing(processing);

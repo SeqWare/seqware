@@ -21,10 +21,10 @@ import org.biojava3.genome.parsers.gff.GFF3Reader;
  * documentation refers to the previous prototype and has not been verified on
  * the current one. It seems that GVF is backwards compatible with GFF3 parsers
  * so let's hope this works.
- * 
+ *
  * This does not support multi-individual files yet.
- * 
- * The other issue is that the old converter only picked up specific tags. Other datasets like the 
+ *
+ * The other issue is that the old converter only picked up specific tags. Other datasets like the
  * 10Gen Data set seem to use pretty different tags. Maybe we should automatically load tags on the fly?
  *
  * @author boconnor
@@ -147,14 +147,16 @@ import org.biojava3.genome.parsers.gff.GFF3Reader;
  * use. Attributes that begin with a lowercase letter can be used freely by
  * applications. You can stash any semi-structured data into the database by
  * using one or more unreserved (lowercase) tags.
- *
- *
+ * @version $Id: $Id
  */
 public class GFF3VariantImportWorker extends ImportWorker {
     private TagSet gff3TagSet;
     private static final String GFF3 = "GFF3";
     private CreateUpdateManager mManager;
 
+    /**
+     * <p>Constructor for GFF3VariantImportWorker.</p>
+     */
     public GFF3VariantImportWorker() {
     }
     
@@ -162,6 +164,7 @@ public class GFF3VariantImportWorker extends ImportWorker {
         return VCFVariantImportWorker.processVCFTagSpec(key, this.gff3TagSet, this.mManager);
     }
     
+    /** {@inheritDoc} */
     @Override
     public void run() {
         // grab FeatureSet reference

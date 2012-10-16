@@ -25,11 +25,18 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 @Service
+/**
+ * <p>ValidationReportServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ValidationReportServiceImpl implements ValidationReportService {
 
   @Autowired
   private FileDAO fileDao;
 
+  /** {@inheritDoc} */
   @Override
   public List<ReportEntry> fileLinkReport() {
     List<File> files = fileDao.list();
@@ -113,6 +120,7 @@ public class ValidationReportServiceImpl implements ValidationReportService {
     return result;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String fileReverseHierarchyDisplay(Integer swa) {
     checkNotNull(swa);
@@ -137,6 +145,7 @@ public class ValidationReportServiceImpl implements ValidationReportService {
     return sb.toString();
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<ReportEntry> fileLinkReport(List<Integer> fileSwas) {
     List<ReportEntry> result = Lists.newArrayList();

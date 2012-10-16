@@ -44,14 +44,19 @@ import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * 
+ * <p>AttributeAnnotator class.</p>
+ *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
 public class AttributeAnnotator extends Plugin {
 
   ReturnValue ret = new ReturnValue();
 
+  /**
+   * <p>Constructor for AttributeAnnotator.</p>
+   */
   public AttributeAnnotator() {
     super();
     parser.acceptsAll(Arrays.asList("sequencer-run-accession", "sr"),
@@ -88,16 +93,19 @@ public class AttributeAnnotator extends Plugin {
     ret.setExitStatus(ReturnValue.SUCCESS);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue init() {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_test() {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
 
@@ -247,11 +255,13 @@ public class AttributeAnnotator extends Plugin {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue clean_up() {
     return ret;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String get_description() {
     return "Experimental plugin. Allows the annotation of objects in the database with 'skip' values.";

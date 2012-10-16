@@ -4,6 +4,8 @@ package com.github.seqware.queryengine;
  * Global settings for benchmarking implementations.
  *
  * @author jbaran
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public interface Benchmarking {
 

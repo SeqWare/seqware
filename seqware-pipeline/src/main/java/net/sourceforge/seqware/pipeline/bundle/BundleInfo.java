@@ -17,10 +17,21 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * <p>BundleInfo class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class BundleInfo {
 
   private ArrayList<WorkflowInfo> workflows = new ArrayList<WorkflowInfo>();
 
+  /**
+   * <p>parseFromFile.</p>
+   *
+   * @param metadata a {@link java.io.File} object.
+   */
   public void parseFromFile(File metadata) {
 
     try {
@@ -96,10 +107,20 @@ public class BundleInfo {
 
   }
 
+  /**
+   * <p>getWorkflowInfo.</p>
+   *
+   * @return a {@link java.util.ArrayList} object.
+   */
   public ArrayList<WorkflowInfo> getWorkflowInfo() {
     return workflows;
   }
 
+  /**
+   * <p>Setter for the field <code>workflows</code>.</p>
+   *
+   * @param workflows a {@link java.util.ArrayList} object.
+   */
   public void setWorkflows(ArrayList<WorkflowInfo> workflows) {
     this.workflows = workflows;
   }

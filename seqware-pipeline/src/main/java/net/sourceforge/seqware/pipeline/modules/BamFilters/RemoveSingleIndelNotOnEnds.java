@@ -17,18 +17,23 @@ import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * 
+ *
  * Purpose:
- * 
+ *
  * Module to wrap remove_indels_and_trim script.
- * 
+ *
  * @author jmendler
- * 
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class RemoveSingleIndelNotOnEnds extends Module {
   private OptionSet options = null;
 
+  /**
+   * <p>getOptionParser.</p>
+   *
+   * @return a {@link joptsimple.OptionParser} object.
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
 
@@ -41,6 +46,11 @@ public class RemoveSingleIndelNotOnEnds extends Module {
     return (parser);
   }
 
+  /**
+   * <p>get_syntax.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String get_syntax() {
     OptionParser parser = getOptionParser();
     StringWriter output = new StringWriter();
@@ -53,6 +63,7 @@ public class RemoveSingleIndelNotOnEnds extends Module {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
     ReturnValue ret = new ReturnValue();
@@ -82,6 +93,7 @@ public class RemoveSingleIndelNotOnEnds extends Module {
   }
 
   // FIXME: Got until here with wrapping, still need to do the rest
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
     for ( String arg : new String[]{ "fasta", "input", "filter-script"} ) {
@@ -98,17 +110,20 @@ public class RemoveSingleIndelNotOnEnds extends Module {
     return new ReturnValue();
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     // Verify output file
     return FileTools.verifyFile(new File((String) options.valueOf("output")));
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_test() {
     return new ReturnValue(ReturnValue.NOTIMPLEMENTED);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
     StringBuffer cmd = new StringBuffer();

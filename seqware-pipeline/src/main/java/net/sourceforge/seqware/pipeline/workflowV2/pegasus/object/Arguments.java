@@ -7,26 +7,51 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.Argument;
 
 import org.jdom.Element;
 
+/**
+ * <p>Arguments class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class Arguments extends PegasusAbstract {
 
     private List<Argument> sysOptions;
     private List<Argument> moduleOptions;
     private Argument module;
 
+    /**
+     * <p>Constructor for Arguments.</p>
+     */
     public Arguments() {
 	this.sysOptions = new ArrayList<Argument>();
 	this.moduleOptions = new ArrayList<Argument>();
     }
 
+    /**
+     * <p>addModuleOption.</p>
+     *
+     * @param arg a {@link net.sourceforge.seqware.pipeline.workflowV2.model.Argument} object.
+     */
     public void addModuleOption(Argument arg) {
 	this.moduleOptions.add(arg);
     }
 
+    /**
+     * <p>addModuleOption.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @param value a {@link java.lang.String} object.
+     */
     public void addModuleOption(String key, String value) {
 	Argument arg = new Argument(key, value);
 	this.addModuleOption(arg);
     }
 
+    /**
+     * <p>addSysOption.</p>
+     *
+     * @param arg a {@link net.sourceforge.seqware.pipeline.workflowV2.model.Argument} object.
+     */
     public void addSysOption(Argument arg) {
 	if (arg.getKey().equals("--module")) {
 	    this.module = arg;
@@ -35,11 +60,18 @@ public class Arguments extends PegasusAbstract {
 	}
     }
 
+    /**
+     * <p>addSysOption.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @param value a {@link java.lang.String} object.
+     */
     public void addSysOption(String key, String value) {
 	Argument arg = new Argument(key, value);
 	this.addSysOption(arg);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Element serializeXML() {
 	Element element = new Element("argument", NAMESPACE);
@@ -75,6 +107,12 @@ public class Arguments extends PegasusAbstract {
 	return sb.toString();
     }
 
+    /**
+     * <p>hasOption.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     public boolean hasOption(String key) {
 	for (Argument arg : this.sysOptions) {
 	    if (arg.getKey().equals(key))
@@ -87,6 +125,11 @@ public class Arguments extends PegasusAbstract {
 	return false;
     }
 
+    /**
+     * <p>removeModuleOption.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     */
     public void removeModuleOption(String key) {
 	Argument rem = null;
 	for (Argument arg : this.moduleOptions) {

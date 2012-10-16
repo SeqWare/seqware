@@ -21,10 +21,13 @@ import java.util.ListIterator;
 /**
  * Workaround for bug with Apache CLI https://issues.apache.org/jira/browse/CLI-185
  * This can be removed when CLI 1.3 is released
+ *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class HackedPosixParser extends PosixParser {
     
+    /** {@inheritDoc} */
     @Override
         public void processArgs(Option opt, ListIterator iter)
         throws ParseException

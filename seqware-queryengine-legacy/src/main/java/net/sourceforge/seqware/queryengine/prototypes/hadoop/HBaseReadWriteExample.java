@@ -1,5 +1,11 @@
 package net.sourceforge.seqware.queryengine.prototypes.hadoop;
 
+  /**
+   * <p>HBaseReadWriteExample class.</p>
+   *
+   * @author boconnor
+   * @version $Id: $Id
+   */
   public class HBaseReadWriteExample {
     /*
     

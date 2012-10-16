@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
  * http://en.wikipedia.org/wiki/Reverse_Polish_notation).
  *
  * @author jbaran
+ * @version $Id: $Id
  */
 public class RPNStack implements Serializable {
 
@@ -213,10 +214,20 @@ public class RPNStack implements Serializable {
         }
     }
 
+    /**
+     * <p>Constructor for RPNStack.</p>
+     *
+     * @param arguments a {@link java.lang.Object} object.
+     */
     public RPNStack(Object... arguments) {
         this(Arrays.asList(arguments));
     }
 
+    /**
+     * <p>Constructor for RPNStack.</p>
+     *
+     * @param arguments a {@link java.util.List} object.
+     */
     public RPNStack(List arguments) {
         this.stack = arguments;
 
@@ -249,7 +260,7 @@ public class RPNStack implements Serializable {
      * Returns the parameters of the argument stack, i.e., everything that is
      * not a constant and considered to be a variable.
      *
-     * @return
+     * @return a {@link java.util.Set} object.
      */
     public Set<Parameter> getParameters() {
         return this.parameters.keySet();
@@ -414,6 +425,7 @@ public class RPNStack implements Serializable {
      *
      * @param query A query string.
      * @return An RPNStack that represents the query.
+     * @throws org.antlr.runtime.RecognitionException if any.
      */
     public static RPNStack compileQuery(String query) throws RecognitionException {
         Logger.getLogger(RPNStack.class.getName()).info("Compile query: " + query);

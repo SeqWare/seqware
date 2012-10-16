@@ -21,7 +21,20 @@ import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>BulkUtil class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class BulkUtil {
+	/**
+	 * <p>getFiles.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param nameList a {@link java.lang.String} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	public static List<File> getFiles(HttpServletRequest request, String nameList){
 		List<File> list = null;
 		HttpSession	session	= request.getSession(false);
@@ -43,6 +56,14 @@ public class BulkUtil {
 		return list;
 	}
 	
+	/**
+	 * <p>updateSelectedIds.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param nameSelected a {@link java.lang.String} object.
+	 * @param isSelect a boolean.
+	 * @param nodeIds a {@link java.util.List} object.
+	 */
 	public static void updateSelectedIds(HttpServletRequest request, String nameSelected,
 				boolean isSelect, List<String> nodeIds){
 	//	List<String> list = (List<String>)request.getSession(false).getAttribute(nameSelected);
@@ -71,6 +92,15 @@ public class BulkUtil {
 		setCurrentSelectedNodes(request, nameSelected, list);
 	}
 	
+	/**
+	 * <p>getSelectedIds.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param nameSelected a {@link java.lang.String} object.
+	 * @param ids an array of {@link java.lang.String} objects.
+	 * @param statuses an array of {@link java.lang.String} objects.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getSelectedIds(HttpServletRequest request, String nameSelected,
 										String[] ids, String[] statuses){
 		String selectedIds = "";
@@ -154,6 +184,13 @@ public class BulkUtil {
 		}
 	}
 	
+	/**
+	 * <p>selectIUSNode.</p>
+	 *
+	 * @param selectedIds a {@link java.util.List} object.
+	 * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+	 * @return a {@link java.util.SortedSet} object.
+	 */
 	public static SortedSet<IUS> selectIUSNode(List<String> selectedIds, Sample sample){
 		SortedSet<IUS> iuss = sample.getIUS();
 		if(selectedIds!=null){
@@ -181,6 +218,13 @@ public class BulkUtil {
 		}
 	}
 	
+	/**
+	 * <p>selectSampleNode.</p>
+	 *
+	 * @param selectedIds a {@link java.util.List} object.
+	 * @param experiment a {@link net.sourceforge.seqware.common.model.Experiment} object.
+	 * @return a {@link java.util.SortedSet} object.
+	 */
 	public static SortedSet<Sample> selectSampleNode(List<String> selectedIds, Experiment experiment){
 		SortedSet<Sample> samples = experiment.getSamples();
 		if(selectedIds!=null){
@@ -203,6 +247,13 @@ public class BulkUtil {
 		}
 	}
 
+	/**
+	 * <p>selectExperimentNode.</p>
+	 *
+	 * @param selectedIds a {@link java.util.List} object.
+	 * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
+	 * @return a {@link java.util.SortedSet} object.
+	 */
 	public static SortedSet<Experiment> selectExperimentNode(List<String> selectedIds, Study study){
 		SortedSet<Experiment> experiments = study.getExperiments();
 		SortedSet<Processing> processings = new TreeSet<Processing>(study.getProcessings());
@@ -213,6 +264,13 @@ public class BulkUtil {
 		return experiments;
 	}
 	
+	/**
+	 * <p>selectStudyNode.</p>
+	 *
+	 * @param selectedIds a {@link java.util.List} object.
+	 * @param studies a {@link java.util.List} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	public static List<Study> selectStudyNode(List<String> selectedIds, List<Study> studies){
 		if(selectedIds!=null){
 			for (String selectedObjectId : selectedIds) {
@@ -227,6 +285,13 @@ public class BulkUtil {
 		return studies;
 	}
 
+	/**
+	 * <p>selectWorkflowRunNode.</p>
+	 *
+	 * @param selectedIds a {@link java.util.List} object.
+	 * @param workflowRuns a {@link java.util.List} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	public static List<WorkflowRun> selectWorkflowRunNode(List<String> selectedIds, List<WorkflowRun> workflowRuns){
 		if(selectedIds!=null)
 		for (String selectedObjectId : selectedIds) {
@@ -252,6 +317,13 @@ public class BulkUtil {
 		}
 	}
 	
+	/**
+	 * <p>selectProcessingNode.</p>
+	 *
+	 * @param selectedIds a {@link java.util.List} object.
+	 * @param workflowRun a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+	 * @return a {@link java.util.Set} object.
+	 */
 	public static Set<Processing> selectProcessingNode(List<String> selectedIds, WorkflowRun workflowRun){
 		SortedSet<Processing> processings = workflowRun.getProcessings();
 		// select processing
@@ -304,6 +376,13 @@ public class BulkUtil {
 */		
 	}
 
+	/**
+	 * <p>selectProcessingNode.</p>
+	 *
+	 * @param selectedIds a {@link java.util.List} object.
+	 * @param proc a {@link net.sourceforge.seqware.common.model.Processing} object.
+	 * @return a {@link java.util.Set} object.
+	 */
 	public static Set<Processing> selectProcessingNode(List<String> selectedIds, Processing proc){
 		if(selectedIds == null)
 			return  proc.getChildren();
@@ -316,6 +395,13 @@ public class BulkUtil {
 		return processings;
 	}
 	
+	/**
+	 * <p>selectProcessingNode.</p>
+	 *
+	 * @param selectedIds a {@link java.util.List} object.
+	 * @param lane a {@link net.sourceforge.seqware.common.model.Lane} object.
+	 * @return a {@link java.util.Set} object.
+	 */
 	public static Set<Processing> selectProcessingNode(List<String> selectedIds, Lane lane){
 		if(selectedIds == null)
 			return  lane.getProcessings();
@@ -328,6 +414,13 @@ public class BulkUtil {
 		return processings;
 	}
 	
+	/**
+	 * <p>selectProcessingNode.</p>
+	 *
+	 * @param selectedIds a {@link java.util.List} object.
+	 * @param ius a {@link net.sourceforge.seqware.common.model.IUS} object.
+	 * @return a {@link java.util.Set} object.
+	 */
 	public static Set<Processing> selectProcessingNode(List<String> selectedIds, IUS ius){
 		if(selectedIds == null)
 			return  ius.getProcessings();
