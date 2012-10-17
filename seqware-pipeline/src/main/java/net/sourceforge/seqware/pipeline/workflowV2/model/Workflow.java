@@ -57,7 +57,7 @@ public class Workflow {
 	}
 	
 	public Job createJavaJob(String algo, String cp, String mainclass) {
-		AbstractJob job = new AbstractJob(algo,cp,mainclass);
+		AbstractJob job = new JavaJob(algo,cp,mainclass);
 		this.jobs.add(job);
 		return job;
 	}

@@ -39,7 +39,7 @@ public class ProvisionFilesJob extends PegasusJob {
 		}
 		
 
-		sb.append("--module module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles").append("\n");
+		sb.append("--module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles").append("\n");
 		sb.append("--").append("\n");
 		
 		if(this.jobObj.getCommand().toString().isEmpty() == false) {
