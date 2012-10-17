@@ -95,7 +95,7 @@ public class Metadata extends Plugin {
     if (options.has("list-tables")) {
 
       print("TableName\n");
-      for (String table : new String[]{"study", "experiment", "sample"}) {
+      for (String table : new String[]{"study", "experiment", "sample", "sequencer_run", "ius", "lane"}) {
         print(table + "\n");
       }
 
@@ -206,6 +206,27 @@ public class Metadata extends Plugin {
     return(ret);
   }
 
+  /**
+   * 
+   * @return ReturnValue
+   */
+  private ReturnValue addSequencerRun() {
+    // check to make sure we have what we need
+    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+    if (fields.containsKey("experiment_accession") && fields.containsKey("organism_id") && fields.containsKey("title") && fields.containsKey("description")) {
+      
+      // create a new experiment
+      ret = metadata.addSample(Integer.parseInt(fields.get("experiment_accession")), Integer.parseInt(fields.get("organism_id")), fields.get("description"), fields.get("title"));
+      
+      print("SWID: "+ret.getAttribute("sw_accession"));
+      
+    } else {
+      Logger.getLogger(Metadata.class.getName()).log(Level.SEVERE, "You need to supply experiment_accession (reported if you create an experiment using this tool), title, and description for the sample table along with an integer for organism_id [31: Homo sapiens]", "");
+      ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+    }
+    return(ret);
+  }
+  
   /** {@inheritDoc} */
   public void print(String string) {
     if (bw != null) {

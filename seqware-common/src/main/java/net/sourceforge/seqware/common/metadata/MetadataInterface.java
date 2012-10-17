@@ -9,9 +9,17 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
+import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.LaneAttribute;
+import net.sourceforge.seqware.common.model.LibrarySelection;
+import net.sourceforge.seqware.common.model.LibrarySource;
+import net.sourceforge.seqware.common.model.LibraryStrategy;
+import net.sourceforge.seqware.common.model.Organism;
+import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
+import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleAttribute;
 import net.sourceforge.seqware.common.model.SequencerRunAttribute;
 import net.sourceforge.seqware.common.model.Study;
@@ -97,6 +105,80 @@ public interface MetadataInterface {
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
   public ReturnValue addSample(Integer experimentAccession, Integer organismId, String description, String title);
+  
+    /**
+   * <p>addSample.</p>
+   *
+   * @param experimentAccession a {@link java.lang.Integer} object.
+   * @param organismId a {@link java.lang.Integer} object.
+   * @param description a {@link java.lang.String} object.
+   * @param title a {@link java.lang.String} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
+  public ReturnValue addSequencerRun(Integer experimentAccession, Integer organismAccession, Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip);
+  
+    /**
+   * <p>addSample.</p>
+   *
+   * @param experimentAccession a {@link java.lang.Integer} object.
+   * @param organismId a {@link java.lang.Integer} object.
+   * @param description a {@link java.lang.String} object.
+   * @param title a {@link java.lang.String} object.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
+  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip);
+  
+    /**
+   * <p>addSample.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
+  
+  public ReturnValue addIUS(Integer laneAccession, Integer sampleAccession, String name, String description, String barcode, boolean skip);
+  
+  /**
+   * <p>getPlatforms.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.Platform} object.
+   */
+  public List<Platform> getPlatforms();
+  
+    /**
+   * <p>getOrganisms.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.Organism} object.
+   */
+  public List<Organism> getOrganisms();
+  
+ /**
+   * <p>getStudyTypes.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.StudyType} object.
+   */
+  public List<StudyType> getStudyTypes();
+  
+   /**
+   * <p>getLibraryStrategies.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.LibraryStrategy} object.
+   */
+  public List<LibraryStrategy> getLibraryStrategies();
+  
+  /**
+   * <p>getLibrarySelections.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.LibrarySelection} object.
+   */
+  public List<LibrarySelection> getLibrarySelections();
+  
+  /**
+   * <p>getLibrarySource.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.LibrarySource} object.
+   */
+  public List<LibrarySource> getLibrarySource();
+  
+  
 
   /**
    * <p>add_empty_processing_event.</p>
