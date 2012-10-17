@@ -1379,6 +1379,7 @@
             inverse="true"
             cascade="none"
             sort="natural"
+
         >
             <key column="sequencer_run_id" />
             <one-to-many class="Lane" />
