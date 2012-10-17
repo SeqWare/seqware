@@ -1622,7 +1622,7 @@
         <many-to-one
             name="sequencerRun"
             class="SequencerRun"
-            cascade="none"
+            cascade="all"
             outer-join="auto"
             update="true"
             insert="true"

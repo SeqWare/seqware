@@ -117,6 +117,8 @@ public class SequencerRunServiceImpl implements SequencerRunService {
    */
   public void insert(SequencerRunWizardDTO sequencerRun) {
 
+    sequencerRun.setCreateTimestamp(new Date());
+      
     Log.stderr("Counts: " + sequencerRun.getLaneCount());
     TreeSet<Lane> list = new TreeSet<Lane>();
     for (int i = 1; i <= sequencerRun.getLaneCount(); i++) {
@@ -162,7 +164,6 @@ public class SequencerRunServiceImpl implements SequencerRunService {
      * list.add(sequencerRun.getLane7()); list.add(sequencerRun.getLane8());
      * sequencerRun.setLanes(list);
      */
-    sequencerRun.setCreateTimestamp(new Date());
 
     if (sequencerRun.getReadyToProcess() != null && sequencerRun.getReadyToProcess().equals("Y")) {
       sequencerRun.setStatus("ready_to_process");
