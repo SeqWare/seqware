@@ -48,6 +48,9 @@ import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.LaneAttribute;
+import net.sourceforge.seqware.common.model.LibrarySelection;
+import net.sourceforge.seqware.common.model.LibrarySource;
+import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.Processing;
@@ -111,11 +114,13 @@ public class MetadataWS extends Metadata {
 
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue addWorkflow(String name, String version, String description, String baseCommand,
-      String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip,
-      boolean storeArchiveZip) {
+          String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip,
+          boolean storeArchiveZip) {
 
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -187,9 +192,11 @@ public class MetadataWS extends Metadata {
     return (ret);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public ReturnValue addStudy(String title, String description, String accession, StudyType studyType,
-      String centerName, String centerProjectName, Integer studyTypeId) {
+          String centerName, String centerProjectName, Integer studyTypeId) {
 
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -302,18 +309,17 @@ public class MetadataWS extends Metadata {
   }
 
   /**
-   * 
+   *
    * @param p
-   * @param parentIds
-   *          if sw accession, each ID must be in the form "/ID", if db id then
-   *          in the form ?id=ID
+   * @param parentIds if sw accession, each ID must be in the form "/ID", if db
+   * id then in the form ?id=ID
    * @param childIds
    * @throws ResourceException
    * @throws IOException
    * @throws JAXBException
    */
   private void addParentsAndChildren(Processing p, String[] parentIds, String[] childIds) throws ResourceException,
-      IOException, JAXBException {
+          IOException, JAXBException {
 
     // Associate the processing entry with the zero or more parents
     if (parentIds != null && parentIds.length != 0 && !(parentIds[0].trim().equals("/0"))) {
@@ -435,7 +441,9 @@ public class MetadataWS extends Metadata {
     return new ReturnValue(ReturnValue.SUCCESS);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue add_empty_processing_event(int[] parentIDs) {
     // FIXME: Add a new processing entry
@@ -446,7 +454,9 @@ public class MetadataWS extends Metadata {
     return addProcessingEventWithParentsAndChildren(processing, convertIDs(parentIDs, "?id="), null);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue add_empty_processing_event_by_parent_accession(int[] parentAccessions) {
     // FIXME: Add a new processing entry
@@ -458,18 +468,16 @@ public class MetadataWS extends Metadata {
   }
 
   /**
-   * 
+   *
    * @param processing
-   * @param parentIds
-   *          may be db IDS or sw accession, previously converted to be either
-   *          "/ID" or "?id=SWA"
-   * @param childIds
-   *          may be db IDS or sw accession, previously converted to be either
-   *          "/ID" or "?id=SWA"
+   * @param parentIds may be db IDS or sw accession, previously converted to be
+   * either "/ID" or "?id=SWA"
+   * @param childIds may be db IDS or sw accession, previously converted to be
+   * either "/ID" or "?id=SWA"
    * @return
    */
   private ReturnValue addProcessingEventWithParentsAndChildren(Processing processing, String[] parentIds,
-      String[] childIds) {
+          String[] childIds) {
     ReturnValue ret = new ReturnValue();
     try {
       Processing p = ll.addProcessing(processing);
@@ -485,7 +493,9 @@ public class MetadataWS extends Metadata {
     return ret;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue add_task_group(int[] parentIDs, int[] childIDs, String algorithm, String description) {
     Processing processing = new Processing();
@@ -495,10 +505,12 @@ public class MetadataWS extends Metadata {
     processing.setDescription(description);
 
     return addProcessingEventWithParentsAndChildren(processing, convertIDs(parentIDs, "?id="),
-        convertIDs(childIDs, "?id="));
+            convertIDs(childIDs, "?id="));
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public int add_workflow_run(int workflowAccession) {
     WorkflowRun wr = new WorkflowRun();
@@ -519,7 +531,9 @@ public class MetadataWS extends Metadata {
     return (wr.getWorkflowRunId());
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void add_workflow_run_ancestor(int workflowRunAccession, int processingId) {
     try {
@@ -538,7 +552,9 @@ public class MetadataWS extends Metadata {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue associate_processing_event_with_parents_and_child(int processingID, int[] parentIDs, int[] childIDs) {
     ReturnValue ret = new ReturnValue();
@@ -556,14 +572,18 @@ public class MetadataWS extends Metadata {
 
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue clean_up() {
     ll.clean_up();
     return new ReturnValue(ReturnValue.SUCCESS);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<ReturnValue> findFilesAssociatedWithASample(String sampleName) {
     ReturnValueList rv = new ReturnValueList();
@@ -579,7 +599,9 @@ public class MetadataWS extends Metadata {
     return rv.getList();
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName) {
     ReturnValueList rv = new ReturnValueList();
@@ -588,14 +610,16 @@ public class MetadataWS extends Metadata {
       JaxbObject<ReturnValueList> jaxb = new JaxbObject<ReturnValueList>();
 
       rv = (ReturnValueList) ll.findObject("/studies", "/" + study.getSwAccession() + "/files", jaxb,
-          new ReturnValueList());
+              new ReturnValueList());
     } catch (Exception e) {
       e.printStackTrace();
     }
     return rv.getList();
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<ReturnValue> findFilesAssociatedWithASequencerRun(String runName) {
     ReturnValueList rv = new ReturnValueList();
@@ -604,7 +628,7 @@ public class MetadataWS extends Metadata {
       JaxbObject<ReturnValueList> jaxb = new JaxbObject<ReturnValueList>();
 
       rv = (ReturnValueList) ll.findObject("/sequencerruns", "/" + run.getSwAccession() + "/files", jaxb,
-          new ReturnValueList());
+              new ReturnValueList());
     } catch (Exception e) {
       e.printStackTrace();
       // rv.setExitStatus(ReturnValue.FAILURE);
@@ -612,13 +636,17 @@ public class MetadataWS extends Metadata {
     return rv.getList();
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ArrayList<String> fix_file_paths(String prefix, ArrayList<String> files) {
     throw new UnsupportedOperationException("Not supported yet.");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Map<String, String> get_workflow_info(int workflowAccession) {
     Map<String, String> map = new HashMap<String, String>();
@@ -653,7 +681,9 @@ public class MetadataWS extends Metadata {
     return object;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public int get_workflow_run_accession(int workflowRunId) {
     int accession = 0;
@@ -667,7 +697,9 @@ public class MetadataWS extends Metadata {
 
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public WorkflowRun getWorkflowRun(int workflowRunAccession) {
     WorkflowRun wr = null;
@@ -679,7 +711,9 @@ public class MetadataWS extends Metadata {
     return (wr);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public int get_workflow_run_id(int workflowRunAccession) {
     int id = 0;
@@ -693,14 +727,18 @@ public class MetadataWS extends Metadata {
     return id;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue init(String database, String username, String password) {
     ll = new LowLevel(database, username, password);
     return new ReturnValue(ReturnValue.SUCCESS);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean linkWorkflowRunAndParent(int workflowRunId, int parentAccession) throws SQLException {
     JaxbObject<WorkflowRun> jow = new JaxbObject<WorkflowRun>();
@@ -743,7 +781,9 @@ public class MetadataWS extends Metadata {
     return (true);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public int mapProcessingIdToAccession(int processingId) {
     int accession = 0;
@@ -756,10 +796,12 @@ public class MetadataWS extends Metadata {
     return accession;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue processing_event_to_task_group(int processingID, int[] parentIDs, int[] childIDs,
-      String algorithm, String description) {
+          String algorithm, String description) {
 
     try {
       Processing processing = ll.findProcessing("?id=" + processingID);
@@ -785,7 +827,9 @@ public class MetadataWS extends Metadata {
     return ret;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue update_processing_event(int processingID, ReturnValue retval) {
     try {
@@ -850,7 +894,9 @@ public class MetadataWS extends Metadata {
     return ret;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue update_processing_status(int processingID, String status) {
     try {
@@ -873,7 +919,9 @@ public class MetadataWS extends Metadata {
     return ret;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue update_processing_workflow_run(int processingID, int workflowRunAccession) {
     try {
@@ -898,11 +946,13 @@ public class MetadataWS extends Metadata {
     return ret;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
-      String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
-      String stdErr, String stdOut) {
+          String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
+          String stdErr, String stdOut) {
     int accession = 0;
     try {
       WorkflowRun wr = ll.findWorkflowRun("?id=" + workflowRunId);
@@ -949,19 +999,25 @@ public class MetadataWS extends Metadata {
     return stringIds;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue saveFileForIus(int workflowRunId, int iusAccession, FileMetadata file) {
     throw new UnsupportedOperationException("Not supported yet.");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Boolean isDuplicateFile(String filepath) {
     throw new UnsupportedOperationException("Not supported yet.");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue updateWorkflow(int workflowId, String permanentBundleLocation) {
     ReturnValue rv = new ReturnValue();
@@ -980,7 +1036,9 @@ public class MetadataWS extends Metadata {
     return rv;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String listInstalledWorkflows() {
 
@@ -1003,7 +1061,9 @@ public class MetadataWS extends Metadata {
 
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String listInstalledWorkflowParams(String workflowAccession) {
 
@@ -1051,7 +1111,9 @@ public class MetadataWS extends Metadata {
 
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public SortedSet<WorkflowParam> getWorkflowParams(String workflowAccession) {
     SortedSet<WorkflowParam> params = null;
@@ -1068,7 +1130,9 @@ public class MetadataWS extends Metadata {
 
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public int getWorkflowAccession(String name, String version) {
 
@@ -1084,7 +1148,9 @@ public class MetadataWS extends Metadata {
     return workflowAccession;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<WorkflowRun> getWorkflowRunsByStatus(String status) {
     try {
@@ -1098,7 +1164,9 @@ public class MetadataWS extends Metadata {
     return new ArrayList<WorkflowRun>();
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<WorkflowRun> getWorkflowRunsByHost(String host) {
     try {
@@ -1112,7 +1180,9 @@ public class MetadataWS extends Metadata {
     return new ArrayList<WorkflowRun>();
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public WorkflowRun getWorkflowRunWithWorkflow(String workflowRunAccession) {
     try {
@@ -1150,6 +1220,7 @@ public class MetadataWS extends Metadata {
    *
    * FIXME: this is a hack, will need to add an object layer between this
    * metadata object and the response
+   *
    * @author boconnor
    */
   @Override
@@ -1157,7 +1228,9 @@ public class MetadataWS extends Metadata {
     return (ll.getString("/reports/sequencerruns"));
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateLane(int laneSWID, LaneAttribute laneAtt, Boolean skip) {
     try {
@@ -1185,7 +1258,9 @@ public class MetadataWS extends Metadata {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateIUS(int iusSWID, IUSAttribute iusAtt, Boolean skip) {
     try {
@@ -1213,12 +1288,14 @@ public class MetadataWS extends Metadata {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateSequencerRun(int sequencerRunSWID, SequencerRunAttribute sequencerRunAtt, Boolean skip) {
     try {
       Log.debug("Annotating SequencerRun " + sequencerRunSWID + " with skip=" + skip + ", sequencerRunAtt = "
-          + sequencerRunAtt);
+              + sequencerRunAtt);
       SequencerRun sequencerRun = ll.findSequencerRun("/" + sequencerRunSWID);
       if (skip != null) {
         sequencerRun.setSkip(skip);
@@ -1242,7 +1319,9 @@ public class MetadataWS extends Metadata {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateExperiment(int experimentSWID, ExperimentAttribute att, Boolean skip) {
     try {
@@ -1271,7 +1350,9 @@ public class MetadataWS extends Metadata {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateProcessing(int swid, ProcessingAttribute att, Boolean skip) {
     try {
@@ -1300,7 +1381,9 @@ public class MetadataWS extends Metadata {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateSample(int swid, SampleAttribute att, Boolean skip) {
     try {
@@ -1328,7 +1411,9 @@ public class MetadataWS extends Metadata {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateStudy(int swid, StudyAttribute att, Boolean skip) {
     try {
@@ -1357,14 +1442,18 @@ public class MetadataWS extends Metadata {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String getWorkflowRunReport(int workflowRunSWID) {
     String report = (String) ll.getString("/reports/workflowruns/" + workflowRunSWID);
     return report;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String getWorkflowRunReport(int workflowSWID, Date earliestDate, Date latestDate) {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -1384,7 +1473,9 @@ public class MetadataWS extends Metadata {
     return report;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String getWorkflowRunReport(Date earliestDate, Date latestDate) {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -1405,7 +1496,9 @@ public class MetadataWS extends Metadata {
     return report;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public File getFile(int swAccession) {
     try {
       return ll.findFile("/" + swAccession);
@@ -1435,7 +1528,6 @@ public class MetadataWS extends Metadata {
    * 
    * }
    */
-
   protected class LowLevel {
 
     private ClientResource resource;
@@ -1469,7 +1561,7 @@ public class MetadataWS extends Metadata {
           // .add(0, new org.restlet.ext.httpclient.HttpClientHelper(null));
 
           final SSLContext sslContext = SSLContext.getInstance("TLS");
-          sslContext.init(null, new TrustManager[] { tm }, null);
+          sslContext.init(null, new TrustManager[]{tm}, null);
           Context context = client.getContext();
           context.getAttributes().put("sslContextFactory", new SslContextFactory() {
             @Override
@@ -1637,8 +1729,44 @@ public class MetadataWS extends Metadata {
     private Workflow findWorkflowParams(String workflowAccession) throws IOException, JAXBException {
       JaxbObject<Workflow> jaxb = new JaxbObject<Workflow>();
       Workflow list = (Workflow) findObject("/workflows", "/" + workflowAccession + "?show=params", jaxb,
-          new Workflow());
+              new Workflow());
       return list;
+    }
+    
+    private List<Platform> findPlatforms() throws IOException, JAXBException {
+      JaxbObject<PlatformList> jaxb = new JaxbObject<PlatformList>();
+      StudyList list = (PlatformList) findObject("/platforms", "", jaxb, new PlatformList());
+      return list.getList();
+    }
+    
+    private List<Organism> findOrganisms() throws IOException, JAXBException {
+      JaxbObject<OrganismList> jaxb = new JaxbObject<OrganismList>();
+      StudyList list = (OrganismList) findObject("/organisms", "", jaxb, new OrganismList());
+      return list.getList();
+    }
+    
+    private List<StudyType> findStudyTypes() throws IOException, JAXBException {
+      JaxbObject<StudyTypeList> jaxb = new JaxbObject<StudyTypeList>();
+      StudyList list = (StudyTypeList) findObject("/studytypes", "", jaxb, new StudyTypeList());
+      return list.getList();
+    }
+    
+    private List<LibraryStrategy> findLibraryStrategies() throws IOException, JAXBException {
+      JaxbObject<LibraryStrategyList> jaxb = new JaxbObject<LibraryStrategyList>();
+      StudyList list = (LibraryStrategyList) findObject("/librarystrategies", "", jaxb, new LibraryStrategyList());
+      return list.getList();
+    }
+    
+    private List<LibrarySelection> findLibrarySelections() throws IOException, JAXBException {
+      JaxbObject<LibrarySelectionList> jaxb = new JaxbObject<LibrarySelectionList>();
+      StudyList list = (LibrarySelectionList) findObject("/libraryselections", "", jaxb, new LibrarySelectionList());
+      return list.getList();
+    }
+    
+    private List<LibrarySource> findLibrarySources() throws IOException, JAXBException {
+      JaxbObject<LibrarySourceList> jaxb = new JaxbObject<LibrarySourceList>();
+      StudyList list = (LibrarySourceList) findObject("/librarysources", "", jaxb, new LibrarySourceList());
+      return list.getList();
     }
 
     private Processing findProcessing(String searchString) throws IOException, JAXBException {
@@ -1713,7 +1841,37 @@ public class MetadataWS extends Metadata {
       JaxbObject<File> jaxb = new JaxbObject<File>();
       return (File) findObject("/files", searchString, jaxb, study);
     }
+    
+    private Platform findPlatform(String searchString) throws IOException, JAXBException {
+      Platform p = new Platform();
+      JaxbObject<Platform> jaxb = new JaxbObject<Platform>();
+      return (Platform) findObject("/platforms", searchString, jaxb, p);
+    }
+    
+    private StudyType findStudyType(String searchString) throws IOException, JAXBException {
+      StudyType st = new StudyType();
+      JaxbObject<StudyType> jaxb = new JaxbObject<StudyType>();
+      return (StudyType) findObject("/studytypes", searchString, jaxb, st);
+    }
+    
+    private LibraryStrategy findLibraryStrategy(String searchString) throws IOException, JAXBException {
+      LibraryStrategy ls = new LibraryStrategy();
+      JaxbObject<LibraryStrategy> jaxb = new JaxbObject<LibraryStrategy>();
+      return (LibraryStrategy) findObject("/librarystrategies", searchString, jaxb, ls);
+    }
 
+    private LibrarySelection findLibrarySelection(String searchString) throws IOException, JAXBException {
+      LibrarySelection ls = new LibrarySelection();
+      JaxbObject<LibrarySelection> jaxb = new JaxbObject<LibrarySelection>();
+      return (LibrarySelection) findObject("/libraryselections", searchString, jaxb, ls);
+    }
+    
+    private LibrarySource findLibrarySource(String searchString) throws IOException, JAXBException {
+      LibrarySource ls = new LibrarySource();
+      JaxbObject<LibrarySource> jaxb = new JaxbObject<LibrarySource>();
+      return (LibrarySource) findObject("/librarysource", searchString, jaxb, ls);
+    }
+    
     private String getString(String uri) {
       String text = null;
       Representation result = null;
@@ -1730,7 +1888,7 @@ public class MetadataWS extends Metadata {
     }
 
     private Object findObject(String uri, String searchString, JaxbObject jaxb, Object parent) throws IOException,
-        JAXBException, NotFoundException {
+            JAXBException, NotFoundException {
       Representation result = null;
       ClientResource cResource = resource.getChild(version + uri + searchString);
       Log.info("findObject: " + cResource);
@@ -1762,19 +1920,19 @@ public class MetadataWS extends Metadata {
     }
 
     private void updateWorkflow(String searchString, Workflow parent) throws IOException, JAXBException,
-        ResourceException {
+            ResourceException {
       JaxbObject<Workflow> jaxbProcess = new JaxbObject<Workflow>();
       updateObject("/workflows", searchString, jaxbProcess, parent);
     }
 
     private void updateProcessing(String searchString, Processing parent) throws IOException, JAXBException,
-        ResourceException {
+            ResourceException {
       JaxbObject<Processing> jaxbProcess = new JaxbObject<Processing>();
       updateObject("/processes", searchString, jaxbProcess, parent);
     }
 
     private void updateWorkflowRun(String searchString, WorkflowRun parent) throws IOException, JAXBException,
-        ResourceException {
+            ResourceException {
       JaxbObject<WorkflowRun> jaxb = new JaxbObject<WorkflowRun>();
       updateObject("/workflowruns", searchString, jaxb, parent);
     }
@@ -1790,7 +1948,7 @@ public class MetadataWS extends Metadata {
     }
 
     private void updateSequencerRun(String searchString, SequencerRun parent) throws IOException, JAXBException,
-        ResourceException {
+            ResourceException {
       JaxbObject<SequencerRun> jaxb = new JaxbObject<SequencerRun>();
       updateObject("/sequencerruns", searchString, jaxb, parent);
     }
@@ -1811,15 +1969,14 @@ public class MetadataWS extends Metadata {
      * new JaxbObject<Study>(); updateObject("/studies", searchString, jaxb,
      * parent); }
      */
-
     private void updateExperiment(String searchString, Experiment parent) throws IOException, JAXBException,
-        ResourceException {
+            ResourceException {
       JaxbObject<Experiment> jaxb = new JaxbObject<Experiment>();
       updateObject("/experiments", searchString, jaxb, parent);
     }
 
     private void updateObject(String uri, String searchString, JaxbObject jaxb, Object parent) throws IOException,
-        JAXBException, ResourceException {
+            JAXBException, ResourceException {
       Representation result = null;
       Log.debug("Updating object: " + parent.getClass().getCanonicalName() + " " + searchString);
       ClientResource cResource = resource.getChild(version + uri + searchString);
@@ -1872,19 +2029,37 @@ public class MetadataWS extends Metadata {
     }
 
     private WorkflowParam addWorkflowParam(WorkflowParam workflowParam) throws IOException, JAXBException,
-        ResourceException {
+            ResourceException {
       JaxbObject<WorkflowParam> jaxb = new JaxbObject<WorkflowParam>();
       return (WorkflowParam) addObject("/workflowparams", "", jaxb, workflowParam);
     }
 
     private WorkflowParamValue addWorkflowParamValue(WorkflowParamValue workflowParamVal) throws IOException,
-        JAXBException, ResourceException {
+            JAXBException, ResourceException {
       JaxbObject<WorkflowParamValue> jaxb = new JaxbObject<WorkflowParamValue>();
       return (WorkflowParamValue) addObject("/workflowparamvalues", "", jaxb, workflowParamVal);
     }
+    
+    private SequencerRun addSequencerRun(SequencerRun sequencerRun) throws IOException,
+            JAXBException, ResourceException {
+      JaxbObject<WorkflowRun> jaxb = new JaxbObject<WorkflowRun>();
+      return (SequencerRun) addObject("/sequencerruns", "", jaxb, sequencerRun);
+    }
+    
+    private Lane addLane(Lane lane) throws IOException,
+            JAXBException, ResourceException {
+      JaxbObject<Lane> jaxb = new JaxbObject<Lane>();
+      return (Lane) addObject("/lanes", "", jaxb, lane);
+    }
 
+    private IUS addIUS(IUS ius) throws IOException,
+            JAXBException, ResourceException {
+      JaxbObject<IUS> jaxb = new JaxbObject<IUS>();
+      return (IUS) addObject("/ius", "", jaxb, ius);
+    }
+    
     private Object addObject(String uri, String searchString, JaxbObject jaxb, Object parent) throws IOException,
-        JAXBException, ResourceException {
+            JAXBException, ResourceException {
       Representation result = null;
       ClientResource cResource = resource.getChild(version + uri + searchString);
       Log.debug("addObject: " + cResource);
@@ -1917,7 +2092,9 @@ public class MetadataWS extends Metadata {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateWorkflow(int workflowSWID, WorkflowAttribute att, Boolean skip) {
     try {
@@ -1947,7 +2124,9 @@ public class MetadataWS extends Metadata {
 
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateWorkflowRun(int workflowrunSWID, WorkflowRunAttribute att, Boolean skip) {
     try {
@@ -1976,7 +2155,9 @@ public class MetadataWS extends Metadata {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateIUS(int iusSWID, Set<IUSAttribute> iusAtts) {
     try {
@@ -1998,7 +2179,9 @@ public class MetadataWS extends Metadata {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateLane(int laneSWID, Set<LaneAttribute> laneAtts) {
     try {
@@ -2020,7 +2203,9 @@ public class MetadataWS extends Metadata {
 
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateSequencerRun(int sequencerRunSWID, Set<SequencerRunAttribute> sequencerRunAtts) {
     try {
@@ -2042,7 +2227,9 @@ public class MetadataWS extends Metadata {
 
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateExperiment(int experimentSWID, Set<ExperimentAttribute> atts) {
     try {
@@ -2064,7 +2251,9 @@ public class MetadataWS extends Metadata {
 
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateProcessing(int processingSWID, Set<ProcessingAttribute> atts) {
     try {
@@ -2086,7 +2275,9 @@ public class MetadataWS extends Metadata {
 
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateSample(int sampleSWID, Set<SampleAttribute> atts) {
     try {
@@ -2108,7 +2299,9 @@ public class MetadataWS extends Metadata {
 
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateStudy(int studySWID, Set<StudyAttribute> atts) {
     try {
@@ -2129,7 +2322,9 @@ public class MetadataWS extends Metadata {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateWorkflow(int workflowSWID, Set<WorkflowAttribute> atts) {
     try {
@@ -2150,7 +2345,9 @@ public class MetadataWS extends Metadata {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateWorkflowRun(int workflowrunSWID, Set<WorkflowRunAttribute> atts) {
     try {
@@ -2170,5 +2367,181 @@ public class MetadataWS extends Metadata {
       Log.error("ResourceException while updating study " + workflowrunSWID + " " + ex.getMessage());
     }
 
+  }
+
+  /**
+   * FIXME: there are problems with setting accession when I should set ID
+   * 
+   * @param experimentAccession
+   * @param organismAccession
+   * @param platformAccession
+   * @param name
+   * @param description
+   * @param pairdEnd
+   * @param skip
+   * @return 
+   */
+  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip) {
+     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+
+    try {
+
+      Platform p = ll.findPlatform("/" + platformAccession);
+      
+      SequencerRun sr = new SequencerRun();
+      sr.setName(name);
+      sr.setDescription(description);
+      sr.setPairedEnd(pairdEnd);
+      sr.setSkip(skip);
+      sr.setPlatform(p);
+
+      Log.info("Posting new sequencer_run");
+
+      sr = ll.addSequencerRun(sr);
+
+      ret.setAttribute("sw_accession", sr.getSwAccession().toString());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      ret.setExitStatus(ReturnValue.FAILURE);
+      return ret;
+    }
+
+    return (ret);
+  }
+
+  // FIXME: might actually need to turn off libraryStrategy et al.
+  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip) {
+     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+
+    try {
+
+      SequencerRun sr = ll.findSequencerRun("/" + sequencerRunAccession);
+      StudyType st = ll.findStudyType("/"+studyTypeId);
+      LibraryStrategy ls = ll.findLibraryStrategy("/"+libraryStrategyId);
+      LibrarySelection lsel = ll.findLibrarySelection("/"+librarySelectionId);
+      LibrarySource lsource = ll.findLibrarySource("/"+librarySourceId);
+      
+      Lane l = new Lane();
+      l.setStudyType(st);
+      l.setLibraryStrategy(ls);
+      l.setLibrarySelection(lsel);
+      l.setLibrarySource(lsource);
+      l.setSequencerRun(sr);
+      l.setName(name);
+      l.setDescription(description);
+      l.setCycleDescriptor(cycleDescriptor);
+      l.setSkip(skip);
+      
+      Log.info("Posting new lane");
+
+      l = ll.addLane(l);
+
+      ret.setAttribute("sw_accession", l.getSwAccession().toString());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      ret.setExitStatus(ReturnValue.FAILURE);
+      return ret;
+    }
+
+    return (ret);
+  }
+
+  public ReturnValue addIUS(Integer laneAccession, Integer sampleAccession, String name, String description, String barcode, boolean skip) {
+    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+
+    try {
+
+      Lane l = ll.findLane("/" + laneAccession);
+      Sample s = ll.findSample("/"+sampleAccession);
+      
+      IUS i = new IUS();
+      i.setLane(l);
+      i.setSample(s);
+      i.setName(name);
+      i.setDescription(description);
+      i.setTag(barcode);
+      i.setSkip(skip);
+      
+      Log.info("Posting new IUS");
+
+      i = ll.addIUS(i);
+
+      ret.setAttribute("sw_accession", i.getSwAccession().toString());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      ret.setExitStatus(ReturnValue.FAILURE);
+      return ret;
+    }
+
+    return (ret);
+  }
+
+  public List<Platform> getPlatforms() {
+    try {
+      return ll.findPlatforms();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  public List<Organism> getOrganisms() {
+    try {
+      return ll.findOrganisms();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  public List<StudyType> getStudyTypes() {
+    try {
+      return ll.findStudyTypes();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  public List<LibraryStrategy> getLibraryStrategies() {
+    try {
+      return ll.findLibraryStrategies();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  public List<LibrarySelection> getLibrarySelections() {
+    try {
+      return ll.findLibrarySelections();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  public List<LibrarySource> getLibrarySource() {
+    try {
+      return ll.findLibrarySources();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
   }
 }
