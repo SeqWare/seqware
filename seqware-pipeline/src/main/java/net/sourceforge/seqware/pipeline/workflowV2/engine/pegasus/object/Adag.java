@@ -25,6 +25,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.BashJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.JavaJob;
+import net.sourceforge.seqware.pipeline.workflowV2.model.JavaSeqwareModuleJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
 import net.sourceforge.seqware.pipeline.workflowV2.model.PerlJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
@@ -291,6 +292,8 @@ public class Adag  {
 			ret = new PegasusJavaJob(job,wfdm.getConfigs().get("basedir"));
 		} else if(job instanceof PerlJob) {
 			ret = new PegasusPerlJob(job, wfdm.getConfigs().get("basedir"));
+		} else if (job instanceof JavaSeqwareModuleJob){
+			ret = new PegasusJavaSeqwareModuleJob(job, wfdm.getConfigs().get("basedir"));
 		} else {
 			ret = new PegasusJob(job, wfdm.getConfigs().get("basedir"));
 		}
