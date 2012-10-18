@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -350,7 +351,9 @@ public class WorkflowDataModelFactory {
     	int inCount = 0;
     	for(Map.Entry<String, SqwFile> entry: map.entrySet()) {
     		if(entry.getValue().isInput()) {
-    			entry.getValue().setPath("provisionFiles/"+inCount);
+    			SqwFile file = entry.getValue();
+    			String fileName = FilenameUtils.getName(file.getLocation());
+    			entry.getValue().setPath("provisionFiles/"+inCount+"/"+fileName);
     			inCount ++;
     		}
     	}
