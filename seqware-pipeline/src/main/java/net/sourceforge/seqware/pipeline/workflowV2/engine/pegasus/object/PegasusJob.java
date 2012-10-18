@@ -208,7 +208,7 @@ public class PegasusJob {
 				sb.append("--metadata-parent-accession-file " + paf).append("\n");
 			}
 		}
-		sb.append("--metadata-processing-accession-file" + this.getAccessionFile()).append("\n");
+		sb.append("--metadata-processing-accession-file " + this.getAccessionFile()).append("\n");
 		return sb.toString();
 	}
 	
