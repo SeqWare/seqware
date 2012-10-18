@@ -23,6 +23,7 @@ import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.StringUtils;
+import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 import net.sourceforge.seqware.pipeline.workflowV2.model.XmlWorkflowDataModel;
 
 public class WorkflowDataModelFactory {
@@ -155,6 +156,8 @@ public class WorkflowDataModelFactory {
 	        	m.invoke(ret);
 	        	m = clazz.getMethod("setupFiles");
 	        	m.invoke(ret);
+	        	//handle the provisionedPath
+	        	this.setupProvisionedPath(ret.getFiles());
 	        	m = clazz.getMethod("setupWorkflow");
 	        	m.invoke(ret);
 	        	m = clazz.getMethod("setupEnvironment");
@@ -343,4 +346,13 @@ public class WorkflowDataModelFactory {
     	}
     }
 
+    private void setupProvisionedPath(Map<String,SqwFile> map) {
+    	int inCount = 0;
+    	for(Map.Entry<String, SqwFile> entry: map.entrySet()) {
+    		if(entry.getValue().isInput()) {
+    			entry.getValue().setPath("provisionFiles/"+inCount);
+    			inCount ++;
+    		}
+    	}
+    }
 }
