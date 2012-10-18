@@ -68,8 +68,14 @@ import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowParamValue;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
+import net.sourceforge.seqware.common.model.lists.LibrarySelectionList;
+import net.sourceforge.seqware.common.model.lists.LibrarySourceList;
+import net.sourceforge.seqware.common.model.lists.LibraryStrategyList;
+import net.sourceforge.seqware.common.model.lists.OrganismList;
+import net.sourceforge.seqware.common.model.lists.PlatformList;
 import net.sourceforge.seqware.common.model.lists.ReturnValueList;
 import net.sourceforge.seqware.common.model.lists.StudyList;
+import net.sourceforge.seqware.common.model.lists.StudyTypeList;
 import net.sourceforge.seqware.common.model.lists.WorkflowList;
 import net.sourceforge.seqware.common.model.lists.WorkflowRunList2;
 import net.sourceforge.seqware.common.module.FileMetadata;
@@ -1735,37 +1741,37 @@ public class MetadataWS extends Metadata {
     
     private List<Platform> findPlatforms() throws IOException, JAXBException {
       JaxbObject<PlatformList> jaxb = new JaxbObject<PlatformList>();
-      StudyList list = (PlatformList) findObject("/platforms", "", jaxb, new PlatformList());
+      PlatformList list = (PlatformList) findObject("/platforms", "", jaxb, new PlatformList());
       return list.getList();
     }
     
     private List<Organism> findOrganisms() throws IOException, JAXBException {
       JaxbObject<OrganismList> jaxb = new JaxbObject<OrganismList>();
-      StudyList list = (OrganismList) findObject("/organisms", "", jaxb, new OrganismList());
+      OrganismList list = (OrganismList) findObject("/organisms", "", jaxb, new OrganismList());
       return list.getList();
     }
     
     private List<StudyType> findStudyTypes() throws IOException, JAXBException {
       JaxbObject<StudyTypeList> jaxb = new JaxbObject<StudyTypeList>();
-      StudyList list = (StudyTypeList) findObject("/studytypes", "", jaxb, new StudyTypeList());
+      StudyTypeList list = (StudyTypeList) findObject("/studytypes", "", jaxb, new StudyTypeList());
       return list.getList();
     }
     
     private List<LibraryStrategy> findLibraryStrategies() throws IOException, JAXBException {
       JaxbObject<LibraryStrategyList> jaxb = new JaxbObject<LibraryStrategyList>();
-      StudyList list = (LibraryStrategyList) findObject("/librarystrategies", "", jaxb, new LibraryStrategyList());
+      LibraryStrategyList list = (LibraryStrategyList) findObject("/librarystrategies", "", jaxb, new LibraryStrategyList());
       return list.getList();
     }
     
     private List<LibrarySelection> findLibrarySelections() throws IOException, JAXBException {
       JaxbObject<LibrarySelectionList> jaxb = new JaxbObject<LibrarySelectionList>();
-      StudyList list = (LibrarySelectionList) findObject("/libraryselections", "", jaxb, new LibrarySelectionList());
+      LibrarySelectionList list = (LibrarySelectionList) findObject("/libraryselections", "", jaxb, new LibrarySelectionList());
       return list.getList();
     }
     
     private List<LibrarySource> findLibrarySources() throws IOException, JAXBException {
       JaxbObject<LibrarySourceList> jaxb = new JaxbObject<LibrarySourceList>();
-      StudyList list = (LibrarySourceList) findObject("/librarysources", "", jaxb, new LibrarySourceList());
+      LibrarySourceList list = (LibrarySourceList) findObject("/librarysources", "", jaxb, new LibrarySourceList());
       return list.getList();
     }
 
