@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.sourceforge.seqware.common.model.Organism;
+import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.StudyType;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -59,7 +61,7 @@ public class Metadata extends Plugin {
     //parser.acceptsAll(Arrays.asList("list", "l"), "Optional: if provided will list out the table rows currently in the MetaDB your settings point to.");
     parser.acceptsAll(Arrays.asList("output-file", "of"), "Optional: if provided along with the --list or --list-tables options this will cause the output list of rows/tables to be written to the file specified rather than stdout.").withRequiredArg();
     parser.acceptsAll(Arrays.asList("list-fields", "lf"), "Optional: if provided along with the --table option this will list out the fields for that table and their type.");
-    parser.acceptsAll(Arrays.asList("field", "f"), "Optional: the table you are interested in reading or writing.").withRequiredArg();
+    parser.acceptsAll(Arrays.asList("field", "f"), "Optional: the field you are interested in writing. This is encoded as '<field_name>::<value>', you should use single quotes when the value includes spaces. You supply multiple --field arguments for a given table insert.").withRequiredArg();
     parser.acceptsAll(Arrays.asList("create", "c"), "Optional: indicates you want to create a new row, must supply --table and all the required --field params.");
 
     ret.setExitStatus(ReturnValue.SUCCESS);
@@ -147,14 +149,41 @@ public class Metadata extends Plugin {
       List<StudyType> studyTypes = this.metadata.getStudyTypes();
       print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\naccession\tString\ncenter_name\tString\ncenter_project_name\tString\nstudy_type\tInteger\t[");
       for (StudyType st : studyTypes) {
-        print(st.getStudyTypeId() + ": " + st.getName());
+        print(st.getStudyTypeId() + ": " + st.getName()+" ");
       }
       //"1: Whole Genome Sequencing, 2: Metagenomics, 3: Transcriptome Analysis, 4: Resequencing, 5: Epigenetics, 6: Synthetic Genomics, 7: Forensic or Paleo-genomics, 8: Gene Regulation Study, 9: Cancer Genomics, 10: Population Genomics, 11: Other"
       print("]\n");
     } else if ("experiment".equals(table)) {
-      print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\nstudy_accession\tInteger\nplatform_id\tInteger\t[9: Illumina Genome Analyzer II, 20: Illumina HiSeq 2000, 26: Illumina MiSeq]\n");
+      print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\nstudy_accession\tInteger\nplatform_id\tInteger\t[");
+      List<Platform> platforms = this.metadata.getPlatforms();
+      for (Platform obj : platforms) {
+        print(obj.getPlatformId() + ": " + obj.getName()+" "+obj.getInstrumentModel()+" ");
+      }
+      print ("]\n");
     } else if ("sample".equals(table)) {
       print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\nexperiment_accession\tInteger\norganism_id\tInteger\t[31: Homo sapiens]\n");
+      List<Organism> objs = this.metadata.getOrganisms();
+      for (Organism obj : objs) {
+        print(obj.getOrganismId() + ": " + obj.getName()+" ");
+      }
+      print ("]\n");
+    } else if ("sequencer_run".equals(table)) {
+      print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\npaired_end\tBoolean\t[true, false]\nskip\tBoolean\t[true, false]\nplatform_accession\tInteger\t[");
+      List<Platform> platforms = this.metadata.getPlatforms();
+      for (Platform obj : platforms) {
+        print(obj.getPlatformId() + ": " + obj.getName()+" "+obj.getInstrumentModel()+" ");
+      }
+      print ("]\n");
+    } else if ("lane".equals(table)) {
+      print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\ncycle_descriptor\tString\t[e.g. {F*120}{..}{R*120}]\nskip\tBoolean\t[true, false]\nsequencer_run_accession\tInteger\nstudy_type_accession\tInteger\t[");
+      List<Platform> platforms = this.metadata.getPlatforms();
+      for (Platform obj : platforms) {
+        print(obj.getPlatformId() + ": " + obj.getName()+" "+obj.getInstrumentModel()+" ");
+      }
+      print ("]\n");
+      
+      //LEFT OFF HERE
+      
     } else {
       Logger.getLogger(Metadata.class.getName()).log(Level.SEVERE, "This tool does not know how to list the fields for the " + table + " table.", "");
     }
@@ -223,25 +252,64 @@ public class Metadata extends Plugin {
    *
    * @return ReturnValue
    *
-   * LEFT OFF WITH!
    */
   private ReturnValue addSequencerRun() {
     // check to make sure we have what we need
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-    if (fields.containsKey("experiment_accession") && fields.containsKey("organism_id") && fields.containsKey("title") && fields.containsKey("description")) {
+    if (fields.containsKey("platform_accession") && fields.containsKey("name") && fields.containsKey("description") && fields.containsKey("paired_end") && fields.containsKey("skip")) {
 
       // create a new experiment
-      ret = metadata.addSample(Integer.parseInt(fields.get("experiment_accession")), Integer.parseInt(fields.get("organism_id")), fields.get("description"), fields.get("title"));
+      ret = metadata.addSequencerRun(Integer.parseInt(fields.get("platform_accession")), fields.get("name"), fields.get("description"), "true".equalsIgnoreCase(fields.get("paired_end")), "true".equalsIgnoreCase(fields.get("skip")));
 
       print("SWID: " + ret.getAttribute("sw_accession"));
 
     } else {
-      Logger.getLogger(Metadata.class.getName()).log(Level.SEVERE, "You need to supply experiment_accession (reported if you create an experiment using this tool), title, and description for the sample table along with an integer for organism_id [31: Homo sapiens]", "");
+      Logger.getLogger(Metadata.class.getName()).log(Level.SEVERE, "You need to supply name, description, platform_accession [see platform lookup], and 'true' or 'false' for paired_end and skip.", "");
+      ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+    }
+    return (ret);
+  }
+  
+  private ReturnValue addLane() {
+    // check to make sure we have what we need
+    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+    
+    //Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip
+    if (fields.containsKey("sequencer_run_accession") && fields.containsKey("study_type_accession") && fields.containsKey("library_strategy_accession") && fields.containsKey("library_selection_accession") && fields.containsKey("library_source_accession")
+            && fields.containsKey("name") && fields.containsKey("description") && fields.containsKey("cycle_descriptor") && fields.containsKey("skip")) {
+
+      // create a new experiment
+      ret = metadata.addLane(Integer.parseInt(fields.get("sequencer_run_accession")), Integer.parseInt(fields.get("study_type_accession")), Integer.parseInt(fields.get("library_strategy_accession")), Integer.parseInt(fields.get("library_selection_accession")), Integer.parseInt(fields.get("library_source_accession")), fields.get("name"), fields.get("description"), fields.get("cycle_descriptor"), "true".equalsIgnoreCase(fields.get("skip")));
+
+      print("SWID: " + ret.getAttribute("sw_accession"));
+
+    } else {
+      Logger.getLogger(Metadata.class.getName()).log(Level.SEVERE, "You need to supply name, description, cycle_descriptor [e.g. {F*120}{..}{R*120}], sequencer_run_accession, study_type_accession, library_strategy_accession, library_selection_accession, library_source_accession and 'true' or 'false' for skip.", "");
       ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
     }
     return (ret);
   }
 
+    private ReturnValue addIUS() {
+    // check to make sure we have what we need
+    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+    
+    //Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip
+    if (fields.containsKey("lane_accession") && fields.containsKey("sample_accession")
+            && fields.containsKey("name") && fields.containsKey("description") && fields.containsKey("barcode") && fields.containsKey("skip")) {
+
+      // create a new experiment
+      ret = metadata.addIUS(Integer.parseInt(fields.get("lane_accession")), Integer.parseInt(fields.get("sample_accession")), fields.get("name"), fields.get("description"), fields.get("barcode"), "true".equalsIgnoreCase(fields.get("skip")));
+      
+      print("SWID: " + ret.getAttribute("sw_accession"));
+
+    } else {
+      Logger.getLogger(Metadata.class.getName()).log(Level.SEVERE, "You need to supply name, description, cycle_descriptor [e.g. {F*120}{..}{R*120}], sequencer_run_accession, study_type_accession, library_strategy_accession, library_selection_accession, library_source_accession and 'true' or 'false' for skip.", "");
+      ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+    }
+    return (ret);
+  }
+  
   /**
    * {@inheritDoc}
    */
