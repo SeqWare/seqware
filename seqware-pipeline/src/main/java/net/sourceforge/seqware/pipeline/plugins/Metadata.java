@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.sourceforge.seqware.common.model.LibrarySelection;
+import net.sourceforge.seqware.common.model.LibrarySource;
+import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.StudyType;
@@ -128,6 +131,18 @@ public class Metadata extends Plugin {
 
         return (addSample());
 
+      } else if ("sequencer_run".equals((String) options.valueOf("table"))) {
+
+        return (addSequencerRun());
+
+      } else if ("lane".equals((String) options.valueOf("table"))) {
+
+        return (addLane());
+
+      } else if ("ius".equals((String) options.valueOf("table"))) {
+
+        return (addIUS());
+
       } else {
         Logger.getLogger(Metadata.class.getName()).log(Level.SEVERE, "This tool does not know how to save to the " + options.valueOf("table") + " table.", "");
       }
@@ -141,7 +156,7 @@ public class Metadata extends Plugin {
   }
 
   /**
-   * LEFT OFF WITH
+   * list the fields available to set
    */
   private ReturnValue listFields(String table) {
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
@@ -149,7 +164,7 @@ public class Metadata extends Plugin {
       List<StudyType> studyTypes = this.metadata.getStudyTypes();
       print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\naccession\tString\ncenter_name\tString\ncenter_project_name\tString\nstudy_type\tInteger\t[");
       for (StudyType st : studyTypes) {
-        print(st.getStudyTypeId() + ": " + st.getName()+" ");
+        print(st.getStudyTypeId() + ": " + st.getName()+", ");
       }
       //"1: Whole Genome Sequencing, 2: Metagenomics, 3: Transcriptome Analysis, 4: Resequencing, 5: Epigenetics, 6: Synthetic Genomics, 7: Forensic or Paleo-genomics, 8: Gene Regulation Study, 9: Cancer Genomics, 10: Population Genomics, 11: Other"
       print("]\n");
@@ -157,33 +172,45 @@ public class Metadata extends Plugin {
       print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\nstudy_accession\tInteger\nplatform_id\tInteger\t[");
       List<Platform> platforms = this.metadata.getPlatforms();
       for (Platform obj : platforms) {
-        print(obj.getPlatformId() + ": " + obj.getName()+" "+obj.getInstrumentModel()+" ");
+        print(obj.getPlatformId() + ": " + obj.getName()+" "+obj.getInstrumentModel()+", ");
       }
       print ("]\n");
     } else if ("sample".equals(table)) {
       print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\nexperiment_accession\tInteger\norganism_id\tInteger\t[31: Homo sapiens]\n");
       List<Organism> objs = this.metadata.getOrganisms();
       for (Organism obj : objs) {
-        print(obj.getOrganismId() + ": " + obj.getName()+" ");
+        print(obj.getOrganismId() + ": " + obj.getName()+", ");
       }
       print ("]\n");
     } else if ("sequencer_run".equals(table)) {
       print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\npaired_end\tBoolean\t[true, false]\nskip\tBoolean\t[true, false]\nplatform_accession\tInteger\t[");
       List<Platform> platforms = this.metadata.getPlatforms();
       for (Platform obj : platforms) {
-        print(obj.getPlatformId() + ": " + obj.getName()+" "+obj.getInstrumentModel()+" ");
+        print(obj.getPlatformId() + ": " + obj.getName()+" "+obj.getInstrumentModel()+", ");
       }
       print ("]\n");
     } else if ("lane".equals(table)) {
       print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\ncycle_descriptor\tString\t[e.g. {F*120}{..}{R*120}]\nskip\tBoolean\t[true, false]\nsequencer_run_accession\tInteger\nstudy_type_accession\tInteger\t[");
       List<Platform> platforms = this.metadata.getPlatforms();
       for (Platform obj : platforms) {
-        print(obj.getPlatformId() + ": " + obj.getName()+" "+obj.getInstrumentModel()+" ");
+        print(obj.getPlatformId() + ": " + obj.getName()+" "+obj.getInstrumentModel()+", ");
       }
-      print ("]\n");
-      
-      //LEFT OFF HERE
-      
+      print ("]\nlibrary_strategy_accession\tInteger\t[");
+      List<LibraryStrategy> objs = this.metadata.getLibraryStrategies();
+      for (LibraryStrategy obj : objs) {
+        print(obj.getLibraryStrategyId() + ": " + obj.getName()+" "+obj.getDescription()+", ");
+      }
+      print ("]\nlibrary_selection_accession\tInteger\t[");
+      List<LibrarySelection> libSelections = this.metadata.getLibrarySelections();
+      for (LibrarySelection obj : libSelections) {
+        print(obj.getLibrarySelectionId() + ": " + obj.getName()+" "+obj.getDescription()+", ");
+      }
+      print ("]\nlibrary_source_accession\tInteger\t[");
+      List<LibrarySource> libSources = this.metadata.getLibrarySource();
+      for (LibrarySource obj : libSources) {
+        print(obj.getLibrarySourceId() + ": " + obj.getName()+" "+obj.getDescription()+", ");
+      }
+      print("]\n");
     } else {
       Logger.getLogger(Metadata.class.getName()).log(Level.SEVERE, "This tool does not know how to list the fields for the " + table + " table.", "");
     }
