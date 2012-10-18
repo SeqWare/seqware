@@ -353,7 +353,7 @@ public class WorkflowDataModelFactory {
     		if(entry.getValue().isInput()) {
     			SqwFile file = entry.getValue();
     			String fileName = FilenameUtils.getName(file.getLocation());
-    			entry.getValue().setPath("provisionFiles/"+inCount+"/"+fileName);
+    			entry.getValue().setPath("provisionfiles/"+inCount+"/"+fileName);
     			inCount ++;
     		}
     	}
