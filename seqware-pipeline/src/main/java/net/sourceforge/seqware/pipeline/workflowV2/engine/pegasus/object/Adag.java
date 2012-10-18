@@ -275,7 +275,8 @@ public class Adag  {
 				}
 			}
 		}
-
+		//set accessionFile relations
+		this.setAccessionFileRelations(pjob0);
 	}
 	
 	private PegasusJob getPegasusJobObject(AbstractJob job) {
@@ -298,5 +299,12 @@ public class Adag  {
 			ret = new PegasusJob(job, wfdm.getConfigs().get("basedir"));
 		}
 		return ret;
+	}
+	
+	private void setAccessionFileRelations(PegasusJob parent) {
+		for(PegasusJob pjob: parent.getChildren()) {
+			pjob.addParentAccessionFile(parent.getAccessionFile());
+			setAccessionFileRelations(pjob);
+		}
 	}
 }
