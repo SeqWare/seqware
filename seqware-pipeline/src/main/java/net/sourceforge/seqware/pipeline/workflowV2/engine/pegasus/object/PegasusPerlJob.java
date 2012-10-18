@@ -17,23 +17,7 @@ public class PegasusPerlJob extends PegasusJob {
 		sb.append("-Xmx").append(this.jobObj.getCommand().getMaxMemory()).append("\n");
 		sb.append("-classpath ").append(basedir).append("/lib/").append(Adag.PIPELINE).append("\n");
 		sb.append("net.sourceforge.seqware.pipeline.runner.Runner").append("\n");
-		if(this.hasMetadataWriteback()) {
-			sb.append("--metadata").append("\n");
-		} else {
-			sb.append("--no-metadata").append("\n");
-		}
-		if(this.hasMetadataWriteback()) {
-			if(this.parentAccession!=null){
-				sb.append("--metadata-parent-accession " + this.parentAccession).append("\n");
-			}
-			if(this.wfrAccession!=null) {
-				if(!this.wfrAncesstor) {
-					sb.append("--metadata-workflow-run-ancestor-accession " + this.wfrAccession).append("\n");
-				} else {
-					sb.append("--metadata-workflow-run-accession " + this.wfrAccession).append("\n");
-				}
-			}
-		}
+		sb.append(this.buildMetadataString());
 		sb.append("--module net.sourceforge.seqware.pipeline.modules.GenericCommandRunner").append("\n");
 		sb.append("--").append("\n");
 		sb.append("--gcr-algorithm ").append(this.jobObj.getAlgo()).append("\n");

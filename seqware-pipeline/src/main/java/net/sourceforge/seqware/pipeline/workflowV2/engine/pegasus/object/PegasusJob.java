@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jdom.Element;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.BashJob;
@@ -24,12 +26,14 @@ public class PegasusJob {
 	protected String parentAccession;
 	protected String wfrAccession;
 	protected boolean wfrAncesstor;
+	protected List<String> parentAccessionFiles;
 	
 	public PegasusJob(AbstractJob job, String basedir) {
 		this.jobObj = job;
 		this.basedir = basedir;
 		this.parents = new ArrayList<PegasusJob>();
 		this.children = new ArrayList<PegasusJob>();
+		this.parentAccessionFiles = new ArrayList<String>();
 	}
 	
 	public Element serializeXML() {
@@ -84,23 +88,7 @@ public class PegasusJob {
 		sb.append("-Xmx").append(this.jobObj.getCommand().getMaxMemory()).append("\n");
 		sb.append("-classpath ").append(basedir).append("/lib/").append(Adag.PIPELINE).append("\n");
 		sb.append("net.sourceforge.seqware.pipeline.runner.Runner").append("\n");
-		if(this.hasMetadataWriteback()) {
-			sb.append("--metadata").append("\n");
-		} else {
-			sb.append("--no-metadata").append("\n");
-		}
-		if(this.hasMetadataWriteback()) {
-			if(this.parentAccession!=null){
-				sb.append("--metadata-parent-accession " + this.parentAccession).append("\n");
-			}
-			if(this.wfrAccession!=null) {
-				if(!this.wfrAncesstor) {
-					sb.append("--metadata-workflow-run-ancestor-accession " + this.wfrAccession).append("\n");
-				} else {
-					sb.append("--metadata-workflow-run-accession " + this.wfrAccession).append("\n");
-				}
-			}
-		}
+		sb.append(this.buildMetadataString());
 		sb.append("--module net.sourceforge.seqware.pipeline.modules.GenericCommandRunner").append("\n");
 		sb.append("--").append("\n");
 		sb.append("--gcr-algorithm ").append(this.jobObj.getAlgo()).append("\n");
@@ -139,8 +127,10 @@ public class PegasusJob {
 	}
 	
 	public void addParent(PegasusJob parent) {
-		this.parents.add(parent);
-		parent.getChildren().add(this);
+		if(!this.parents.contains(parent))
+			this.parents.add(parent);
+		if(!parent.getChildren().contains(this))
+			parent.getChildren().add(this);
 	}
 	
     public Element getDependentElement(PegasusJob parent) {
@@ -183,4 +173,58 @@ public class PegasusJob {
 	public void setWorkflowRunAncesstor(boolean wfrAncesstor) {
 		this.wfrAncesstor = wfrAncesstor;
 	}
+	
+	public String getAccessionFile() {
+		return this.jobObj.getAlgo() + "_" + this.getId() + "_accession";
+	}
+	
+	
+	public void addParentAccessionFile(String paf) {
+		if(!this.parentAccessionFiles.contains(paf))
+			this.parentAccessionFiles.add(paf);
+	}
+	
+	protected String buildMetadataString() {
+		StringBuilder sb = new StringBuilder();
+		if(this.hasMetadataWriteback()) {
+			sb.append("--metadata").append("\n");
+		} else {
+			sb.append("--no-metadata").append("\n");
+		}
+		
+		if(this.parentAccession!=null){
+			sb.append("--metadata-parent-accession " + this.parentAccession).append("\n");
+		}
+		if(this.wfrAccession!=null) {
+			if(!this.wfrAncesstor) {
+				sb.append("--metadata-workflow-run-ancestor-accession " + this.wfrAccession).append("\n");
+			} else {
+				sb.append("--metadata-workflow-run-accession " + this.wfrAccession).append("\n");
+			}
+		}
+		
+		if(!this.parentAccessionFiles.isEmpty()) {
+			for(String paf: this.parentAccessionFiles) {
+				sb.append("--metadata-parent-accession-file " + paf).append("\n");
+			}
+		}
+		sb.append("--metadata-processing-accession-file" + this.getAccessionFile()).append("\n");
+		return sb.toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj==null || obj instanceof PegasusJob == false)
+			return false;
+		if(obj == this)
+			return true;
+		PegasusJob rhs = (PegasusJob) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj)).append(this.getAccessionFile(),rhs.getAccessionFile()).isEquals();			
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17,37).append(this.getAccessionFile()).toHashCode();
+	}
+	
 }
