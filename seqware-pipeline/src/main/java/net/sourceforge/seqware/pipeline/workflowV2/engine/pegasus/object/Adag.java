@@ -233,46 +233,48 @@ public class Adag  {
 					}
 				}
 			}
-
-			if(!hasProvisionOut.isEmpty()) {
-				for(Map.Entry<PegasusJob, PegasusJob> entry: hasProvisionOut.entrySet()) {
-					//get all children
-					Collection<PegasusJob> children = entry.getKey().getChildren();
-					if(children.size()<=1)
-						continue;
-					// and set other's parent as the value
-					for(PegasusJob child: children ) {
-						if(child == entry.getValue())
-							continue;
-						child.addParent(entry.getValue());
-					}
-				}
-			}
+			
 			//if no parent, set parents after provisionfiles
 			if(pjob.getParents().isEmpty()) {
 				for(PegasusJob parent: parents) {
 					pjob.addParent(parent);
 				}
 			}
-			
-			//add all provision out job
-			//get all the leaf job
-			List<PegasusJob> leaves = new ArrayList<PegasusJob>();
-			for(PegasusJob _job: this.jobs) {
-				if(_job.getChildren().isEmpty()) {
-					leaves.add(_job);
-				}
-			}
-			for(Map.Entry<SqwFile, PegasusJob> entry: fileJobMap.entrySet()) {
-				if(entry.getKey().isOutput()) {
-					//set parents to all leaf jobs
-					for(PegasusJob leaf: leaves) {
-						if(leaf!=entry.getValue())
-							entry.getValue().addParent(leaf);
-					}
+		}
+		
+		if(!hasProvisionOut.isEmpty()) {
+			for(Map.Entry<PegasusJob, PegasusJob> entry: hasProvisionOut.entrySet()) {
+				//get all children
+				Collection<PegasusJob> children = entry.getKey().getChildren();
+				if(children.size()<=1)
+					continue;
+				// and set other's parent as the value
+				for(PegasusJob child: children ) {
+					if(child == entry.getValue())
+						continue;
+					child.addParent(entry.getValue());
 				}
 			}
 		}
+		
+		//add all provision out job
+		//get all the leaf job
+		List<PegasusJob> leaves = new ArrayList<PegasusJob>();
+		for(PegasusJob _job: this.jobs) {
+			if(_job.getChildren().isEmpty()) {
+				leaves.add(_job);
+			}
+		}
+		for(Map.Entry<SqwFile, PegasusJob> entry: fileJobMap.entrySet()) {
+			if(entry.getKey().isOutput()) {
+				//set parents to all leaf jobs
+				for(PegasusJob leaf: leaves) {
+					if(leaf!=entry.getValue())
+						entry.getValue().addParent(leaf);
+				}
+			}
+		}
+
 	}
 	
 	private PegasusJob getPegasusJobObject(AbstractJob job) {
