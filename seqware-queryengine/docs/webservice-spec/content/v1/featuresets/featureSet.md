@@ -1,29 +1,75 @@
 ---
-title: Reference Sets | Generic Feature Store API
+title: Feature Sets | Generic Feature Store API
 ---
 
-# Reference Sets API
+# Feature Sets API
 
-Reference sets are collections of references which are a collection of contigs and coordinates. Think of the reference set as "homo sapiens" and a particular reference as a build version like "hg19" or "hg18".
+Feature sets are collections of features (variants) that have been loaded from files (GVF, VCF) or have been created via analysis events such as queries. 
 
 Things to keep in mind:
 
-* A reference is associated with one reference set at a time.
-* A feature set exist cannot exist without a reference.  If the reference/reference set is not a common one the user can just create them as needed in order to associate with a feature set.
-* Feature set can only be associated with 1 reference at a time. Cannot be changed once associated (but in the future an analysis component could convert a feature set to a new feature set with transformed coordinates).
+* Unlike other sets, in the back-end, the feature set is implemented as a "light" object that is only referenced by individual features
 
 In the document below the examples are loosly progressive, so things like versions increment in the document.
 
 ## Authentication
 
-Management of reference sets via the API requires that you are
+Management of feature sets via the API requires that you are
 authenticated.
 
-## List all reference sets
+## List all feature sets
 
-    GET /referenceSets
+    GET /featureSets
     
-Gets a list of references sets, these are typically different species like mouse and human that particular references (builds of a genome) can be associated with.
+Gets a list of feature sets.
+
+## Create a new feature set
+
+    POST /featureSet?format=:fileFormat&ad_hoc_tagset=:rowkey1&tagset=:rowkey2&batch=10000&reference=rowkey3
+    
+This resource lets you create a new feature set, attach the tags in it to a given tagset, populate an ad hoc tagset if necessary, specify a file format, and a batch size. 
+
+### Input
+
+You can post a VCF, GVF, or other file formats that are supported.  You will need to apply tags and other information using those seperate resources, this just creates the core object.
+
+<blockquote>
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
+21	26960070	rs116645811	G	A	.	.	Ensembl::Details=A|ENSG00000260583|ENST00000567517|Transcript|5KB_upstream_variant||||||rs116645811||,A|ENSG00000154719|ENST00000352957|Transcript|intron_variant||||||rs116645811||,A|ENSG00000154719|ENST00000307301|Transcript|non_synonymous_codon|1043|1001|334|T/M|aCg/aTg|rs116645811|0.001|0.05;SO:0001023::allele=A;SO:0000704::gene=ENSG00000260583,ENSG00000154719;SO:0000110::sequence_feature=ENST00000567517,ENST00000352957,ENST00000307301;Ensembl::FeatureType=Transcript;5KB_upstream_variant=SO:0001635;SO:0001635=5KB_upstream_variant;intron_variant=SO:0001627;SO:0001627=intron_variant;non_synonymous_codon=SO:0001818;SO:0001818=non_synonymous_codon;Ensembl::cDNARelativePosition=1043;Ensembl::CDSRelativePosition=1001;Ensembl::ProteinRelativePosition=334;SO:0001385::modified_amino_acid_feature=T/M;Ensembl::AlternateCodons=aCg/aTg;Ensembl::ExistingVariation=rs116645811;Ensembl::PolyPhen=0.001;Ensembl::SIFT=0.05
+21	26965148	rs1135638	G	A	.	.	Ensembl::Details=A|ENSG00000154719|ENST00000419219|Transcript|synonymous_codon|876|867|289|G|ggC/ggT|rs1135638||,A|ENSG00000154719|ENST00000352957|Transcript|synonymous_codon|939|897|299|G|ggC/ggT|rs1135638||,A|ENSG00000154719|ENST00000307301|Transcript|synonymous_codon|939|897|299|G|ggC/ggT|rs1135638||;SO:0001023::allele=A;SO:0000704::gene=ENSG00000154719;SO:0000110::sequence_feature=ENST00000419219,ENST00000352957,ENST00000307301;Ensembl::FeatureType=Transcript;synonymous_codon=SO:0001819;SO:0001819=synonymous_codon;Ensembl::cDNARelativePosition=876,939;Ensembl::CDSRelativePosition=867,897;Ensembl::ProteinRelativePosition=289,299;SO:0001385::modified_amino_acid_feature=G;Ensembl::AlternateCodons=ggC/ggT;Ensembl::ExistingVariation=rs1135638;;
+21	26965172	rs10576	T	C	.	.	Ensembl::Details=C|ENSG00000154719|ENST00000419219|Transcript|synonymous_codon|852|843|281|P|ccA/ccG|rs10576||,C|ENSG00000154719|ENST00000352957|Transcript|synonymous_codon|915|873|291|P|ccA/ccG|rs10576||,C|ENSG00000154719|ENST00000307301|Transcript|synonymous_codon|915|873|291|P|ccA/ccG|rs10576||;SO:0001023::allele=C;SO:0000704::gene=ENSG00000154719;SO:0000110::sequence_feature=ENST00000419219,ENST00000352957,ENST00000307301;Ensembl::FeatureType=Transcript;synonymous_codon=SO:0001819;SO:0001819=synonymous_codon;Ensembl::cDNARelativePosition=852,915;Ensembl::CDSRelativePosition=843,873;Ensembl::ProteinRelativePosition=281,291;SO:0001385::modified_amino_acid_feature=P;Ensembl::AlternateCodons=ccA/ccG;Ensembl::ExistingVariation=rs10576;;
+21	26965205	rs1057885	T	C	.	.	Ensembl::Details=C|ENSG00000154719|ENST00000419219|Transcript|synonymous_codon|819|810|270|V|gtA/gtG|rs1057885||,C|ENSG00000154719|ENST00000352957|Transcript|synonymous_codon|882|840|280|V|gtA/gtG|rs1057885||,C|ENSG00000154719|ENST00000307301|Transcript|synonymous_codon|882|840|280|V|gtA/gtG|rs1057885||;SO:0001023::allele=C;SO:0000704::gene=ENSG00000154719;SO:0000110::sequence_feature=ENST00000419219,ENST00000352957,ENST00000307301;Ensembl::FeatureType=Transcript;synonymous_codon=SO:0001819;SO:0001819=synonymous_codon;Ensembl::cDNARelativePosition=819,882;Ensembl::CDSRelativePosition=810,840;Ensembl::ProteinRelativePosition=270,280;SO:0001385::modified_amino_acid_feature=V;Ensembl::AlternateCodons=gtA/gtG;Ensembl::ExistingVariation=rs1057885;;
+</blockquote>
+
+### Response
+
+You just get the freshly created resource back. Notice the collections inside it are empty.
+
+<%= headers 201 %>
+<%= json({
+  "id" => "1",
+  "url" => "http://server/gfs/0.1/referenceSets/1",
+  "version" => "http://server/gfs/0.1/referenceSets/1/version/1",
+  "description" => "This feature set describes the mutations that create a bat man",
+  "tags" => [
+
+  ],
+  "owner" => "http://server/gfs/0.1/users/23",
+  "acl" => [
+
+  ],
+  "reference" => "hg_19",
+  "create_tstmp" => "2012-05-22 23:45:00",
+  "ttl" => "FOREVER",
+  "updates" => [
+
+  ]
+}) %>
+
+
+**Content below is place-holder content**
+---------------------------------------
+
 
 ### Response
 
