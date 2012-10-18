@@ -3,6 +3,7 @@ package net.sourceforge.seqware.pipeline.workflowV2;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Environment;
@@ -34,7 +35,7 @@ public abstract class AbstractWorkflowDataModel  {
 
     public AbstractWorkflowDataModel() {
     	this.env = new Environment();
-    	this.files = new HashMap<String, SqwFile>();
+    	this.files = new LinkedHashMap<String, SqwFile>();
     	this.setTags(new HashMap<String,String>());
     	this.configs = new HashMap<String,String>();
     	this.workflow = new Workflow();
