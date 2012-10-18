@@ -1,7 +1,7 @@
     PROJECT: SeqWare
     FILE: README.md
     PROEJCT LEAD: Brian O'Connor <briandoconnor@gmail.com>
-    UPDATED: 20121012
+    UPDATED: 20121016
     HOMEPAGE: http://seqware.github.com/
 
 INTRODUCTION
