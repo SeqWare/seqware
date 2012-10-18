@@ -204,7 +204,7 @@ public class Adag  {
 							//create a provisionFileJob;
 							AbstractJob pfjob = new BashJob("provisionFile_in");
 							pfjob.addFile(file);
-							PegasusJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getConfigs().get("basedir"), file);
+							ProvisionFilesJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getConfigs().get("basedir"), file);
 							parentPfjob.setId(this.jobs.size());
 							parentPfjob.addParent(pjob0);
 							parentPfjob.setMetadataWriteback(metadatawriteback);
@@ -212,6 +212,7 @@ public class Adag  {
 								parentPfjob.setWorkflowRunAccession(workflowRunAccession);
 							}
 							this.jobs.add(parentPfjob);
+							parentPfjob.setOutputDir("provisionfiles/" + provisionFileCount) ;
 							pjob.addParent(parentPfjob);	
 							//add mkdir to the first job, then set the file path
 							job0.getCommand().addArgument("mkdir -p provisionfiles/" + provisionFileCount + "; ");
