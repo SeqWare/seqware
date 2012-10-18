@@ -1,29 +1,26 @@
 ---
-title: Reference Sets | Generic Feature Store API
+title: Users | Generic Feature Store API
 ---
 
-# Reference Sets API
+# User API
 
-Reference sets are collections of references which are a collection of contigs and coordinates. Think of the reference set as "homo sapiens" and a particular reference as a build version like "hg19" or "hg18".
 
-Things to keep in mind:
-
-* A reference is associated with one reference set at a time.
-* A feature set exist cannot exist without a reference.  If the reference/reference set is not a common one the user can just create them as needed in order to associate with a feature set.
-* Feature set can only be associated with 1 reference at a time. Cannot be changed once associated (but in the future an analysis component could convert a feature set to a new feature set with transformed coordinates).
-
-In the document below the examples are loosly progressive, so things like versions increment in the document.
 
 ## Authentication
 
-Management of reference sets via the API requires that you are
+Management of users via the API requires that you are
 authenticated.
 
-## List all reference sets
+## List all users
 
-    GET /referenceSets
+    GET /users
     
-Gets a list of references sets, these are typically different species like mouse and human that particular references (builds of a genome) can be associated with.
+Gets a list of users.
+
+
+**Content below is place-holder content**
+---------------------------------------
+
 
 ### Response
 
