@@ -111,7 +111,7 @@ public class MetadataNoConnection extends Metadata {
     return (new ReturnValue(ReturnValue.SUCCESS));
   }
 
-    public ReturnValue addSequencerRun(Integer experimentAccession, Integer organismAccession, Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip) {
+    public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip) {
         logger.info("No metadata connection");
         return (new ReturnValue(ReturnValue.SUCCESS));
     }
