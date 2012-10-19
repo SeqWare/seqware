@@ -176,7 +176,7 @@ public class Metadata extends Plugin {
       }
       print ("]\n");
     } else if ("sample".equals(table)) {
-      print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\nexperiment_accession\tInteger\norganism_id\tInteger\t[31: Homo sapiens]\n");
+      print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\nexperiment_accession\tInteger\norganism_id\tInteger\t[\n");
       List<Organism> objs = this.metadata.getOrganisms();
       for (Organism obj : objs) {
         print(obj.getOrganismId() + ": " + obj.getName()+", ");
@@ -211,6 +211,9 @@ public class Metadata extends Plugin {
         print(obj.getLibrarySourceId() + ": " + obj.getName()+" "+obj.getDescription()+", ");
       }
       print("]\n");
+    } else if ("ius".equals(table)) {
+      print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\nbarcode\tString\nskip\tBoolean\t[true, false]\nsample_accession\tInteger\nlane_accession\tInteger\n");
+      
     } else {
       Logger.getLogger(Metadata.class.getName()).log(Level.SEVERE, "This tool does not know how to list the fields for the " + table + " table.", "");
     }
