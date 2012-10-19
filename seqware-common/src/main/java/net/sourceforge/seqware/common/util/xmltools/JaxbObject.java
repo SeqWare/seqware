@@ -74,11 +74,12 @@ public class JaxbObject<T> {
                         Study.class, StudyAttribute.class, StudyLink.class, StudyType.class,
                         Workflow.class, WorkflowParam.class, WorkflowParamValue.class,
                         WorkflowRun.class, WorkflowRunParam.class,
-                        ExperimentList.class, FileList.class, IUSList.class, LaneList.class, ProcessingList.class,
+                        ExperimentList.class, FileList.class, IUSList.class, LaneList.class, 
+                        LibrarySelectionList.class, LibrarySourceList.class, LibraryStrategyList.class,
+                        OrganismList.class, PlatformList.class, ProcessingList.class,
                         ReturnValueList.class, SampleList.class, SequencerRunList.class, StudyList.class,
-                        WorkflowList.class, WorkflowRunList.class, WorkflowRunList2.class,
-                        WorkflowParamList.class, WorkflowParamValueList.class,
-			ArrayList.class);
+                        StudyTypeList.class, WorkflowList.class, WorkflowRunList.class, WorkflowRunList2.class,
+                        WorkflowParamList.class, WorkflowParamValueList.class, ArrayList.class);
             }
         } catch (JAXBException e) {
             e.printStackTrace();

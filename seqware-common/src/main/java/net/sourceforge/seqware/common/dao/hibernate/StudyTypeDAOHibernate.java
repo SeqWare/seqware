@@ -19,6 +19,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @version $Id: $Id
  */
 public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyTypeDAO {
+
   /**
    * <p>Constructor for StudyTypeDAOHibernate.</p>
    */
@@ -26,31 +27,28 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
     super();
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public void insert(StudyType studyType) {
     this.getHibernateTemplate().save(studyType);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public void update(StudyType studyType) {
     this.getHibernateTemplate().update(studyType);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public List<StudyType> list(Registration registration) {
-    ArrayList<StudyType> studyTypes = new ArrayList<StudyType>();
-    if (registration == null)
-      return studyTypes;
-
-    List expmts = this.getHibernateTemplate().find("from StudyType as studyType order by studyType.studyTypeId asc" // desc
-    );
-
-    // expmts =
-    // this.getHibernateTemplate().find("from StudyType as studyType order by studyType.name desc");
-    for (Object studyType : expmts) {
-      studyTypes.add((StudyType) studyType);
+    if (registration == null) {
+      return (null);
     }
-    return studyTypes;
+    return (list());
   }
 
   /**
@@ -61,7 +59,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
   public StudyType findByName(String name) {
     String query = "from studyType as studyType where studyType.name = ?";
     StudyType studyType = null;
-    Object[] parameters = { name };
+    Object[] parameters = {name};
     List list = this.getHibernateTemplate().find(query, parameters);
     if (list.size() > 0) {
       studyType = (StudyType) list.get(0);
@@ -78,7 +76,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
   public StudyType findByID(Integer expID) {
     String query = "from StudyType as studyType where studyType.studyTypeId = ?";
     StudyType studyType = null;
-    Object[] parameters = { expID };
+    Object[] parameters = {expID};
     List list = this.getHibernateTemplate().find(query, parameters);
     if (list.size() > 0) {
       studyType = (StudyType) list.get(0);
@@ -86,7 +84,9 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
     return studyType;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public StudyType updateDetached(StudyType studyType) {
     StudyType dbObject = findByID(studyType.getStudyTypeId());
@@ -102,9 +102,21 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
     return null;
   }
 
-    /** {@inheritDoc} */
-    @Override
-    public List<StudyType> list() {
-        throw new UnsupportedOperationException("Not supported yet.");
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<StudyType> list() {
+    ArrayList<StudyType> studyTypes = new ArrayList<StudyType>();
+
+    List expmts = this.getHibernateTemplate().find("from StudyType as studyType order by studyType.studyTypeId asc" // desc
+            );
+
+    // expmts =
+    // this.getHibernateTemplate().find("from StudyType as studyType order by studyType.name desc");
+    for (Object studyType : expmts) {
+      studyTypes.add((StudyType) studyType);
     }
+    return studyTypes;
+  }
 }
