@@ -36,7 +36,7 @@ public class ProvisionFilesJob extends PegasusJob {
 		String inputType = "--input-file ";
 		String output = this.outputDir;
 		if(this.file.isOutput()) {
-			inputType = "--input-file-metadata "+ this.file.getType() + "/";
+			inputType = "--input-file-metadata "+ this.jobObj.getAlgo() + "::" + this.file.getType() + "::";
 			output = this.metadataOutputPrefix + "/" + this.outputDir;
 		}
 		sb.append(inputType).append(this.file.getLocation()).append("\n");
