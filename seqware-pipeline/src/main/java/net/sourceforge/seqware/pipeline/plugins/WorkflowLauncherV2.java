@@ -75,10 +75,6 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
      */
     @Override
     public ReturnValue do_run() {
-
-    	if(options.has("workflow-accession")) {
-    		
-    	}
     	// set up workflow engine
     	AbstractWorkflowEngine engine = new PegasusWorkflowEngine();
     	WorkflowDataModelFactory factory = new WorkflowDataModelFactory(options, config, params, metadata);
