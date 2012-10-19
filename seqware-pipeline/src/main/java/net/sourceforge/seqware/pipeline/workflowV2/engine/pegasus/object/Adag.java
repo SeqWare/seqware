@@ -219,7 +219,7 @@ public class Adag  {
 							provisionFileCount ++;
 					} else {
 							//create a provisionFileJob;
-							AbstractJob pfjob = new BashJob("provisionFile_in");
+							AbstractJob pfjob = new BashJob("provisionFile_out");
 							pfjob.addFile(file);
 							ProvisionFilesJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getConfigs().get("basedir"), file);
 							parentPfjob.setId(this.jobs.size());
