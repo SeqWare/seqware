@@ -65,10 +65,7 @@ import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowParamValue;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
-import net.sourceforge.seqware.common.model.lists.ReturnValueList;
-import net.sourceforge.seqware.common.model.lists.StudyList;
-import net.sourceforge.seqware.common.model.lists.WorkflowList;
-import net.sourceforge.seqware.common.model.lists.WorkflowRunList2;
+import net.sourceforge.seqware.common.model.lists.*;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -567,16 +564,19 @@ public class MetadataWS extends Metadata {
   @Override
   public List<ReturnValue> findFilesAssociatedWithASample(String sampleName) {
     ReturnValueList rv = new ReturnValueList();
+    List<ReturnValue> values = new ArrayList<ReturnValue>();
     try {
-      Sample sample = ll.findSample("?name=" + sampleName);
+      List<Sample> samples = ll.matchSampleName(sampleName);
       JaxbObject<ReturnValueList> jaxb = new JaxbObject<ReturnValueList>();
-
-      rv = (ReturnValueList) ll.findObject("/samples", "/" + sample.getSwAccession() + "/files", jaxb, rv);
+      for (Sample sample: samples)
+      {
+        rv = (ReturnValueList) ll.findObject("/samples", "/" + sample.getSwAccession() + "/files", jaxb, rv);
+        values.addAll(rv.getList());
+      }
     } catch (Exception e) {
-      e.printStackTrace();
-      // rv.setExitStatus(ReturnValue.FAILURE);
+      Log.error("Problem finding files associated with sample: "+sampleName,e);
     }
-    return rv.getList();
+    return values;
   }
 
   /** {@inheritDoc} */
@@ -1622,6 +1622,23 @@ public class MetadataWS extends Metadata {
       }
     }
 
+    /**
+     * Use percent sign to designate what should be matched. 
+     * 
+     * Eg. SAMPLE_1% will match SAMPLE_1_001 and SAMPLE_1_002 and SAMPLE_1
+     * 
+     * 
+     * @param name
+     * @return
+     * @throws IOException
+     * @throws JAXBException 
+     */
+    private List<Sample> matchSampleName(String name) throws IOException, JAXBException {
+      JaxbObject<SampleList> jaxb = new JaxbObject<SampleList>();
+      SampleList list = (SampleList) findObject("/samples", "?matches="+name, jaxb, new SampleList());
+      return list.getList();
+    }
+    
     private List<Study> findStudies() throws IOException, JAXBException {
       JaxbObject<StudyList> jaxb = new JaxbObject<StudyList>();
       StudyList list = (StudyList) findObject("/studies", "", jaxb, new StudyList());
