@@ -315,6 +315,185 @@ public class MetadataWS extends Metadata {
   }
 
   /**
+   * FIXME: there are problems with setting accession when I should set ID
+   *
+   * @param experimentAccession
+   * @param organismAccession
+   * @param platformAccession
+   * @param name
+   * @param description
+   * @param pairdEnd
+   * @param skip
+   * @return
+   */
+  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, 
+          boolean pairdEnd, boolean skip) {
+    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+
+    try {
+
+      Platform p = ll.findPlatform("/" + platformAccession);
+
+      SequencerRun sr = new SequencerRun();
+      sr.setName(name);
+      sr.setDescription(description);
+      sr.setPairedEnd(pairdEnd);
+      sr.setSkip(skip);
+      sr.setPlatform(p);
+
+      Log.info("Posting new sequencer_run");
+
+      sr = ll.addSequencerRun(sr);
+
+      ret.setAttribute("sw_accession", sr.getSwAccession().toString());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      ret.setExitStatus(ReturnValue.FAILURE);
+      return ret;
+    }
+
+    return (ret);
+  }
+
+  // FIXME: might actually need to turn off libraryStrategy et al.
+  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, 
+          Integer librarySelectionId, Integer librarySourceId, String name, String description,
+          String cycleDescriptor, boolean skip) {
+    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+
+    try {
+
+      SequencerRun sr = ll.findSequencerRun("/" + sequencerRunAccession);
+      StudyType st = ll.findStudyType("/" + studyTypeId);
+      LibraryStrategy ls = ll.findLibraryStrategy("/" + libraryStrategyId);
+      LibrarySelection lsel = ll.findLibrarySelection("/" + librarySelectionId);
+      LibrarySource lsource = ll.findLibrarySource("/" + librarySourceId);
+
+      Lane l = new Lane();
+      l.setStudyType(st);
+      l.setLibraryStrategy(ls);
+      l.setLibrarySelection(lsel);
+      l.setLibrarySource(lsource);
+      l.setSequencerRun(sr);
+      l.setName(name);
+      l.setDescription(description);
+      l.setCycleDescriptor(cycleDescriptor);
+      l.setSkip(skip);
+
+      Log.info("Posting new lane");
+
+      l = ll.addLane(l);
+
+      ret.setAttribute("sw_accession", l.getSwAccession().toString());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      ret.setExitStatus(ReturnValue.FAILURE);
+      return ret;
+    }
+
+    return (ret);
+  }
+
+  public ReturnValue addIUS(Integer laneAccession, Integer sampleAccession, String name, String description, String barcode, boolean skip) {
+    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+
+    try {
+
+      Lane l = ll.findLane("/" + laneAccession);
+      Sample s = ll.findSample("/" + sampleAccession);
+
+      IUS i = new IUS();
+      i.setLane(l);
+      i.setSample(s);
+      i.setName(name);
+      i.setDescription(description);
+      i.setTag(barcode);
+      i.setSkip(skip);
+
+      Log.info("Posting new IUS");
+
+      i = ll.addIUS(i);
+
+      ret.setAttribute("sw_accession", i.getSwAccession().toString());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      ret.setExitStatus(ReturnValue.FAILURE);
+      return ret;
+    }
+
+    return (ret);
+  }
+
+  public List<Platform> getPlatforms() {
+    try {
+      return ll.findPlatforms();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  public List<Organism> getOrganisms() {
+    try {
+      return ll.findOrganisms();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  public List<StudyType> getStudyTypes() {
+    try {
+      return ll.findStudyTypes();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  public List<LibraryStrategy> getLibraryStrategies() {
+    try {
+      return ll.findLibraryStrategies();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  public List<LibrarySelection> getLibrarySelections() {
+    try {
+      return ll.findLibrarySelections();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  public List<LibrarySource> getLibrarySource() {
+    try {
+      return ll.findLibrarySources();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  /**
    *
    * @param p
    * @param parentIds if sw accession, each ID must be in the form "/ID", if db
@@ -1516,588 +1695,6 @@ public class MetadataWS extends Metadata {
     return null;
   }
 
-  /*
-   * public void annotateFile(int fileSWID, FileAttribute att, Boolean skip) {
-   * try { Log.debug("Annotating WorkflowRun " + fileSWID + " with skip=" + skip
-   * + ", Att = " + att); File obj = ll.findFile("/" + fileSWID); if (skip !=
-   * null) { // obj.setSkip(skip);
-   * Log.info("Processing does not have a skip column!"); } if (att != null) {
-   * Set<FileAttribute> atts = obj.getFileAttributes(); if (atts == null) { atts
-   * = new HashSet<FileAttribute>(); } // att.setStudy(obj); atts.add(att);
-   * obj.setFileAttributes(atts); } ll.updateFile("/" + fileSWID, obj); } catch
-   * (IOException ex) { Log.error("IOException while updating study " + fileSWID
-   * + " " + ex.getMessage()); } catch (JAXBException ex) {
-   * Log.error("JAXBException while updating study " + fileSWID + " " +
-   * ex.getMessage()); } catch (ResourceException ex) {
-   * Log.error("ResourceException while updating study " + fileSWID + " " +
-   * ex.getMessage()); }
-   * 
-   * }
-   */
-  protected class LowLevel {
-
-    private ClientResource resource;
-
-    public LowLevel(String database, String username, String password) {
-      Client client = null;
-      if (database.contains("https")) {
-        try {
-          Log.info("using HTTPS connection");
-          client = new Client(new Context(), Protocol.HTTPS);
-          TrustManager tm = new X509TrustManager() {
-            @Override
-            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-              Log.debug("checkClientTrusted");
-            }
-
-            @Override
-            public X509Certificate[] getAcceptedIssuers() {
-              Log.debug("getAcceptedIssuers");
-              return new X509Certificate[0];
-            }
-
-            @Override
-            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-              Log.debug("checkServerTrusted");
-              // This will never throw an exception.
-              // This doesn't check anything at all: it's insecure.
-            }
-          };
-          // Engine.getInstance().getRegisteredClients()
-          // .add(0, new org.restlet.ext.httpclient.HttpClientHelper(null));
-
-          final SSLContext sslContext = SSLContext.getInstance("TLS");
-          sslContext.init(null, new TrustManager[]{tm}, null);
-          Context context = client.getContext();
-          context.getAttributes().put("sslContextFactory", new SslContextFactory() {
-            @Override
-            public void init(Series<Parameter> parameters) {
-              Log.debug("sslcontextfactory init");
-            }
-
-            @Override
-            public SSLContext createSslContext() {
-              Log.debug("createsslcontext");
-              return sslContext;
-            }
-          });
-        } catch (KeyManagementException ex) {
-          Log.fatal(ex);
-        } catch (NoSuchAlgorithmException ex) {
-          Log.fatal(ex);
-        }
-
-      } else {
-        Log.info("using HTTP connection");
-        client = new Client(new Context(), Protocol.HTTP);
-      }
-      client.getContext().getParameters().add("useForwardedForHeader", "false");
-      client.getContext().getParameters().add("maxConnectionsPerHost", "100");
-
-      String[] pathElements = database.split("/");
-      resource = new ClientResource(database);
-      resource.setNext(client);
-      resource.setFollowingRedirects(false);
-      resource.setChallengeResponse(ChallengeScheme.HTTP_BASIC, username, password);
-      version = "";
-      if (pathElements.length > 3) {
-        for (int i = 3; i < pathElements.length; i++) {
-          version += "/" + pathElements[i];
-        }
-      }
-
-      // version = (pathElements.length > 3 ? "/" +
-      // pathElements[pathElements.length - 1] : "");
-      Log.debug("Database string is " + database);
-      Log.debug("root is " + resource);
-      Log.debug("Version is " + version);
-      user = username;
-      pass = password.toCharArray();
-
-    }
-
-    public Processing existsProcessing(String searchString) {
-      Processing processing = null;
-      try {
-        processing = findProcessing(searchString);
-      } catch (IOException ex) {
-        Log.debug("Processing does not exist. Continuing.", ex);
-      } catch (JAXBException ex) {
-        Log.error(ex);
-      } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
-      }
-      return processing;
-    }
-
-    public Lane existsLane(String searchString) {
-      Lane lane = null;
-      try {
-        lane = findLane(searchString);
-      } catch (IOException ex) {
-        Log.debug("Lane does not exist. Continuing.", ex);
-      } catch (JAXBException ex) {
-        Log.error(ex);
-      } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
-      }
-      return lane;
-    }
-
-    public IUS existsIUS(String searchString) {
-      IUS ius = null;
-      try {
-        ius = findIUS(searchString);
-      } catch (IOException ex) {
-        Log.debug("IUS does not exist. Continuing.", ex);
-      } catch (JAXBException ex) {
-        Log.error(ex);
-      } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
-      }
-      return ius;
-    }
-
-    public SequencerRun existsSequencerRun(String searchString) {
-      SequencerRun sr = null;
-      try {
-        sr = findSequencerRun(searchString);
-      } catch (IOException ex) {
-        Log.debug("SequencerRun does not exist. Continuing.", ex);
-      } catch (JAXBException ex) {
-        Log.error(ex);
-      } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
-      }
-      return sr;
-    }
-
-    public Study existsStudy(String searchString) {
-      Study study = null;
-      try {
-        study = findStudy(searchString);
-      } catch (IOException ex) {
-        Log.debug("Study does not exist. Continuing.", ex);
-      } catch (JAXBException ex) {
-        Log.error(ex);
-      } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
-      }
-      return study;
-    }
-
-    public Experiment existsExperiment(String searchString) {
-      Experiment experiment = null;
-      try {
-        experiment = findExperiment(searchString);
-      } catch (IOException ex) {
-        Log.debug("Experiment does not exist. Continuing.", ex);
-      } catch (JAXBException ex) {
-        Log.error(ex);
-      } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
-      }
-      return experiment;
-    }
-
-    public Sample existsSample(String searchString) {
-      Sample sample = null;
-      try {
-        sample = findSample(searchString);
-      } catch (IOException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
-      } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
-      } catch (JAXBException ex) {
-        Log.error(ex);
-      }
-      return sample;
-    }
-
-    public void clean_up() {
-      if (resource != null) {
-        resource.release();
-      }
-    }
-
-    private List<Study> findStudies() throws IOException, JAXBException {
-      JaxbObject<StudyList> jaxb = new JaxbObject<StudyList>();
-      StudyList list = (StudyList) findObject("/studies", "", jaxb, new StudyList());
-      return list.getList();
-    }
-
-    private List<Workflow> findWorkflows() throws IOException, JAXBException {
-      JaxbObject<WorkflowList> jaxb = new JaxbObject<WorkflowList>();
-      WorkflowList list = (WorkflowList) findObject("/workflows", "", jaxb, new WorkflowList());
-      return list.getList();
-    }
-
-    private Workflow findWorkflowParams(String workflowAccession) throws IOException, JAXBException {
-      JaxbObject<Workflow> jaxb = new JaxbObject<Workflow>();
-      Workflow list = (Workflow) findObject("/workflows", "/" + workflowAccession + "?show=params", jaxb,
-              new Workflow());
-      return list;
-    }
-    
-    private List<Platform> findPlatforms() throws IOException, JAXBException {
-      JaxbObject<PlatformList> jaxb = new JaxbObject<PlatformList>();
-      PlatformList list = (PlatformList) findObject("/platforms", "", jaxb, new PlatformList());
-      return list.getList();
-    }
-    
-    private List<Organism> findOrganisms() throws IOException, JAXBException {
-      JaxbObject<OrganismList> jaxb = new JaxbObject<OrganismList>();
-      OrganismList list = (OrganismList) findObject("/organisms", "", jaxb, new OrganismList());
-      return list.getList();
-    }
-    
-    private List<StudyType> findStudyTypes() throws IOException, JAXBException {
-      JaxbObject<StudyTypeList> jaxb = new JaxbObject<StudyTypeList>();
-      StudyTypeList list = (StudyTypeList) findObject("/studytypes", "", jaxb, new StudyTypeList());
-      return list.getList();
-    }
-    
-    private List<LibraryStrategy> findLibraryStrategies() throws IOException, JAXBException {
-      JaxbObject<LibraryStrategyList> jaxb = new JaxbObject<LibraryStrategyList>();
-      LibraryStrategyList list = (LibraryStrategyList) findObject("/librarystrategies", "", jaxb, new LibraryStrategyList());
-      return list.getList();
-    }
-    
-    private List<LibrarySelection> findLibrarySelections() throws IOException, JAXBException {
-      JaxbObject<LibrarySelectionList> jaxb = new JaxbObject<LibrarySelectionList>();
-      LibrarySelectionList list = (LibrarySelectionList) findObject("/libraryselections", "", jaxb, new LibrarySelectionList());
-      return list.getList();
-    }
-    
-    private List<LibrarySource> findLibrarySources() throws IOException, JAXBException {
-      JaxbObject<LibrarySourceList> jaxb = new JaxbObject<LibrarySourceList>();
-      LibrarySourceList list = (LibrarySourceList) findObject("/librarysources", "", jaxb, new LibrarySourceList());
-      return list.getList();
-    }
-
-    private Processing findProcessing(String searchString) throws IOException, JAXBException {
-      Processing parent = new Processing();
-      JaxbObject<Processing> jaxbProcess = new JaxbObject<Processing>();
-      return (Processing) findObject("/processes", searchString, jaxbProcess, parent);
-    }
-
-    private Lane findLane(String searchString) throws IOException, JAXBException {
-      Lane lane = new Lane();
-      JaxbObject<Lane> jaxb = new JaxbObject<Lane>();
-      return (Lane) findObject("/lanes", searchString, jaxb, lane);
-    }
-
-    private IUS findIUS(String searchString) throws IOException, JAXBException {
-      IUS ius = new IUS();
-      JaxbObject<IUS> jaxb = new JaxbObject<IUS>();
-      return (IUS) findObject("/ius", searchString, jaxb, ius);
-    }
-
-    private WorkflowRun findWorkflowRun(String searchString) throws IOException, JAXBException {
-      WorkflowRun wr = new WorkflowRun();
-      JaxbObject<WorkflowRun> jaxb = new JaxbObject<WorkflowRun>();
-      return (WorkflowRun) findObject("/workflowruns", searchString, jaxb, wr);
-    }
-
-    private Workflow findWorkflowByWorkflowRun(String workflowRunAccession) throws IOException, JAXBException {
-      Workflow w = new Workflow();
-      JaxbObject<Workflow> jaxb = new JaxbObject<Workflow>();
-      return (Workflow) findObject("/workflowruns", "/" + workflowRunAccession + "/workflow", jaxb, w);
-    }
-
-    private List<WorkflowRun> findWorkflowRuns(String searchString) throws IOException, JAXBException {
-      WorkflowRunList2 wrl = new WorkflowRunList2();
-      JaxbObject<WorkflowRunList2> jaxb = new JaxbObject<WorkflowRunList2>();
-      WorkflowRunList2 wrl2 = (WorkflowRunList2) findObject("/workflowruns", searchString, jaxb, wrl);
-      return wrl2.getList();
-    }
-
-    private Workflow findWorkflow(String searchString) throws IOException, JAXBException {
-      Workflow wr = new Workflow();
-      JaxbObject<Workflow> jaxb = new JaxbObject<Workflow>();
-      return (Workflow) findObject("/workflows", searchString, jaxb, wr);
-    }
-
-    private SequencerRun findSequencerRun(String searchString) throws IOException, JAXBException {
-      SequencerRun study = new SequencerRun();
-      JaxbObject<SequencerRun> jaxb = new JaxbObject<SequencerRun>();
-      return (SequencerRun) findObject("/sequencerruns", searchString, jaxb, study);
-    }
-
-    private Study findStudy(String searchString) throws IOException, JAXBException {
-      Study study = new Study();
-      JaxbObject<Study> jaxb = new JaxbObject<Study>();
-      return (Study) findObject("/studies", searchString, jaxb, study);
-    }
-
-    private Sample findSample(String searchString) throws IOException, JAXBException {
-      Sample study = new Sample();
-      JaxbObject<Sample> jaxb = new JaxbObject<Sample>();
-      return (Sample) findObject("/samples", searchString, jaxb, study);
-    }
-
-    private Experiment findExperiment(String searchString) throws IOException, JAXBException {
-      Experiment exp = new Experiment();
-      JaxbObject<Experiment> jaxb = new JaxbObject<Experiment>();
-      return (Experiment) findObject("/experiments", searchString, jaxb, exp);
-    }
-
-    private File findFile(String searchString) throws IOException, JAXBException {
-      File study = new File();
-      JaxbObject<File> jaxb = new JaxbObject<File>();
-      return (File) findObject("/files", searchString, jaxb, study);
-    }
-    
-    private Platform findPlatform(String searchString) throws IOException, JAXBException {
-      Platform p = new Platform();
-      JaxbObject<Platform> jaxb = new JaxbObject<Platform>();
-      return (Platform) findObject("/platforms", searchString, jaxb, p);
-    }
-    
-    private StudyType findStudyType(String searchString) throws IOException, JAXBException {
-      StudyType st = new StudyType();
-      JaxbObject<StudyType> jaxb = new JaxbObject<StudyType>();
-      return (StudyType) findObject("/studytypes", searchString, jaxb, st);
-    }
-    
-    private LibraryStrategy findLibraryStrategy(String searchString) throws IOException, JAXBException {
-      LibraryStrategy ls = new LibraryStrategy();
-      JaxbObject<LibraryStrategy> jaxb = new JaxbObject<LibraryStrategy>();
-      return (LibraryStrategy) findObject("/librarystrategies", searchString, jaxb, ls);
-    }
-
-    private LibrarySelection findLibrarySelection(String searchString) throws IOException, JAXBException {
-      LibrarySelection ls = new LibrarySelection();
-      JaxbObject<LibrarySelection> jaxb = new JaxbObject<LibrarySelection>();
-      return (LibrarySelection) findObject("/libraryselections", searchString, jaxb, ls);
-    }
-    
-    private LibrarySource findLibrarySource(String searchString) throws IOException, JAXBException {
-      LibrarySource ls = new LibrarySource();
-      JaxbObject<LibrarySource> jaxb = new JaxbObject<LibrarySource>();
-      return (LibrarySource) findObject("/librarysource", searchString, jaxb, ls);
-    }
-    
-    private String getString(String uri) {
-      String text = null;
-      Representation result = null;
-      ClientResource cResource = resource.getChild(version + uri);
-
-      try {
-        result = cResource.get();
-        text = result.getText();
-
-      } catch (Exception ex) {
-        Log.error("MetadataWS.getString " + ex.getMessage());
-      }
-      return (text);
-    }
-
-    private Object findObject(String uri, String searchString, JaxbObject jaxb, Object parent) throws IOException,
-            JAXBException, NotFoundException {
-      Representation result = null;
-      ClientResource cResource = resource.getChild(version + uri + searchString);
-      Log.info("findObject: " + cResource);
-      Class clazz = parent.getClass();
-      try {
-        result = cResource.get();
-        String text = result.getText();
-        parent = XmlTools.unMarshal(jaxb, parent, text);
-
-      } catch (SAXException ex) {
-        Log.error("MetadataWS.findObject " + ex.getMessage());
-        ex.printStackTrace();
-        parent = null;
-      } catch (ResourceException e) {
-        Log.error("MetadataWS.findObject " + e.getMessage());
-        parent = null;
-      } finally {
-        if (result != null) {
-          result.exhaust();
-          result.release();
-        }
-        if (cResource.getResponseEntity() != null) {
-          cResource.getResponseEntity().release();
-        }
-        cResource.release();
-      }
-      // testNull(parent, clazz, searchString);
-      return parent;
-    }
-
-    private void updateWorkflow(String searchString, Workflow parent) throws IOException, JAXBException,
-            ResourceException {
-      JaxbObject<Workflow> jaxbProcess = new JaxbObject<Workflow>();
-      updateObject("/workflows", searchString, jaxbProcess, parent);
-    }
-
-    private void updateProcessing(String searchString, Processing parent) throws IOException, JAXBException,
-            ResourceException {
-      JaxbObject<Processing> jaxbProcess = new JaxbObject<Processing>();
-      updateObject("/processes", searchString, jaxbProcess, parent);
-    }
-
-    private void updateWorkflowRun(String searchString, WorkflowRun parent) throws IOException, JAXBException,
-            ResourceException {
-      JaxbObject<WorkflowRun> jaxb = new JaxbObject<WorkflowRun>();
-      updateObject("/workflowruns", searchString, jaxb, parent);
-    }
-
-    private void updateLane(String searchString, Lane parent) throws IOException, JAXBException, ResourceException {
-      JaxbObject<Lane> jaxb = new JaxbObject<Lane>();
-      updateObject("/lanes", searchString, jaxb, parent);
-    }
-
-    private void updateIUS(String searchString, IUS parent) throws IOException, JAXBException, ResourceException {
-      JaxbObject<IUS> jaxb = new JaxbObject<IUS>();
-      updateObject("/ius", searchString, jaxb, parent);
-    }
-
-    private void updateSequencerRun(String searchString, SequencerRun parent) throws IOException, JAXBException,
-            ResourceException {
-      JaxbObject<SequencerRun> jaxb = new JaxbObject<SequencerRun>();
-      updateObject("/sequencerruns", searchString, jaxb, parent);
-    }
-
-    private void updateSample(String searchString, Sample parent) throws IOException, JAXBException, ResourceException {
-      JaxbObject<Sample> jaxb = new JaxbObject<Sample>();
-      updateObject("/samples", searchString, jaxb, parent);
-    }
-
-    private void updateStudy(String searchString, Study parent) throws IOException, JAXBException, ResourceException {
-      JaxbObject<Study> jaxb = new JaxbObject<Study>();
-      updateObject("/studies", searchString, jaxb, parent);
-    }
-
-    /*
-     * private void updateFile(String searchString, Study parent) throws
-     * IOException, JAXBException, ResourceException { JaxbObject<Study> jaxb =
-     * new JaxbObject<Study>(); updateObject("/studies", searchString, jaxb,
-     * parent); }
-     */
-    private void updateExperiment(String searchString, Experiment parent) throws IOException, JAXBException,
-            ResourceException {
-      JaxbObject<Experiment> jaxb = new JaxbObject<Experiment>();
-      updateObject("/experiments", searchString, jaxb, parent);
-    }
-
-    private void updateObject(String uri, String searchString, JaxbObject jaxb, Object parent) throws IOException,
-            JAXBException, ResourceException {
-      Representation result = null;
-      Log.debug("Updating object: " + parent.getClass().getCanonicalName() + " " + searchString);
-      ClientResource cResource = resource.getChild(version + uri + searchString);
-      Log.debug("updateObject: " + cResource);
-      try {
-        Document text = XmlTools.marshalToDocument(jaxb, parent);
-        result = cResource.put(XmlTools.getRepresentation(text));
-      } finally {
-        if (result != null) {
-          result.exhaust();
-          result.release();
-        }
-        cResource.release();
-      }
-    }
-
-    private Study addStudy(Study study) throws IOException, JAXBException, ResourceException {
-      JaxbObject<Study> jaxb = new JaxbObject<Study>();
-      return (Study) addObject("/studies", "", jaxb, study);
-    }
-
-    private Experiment addExperiment(Experiment o) throws IOException, JAXBException, ResourceException {
-      JaxbObject<Experiment> jaxb = new JaxbObject<Experiment>();
-      return (Experiment) addObject("/experiments", "", jaxb, o);
-    }
-
-    private Sample addSample(Sample o) throws IOException, JAXBException, ResourceException {
-      JaxbObject<Sample> jaxb = new JaxbObject<Sample>();
-      return (Sample) addObject("/samples", "", jaxb, o);
-    }
-
-    private Processing addProcessing(Processing processing) throws IOException, JAXBException, ResourceException {
-      JaxbObject<Processing> jaxb = new JaxbObject<Processing>();
-      return (Processing) addObject("/processes", "", jaxb, processing);
-    }
-
-    private File addFile(File workflowRun) throws IOException, JAXBException, ResourceException {
-      JaxbObject<File> jaxb = new JaxbObject<File>();
-      return (File) addObject("/files", "", jaxb, workflowRun);
-    }
-
-    private WorkflowRun addWorkflowRun(WorkflowRun workflowRun) throws IOException, JAXBException, ResourceException {
-      JaxbObject<WorkflowRun> jaxb = new JaxbObject<WorkflowRun>();
-      return (WorkflowRun) addObject("/workflowruns", "", jaxb, workflowRun);
-    }
-
-    private Workflow addWorkflow(Workflow workflow) throws IOException, JAXBException, ResourceException {
-      JaxbObject<Workflow> jaxb = new JaxbObject<Workflow>();
-      return (Workflow) addObject("/workflows", "", jaxb, workflow);
-    }
-
-    private WorkflowParam addWorkflowParam(WorkflowParam workflowParam) throws IOException, JAXBException,
-            ResourceException {
-      JaxbObject<WorkflowParam> jaxb = new JaxbObject<WorkflowParam>();
-      return (WorkflowParam) addObject("/workflowparams", "", jaxb, workflowParam);
-    }
-
-    private WorkflowParamValue addWorkflowParamValue(WorkflowParamValue workflowParamVal) throws IOException,
-            JAXBException, ResourceException {
-      JaxbObject<WorkflowParamValue> jaxb = new JaxbObject<WorkflowParamValue>();
-      return (WorkflowParamValue) addObject("/workflowparamvalues", "", jaxb, workflowParamVal);
-    }
-    
-    private SequencerRun addSequencerRun(SequencerRun sequencerRun) throws IOException,
-            JAXBException, ResourceException {
-      JaxbObject<WorkflowRun> jaxb = new JaxbObject<WorkflowRun>();
-      return (SequencerRun) addObject("/sequencerruns", "", jaxb, sequencerRun);
-    }
-    
-    private Lane addLane(Lane lane) throws IOException,
-            JAXBException, ResourceException {
-      JaxbObject<Lane> jaxb = new JaxbObject<Lane>();
-      return (Lane) addObject("/lanes", "", jaxb, lane);
-    }
-
-    private IUS addIUS(IUS ius) throws IOException,
-            JAXBException, ResourceException {
-      JaxbObject<IUS> jaxb = new JaxbObject<IUS>();
-      return (IUS) addObject("/ius", "", jaxb, ius);
-    }
-    
-    private Object addObject(String uri, String searchString, JaxbObject jaxb, Object parent) throws IOException,
-            JAXBException, ResourceException {
-      Representation result = null;
-      ClientResource cResource = resource.getChild(version + uri + searchString);
-      Log.debug("addObject: " + cResource);
-      Document s = XmlTools.marshalToDocument(jaxb, parent);
-      try {
-        result = cResource.post(XmlTools.getRepresentation(s));
-        if (result != null) {
-          String text = result.getText();
-          if (text == null) {
-            Log.warn("WARNING: POST process returned a null value. The object may not have been created");
-          } else {
-            try {
-              Log.debug("addObject:" + text);
-              parent = XmlTools.unMarshal(jaxb, parent, text);
-            } catch (SAXException ex) {
-              throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY);
-            }
-          }
-        }
-      } catch (ResourceException e) {
-        Log.error("MetadataWS.addObject " + e.getMessage());
-        e.printStackTrace();
-      }
-      if (result != null) {
-        result.exhaust();
-        result.release();
-      }
-      cResource.release();
-      return parent;
-    }
-  }
-
   /**
    * {@inheritDoc}
    */
@@ -2375,179 +1972,585 @@ public class MetadataWS extends Metadata {
 
   }
 
-  /**
-   * FIXME: there are problems with setting accession when I should set ID
+  /*
+   * public void annotateFile(int fileSWID, FileAttribute att, Boolean skip) {
+   * try { Log.debug("Annotating WorkflowRun " + fileSWID + " with skip=" + skip
+   * + ", Att = " + att); File obj = ll.findFile("/" + fileSWID); if (skip !=
+   * null) { // obj.setSkip(skip);
+   * Log.info("Processing does not have a skip column!"); } if (att != null) {
+   * Set<FileAttribute> atts = obj.getFileAttributes(); if (atts == null) { atts
+   * = new HashSet<FileAttribute>(); } // att.setStudy(obj); atts.add(att);
+   * obj.setFileAttributes(atts); } ll.updateFile("/" + fileSWID, obj); } catch
+   * (IOException ex) { Log.error("IOException while updating study " + fileSWID
+   * + " " + ex.getMessage()); } catch (JAXBException ex) {
+   * Log.error("JAXBException while updating study " + fileSWID + " " +
+   * ex.getMessage()); } catch (ResourceException ex) {
+   * Log.error("ResourceException while updating study " + fileSWID + " " +
+   * ex.getMessage()); }
    * 
-   * @param experimentAccession
-   * @param organismAccession
-   * @param platformAccession
-   * @param name
-   * @param description
-   * @param pairdEnd
-   * @param skip
-   * @return 
+   * }
    */
-  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip) {
-     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+  protected class LowLevel {
 
-    try {
+    private ClientResource resource;
 
-      Platform p = ll.findPlatform("/" + platformAccession);
-      
-      SequencerRun sr = new SequencerRun();
-      sr.setName(name);
-      sr.setDescription(description);
-      sr.setPairedEnd(pairdEnd);
-      sr.setSkip(skip);
-      sr.setPlatform(p);
+    public LowLevel(String database, String username, String password) {
+      Client client = null;
+      if (database.contains("https")) {
+        try {
+          Log.info("using HTTPS connection");
+          client = new Client(new Context(), Protocol.HTTPS);
+          TrustManager tm = new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+              Log.debug("checkClientTrusted");
+            }
 
-      Log.info("Posting new sequencer_run");
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+              Log.debug("getAcceptedIssuers");
+              return new X509Certificate[0];
+            }
 
-      sr = ll.addSequencerRun(sr);
+            @Override
+            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+              Log.debug("checkServerTrusted");
+              // This will never throw an exception.
+              // This doesn't check anything at all: it's insecure.
+            }
+          };
+          // Engine.getInstance().getRegisteredClients()
+          // .add(0, new org.restlet.ext.httpclient.HttpClientHelper(null));
 
-      ret.setAttribute("sw_accession", sr.getSwAccession().toString());
+          final SSLContext sslContext = SSLContext.getInstance("TLS");
+          sslContext.init(null, new TrustManager[]{tm}, null);
+          Context context = client.getContext();
+          context.getAttributes().put("sslContextFactory", new SslContextFactory() {
+            @Override
+            public void init(Series<Parameter> parameters) {
+              Log.debug("sslcontextfactory init");
+            }
 
-    } catch (Exception e) {
-      e.printStackTrace();
-      ret.setExitStatus(ReturnValue.FAILURE);
-      return ret;
+            @Override
+            public SSLContext createSslContext() {
+              Log.debug("createsslcontext");
+              return sslContext;
+            }
+          });
+        } catch (KeyManagementException ex) {
+          Log.fatal(ex);
+        } catch (NoSuchAlgorithmException ex) {
+          Log.fatal(ex);
+        }
+
+      } else {
+        Log.info("using HTTP connection");
+        client = new Client(new Context(), Protocol.HTTP);
+      }
+      client.getContext().getParameters().add("useForwardedForHeader", "false");
+      client.getContext().getParameters().add("maxConnectionsPerHost", "100");
+
+      String[] pathElements = database.split("/");
+      resource = new ClientResource(database);
+      resource.setNext(client);
+      resource.setFollowingRedirects(false);
+      resource.setChallengeResponse(ChallengeScheme.HTTP_BASIC, username, password);
+      version = "";
+      if (pathElements.length > 3) {
+        for (int i = 3; i < pathElements.length; i++) {
+          version += "/" + pathElements[i];
+        }
+      }
+
+      // version = (pathElements.length > 3 ? "/" +
+      // pathElements[pathElements.length - 1] : "");
+      Log.debug("Database string is " + database);
+      Log.debug("root is " + resource);
+      Log.debug("Version is " + version);
+      user = username;
+      pass = password.toCharArray();
+
     }
 
-    return (ret);
-  }
-
-  // FIXME: might actually need to turn off libraryStrategy et al.
-  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip) {
-     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-
-    try {
-
-      SequencerRun sr = ll.findSequencerRun("/" + sequencerRunAccession);
-      StudyType st = ll.findStudyType("/"+studyTypeId);
-      LibraryStrategy ls = ll.findLibraryStrategy("/"+libraryStrategyId);
-      LibrarySelection lsel = ll.findLibrarySelection("/"+librarySelectionId);
-      LibrarySource lsource = ll.findLibrarySource("/"+librarySourceId);
-      
-      Lane l = new Lane();
-      l.setStudyType(st);
-      l.setLibraryStrategy(ls);
-      l.setLibrarySelection(lsel);
-      l.setLibrarySource(lsource);
-      l.setSequencerRun(sr);
-      l.setName(name);
-      l.setDescription(description);
-      l.setCycleDescriptor(cycleDescriptor);
-      l.setSkip(skip);
-      
-      Log.info("Posting new lane");
-
-      l = ll.addLane(l);
-
-      ret.setAttribute("sw_accession", l.getSwAccession().toString());
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      ret.setExitStatus(ReturnValue.FAILURE);
-      return ret;
+    public Processing existsProcessing(String searchString) {
+      Processing processing = null;
+      try {
+        processing = findProcessing(searchString);
+      } catch (IOException ex) {
+        Log.debug("Processing does not exist. Continuing.", ex);
+      } catch (JAXBException ex) {
+        Log.error(ex);
+      } catch (NotFoundException ex) {
+        Log.debug("Sample does not exist. Continuing.", ex);
+      }
+      return processing;
     }
 
-    return (ret);
-  }
-
-  public ReturnValue addIUS(Integer laneAccession, Integer sampleAccession, String name, String description, String barcode, boolean skip) {
-    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-
-    try {
-
-      Lane l = ll.findLane("/" + laneAccession);
-      Sample s = ll.findSample("/"+sampleAccession);
-      
-      IUS i = new IUS();
-      i.setLane(l);
-      i.setSample(s);
-      i.setName(name);
-      i.setDescription(description);
-      i.setTag(barcode);
-      i.setSkip(skip);
-      
-      Log.info("Posting new IUS");
-
-      i = ll.addIUS(i);
-
-      ret.setAttribute("sw_accession", i.getSwAccession().toString());
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      ret.setExitStatus(ReturnValue.FAILURE);
-      return ret;
+    public Lane existsLane(String searchString) {
+      Lane lane = null;
+      try {
+        lane = findLane(searchString);
+      } catch (IOException ex) {
+        Log.debug("Lane does not exist. Continuing.", ex);
+      } catch (JAXBException ex) {
+        Log.error(ex);
+      } catch (NotFoundException ex) {
+        Log.debug("Sample does not exist. Continuing.", ex);
+      }
+      return lane;
     }
 
-    return (ret);
-  }
-
-  public List<Platform> getPlatforms() {
-    try {
-      return ll.findPlatforms();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    } catch (JAXBException ex) {
-      ex.printStackTrace();
+    public IUS existsIUS(String searchString) {
+      IUS ius = null;
+      try {
+        ius = findIUS(searchString);
+      } catch (IOException ex) {
+        Log.debug("IUS does not exist. Continuing.", ex);
+      } catch (JAXBException ex) {
+        Log.error(ex);
+      } catch (NotFoundException ex) {
+        Log.debug("Sample does not exist. Continuing.", ex);
+      }
+      return ius;
     }
-    return null;
-  }
 
-  public List<Organism> getOrganisms() {
-    try {
-      return ll.findOrganisms();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    } catch (JAXBException ex) {
-      ex.printStackTrace();
+    public SequencerRun existsSequencerRun(String searchString) {
+      SequencerRun sr = null;
+      try {
+        sr = findSequencerRun(searchString);
+      } catch (IOException ex) {
+        Log.debug("SequencerRun does not exist. Continuing.", ex);
+      } catch (JAXBException ex) {
+        Log.error(ex);
+      } catch (NotFoundException ex) {
+        Log.debug("Sample does not exist. Continuing.", ex);
+      }
+      return sr;
     }
-    return null;
-  }
 
-  public List<StudyType> getStudyTypes() {
-    try {
-      return ll.findStudyTypes();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    } catch (JAXBException ex) {
-      ex.printStackTrace();
+    public Study existsStudy(String searchString) {
+      Study study = null;
+      try {
+        study = findStudy(searchString);
+      } catch (IOException ex) {
+        Log.debug("Study does not exist. Continuing.", ex);
+      } catch (JAXBException ex) {
+        Log.error(ex);
+      } catch (NotFoundException ex) {
+        Log.debug("Sample does not exist. Continuing.", ex);
+      }
+      return study;
     }
-    return null;
-  }
 
-  public List<LibraryStrategy> getLibraryStrategies() {
-    try {
-      return ll.findLibraryStrategies();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    } catch (JAXBException ex) {
-      ex.printStackTrace();
+    public Experiment existsExperiment(String searchString) {
+      Experiment experiment = null;
+      try {
+        experiment = findExperiment(searchString);
+      } catch (IOException ex) {
+        Log.debug("Experiment does not exist. Continuing.", ex);
+      } catch (JAXBException ex) {
+        Log.error(ex);
+      } catch (NotFoundException ex) {
+        Log.debug("Sample does not exist. Continuing.", ex);
+      }
+      return experiment;
     }
-    return null;
-  }
 
-  public List<LibrarySelection> getLibrarySelections() {
-    try {
-      return ll.findLibrarySelections();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    } catch (JAXBException ex) {
-      ex.printStackTrace();
+    public Sample existsSample(String searchString) {
+      Sample sample = null;
+      try {
+        sample = findSample(searchString);
+      } catch (IOException ex) {
+        Log.debug("Sample does not exist. Continuing.", ex);
+      } catch (NotFoundException ex) {
+        Log.debug("Sample does not exist. Continuing.", ex);
+      } catch (JAXBException ex) {
+        Log.error(ex);
+      }
+      return sample;
     }
-    return null;
-  }
 
-  public List<LibrarySource> getLibrarySource() {
-    try {
-      return ll.findLibrarySources();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    } catch (JAXBException ex) {
-      ex.printStackTrace();
+    public void clean_up() {
+      if (resource != null) {
+        resource.release();
+      }
     }
-    return null;
+
+    private List<Study> findStudies() throws IOException, JAXBException {
+      JaxbObject<StudyList> jaxb = new JaxbObject<StudyList>();
+      StudyList list = (StudyList) findObject("/studies", "", jaxb, new StudyList());
+      return list.getList();
+    }
+
+    private List<Workflow> findWorkflows() throws IOException, JAXBException {
+      JaxbObject<WorkflowList> jaxb = new JaxbObject<WorkflowList>();
+      WorkflowList list = (WorkflowList) findObject("/workflows", "", jaxb, new WorkflowList());
+      return list.getList();
+    }
+
+    private Workflow findWorkflowParams(String workflowAccession) throws IOException, JAXBException {
+      JaxbObject<Workflow> jaxb = new JaxbObject<Workflow>();
+      Workflow list = (Workflow) findObject("/workflows", "/" + workflowAccession + "?show=params", jaxb,
+              new Workflow());
+      return list;
+    }
+
+    private List<Platform> findPlatforms() throws IOException, JAXBException {
+      JaxbObject<PlatformList> jaxb = new JaxbObject<PlatformList>();
+      PlatformList list = (PlatformList) findObject("/platforms", "", jaxb, new PlatformList());
+      return list.getList();
+    }
+
+    private List<Organism> findOrganisms() throws IOException, JAXBException {
+      JaxbObject<OrganismList> jaxb = new JaxbObject<OrganismList>();
+      OrganismList list = (OrganismList) findObject("/organisms", "", jaxb, new OrganismList());
+      return list.getList();
+    }
+
+    private List<StudyType> findStudyTypes() throws IOException, JAXBException {
+      JaxbObject<StudyTypeList> jaxb = new JaxbObject<StudyTypeList>();
+      StudyTypeList list = (StudyTypeList) findObject("/studytypes", "", jaxb, new StudyTypeList());
+      return list.getList();
+    }
+
+    private List<LibraryStrategy> findLibraryStrategies() throws IOException, JAXBException {
+      JaxbObject<LibraryStrategyList> jaxb = new JaxbObject<LibraryStrategyList>();
+      LibraryStrategyList list = (LibraryStrategyList) findObject("/librarystrategies", "", jaxb, new LibraryStrategyList());
+      return list.getList();
+    }
+
+    private List<LibrarySelection> findLibrarySelections() throws IOException, JAXBException {
+      JaxbObject<LibrarySelectionList> jaxb = new JaxbObject<LibrarySelectionList>();
+      LibrarySelectionList list = (LibrarySelectionList) findObject("/libraryselections", "", jaxb, new LibrarySelectionList());
+      return list.getList();
+    }
+
+    private List<LibrarySource> findLibrarySources() throws IOException, JAXBException {
+      JaxbObject<LibrarySourceList> jaxb = new JaxbObject<LibrarySourceList>();
+      LibrarySourceList list = (LibrarySourceList) findObject("/librarysources", "", jaxb, new LibrarySourceList());
+      return list.getList();
+    }
+
+    private Processing findProcessing(String searchString) throws IOException, JAXBException {
+      Processing parent = new Processing();
+      JaxbObject<Processing> jaxbProcess = new JaxbObject<Processing>();
+      return (Processing) findObject("/processes", searchString, jaxbProcess, parent);
+    }
+
+    private Lane findLane(String searchString) throws IOException, JAXBException {
+      Lane lane = new Lane();
+      JaxbObject<Lane> jaxb = new JaxbObject<Lane>();
+      return (Lane) findObject("/lanes", searchString, jaxb, lane);
+    }
+
+    private IUS findIUS(String searchString) throws IOException, JAXBException {
+      IUS ius = new IUS();
+      JaxbObject<IUS> jaxb = new JaxbObject<IUS>();
+      return (IUS) findObject("/ius", searchString, jaxb, ius);
+    }
+
+    private WorkflowRun findWorkflowRun(String searchString) throws IOException, JAXBException {
+      WorkflowRun wr = new WorkflowRun();
+      JaxbObject<WorkflowRun> jaxb = new JaxbObject<WorkflowRun>();
+      return (WorkflowRun) findObject("/workflowruns", searchString, jaxb, wr);
+    }
+
+    private Workflow findWorkflowByWorkflowRun(String workflowRunAccession) throws IOException, JAXBException {
+      Workflow w = new Workflow();
+      JaxbObject<Workflow> jaxb = new JaxbObject<Workflow>();
+      return (Workflow) findObject("/workflowruns", "/" + workflowRunAccession + "/workflow", jaxb, w);
+    }
+
+    private List<WorkflowRun> findWorkflowRuns(String searchString) throws IOException, JAXBException {
+      WorkflowRunList2 wrl = new WorkflowRunList2();
+      JaxbObject<WorkflowRunList2> jaxb = new JaxbObject<WorkflowRunList2>();
+      WorkflowRunList2 wrl2 = (WorkflowRunList2) findObject("/workflowruns", searchString, jaxb, wrl);
+      return wrl2.getList();
+    }
+
+    private Workflow findWorkflow(String searchString) throws IOException, JAXBException {
+      Workflow wr = new Workflow();
+      JaxbObject<Workflow> jaxb = new JaxbObject<Workflow>();
+      return (Workflow) findObject("/workflows", searchString, jaxb, wr);
+    }
+
+    private SequencerRun findSequencerRun(String searchString) throws IOException, JAXBException {
+      SequencerRun study = new SequencerRun();
+      JaxbObject<SequencerRun> jaxb = new JaxbObject<SequencerRun>();
+      return (SequencerRun) findObject("/sequencerruns", searchString, jaxb, study);
+    }
+
+    private Study findStudy(String searchString) throws IOException, JAXBException {
+      Study study = new Study();
+      JaxbObject<Study> jaxb = new JaxbObject<Study>();
+      return (Study) findObject("/studies", searchString, jaxb, study);
+    }
+
+    private Sample findSample(String searchString) throws IOException, JAXBException {
+      Sample study = new Sample();
+      JaxbObject<Sample> jaxb = new JaxbObject<Sample>();
+      return (Sample) findObject("/samples", searchString, jaxb, study);
+    }
+
+    private Experiment findExperiment(String searchString) throws IOException, JAXBException {
+      Experiment exp = new Experiment();
+      JaxbObject<Experiment> jaxb = new JaxbObject<Experiment>();
+      return (Experiment) findObject("/experiments", searchString, jaxb, exp);
+    }
+
+    private File findFile(String searchString) throws IOException, JAXBException {
+      File study = new File();
+      JaxbObject<File> jaxb = new JaxbObject<File>();
+      return (File) findObject("/files", searchString, jaxb, study);
+    }
+
+    private Platform findPlatform(String searchString) throws IOException, JAXBException {
+      Platform p = new Platform();
+      JaxbObject<Platform> jaxb = new JaxbObject<Platform>();
+      return (Platform) findObject("/platforms", searchString, jaxb, p);
+    }
+
+    private StudyType findStudyType(String searchString) throws IOException, JAXBException {
+      StudyType st = new StudyType();
+      JaxbObject<StudyType> jaxb = new JaxbObject<StudyType>();
+      return (StudyType) findObject("/studytypes", searchString, jaxb, st);
+    }
+
+    private LibraryStrategy findLibraryStrategy(String searchString) throws IOException, JAXBException {
+      LibraryStrategy ls = new LibraryStrategy();
+      JaxbObject<LibraryStrategy> jaxb = new JaxbObject<LibraryStrategy>();
+      return (LibraryStrategy) findObject("/librarystrategies", searchString, jaxb, ls);
+    }
+
+    private LibrarySelection findLibrarySelection(String searchString) throws IOException, JAXBException {
+      LibrarySelection ls = new LibrarySelection();
+      JaxbObject<LibrarySelection> jaxb = new JaxbObject<LibrarySelection>();
+      return (LibrarySelection) findObject("/libraryselections", searchString, jaxb, ls);
+    }
+
+    private LibrarySource findLibrarySource(String searchString) throws IOException, JAXBException {
+      LibrarySource ls = new LibrarySource();
+      JaxbObject<LibrarySource> jaxb = new JaxbObject<LibrarySource>();
+      return (LibrarySource) findObject("/librarysource", searchString, jaxb, ls);
+    }
+
+    private String getString(String uri) {
+      String text = null;
+      Representation result = null;
+      ClientResource cResource = resource.getChild(version + uri);
+
+      try {
+        result = cResource.get();
+        text = result.getText();
+
+      } catch (Exception ex) {
+        Log.error("MetadataWS.getString " + ex.getMessage());
+      }
+      return (text);
+    }
+
+    private Object findObject(String uri, String searchString, JaxbObject jaxb, Object parent) throws IOException,
+            JAXBException, NotFoundException {
+      Representation result = null;
+      ClientResource cResource = resource.getChild(version + uri + searchString);
+      Log.info("findObject: " + cResource);
+      Class clazz = parent.getClass();
+      try {
+        result = cResource.get();
+        String text = result.getText();
+        parent = XmlTools.unMarshal(jaxb, parent, text);
+
+      } catch (SAXException ex) {
+        Log.error("MetadataWS.findObject " + ex.getMessage());
+        ex.printStackTrace();
+        parent = null;
+      } catch (ResourceException e) {
+        Log.error("MetadataWS.findObject " + e.getMessage());
+        parent = null;
+      } finally {
+        if (result != null) {
+          result.exhaust();
+          result.release();
+        }
+        if (cResource.getResponseEntity() != null) {
+          cResource.getResponseEntity().release();
+        }
+        cResource.release();
+      }
+      // testNull(parent, clazz, searchString);
+      return parent;
+    }
+
+    private void updateWorkflow(String searchString, Workflow parent) throws IOException, JAXBException,
+            ResourceException {
+      JaxbObject<Workflow> jaxbProcess = new JaxbObject<Workflow>();
+      updateObject("/workflows", searchString, jaxbProcess, parent);
+    }
+
+    private void updateProcessing(String searchString, Processing parent) throws IOException, JAXBException,
+            ResourceException {
+      JaxbObject<Processing> jaxbProcess = new JaxbObject<Processing>();
+      updateObject("/processes", searchString, jaxbProcess, parent);
+    }
+
+    private void updateWorkflowRun(String searchString, WorkflowRun parent) throws IOException, JAXBException,
+            ResourceException {
+      JaxbObject<WorkflowRun> jaxb = new JaxbObject<WorkflowRun>();
+      updateObject("/workflowruns", searchString, jaxb, parent);
+    }
+
+    private void updateLane(String searchString, Lane parent) throws IOException, JAXBException, ResourceException {
+      JaxbObject<Lane> jaxb = new JaxbObject<Lane>();
+      updateObject("/lanes", searchString, jaxb, parent);
+    }
+
+    private void updateIUS(String searchString, IUS parent) throws IOException, JAXBException, ResourceException {
+      JaxbObject<IUS> jaxb = new JaxbObject<IUS>();
+      updateObject("/ius", searchString, jaxb, parent);
+    }
+
+    private void updateSequencerRun(String searchString, SequencerRun parent) throws IOException, JAXBException,
+            ResourceException {
+      JaxbObject<SequencerRun> jaxb = new JaxbObject<SequencerRun>();
+      updateObject("/sequencerruns", searchString, jaxb, parent);
+    }
+
+    private void updateSample(String searchString, Sample parent) throws IOException, JAXBException, ResourceException {
+      JaxbObject<Sample> jaxb = new JaxbObject<Sample>();
+      updateObject("/samples", searchString, jaxb, parent);
+    }
+
+    private void updateStudy(String searchString, Study parent) throws IOException, JAXBException, ResourceException {
+      JaxbObject<Study> jaxb = new JaxbObject<Study>();
+      updateObject("/studies", searchString, jaxb, parent);
+    }
+
+    /*
+     * private void updateFile(String searchString, Study parent) throws
+     * IOException, JAXBException, ResourceException { JaxbObject<Study> jaxb =
+     * new JaxbObject<Study>(); updateObject("/studies", searchString, jaxb,
+     * parent); }
+     */
+    private void updateExperiment(String searchString, Experiment parent) throws IOException, JAXBException,
+            ResourceException {
+      JaxbObject<Experiment> jaxb = new JaxbObject<Experiment>();
+      updateObject("/experiments", searchString, jaxb, parent);
+    }
+
+    private void updateObject(String uri, String searchString, JaxbObject jaxb, Object parent) throws IOException,
+            JAXBException, ResourceException {
+      Representation result = null;
+      Log.debug("Updating object: " + parent.getClass().getCanonicalName() + " " + searchString);
+      ClientResource cResource = resource.getChild(version + uri + searchString);
+      Log.debug("updateObject: " + cResource);
+      try {
+        Document text = XmlTools.marshalToDocument(jaxb, parent);
+        result = cResource.put(XmlTools.getRepresentation(text));
+      } finally {
+        if (result != null) {
+          result.exhaust();
+          result.release();
+        }
+        cResource.release();
+      }
+    }
+
+    private Study addStudy(Study study) throws IOException, JAXBException, ResourceException {
+      JaxbObject<Study> jaxb = new JaxbObject<Study>();
+      return (Study) addObject("/studies", "", jaxb, study);
+    }
+
+    private Experiment addExperiment(Experiment o) throws IOException, JAXBException, ResourceException {
+      JaxbObject<Experiment> jaxb = new JaxbObject<Experiment>();
+      return (Experiment) addObject("/experiments", "", jaxb, o);
+    }
+
+    private Sample addSample(Sample o) throws IOException, JAXBException, ResourceException {
+      JaxbObject<Sample> jaxb = new JaxbObject<Sample>();
+      return (Sample) addObject("/samples", "", jaxb, o);
+    }
+
+    private Processing addProcessing(Processing processing) throws IOException, JAXBException, ResourceException {
+      JaxbObject<Processing> jaxb = new JaxbObject<Processing>();
+      return (Processing) addObject("/processes", "", jaxb, processing);
+    }
+
+    private File addFile(File workflowRun) throws IOException, JAXBException, ResourceException {
+      JaxbObject<File> jaxb = new JaxbObject<File>();
+      return (File) addObject("/files", "", jaxb, workflowRun);
+    }
+
+    private WorkflowRun addWorkflowRun(WorkflowRun workflowRun) throws IOException, JAXBException, ResourceException {
+      JaxbObject<WorkflowRun> jaxb = new JaxbObject<WorkflowRun>();
+      return (WorkflowRun) addObject("/workflowruns", "", jaxb, workflowRun);
+    }
+
+    private Workflow addWorkflow(Workflow workflow) throws IOException, JAXBException, ResourceException {
+      JaxbObject<Workflow> jaxb = new JaxbObject<Workflow>();
+      return (Workflow) addObject("/workflows", "", jaxb, workflow);
+    }
+
+    private WorkflowParam addWorkflowParam(WorkflowParam workflowParam) throws IOException, JAXBException,
+            ResourceException {
+      JaxbObject<WorkflowParam> jaxb = new JaxbObject<WorkflowParam>();
+      return (WorkflowParam) addObject("/workflowparams", "", jaxb, workflowParam);
+    }
+
+    private WorkflowParamValue addWorkflowParamValue(WorkflowParamValue workflowParamVal) throws IOException,
+            JAXBException, ResourceException {
+      JaxbObject<WorkflowParamValue> jaxb = new JaxbObject<WorkflowParamValue>();
+      return (WorkflowParamValue) addObject("/workflowparamvalues", "", jaxb, workflowParamVal);
+    }
+
+    private SequencerRun addSequencerRun(SequencerRun sequencerRun) throws IOException,
+            JAXBException, ResourceException {
+      JaxbObject<WorkflowRun> jaxb = new JaxbObject<WorkflowRun>();
+      return (SequencerRun) addObject("/sequencerruns", "", jaxb, sequencerRun);
+    }
+
+    private Lane addLane(Lane lane) throws IOException,
+            JAXBException, ResourceException {
+      JaxbObject<Lane> jaxb = new JaxbObject<Lane>();
+      return (Lane) addObject("/lanes", "", jaxb, lane);
+    }
+
+    private IUS addIUS(IUS ius) throws IOException,
+            JAXBException, ResourceException {
+      JaxbObject<IUS> jaxb = new JaxbObject<IUS>();
+      return (IUS) addObject("/ius", "", jaxb, ius);
+    }
+
+    private Object addObject(String uri, String searchString, JaxbObject jaxb, Object parent) throws IOException,
+            JAXBException, ResourceException {
+      Representation result = null;
+      ClientResource cResource = resource.getChild(version + uri + searchString);
+      Log.debug("addObject: " + cResource);
+      Document s = XmlTools.marshalToDocument(jaxb, parent);
+      try {
+        result = cResource.post(XmlTools.getRepresentation(s));
+        if (result != null) {
+          String text = result.getText();
+          if (text == null) {
+            Log.warn("WARNING: POST process returned a null value. The object may not have been created");
+          } else {
+            try {
+              Log.debug("addObject:" + text);
+              parent = XmlTools.unMarshal(jaxb, parent, text);
+            } catch (SAXException ex) {
+              throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY);
+            }
+          }
+        }
+      } catch (ResourceException e) {
+        Log.error("MetadataWS.addObject " + e.getMessage());
+        e.printStackTrace();
+      }
+      if (result != null) {
+        result.exhaust();
+        result.release();
+      }
+      cResource.release();
+      return parent;
+    }
   }
 }
