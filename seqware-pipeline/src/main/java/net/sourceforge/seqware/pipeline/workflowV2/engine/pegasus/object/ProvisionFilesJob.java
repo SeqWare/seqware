@@ -41,6 +41,9 @@ public class ProvisionFilesJob extends PegasusJob {
 		}
 		sb.append(inputType).append(this.file.getLocation()).append("\n");
 		sb.append("--output-dir " + output).append("\n");
+		if(this.file.isForceCopy()) {
+			sb.append("--force-copy");
+		}
 		
 		return sb.toString();
 	}
