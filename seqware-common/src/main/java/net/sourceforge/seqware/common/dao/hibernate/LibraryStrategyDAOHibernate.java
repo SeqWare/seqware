@@ -19,6 +19,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @version $Id: $Id
  */
 public class LibraryStrategyDAOHibernate extends HibernateDaoSupport implements LibraryStrategyDAO {
+
   /**
    * <p>Constructor for LibraryStrategyDAOHibernate.</p>
    */
@@ -26,26 +27,21 @@ public class LibraryStrategyDAOHibernate extends HibernateDaoSupport implements 
     super();
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public List<LibraryStrategy> list(Registration registration) {
-    ArrayList<LibraryStrategy> objects = new ArrayList<LibraryStrategy>();
-    if (registration == null)
-      return objects;
-
-    List expmts = this.getHibernateTemplate().find("from LibraryStrategy as ls order by ls.libraryStrategyId asc" // desc
-    );
-
-    for (Object object : expmts) {
-      objects.add((LibraryStrategy) object);
-    }
-    return objects;
+    if (registration == null) { return(null); }
+    return(list());
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public LibraryStrategy findByID(Integer id) {
     String query = "from LibraryStrategy as l where l.libraryStrategyId = ?";
     LibraryStrategy obj = null;
-    Object[] parameters = { id };
+    Object[] parameters = {id};
     List list = this.getHibernateTemplate().find(query, parameters);
     if (list.size() > 0) {
       obj = (LibraryStrategy) list.get(0);
@@ -53,7 +49,9 @@ public class LibraryStrategyDAOHibernate extends HibernateDaoSupport implements 
     return obj;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public LibraryStrategy updateDetached(LibraryStrategy strategy) {
     LibraryStrategy dbObject = findByID(strategy.getLibraryStrategyId());
@@ -69,10 +67,19 @@ public class LibraryStrategyDAOHibernate extends HibernateDaoSupport implements 
     return null;
   }
 
-    /** {@inheritDoc} */
-    @Override
-    public List<LibraryStrategy> list() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<LibraryStrategy> list() {
+    ArrayList<LibraryStrategy> objects = new ArrayList<LibraryStrategy>();
 
+    List expmts = this.getHibernateTemplate().find("from LibraryStrategy as ls order by ls.libraryStrategyId asc" // desc
+            );
+
+    for (Object object : expmts) {
+      objects.add((LibraryStrategy) object);
+    }
+    return objects;
+  }
 }
