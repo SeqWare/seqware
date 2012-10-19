@@ -332,7 +332,8 @@ public class MetadataWS extends Metadata {
 
     try {
 
-      Platform p = ll.findPlatform("/" + platformAccession);
+      Platform p = new Platform();
+      p.setPlatformId(platformAccession);
 
       SequencerRun sr = new SequencerRun();
       sr.setName(name);
@@ -365,10 +366,14 @@ public class MetadataWS extends Metadata {
     try {
 
       SequencerRun sr = ll.findSequencerRun("/" + sequencerRunAccession);
-      StudyType st = ll.findStudyType("/" + studyTypeId);
-      LibraryStrategy ls = ll.findLibraryStrategy("/" + libraryStrategyId);
-      LibrarySelection lsel = ll.findLibrarySelection("/" + librarySelectionId);
-      LibrarySource lsource = ll.findLibrarySource("/" + librarySourceId);
+      StudyType st = new StudyType();
+      st.setStudyTypeId(studyTypeId);
+      LibraryStrategy ls = new LibraryStrategy();
+      ls.setLibraryStrategyId(libraryStrategyId);
+      LibrarySelection lsel = new LibrarySelection();
+      lsel.setLibrarySelectionId(librarySelectionId);
+      LibrarySource lsource = new LibrarySource();
+      lsource.setLibrarySourceId(librarySourceId);
 
       Lane l = new Lane();
       l.setStudyType(st);
@@ -2361,11 +2366,11 @@ public class MetadataWS extends Metadata {
         parent = XmlTools.unMarshal(jaxb, parent, text);
 
       } catch (SAXException ex) {
-        Log.error("MetadataWS.findObject " + ex.getMessage());
+        Log.error("MetadataWS.findObject with search string "+searchString+" encountered error "+ ex.getMessage());
         ex.printStackTrace();
         parent = null;
       } catch (ResourceException e) {
-        Log.error("MetadataWS.findObject " + e.getMessage());
+        Log.error("MetadataWS.findObject with search string "+searchString+" encountered error "+ e.getMessage());
         parent = null;
       } finally {
         if (result != null) {
