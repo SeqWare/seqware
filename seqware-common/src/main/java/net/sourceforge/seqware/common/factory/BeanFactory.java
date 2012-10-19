@@ -3,10 +3,15 @@ package net.sourceforge.seqware.common.factory;
 import net.sourceforge.seqware.common.ContextImpl;
 import net.sourceforge.seqware.common.business.ExperimentService;
 import net.sourceforge.seqware.common.business.FileAttributeService;
+import net.sourceforge.seqware.common.business.StudyTypeService;
 import net.sourceforge.seqware.common.business.FileService;
 import net.sourceforge.seqware.common.business.IUSService;
 import net.sourceforge.seqware.common.business.LaneService;
+import net.sourceforge.seqware.common.business.LibrarySelectionService;
 import net.sourceforge.seqware.common.business.LibraryService;
+import net.sourceforge.seqware.common.business.LibrarySourceService;
+import net.sourceforge.seqware.common.business.LibraryStrategyService;
+import net.sourceforge.seqware.common.business.OrganismService;
 import net.sourceforge.seqware.common.business.PlatformService;
 import net.sourceforge.seqware.common.business.ProcessingExperimentsService;
 import net.sourceforge.seqware.common.business.ProcessingIUSService;
@@ -279,12 +284,57 @@ public abstract class BeanFactory {
   }
 
   /**
-   * <p>getFileAttributeService.</p>
+   * <p>getStudyTypeServiceBean.</p>
    *
-   * @return a {@link net.sourceforge.seqware.common.business.FileAttributeService} object.
+   * @return a {@link net.sourceforge.seqware.common.business.StudyTypeService} object.
    */
-  public static FileAttributeService getFileAttributeService() {
-    return ContextImpl.getInstance().getFileAttributeService();
+  public static StudyTypeService getStudyTypeServiceBean() {
+    return ContextImpl.getInstance().getStudyTypeService();
+  }
+  
+  /**
+   * <p>getLibrarySelectionServiceBean.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.LibrarySelectionServiceBean} object.
+   */
+  public static LibrarySelectionService getLibrarySelectionServiceBean() {
+    return ContextImpl.getInstance().getLibrarySelectionService();
   }
 
+  /**
+   * <p>getLibrarySourceServiceBean.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.LibrarySourceServiceBean} object.
+   */
+  public static LibrarySourceService getLibrarySourceServiceBean() {
+    return ContextImpl.getInstance().getLibrarySourceService();
+  }
+  
+  /**
+   * <p>getLibraryStrategyServiceBean.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.LibraryStrategyServiceBean} object.
+   */
+  public static LibraryStrategyService getLibraryStrategyServiceBean() {
+    return ContextImpl.getInstance().getLibraryStrategyService();
+  }
+  
+  /**
+   * <p>getOrganismServiceBean.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.OrganismServiceBean} object.
+   */
+  public static OrganismService getOrganismServiceBean() {
+    return ContextImpl.getInstance().getOrganismService();
+  }
+  
+  /**
+   * <p>getFileAttributeServiceBean.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.FileAttributeServiceBean} object.
+   */
+  public static FileAttributeService getFileAttributeServiceBean() {
+    return ContextImpl.getInstance().getFileAttributeService();
+  }
+  
 }

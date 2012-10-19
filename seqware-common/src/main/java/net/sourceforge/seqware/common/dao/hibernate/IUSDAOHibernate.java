@@ -44,9 +44,10 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
    *
    * Inserts an instance of Lane into the database.
    */
-  public void insert(IUS obj) {
+  public Integer insert(IUS obj) {
     this.getHibernateTemplate().save(obj);
     getSession().flush();
+    return(obj.getSwAccession());
   }
 
   /**
@@ -334,16 +335,18 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
 
   /** {@inheritDoc} */
   @Override
-  public void insert(Registration registration, IUS obj) {
+  public Integer insert(Registration registration, IUS obj) {
     Logger logger = Logger.getLogger(IUSDAOHibernate.class);
     if (registration == null) {
       logger.error("IUSDAOHibernate insert registration is null");
     } else if (registration.isLIMSAdmin() || obj.givesPermission(registration)) {
       logger.info("insert IUS object");
       insert(obj);
+      return(obj.getSwAccession());
     } else {
       logger.error("IUSDAOHibernate insert not authorized");
     }
+    return(null);
   }
 
   /** {@inheritDoc} */
