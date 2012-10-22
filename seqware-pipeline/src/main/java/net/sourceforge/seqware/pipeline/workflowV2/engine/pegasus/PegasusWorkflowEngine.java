@@ -3,16 +3,12 @@ package net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.runtools.RunTools;
-import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
@@ -20,6 +16,9 @@ import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
 
 	@Override
+	/**
+	 * launch the workflow defined in the object model
+	 */
 	public ReturnValue launchWorkflow(AbstractWorkflowDataModel objectModel) {
 		//parse objectmodel 
 		ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
@@ -133,33 +132,4 @@ public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
 
 	}
 	
-    /**
-     * This method just needs a sw_accession value from the workflow table and
-     * an ini file(s) in order to schedule a workflow. All needed info is pulled
-     * from the workflow table which was populated when the workflow was
-     * installed. Keep in mind this does not actually trigger anything, it just
-     * schedules the workflow to run by adding to the workflow_run table. This
-     * lets you run workflows on a different host from where this command line
-     * tool is run but requires an external process to launch workflows that
-     * have been scheduled.
-     * 
-     * @param workflowAccession
-     * @return
-     */
-    private ReturnValue scheduleInstalledBundle(String workflowAccession,
-	    String workflowRunAccession, ArrayList<String> iniFiles,
-	    boolean metadataWriteback, ArrayList<String> parentAccessions,
-	    ArrayList<String> parentsLinkedToWR, boolean wait,
-	    List<String> cmdLineOptions) {
-
-		ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-/*	
-		Map<String, String> workflowMetadata = this.metadata
-			.get_workflow_info(Integer.parseInt(workflowAccession));
-		WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
-		scheduleWorkflow(wi, workflowRunAccession, iniFiles, metadataWriteback,
-			parentAccessions, parentsLinkedToWR, wait, cmdLineOptions);
-	*/
-		return (ret);
-    }
 }
