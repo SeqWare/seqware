@@ -16,3 +16,5 @@ The [API](http://seqware.github.com/webservice-api/) covers the SeqWare Web Serv
 ## Javadoc 
 
 The Javadoc for the release of version 0.12.5 can be found [here](/javadoc/svn_0.12.5/)
+
+The Javadoc for the simplified workflow can be found [here](/javadoc/simplifiedworkflow/)
