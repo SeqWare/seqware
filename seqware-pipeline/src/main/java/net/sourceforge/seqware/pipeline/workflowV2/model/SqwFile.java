@@ -9,6 +9,12 @@ public class SqwFile {
 	private boolean input;
 	private boolean forceCopy;
 	private String path;
+	private String uniqueDir;
+	
+	public SqwFile() {
+		//need to create a random directory for later reference
+		this.uniqueDir = Long.toString(System.nanoTime());
+	}
 	
 	public String getType() {
 		return type;
@@ -16,17 +22,24 @@ public class SqwFile {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public String getLocation() {
+	public String getSourcePath() {
 		return location;
 	}
-	public void setLocation(String location) {
+	public void setSourcePath(String location) {
 		this.location = location;
 	}
 	
+	/**
+	 * is an output file?
+	 * @return
+	 */
 	public boolean isOutput() {
 		return !input;
 	}
-	
+	/**
+	 * is an input file?
+	 * @return
+	 */
 	public boolean isInput() {
 		return input;
 	}
@@ -74,10 +87,21 @@ public class SqwFile {
 	public void setForceCopy(boolean forceCopy) {
 		this.forceCopy = forceCopy;
 	}
-	public String getPath() {
-		return path;
+	/**
+	 * 
+	 * @return the file path after provisioned.
+	 */
+	public String getProvisionedPath() {
+		return "provisionfiles/" + this.uniqueDir;
 	}
-	public void setPath(String path) {
-		this.path = path;
+
+	
+	/**
+	 * return the unqiue dir associate with the file
+	 * if the file type is input, the provisioned file will be output to provisionfiles/uniquedir
+	 * @return
+	 */
+	public String getUniqueDir() {
+		return this.uniqueDir;
 	}
 }
