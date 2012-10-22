@@ -363,8 +363,8 @@ public class WorkflowDataModelFactory {
     	for(Map.Entry<String, SqwFile> entry: map.entrySet()) {
     		if(entry.getValue().isInput()) {
     			SqwFile file = entry.getValue();
-    			String fileName = FilenameUtils.getName(file.getLocation());
-    			entry.getValue().setPath("provisionfiles/"+inCount+"/"+fileName);
+    			String fileName = FilenameUtils.getName(file.getSourcePath());
+    			entry.getValue().setProvisionedPath("provisionfiles/"+inCount+"/"+fileName);
     			inCount ++;
     		}
     	}

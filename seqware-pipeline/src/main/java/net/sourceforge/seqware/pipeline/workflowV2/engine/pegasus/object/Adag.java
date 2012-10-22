@@ -107,7 +107,6 @@ public class Adag  {
 	private void parseWorkflow(AbstractWorkflowDataModel wfdm) {
 		boolean metadatawriteback = Boolean.parseBoolean(wfdm.getConfigs().get("metadata"));
 		List<PegasusJob> parents = new ArrayList<PegasusJob>();
-		int provisionFileCount = 0;
 		//mkdir data job
 		AbstractJob job0 = new BashJob("createdirs");
 		job0.getCommand().addArgument("mkdir -p provisionfiles; ");
@@ -156,10 +155,9 @@ public class Adag  {
 						pjob.addParent(parent);
 					}
 					//add mkdir to the first job, then set the file path
-					String outputDir = "provisionfiles/" + provisionFileCount ;
+					String outputDir = "provisionfiles/" + entry.getValue().getUniqueDir() ;
 					job0.getCommand().addArgument("mkdir -p " + outputDir + "; ");
 					pjob.setOutputDir(outputDir);
-					provisionFileCount ++;
 				} else {
 					pjob.setMetadataOutputPrefix(wfdm.getConfigs().get("metadata-output-file-prefix"));
 					pjob.setOutputDir(wfdm.getConfigs().get("metadata-output-dir"));
