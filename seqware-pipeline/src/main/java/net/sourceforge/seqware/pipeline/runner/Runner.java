@@ -274,7 +274,7 @@ public class Runner {
    * @param methodName a {@link java.lang.String} object.
    */
   public void evaluateReturn(Module app, String methodName) {
-    printAndAppendtoStderr(app.getClass().getName() + "." + methodName);
+    printAndAppendtoStdout(app.getClass().getName() + "." + methodName);
 
     // If metaDB is defined, let's update status to methodName so we know what
     // we are running
@@ -821,8 +821,8 @@ public class Runner {
           processingID = metaret.getReturnValue();
           // translate to accession
           processingAccession = meta.mapProcessingIdToAccession(processingID);
-          printAndAppendtoStderr("MetaDB ProcessingID for this run is: " + processingID);
-          printAndAppendtoStderr("MetaDB ProcessingAccession for this run is: " + processingAccession);
+          printAndAppendtoStdout("MetaDB ProcessingID for this run is: " + processingID);
+          printAndAppendtoStdout("MetaDB ProcessingAccession for this run is: " + processingAccession);
         } else {
           printAndAppendtoStderr("MetaDB failed with exit: " + metaret.getExitStatus());
           if (metaret.getStdout() != null) {
@@ -840,8 +840,8 @@ public class Runner {
           processingID = metaret.getReturnValue();
           // translate to accession
           processingAccession = meta.mapProcessingIdToAccession(processingID);
-          printAndAppendtoStderr("MetaDB ProcessingID for this run is: " + processingID);
-          printAndAppendtoStderr("MetaDB ProcessingAccession for this run is: " + processingAccession);
+          printAndAppendtoStdout("MetaDB ProcessingID for this run is: " + processingID);
+          printAndAppendtoStdout("MetaDB ProcessingAccession for this run is: " + processingAccession);
         } else {
           printAndAppendtoStderr("MetaDB failed with exit: " + metaret.getExitStatus());
           if (metaret.getStdout() != null) {
