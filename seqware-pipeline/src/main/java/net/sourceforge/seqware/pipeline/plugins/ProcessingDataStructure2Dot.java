@@ -57,7 +57,7 @@ public class ProcessingDataStructure2Dot extends Plugin {
         .accepts(
             "output-file",
             "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.")
-        .withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location.");
+        .withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location. ");
 
 	}
 	
