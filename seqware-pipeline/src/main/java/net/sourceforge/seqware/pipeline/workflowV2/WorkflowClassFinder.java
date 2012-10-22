@@ -24,9 +24,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-
-
-
 public class WorkflowClassFinder {
 	
 
@@ -39,6 +36,11 @@ public class WorkflowClassFinder {
 			Thread.currentThread().getContextClassLoader());
 	}
 
+	/**
+	 * find the first .class in the clazzPath
+	 * @param clazzPath
+	 * @return
+	 */
 	public Class<?> findFirstWorkflowClass(String clazzPath) {
 		String candidateClassesLocationPattern = "file:" + 
 			clazzPath + "**" + FOLDERS_SEPARATOR_AS_STRING + "*.class";
@@ -63,7 +65,7 @@ public class WorkflowClassFinder {
 				URL url = new URL("file://"+clazzPath);
 				URL[] urls = new URL[]{url};
 				ClassLoader cl = new URLClassLoader(urls);				
-				Class cls = cl.loadClass(qPath);
+				Class<?> cls = cl.loadClass(qPath);
 				Log.info("CLASS LOADED "+ qPath);
 				return cls;
 				

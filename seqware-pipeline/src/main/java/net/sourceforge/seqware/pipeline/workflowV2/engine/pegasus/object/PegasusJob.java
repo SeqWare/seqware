@@ -15,6 +15,11 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.JavaSeqwareModuleJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.PerlJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Requirement;
 
+/**
+ * a pegasusjob object and its subclasses match to the <job> element in a dax
+ * @author yliang
+ *
+ */
 public class PegasusJob {
 	protected AbstractJob jobObj;
 	private int id;
@@ -63,10 +68,18 @@ public class PegasusJob {
 		return element;
 	}
 
+	/**
+	 * get the job id
+	 * @return
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * set the job id
+	 * @param id
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -81,6 +94,10 @@ public class PegasusJob {
 		return argumentE;
 	}
 	
+	/**
+	 * for overridden by a specific job type
+	 * @return
+	 */
 	protected String buildCommandString() {
 		StringBuilder sb = new StringBuilder();
 		//add memory, classpath, module for bash
