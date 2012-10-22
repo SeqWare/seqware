@@ -22,14 +22,7 @@ public abstract class AbstractWorkflowDataModel  {
     private boolean metadataWriteBack;
     private Map<String,SqwFile> files;
     private Collection<String> dirs;
-	/**
-	 * 	extra params, these will be passed directly to the Java Object/FTL, 
-	 *  so you can use this to override key/values from the ini files
-	 *  very useful if you're calling the workflow from another system
-	 *  and want to pass in arguments on the command line rather than ini file
-	 * @return
-	 */
-    private Collection<String> cmdOptions;
+
     private String random;
     private String date;
 
@@ -42,37 +35,67 @@ public abstract class AbstractWorkflowDataModel  {
     	this.dirs = new ArrayList<String>();
     }
     
+    /**
+     * to be Overridden by the workflow author
+     */
     public void setupDirectory() {
     	
     }
     
+    /**
+     * to be Overridden by the workflow author
+     */
     public void setupWorkflow() {
     	
     }
+    /**
+     * to be Overridden by the workflow author
+     */
     public void setupEnvironment() {
     	
     }
+    /**
+     * to be Overridden by the workflow author
+     */
     public Map<String, SqwFile> setupFiles() {
     	return this.files;
     }
+    /**
+     * to be Overridden by the workflow author
+     */
     public abstract void buildWorkflow();
+    /**
+     * to be Overridden by the workflow author
+     */
     public void wrapup() {
     	
     }
 
-    protected Workflow setWorkflowObjectModel(Workflow wfom) {
-    	this.workflow = wfom;
-    	return this.workflow;
-    }
+    /**
+     * 
+     * @return pre-defined date variable
+     */
 	public String getDate() {
 		return date;
 	}
+	/**
+	 * set the pre-defined date variable
+	 * @param date
+	 */
 	public void setDate(String date) {
 		this.date = date;
 	}
+	/**
+	 * 
+	 * @return the pre-defined random variable
+	 */
 	public String getRandom() {
 		return random;
 	}
+	/**
+	 * set the pre-defined random variable
+	 * @param random
+	 */
 	public void setRandom(String random) {
 		this.random = random;
 	}
@@ -91,25 +114,15 @@ public abstract class AbstractWorkflowDataModel  {
 	public String getName() {
 		return name;
 	}
+	/**
+	 * set the workflow name
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Collection<String> getCmdOptions() {
-		return cmdOptions;
-	}
-	public void setCmdOptions(Collection<String> cmdOptions) {
-		this.cmdOptions = cmdOptions;
-	}
-	public WorkflowInfo getWorkflowInfo() {
-		return workflowInfo;
-	}
-	public void setWorkflowInfo(WorkflowInfo workflowInfo) {
-		this.workflowInfo = workflowInfo;
-	}
-	
-	public void setWorkflow(Workflow workflow) {
-		this.workflow = workflow;
-	}
+
+
 	/**
 	 * 
 	 * @return pre-defined workflow object;
@@ -117,34 +130,70 @@ public abstract class AbstractWorkflowDataModel  {
 	public Workflow getWorkflow() {
 		return this.workflow;
 	}
+	
+	/**
+	 * need metadata writeback? user can override this setting by using --no-metadata or --metadata from command line
+	 * @return
+	 */
 	public boolean isMetadataWriteBack() {
 		return metadataWriteBack;
 	}
+	/**
+	 * need metadata writeback? user can override this setting by using --no-metadata or --metadata from command line
+	 * @return
+	 */	
 	public void setMetadataWriteBack(boolean b) {
 		this.metadataWriteBack = b;
 	}
 	
+	/**
+	 * 
+	 * @return the key-value properties from INI files
+	 */
 	public Map<String,String> getConfigs() {
 		return this.configs;
 	}
-	
+	/**
+	 * set the key-value properties for workflow
+	 * @param configs
+	 */
 	public void setConfigs(Map<String,String> configs) {
 		this.configs = configs;
 	}
+	/**
+	 * 
+	 * @return workflow version
+	 */
 	public String getVersion() {
 		return version;
 	}
+	/**
+	 * set workflow version
+	 * @param version
+	 */
 	public void setVersion(String version) {
 		this.version = version;
 	}
+	/**
+	 * 
+	 * @return user defined files
+	 */
 	public Map<String,SqwFile> getFiles() {
 		return files;
 	}
 
+	/**
+	 * wait for the workflow to finished, user can override this by using --wait from command line
+	 * @return
+	 */
 	public boolean isWait() {
 		return wait;
 	}
 
+	/**
+	 * wait for the workflow to finished, user can override this by using --wait from command line
+	 * @param wait
+	 */
 	public void setWait(boolean wait) {
 		this.wait = wait;
 	}
@@ -156,14 +205,26 @@ public abstract class AbstractWorkflowDataModel  {
 		return "";
 	}
 
+	/**
+	 * the key-value from metadata.xml
+	 * @return
+	 */
 	public Map<String,String> getTags() {
 		return tags;
 	}
 
+	/**
+	 * set the key-value properties from metadata.xml
+	 * @param tags
+	 */
 	public void setTags(Map<String,String> tags) {
 		this.tags = tags;
 	}
 
+	/**
+	 * 
+	 * @return workflow environment
+	 */
 	public Environment getEnv() {
 		return env;
 	}
@@ -183,6 +244,11 @@ public abstract class AbstractWorkflowDataModel  {
 		return this.dirs;
 	}
 	
+	/**
+	 * create a sqwfile
+	 * @param name
+	 * @return the created sqwfile
+	 */
 	public SqwFile createFile(String name) {
 		SqwFile file = new SqwFile();
 		this.files.put(name, file);
