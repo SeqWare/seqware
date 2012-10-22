@@ -34,6 +34,12 @@ import org.jdom.output.XMLOutputter;
  */
 public class DaxgeneratorV2 {
     
+	/**
+	 * generate a dax file from the object model
+	 * @param wfdm
+	 * @param output
+	 * @return
+	 */
     public ReturnValue generateDax(AbstractWorkflowDataModel wfdm, String output) {
     	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
     	ret = this.createDax(wfdm, output);
