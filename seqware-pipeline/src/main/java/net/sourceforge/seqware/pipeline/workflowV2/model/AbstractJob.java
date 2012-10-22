@@ -69,12 +69,16 @@ public class AbstractJob implements Job {
 	}
 
 
+	/**
+	 * 
+	 * @return all the files for this job
+	 */
 	public Collection<SqwFile> getFiles() {
 		return files;
 	}
-	public void setFiles(Collection<SqwFile> files) {
-		this.files = files;
-	}
+	/**
+	 * add a job specific file for provision
+	 */
 	public void addFile(SqwFile file) {
 		this.files.add(file);
 	}
@@ -163,6 +167,9 @@ public class AbstractJob implements Job {
 	}
 
 	@Override
+	/**
+	 * set the command for this job
+	 */
 	public Command setCommand(String cmd) {
 		this.command.getArguments().add(cmd);
 		return this.command;
@@ -183,13 +190,23 @@ public class AbstractJob implements Job {
 	public Job setQueue(String queue) {
 		return null;
 	}
+	
+	public String getQueue() {
+		return null;
+	}
 
 	@Override
+	/**
+	 * the job specific metadata write back is not supported yet.
+	 */
 	public void setHasMetadataWriteback(boolean metadata) {
 		this.hasMetadataWriteback = metadata;
 	}
 
 	@Override
+	/**
+	 * the job specific metadata write back is not supported yet.
+	 */
 	public boolean hasMetadataWriteback() {
 		return this.hasMetadataWriteback;
 	}

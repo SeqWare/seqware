@@ -22,6 +22,12 @@ import freemarker.template.TemplateException;
 
 public class WorkflowXmlParser {
 	
+	/**
+	 * parse the FTL to XML, and XML to Java
+	 * @param wfdm
+	 * @param file
+	 * @return
+	 */
 	public ReturnValue parseXml(AbstractWorkflowDataModel wfdm, String file) {
 		ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 		//generate tmp xml file from FTL file
