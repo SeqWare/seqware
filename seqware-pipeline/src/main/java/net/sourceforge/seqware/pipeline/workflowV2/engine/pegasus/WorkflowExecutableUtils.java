@@ -4,6 +4,11 @@ import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Pfn;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.WorkflowExecutable;
 
+/**
+ * a util class to generate Java, Perl, and DirManager for dax
+ * @author yliang
+ *
+ */
 public class WorkflowExecutableUtils {
     private static String URL_JAVA = "file:///${basedir}/bin/jre1.6.0_29/bin/java";
     private static String URL_PERL = "file:///${basedir}/bin/perl-5.14.1/perl";

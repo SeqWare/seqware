@@ -27,6 +27,12 @@ import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.StringUtils;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 import net.sourceforge.seqware.pipeline.workflowV2.model.XmlWorkflowDataModel;
 
+/**
+ * a utils class for creating the AbstractWorkflowDataModel,
+ * by reading the metadata.xml file, will load a Java based objectModel or XML based ObjectModel
+ * @author yliang
+ *
+ */
 public class WorkflowDataModelFactory {
 	private Map<String, String> config;
 	private OptionSet options;
@@ -40,6 +46,11 @@ public class WorkflowDataModelFactory {
 		this.metadata = metadata;
 	}
 	
+	/**
+	 * load metadata.xml, if FTL, parse the FTL to XML, and translate it to Java based Object
+	 * if Java, load the class. 
+	 * @return
+	 */
 	public AbstractWorkflowDataModel getWorkflowDataModel() {	
 		// get bundle path
 	    String bundlePath = "";

@@ -35,7 +35,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 /**
- * 
+ * Adag object match to the <adag> element, which is a root element in a dax. 
  * @author yongliang
  */
 public class Adag  {
@@ -52,7 +52,6 @@ public class Adag  {
     private String count = "1";
     private String index = "0";
     
-    private Workflow wf;
     private AbstractWorkflowDataModel wfdm;
     
     private Map<SqwFile, PegasusJob> fileJobMap;
@@ -61,7 +60,6 @@ public class Adag  {
     	this.wfdm = wfdm;
 		this.jobs = new ArrayList<PegasusJob>();
 		this.fileJobMap = new HashMap<SqwFile, PegasusJob>();
-		//this.parseWorkflow(wf);
 		this.parseWorkflow(wfdm);
 		this.setDefaultExcutables();
     }
@@ -75,7 +73,11 @@ public class Adag  {
 		executables.add(WorkflowExecutableUtils.getDefaultDirManagerExcutable(this.wfdm));
     }
 
-
+    /**
+     * Adag object serialize to <adag> element
+     * and all its sub objects serialize to sub element
+     * @return
+     */
     public Element serializeXML() {
 		Element adag = new Element("adag", NAMESPACE);
 		adag.addNamespaceDeclaration(XSI);
@@ -101,15 +103,6 @@ public class Adag  {
 		return adag;
     }
 
-	public Workflow getWorkflow() {
-		return wf;
-	}
-
-
-
-	public void setWorkflow(Workflow wf) {
-		this.wf = wf;
-	}
 	
 	private void parseWorkflow(AbstractWorkflowDataModel wfdm) {
 		boolean metadatawriteback = Boolean.parseBoolean(wfdm.getConfigs().get("metadata"));
