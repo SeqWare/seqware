@@ -45,9 +45,7 @@ public class Adag  {
     private String schemaLocation = "http://pegasus.isi.edu/schema/DAX http://pegasus.isi.edu/schema/dax-3.2.xsd";
     public static Namespace NAMESPACE = Namespace.getNamespace("http://pegasus.isi.edu/schema/DAX");
     public static Namespace XSI = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-    //FIXME should be passed in from maven 
     public static String PIPELINE = "seqware-pipeline-0.13.3-SNAPSHOT-full.jar";
-
     private String version = "3.2";
     private String count = "1";
     private String index = "0";
@@ -203,11 +201,10 @@ public class Adag  {
 								parentPfjob.setWorkflowRunAccession(workflowRunAccession);
 							}
 							this.jobs.add(parentPfjob);
-							parentPfjob.setOutputDir("provisionfiles/" + provisionFileCount) ;
+							parentPfjob.setOutputDir(file.getProvisionedPath()) ;
 							pjob.addParent(parentPfjob);	
 							//add mkdir to the first job, then set the file path
-							job0.getCommand().addArgument("mkdir -p provisionfiles/" + provisionFileCount + "; ");
-							provisionFileCount ++;
+							job0.getCommand().addArgument("mkdir -p " + file.getProvisionedPath() + "; ");
 					} else {
 							//create a provisionFileJob;
 							AbstractJob pfjob = new BashJob("provisionFile_out");
@@ -298,5 +295,9 @@ public class Adag  {
 			pjob.addParentAccessionFile(parent.getAccessionFile());
 			setAccessionFileRelations(pjob);
 		}
+	}
+	
+	public String getPipelineJarPath() {
+		return "seqware-pipeline-"+this.wfdm.getConfigs().get("seqware-version")+"-full.jar";
 	}
 }
