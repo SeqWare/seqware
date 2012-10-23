@@ -169,7 +169,7 @@ public class WorkflowDataModelFactory {
 	        	m = clazz.getMethod("setupFiles");
 	        	m.invoke(ret);
 	        	//handle the provisionedPath
-	        	this.setupProvisionedPath(ret.getFiles());
+	        	//this.setupProvisionedPath(ret.getFiles());
 	        	m = clazz.getMethod("setupWorkflow");
 	        	m.invoke(ret);
 	        	m = clazz.getMethod("setupEnvironment");
@@ -358,7 +358,7 @@ public class WorkflowDataModelFactory {
     	}
     }
 
-    private void setupProvisionedPath(Map<String,SqwFile> map) {
+/*    private void setupProvisionedPath(Map<String,SqwFile> map) {
     	int inCount = 0;
     	for(Map.Entry<String, SqwFile> entry: map.entrySet()) {
     		if(entry.getValue().isInput()) {
@@ -368,5 +368,5 @@ public class WorkflowDataModelFactory {
     			inCount ++;
     		}
     	}
-    }
+    }*/
 }
