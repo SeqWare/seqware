@@ -94,7 +94,16 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
      }
 
      List<String> parentsLinkedToWR = new ArrayList<String>();
-
+	 	if (options.has("link-workflow-run-to-parents")) {
+		    List opts = options.valuesOf("link-workflow-run-to-parents");
+		    for (Object opt : opts) {
+			String[] tokens = ((String) opt).split(",");
+			for (String t : tokens) {
+			    parentsLinkedToWR.add(t);
+			}
+		    }
+		}
+	 	
 	WorkflowRun wr = null;
 	
 	
@@ -128,10 +137,7 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 	     metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
 		     dataModel.getTags().get("workflow_template"), "completed",
 		     statusCmd, dataModel.getWorkflowBundleDir(), "","", wr
-		     .getHost(), Integer.parseInt(retPegasus
-		     .getAttribute("currStep")), Integer
-		     .parseInt(retPegasus
-		     .getAttribute("totalSteps")),
+		     .getHost(), 0, 0,
 		     retPegasus.getStderr(), retPegasus.getStdout());
 	     return ret;
      }
