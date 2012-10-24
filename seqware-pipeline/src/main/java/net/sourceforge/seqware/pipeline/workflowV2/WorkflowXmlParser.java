@@ -85,6 +85,14 @@ public class WorkflowXmlParser {
 				wfdm.getFiles().put(fe.getAttributeValue("name"), file0); 
 			}
 		}
+		//handle dirs
+		Element dirsE = root.getChild("dirs");
+		if(dirsE != null) {
+			List<Element> dirs = dirsE.getChildren();
+			for(Element dir: dirs) {
+				wfdm.addDirectory(dir.getText());
+			}
+		}
 		//handle jobs
 		Element jobsE = root.getChild("jobs");
 		Map<String, Job> jobsMap = new HashMap<String, Job>();
@@ -123,7 +131,7 @@ public class WorkflowXmlParser {
     	} else if(jobE.getAttributeValue("type").equals("perl")) {
     		String script = jobE.getAttributeValue("script");
     		job = workflow.createPerlJob(algo, script);
-    	} else if(jobE.getAttributeValue("type").toLowerCase().equals("javamodule")) {
+    	} else if(jobE.getAttributeValue("type").toLowerCase().equals("javaseqwaremodule")) {
     		String cp = jobE.getAttributeValue("classpath");
     		String module = jobE.getAttributeValue("module");
     		job = workflow.createJavaSeqwareModuleJob(algo, cp, module);
