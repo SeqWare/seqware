@@ -364,8 +364,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	    return (ret);
 	}
 
-	Map<String, String> map = this.prepareData(wi, workflowRunAccession,
-		iniFiles, preParsedIni, metadataWriteback, parentAccessions);
+
 	// if we're doing metadata writeback will need to parameterize the
 	// workflow correctly
 	if (metadataWriteback) {
@@ -425,6 +424,9 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	    ret.setStderr("Can't write DAX file! " + e.getMessage());
 	    return (ret);
 	}
+        
+        Map<String, String> map = this.prepareData(wi, workflowRunAccession,
+		iniFiles, preParsedIni, metadataWriteback, parentAccessions);
 
 	Log.stdout("CREATING DAX IN: " + dax.getAbsolutePath());
 
