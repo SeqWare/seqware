@@ -34,8 +34,10 @@ import net.sourceforge.seqware.common.util.Log;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * <p>SequencerRunReporter class.</p>
  *
  * @author boconnor
+ * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
 public class SequencerRunReporter extends Plugin {
@@ -43,23 +45,29 @@ public class SequencerRunReporter extends Plugin {
     ReturnValue ret = new ReturnValue();
     private BufferedWriter writer;
 
+    /**
+     * <p>Constructor for SequencerRunReporter.</p>
+     */
     public SequencerRunReporter() {
         super();
         parser.acceptsAll(Arrays.asList("output-filename", "output"), "Name of the output tab-delimited file.").withRequiredArg();
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue init() {
 
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_test() {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_run() {
         String report = this.metadata.getSequencerRunReport();
@@ -85,11 +93,13 @@ public class SequencerRunReporter extends Plugin {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue clean_up() {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String get_description() {
         return "Prints a tab-delimited file describing the sequencer run, lane, "

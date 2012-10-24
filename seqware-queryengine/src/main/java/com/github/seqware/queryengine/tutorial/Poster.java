@@ -50,28 +50,47 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 
 /**
  * This is a quick and dirty sample application built on top of our API, created for
- * Poster testing. It demonstrates, times, and verifies by count several queries. 
+ * Poster testing. It demonstrates, times, and verifies by count several queries.
  * It also triggers a hack for secondary indexes.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class Poster {
 
+    /** Constant <code>HG_19="hg_19"</code> */
     public static final String HG_19 = "hg_19";
 //    public static final int CUT_OFF = 1000;
+    /** Constant <code>BENCHMARKING_BATCH_SIZE=20000</code> */
     public static final int BENCHMARKING_BATCH_SIZE = 20000;
     private String[] args;
     Map<String, String> keyValues = new HashMap<String, String>();
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.io.IOException if any.
+     */
     public static void main(String[] args) throws IOException {
         Poster dumper = new Poster(args);
         dumper.benchmark();
     }
 
+    /**
+     * <p>Constructor for Poster.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public Poster(String[] args) {
         this.args = args;
     }
 
+    /**
+     * <p>benchmark.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     public void benchmark() throws IOException {
         if (args.length != 2) {
             System.err.println(args.length + " arguments found");
@@ -175,15 +194,15 @@ public class Poster {
             /**
              * PMC code follows
              */
-            keyValues.put(count + "-start-PMC_query-date-long", Long.toString(System.currentTimeMillis()));
-            // run a query that looks for tag called "PMC", should touch a small fraction of Features
-            QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, fSet, new RPNStack(
-                    new RPNStack.TagOccurrence("RV")));
-            FeatureSet resultSet = queryFuture.get();
-            keyValues.put(count + "-end-PMC_query-date-long", Long.toString(System.currentTimeMillis()));
-            fsetcount = (int) resultSet.getCount();
-            keyValues.put(count + "-features-PMC_query-written", Long.toString(fsetcount));
-            keyValues.put(count + "-end-PMC_query-count-date-long", Long.toString(System.currentTimeMillis()));
+//            keyValues.put(count + "-start-PMC_query-date-long", Long.toString(System.currentTimeMillis()));
+//            // run a query that looks for tag called "PMC", should touch a small fraction of Features
+//            QueryFuture<FeatureSet> queryFuture = SWQEFactory.getQueryInterface().getFeaturesByAttributes(1, fSet, new RPNStack(
+//                    new RPNStack.TagOccurrence("RV")));
+//            FeatureSet resultSet = queryFuture.get();
+//            keyValues.put(count + "-end-PMC_query-date-long", Long.toString(System.currentTimeMillis()));
+//            fsetcount = (int) resultSet.getCount();
+//            keyValues.put(count + "-features-PMC_query-written", Long.toString(fsetcount));
+//            keyValues.put(count + "-end-PMC_query-count-date-long", Long.toString(System.currentTimeMillis()));
             /**
              * PMC code ends
              */

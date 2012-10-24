@@ -2,6 +2,8 @@ package net.sourceforge.seqware.pipeline.workflowV2.model;
 
 import java.util.Collection;
 
+
+
 public interface Job {
 	/**
 	 * add a job specific file

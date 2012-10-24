@@ -22,12 +22,19 @@ import org.restlet.resource.ServerResource;
 
 
 /**
- * @author boconnor
+ * <p>WorkflowRunStatusResource class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class WorkflowRunStatusResource extends ServerResource {
 
   //Get("text/html")
+  /**
+   * <p>represent.</p>
+   *
+   * @return a {@link org.restlet.representation.Representation} object.
+   */
   @Get
   public Representation represent() {  
 

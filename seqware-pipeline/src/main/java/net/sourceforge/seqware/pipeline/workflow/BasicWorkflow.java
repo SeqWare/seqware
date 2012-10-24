@@ -26,8 +26,17 @@ import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.daxgenerator.Daxgenerator;
+import net.sourceforge.seqware.pipeline.workflowV2.WorkflowEngine;
 
-public abstract class BasicWorkflow  {
+
+/**
+ * <p>Abstract BasicWorkflow class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
+public abstract class BasicWorkflow implements WorkflowEngine {
+
 
     protected ReturnValue ret = new ReturnValue();
     protected Metadata metadata = null;
@@ -45,6 +54,12 @@ public abstract class BasicWorkflow  {
 	setup, prejob, mainjob, postjob, cleanup, statcall, data;
     }
 
+    /**
+     * <p>Constructor for BasicWorkflow.</p>
+     *
+     * @param metadata a {@link net.sourceforge.seqware.common.metadata.Metadata} object.
+     * @param config a {@link java.util.Map} object.
+     */
     public BasicWorkflow(Metadata metadata, Map<String, String> config) {
 	super();
 	this.metadata = metadata;
@@ -72,13 +87,12 @@ public abstract class BasicWorkflow  {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * This method just needs a sw_accession value from the workflow table and
      * an ini file(s) in order to launch a workflow. All needed info is pulled
      * from the workflow table which was populated when the workflow was
      * installed.
-     * 
-     * @param workflowAccession
-     * @return
      */
     public ReturnValue launchInstalledBundle(String workflowAccession,
 	    String workflowRunAccession, ArrayList<String> iniFiles,
@@ -103,6 +117,8 @@ public abstract class BasicWorkflow  {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * This method just needs a sw_accession value from the workflow table and
      * an ini file(s) in order to schedule a workflow. All needed info is pulled
      * from the workflow table which was populated when the workflow was
@@ -111,9 +127,6 @@ public abstract class BasicWorkflow  {
      * lets you run workflows on a different host from where this command line
      * tool is run but requires an external process to launch workflows that
      * have been scheduled.
-     * 
-     * @param workflowAccession
-     * @return
      */
     public ReturnValue scheduleInstalledBundle(String workflowAccession,
 	    String workflowRunAccession, ArrayList<String> iniFiles,
@@ -133,12 +146,11 @@ public abstract class BasicWorkflow  {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * This method just needs a sw_accession value from the workflow_run table
      * to launch a workflow. All needed info is pulled from the workflow_run
      * table which was populated when the workflow was scheduled.
-     * 
-     * @param workflowAccession
-     * @return
      */
     public ReturnValue launchScheduledBundle(String workflowAccession,
 	    String workflowRunAccession, boolean metadataWriteback, boolean wait) {
@@ -165,13 +177,9 @@ public abstract class BasicWorkflow  {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * FIXME: need to add metadata writeback
-     * 
-     * @param workflow
-     * @param version
-     * @param iniFiles
-     * @param bundle
-     * @return
      */
     public ReturnValue launchBundle(String workflow, String version,
 	    String metadataFile, String bundle, ArrayList<String> iniFiles,
@@ -843,6 +851,17 @@ public abstract class BasicWorkflow  {
 	return (results);
     }
 
+    /**
+     * <p>prepareData.</p>
+     *
+     * @param wi a {@link net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo} object.
+     * @param workflowRunAccession a {@link java.lang.String} object.
+     * @param iniFiles a {@link java.util.ArrayList} object.
+     * @param preParsedIni a {@link java.util.Map} object.
+     * @param metadataWriteback a boolean.
+     * @param parentAccessions a {@link java.util.ArrayList} object.
+     * @return a {@link java.util.Map} object.
+     */
     protected Map<String, String> prepareData(WorkflowInfo wi,
 	    String workflowRunAccession, ArrayList<String> iniFiles,
 	    Map<String, String> preParsedIni, boolean metadataWriteback,
@@ -916,6 +935,16 @@ public abstract class BasicWorkflow  {
 	return map;
     }
 
+    /**
+     * <p>generateDaxFile.</p>
+     *
+     * @param wi a {@link net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo} object.
+     * @param dax a {@link java.io.File} object.
+     * @param iniFilesStr a {@link java.lang.String} object.
+     * @param map a {@link java.util.Map} object.
+     * @param cmdLineOptions a {@link java.util.List} object.
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
     protected ReturnValue generateDaxFile(WorkflowInfo wi, File dax,
 	    String iniFilesStr, Map<String, String> map,
 	    List<String> cmdLineOptions) {

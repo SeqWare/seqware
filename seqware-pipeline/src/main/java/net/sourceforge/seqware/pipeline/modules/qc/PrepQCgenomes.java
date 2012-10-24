@@ -21,29 +21,29 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Prepare the "QC Genomes" database from external sources.
- * 
+ *
  * This module makes a FASTA file and a KEY file for human rRNA and complete viral genomes.
  * The wget tool is used to extract the following files:
  * a) http://www.arb-silva.de/no_cache/download/archive/release_102/Exports/lsu-parc.fasta.tgz
  * b) http://www.arb-silva.de/no_cache/download/archive/release_102/Exports/ssu-parc.fasta.tgz
  * c) ftp://ftp.ncbi.nih.gov/genomes/Viruses/all.fna.tar.gz
- * 
+ *
  * IMPORTANT NOTE:  The resource files are currently hard-coded into the underlying script!!!
-
- * Another Note:  I've found SILVA to be extremely quick to block multiple 'wget' attempts, so I'd advise users avoid 
+ *
+ * Another Note:  I've found SILVA to be extremely quick to block multiple 'wget' attempts, so I'd advise users avoid
  * running this module more than once in a short time span.
- * 
+ *
  * Underlying script:  sw_module_PrepQCgenomes.pl
  * Necessary programs:  perl
- * 
+ *
  * Expected output:  3 files.  Although the user must supply the output directory name, the actual file are fixed.
  * (DATE is determined via java.util.Date)
  * 1)  {outputDIR}/QCgenomes.DATE.log -- A brief log of the database construction process.
  * 2)  {outputDIR}/QCgenomes.DATE.fa -- The extracted human rRNA & viral sequences in FASTA format.
- * 3)  {outputDIR}/QCgenomes.DATE.key -- 2 column, tab-delimited: sequence accession & sequence type (i.e. rRNA, viral) 
- * 
- * @author sacheek@med.unc.edu
+ * 3)  {outputDIR}/QCgenomes.DATE.key -- 2 column, tab-delimited: sequence accession & sequence type (i.e. rRNA, viral)
  *
+ * @author sacheek@med.unc.edu
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class PrepQCgenomes extends Module {
@@ -57,9 +57,9 @@ public class PrepQCgenomes extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("outputDIR", "directory for ~.fa and ~.key output files").withRequiredArg();
@@ -69,8 +69,9 @@ public class PrepQCgenomes extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -88,11 +89,11 @@ public class PrepQCgenomes extends Module {
  
   
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -129,9 +130,9 @@ public class PrepQCgenomes extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -154,9 +155,9 @@ public class PrepQCgenomes extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -188,9 +189,9 @@ public class PrepQCgenomes extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known dataset.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -200,10 +201,10 @@ public class PrepQCgenomes extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Run core of module.
    * Based on script sw_module_PrepQCgenomes.pl
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_run() {
@@ -249,9 +250,9 @@ public class PrepQCgenomes extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Check to make sure the output was created correctly.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -270,10 +271,11 @@ public class PrepQCgenomes extends Module {
     return(ret);
   }
   
-    /**
+  /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.  Remove tempDir.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

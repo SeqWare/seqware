@@ -21,36 +21,50 @@ import org.hibernate.Query;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>StudyDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
 
   private Logger logger;
 
+  /**
+   * <p>Constructor for StudyDAOHibernate.</p>
+   */
   public StudyDAOHibernate() {
     super();
     logger = Logger.getLogger(StudyDAOHibernate.class);
   }
 
+  /** {@inheritDoc} */
   public Integer insert(Study study) {
     this.getHibernateTemplate().save(study);
     this.getSession().flush();
     return study.getSwAccession();
   }
 
+  /** {@inheritDoc} */
   public void update(Study study) {
     this.getHibernateTemplate().update(study);
     getSession().flush();
   }
 
+  /** {@inheritDoc} */
   @Override
   public void merge(Study study) {
     this.getHibernateTemplate().merge(study);
     getSession().flush();
   }
 
+  /** {@inheritDoc} */
   public void delete(Study study) {
     this.getHibernateTemplate().delete(study);
   }
 
+  /** {@inheritDoc} */
   public List<Study> list(Registration registration, Boolean isAsc) {
     ArrayList<Study> studys = new ArrayList<Study>();
     logger.debug("Get Study LIST for " + registration.getEmailAddress());
@@ -120,6 +134,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return studys;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public List<Study> list() {
@@ -136,6 +151,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return studys;
   }
 
+  /** {@inheritDoc} */
   public List<Study> listMyShared(Registration registration, Boolean isAsc) {
     List<Study> sharedStudies = new ArrayList<Study>();
 
@@ -156,6 +172,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return sharedStudies;
   }
 
+  /** {@inheritDoc} */
   public List<Study> listSharedWithMe(Registration registration, Boolean isAsc) {
     ArrayList<Study> studys = new ArrayList<Study>();
 
@@ -194,6 +211,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return studys;
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer studyId) {
     List<File> files = new ArrayList<File>();
     String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -317,6 +335,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return files;
   }
 
+  /** {@inheritDoc} */
   public boolean isHasFile(Integer studyId) {
     boolean isHasFile = false;
 
@@ -491,6 +510,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return isHasFile;
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer studyId, String metaType) {
     List<File> files = new ArrayList<File>();
     String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -614,6 +634,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return files;
   }
 
+  /** {@inheritDoc} */
   public boolean isHasFile(Integer studyId, String metaType) {
     boolean isHasFile = false;
 
@@ -735,6 +756,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return isHasFile;
   }
 
+  /** {@inheritDoc} */
   public List<Study> listStudyHasFile(Registration registration, String metaType, Boolean isAsc) {
     List<Study> studies = new ArrayList<Study>();
     /*
@@ -966,11 +988,9 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of Study in the database by the Study name.
-   * 
-   * @param name
-   *          name of the Study
-   * @return Study or null if not found
    */
   public Study findByTitle(String title) {
     String query = "from Study as study where lower(study.title) = ?";
@@ -985,11 +1005,9 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of Study in the database by the Study ID.
-   * 
-   * @param expID
-   *          ID of the Study
-   * @return Study or null if not found
    */
   public Study findByID(Integer expID) {
     String query = "from Study as study where study.studyId = ?";
@@ -1002,6 +1020,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return study;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
   public Study findBySWAccession(Integer swAccession) {
@@ -1015,6 +1034,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return study;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
   public List<Study> findByOwnerID(Integer registrationId) {
@@ -1023,6 +1043,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return this.getHibernateTemplate().find(query, parameters);
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
   public List<Study> findByCriteria(String criteria, boolean isCaseSens) {
@@ -1068,6 +1089,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
   // session.close();
   // return result;
   // }
+  /** {@inheritDoc} */
   @Override
   public Study updateDetached(Study study) {
     Study dbObject = reattachStudy(study);
@@ -1083,6 +1105,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<ReturnValue> findFiles(Integer swAccession) {
     getSessionFactory().getCurrentSession().flush();
@@ -1095,6 +1118,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return list;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void updateOwners(Integer swAccession) {
     Study study = findBySWAccession(swAccession);
@@ -1102,6 +1126,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     po.filesFromStudy(study);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(Registration registration, Study study) {
     Study dbObject = reattachStudy(study);
@@ -1118,6 +1143,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer insert(Registration registration, Study study) {
     Integer swAccession = 0;
@@ -1135,6 +1161,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return (swAccession);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Study updateDetached(Registration registration, Study study) {
     Study dbObject = reattachStudy(study);
@@ -1159,6 +1186,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return dbObject;
   }
 
+  /** {@inheritDoc} */
   @Override
   public int getStatusCount(Study study, String status) {
     String query = "WITH RECURSIVE all_the_runs(workflow_run_id) AS ("

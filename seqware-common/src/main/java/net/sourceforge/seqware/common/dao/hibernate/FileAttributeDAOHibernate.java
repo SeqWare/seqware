@@ -13,6 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
+/**
+ * <p>FileAttributeDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class FileAttributeDAOHibernate implements FileAttributeDAO {
 
   @Autowired
@@ -22,6 +28,7 @@ public class FileAttributeDAOHibernate implements FileAttributeDAO {
     return sessionFactory.getCurrentSession();
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<FileAttribute> getAll() {
     Query query = currentSession().createQuery("from FileAttribute");
@@ -30,6 +37,7 @@ public class FileAttributeDAOHibernate implements FileAttributeDAO {
     return records;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<FileAttribute> get(File file) {
     Query query = currentSession().createQuery("from FileAttribute as f where f.file = :file");
@@ -39,21 +47,25 @@ public class FileAttributeDAOHibernate implements FileAttributeDAO {
     return records;
   }
 
+  /** {@inheritDoc} */
   @Override
   public FileAttribute get(Integer id) {
     return (FileAttribute) currentSession().get(FileAttribute.class, id);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer add(FileAttribute fileAttribute) {
     return (Integer) currentSession().save(fileAttribute);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(FileAttribute fileAttribute) {
     currentSession().merge(fileAttribute);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void delete(FileAttribute fileAttribute) {
     // Detach from file before deleting attribute.

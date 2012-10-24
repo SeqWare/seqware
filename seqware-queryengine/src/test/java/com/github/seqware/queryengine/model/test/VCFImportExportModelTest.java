@@ -27,9 +27,12 @@ import org.junit.Test;
  * Run the basic VCFImportExportTest across all models
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class VCFImportExportModelTest extends VCFImportExportTest {
 
+    /** {@inheritDoc} */
     @Test
     @Override
     public void testNormalVCFImport() {
@@ -40,18 +43,21 @@ public class VCFImportExportModelTest extends VCFImportExportTest {
         super.testNormalVCFImport();;
     }
 
+    /** {@inheritDoc} */
     @Test
     @Override
     public void testInvalidVCFImport() {
         // skip this test
     }
 
+    /** {@inheritDoc} */
     @Test
     @Override
     public void testMissingValueVCFImport() {
         // skip this test
     }
 
+    /** {@inheritDoc} */
     @Test
     @Override
     public void testVCFImportParam() throws IOException {

@@ -14,12 +14,27 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
 
 import org.junit.Test;
 
+/**
+ * <p>LaneServiceImplTest class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
+ */
 public class LaneServiceImplTest extends BaseUnit {
 
+  /**
+   * <p>Constructor for LaneServiceImplTest.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
   public LaneServiceImplTest() throws Exception {
     super();
   }
 
+  /**
+   * <p>testAssociatedWorkflowRuns.</p>
+   */
   @Test
   public void testAssociatedWorkflowRuns() {
     try {
@@ -34,6 +49,9 @@ public class LaneServiceImplTest extends BaseUnit {
     }
   }
 
+  /**
+   * <p>testFindByCriteria.</p>
+   */
   @Test
   public void testFindByCriteria() {
     LaneService laneService = BeanFactory.getLaneServiceBean();

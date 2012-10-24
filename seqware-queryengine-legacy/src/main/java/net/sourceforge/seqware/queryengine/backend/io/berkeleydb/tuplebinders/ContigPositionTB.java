@@ -11,11 +11,14 @@ import net.sourceforge.seqware.queryengine.backend.model.ContigPosition;
 import net.sourceforge.seqware.queryengine.backend.model.Model;
 
 /**
- * @author boconnor
+ * <p>ContigPositionTB class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class ContigPositionTB extends TupleBinding {
 
+  /** {@inheritDoc} */
   @Override
   public void objectToEntry(Object object, TupleOutput to) {
     ContigPosition ag = (ContigPosition)object;
@@ -25,6 +28,7 @@ public class ContigPositionTB extends TupleBinding {
     to.writeInt(ag.getStopPosition());
   }
 
+  /** {@inheritDoc} */
   @Override
   public Object entryToObject(TupleInput ti) {
     // reset because this InputStream may have been sniffed before this tuple binder was called

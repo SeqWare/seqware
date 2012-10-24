@@ -25,16 +25,22 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
  * RegistrationSetupController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class StudyReportController extends BaseCommandController {
   private StudyService studyService;
   
+  /**
+   * <p>Constructor for StudyReportController.</p>
+   */
   public StudyReportController() {
     super();
     setSupportedMethods(new String[] { METHOD_GET });
   }
 
+  /** {@inheritDoc} */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
@@ -189,10 +195,20 @@ public class StudyReportController extends BaseCommandController {
     }
   }
 
+  /**
+   * <p>Getter for the field <code>studyService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.StudyService} object.
+   */
   public StudyService getStudyService() {
     return studyService;
   }
 
+  /**
+   * <p>Setter for the field <code>studyService</code>.</p>
+   *
+   * @param studyService a {@link net.sourceforge.seqware.common.business.StudyService} object.
+   */
   public void setStudyService(StudyService studyService) {
     this.studyService = studyService;
   }

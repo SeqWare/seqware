@@ -31,6 +31,7 @@ import org.restlet.resource.ResourceException;
  * https://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_extend_the_web_service#Basic_Resource
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class BasicRestlet extends Restlet {
 
@@ -38,9 +39,19 @@ public class BasicRestlet extends Restlet {
     protected List<String> fields;
     protected Registration registration;
 
+    /**
+     * <p>Constructor for BasicRestlet.</p>
+     *
+     * @param context a {@link org.restlet.Context} object.
+     */
     public BasicRestlet(Context context) {
         super(context);
     }
+    /**
+     * <p>init.</p>
+     *
+     * @param request a {@link org.restlet.Request} object.
+     */
     protected void init(Request request) {
         Form form = request.getResourceRef().getQueryAsForm();
         queryValues = form.getValuesMap();
@@ -54,11 +65,23 @@ public class BasicRestlet extends Restlet {
             fields.addAll(Arrays.asList(fieldArr));
         }
     }
+    /**
+     * <p>authenticate.</p>
+     *
+     * @param identifier a {@link java.lang.String} object.
+     * @throws org.restlet.resource.ResourceException if any.
+     */
     protected void authenticate(String identifier) throws ResourceException {
         registration = BeanFactory.getRegistrationServiceBean().
                 findByEmailAddress(identifier);
     }
 
+    /**
+     * <p>testIfNull.</p>
+     *
+     * @param o a {@link java.lang.Object} object.
+     * @return a {@link java.lang.Object} object.
+     */
     protected Object testIfNull(Object o) {
         if (o == null) {
             throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Object cannot be found "+ o);

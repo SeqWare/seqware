@@ -18,18 +18,26 @@ import com.sleepycat.db.SecondaryMultiKeyCreator;
 
 
 /**
- * @author boconnor
+ * <p>TagKeyOnlyCreator class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 // could alternatively extend SecondaryMultiKeyCreator for multiple read sequence groups
 public class TagKeyOnlyCreator implements SecondaryMultiKeyCreator {
   
   private TupleBinding binding;
   
+  /**
+   * <p>Constructor for TagKeyOnlyCreator.</p>
+   *
+   * @param binding a {@link com.sleepycat.bind.tuple.TupleBinding} object.
+   */
   public TagKeyOnlyCreator(TupleBinding binding) {
     this.binding = binding;
   }
   
+  /** {@inheritDoc} */
   public void createSecondaryKeys(SecondaryDatabase secDb,
                                     DatabaseEntry key,
                                     DatabaseEntry value,

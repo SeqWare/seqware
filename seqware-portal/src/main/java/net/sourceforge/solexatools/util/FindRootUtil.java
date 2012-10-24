@@ -10,23 +10,53 @@ import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>FindRootUtil class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class FindRootUtil {
 	
+	/**
+	 * <p>getStudy.</p>
+	 *
+	 * @param experiment a {@link net.sourceforge.seqware.common.model.Experiment} object.
+	 * @return a {@link net.sourceforge.seqware.common.model.Study} object.
+	 */
 	public static Study getStudy(Experiment experiment){
 		Study study = experiment.getStudy();
 		return study;
 	}
 	
+	/**
+	 * <p>getStudy.</p>
+	 *
+	 * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+	 * @return a {@link net.sourceforge.seqware.common.model.Study} object.
+	 */
 	public static Study getStudy(Sample sample){
 		Study study = getStudy(sample.getExperiment());
 		return study;
 	}	
 	
+	/**
+	 * <p>getStudy.</p>
+	 *
+	 * @param lane a {@link net.sourceforge.seqware.common.model.Lane} object.
+	 * @return a {@link net.sourceforge.seqware.common.model.Study} object.
+	 */
 	public static Study getStudy(Lane lane){
 		Study study = getStudy(lane.getSample());
 		return study;
 	}
 	
+	/**
+	 * <p>getStudy.</p>
+	 *
+	 * @param processing a {@link net.sourceforge.seqware.common.model.Processing} object.
+	 * @return a {@link net.sourceforge.seqware.common.model.Study} object.
+	 */
 	public static Study getStudy(Processing processing){
 		//Study study = getStudy(lane.getSample());
 		Set<Lane> lanes = processing.getLanes();
@@ -48,11 +78,23 @@ public class FindRootUtil {
 	}
 	
 	// FOR SEQUENCER RUN
+	/**
+	 * <p>getSequencerRun.</p>
+	 *
+	 * @param lane a {@link net.sourceforge.seqware.common.model.Lane} object.
+	 * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
+	 */
 	public static SequencerRun getSequencerRun(Lane lane){
 		SequencerRun sequencerRun = lane.getSequencerRun();
 		return sequencerRun;
 	}
 	
+	/**
+	 * <p>getSequencerRun.</p>
+	 *
+	 * @param processing a {@link net.sourceforge.seqware.common.model.Processing} object.
+	 * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
+	 */
 	public static SequencerRun getSequencerRun(Processing processing){
 		//Study study = getStudy(lane.getSample());
 		Set<Lane> lanes = processing.getLanes();

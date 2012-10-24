@@ -9,6 +9,7 @@ import java.util.Iterator;
  *
  * @author boconnor
  * @author jbaran
+ * @version $Id: $Id
  */
 public abstract class SeqWareIterator<T> implements Iterator<T> {
 
@@ -37,18 +38,22 @@ public abstract class SeqWareIterator<T> implements Iterator<T> {
 
     /**
      * Implementation of hasNext().
+     *
+     * @return a boolean.
      */
     protected abstract boolean hasNextImpl();
 
     /**
      * Implementation of next().
+     *
+     * @return a T object.
      */
     protected abstract T nextImpl();
 
     /**
-     * Super method for dealing with database iterator specifics, such as closing the DB-iterator when no more data is available.
+     * {@inheritDoc}
      *
-     * @return Returns true if more items are available, otherwise returns false.
+     * Super method for dealing with database iterator specifics, such as closing the DB-iterator when no more data is available.
      */
     @Override
     public final boolean hasNext() {
@@ -61,9 +66,9 @@ public abstract class SeqWareIterator<T> implements Iterator<T> {
     }
 
     /**
-     * Super method for dealing with database iterator specifics, such as closing the DB-iterator when no more data is available.
+     * {@inheritDoc}
      *
-     * @return Next item.
+     * Super method for dealing with database iterator specifics, such as closing the DB-iterator when no more data is available.
      */
     @Override
     public final T next() {
@@ -73,6 +78,8 @@ public abstract class SeqWareIterator<T> implements Iterator<T> {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Removal of subjects cannot be done implicitly from an iterator -- this method is not supported.
      */
     @Override

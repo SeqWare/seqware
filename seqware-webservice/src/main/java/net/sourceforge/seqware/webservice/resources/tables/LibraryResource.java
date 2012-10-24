@@ -20,14 +20,24 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 
+/**
+ * <p>LibraryResource class.</p>
+ *
+ * @author morgantaschuk
+ * @version $Id: $Id
+ */
 public class LibraryResource extends DatabaseResource {
 
   private Long swa;
 
+  /**
+   * <p>Constructor for LibraryResource.</p>
+   */
   public LibraryResource() {
     super("library");
   }
 
+  /** {@inheritDoc} */
   @Override
   protected void doInit() throws ResourceException {
     String swaString = (String) getRequestAttributes().get("swa");
@@ -38,6 +48,11 @@ public class LibraryResource extends DatabaseResource {
     }
   }
 
+  /**
+   * <p>someString.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.webservice.dto.LibraryDto} object.
+   */
   @Get
   public LibraryDto someString() {
     authenticate();

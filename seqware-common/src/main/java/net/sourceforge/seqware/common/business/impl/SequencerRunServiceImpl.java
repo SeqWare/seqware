@@ -15,21 +15,29 @@ import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.SequencerRunWizardDTO;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>SequencerRunServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SequencerRunServiceImpl implements SequencerRunService {
   private SequencerRunDAO sequencerRunDAO = null;
   private LaneDAO laneDAO = null;
   private FileDAO fileDAO = null;
 
+  /**
+   * <p>Constructor for SequencerRunServiceImpl.</p>
+   */
   public SequencerRunServiceImpl() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Sets a private member variable with an instance of an implementation of
    * SequencerRunDAO. This method is called by the Spring framework at run time.
-   * 
-   * @param sequencerRunDAO
-   *          implementation of SequencerRunDAO
    * @see SequencerRunDAO
    */
   public void setSequencerRunDAO(SequencerRunDAO sequencerRunDAO) {
@@ -39,7 +47,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
   /**
    * Sets a private member variable with an instance of an implementation of
    * LaneDAO. This method is called by the Spring framework at run time.
-   * 
+   *
    * @param laneDAO
    *          implementation of LaneDAO
    * @see LaneDAO
@@ -51,7 +59,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
   /**
    * Sets a private member variable with an instance of an implementation of
    * FileDAO. This method is called by the Spring framework at run time.
-   * 
+   *
    * @param fileDAO
    *          implementation of FileDAO
    * @see FileDAO
@@ -61,10 +69,9 @@ public class SequencerRunServiceImpl implements SequencerRunService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of SequencerRun into the database.
-   * 
-   * @param sequencerRunDAO
-   *          instance of SequencerRunDAO
    */
   public void insert(SequencerRun sequencerRun) {
     /*
@@ -105,12 +112,13 @@ public class SequencerRunServiceImpl implements SequencerRunService {
   /**
    * This is being used to create a new SequencerRun object and the correct
    * number of assocated Lanes
-   * 
-   * @param sequencerRunDAO
-   *          instance of SequencerRunDAO
+   *
+   * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
    */
   public void insert(SequencerRunWizardDTO sequencerRun) {
 
+    sequencerRun.setCreateTimestamp(new Date());
+      
     Log.stderr("Counts: " + sequencerRun.getLaneCount());
     TreeSet<Lane> list = new TreeSet<Lane>();
     for (int i = 1; i <= sequencerRun.getLaneCount(); i++) {
@@ -156,7 +164,6 @@ public class SequencerRunServiceImpl implements SequencerRunService {
      * list.add(sequencerRun.getLane7()); list.add(sequencerRun.getLane8());
      * sequencerRun.setLanes(list);
      */
-    sequencerRun.setCreateTimestamp(new Date());
 
     if (sequencerRun.getReadyToProcess() != null && sequencerRun.getReadyToProcess().equals("Y")) {
       sequencerRun.setStatus("ready_to_process");
@@ -167,10 +174,9 @@ public class SequencerRunServiceImpl implements SequencerRunService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of SequencerRun in the database.
-   * 
-   * @param sequencerRun
-   *          instance of SequencerRun
    */
   public void update(SequencerRun sequencerRun) {
 
@@ -184,10 +190,9 @@ public class SequencerRunServiceImpl implements SequencerRunService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Deletes an instance of SequencerRun in the database.
-   * 
-   * @param sequencerRun
-   *          instance of SequencerRun
    */
   public void delete(SequencerRun sequencerRun) {
     // get lanes
@@ -200,6 +205,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
     sequencerRunDAO.delete(sequencerRun);
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<SequencerRun> setProcCountInfo(List<SequencerRun> list) {
     for (SequencerRun sequencerRun : list) {
@@ -218,6 +224,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
     return list;
   }
 
+  /** {@inheritDoc} */
   public List<SequencerRun> list(Registration registration) {
     // get list and delete dublicate
     // Set<SequencerRun> tempList = new
@@ -226,6 +233,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
     return sequencerRunDAO.list(registration, true);
   }
 
+  /** {@inheritDoc} */
   public List<SequencerRun> list(Registration registration, Boolean isAsc) {
     // get list and delete dublicate
     // Set<SequencerRun> tempList = new
@@ -235,11 +243,11 @@ public class SequencerRunServiceImpl implements SequencerRunService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of SequencerRun in the database by the SequencerRun
    * emailAddress, and copies the SequencerRun properties to an instance of
    * SequencerRun.
-   * 
-   * @return instance of SequencerRun, or null if a SequencerRun cannot be found
    */
   public SequencerRun findByName(String name) {
     SequencerRun sequencerRun = null;
@@ -253,6 +261,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
     return sequencerRun;
   }
 
+  /** {@inheritDoc} */
   public SequencerRun findByID(Integer expID) {
     SequencerRun sequencerRun = null;
     if (expID != null) {
@@ -267,6 +276,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
     return sequencerRun;
   }
 
+  /** {@inheritDoc} */
   @Override
   public SequencerRun findBySWAccession(Integer swAccession) {
     SequencerRun sequencerRun = null;
@@ -281,6 +291,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
     return sequencerRun;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<SequencerRun> findByOwnerID(Integer registrationId) {
     List<SequencerRun> sequencerRuns = null;
@@ -296,16 +307,9 @@ public class SequencerRunServiceImpl implements SequencerRunService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Determines if an email address has already been used.
-   * 
-   * @param oldEmail
-   *          The previous email address, or null if this method is being called
-   *          for a new email address
-   * 
-   * @param newEmail
-   *          The email address that is being checked
-   * 
-   * @return true if the newEmail has already been used, and false otherwise
    */
   public boolean hasNameBeenUsed(String oldName, String newName) {
     boolean nameUsed = false;
@@ -331,11 +335,13 @@ public class SequencerRunServiceImpl implements SequencerRunService {
     return nameUsed;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<SequencerRun> findByCriteria(String criteria, boolean isCaseSens) {
     return sequencerRunDAO.findByCriteria(criteria, isCaseSens);
   }
 
+  /** {@inheritDoc} */
   @Override
   public SequencerRun updateDetached(SequencerRun sequencerRun) {
     return sequencerRunDAO.updateDetached(sequencerRun);
@@ -355,28 +361,33 @@ public class SequencerRunServiceImpl implements SequencerRunService {
    * sequencerRun.setLane8((Lane)lanes[0]); } }
    */
 
+    /** {@inheritDoc} */
     @Override
     public List<SequencerRun> list() {
         return sequencerRunDAO.list();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(Registration registration, SequencerRun sequencerRun) {
         sequencerRunDAO.update(registration, sequencerRun);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void insert(Registration registration, SequencerRun sequencerRun) {
         sequencerRun.setCreateTimestamp(new Date());
         sequencerRunDAO.insert(registration, sequencerRun);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void insert(Registration registration, SequencerRunWizardDTO sequencerRun) {
         sequencerRun.setCreateTimestamp(new Date());
         sequencerRunDAO.insert(registration, sequencerRun);
     }
 
+    /** {@inheritDoc} */
     @Override
     public SequencerRun updateDetached(Registration registration, SequencerRun sequencerRun) {
         return sequencerRunDAO.updateDetached(registration, sequencerRun);

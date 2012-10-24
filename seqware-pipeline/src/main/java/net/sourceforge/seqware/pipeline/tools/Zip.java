@@ -7,8 +7,19 @@ import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 
 
+/**
+ * <p>Zip class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class Zip {
   
+  /**
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
+   */
   public static void main(String[] args) {
 
     OptionSet options = null;

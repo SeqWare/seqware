@@ -22,11 +22,14 @@ import java.util.Arrays;
 import org.apache.commons.lang.ArrayUtils;
 
 /**
+ * <p>InMemoryFeaturesByTagPlugin class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class InMemoryFeaturesByTagPlugin extends InMemoryFeaturesByFilterPlugin {
 
+    /** {@inheritDoc} */
     @Override
     protected FeatureFilter getFilter() {
         return new InMemoryFeaturesByTagPlugin.FeaturesByTagFilter();

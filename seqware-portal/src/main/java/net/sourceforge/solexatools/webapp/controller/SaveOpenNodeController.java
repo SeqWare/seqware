@@ -18,6 +18,12 @@ import net.sourceforge.solexatools.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>SaveOpenNodeController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SaveOpenNodeController extends BaseCommandController {
 	private ExperimentService experimentService;
 	private SampleService sampleService;
@@ -25,11 +31,15 @@ public class SaveOpenNodeController extends BaseCommandController {
 	private ProcessingService processingService;
 	private FileService fileService;
 	
+	/**
+	 * <p>Constructor for SaveOpenNodeController.</p>
+	 */
 	public SaveOpenNodeController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_POST});
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -124,41 +134,91 @@ public class SaveOpenNodeController extends BaseCommandController {
 		return ids.get(ids.size()-1);
 	}
 
+	/**
+	 * <p>Getter for the field <code>experimentService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+	 */
 	public ExperimentService getExperimentService() {
 		return experimentService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>experimentService</code>.</p>
+	 *
+	 * @param experimentService a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+	 */
 	public void setExperimentService(ExperimentService experimentService) {
 		this.experimentService = experimentService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>sampleService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	 */
 	public SampleService getSampleService() {
 		return sampleService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sampleService</code>.</p>
+	 *
+	 * @param sampleService a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	 */
 	public void setSampleService(SampleService sampleService) {
 		this.sampleService = sampleService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>laneService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	 */
 	public LaneService getLaneService() {
 		return laneService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>laneService</code>.</p>
+	 *
+	 * @param laneService a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	 */
 	public void setLaneService(LaneService laneService) {
 		this.laneService = laneService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>processingService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+	 */
 	public ProcessingService getProcessingService() {
 		return processingService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>processingService</code>.</p>
+	 *
+	 * @param processingService a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+	 */
 	public void setProcessingService(ProcessingService processingService) {
 		this.processingService = processingService;
 	}
+	/**
+	 * <p>Getter for the field <code>fileService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
+	 */
 	public FileService getFileService() {
 		return fileService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>fileService</code>.</p>
+	 *
+	 * @param fileService a {@link net.sourceforge.seqware.common.business.FileService} object.
+	 */
 	public void setFileService(FileService fileService) {
 		this.fileService = fileService;
 	}

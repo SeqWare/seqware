@@ -21,20 +21,29 @@ import java.util.Iterator;
 
 /**
  * A bit of a hack class, allows us to have getCount as well as iterable
+ *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class InMemoryIterable<T> implements SeqWareIterable<T>{
     private Collection col;      
     
+    /**
+     * <p>Constructor for InMemoryIterable.</p>
+     *
+     * @param col a {@link java.util.Collection} object.
+     */
     public InMemoryIterable(Collection col){
         this.col = col;
     }
 
+    /** {@inheritDoc} */
     @Override
     public long getCount() {
         return col.size();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<T> iterator() {
         return col.iterator();

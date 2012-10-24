@@ -19,20 +19,20 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * 
+ *
  *       A SRA analysis object captures secondary analysis results from a short read dataset.
- *       This analysis can the results of short reads used in assembly, alignment, 
+ *       This analysis can the results of short reads used in assembly, alignment,
  *       abundance instrumentation.  The analysis can also be a list of reads, or
  *       a fasta file of trimmed reads associated with the experiment.  The analysis
  *       can be a QC report or other free text or spreadsheet that is attached
  *       to a SRA object.  Analysis objects can be immediately or eventually passed
- *       downstream for submission to an appropriate archive.  
- *     
- * 
+ *       downstream for submission to an appropriate archive.
+ *
+ *
  * <p>Java class for AnalysisType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="AnalysisType">
  *   &lt;complexContent>
@@ -248,8 +248,9 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ * @author morgantaschuk
+ * @version $Id: $Id
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AnalysisType", propOrder = {
@@ -286,11 +287,8 @@ public class AnalysisType {
 
     /**
      * Gets the value of the title property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getTITLE() {
         return title;
@@ -298,11 +296,10 @@ public class AnalysisType {
 
     /**
      * Sets the value of the title property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setTITLE(String value) {
         this.title = value;
@@ -310,11 +307,8 @@ public class AnalysisType {
 
     /**
      * Gets the value of the parent property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link AnalysisType.PARENT }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.AnalysisType.PARENT} object.
      */
     public AnalysisType.PARENT getPARENT() {
         return parent;
@@ -322,11 +316,10 @@ public class AnalysisType {
 
     /**
      * Sets the value of the parent property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link AnalysisType.PARENT }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.AnalysisType.PARENT}
      */
     public void setPARENT(AnalysisType.PARENT value) {
         this.parent = value;
@@ -334,11 +327,8 @@ public class AnalysisType {
 
     /**
      * Gets the value of the description property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getDESCRIPTION() {
         return description;
@@ -346,11 +336,10 @@ public class AnalysisType {
 
     /**
      * Sets the value of the description property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setDESCRIPTION(String value) {
         this.description = value;
@@ -358,11 +347,8 @@ public class AnalysisType {
 
     /**
      * Gets the value of the analysistype property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link AnalysisType.ANALYSISTYPE }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.AnalysisType.ANALYSISTYPE} object.
      */
     public AnalysisType.ANALYSISTYPE getANALYSISTYPE() {
         return analysistype;
@@ -370,11 +356,10 @@ public class AnalysisType {
 
     /**
      * Sets the value of the analysistype property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link AnalysisType.ANALYSISTYPE }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.AnalysisType.ANALYSISTYPE}
      */
     public void setANALYSISTYPE(AnalysisType.ANALYSISTYPE value) {
         this.analysistype = value;
@@ -382,11 +367,8 @@ public class AnalysisType {
 
     /**
      * Gets the value of the analysisfiles property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link AnalysisType.ANALYSISFILES }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.AnalysisType.ANALYSISFILES} object.
      */
     public AnalysisType.ANALYSISFILES getANALYSISFILES() {
         return analysisfiles;
@@ -394,11 +376,10 @@ public class AnalysisType {
 
     /**
      * Sets the value of the analysisfiles property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link AnalysisType.ANALYSISFILES }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.AnalysisType.ANALYSISFILES}
      */
     public void setANALYSISFILES(AnalysisType.ANALYSISFILES value) {
         this.analysisfiles = value;
@@ -406,11 +387,8 @@ public class AnalysisType {
 
     /**
      * Gets the value of the analysislinks property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link AnalysisType.ANALYSISLINKS }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.AnalysisType.ANALYSISLINKS} object.
      */
     public AnalysisType.ANALYSISLINKS getANALYSISLINKS() {
         return analysislinks;
@@ -418,11 +396,10 @@ public class AnalysisType {
 
     /**
      * Sets the value of the analysislinks property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link AnalysisType.ANALYSISLINKS }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.AnalysisType.ANALYSISLINKS}
      */
     public void setANALYSISLINKS(AnalysisType.ANALYSISLINKS value) {
         this.analysislinks = value;
@@ -430,11 +407,8 @@ public class AnalysisType {
 
     /**
      * Gets the value of the analysisattributes property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link AnalysisType.ANALYSISATTRIBUTES }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.AnalysisType.ANALYSISATTRIBUTES} object.
      */
     public AnalysisType.ANALYSISATTRIBUTES getANALYSISATTRIBUTES() {
         return analysisattributes;
@@ -442,11 +416,10 @@ public class AnalysisType {
 
     /**
      * Sets the value of the analysisattributes property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link AnalysisType.ANALYSISATTRIBUTES }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.AnalysisType.ANALYSISATTRIBUTES}
      */
     public void setANALYSISATTRIBUTES(AnalysisType.ANALYSISATTRIBUTES value) {
         this.analysisattributes = value;
@@ -454,11 +427,8 @@ public class AnalysisType {
 
     /**
      * Gets the value of the alias property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getAlias() {
         return alias;
@@ -466,11 +436,10 @@ public class AnalysisType {
 
     /**
      * Sets the value of the alias property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setAlias(String value) {
         this.alias = value;
@@ -478,11 +447,8 @@ public class AnalysisType {
 
     /**
      * Gets the value of the accession property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getAccession() {
         return accession;
@@ -490,11 +456,10 @@ public class AnalysisType {
 
     /**
      * Sets the value of the accession property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setAccession(String value) {
         this.accession = value;
@@ -502,11 +467,8 @@ public class AnalysisType {
 
     /**
      * Gets the value of the analysisCenter property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getAnalysisCenter() {
         return analysisCenter;
@@ -514,11 +476,10 @@ public class AnalysisType {
 
     /**
      * Sets the value of the analysisCenter property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setAnalysisCenter(String value) {
         this.analysisCenter = value;

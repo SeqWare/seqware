@@ -34,17 +34,23 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>StudyIDFilter class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class StudyIDFilter extends StudyIDResource {
 
+  /** {@inheritDoc} */
   @Override
   public void doInit() {
     super.doInit();
 
   }
 
+  /**
+   * <p>getXml.</p>
+   */
   @Get
   public void getXml() {
     StudyService ss = BeanFactory.getStudyServiceBean();

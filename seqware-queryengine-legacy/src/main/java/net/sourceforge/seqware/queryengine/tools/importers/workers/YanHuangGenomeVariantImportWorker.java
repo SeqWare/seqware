@@ -18,37 +18,45 @@ import net.sourceforge.seqware.queryengine.backend.store.impl.BerkeleyDBStore;
 import net.sourceforge.seqware.queryengine.tools.importers.VariantImporter;
 
 /**
+ * <p>YanHuangGenomeVariantImportWorker class.</p>
+ *
  * @author boconnor
  *
  * A simple worker thread to parse the file http://yh.genomics.org.cn/do.downServlet?file=data/snps/yhsnp_add.gff
  * These are the SNV calls from the YanHuang genome, see http://yh.genomics.org.cn for more information
  * From their README:
- * 
-SNP gff3:
-Col 1: chromosome ID
-Col 2: source of result derived from (for SNP gff3 always "SoapSNP")
-Col 3: type of item (for SNP gff always "SNP")
-Col 4: start (SNP position)
-Col 5: end (certainly it is same to start in SNP)
-Col 6: quality score in phred unit
-Col 7: strand (always "+" because of method)
-Col 8: phase of SNPs, only available if the SNP is in the coding region
-Col 9: this field contain some sub-fields separated by space
-  ID: the unique ID of a SNP. "rs***" is for SNP in dbSNP, “NOM1_” for novel SNPs.
-  status: if the SNP is known or novel? "dbSNP" is for those in NCBI dbSNP dataset and "novel" for those not found in dbSNP
-  ref: reference base of NCBI at the site
-  allele: Diploid alleles of on this position
-  support1: number of reads support for first allele.
-  support2: number of reads support for second allele
-  location: annotated region where the SNP located
- * 
+ *
+ *SNP gff3:
+ *Col 1: chromosome ID
+ *Col 2: source of result derived from (for SNP gff3 always "SoapSNP")
+ *Col 3: type of item (for SNP gff always "SNP")
+ *Col 4: start (SNP position)
+ *Col 5: end (certainly it is same to start in SNP)
+ *Col 6: quality score in phred unit
+ *Col 7: strand (always "+" because of method)
+ *Col 8: phase of SNPs, only available if the SNP is in the coding region
+ *Col 9: this field contain some sub-fields separated by space
+ *  ID: the unique ID of a SNP. "rs***" is for SNP in dbSNP, “NOM1_” for novel SNPs.
+ *  status: if the SNP is known or novel? "dbSNP" is for those in NCBI dbSNP dataset and "novel" for those not found in dbSNP
+ *  ref: reference base of NCBI at the site
+ *  allele: Diploid alleles of on this position
+ *  support1: number of reads support for first allele.
+ *  support2: number of reads support for second allele
+ *  location: annotated region where the SNP located
+ * @version $Id: $Id
  */
 public class YanHuangGenomeVariantImportWorker extends ImportWorker {
 
 
+  /**
+   * <p>Constructor for YanHuangGenomeVariantImportWorker.</p>
+   */
   public YanHuangGenomeVariantImportWorker() { }
 
 
+  /**
+   * <p>run.</p>
+   */
   public void run() {
 
     // open the file

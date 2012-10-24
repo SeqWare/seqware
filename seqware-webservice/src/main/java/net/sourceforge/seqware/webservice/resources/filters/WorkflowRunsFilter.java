@@ -37,17 +37,21 @@ import org.restlet.resource.Post;
 
 /**
  * We presume there is either a runId or a testId, not both.
+ *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class WorkflowRunsFilter extends BasicResource {
 
     private String workflowId;
 
+    /** {@inheritDoc} */
     @Override
     public void doInit() {
         workflowId = (String) getRequestAttributes().get("workflowId");
     }
 
+    /** {@inheritDoc} */
     @Override
     protected Representation get() {
         String path = this.getRequest().getResourceRef().getPath();
@@ -60,6 +64,7 @@ public class WorkflowRunsFilter extends BasicResource {
         return rep;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected Representation post(Representation entity) {
         authenticate();
@@ -78,6 +83,14 @@ public class WorkflowRunsFilter extends BasicResource {
         return null;
     }
 
+    /**
+     * <p>postRun.</p>
+     *
+     * @param entity a {@link org.restlet.representation.Representation} object.
+     * @return a {@link org.restlet.representation.Representation} object.
+     * @throws java.io.IOException if any.
+     * @throws java.lang.Exception if any.
+     */
     @Post("txt")
     public Representation postRun(Representation entity) throws IOException, Exception {
         authenticate();

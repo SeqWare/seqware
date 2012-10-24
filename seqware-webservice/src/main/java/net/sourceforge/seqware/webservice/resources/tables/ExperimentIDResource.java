@@ -39,15 +39,23 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>ExperimentIDResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class ExperimentIDResource extends DatabaseIDResource {
 
+    /**
+     * <p>Constructor for ExperimentIDResource.</p>
+     */
     public ExperimentIDResource() {
         super("experimentId");
     }
 
+    /**
+     * <p>getXml.</p>
+     */
     @Get
     public void getXml() {
         ExperimentService ss = BeanFactory.getExperimentServiceBean();
@@ -71,6 +79,7 @@ public class ExperimentIDResource extends DatabaseIDResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
+    /** {@inheritDoc} */
     @Override
     @Put
     public Representation put(Representation entity) {

@@ -10,7 +10,22 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 
 
+/**
+ * <p>Validate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class Validate {
+  /**
+   * <p>Fastq.</p>
+   *
+   * @param file a {@link java.io.File} object.
+   * @param platform a {@link java.lang.String} object.
+   * @param aligner a {@link java.lang.String} object.
+   * @param ends a int.
+   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   */
   public static ReturnValue Fastq(File file, String platform, String aligner,
       int ends) {
     // Make sure file exists and is not empty

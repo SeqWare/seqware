@@ -12,11 +12,21 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>LibrarySelectionDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class LibrarySelectionDAOHibernate extends HibernateDaoSupport implements LibrarySelectionDAO {
+  /**
+   * <p>Constructor for LibrarySelectionDAOHibernate.</p>
+   */
   public LibrarySelectionDAOHibernate() {
     super();
   }
 
+  /** {@inheritDoc} */
   public List<LibrarySelection> list(Registration registration) {
     ArrayList<LibrarySelection> objects = new ArrayList<LibrarySelection>();
     if (registration == null)
@@ -31,6 +41,7 @@ public class LibrarySelectionDAOHibernate extends HibernateDaoSupport implements
     return objects;
   }
 
+  /** {@inheritDoc} */
   public LibrarySelection findByID(Integer id) {
     String query = "from LibrarySelection as l where l.librarySelectionId = ?";
     LibrarySelection obj = null;
@@ -42,6 +53,7 @@ public class LibrarySelectionDAOHibernate extends HibernateDaoSupport implements
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   public LibrarySelection updateDetached(LibrarySelection librarySelection) {
     LibrarySelection dbObject = findByID(librarySelection.getLibrarySelectionId());
@@ -57,6 +69,7 @@ public class LibrarySelectionDAOHibernate extends HibernateDaoSupport implements
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<LibrarySelection> list() {
         throw new UnsupportedOperationException("Not supported yet.");

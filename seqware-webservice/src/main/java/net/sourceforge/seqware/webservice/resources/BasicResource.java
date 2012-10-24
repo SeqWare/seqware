@@ -38,6 +38,7 @@ import com.google.common.annotations.VisibleForTesting;
  * https://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_extend_the_web_service#Basic_Resource
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class BasicResource extends WadlServerResource {
 
@@ -47,6 +48,9 @@ public class BasicResource extends WadlServerResource {
     private static RegistrationService registrationService;
     
 
+    /**
+     * <p>Constructor for BasicResource.</p>
+     */
     public BasicResource() {
         super();
     }
@@ -58,11 +62,17 @@ public class BasicResource extends WadlServerResource {
       return BasicResource.registrationService;
     }
     
+    /**
+     * <p>Setter for the field <code>registrationService</code>.</p>
+     *
+     * @param registrationService a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+     */
     @VisibleForTesting
     protected static void setRegistrationService(RegistrationService registrationService) {
       BasicResource.registrationService = registrationService;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
@@ -80,11 +90,22 @@ public class BasicResource extends WadlServerResource {
 
     }
 
+    /**
+     * <p>authenticate.</p>
+     *
+     * @throws org.restlet.resource.ResourceException if any.
+     */
     protected void authenticate() throws ResourceException {
         registration = BasicResource.getRegistrationService().
                 findByEmailAddress(this.getRequest().getChallengeResponse().getIdentifier()); 
     }
 
+    /**
+     * <p>testIfNull.</p>
+     *
+     * @param o a {@link java.lang.Object} object.
+     * @return a {@link java.lang.Object} object.
+     */
     protected Object testIfNull(Object o) {
        /* if (o == null) {
             throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Object cannot be found");

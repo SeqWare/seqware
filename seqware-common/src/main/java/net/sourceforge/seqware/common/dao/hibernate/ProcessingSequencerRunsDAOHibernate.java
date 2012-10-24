@@ -12,7 +12,14 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>ProcessingSequencerRunsDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ProcessingSequencerRunsDAOHibernate extends HibernateDaoSupport implements ProcessingSequencerRunsDAO {
+  /** {@inheritDoc} */
   @Override
   public void insert(ProcessingSequencerRuns processingSequencerRuns) {
     this.getHibernateTemplate().save(processingSequencerRuns);
@@ -25,6 +32,7 @@ public class ProcessingSequencerRunsDAOHibernate extends HibernateDaoSupport imp
    * net.sourceforge.seqware.common.dao.hibernate.ProcessingSequencerRunsDAO
    * #update ( net.sourceforge.seqware.common.model.ProcessingSequencerRuns)
    */
+  /** {@inheritDoc} */
   @Override
   public void update(ProcessingSequencerRuns processingSequencerRuns) {
     this.getHibernateTemplate().update(processingSequencerRuns);
@@ -37,6 +45,7 @@ public class ProcessingSequencerRunsDAOHibernate extends HibernateDaoSupport imp
    * net.sourceforge.seqware.common.dao.hibernate.ProcessingSequencerRunsDAO
    * #delete ( net.sourceforge.seqware.common.model.ProcessingSequencerRuns)
    */
+  /** {@inheritDoc} */
   @Override
   public void delete(ProcessingSequencerRuns processingSequencerRuns) {
     this.getHibernateTemplate().delete(processingSequencerRuns);
@@ -51,6 +60,7 @@ public class ProcessingSequencerRunsDAOHibernate extends HibernateDaoSupport imp
    * (net.sourceforge.seqware.common.model.Processing,
    * net.sourceforge.seqware.common.model.SequencerRun)
    */
+  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("rawtypes")
   public ProcessingSequencerRuns findByProcessingSequencerRun(Processing processing, SequencerRun sequencerRun) {
@@ -64,6 +74,7 @@ public class ProcessingSequencerRunsDAOHibernate extends HibernateDaoSupport imp
     return obj;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ProcessingSequencerRuns updateDetached(ProcessingSequencerRuns processingSequencerRuns) {
     ProcessingSequencerRuns dbObject = findByProcessingSequencerRun(processingSequencerRuns.getProcessing(),
@@ -80,6 +91,7 @@ public class ProcessingSequencerRunsDAOHibernate extends HibernateDaoSupport imp
     return null;
   }
 
+    /** {@inheritDoc} */
     @Override
     public List<ProcessingSequencerRuns> list() {
         throw new UnsupportedOperationException("Not supported yet.");

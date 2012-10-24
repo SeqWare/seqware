@@ -26,11 +26,14 @@ import net.sourceforge.seqware.common.model.lists.IUSList;
 
 
 /**
+ * <p>XmlizeIUSSortedSet class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class XmlizeIUSSortedSet extends XmlAdapter<IUSList, SortedSet<IUS>>{
 
+    /** {@inheritDoc} */
     @Override
     public SortedSet<IUS> unmarshal(IUSList vt) throws Exception {
         SortedSet<IUS> iusSet = new TreeSet<IUS>();
@@ -41,6 +44,7 @@ public class XmlizeIUSSortedSet extends XmlAdapter<IUSList, SortedSet<IUS>>{
         return iusSet;        
     }
 
+    /** {@inheritDoc} */
     @Override
     public IUSList marshal(SortedSet<IUS> bt) throws Exception {
         if (bt != null)

@@ -29,14 +29,21 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 
 /**
+ * <p>DatabaseResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class DatabaseResource extends BasicResource {
 
     protected String table;
     
 
+    /**
+     * <p>Constructor for DatabaseResource.</p>
+     *
+     * @param table a {@link java.lang.String} object.
+     */
     public DatabaseResource(String table) {
         this.table = table;
     }

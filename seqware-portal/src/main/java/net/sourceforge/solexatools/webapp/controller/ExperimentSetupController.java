@@ -21,8 +21,10 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
  * RegistrationSetupController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class ExperimentSetupController extends BaseCommandController {
 
   private StudyService studyService;
@@ -32,11 +34,15 @@ public class ExperimentSetupController extends BaseCommandController {
   private LibrarySourceService librarySourceService;
   private LibraryStrategyService libraryStrategyService;
 
+  /**
+   * <p>Constructor for ExperimentSetupController.</p>
+   */
   public ExperimentSetupController() {
     super();
     setSupportedMethods(new String[] {METHOD_GET});
   }
 
+  /** {@inheritDoc} */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
       HttpServletResponse response)
@@ -121,52 +127,112 @@ public class ExperimentSetupController extends BaseCommandController {
   }
 
 
+  /**
+   * <p>Getter for the field <code>librarySelectionService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.LibrarySelectionService} object.
+   */
   public LibrarySelectionService getLibrarySelectionService() {
     return librarySelectionService;
   }
 
+  /**
+   * <p>Setter for the field <code>librarySelectionService</code>.</p>
+   *
+   * @param librarySelectionService a {@link net.sourceforge.seqware.common.business.LibrarySelectionService} object.
+   */
   public void setLibrarySelectionService(
       LibrarySelectionService librarySelectionService) {
     this.librarySelectionService = librarySelectionService;
   }
 
+  /**
+   * <p>Getter for the field <code>librarySourceService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.LibrarySourceService} object.
+   */
   public LibrarySourceService getLibrarySourceService() {
     return librarySourceService;
   }
 
+  /**
+   * <p>Setter for the field <code>librarySourceService</code>.</p>
+   *
+   * @param librarySourceService a {@link net.sourceforge.seqware.common.business.LibrarySourceService} object.
+   */
   public void setLibrarySourceService(LibrarySourceService librarySourceService) {
     this.librarySourceService = librarySourceService;
   }
 
+  /**
+   * <p>Getter for the field <code>libraryStrategyService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.LibraryStrategyService} object.
+   */
   public LibraryStrategyService getLibraryStrategyService() {
     return libraryStrategyService;
   }
 
+  /**
+   * <p>Setter for the field <code>libraryStrategyService</code>.</p>
+   *
+   * @param libraryStrategyService a {@link net.sourceforge.seqware.common.business.LibraryStrategyService} object.
+   */
   public void setLibraryStrategyService(
       LibraryStrategyService libraryStrategyService) {
     this.libraryStrategyService = libraryStrategyService;
   }
 
+  /**
+   * <p>Getter for the field <code>platformService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.PlatformService} object.
+   */
   public PlatformService getPlatformService() {
     return platformService;
   }
 
+  /**
+   * <p>Setter for the field <code>platformService</code>.</p>
+   *
+   * @param platformService a {@link net.sourceforge.seqware.common.business.PlatformService} object.
+   */
   public void setPlatformService(PlatformService platformService) {
     this.platformService = platformService;
   }
 
+  /**
+   * <p>Getter for the field <code>experimentService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+   */
   public ExperimentService getExperimentService() {
     return experimentService;
   }
 
+  /**
+   * <p>Setter for the field <code>experimentService</code>.</p>
+   *
+   * @param experimentService a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+   */
   public void setExperimentService(ExperimentService experimentService) {
     this.experimentService = experimentService;
   }
 
+  /**
+   * <p>Getter for the field <code>studyService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.StudyService} object.
+   */
   public StudyService getStudyService() {
     return studyService;
   }
 
+  /**
+   * <p>Setter for the field <code>studyService</code>.</p>
+   *
+   * @param studyService a {@link net.sourceforge.seqware.common.business.StudyService} object.
+   */
   public void setStudyService(StudyService studyService) {
     this.studyService = studyService;
   }

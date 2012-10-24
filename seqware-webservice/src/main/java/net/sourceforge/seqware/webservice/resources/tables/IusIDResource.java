@@ -42,18 +42,26 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>IusIDResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class IusIDResource extends DatabaseIDResource {
 
     private Logger logger;
 
+    /**
+     * <p>Constructor for IusIDResource.</p>
+     */
     public IusIDResource() {
         super("iusId");
         logger = Logger.getLogger(IusIDResource.class);
     }
 
+    /**
+     * <p>getXml.</p>
+     */
     @Get
     public void getXml() {
         authenticate();
@@ -78,6 +86,7 @@ public class IusIDResource extends DatabaseIDResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
+    /** {@inheritDoc} */
     @Override
     public Representation put(Representation entity) {
         authenticate();

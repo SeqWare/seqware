@@ -14,8 +14,20 @@ import java.util.Map;
 import java.util.Properties;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>MapTools class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class MapTools {
 
+    /**
+     * <p>ini2Map.</p>
+     *
+     * @param iniFile a {@link java.lang.String} object.
+     * @param hm a {@link java.util.Map} object.
+     */
     public static void ini2Map(String iniFile, Map<String, String> hm) {
         ini2Map(iniFile, hm, false);
     }
@@ -38,7 +50,7 @@ public class MapTools {
      * doesn't know about the contents of the metadata key-values other than
      * they are ":" delimited with key=value.
      *
-     * @param iniFile
+     * @param iniFile a {@link java.lang.String} object.
      * @param hm a HashMap to be filled with key and details as key-values in a
      * nested HashMap.
      */
@@ -81,6 +93,13 @@ public class MapTools {
 
     }
 
+    /**
+     * <p>ini2Map.</p>
+     *
+     * @param iniFile a {@link java.lang.String} object.
+     * @param hm a {@link java.util.Map} object.
+     * @param keyToUpper a boolean.
+     */
     public static void ini2Map(String iniFile, Map<String, String> hm, boolean keyToUpper) {
         // Load config ini from disk
         try {
@@ -92,6 +111,14 @@ public class MapTools {
         }
     }
 
+    /**
+     * <p>ini2Map.</p>
+     *
+     * @param iniFile a {@link java.io.InputStream} object.
+     * @param hm a {@link java.util.Map} object.
+     * @param keyToUpper a boolean.
+     * @throws java.io.IOException if any.
+     */
     public static void ini2Map(InputStream iniFile, Map<String, String> hm, boolean keyToUpper) throws IOException {
         // Load config ini from stream
         Properties config = new Properties();
@@ -113,6 +140,9 @@ public class MapTools {
     /**
      * Method to getValues all "--key=value" or "--key value" parameters and add
      * them to hashmap
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @param hm a {@link java.util.Map} object.
      */
     public static void cli2Map(String[] args, Map<String, String> hm) {
         if (args == null || hm == null) {
@@ -147,6 +177,12 @@ public class MapTools {
     /*
      * Iterate through a Map and change all Strings to ints where possible
      */
+    /**
+     * <p>mapString2Int.</p>
+     *
+     * @param map a {@link java.util.Map} object.
+     * @return a {@link java.util.Map} object.
+     */
     public static Map mapString2Int(Map map) {
         Map<String, Object> result = new HashMap<String, Object>();
         Iterator iter = map.keySet().iterator();
@@ -170,6 +206,11 @@ public class MapTools {
      * FIXME: Here we are assuming the variable is the entire value. Instead,
      * parse the value in case it is embeded. i.e. key=foo${value2}xxx
      */
+    /**
+     * <p>mapExpandVariables.</p>
+     *
+     * @param map a {@link java.util.Map} object.
+     */
     public static void mapExpandVariables(Map map) {
         Iterator iter = map.keySet().iterator();
         while (iter.hasNext()) {
@@ -191,6 +232,12 @@ public class MapTools {
         }
     }
 
+    /**
+     * <p>iniString2Map.</p>
+     *
+     * @param iniString a {@link java.lang.String} object.
+     * @return a {@link java.util.Map} object.
+     */
     public static Map<String, String> iniString2Map(String iniString) {
         Map<String, String> result = new HashMap<String, String>();
         String[] lines = iniString.split("\n");

@@ -30,15 +30,22 @@ import java.util.zip.ZipFile;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * <p>ZipFileUtil class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ZipFileUtil {
 
   /**
    * Unpack a zip file
-   * 
-   * @param theFile
-   * @param targetDir
+   *
+   * @param theFile a {@link java.io.File} object.
+   * @param targetDir a {@link java.io.File} object.
    * @return the file
-   * @throws IOException
+   * @throws java.io.IOException if any.
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
    */
   public static java.io.File unpackArchive(File theFile, File targetDir, HttpServletRequest request) throws IOException {
 	  
@@ -68,6 +75,13 @@ public class ZipFileUtil {
       return theFile;
   }
 
+  /**
+   * <p>copyInputStream.</p>
+   *
+   * @param in a {@link java.io.InputStream} object.
+   * @param out a {@link java.io.OutputStream} object.
+   * @throws java.io.IOException if any.
+   */
   public static void copyInputStream(InputStream in, OutputStream out) throws IOException {
       byte[] buffer = new byte[1024];
       int len = in.read(buffer);
@@ -79,6 +93,12 @@ public class ZipFileUtil {
       out.close();
   }
 
+  /**
+   * <p>buildDirectory.</p>
+   *
+   * @param file a {@link java.io.File} object.
+   * @return a boolean.
+   */
   public static boolean buildDirectory(File file) {
       return file.exists() || file.mkdirs();
   }

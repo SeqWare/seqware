@@ -6,6 +6,12 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 
+/**
+ * <p>StudyType class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class StudyType implements Serializable {
 	/**
 	 * 
@@ -15,6 +21,12 @@ public class StudyType implements Serializable {
 	private String  name;
 	private String	description;
 	
+	/**
+	 * <p>compareTo.</p>
+	 *
+	 * @param that a {@link net.sourceforge.seqware.common.model.StudyType} object.
+	 * @return a int.
+	 */
 	public int compareTo(StudyType that) {
 		if(that == null)
 			return -1;
@@ -27,6 +39,7 @@ public class StudyType implements Serializable {
 
 		return(that.getStudyTypeId().compareTo(this.getStudyTypeId()));
 	}
+        /** {@inheritDoc} */
         @Override
 	public String toString() {
 		return new ToStringBuilder(this)
@@ -34,6 +47,7 @@ public class StudyType implements Serializable {
 			.append("name", getName())
 			.toString();
 	}
+        /** {@inheritDoc} */
         @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;
@@ -43,6 +57,7 @@ public class StudyType implements Serializable {
 			.append(this.getName(), castOther.getName())
 			.isEquals();
 	}
+        /** {@inheritDoc} */
         @Override
 	public int hashCode() {
 		return new HashCodeBuilder()
@@ -50,30 +65,65 @@ public class StudyType implements Serializable {
 			.toHashCode();
 	}
 
+    /**
+     * <p>Getter for the field <code>studyTypeId</code>.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     public Integer getStudyTypeId() {
         return studyTypeId;
     }
 
+    /**
+     * <p>Setter for the field <code>studyTypeId</code>.</p>
+     *
+     * @param studyTypeId a {@link java.lang.Integer} object.
+     */
     public void setStudyTypeId(Integer studyTypeId) {
         this.studyTypeId = studyTypeId;
     }
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * <p>Setter for the field <code>name</code>.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * <p>Getter for the field <code>description</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * <p>Setter for the field <code>description</code>.</p>
+     *
+     * @param description a {@link java.lang.String} object.
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * <p>Getter for the field <code>serialVersionUID</code>.</p>
+     *
+     * @return a long.
+     */
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }

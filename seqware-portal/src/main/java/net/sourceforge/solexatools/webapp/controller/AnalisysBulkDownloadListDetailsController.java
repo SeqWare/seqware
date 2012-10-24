@@ -27,12 +27,21 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>AnalisysBulkDownloadListDetailsController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class AnalisysBulkDownloadListDetailsController extends BaseCommandController {
 	private WorkflowRunService workflowRunService;
 	private SampleService sampleService;
 	private LaneService laneService;
 	private ProcessingService processingService;
 	
+	/**
+	 * <p>Constructor for AnalisysBulkDownloadListDetailsController.</p>
+	 */
 	public AnalisysBulkDownloadListDetailsController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
@@ -67,6 +76,7 @@ public class AnalisysBulkDownloadListDetailsController extends BaseCommandContro
 		return isAsc;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)
@@ -231,34 +241,74 @@ public class AnalisysBulkDownloadListDetailsController extends BaseCommandContro
 		return typeList;
 	}
 
+	/**
+	 * <p>Getter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public WorkflowRunService getWorkflowRunService() {
 		return workflowRunService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @param workflowRunService a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public void setWorkflowRunService(WorkflowRunService workflowRunService) {
 		this.workflowRunService = workflowRunService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>sampleService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	 */
 	public SampleService getSampleService() {
 		return sampleService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sampleService</code>.</p>
+	 *
+	 * @param sampleService a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	 */
 	public void setSampleService(SampleService sampleService) {
 		this.sampleService = sampleService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>laneService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	 */
 	public LaneService getLaneService() {
 		return laneService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>laneService</code>.</p>
+	 *
+	 * @param laneService a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	 */
 	public void setLaneService(LaneService laneService) {
 		this.laneService = laneService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>processingService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+	 */
 	public ProcessingService getProcessingService() {
 		return processingService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>processingService</code>.</p>
+	 *
+	 * @param processingService a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+	 */
 	public void setProcessingService(ProcessingService processingService) {
 		this.processingService = processingService;
 	}

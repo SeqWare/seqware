@@ -16,8 +16,15 @@ import net.sourceforge.seqware.common.model.Workflow;
 
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>SampleReportDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SampleReportDAOHibernate extends HibernateDaoSupport implements SampleReportDAO {
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public List<String> getStatusesForStudy(Study study) {
@@ -30,6 +37,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     return statuses;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<String> getStatusesForWorkflow(Study study, Workflow workflow) {
     String query = "select distinct status from sample_report where study_id = ? and workflow_id = ?";
@@ -43,6 +51,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     return statuses;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public List<Workflow> getWorkflowsForStudy(Study study) {
@@ -56,6 +65,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     return usedWorkflows;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public List<Workflow> getWorkflows(SequencerRun seqRun) {
@@ -79,6 +89,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     }
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public int countOfStatus(Study study, String status) {
@@ -91,6 +102,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     return count;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public int countOfStatus(Study study, Workflow workflow, String status) {
@@ -104,6 +116,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     return count;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public int countOfStatus(SequencerRun seqRun, Workflow workflow, String status) {
@@ -128,6 +141,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     }
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public int countOfStatus(SequencerRun seqRun, String status) {
@@ -151,6 +165,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     }
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public int countOfRows(SequencerRun seqRun) {
@@ -173,6 +188,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     }
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public List<Sample> getChildSamples(Study study) {
@@ -187,6 +203,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     return childSamples;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public String getStatus(Study study, Sample childSample, Workflow workflow) {
@@ -200,6 +217,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     return status;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public String getStatus(Study study, Sample sample, IUS ius, Lane lane, SequencerRun seqRun, Workflow workflow) {
@@ -216,6 +234,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     return status;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<SampleReportRow> getRowsForSequencerRun(SequencerRun sr) {
     String query = "from SampleReportRow as sr where sr.sequencerRun.sequencerRunId = ?";
@@ -225,6 +244,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     return list;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<SampleReportRow> getRowsWithSequencerRuns() {
     String query = "from SampleReportRow as sr where sr.sequencerRun.sequencerRunId is not null";
@@ -233,6 +253,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     return list;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public List<String> getStatusesForSequencerRun(SequencerRun seqRun) {
@@ -255,6 +276,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<String> getStatusesForWorkflow(SequencerRun seqRun, Workflow workflow) {
     if (seqRun != null) {
@@ -279,6 +301,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<SequencerRunReportId> getSequencerRunReportIds(SequencerRun seqRun, String sortField, String sortOrder,
       int offset, int limit) {
@@ -327,6 +350,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     return keys;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<SequencerRunReportId> getSequencerRunReportIds(SequencerRun seqRun) {
     return getSequencerRunReportIds(seqRun, null, null, 0, Integer.MAX_VALUE);

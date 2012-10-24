@@ -26,19 +26,26 @@ import org.junit.runner.RunWith;
 /**
  * This test suite tests a HBaseStorageBackend using ProtoBuffer serialization
  * and models that are aware of (and can optimize) against a HBase back-end while using Map/Reduce.
- * 
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 @RunWith(DynamicSuite.class)
 public class MRHBaseModelHBaseStoragePBSerializationSuite {
 
+    /**
+     * <p>setupSuite.</p>
+     */
     @BeforeClass
     public static void setupSuite() {
         Logger.getLogger(MRHBaseModelHBaseStoragePBSerializationSuite.class.getName()).info( "Running test suite with HBase-aware+MapReduce objects using Protobuf serialization to HBase");
         SWQEFactory.setFactoryBackendType(SWQEFactory.Model_Type.MRHBASE, SWQEFactory.Storage_Type.HBASE_STORAGE, SWQEFactory.Serialization_Type.PROTOBUF);
     }
 
+    /**
+     * <p>tearDownSuite.</p>
+     */
     @AfterClass
     public static void tearDownSuite() {
         Logger.getLogger(MRHBaseModelHBaseStoragePBSerializationSuite.class.getName()).info( "Ending test suite and resetting");

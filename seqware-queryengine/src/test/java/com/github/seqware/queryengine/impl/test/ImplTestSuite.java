@@ -24,17 +24,26 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
- * Run all the tests in this directory which are implementation-specific. 
+ * Run all the tests in this directory which are implementation-specific.
+ *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 @RunWith(DynamicSuite.class)
 public class ImplTestSuite {
 
+    /**
+     * <p>setupSuite.</p>
+     */
     @BeforeClass
     public static void setupSuite() {
         Logger.getLogger(ImplTestSuite.class.getName()).info( "Running test suite for implementation-specific tests");
     }
     
+    /**
+     * <p>tearDownSuite.</p>
+     */
     @AfterClass
     public static void tearDownSuite(){
         Logger.getLogger(ImplTestSuite.class.getName()).info( "Ending test suite and resetting");

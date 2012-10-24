@@ -22,24 +22,26 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * Purpose:
  *
- * This module takes a BerkeleyDB SeqWare Query Engine database and 
+ * This module takes a BerkeleyDB SeqWare Query Engine database and
  * dumps the variants as a series of BED files, one per contig.
- * 
+ *
  * The overall flow for this module is to call
  * <ul>
  *   <li>BEDExporter</li>
  * </ul>
- * 
+ *
  * The input is a zip file of a SeqWare Query Engine database.
- * 
+ *
  * The output is a zip file of BED files for each contig.
- * 
+ *
  * Sample of commands this actually runs:
- * 
+ *
  * /home/solexa/programs/jdk1.6.0_13/bin/java -Djava.library.path=/home/solexa/programs/BerkeleyDB.4.7/lib -cp /home/solexa/svnroot/solexatools/solexa-queryengine/tools/java/lib/db.jar:/home/solexa/svnroot/solexatools/solexa-queryengine/tools/java/dist/seqware-qe-0.2.0.jar net.sourceforge.seqware.queryengine.tools.BEDExporter /state/partition1/tmp/solexa/bestscore_no_pcr_duplicates_mismatch_only_last_5_bases_removed_20090804/bbed_0.2.0_20090826 test . true true 0 100000 0 0 0 false 0 0-100 0-100 4294967296 true true chr22 not_dbSNP
- * 
+ *
  * Notes/TODO/FIXME:
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class DumpVariantDB extends Module {
@@ -49,6 +51,11 @@ public class DumpVariantDB extends Module {
   private File bedTempDir = null;
   private File bedOutputDir = null;
   
+  /**
+   * <p>getOptionParser.</p>
+   *
+   * @return a {@link joptsimple.OptionParser} object.
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("local-temp-path").withRequiredArg();
@@ -73,6 +80,11 @@ public class DumpVariantDB extends Module {
     return(parser);
   }
   
+  /**
+   * <p>get_syntax.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String get_syntax() {
     OptionParser parser = getOptionParser();
     StringWriter output = new StringWriter();
@@ -85,6 +97,7 @@ public class DumpVariantDB extends Module {
     }
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue init() {
     
@@ -124,8 +137,10 @@ public class DumpVariantDB extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Things to check:
-   * * 
+   * *
    */
   @Override
   public ReturnValue do_test() {
@@ -148,6 +163,7 @@ public class DumpVariantDB extends Module {
     
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
 
@@ -165,6 +181,7 @@ public class DumpVariantDB extends Module {
     
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
     
@@ -194,6 +211,7 @@ public class DumpVariantDB extends Module {
  
   }
   
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
 
@@ -231,6 +249,7 @@ public class DumpVariantDB extends Module {
     return(variantExportRV);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     
@@ -242,6 +261,7 @@ public class DumpVariantDB extends Module {
   }
   
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue clean_up() {
     ReturnValue ret = new ReturnValue();

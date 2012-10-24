@@ -27,13 +27,21 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
 /**
+ * <p>CheckForCycles class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class CheckForCycles {
 
     private StringBuilder results = new StringBuilder();
 
+    /**
+     * <p>checkStudy.</p>
+     *
+     * @param studySwa a {@link java.lang.Integer} object.
+     * @return a {@link java.lang.String} object.
+     */
     public String checkStudy(Integer studySwa) {
             StudyService ss = BeanFactory.getStudyServiceBean();
             Study study = ss.findBySWAccession(studySwa);
@@ -73,6 +81,12 @@ public class CheckForCycles {
 
     }
 
+    /**
+     * <p>checkSample.</p>
+     *
+     * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+     * @return a {@link java.util.Set} object.
+     */
     public Set<Sample> checkSample(Sample sample) {
         Set<Sample> samples = new TreeSet<Sample>();
         List<Sample> samplePath = new ArrayList<Sample>();
@@ -101,6 +115,11 @@ public class CheckForCycles {
         }
     }
 
+    /**
+     * <p>checkProcessing.</p>
+     *
+     * @param processing a {@link net.sourceforge.seqware.common.model.Processing} object.
+     */
     public void checkProcessing(Processing processing) {
         List<Processing> processingPath = new ArrayList<Processing>();
         processingPath.add(processing);

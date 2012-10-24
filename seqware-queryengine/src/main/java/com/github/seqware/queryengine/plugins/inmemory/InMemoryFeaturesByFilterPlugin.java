@@ -28,13 +28,20 @@ import java.util.Set;
  *
  * @author dyuen
  * @author jbaran
+ * @version $Id: $Id
  */
 public abstract class InMemoryFeaturesByFilterPlugin extends AbstractMRInMemoryPlugin {
     private Object[] parameters;    
     private Set<Feature> accumulator = new HashSet<Feature>();
     
+    /**
+     * <p>getFilter.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.plugins.inmemory.FeatureFilter} object.
+     */
     protected abstract FeatureFilter getFilter();
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue init(FeatureSet inputSet, Object ... parameters) {
         this.inputSet = inputSet;
@@ -42,6 +49,7 @@ public abstract class InMemoryFeaturesByFilterPlugin extends AbstractMRInMemoryP
         return new ReturnValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue map(Feature feature, FeatureSet mappedSet) {
         boolean result = getFilter().featurePasses(feature, parameters);
@@ -55,12 +63,14 @@ public abstract class InMemoryFeaturesByFilterPlugin extends AbstractMRInMemoryP
         return new ReturnValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue reduce(FeatureSet mappedSet, FeatureSet resultSet) {
         // doesn't really do anything
         return new ReturnValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeatureSet getFinalResult() {
         super.performInMemoryRun();
@@ -74,12 +84,14 @@ public abstract class InMemoryFeaturesByFilterPlugin extends AbstractMRInMemoryP
         return fSet;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue reduceInit() {
         // doesn't really do anything
         return new ReturnValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ReturnValue mapInit() {
         // doesn't really do anything

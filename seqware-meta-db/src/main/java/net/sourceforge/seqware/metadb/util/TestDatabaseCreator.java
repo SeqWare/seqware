@@ -9,6 +9,12 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import java.io.InputStreamReader;
 
+/**
+ * <p>TestDatabaseCreator class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class TestDatabaseCreator {
 
     private final static String POSTGRE_DB = "postgres";
@@ -25,6 +31,11 @@ public class TestDatabaseCreator {
     private static boolean first_time_created = true;
     private static Logger logger = Logger.getLogger(TestDatabaseCreator.class);
     
+    /**
+     * <p>createDatabase.</p>
+     *
+     * @throws java.sql.SQLException if any.
+     */
     public static void createDatabase() throws SQLException {
 
         if (!first_time_created && !database_changed) {
@@ -54,6 +65,11 @@ public class TestDatabaseCreator {
         database_changed = false;
     }
 
+    /**
+     * <p>dropDatabase.</p>
+     *
+     * @throws java.sql.SQLException if any.
+     */
     public static void dropDatabase() throws SQLException {
         Connection connectionToPostgres = null;
         try {
@@ -69,6 +85,9 @@ public class TestDatabaseCreator {
         }
     }
 
+    /**
+     * <p>markDatabaseChanged.</p>
+     */
     public static void markDatabaseChanged() {
         database_changed = true;
     }

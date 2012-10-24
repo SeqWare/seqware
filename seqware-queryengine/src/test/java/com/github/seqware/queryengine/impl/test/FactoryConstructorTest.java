@@ -11,6 +11,8 @@ import org.junit.Test;
  * Tests with a static initializer block started via factory.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class FactoryConstructorTest  {
 
@@ -18,6 +20,9 @@ public class FactoryConstructorTest  {
     private static FeatureSet aSet;
     private static Feature a1, a2, a3;
     
+    /**
+     * <p>Constructor for FactoryConstructorTest.</p>
+     */
     public FactoryConstructorTest() {
         FactoryConstructorTest.testID = UUID.randomUUID();
         //System.out.println("starting static init in testID: " + testID.toString());
@@ -34,6 +39,9 @@ public class FactoryConstructorTest  {
         //System.out.println("ending static init in testID: " + testID.toString());
     }
 
+    /**
+     * <p>testFeatureCreationAndIterate.</p>
+     */
     @Test
     public void testFeatureCreationAndIterate() {
         //System.out.println("running base test in testID: " + testID.toString());

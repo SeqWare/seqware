@@ -13,8 +13,20 @@ import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 
+/**
+ * <p>FindChildUtil class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class FindChildUtil {
 	
+	/**
+	 * <p>getNodeIds.</p>
+	 *
+	 * @param node a {@link java.lang.Object} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	public static List<String> getNodeIds(Object node){
 		List<String> ids = new LinkedList<String>();
 		
@@ -64,6 +76,12 @@ public class FindChildUtil {
 		return ids;
 	}
 	
+	/**
+	 * <p>getRootProcessing.</p>
+	 *
+	 * @param workflowRun a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+	 * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
+	 */
 	public static Processing getRootProcessing(WorkflowRun workflowRun){
 		Set<Processing> processings = workflowRun.getProcessings();
 		for (Processing processing : processings) {
