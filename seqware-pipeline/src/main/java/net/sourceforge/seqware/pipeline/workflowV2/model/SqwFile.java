@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2.model;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -92,13 +93,13 @@ public class SqwFile {
 	 * @return the file path after provisioned.
 	 */
 	public String getProvisionedPath() {
-		return "provisionfiles/" + this.uniqueDir;
+		return "provisionfiles/" + this.uniqueDir + "/" + FilenameUtils.getName(this.getSourcePath());
 	}
 
 	
 	/**
 	 * return the unqiue dir associate with the file
-	 * if the file type is input, the provisioned file will be output to provisionfiles/uniquedir
+	 * if the file type is input, the provisioned file will be output to provisionfiles/uniquedir + filename
 	 * @return
 	 */
 	public String getUniqueDir() {
