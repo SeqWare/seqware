@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,16 +16,20 @@ public abstract class AbstractWorkflowDataModel  {
     private String name;
     private String version;
     private Environment env;
-    private WorkflowInfo workflowInfo;
+    private String workflowBundleDir;
     private Map<String,String> tags;
     protected Map<String,String> configs;
     private boolean wait;
     private boolean metadataWriteBack;
     private Map<String,SqwFile> files;
     private Collection<String> dirs;
-
+    private String parent_accessions;
+    private String workflow_accession;
+    private String workflow_run_accession;
     private String random;
     private String date;
+    private String metadata_output_file_prefix;
+    private String metadata_output_dir;
 
     public AbstractWorkflowDataModel() {
     	this.env = new Environment();
@@ -104,7 +109,11 @@ public abstract class AbstractWorkflowDataModel  {
 	 * @return the workflow bundle Dir
 	 */
 	public String getWorkflowBundleDir() {
-		return this.workflowInfo == null? null:this.workflowInfo.getWorkflowDir();
+		return this.workflowBundleDir;
+	}
+	
+	public void setWorkflowBundleDir(String dir) {
+		this.workflowBundleDir = dir;
 	}
 
 	/**
@@ -202,7 +211,7 @@ public abstract class AbstractWorkflowDataModel  {
 	 * @return ${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}
 	 */
 	public String getWorkflowBaseDir() {
-		return "";
+		return this.getWorkflowBundleDir() + File.separator + "Workflow_Bundle_"+this.getName()+ File.separator + this.getVersion();
 	}
 
 	/**
@@ -253,6 +262,79 @@ public abstract class AbstractWorkflowDataModel  {
 		SqwFile file = new SqwFile();
 		this.files.put(name, file);
 		return file;		
+	}
+
+	/**
+	 * 
+	 * @return parent_accessions separated by ","
+	 */
+	public String getParent_accessions() {
+		return parent_accessions;
+	}
+
+	/**
+	 * 
+	 * @param parent_accessions parent_accessions separated by ","
+	 */
+	public void setParent_accessions(String parent_accessions) {
+		this.parent_accessions = parent_accessions;
+	}
+
+	/**
+	 * 
+	 * @return a workflow_accession number
+	 */
+	public String getWorkflow_accession() {
+		return workflow_accession;
+	}
+
+	/**
+	 * set workflow_accession 
+	 * @param workflow_accession 
+	 */
+	public void setWorkflow_accession(String workflow_accession) {
+		this.workflow_accession = workflow_accession;
+	}
+
+	/**
+	 * 
+	 * @return workflow run accession number
+	 */
+	public String getWorkflow_run_accession() {
+		return workflow_run_accession;
+	}
+
+	/**
+	 * set workflow run accession
+	 * @param workflow_run_accession
+	 */
+	public void setWorkflow_run_accession(String workflow_run_accession) {
+		this.workflow_run_accession = workflow_run_accession;
+	}
+
+	/**
+	 * 
+	 * @return output file prefix
+	 */
+	public String getMetadata_output_file_prefix() {
+		return metadata_output_file_prefix;
+	}
+
+	/**
+	 * set output file prefix, used by provisionfiles output
+	 * @param metadata_output_file_prefix
+	 */
+	public void setMetadata_output_file_prefix(
+			String metadata_output_file_prefix) {
+		this.metadata_output_file_prefix = metadata_output_file_prefix;
+	}
+
+	public String getMetadata_output_dir() {
+		return metadata_output_dir;
+	}
+
+	public void setMetadata_output_dir(String metadata_output_dir) {
+		this.metadata_output_dir = metadata_output_dir;
 	}
 	
 }
