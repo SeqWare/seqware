@@ -324,17 +324,18 @@ public class Metadata extends Plugin {
     // check to make sure we have what we need
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
     
-    //Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip
+    //Integer laneId, Integer sampleId, String name, String description, String cycleDescriptor, boolean skip
     if (fields.containsKey("lane_accession") && fields.containsKey("sample_accession")
-            && fields.containsKey("name") && fields.containsKey("description") && fields.containsKey("barcode") && fields.containsKey("skip")) {
-
+            && fields.containsKey("name") && fields.containsKey("description") && fields.containsKey("skip")) {
+    	//allow barcode to be empty
+    	
       // create a new experiment
       ret = metadata.addIUS(Integer.parseInt(fields.get("lane_accession")), Integer.parseInt(fields.get("sample_accession")), fields.get("name"), fields.get("description"), fields.get("barcode"), "true".equalsIgnoreCase(fields.get("skip")));
       
       print("SWID: " + ret.getAttribute("sw_accession"));
 
     } else {
-      Logger.getLogger(Metadata.class.getName()).log(Level.SEVERE, "You need to supply name, description, cycle_descriptor [e.g. {F*120}{..}{R*120}], sequencer_run_accession, study_type_accession, library_strategy_accession, library_selection_accession, library_source_accession and 'true' or 'false' for skip.", "");
+      Logger.getLogger(Metadata.class.getName()).log(Level.SEVERE, "You need to supply name, description, lane_accession, sample_accession, barcode and 'true' or 'false' for skip.", "");
       ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
     }
     return (ret);
