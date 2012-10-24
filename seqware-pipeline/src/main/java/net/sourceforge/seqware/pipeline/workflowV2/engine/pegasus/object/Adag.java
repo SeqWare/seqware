@@ -45,7 +45,7 @@ public class Adag  {
     private String schemaLocation = "http://pegasus.isi.edu/schema/DAX http://pegasus.isi.edu/schema/dax-3.2.xsd";
     public static Namespace NAMESPACE = Namespace.getNamespace("http://pegasus.isi.edu/schema/DAX");
     public static Namespace XSI = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-    public static String PIPELINE = "seqware-pipeline-0.13.3-SNAPSHOT-full.jar";
+    public static String PIPELINE = "seqware-distribution-0.13.4-SNAPSHOT-full.jar";
     private String version = "3.2";
     private String count = "1";
     private String index = "0";
