@@ -17,18 +17,24 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
  * RegistrationSetupController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class StudySetupController extends BaseCommandController {
     
     private StudyService studyService;
     private StudyTypeService studyTypeService;
 
+	/**
+	 * <p>Constructor for StudySetupController.</p>
+	 */
 	public StudySetupController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -80,18 +86,38 @@ public class StudySetupController extends BaseCommandController {
 		return study;
 	}
 
+	/**
+	 * <p>Getter for the field <code>studyService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.StudyService} object.
+	 */
 	public StudyService getStudyService() {
 		return studyService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>studyService</code>.</p>
+	 *
+	 * @param studyService a {@link net.sourceforge.seqware.common.business.StudyService} object.
+	 */
 	public void setStudyService(StudyService studyService) {
 		this.studyService = studyService;
 	}
 
+    /**
+     * <p>Getter for the field <code>studyTypeService</code>.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.common.business.StudyTypeService} object.
+     */
     public StudyTypeService getStudyTypeService() {
         return studyTypeService;
     }
 
+    /**
+     * <p>Setter for the field <code>studyTypeService</code>.</p>
+     *
+     * @param studyTypeService a {@link net.sourceforge.seqware.common.business.StudyTypeService} object.
+     */
     public void setStudyTypeService(StudyTypeService studyTypeService) {
         this.studyTypeService = studyTypeService;
     }

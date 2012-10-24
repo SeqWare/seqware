@@ -38,11 +38,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author boconnor
+ * <p>ConsequenceResource class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class ConsequenceResource extends ServerResource {
 
+  /**
+   * <p>represent.</p>
+   *
+   * @return a {@link org.restlet.representation.Representation} object.
+   */
   @Get
   public Representation represent() {  
 

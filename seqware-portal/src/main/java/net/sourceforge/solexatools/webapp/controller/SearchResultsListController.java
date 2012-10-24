@@ -38,6 +38,12 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
+/**
+ * <p>SearchResultsListController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SearchResultsListController extends BaseCommandController {
 
 	private final String nameOneItem = "search.list.pagination.nameOneItem";
@@ -57,48 +63,102 @@ public class SearchResultsListController extends BaseCommandController {
 	private WorkflowService workflowService;
 	private WorkflowRunService workflowRunService;
 	
+	/**
+	 * <p>Constructor for SearchResultsListController.</p>
+	 */
 	public SearchResultsListController(){}
 
+	/**
+	 * <p>Setter for the field <code>studyService</code>.</p>
+	 *
+	 * @param studyService a {@link net.sourceforge.seqware.common.business.StudyService} object.
+	 */
 	public void setStudyService(StudyService studyService) {
 		this.studyService = studyService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>experimentService</code>.</p>
+	 *
+	 * @param experimentService a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+	 */
 	public void setExperimentService(ExperimentService experimentService) {
 		this.experimentService = experimentService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sampleService</code>.</p>
+	 *
+	 * @param sampleService a {@link net.sourceforge.seqware.common.business.SampleService} object.
+	 */
 	public void setSampleService(SampleService sampleService) {
 		this.sampleService = sampleService;
 	}
 
+	/**
+	 * <p>setIUSService.</p>
+	 *
+	 * @param iusService a {@link net.sourceforge.seqware.common.business.IUSService} object.
+	 */
 	public void setIUSService(IUSService iusService) {
 		this.IUSService = iusService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sequencerRunService</code>.</p>
+	 *
+	 * @param sequencerRunService a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+	 */
 	public void setSequencerRunService(SequencerRunService sequencerRunService) {
 		this.sequencerRunService = sequencerRunService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>laneService</code>.</p>
+	 *
+	 * @param laneService a {@link net.sourceforge.seqware.common.business.LaneService} object.
+	 */
 	public void setLaneService(LaneService laneService) {
 		this.laneService = laneService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>processingService</code>.</p>
+	 *
+	 * @param processingService a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+	 */
 	public void setProcessingService(ProcessingService processingService) {
 		this.processingService = processingService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>fileService</code>.</p>
+	 *
+	 * @param fileService a {@link net.sourceforge.seqware.common.business.FileService} object.
+	 */
 	public void setFileService(FileService fileService) {
 		this.fileService = fileService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowService</code>.</p>
+	 *
+	 * @param workflowService a {@link net.sourceforge.seqware.common.business.WorkflowService} object.
+	 */
 	public void setWorkflowService(WorkflowService workflowService) {
 		this.workflowService = workflowService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @param workflowRunService a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public void setWorkflowRunService(WorkflowRunService workflowRunService) {
 		this.workflowRunService = workflowRunService;
 	}
 
+	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,

@@ -22,14 +22,24 @@ import org.restlet.resource.ResourceException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+/**
+ * <p>LibrariesResource class.</p>
+ *
+ * @author morgantaschuk
+ * @version $Id: $Id
+ */
 public class LibrariesResource extends DatabaseResource {
 
   private Map<String, String> attributes;
   
+  /**
+   * <p>Constructor for LibrariesResource.</p>
+   */
   public LibrariesResource() {
     super("libraries");
   }
   
+  /** {@inheritDoc} */
   @Override
   public void doInit() {
       Form form = getRequest().getResourceRef().getQueryAsForm();
@@ -64,6 +74,11 @@ public class LibrariesResource extends DatabaseResource {
     return result;
   }
 
+  /**
+   * <p>getLibraries.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   @Get
   public List<LibraryDto> getLibraries() {
     authenticate();

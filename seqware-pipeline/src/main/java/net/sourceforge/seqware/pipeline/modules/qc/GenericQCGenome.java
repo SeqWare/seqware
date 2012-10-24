@@ -19,20 +19,20 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Estimate % of reads in a given lane that align to a specified set of sequence databases.
- * 
+ *
  * This module takes a sampling of reads (1%, selected randomly) of a given lane and attempts
  * alignments against a series of sequence databases.  The output is a text file giving the number
  * of evaluated reads and the %aligned to each of the user-specified list of sequence databases.
  * There are two alignment options:  BWA or miRNA.  The first option runs BWA using the user-specified
- * sequence file as the reference.  The second option is meant for analysis of miRNA.  This second 
+ * sequence file as the reference.  The second option is meant for analysis of miRNA.  This second
  * option will essentially scan each read for perfect matches to the reference sequence.  (The "miRNA"
  * alignment type is meant for miRNA analysis, but can be used for any cases where you wish to evaluate
- * reference sequences that may be smaller than the read length.)  The alignment type should be specified 
+ * reference sequences that may be smaller than the read length.)  The alignment type should be specified
  * by the user in the 3rd column of the "DBlist" input file.
- * 
+ *
  * Underlying script:  sw_module_GenericQC.pl
  * Necessary programs: perl, BWA
- * 
+ *
  * Input criteria:
  * 1)  input reads in FASTQ format
  * 2)  "DBlist" -- file specifying sequence databases to compare against;
@@ -40,19 +40,19 @@ import org.openide.util.lookup.ServiceProvider;
  * 3)  output file name
  * 4)  path to BWA
  * 5)  path to perl
- * 
- * IMPORTANT NOTE:  For any sequence DB that is to be evaluated by BWA (i.e. alignment type "BWA" is 
+ *
+ * IMPORTANT NOTE:  For any sequence DB that is to be evaluated by BWA (i.e. alignment type "BWA" is
  * specified in the input list), the FASTA file *MUST* already be indexed for BWA.
- * 
+ *
  * Another note:  For paired end lanes (with two FASTQ files per lane), simply choose one or other for evaluation.
  * Since this is not an exhaustive comparison (only 1% of reads considered), evaluating one FASTQ per lane should
  * be sufficient, unless some specific problem is suspected.
- * 
+ *
  * Expected output:  tab-delimited file giving %aligned to each user-specified sequence DB; the first line gives
  * the total number of reads that were selected in the sampling process
  *
  * @author sacheek@med.unc.edu
- *
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class GenericQCGenome extends Module {
@@ -62,9 +62,9 @@ public class GenericQCGenome extends Module {
   
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
-   */  
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser.accepts("fastq", "fastq format of input reads").withRequiredArg();
@@ -78,8 +78,9 @@ public class GenericQCGenome extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -95,11 +96,11 @@ public class GenericQCGenome extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * All necessary setup for the module.
-   * Populate the "processing" table in seqware_meta_db. 
+   * Populate the "processing" table in seqware_meta_db.
    * Create a temporary directory.
-   *  
-   * @return A ReturnValue object that contains information about the status of init.
    */
   @Override
   public ReturnValue init() {
@@ -134,9 +135,9 @@ public class GenericQCGenome extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Verify that the parameters are defined & make sense.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -158,9 +159,9 @@ public class GenericQCGenome extends Module {
     return ret;
   }
   /**
+   * {@inheritDoc}
+   *
    * Verify anything needed to run the module is ready (e.g. input files exist, etc).
-   * 
-   * @return a ReturnValue object
    */
   @Override
 
@@ -217,9 +218,9 @@ public class GenericQCGenome extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Test program on a known dataset.  Not implemented in this module.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -229,6 +230,7 @@ public class GenericQCGenome extends Module {
   }
   
   
+  /** {@inheritDoc} */
   @Override
 public ReturnValue do_run() {
     
@@ -261,15 +263,17 @@ public ReturnValue do_run() {
     return(ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     // just make sure the file exists
     return(FileTools.fileExistsAndNotEmpty(new File((String)options.valueOf("outfile"))));
   }
   /**
+   * {@inheritDoc}
+   *
    * Optional:  Cleanup.  Remove tempDir.
    * Cleanup files that are outside the current working directory since Pegasus won't do that for you.
-   * 
    */
   @Override
   public ReturnValue clean_up() {

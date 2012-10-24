@@ -23,8 +23,11 @@ import net.sourceforge.seqware.queryengine.backend.util.iterators.LocatableSecon
 import net.sourceforge.seqware.queryengine.backend.util.iterators.SecondaryCursorIterator;
 
 /**
- * @author boconnor
+ * <p>PostgreSQLTest class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 @Test(groups="postgresql")
 public class PostgreSQLTest {
@@ -45,6 +48,11 @@ public class PostgreSQLTest {
       // nothing to do here
     }
     
+    /**
+     * <p>testMismatchDBReadingAndWriting.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test(enabled = true)
     public void testMismatchDBReadingAndWriting() throws Exception {
 

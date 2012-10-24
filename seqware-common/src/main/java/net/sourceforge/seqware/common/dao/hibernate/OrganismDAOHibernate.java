@@ -12,12 +12,22 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>OrganismDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class OrganismDAOHibernate extends HibernateDaoSupport implements OrganismDAO {
 
+    /**
+     * <p>Constructor for OrganismDAOHibernate.</p>
+     */
     public OrganismDAOHibernate() {
         super();
     }
 
+    /** {@inheritDoc} */
     public List<Organism> list(Registration registration) {
         ArrayList<Organism> organisms = new ArrayList<Organism>();
         if (registration == null) {
@@ -33,6 +43,7 @@ public class OrganismDAOHibernate extends HibernateDaoSupport implements Organis
         return organisms;
     }
 
+    /** {@inheritDoc} */
     public Organism findByID(Integer id) {
         String query = "from Organism as p where p.organismId = ?";
         Organism obj = null;
@@ -44,6 +55,7 @@ public class OrganismDAOHibernate extends HibernateDaoSupport implements Organis
         return obj;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Organism updateDetached(Organism organism) {
         Organism dbObject = findByID(organism.getOrganismId());
@@ -59,6 +71,7 @@ public class OrganismDAOHibernate extends HibernateDaoSupport implements Organis
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Organism> list() {
         ArrayList<Organism> organisms = new ArrayList<Organism>();

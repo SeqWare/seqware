@@ -18,8 +18,10 @@ import java.util.Iterator;
  * itself is deleted?
  *
  * @author jbaran
+ * @version $Id: $Id
  */
 public abstract class FeatureSet extends AbstractMolSet<FeatureSet> implements MolSetInterface<FeatureSet, Feature> {
+    /** Constant <code>prefix="FeatureSet"</code> */
     public final static String prefix = "FeatureSet";
 
     /**
@@ -31,26 +33,28 @@ public abstract class FeatureSet extends AbstractMolSet<FeatureSet> implements M
         
     /**
      * Get the description associated with this FeatureSet
+     *
      * @return the description associated with this FeatureSet
      */
     public abstract String getDescription();
 
     /**
-     * Adds a single new Feature to the set.
+     * {@inheritDoc}
      *
-     * @param feature The feature that is to be added to the feature set.
+     * Adds a single new Feature to the set.
      */
     @Override
     public abstract FeatureSet add(Feature feature);
 
     /**
-     * Adds a collection of new Feature to the set.
+     * {@inheritDoc}
      *
-     * @param features The features that are to be added to the feature set.
+     * Adds a collection of new Feature to the set.
      */
     @Override
     public abstract FeatureSet add(Collection<Feature> features);
     
+    /** {@inheritDoc} */
     @Override
     public abstract FeatureSet remove(Feature feature);
 
@@ -70,13 +74,15 @@ public abstract class FeatureSet extends AbstractMolSet<FeatureSet> implements M
     
     /**
      * Get the referenceID for the associated reference
-     * @return 
+     *
+     * @return a {@link com.github.seqware.queryengine.util.SGID} object.
      */
     public abstract SGID getReferenceID();
     
-     /**
+    /**
+     * {@inheritDoc}
+     *
      * Create an FeatureSet builder started with a copy of this
-     * @return 
      */
     @Override
     public abstract FeatureSet.Builder toBuilder();

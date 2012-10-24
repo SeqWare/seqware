@@ -13,6 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
+/**
+ * <p>WorkflowAttributeDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class WorkflowAttributeDAOHibernate implements WorkflowAttributeDAO {
 
   @Autowired
@@ -22,6 +28,7 @@ public class WorkflowAttributeDAOHibernate implements WorkflowAttributeDAO {
     return sessionFactory.getCurrentSession();
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<WorkflowAttribute> getAll() {
     Query query = currentSession().createQuery("from WorkflowAttribute");
@@ -30,6 +37,7 @@ public class WorkflowAttributeDAOHibernate implements WorkflowAttributeDAO {
     return records;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<WorkflowAttribute> get(Workflow workflow) {
     Query query = currentSession().createQuery("from WorkflowAttribute as f where f.workflow = :workflow");
@@ -39,21 +47,25 @@ public class WorkflowAttributeDAOHibernate implements WorkflowAttributeDAO {
     return records;
   }
 
+  /** {@inheritDoc} */
   @Override
   public WorkflowAttribute get(Integer id) {
     return (WorkflowAttribute) currentSession().get(WorkflowAttribute.class, id);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer add(WorkflowAttribute workflowAttribute) {
     return (Integer) currentSession().save(workflowAttribute);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(WorkflowAttribute workflowAttribute) {
     currentSession().merge(workflowAttribute);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void delete(WorkflowAttribute workflowAttribute) {
     currentSession().delete(workflowAttribute);

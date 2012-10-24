@@ -17,6 +17,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 @Repository
+/**
+ * <p>LibraryDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class LibraryDAOHibernate implements LibraryDAO {
 
   @Autowired
@@ -26,6 +32,7 @@ public class LibraryDAOHibernate implements LibraryDAO {
     return sessionFactory.getCurrentSession();
   }
 
+  /** {@inheritDoc} */
   @Override
   public Sample findBySWAccession(Long swAccession) {
     String queryStringCase = "from Sample as s where s.swAccession = :swAccession";
@@ -35,6 +42,7 @@ public class LibraryDAOHibernate implements LibraryDAO {
     return (Sample) query.uniqueResult();
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Sample> getLibraries(String attributeName, String attributeValue) {
     String queryString = "select distinct sample from Sample as sample inner join sample.sampleAttributes as attribute where attribute.tag like :attributeName and attribute.value like :attributeValue";
@@ -73,6 +81,7 @@ public class LibraryDAOHibernate implements LibraryDAO {
     return false;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Sample> getLibraries() {
     String queryStringCase = "select distinct sample from Sample as sample inner join fetch sample.sampleAttributes as attribute where attribute.tag like 'geo_reaction_id'";

@@ -9,14 +9,19 @@ import java.security.MessageDigest;
 
 /**
  * Utility class for calculating MD5 hash on a file's contents.
- * 
+ *
  * @author lmose
+ * @version $Id: $Id
  */
 public class MD5Generator {
 
     /**
      * Returns a 32 character representation of the MD5 hash of the specified
      * file's content.  Leading zeros are preserved.
+     *
+     * @param filename a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     * @throws java.lang.Exception if any.
      */
     public String md5sum(String filename) throws Exception {
         String result = "ERROR";

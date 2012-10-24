@@ -19,17 +19,17 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * 
+ *
  *         A Sample defines an isolate of sequenceable material upon which
  *         sequencing experiments can be based.  The Sample object may be a surrogate for taxonomy
  *         accession or an anonymized individual identifier.  Or, it may fully specify
  *         provenance and isolation method of the starting material.
- *       
- * 
+ *
+ *
  * <p>Java class for SampleType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="SampleType">
  *   &lt;complexContent>
@@ -144,8 +144,9 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ * @author morgantaschuk
+ * @version $Id: $Id
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SampleType", propOrder = {
@@ -174,11 +175,8 @@ public class SampleType {
 
     /**
      * Gets the value of the samplename property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SampleType.SAMPLENAME }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.SampleType.SAMPLENAME} object.
      */
     public SampleType.SAMPLENAME getSAMPLENAME() {
         return samplename;
@@ -186,11 +184,10 @@ public class SampleType {
 
     /**
      * Sets the value of the samplename property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link SampleType.SAMPLENAME }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.SampleType.SAMPLENAME}
      */
     public void setSAMPLENAME(SampleType.SAMPLENAME value) {
         this.samplename = value;
@@ -198,11 +195,8 @@ public class SampleType {
 
     /**
      * Gets the value of the description property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getDESCRIPTION() {
         return description;
@@ -210,11 +204,10 @@ public class SampleType {
 
     /**
      * Sets the value of the description property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setDESCRIPTION(String value) {
         this.description = value;
@@ -222,11 +215,8 @@ public class SampleType {
 
     /**
      * Gets the value of the members property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SampleType.MEMBERS }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.SampleType.MEMBERS} object.
      */
     public SampleType.MEMBERS getMEMBERS() {
         return members;
@@ -234,11 +224,10 @@ public class SampleType {
 
     /**
      * Sets the value of the members property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link SampleType.MEMBERS }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.SampleType.MEMBERS}
      */
     public void setMEMBERS(SampleType.MEMBERS value) {
         this.members = value;
@@ -246,11 +235,8 @@ public class SampleType {
 
     /**
      * Gets the value of the samplelinks property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SampleType.SAMPLELINKS }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.SampleType.SAMPLELINKS} object.
      */
     public SampleType.SAMPLELINKS getSAMPLELINKS() {
         return samplelinks;
@@ -258,11 +244,10 @@ public class SampleType {
 
     /**
      * Sets the value of the samplelinks property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link SampleType.SAMPLELINKS }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.SampleType.SAMPLELINKS}
      */
     public void setSAMPLELINKS(SampleType.SAMPLELINKS value) {
         this.samplelinks = value;
@@ -270,11 +255,8 @@ public class SampleType {
 
     /**
      * Gets the value of the sampleattributes property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SampleType.SAMPLEATTRIBUTES }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.SampleType.SAMPLEATTRIBUTES} object.
      */
     public SampleType.SAMPLEATTRIBUTES getSAMPLEATTRIBUTES() {
         return sampleattributes;
@@ -282,11 +264,10 @@ public class SampleType {
 
     /**
      * Sets the value of the sampleattributes property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link SampleType.SAMPLEATTRIBUTES }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.SampleType.SAMPLEATTRIBUTES}
      */
     public void setSAMPLEATTRIBUTES(SampleType.SAMPLEATTRIBUTES value) {
         this.sampleattributes = value;
@@ -294,11 +275,8 @@ public class SampleType {
 
     /**
      * Gets the value of the alias property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getAlias() {
         return alias;
@@ -306,11 +284,10 @@ public class SampleType {
 
     /**
      * Sets the value of the alias property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setAlias(String value) {
         this.alias = value;
@@ -318,11 +295,8 @@ public class SampleType {
 
     /**
      * Gets the value of the accession property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getAccession() {
         return accession;
@@ -330,11 +304,10 @@ public class SampleType {
 
     /**
      * Sets the value of the accession property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setAccession(String value) {
         this.accession = value;

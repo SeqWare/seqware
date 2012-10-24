@@ -14,15 +14,23 @@ import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import net.sourceforge.seqware.queryengine.backend.model.Variant;
 
 /**
- * @author boconnor
+ * <p>U87TranslocationVariantImportWorker class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class U87TranslocationVariantImportWorker extends ImportWorker {
 
 
+  /**
+   * <p>Constructor for U87TranslocationVariantImportWorker.</p>
+   */
   public U87TranslocationVariantImportWorker() { }
 
 
+  /**
+   * <p>run.</p>
+   */
   public void run() {
 
     // open the file

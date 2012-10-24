@@ -22,13 +22,24 @@ import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * <p>FileDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
 
+  /**
+   * <p>Constructor for FileDAOHibernate.</p>
+   */
   public FileDAOHibernate() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of File into the database.
    */
   public void insert(File file) {
@@ -37,6 +48,8 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of File in the database.
    */
   public void update(File file) {
@@ -45,6 +58,8 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of File in the database.
    */
   public void delete(File file) {
@@ -52,11 +67,13 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
     this.getHibernateTemplate().delete(file);
   }
 
+  /** {@inheritDoc} */
   public void deleteAll(List<File> files) {
 
     this.getHibernateTemplate().deleteAll(files);
   }
 
+  /** {@inheritDoc} */
   public void deleteAllWithFolderStore(List<File> list) {
     for (File file : list) {
       String fileName = file.getFilePath();
@@ -85,11 +102,9 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of File in the database by the File Path.
-   * 
-   * @param Path
-   *          of the File
-   * @return File or null if not found
    */
   public File findByPath(String path) {
     String query = "from File as file where file.filePath = ?";
@@ -103,11 +118,9 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of File in the database by the File ID.
-   * 
-   * @param expID
-   *          ID of the File
-   * @return File or null if not found
    */
   public File findByID(Integer id) {
     String query = "from File as file where file.fileId = ?";
@@ -120,6 +133,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
     return file;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
   public File findBySWAccession(Integer swAccession) {
@@ -133,6 +147,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
     return file;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
   public List<File> findByOwnerId(Integer registrationId) {
@@ -141,6 +156,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
     return this.getHibernateTemplate().find(query, parameters);
   }
 
+  /** {@inheritDoc} */
   public java.io.File saveFile(MultipartFile uploadFile, String folderStore, Registration owner) throws IOException {
     String targetPath = ProvisionFilesUtil.createTargetPath(folderStore, owner.getEmailAddress(), uploadFile
         .getOriginalFilename().replace(" ", "_"));
@@ -160,6 +176,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
     return file;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
   public List<File> findByCriteria(String criteria, boolean isCaseSens) {
@@ -228,6 +245,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public File updateDetached(File file) {
     File dbObject = findByID(file.getFileId());
@@ -243,6 +261,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<File> list() {
     ArrayList<File> l = new ArrayList<File>();
@@ -259,6 +278,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
     return l;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(Registration registration, File file) {
     File dbObject = reattachFile(file);
@@ -274,6 +294,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void insert(Registration registration, File file) {
     Logger logger = Logger.getLogger(FileDAOHibernate.class);
@@ -287,6 +308,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public File updateDetached(Registration registration, File file) {
     File dbObject = reattachFile(file);

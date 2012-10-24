@@ -33,15 +33,23 @@ import org.restlet.data.MediaType;
 import org.w3c.dom.Document;
 
 /**
+ * <p>StudyIdFilesResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class StudyIdFilesResource extends BasicRestlet {
 
+    /**
+     * <p>Constructor for StudyIdFilesResource.</p>
+     *
+     * @param context a {@link org.restlet.Context} object.
+     */
     public StudyIdFilesResource(Context context) {
         super(context);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void handle(Request request, Response response) {
         authenticate(request.getChallengeResponse().getIdentifier());
@@ -58,6 +66,12 @@ public class StudyIdFilesResource extends BasicRestlet {
         response.setEntity(XmlTools.getRepresentation(line));
     }
 
+    /**
+     * <p>hello.</p>
+     *
+     * @param studySWA a int.
+     * @return a {@link java.util.List} object.
+     */
     public List<ReturnValue> hello(int studySWA) {
 
         StudyService ss = BeanFactory.getStudyServiceBean();

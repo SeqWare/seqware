@@ -26,16 +26,21 @@ import net.sourceforge.seqware.queryengine.backend.util.SeqWareException;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareSettings;
 
 /**
+ * <p>ImporterTest class.</p>
+ *
  * @author boconnor
- * 
+ *
  * This is a simple script that annotates DB records with tags.
  *
  * TODO:
+ * @version $Id: $Id
  */
 public class ImporterTest {
 
   /**
-   * @param args
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
    */
   public static void main(String[] args) {
 

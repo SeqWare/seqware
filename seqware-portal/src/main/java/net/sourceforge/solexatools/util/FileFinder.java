@@ -6,6 +6,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * <p>FileFinder class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class FileFinder {
     
     private Pattern p = null;
@@ -19,50 +25,118 @@ public class FileFinder {
     private final int DIRECTORIES = 1;
     private final int ALL = 2;
     
+    /**
+     * <p>Constructor for FileFinder.</p>
+     */
     public FileFinder() {
     }
     
+    /**
+     * <p>Constructor for FileFinder.</p>
+     *
+     * @param p a {@link java.util.regex.Pattern} object.
+     */
     public FileFinder(Pattern p) {
     	this.p = p;
     }
 
+    /**
+     * <p>findAll.</p>
+     *
+     * @param startPath a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     * @throws java.lang.Exception if any.
+     */
     public List findAll(String startPath) throws Exception {
         return find(startPath, "", ALL);
     }
 
+    /**
+     * <p>findAll.</p>
+     *
+     * @param startPath a {@link java.lang.String} object.
+     * @param mask a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     * @throws java.lang.Exception if any.
+     */
     public List findAll(String startPath, String mask)
             throws Exception {
         return find(startPath, mask, ALL);
     }
 
+    /**
+     * <p>findFiles.</p>
+     *
+     * @param startPath a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     * @throws java.lang.Exception if any.
+     */
     public List findFiles(String startPath)
             throws Exception {
         return find(startPath, "", FILES);
     }
 
+    /**
+     * <p>findFiles.</p>
+     *
+     * @param startPath a {@link java.lang.String} object.
+     * @param mask a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     * @throws java.lang.Exception if any.
+     */
     public List findFiles(String startPath, String mask)
             throws Exception {
         return find(startPath, mask, FILES);
     }
 
+    /**
+     * <p>findDirectories.</p>
+     *
+     * @param startPath a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     * @throws java.lang.Exception if any.
+     */
     public List findDirectories(String startPath)
             throws Exception {
         return find(startPath, "", DIRECTORIES);
     }
 
+    /**
+     * <p>findDirectories.</p>
+     *
+     * @param startPath a {@link java.lang.String} object.
+     * @param mask a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     * @throws java.lang.Exception if any.
+     */
     public List findDirectories(String startPath, String mask)
             throws Exception {
         return find(startPath, mask, DIRECTORIES);
     }
     
+    /**
+     * <p>getDirectorySize.</p>
+     *
+     * @return a long.
+     */
     public long getDirectorySize() {
         return totalLength;
     }
     
+    /**
+     * <p>Getter for the field <code>filesNumber</code>.</p>
+     *
+     * @return a long.
+     */
     public long getFilesNumber() {
         return filesNumber;
     }
     
+    /**
+     * <p>Getter for the field <code>directoriesNumber</code>.</p>
+     *
+     * @return a long.
+     */
     public long getDirectoriesNumber() {
         return directoriesNumber;
     }

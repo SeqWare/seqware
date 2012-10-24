@@ -32,12 +32,19 @@ import org.restlet.resource.ServerResource;
 
 
 /**
- * @author boconnor
+ * <p>GeneReportResource class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class GeneReportResource extends ServerResource {
 
   //Get("text/html")
+  /**
+   * <p>represent.</p>
+   *
+   * @return a {@link org.restlet.representation.Representation} object.
+   */
   @Get
   public Representation represent() {  
 

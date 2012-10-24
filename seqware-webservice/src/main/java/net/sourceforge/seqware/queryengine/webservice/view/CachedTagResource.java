@@ -37,13 +37,21 @@ import freemarker.template.Template;
 
 
 /**
+ * <p>CachedTagResource class.</p>
+ *
  * @author boconnor
  *
  * This is a resource that will first attempt to open a cached tag file and, if it can't be found, does a live query of the DB, writes the file out, and returns the result.
+ * @version $Id: $Id
  */
 public class CachedTagResource extends ServerResource {
 
   //Get("text/html")
+  /**
+   * <p>represent.</p>
+   *
+   * @return a {@link org.restlet.representation.Representation} object.
+   */
   @Get
   public Representation represent() {  
 

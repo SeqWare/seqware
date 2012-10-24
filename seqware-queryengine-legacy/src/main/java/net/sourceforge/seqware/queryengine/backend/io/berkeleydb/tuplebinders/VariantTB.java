@@ -14,11 +14,14 @@ import net.sourceforge.seqware.queryengine.backend.model.Model;
 import net.sourceforge.seqware.queryengine.backend.model.Variant;
 
 /**
- * @author boconnor
+ * <p>VariantTB class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class VariantTB extends TupleBinding {
 
+  /** {@inheritDoc} */
   @Override
   public void objectToEntry(Object object, TupleOutput to) {
     Variant m = (Variant)object;
@@ -74,6 +77,7 @@ public class VariantTB extends TupleBinding {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public Object entryToObject(TupleInput ti) {
       Variant m = new Variant();

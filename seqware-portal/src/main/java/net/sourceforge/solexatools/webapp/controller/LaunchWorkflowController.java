@@ -22,42 +22,65 @@ import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 
+/**
+ * <p>LaunchWorkflowController class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class LaunchWorkflowController extends SimpleFormController {
     private WorkflowService workflowService;
     private WorkflowRunService workflowRunService;
 
+    /**
+     * <p>Constructor for LaunchWorkflowController.</p>
+     */
     public LaunchWorkflowController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET, METHOD_POST});
 		setCommandClass(Workflow.class);
 	}
 
+    /**
+     * <p>Getter for the field <code>workflowService</code>.</p>
+     *
+     * @return a {@link net.sourceforge.seqware.common.business.WorkflowService} object.
+     */
     public WorkflowService getWorkflowService() {
 		return workflowService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowService</code>.</p>
+	 *
+	 * @param workflowService a {@link net.sourceforge.seqware.common.business.WorkflowService} object.
+	 */
 	public void setWorkflowService(WorkflowService workflowService) {
 		this.workflowService = workflowService;
 	}
 
+	/**
+	 * <p>Getter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @return a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public WorkflowRunService getWorkflowRunService() {
 		return workflowRunService;
 	}
 
+	/**
+	 * <p>Setter for the field <code>workflowRunService</code>.</p>
+	 *
+	 * @param workflowRunService a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+	 */
 	public void setWorkflowRunService(WorkflowRunService workflowRunService) {
 		this.workflowRunService = workflowRunService;
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Handles the user's request to submit a new study.
-	 *
-	 * @param request HttpServletRequest
-	 * @param response HttpServletResponse
-	 * @param command Study command object
-	 *
-	 * @return ModelAndView
-	 *
-	 * @throws Exception
 	 */
 	protected ModelAndView onSubmit(HttpServletRequest	request,
 			HttpServletResponse	response,

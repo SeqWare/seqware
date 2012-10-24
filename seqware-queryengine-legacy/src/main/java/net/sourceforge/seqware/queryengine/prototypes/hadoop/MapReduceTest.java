@@ -28,8 +28,9 @@ import com.sleepycat.db.DatabaseEntry;
  * > if they do then increment counter
  * > write the counter to an hdfs file
  * > need to figure out how to pass parameters to map and reduce classes!
- * @author boconnor
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class MapReduceTest {
 
@@ -105,11 +106,11 @@ public class MapReduceTest {
   
   /**
    * Sets up the actual job.
-   * 
+   *
    * @param conf  The current configuration.
    * @param args  The command line parameters.
    * @return The newly created job.
-   * @throws IOException When setting up the job fails.
+   * @throws java.io.IOException When setting up the job fails.
    */
   public static Job createSubmittableJob(Configuration conf, String[] args) 
   throws IOException {
@@ -147,9 +148,9 @@ public class MapReduceTest {
 
   /**
    * Main entry point.
-   * 
+   *
    * @param args  The command line parameters.
-   * @throws Exception When running the job fails.
+   * @throws java.lang.Exception When running the job fails.
    */
   public static void main(String[] args) throws Exception {
     HBaseConfiguration conf = new HBaseConfiguration();

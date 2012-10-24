@@ -35,26 +35,31 @@ import com.amazonaws.services.s3.model.S3Object;
 import net.sourceforge.seqware.common.util.Log;
 
 /**
- * 
+ *
  * Purpose:
- * 
+ *
  * This module takes a software bundle and unzips it to the temporary directory.
  * Software bundles let you create a directory structure containing binary
  * applications and their associated files that can then be referenced by the
  * module. See the SeqWare wiki at http://seqware.sf.net for information on
  * creating these software bundles.
- * 
+ *
  * TODO: move the download code to an S3 utility, factor out common code between
  * this and ProvisionFiles object
- * 
+ *
  * @author boconnor
- * 
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class ProvisionDependenciesBundle extends Module {
 
   private OptionSet options = null;
 
+  /**
+   * <p>getOptionParser.</p>
+   *
+   * @return a {@link joptsimple.OptionParser} object.
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser
@@ -66,6 +71,11 @@ public class ProvisionDependenciesBundle extends Module {
     return (parser);
   }
 
+  /**
+   * <p>get_syntax.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String get_syntax() {
     OptionParser parser = getOptionParser();
     StringWriter output = new StringWriter();
@@ -79,6 +89,8 @@ public class ProvisionDependenciesBundle extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Things to check: * FIXME
    */
   @Override
@@ -86,6 +98,7 @@ public class ProvisionDependenciesBundle extends Module {
     return new ReturnValue(ReturnValue.NOTIMPLEMENTED);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
 
@@ -113,6 +126,7 @@ public class ProvisionDependenciesBundle extends Module {
     return (ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
 
@@ -142,6 +156,7 @@ public class ProvisionDependenciesBundle extends Module {
     return (ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
 
@@ -305,6 +320,7 @@ public class ProvisionDependenciesBundle extends Module {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     // TODO: should use a MANIFEST to ensure all files are there

@@ -14,8 +14,17 @@ import freemarker.template.TemplateException;
 import java.io.File;
 import net.sourceforge.seqware.common.util.Log;
 
+/**
+ * <p>Daxgenerator class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class Daxgenerator {
 
+    /**
+     * <p>getSyntax.</p>
+     */
     public static void getSyntax() {
         Log.stdout("Syntax: java DAXGenerator [path_to_config/config1.ini [path_to_config/config2.ini] ...] [--key_to_override=value ...] path_to_template/template.ftl path_for_dax/output.dax");
         Log.stdout("Required file arguments:");
@@ -38,6 +47,16 @@ public class Daxgenerator {
 
     }
 
+    /**
+     * <p>processTemplate.</p>
+     *
+     * @param iniFiles an array of {@link java.lang.String} objects.
+     * @param template a {@link java.lang.String} object.
+     * @param output a {@link java.lang.String} object.
+     * @param argMap a {@link java.util.Map} object.
+     * @param extraArgs an array of {@link java.lang.String} objects.
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
     public ReturnValue processTemplate(String[] iniFiles, String template, String output, Map<String, String> argMap, String[] extraArgs) {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
@@ -116,6 +135,11 @@ public class Daxgenerator {
         return (ret);
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         String template = null;
         String output = null;

@@ -22,17 +22,17 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * 
+ *
  *           A Study is a container for a sequencing investigation that may comprise multiple experiments.
- *           The Study has an overall goal, but is otherwise minimally defined in the SRA. 
+ *           The Study has an overall goal, but is otherwise minimally defined in the SRA.
  *           A Study is composed of a descriptor, zero or more experiments, and zero or more analyses.
  *           The submitter may decorate the Study with web links and properties.
- *       
- * 
+ *
+ *
  * <p>Java class for StudyType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="StudyType">
  *   &lt;complexContent>
@@ -154,8 +154,9 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ * @author morgantaschuk
+ * @version $Id: $Id
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "StudyType", propOrder = {
@@ -178,11 +179,8 @@ public class StudyType {
 
     /**
      * Gets the value of the descriptor property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link StudyType.DESCRIPTOR }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.StudyType.DESCRIPTOR} object.
      */
     public StudyType.DESCRIPTOR getDESCRIPTOR() {
         return descriptor;
@@ -190,11 +188,10 @@ public class StudyType {
 
     /**
      * Sets the value of the descriptor property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link StudyType.DESCRIPTOR }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.StudyType.DESCRIPTOR}
      */
     public void setDESCRIPTOR(StudyType.DESCRIPTOR value) {
         this.descriptor = value;
@@ -202,11 +199,8 @@ public class StudyType {
 
     /**
      * Gets the value of the studylinks property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link StudyType.STUDYLINKS }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.StudyType.STUDYLINKS} object.
      */
     public StudyType.STUDYLINKS getSTUDYLINKS() {
         return studylinks;
@@ -214,11 +208,10 @@ public class StudyType {
 
     /**
      * Sets the value of the studylinks property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link StudyType.STUDYLINKS }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.StudyType.STUDYLINKS}
      */
     public void setSTUDYLINKS(StudyType.STUDYLINKS value) {
         this.studylinks = value;
@@ -226,11 +219,8 @@ public class StudyType {
 
     /**
      * Gets the value of the studyattributes property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link StudyType.STUDYATTRIBUTES }
-     *     
+     *
+     * @return a {@link net.sourceforge.seqware.queryengine.webservice.model.StudyType.STUDYATTRIBUTES} object.
      */
     public StudyType.STUDYATTRIBUTES getSTUDYATTRIBUTES() {
         return studyattributes;
@@ -238,11 +228,10 @@ public class StudyType {
 
     /**
      * Sets the value of the studyattributes property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link StudyType.STUDYATTRIBUTES }
-     *     
+     *     {@link net.sourceforge.seqware.queryengine.webservice.model.StudyType.STUDYATTRIBUTES}
      */
     public void setSTUDYATTRIBUTES(StudyType.STUDYATTRIBUTES value) {
         this.studyattributes = value;
@@ -250,11 +239,8 @@ public class StudyType {
 
     /**
      * Gets the value of the alias property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getAlias() {
         return alias;
@@ -262,11 +248,10 @@ public class StudyType {
 
     /**
      * Sets the value of the alias property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setAlias(String value) {
         this.alias = value;
@@ -274,11 +259,8 @@ public class StudyType {
 
     /**
      * Gets the value of the accession property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getAccession() {
         return accession;
@@ -286,11 +268,10 @@ public class StudyType {
 
     /**
      * Sets the value of the accession property.
-     * 
+     *
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     {@link java.lang.String}
      */
     public void setAccession(String value) {
         this.accession = value;

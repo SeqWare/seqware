@@ -23,11 +23,14 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
 /**
+ * <p>SeqwareAccessionResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class SeqwareAccessionResource extends BasicResource {
 
+    /** {@inheritDoc} */
     @Get
     @Override
     public Representation get() {

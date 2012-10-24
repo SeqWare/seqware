@@ -19,11 +19,16 @@ import org.junit.Test;
  * to FSGIDs that are position aware.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class RowKeyFeatureSetTest {
 
     private static FeatureSet fSet;
 
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -56,6 +61,9 @@ public class RowKeyFeatureSetTest {
         mManager.close();
     }
 
+    /**
+     * <p>testRowKeyGeneration.</p>
+     */
     @Test
     public void testRowKeyGeneration() {
         String[] expKeys = {"funky_ref" + StorageInterface.SEPARATOR + "chr16:000000049291141", "funky_ref" + StorageInterface.SEPARATOR + "chr16:000000049291360", "funky_ref" + StorageInterface.SEPARATOR + "chr16:000000049302125"};

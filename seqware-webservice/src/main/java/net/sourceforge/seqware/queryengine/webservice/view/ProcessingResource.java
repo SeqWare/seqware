@@ -24,14 +24,21 @@ import org.restlet.resource.ServerResource;
 
 
 /**
+ * <p>ProcessingResource class.</p>
+ *
  * @author boconnor
  *
  * This is still being worked on
- *
+ * @version $Id: $Id
  */
 public class ProcessingResource extends ServerResource {
 
   //Get("text/html")
+  /**
+   * <p>represent.</p>
+   *
+   * @return a {@link org.restlet.representation.Representation} object.
+   */
   @Get
   public Representation represent() {  
 

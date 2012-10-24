@@ -24,11 +24,14 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  *
  * @author dyuen
  * @author jbaran
+ * @version $Id: $Id
  */
 public class Tag extends AtomImpl<Tag> {
 
+    /** Constant <code>prefix="Tag"</code> */
     public final static String prefix = "Tag";
-    public static String SEPARATOR = "::";
+    /** Constant <code>SEPARATOR="::"</code> */
+    public final static String SEPARATOR = "::";
     private LazyReference<TagSet> tagSet = new LazyReference<TagSet>(TagSet.class);
 
     /**
@@ -68,11 +71,13 @@ public class Tag extends AtomImpl<Tag> {
      * @return True if this tag is a descendant of the tag in the parameter.
      */
     public boolean isDescendantOf(String tagKey) {
-        if (!this.getKey().startsWith("SO:"))
+        if (!this.getKey().startsWith("SO:")) {
             return false;
+        }
 
-        if (tagKey == null || !tagKey.startsWith("SO:"))
+        if (tagKey == null || !tagKey.startsWith("SO:")) {
             return false;
+        }
 
         String thisKey = this.getKey().replaceFirst("^SO:", "");
         tagKey = tagKey.replaceFirst("^SO:", "");
@@ -133,8 +138,8 @@ public class Tag extends AtomImpl<Tag> {
      * of the back-end. This is used primary to keep track of which TagSet a tag
      * came from.
      *
-     * @param sgid
-     * @return
+     * @param sgid a {@link com.github.seqware.queryengine.util.SGID} object.
+     * @return a {@link com.github.seqware.queryengine.model.Tag} object.
      */
     public Tag setTagSet(SGID sgid) {
         this.tagSet.setSGID(sgid);
@@ -146,7 +151,8 @@ public class Tag extends AtomImpl<Tag> {
      * of the back-end. This is used primary to keep track of which TagSet a tag
      * came from.
      *
-     * @return
+     * @param set a {@link com.github.seqware.queryengine.model.TagSet} object.
+     * @return a {@link com.github.seqware.queryengine.model.Tag} object.
      */
     public Tag setTagSet(TagSet set) {
         this.tagSet.set(set);
@@ -156,22 +162,25 @@ public class Tag extends AtomImpl<Tag> {
     /**
      * Get the type of value for the tag value
      *
-     * @return
+     * @return a {@link com.github.seqware.queryengine.model.Tag.ValueType} object.
      */
     public ValueType getvType() {
         return vType;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Class getHBaseClass() {
         return Tag.class;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getHBasePrefix() {
         return Tag.prefix;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
         if (o == null) {
@@ -180,12 +189,12 @@ public class Tag extends AtomImpl<Tag> {
         if (!(o instanceof Tag)) {
             return false;
         }
-        Tag that = (Tag) o;
         EqualsBuilder b = new EqualsBuilder();
         b.append(this.getSGID(), ((Tag)o).getSGID());
         return b.isEquals();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         HashCodeBuilder b = new HashCodeBuilder();
@@ -196,16 +205,16 @@ public class Tag extends AtomImpl<Tag> {
     /**
      * Create a new ACL builder
      *
-     * @return
+     * @return a {@link com.github.seqware.queryengine.model.Tag.Builder} object.
      */
     public static Tag.Builder newBuilder() {
         return new Tag.Builder();
     }
 
     /**
-     * Create an ACL builder started with a copy of this
+     * {@inheritDoc}
      *
-     * @return
+     * Create an ACL builder started with a copy of this
      */
     @Override
     public Tag.Builder toBuilder() {
@@ -215,11 +224,10 @@ public class Tag extends AtomImpl<Tag> {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Tags are not taggable, but it is actually easier to have the capability
      * via inheritance and just turn it off
-     *
-     * @param tag new tag to associate with this
-     * @return whether the subject was successfully tagged
      */
     @Override
     public boolean associateTag(Tag tag) {
@@ -227,11 +235,10 @@ public class Tag extends AtomImpl<Tag> {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Tags are not taggable, but it is actually easier to have the capability
      * via inheritance and just turn it off
-     *
-     * @param tag tag to be removed
-     * @return whether the tag was successfully removed
      */
     @Override
     public boolean dissociateTag(Tag tag) {
@@ -239,10 +246,10 @@ public class Tag extends AtomImpl<Tag> {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Tags are not taggable, but it is actually easier to have the capability
      * via inheritance and just turn it off
-     *
-     * @return Iterable of tags
      */
     @Override
     public SeqWareIterable<Tag> getTags() {

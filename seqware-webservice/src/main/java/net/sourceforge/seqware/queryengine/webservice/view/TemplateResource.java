@@ -14,11 +14,18 @@ import org.restlet.resource.Get;
 
 
 /**
- * @author boconnor
+ * <p>TemplateResource class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class TemplateResource extends GenericTemplateResource {
 
+  /**
+   * <p>represent.</p>
+   *
+   * @return a {@link org.restlet.representation.Representation} object.
+   */
   @Get
   public Representation represent() { 
     

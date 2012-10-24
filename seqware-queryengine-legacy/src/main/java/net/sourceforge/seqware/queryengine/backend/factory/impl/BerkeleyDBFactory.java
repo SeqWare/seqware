@@ -10,11 +10,14 @@ import net.sourceforge.seqware.queryengine.backend.util.SeqWareSettings;
 import net.sourceforge.seqware.queryengine.backend.factory.Factory;
 
 /**
- * @author boconnor
+ * <p>BerkeleyDBFactory class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class BerkeleyDBFactory extends Factory {
 
+    /** {@inheritDoc} */
     public BerkeleyDBStore getStore(SeqWareSettings settings) throws SeqWareException, Exception {
         super.getStore(settings);
         if ("berkeleydb-mismatch-store".equals(getSettings().getStoreType()) ||

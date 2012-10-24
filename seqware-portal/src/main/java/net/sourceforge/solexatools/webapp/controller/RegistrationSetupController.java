@@ -18,16 +18,23 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 /**
  * RegistrationSetupController
  * This is invoked upon entry to Registration.jsp or RegistrationUpdate.jsp
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class RegistrationSetupController extends BaseCommandController {
 	
   private RegistrationService registrationService = null;
   
+  /**
+   * <p>Constructor for RegistrationSetupController.</p>
+   */
   public RegistrationSetupController() {
 		super();
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)
@@ -60,10 +67,20 @@ public class RegistrationSetupController extends BaseCommandController {
 		return modelAndView;
 	}
 
+  /**
+   * <p>Getter for the field <code>registrationService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+   */
   public RegistrationService getRegistrationService() {
     return registrationService;
   }
 
+  /**
+   * <p>Setter for the field <code>registrationService</code>.</p>
+   *
+   * @param registrationService a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+   */
   public void setRegistrationService(RegistrationService registrationService) {
     this.registrationService = registrationService;
   }

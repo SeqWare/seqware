@@ -21,19 +21,24 @@ import net.sourceforge.seqware.common.util.Log;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * <p>BundleManager class.</p>
+ *
  * @author boconnor
- * 
+ *
  * ProviderFor(PluginInterface.class)
- * 
+ *
  * TODO: improve the use of workflow-accession, see https://jira.oicr.on.ca/browse/SEQWARE-539
  * TODO: the param listing won't currently work for a local provisioned directory
- * 
+ * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
 public class BundleManager extends Plugin {
 
     ReturnValue ret = new ReturnValue();
 
+    /**
+     * <p>Constructor for BundleManager.</p>
+     */
     public BundleManager() {
         super();
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Optional: Provides this help message.");
@@ -61,6 +66,7 @@ public class BundleManager extends Plugin {
     /* (non-Javadoc)
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#init()
      */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue init() {
         return ret;
@@ -69,6 +75,7 @@ public class BundleManager extends Plugin {
     /* (non-Javadoc)
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_test()
      */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_test() {
         // TODO Auto-generated method stub
@@ -78,6 +85,7 @@ public class BundleManager extends Plugin {
     /* (non-Javadoc)
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_run()
      */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_run() {
 
@@ -234,12 +242,18 @@ public class BundleManager extends Plugin {
     /* (non-Javadoc)
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#clean_up()
      */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue clean_up() {
         // TODO Auto-generated method stub
         return ret;
     }
 
+    /**
+     * <p>get_description.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String get_description() {
         return ("A plugin that lets you create, test, and install workflow bundles.");
     }
