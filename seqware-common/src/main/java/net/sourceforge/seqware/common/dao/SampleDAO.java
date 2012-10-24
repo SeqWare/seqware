@@ -20,7 +20,8 @@ public interface SampleDAO {
     /**
      * <p>insert.</p>
      *
-     * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+     * @param sample a {@link net.sourceforge.seqware.common.model.Sample}
+     * object.
      * @return a {@link java.lang.Integer} object.
      */
     public Integer insert(Sample sample);
@@ -28,8 +29,10 @@ public interface SampleDAO {
     /**
      * <p>insert.</p>
      *
-     * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
-     * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+     * @param registration a {@link net.sourceforge.seqware.common.model.Registration}
+     * object.
+     * @param sample a {@link net.sourceforge.seqware.common.model.Sample}
+     * object.
      * @return a {@link java.lang.Integer} object.
      */
     public Integer insert(Registration registration, Sample sample);
@@ -37,22 +40,26 @@ public interface SampleDAO {
     /**
      * <p>update.</p>
      *
-     * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+     * @param sample a {@link net.sourceforge.seqware.common.model.Sample}
+     * object.
      */
     public void update(Sample sample);
 
     /**
      * <p>update.</p>
      *
-     * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
-     * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+     * @param registration a {@link net.sourceforge.seqware.common.model.Registration}
+     * object.
+     * @param sample a {@link net.sourceforge.seqware.common.model.Sample}
+     * object.
      */
     public void update(Registration registration, Sample sample);
 
     /**
      * <p>delete.</p>
      *
-     * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+     * @param sample a {@link net.sourceforge.seqware.common.model.Sample}
+     * object.
      */
     public void delete(Sample sample);
 
@@ -79,6 +86,14 @@ public interface SampleDAO {
     public Sample findByName(String name);
 
     /**
+     * <p>findByName.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
+     */
+    public List<Sample> matchName(String name);
+
+    /**
      * <p>findByTitle.</p>
      *
      * @param title a {@link java.lang.String} object.
@@ -97,7 +112,8 @@ public interface SampleDAO {
     /**
      * <p>listSample.</p>
      *
-     * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+     * @param registration a {@link net.sourceforge.seqware.common.model.Registration}
+     * object.
      * @return a {@link java.util.List} object.
      */
     public List<Sample> listSample(Registration registration);
@@ -172,7 +188,8 @@ public interface SampleDAO {
     /**
      * <p>updateDetached.</p>
      *
-     * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+     * @param sample a {@link net.sourceforge.seqware.common.model.Sample}
+     * object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
     public Sample updateDetached(Sample sample);
@@ -180,8 +197,10 @@ public interface SampleDAO {
     /**
      * <p>updateDetached.</p>
      *
-     * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
-     * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+     * @param registration a {@link net.sourceforge.seqware.common.model.Registration}
+     * object.
+     * @param sample a {@link net.sourceforge.seqware.common.model.Sample}
+     * object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
     public Sample updateDetached(Registration registration, Sample sample);
@@ -214,7 +233,8 @@ public interface SampleDAO {
     /**
      * <p>getRootSample.</p>
      *
-     * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+     * @param sample a {@link net.sourceforge.seqware.common.model.Sample}
+     * object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
     public Sample getRootSample(Sample sample);
