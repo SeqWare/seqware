@@ -13,8 +13,20 @@ import net.sourceforge.seqware.queryengine.backend.store.impl.HBaseStore;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareSettings;
 
+/**
+ * <p>HBaseRead2 class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class HBaseRead2 {
 
+  /**
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
+   * @throws java.lang.Exception if any.
+   */
   public static void main(String[] args) throws Exception {
     
     /* System.out.println("Trying HBase Store");

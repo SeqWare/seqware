@@ -9,11 +9,22 @@ import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 
+/**
+ * <p>SampleDetailsWorkflowLineItems class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class SampleDetailsWorkflowLineItems {
 
   private HashMap<WorkflowRun, List<Processing>> workFlowMap = new HashMap<WorkflowRun, List<Processing>>();
   private WorkflowRun dummyWf = new WorkflowRun();
 
+  /**
+   * <p>Constructor for SampleDetailsWorkflowLineItems.</p>
+   *
+   * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+   */
   public SampleDetailsWorkflowLineItems(Sample sample) {
     init();
     if (sample.getProcessings() != null) {
@@ -23,6 +34,11 @@ public class SampleDetailsWorkflowLineItems {
     }
   }
 
+  /**
+   * <p>Constructor for SampleDetailsWorkflowLineItems.</p>
+   *
+   * @param processing a {@link net.sourceforge.seqware.common.model.Processing} object.
+   */
   public SampleDetailsWorkflowLineItems(Processing processing) {
     init();
     if (processing != null) {
@@ -34,6 +50,11 @@ public class SampleDetailsWorkflowLineItems {
     dummyWf.setName("N/A");
   }
 
+  /**
+   * <p>addProcessings.</p>
+   *
+   * @param ius a {@link net.sourceforge.seqware.common.model.IUS} object.
+   */
   public void addProcessings(IUS ius) {
     if (ius.getProcessings() != null) {
       for (Processing processing : ius.getProcessings()) {
@@ -60,10 +81,21 @@ public class SampleDetailsWorkflowLineItems {
     }
   }
 
+  /**
+   * <p>getProcessingsByWorkflow.</p>
+   *
+   * @param wfRun a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+   * @return a {@link java.util.List} object.
+   */
   public List<Processing> getProcessingsByWorkflow(WorkflowRun wfRun) {
     return workFlowMap.get(wfRun);
   }
 
+  /**
+   * <p>getWorkflowsRun.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<WorkflowRun> getWorkflowsRun() {
     return new ArrayList<WorkflowRun>(workFlowMap.keySet());
   }

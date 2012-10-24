@@ -20,6 +20,12 @@ import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+/**
+ * <p>XmlTools class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class XmlTools {
 
     private static Document getDocument(String string) throws ParserConfigurationException, IOException, SAXException {
@@ -41,6 +47,12 @@ public class XmlTools {
 //        
 //        return true;
 //    }
+    /**
+     * <p>prettyPrint.</p>
+     *
+     * @param filename a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     public static boolean prettyPrint(String filename) {
         Logger.getLogger(XmlTools.class).info("start");
         // Parse input file
@@ -78,10 +90,23 @@ public class XmlTools {
         return true;
     }
 
+    /**
+     * <p>getRepresentation.</p>
+     *
+     * @param document a {@link org.w3c.dom.Document} object.
+     * @return a {@link org.restlet.ext.xml.DomRepresentation} object.
+     */
     public static DomRepresentation getRepresentation(Document document) {
         return new DomRepresentation(MediaType.APPLICATION_XML, document);
     }
 
+    /**
+     * <p>marshalToDocument.</p>
+     *
+     * @param jaxbTool a {@link net.sourceforge.seqware.common.util.xmltools.JaxbObject} object.
+     * @param o a {@link java.lang.Object} object.
+     * @return a {@link org.w3c.dom.Document} object.
+     */
     public static Document marshalToDocument(JaxbObject jaxbTool, Object o) {
         Document doc = null;
         try {
@@ -107,6 +132,15 @@ public class XmlTools {
 //        return xml;
 //    }
 
+    /**
+     * <p>unMarshal.</p>
+     *
+     * @param jaxbTool a {@link net.sourceforge.seqware.common.util.xmltools.JaxbObject} object.
+     * @param expectedType a {@link java.lang.Object} object.
+     * @param string a {@link java.lang.String} object.
+     * @return a {@link java.lang.Object} object.
+     * @throws org.xml.sax.SAXException if any.
+     */
     public static Object unMarshal(JaxbObject jaxbTool, Object expectedType, String string) throws SAXException {
         Object o = null;
         try {

@@ -31,17 +31,24 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Implement HBase optimizations for the back-end. Will implement 
+ * Implement HBase optimizations for the back-end. Will implement
  * and link up actual Map/Reduce plug-ins here
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class MRHBasePersistentBackEnd extends HBasePersistentBackEnd {
 
+    /**
+     * <p>Constructor for MRHBasePersistentBackEnd.</p>
+     *
+     * @param i a {@link com.github.seqware.queryengine.impl.StorageInterface} object.
+     */
     public MRHBasePersistentBackEnd(StorageInterface i) {
         super(i);
     }
     
+    /** {@inheritDoc} */
     @Override
     public QueryFuture getFeatures(int hours, FeatureSet set) {
         AnalysisPluginInterface plugin = new MRFeaturesAllPlugin();
@@ -49,6 +56,7 @@ public class MRHBasePersistentBackEnd extends HBasePersistentBackEnd {
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
+     /** {@inheritDoc} */
      @Override
     public QueryFuture getFeaturesByAttributes(int hours, FeatureSet set, RPNStack constraints) {
         AnalysisPluginInterface plugin = new MRFeaturesByAttributesPlugin();
@@ -70,6 +78,7 @@ public class MRHBasePersistentBackEnd extends HBasePersistentBackEnd {
 //        return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
 //    }
 
+    /** {@inheritDoc} */
     @Override
     public QueryFuture getFeaturesByRange(int hours, FeatureSet set, Location location, String structure, long start, long stop) {
         AnalysisPluginInterface plugin = new MRFeaturesByRangePlugin();
@@ -77,6 +86,7 @@ public class MRHBasePersistentBackEnd extends HBasePersistentBackEnd {
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
 
+    /** {@inheritDoc} */
     @Override
     public QueryFuture getFeaturesByTag(int hours, FeatureSet set, String subject, String predicate, String object) {
         AnalysisPluginInterface plugin = new MRFeaturesByTagsPlugin();
@@ -84,6 +94,7 @@ public class MRHBasePersistentBackEnd extends HBasePersistentBackEnd {
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
     
+    /** {@inheritDoc} */
     @Override
     public QueryFuture<Long> getFeatureSetCount(int hours, FeatureSet set) {
         AnalysisPluginInterface plugin = new MRFeatureSetCountPlugin();

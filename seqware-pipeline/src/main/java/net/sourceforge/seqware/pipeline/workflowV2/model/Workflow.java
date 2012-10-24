@@ -12,40 +12,40 @@ public class Workflow {
 	private Collection<String> tests;
 	//may be better to use Map
 	private List<AbstractJob> jobs;
-	
 
+	
 	public Workflow() {
 		this.jobs = new ArrayList<AbstractJob>();
 		this.tests = new ArrayList<String>();
 	}
 	
 	/**
-	 * get all jobs in current workflow
-	 * @return
-	 */
+	* get all jobs in current workflow
+	* @return
+	*/
 	public List<AbstractJob> getJobs() {
 		return jobs;
 	}
-
+	
 	/**
-	 * add job to the workflow
-	 * @param job
-	 */
+	* add job to the workflow
+	* @param job
+	*/
 	public void addJobs(AbstractJob job) {
 		this.jobs.add(job);
 	}
 	
 	/**
-	 * 
-	 * @return the workflowbundle diretory
-	 */
+	*
+	* @return the workflowbundle diretory
+	*/
 	public String getWorkflowBundleDir() {
 		return workflowBundleDir;
 	}
 	/**
-	 * set the workflowBundle directory
-	 * @param workflowBundleDir
-	 */
+	* set the workflowBundle directory
+	* @param workflowBundleDir
+	*/
 	public void setWorkflowBundleDir(String workflowBundleDir) {
 		this.workflowBundleDir = workflowBundleDir;
 	}
@@ -73,21 +73,23 @@ public class Workflow {
 		this.jobs.add(job);
 		return job;
 	}
-
+	
 	/**
-	 * add a test command for the workflow
-	 * @param value
-	 */
+	* add a test command for the workflow
+	* @param value
+	*/
 	public void addTest(String value) {
 		this.tests.add(value);
 	}
 	
 	/**
-	 * @return all test commands
-	 */
+	* @return all test commands
+	*/
 	public Collection<String> getTests() {
 		return this.tests;
 	}
 	
 
 }
+
+

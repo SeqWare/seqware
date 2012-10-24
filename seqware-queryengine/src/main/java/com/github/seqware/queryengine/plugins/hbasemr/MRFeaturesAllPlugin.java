@@ -20,10 +20,13 @@ import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin
 
 /**
  * Implements the "get all features in a feature set" query
+ *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class MRFeaturesAllPlugin extends MRFeaturesByFilterPlugin{
 
+    /** {@inheritDoc} */
     @Override
     public Object[] getInternalParameters() {
         return new Object[]{new InMemoryFeaturesAllPlugin.FeaturesAllFilter()};

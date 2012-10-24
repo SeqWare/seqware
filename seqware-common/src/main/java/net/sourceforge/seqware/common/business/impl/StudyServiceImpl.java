@@ -17,6 +17,12 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>StudyServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class StudyServiceImpl implements StudyService {
 
   private StudyDAO studyDAO = null;
@@ -24,16 +30,18 @@ public class StudyServiceImpl implements StudyService {
   private FileDAO fileDAO = null;
   private static final Log log = LogFactory.getLog(StudyServiceImpl.class);
 
+  /**
+   * <p>Constructor for StudyServiceImpl.</p>
+   */
   public StudyServiceImpl() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Sets a private member variable with an instance of an implementation of
    * StudyDAO. This method is called by the Spring framework at run time.
-   * 
-   * @param studyDAO
-   *          implementation of StudyDAO
    * @see StudyDAO
    */
   public void setStudyDAO(StudyDAO studyDAO) {
@@ -43,7 +51,7 @@ public class StudyServiceImpl implements StudyService {
   /**
    * Sets a private member variable with an instance of an implementation of
    * FileDAO. This method is called by the Spring framework at run time.
-   * 
+   *
    * @param fileDAO
    *          implementation of FileDAO
    * @see FileDAO
@@ -53,10 +61,9 @@ public class StudyServiceImpl implements StudyService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of Study into the database.
-   * 
-   * @param studyDAO
-   *          instance of StudyDAO
    */
   public Integer insert(Study study) {
 
@@ -66,10 +73,9 @@ public class StudyServiceImpl implements StudyService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of Study in the database.
-   * 
-   * @param study
-   *          instance of Study
    */
   public void update(Study study) {
 
@@ -77,16 +83,16 @@ public class StudyServiceImpl implements StudyService {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void merge(Study study) {
     studyDAO.merge(study);
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of Study in the database.
-   * 
-   * @param study
-   *          instance of Study
    */
   public void delete(Study study, String deleteRealFiles) {
     List<File> deleteFiles = null;
@@ -101,47 +107,56 @@ public class StudyServiceImpl implements StudyService {
     }
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer studyId) {
     return studyDAO.getFiles(studyId);
   }
 
+  /** {@inheritDoc} */
   public boolean isHasFile(Integer studyId) {
     return studyDAO.isHasFile(studyId);
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer studyId, String metaType) {
     return studyDAO.getFiles(studyId, metaType);
   }
 
+  /** {@inheritDoc} */
   public boolean isHasFile(Integer studyId, String metaType) {
     return studyDAO.isHasFile(studyId, metaType);
   }
 
+  /** {@inheritDoc} */
   public List<Study> list(Registration registration) {
     return list(registration, true);
   }
 
+  /** {@inheritDoc} */
   public List<Study> list(Registration registration, Boolean isAcs) {
     return studyDAO.list(registration, isAcs);
   }
 
+  /** {@inheritDoc} */
   public List<Study> listMyShared(Registration registration, Boolean isAcs) {
     return studyDAO.listMyShared(registration, isAcs);
   }
 
+  /** {@inheritDoc} */
   public List<Study> listSharedWithMe(Registration registration) {
     return listSharedWithMe(registration, true);
   }
 
+  /** {@inheritDoc} */
   public List<Study> listSharedWithMe(Registration registration, Boolean isAcs) {
     return studyDAO.listSharedWithMe(registration, isAcs);
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Finds an instance of Study in the database by the Study emailAddress, and
    * copies the Study properties to an instance of Study.
-   * 
-   * @return instance of Study, or null if a Study cannot be found
    */
   public Study findByTitle(String title) {
     Study study = null;
@@ -155,6 +170,7 @@ public class StudyServiceImpl implements StudyService {
     return study;
   }
 
+  /** {@inheritDoc} */
   public Study findByID(Integer studyID) {
     Study study = null;
     if (studyID != null) {
@@ -168,6 +184,7 @@ public class StudyServiceImpl implements StudyService {
     return study;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Study findBySWAccession(Integer swAccession) {
     Study study = null;
@@ -182,6 +199,7 @@ public class StudyServiceImpl implements StudyService {
     return study;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Study> findByOwnerID(Integer registrationId) {
     List<Study> studies = null;
@@ -196,22 +214,16 @@ public class StudyServiceImpl implements StudyService {
     return studies;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Study> findByCriteria(String criteria, boolean isCaseSens) {
     return studyDAO.findByCriteria(criteria, isCaseSens);
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Determines if an email address has already been used.
-   * 
-   * @param oldEmail
-   *          The previous email address, or null if this method is being called
-   *          for a new email address
-   * 
-   * @param newEmail
-   *          The email address that is being checked
-   * 
-   * @return true if the newEmail has already been used, and false otherwise
    */
   public boolean hasTitleBeenUsed(String oldTitle, String newTitle) {
     boolean titleUsed = false;
@@ -237,6 +249,7 @@ public class StudyServiceImpl implements StudyService {
     return titleUsed;
   }
 
+  /** {@inheritDoc} */
   public List<Study> listWithHasFile(List<Study> list) {
     for (Study study : list) {
       study.setIsHasFile(isHasFile(study.getStudyId()));
@@ -244,6 +257,7 @@ public class StudyServiceImpl implements StudyService {
     return list;
   }
 
+  /** {@inheritDoc} */
   public List<Study> listWithHasFile(List<Study> list, String metaType) {
     List<Study> result = new LinkedList<Study>();
     for (Study study : list) {
@@ -255,68 +269,94 @@ public class StudyServiceImpl implements StudyService {
     return result;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Study> list() {
     return studyDAO.list();
   }
 
+  /** {@inheritDoc} */
   public List<Study> listStudyHasFile(Registration registration, String metaType, Boolean isAsc) {
     return studyDAO.listStudyHasFile(registration, metaType, isAsc);
   }
 
+  /**
+   * <p>Getter for the field <code>studyTypeDAO</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.dao.StudyTypeDAO} object.
+   */
   public StudyTypeDAO getStudyTypeDAO() {
     return studyTypeDAO;
   }
 
+  /**
+   * <p>Setter for the field <code>studyTypeDAO</code>.</p>
+   *
+   * @param studyTypeDAO a {@link net.sourceforge.seqware.common.dao.StudyTypeDAO} object.
+   */
   public void setStudyTypeDAO(StudyTypeDAO studyTypeDAO) {
     this.studyTypeDAO = studyTypeDAO;
   }
 
+  /**
+   * <p>Getter for the field <code>studyDAO</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.dao.StudyDAO} object.
+   */
   public StudyDAO getStudyDAO() {
     return studyDAO;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Study updateDetached(Study study) {
     return studyDAO.updateDetached(study);
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<ReturnValue> findFiles(Integer swAccession) {
     return studyDAO.findFiles(swAccession);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void updateOwners(Integer swAccession) {
     studyDAO.updateOwners(swAccession);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(Registration registration, Study study) {
     studyDAO.update(registration, study);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer insert(Registration registration, Study study) {
     study.setCreateTimestamp(new Date());
     return (studyDAO.insert(registration, study));
   }
 
+  /** {@inheritDoc} */
   @Override
   public Study updateDetached(Registration registration, Study study) {
     return studyDAO.updateDetached(registration, study);
   }
 
+  /** {@inheritDoc} */
   @Override
   public int getRunningCount(Study study) {
     return studyDAO.getStatusCount(study, WorkflowRun.RUNNING);
   }
 
+  /** {@inheritDoc} */
   @Override
   public int getFinishedCount(Study study) {
     return studyDAO.getStatusCount(study, WorkflowRun.FINISHED);
   }
 
+  /** {@inheritDoc} */
   @Override
   public int getFailedCount(Study study) {
     return studyDAO.getStatusCount(study, WorkflowRun.FAILED);

@@ -25,6 +25,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  *
  * @author dyuen
  * @author jbaran
+ * @version $Id: $Id
  */
 public class Feature extends AtomImpl<Feature> {
 
@@ -69,11 +70,13 @@ public class Feature extends AtomImpl<Feature> {
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Class getHBaseClass() {
         return Feature.class;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getHBasePrefix() {
         assert(this.getSGID() instanceof FSGID);
@@ -245,20 +248,28 @@ public class Feature extends AtomImpl<Feature> {
             return this.getAdditionalAttribute(name);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
+    /**
+     * <p>newBuilder.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.model.Feature.Builder} object.
+     */
     public static Feature.Builder newBuilder() {
         return new Feature.Builder();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Feature.Builder toBuilder() {
         Feature.Builder b = new Feature.Builder();

@@ -36,8 +36,9 @@ import org.openide.util.lookup.ServiceProvider;
  */
 
 
-/***
- * 
+/**
+ *
+ *
  * <code>
  * Syntax:
  *	./SNVMix2	-m <modelfile> [-i <infile>] [-o <outfile>] [-T | -C | -F] [-p < q | m | s >] [-t < mb | m | b | M | Mb | MB | SNVMix1>] [-q <#>] [-Q <#>] [-a/-b/-d <#,#,#>] [-M <trainP file>] [-h]
@@ -46,48 +47,51 @@ import org.openide.util.lookup.ServiceProvider;
  *			space-separated values each, like:
  *			mu 0.xxxxxxxx 0.xxxxxxxx 0.xxxxxxxx
  *			pi 0.xxxxxxxx 0.xxxxxxxx 0.xxxxxxxx
-	Optional:
-	-i <infile>	quality pileup, from pileup2matlab.pl script (def: STDIN)
-	-o <outfile>	where to put the results (def: STDOUT)
-	-T | -C | -F	Train, Classify or Filter (def: Classify)
-	-p q|m|s	Input pileup format (def: s)
-			q = quality
-			m = MAQ
-			s = SAMtools
-	-t mb|m|b|M|Mb|MB|SNVMix1
-			Filter type (def: mb)
-			mb	Lowest between map and base quality
-			m	Filter on map, and use as surrogate for base quality
-			b	Filter on base quality, take map quality as 1
-			M	Filter on map quality but use only base quality
-			Mb	Filter on map quality and use both map and base qualities
-			MB	Filter on map quality AND base quality
-			SNVMix1	Filter on base quality and map quality, afterwards consider them perfect
-	-q #		Cutoff Phred value for Base Quality, anything <= this value is ignored (def: Q19)
-	-Q #		Cutoff Phred value for Map Quality, anything <= this value is ignored (def: Q19)
-
-	Training parameters:
-	-a #,#,#	Provide alpha training parameters
-	-b #,#,#	Provide beta training parameters
-	-d #,#,#	Provide delta training parameters
-	-M <file>	Provide a file containing training parameters (will override -a, -b and -d)
-			Values are space-separated:
-			alpha # # #
-			beta # # #
-			delta # # #
-
- 	-apply-filter 	<yes/no>
- 	-perl-path   	Path to perl installation
- 	-filter-path 	Path to the filter script
- 	-threshold  	THRESHOLD is given, then SNVs will be reported when the selected probability exceeds this
- 	-c [2|3]  		TYPE is the number of classes to consider
-               		'2' considers only AA and {AB U BB} (default)
-               		'3' considers AA, AB and BB
-               
-	-h				this message
-	
-	</code>
-*/
+ *	Optional:
+ *	-i <infile>	quality pileup, from pileup2matlab.pl script (def: STDIN)
+ *	-o <outfile>	where to put the results (def: STDOUT)
+ *	-T | -C | -F	Train, Classify or Filter (def: Classify)
+ *	-p q|m|s	Input pileup format (def: s)
+ *			q = quality
+ *			m = MAQ
+ *			s = SAMtools
+ *	-t mb|m|b|M|Mb|MB|SNVMix1
+ *			Filter type (def: mb)
+ *			mb	Lowest between map and base quality
+ *			m	Filter on map, and use as surrogate for base quality
+ *			b	Filter on base quality, take map quality as 1
+ *			M	Filter on map quality but use only base quality
+ *			Mb	Filter on map quality and use both map and base qualities
+ *			MB	Filter on map quality AND base quality
+ *			SNVMix1	Filter on base quality and map quality, afterwards consider them perfect
+ *	-q #		Cutoff Phred value for Base Quality, anything <= this value is ignored (def: Q19)
+ *	-Q #		Cutoff Phred value for Map Quality, anything <= this value is ignored (def: Q19)
+ *
+ *	Training parameters:
+ *	-a #,#,#	Provide alpha training parameters
+ *	-b #,#,#	Provide beta training parameters
+ *	-d #,#,#	Provide delta training parameters
+ *	-M <file>	Provide a file containing training parameters (will override -a, -b and -d)
+ *			Values are space-separated:
+ *			alpha # # #
+ *			beta # # #
+ *			delta # # #
+ *
+ * 	-apply-filter 	<yes/no>
+ * 	-perl-path   	Path to perl installation
+ * 	-filter-path 	Path to the filter script
+ * 	-threshold  	THRESHOLD is given, then SNVs will be reported when the selected probability exceeds this
+ * 	-c [2|3]  		TYPE is the number of classes to consider
+ *               		'2' considers only AA and {AB U BB} (default)
+ *               		'3' considers AA, AB and BB
+ *
+ *	-h				this message
+ *
+ *	</code>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 @ServiceProvider(service=ModuleInterface.class)
 public class SNVMix extends Module {
 
@@ -97,7 +101,7 @@ public class SNVMix extends Module {
 
 	/**
 	 * getOptionParser is an internal method to parse command line args.
-	 * 
+	 *
 	 * @return OptionParser this is used to get command line options
 	 */
 	protected OptionParser getOptionParser() {
@@ -168,9 +172,9 @@ public class SNVMix extends Module {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * A method used to return the syntax for this module
-	 * 
-	 * @return a string describing the syntax
 	 */
 	@Override
 	public String get_syntax() {
@@ -186,10 +190,9 @@ public class SNVMix extends Module {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Initialization of the module.
-	 * 
-	 * @return A ReturnValue object that contains information about the status
-	 *         of init
 	 */
 	@Override
 	public ReturnValue init() {
@@ -230,10 +233,10 @@ public class SNVMix extends Module {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Verifies that the parameters make sense. Have to verify the parameters
 	 * provided.
-	 * 
-	 * @return a ReturnValue object
 	 */
 	@Override
 	public ReturnValue do_verify_parameters() {
@@ -398,11 +401,11 @@ public class SNVMix extends Module {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * The do_verify_input method ensures that the model files exist. It also
 	 * does the validation of the input files or anything that is needed to make
 	 * sure the module has everything it needs to run.
-	 * 
-	 * @return a ReturnValue object
 	 */
 	@Override
 	public ReturnValue do_verify_input() {
@@ -471,9 +474,9 @@ public class SNVMix extends Module {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Not implemented.
-	 * 
-	 * @return a ReturnValue object
 	 */
 	@Override
 	public ReturnValue do_test() {
@@ -483,8 +486,9 @@ public class SNVMix extends Module {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * The SNVMix and filter if specified are combined here.
-	 * @return a ReturnValue object
 	 */
 	@Override
 	public ReturnValue do_run() {
@@ -574,9 +578,9 @@ public class SNVMix extends Module {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * A method to check to make sure the output was created correctly
-	 * 
-	 * @return a ReturnValue object
 	 */
 	@Override
 	public ReturnValue do_verify_output() {
@@ -591,6 +595,8 @@ public class SNVMix extends Module {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * A cleanup method, this cleans up the temporary file created.
 	 */
 	@Override

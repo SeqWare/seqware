@@ -27,6 +27,7 @@ import com.github.seqware.queryengine.model.impl.AtomImpl;
  * compatibility and to quickly detect incompatible serialization types
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public interface SerializationInterface {
 
@@ -41,21 +42,21 @@ public interface SerializationInterface {
     /**
      * Given an array of bytes, get back an atom
      *
-     * @param <T> class type, behaviour is undefined if the class is incorrect
      * @param bytes byte representation of the desired object
-     * @return de-serialized object, or null if the serialization type does not match 
+     * @return de-serialized object, or null if the serialization type does not match
+     * @param type a {@link java.lang.Class} object.
      */
     public <T extends AtomImpl> T deserialize(byte[] bytes, Class<T> type);
 
     /**
      * Stored as the first four bytes of serialization so that serialization
      * types can pre-emptively handle their own forward/backward compatibility.
-     * 
+     *
      * 0 has been reserved for ApacheSerialization
      * 10,000-19,999 has been reserved for ProtocolBuffers
      * 20,000-29,999 has been reserved for Kryo
-     * 
-     * @return
+     *
+     * @return a int.
      */
     public abstract int getSerializationConstant();
 }

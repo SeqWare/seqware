@@ -40,8 +40,10 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 /**
  * ExperimentController
+ *
+ * @author boconnor
+ * @version $Id: $Id
  */
-
 public class ExperimentController extends MultiActionController {
   private StudyService studyService;
   private ExperimentService experimentService;
@@ -55,86 +57,185 @@ public class ExperimentController extends MultiActionController {
   private ExperimentSpotDesignService experimentSpotDesignService;
   private ExperimentSpotDesignReadSpecService experimentSpotDesignReadSpecService;
 
+  /**
+   * <p>Constructor for ExperimentController.</p>
+   */
   public ExperimentController() {
     super();
   }
 
+  /**
+   * <p>Constructor for ExperimentController.</p>
+   *
+   * @param delegate a {@link java.lang.Object} object.
+   */
   public ExperimentController(Object delegate) {
     super(delegate);
   }
 
+  /**
+   * <p>Getter for the field <code>studyService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.StudyService} object.
+   */
   public StudyService getStudyService() {
     return studyService;
   }
 
+  /**
+   * <p>Setter for the field <code>studyService</code>.</p>
+   *
+   * @param studyService a {@link net.sourceforge.seqware.common.business.StudyService} object.
+   */
   public void setStudyService(StudyService studyService) {
     this.studyService = studyService;
   }
 
+  /**
+   * <p>Getter for the field <code>validator</code>.</p>
+   *
+   * @return a {@link org.springframework.validation.Validator} object.
+   */
   public Validator getValidator() {
     return validator;
   }
 
+  /**
+   * <p>Setter for the field <code>validator</code>.</p>
+   *
+   * @param validator a {@link org.springframework.validation.Validator} object.
+   */
   public void setValidator(Validator validator) {
     this.validator = validator;
   }
 
+  /**
+   * <p>Getter for the field <code>updateValidator</code>.</p>
+   *
+   * @return a {@link org.springframework.validation.Validator} object.
+   */
   public Validator getUpdateValidator() {
     return updateValidator;
   }
 
+  /**
+   * <p>Setter for the field <code>updateValidator</code>.</p>
+   *
+   * @param validator a {@link org.springframework.validation.Validator} object.
+   */
   public void setUpdateValidator(Validator validator) {
     this.updateValidator = validator;
   }
 
+  /**
+   * <p>Getter for the field <code>experimentService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+   */
   public ExperimentService getExperimentService() {
     return experimentService;
   }
 
+  /**
+   * <p>Setter for the field <code>experimentService</code>.</p>
+   *
+   * @param experimentService a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+   */
   public void setExperimentService(ExperimentService experimentService) {
     this.experimentService = experimentService;
   }
 
+  /**
+   * <p>Getter for the field <code>librarySelectionService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.LibrarySelectionService} object.
+   */
   public LibrarySelectionService getLibrarySelectionService() {
     return librarySelectionService;
   }
 
+  /**
+   * <p>Setter for the field <code>librarySelectionService</code>.</p>
+   *
+   * @param librarySelectionService a {@link net.sourceforge.seqware.common.business.LibrarySelectionService} object.
+   */
   public void setLibrarySelectionService(LibrarySelectionService librarySelectionService) {
     this.librarySelectionService = librarySelectionService;
   }
 
+  /**
+   * <p>Getter for the field <code>librarySourceService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.LibrarySourceService} object.
+   */
   public LibrarySourceService getLibrarySourceService() {
     return librarySourceService;
   }
 
+  /**
+   * <p>Setter for the field <code>librarySourceService</code>.</p>
+   *
+   * @param librarySourceService a {@link net.sourceforge.seqware.common.business.LibrarySourceService} object.
+   */
   public void setLibrarySourceService(LibrarySourceService librarySourceService) {
     this.librarySourceService = librarySourceService;
   }
 
+  /**
+   * <p>Getter for the field <code>libraryStrategyService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.LibraryStrategyService} object.
+   */
   public LibraryStrategyService getLibraryStrategyService() {
     return libraryStrategyService;
   }
 
+  /**
+   * <p>Setter for the field <code>libraryStrategyService</code>.</p>
+   *
+   * @param libraryStrategyService a {@link net.sourceforge.seqware.common.business.LibraryStrategyService} object.
+   */
   public void setLibraryStrategyService(LibraryStrategyService libraryStrategyService) {
     this.libraryStrategyService = libraryStrategyService;
   }
 
+  /**
+   * <p>Getter for the field <code>platformService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.PlatformService} object.
+   */
   public PlatformService getPlatformService() {
     return platformService;
   }
 
+  /**
+   * <p>Setter for the field <code>platformService</code>.</p>
+   *
+   * @param platformService a {@link net.sourceforge.seqware.common.business.PlatformService} object.
+   */
   public void setPlatformService(PlatformService platformService) {
     this.platformService = platformService;
   }
 
+  /**
+   * <p>Getter for the field <code>experimentLibraryDesignService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.ExperimentLibraryDesignService} object.
+   */
   public ExperimentLibraryDesignService getExperimentLibraryDesignService() {
     return experimentLibraryDesignService;
   }
 
+  /**
+   * <p>Setter for the field <code>experimentLibraryDesignService</code>.</p>
+   *
+   * @param experimentLibraryDesignService a {@link net.sourceforge.seqware.common.business.ExperimentLibraryDesignService} object.
+   */
   public void setExperimentLibraryDesignService(ExperimentLibraryDesignService experimentLibraryDesignService) {
     this.experimentLibraryDesignService = experimentLibraryDesignService;
   }
 
+  /** {@inheritDoc} */
   protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
     // Uncomment the following line if you're using a Double object
     // binder.registerCustomEditor(Integer.class, new CustomIntegerEditor());
@@ -143,6 +244,7 @@ public class ExperimentController extends MultiActionController {
   }
 
   // @Override
+  /** {@inheritDoc} */
   protected void bind(HttpServletRequest arg0, Object arg1) throws Exception {
     // TODO Auto-generated method stub
     super.bind(arg0, arg1);
@@ -150,17 +252,15 @@ public class ExperimentController extends MultiActionController {
 
   /**
    * Handles the user's request to submit a new study.
-   * 
+   *
    * @param request
    *          HttpServletRequest
    * @param response
    *          HttpServletResponse
    * @param command
    *          Study command object
-   * 
    * @return ModelAndView
-   * 
-   * @throws Exception
+   * @throws java.lang.Exception if any.
    */
   public ModelAndView handleSubmit(HttpServletRequest request, HttpServletResponse response, Experiment command)
       throws Exception {
@@ -214,9 +314,13 @@ public class ExperimentController extends MultiActionController {
   /**
    * Handles the user's request to reset the experiment page during a new or
    * update experiment.
-   * 
+   *
    * @param command
    *          Experiment command object
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+   * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+   * @throws java.lang.Exception if any.
    */
   public ModelAndView handleReset(HttpServletRequest request, HttpServletResponse response, Experiment command)
       throws Exception {
@@ -260,9 +364,13 @@ public class ExperimentController extends MultiActionController {
 
   /**
    * Handles the user's request to cancel the study or the study update page.
-   * 
+   *
    * @param command
    *          Study command object
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+   * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+   * @throws java.lang.Exception if any.
    */
   public ModelAndView handleCancel(HttpServletRequest request, HttpServletResponse response, Study command)
       throws Exception {
@@ -277,9 +385,13 @@ public class ExperimentController extends MultiActionController {
 
   /**
    * Handles the user's request to update their study.
-   * 
+   *
    * @param command
    *          Study command object
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+   * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+   * @throws java.lang.Exception if any.
    */
   public ModelAndView handleUpdate(HttpServletRequest request, HttpServletResponse response, Experiment command)
       throws Exception {
@@ -342,9 +454,13 @@ public class ExperimentController extends MultiActionController {
 
   /**
    * Handles the user's request to delete their experiment.
-   * 
+   *
    * @param command
    *          Experiment command object
+   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+   * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+   * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+   * @throws java.lang.Exception if any.
    */
   public ModelAndView handleDelete(HttpServletRequest request, HttpServletResponse response, Study command)
       throws Exception {
@@ -553,18 +669,38 @@ public class ExperimentController extends MultiActionController {
     return experiment;
   }
 
+  /**
+   * <p>Getter for the field <code>experimentSpotDesignService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.ExperimentSpotDesignService} object.
+   */
   public ExperimentSpotDesignService getExperimentSpotDesignService() {
     return experimentSpotDesignService;
   }
 
+  /**
+   * <p>Setter for the field <code>experimentSpotDesignService</code>.</p>
+   *
+   * @param experimentSpotDesignService a {@link net.sourceforge.seqware.common.business.ExperimentSpotDesignService} object.
+   */
   public void setExperimentSpotDesignService(ExperimentSpotDesignService experimentSpotDesignService) {
     this.experimentSpotDesignService = experimentSpotDesignService;
   }
 
+  /**
+   * <p>Getter for the field <code>experimentSpotDesignReadSpecService</code>.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.business.ExperimentSpotDesignReadSpecService} object.
+   */
   public ExperimentSpotDesignReadSpecService getExperimentSpotDesignReadSpecService() {
     return experimentSpotDesignReadSpecService;
   }
 
+  /**
+   * <p>Setter for the field <code>experimentSpotDesignReadSpecService</code>.</p>
+   *
+   * @param experimentSpotDesignReadSpecService a {@link net.sourceforge.seqware.common.business.ExperimentSpotDesignReadSpecService} object.
+   */
   public void setExperimentSpotDesignReadSpecService(
       ExperimentSpotDesignReadSpecService experimentSpotDesignReadSpecService) {
     this.experimentSpotDesignReadSpecService = experimentSpotDesignReadSpecService;

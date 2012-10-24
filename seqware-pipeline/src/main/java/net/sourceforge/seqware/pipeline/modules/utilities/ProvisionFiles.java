@@ -31,18 +31,18 @@ import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * 
+ *
  * Purpose:
- * 
+ *
  * This module takes one or more inputs (S3 URL, HTTP/HTTPS URL, or local file
  * path) and copies the file to the specified output (S3 bucket URL, HTTP/HTTPS
  * URL, or local directory path). For S3 this bundle supports large, multipart
  * file upload which is needed for files >2G.
- * 
+ *
  * FIXME: needs to return errors on failures/exceptions
- * 
+ *
  * @author boconnor
- * 
+ * @version $Id: $Id
  */
 @ServiceProvider(service = ModuleInterface.class)
 public class ProvisionFiles extends Module {
@@ -61,6 +61,11 @@ public class ProvisionFiles extends Module {
 
   // FIXME: users have requested the ability to specify a single input file and
   // a single output file so they can copy and rename
+  /**
+   * <p>getOptionParser.</p>
+   *
+   * @return a {@link joptsimple.OptionParser} object.
+   */
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser
@@ -111,6 +116,11 @@ public class ProvisionFiles extends Module {
     return (parser);
   }
 
+  /**
+   * <p>get_syntax.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String get_syntax() {
     OptionParser parser = getOptionParser();
     StringWriter output = new StringWriter();
@@ -124,6 +134,8 @@ public class ProvisionFiles extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Things to check: * FIXME
    */
   @Override
@@ -131,6 +143,7 @@ public class ProvisionFiles extends Module {
     return new ReturnValue(ReturnValue.NOTIMPLEMENTED);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
 
@@ -172,6 +185,7 @@ public class ProvisionFiles extends Module {
     return (ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
 
@@ -230,6 +244,7 @@ public class ProvisionFiles extends Module {
     return (ret);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
 
@@ -346,6 +361,15 @@ public class ProvisionFiles extends Module {
     return (ret);
   }
 
+  /**
+   * <p>provisionFile.</p>
+   *
+   * @param input a {@link java.lang.String} object.
+   * @param output a {@link java.lang.String} object.
+   * @param skipIfMissing a boolean.
+   * @param fileArray a {@link java.util.ArrayList} object.
+   * @return a boolean.
+   */
   protected boolean provisionFile(String input, String output, boolean skipIfMissing, ArrayList<FileMetadata> fileArray) {
 
     BufferedInputStream reader = null;
@@ -384,11 +408,13 @@ public class ProvisionFiles extends Module {
    * should deal with failed uploads (maybe) I'm not really dealing with failed
    * upload recovery here... Keep in mind only the writeout to local file will
    * attempt to recover from failed reader
-   * 
-   * @param output
-   * @param bufferLength
-   * @param startPosition
-   * @return
+   *
+   * @param output a {@link java.lang.String} object.
+   * @param reader a {@link java.io.BufferedInputStream} object.
+   * @param bufLen a int.
+   * @param input a {@link java.lang.String} object.
+   * @param fileArray a {@link java.util.ArrayList} object.
+   * @return a boolean.
    */
   protected boolean putDestination(BufferedInputStream reader, String output, int bufLen, String input,
       ArrayList<FileMetadata> fileArray) {
@@ -451,6 +477,11 @@ public class ProvisionFiles extends Module {
     return (result);
   }
 
+  /**
+   * <p>getDecryptCipher.</p>
+   *
+   * @return a {@link javax.crypto.Cipher} object.
+   */
   protected Cipher getDecryptCipher() {
     if (options.has("decrypt-key")) {
       return (filesUtil.getDecryptCipher((String) options.valueOf("decrypt-key")));
@@ -466,6 +497,11 @@ public class ProvisionFiles extends Module {
     return (null);
   }
 
+  /**
+   * <p>getEncryptCipher.</p>
+   *
+   * @return a {@link javax.crypto.Cipher} object.
+   */
   protected Cipher getEncryptCipher() {
     if (options.has("encrypt-key")) {
       return (filesUtil.getEncryptCipher((String) options.valueOf("encrypt-key")));
@@ -481,6 +517,7 @@ public class ProvisionFiles extends Module {
     return (null);
   }
 
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     // TODO: should verify output, especially is they are local files!

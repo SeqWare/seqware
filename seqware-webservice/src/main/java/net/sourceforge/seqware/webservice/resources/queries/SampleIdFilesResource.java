@@ -32,15 +32,23 @@ import org.restlet.Response;
 import org.w3c.dom.Document;
 
 /**
+ * <p>SampleIdFilesResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class SampleIdFilesResource extends BasicRestlet {
 
+    /**
+     * <p>Constructor for SampleIdFilesResource.</p>
+     *
+     * @param context a {@link org.restlet.Context} object.
+     */
     public SampleIdFilesResource(Context context) {
         super(context);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void handle(Request request, Response response) {
         authenticate(request.getChallengeResponse().getIdentifier());

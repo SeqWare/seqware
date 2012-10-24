@@ -24,22 +24,30 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>ProcessingServiceImpl class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class ProcessingServiceImpl implements ProcessingService {
 
   private ProcessingDAO processingDAO = null;
   private FileDAO fileDAO = null;
   private static final Log log = LogFactory.getLog(ProcessingServiceImpl.class);
 
+  /**
+   * <p>Constructor for ProcessingServiceImpl.</p>
+   */
   public ProcessingServiceImpl() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Sets a private member variable with an instance of an implementation of
    * ProcessingDAO. This method is called by the Spring framework at run time.
-   * 
-   * @param processingDAO
-   *          implementation of ProcessingDAO
    * @see ProcessingDAO
    */
   public void setProcessingDAO(ProcessingDAO processingDAO) {
@@ -49,7 +57,7 @@ public class ProcessingServiceImpl implements ProcessingService {
   /**
    * Sets a private member variable with an instance of an implementation of
    * FileDAO. This method is called by the Spring framework at run time.
-   * 
+   *
    * @param fileDAO
    *          implementation of FileDAO
    * @see FileDAO
@@ -59,10 +67,9 @@ public class ProcessingServiceImpl implements ProcessingService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of Processing into the database.
-   * 
-   * @param processingDAO
-   *          instance of ProcessingDAO
    */
   public void insert(SequencerRun sequencerRun, Processing processing) {
 
@@ -75,6 +82,7 @@ public class ProcessingServiceImpl implements ProcessingService {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void insert(Registration registration, SequencerRun sequencerRun, Processing processing) {
     if (processing.getStatus() == null) {
@@ -85,6 +93,7 @@ public class ProcessingServiceImpl implements ProcessingService {
     processingDAO.insert(registration, processing);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer insert(Processing processing) {
 
@@ -98,15 +107,15 @@ public class ProcessingServiceImpl implements ProcessingService {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of Processing in the database.
-   * 
-   * @param processing
-   *          instance of Processing
    */
   public void update(Processing processing) {
     processingDAO.update(processing);
   }
 
+  /** {@inheritDoc} */
   public void delete(Processing processing, String deleteRealFiles) {
     List<File> deleteFiles = null;
     if ("yes".equals(deleteRealFiles)) {
@@ -160,14 +169,17 @@ public class ProcessingServiceImpl implements ProcessingService {
     }
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer processingId) {
     return processingDAO.getFiles(processingId);
   }
 
+  /** {@inheritDoc} */
   public boolean isHasFile(Integer processingId) {
     return processingDAO.isHasFile(processingId);
   }
 
+  /** {@inheritDoc} */
   public Set<Processing> setWithHasFile(Set<Processing> list) {
     for (Processing processing : list) {
       boolean isHasFile = isHasFile(processing.getProcessingId());
@@ -179,14 +191,23 @@ public class ProcessingServiceImpl implements ProcessingService {
     return list;
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer processingId, String metaType) {
     return processingDAO.getFiles(processingId, metaType);
   }
 
+  /**
+   * <p>isHasFile.</p>
+   *
+   * @param processingId a {@link java.lang.Integer} object.
+   * @param metaType a {@link java.lang.String} object.
+   * @return a boolean.
+   */
   public boolean isHasFile(Integer processingId, String metaType) {
     return processingDAO.isHasFile(processingId, metaType);
   }
 
+  /** {@inheritDoc} */
   public Set<Processing> setWithHasFile(Set<Processing> list, String metaType) {
     Set<Processing> result = new TreeSet<Processing>();
     for (Processing processing : list) {
@@ -202,6 +223,7 @@ public class ProcessingServiceImpl implements ProcessingService {
     return result;
   }
 
+  /** {@inheritDoc} */
   public Processing findByID(Integer id) {
 
     Processing processing = null;
@@ -217,6 +239,7 @@ public class ProcessingServiceImpl implements ProcessingService {
 
   }
 
+  /** {@inheritDoc} */
   public Processing findByIDOnlyWithRunningWR(Integer processingID) {
     Processing processing = findByID(processingID);
     /*
@@ -233,6 +256,7 @@ public class ProcessingServiceImpl implements ProcessingService {
     return processing;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Processing findBySWAccession(Integer swAccession) {
     Processing processing = null;
@@ -247,6 +271,7 @@ public class ProcessingServiceImpl implements ProcessingService {
     return processing;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Processing> findByOwnerID(Integer registrationId) {
     List<Processing> processings = null;
@@ -261,26 +286,31 @@ public class ProcessingServiceImpl implements ProcessingService {
     return processings;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Processing> findByCriteria(String criteria, boolean isCaseSens) {
     return processingDAO.findByCriteria(criteria, isCaseSens);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Processing updateDetached(Processing processing) {
     return processingDAO.updateDetached(processing);
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Processing> list() {
     return processingDAO.list();
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(Registration registration, Processing processing) {
     processingDAO.update(registration, processing);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer insert(Registration registration, Processing processing) {
     if (processing.getStatus() == null) {
@@ -290,12 +320,15 @@ public class ProcessingServiceImpl implements ProcessingService {
     return processingDAO.insert(registration, processing);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Processing updateDetached(Registration registration, Processing processing) {
     return processingDAO.updateDetached(registration, processing);
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Returns the Set of the Processings belongs to the specific Sample,
    * WorkflowRun.
    */
@@ -338,6 +371,7 @@ public class ProcessingServiceImpl implements ProcessingService {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public Set<Processing> findFor(Sample sample) {
     return findFor(sample, null);

@@ -24,9 +24,11 @@ import com.github.seqware.queryengine.plugins.MapReducePlugin;
  * Base class for all in-memory plug-ins that do MR
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public abstract class AbstractMRInMemoryPlugin extends AbstractInMemoryPlugin implements MapReducePlugin<Feature, FeatureSet> {
 
+    /** {@inheritDoc} */
     @Override
     public void performInMemoryRun() {
         // TODO Set of mapped features is currently not used.

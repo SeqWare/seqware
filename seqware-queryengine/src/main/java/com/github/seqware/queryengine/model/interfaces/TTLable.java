@@ -25,6 +25,7 @@ import java.util.Date;
  * to not run a matching daily task to clean-up expired elements.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public interface TTLable {
 
@@ -53,32 +54,37 @@ public interface TTLable {
     
     /**
      * Return the expiry date
-     * @return 
+     *
+     * @return a {@link java.util.Date} object.
      */
     public Date getExpiryDate();
     
     /**
      * Return the expiry date in terms of hours in the future
      * (may fail if the time difference is too large)
-     * @return 
+     *
+     * @return a int.
      */
     public int getTTL();
     
     /**
      * Return true iff this expires
-     * @return 
+     *
+     * @return a boolean.
      */
     public boolean isExpires();
     
     /**
      * Return raw expiry time
-     * @return 
+     *
+     * @return a long.
      */
     public long getExpiryTime();
     
     /**
      * Return whether cascade should occur on deletion
-     * @return 
+     *
+     * @return a boolean.
      */
     public boolean getCascade();
 }

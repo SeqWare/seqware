@@ -21,12 +21,17 @@ import net.sourceforge.seqware.queryengine.backend.util.SeqWareException;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareIterator;
 import net.sourceforge.seqware.queryengine.backend.util.SeqWareSettings;
 /**
+ * <p>ListBEDExporter class.</p>
+ *
  * @author boconnor
  * FIXME: the sorted output orders by start and not chr then start
+ * @version $Id: $Id
  */
 public class ListBEDExporter {
 
   /**
+   * <p>main.</p>
+   *
    * @param args
    * LEFT OFF WITH: need to figure out why ID is null
    */

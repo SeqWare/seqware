@@ -19,15 +19,23 @@ import net.sourceforge.seqware.queryengine.backend.store.impl.BerkeleyDBStore;
 import net.sourceforge.seqware.queryengine.tools.importers.VariantImporter;
 
 /**
- * @author boconnor
+ * <p>BedFeatureImportWorker class.</p>
  *
+ * @author boconnor
+ * @version $Id: $Id
  */
 public class BedFeatureImportWorker extends ImportWorker {
 
 
+  /**
+   * <p>Constructor for BedFeatureImportWorker.</p>
+   */
   public BedFeatureImportWorker() { }
 
 
+  /**
+   * <p>run.</p>
+   */
   public void run() {
 
     // open the file

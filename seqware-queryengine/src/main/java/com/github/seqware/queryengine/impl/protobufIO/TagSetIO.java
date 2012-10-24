@@ -30,11 +30,14 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
+ * <p>TagSetIO class.</p>
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class TagSetIO implements ProtobufTransferInterface<TagSetPB, TagSet>{
 
+    /** {@inheritDoc} */
     @Override
     public TagSet pb2m(TagSetPB userpb) {
         TagSet.Builder builder = InMemoryTagSet.newBuilder();
@@ -55,6 +58,7 @@ public class TagSetIO implements ProtobufTransferInterface<TagSetPB, TagSet>{
     }
     
 
+    /** {@inheritDoc} */
     @Override
     public TagSetPB m2pb(TagSet sgid) {
         QueryEngine.TagSetPB.Builder builder = QueryEngine.TagSetPB.newBuilder();
@@ -71,6 +75,7 @@ public class TagSetIO implements ProtobufTransferInterface<TagSetPB, TagSet>{
         return userpb;
     }
 
+    /** {@inheritDoc} */
     @Override
     public TagSet byteArr2m(byte[] arr) {
         try {

@@ -21,7 +21,10 @@ import org.junit.runner.RunWith;
 
 /**
  * Add tests here to have them run in the tests suites for the model directory.
+ *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 @RunWith(DynamicSuite.class)
 public class DynamicSuiteBuilder {
@@ -30,6 +33,11 @@ public class DynamicSuiteBuilder {
         FeatureTest.class, QueryInterfaceTest.class, ReferenceSetTest.class, TaggableTest.class, GVFFormatTest.class, 
         UserGroupTest.class, TTLTest.class, FriendlyNameTest.class, VCFImportExportModelTest.class};
     
+    /**
+     * <p>modelSuite.</p>
+     *
+     * @return an array of {@link java.lang.Class} objects.
+     */
     public static Class[] modelSuite() {
          return DynamicSuiteBuilder.ModelTests;
    }

@@ -47,26 +47,35 @@ import org.apache.log4j.Logger;
 
 /**
  * This plug-in implements a quick and dirty export using Map/Reduce
- * 
+ *
  * TODO: Copy from HDFS and parse key value file to VCF properly.
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class MRVCFDumperPlugin extends AbstractMRHBasePlugin<File> {
 
     private Path path = new Path("/tmp/" + new BigInteger(20, new SecureRandom()).toString(32) + "testVCFDumper.vcf");
 
+    /** {@inheritDoc} */
     @Override
     public byte[] handleSerialization(Object... parameters) {
         byte[] serialize = SerializationUtils.serialize(parameters);
         return serialize;
     }
 
+    /**
+     * <p>handleDeserialization.</p>
+     *
+     * @param data an array of byte.
+     * @return an array of {@link java.lang.Object} objects.
+     */
     public static Object[] handleDeserialization(byte[] data) {
         Object[] result = (Object[]) SerializationUtils.deserialize(data);
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void performVariableInit(String inputTableName, String outputTableName, Scan scan) {
         try {
@@ -87,6 +96,7 @@ public class MRVCFDumperPlugin extends AbstractMRHBasePlugin<File> {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Object[] getInternalParameters() {
         return new Object[0];
@@ -148,6 +158,7 @@ public class MRVCFDumperPlugin extends AbstractMRHBasePlugin<File> {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public File variableResult() {
         FileSystem fs = null;

@@ -32,7 +32,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author kai.wang@uky.edu
  * @author briandoconnor@gmail.com
- *
+ * @version $Id: $Id
  */
 @ServiceProvider(service=ModuleInterface.class)
 public class MapSplice extends Module {
@@ -43,7 +43,7 @@ public class MapSplice extends Module {
 
   /**
    * getOptionParser is an internal method to parse command line args.
-   * 
+   *
    * @return OptionParser this is used to get command line options
    */
   protected OptionParser getOptionParser() {
@@ -173,8 +173,9 @@ public class MapSplice extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * A method used to return the syntax for this module
-   * @return a string describing the syntax
    */
   @Override
   public String get_syntax() {
@@ -190,14 +191,14 @@ public class MapSplice extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * The init method is where you put any code needed to setup your module.
    * Here I set some basic information in the ReturnValue object which will eventually
    * populate the "processing" table in seqware_meta_db. I also create a temporary
    * directory using the FileTools object.
-   * 
+   *
    * init is optional
-   * 
-   * @return A ReturnValue object that contains information about the status of init
    */
   @Override
   public ReturnValue init() {
@@ -243,9 +244,9 @@ public class MapSplice extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Verifies that the parameters make sense
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -270,6 +271,8 @@ public class MapSplice extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * The do_verify_input method ensures that the input files exist. It
    * may also do validation of the input files or anything that is needed
    * to make sure the module has everything it needs to run. There is some
@@ -278,8 +281,6 @@ public class MapSplice extends Module {
    * connected to etc.  While do_verify_parameters is primarily used to
    * validate that the minimal parameters are passed in. The overlap between
    * these two methods is at the discretion of the developer
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -318,13 +319,13 @@ public class MapSplice extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * This is really an optional method but a very good idea. You
    * would test the programs your calling here by running them on
    * a "known good" test dataset and then compare the new answer
    * with the previous known good answer. Other forms of testing could be
    * encapsulated here as well.
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_test() {
@@ -339,10 +340,10 @@ public class MapSplice extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Run core of module.
    * Based on script sw_module_BWA.pl
-   *
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_run() {
@@ -453,9 +454,9 @@ public class MapSplice extends Module {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * A method to check to make sure the output was created correctly
-   * 
-   * @return a ReturnValue object
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -497,9 +498,11 @@ public class MapSplice extends Module {
   }
   
   /**
+   * {@inheritDoc}
+   *
    * A cleanup method, make sure you cleanup files that are outside the current working directory
    * since Pegasus won't clean those for you.
-   * 
+   *
    * clean_up is optional
    */
   @Override

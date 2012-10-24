@@ -24,13 +24,24 @@ import org.hibernate.Query;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/**
+ * <p>IUSDAOHibernate class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ */
 public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
 
+  /**
+   * <p>Constructor for IUSDAOHibernate.</p>
+   */
   public IUSDAOHibernate() {
     super();
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Inserts an instance of Lane into the database.
    */
   public void insert(IUS obj) {
@@ -39,6 +50,8 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Updates an instance of Lane in the database.
    */
   public void update(IUS obj) {
@@ -47,11 +60,13 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     getSession().flush();
   }
 
+  /** {@inheritDoc} */
   public void delete(IUS obj) {
 
     this.getHibernateTemplate().delete(obj);
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer iusId) {
     List<File> files = new ArrayList<File>();
 
@@ -78,6 +93,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     return files;
   }
 
+  /** {@inheritDoc} */
   public boolean isHasFile(Integer iusId) {
     boolean isHasFile = false;
     String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -101,6 +117,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     return isHasFile;
   }
 
+  /** {@inheritDoc} */
   public List<File> getFiles(Integer iusId, String metaType) {
     List<File> files = new ArrayList<File>();
 
@@ -127,6 +144,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     return files;
   }
 
+  /** {@inheritDoc} */
   public boolean isHasFile(Integer iusId, String metaType) {
     boolean isHasFile = false;
     String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -150,6 +168,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     return isHasFile;
   }
 
+  /** {@inheritDoc} */
   public IUS findByID(Integer id) {
     String query = "from IUS as ius where ius.iusId = ?";
     IUS obj = null;
@@ -161,6 +180,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     return obj;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
   public List<IUS> findByOwnerID(Integer registrationId) {
@@ -169,6 +189,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     return this.getHibernateTemplate().find(query, parameters);
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
   public IUS findBySWAccession(Integer swAccession) {
@@ -182,6 +203,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     return obj;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
   public List<IUS> findByCriteria(String criteria, boolean isCaseSens) {
@@ -203,6 +225,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     return query.list();
   }
 
+  /** {@inheritDoc} */
   @Override
   public IUS updateDetached(IUS ius) {
     IUS dbObject = findByID(ius.getIusId());
@@ -218,6 +241,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     return null;
   }
 
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
   public List<IUS> findBelongsToStudy(Study study) {
@@ -275,6 +299,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     return iuses;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<IUS> list() {
     ArrayList<IUS> l = new ArrayList<IUS>();
@@ -290,6 +315,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     return l;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void update(Registration registration, IUS ius) {
     IUS dbObject = reattachIUS(ius);
@@ -306,6 +332,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
 
   }
 
+  /** {@inheritDoc} */
   @Override
   public void insert(Registration registration, IUS obj) {
     Logger logger = Logger.getLogger(IUSDAOHibernate.class);
@@ -319,6 +346,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public IUS updateDetached(Registration registration, IUS ius) {
     IUS dbObject = reattachIUS(ius);
@@ -342,6 +370,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     return dbObject;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<IUS> find(String sequencerRunName, Integer lane, String sampleName) {
     checkNotNull(sequencerRunName);

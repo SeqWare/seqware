@@ -23,22 +23,32 @@ import java.util.Iterator;
     
 /**
  * A bit of a hack class, allows us to have getCount as well as iterable
+ *
  * @author dyuen
+ * @version $Id: $Id
  */
 public class SGIDIterable<T extends Atom> implements SeqWareIterable<T>{
     private Iterable<SGID> scanner;
     private final Class<T> t;
     
+    /**
+     * <p>Constructor for SGIDIterable.</p>
+     *
+     * @param scanner a {@link java.lang.Iterable} object.
+     * @param t a {@link java.lang.Class} object.
+     */
     public SGIDIterable(Iterable<SGID> scanner, Class<T> t){
         this.scanner = scanner;
         this.t = t;
     }
 
+    /** {@inheritDoc} */
     @Override
     public long getCount() {
         throw new UnsupportedOperationException("HBase Scan class does not seem to support a number of rows operation");
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<T> iterator() {
         return new SGIDIterator();

@@ -40,18 +40,26 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>SequencerRunIDResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class SequencerRunIDResource extends DatabaseIDResource {
 
     private Logger logger;
 
+    /**
+     * <p>Constructor for SequencerRunIDResource.</p>
+     */
     public SequencerRunIDResource() {
         super("sequencerRunId");
         logger = Logger.getLogger(SequencerRunIDResource.class);
     }
 
+    /**
+     * <p>getXml.</p>
+     */
     @Get
     public void getXml() {
         authenticate();
@@ -91,6 +99,7 @@ public class SequencerRunIDResource extends DatabaseIDResource {
 
     }
 
+    /** {@inheritDoc} */
     @Override
 	@Put
     public Representation put(Representation entity) {

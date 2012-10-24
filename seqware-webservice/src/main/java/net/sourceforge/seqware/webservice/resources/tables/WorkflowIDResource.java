@@ -43,20 +43,29 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>WorkflowIDResource class.</p>
  *
  * @author mtaschuk
+ * @version $Id: $Id
  */
 public class WorkflowIDResource extends DatabaseIDResource {
 
+    /**
+     * <p>Constructor for WorkflowIDResource.</p>
+     */
     public WorkflowIDResource() {
         super("workflowId");
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeqWareWebServiceApplication getApplication() {
         return (SeqWareWebServiceApplication) super.getApplication();
     }
 
+    /**
+     * <p>getXml.</p>
+     */
     @Get
     public void getXml() {
         authenticate();
@@ -93,6 +102,7 @@ public class WorkflowIDResource extends DatabaseIDResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
+    /** {@inheritDoc} */
     @Override
     public Representation put(Representation entity) {
         authenticate();

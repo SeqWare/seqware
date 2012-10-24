@@ -15,10 +15,19 @@ import org.restlet.resource.ResourceException;
 
 import com.google.common.annotations.VisibleForTesting;
 
+/**
+ * <p>FileAttributeServerResource class.</p>
+ *
+ * @author morgantaschuk
+ * @version $Id: $Id
+ */
 public class FileAttributeServerResource extends BasicResource implements FileAttributeResource {
 
   private static FileAttributeService fileAttributeService;
 
+  /**
+   * <p>Constructor for FileAttributeServerResource.</p>
+   */
   public FileAttributeServerResource() {
     super();
     FileAttributeServerResource.initialiseFileAttributeService();
@@ -40,6 +49,7 @@ public class FileAttributeServerResource extends BasicResource implements FileAt
     BasicResource.setRegistrationService(registrationService);
   }
 
+  /** {@inheritDoc} */
   @Override
   public AttributeDto getAttribute() {
     Integer fileSwa;
@@ -64,6 +74,7 @@ public class FileAttributeServerResource extends BasicResource implements FileAt
     return attributeDto;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void addAttribute(AttributeDto attributeDto) {
     Integer fileSwa;
@@ -87,6 +98,7 @@ public class FileAttributeServerResource extends BasicResource implements FileAt
     setStatus(Status.SUCCESS_CREATED);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void updateAttribute(AttributeDto attributeDto) {
     Integer fileSwa;
@@ -106,6 +118,7 @@ public class FileAttributeServerResource extends BasicResource implements FileAt
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void deleteAttribute() {
     Integer fileSwa;

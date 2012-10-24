@@ -11,13 +11,18 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Unit tests of {@link FeatureSet}.
+ * Unit tests of {@link com.github.seqware.queryengine.model.FeatureSet}.
  *
  * @author jbaran
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class FeatureSetTest {
 
+    /**
+     * <p>testConsistentStorageSingleFeatures.</p>
+     */
     @Test
     public void testConsistentStorageSingleFeatures() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -49,6 +54,9 @@ public class FeatureSetTest {
         Assert.assertTrue("Feature set did not return all of the features that had been stored previously.", testFeatures.isEmpty());
     }
 
+    /**
+     * <p>testVersioningAndFeatureSets.</p>
+     */
     @Test
     public void testVersioningAndFeatureSets() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -93,6 +101,9 @@ public class FeatureSetTest {
         Assert.assertTrue("first FeatureSet size wrong", aSet.getPrecedingVersion().getPrecedingVersion().getPrecedingVersion().getCount() == 0);
     }
     
+    /**
+     * <p>testMultipleFeaturesSameLocation.</p>
+     */
     @Test
     public void testMultipleFeaturesSameLocation(){
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
@@ -122,6 +133,9 @@ public class FeatureSetTest {
         Assert.assertTrue("FeatureSet size wrong, expected 3 and found " + aSet.getCount(), aSet.getCount() == 3);
     }
     
+    /**
+     * <p>testDetachedOperations.</p>
+     */
     @Test 
     public void testDetachedOperations(){
         //unlike other sets, lazy FeatureSets should also allow you to attach even when the set itself is unmanaged

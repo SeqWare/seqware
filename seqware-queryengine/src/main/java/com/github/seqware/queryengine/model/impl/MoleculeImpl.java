@@ -11,15 +11,17 @@ import java.util.GregorianCalendar;
 
 /**
  * Implements core functionality that is shared by classes that are controlled
- * by permissions and Versionable, Taggable, TTLable via {@link AtomImpl})
+ * by permissions and Versionable, Taggable, TTLable via {@link com.github.seqware.queryengine.model.impl.AtomImpl})
  *
  * @author dyuen
+ * @version $Id: $Id
  */
 public abstract class MoleculeImpl<T extends Molecule> extends AtomImpl<T> implements Molecule<T>, ACLable, TTLable {
 
     private ACL permissions = ACL.newBuilder().build();
     private long expiryTime = TTLable.FOREVER;
 
+    /** {@inheritDoc} */
     @Override
     public void setPermissions(ACL permissions) {
         this.permissions = permissions;
@@ -28,11 +30,13 @@ public abstract class MoleculeImpl<T extends Molecule> extends AtomImpl<T> imple
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public ACL getPermissions() {
         return permissions;
     }
     
+    /** {@inheritDoc} */
     @Override
     public void setTTL(long time, boolean cascade) {
         this.expiryTime = time;
@@ -42,6 +46,7 @@ public abstract class MoleculeImpl<T extends Molecule> extends AtomImpl<T> imple
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setTTL(int hours, boolean cascade) {
         Calendar calendar = new GregorianCalendar();
@@ -53,6 +58,7 @@ public abstract class MoleculeImpl<T extends Molecule> extends AtomImpl<T> imple
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Date getExpiryDate() {
         if (this.expiryTime <= TTLable.FOREVER){
@@ -61,6 +67,7 @@ public abstract class MoleculeImpl<T extends Molecule> extends AtomImpl<T> imple
         return new Date(this.expiryTime);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getTTL() {
         long currentTime = System.currentTimeMillis();
@@ -68,17 +75,20 @@ public abstract class MoleculeImpl<T extends Molecule> extends AtomImpl<T> imple
         return (int)Math.round(difference/1000.0/60.0/60.0);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean getCascade() {
         // molecules in general do not contain anything to cascade to
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public long getExpiryTime() {
         return this.expiryTime;
     }
     
+    /** {@inheritDoc} */
     @Override 
     public boolean isExpires(){
         return this.expiryTime > TTLable.FOREVER;

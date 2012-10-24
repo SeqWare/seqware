@@ -16,9 +16,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Unit tests of {@link ACLable}.
+ * Unit tests of {@link com.github.seqware.queryengine.model.interfaces.ACLable}.
  *
  * @author dyuen
+ * @version $Id: $Id
+ * @since 0.13.3
  */
 public class ACLTest {
 
@@ -32,6 +34,9 @@ public class ACLTest {
     private static AnalysisSet aSet;
     private static Analysis a1;
 
+    /**
+     * <p>setupTests.</p>
+     */
     @BeforeClass
     public static void setupTests() {
 //        Logger.getLogger(ACLTest.class.getName()).info( "@BeforeClass");
@@ -68,6 +73,9 @@ public class ACLTest {
         mManager.close();
     }
 
+    /**
+     * <p>testACLWithVersions.</p>
+     */
     @Test
     public void testACLWithVersions() {
 //        Logger.getLogger(ACLTest.class.getName()).info( "@Test");
@@ -85,6 +93,9 @@ public class ACLTest {
         
     }
 
+    /**
+     * <p>testACLWithAllObjects.</p>
+     */
     @Test
     public void testACLWithAllObjects() {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
