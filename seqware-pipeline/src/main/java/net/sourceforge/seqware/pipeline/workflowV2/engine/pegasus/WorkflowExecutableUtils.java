@@ -10,9 +10,6 @@ import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Workflo
  *
  */
 public class WorkflowExecutableUtils {
-    private static String URL_JAVA = "file:///${basedir}/bin/jre1.6.0_29/bin/java";
-    private static String URL_PERL = "file:///${basedir}/bin/perl-5.14.1/perl";
-    private static String URL_DIRMANAGER = "file:///${basedir}/bin/globus/pegasus-dirmanager";
 
     public static WorkflowExecutable getDefaultJavaExcutable(AbstractWorkflowDataModel datamodel) {
 		WorkflowExecutable ex_java = new WorkflowExecutable();
@@ -23,10 +20,11 @@ public class WorkflowExecutableUtils {
 		ex_java.setOs("linux");
 		ex_java.setVersion("1.6.0");
 	
+		String BASE_DIR = datamodel.getWorkflowBaseDir();
 		Pfn pfn_java = new Pfn();
 		String siteObj = datamodel.getEnv().getSwCluster();
 		pfn_java.setSite(siteObj == null ? "local" : siteObj);
-		String url = StringUtils.replace(URL_JAVA, datamodel.getConfigs());
+		String url = "file:///" + BASE_DIR + "/bin/jre1.6.0_29/bin/java";
 		pfn_java.setUrl(url);
 		ex_java.setPfn(pfn_java);
 	
@@ -44,10 +42,11 @@ public class WorkflowExecutableUtils {
 		ex_perl.setOs("linux");
 		ex_perl.setVersion("5.14.1");
 	
+		String BASE_DIR = datamodel.getWorkflowBaseDir();
 		Pfn pfn_perl = new Pfn();
 		String siteObj = datamodel.getEnv().getSwCluster();
 		pfn_perl.setSite(siteObj == null ? "local" : siteObj);
-		String url = StringUtils.replace(URL_PERL, datamodel.getConfigs());
+		String url = "file:///" + BASE_DIR + "/bin/perl-5.14.1/perl";
 		pfn_perl.setUrl(url);
 		ex_perl.setPfn(pfn_perl);
 		return ex_perl;
@@ -62,10 +61,11 @@ public class WorkflowExecutableUtils {
 		ex_dirmanager.setOs("linux");
 		ex_dirmanager.setVersion("1");
 	
+		String BASE_DIR = datamodel.getWorkflowBaseDir();
 		Pfn pfn_dirmanager = new Pfn();
 		String siteObj = datamodel.getEnv().getSwCluster();
 		pfn_dirmanager.setSite(siteObj == null ? "local" :  siteObj);
-		String url = StringUtils.replace(URL_DIRMANAGER, datamodel.getConfigs());
+		String url = "file:///" + BASE_DIR + "/bin/globus/pegasus-dirmanager";
 		pfn_dirmanager.setUrl(url);
 		ex_dirmanager.setPfn(pfn_dirmanager);
 		return ex_dirmanager;
