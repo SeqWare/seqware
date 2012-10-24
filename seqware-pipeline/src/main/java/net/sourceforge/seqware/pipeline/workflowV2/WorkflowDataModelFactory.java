@@ -121,6 +121,7 @@ public class WorkflowDataModelFactory {
 		//set name, version in workflow
 		ret.setName(metaInfo.get("name"));
 		ret.setVersion(metaInfo.get("workflow_version"));
+		ret.setWorkflowBundleDir(bundlePath);
 		//set memory, network, compute to environment
 		ret.getEnv().setCompute(metaInfo.get("compute"));
 		ret.getEnv().setNetwork(metaInfo.get("network"));
@@ -130,12 +131,12 @@ public class WorkflowDataModelFactory {
 		Map<String, String> configs = this.loadIniConfigs();
 		configs.put("workflow_bundle_dir", bundlePath);
 		configs.put("workflow_name", ret.getName());
-        String basedir = bundlePath + File.separator + "Workflow_Bundle_"+ret.getName()+ File.separator + ret.getVersion();
-		configs.put("basedir", basedir);	
-		Log.error("basedir " + basedir);
+        //String basedir = bundlePath + File.separator + "Workflow_Bundle_"+ret.getName()+ File.separator + ret.getVersion();
+		//configs.put("basedir", basedir);	
+		//Log.error("basedir " + basedir);
 		
 		//merge command line option with configs
-		this.mergeCmdOptions(configs);
+		this.mergeCmdOptions(ret);
 		//merge version, and name ??? TODO 
 		
 		//set random, date, wait
@@ -283,7 +284,8 @@ public class WorkflowDataModelFactory {
     }
     
     //FIXME should iterate all options automatically
-    private void mergeCmdOptions(Map<String,String> map) {
+    private void mergeCmdOptions(AbstractWorkflowDataModel model) {
+    	Map<String,String> map = model.getConfigs();
     	//merge parent-accessions
     	if (options.has("parent-accessions")) {
     		// parent accessions
@@ -297,11 +299,12 @@ public class WorkflowDataModelFactory {
 	    			}
     		    }
     		}
-    		map.put("parent-accessions", org.apache.commons.lang.StringUtils.join(parentAccessions,","));
+    		//map.put("parent-accessions", org.apache.commons.lang.StringUtils.join(parentAccessions,","));
+    		model.setParent_accessions(org.apache.commons.lang.StringUtils.join(parentAccessions,","));
     	}
     	//merge 
     	// link-workflow-run-to-parents
-    	if (options.has("link-workflow-run-to-parents")) {
+/*    	if (options.has("link-workflow-run-to-parents")) {
         	ArrayList<String> parentsLinkedToWR = new ArrayList<String>();
     	    List opts = options.valuesOf("link-workflow-run-to-parents");
     	    for (Object opt : opts) {
@@ -311,14 +314,16 @@ public class WorkflowDataModelFactory {
 	    		}
     	    }
     	    map.put("link-workflow-run-to-parents", org.apache.commons.lang.StringUtils.join(parentsLinkedToWR,","));
-    	}
+    	}*/
     	//merge workflow-accession
     	if(options.has("workflow-accession")) {
-    		map.put("workflow-accession", (String) options.valueOf("workflow-accession"));
+    		//map.put("workflow-accession", (String) options.valueOf("workflow-accession"));
+    		model.setWorkflow_accession((String) options.valueOf("workflow-accession"));
     	}
     	//merge "workflow-run-accession"
     	if(options.has("workflow-run-accession")) {
-    		map.put("workflow-run-accession", (String) options.valueOf("workflow-run-accession"));
+    		//map.put("workflow-run-accession", (String) options.valueOf("workflow-run-accession"));
+    		model.setWorkflow_run_accession((String) options.valueOf("workflow-run-accession"));
     	}
     	//merge schedule
     	if(options.has("schedule")) {
@@ -350,11 +355,13 @@ public class WorkflowDataModelFactory {
     	map.put("metadata", Boolean.toString(metadataWriteback));
     	//metadata-output-file-prefix
     	if (options.has("metadata-output-file-prefix")) {
-    		map.put("metadata-output-file-prefix", (String) options.valueOf("metadata-output-file-prefix"));
+//    		map.put("metadata-output-file-prefix", (String) options.valueOf("metadata-output-file-prefix"));
+    		model.setMetadata_output_file_prefix((String) options.valueOf("metadata-output-file-prefix"));
     	}
     	//metadata-output-dir
     	if (options.has("metadata-output-dir")) {
-    		map.put("metadata-output-dir", (String) options.valueOf("metadata-output-dir"));
+//    		map.put("metadata-output-dir", (String) options.valueOf("metadata-output-dir"));
+    		model.setMetadata_output_dir((String) options.valueOf("metadata-output-dir"));
     	}
     }
 

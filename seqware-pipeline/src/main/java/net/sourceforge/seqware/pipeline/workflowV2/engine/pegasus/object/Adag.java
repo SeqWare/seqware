@@ -114,15 +114,15 @@ public class Adag  {
 				job0.getCommand().addArgument("mkdir -p " + dir + "; ");
 			}
 		}
-		PegasusJob pjob0 = new PegasusJob(job0, wfdm.getConfigs().get("basedir"));
+		PegasusJob pjob0 = new PegasusJob(job0, wfdm.getWorkflowBaseDir());
 		pjob0.setId(this.jobs.size());
 		pjob0.setMetadataWriteback(metadatawriteback);
 		//if has parent-accessions, assign it to first job
-		String parentAccession = wfdm.getConfigs().get("parent-accessions");
+		String parentAccession = wfdm.getParent_accessions();
 		if(parentAccession!=null && !parentAccession.isEmpty()) {
 			pjob0.setParentAccession(parentAccession);
 		}
-		String workflowRunAccession = wfdm.getConfigs().get("workflow-run-accession");
+		String workflowRunAccession = wfdm.getWorkflow_run_accession();
 		if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
 			pjob0.setWorkflowRunAccession(workflowRunAccession);
 			pjob0.setWorkflowRunAncesstor(true);
@@ -137,7 +137,7 @@ public class Adag  {
 			for(Map.Entry<String,SqwFile> entry: wfdm.getFiles().entrySet()) {
 				AbstractJob job = new BashJob("provisionFile_"+entry.getKey());
 				job.addFile(entry.getValue());
-				ProvisionFilesJob pjob = new ProvisionFilesJob(job,wfdm.getConfigs().get("basedir"), entry.getValue());
+				ProvisionFilesJob pjob = new ProvisionFilesJob(job,wfdm.getWorkflowBaseDir(), entry.getValue());
 				pjob.setId(this.jobs.size());
 				pjob.setMetadataWriteback(metadatawriteback);
 				if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
@@ -157,8 +157,8 @@ public class Adag  {
 					job0.getCommand().addArgument("mkdir -p " + outputDir + "; ");
 					pjob.setOutputDir(outputDir);
 				} else {
-					pjob.setMetadataOutputPrefix(wfdm.getConfigs().get("metadata-output-file-prefix"));
-					pjob.setOutputDir(wfdm.getConfigs().get("metadata-output-dir"));
+					pjob.setMetadataOutputPrefix(wfdm.getMetadata_output_file_prefix());
+					pjob.setOutputDir(wfdm.getMetadata_output_dir());
 					//set the filepath
 				}
 			}
@@ -193,7 +193,7 @@ public class Adag  {
 							//create a provisionFileJob;
 							AbstractJob pfjob = new BashJob("provisionFile_in");
 							pfjob.addFile(file);
-							ProvisionFilesJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getConfigs().get("basedir"), file);
+							ProvisionFilesJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getWorkflowBaseDir(), file);
 							parentPfjob.setId(this.jobs.size());
 							parentPfjob.addParent(pjob0);
 							parentPfjob.setMetadataWriteback(metadatawriteback);
@@ -209,12 +209,12 @@ public class Adag  {
 							//create a provisionFileJob;
 							AbstractJob pfjob = new BashJob("provisionFile_out");
 							pfjob.addFile(file);
-							ProvisionFilesJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getConfigs().get("basedir"), file);
+							ProvisionFilesJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getWorkflowBaseDir(), file);
 							parentPfjob.setId(this.jobs.size());
 							parentPfjob.addParent(pjob);
 							parentPfjob.setMetadataWriteback(metadatawriteback);
-							parentPfjob.setMetadataOutputPrefix(wfdm.getConfigs().get("metadata-output-file-prefix"));
-							parentPfjob.setOutputDir(wfdm.getConfigs().get("metadata-output-dir"));
+							parentPfjob.setMetadataOutputPrefix(wfdm.getMetadata_output_file_prefix());
+							parentPfjob.setOutputDir(wfdm.getMetadata_output_dir());
 							if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
 								parentPfjob.setWorkflowRunAccession(workflowRunAccession);
 							}
@@ -279,13 +279,13 @@ public class Adag  {
 	private PegasusJob createPegasusJobObject(AbstractJob job, AbstractWorkflowDataModel wfdm) {
 		PegasusJob ret = null;
 		if(job instanceof JavaJob) {
-			ret = new PegasusJavaJob(job,wfdm.getConfigs().get("basedir"));
+			ret = new PegasusJavaJob(job,wfdm.getWorkflowBaseDir());
 		} else if(job instanceof PerlJob) {
-			ret = new PegasusPerlJob(job, wfdm.getConfigs().get("basedir"));
+			ret = new PegasusPerlJob(job, wfdm.getWorkflowBaseDir());
 		} else if (job instanceof JavaSeqwareModuleJob){
-			ret = new PegasusJavaSeqwareModuleJob(job, wfdm.getConfigs().get("basedir"));
+			ret = new PegasusJavaSeqwareModuleJob(job, wfdm.getWorkflowBaseDir());
 		} else {
-			ret = new PegasusJob(job, wfdm.getConfigs().get("basedir"));
+			ret = new PegasusJob(job, wfdm.getWorkflowBaseDir());
 		}
 		return ret;
 	}
