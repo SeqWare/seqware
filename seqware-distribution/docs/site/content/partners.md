@@ -29,3 +29,4 @@ These are the folks that have made SeqWare possible.  Most development activity 
 * **Morgan Taschuk**: SeqWare Pipeline Developer at OICR.
 * **Denis Yuen**: SeqWare Query Engine Developer at OICR.
 * **Yong Liang**: SeqWare Web Service and Pipeline Developer at OICR.
+* **Joachim Baran**: Contributor for the SeqWare Query Engine at OICR.
