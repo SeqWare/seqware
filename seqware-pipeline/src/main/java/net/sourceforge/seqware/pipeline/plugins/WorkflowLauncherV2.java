@@ -71,8 +71,10 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
      if(wra==null || wra.isEmpty()) {
      return retPegasus;
      }
-     int workflowrunaccession = Integer.parseInt(wra);
-     int workflowrun = this.metadata.get_workflow_run_id(workflowrunaccession);
+     
+     int workflowrunId = Integer.parseInt(wra);
+     int workflowrunaccession = this.metadata.get_workflow_run_accession(workflowrunId);
+     //int workflowrun = this.metadata.get_workflow_run_id(workflowrunaccession);
     
      // figure out the status command
      String stdOut = retPegasus.getStdout();
@@ -100,7 +102,7 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 	// need to link all the parents to this workflow run accession
 	for (String parentLinkedToWR : parentsLinkedToWR) {
 		try {
-			this.metadata.linkWorkflowRunAndParent(workflowrun,
+			this.metadata.linkWorkflowRunAndParent(workflowrunId,
 			Integer.parseInt(parentLinkedToWR));
 		} catch (Exception e) {
 			Log.error(e.getMessage());
@@ -115,7 +117,7 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
      if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS
     		 || statusCmd == null) {
      // then something went wrong trying to call pegasus
-		metadata.update_workflow_run(workflowrun, dataModel.getTags().get("workflow_command"),
+		metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
 			dataModel.getTags().get("workflow_template"), "failed", statusCmd,
 			dataModel.getWorkflowBundleDir(), "",
 			"", wr.getHost(), 0, 0,
@@ -123,7 +125,7 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     
 		return (retPegasus);
      } else {
-	     metadata.update_workflow_run(workflowrun, dataModel.getTags().get("workflow_command"),
+	     metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
 		     dataModel.getTags().get("workflow_template"), "completed",
 		     statusCmd, dataModel.getWorkflowBundleDir(), "","", wr
 		     .getHost(), Integer.parseInt(retPegasus
