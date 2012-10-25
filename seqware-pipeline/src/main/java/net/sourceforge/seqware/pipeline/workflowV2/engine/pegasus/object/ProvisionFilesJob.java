@@ -10,8 +10,8 @@ public class ProvisionFilesJob extends PegasusJob {
 	private String outputDir;
 	private SqwFile file;
 	
-	public ProvisionFilesJob(AbstractJob job, String basedir, SqwFile file) {
-		super(job, basedir);
+	public ProvisionFilesJob(AbstractJob job, String basedir, SqwFile file, String sqwVersion) {
+		super(job, basedir, sqwVersion);
 		this.file = file;
 	}
 
@@ -21,7 +21,7 @@ public class ProvisionFilesJob extends PegasusJob {
 		//add memory, classpath, module for bash
 
 		sb.append("-Xmx").append(this.jobObj.getCommand().getMaxMemory()).append("\n");
-		sb.append("-classpath ").append(basedir).append("/lib/").append(Adag.PIPELINE).append("\n");
+		sb.append("-classpath ").append(basedir).append("/lib/").append(this.getPipelinePath()).append("\n");
 		sb.append("net.sourceforge.seqware.pipeline.runner.Runner").append("\n");
 		sb.append(this.buildMetadataString());
 

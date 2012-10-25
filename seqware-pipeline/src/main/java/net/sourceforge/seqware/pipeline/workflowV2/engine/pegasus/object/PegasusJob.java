@@ -32,10 +32,12 @@ public class PegasusJob {
 	protected String wfrAccession;
 	protected boolean wfrAncesstor;
 	protected List<String> parentAccessionFiles;
+	private String sqw_version;
 	
-	public PegasusJob(AbstractJob job, String basedir) {
+	public PegasusJob(AbstractJob job, String basedir, String sqwVersion) {
 		this.jobObj = job;
 		this.basedir = basedir;
+		this.sqw_version = sqwVersion;
 		this.parents = new ArrayList<PegasusJob>();
 		this.children = new ArrayList<PegasusJob>();
 		this.parentAccessionFiles = new ArrayList<String>();
@@ -45,11 +47,7 @@ public class PegasusJob {
 		String name = "java";
 		//FIXME should not hardcode here
 		String version = "1.6.0";
-/*		if(this.jobObj instanceof PerlJob) {
-			name = "perl";
-			//FIXME should put in property file
-			version = "5.14.1";
-		} */
+
 		
 		Element element = new Element("job", Adag.NAMESPACE);
 		element.setAttribute("id", this.jobObj.getAlgo()+"_"+this.id);
@@ -103,7 +101,7 @@ public class PegasusJob {
 		//add memory, classpath, module for bash
 		
 		sb.append("-Xmx").append(this.jobObj.getCommand().getMaxMemory()).append("\n");
-		sb.append("-classpath ").append(basedir).append("/lib/").append(Adag.PIPELINE).append("\n");
+		sb.append("-classpath ").append(basedir).append("/lib/").append(this.getPipelinePath()).append("\n");
 		sb.append("net.sourceforge.seqware.pipeline.runner.Runner").append("\n");
 		sb.append(this.buildMetadataString());
 		sb.append("--module net.sourceforge.seqware.pipeline.modules.GenericCommandRunner").append("\n");
@@ -244,4 +242,7 @@ public class PegasusJob {
 		return new HashCodeBuilder(17,37).append(this.getAccessionFile()).toHashCode();
 	}
 	
+	String getPipelinePath() {
+		return "seqware-distribution-" + this.sqw_version+"-full.jar";
+	}
 }

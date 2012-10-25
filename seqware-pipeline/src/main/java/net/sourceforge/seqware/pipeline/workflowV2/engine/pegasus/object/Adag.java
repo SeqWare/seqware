@@ -45,7 +45,7 @@ public class Adag  {
     private String schemaLocation = "http://pegasus.isi.edu/schema/DAX http://pegasus.isi.edu/schema/dax-3.2.xsd";
     public static Namespace NAMESPACE = Namespace.getNamespace("http://pegasus.isi.edu/schema/DAX");
     public static Namespace XSI = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-    public static String PIPELINE = "seqware-distribution-0.13.4-SNAPSHOT-full.jar";
+    //public static String PIPELINE = "seqware-distribution-0.13.4-SNAPSHOT-full.jar";
     private String version = "3.2";
     private String count = "1";
     private String index = "0";
@@ -114,7 +114,7 @@ public class Adag  {
 				job0.getCommand().addArgument("mkdir -p " + dir + "; ");
 			}
 		}
-		PegasusJob pjob0 = new PegasusJob(job0, wfdm.getWorkflowBaseDir());
+		PegasusJob pjob0 = new PegasusJob(job0, wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
 		pjob0.setId(this.jobs.size());
 		pjob0.setMetadataWriteback(metadatawriteback);
 		//if has parent-accessions, assign it to first job
@@ -137,7 +137,8 @@ public class Adag  {
 			for(Map.Entry<String,SqwFile> entry: wfdm.getFiles().entrySet()) {
 				AbstractJob job = new BashJob("provisionFile_"+entry.getKey());
 				job.addFile(entry.getValue());
-				ProvisionFilesJob pjob = new ProvisionFilesJob(job,wfdm.getWorkflowBaseDir(), entry.getValue());
+				ProvisionFilesJob pjob = new ProvisionFilesJob(job,wfdm.getWorkflowBaseDir(), entry.getValue(),
+						wfdm.getTags().get("seqware_version"));
 				pjob.setId(this.jobs.size());
 				pjob.setMetadataWriteback(metadatawriteback);
 				if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
@@ -193,7 +194,8 @@ public class Adag  {
 							//create a provisionFileJob;
 							AbstractJob pfjob = new BashJob("provisionFile_in");
 							pfjob.addFile(file);
-							ProvisionFilesJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getWorkflowBaseDir(), file);
+							ProvisionFilesJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getWorkflowBaseDir(), file,
+									wfdm.getTags().get("seqware_version"));
 							parentPfjob.setId(this.jobs.size());
 							parentPfjob.addParent(pjob0);
 							parentPfjob.setMetadataWriteback(metadatawriteback);
@@ -209,7 +211,8 @@ public class Adag  {
 							//create a provisionFileJob;
 							AbstractJob pfjob = new BashJob("provisionFile_out");
 							pfjob.addFile(file);
-							ProvisionFilesJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getWorkflowBaseDir(), file);
+							ProvisionFilesJob parentPfjob = new ProvisionFilesJob(pfjob,wfdm.getWorkflowBaseDir(), file,
+									wfdm.getTags().get("seqware_version"));
 							parentPfjob.setId(this.jobs.size());
 							parentPfjob.addParent(pjob);
 							parentPfjob.setMetadataWriteback(metadatawriteback);
@@ -279,13 +282,13 @@ public class Adag  {
 	private PegasusJob createPegasusJobObject(AbstractJob job, AbstractWorkflowDataModel wfdm) {
 		PegasusJob ret = null;
 		if(job instanceof JavaJob) {
-			ret = new PegasusJavaJob(job,wfdm.getWorkflowBaseDir());
+			ret = new PegasusJavaJob(job,wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
 		} else if(job instanceof PerlJob) {
-			ret = new PegasusPerlJob(job, wfdm.getWorkflowBaseDir());
+			ret = new PegasusPerlJob(job, wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
 		} else if (job instanceof JavaSeqwareModuleJob){
-			ret = new PegasusJavaSeqwareModuleJob(job, wfdm.getWorkflowBaseDir());
+			ret = new PegasusJavaSeqwareModuleJob(job, wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
 		} else {
-			ret = new PegasusJob(job, wfdm.getWorkflowBaseDir());
+			ret = new PegasusJob(job, wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
 		}
 		return ret;
 	}
