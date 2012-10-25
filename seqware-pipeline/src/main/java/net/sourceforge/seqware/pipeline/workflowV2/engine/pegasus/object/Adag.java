@@ -204,7 +204,7 @@ public class Adag  {
 							parentPfjob.setOutputDir("provisionfiles/"+file.getUniqueDir()) ;
 							pjob.addParent(parentPfjob);	
 							//add mkdir to the first job, then set the file path
-							job0.getCommand().addArgument("mkdir -p " + file.getProvisionedPath() + "; ");
+							job0.getCommand().addArgument("mkdir -p " + "provisionfiles/"+file.getUniqueDir() + "; ");
 					} else {
 							//create a provisionFileJob;
 							AbstractJob pfjob = new BashJob("provisionFile_out");
