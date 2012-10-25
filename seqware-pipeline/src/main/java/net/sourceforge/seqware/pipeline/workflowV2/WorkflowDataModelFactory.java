@@ -131,8 +131,8 @@ public class WorkflowDataModelFactory {
 		Map<String, String> configs = this.loadIniConfigs();
 		configs.put("workflow_bundle_dir", bundlePath);
 		configs.put("workflow_name", ret.getName());
-        //String basedir = bundlePath + File.separator + "Workflow_Bundle_"+ret.getName()+ File.separator + ret.getVersion();
-		//configs.put("basedir", basedir);	
+        String basedir = bundlePath + File.separator + "Workflow_Bundle_"+ret.getName()+ File.separator + ret.getVersion();
+		configs.put("workflow_base_dir", basedir);	
 		//Log.error("basedir " + basedir);
 		
 		//merge command line option with configs
