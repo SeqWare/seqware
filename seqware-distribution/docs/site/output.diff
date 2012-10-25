@@ -1,0 +1,60 @@
+--- output/docs/15-workflow-examples/index.html
++++ output/docs/15-workflow-examples/index.html
+@@ -151,6 +151,57 @@
+ 
+ }
+ </code></pre>
++
++<p>FTL Examples</p>
++
++<pre><code>&lt;workflow&gt;
++    &lt;files&gt;
++        &lt;file name="file_in_0" type="text/plain" forcecopy="false" sourcepath="${workflow_base_dir}/data/input.txt" input="true"/&gt;
++        &lt;file name="file_in_1" type="text/plain" forcecopy="false" sourcepath="${workflow_base_dir}/data/input.txt" input="true"/&gt;
++        &lt;file name="file_in_3" type="text/plain" forcecopy="false" sourcepath="${workflow_base_dir}/data/input1.txt" input="true"/&gt;
++        &lt;file name="file_out" type="text/plain" forcecopy="true" sourcepath="${workflow_base_dir}/dir2/output" input="false"/&gt;
++    &lt;/files&gt;
++    &lt;dirs&gt;
++        &lt;dir&gt;dir1&lt;/dir&gt;
++        &lt;dir&gt;dir2&lt;/dir&gt;
++    &lt;/dirs&gt;
++    &lt;jobs&gt;
++        &lt;job refid="ID000"&gt;
++           &lt;algorithm&gt;bash_mkdir&lt;/algorithm&gt;
++            &lt;argument&gt;mkdir test1&lt;/argument&gt;
++        &lt;/job&gt;
++        &lt;job refid="ID001" type="perl" script="${workflow_base_dir}/dependency/perltest.pl"&gt;
++           &lt;algorithm&gt;perl_mkdir&lt;/algorithm&gt;
++            &lt;argument&gt;test2&lt;/argument&gt;
++        &lt;/job&gt;
++        &lt;job refid="ID002"&gt;
++           &lt;algorithm&gt;bash_mkdir&lt;/algorithm&gt;
++            &lt;argument&gt;mkdir test3&lt;/argument&gt;
++        &lt;/job&gt;
++        &lt;job refid="ID003"&gt;
++           &lt;algorithm&gt;bash_mkdir&lt;/algorithm&gt;
++            &lt;argument&gt;mkdir test4&lt;/argument&gt;
++        &lt;/job&gt;
++
++        &lt;job refid="ID100"&gt;
++           &lt;algorithm&gt;bash_cp&lt;/algorithm&gt;
++            &lt;argument&gt;cp ${workflow_base_dir}/data/input.txt test1&lt;/argument&gt;
++           &lt;parent&gt;ID000&lt;/parent&gt;
++        &lt;/job&gt;
++        &lt;job refid="ID101"&gt;
++           &lt;algorithm&gt;bash_cp&lt;/algorithm&gt;
++            &lt;argument&gt;cp ${workflow_base_dir}/data/input.txt test2&lt;/argument&gt;
++           &lt;parent&gt;ID001&lt;/parent&gt;
++        &lt;/job&gt;
++        &lt;job refid="ID102"&gt;
++           &lt;algorithm&gt;bash_cp&lt;/algorithm&gt;
++            &lt;argument&gt;cp ${workflow_base_dir}/data/input1.txt test3&lt;/argument&gt;
++           &lt;parent&gt;ID002&lt;/parent&gt;
++            &lt;file name="file_out" type="text/plain" forcecopy="true" sourcepath="dir1/output13_tmp" input="false"/&gt;
++        &lt;/job&gt;
++    &lt;/jobs&gt;
++&lt;/workflow&gt;
++</code></pre>
+ </div>
+ </div>
+ </div>
