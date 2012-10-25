@@ -5,8 +5,8 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.Command;
 
 public class PegasusPerlJob extends PegasusJob {
 
-	public PegasusPerlJob(AbstractJob job, String basedir) {
-		super(job, basedir);
+	public PegasusPerlJob(AbstractJob job, String basedir, String sqwVersion) {
+		super(job, basedir, sqwVersion);
 	}
 
 	@Override
@@ -15,7 +15,7 @@ public class PegasusPerlJob extends PegasusJob {
 		//add memory, classpath, module for bash
 		
 		sb.append("-Xmx").append(this.jobObj.getCommand().getMaxMemory()).append("\n");
-		sb.append("-classpath ").append(basedir).append("/lib/").append(Adag.PIPELINE).append("\n");
+		sb.append("-classpath ").append(basedir).append("/lib/").append(this.getPipelinePath()).append("\n");
 		sb.append("net.sourceforge.seqware.pipeline.runner.Runner").append("\n");
 		sb.append(this.buildMetadataString());
 		sb.append("--module net.sourceforge.seqware.pipeline.modules.GenericCommandRunner").append("\n");
