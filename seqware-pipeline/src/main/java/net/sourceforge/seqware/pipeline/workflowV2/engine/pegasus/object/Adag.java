@@ -201,7 +201,7 @@ public class Adag  {
 								parentPfjob.setWorkflowRunAccession(workflowRunAccession);
 							}
 							this.jobs.add(parentPfjob);
-							parentPfjob.setOutputDir(file.getProvisionedPath()) ;
+							parentPfjob.setOutputDir("provisionfiles/"+file.getUniqueDir()) ;
 							pjob.addParent(parentPfjob);	
 							//add mkdir to the first job, then set the file path
 							job0.getCommand().addArgument("mkdir -p " + file.getProvisionedPath() + "; ");

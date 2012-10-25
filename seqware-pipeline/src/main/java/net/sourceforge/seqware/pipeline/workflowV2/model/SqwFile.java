@@ -4,12 +4,15 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+/**
+ * a file object which has all information for provision
+ *
+ */
 public class SqwFile {
 	private String type;
 	private String location;
 	private boolean input;
 	private boolean forceCopy;
-	private String path;
 	private String uniqueDir;
 	
 	public SqwFile() {
