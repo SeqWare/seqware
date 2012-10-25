@@ -76,7 +76,7 @@ public class WorkflowXmlParser {
 			List<Element> fileES = filesE.getChildren();
 			for(Element fe: fileES) {
 				SqwFile file0 = new SqwFile();
-				file0.setSourcePath(fe.getAttributeValue("location"));
+				file0.setSourcePath(fe.getAttributeValue("sourcepath"));
 				file0.setType(fe.getAttributeValue("type"));
 				file0.setIsInput(Boolean.parseBoolean(fe.getAttributeValue("input")));
 				if(fe.getAttribute("forcecopy") != null) {
@@ -146,7 +146,7 @@ public class WorkflowXmlParser {
     	if(files != null && !files.isEmpty()) {
     		for(Element fileE: files) {
     			SqwFile sqwFile = new SqwFile();
-    			sqwFile.setSourcePath(fileE.getAttributeValue("location"));
+    			sqwFile.setSourcePath(fileE.getAttributeValue("sourcepath"));
     			sqwFile.setType(fileE.getAttributeValue("type"));
     			sqwFile.setIsInput(Boolean.parseBoolean(fileE.getAttributeValue("input")));
 				if(fileE.getAttribute("forcecopy") != null) {
