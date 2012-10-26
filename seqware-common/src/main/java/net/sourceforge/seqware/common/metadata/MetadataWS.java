@@ -68,16 +68,7 @@ import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowParamValue;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
-import net.sourceforge.seqware.common.model.lists.LibrarySelectionList;
-import net.sourceforge.seqware.common.model.lists.LibrarySourceList;
-import net.sourceforge.seqware.common.model.lists.LibraryStrategyList;
-import net.sourceforge.seqware.common.model.lists.OrganismList;
-import net.sourceforge.seqware.common.model.lists.PlatformList;
-import net.sourceforge.seqware.common.model.lists.ReturnValueList;
-import net.sourceforge.seqware.common.model.lists.StudyList;
-import net.sourceforge.seqware.common.model.lists.StudyTypeList;
-import net.sourceforge.seqware.common.model.lists.WorkflowList;
-import net.sourceforge.seqware.common.model.lists.WorkflowRunList2;
+import net.sourceforge.seqware.common.model.lists.*;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -1861,35 +1852,6 @@ public class MetadataWS extends Metadata {
     }
   }
 
-    /**
-     * Use percent sign to designate what should be matched. 
-     * 
-     * Eg. SAMPLE_1% will match SAMPLE_1_001 and SAMPLE_1_002 and SAMPLE_1
-     * 
-     * 
-     * @param name
-     * @return
-     * @throws IOException
-     * @throws JAXBException 
-     */
-    private List<Sample> matchSampleName(String name) throws IOException, JAXBException {
-      JaxbObject<SampleList> jaxb = new JaxbObject<SampleList>();
-      SampleList list = (SampleList) findObject("/samples", "?matches="+name, jaxb, new SampleList());
-      return list.getList();
-    }
-    
-    private List<Study> findStudies() throws IOException, JAXBException {
-      JaxbObject<StudyList> jaxb = new JaxbObject<StudyList>();
-      StudyList list = (StudyList) findObject("/studies", "", jaxb, new StudyList());
-      return list.getList();
-    }
-
-    private List<Workflow> findWorkflows() throws IOException, JAXBException {
-      JaxbObject<WorkflowList> jaxb = new JaxbObject<WorkflowList>();
-      WorkflowList list = (WorkflowList) findObject("/workflows", "", jaxb, new WorkflowList());
-      return list.getList();
-    }
-
   /**
    * {@inheritDoc}
    */
@@ -2385,6 +2347,23 @@ public class MetadataWS extends Metadata {
       return (text);
     }
 
+    /**
+     * Use percent sign to designate what should be matched. 
+     * 
+     * Eg. SAMPLE_1% will match SAMPLE_1_001 and SAMPLE_1_002 and SAMPLE_1
+     * 
+     * 
+     * @param name
+     * @return
+     * @throws IOException
+     * @throws JAXBException 
+     */
+    private List<Sample> matchSampleName(String name) throws IOException, JAXBException {
+      JaxbObject<SampleList> jaxb = new JaxbObject<SampleList>();
+      SampleList list = (SampleList) findObject("/samples", "?matches="+name, jaxb, new SampleList());
+      return list.getList();
+    }
+    
     private Object findObject(String uri, String searchString, JaxbObject jaxb, Object parent) throws IOException,
             JAXBException, NotFoundException {
       Representation result = null;
