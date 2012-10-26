@@ -37,9 +37,10 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
     }
 
     /** {@inheritDoc} */
-    public void insert(SequencerRun sequencerRun) {
+    public Integer insert(SequencerRun sequencerRun) {
         this.getHibernateTemplate().save(sequencerRun);
         getSession().flush();
+        return(sequencerRun.getSwAccession());
     }
 
     /**
@@ -47,9 +48,10 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
      *
      * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
      */
-    public void insert(SequencerRunWizardDTO sequencerRun) {
+    public Integer insert(SequencerRunWizardDTO sequencerRun) {
         this.getHibernateTemplate().save(sequencerRun);
         getSession().flush();
+        return(sequencerRun.getSwAccession());
     }
 
     /** {@inheritDoc} */
@@ -448,7 +450,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
 
     /** {@inheritDoc} */
     @Override
-    public void insert(Registration registration, SequencerRun sequencerRun) {
+    public Integer insert(Registration registration, SequencerRun sequencerRun) {
         Logger logger = Logger.getLogger(SequencerRunDAOHibernate.class);
         if (registration==null)
         {
@@ -458,16 +460,18 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         {
             logger.info("insert sequencer run object");
             insert(sequencerRun);
+            return(sequencerRun.getSwAccession());
         }
         else
         {
             logger.error("sequencerRunDAOHibernate insert not authorized");
         }
+        return(null);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void insert(Registration registration, SequencerRunWizardDTO sequencerRun) {
+    public Integer insert(Registration registration, SequencerRunWizardDTO sequencerRun) {
          Logger logger = Logger.getLogger(SequencerRunDAOHibernate.class);
         if (registration==null)
         {
@@ -477,11 +481,13 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         {
             logger.info("insert SequencerRunWizardDTO object");
             insert(sequencerRun);
+            return(sequencerRun.getSwAccession());
         }
         else
         {
             logger.error("sequencerRunDAOHibernate insert not authorized");
         }
+        return(null);
     }
 
     /** {@inheritDoc} */

@@ -19,6 +19,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @version $Id: $Id
  */
 public class LibrarySourceDAOHibernate extends HibernateDaoSupport implements LibrarySourceDAO {
+
   /**
    * <p>Constructor for LibrarySourceDAOHibernate.</p>
    */
@@ -26,26 +27,21 @@ public class LibrarySourceDAOHibernate extends HibernateDaoSupport implements Li
     super();
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public List<LibrarySource> list(Registration registration) {
-    ArrayList<LibrarySource> objects = new ArrayList<LibrarySource>();
-    if (registration == null)
-      return objects;
-
-    List expmts = this.getHibernateTemplate().find("from LibrarySource as ls order by ls.librarySourceId asc" // desc
-    );
-
-    for (Object object : expmts) {
-      objects.add((LibrarySource) object);
-    }
-    return objects;
+    if (registration == null) { return(null); }
+    return (list());
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public LibrarySource findByID(Integer id) {
     String query = "from LibrarySource as l where l.librarySourceId = ?";
     LibrarySource obj = null;
-    Object[] parameters = { id };
+    Object[] parameters = {id};
     List list = this.getHibernateTemplate().find(query, parameters);
     if (list.size() > 0) {
       obj = (LibrarySource) list.get(0);
@@ -53,7 +49,9 @@ public class LibrarySourceDAOHibernate extends HibernateDaoSupport implements Li
     return obj;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public LibrarySource updateDetached(LibrarySource librarySource) {
     LibrarySource dbObject = findByID(librarySource.getLibrarySourceId());
@@ -69,9 +67,19 @@ public class LibrarySourceDAOHibernate extends HibernateDaoSupport implements Li
     return null;
   }
 
-    /** {@inheritDoc} */
-    @Override
-    public List<LibrarySource> list() {
-        throw new UnsupportedOperationException("Not supported yet.");
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<LibrarySource> list() {
+    ArrayList<LibrarySource> objects = new ArrayList<LibrarySource>();
+
+    List expmts = this.getHibernateTemplate().find("from LibrarySource as ls order by ls.librarySourceId asc" // desc
+            );
+
+    for (Object object : expmts) {
+      objects.add((LibrarySource) object);
     }
+    return objects;
+  }
 }

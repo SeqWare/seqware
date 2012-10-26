@@ -5,7 +5,11 @@ import net.sourceforge.seqware.common.business.FileAttributeService;
 import net.sourceforge.seqware.common.business.FileService;
 import net.sourceforge.seqware.common.business.IUSService;
 import net.sourceforge.seqware.common.business.LaneService;
+import net.sourceforge.seqware.common.business.LibrarySelectionService;
 import net.sourceforge.seqware.common.business.LibraryService;
+import net.sourceforge.seqware.common.business.LibrarySourceService;
+import net.sourceforge.seqware.common.business.LibraryStrategyService;
+import net.sourceforge.seqware.common.business.OrganismService;
 import net.sourceforge.seqware.common.business.PlatformService;
 import net.sourceforge.seqware.common.business.ProcessingExperimentsService;
 import net.sourceforge.seqware.common.business.ProcessingIUSService;
@@ -21,6 +25,7 @@ import net.sourceforge.seqware.common.business.SampleSearchService;
 import net.sourceforge.seqware.common.business.SampleService;
 import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.business.StudyService;
+import net.sourceforge.seqware.common.business.StudyTypeService;
 import net.sourceforge.seqware.common.business.ValidationReportService;
 import net.sourceforge.seqware.common.business.WorkflowParamService;
 import net.sourceforge.seqware.common.business.WorkflowParamValueService;
@@ -67,6 +72,11 @@ public class ContextImpl {
   private WorkflowParamValueService workflowParamValueService;
   private SessionFactory sessionFactory;
   private PlatformService platformService;
+  private StudyTypeService studyTypeService;
+  private LibrarySelectionService librarySelectionService;
+  private LibrarySourceService librarySourceService;
+  private LibraryStrategyService libraryStrategyService;
+  private OrganismService organismService;
 
   @Autowired
   private LibraryService libraryService;
@@ -571,6 +581,46 @@ public class ContextImpl {
    */
   public FileAttributeService getFileAttributeService() {
     return fileAttributeService;
+  }
+
+  public StudyTypeService getStudyTypeService() {
+    return studyTypeService;
+  }
+
+  public void setStudyTypeService(StudyTypeService studyTypeService) {
+    this.studyTypeService = studyTypeService;
+  }
+
+  public LibrarySelectionService getLibrarySelectionService() {
+    return librarySelectionService;
+  }
+
+  public void setLibrarySelectionService(LibrarySelectionService librarySelectionService) {
+    this.librarySelectionService = librarySelectionService;
+  }
+
+  public LibrarySourceService getLibrarySourceService() {
+    return librarySourceService;
+  }
+
+  public void setLibrarySourceService(LibrarySourceService librarySourceService) {
+    this.librarySourceService = librarySourceService;
+  }
+
+  public LibraryStrategyService getLibraryStrategyService() {
+    return libraryStrategyService;
+  }
+
+  public void setLibraryStrategyService(LibraryStrategyService libraryStrategyService) {
+    this.libraryStrategyService = libraryStrategyService;
+  }
+
+  public OrganismService getOrganismService() {
+    return organismService;
+  }
+
+  public void setOrganismService(OrganismService organismService) {
+    this.organismService = organismService;
   }
 
 }

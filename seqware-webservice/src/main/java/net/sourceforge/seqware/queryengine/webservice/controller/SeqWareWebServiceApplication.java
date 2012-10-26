@@ -84,6 +84,12 @@ import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
 
 import freemarker.template.Configuration;
+import net.sourceforge.seqware.webservice.resources.tables.LibrarySelectionResource;
+import net.sourceforge.seqware.webservice.resources.tables.LibrarySourceResource;
+import net.sourceforge.seqware.webservice.resources.tables.LibraryStrategyResource;
+import net.sourceforge.seqware.webservice.resources.tables.OrganismResource;
+import net.sourceforge.seqware.webservice.resources.tables.PlatformResource;
+import net.sourceforge.seqware.webservice.resources.tables.StudyTypeResource;
 
 /**
  * <p>SeqWareWebServiceApplication class.</p>
@@ -158,6 +164,21 @@ public class SeqWareWebServiceApplication extends WadlApplication {
 //        router.attach("/experiments/{ID}/processes", Resource.class);
 //        router.attach("/experiments/{ID}/processes/{ID}", Resource.class);
 //
+        
+        // TODO: make sure sequencer run, lane, and IUS have post methods!
+        
+        router.attach("/platforms", PlatformResource.class);
+        router.attach("/platforms/", slashRedirect);
+        router.attach("/studytypes", StudyTypeResource.class); 
+        router.attach("/studytypes/", slashRedirect);
+        router.attach("/libraryselections", LibrarySelectionResource.class); 
+        router.attach("/libraryselections/", slashRedirect);
+        router.attach("/librarysources", LibrarySourceResource.class); 
+        router.attach("/librarysources/", slashRedirect);
+        router.attach("/librarystrategies", LibraryStrategyResource.class); 
+        router.attach("/librarystrategies/", slashRedirect);
+        router.attach("/organisms", OrganismResource.class); 
+        router.attach("/organisms/", slashRedirect);        
 
         router.attach("/files", FileResource.class);
         router.attach("/files/", slashRedirect);
@@ -212,12 +233,9 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/studies/{studyId}", StudyIDResource.class);
         router.attach("/studies/{studyId}/experiments", StudyIDFilter.class);
 
-
-
         router.attach("/x/library", LibraryResource.class);
         router.attach("/x/library/{swa}", LibraryResource.class);
         router.attach("/x/libraries", LibrariesResource.class);
-
 
 //        router.attach("/studies/{studyId}/experiments/{experimentId}", FilteredExperimentResource.class);
 //        router.attach("/studies/{ID}/experiments/{ID}/samples", Resource.class);
@@ -273,59 +291,11 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/reports/workflowruns/{workflowRunId}/stderr/", slashRedirect);
         router.attach("/reports/workflowruns/{workflowRunId}/stdout/", slashRedirect);
 
-
         // A report giving runtime info for workflows
         router.attach("/reports/workflowruntimes", new WorkflowRuntimeResource(getContext()));
 
-        /*
-         * End new version of webservices
-         */
-//        router.attach("/hello", HelloWorldResource.class);
-        /*
-         * nothing wrong with these resources, I just turned them off since I
-         * was focused on the resources below
-         */
-        // REALTIME
-
-//        // QUERY ENGINE RESOURCES
-//        // setup entry document
-//        router.attach(rootURL+"/"+version, TemplateResource.class);
-//
-//        // realtime entry
-//        router.attach(rootURL+"/"+version+"/realtime", TemplateResource.class);
-//
-//        // defines a mismatch resource
-//        router.attach(rootURL+"/"+version+"/realtime/variants", TemplateResource.class);
-//        router.attach(rootURL+"/"+version+"/realtime/variants/mismatches", TemplateResource.class);
-//        router.attach(rootURL+"/"+version+"/realtime/variants/mismatches/{mismatchId}", MismatchResource.class);
-        //router.attach("/"+version+"/realtime/variants/translocations", MismatchesResource.class);
-        //router.attach("/"+version+"/realtime/variants/translocations/{translocationId}", MismatchResource.class);
-        //router.attach("/"+version+"/realtime/variants/cnvs", MismatchesResource.class);
-        //router.attach("/"+version+"/realtime/variants/cnvs/{cnvId}", MismatchResource.class);
-        //router.attach("/"+version+"/realtime/variants/inversions", MismatchesResource.class);
-        //router.attach("/"+version+"/realtime/variants/inversions/{inversionId}", MismatchResource.class);
-
-//        System.out.println("registered URL: "+rootURL+"/"+version+"/realtime/variants");
-
-        // define dynamic tags resource
-//        router.attach(rootURL+"/"+version+"/realtime/variants/tags", TemplateResource.class);
-//        router.attach(rootURL+"/"+version+"/realtime/variants/tags/{tagsId}", CachedTagResource.class);
-//
-//        // defines coverage resource
-//        router.attach(rootURL+"/"+version+"/realtime/coverage", TemplateResource.class);
-//        router.attach(rootURL+"/"+version+"/realtime/coverage/basecoverage", CoveragesResource.class);
-//        router.attach(rootURL+"/"+version+"/realtime/coverage/basecoverage/{coverageId}", CoverageResource.class);
-//        //router.attach("/"+version+"/realtime/coverage/clonecoverages", CoveragesResource.class);
-//        //router.attach("/"+version+"/realtime/coverage/clonecoverages/{coverageId}", CoverageResource.class);
-//
-//        // defines consequence resource
-//        router.attach(rootURL+"/"+version+"/realtime/consequences", TemplateResource.class);
-//        router.attach(rootURL+"/"+version+"/realtime/consequences/mismatchconsequences", TemplateResource.class);
-//        router.attach(rootURL+"/"+version+"/realtime/consequences/mismatchconsequences/{consequenceId}", ConsequenceResource.class);
-
-
         // REPORT RESOURCES
-
+        
         router.attach("/" + version + "/realtime/reports/genes/{mismatchId}", GeneReportResource.class);
         router.attach("/" + version + "/realtime/reports/workflows/composition", TemplateResource.class);
         //router.attach("/"+version+"/realtime/reports/workflows/errors", WorkflowErrors.class);
@@ -346,23 +316,13 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         //router.attach(rootURL+"/"+version+"/asynchronous/workflow_run/status", TemplateResource.class);
         router.attach("/" + version + "/asynchronous/workflow_run/status/{workflowRunAccession}", WorkflowRunStatusResource.class);
         router.attach("/" + version + "/asynchronous/workflow_run/file/{fileAccession}", FileResource.class);
-//
-        //"+version+"/asynchronous/workflow_run/file/43
-        //http://ec2-50-19-0-81.compute-1.amazonaws.com:8080/SeqWareQEWS/"+version+"/asynchronous/workflow_run/status/15
-
 
         // STATIC COMPONENTS
+        
         // static reporting of tags with limited search abilities
         // Not really used anymore since replacing with CachedTagResource
         router.attach("/" + version + "/static/variants/tags", TemplateResource.class);
         router.attach("/" + version + "/static/variants/tags/{tagsId}", TagResource.class);
-
-//        String workingDir = EnvUtil.getProperty("workingdir");
-//        System.out.println("workingdir: " + workingDir);
-//
-//        ServletContext context = (ServletContext) getContext().getServerDispatcher().getContext().getAttributes().get("org.restlet.ext.servlet.ServletContext");
-//
-
         router.attach("/x/report/filelinkreport", FileLinkReportResource.class);
         router.attach("/x/report/filelinkreport/{swas}", FileLinkReportResource.class);
         router.attach("/x/report/reversehierarchy/{swa}", FileReverseHierarchyDisplayResource.class);
