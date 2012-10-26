@@ -20,7 +20,7 @@ public interface IUSDAO {
    *
    * @param obj a {@link net.sourceforge.seqware.common.model.IUS} object.
    */
-  public void insert(IUS obj);
+  public Integer insert(IUS obj);
 
   /**
    * <p>insert.</p>
@@ -28,7 +28,7 @@ public interface IUSDAO {
    * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
    * @param obj a {@link net.sourceforge.seqware.common.model.IUS} object.
    */
-  public void insert(Registration registration, IUS obj);
+  public Integer insert(Registration registration, IUS obj);
 
   /**
    * <p>update.</p>

@@ -315,6 +315,190 @@ public class MetadataWS extends Metadata {
   }
 
   /**
+   * FIXME: there are problems with setting accession when I should set ID
+   *
+   * @param experimentAccession
+   * @param organismAccession
+   * @param platformAccession
+   * @param name
+   * @param description
+   * @param pairdEnd
+   * @param skip
+   * @return
+   */
+  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, 
+          boolean pairdEnd, boolean skip) {
+    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+
+    try {
+
+      Platform p = new Platform();
+      p.setPlatformId(platformAccession);
+
+      SequencerRun sr = new SequencerRun();
+      sr.setName(name);
+      sr.setDescription(description);
+      sr.setPairedEnd(pairdEnd);
+      sr.setSkip(skip);
+      sr.setPlatform(p);
+
+      Log.info("Posting new sequencer_run");
+
+      sr = ll.addSequencerRun(sr);
+
+      ret.setAttribute("sw_accession", sr.getSwAccession().toString());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      ret.setExitStatus(ReturnValue.FAILURE);
+      return ret;
+    }
+
+    return (ret);
+  }
+
+  // FIXME: might actually need to turn off libraryStrategy et al.
+  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, 
+          Integer librarySelectionId, Integer librarySourceId, String name, String description,
+          String cycleDescriptor, boolean skip) {
+    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+
+    try {
+
+      SequencerRun sr = ll.findSequencerRun("/" + sequencerRunAccession);
+      StudyType st = new StudyType();
+      st.setStudyTypeId(studyTypeId);
+      LibraryStrategy ls = new LibraryStrategy();
+      ls.setLibraryStrategyId(libraryStrategyId);
+      LibrarySelection lsel = new LibrarySelection();
+      lsel.setLibrarySelectionId(librarySelectionId);
+      LibrarySource lsource = new LibrarySource();
+      lsource.setLibrarySourceId(librarySourceId);
+
+      Lane l = new Lane();
+      l.setStudyType(st);
+      l.setLibraryStrategy(ls);
+      l.setLibrarySelection(lsel);
+      l.setLibrarySource(lsource);
+      l.setSequencerRun(sr);
+      l.setName(name);
+      l.setDescription(description);
+      l.setCycleDescriptor(cycleDescriptor);
+      l.setSkip(skip);
+
+      Log.info("Posting new lane");
+
+      l = ll.addLane(l);
+
+      ret.setAttribute("sw_accession", l.getSwAccession().toString());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      ret.setExitStatus(ReturnValue.FAILURE);
+      return ret;
+    }
+
+    return (ret);
+  }
+
+  public ReturnValue addIUS(Integer laneAccession, Integer sampleAccession, String name, String description, String barcode, boolean skip) {
+    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+
+    try {
+
+      Lane l = ll.findLane("/" + laneAccession);
+      Sample s = ll.findSample("/" + sampleAccession);
+
+      IUS i = new IUS();
+      i.setLane(l);
+      i.setSample(s);
+      i.setName(name);
+      i.setDescription(description);
+      i.setTag(barcode);
+      i.setSkip(skip);
+
+      Log.info("Posting new IUS");
+
+      i = ll.addIUS(i);
+
+      ret.setAttribute("sw_accession", i.getSwAccession().toString());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      ret.setExitStatus(ReturnValue.FAILURE);
+      return ret;
+    }
+
+    return (ret);
+  }
+
+  public List<Platform> getPlatforms() {
+    try {
+      return ll.findPlatforms();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  public List<Organism> getOrganisms() {
+    try {
+      return ll.findOrganisms();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  public List<StudyType> getStudyTypes() {
+    try {
+      return ll.findStudyTypes();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  public List<LibraryStrategy> getLibraryStrategies() {
+    try {
+      return ll.findLibraryStrategies();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  public List<LibrarySelection> getLibrarySelections() {
+    try {
+      return ll.findLibrarySelections();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  public List<LibrarySource> getLibrarySource() {
+    try {
+      return ll.findLibrarySources();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  /**
    *
    * @param p
    * @param parentIds if sw accession, each ID must be in the form "/ID", if db
@@ -1519,6 +1703,311 @@ public class MetadataWS extends Metadata {
     return null;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void annotateWorkflow(int workflowSWID, WorkflowAttribute att, Boolean skip) {
+    try {
+      Log.debug("Annotating WorkflowRun " + workflowSWID + " with skip=" + skip + ", Att = " + att);
+      Workflow obj = ll.findWorkflow("/" + workflowSWID);
+      if (skip != null) {
+        // obj.setSkip(skip);
+        Log.info("Processing does not have a skip column!");
+      }
+      if (att != null) {
+        Set<WorkflowAttribute> atts = obj.getWorkflowAttributes();
+        if (atts == null) {
+          atts = new HashSet<WorkflowAttribute>();
+        }
+        // att.setStudy(obj);
+        atts.add(att);
+        obj.setWorkflowAttributes(atts);
+      }
+      ll.updateWorkflow("/" + workflowSWID, obj);
+    } catch (IOException ex) {
+      Log.error("IOException while updating study " + workflowSWID + " " + ex.getMessage());
+    } catch (JAXBException ex) {
+      Log.error("JAXBException while updating study " + workflowSWID + " " + ex.getMessage());
+    } catch (ResourceException ex) {
+      Log.error("ResourceException while updating study " + workflowSWID + " " + ex.getMessage());
+    }
+
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void annotateWorkflowRun(int workflowrunSWID, WorkflowRunAttribute att, Boolean skip) {
+    try {
+      Log.debug("Annotating WorkflowRun " + workflowrunSWID + " with skip=" + skip + ", Att = " + att);
+      WorkflowRun obj = ll.findWorkflowRun("/" + workflowrunSWID);
+      if (skip != null) {
+        // obj.setSkip(skip);
+        Log.info("Processing does not have a skip column!");
+      }
+      if (att != null) {
+        Set<WorkflowRunAttribute> atts = obj.getWorkflowRunAttributes();
+        if (atts == null) {
+          atts = new HashSet<WorkflowRunAttribute>();
+        }
+        // att.setStudy(obj);
+        atts.add(att);
+        obj.setWorkflowRunAttributes(atts);
+      }
+      ll.updateWorkflowRun("/" + workflowrunSWID, obj);
+    } catch (IOException ex) {
+      Log.error("IOException while updating study " + workflowrunSWID + " " + ex.getMessage());
+    } catch (JAXBException ex) {
+      Log.error("JAXBException while updating study " + workflowrunSWID + " " + ex.getMessage());
+    } catch (ResourceException ex) {
+      Log.error("ResourceException while updating study " + workflowrunSWID + " " + ex.getMessage());
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void annotateIUS(int iusSWID, Set<IUSAttribute> iusAtts) {
+    try {
+      Log.debug("Annotating IUS ");
+      IUS ius = ll.findIUS("/" + iusSWID);
+      ius.getIusAttributes().clear();
+      for (IUSAttribute ia : iusAtts) {
+        // ia.setIus(ius);
+        ius.getIusAttributes().add(ia);
+      }
+
+      ll.updateIUS("/" + iusSWID, ius);
+    } catch (IOException ex) {
+      Log.error("IOException while updating ius " + iusSWID + " " + ex.getMessage());
+    } catch (JAXBException ex) {
+      Log.error("JAXBException while updating ius " + iusSWID + " " + ex.getMessage());
+    } catch (ResourceException ex) {
+      Log.error("ResourceException while updating ius " + iusSWID + " " + ex.getMessage());
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void annotateLane(int laneSWID, Set<LaneAttribute> laneAtts) {
+    try {
+      Log.debug("Annotating Lane " + laneSWID);
+      Lane lane = ll.findLane("/" + laneSWID);
+      lane.getLaneAttributes().clear();
+      for (LaneAttribute la : laneAtts) {
+        // la.setLane(lane);
+        lane.getLaneAttributes().add(la);
+      }
+      ll.updateLane("/" + laneSWID, lane);
+    } catch (IOException ex) {
+      Log.error("IOException while updating lane " + laneSWID + " " + ex.getMessage());
+    } catch (JAXBException ex) {
+      Log.error("JAXBException while updating lane " + laneSWID + " " + ex.getMessage());
+    } catch (ResourceException ex) {
+      Log.error("ResourceException while updating lane " + laneSWID + " " + ex.getMessage());
+    }
+
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void annotateSequencerRun(int sequencerRunSWID, Set<SequencerRunAttribute> sequencerRunAtts) {
+    try {
+      Log.debug("Annotating SequencerRun " + sequencerRunSWID);
+      SequencerRun sequencerRun = ll.findSequencerRun("/" + sequencerRunSWID);
+      sequencerRun.getSequencerRunAttributes().clear();
+      for (SequencerRunAttribute sa : sequencerRunAtts) {
+        // sa.setSequencerRunWizardDTO((SequencerRunWizardDTO) sequencerRun);
+        sequencerRun.getSequencerRunAttributes().add(sa);
+      }
+      ll.updateSequencerRun("/" + sequencerRunSWID, sequencerRun);
+    } catch (IOException ex) {
+      Log.error("IOException while updating sequencerRun " + sequencerRunSWID + " " + ex.getMessage());
+    } catch (JAXBException ex) {
+      Log.error("JAXBException while updating sequencerRun " + sequencerRunSWID + " " + ex.getMessage());
+    } catch (ResourceException ex) {
+      Log.error("ResourceException while updating sequencerRun " + sequencerRunSWID + " " + ex.getMessage());
+    }
+
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void annotateExperiment(int experimentSWID, Set<ExperimentAttribute> atts) {
+    try {
+      Log.debug("Annotating Experiment " + experimentSWID);
+      Experiment obj = ll.findExperiment("/" + experimentSWID);
+      obj.getExperimentAttributes().clear();
+      for (ExperimentAttribute ea : atts) {
+        // ea.setExperiment(obj);
+        obj.getExperimentAttributes().add(ea);
+      }
+      ll.updateExperiment("/" + experimentSWID, obj);
+    } catch (IOException ex) {
+      Log.error("IOException while updating experiment " + experimentSWID + " " + ex.getMessage());
+    } catch (JAXBException ex) {
+      Log.error("JAXBException while updating experiment " + experimentSWID + " " + ex.getMessage());
+    } catch (ResourceException ex) {
+      Log.error("ResourceException while updating experiment " + experimentSWID + " " + ex.getMessage());
+    }
+  }
+
+    /**
+     * Use percent sign to designate what should be matched. 
+     * 
+     * Eg. SAMPLE_1% will match SAMPLE_1_001 and SAMPLE_1_002 and SAMPLE_1
+     * 
+     * 
+     * @param name
+     * @return
+     * @throws IOException
+     * @throws JAXBException 
+     */
+    private List<Sample> matchSampleName(String name) throws IOException, JAXBException {
+      JaxbObject<SampleList> jaxb = new JaxbObject<SampleList>();
+      SampleList list = (SampleList) findObject("/samples", "?matches="+name, jaxb, new SampleList());
+      return list.getList();
+    }
+    
+    private List<Study> findStudies() throws IOException, JAXBException {
+      JaxbObject<StudyList> jaxb = new JaxbObject<StudyList>();
+      StudyList list = (StudyList) findObject("/studies", "", jaxb, new StudyList());
+      return list.getList();
+    }
+
+    private List<Workflow> findWorkflows() throws IOException, JAXBException {
+      JaxbObject<WorkflowList> jaxb = new JaxbObject<WorkflowList>();
+      WorkflowList list = (WorkflowList) findObject("/workflows", "", jaxb, new WorkflowList());
+      return list.getList();
+    }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void annotateProcessing(int processingSWID, Set<ProcessingAttribute> atts) {
+    try {
+      Log.debug("Annotating Processing " + processingSWID);
+      Processing obj = ll.findProcessing("/" + processingSWID);
+      obj.getProcessingAttributes().clear();
+      for (ProcessingAttribute pa : atts) {
+        // pa.setProcessing(obj);
+        obj.getProcessingAttributes().add(pa);
+      }
+      ll.updateProcessing("/" + processingSWID, obj);
+    } catch (IOException ex) {
+      Log.error("IOException while updating processing " + processingSWID + " " + ex.getMessage());
+    } catch (JAXBException ex) {
+      Log.error("JAXBException while updating processing " + processingSWID + " " + ex.getMessage());
+    } catch (ResourceException ex) {
+      Log.error("ResourceException while updating processing " + processingSWID + " " + ex.getMessage());
+    }
+
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void annotateSample(int sampleSWID, Set<SampleAttribute> atts) {
+    try {
+      Log.debug("Annotating Sample " + sampleSWID);
+      Sample obj = ll.findSample("/" + sampleSWID);
+      obj.getSampleAttributes().clear();
+      for (SampleAttribute sa : atts) {
+        // sa.setSample(obj);
+        obj.getSampleAttributes().add(sa);
+      }
+      ll.updateSample("/" + sampleSWID, obj);
+    } catch (IOException ex) {
+      Log.error("IOException while updating sample " + sampleSWID + " " + ex.getMessage());
+    } catch (JAXBException ex) {
+      Log.error("JAXBException while updating sample " + sampleSWID + " " + ex.getMessage());
+    } catch (ResourceException ex) {
+      Log.error("ResourceException while updating sample " + sampleSWID + " " + ex.getMessage());
+    }
+
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void annotateStudy(int studySWID, Set<StudyAttribute> atts) {
+    try {
+      Log.debug("Annotating Study ");
+      Study obj = ll.findStudy("/" + studySWID);
+      obj.getStudyAttributes().clear();
+      for (StudyAttribute sa : atts) {
+        // sa.setStudy(obj);
+        obj.getStudyAttributes().add(sa);
+      }
+      ll.updateStudy("/" + studySWID, obj);
+    } catch (IOException ex) {
+      Log.error("IOException while updating study " + studySWID + " " + ex.getMessage());
+    } catch (JAXBException ex) {
+      Log.error("JAXBException while updating study " + studySWID + " " + ex.getMessage());
+    } catch (ResourceException ex) {
+      Log.error("ResourceException while updating study " + studySWID + " " + ex.getMessage());
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void annotateWorkflow(int workflowSWID, Set<WorkflowAttribute> atts) {
+    try {
+      Log.debug("Annotating WorkflowRun " + workflowSWID);
+      Workflow obj = ll.findWorkflow("/" + workflowSWID);
+      obj.getWorkflowAttributes().clear();
+      for (WorkflowAttribute wa : atts) {
+        // wa.setWorkflow(obj);
+        obj.getWorkflowAttributes().add(wa);
+      }
+      ll.updateWorkflow("/" + workflowSWID, obj);
+    } catch (IOException ex) {
+      Log.error("IOException while updating study " + workflowSWID + " " + ex.getMessage());
+    } catch (JAXBException ex) {
+      Log.error("JAXBException while updating study " + workflowSWID + " " + ex.getMessage());
+    } catch (ResourceException ex) {
+      Log.error("ResourceException while updating study " + workflowSWID + " " + ex.getMessage());
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void annotateWorkflowRun(int workflowrunSWID, Set<WorkflowRunAttribute> atts) {
+    try {
+      Log.debug("Annotating WorkflowRun ");
+      WorkflowRun obj = ll.findWorkflowRun("/" + workflowrunSWID);
+      obj.getWorkflowRunAttributes().clear();
+      for (WorkflowRunAttribute wa : atts) {
+        // wa.setWorkflowRun(obj);
+        obj.getWorkflowRunAttributes().add(wa);
+      }
+      ll.updateWorkflowRun("/" + workflowrunSWID, obj);
+    } catch (IOException ex) {
+      Log.error("IOException while updating study " + workflowrunSWID + " " + ex.getMessage());
+    } catch (JAXBException ex) {
+      Log.error("JAXBException while updating study " + workflowrunSWID + " " + ex.getMessage());
+    } catch (ResourceException ex) {
+      Log.error("ResourceException while updating study " + workflowrunSWID + " " + ex.getMessage());
+    }
+
+  }
+
   /*
    * public void annotateFile(int fileSWID, FileAttribute att, Boolean skip) {
    * try { Log.debug("Annotating WorkflowRun " + fileSWID + " with skip=" + skip
@@ -1723,23 +2212,6 @@ public class MetadataWS extends Metadata {
       }
     }
 
-    /**
-     * Use percent sign to designate what should be matched. 
-     * 
-     * Eg. SAMPLE_1% will match SAMPLE_1_001 and SAMPLE_1_002 and SAMPLE_1
-     * 
-     * 
-     * @param name
-     * @return
-     * @throws IOException
-     * @throws JAXBException 
-     */
-    private List<Sample> matchSampleName(String name) throws IOException, JAXBException {
-      JaxbObject<SampleList> jaxb = new JaxbObject<SampleList>();
-      SampleList list = (SampleList) findObject("/samples", "?matches="+name, jaxb, new SampleList());
-      return list.getList();
-    }
-    
     private List<Study> findStudies() throws IOException, JAXBException {
       JaxbObject<StudyList> jaxb = new JaxbObject<StudyList>();
       StudyList list = (StudyList) findObject("/studies", "", jaxb, new StudyList());
@@ -1758,37 +2230,37 @@ public class MetadataWS extends Metadata {
               new Workflow());
       return list;
     }
-    
+
     private List<Platform> findPlatforms() throws IOException, JAXBException {
       JaxbObject<PlatformList> jaxb = new JaxbObject<PlatformList>();
       PlatformList list = (PlatformList) findObject("/platforms", "", jaxb, new PlatformList());
       return list.getList();
     }
-    
+
     private List<Organism> findOrganisms() throws IOException, JAXBException {
       JaxbObject<OrganismList> jaxb = new JaxbObject<OrganismList>();
       OrganismList list = (OrganismList) findObject("/organisms", "", jaxb, new OrganismList());
       return list.getList();
     }
-    
+
     private List<StudyType> findStudyTypes() throws IOException, JAXBException {
       JaxbObject<StudyTypeList> jaxb = new JaxbObject<StudyTypeList>();
       StudyTypeList list = (StudyTypeList) findObject("/studytypes", "", jaxb, new StudyTypeList());
       return list.getList();
     }
-    
+
     private List<LibraryStrategy> findLibraryStrategies() throws IOException, JAXBException {
       JaxbObject<LibraryStrategyList> jaxb = new JaxbObject<LibraryStrategyList>();
       LibraryStrategyList list = (LibraryStrategyList) findObject("/librarystrategies", "", jaxb, new LibraryStrategyList());
       return list.getList();
     }
-    
+
     private List<LibrarySelection> findLibrarySelections() throws IOException, JAXBException {
       JaxbObject<LibrarySelectionList> jaxb = new JaxbObject<LibrarySelectionList>();
       LibrarySelectionList list = (LibrarySelectionList) findObject("/libraryselections", "", jaxb, new LibrarySelectionList());
       return list.getList();
     }
-    
+
     private List<LibrarySource> findLibrarySources() throws IOException, JAXBException {
       JaxbObject<LibrarySourceList> jaxb = new JaxbObject<LibrarySourceList>();
       LibrarySourceList list = (LibrarySourceList) findObject("/librarysources", "", jaxb, new LibrarySourceList());
@@ -1867,19 +2339,19 @@ public class MetadataWS extends Metadata {
       JaxbObject<File> jaxb = new JaxbObject<File>();
       return (File) findObject("/files", searchString, jaxb, study);
     }
-    
+
     private Platform findPlatform(String searchString) throws IOException, JAXBException {
       Platform p = new Platform();
       JaxbObject<Platform> jaxb = new JaxbObject<Platform>();
       return (Platform) findObject("/platforms", searchString, jaxb, p);
     }
-    
+
     private StudyType findStudyType(String searchString) throws IOException, JAXBException {
       StudyType st = new StudyType();
       JaxbObject<StudyType> jaxb = new JaxbObject<StudyType>();
       return (StudyType) findObject("/studytypes", searchString, jaxb, st);
     }
-    
+
     private LibraryStrategy findLibraryStrategy(String searchString) throws IOException, JAXBException {
       LibraryStrategy ls = new LibraryStrategy();
       JaxbObject<LibraryStrategy> jaxb = new JaxbObject<LibraryStrategy>();
@@ -1891,13 +2363,13 @@ public class MetadataWS extends Metadata {
       JaxbObject<LibrarySelection> jaxb = new JaxbObject<LibrarySelection>();
       return (LibrarySelection) findObject("/libraryselections", searchString, jaxb, ls);
     }
-    
+
     private LibrarySource findLibrarySource(String searchString) throws IOException, JAXBException {
       LibrarySource ls = new LibrarySource();
       JaxbObject<LibrarySource> jaxb = new JaxbObject<LibrarySource>();
       return (LibrarySource) findObject("/librarysource", searchString, jaxb, ls);
     }
-    
+
     private String getString(String uri) {
       String text = null;
       Representation result = null;
@@ -1925,11 +2397,11 @@ public class MetadataWS extends Metadata {
         parent = XmlTools.unMarshal(jaxb, parent, text);
 
       } catch (SAXException ex) {
-        Log.error("MetadataWS.findObject " + ex.getMessage());
+        Log.error("MetadataWS.findObject with search string "+searchString+" encountered error "+ ex.getMessage());
         ex.printStackTrace();
         parent = null;
       } catch (ResourceException e) {
-        Log.error("MetadataWS.findObject " + e.getMessage());
+        Log.error("MetadataWS.findObject with search string "+searchString+" encountered error "+ e.getMessage());
         parent = null;
       } finally {
         if (result != null) {
@@ -2065,13 +2537,13 @@ public class MetadataWS extends Metadata {
       JaxbObject<WorkflowParamValue> jaxb = new JaxbObject<WorkflowParamValue>();
       return (WorkflowParamValue) addObject("/workflowparamvalues", "", jaxb, workflowParamVal);
     }
-    
+
     private SequencerRun addSequencerRun(SequencerRun sequencerRun) throws IOException,
             JAXBException, ResourceException {
       JaxbObject<WorkflowRun> jaxb = new JaxbObject<WorkflowRun>();
       return (SequencerRun) addObject("/sequencerruns", "", jaxb, sequencerRun);
     }
-    
+
     private Lane addLane(Lane lane) throws IOException,
             JAXBException, ResourceException {
       JaxbObject<Lane> jaxb = new JaxbObject<Lane>();
@@ -2083,7 +2555,7 @@ public class MetadataWS extends Metadata {
       JaxbObject<IUS> jaxb = new JaxbObject<IUS>();
       return (IUS) addObject("/ius", "", jaxb, ius);
     }
-    
+
     private Object addObject(String uri, String searchString, JaxbObject jaxb, Object parent) throws IOException,
             JAXBException, ResourceException {
       Representation result = null;
@@ -2116,458 +2588,5 @@ public class MetadataWS extends Metadata {
       cResource.release();
       return parent;
     }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void annotateWorkflow(int workflowSWID, WorkflowAttribute att, Boolean skip) {
-    try {
-      Log.debug("Annotating WorkflowRun " + workflowSWID + " with skip=" + skip + ", Att = " + att);
-      Workflow obj = ll.findWorkflow("/" + workflowSWID);
-      if (skip != null) {
-        // obj.setSkip(skip);
-        Log.info("Processing does not have a skip column!");
-      }
-      if (att != null) {
-        Set<WorkflowAttribute> atts = obj.getWorkflowAttributes();
-        if (atts == null) {
-          atts = new HashSet<WorkflowAttribute>();
-        }
-        // att.setStudy(obj);
-        atts.add(att);
-        obj.setWorkflowAttributes(atts);
-      }
-      ll.updateWorkflow("/" + workflowSWID, obj);
-    } catch (IOException ex) {
-      Log.error("IOException while updating study " + workflowSWID + " " + ex.getMessage());
-    } catch (JAXBException ex) {
-      Log.error("JAXBException while updating study " + workflowSWID + " " + ex.getMessage());
-    } catch (ResourceException ex) {
-      Log.error("ResourceException while updating study " + workflowSWID + " " + ex.getMessage());
-    }
-
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void annotateWorkflowRun(int workflowrunSWID, WorkflowRunAttribute att, Boolean skip) {
-    try {
-      Log.debug("Annotating WorkflowRun " + workflowrunSWID + " with skip=" + skip + ", Att = " + att);
-      WorkflowRun obj = ll.findWorkflowRun("/" + workflowrunSWID);
-      if (skip != null) {
-        // obj.setSkip(skip);
-        Log.info("Processing does not have a skip column!");
-      }
-      if (att != null) {
-        Set<WorkflowRunAttribute> atts = obj.getWorkflowRunAttributes();
-        if (atts == null) {
-          atts = new HashSet<WorkflowRunAttribute>();
-        }
-        // att.setStudy(obj);
-        atts.add(att);
-        obj.setWorkflowRunAttributes(atts);
-      }
-      ll.updateWorkflowRun("/" + workflowrunSWID, obj);
-    } catch (IOException ex) {
-      Log.error("IOException while updating study " + workflowrunSWID + " " + ex.getMessage());
-    } catch (JAXBException ex) {
-      Log.error("JAXBException while updating study " + workflowrunSWID + " " + ex.getMessage());
-    } catch (ResourceException ex) {
-      Log.error("ResourceException while updating study " + workflowrunSWID + " " + ex.getMessage());
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void annotateIUS(int iusSWID, Set<IUSAttribute> iusAtts) {
-    try {
-      Log.debug("Annotating IUS ");
-      IUS ius = ll.findIUS("/" + iusSWID);
-      ius.getIusAttributes().clear();
-      for (IUSAttribute ia : iusAtts) {
-        // ia.setIus(ius);
-        ius.getIusAttributes().add(ia);
-      }
-
-      ll.updateIUS("/" + iusSWID, ius);
-    } catch (IOException ex) {
-      Log.error("IOException while updating ius " + iusSWID + " " + ex.getMessage());
-    } catch (JAXBException ex) {
-      Log.error("JAXBException while updating ius " + iusSWID + " " + ex.getMessage());
-    } catch (ResourceException ex) {
-      Log.error("ResourceException while updating ius " + iusSWID + " " + ex.getMessage());
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void annotateLane(int laneSWID, Set<LaneAttribute> laneAtts) {
-    try {
-      Log.debug("Annotating Lane " + laneSWID);
-      Lane lane = ll.findLane("/" + laneSWID);
-      lane.getLaneAttributes().clear();
-      for (LaneAttribute la : laneAtts) {
-        // la.setLane(lane);
-        lane.getLaneAttributes().add(la);
-      }
-      ll.updateLane("/" + laneSWID, lane);
-    } catch (IOException ex) {
-      Log.error("IOException while updating lane " + laneSWID + " " + ex.getMessage());
-    } catch (JAXBException ex) {
-      Log.error("JAXBException while updating lane " + laneSWID + " " + ex.getMessage());
-    } catch (ResourceException ex) {
-      Log.error("ResourceException while updating lane " + laneSWID + " " + ex.getMessage());
-    }
-
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void annotateSequencerRun(int sequencerRunSWID, Set<SequencerRunAttribute> sequencerRunAtts) {
-    try {
-      Log.debug("Annotating SequencerRun " + sequencerRunSWID);
-      SequencerRun sequencerRun = ll.findSequencerRun("/" + sequencerRunSWID);
-      sequencerRun.getSequencerRunAttributes().clear();
-      for (SequencerRunAttribute sa : sequencerRunAtts) {
-        // sa.setSequencerRunWizardDTO((SequencerRunWizardDTO) sequencerRun);
-        sequencerRun.getSequencerRunAttributes().add(sa);
-      }
-      ll.updateSequencerRun("/" + sequencerRunSWID, sequencerRun);
-    } catch (IOException ex) {
-      Log.error("IOException while updating sequencerRun " + sequencerRunSWID + " " + ex.getMessage());
-    } catch (JAXBException ex) {
-      Log.error("JAXBException while updating sequencerRun " + sequencerRunSWID + " " + ex.getMessage());
-    } catch (ResourceException ex) {
-      Log.error("ResourceException while updating sequencerRun " + sequencerRunSWID + " " + ex.getMessage());
-    }
-
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void annotateExperiment(int experimentSWID, Set<ExperimentAttribute> atts) {
-    try {
-      Log.debug("Annotating Experiment " + experimentSWID);
-      Experiment obj = ll.findExperiment("/" + experimentSWID);
-      obj.getExperimentAttributes().clear();
-      for (ExperimentAttribute ea : atts) {
-        // ea.setExperiment(obj);
-        obj.getExperimentAttributes().add(ea);
-      }
-      ll.updateExperiment("/" + experimentSWID, obj);
-    } catch (IOException ex) {
-      Log.error("IOException while updating experiment " + experimentSWID + " " + ex.getMessage());
-    } catch (JAXBException ex) {
-      Log.error("JAXBException while updating experiment " + experimentSWID + " " + ex.getMessage());
-    } catch (ResourceException ex) {
-      Log.error("ResourceException while updating experiment " + experimentSWID + " " + ex.getMessage());
-    }
-
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void annotateProcessing(int processingSWID, Set<ProcessingAttribute> atts) {
-    try {
-      Log.debug("Annotating Processing " + processingSWID);
-      Processing obj = ll.findProcessing("/" + processingSWID);
-      obj.getProcessingAttributes().clear();
-      for (ProcessingAttribute pa : atts) {
-        // pa.setProcessing(obj);
-        obj.getProcessingAttributes().add(pa);
-      }
-      ll.updateProcessing("/" + processingSWID, obj);
-    } catch (IOException ex) {
-      Log.error("IOException while updating processing " + processingSWID + " " + ex.getMessage());
-    } catch (JAXBException ex) {
-      Log.error("JAXBException while updating processing " + processingSWID + " " + ex.getMessage());
-    } catch (ResourceException ex) {
-      Log.error("ResourceException while updating processing " + processingSWID + " " + ex.getMessage());
-    }
-
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void annotateSample(int sampleSWID, Set<SampleAttribute> atts) {
-    try {
-      Log.debug("Annotating Sample " + sampleSWID);
-      Sample obj = ll.findSample("/" + sampleSWID);
-      obj.getSampleAttributes().clear();
-      for (SampleAttribute sa : atts) {
-        // sa.setSample(obj);
-        obj.getSampleAttributes().add(sa);
-      }
-      ll.updateSample("/" + sampleSWID, obj);
-    } catch (IOException ex) {
-      Log.error("IOException while updating sample " + sampleSWID + " " + ex.getMessage());
-    } catch (JAXBException ex) {
-      Log.error("JAXBException while updating sample " + sampleSWID + " " + ex.getMessage());
-    } catch (ResourceException ex) {
-      Log.error("ResourceException while updating sample " + sampleSWID + " " + ex.getMessage());
-    }
-
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void annotateStudy(int studySWID, Set<StudyAttribute> atts) {
-    try {
-      Log.debug("Annotating Study ");
-      Study obj = ll.findStudy("/" + studySWID);
-      obj.getStudyAttributes().clear();
-      for (StudyAttribute sa : atts) {
-        // sa.setStudy(obj);
-        obj.getStudyAttributes().add(sa);
-      }
-      ll.updateStudy("/" + studySWID, obj);
-    } catch (IOException ex) {
-      Log.error("IOException while updating study " + studySWID + " " + ex.getMessage());
-    } catch (JAXBException ex) {
-      Log.error("JAXBException while updating study " + studySWID + " " + ex.getMessage());
-    } catch (ResourceException ex) {
-      Log.error("ResourceException while updating study " + studySWID + " " + ex.getMessage());
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void annotateWorkflow(int workflowSWID, Set<WorkflowAttribute> atts) {
-    try {
-      Log.debug("Annotating WorkflowRun " + workflowSWID);
-      Workflow obj = ll.findWorkflow("/" + workflowSWID);
-      obj.getWorkflowAttributes().clear();
-      for (WorkflowAttribute wa : atts) {
-        // wa.setWorkflow(obj);
-        obj.getWorkflowAttributes().add(wa);
-      }
-      ll.updateWorkflow("/" + workflowSWID, obj);
-    } catch (IOException ex) {
-      Log.error("IOException while updating study " + workflowSWID + " " + ex.getMessage());
-    } catch (JAXBException ex) {
-      Log.error("JAXBException while updating study " + workflowSWID + " " + ex.getMessage());
-    } catch (ResourceException ex) {
-      Log.error("ResourceException while updating study " + workflowSWID + " " + ex.getMessage());
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void annotateWorkflowRun(int workflowrunSWID, Set<WorkflowRunAttribute> atts) {
-    try {
-      Log.debug("Annotating WorkflowRun ");
-      WorkflowRun obj = ll.findWorkflowRun("/" + workflowrunSWID);
-      obj.getWorkflowRunAttributes().clear();
-      for (WorkflowRunAttribute wa : atts) {
-        // wa.setWorkflowRun(obj);
-        obj.getWorkflowRunAttributes().add(wa);
-      }
-      ll.updateWorkflowRun("/" + workflowrunSWID, obj);
-    } catch (IOException ex) {
-      Log.error("IOException while updating study " + workflowrunSWID + " " + ex.getMessage());
-    } catch (JAXBException ex) {
-      Log.error("JAXBException while updating study " + workflowrunSWID + " " + ex.getMessage());
-    } catch (ResourceException ex) {
-      Log.error("ResourceException while updating study " + workflowrunSWID + " " + ex.getMessage());
-    }
-
-  }
-
-  /**
-   * FIXME: there are problems with setting accession when I should set ID
-   * 
-   * @param experimentAccession
-   * @param organismAccession
-   * @param platformAccession
-   * @param name
-   * @param description
-   * @param pairdEnd
-   * @param skip
-   * @return 
-   */
-  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip) {
-     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-
-    try {
-
-      Platform p = ll.findPlatform("/" + platformAccession);
-      
-      SequencerRun sr = new SequencerRun();
-      sr.setName(name);
-      sr.setDescription(description);
-      sr.setPairedEnd(pairdEnd);
-      sr.setSkip(skip);
-      sr.setPlatform(p);
-
-      Log.info("Posting new sequencer_run");
-
-      sr = ll.addSequencerRun(sr);
-
-      ret.setAttribute("sw_accession", sr.getSwAccession().toString());
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      ret.setExitStatus(ReturnValue.FAILURE);
-      return ret;
-    }
-
-    return (ret);
-  }
-
-  // FIXME: might actually need to turn off libraryStrategy et al.
-  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip) {
-     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-
-    try {
-
-      SequencerRun sr = ll.findSequencerRun("/" + sequencerRunAccession);
-      StudyType st = ll.findStudyType("/"+studyTypeId);
-      LibraryStrategy ls = ll.findLibraryStrategy("/"+libraryStrategyId);
-      LibrarySelection lsel = ll.findLibrarySelection("/"+librarySelectionId);
-      LibrarySource lsource = ll.findLibrarySource("/"+librarySourceId);
-      
-      Lane l = new Lane();
-      l.setStudyType(st);
-      l.setLibraryStrategy(ls);
-      l.setLibrarySelection(lsel);
-      l.setLibrarySource(lsource);
-      l.setSequencerRun(sr);
-      l.setName(name);
-      l.setDescription(description);
-      l.setCycleDescriptor(cycleDescriptor);
-      l.setSkip(skip);
-      
-      Log.info("Posting new lane");
-
-      l = ll.addLane(l);
-
-      ret.setAttribute("sw_accession", l.getSwAccession().toString());
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      ret.setExitStatus(ReturnValue.FAILURE);
-      return ret;
-    }
-
-    return (ret);
-  }
-
-  public ReturnValue addIUS(Integer laneAccession, Integer sampleAccession, String name, String description, String barcode, boolean skip) {
-    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-
-    try {
-
-      Lane l = ll.findLane("/" + laneAccession);
-      Sample s = ll.findSample("/"+sampleAccession);
-      
-      IUS i = new IUS();
-      i.setLane(l);
-      i.setSample(s);
-      i.setName(name);
-      i.setDescription(description);
-      i.setTag(barcode);
-      i.setSkip(skip);
-      
-      Log.info("Posting new IUS");
-
-      i = ll.addIUS(i);
-
-      ret.setAttribute("sw_accession", i.getSwAccession().toString());
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      ret.setExitStatus(ReturnValue.FAILURE);
-      return ret;
-    }
-
-    return (ret);
-  }
-
-  public List<Platform> getPlatforms() {
-    try {
-      return ll.findPlatforms();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    } catch (JAXBException ex) {
-      ex.printStackTrace();
-    }
-    return null;
-  }
-
-  public List<Organism> getOrganisms() {
-    try {
-      return ll.findOrganisms();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    } catch (JAXBException ex) {
-      ex.printStackTrace();
-    }
-    return null;
-  }
-
-  public List<StudyType> getStudyTypes() {
-    try {
-      return ll.findStudyTypes();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    } catch (JAXBException ex) {
-      ex.printStackTrace();
-    }
-    return null;
-  }
-
-  public List<LibraryStrategy> getLibraryStrategies() {
-    try {
-      return ll.findLibraryStrategies();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    } catch (JAXBException ex) {
-      ex.printStackTrace();
-    }
-    return null;
-  }
-
-  public List<LibrarySelection> getLibrarySelections() {
-    try {
-      return ll.findLibrarySelections();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    } catch (JAXBException ex) {
-      ex.printStackTrace();
-    }
-    return null;
-  }
-
-  public List<LibrarySource> getLibrarySource() {
-    try {
-      return ll.findLibrarySources();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    } catch (JAXBException ex) {
-      ex.printStackTrace();
-    }
-    return null;
   }
 }
