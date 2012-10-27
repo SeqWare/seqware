@@ -98,13 +98,11 @@ public class StudyServiceImpl implements StudyService {
     List<File> deleteFiles = null;
     if ("yes".equals(deleteRealFiles)) {
       deleteFiles = studyDAO.getFiles(study.getStudyId());
+      fileDAO.deleteAllWithFolderStore(deleteFiles);
     }
 
     studyDAO.delete(study);
 
-    if ("yes".equals(deleteRealFiles)) {
-      fileDAO.deleteAllWithFolderStore(deleteFiles);
-    }
   }
 
   /** {@inheritDoc} */

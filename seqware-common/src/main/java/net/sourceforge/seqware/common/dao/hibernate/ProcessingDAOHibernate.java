@@ -62,9 +62,11 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
      * {@inheritDoc}
      *
      * Updates an instance of Processing in the database.
+     * This is likely to not work given the complex tree structures 
+     * created with processing entries.
      */
     public void delete(Processing processing) {
-
+      
         this.getHibernateTemplate().delete(processing);
     }
 
