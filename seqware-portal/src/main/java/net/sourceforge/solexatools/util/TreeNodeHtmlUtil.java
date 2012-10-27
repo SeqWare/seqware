@@ -169,8 +169,11 @@ public class TreeNodeHtmlUtil {
 		
 		if(wrf!=null){
 			Integer wrfId = wrf.getWorkflowRunId();
-			html = "<li class='expandable'><div class='hitarea hasChildren-hitarea expandable-hitarea' ></div>" +
-			"<span id='wfr_"+ wrfId +"'>Analysis Workflow</span> <span><a class='m-question np-mousetrack supernote-hover-demo1' href='#demo1'><img src='i/ico/ico_question.gif'></a></span> <span class='m-link'><a href='#'>edit</a> - <a href='#'>delete</a></span> <span class='m-description'>Description:</span><ul style='display: none;'></li>";
+			//html = "<li class='expandable'><div class='hitarea hasChildren-hitarea expandable-hitarea' ></div>" +
+			//"<span id='wfr_"+ wrfId +"'>Analysis Workflow</span> <span><a class='m-question np-mousetrack supernote-hover-demo1' href='#demo1'><img src='i/ico/ico_question.gif'></a></span> <span class='m-link'><a href='#'>edit</a> - <a href='#'>delete</a></span> <span class='m-description'>Description:</span><ul style='display: none;'></li>";
+                        html = "<li class='expandable'><div class='hitarea hasChildren-hitarea expandable-hitarea' ></div>" +
+			"<span id='wfr_"+ wrfId +"'>Analysis Workflow</span> <span><a class='m-question np-mousetrack supernote-hover-demo1' href='#demo1'><img src='i/ico/ico_question.gif'></a></span> <span class='m-link'><a href='#'>edit</a></span> <span class='m-description'>Description:</span><ul style='display: none;'></li>";
+
 		}
 		
 		Integer aeId = processing.getProcessingId();
@@ -185,7 +188,8 @@ public class TreeNodeHtmlUtil {
 		String ownerHtml = "";
 		if(registration.getRegistrationId().equals(processing.getOwner().getRegistrationId())){
 			String editLink = "<a href='#'>edit</a> -";
-			String deleteLink = "<a href='#' popup-delete='true' form-action='processingDelete.htm' object-id='"+ aeId + "' object-name='Analysis Event "+ name +"'>delete</a>";
+			//String deleteLink = "<a href='#' popup-delete='true' form-action='processingDelete.htm' object-id='"+ aeId + "' object-name='Analysis Event "+ name +"'>delete</a>";
+			String deleteLink = "";
 			ownerHtml = "<span class='m-link'> "+ editLink + deleteLink + "</span>"; 
 		}		
 

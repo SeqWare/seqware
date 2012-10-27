@@ -60,10 +60,35 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     /**
      * {@inheritDoc}
      *
-     * Deletes an instance of Sample in the database.
+     * This deletion will result in just the sample being deleted but the IUS will remain.
+     * This will potentially cause orphans which is not really at all good.  A better solution 
+     * is to never delete but just use a deletion attribute.
      */
     public void delete(Sample sample) {
-
+        // remove parent experiment
+        sample.getExperiment().getSamples().remove(sample);
+        // clear IUS
+        for (IUS i : sample.getIUS()) {
+          for (Processing p : i.getProcessings()) {
+            p.getIUS().remove(i);
+            this.getHibernateTemplate().update(p);
+          }
+          i.setProcessings(null);
+          for (WorkflowRun wr : i.getWorkflowRuns()) {
+            wr.getIus().remove(i);
+            this.getHibernateTemplate().update(wr);
+          }
+          i.setWorkflowRuns(null);
+        }
+        // don't remove processings
+        for (Processing p : sample.getProcessings()) {
+          p.getSamples().remove(sample);
+        }
+        sample.setProcessings(null);
+        // flush
+        this.getHibernateTemplate().update(sample);
+        this.getHibernateTemplate().flush();
+        // delete
         this.getHibernateTemplate().delete(sample);
     }
 
