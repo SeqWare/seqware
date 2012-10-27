@@ -36,7 +36,8 @@
 	<c:if test="${workflowRun.status=='completed'}">
 		<c:url var="shareURL" value="analisysShare.htm"/>
 		<c:url var="deleteURL" value="analisysDelete.htm"/>
-	     	<c:set var="linksHtml" value="<a href='#' popup-share='true' form-action='${shareURL}' tt='wfr' object-id='${workflowRun.workflowRunId}' object-name='${workflowRun.workflow.jsonEscapeName} analysis workflow'>share</a> - <a href='#' popup-delete='true' tt='wfr' form-action='${deleteURL}' object-id='${workflowRun.workflowRunId}' object-name='${workflowRun.workflow.jsonEscapeName} analysis workflow'>delete</a>"/>
+	     	<c:set var="linksHtml" value="<a href='#' popup-share='true' form-action='${shareURL}' tt='wfr' object-id='${workflowRun.workflowRunId}' object-name='${workflowRun.workflow.jsonEscapeName} analysis workflow'>share</a>"/>
+	     	<!-- c:set var="linksHtml" value="<a href='#' popup-share='true' form-action='${shareURL}' tt='wfr' object-id='${workflowRun.workflowRunId}' object-name='${workflowRun.workflow.jsonEscapeName} analysis workflow'>share</a> - <a href='#' popup-delete='true' tt='wfr' form-action='${deleteURL}' object-id='${workflowRun.workflowRunId}' object-name='${workflowRun.workflow.jsonEscapeName} analysis workflow'>delete</a>"/ -->
 	</c:if>
 	<c:if test="${workflowRun.status!='completed'}">
 		<c:set var="linksHtml" value="<a href='#' popup-cancel='true' tt='wfrr' object-id='${workflowRun.workflowRunId}'>cancel</a>"/>
