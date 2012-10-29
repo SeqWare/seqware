@@ -28,6 +28,7 @@ import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.daxgenerator.Daxgenerator;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowEngine;
 
+
 /**
  * <p>Abstract BasicWorkflow class.</p>
  *
@@ -35,6 +36,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.WorkflowEngine;
  * @version $Id: $Id
  */
 public abstract class BasicWorkflow implements WorkflowEngine {
+
 
     protected ReturnValue ret = new ReturnValue();
     protected Metadata metadata = null;
