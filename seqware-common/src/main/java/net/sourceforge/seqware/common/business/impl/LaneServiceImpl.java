@@ -633,9 +633,9 @@ public class LaneServiceImpl implements LaneService {
 
     /** {@inheritDoc} */
     @Override
-    public void insert(Registration registration, Lane lane) {
+    public Integer insert(Registration registration, Lane lane) {
         lane.setCreateTimestamp(new Date());
-	laneDAO.insert(registration, lane);
+	return(laneDAO.insert(registration, lane));
     }
 
     /** {@inheritDoc} */

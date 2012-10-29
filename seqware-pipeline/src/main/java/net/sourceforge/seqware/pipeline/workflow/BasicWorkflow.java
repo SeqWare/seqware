@@ -28,6 +28,7 @@ import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.daxgenerator.Daxgenerator;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowEngine;
 
+
 /**
  * <p>Abstract BasicWorkflow class.</p>
  *
@@ -35,6 +36,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.WorkflowEngine;
  * @version $Id: $Id
  */
 public abstract class BasicWorkflow implements WorkflowEngine {
+
 
     protected ReturnValue ret = new ReturnValue();
     protected Metadata metadata = null;
@@ -364,8 +366,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	    return (ret);
 	}
 
-	Map<String, String> map = this.prepareData(wi, workflowRunAccession,
-		iniFiles, preParsedIni, metadataWriteback, parentAccessions);
+
 	// if we're doing metadata writeback will need to parameterize the
 	// workflow correctly
 	if (metadataWriteback) {
@@ -425,6 +426,9 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	    ret.setStderr("Can't write DAX file! " + e.getMessage());
 	    return (ret);
 	}
+        
+        Map<String, String> map = this.prepareData(wi, workflowRunAccession,
+		iniFiles, preParsedIni, metadataWriteback, parentAccessions);
 
 	Log.stdout("CREATING DAX IN: " + dax.getAbsolutePath());
 

@@ -7,7 +7,9 @@ import java.util.List;
 import net.sourceforge.seqware.common.dao.ExperimentDAO;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.Registration;
+import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
@@ -50,8 +52,31 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     this.getHibernateTemplate().merge(experiment);
   }
 
-  /** {@inheritDoc} */
+  /** 
+   * {@inheritDoc} 
+   * 
+   * This deletion will result in just the experiment being deleted but the samples and IUS will remain.
+   * This will potentially cause orphans which is not really at all good.  A better solution 
+   * is to never delete but just use a deletion attribute.
+   */
   public void delete(Experiment experiment) {
+    // remove partent study
+    experiment.getStudy().getExperiments().remove(experiment);
+    // clear samples
+    for (Sample s : experiment.getSamples()) {
+      s.setExperiment(null);
+      //this.getHibernateTemplate().update(s);
+    }
+    experiment.setSamples(null);
+    // don't delete processing
+    for (Processing p : experiment.getProcessings()) {
+      p.getExperiments().remove(experiment);
+    }
+    experiment.setProcessings(null);
+    // flush the change
+    this.getHibernateTemplate().update(experiment);
+    this.getHibernateTemplate().flush();
+    // and delete the study
     this.getHibernateTemplate().delete(experiment);
   }
 

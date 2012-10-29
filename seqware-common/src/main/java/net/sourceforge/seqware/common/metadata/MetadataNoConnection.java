@@ -13,6 +13,11 @@ import java.util.TreeSet;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.LaneAttribute;
+import net.sourceforge.seqware.common.model.LibrarySelection;
+import net.sourceforge.seqware.common.model.LibrarySource;
+import net.sourceforge.seqware.common.model.LibraryStrategy;
+import net.sourceforge.seqware.common.model.Organism;
+import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.model.SampleAttribute;
 import net.sourceforge.seqware.common.model.SequencerRunAttribute;
@@ -106,6 +111,43 @@ public class MetadataNoConnection extends Metadata {
     return (new ReturnValue(ReturnValue.SUCCESS));
   }
 
+    public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip) {
+        logger.info("No metadata connection");
+        return (new ReturnValue(ReturnValue.SUCCESS));
+    }
+  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip) {
+              logger.info("No metadata connection");
+        return (new ReturnValue(ReturnValue.SUCCESS));
+  }
+  public ReturnValue addIUS(Integer laneAccession, Integer sampleAccession, String name, String description, String barcode, boolean skip) {
+              logger.info("No metadata connection");
+        return (new ReturnValue(ReturnValue.SUCCESS));
+  }
+  public List<Platform> getPlatforms() {
+              logger.info("No metadata connection");
+        return (new ArrayList<Platform>());
+  }
+  public List<Organism> getOrganisms() {
+                    logger.info("No metadata connection");
+        return (new ArrayList<Organism>());
+  }
+  public List<StudyType> getStudyTypes() {
+                    logger.info("No metadata connection");
+        return (new ArrayList<StudyType>());
+  }
+  public List<LibraryStrategy> getLibraryStrategies() {
+                    logger.info("No metadata connection");
+        return (new ArrayList<LibraryStrategy>());
+  }
+  public List<LibrarySelection> getLibrarySelections() {
+                    logger.info("No metadata connection");
+        return (new ArrayList<LibrarySelection>());
+  }
+  public List<LibrarySource> getLibrarySource() {
+                    logger.info("No metadata connection");
+        return (new ArrayList<LibrarySource>());
+  }
+  
   // FIXME: This should all be a transaction. For now, we end up with cruft in
   // the DB if something failed.
   /*

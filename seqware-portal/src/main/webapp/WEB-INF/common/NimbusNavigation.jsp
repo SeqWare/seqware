@@ -51,7 +51,8 @@
     </div>
     <div class="b-news-content m-collapsed">
         <ul>
-            <li><a href="<c:url value="/myAnalisysList.htm"/>"><spring:message code="navigation.myAnalysis.showAnalysis"/></a></li>
+            <li><a href="<c:url value="/myAnalisysTable.htm"/>"><spring:message code="navigation.myAnalysis.showAnalysisTable"/></a>
+                </li>
             <li><a href="<c:url value="/myAnalisysBulkDownloadList.htm"/>"><spring:message code="navigation.myAnalysis.bulkDownload"/></a></li>
             <% if (registration != null && registration.isLIMSAdmin()) { %>
             <li><a href="<c:url value="/manageWorkflows.htm"/>"><spring:message code="navigation.myAnalysis.manageWorkflows"/></a></li>
