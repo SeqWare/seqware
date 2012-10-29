@@ -29,7 +29,8 @@
 	<c:set var="ownerLinkHtml" value=""/>
 		<c:if test="${!isBulkPage}">
 		<c:if test="${isOwner}">
-			<c:set var="ownerLinkHtml" value="<span class='m-link'><a href='#' popup-delete='true' form-action='fileDelete.htm' tt='${typeTree}' object-id='${file.fileId}' object-name='${file.jsonEscapeFileName} file'>delete</a></span>"/>
+			<!-- c:set var="ownerLinkHtml" value="<span class='m-link'><a href='#' popup-delete='true' form-action='fileDelete.htm' tt='${typeTree}' object-id='${file.fileId}' object-name='${file.jsonEscapeFileName} file'>delete</a></span>"/ -->
+			<c:set var="ownerLinkHtml" value=""/>
 		</c:if>
 	</c:if>
 			

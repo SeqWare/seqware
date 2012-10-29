@@ -60,14 +60,41 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     /**
      * {@inheritDoc}
      *
-     * Deletes an instance of Sample in the database.
+     * This deletion will result in just the sample being deleted but the IUS will remain.
+     * This will potentially cause orphans which is not really at all good.  A better solution 
+     * is to never delete but just use a deletion attribute.
      */
     public void delete(Sample sample) {
-
+        // remove parent experiment
+        sample.getExperiment().getSamples().remove(sample);
+        // clear IUS
+        for (IUS i : sample.getIUS()) {
+          for (Processing p : i.getProcessings()) {
+            p.getIUS().remove(i);
+            this.getHibernateTemplate().update(p);
+          }
+          i.setProcessings(null);
+          for (WorkflowRun wr : i.getWorkflowRuns()) {
+            wr.getIus().remove(i);
+            this.getHibernateTemplate().update(wr);
+          }
+          i.setWorkflowRuns(null);
+        }
+        // don't remove processings
+        for (Processing p : sample.getProcessings()) {
+          p.getSamples().remove(sample);
+        }
+        sample.setProcessings(null);
+        // flush
+        this.getHibernateTemplate().update(sample);
+        this.getHibernateTemplate().flush();
+        // delete
         this.getHibernateTemplate().delete(sample);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<File> getFiles(Integer sampleId) {
         List<File> files = new ArrayList<File>();
 
@@ -154,7 +181,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return files;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isHasFile(Integer sampleId) {
         boolean isHasFile = false;
@@ -261,7 +290,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return isHasFile;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<File> getFiles(Integer sampleId, String metaType) {
         List<File> files = new ArrayList<File>();
         /*
@@ -374,7 +405,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return files;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isHasFile(Integer sampleId, String metaType) {
         boolean isHasFile = false;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -490,7 +523,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      *
      * return samples; }
      */
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<Integer, Integer> getCountFiles(Integer expId) {
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id, sample_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id, s.sample_id "
@@ -532,7 +567,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return countFiles;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<Integer, Integer> getCountFiles(Integer expId, String metaType) {
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id, sample_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id, s.sample_id "
@@ -607,6 +644,18 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     /**
      * {@inheritDoc}
      *
+     * Finds an instance of Sample in the database by the Sample emailAddress.
+     */
+    public List<Sample> matchName(String name) {
+        String query = "from Sample as sample where sample.name like ?";
+        Object[] parameters = {name};
+        List list = this.getHibernateTemplate().find(query, parameters);
+        return (List<Sample>)list;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * Finds an instance of Sample in the database by the Sample ID.
      */
     public Sample findByID(Integer id) {
@@ -620,7 +669,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return sample;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public Sample findBySWAccession(Integer swAccession) {
@@ -634,7 +685,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return sample;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public List<Sample> findByOwnerID(Integer registrationId) {
@@ -643,7 +696,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return this.getHibernateTemplate().find(query, parameters);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public List<Sample> findByCriteria(String criteria, boolean isCaseSens) {
@@ -711,7 +766,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return (filteredList);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     public List<Sample> listSample(Registration registaration) {
         Integer ownerId = registaration.getRegistrationId();
@@ -728,7 +785,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return (list);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public List<Sample> getRootSamples(Study study) {
@@ -739,7 +798,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return list;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Sample getRootSample(Sample sample) {
         Sample upSample = sample;
@@ -769,7 +830,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return upSample;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Sample updateDetached(Sample sample) {
         Sample dbObject = reattachSample(sample);
@@ -785,7 +848,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return null;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<ReturnValue> findFiles(Integer swAccession) {
         getSessionFactory().getCurrentSession().flush();
@@ -798,7 +863,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return list;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Sample> list() {
         ArrayList<Sample> l = new ArrayList<Sample>();
@@ -814,15 +881,17 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         return l;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void update(Registration registration, Sample sample) {
         Sample dbObject = reattachSample(sample);
         Logger logger = Logger.getLogger(SampleDAOHibernate.class);
         if (registration == null) {
             logger.error("SampleDAOHibernate update registration is null");
-        } else if (registration.isLIMSAdmin() || 
-                (sample.givesPermission(registration) && dbObject.givesPermission(registration))) {
+        } else if (registration.isLIMSAdmin()
+                || (sample.givesPermission(registration) && dbObject.givesPermission(registration))) {
             logger.info("updating sample object");
             update(sample);
         } else {
@@ -831,7 +900,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
 
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer insert(Registration registration, Sample sample) {
         Logger logger = Logger.getLogger(SampleDAOHibernate.class);
@@ -843,13 +914,15 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
             insert(sample);
             this.getSession().flush();
             swAccession = sample.getSwAccession();
-        }  else {
+        } else {
             logger.error("SampleDAOHibernate insert not authorized");
         }
-        return(swAccession);
+        return (swAccession);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Sample updateDetached(Registration registration, Sample sample) {
         Sample dbObject = reattachSample(sample);
@@ -864,8 +937,8 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         }
         return null;
     }
-    
-        private Sample reattachSample(Sample sample) throws IllegalStateException, DataAccessResourceFailureException {
+
+    private Sample reattachSample(Sample sample) throws IllegalStateException, DataAccessResourceFailureException {
         Sample dbObject = sample;
         if (!getSession().contains(sample)) {
             dbObject = findByID(sample.getSampleId());

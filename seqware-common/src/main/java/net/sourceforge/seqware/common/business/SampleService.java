@@ -76,6 +76,8 @@ public interface SampleService {
      */
     public Sample findByName(String name);
 
+    public List<Sample> matchName(String name);
+    
     /**
      * <p>findByTitle.</p>
      *
