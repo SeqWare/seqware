@@ -49,18 +49,26 @@ public abstract class AbstractWorkflowDataModel  {
     
     /**
      * to be Overridden by the workflow author
+     * you generally don't call this as the workflow author since it promotes hardcoding
+     * this will typically be filled in by maven
      */
     public void setupWorkflow() {
     	
     }
     /**
      * to be Overridden by the workflow author
+     * generally people don't override this. 
      */
     public void setupEnvironment() {
     	
     }
     /**
      * to be Overridden by the workflow author
+     * the place to specify inputs and outputs to the program
+     * also, a user can specify inputs and outputs on jobs directly in which 
+     * case they are still provisioned properly with respect to the job (inputs before, outputs after)
+     * when you define inputs/outputs here they are provisioned before all jobs
+     * and after all jobs respectively
      */
     public Map<String, SqwFile> setupFiles() {
     	return this.files;
