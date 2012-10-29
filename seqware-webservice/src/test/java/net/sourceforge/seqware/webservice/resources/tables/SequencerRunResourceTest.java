@@ -16,14 +16,43 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
+import java.util.Date;
+import junit.framework.Assert;
+import net.sourceforge.seqware.common.model.IUS;
+import net.sourceforge.seqware.common.model.Lane;
+import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.common.model.SequencerRun;
+import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
+import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
+import org.w3c.dom.Document;
+
 /**
  *
  * @author mtaschuk
  */
-public class SequencerRunResourceTest extends DatabaseResourceTest{
+public class SequencerRunResourceTest extends DatabaseResourceTest {
 
     public SequencerRunResourceTest() {
         super("/sequencerruns");
     }
-    
+
+    @Override
+    public void testPost() {
+        System.out.println(getRelativeURI() + " POST");
+        Representation rep = null;
+        try {
+            SequencerRun r = new SequencerRun();
+            r.setSequencerRunId(242424);
+
+            Document doc = XmlTools.marshalToDocument(new JaxbObject<SequencerRun>(), r);
+            rep = resource.post(XmlTools.getRepresentation(doc));
+            rep.exhaust();
+            rep.release();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(e.getMessage());
+        }
+    }
 }
