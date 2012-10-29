@@ -45,7 +45,6 @@ public class IusResourceTest extends DatabaseResourceTest {
         try {
             IUS ius = new IUS();
             ius.setCreateTimestamp(new Date());
-            ius.setIusId(27);
             ius.setSwAccession(6213);
             ius.setUpdateTimestamp(new Date());
             Sample s = new Sample();
