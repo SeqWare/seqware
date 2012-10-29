@@ -42,9 +42,10 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
      *
      * Inserts an instance of Lane into the database.
      */
-    public void insert(Lane lane) {
+    public Integer insert(Lane lane) {
         this.getHibernateTemplate().save(lane);
         getSession().flush();
+        return(lane.getSwAccession());
     }
 
     /**
@@ -459,16 +460,18 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
     
     /** {@inheritDoc} */
     @Override
-    public void insert(Registration registration, Lane lane) {
+    public Integer insert(Registration registration, Lane lane) {
         Logger logger = Logger.getLogger(LaneDAOHibernate.class);
         if (registration == null) {
             logger.error("LaneDAOHibernate insert registration is null");
         } else if (registration.isLIMSAdmin() || lane.givesPermission(registration)) {
             logger.info("insert Lane object");
             insert(lane);
+            return(lane.getSwAccession());
         } else {
             logger.error("LaneDAOHibernate insert not authorized");
         }
+        return(null);
     }
     
     /** {@inheritDoc} */

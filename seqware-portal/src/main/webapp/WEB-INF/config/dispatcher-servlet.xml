@@ -258,6 +258,26 @@
         </property>
 	</bean>
 
+	<bean id="analisysTableController"
+		class="net.sourceforge.solexatools.webapp.controller.AnalisysTableController">
+		<property name="workflowService">
+		<ref bean="workflowService"/>
+		</property>
+		<property name="workflowRunService">
+		<ref bean="workflowRunService"/>
+		</property>
+	</bean>
+
+	<bean id="analisysTableControllerDetails"
+		class="net.sourceforge.solexatools.webapp.controller.AnalisysTableControllerDetails">
+		<property name="workflowService">
+		<ref bean="workflowService"/>
+		</property>
+		<property name="workflowRunService">
+		<ref bean="workflowRunService"/>
+		</property>
+	</bean>
+
 	<!-- Workflow -->
 	<bean id="workflowSetupController"
 		class="net.sourceforge.solexatools.webapp.controller.WorkflowSetupController">
@@ -1513,6 +1533,8 @@
 				<prop key="**/workflowSetup.htm">workflowSetupController</prop>
 				<prop key="**/workflowNew.htm">workflowController</prop>
 				<prop key="**/myAnalisysList.htm">analisysListController</prop>
+				<prop key="**/myAnalisysTable.htm">analisysTableController</prop>
+				<prop key="**/myAnalisysTableDetails.htm">analisysTableControllerDetails</prop>
 				<prop key="**/analisysListDetails.htm">analisysListDetailsController</prop>
 				<prop key="**/analisysRunningListDetails.htm">analisysRunningListDetailsController</prop>
 				<!--prop key="**/mySharedAnalisysListDetails.htm">mySharedAnalisysListDetailsController</prop-->

@@ -8,8 +8,10 @@ import java.util.List;
 import net.sourceforge.seqware.common.dao.StudyDAO;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import net.sourceforge.seqware.common.hibernate.PropagateOwnership;
+import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Registration;
+import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
@@ -59,8 +61,28 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     getSession().flush();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc} 
+   * 
+   * This deletion will result in just the study and experiments being deleted but the samples and IUS will remain.
+   * This will potentially cause orphans which is not really at all good.  A better solution 
+   * is to never delete but just use a deletion attribute.
+   * 
+   */
   public void delete(Study study) {
+    // clear experiments
+    for (Experiment e : study.getExperiments()) {
+      for (Sample s : e.getSamples()) {
+        s.setExperiment(null);
+        this.getHibernateTemplate().update(s);
+      }
+      e.setSamples(null);
+      this.getHibernateTemplate().update(e);
+    }
+    //study.getExperiments().clear();
+    // flush the change
+    this.getHibernateTemplate().update(study);
+    this.getHibernateTemplate().flush();
+    // and delete the study
     this.getHibernateTemplate().delete(study);
   }
 

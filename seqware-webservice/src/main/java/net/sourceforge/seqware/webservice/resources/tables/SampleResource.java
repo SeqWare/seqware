@@ -16,9 +16,12 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.ExperimentService;
 import net.sourceforge.seqware.common.business.SampleService;
@@ -52,7 +55,9 @@ public class SampleResource extends DatabaseResource {
         super("sample");
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
@@ -80,12 +85,27 @@ public class SampleResource extends DatabaseResource {
             getResponse().setEntity(XmlTools.getRepresentation(line));
 
         } else if (queryValues.get("name") != null) {
+
             jaxbTool = new JaxbObject<Sample>();
             Sample sample = (Sample) testIfNull(ss.findByName(queryValues.get("name")));
             Sample dto = copier.hibernate2dto(Sample.class, sample);
             Document line = XmlTools.marshalToDocument(jaxbTool, dto);
             getResponse().setEntity(XmlTools.getRepresentation(line));
 
+        } else if (queryValues.get("matches") != null) {
+            jaxbTool = new JaxbObject<SampleList>();
+            String name = queryValues.get("matches");
+            
+            List<Sample> samples = (List<Sample>) testIfNull(ss.matchName(name));
+            SampleList eList = new SampleList();
+            eList.setList(new ArrayList());
+
+            for (Sample sample : samples) {
+                Sample dto = copier.hibernate2dto(Sample.class, sample);
+                eList.add(dto);
+            }
+            Document line = XmlTools.marshalToDocument(jaxbTool, eList);
+            getResponse().setEntity(XmlTools.getRepresentation(line));
         } else {
             jaxbTool = new JaxbObject<SampleList>();
             List<Sample> samples = (List<Sample>) testIfNull(ss.list());

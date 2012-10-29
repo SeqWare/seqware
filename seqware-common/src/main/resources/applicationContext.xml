@@ -1468,6 +1468,21 @@
         <property name="platformService">
             <ref local="platformService"/>
         </property>
+        <property name="studyTypeService">
+            <ref local="studyTypeService"/>
+        </property>
+        <property name="librarySelectionService">
+            <ref local="librarySelectionService"/>
+        </property>
+        <property name="librarySourceService">
+            <ref local="librarySourceService"/>
+        </property>
+        <property name="libraryStrategyService">
+            <ref local="libraryStrategyService"/>
+        </property>
+        <property name="organismService">
+            <ref local="organismService"/>
+        </property>
     </bean>
       
 </beans>

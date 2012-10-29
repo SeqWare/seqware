@@ -21,6 +21,11 @@ import javax.sql.DataSource;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.LaneAttribute;
+import net.sourceforge.seqware.common.model.LibrarySelection;
+import net.sourceforge.seqware.common.model.LibrarySource;
+import net.sourceforge.seqware.common.model.LibraryStrategy;
+import net.sourceforge.seqware.common.model.Organism;
+import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.model.SampleAttribute;
 import net.sourceforge.seqware.common.model.SequencerRunAttribute;
@@ -65,24 +70,32 @@ public class MetadataDB extends Metadata {
     logger = Logger.getLogger(MetadataDB.class);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue addStudy(String title, String description, String accession, StudyType studyType,
-      String centerName, String centerProjectName, Integer studyTypeId) {
+          String centerName, String centerProjectName, Integer studyTypeId) {
     return (new ReturnValue(ReturnValue.NOTIMPLEMENTED));
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title) {
     return (new ReturnValue(ReturnValue.NOTIMPLEMENTED));
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public ReturnValue addSample(Integer experimentAccession, Integer organismId, String description, String title) {
     return (new ReturnValue(ReturnValue.NOTIMPLEMENTED));
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName) {
     // String getStudyInfoFromStudyName =
@@ -144,7 +157,9 @@ public class MetadataDB extends Metadata {
     throw new NotImplementedException("Please use the SymLinker through the Web service.");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<ReturnValue> findFilesAssociatedWithASample(String sampleName) {
     // StringBuffer buffer = new StringBuffer();
@@ -334,7 +349,9 @@ public class MetadataDB extends Metadata {
    * variant1 is process match -> variant is algorithm match -> match1, match2,
    * etc is subprocess
    */
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue add_empty_processing_event(int[] parentIDs) {
     int processingID;
@@ -366,7 +383,7 @@ public class MetadataDB extends Metadata {
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString());
       return new ReturnValue(null, "Could not execute one of the SQL commands: " + sql.toString() + "\nException: "
-          + e.getMessage(), ReturnValue.SQLQUERYFAILED);
+              + e.getMessage(), ReturnValue.SQLQUERYFAILED);
     }
 
     /*
@@ -377,7 +394,9 @@ public class MetadataDB extends Metadata {
     return ret;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue add_empty_processing_event_by_parent_accession(int[] parentAccessions) {
     int processingID;
@@ -399,7 +418,7 @@ public class MetadataDB extends Metadata {
           if (!linkAccessionAndParent(accession, processingID)) {
             ret.setExitStatus(ReturnValue.SQLQUERYFAILED);
             ret.setStderr(ret.getStderr() + "\nCouldn't link this processing event: " + processingID + " to accession "
-                + accession);
+                    + accession);
             return (ret);
           }
 
@@ -408,7 +427,7 @@ public class MetadataDB extends Metadata {
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString());
       return new ReturnValue(null, "Could not execute one of the SQL commands: " + sql.toString() + "\nException: "
-          + e.getMessage(), ReturnValue.SQLQUERYFAILED);
+              + e.getMessage(), ReturnValue.SQLQUERYFAILED);
     }
 
     /*
@@ -606,10 +625,12 @@ public class MetadataDB extends Metadata {
     return (result);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue processing_event_to_task_group(int processingID, int parentIDs[], int[] childIDs,
-      String algorithm, String description) {
+          String algorithm, String description) {
     // Create a SQL statement
     StringBuffer sql = new StringBuffer();
     try {
@@ -633,7 +654,7 @@ public class MetadataDB extends Metadata {
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString());
       return new ReturnValue(null, "Could not execute one of the SQL commands: " + sql.toString() + "\nException: "
-          + e.getMessage(), ReturnValue.SQLQUERYFAILED);
+              + e.getMessage(), ReturnValue.SQLQUERYFAILED);
     }
 
     /*
@@ -644,7 +665,9 @@ public class MetadataDB extends Metadata {
     return ret;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue add_task_group(int parentIDs[], int[] childIDs, String algorithm, String description) {
     int processingID;
@@ -652,7 +675,7 @@ public class MetadataDB extends Metadata {
     StringBuffer sql = new StringBuffer();
     try {
       sql.append("INSERT INTO processing (create_tstmp, task_group, algorithm) VALUES( now(), true, '" + algorithm
-          + "' )");
+              + "' )");
       processingID = InsertAndReturnNewPrimaryKey(sql.toString(), "processing_processing_id_seq");
 
       if (description != null) {
@@ -666,7 +689,7 @@ public class MetadataDB extends Metadata {
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString());
       return new ReturnValue(null, "Could not execute one of the SQL commands: " + sql.toString() + "\nException: "
-          + e.getMessage(), ReturnValue.SQLQUERYFAILED);
+              + e.getMessage(), ReturnValue.SQLQUERYFAILED);
     }
 
     /*
@@ -677,7 +700,9 @@ public class MetadataDB extends Metadata {
     return ret;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   /*
    * FIXME: this should check if association is already made, to make duplicates
@@ -727,7 +752,7 @@ public class MetadataDB extends Metadata {
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
       return new ReturnValue(null, "Could not execute one of the SQL commands: " + sql.toString() + "\nException: "
-          + e.getMessage(), ReturnValue.SQLQUERYFAILED);
+              + e.getMessage(), ReturnValue.SQLQUERYFAILED);
     }
 
     /*
@@ -738,7 +763,9 @@ public class MetadataDB extends Metadata {
     return ret;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue update_processing_status(int processingID, String status) {
 
@@ -758,14 +785,16 @@ public class MetadataDB extends Metadata {
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
       return new ReturnValue(null, "Could not execute one of the SQL commands: " + sql.toString() + "\nException: "
-          + e.getMessage(), ReturnValue.SQLQUERYFAILED);
+              + e.getMessage(), ReturnValue.SQLQUERYFAILED);
     }
 
     // On sucess, return empty ReturnValue
     return new ReturnValue();
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public int add_workflow_run(int workflowAccession) {
     int workflowId = 0;
     int id = 0;
@@ -784,7 +813,9 @@ public class MetadataDB extends Metadata {
     return (id);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public int get_workflow_run_accession(int workflowRunId) {
     int result = 0;
 
@@ -802,7 +833,9 @@ public class MetadataDB extends Metadata {
     return (result);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public int get_workflow_run_id(int workflowRunAccession) {
     int result = 0;
 
@@ -820,15 +853,17 @@ public class MetadataDB extends Metadata {
     return (result);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public WorkflowRun getWorkflowRun(int workflowRunAccession) {
 
     WorkflowRun wr = null;
 
     String sql = "select workflow_run_id, name, ini_file, cmd, workflow_template, dax, "
-        + "status, status_cmd, seqware_revision, host, stderr, stdout, "
-        + "current_working_dir, username, create_tstmp from workflow_run where sw_accession = " + workflowRunAccession;
+            + "status, status_cmd, seqware_revision, host, stderr, stdout, "
+            + "current_working_dir, username, create_tstmp from workflow_run where sw_accession = " + workflowRunAccession;
     ResultSet rs;
     try {
       rs = executeQuery(sql);
@@ -856,7 +891,9 @@ public class MetadataDB extends Metadata {
 
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public void add_workflow_run_ancestor(int workflowRunAccession, int processingId) {
     int workflowRunId = 0;
     try {
@@ -864,7 +901,7 @@ public class MetadataDB extends Metadata {
 
       StringBuffer sql = new StringBuffer();
       sql.append("update processing set ancestor_workflow_run_id = ").append(workflowRunId).append(", update_tstmp='")
-          .append(new Timestamp(System.currentTimeMillis())).append("' where processing_id = ").append(processingId);
+              .append(new Timestamp(System.currentTimeMillis())).append("' where processing_id = ").append(processingId);
       executeUpdate(sql.toString());
 
     } catch (Exception e) {
@@ -872,7 +909,9 @@ public class MetadataDB extends Metadata {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue update_processing_workflow_run(int processingID, int workflowRunAccession) {
 
@@ -891,17 +930,19 @@ public class MetadataDB extends Metadata {
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
       return new ReturnValue(null, "Could not execute one of the SQL commands: " + sql.toString() + "\nException: "
-          + e.getMessage(), ReturnValue.SQLQUERYFAILED);
+              + e.getMessage(), ReturnValue.SQLQUERYFAILED);
     }
 
     // On sucess, return empty ReturnValue
     return new ReturnValue();
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
-      String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
-      String stdErr, String stdOut) {
+          String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
+          String stdErr, String stdOut) {
 
     // metadata.update_workflow_run(workflowRunId, pegasusCmd, template,
     // "pending", statusCmd, wi.getWorkflowDir(), daxReader.toString(),
@@ -914,17 +955,17 @@ public class MetadataDB extends Metadata {
     try {
       //
       String sql = "UPDATE workflow_run SET status = " + formatSQL(status, "pending") + ", cmd = "
-          + formatSQL(pegasusCmd, null) + ", workflow_template = " + formatSQL(workflowTemplate, null) + ", dax = "
-          + formatSQL(dax, null) + ", status_cmd = " + formatSQL(statusCmd, null) + ", current_working_dir = "
-          + formatSQL(workingDirectory, null) + ", ini_file = " + formatSQL(ini, null) + ", host = "
-          + formatSQL(host, null) + ", stderr = " + formatSQL(stdErr, null) + ", stdout = " + formatSQL(stdOut, null)
-          + ", update_tstmp='" + new Timestamp(System.currentTimeMillis()) + "' where workflow_run_id = "
-          + workflowRunId;
+              + formatSQL(pegasusCmd, null) + ", workflow_template = " + formatSQL(workflowTemplate, null) + ", dax = "
+              + formatSQL(dax, null) + ", status_cmd = " + formatSQL(statusCmd, null) + ", current_working_dir = "
+              + formatSQL(workingDirectory, null) + ", ini_file = " + formatSQL(ini, null) + ", host = "
+              + formatSQL(host, null) + ", stderr = " + formatSQL(stdErr, null) + ", stdout = " + formatSQL(stdOut, null)
+              + ", update_tstmp='" + new Timestamp(System.currentTimeMillis()) + "' where workflow_run_id = "
+              + workflowRunId;
       executeUpdate(sql);
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql + "\n" + e.getMessage());
       return new ReturnValue(null, "Could not execute one of the SQL commands: " + sql + "\nException: "
-          + e.getMessage(), ReturnValue.SQLQUERYFAILED);
+              + e.getMessage(), ReturnValue.SQLQUERYFAILED);
     }
 
     return (ret);
@@ -951,18 +992,22 @@ public class MetadataDB extends Metadata {
     executeUpdate(sql.toString());
   }
 
-  private String sqlQuote(String str) {
-    return str == null ? "null" : "'" + str + "'";
+  private String sqlQuote(String value) {
+    return value == null ? "null" : "'" + value + "'";
+  }
+
+  private String sqlQuote(Long value) {
+    return value == null ? "null" : value.toString();
   }
 
   private int insertFileRecord(FileMetadata file) throws SQLException {
-    String md5sum = getMD5Hash(file.getFilePath());
 
-    String sql = "INSERT INTO FILE (file_path, meta_type, type, description, url, url_label, md5sum) "
-        + " VALUES (%s, %s, %s, %s, %s, %s, %s)";
+    String sql = "INSERT INTO FILE (file_path, meta_type, type, description, url, url_label, md5sum, size) "
+            + " VALUES (%s, %s, %s, %s, %s, %s, %s, %s)";
 
     sql = String.format(sql, sqlQuote(file.getFilePath()), sqlQuote(file.getMetaType()), sqlQuote(file.getType()),
-        sqlQuote(file.getDescription()), sqlQuote(file.getUrl()), sqlQuote(file.getUrlLabel()), sqlQuote(md5sum));
+            sqlQuote(file.getDescription()), sqlQuote(file.getUrl()), sqlQuote(file.getUrlLabel()), sqlQuote(file.getMd5sum()),
+            sqlQuote(file.getSize()));
 
     try {
       /*
@@ -975,7 +1020,9 @@ public class MetadataDB extends Metadata {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue update_processing_event(int processingID, ReturnValue retval) {
     // Create a SQL statement
@@ -1094,7 +1141,7 @@ public class MetadataDB extends Metadata {
     } catch (SQLException e) {
       e.printStackTrace();
       return new ReturnValue(null, "Could not execute one of the SQL commands: " + sql.toString() + "\nException: "
-          + e.getMessage(), ReturnValue.SQLQUERYFAILED);
+              + e.getMessage(), ReturnValue.SQLQUERYFAILED);
     }
 
     /*
@@ -1124,7 +1171,7 @@ public class MetadataDB extends Metadata {
     } catch (SQLException e) {
       e.printStackTrace();
       return new ReturnValue(null, "Could not connect to SQL database: " + e.getMessage(),
-          ReturnValue.DBCOULDNOTINITIALIZE);
+              ReturnValue.DBCOULDNOTINITIALIZE);
     }
     return init();
 
@@ -1149,7 +1196,7 @@ public class MetadataDB extends Metadata {
     } catch (SQLException e) {
       e.printStackTrace();
       return new ReturnValue(null, "Could not connect to SQL database: " + e.getMessage(),
-          ReturnValue.DBCOULDNOTINITIALIZE);
+              ReturnValue.DBCOULDNOTINITIALIZE);
     }
     return init();
   }
@@ -1162,7 +1209,7 @@ public class MetadataDB extends Metadata {
       this.setDbmd(this.getDb().getMetaData());
     } catch (SQLException e) {
       return new ReturnValue(null,
-          "Could not retreive Connection Metadata from Database. Assuming connection was not successful: "
+              "Could not retreive Connection Metadata from Database. Assuming connection was not successful: "
               + e.getMessage(), ReturnValue.DBCOULDNOTINITIALIZE);
     }
 
@@ -1176,15 +1223,17 @@ public class MetadataDB extends Metadata {
     // If no error so far, return Meta information
     try {
       return new ReturnValue(null, "Connection to " + dbmd.getDatabaseProductName() + " "
-          + dbmd.getDatabaseProductVersion() + " successful.\n", ReturnValue.SUCCESS);
+              + dbmd.getDatabaseProductVersion() + " successful.\n", ReturnValue.SUCCESS);
     } catch (SQLException e) {
       return new ReturnValue(null,
-          "Could not parse Connection Metadata from Database. Assuming connection was not successful: "
+              "Could not parse Connection Metadata from Database. Assuming connection was not successful: "
               + e.getMessage(), ReturnValue.DBCOULDNOTINITIALIZE);
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue clean_up() {
     ReturnValue ret = new ReturnValue();
@@ -1204,7 +1253,9 @@ public class MetadataDB extends Metadata {
     return ret;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ArrayList<String> fix_file_paths(String prefix, ArrayList<String> files) {
     // TODO Auto-generated method stub
@@ -1212,7 +1263,8 @@ public class MetadataDB extends Metadata {
   }
 
   /**
-   * <p>Getter for the field <code>db</code>.</p>
+   * <p>Getter for the field
+   * <code>db</code>.</p>
    *
    * @return a {@link java.sql.Connection} object.
    */
@@ -1221,7 +1273,8 @@ public class MetadataDB extends Metadata {
   }
 
   /**
-   * <p>Setter for the field <code>db</code>.</p>
+   * <p>Setter for the field
+   * <code>db</code>.</p>
    *
    * @param db a {@link java.sql.Connection} object.
    */
@@ -1230,7 +1283,8 @@ public class MetadataDB extends Metadata {
   }
 
   /**
-   * <p>Getter for the field <code>dbmd</code>.</p>
+   * <p>Getter for the field
+   * <code>dbmd</code>.</p>
    *
    * @return a {@link java.sql.DatabaseMetaData} object.
    */
@@ -1239,7 +1293,8 @@ public class MetadataDB extends Metadata {
   }
 
   /**
-   * <p>Setter for the field <code>dbmd</code>.</p>
+   * <p>Setter for the field
+   * <code>dbmd</code>.</p>
    *
    * @param dbmd a {@link java.sql.DatabaseMetaData} object.
    */
@@ -1248,7 +1303,8 @@ public class MetadataDB extends Metadata {
   }
 
   /**
-   * <p>Getter for the field <code>sql</code>.</p>
+   * <p>Getter for the field
+   * <code>sql</code>.</p>
    *
    * @return a {@link java.sql.Statement} object.
    */
@@ -1257,7 +1313,8 @@ public class MetadataDB extends Metadata {
   }
 
   /**
-   * <p>Setter for the field <code>sql</code>.</p>
+   * <p>Setter for the field
+   * <code>sql</code>.</p>
    *
    * @param sql a {@link java.sql.Statement} object.
    */
@@ -1265,10 +1322,12 @@ public class MetadataDB extends Metadata {
     this.sql = sql;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public ReturnValue addWorkflow(String name, String version, String description, String baseCommand,
-      String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip,
-      boolean storeArchiveZip) {
+          String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip,
+          boolean storeArchiveZip) {
 
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -1284,17 +1343,17 @@ public class MetadataDB extends Metadata {
     try {
 
       sql.append("INSERT INTO workflow (name, description, version, base_ini_file, cmd, current_working_dir, permanent_bundle_location, workflow_template, create_tstmp, update_tstmp) "
-          + "VALUES( '"
-          + name
-          + "', '"
-          + description
-          + "', '"
-          + version
-          + "', '"
-          + configFile
-          + "', '"
-          + command
-          + "', '" + provisionDir + "', '" + archiveZip + "', '" + templateFile + "', now(), now())");
+              + "VALUES( '"
+              + name
+              + "', '"
+              + description
+              + "', '"
+              + version
+              + "', '"
+              + configFile
+              + "', '"
+              + command
+              + "', '" + provisionDir + "', '" + archiveZip + "', '" + templateFile + "', now(), now())");
 
       // get back last ID value
       workflowId = InsertAndReturnNewPrimaryKey(sql.toString(), "workflow_workflow_id_seq");
@@ -1313,20 +1372,20 @@ public class MetadataDB extends Metadata {
           display = "true";
         }
         String insert = "insert into workflow_param (workflow_id, type, key, display, display_name, file_meta_type, default_value) values ( "
-            + workflowId
-            + ", "
-            + formatSQL(details.get("type"), "text")
-            + ", "
-            + formatSQL(details.get("key"), null)
-            + ", "
-            + display
-            + ", "
-            + formatSQL(details.get("display_name"), details.get("key"))
-            + ", "
-            + formatSQL(details.get("file_meta_type"), null)
-            + ", "
-            + formatSQL(details.get("default_value"), null)
-            + ")";
+                + workflowId
+                + ", "
+                + formatSQL(details.get("type"), "text")
+                + ", "
+                + formatSQL(details.get("key"), null)
+                + ", "
+                + display
+                + ", "
+                + formatSQL(details.get("display_name"), details.get("key"))
+                + ", "
+                + formatSQL(details.get("file_meta_type"), null)
+                + ", "
+                + formatSQL(details.get("default_value"), null)
+                + ")";
         int workflowParamId = InsertAndReturnNewPrimaryKey(insert, "workflow_param_workflow_param_id_seq");
 
         // at this point everything should be setup unless it's of type
@@ -1338,9 +1397,9 @@ public class MetadataDB extends Metadata {
             String[] kv = pulldown.split("\\|");
             if (kv.length == 2) {
               String pulldownInsert = "insert into workflow_param_value (workflow_param_id, display_name, value) values ( "
-                  + workflowParamId + ", " + formatSQL(kv[0], kv[0]) + ", " + formatSQL(kv[1], kv[1]) + ")";
+                      + workflowParamId + ", " + formatSQL(kv[0], kv[0]) + ", " + formatSQL(kv[1], kv[1]) + ")";
               int workflowParamValueId = InsertAndReturnNewPrimaryKey(pulldownInsert,
-                  "workflow_param_value_workflow_param_value_id_seq");
+                      "workflow_param_value_workflow_param_value_id_seq");
             }
           }
         }
@@ -1352,7 +1411,7 @@ public class MetadataDB extends Metadata {
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + e.getMessage() + ":" + e.getMessage());
       return new ReturnValue(null, "Could not execute one of the SQL commands: " + sql.toString() + "\nException: "
-          + e.getMessage(), ReturnValue.SQLQUERYFAILED);
+              + e.getMessage(), ReturnValue.SQLQUERYFAILED);
     }
 
     // add default params in workflow_param table
@@ -1373,13 +1432,15 @@ public class MetadataDB extends Metadata {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Map<String, String> get_workflow_info(int workflowAccession) {
 
     HashMap<String, String> map = new HashMap<String, String>();
     String sql = "SELECT name, description, version, base_ini_file, cmd, current_working_dir, workflow_template, create_tstmp, update_tstmp, permanent_bundle_location FROM workflow where sw_accession = "
-        + workflowAccession;
+            + workflowAccession;
     ResultSet rs;
 
     try {
@@ -1405,14 +1466,16 @@ public class MetadataDB extends Metadata {
     return (map);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue saveFileForIus(int workflowRunId, int iusAccession, FileMetadata file) {
     ReturnValue returnVal = new ReturnValue(ReturnValue.SUCCESS);
     int processingId = Integer.MIN_VALUE;
     try {
       int fileId = insertFileRecord(file);
-      processingId = add_empty_processing_event_by_parent_accession(new int[] { iusAccession }).getReturnValue();
+      processingId = add_empty_processing_event_by_parent_accession(new int[]{iusAccession}).getReturnValue();
       returnVal.setAlgorithm("fileImport");
       update_processing_event(processingId, returnVal);
       if (!linkWorkflowRunAndParent(workflowRunId, iusAccession)) {
@@ -1435,7 +1498,9 @@ public class MetadataDB extends Metadata {
     return returnVal;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Boolean isDuplicateFile(String filepath) {
 
@@ -1456,11 +1521,13 @@ public class MetadataDB extends Metadata {
     return false;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReturnValue updateWorkflow(int workflowId, String permanentBundleLocation) {
     String sql = "UPDATE workflow SET " + "permanent_bundle_location = '" + permanentBundleLocation + "',"
-        + " update_tstmp='" + new Timestamp(System.currentTimeMillis()) + "' " + "WHERE workflow_id = " + workflowId;
+            + " update_tstmp='" + new Timestamp(System.currentTimeMillis()) + "' " + "WHERE workflow_id = " + workflowId;
     ReturnValue ret = new ReturnValue();
 
     try {
@@ -1496,14 +1563,18 @@ public class MetadataDB extends Metadata {
     return (sb.toString());
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   // FIXME: need to implement this for this backend type
   public String listInstalledWorkflowParams(String workflowAccession) {
     return null;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public int getWorkflowAccession(String name, String version) {
     int result = 0;
 
@@ -1545,19 +1616,23 @@ public class MetadataDB extends Metadata {
     return getSql().executeUpdate(s);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName) {
     throw new NotImplementedException("Please use the Symlinker through the Web service.");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public List<WorkflowRun> getWorkflowRunsByStatus(String status) {
 
     ArrayList<WorkflowRun> results = new ArrayList<WorkflowRun>();
 
     String sql = "select workflow_run_id, name, ini_file, cmd, workflow_template, dax, status, status_cmd, seqware_revision, host, current_working_dir, username, create_tstmp from workflow_run where status = '"
-        + status + "'";
+            + status + "'";
     ResultSet rs;
     try {
       rs = executeQuery(sql);
@@ -1583,12 +1658,14 @@ public class MetadataDB extends Metadata {
     return (results);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public List<WorkflowRun> getWorkflowRunsByHost(String host) {
     ArrayList<WorkflowRun> results = new ArrayList<WorkflowRun>();
 
     String sql = "select workflow_run_id, name, ini_file, cmd, workflow_template, dax, status, status_cmd, seqware_revision, host, current_working_dir, username, create_tstmp from workflow_run where host = '"
-        + host + "'";
+            + host + "'";
     ResultSet rs;
     try {
       rs = executeQuery(sql);
@@ -1614,7 +1691,9 @@ public class MetadataDB extends Metadata {
     return (results);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public WorkflowRun getWorkflowRunWithWorkflow(String workflowRunAccession) {
     throw new NotImplementedException("This is currently not implemented for a direct DB connection!");
@@ -1638,150 +1717,223 @@ public class MetadataDB extends Metadata {
     return (null);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateIUS(int iusSWID, IUSAttribute iusAtt, Boolean skip) {
     throw new NotImplementedException("Updating IUSes must be performed through webservice");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateLane(int laneSWID, LaneAttribute laneAtt, Boolean skip) {
     throw new NotImplementedException("Updating Lanes must be performed through webservice");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateSequencerRun(int sequencerRunSWID, SequencerRunAttribute sequencerRunAtt, Boolean skip) {
     throw new NotImplementedException("Updating Sequencer Runs must be performed through webservice");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateExperiment(int experimentSWID, ExperimentAttribute att, Boolean skip) {
     throw new NotImplementedException("Updating Experiment annotation must be performed through webservice");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateProcessing(int processingSWID, ProcessingAttribute att, Boolean skip) {
     throw new NotImplementedException("Updating processing attribute must be performed through webservice");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateSample(int sampleSWID, SampleAttribute att, Boolean skip) {
     throw new NotImplementedException("Updating sample attribute must be performed through webservice");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateStudy(int studySWID, StudyAttribute att, Boolean skip) {
     throw new NotImplementedException("Updating Study attribute must be performed through webservice");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String getWorkflowRunReport(int workflowRunSWID) {
     throw new NotImplementedException("Retrieving workflow run reports must be performed through webservice");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String getWorkflowRunReport(int workflowSWID, Date earliestDate, Date latestDate) {
     throw new NotImplementedException("Retrieving workflow run reports must be performed through webservice");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String getWorkflowRunReport(Date earliestDate, Date latestDate) {
     throw new NotImplementedException("Retrieving workflow run reports must be performed through webservice");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public net.sourceforge.seqware.common.model.File getFile(int swAccession) {
     throw new NotImplementedException("Retrieving files must be performed through the webservice");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public SortedSet<WorkflowParam> getWorkflowParams(String swAccession) {
     throw new NotImplementedException("Retrieving workflow params must be performed through the webservice");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateWorkflow(int workflowSWID, WorkflowAttribute att, Boolean skip) {
     throw new NotImplementedException("Updating processing attribute must be performed through webservice");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateWorkflowRun(int workflowrunSWID, WorkflowRunAttribute att, Boolean skip) {
     throw new NotImplementedException("Updating processing attribute must be performed through webservice");
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateIUS(int laneSWID, Set<IUSAttribute> iusAtts) {
     // TODO Auto-generated method stub
-
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateLane(int laneSWID, Set<LaneAttribute> laneAtts) {
     // TODO Auto-generated method stub
-
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateSequencerRun(int sequencerRunSWID, Set<SequencerRunAttribute> sequencerRunAtts) {
     // TODO Auto-generated method stub
-
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateExperiment(int experimentSWID, Set<ExperimentAttribute> atts) {
     // TODO Auto-generated method stub
-
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateProcessing(int processingSWID, Set<ProcessingAttribute> atts) {
     // TODO Auto-generated method stub
-
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateSample(int sampleSWID, Set<SampleAttribute> atts) {
     // TODO Auto-generated method stub
-
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateStudy(int studySWID, Set<StudyAttribute> atts) {
     // TODO Auto-generated method stub
-
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateWorkflow(int workflowSWID, Set<WorkflowAttribute> atts) {
     // TODO Auto-generated method stub
-
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void annotateWorkflowRun(int workflowSWID, Set<WorkflowRunAttribute> atts) {
     // TODO Auto-generated method stub
+  }
 
+  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip) {
+    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+  }
+
+  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip) {
+    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+  }
+
+  public ReturnValue addIUS(Integer laneAccession, Integer sampleAccession, String name, String description, String barcode, boolean skip) {
+    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+  }
+
+  public List<Platform> getPlatforms() {
+    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+  }
+
+  public List<Organism> getOrganisms() {
+    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+  }
+
+  public List<StudyType> getStudyTypes() {
+    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+  }
+
+  public List<LibraryStrategy> getLibraryStrategies() {
+    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+  }
+
+  public List<LibrarySelection> getLibrarySelections() {
+    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+  }
+
+  public List<LibrarySource> getLibrarySource() {
+    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
 }
