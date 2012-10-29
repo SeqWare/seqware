@@ -26,6 +26,7 @@
         <postgresql.version>9.1-901.jdbc3</postgresql.version>
         <guava.version>11.0.2</guava.version>
         <restlet.version>2.1-RC5</restlet.version>
+        <opencsv.version>2.3</opencsv.version>
         <maven-assembly-plugin.version>2.3</maven-assembly-plugin.version>
         <jetty-maven-plugin.version>7.0.0.pre5</jetty-maven-plugin.version>
         <github.url>scm:git:git@github.com:SeqWare/seqware.git</github.url>
@@ -53,25 +54,10 @@
        </repository>
     </distributionManagement>
 
-<!-- old parameters
-    <scm>
-        <connection>scm:svn:https://seqware.svn.sourceforge.net/svnroot/seqware/trunk</connection>
-        <developerConnection>scm:svn:https://seqware.svn.sourceforge.net/svnroot/seqware/trunk</developerConnection>
-    </scm>
-    <distributionManagement>
-        <repository>
-            <id>wrench.res.oicr.on.ca</id>
-            <name>wrench.res.oicr.on.ca-releases</name>
-            <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-release</url>
-            <uniqueVersion>false</uniqueVersion>
-        </repository>
-    </distributionManagement>
--->
-
     <artifactId>seqware</artifactId>
     <packaging>pom</packaging>
     <groupId>com.github.seqware</groupId>
-    <version>0.13.3</version>
+    <version>0.13.4-SNAPSHOT</version>
 
     <repositories>
 	 <repository>
@@ -127,17 +113,20 @@
     <modules>
         <module>seqware-queryengine</module>
         <module>seqware-queryengine-legacy</module>
-	<module>seqware-meta-db</module>
+		<module>seqware-meta-db</module>
         <module>seqware-common</module>
         <module>seqware-pipeline</module>
         <module>seqware-webservice-dto</module>
         <module>seqware-webservice</module>
         <module>seqware-portal</module>
-	<module>seqware-archetypes/seqware-archetype-module</module>
+        <module>seqware-archetype-java-workflow</module>
+    	<module>seqware-archetype-ftl-workflow</module>
+		<module>seqware-archetypes/seqware-archetype-module</module>
         <module>seqware-archetypes/seqware-archetype-workflow</module>
         <module>seqware-archetypes/seqware-archetype-simple-workflow</module>
         <module>seqware-distribution</module>
     </modules>
+
 
     <licenses>
         <license>
@@ -473,6 +462,11 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>net.sf.opencsv</groupId>
+                <artifactId>opencsv</artifactId>
+                <version>${opencsv.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -522,6 +516,11 @@
       			<xmlOutput>true</xmlOutput>
    		    </configuration>
                 </plugin>
+ 	        <plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-release-plugin</artifactId>
+        		<version>2.3.2</version>
+	      	</plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>

@@ -809,6 +809,22 @@
 		return false;
 	});
 
+	 // set action in the stderr popup window
+	$("a[popup-stderr='true']").live('click', function(){ 
+		var stdErr = $(this).attr('stderr');
+    	        $("#stderr-popup textarea#stdTA").text(stdErr);
+                $("#stderr-popup").togglePopup();
+		return false;
+	});
+
+	 // set action in the stderr popup window
+	$("a[popup-stdout='true']").live('click', function(){ 
+		var stdOut = $(this).attr('stdout');
+    	        $("#stderr-popup textarea#stdTA").text(stdOut);
+                $("#stderr-popup").togglePopup();
+		return false;
+	});
+
 	 // set action in the Share popup window
 	$("a[popup-share='true']").live('click', function(){ 
 		var formAction = $(this).attr('form-action');
