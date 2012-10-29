@@ -44,7 +44,7 @@
         <dependency>
             <groupId>com.github.seqware</groupId>
             <artifactId>seqware-pipeline</artifactId>
-            <version>0.13.4-SNAPSHOT</version>
+            <version>0.13.4</version>
             <type>jar</type>
         </dependency>
     </dependencies>
