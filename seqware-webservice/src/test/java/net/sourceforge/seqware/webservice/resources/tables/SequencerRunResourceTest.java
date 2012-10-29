@@ -44,7 +44,6 @@ public class SequencerRunResourceTest extends DatabaseResourceTest {
         Representation rep = null;
         try {
             SequencerRun r = new SequencerRun();
-            r.setSequencerRunId(242424);
 
             Document doc = XmlTools.marshalToDocument(new JaxbObject<SequencerRun>(), r);
             rep = resource.post(XmlTools.getRepresentation(doc));

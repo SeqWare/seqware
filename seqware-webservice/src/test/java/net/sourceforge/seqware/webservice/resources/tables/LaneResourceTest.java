@@ -43,7 +43,6 @@ public class LaneResourceTest extends DatabaseResourceTest {
         Representation rep = null;
         try {
             Lane l = new Lane();
-            l.setLaneId(1701);
 
             Document doc = XmlTools.marshalToDocument(new JaxbObject<Lane>(), l);
             rep = resource.post(XmlTools.getRepresentation(doc));
