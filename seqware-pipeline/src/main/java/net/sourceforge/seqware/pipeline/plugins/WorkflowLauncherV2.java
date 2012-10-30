@@ -19,6 +19,7 @@ import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowDataModelFactory;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.OozieWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.PegasusWorkflowEngine;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -56,11 +57,12 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 */
     @Override
     public ReturnValue do_run() {
-     // set up workflow engine
-     AbstractWorkflowEngine engine = new PegasusWorkflowEngine();
+
      WorkflowDataModelFactory factory = new WorkflowDataModelFactory(options, config, params, metadata);
      AbstractWorkflowDataModel dataModel = factory.getWorkflowDataModel();
     
+     // set up workflow engine
+     AbstractWorkflowEngine engine = this.getWorkflowEngine(dataModel);
      ReturnValue retPegasus = engine.launchWorkflow(dataModel);
      if(!Boolean.parseBoolean(dataModel.getConfigs().get("metadata"))) {
      return retPegasus;
@@ -144,7 +146,16 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     
     }
     
-    
+    private AbstractWorkflowEngine getWorkflowEngine(AbstractWorkflowDataModel dataModel) {
+    	AbstractWorkflowEngine wfEngine = null;
+    	String engine = dataModel.getTags().get("workflow_engine");
+    	if(engine == null || !engine.equals("oozie")) {
+    		wfEngine = new PegasusWorkflowEngine();
+    	} else {
+    		wfEngine = new OozieWorkflowEngine();
+    	}
+    	return null;
+    }
 }
 
 
