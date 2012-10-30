@@ -16,7 +16,8 @@
 <c:set var="ownerLinkHtml" value=""/>
 <c:if test="${!isBulkPage}">
 	<c:if test="${isOwner}">
-		<c:set var="ownerLinkHtml" value="<span class='m-link'><a href='#' popup-delete='true' form-action='processingDelete.htm' tt='${typeTree}' object-id='${node.processingId}' object-name='${nodeName} analysis event'>delete</a> - <a href='uploadFileSetup.htm?id=${node.processingId}&tn=ae&tt=${typeTree}' sn='y'>upload file</a></span>"/>
+		<c:set var="ownerLinkHtml" value="<a href='uploadFileSetup.htm?id=${node.processingId}&tn=ae&tt=${typeTree}' sn='y'>upload file</a></span>"/>
+		<!-- c:set var="ownerLinkHtml" value="<span class='m-link'><a href='#' popup-delete='true' form-action='processingDelete.htm' tt='${typeTree}' object-id='${node.processingId}' object-name='${nodeName} analysis event'>delete</a> - <a href='uploadFileSetup.htm?id=${node.processingId}&tn=ae&tt=${typeTree}' sn='y'>upload file</a></span>"/ -->
 	</c:if>
 </c:if>
 

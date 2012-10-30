@@ -9,6 +9,50 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 0.13.4 (2012-10-22)
+
+### Defect
+* [SEQWARE-1294] - Portal Fails when creating a Sequencer Run
+
+### Improvement
+* [SEQWARE-1264] - 0.12.5.1 Release
+* [SEQWARE-1265] - 0.13.3 Release
+
+### Story
+* [SEQWARE-779] - Annotation workflow to support the ICGC (duplicate of SEQWARE-1038)
+* [SEQWARE-1154] - add xml support based on the current java objects for workflow
+* [SEQWARE-1193] - improve the java workflow base on the new spec
+* [SEQWARE-1243] - We need integration tests for each sub-project
+* [SEQWARE-1250] - Make sure that attribute writeback works perfectly from the commandline and within workflows
+* [SEQWARE-1251] - SOP for documentation release
+
+### Task
+* [SEQWARE-1291] - Announce 0.12.5.1 and 0.13.3 releases on twitter and group page after once-over as a group
+* [SEQWARE-1292] - Complete release to pipedev.hpc
+
+### Technical task
+* [SEQWARE-619] - Command line cleanup
+* [SEQWARE-640] - QE RESTful API documented in nanoc and on website
+* [SEQWARE-978] - java workflow documentation
+* [SEQWARE-1196] - modify current workflowObjectModels according to the spec
+* [SEQWARE-1202] - Update the mvn archetypes and make available on github
+* [SEQWARE-1213] - Update our OICR SDK, web services, database for 0.12.5.1
+* [SEQWARE-1214] - Release 0.12.5.1 hotfix that includes BundleManager fixes
+* [SEQWARE-1236] - clean up the workflow client
+* [SEQWARE-1245] - We need a checklist from SeqProdBio and PipelineEval for integration tests to do before a release
+* [SEQWARE-1268] - create setupDirectory() for dataModel
+* [SEQWARE-1271] - check text/key-value for metadata saver and make sure that it works
+* [SEQWARE-1273] - put workflow java doc in nanoc
+* [SEQWARE-1274] - add classpath parameter to javaSeqwareModuleJob
+* [SEQWARE-1276] - create a workflow client sample in VM that includes all features in the new simplifiled workflow
+* [SEQWARE-1277] - discuss with Brian about the new workflow when it is ready
+* [SEQWARE-1278] - change the workflow engine, allow it to take in parent workflowrun id for metadata wirteback
+* [SEQWARE-1281] - merge comand line options with configs<string,string> in datamodel
+* [SEQWARE-1295] - We need command line tools to populate sequencer_run, lane, and IUS
+* [SEQWARE-1299] - update dax after discuss with Brian
+* [SEQWARE-1306] - write a plugin to generate dot file from processing table
+* [SEQWARE-1307] - Test Oozie to see if SeqWare Runner Bash tasks can be run via this workflow system on a Hadoop Cluster
+
 ## 0.13.3 (2012-10-09)
 
 ### Defect

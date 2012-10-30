@@ -49,12 +49,12 @@ public class WorkflowClassFinder {
 	}
 
 	/**
-	 * <p>findFirstWorkflowClass.</p>
-	 *
-	 * @param clazzPath a {@link java.lang.String} object.
-	 * @return a {@link java.lang.Class} object.
+	 * find the first .class in the clazzPath
+	 * @param clazzPath
+	 * @return
 	 */
-	public Class findFirstWorkflowClass(String clazzPath) {
+	public Class<?> findFirstWorkflowClass(String clazzPath) {
+
 		String candidateClassesLocationPattern = "file:" + 
 			clazzPath + "**" + FOLDERS_SEPARATOR_AS_STRING + "*.class";
 		Resource[] resources = null;
@@ -78,7 +78,7 @@ public class WorkflowClassFinder {
 				URL url = new URL("file://"+clazzPath);
 				URL[] urls = new URL[]{url};
 				ClassLoader cl = new URLClassLoader(urls);				
-				Class cls = cl.loadClass(qPath);
+				Class<?> cls = cl.loadClass(qPath);
 				Log.info("CLASS LOADED "+ qPath);
 				return cls;
 				

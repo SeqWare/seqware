@@ -54,6 +54,11 @@ public class Lane implements Serializable, Comparable<Lane>, PermissionsAware {
     private Set<LaneAttribute> laneAttributes = new TreeSet<LaneAttribute>();
     private Boolean isSelected = false;
     private Boolean isHasFile = false;
+    private StudyType studyType;
+    private LibraryStrategy libraryStrategy;
+    private LibrarySelection librarySelection;
+    private LibrarySource librarySource;
+    
 
     /**
      * <p>Constructor for Lane.</p>
@@ -831,4 +836,38 @@ public class Lane implements Serializable, Comparable<Lane>, PermissionsAware {
         return hasPermission;
 
     }
+
+  public StudyType getStudyType() {
+    return studyType;
+  }
+
+  public void setStudyType(StudyType studyType) {
+    this.studyType = studyType;
+  }
+
+  public LibraryStrategy getLibraryStrategy() {
+    return libraryStrategy;
+  }
+
+  public void setLibraryStrategy(LibraryStrategy libraryStrategy) {
+    this.libraryStrategy = libraryStrategy;
+  }
+
+  public LibrarySelection getLibrarySelection() {
+    return librarySelection;
+  }
+
+  public void setLibrarySelection(LibrarySelection librarySelection) {
+    this.librarySelection = librarySelection;
+  }
+
+  public LibrarySource getLibrarySource() {
+    return librarySource;
+  }
+
+  public void setLibrarySource(LibrarySource librarySource) {
+    this.librarySource = librarySource;
+  }
+    
+    
 }

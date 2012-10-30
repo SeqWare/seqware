@@ -73,7 +73,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
    *
    * Inserts an instance of SequencerRun into the database.
    */
-  public void insert(SequencerRun sequencerRun) {
+  public Integer insert(SequencerRun sequencerRun) {
     /*
      * //FIXME: need to set the names of each lane!! TreeSet <Lane> list = new
      * TreeSet<Lane>(); //FIXME: why do I have to manually set these!?!?!
@@ -106,7 +106,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
     } else {
       sequencerRun.setStatus("not_ready_to_process");
     }
-    sequencerRunDAO.insert(sequencerRun);
+    return(sequencerRunDAO.insert(sequencerRun));
   }
 
   /**
@@ -115,7 +115,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
    *
    * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
    */
-  public void insert(SequencerRunWizardDTO sequencerRun) {
+  public Integer insert(SequencerRunWizardDTO sequencerRun) {
 
     sequencerRun.setCreateTimestamp(new Date());
       
@@ -170,7 +170,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
     } else {
       sequencerRun.setStatus("not_ready_to_process");
     }
-    sequencerRunDAO.insert(sequencerRun);
+    return(sequencerRunDAO.insert(sequencerRun));
   }
 
   /**
@@ -375,16 +375,16 @@ public class SequencerRunServiceImpl implements SequencerRunService {
 
     /** {@inheritDoc} */
     @Override
-    public void insert(Registration registration, SequencerRun sequencerRun) {
+    public Integer insert(Registration registration, SequencerRun sequencerRun) {
         sequencerRun.setCreateTimestamp(new Date());
-        sequencerRunDAO.insert(registration, sequencerRun);
+        return(sequencerRunDAO.insert(registration, sequencerRun));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void insert(Registration registration, SequencerRunWizardDTO sequencerRun) {
+    public Integer insert(Registration registration, SequencerRunWizardDTO sequencerRun) {
         sequencerRun.setCreateTimestamp(new Date());
-        sequencerRunDAO.insert(registration, sequencerRun);
+        return(sequencerRunDAO.insert(registration, sequencerRun));
     }
 
     /** {@inheritDoc} */

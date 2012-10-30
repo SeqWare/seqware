@@ -19,6 +19,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @version $Id: $Id
  */
 public class LibrarySelectionDAOHibernate extends HibernateDaoSupport implements LibrarySelectionDAO {
+
   /**
    * <p>Constructor for LibrarySelectionDAOHibernate.</p>
    */
@@ -26,26 +27,21 @@ public class LibrarySelectionDAOHibernate extends HibernateDaoSupport implements
     super();
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public List<LibrarySelection> list(Registration registration) {
-    ArrayList<LibrarySelection> objects = new ArrayList<LibrarySelection>();
-    if (registration == null)
-      return objects;
-
-    List expmts = this.getHibernateTemplate().find("from LibrarySelection as ls order by ls.librarySelectionId asc" // desc
-    );
-
-    for (Object object : expmts) {
-      objects.add((LibrarySelection) object);
-    }
-    return objects;
+    if (registration == null) { return(null); }
+    return (list());
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public LibrarySelection findByID(Integer id) {
     String query = "from LibrarySelection as l where l.librarySelectionId = ?";
     LibrarySelection obj = null;
-    Object[] parameters = { id };
+    Object[] parameters = {id};
     List list = this.getHibernateTemplate().find(query, parameters);
     if (list.size() > 0) {
       obj = (LibrarySelection) list.get(0);
@@ -53,7 +49,9 @@ public class LibrarySelectionDAOHibernate extends HibernateDaoSupport implements
     return obj;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public LibrarySelection updateDetached(LibrarySelection librarySelection) {
     LibrarySelection dbObject = findByID(librarySelection.getLibrarySelectionId());
@@ -69,10 +67,20 @@ public class LibrarySelectionDAOHibernate extends HibernateDaoSupport implements
     return null;
   }
 
-    /** {@inheritDoc} */
-    @Override
-    public List<LibrarySelection> list() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<LibrarySelection> list() {
+    ArrayList<LibrarySelection> objects = new ArrayList<LibrarySelection>();
 
+
+    List expmts = this.getHibernateTemplate().find("from LibrarySelection as ls order by ls.librarySelectionId asc" // desc
+            );
+
+    for (Object object : expmts) {
+      objects.add((LibrarySelection) object);
+    }
+    return objects;
+  }
 }

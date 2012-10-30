@@ -55,9 +55,9 @@ public class IUSServiceImpl implements IUSService {
   }
 
   /** {@inheritDoc} */
-  public void insert(IUS obj) {
+  public Integer insert(IUS obj) {
     obj.setCreateTimestamp(new Date());
-    dao.insert(obj);
+    return(dao.insert(obj));
   }
 
   /** {@inheritDoc} */
@@ -205,9 +205,9 @@ public class IUSServiceImpl implements IUSService {
 
   /** {@inheritDoc} */
   @Override
-  public void insert(Registration registration, IUS ius) {
+  public Integer insert(Registration registration, IUS ius) {
     ius.setCreateTimestamp(new Date());
-    dao.insert(registration, ius);
+    return(dao.insert(registration, ius));
   }
 
   /** {@inheritDoc} */

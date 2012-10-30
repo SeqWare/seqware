@@ -38,7 +38,7 @@ public class FileAttributesServerResource extends BasicResource implements FileA
 
   private static void initialiseFileAttributeService() {
     if (FileAttributesServerResource.fileAttributeService == null) {
-      FileAttributesServerResource.fileAttributeService = BeanFactory.getFileAttributeService();
+      FileAttributesServerResource.fileAttributeService = BeanFactory.getFileAttributeServiceBean();
     }
   }
 
