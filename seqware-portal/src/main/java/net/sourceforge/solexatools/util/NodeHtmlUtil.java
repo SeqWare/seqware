@@ -159,8 +159,9 @@ public class NodeHtmlUtil {
       String ownerHtml = "";
       if (registration.equals(file.getOwner()) || registration.isLIMSAdmin()) {
         // String editLink = "<a href='#'>edit</a>";
-        String deleteLink = "<a href='#' popup-delete='true' form-action='fileDelete.htm' tt='" + typeTree
-            + "' object-id='" + fileId + "' object-name='File " + name + "'>delete</a>";
+        //String deleteLink = "<a href='#' popup-delete='true' form-action='fileDelete.htm' tt='" + typeTree
+        //    + "' object-id='" + fileId + "' object-name='File " + name + "'>delete</a>";
+        String deleteLink = "";
         // String addLink = "<a href='sampleSetup.htm?experimentId="+ expId
         // +"&studyId=" + studyId +"'> add sample</a>";
         ownerHtml = "<span class='m-link'> " + deleteLink + "</span>";
@@ -250,9 +251,10 @@ public class NodeHtmlUtil {
     // "<li class='expandable'><div class='hitarea hasChildren-hitarea expandable-hitarea' ></div><span id='wfr_<c:out value="${wfr.workflowRunId}"/>'>Analysis Workflow <c:out value="${wfr.workflow.name}"/> <c:out value="${wfrRun.workflow.version}"/> <c:out value="${wfr.createTimestamp}"/></span> <c:if test="${isBulk}"><span>${selectLinkHtml}</span></c:if>  <span><a class='m-question np-mousetrack supernote-hover-demo1' href='#demo1'><img src='i/ico/ico_question.gif'></a></span> <span class='m-link'><a href='#'>edit</a> - <a href='#'>delete</a></span> <span class='m-description'>Description: <c:out value="${wfr.workflow.jsonEscapeDescription}"/></span><ul style='display: none;'></li>",
     String linksHtml = "";
     if (workflowRun.getStatus().equals("completed")) {
-      linksHtml = "<a href='javascript:void(0)' popup-delete='true' tt='" + typeTree
-          + "' form-action='analisysDelete.htm' object-id='" + wfrId + "' object-name='" + desc
-          + " analysis workflow'>delete</a>"; // "<a href='javascript:void(0)'>delete</a>";
+      linksHtml = "";
+      //linksHtml = "<a href='javascript:void(0)' popup-delete='true' tt='" + typeTree
+      //    + "' form-action='analisysDelete.htm' object-id='" + wfrId + "' object-name='" + desc
+      //    + " analysis workflow'>delete</a>"; // "<a href='javascript:void(0)'>delete</a>";
     } else
       // if(!workflowRun.getStatus().equals("cancelled")){
       linksHtml = "<a href='javascript:void(0)' popup-cancel='true' tt='wfrr' object-id='" + wfrId + "'>cancel</a>";
@@ -311,8 +313,9 @@ public class NodeHtmlUtil {
       // if(typeTree=="wfr" || typeTree=="wfrr"){
       // rootAttrHtml="root-id='?'";
       // }
-      String deleteLink = "<a href='#' popup-delete='true' form-action='processingDelete.htm' tt='" + typeTree
-          + "' object-id='" + aeId + "' object-name='Analysis Event " + name + "'>delete</a>";
+      //String deleteLink = "<a href='#' popup-delete='true' form-action='processingDelete.htm' tt='" + typeTree
+      //    + "' object-id='" + aeId + "' object-name='Analysis Event " + name + "'>delete</a>";
+      String deleteLink = "";
       String uploadFileLink = "<a href='uploadFileSetup.htm?id=" + aeId + "&tn=ae&tt=" + typeTree
           + "' sn='y'>upload file</a>";
       ownerHtml = "<span class='m-link'> " + deleteLink + " - " + uploadFileLink + "</span>";
@@ -422,8 +425,9 @@ public class NodeHtmlUtil {
 
       String uploadFileLink = "<a href='uploadFileSetup.htm?id=" + iusId + "&tn=ius&tt=st' sn='y'>upload file</a>";
 
-      String deleteLink = "<a href='#' popup-delete='true' form-action='iusDelete.htm' tt='st' object-id='" + iusId
-          + "' object-name='" + name + " IUS'>delete</a>";
+      //String deleteLink = "<a href='#' popup-delete='true' form-action='iusDelete.htm' tt='st' object-id='" + iusId
+      //    + "' object-name='" + name + " IUS'>delete</a>";
+      String deleteLink = "";
 
       if (isAssSample && isAssLane) {
         Sample sample = ius.getSample();
