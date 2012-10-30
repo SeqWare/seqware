@@ -19,7 +19,7 @@ import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowDataModelFactory;
-import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.OozieWorkflowEngine;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.OozieWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.PegasusWorkflowEngine;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -154,7 +154,7 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     	} else {
     		wfEngine = new OozieWorkflowEngine();
     	}
-    	return null;
+    	return wfEngine;
     }
 }
 
