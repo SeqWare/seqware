@@ -1,6 +1,9 @@
 *.class
 .svn
 
+# Nanoc files #
+*.sassc
+
 # Package Files #
 *.jar
 *.ear

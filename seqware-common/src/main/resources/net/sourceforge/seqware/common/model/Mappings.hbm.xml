@@ -1816,7 +1816,7 @@
         <many-to-one
             name="lane"
             class="Lane"
-            cascade="delete"
+            cascade="none"
             outer-join="auto"
             update="true"
             insert="true"
@@ -1826,7 +1826,7 @@
         <many-to-one
             name="sample"
             class="Sample"
-            cascade="none"
+            cascade="all"
             outer-join="auto"
             update="true"
             insert="true"

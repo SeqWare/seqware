@@ -57,7 +57,7 @@
     <artifactId>seqware</artifactId>
     <packaging>pom</packaging>
     <groupId>com.github.seqware</groupId>
-    <version>0.13.4-SNAPSHOT</version>
+    <version>0.13.5-SNAPSHOT</version>
 
     <repositories>
 	 <repository>
@@ -113,17 +113,20 @@
     <modules>
         <module>seqware-queryengine</module>
         <module>seqware-queryengine-legacy</module>
-	<module>seqware-meta-db</module>
+		<module>seqware-meta-db</module>
         <module>seqware-common</module>
         <module>seqware-pipeline</module>
         <module>seqware-webservice-dto</module>
         <module>seqware-webservice</module>
         <module>seqware-portal</module>
-	<module>seqware-archetypes/seqware-archetype-module</module>
+        <module>seqware-archetype-java-workflow</module>
+    	<module>seqware-archetype-ftl-workflow</module>
+		<module>seqware-archetypes/seqware-archetype-module</module>
         <module>seqware-archetypes/seqware-archetype-workflow</module>
         <module>seqware-archetypes/seqware-archetype-simple-workflow</module>
         <module>seqware-distribution</module>
     </modules>
+
 
     <licenses>
         <license>

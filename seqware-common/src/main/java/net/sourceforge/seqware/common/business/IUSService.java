@@ -32,7 +32,7 @@ public interface IUSService {
    *
    * @param ius a {@link net.sourceforge.seqware.common.model.IUS} object.
    */
-  public void insert(IUS ius);
+  public Integer insert(IUS ius);
 
   /**
    * <p>insert.</p>
@@ -40,7 +40,7 @@ public interface IUSService {
    * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
    * @param ius a {@link net.sourceforge.seqware.common.model.IUS} object.
    */
-  public void insert(Registration registration, IUS ius);
+  public Integer insert(Registration registration, IUS ius);
 
   /**
    * <p>update.</p>
