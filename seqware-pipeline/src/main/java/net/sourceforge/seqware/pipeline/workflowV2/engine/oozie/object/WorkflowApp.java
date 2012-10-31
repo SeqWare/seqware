@@ -1,11 +1,16 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.PegasusJob;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.ProvisionFilesJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.BashJob;
+import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 
 import org.jdom.Element;
 
@@ -13,11 +18,11 @@ public class WorkflowApp {
 	public static org.jdom.Namespace NAMESPACE = org.jdom.Namespace.getNamespace("uri:oozie:workflow:0.2");
 	
 	private AbstractWorkflowDataModel wfdm;
-	private List<OozieJob> jobList;
+	private List<OozieJob> jobs;
 	
 	public WorkflowApp(AbstractWorkflowDataModel wfdm) {
 		this.wfdm = wfdm;
-		this.jobList = new ArrayList<OozieJob>();
+		this.jobs = new ArrayList<OozieJob>();
 		this.parseDataModel(wfdm);
 	}
 	
@@ -25,15 +30,15 @@ public class WorkflowApp {
 		 Element element = new Element("workflow-app", NAMESPACE);
 		 element.setAttribute("name",wfdm.getName());
 		 
-		 if(this.jobList.isEmpty())
+		 if(this.jobs.isEmpty())
 			 return element;
 		 
-		 OozieJob job0 = this.jobList.get(0);
+		 OozieJob job0 = this.jobs.get(0);
 		 Element start = new Element("start", NAMESPACE);
 		 start.setAttribute("to", job0.getName());
 		 element.addContent(start);
 		 
-		 for(OozieJob job: this.jobList) {
+		 for(OozieJob job: this.jobs) {
 			 element.addContent(job.serializeXML());
 		 }
 		 
@@ -51,6 +56,8 @@ public class WorkflowApp {
 	}
 	
 	private void parseDataModel(AbstractWorkflowDataModel wfdm) {
+		boolean metadatawriteback = wfdm.isMetadataWriteBack();
+		List<OozieJob> parents = new ArrayList<OozieJob>();
 		int count = 0;
 		//first job create dirs
 		//mkdir data job
@@ -64,8 +71,55 @@ public class WorkflowApp {
 			}
 		}
 		
-		OozieJob oJob0 = new OozieJob(job0, "start_"+count);
-		this.jobList.add(oJob0);
+		OozieJob oJob0 = new OozieJob(job0, "start_"+count++);
+		oJob0.setMetadataWriteback(metadatawriteback);
+		//if has parent-accessions, assign it to first job
+		String parentAccession = wfdm.getParent_accessions();
+		if(parentAccession!=null && !parentAccession.isEmpty()) {
+			oJob0.setParentAccession(parentAccession);
+		}
+		String workflowRunAccession = wfdm.getWorkflow_run_accession();
+		if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
+			oJob0.setWorkflowRunAccession(workflowRunAccession);
+			oJob0.setWorkflowRunAncesstor(true);
+		}
+		this.jobs.add(oJob0);
 		
+		//provisionFiles job
+		//sqwfiles
+		if(!wfdm.getFiles().isEmpty()) {
+			Collection<OozieJob> newParents = new ArrayList<OozieJob>();
+			for(Map.Entry<String,SqwFile> entry: wfdm.getFiles().entrySet()) {
+				AbstractJob job = new BashJob("provisionFile_"+entry.getKey());
+				job.addFile(entry.getValue());
+				OozieProvisionFileJob pjob = new OozieProvisionFileJob(job,job.getAlgo()+count++);
+				pjob.setMetadataWriteback(metadatawriteback);
+				if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
+					pjob.setWorkflowRunAccession(workflowRunAccession);
+				}
+				this.jobs.add(pjob);
+				//this.fileJobMap.put(entry.getValue(), pjob);
+	
+				//handle in 
+				if(entry.getValue().isInput()) {
+					newParents.add(pjob);
+					for(OozieJob parent: parents) {
+						pjob.addParent(parent);
+					}
+					//add mkdir to the first job, then set the file path
+					String outputDir = "provisionfiles/" + entry.getValue().getUniqueDir() ;
+					job0.getCommand().addArgument("mkdir -p " + outputDir + "; ");
+					pjob.setOutputDir(outputDir);
+				} else {
+					pjob.setMetadataOutputPrefix(wfdm.getMetadata_output_file_prefix());
+					pjob.setOutputDir(wfdm.getMetadata_output_dir());
+					//set the filepath
+				}
+			}
+			//reset parents
+			parents.clear();
+			parents.addAll(newParents);
+		}
+
 	}
 }
