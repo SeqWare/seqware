@@ -137,6 +137,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 		
 		try {
 			this.dir = FileTools.createDirectoryWithUniqueName(new File(work_dir), "oozie");
+			this.dir.setWritable(true, false);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -146,9 +147,6 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 		//create lib dir
 		File lib = new File(this.dir,"lib");
 		lib.mkdir();
-		//copy the seqware-pipeline.jar
-		
-		//generate workflow.xml
 	}
 	
 	/**
