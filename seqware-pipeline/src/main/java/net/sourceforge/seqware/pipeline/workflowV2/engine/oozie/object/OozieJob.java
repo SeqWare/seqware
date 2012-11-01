@@ -18,11 +18,13 @@ public class OozieJob {
 	private boolean metadataWriteback;
 	private List<OozieJob> parents;
 	private List<OozieJob> children;
+	protected String oozie_working_dir;
 	
 	
-	public OozieJob(AbstractJob job, String name) {
+	public OozieJob(AbstractJob job, String name, String oozie_working_dir) {
 		this.name = name;
 		this.jobObj = job;
+		this.oozie_working_dir = oozie_working_dir;
 		this.parents = new ArrayList<OozieJob>();
 		this.children = new ArrayList<OozieJob>();
 	}
@@ -90,9 +92,22 @@ public class OozieJob {
 		dash.setText("--");
 		javaE.addContent(dash);
 		
+		Element algo = new Element("arg", WorkflowApp.NAMESPACE);
+		algo.setText("--gcr-algorithm");
+		javaE.addContent(algo);
+		
+		Element algoValue = new Element("arg", WorkflowApp.NAMESPACE);
+		algoValue.setText(this.jobObj.getAlgo());
+		javaE.addContent(algoValue);
+		
 		Element command = new Element("arg", WorkflowApp.NAMESPACE);
 		command.setText("--gcr-command");
 		javaE.addContent(command);
+		
+		//add cd command for every gcr job
+		Element cdE = new Element("arg", WorkflowApp.NAMESPACE);
+		cdE.setText("cd " + this.oozie_working_dir + "; ");
+		javaE.addContent(cdE);
 		
 		for(String arg: this.jobObj.getCommand().getArguments()) {
 			Element cmdArg = new Element("arg", WorkflowApp.NAMESPACE);
