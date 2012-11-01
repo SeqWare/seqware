@@ -40,9 +40,6 @@ import javax.ws.rs.core.Response;
  *
  * @author dyuen
  */
-@Path("/referenceset.json")
-@Api(value = "/referenceset", description = "Operations about referencesets"/*, listingPath="/resources.json/referenceset"*/)
-@Produces({"application/json"})
 public class ReferenceSetResource extends JavaHelp {
 
     /**
@@ -52,7 +49,6 @@ public class ReferenceSetResource extends JavaHelp {
      */
     @GET
     @Path("/list")
-    @Produces({"application/json"})
     @ApiOperation(value = "List all referencesets by rowkey", notes = "Add extra notes here")
     public Response featuresRequest() {
         // Check whether the dsn contains the type of store, or not:
@@ -76,7 +72,6 @@ public class ReferenceSetResource extends JavaHelp {
      */
     @GET
     @Path("/{sgid}")
-    @Produces({"application/json"})
     @ApiOperation(value = "Find referenceset by rowkey", notes = "Add extra notes here")
     @ApiErrors(value = { @ApiError(code = 400, reason = "Invalid ID supplied"),
     @ApiError(code = 404, reason = "ReferenceSet not found") })
