@@ -16,71 +16,29 @@
  */
 package com.github.seqware.queryengine.system.rest.resources;
 
-import com.github.seqware.queryengine.dto.QueryEngine.TagSetPB;
 import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.impl.protobufIO.TagSetIO;
 import com.github.seqware.queryengine.model.TagSet;
-import com.wordnik.swagger.jaxrs.JavaHelp;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import com.github.seqware.queryengine.util.SeqWareIterable;
 
 /**
- * TagSet resource
+ * TagSet resource.
  *
  * @author dyuen
  */
-@Path("/tagset")
-public class TagSetResource {// extends JavaHelp{
+public class TagSetResource extends GenericMutableSetResource<TagSet> {
 
-    /**
-     * List available tagsets
-     *
-     * @param sgid rowkey of the tagset to be accessed
-     * @return list of tags within this tagset
-     */
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response featuresRequest() {
-        // Check whether the dsn contains the type of store, or not:
-        //        if (!dsn.matches("^[a-zA-Z]+[0-9a-zA-Z_]*\\.[a-zA-Z]+[0-9a-zA-Z_]*\\.[a-zA-Z]+[0-9a-zA-Z_]*$"))
-        //            return this.getUnsupportedOperationResponse();
-        StringBuilder response = new StringBuilder();
-        for (TagSet ts : SWQEFactory.getQueryInterface().getTagSets()) {
-            response.append(ts.getSGID().getRowKey());
-            response.append("\n");
-        }
-
-        return Response.ok(//"<?xml version=\"1.0\" standalone=\"no\"?>\n" +
-                response.toString()).header("Access-Control-Allow-Origin", "*").header("X-DAS-Status", "200").build();
+    @Override
+    public final String getClassName() {
+        return "TagSet";
     }
 
-    /**
-     * Retrieve tags from a tagset
-     *
-     * @param sgid rowkey of the tagset to be accessed
-     * @return list of tags within this tagset
-     */
-    @GET
-    @Path("{sgid}/tags")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response featuresRequest(@PathParam("sgid") String sgid) {
-        // Check whether the dsn contains the type of store, or not:
-        //        if (!dsn.matches("^[a-zA-Z]+[0-9a-zA-Z_]*\\.[a-zA-Z]+[0-9a-zA-Z_]*\\.[a-zA-Z]+[0-9a-zA-Z_]*$"))
-        //            return this.getUnsupportedOperationResponse();
-        TagSet latestAtomByRowKey = SWQEFactory.getQueryInterface().getLatestAtomByRowKey(sgid, TagSet.class);
-        if (latestAtomByRowKey == null) {
-            // A genuinely bad request:
-            // (see also http://www.biodas.org/documents/spec-1.6.html#response)
-            return Response.status(Response.Status.BAD_REQUEST).header("QE-Status", "400").build();
-        }
-
-        TagSetIO tIO = new TagSetIO();
-        TagSetPB m2pb = tIO.m2pb(latestAtomByRowKey);
-        String toString = m2pb.toString();
-
-        return Response.ok(//"<?xml version=\"1.0\" standalone=\"no\"?>\n" +
-                toString.toString()).header("Access-Control-Allow-Origin", "*").header("QE-Status", "200").build();
-
+    @Override
+    public final Class getModelClass() {
+        return TagSet.class;
+    }
+    
+    @Override
+    public final SeqWareIterable getElements() {
+        return SWQEFactory.getQueryInterface().getTagSets();
     }
 }

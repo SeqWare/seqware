@@ -17,28 +17,28 @@
 package com.github.seqware.queryengine.system.rest.resources;
 
 import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.model.ReferenceSet;
+import com.github.seqware.queryengine.model.Group;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 
 /**
- * ReferenceSet resource.
+ * Group resource.
  *
  * @author dyuen
  */
-public class ReferenceSetResource extends GenericMutableSetResource<ReferenceSet> {
+public class GroupResource extends GenericMutableSetResource<Group> {
 
     @Override
-    public String getClassName() {
-        return "ReferenceSet";
+    public final String getClassName() {
+        return "Group";
     }
 
     @Override
-    public Class getModelClass() {
-        return ReferenceSet.class;
+    public final Class getModelClass() {
+        return Group.class;
     }
     
     @Override
-    public SeqWareIterable getElements() {
-        return SWQEFactory.getQueryInterface().getReferenceSets();
+    public final SeqWareIterable getElements() {
+        return SWQEFactory.getQueryInterface().getGroups();
     }
 }
