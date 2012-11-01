@@ -20,6 +20,7 @@ import com.github.seqware.queryengine.dto.QueryEngine.TagSetPB;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.protobufIO.TagSetIO;
 import com.github.seqware.queryengine.model.TagSet;
+import com.wordnik.swagger.jaxrs.JavaHelp;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -30,7 +31,7 @@ import javax.ws.rs.core.Response;
  * @author dyuen
  */
 @Path("/tagset")
-public class TagSetResource {
+public class TagSetResource {// extends JavaHelp{
 
     /**
      * List available tagsets

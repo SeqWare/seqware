@@ -17,56 +17,74 @@
 package com.github.seqware.queryengine.system.rest.resources;
 
 import com.github.seqware.queryengine.dto.QueryEngine.ReferenceSetPB;
-import com.github.seqware.queryengine.dto.QueryEngine.TagSetPB;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.protobufIO.ReferenceSetIO;
-import com.github.seqware.queryengine.impl.protobufIO.TagSetIO;
 import com.github.seqware.queryengine.model.ReferenceSet;
-import com.github.seqware.queryengine.model.TagSet;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.googlecode.protobuf.format.JsonFormat;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiError;
+import com.wordnik.swagger.annotations.ApiErrors;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.jaxrs.JavaHelp;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * TagSet resource
+ * TagSet resource.
  *
  * @author dyuen
  */
-@Path("/referenceset")
-public class ReferenceSetResource {
+@Path("/referenceset.json")
+@Api(value = "/referenceset", description = "Operations about referencesets"/*, listingPath="/resources.json/referenceset"*/)
+@Produces({"application/json"})
+public class ReferenceSetResource extends JavaHelp {
 
     /**
-     * List available referencesets
+     * List available referencesets.
      *
      * @return list of referencesets
      */
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/list")
+    @Produces({"application/json"})
+    @ApiOperation(value = "List all referencesets by rowkey", notes = "Add extra notes here")
     public Response featuresRequest() {
         // Check whether the dsn contains the type of store, or not:
         //        if (!dsn.matches("^[a-zA-Z]+[0-9a-zA-Z_]*\\.[a-zA-Z]+[0-9a-zA-Z_]*\\.[a-zA-Z]+[0-9a-zA-Z_]*$"))
         //            return this.getUnsupportedOperationResponse();
-        StringBuilder response = new StringBuilder();
+        List<String> stringList = new ArrayList<String>();
         for (ReferenceSet ts : SWQEFactory.getQueryInterface().getReferenceSets()) {
-            response.append(ts.getSGID().getRowKey());
-            response.append("\n");
+            stringList.add(ts.getSGID().getRowKey());
         }
-
+        
+        
         return Response.ok(//"<?xml version=\"1.0\" standalone=\"no\"?>\n" +
-                response.toString()).header("Access-Control-Allow-Origin", "*").header("X-DAS-Status", "200").build();
+                new Gson().toJson(stringList).toString()).header("Access-Control-Allow-Origin", "*").header("X-DAS-Status", "200").build();
     }
 
     /**
-     * Retrieve referenceset
+     * Retrieve referenceset.
      *
      * @param sgid rowkey of the referenceset to be accessed
      * @return referenceset
      */
     @GET
-    @Path("{sgid}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response featuresRequest(@PathParam("sgid") String sgid,  @DefaultValue("PB") @QueryParam(value ="format") String format) {
+    @Path("/{sgid}")
+    @Produces({"application/json"})
+    @ApiOperation(value = "Find referenceset by rowkey", notes = "Add extra notes here")
+    @ApiErrors(value = { @ApiError(code = 400, reason = "Invalid ID supplied"),
+    @ApiError(code = 404, reason = "ReferenceSet not found") })
+    public Response featuresRequest(
+            @ApiParam(value = "id of referenceset to be fetched", required = true)
+            @PathParam("sgid") String sgid,  
+            @ApiParam(value = "format of output", required = false)
+            @DefaultValue("JSON") @QueryParam(value ="format") String format) {
         // Check whether the dsn contains the type of store, or not:
         //        if (!dsn.matches("^[a-zA-Z]+[0-9a-zA-Z_]*\\.[a-zA-Z]+[0-9a-zA-Z_]*\\.[a-zA-Z]+[0-9a-zA-Z_]*$"))
         //            return this.getUnsupportedOperationResponse();
