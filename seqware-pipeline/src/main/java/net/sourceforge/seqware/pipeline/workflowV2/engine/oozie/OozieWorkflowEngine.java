@@ -30,9 +30,8 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 		ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 		this.setupEnvironment();
 		this.parseDataModel(objectModel);
-		this.setupHDFS(objectModel);
-		//ret = this.runWorkflow(objectModel, dax);
-		ret = this.runWorkflow(objectModel);
+		//this.setupHDFS(objectModel);
+		//ret = this.runWorkflow(objectModel);
 		return ret;
 	}
 	
