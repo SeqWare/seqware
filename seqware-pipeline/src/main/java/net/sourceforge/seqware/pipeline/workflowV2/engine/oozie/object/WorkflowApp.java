@@ -3,8 +3,10 @@ package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.PegasusJavaJob;
@@ -29,6 +31,8 @@ public class WorkflowApp {
 	private List<OozieJob> jobs;
 	private String lastJoin;
     private Map<SqwFile, OozieJob> fileJobMap;
+    //to avoid the duplicated join
+
 	
 	public WorkflowApp(AbstractWorkflowDataModel wfdm) {
 		this.wfdm = wfdm;
@@ -48,8 +52,8 @@ public class WorkflowApp {
 		 Element start = new Element("start", NAMESPACE);
 		 start.setAttribute("to", job0.getName());
 		 element.addContent(start);
-		 
-		 this.generateWorkflowXml(element, this.jobs.get(0));
+		 Set<String> joins = new HashSet<String>();
+		 this.generateWorkflowXml(element, this.jobs.get(0), joins);
 		 
 		 Element kill = new Element("kill", NAMESPACE);
 		 kill.setAttribute("name","fail");
@@ -74,7 +78,7 @@ public class WorkflowApp {
 	/*
 	 * any okTo need to check if the child has join? if YES, okTo->join->childJob
 	 */
-	private void generateWorkflowXml(Element rootElement, OozieJob parentJob) {
+	private void generateWorkflowXml(Element rootElement, OozieJob parentJob, Set<String> existingJoins) {
 		String okTo = parentJob.getOkTo();
 		if(parentJob.hasFork()) {
 			//set parentJob.okTo to forkjob
@@ -87,11 +91,15 @@ public class WorkflowApp {
 				String forkStartTo = childJob.getName();
 				if(childJob.hasJoin()) {
 					//create join
-					Element joinE = new Element("join", NAMESPACE);
-					joinE.setAttribute("name","join_"+childJob.getName());
-					joinE.setAttribute("to",childJob.getName());
-					rootElement.addContent(joinE);
 					forkStartTo = "join_"+childJob.getName();
+					if(!existingJoins.contains(forkStartTo)) {
+						Element joinE = new Element("join", NAMESPACE);
+						joinE.setAttribute("name",forkStartTo);
+						joinE.setAttribute("to",childJob.getName());
+						rootElement.addContent(joinE);
+						existingJoins.add(forkStartTo);
+					}
+
 				}
 				pathE.setAttribute("start",forkStartTo);
 				fork.addContent(pathE);
@@ -99,7 +107,20 @@ public class WorkflowApp {
 			rootElement.addContent(fork);
 		} else if(parentJob.getChildren().size()==1) {
 			//check join
-			okTo = parentJob.getChildren().iterator().next().getName();
+			OozieJob childJob = parentJob.getChildren().iterator().next();
+			okTo = childJob.getName();
+			if(childJob.hasJoin()) {
+				okTo = "join_"+childJob.getName();
+				//create join
+				if(!existingJoins.contains(okTo)) {
+					Element joinE = new Element("join", NAMESPACE);
+					joinE.setAttribute("name",okTo);
+					joinE.setAttribute("to",childJob.getName());
+					rootElement.addContent(joinE);
+					existingJoins.add(okTo);
+				}
+
+			}
 		} 
 		
 		parentJob.setOkTo(okTo);
@@ -107,7 +128,7 @@ public class WorkflowApp {
 		rootElement.addContent(parentJob.serializeXML());
 		//recursively 
 		for(OozieJob childJob: parentJob.getChildren()) {
-			this.generateWorkflowXml(rootElement, childJob);
+			this.generateWorkflowXml(rootElement, childJob, existingJoins);
 		}
 		
 
@@ -119,7 +140,6 @@ public class WorkflowApp {
 		//first job create dirs
 		//mkdir data job
 		AbstractJob job0 = new BashJob("createdirs");
-		job0.getCommand().addArgument("cd " + wfdm.getConfigs().get("oozie_working_dir") + "; ");
 		job0.getCommand().addArgument("mkdir -p provisionfiles; ");
 		//check if there are user defined directory
 		if(!wfdm.getDirectories().isEmpty()) {
@@ -128,7 +148,8 @@ public class WorkflowApp {
 			}
 		}
 		
-		OozieJob oJob0 = new OozieJob(job0, "start_"+this.jobs.size());
+		OozieJob oJob0 = new OozieJob(job0, "start_"+this.jobs.size(), 
+				wfdm.getConfigs().get("oozie_working_dir"));
 		oJob0.setMetadataWriteback(metadatawriteback);
 		//if has parent-accessions, assign it to first job
 		String parentAccession = wfdm.getParent_accessions();
@@ -307,11 +328,13 @@ public class WorkflowApp {
 		if(job instanceof JavaJob) {
 			//ret = new PegasusJavaJob(job,wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
 		} else if(job instanceof PerlJob) {
-			ret = new OozieJob(job, job.getAlgo() + "_" + this.jobs.size());
+			ret = new OozieJob(job, job.getAlgo() + "_" + this.jobs.size(), 
+					wfdm.getConfigs().get("oozie_working_dir"));
 		} else if (job instanceof JavaSeqwareModuleJob){
 			//ret = new PegasusJavaSeqwareModuleJob(job, wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
 		} else {
-			ret = new OozieJob(job, job.getAlgo() + "_" + this.jobs.size());
+			ret = new OozieJob(job, job.getAlgo() + "_" + this.jobs.size(), 
+					wfdm.getConfigs().get("oozie_working_dir"));
 		}
 		return ret;
 	}
