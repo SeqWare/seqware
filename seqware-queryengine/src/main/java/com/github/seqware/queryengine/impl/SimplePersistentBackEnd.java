@@ -154,6 +154,12 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     public SeqWareIterable<User> getUsers() {
         return getAllOfClass(User.class);
     }
+    
+    /** {@inheritDoc} */
+    @Override
+    public SeqWareIterable<Analysis> getAnalyses() {
+        return getAllOfClass(Analysis.class);
+    }
 
     /** {@inheritDoc} */
     @Override

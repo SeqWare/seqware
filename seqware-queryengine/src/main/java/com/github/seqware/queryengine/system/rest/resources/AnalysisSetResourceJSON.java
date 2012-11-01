@@ -16,29 +16,17 @@
  */
 package com.github.seqware.queryengine.system.rest.resources;
 
-import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.model.ReferenceSet;
-import com.github.seqware.queryengine.util.SeqWareIterable;
+import com.wordnik.swagger.annotations.Api;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 /**
- * ReferenceSet resource.
  *
  * @author dyuen
  */
-public class ReferenceSetResource extends GenericMutableSetResource<ReferenceSet> {
-
-    @Override
-    public String getClassName() {
-        return "ReferenceSet";
-    }
-
-    @Override
-    public Class getModelClass() {
-        return ReferenceSet.class;
-    }
+@Path("/analysisset.json")
+@Api(value = "/analysisset", description = "Operations about analysissets"/*, listingPath="/resources.json/referenceset"*/)
+@Produces({"application/json"})
+public class AnalysisSetResourceJSON extends AnalysisSetResource{
     
-    @Override
-    public SeqWareIterable getElements() {
-        return SWQEFactory.getQueryInterface().getReferenceSets();
-    }
 }
