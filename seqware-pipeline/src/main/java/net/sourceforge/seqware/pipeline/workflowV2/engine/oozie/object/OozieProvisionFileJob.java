@@ -12,7 +12,7 @@ public class OozieProvisionFileJob extends OozieJob {
 	private SqwFile file;
 	
 	public OozieProvisionFileJob(AbstractJob job, SqwFile file, String name) {
-		super(job, name);
+		super(job, name, null);
 		this.file = file;
 	}
 
