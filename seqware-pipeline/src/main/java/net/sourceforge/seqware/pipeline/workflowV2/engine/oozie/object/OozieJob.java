@@ -3,20 +3,18 @@ package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.PegasusJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 
 import org.jdom.Element;
 
 public class OozieJob {
-	private String okTo;
-	private String errorTo;
-	private String name;
+	protected String okTo = "end";
+	//private String errorTo; always to fail now
+	protected String name;
 	protected String parentAccession;
 	protected String wfrAccession;
 	protected boolean wfrAncesstor;
-	private AbstractJob jobObj;
+	protected AbstractJob jobObj;
 	private boolean metadataWriteback;
 	private List<OozieJob> parents;
 	private List<OozieJob> children;
@@ -37,7 +35,7 @@ public class OozieJob {
 		
 		//okTo
 		Element ok = new Element("ok", WorkflowApp.NAMESPACE);
-		ok.setAttribute("to","end");
+		ok.setAttribute("to",this.okTo);
 		element.addContent(ok);
 		
 		Element error = new Element("error", WorkflowApp.NAMESPACE);
@@ -146,5 +144,25 @@ public class OozieJob {
 	
 	public Collection<OozieJob> getChildren() {
 		return this.children;
+	}
+	
+	public void setOkTo(String okTo) {
+		this.okTo = okTo;
+	}
+	
+	public String getOkTo() {
+		return this.okTo;
+	}
+	
+	public boolean hasFork() {
+		return this.getChildren().size()>1;
+	}
+	
+	public boolean hasJoin() {
+		return this.getParents().size()>1;
+	}
+	
+	public AbstractJob getJobObject() {
+		return this.jobObj;
 	}
 }
