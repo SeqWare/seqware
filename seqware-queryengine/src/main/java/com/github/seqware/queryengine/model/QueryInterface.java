@@ -152,6 +152,14 @@ public interface QueryInterface {
      * @return something iterable that that iterates through all Tags
      */
     public SeqWareIterable<Tag> getTags();
+    
+    //  ANALYSIS
+    /**
+     * <p>getAnalysis.</p>
+     *
+     * @return something iterable that iterates through all Analyses
+     */
+    public SeqWareIterable<Analysis> getAnalyses();
 
 //    // ANALYSIS SET
     /**

@@ -17,28 +17,28 @@
 package com.github.seqware.queryengine.system.rest.resources;
 
 import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.model.ReferenceSet;
+import com.github.seqware.queryengine.model.Reference;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 
 /**
- * ReferenceSet resource.
+ * Reference resource.
  *
  * @author dyuen
  */
-public class ReferenceSetResource extends GenericMutableSetResource<ReferenceSet> {
+public class ReferenceResource extends GenericElementResource<Reference> {
 
     @Override
-    public String getClassName() {
-        return "ReferenceSet";
+    public final String getClassName() {
+        return "Reference";
     }
 
     @Override
-    public Class getModelClass() {
-        return ReferenceSet.class;
+    public final Class getModelClass() {
+        return Reference.class;
     }
     
     @Override
-    public SeqWareIterable getElements() {
-        return SWQEFactory.getQueryInterface().getReferenceSets();
+    public final SeqWareIterable getElements() {
+        return SWQEFactory.getQueryInterface().getReferences();
     }
 }
