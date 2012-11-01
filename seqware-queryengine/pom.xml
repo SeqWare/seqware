@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>seqware-queryengine</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <name>seqware-queryengine</name>
     <description>SeqWare Query Backend</description>
@@ -12,6 +12,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <protobuf.version>2.4.1</protobuf.version>
+        <jersey-version>1.14</jersey-version>
+        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
     </properties>
     <parent>
         <groupId>com.github.seqware</groupId>
@@ -62,6 +64,31 @@
         
         <plugins>
             <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${maven-war-plugin.version}</version>
+                <configuration>
+                    <packagingExcludes>**/servlet*.jar,META-INF/context.xml</packagingExcludes>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>tomcat-maven-plugin</artifactId>
+                <!-- snapshot was here but commented out originally, using the latest released version as checked by mvn help:describe -DgroupId=org.codehaus.mojo  -DartifactId=tomcat-maven-plugin -Dfull=true | less -->
+                <version>1.1</version>
+                <!--                <version>1.2-SNAPSHOT</version>-->
+                <configuration>
+                    <mode>war</mode>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>${maven-jar-plugin.version}</version>
@@ -103,8 +130,8 @@
                         <include>**/*Impl*.java</include>
                     </excludes>
                     <!--  <forkMode>
-                          never
-                      </forkMode>
+never
+</forkMode>
                 		  -->
                 </configuration>
             </plugin>
@@ -255,7 +282,7 @@
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase</artifactId>
             <!-- current public version
-              		    <version>0.94.0</version>
+                                      		    <version>0.94.0</version>
             -->
             <!-- current Cloudera stable -->
             <version>0.92.1-cdh4.0.0</version>
@@ -288,6 +315,14 @@
                     <artifactId>jersey-core</artifactId>
                     <groupId>com.sun.jersey</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>servlet-api-2.5</artifactId>
+                    <groupId>org.mortbay.jetty</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -306,6 +341,10 @@
                 <exclusion>
                     <artifactId>jetty-util</artifactId>
                     <groupId>org.mortbay.jetty</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -332,7 +371,7 @@
             <artifactId>hadoop-tools</artifactId>
             <groupId>org.apache.hadoop</groupId>
             <!-- current public version
-          		    <version>1.0.3</version>
+                                  		    <version>1.0.3</version>
    	        -->
             <!-- current Cloudera stable -->
             <version>2.0.0-mr1-cdh4.0.0</version>
@@ -472,18 +511,46 @@
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-grizzly2</artifactId>
-            <version>1.14</version>
+            <version>${jersey-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-core</artifactId>
+            <version>${jersey-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-server</artifactId>
+            <version>${jersey-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-servlet</artifactId>
+            <version>${jersey-version}</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.protobuf-java-format</groupId>
             <artifactId>protobuf-java-format</artifactId>
             <version>1.2</version>
         </dependency>
-	<dependency>
-	    <groupId>com.wordnik</groupId>
-	    <artifactId>swagger-jaxrs_2.9.1</artifactId>
-	    <version>1.1.0</version>
-	    <scope>compile</scope>
-	</dependency>
+        <dependency>
+            <groupId>com.wordnik</groupId>
+            <artifactId>swagger-jaxrs_2.9.1</artifactId>
+            <version>1.1.0</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--  Gson: Java to Json conversion -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.2.2</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>

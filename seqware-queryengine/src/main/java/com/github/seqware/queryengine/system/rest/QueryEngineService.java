@@ -19,8 +19,11 @@ package com.github.seqware.queryengine.system.rest;
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
+import com.wordnik.swagger.annotations.Api;
 import java.io.IOException;
 import java.net.URI;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.UriBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
 
@@ -33,27 +36,31 @@ import org.glassfish.grizzly.http.server.HttpServer;
  *
  * @author dyuen
  */
-public class QueryEngineService {
-
-    private static URI getBaseURI() {
-        return UriBuilder.fromUri("http://localhost/").port(24242).build();
-    }
+public class QueryEngineService extends PackagesResourceConfig {
     
-    public static final URI BASE_URI = getBaseURI();
-
-    public static HttpServer startService(String[] args) throws IOException {
-        System.out.println("Starting grizzly...");
-        ResourceConfig rc = new PackagesResourceConfig("com.github.seqware.queryengine.system.rest");
-        return GrizzlyServerFactory.createHttpServer(BASE_URI,  rc);
+    public QueryEngineService(){
+        super("com.github.seqware.queryengine.system.rest.resources");
     }
 
-    public static void main(String[] args) throws IOException {
-        HttpServer httpServer = QueryEngineService.startService(args);
-        System.out.println(String.format("Jersey app started with WADL available at "
-                + "%sapplication.wadl\nTry out %stagset\nHit enter to stop it...",
-                BASE_URI, BASE_URI));
-        System.in.read();
-        httpServer.stop();
+//    private static URI getBaseURI() {
+//        return UriBuilder.fromUri("http://localhost/").port(24243).build();
+//    }
+    
+//    public static final URI BASE_URI = getBaseURI();
 
-    }
+//    public static HttpServer startService(String[] args) throws IOException {
+//        System.out.println("Starting grizzly...");
+//        ResourceConfig rc = new PackagesResourceConfig("com.github.seqware.queryengine.system.rest");
+//        return GrizzlyServerFactory.createHttpServer(BASE_URI,  rc);
+//    }
+//
+//    public static void main(String[] args) throws IOException {
+//        HttpServer httpServer = QueryEngineService.startService(args);
+//        System.out.println(String.format("Jersey app started with WADL available at "
+//                + "%sapplication.wadl\nTry out %stagset\nHit enter to stop it...",
+//                BASE_URI, BASE_URI));
+//        System.in.read();
+//        httpServer.stop();
+//
+//    }
 }
