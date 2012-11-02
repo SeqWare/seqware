@@ -30,6 +30,8 @@ public abstract class AbstractWorkflowDataModel  {
     private String date;
     private String metadata_output_file_prefix;
     private String metadata_output_dir;
+    //default is pegasus
+    private String workflow_engine;
 
     public AbstractWorkflowDataModel() {
     	this.env = new Environment();
@@ -343,6 +345,22 @@ public abstract class AbstractWorkflowDataModel  {
 
 	public void setMetadata_output_dir(String metadata_output_dir) {
 		this.metadata_output_dir = metadata_output_dir;
+	}
+
+	/**
+	 * 
+	 * @return engine that workflow will run on, default is pegasus
+	 */
+	public String getWorkflow_engine() {
+		return workflow_engine;
+	}
+
+	/**
+	 * default is pegasus
+	 * @param workflow_engine
+	 */
+	public void setWorkflow_engine(String workflow_engine) {
+		this.workflow_engine = workflow_engine;
 	}
 	
 }

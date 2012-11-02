@@ -238,10 +238,6 @@ public class WorkflowDataModelFactory {
 		    Element build = wf.getChild("build");
 		    if(build != null)
 		    	ret.put("build", build.getAttributeValue("command").replaceFirst("\\$\\{workflow_bundle_dir\\}",bundleDir));
-		    Element engine = wf.getChild("workflow_engine");
-		    if(engine!=null) {
-		    	ret.put("workflow_engine", engine.getText());
-		    }
 		    Element requirements = wf.getChild("requirements");
 		    if(requirements != null) {
 		    	ret.put("compute", requirements.getAttributeValue("compute"));
@@ -366,6 +362,10 @@ public class WorkflowDataModelFactory {
     	if (options.has("metadata-output-dir")) {
 //    		map.put("metadata-output-dir", (String) options.valueOf("metadata-output-dir"));
     		model.setMetadata_output_dir((String) options.valueOf("metadata-output-dir"));
+    	}
+    	//workflow_engine
+    	if (options.has("workflow-engine")) {
+    		model.setWorkflow_engine((String) options.valueOf("workflow-engine"));
     	}
     }
 
