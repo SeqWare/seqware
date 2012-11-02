@@ -33,17 +33,23 @@ import org.openide.util.lookup.ServiceProvider;
 public class WorkflowLauncherV2 extends WorkflowPlugin {
 
     public WorkflowLauncherV2() {
-     super();
-     parser
-        .accepts(
-            "metadata-output-file-prefix",
-            "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.")
-        .withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location.");
-     parser
-        .accepts(
-            "metadata-output-dir",
-            "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.")
-        .withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location.");
+	     super();
+	     parser
+	        .accepts(
+	            "metadata-output-file-prefix",
+	            "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.")
+	        .withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location.");
+	     parser
+	        .accepts(
+	            "metadata-output-dir",
+	            "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.")
+	        .withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location.");
+	     parser
+	        .accepts(
+	            "workflow-engine",
+	            "Optional: Specifies a workflow engine, we support Oozie and Pegasus. Default is Pegasus.")
+	        .withRequiredArg().ofType(String.class).describedAs("Workflow Engine");
+
     }
 
     public String get_description() {
@@ -148,7 +154,7 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     
     private AbstractWorkflowEngine getWorkflowEngine(AbstractWorkflowDataModel dataModel) {
     	AbstractWorkflowEngine wfEngine = null;
-    	String engine = dataModel.getTags().get("workflow_engine");
+    	String engine = dataModel.getWorkflow_engine();
     	if(engine == null || !engine.equals("oozie")) {
     		wfEngine = new PegasusWorkflowEngine();
     	} else {

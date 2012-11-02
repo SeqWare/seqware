@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jdom.Element;
 
 public class OozieJob {
@@ -179,5 +181,25 @@ public class OozieJob {
 	
 	public AbstractJob getJobObject() {
 		return this.jobObj;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null || obj instanceof OozieJob == false)
+			return false;
+		if(obj == this)
+			return true;
+		OozieJob rhs = (OozieJob) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj)).append(name, rhs.name).isEquals();
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17,37).append(name).toHashCode();
+	}
+	
+	@Override
+	public String toString() {
+		return this.name;
 	}
 }
