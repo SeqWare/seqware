@@ -19,6 +19,19 @@ package com.github.seqware.queryengine.system.rest.resources;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.util.SeqWareIterable;
+import com.wordnik.swagger.annotations.ApiError;
+import com.wordnik.swagger.annotations.ApiErrors;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * FeatureSet resource.
@@ -40,5 +53,77 @@ public class FeatureSetResource extends GenericSetResource<FeatureSet> {
     @Override
     public final SeqWareIterable getElements() {
         return SWQEFactory.getQueryInterface().getFeatureSets();
+    }
+    
+    /**
+     * Create new analysis event to create a query, monitor the query, and return a new feature set when ready.
+     * @param sgid rowkey of featureset to operate on
+     * @param query query in our query language
+     * @param ttl time in hours for the results to live 
+     * @return 
+     */
+    @POST
+    @Path("/{sgid}/query")
+    @ApiOperation(value = "Create new analysis event to monitor query", notes = "This can only be done by an authenticated user.")
+    @ApiErrors(value = {
+        @ApiError(code = INVALID_ID, reason = "Invalid element supplied"),
+        @ApiError(code = INVALID_SET, reason = "Element not found")})
+    public Response updateElementPermissions(
+            @ApiParam(value = "rowkey that needs to be updated", required = true) 
+            @PathParam("sgid") String sgid,
+            @ApiParam(value = "query", required = true)
+            @QueryParam(value = "query") String query,
+            @ApiParam(value = "ttl", required = false)
+            @QueryParam(value = "ttl") int ttl
+            ) {
+        // make this an overrideable method in the real version
+        //userData.addUser(user);
+        return Response.ok().entity("").build();
+    }
+    
+    /**
+     * Return the features that belong to the specified feature set either in JSON or VCF
+     * @param sgid rowkey of featureset to operate on
+     * @return 
+     */
+    @GET
+    @Path("/{sgid}/features")
+    @ApiOperation(value = "List features in a featureset", notes = "This can only be done by an authenticated user.")
+    @ApiErrors(value = {
+        @ApiError(code = INVALID_ID, reason = "Invalid element supplied"),
+        @ApiError(code = INVALID_SET, reason = "Element not found")})
+    public Response getFeatureListing(
+            @ApiParam(value = "rowkey that needs to be updated", required = true) 
+            @PathParam("sgid") String sgid,
+            @ApiParam(value = "format of output", required = false, allowableValues = "JSON,VCF")
+            @DefaultValue(value = "JSON")
+            @QueryParam(value = "format") String format
+            ) {
+        // make this an overrideable method in the real version
+        //userData.addUser(user);
+        return Response.ok().entity("").build();
+    }
+    
+    /**
+     * Upload a raw variant file to create a new featureset
+     * @param sgid rowkey of ontology to create
+     * @return 
+     */
+    @POST
+    @Path("/createWithRaw")
+    @ApiOperation(value = "Create a new featureset with a raw data file", notes = "This can only be done by an authenticated user.")
+    @ApiErrors(value = {
+        @ApiError(code = RESOURCE_EXISTS, reason = "Resource already exists")})
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response updateElementPermissions(
+            @ApiParam(value = "rowkey that needs to be updated", required = false) 
+            @PathParam("sgid") String sgid,
+            @ApiParam(value = "format of input", required = true, allowableValues = "VCF,GFF3,GVF")
+            @DefaultValue(value = "VCF")
+            @QueryParam(value = "format") String format
+            ) {
+        // make this an overrideable method in the real version
+        //userData.addUser(user);
+        return Response.ok().entity("").build();
     }
 }

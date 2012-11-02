@@ -8,6 +8,7 @@ import com.github.seqware.queryengine.util.LazyReference;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.ArrayList;
+import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -26,6 +27,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @author jbaran
  * @version $Id: $Id
  */
+@XmlRootElement(name = "Tag")
 public class Tag extends AtomImpl<Tag> {
 
     /** Constant <code>prefix="Tag"</code> */
