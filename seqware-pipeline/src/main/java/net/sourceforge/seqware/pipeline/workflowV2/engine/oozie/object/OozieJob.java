@@ -21,6 +21,7 @@ public class OozieJob {
 	private List<OozieJob> parents;
 	private List<OozieJob> children;
 	protected String oozie_working_dir;
+	protected List<String> parentAccessionFiles;
 	
 	
 	public OozieJob(AbstractJob job, String name, String oozie_working_dir) {
@@ -29,6 +30,7 @@ public class OozieJob {
 		this.oozie_working_dir = oozie_working_dir;
 		this.parents = new ArrayList<OozieJob>();
 		this.children = new ArrayList<OozieJob>();
+		this.parentAccessionFiles = new ArrayList<String>();
 	}
 	
 	public Element serializeXML() {
@@ -124,7 +126,7 @@ public class OozieJob {
 		this.parentAccession = parentAccession;
 	}
 
-	public boolean isMetadataWriteback() {
+	public boolean hasMetadataWriteback() {
 		return metadataWriteback;
 	}
 
@@ -201,5 +203,42 @@ public class OozieJob {
 	@Override
 	public String toString() {
 		return this.name;
+	}
+	
+	protected String buildMetadataString() {
+		StringBuilder sb = new StringBuilder();
+		if(this.hasMetadataWriteback()) {
+			sb.append("--metadata").append("\n");
+		} else {
+			sb.append("--no-metadata").append("\n");
+		}
+		
+		if(this.parentAccession!=null){
+			sb.append("--metadata-parent-accession " + this.parentAccession).append("\n");
+		}
+		if(this.wfrAccession!=null) {
+			if(!this.wfrAncesstor) {
+				sb.append("--metadata-workflow-run-ancestor-accession " + this.wfrAccession).append("\n");
+			} else {
+				sb.append("--metadata-workflow-run-accession " + this.wfrAccession).append("\n");
+			}
+		}
+		
+		if(!this.parentAccessionFiles.isEmpty()) {
+			for(String paf: this.parentAccessionFiles) {
+				sb.append("--metadata-parent-accession-file " + paf).append("\n");
+			}
+		}
+		sb.append("--metadata-processing-accession-file " + this.getAccessionFile()).append("\n");
+		return sb.toString();
+	}
+	
+	public void addParentAccessionFile(String paf) {
+		if(!this.parentAccessionFiles.contains(paf))
+			this.parentAccessionFiles.add(paf);
+	}
+
+	public String getAccessionFile() {
+		return this.getName() + "_accession";
 	}
 }
