@@ -16,17 +16,22 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import org.apache.commons.io.FileUtils;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
@@ -35,44 +40,23 @@ import org.junit.runner.Description;
  *
  * @author mtaschuk
  */
-public class SymLinkFileReporterTest {
+public class SymLinkFileReporterTest extends PluginTest {
 
-    private static net.sourceforge.seqware.common.metadata.Metadata metadata;
-    private SymLinkFileReporter instance;
     private String outputFilename = "test";
     private String fullOutputFilename = outputFilename + ".csv";
-    private String studyDir;
-    private String sampleDir;
+    private String studyDir = "AbcCo_Exome_Sequencing-120/-/Exome_ABC015069_Test_2-4783";
+    private String sampleDir = "./-/Exome_ABC015069_Test_2-4783";
     private String[] allDirs = new String[]{"ABC019534_Nimblegen_data-6548", "AbcCo_Tumour_Sequencing-4758", "AbcCo_Exome_Sequencing-120"};
 
-    public SymLinkFileReporterTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Before
+    @Override
     public void setUp() {
-        metadata = new MetadataWS();
-        metadata.init("http://localhost:8889/seqware-webservice", "admin@admin.com", "admin");
-
+        super.setUp();
         instance = new SymLinkFileReporter();
         instance.setMetadata(metadata);
-
-        studyDir = "AbcCo_Exome_Sequencing-120/-/Exome_ABC015069_Test_2-4783";
-        sampleDir = "./-/Exome_ABC015069_Test_2-4783";
-
     }
 
-    @After
-    public void tearDown() {
-        metadata.clean_up();
-
+    public SymLinkFileReporterTest() {
     }
 
     @Test
@@ -260,8 +244,7 @@ public class SymLinkFileReporterTest {
         examineDirectory(13, sampleDir);
     }
 /////////////////////////////////////////////NEGATIVE TESTS, see https://jira.oicr.on.ca/browse/SEQWARE-1332
- 
-    
+
 //    @Test
 //    public void testGetStudyFilesWrongStudyName() {
 //        launchPlugin("--output-filename", outputFilename, "--no-links", "--study", "ASCBDK");
@@ -299,21 +282,12 @@ public class SymLinkFileReporterTest {
 //        checkReturnValue(ReturnValue.INVALIDPARAMETERS, instance.do_run());
 //        examineFile(fullOutputFilename, 1, 34, 10);
 //    }
-
     @Test
     public void testGetSampleFilesBadlySpelledParameter() {
         instance.setParams(Arrays.asList("--output-filename", outputFilename, "--no-links", "--sample",
                 "Exome_ABC015069_Test_2", "--dplicates"));
         checkReturnValue(ReturnValue.INVALIDARGUMENT, instance.parse_parameters());
         Assert.assertFalse("Output file should not exist.", new File(fullOutputFilename).exists());
-    }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void launchPlugin(String... params) {
-        instance.setParams(Arrays.asList(params));
-        checkReturnValue(ReturnValue.SUCCESS, instance.parse_parameters());
-        checkReturnValue(ReturnValue.SUCCESS, instance.init());
-        checkReturnValue(ReturnValue.SUCCESS, instance.do_run());
     }
 
     /**
@@ -372,10 +346,6 @@ public class SymLinkFileReporterTest {
         }
 
         Assert.assertEquals("The number of rows is different than expected", expectedRowCount, lines);
-    }
-
-    private void checkReturnValue(int expected, ReturnValue rv) {
-        Assert.assertEquals("Get files and symlinks did not exit successfully.", expected, rv.getExitStatus());
     }
     @Rule
     public TestRule watchman = new TestWatcher() {
