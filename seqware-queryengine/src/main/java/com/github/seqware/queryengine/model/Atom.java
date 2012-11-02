@@ -6,7 +6,6 @@ import com.github.seqware.queryengine.model.interfaces.Buildable;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.Serializable;
 import java.util.Date;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Implements core functionality that is shared by all classes that require
@@ -19,7 +18,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author dyuen
  * @version $Id: $Id
  */
-@XmlRootElement(name = "Atom")
 public interface Atom<T extends Atom> extends Taggable, Versionable<T>, Serializable, Buildable {
 
     /**

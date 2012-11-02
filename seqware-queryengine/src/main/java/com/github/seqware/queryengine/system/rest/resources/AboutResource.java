@@ -56,9 +56,9 @@ public class AboutResource extends JavaHelp {
      */
     @GET
     @Path(value = "/debug")
-    @ApiOperation(value = "List information about the attached back-end", notes = "Add extra notes here")
+    @ApiOperation(value = "List information about the attached back-end", notes = "This resource, used mainly for debugging, will describe the classes in use, and which back-end is currently allocated via constants")
     public Response backendRequest() {
-        return Response.ok(new Gson().toJson(new BagOfVersionInfo()).toString()).header("Access-Control-Allow-Origin", "*").header("X-DAS-Status", "200").build();
+        return Response.ok(new Gson().toJson(new BagOfVersionInfo()).toString())/*.header("Access-Control-Allow-Origin", "*").header("X-DAS-Status", "200")*/.build();
     }
 
     /**
@@ -69,8 +69,9 @@ public class AboutResource extends JavaHelp {
      */
     @GET
     @Path(value = "/versions")
-    @ApiOperation(value = "List compatible versions", notes = "Add extra notes here")
+    @ApiOperation(value = "List compatible versions", notes = "Generates a list of versions of the RESTful API this server understands.")
     public Response versionRequest() {
-        return Response.ok(new Gson().toJson(getClass().getPackage().getImplementationVersion()).toString()).header("Access-Control-Allow-Origin", "*").header("X-DAS-Status", "200").build();
+        String version = getClass().getPackage().getImplementationVersion();
+        return Response.ok(new Gson().toJson(version))/*.header("Access-Control-Allow-Origin", "*").header("X-DAS-Status", "200")*/.build();
     }
 }
