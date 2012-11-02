@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import org.apache.commons.io.FileUtils;
 import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
@@ -40,26 +41,12 @@ public class SymLinkFileReporterTest {
     private SymLinkFileReporter instance;
     private String outputFilename = "test";
     private String fullOutputFilename = outputFilename + ".csv";
+    private String studyDir;
+    private String sampleDir;
+    private String[] allDirs = new String[]{"ABC019534_Nimblegen_data-6548", "AbcCo_Tumour_Sequencing-4758", "AbcCo_Exome_Sequencing-120"};
 
     public SymLinkFileReporterTest() {
     }
-    @Rule
-    public TestRule watchman = new TestWatcher() {
-
-        @Override
-        protected void failed(Throwable e, Description d) {
-            String newName = outputFilename + "_failed" + d.getMethodName() + ".csv";
-            File file = new File(fullOutputFilename);
-            file.renameTo(new File(newName));
-            Log.error(d + ": CSV report moved to " + newName);
-        }
-
-        @Override
-        protected void succeeded(Description d) {
-            File file = new File(fullOutputFilename);
-            Assert.assertTrue("Could not delete file " + fullOutputFilename, file.delete());
-        }
-    };
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -77,6 +64,8 @@ public class SymLinkFileReporterTest {
         instance = new SymLinkFileReporter();
         instance.setMetadata(metadata);
 
+        studyDir = "AbcCo_Exome_Sequencing-120/-/Exome_ABC015069_Test_2-4783";
+        sampleDir = "./-/Exome_ABC015069_Test_2-4783";
 
     }
 
@@ -87,23 +76,268 @@ public class SymLinkFileReporterTest {
     }
 
     @Test
-    public void testGetStudyFiles() {
-        instance.setParams(Arrays.asList("--output-filename", outputFilename, "--no-links", "--study", "AbcCo_Exome_Sequencing"));
-        checkReturnValue(ReturnValue.SUCCESS, instance.parse_parameters());
-        checkReturnValue(ReturnValue.SUCCESS, instance.init());
-        checkReturnValue(ReturnValue.SUCCESS, instance.do_run());
+    public void testGetStudyFilesAndSymlinks() {
+        launchPlugin("--output-filename", outputFilename, "--study", "AbcCo_Exome_Sequencing");
         examineFile(fullOutputFilename, 18, 34, 6);
+        examineDirectory(13, studyDir);
     }
 
     @Test
-    public void testGetStudyBamFiles() {
-        instance.setParams(Arrays.asList("--output-filename", outputFilename, "--no-links", "--study", "AbcCo_Exome_Sequencing", "--file-type", "application/bam"));
+    public void testGetStudyFilesAndSymlinksExplicitly() {
+        launchPlugin("--output-filename", outputFilename, "--study", "AbcCo_Exome_Sequencing", "--link", "s");
+
+        examineFile(fullOutputFilename, 18, 34, 6);
+        examineDirectory(13, studyDir);
+    }
+
+    @Test
+    public void testGetStudyFilesOnlyBamFiles() {
+        launchPlugin("--output-filename", outputFilename, "--study", "AbcCo_Exome_Sequencing", "--file-type", "application/bam");
+
+        examineFile(fullOutputFilename, 2, 34, 1);
+        examineDirectory(1, studyDir);
+    }
+
+    @Test
+    public void testGetStudyFilesMakePhysicalLinks() {
+        launchPlugin("--output-filename", outputFilename, "--study", "AbcCo_Exome_Sequencing", "--link", "P");
+
+        examineFile(fullOutputFilename, 18, 34, 6);
+        examineDirectory(0, studyDir);
+    }
+
+    @Test
+    public void testGetStudyFilesProductionFormat() {
+        launchPlugin("--output-filename", outputFilename, "--study", "AbcCo_Exome_Sequencing", "--prod-format");
+        examineFile(fullOutputFilename, 18, 34, 6);
+        examineDirectory(4, "AbcCo_Exome_Sequencing-120/-/null/null");
+    }
+
+    @Test
+    public void testGetStudyFilesNoLinks() {
+        launchPlugin("--output-filename", outputFilename, "--study", "AbcCo_Exome_Sequencing", "--no-links");
+
+        examineFile(fullOutputFilename, 18, 34, 6);
+        Assert.assertFalse("The symlinks directory was created even though it was specified no-links", new File(studyDir).exists());
+    }
+
+    @Test
+    public void testGetStudyFilesShowAllWorkflowRuns() {
+        launchPlugin("--output-filename", outputFilename, "--study", "AbcCo_Exome_Sequencing", "--show-failed-and-running", "--show-status");
+
+        examineFile(fullOutputFilename, 18, 35, 7);
+        examineDirectory(13, studyDir);
+    }
+
+    @Test
+    public void testGetStudyFilesAndSymlinksWithDuplicates() {
+        launchPlugin("--output-filename", outputFilename, "--study", "AbcCo_Exome_Sequencing", "--duplicates");
+        examineFile(fullOutputFilename, 22, 34, 6);
+        examineDirectory(13, studyDir);
+    }
+
+    /////////////////////////////////////////////////DUMP ALL
+    @Test
+    public void testGetAllFilesAndSymlinks() {
+        launchPlugin("--output-filename", outputFilename, "--dump-all");
+        examineFile(fullOutputFilename, 119, 34, 6);
+        examineDirectory(13, studyDir);
+    }
+
+    @Test
+    public void testGetAllFilesAndSymlinksExplicitly() {
+        launchPlugin("--output-filename", outputFilename, "--dump-all", "--link", "s");
+        examineFile(fullOutputFilename, 119, 34, 6);
+        examineDirectory(13, studyDir);
+    }
+
+    @Test
+    public void testGetAllFilesAndSymlinksOnlyBamFiles() {
+        launchPlugin("--output-filename", outputFilename, "--dump-all", "--file-type", "application/bam");
+        examineFile(fullOutputFilename, 19, 34, 6);
+        examineDirectory(1, studyDir);
+    }
+
+    @Test
+    public void testGetAllFilesAndSymlinksProductionFormat() {
+        launchPlugin("--output-filename", outputFilename, "--dump-all", "--prod-format");
+        examineFile(fullOutputFilename, 119, 34, 6);
+        for (String dir : allDirs) {
+            examineDirectory(4, dir + "/-/null/null");
+        }
+
+    }
+
+    @Test
+    public void testGetAllFilesAndPhysicalLinks() {
+        launchPlugin("--output-filename", outputFilename, "--dump-all", "--link", "P");
+        examineFile(fullOutputFilename, 119, 34, 6);
+        examineDirectory(0, studyDir);
+    }
+
+    @Test
+    public void testGetAllFilesNoLinks() {
+        launchPlugin("--output-filename", outputFilename, "--dump-all", "--no-links");
+
+        examineFile(fullOutputFilename, 119, 34, 6);
+        Assert.assertFalse("The symlinks directory was created even though it was specified no-links", new File(studyDir).exists());
+    }
+
+    @Test
+    public void testGetAllFilesAndSymlinksShowAllWorkflowRuns() {
+        launchPlugin("--output-filename", outputFilename, "--dump-all", "--show-failed-and-running", "--show-status");
+
+        examineFile(fullOutputFilename, 126, 35, 7);
+        examineDirectory(13, studyDir);
+    }
+
+    @Test
+    public void testGetAllFilesAndSymlinksWithDuplicates() {
+        launchPlugin("--output-filename", outputFilename, "--dump-all", "--duplicates");
+        examineFile(fullOutputFilename, 130, 34, 6);
+        examineDirectory(13, studyDir);
+    }
+
+///////////////////////////////////////////////SAMPLE
+    @Test
+    public void testGetSampleFilesAndSymlinks() {
+        launchPlugin("--output-filename", outputFilename, "--sample", "Exome_ABC015069_Test_2");
+        examineFile(fullOutputFilename, 18, 34, 10);
+        examineDirectory(13, sampleDir);
+    }
+
+    @Test
+    public void testGetSampleFilesAndSymlinksExplicitly() {
+        launchPlugin("--output-filename", outputFilename, "--sample", "Exome_ABC015069_Test_2", "--link", "s");
+
+        examineFile(fullOutputFilename, 18, 34, 10);
+        examineDirectory(13, sampleDir);
+    }
+
+    @Test
+    public void testGetSampleFilesOnlyBamFiles() {
+        launchPlugin("--output-filename", outputFilename, "--sample", "Exome_ABC015069_Test_2", "--file-type", "application/bam");
+
+        examineFile(fullOutputFilename, 2, 34, 5);
+        examineDirectory(1, sampleDir);
+    }
+
+    @Test
+    public void testGetSampleFilesMakePhysicalLinks() {
+        launchPlugin("--output-filename", outputFilename, "--sample", "Exome_ABC015069_Test_2", "--link", "P");
+
+        examineFile(fullOutputFilename, 18, 34, 10);
+        examineDirectory(0, sampleDir);
+    }
+
+    @Test
+    public void testGetSampleFilesProductionFormat() {
+        launchPlugin("--output-filename", outputFilename, "--sample", "Exome_ABC015069_Test_2", "--prod-format");
+        examineFile(fullOutputFilename, 18, 34, 10);
+        examineDirectory(4, "./-/null/null");
+    }
+
+    @Test
+    public void testGetSampleFilesNoLinks() {
+        launchPlugin("--output-filename", outputFilename, "--sample", "Exome_ABC015069_Test_2", "--no-links");
+
+        examineFile(fullOutputFilename, 18, 34, 10);
+        Assert.assertFalse("The symlinks directory was created even though it was specified no-links", new File(sampleDir).exists());
+    }
+
+    @Test
+    public void testGetSampleFilesShowAllWorkflowRuns() {
+        launchPlugin("--output-filename", outputFilename, "--sample", "Exome_ABC015069_Test_2", "--show-failed-and-running", "--show-status");
+
+        examineFile(fullOutputFilename, 18, 35, 11);
+        examineDirectory(13, sampleDir);
+    }
+
+    @Test
+    public void testGetSampleFilesAndSymlinksWithDuplicates() {
+        launchPlugin("--output-filename", outputFilename, "--sample", "Exome_ABC015069_Test_2", "--duplicates");
+        examineFile(fullOutputFilename, 22, 34, 10);
+        examineDirectory(13, sampleDir);
+    }
+/////////////////////////////////////////////NEGATIVE TESTS, see https://jira.oicr.on.ca/browse/SEQWARE-1332
+ 
+    
+//    @Test
+//    public void testGetStudyFilesWrongStudyName() {
+//        launchPlugin("--output-filename", outputFilename, "--no-links", "--study", "ASCBDK");
+//        checkReturnValue(ReturnValue.SUCCESS, instance.parse_parameters());
+//        checkReturnValue(ReturnValue.SUCCESS, instance.init());
+//        checkReturnValue(ReturnValue.INVALIDARGUMENT, instance.do_run());
+//        examineFile(fullOutputFilename, 1, 34, 10);
+//    }
+//
+//    @Test
+//    public void testGetSampleFilesWrongSampleName() {
+//        instance.setParams(Arrays.asList("--output-filename", outputFilename, "--no-links", "--sample", "ASCBDK"));
+//        checkReturnValue(ReturnValue.SUCCESS, instance.parse_parameters());
+//        checkReturnValue(ReturnValue.SUCCESS, instance.init());
+//        checkReturnValue(ReturnValue.INVALIDARGUMENT, instance.do_run());
+//        examineFile(fullOutputFilename, 1, 34, 10);
+//    }
+//
+//    @Test
+//    public void testGetFilesWithStudySampleNameDumpAll() {
+//        instance.setParams(Arrays.asList("--output-filename", outputFilename, "--no-links", "--study",
+//                "AbcCo_Exome_Sequencing", "--sample", "Exome_ABC015069_Test_2", "--dump-all"));
+//        checkReturnValue(ReturnValue.SUCCESS, instance.parse_parameters());
+//        checkReturnValue(ReturnValue.SUCCESS, instance.init());
+//        checkReturnValue(ReturnValue.INVALIDPARAMETERS, instance.do_run());
+//        examineFile(fullOutputFilename, 1, 34, 10);
+//    }
+//
+//    @Test
+//    public void testGetSampleFilesWrongLinkType() {
+//        instance.setParams(Arrays.asList("--output-filename", outputFilename, "--no-links", "--sample",
+//                "Exome_ABC015069_Test_2", "--link", "Z"));
+//        checkReturnValue(ReturnValue.SUCCESS, instance.parse_parameters());
+//        checkReturnValue(ReturnValue.SUCCESS, instance.init());
+//        checkReturnValue(ReturnValue.INVALIDPARAMETERS, instance.do_run());
+//        examineFile(fullOutputFilename, 1, 34, 10);
+//    }
+
+    @Test
+    public void testGetSampleFilesBadlySpelledParameter() {
+        instance.setParams(Arrays.asList("--output-filename", outputFilename, "--no-links", "--sample",
+                "Exome_ABC015069_Test_2", "--dplicates"));
+        checkReturnValue(ReturnValue.INVALIDARGUMENT, instance.parse_parameters());
+        Assert.assertFalse("Output file should not exist.", new File(fullOutputFilename).exists());
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void launchPlugin(String... params) {
+        instance.setParams(Arrays.asList(params));
         checkReturnValue(ReturnValue.SUCCESS, instance.parse_parameters());
         checkReturnValue(ReturnValue.SUCCESS, instance.init());
         checkReturnValue(ReturnValue.SUCCESS, instance.do_run());
-        examineFile(fullOutputFilename, 2, 34, 1);
     }
 
+    /**
+     * Checks the links directory to see if it exists and if it has the expected
+     * number of links inside.
+     *
+     * @param expectedLinks
+     * @param dirName
+     */
+    private void examineDirectory(int expectedLinks, String dirName) {
+        File dir = new File(dirName);
+        Assert.assertTrue("The symlink directory does not exist", dir.exists());
+        Assert.assertEquals("The number of produced links is not correct", expectedLinks, dir.listFiles().length);
+    }
+
+    /**
+     * Checks the CSV file to see if it has the expected number of rows,
+     * columns, and has less nulls per line than the expected maximum.
+     *
+     * @param filename The filename of the CSV file
+     * @param expectedRowCount the expected number of rows
+     * @param expectedColumnCount the expected number of columns
+     * @param expectedMaxNulls the maximum 'null' values allowed per line
+     */
     private void examineFile(String filename, int expectedRowCount, int expectedColumnCount, int expectedMaxNulls) {
         int lines = 0;
         Pattern nullPatt = Pattern.compile("null");
@@ -141,6 +375,60 @@ public class SymLinkFileReporterTest {
     }
 
     private void checkReturnValue(int expected, ReturnValue rv) {
-        Assert.assertEquals("Get study files and symlinks did not exit successfully.", expected, rv.getExitStatus());
+        Assert.assertEquals("Get files and symlinks did not exit successfully.", expected, rv.getExitStatus());
     }
+    @Rule
+    public TestRule watchman = new TestWatcher() {
+
+        @Override
+        protected void failed(Throwable e, Description d) {
+            String newName = outputFilename + "_failed" + d.getMethodName() + ".csv";
+            File file = new File(fullOutputFilename);
+            if (file.exists()) {
+                file.renameTo(new File(newName));
+            }
+            Log.error(d + ": CSV report moved to " + newName);
+
+            for (String dirName : allDirs) {
+                renameDir(dirName, d);
+            }
+            renameDir("./-", d);
+
+        }
+
+        private void renameDir(String dirName, Description d) {
+            File dir = new File(dirName);
+
+            if (dir.exists()) {
+                String newDir = dir.getName() + "_failed" + d.getMethodName();
+                dir.renameTo(new File(newDir));
+            }
+        }
+
+        @Override
+        protected void succeeded(Description d) {
+            File file = new File(fullOutputFilename);
+            if (file.exists()) {
+                Assert.assertTrue("Could not delete file " + fullOutputFilename, file.delete());
+            }
+
+            for (String dirName : allDirs) {
+                deleteDir(dirName);
+            }
+            deleteDir("./-");
+
+        }
+
+        private void deleteDir(String dirName) {
+            File dir = new File(dirName);
+            if (dir.exists()) {
+                try {
+                    FileUtils.deleteDirectory(dir);
+                } catch (IOException ex) {
+                    Log.error("Could not delete dir " + dirName, ex);
+                    Assert.fail("Could not delete directory " + dirName);
+                }
+            }
+        }
+    };
 }
