@@ -31,7 +31,6 @@ public class WorkflowApp {
 	private List<OozieJob> jobs;
 	private String lastJoin;
     private Map<SqwFile, OozieJob> fileJobMap;
-    //to avoid the duplicated join
 
 	
 	public WorkflowApp(AbstractWorkflowDataModel wfdm) {
@@ -52,8 +51,10 @@ public class WorkflowApp {
 		 Element start = new Element("start", NAMESPACE);
 		 start.setAttribute("to", job0.getName());
 		 element.addContent(start);
-		 Set<String> joins = new HashSet<String>();
-		 this.generateWorkflowXml(element, this.jobs.get(0), joins);
+		// Set<String> nodes = new HashSet<String>();
+		 //Set<OozieJob> jobs = new HashSet<OozieJob>();
+		 List<List<OozieJob>> graph = this.reOrganizeGraph(job0);
+		 this.generateWorkflowXml2(element, graph);
 		 
 		 Element kill = new Element("kill", NAMESPACE);
 		 kill.setAttribute("name","fail");
@@ -75,64 +76,66 @@ public class WorkflowApp {
 		 return element;
 	}
 	
-	/*
-	 * any okTo need to check if the child has join? if YES, okTo->join->childJob
-	 */
-	private void generateWorkflowXml(Element rootElement, OozieJob parentJob, Set<String> existingJoins) {
-		String okTo = parentJob.getOkTo();
-		if(parentJob.hasFork()) {
-			//set parentJob.okTo to forkjob
-			okTo = "fork_" + parentJob.getName();
-			Element fork = new Element("fork", NAMESPACE);
-			fork.setAttribute("name",okTo);
-			for(OozieJob childJob: parentJob.getChildren()) {
-				Element pathE = new Element("path", NAMESPACE);
-				//check join
-				String forkStartTo = childJob.getName();
-				if(childJob.hasJoin()) {
-					//create join
-					forkStartTo = "join_"+childJob.getName();
-					if(!existingJoins.contains(forkStartTo)) {
-						Element joinE = new Element("join", NAMESPACE);
-						joinE.setAttribute("name",forkStartTo);
-						joinE.setAttribute("to",childJob.getName());
-						rootElement.addContent(joinE);
-						existingJoins.add(forkStartTo);
-					}
-
-				}
-				pathE.setAttribute("start",forkStartTo);
-				fork.addContent(pathE);
-			}
-			rootElement.addContent(fork);
-		} else if(parentJob.getChildren().size()==1) {
-			//check join
-			OozieJob childJob = parentJob.getChildren().iterator().next();
-			okTo = childJob.getName();
-			if(childJob.hasJoin()) {
-				okTo = "join_"+childJob.getName();
-				//create join
-				if(!existingJoins.contains(okTo)) {
-					Element joinE = new Element("join", NAMESPACE);
-					joinE.setAttribute("name",okTo);
-					joinE.setAttribute("to",childJob.getName());
-					rootElement.addContent(joinE);
-					existingJoins.add(okTo);
-				}
-
-			}
-		} 
-		
-		parentJob.setOkTo(okTo);
-		
-		rootElement.addContent(parentJob.serializeXML());
-		//recursively 
-		for(OozieJob childJob: parentJob.getChildren()) {
-			this.generateWorkflowXml(rootElement, childJob, existingJoins);
+	
+	private void generateWorkflowXml2(Element rootElement, List<List<OozieJob>> graph) {
+		OozieJob root = graph.get(0).get(0);
+		Element currentE = root.serializeXML();
+		rootElement.addContent(currentE);
+		for(int i = 1; i<graph.size(); i++) {
+			currentE = this.generateNextLevelXml(rootElement, graph.get(i), currentE, i-1);
 		}
-		
-
+		//point the last one to end
+		if(currentE.getName().equals("action")) {
+			currentE.getChild("ok",NAMESPACE).setAttribute("to","end");
+		} else {
+			currentE.setAttribute("to","end");
+		}
+			
 	}
+	
+	private Element generateNextLevelXml(Element rootElement, List<OozieJob> joblist, Element currentElement, int count) {
+		Element ret = null;
+		//currentElement could be action or join
+		//need to set the next to, action: ok element, join: currentElement
+		Element setNext = currentElement;
+		if(currentElement.getName().equals("action")) {
+			setNext = currentElement.getChild("ok", NAMESPACE);
+		}
+			
+
+		if(joblist.size()>1) {
+			//has fork and join
+			String forkName = "fork_"+ count;
+			setNext.setAttribute("to",forkName);
+			Element forkE = new Element("fork", NAMESPACE);
+			forkE.setAttribute("name", forkName);
+			for(OozieJob job: joblist) {
+				Element path = new Element("path", NAMESPACE);
+				path.setAttribute("start",job.getName());
+				forkE.addContent(path);
+			}
+			rootElement.addContent(forkE);
+			String joinName = "join_" + count;
+			//add action for job
+			for(OozieJob job: joblist) {
+				job.setOkTo(joinName);
+				rootElement.addContent(job.serializeXML());
+			}
+			//add join element
+			Element joinE = new Element("join", NAMESPACE);
+			joinE.setAttribute("name", joinName);
+			rootElement.addContent(joinE);
+			ret = joinE;
+		} else {
+			OozieJob job = joblist.get(0);
+			setNext.setAttribute("to", job.getName());
+			Element nextE = job.serializeXML();
+			rootElement.addContent(nextE);
+			ret = nextE;
+		}
+		return ret;
+	}
+
 	
 	private void parseDataModel(AbstractWorkflowDataModel wfdm) {
 		boolean metadatawriteback = wfdm.isMetadataWriteBack();
@@ -346,4 +349,48 @@ public class WorkflowApp {
 		}
 		return null;
 	}
+	
+	private List<List<OozieJob>> reOrganizeGraph(OozieJob root) {
+		List<List<OozieJob>> newGraph = new ArrayList<List<OozieJob>>();
+		//to avoid duplicated action
+		Set<String> jobName = new HashSet<String>();
+		//add the root
+		List<OozieJob> rootList = new ArrayList<OozieJob>();
+		rootList.add(root);
+		newGraph.add(rootList);
+		jobName.add(root.getName());
+		this.getNextLevel(newGraph, jobName);
+		return newGraph;
+	}
+	
+	private void getNextLevel(List<List<OozieJob>> graph, Set<String> existingJob) {
+		List<OozieJob> lastLevel = graph.get(graph.size() -1);
+		List<OozieJob> nextLevel = new ArrayList<OozieJob>();
+		Set<OozieJob> removed = new HashSet<OozieJob>();
+		for(OozieJob job: lastLevel) {
+			for(OozieJob child: job.getChildren()) { 
+				if(!nextLevel.contains(child))
+					nextLevel.add(child);
+				//remove it from the upper level
+				if(existingJob.contains(child.getName())) {
+					removed.add(child);
+				}
+				existingJob.add(child.getName());
+			}
+		}
+		if(!removed.isEmpty()) {
+			for(OozieJob rm: removed) {
+				for(List<OozieJob> level: graph) {
+					if(level.contains(rm)) {
+						level.remove(rm);
+					}
+				}
+			}
+		}
+		if(!nextLevel.isEmpty()) {
+			graph.add(nextLevel);
+			getNextLevel(graph, existingJob);
+		}
+	}
+	
 }
