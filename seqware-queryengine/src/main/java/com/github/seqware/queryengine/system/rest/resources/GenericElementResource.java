@@ -51,6 +51,7 @@ public abstract class GenericElementResource<T extends Atom> extends JavaHelp {
     public static final int INVALID_ID = 400;
     public static final int INVALID_SET = 404;
     public static final int INVALID_INPUT = 405;
+    public static final int RESOURCE_EXISTS = 406;
 
     /**
      * List available resources.
@@ -59,7 +60,7 @@ public abstract class GenericElementResource<T extends Atom> extends JavaHelp {
      */
     @GET
     @Path(value = "/list")
-    @ApiOperation(value = "List all available elements by rowkey", notes = "Add extra notes here")
+    @ApiOperation(value = "List all available elements by rowkey", notes = "Add extra notes here", responseClass="com.github.seqware.queryengine.model.Atom")
     public final Response featuresRequest() {
         // Check whether the dsn contains the type of store, or not:
         //        if (!dsn.matches("^[a-zA-Z]+[0-9a-zA-Z_]*\\.[a-zA-Z]+[0-9a-zA-Z_]*\\.[a-zA-Z]+[0-9a-zA-Z_]*$"))
@@ -79,7 +80,7 @@ public abstract class GenericElementResource<T extends Atom> extends JavaHelp {
      */
     @GET
     @Path(value = "/{sgid}")
-    @ApiOperation(value = "Find a specific element by rowkey", notes = "Add extra notes here")
+    @ApiOperation(value = "Find a specific element by rowkey", notes = "Add extra notes here", responseClass="com.github.seqware.queryengine.model.Atom")
     @ApiErrors(value = {
         @ApiError(code = INVALID_ID, reason = "Invalid ID supplied"),
         @ApiError(code = INVALID_SET, reason = "set not found")})
@@ -117,7 +118,7 @@ public abstract class GenericElementResource<T extends Atom> extends JavaHelp {
      */
     @GET
     @Path(value = "/tags")
-    @ApiOperation(value = "List available elements filtered by a tagset and tag key", notes = "Add extra notes here")
+    @ApiOperation(value = "List available elements filtered by a tagset and tag key", notes = "Add extra notes here", responseClass="com.github.seqware.queryengine.model.Atom")
     @ApiErrors(value = {
         @ApiError(code = INVALID_ID, reason = "Invalid ID supplied"),
         @ApiError(code = INVALID_SET, reason = "set not found")})
@@ -137,7 +138,7 @@ public abstract class GenericElementResource<T extends Atom> extends JavaHelp {
      */
     @GET
     @Path(value = "/{sgid}/tags")
-    @ApiOperation(value = "Find a specific element by rowkey and list its tags ", notes = "Add extra notes here")
+    @ApiOperation(value = "Find a specific element by rowkey and list its tags ", notes = "Add extra notes here", responseClass="com.github.seqware.queryengine.model.Atom")
     @ApiErrors(value = {
         @ApiError(code = INVALID_ID, reason = "Invalid ID supplied"),
         @ApiError(code = INVALID_SET, reason = "set not found")})
@@ -155,7 +156,7 @@ public abstract class GenericElementResource<T extends Atom> extends JavaHelp {
      */
     @GET
     @Path(value = "/{sgid}/version")
-    @ApiOperation(value = "Find a specific element by rowkey and list its version information", notes = "Add extra notes here")
+    @ApiOperation(value = "Find a specific element by rowkey and list its version information", notes = "Add extra notes here", responseClass="com.github.seqware.queryengine.model.Atom")
     @ApiErrors(value = {
         @ApiError(code = INVALID_ID, reason = "Invalid ID supplied"),
         @ApiError(code = INVALID_SET, reason = "set not found")})
@@ -171,7 +172,7 @@ public abstract class GenericElementResource<T extends Atom> extends JavaHelp {
      */
     @GET
     @Path(value = "/{sgid}/permissions")
-    @ApiOperation(value = "Find a specific element by rowkey and list its permissions ", notes = "Add extra notes here")
+    @ApiOperation(value = "Find a specific element by rowkey and list its permissions ", notes = "Add extra notes here", responseClass=" com.github.seqware.queryengine.model.Atom")
     @ApiErrors(value = {
         @ApiError(code = INVALID_ID, reason = "Invalid ID supplied"),
         @ApiError(code = INVALID_SET, reason = "set not found")})

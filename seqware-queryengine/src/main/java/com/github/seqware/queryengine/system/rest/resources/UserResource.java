@@ -17,7 +17,6 @@
 package com.github.seqware.queryengine.system.rest.resources;
 
 import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.User;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import com.wordnik.swagger.annotations.ApiError;
@@ -61,7 +60,7 @@ public class UserResource extends GenericElementResource<User> {
      */
     @GET
     @Path(value = "/authenticate")
-    @ApiOperation(value = "Authenticate a User and retrieve an authentication token", notes = "Add extra notes here")
+    @ApiOperation(value = "Authenticate a User and retrieve an authentication token", notes = "Add extra notes here", responseClass=" com.github.seqware.queryengine.model.User")
     public final Response getAuthentication(
             @ApiParam(value = "The user's name", required = true)
             @QueryParam(value = "username") String username,
