@@ -190,7 +190,8 @@
                             <excludes><exclude>**/RunnerTest.java</exclude>
 			    <exclude>${exclude.tests}</exclude>
 			    <exclude>**/BasicDeciderTest.java</exclude>
-			    </excludes>
+			    <exclude>**/plugins/*.java</exclude>
+			</excludes>
 			    
                         </configuration>
                     </execution>
@@ -205,6 +206,26 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <!-- try to run tests that require HBase here -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+                <executions>
+                        <execution>
+                                <goals>
+                                        <goal>integration-test</goal>
+                                        <goal>verify</goal>
+                                </goals>
+                        </execution>
+                </executions>
+                <configuration>
+                    <includes>
+                        <include>**/plugins/*.java</include>
+			<include>**/BasicDeciderTest.java</include>
+                   </includes>
+                </configuration>
             </plugin>
 
 
