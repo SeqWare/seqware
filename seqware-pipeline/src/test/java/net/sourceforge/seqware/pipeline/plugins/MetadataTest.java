@@ -17,15 +17,16 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.sourceforge.seqware.common.util.Log;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import net.sourceforge.seqware.common.module.ReturnValue;
+import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
@@ -36,7 +37,11 @@ import org.junit.runner.Description;
  */
 public class MetadataTest extends PluginTest {
 
-    private String results = "metadata_results.txt";
+    private ByteArrayOutputStream outStream = null;
+    private ByteArrayOutputStream errStream = null;
+    private Pattern swidPattern = Pattern.compile("SWID: ([\\d]+)");
+    private Pattern errorPattern = Pattern.compile("ERROR|error|Error|FATAL|fatal|Fatal|WARN|warn|Warn");
+    private PrintStream systemErr = System.err;
 
     @Before
     @Override
@@ -45,141 +50,377 @@ public class MetadataTest extends PluginTest {
         instance = new Metadata();
         instance.setMetadata(metadata);
 
-        PipedInputStream pipeIn = null;
-        try {
-            PipedOutputStream pipeOut = new PipedOutputStream();
-            pipeIn = new PipedInputStream(pipeOut);
-            PrintStream ps = new PrintStream(pipeOut);
-            System.setOut(ps);
-        } catch (IOException ex) {
-            Log.fatal("IOException " + results, ex);
-        } finally {
-            try {
-                pipeIn.close();
-            } catch (IOException ex) {
-                Logger.getLogger(MetadataTest.class.getName()).log(Level.SEVERE, null, ex);
+        outStream = new ByteArrayOutputStream();
+        errStream = new ByteArrayOutputStream();
+        PrintStream pso = new PrintStream(outStream);
+        PrintStream pse = new PrintStream(errStream) {
+
+            @Override
+            public PrintStream append(CharSequence csq) {
+//                systemErr.append(csq);
+                return super.append(csq);
             }
-        }
+
+            @Override
+            public void print(String s) {
+//                systemErr.print(s);
+                super.print(s);
+            }
+        };
+        System.setOut(pso);
+        System.setErr(pse);
+    }
+
+    @Override
+    public void tearDown() {
+        super.tearDown();
     }
 
     public MetadataTest() {
     }
 
+    public String getOut() {
+        return parsePrintStream(outStream);
+    }
+
+    public String getErr() {
+        return parsePrintStream(errStream);
+    }
+
+    public String parsePrintStream(ByteArrayOutputStream stream) {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader r = null;
+        try {
+            ByteArrayInputStream inStream = new ByteArrayInputStream(stream.toByteArray());
+            r = new BufferedReader(new InputStreamReader(inStream));
+
+            String s = r.readLine();
+            while (s != null) {
+                s = s.trim();
+                //remove any blank lines
+                if (s.isEmpty()) {
+                    s = r.readLine();
+                    continue;
+                }
+                if (s.endsWith("[")) {
+                    while (s != null && !s.contains("]")) {
+                        sb.append(s);
+                        s = r.readLine();
+                    }
+                }
+                sb.append(s).append("\n");
+                s = r.readLine();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(MetadataTest.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (r != null) {
+                try {
+                    r.close();
+                } catch (IOException ex) {
+                    systemErr.println("Couldn't close System.out reader" + ex.getMessage());
+                }
+            }
+        }
+
+        return sb.toString();
+    }
+
+    private void checkErrors(String s) {
+        Matcher matcher = errorPattern.matcher(s);
+        systemErr.println("~~~~~~~~~~"+s);
+        Assert.assertFalse("Output contains errors:" + s, matcher.find());
+        systemErr.println("~~~~~~~~~~"+matcher.group());
+        
+    }
+
+    private void checkFields(Map<String, String> expectedFields) {
+        String out = getOut();
+        for (String s : out.split("\n")) {
+            String[] tokens = s.split("\t");
+            Assert.assertTrue("Unknown field exists: " + s, expectedFields.containsKey(tokens[0]));
+            Assert.assertEquals("Field has different parameter type than expected", expectedFields.get(tokens[0]), tokens[1]);
+        }
+    }
+
     @Test
     public void testListAllTables() {
+        systemErr.println("Test List all Tables\n");
         launchPlugin("--list-tables");
-        examineFile(results, 6, 0, 0);
+        String output = getOut();
+        String[] tables = new String[]{"TableName", "study", "experiment", "sample", "ius", "lane", "sequencer_run"};
+        LinkedList<String> stuff = new LinkedList(Arrays.asList(output.split("\n")));
+        for (String table : tables) {
+            int index = stuff.indexOf(table);
+            if (index >= 0) {
+                stuff.remove(index);
+            } else {
+                Assert.fail("Missing a table:" + table);
+            }
+        }
+        while (!stuff.isEmpty()) {
+            String s = stuff.poll();
+            Assert.fail("There are extra tables listed: " + s);
+        }
     }
 
     @Test
     public void testListStudyFields() {
+        systemErr.println("Test List study fields");
+
+        Map<String, String> expectedFields = new HashMap<String, String>();
+        expectedFields.put("Field", "Type");
+        expectedFields.put("title", "String");
+        expectedFields.put("description", "String");
+        expectedFields.put("accession", "String");
+        expectedFields.put("center_name", "String");
+        expectedFields.put("center_project_name", "String");
+        expectedFields.put("study_type", "Integer");
+
         launchPlugin("--table", "study", "--list-fields");
-        Assert.fail();
+        checkFields(expectedFields);
     }
 
     @Test
     public void testListExperimentFields() {
+        systemErr.println("Test List experiment fields");
+
+        Map<String, String> expectedFields = new HashMap<String, String>();
+        expectedFields.put("Field", "Type");
+        expectedFields.put("title", "String");
+        expectedFields.put("description", "String");
+        expectedFields.put("study_accession", "Integer");
+        expectedFields.put("platform_id", "Integer");
+
+
         launchPlugin("--table", "experiment", "--list-fields");
-        Assert.fail();
+        checkFields(expectedFields);
     }
 
     @Test
     public void testListSampleFields() {
+        systemErr.println("Test List sample fields");
+        Map<String, String> expectedFields = new HashMap<String, String>();
+        expectedFields.put("Field", "Type");
+        expectedFields.put("title", "String");
+        expectedFields.put("description", "String");
+        expectedFields.put("experiment_accession", "Integer");
+        expectedFields.put("organism_id", "Integer");
+
         launchPlugin("--table", "sample", "--list-fields");
-        Assert.fail();
+
+        checkFields(expectedFields);
     }
 
     @Test
     public void testListSequencerRunFields() {
+        systemErr.println("Test List sequencer run fields");
+
+        Map<String, String> expectedFields = new HashMap<String, String>();
+        expectedFields.put("Field", "Type");
+        expectedFields.put("name", "String");
+        expectedFields.put("description", "String");
+        expectedFields.put("paired_end", "Boolean");
+        expectedFields.put("skip", "Boolean");
+        expectedFields.put("platform_accession", "Integer");
+
+
+
         launchPlugin("--table", "sequencer_run", "--list-fields");
-        Assert.fail();
+
+        checkFields(expectedFields);
     }
 
     @Test
     public void testListLaneFields() {
+        systemErr.println("Test List Lane fields");
+
+        Map<String, String> expectedFields = new HashMap<String, String>();
+        expectedFields.put("Field", "Type");
+        expectedFields.put("name", "String");
+        expectedFields.put("description", "String");
+        expectedFields.put("cycle_descriptor", "String");
+        expectedFields.put("skip", "Boolean");
+        expectedFields.put("sequencer_run_accession", "Integer");
+        expectedFields.put("study_type_accession", "Integer");
+        expectedFields.put("library_strategy_accession", "Integer");
+        expectedFields.put("library_selection_accession", "Integer");
+        expectedFields.put("library_source_accession", "Integer");
         launchPlugin("--table", "lane", "--list-fields");
-        Assert.fail();
+
+        checkFields(expectedFields);
     }
 
     @Test
     public void testListIUSFields() {
+        systemErr.println("Test List IUS fields");
+
+        Map<String, String> expectedFields = new HashMap<String, String>();
+        expectedFields.put("Field", "Type");
+        expectedFields.put("name", "String");
+        expectedFields.put("description", "String");
+        expectedFields.put("barcode", "String");
+        expectedFields.put("skip", "Boolean");
+        expectedFields.put("sample_accession", "Integer");
+        expectedFields.put("lane_accession", "Integer");
+
         launchPlugin("--table", "ius", "--list-fields");
-        Assert.fail();
+
+        checkFields(expectedFields);
     }
 
     @Test
     public void testMatcher() {
-        String string = "SWID: 12345";
-        Matcher match = Pattern.compile("SWID: ([\\d]+)").matcher(string);
-        System.out.println(match.find());
+        String string = "[SeqWare Pipeline] ERROR [2012/11/01 15:53:51] | "
+                + "MetadataWS.findObject with search string /288023 encountered error "
+                + "Internal Server Error\nExperiment: null\nSWID: 6740";
+        Matcher match = swidPattern.matcher(string);
+        Assert.assertTrue(match.find());
+        Assert.assertEquals("6740", match.group(1));
+        match = errorPattern.matcher(string);
+        Assert.assertTrue(match.find());
+        Assert.assertEquals("ERROR", match.group(0));
+
+    }
+    private String studyAccession = null;
+
+    @Test
+    public void testCreateStudy() {
+        launchPlugin("--table", "study", "--create",
+                "--field", "title::alal" + System.currentTimeMillis(),
+                "--field", "description::alal",
+                "--field", "accession::1235",
+                "--field", "center_name::oicr",
+                "--field", "center_project_name::mine",
+                "--field", "study_type::1");
+        String s = getOut();
+        studyAccession = getAndCheckSwid(s);
+    }
+    private String experimentAccession = null;
+
+    @Test
+    public void testCreateExperiment() {
+        String sAcc = studyAccession;
+        if (sAcc == null) {
+            sAcc = "120";
+        }
+
+        launchPlugin("--table", "experiment", "--create",
+                "--field", "study_accession::" + sAcc,
+                "--field", "title::experimenttitle" + System.currentTimeMillis(),
+                "--field", "description::\"Experiment Description\"",
+                "--field", "platform_id::9");
+        String s = getOut();
+        experimentAccession = getAndCheckSwid(s);
+    }
+    private String sampleAccession = null;
+
+    @Test
+    public void testCreateSample() {
+        String eAcc = experimentAccession;
+        if (eAcc == null) {
+            eAcc = "834";
+        }
+
+        launchPlugin("--table", "sample", "--create",
+                "--field", "experiment_accession::" + eAcc,
+                "--field", "title::sampletitle",
+                "--field", "description::sampledescription",
+                "--field", "organism_id::31");
+        String s = getOut();
+        sampleAccession = getAndCheckSwid(s);
+    }
+    private String runAccession = null;
+
+    @Test
+    public void testCreateSequencerRun() {
+        launchPlugin("--table", "sequencer_run", "--create",
+                "--field", "name::SR" + System.currentTimeMillis(),
+                "--field", "description::SRD",
+                "--field", "platform_accession::20",
+                "--field", "paired_end::true",
+                "--field", "skip::false");
+        String s = getOut();
+        runAccession = getAndCheckSwid(s);
+    }
+    private String laneAccession = null;
+
+    @Test
+    public void testCreateLane() {
+        String rAcc = runAccession;
+        if (rAcc == null) {
+            rAcc = "4715";
+        }
+
+        launchPlugin("--table", "lane", "--create",
+                "--field", "name::lane",
+                "--field", "description::description",
+                "--field", "cycle_descriptor::{F*120}{..}{R*120}",
+                "--field", "sequencer_run_accession::" + rAcc,
+                "--field", "library_strategy_accession::1",
+                "--field", "study_type_accession::1",
+                "--field", "library_selection_accession::1",
+                "--field", "library_source_accession::1",
+                "--field", "skip::false");
+        String s = getOut();
+        laneAccession = getAndCheckSwid(s);
+    }
+
+    @Test
+    public void testCreateIUS() {
+        String lAcc = laneAccession;
+        if (lAcc == null) {
+            lAcc = "4707";
+        }
+        String sAcc = sampleAccession;
+        if (sAcc == null) {
+            sAcc = "4760";
+        }
+
+        launchPlugin("--table", "ius", "--create",
+                "--field", "name::ius",
+                "--field", "description::des",
+                "--field", "lane_accession::" + lAcc,
+                "--field", "sample_accession::" + sAcc,
+                "--field", "skip::false",
+                "--field", "barcode::NoIndex");
+        String s = getOut();
+        getAndCheckSwid(s);
 
     }
 
+    //////////////////////////////////////////////////Negative tests
+//    @Test
+//    public void testCreateSampleFail() {
+//        String eAcc = "8350";
+//
+//        instance.setParams(Arrays.asList("--table", "sample", "--create",
+//                "--field", "experiment_accession::" + eAcc,
+//                "--field", "title::sampletitle",
+//                "--field", "description::sampledescription",
+//                "--field", "organism_id::31"));
+//        checkReturnValue(ReturnValue.SUCCESS, instance.parse_parameters());
+//        checkReturnValue(ReturnValue.SUCCESS, instance.init());
+//        checkReturnValue(ReturnValue.SUCCESS, instance.do_run());
+//
+//    }
+
     ////////////////////////////////////////////////////////////////////////////
-    /**
-     * Checks the file to see if it has the expected number of rows, columns,
-     * and has less nulls per line than the expected maximum.
-     *
-     * @param filename The filename of the CSV file
-     * @param expectedRowCount the expected number of rows
-     * @param expectedColumnCount the expected number of columns
-     * @param expectedMaxNulls the maximum 'null' values allowed per line
-     */
-    private void examineFile(String filename, int expectedRowCount, int expectedColumnCount, int expectedMaxNulls) {
-        int lines = 0;
-        Pattern nullPatt = Pattern.compile("null");
-
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(filename));
-
-            String line = reader.readLine();
-
-            while (line != null) {
-                //count lines
-                lines++;
-
-                //check number of columns
-                int columns = line.split("\t").length;
-                Assert.assertEquals("The number of columns is different than expected on line " + lines, expectedColumnCount, columns);
-
-                Matcher nullMatcher = nullPatt.matcher(line);
-                int nulls = 0;
-                while (nullMatcher.find()) {
-                    nulls++;
-                }
-                Assert.assertTrue("The number of nulls at " + nulls + " is greater than expected " + expectedMaxNulls + " on line " + lines,
-                        nulls <= expectedMaxNulls);
-
-
-                line = reader.readLine();
-            }
-            reader.close();
-        } catch (IOException ex) {
-            Logger.getLogger(SymLinkFileReporterTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        Assert.assertEquals("The number of rows is different than expected", expectedRowCount, lines);
+    private String getAndCheckSwid(String s) throws NumberFormatException {
+        Matcher match = swidPattern.matcher(s);
+        Assert.assertTrue("SWID not found in output.", match.find());
+        String swid = match.group(1);
+        Assert.assertFalse("The SWID was empty", swid.trim().isEmpty());
+        Integer.parseInt(swid.trim());
+        return swid;
     }
     @Rule
     public TestRule watchman = new TestWatcher() {
-
-        @Override
-        protected void failed(Throwable e, Description d) {
-            String newName = results + "_failed" + d.getMethodName() + ".csv";
-            File file = new File(results);
-            if (file.exists()) {
-                file.renameTo(new File(newName));
-            }
-            Log.error(d + ": text report moved to " + newName);
-        }
-
+        //This doesn't catch logs that are sent to Log4J
         @Override
         protected void succeeded(Description d) {
-            File file = new File(results);
-            if (file.exists()) {
-                Assert.assertTrue("Could not delete file " + results, file.delete());
-            }
-
+            checkErrors(getErr());
+            checkErrors(getOut());
         }
     };
 }
