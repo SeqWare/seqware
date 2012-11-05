@@ -32,7 +32,8 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
 /**
- *
+ * Runs the tests for the Metadata plugin indicated on this page:https://wiki.oicr.on.ca/x/Jga5Ag
+ * 
  * @author mtaschuk
  */
 public class MetadataTest extends PluginTest {
