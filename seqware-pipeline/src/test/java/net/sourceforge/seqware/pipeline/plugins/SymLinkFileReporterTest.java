@@ -37,7 +37,7 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
 /**
- *
+ * Runs the tests for SymLinkFileReporterTest on this page: https://wiki.oicr.on.ca/x/Jga5Ag
  * @author mtaschuk
  */
 public class SymLinkFileReporterTest extends PluginTest {
