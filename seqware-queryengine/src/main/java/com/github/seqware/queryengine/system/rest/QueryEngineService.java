@@ -44,7 +44,7 @@ public class QueryEngineService extends JavaApiListing {
     }
 
     private static URI getBaseURI() {
-        return UriBuilder.fromUri("http://localhost/").port(24243).build();
+        return UriBuilder.fromUri("http://localhost/").port(8080).build();
     }
     
     public static final URI BASE_URI = getBaseURI();

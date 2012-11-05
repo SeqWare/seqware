@@ -16,10 +16,12 @@
  */
 package com.github.seqware.queryengine.system.rest.resources;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.introspect.VisibilityChecker;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.ProtobufSerialization;
 import com.github.seqware.queryengine.impl.protobufIO.ProtobufTransferInterface;
@@ -74,7 +76,7 @@ public abstract class GenericElementResource<T extends Atom> extends JavaHelp {
      */
     @GET
     @Path(value = "/list")
-    @ApiOperation(value = "List all available elements by rowkey", notes = "Add extra notes here", responseClass = "com.github.seqware.queryengine.model.Atom")
+    @ApiOperation(value = "List all available elements by rowkey", notes = "This lists the raw rowkeys used to uniquely identify each chain of entities.", responseClass = "com.github.seqware.queryengine.model.Atom")
     public final Response featuresRequest() {
         // Check whether the dsn contains the type of store, or not:
         //        if (!dsn.matches("^[a-zA-Z]+[0-9a-zA-Z_]*\\.[a-zA-Z]+[0-9a-zA-Z_]*\\.[a-zA-Z]+[0-9a-zA-Z_]*$"))
@@ -98,7 +100,7 @@ public abstract class GenericElementResource<T extends Atom> extends JavaHelp {
     @ApiErrors(value = {
         @ApiError(code = INVALID_ID, reason = "Invalid ID supplied"),
         @ApiError(code = INVALID_SET, reason = "set not found")})
-    public final Response featuresRequest (
+    public final Response featureByIDRequest (
             @ApiParam(value = "id of set to be fetched", required = true)
             @PathParam(value = "sgid") String sgid,
             @ApiParam(value = "format of output", required = false)
@@ -117,6 +119,8 @@ public abstract class GenericElementResource<T extends Atom> extends JavaHelp {
         String toString = null;
         if (format.equals("JSON")) {
             ObjectMapper mapper = new ObjectMapper();
+            VisibilityChecker<?> visibilityChecker =  mapper.getVisibilityChecker().withFieldVisibility(Visibility.PUBLIC_ONLY);  
+            mapper.setVisibilityChecker(visibilityChecker);  
             try {
                 toString = mapper.writeValueAsString(latestAtomByRowKey);
             } catch (IOException ex) {
