@@ -13,7 +13,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <protobuf.version>2.4.1</protobuf.version>
         <jersey-version>1.14</jersey-version>
-        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
     </properties>
     <parent>
         <groupId>com.github.seqware</groupId>

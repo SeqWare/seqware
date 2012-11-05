@@ -1,5 +1,6 @@
 package com.github.seqware.queryengine.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.seqware.queryengine.model.interfaces.Versionable;
 import com.github.seqware.queryengine.model.interfaces.Taggable;
 import com.github.seqware.queryengine.model.interfaces.Buildable;
@@ -36,6 +37,7 @@ public interface Atom<T extends Atom> extends Taggable, Versionable<T>, Serializ
      *
      * @return unique identifier for this (version of) resource
      */
+    @JsonIgnore
     public SGID getSGID();
 
     /**
@@ -54,6 +56,7 @@ public interface Atom<T extends Atom> extends Taggable, Versionable<T>, Serializ
      *
      * @return a int.
      */
+    @JsonIgnore
     public int getExternalSerializationVersion();
 
 }
