@@ -25,7 +25,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.sourceforge.seqware.common.module.ReturnValue;
 import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
@@ -131,7 +130,7 @@ public class MetadataTest extends PluginTest {
         Matcher matcher = errorPattern.matcher(s);
         systemErr.println("~~~~~~~~~~"+s);
         Assert.assertFalse("Output contains errors:" + s, matcher.find());
-        systemErr.println("~~~~~~~~~~"+matcher.group());
+//        systemErr.println("~~~~~~~~~~"+matcher.group());
         
     }
 
