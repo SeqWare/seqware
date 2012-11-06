@@ -1,3 +1,4 @@
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -37,7 +38,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>tomcat-maven-plugin</artifactId>
 <!-- snapshot was here but commented out originally, using the latest released version as checked by mvn help:describe -DgroupId=org.codehaus.mojo  -DartifactId=tomcat-maven-plugin -Dfull=true | less -->
-		   <version>1.1</version>
+                <version>1.1</version>
 <!--                <version>1.2-SNAPSHOT</version>-->
                 <configuration>
                     <mode>war</mode>
@@ -73,7 +74,7 @@
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
 <!-- try this as an integration test instead -->
-		    <skipTests>true</skipTests>
+                    <skipTests>true</skipTests>
                     <argLine>-Xms512m -Xmx512m</argLine>
                     <forkMode>pertest</forkMode>
                     <includes>
@@ -88,25 +89,26 @@
                 <version>${maven-failsafe-plugin.version}</version>
 			
                 <executions>
-          <execution>
-            <id>integration-test</id>
-            <goals>
-              <goal>integration-test</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>verify</id>
-            <goals>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>verify</id>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
 
                 <configuration>
                     <argLine>-Xms512m -Xmx512m</argLine>
                     <forkMode>pertest</forkMode>
                     <includes>
                         <include>**/WSResourceTestSuite.java</include>
+                        <include>**/plugins/*.java</include>
                     </includes>
                 </configuration>
             </plugin>
@@ -115,13 +117,13 @@
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
 		<!-- <version>7.0.0.pre5</version> -->
-	        <version>6.1.26</version>
+                <version>6.1.26</version>
                 <configuration>
-		    <skip>${skipITs}</skip>
+                    <skip>${skipITs}</skip>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
 		<!-- next three properties added for IT testing --> 
-		    <stopPort>9999</stopPort>
-          	    <stopKey>STOP</stopKey>
+                    <stopPort>9999</stopPort>
+                    <stopKey>STOP</stopKey>
                    <!--  <contextPath>/</contextPath> -->
 
                     <connectors>
@@ -136,15 +138,15 @@
                     <execution>
                         <id>start-jetty</id>
                         <!-- changed for IT testing <phase>test-compile</phase> -->
-		        <phase>test-compile</phase>	
+                        <phase>test-compile</phase>	
 		        <!-- <phase>pre-integration-test</phase> -->	
                         <goals>
-			    <goal>run</goal>
+                            <goal>run</goal>
                         </goals>
                         <configuration>
                             <connectors>
                                <!-- <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector"> -->
-                               <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                                <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
                                     <port>8889</port>
                                 </connector>
                             </connectors>
@@ -153,13 +155,13 @@
                         </configuration>
                     </execution>
 		   <!-- re-enabled for IT testing -->
-                   <execution>
+                    <execution>
                         <id>stop-jetty</id>
                         <phase>post-integration-test</phase>
                         <goals>
                             <goal>stop</goal>
                         </goals>
-                   </execution>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
@@ -303,6 +305,11 @@
                     <groupId>com.github.seqware</groupId>
                     <artifactId>seqware-common</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+                
             </exclusions>
         </dependency>
         <dependency>
@@ -453,6 +460,12 @@
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>
