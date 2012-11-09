@@ -47,8 +47,8 @@ public class TestDatabaseCreator {
         Connection connectionToPostgres = null;
         Connection connectionToSeqware = null;
         try {
-            connectionToPostgres = createConnection(POSTGRE_DB, POSTGRE_USER, POSTGRE_PASSWORD);
-            loadDatabase(connectionToPostgres);
+            // connectionToPostgres = createConnection(POSTGRE_DB, POSTGRE_USER, POSTGRE_PASSWORD);
+            // loadDatabase(connectionToPostgres);
             connectionToSeqware = createConnection(SEQWARE_DB, POSTGRE_USER, POSTGRE_PASSWORD);
             loadDBStructure(connectionToSeqware);
         } catch (Exception e) {
