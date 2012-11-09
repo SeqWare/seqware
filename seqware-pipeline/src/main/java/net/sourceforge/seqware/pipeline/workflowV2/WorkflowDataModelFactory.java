@@ -152,6 +152,16 @@ public class WorkflowDataModelFactory {
         ret.getEnv().setPegasusConfigDir(config.get("SW_PEGASUS_CONFIG_DIR"));
         ret.getEnv().setDaxDir(config.get("SW_DAX_DIR"));
         ret.getEnv().setSwCluster(config.get("SW_CLUSTER"));
+        ret.getEnv().setOOZIE_URL(config.get("OOZIE_URL"));
+        ret.getEnv().setOOZIE_APP_ROOT(config.get("OOZIE_APP_ROOT"));
+        ret.getEnv().setOOZIE_JOBTRACKER(config.get("OOZIE_JOBTRACKER"));
+        ret.getEnv().setOOZIE_NAMENODE(config.get("OOZIE_NAMENODE"));
+        ret.getEnv().setOOZIE_QUEUENAME(config.get("OOZIE_QUEUENAME"));
+        ret.getEnv().setHADOOP_CORE_XML(config.get("HADOOP_CORE_XML"));
+        ret.getEnv().setHADOOP_HDFS_SITE_XML(config.get("HADOOP_HDFS_SITE_XML"));
+        ret.getEnv().setHADOOP_MAPRED_SITE_XML(config.get("HADOOP_MAPRED_SITE_XML"));
+        ret.getEnv().setOOZIE_WORK_DIR(config.get("OOZIE_WORK_DIR"));
+        ret.getEnv().setOOZIE_APP_PATH(config.get("OOZIE_APP_PATH"));
         
         //get workflow-run-accession
         if(options.has(("workflow-accession"))) {
