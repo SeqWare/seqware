@@ -164,7 +164,7 @@ public class WorkflowDataModelFactory {
         ret.getEnv().setOOZIE_APP_PATH(config.get("OOZIE_APP_PATH"));
         
         //get workflow-run-accession
-        if(options.has(("workflow-accession"))) {
+        if(options.has("status") == false && options.has(("workflow-accession"))) {
         	int workflowAccession = Integer.parseInt((String)options.valueOf("workflow-accession"));
         	int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession);
         	configs.put("workflow-run-accession", ""+workflowrunaccession);
@@ -360,7 +360,7 @@ public class WorkflowDataModelFactory {
     	}
     	//metadatawriteback
     	boolean metadataWriteback = true;
-    	if (options.has("no-metadata") || options.has("no-meta-db")) {
+    	if (options.has("no-metadata") || options.has("no-meta-db") || options.has("status")) {
     	    metadataWriteback = false;
     	}
     	map.put("metadata", Boolean.toString(metadataWriteback));
