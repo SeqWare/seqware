@@ -10,6 +10,8 @@
     <properties>
         <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
         <netbeans.compile.on.save>all</netbeans.compile.on.save>
+        <seqware_meta_db_name>test_seqware_meta_db</seqware_meta_db_name>
+        <seqware_meta_db_port>5432</seqware_meta_db_port>
     </properties>
     
     <parent>
@@ -21,6 +23,79 @@
 
     <build>
         <plugins>
+
+
+      <plugin>
+          <!-- hacked from, some of their syntax did not compile http://mojo.codehaus.org/sql-maven-plugin/examples/execute.html -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>sql-maven-plugin</artifactId>
+        <version>1.5</version>
+
+        <dependencies>
+          <!-- specify the dependent jdbc driver here -->
+          <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+          </dependency>
+        </dependencies>
+
+        <!-- common configuration shared by all executions -->
+        <configuration>
+          <driver>org.postgresql.Driver</driver>
+          <url>jdbc:postgresql://localhost:$seqware_meta_db_port/$seqware_meta_db_name</url>
+          <username>seqware</username>
+          <password>seqware</password>
+          <!--all executions are ignored if -Dmaven.test.skip=true-->
+          <skip>${skipITs}</skip>
+        </configuration>
+
+        <executions>
+          <execution>
+            <id>drop-db-before-test-if-any</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <!-- need another database to drop the targeted one -->
+              <url>jdbc:postgresql://localhost:5432/postgres</url>
+              <autocommit>true</autocommit>
+              <!-- it would be nice to use maven property here for the name, but no joy -->
+              <sqlCommand>DROP DATABASE IF EXISTS test_seqware_meta_db</sqlCommand>
+              <!-- ignore error when database is not avaiable -->
+              <onError>continue</onError>
+            </configuration>
+          </execution>
+          
+          <execution>
+            <id>create-db</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <url>jdbc:postgresql://localhost:5432/postgres</url>
+              <autocommit>true</autocommit>
+              <!-- it would be nice to use maven property here for the name, but no joy -->
+              <sqlCommand>CREATE DATABASE test_seqware_meta_db</sqlCommand>
+            </configuration>
+          </execution>
+
+          <!-- drop db after test, doesn't work because Jetty needs to shutdown before we can drop the DB
+          <execution>
+            <id>drop-db-after-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <autocommit>true</autocommit>
+              <sqlCommand>DROP DATABASE test_seqware_meta_db</sqlCommand>
+            </configuration>
+          </execution> -->
+        </executions>
+      </plugin>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${maven-war-plugin.version}</version>
@@ -106,6 +181,8 @@
                 <configuration>
                     <argLine>-Xms512m -Xmx512m</argLine>
                     <forkMode>pertest</forkMode>
+                    <!-- enforce that out WSResourceTests run before the plugin tests, this sucks and our tests shouldn't have state --> 
+		    <runOrder>filesystem</runOrder>
                     <includes>
                         <include>**/WSResourceTestSuite.java</include>
                         <include>**/plugins/*.java</include>
