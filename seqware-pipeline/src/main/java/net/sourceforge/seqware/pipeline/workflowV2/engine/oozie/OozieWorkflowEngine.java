@@ -15,6 +15,7 @@ import org.apache.oozie.client.WorkflowAction;
 import org.apache.oozie.client.WorkflowJob;
 
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
@@ -23,10 +24,12 @@ import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 
 	private File dir;
-	private String work_dir = "/home/seqware/oozie";
+	private String jobId;
+	private AbstractWorkflowDataModel dataModel;
 	@Override
 	public ReturnValue launchWorkflow(AbstractWorkflowDataModel objectModel) {
 		//parse objectmodel 
+		this.dataModel = objectModel;
 		ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 		this.setupEnvironment();
 		this.parseDataModel(objectModel);
@@ -37,32 +40,28 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 	
 	private ReturnValue runWorkflow(AbstractWorkflowDataModel objectModel) {
 		ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-	    OozieClient wc = new OozieClient("http://localhost:11000/oozie");
+	    OozieClient wc = new OozieClient(this.dataModel.getEnv().getOOZIE_URL());
 
 	    try {
 		    Properties conf = wc.createConfiguration();
-		    String app_path = "hdfs://localhost:8020/user/seqware/seqware_examples/" + this.dir.getName();
+		    String app_path = this.dataModel.getEnv().getOOZIE_APP_PATH() + 
+		    		this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/" + this.dir.getName();
 		    conf.setProperty(OozieClient.APP_PATH, app_path);
-		    conf.setProperty("jobTracker", "localhost:8021");
-		    conf.setProperty("nameNode", "hdfs://localhost:8020");
-		    conf.setProperty("queueName", "default");
-	//	    conf.setProperty("inputDir", "/home/seqware/dot");
-	//	    conf.setProperty("outputDir", "/home/seqware/dot");
-	//	    conf.setProperty("mapred.output.dir", "/home/seqware/dot");
-	//	    conf.setProperty("mapred.work.output.dir", "/home/seqware/dot");
-		    String jobId = wc.run(conf);
-		    System.out.println("Workflow job submitted");
+		    conf.setProperty("jobTracker", this.dataModel.getEnv().getOOZIE_JOBTRACKER());
+		    conf.setProperty("nameNode", this.dataModel.getEnv().getOOZIE_NAMENODE());
+		    conf.setProperty("queueName", this.dataModel.getEnv().getOOZIE_QUEUENAME());
+
+		    jobId = wc.run(conf);
+		    Log.stdout("Workflow job submitted");
 	
 		    while (wc.getJobInfo(jobId).getStatus() == WorkflowJob.Status.RUNNING) {
-		       System.out.println("Workflow job running ...");
+		       Log.stdout("Workflow job running ...");
 		       printWorkflowInfo(wc.getJobInfo(jobId));
 		       Thread.sleep(10 * 1000);
 		    }
-		    System.out.println("Workflow job completed ...");
+		    Log.stdout("Workflow job completed ...");
 		    printWorkflowInfo(wc.getJobInfo(jobId));
-	
-		    System.out.println(wc.getJobInfo(jobId)); 
-		    //LocalOozie.stop();
+
 		}catch(OozieClientException oozieClientException){
 		    oozieClientException.printStackTrace();
 		} catch (InterruptedException e) {
@@ -73,15 +72,14 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 	}
 	
 	private void printWorkflowInfo(WorkflowJob wf) {
-        System.out.println("Application Path   : " + wf.getAppPath());
-        System.out.println("Application Name   : " + wf.getAppName());
-        System.out.println("Application Status : " + wf.getStatus());
-        System.out.println("Application Actions:");
+        Log.stdout("Application Path   : " + wf.getAppPath());
+        Log.stdout("Application Name   : " + wf.getAppName());
+        Log.stdout("Application Status : " + wf.getStatus());
+        Log.stdout("Application Actions:");
         for (WorkflowAction action : wf.getActions()) {
-        System.out.println(MessageFormat.format("   Name: {0} Type: {1} Status: {2}", action.getName(),
+        	Log.stdout(MessageFormat.format("   Name: {0} Type: {1} Status: {2}", action.getName(),
                                                     action.getType(), action.getStatus()));
         }
-        System.out.println();
     }
 
 	
@@ -90,30 +88,30 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 	 */
 	private void setupHDFS(AbstractWorkflowDataModel objectModel) {
 		Configuration conf = new Configuration();
-		conf.addResource(new Path("/etc/hadoop/conf/core-site.xml"));
-		conf.addResource(new Path("/etc/hadoop/conf/hdfs-site.xml"));
-		conf.addResource(new Path("/etc/hadoop/conf/mapred-site.xml"));
+		conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_CORE_XML()));
+		conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_HDFS_SITE_XML()));
+		conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_MAPRED_SITE_XML()));
 
 		FileSystem fileSystem = null;
 		try {
 			fileSystem = FileSystem.get(conf);
-			Path path = new Path("seqware_examples/"+this.dir.getName());
+			Path path = new Path(this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"+this.dir.getName());
 			fileSystem.mkdirs(path);
-			Path pathlib = new Path("seqware_examples/"+this.dir.getName() + "/lib");
+			Path pathlib = new Path(this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"+this.dir.getName() + "/lib");
 			fileSystem.mkdirs(pathlib);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		try {
-			this.copyFromLocal(fileSystem, this.work_dir + "/" +this.dir.getName() + "/job.properties",
-					"seqware_examples/"+this.dir.getName() );
-			this.copyFromLocal(fileSystem, this.work_dir + "/" +this.dir.getName() + "/workflow.xml",
-					"seqware_examples/"+this.dir.getName());
+			this.copyFromLocal(fileSystem, this.dataModel.getEnv().getOOZIE_WORK_DIR() + "/" +this.dir.getName() + "/job.properties",
+					this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"+this.dir.getName() );
+			this.copyFromLocal(fileSystem, this.dataModel.getEnv().getOOZIE_WORK_DIR() + "/" +this.dir.getName() + "/workflow.xml",
+					this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"+this.dir.getName());
 			//copy lib
 			this.copyFromLocal(fileSystem, objectModel.getWorkflowBaseDir() + 
 					"/lib/seqware-distribution-"+objectModel.getTags().get("seqware_version")+"-full.jar",
-					"seqware_examples/"+this.dir.getName()+"/lib");
+					this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"+this.dir.getName()+"/lib");
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		} 			
@@ -135,7 +133,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 		//hardcode for now
 		
 		try {
-			this.dir = FileTools.createDirectoryWithUniqueName(new File(work_dir), "oozie");
+			this.dir = FileTools.createDirectoryWithUniqueName(new File(this.dataModel.getEnv().getOOZIE_WORK_DIR()), "oozie");
 			this.dir.setWritable(true, false);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -155,8 +153,6 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 	 */
 	private File parseDataModel(AbstractWorkflowDataModel objectModel) {
 		File file = new File(this.dir,"workflow.xml");
-		//add oozie_working_dir
-		objectModel.getConfigs().put("oozie_working_dir", this.dir.getAbsolutePath());
 		//generate dax
 		OozieWorkflowXmlGenerator daxv2 = new OozieWorkflowXmlGenerator();
 		daxv2.generateWorkflowXml(objectModel, file.getAbsolutePath());
@@ -167,9 +163,9 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 		File file = new File(this.dir,"job.properties");
 		try {
 			FileWriter fw = new FileWriter(file);
-			fw.write("nameNode=hdfs://localhost:8020\n");
-			fw.write("jobTracker=localhost:8021\n");
-			fw.write("queueName=default\n");
+			fw.write("nameNode="+this.dataModel.getEnv().getOOZIE_NAMENODE()+"\n");
+			fw.write("jobTracker="+this.dataModel.getEnv().getOOZIE_JOBTRACKER()+"\n");
+			fw.write("queueName="+this.dataModel.getEnv().getOOZIE_QUEUENAME()+"\n");
 			fw.write("oozie.wf.application.path=${nameNode}/user/${user.name}/oozie/" + this.dir.getName());
 			fw.close();
 		} catch (IOException e) {
@@ -197,5 +193,27 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 			System.err.println("Exception caught! :" + e);
 			System.exit(1);
 		}
+	}
+
+	@Override
+	public String getId() {
+		return this.jobId;
+	}
+
+	@Override
+	public String getStatus(String id) {
+		return null;
+	}
+
+	@Override
+	public String getStdErr(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getStdOut(String id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

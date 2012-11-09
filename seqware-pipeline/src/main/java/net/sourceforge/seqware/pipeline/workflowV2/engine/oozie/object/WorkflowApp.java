@@ -152,7 +152,7 @@ public class WorkflowApp {
 		}
 		
 		OozieJob oJob0 = new OozieJob(job0, "start_"+this.jobs.size(), 
-				wfdm.getConfigs().get("oozie_working_dir"));
+				wfdm.getEnv().getOOZIE_WORK_DIR());
 		oJob0.setMetadataWriteback(metadatawriteback);
 		//if has parent-accessions, assign it to first job
 		String parentAccession = wfdm.getParent_accessions();
@@ -174,7 +174,7 @@ public class WorkflowApp {
 				AbstractJob job = new BashJob("provisionFile_"+entry.getKey());
 				job.addFile(entry.getValue());
 				OozieProvisionFileJob ojob = new OozieProvisionFileJob(job,
-						entry.getValue(),job.getAlgo()+this.jobs.size(), wfdm.getConfigs().get("oozie_working_dir"));
+						entry.getValue(),job.getAlgo()+this.jobs.size(), wfdm.getEnv().getOOZIE_WORK_DIR());
 				ojob.setMetadataWriteback(metadatawriteback);
 				if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
 					ojob.setWorkflowRunAccession(workflowRunAccession);
@@ -189,7 +189,7 @@ public class WorkflowApp {
 						ojob.addParent(parent);
 					}
 					//add mkdir to the first job, then set the file path
-					String outputDir = wfdm.getConfigs().get("oozie_working_dir")+"/provisionfiles/" + entry.getValue().getUniqueDir() ;
+					String outputDir = wfdm.getEnv().getOOZIE_WORK_DIR()+"/provisionfiles/" + entry.getValue().getUniqueDir() ;
 					job0.getCommand().addArgument("mkdir -p " + outputDir + "; ");
 					ojob.setOutputDir(outputDir);
 				} else {
@@ -227,7 +227,7 @@ public class WorkflowApp {
 							AbstractJob pfjob = new BashJob("provisionFile_in");
 							pfjob.addFile(file);
 							OozieProvisionFileJob parentPfjob = new OozieProvisionFileJob(pfjob, file,
-									pfjob.getAlgo()+"_"+jobs.size(), wfdm.getConfigs().get("oozie_working_dir"));
+									pfjob.getAlgo()+"_"+jobs.size(), wfdm.getEnv().getOOZIE_WORK_DIR());
 							parentPfjob.addParent(oJob0);
 							parentPfjob.setMetadataWriteback(metadatawriteback);
 							if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
@@ -243,7 +243,7 @@ public class WorkflowApp {
 							AbstractJob pfjob = new BashJob("provisionFile_out");
 							pfjob.addFile(file);
 							OozieProvisionFileJob parentPfjob = new OozieProvisionFileJob(pfjob, file,
-									pfjob.getAlgo()+"_"+jobs.size(), wfdm.getConfigs().get("oozie_working_dir"));
+									pfjob.getAlgo()+"_"+jobs.size(), wfdm.getEnv().getOOZIE_WORK_DIR());
 							parentPfjob.addParent(pjob);
 							parentPfjob.setMetadataWriteback(metadatawriteback);
 							parentPfjob.setMetadataOutputPrefix(wfdm.getMetadata_output_file_prefix());
@@ -331,12 +331,12 @@ public class WorkflowApp {
 			//ret = new PegasusJavaJob(job,wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
 		} else if(job instanceof PerlJob) {
 			ret = new OozieJob(job, job.getAlgo() + "_" + this.jobs.size(), 
-					wfdm.getConfigs().get("oozie_working_dir"));
+					wfdm.getEnv().getOOZIE_WORK_DIR());
 		} else if (job instanceof JavaSeqwareModuleJob){
 			//ret = new PegasusJavaSeqwareModuleJob(job, wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
 		} else {
 			ret = new OozieJob(job, job.getAlgo() + "_" + this.jobs.size(), 
-					wfdm.getConfigs().get("oozie_working_dir"));
+					wfdm.getEnv().getOOZIE_WORK_DIR());
 		}
 		return ret;
 	}

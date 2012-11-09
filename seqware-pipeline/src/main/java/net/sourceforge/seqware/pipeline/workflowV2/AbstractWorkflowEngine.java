@@ -21,5 +21,10 @@ public abstract class AbstractWorkflowEngine {
 	 */
 	public abstract ReturnValue launchWorkflow(AbstractWorkflowDataModel objectModel);
 	
+	public abstract String getId();
+	public abstract String getStatus(String id);
+	public abstract String getStdErr(String id);
+	public abstract String getStdOut(String id);
+	
 	
 }
