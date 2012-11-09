@@ -181,8 +181,8 @@
                 <configuration>
                     <argLine>-Xms512m -Xmx512m</argLine>
                     <forkMode>pertest</forkMode>
-                    <!-- enforce that out WSResourceTests run before the plugin tests, this sucks and our tests shouldn't have state --> 
-		    <runOrder>filesystem</runOrder>
+                    <!-- enforce that our WSResourceTests run before the plugin tests, this sucks and our tests shouldn't have state --> 
+		    <runOrder>reversealphabetical</runOrder>
                     <includes>
                         <include>**/WSResourceTestSuite.java</include>
                         <include>**/plugins/*.java</include>
