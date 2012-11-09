@@ -80,9 +80,7 @@ public class OozieJob {
 		mainClass.setText("net.sourceforge.seqware.pipeline.runner.Runner");
 		javaE.addContent(mainClass);
 		
-		Element arg0 = new Element("arg",WorkflowApp.NAMESPACE);
-		arg0.setText("--no-metadata");
-		javaE.addContent(arg0);
+		this.buildMetadataString(javaE);
 		
 		Element arg1 = new Element("arg", WorkflowApp.NAMESPACE);
 		arg1.setText("--module");
@@ -205,32 +203,56 @@ public class OozieJob {
 		return this.name;
 	}
 	
-	protected String buildMetadataString() {
-		StringBuilder sb = new StringBuilder();
+	protected void buildMetadataString(Element javaElement) {
+		Element metaArg = new Element("arg", WorkflowApp.NAMESPACE);
 		if(this.hasMetadataWriteback()) {
-			sb.append("--metadata").append("\n");
+			metaArg.setText("--metadata");
 		} else {
-			sb.append("--no-metadata").append("\n");
+			metaArg.setText("--no-metadata");
 		}
+		javaElement.addContent(metaArg);
+		
 		
 		if(this.parentAccession!=null){
-			sb.append("--metadata-parent-accession " + this.parentAccession).append("\n");
+			Element paArg = new Element("arg", WorkflowApp.NAMESPACE);
+			paArg.setText("--metadata-parent-accession");
+			javaElement.addContent(paArg);
+			
+			Element paVal = new Element("arg", WorkflowApp.NAMESPACE);
+			paVal.setText(this.parentAccession);
+			javaElement.addContent(paVal);
 		}
+		
 		if(this.wfrAccession!=null) {
+			Element wfraArg = new Element("arg", WorkflowApp.NAMESPACE);
+			Element wfraVal = new Element("arg", WorkflowApp.NAMESPACE);
 			if(!this.wfrAncesstor) {
-				sb.append("--metadata-workflow-run-ancestor-accession " + this.wfrAccession).append("\n");
+				wfraArg.setText("--metadata-workflow-run-ancestor-accession");
 			} else {
-				sb.append("--metadata-workflow-run-accession " + this.wfrAccession).append("\n");
+				wfraArg.setText("--metadata-workflow-run-accession");
 			}
+			wfraVal.setText(this.wfrAccession);
+			javaElement.addContent(wfraArg);
+			javaElement.addContent(wfraVal);
 		}
 		
 		if(!this.parentAccessionFiles.isEmpty()) {
 			for(String paf: this.parentAccessionFiles) {
-				sb.append("--metadata-parent-accession-file " + paf).append("\n");
+				Element pafArg = new Element("arg", WorkflowApp.NAMESPACE);
+				pafArg.setText("--metadata-parent-accession-file");
+				Element pafVal = new Element("arg", WorkflowApp.NAMESPACE);
+				pafVal.setText(paf);
+				javaElement.addContent(pafArg);
+				javaElement.addContent(pafVal);
 			}
 		}
-		sb.append("--metadata-processing-accession-file " + this.getAccessionFile()).append("\n");
-		return sb.toString();
+		Element pafArg = new Element("arg", WorkflowApp.NAMESPACE);
+		pafArg.setText("--metadata-processing-accession-file");
+		
+		Element pafVal = new Element("arg", WorkflowApp.NAMESPACE);
+		pafVal.setText(this.getAccessionFile());
+		javaElement.addContent(pafArg);
+		javaElement.addContent(pafVal);
 	}
 	
 	public void addParentAccessionFile(String paf) {
@@ -239,6 +261,6 @@ public class OozieJob {
 	}
 
 	public String getAccessionFile() {
-		return this.getName() + "_accession";
+		return this.oozie_working_dir + "/" + this.getName() + "_accession";
 	}
 }

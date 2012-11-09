@@ -174,7 +174,7 @@ public class WorkflowApp {
 				AbstractJob job = new BashJob("provisionFile_"+entry.getKey());
 				job.addFile(entry.getValue());
 				OozieProvisionFileJob ojob = new OozieProvisionFileJob(job,
-						entry.getValue(),job.getAlgo()+this.jobs.size());
+						entry.getValue(),job.getAlgo()+this.jobs.size(), wfdm.getConfigs().get("oozie_working_dir"));
 				ojob.setMetadataWriteback(metadatawriteback);
 				if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
 					ojob.setWorkflowRunAccession(workflowRunAccession);
@@ -203,7 +203,6 @@ public class WorkflowApp {
 			parents.addAll(newParents);
 		}
 		
-		int idCount = this.jobs.size();
 		//need to remember the provisionOut and reset the job's children to provisionout's children
 		Map<OozieJob, OozieJob> hasProvisionOut = new HashMap<OozieJob, OozieJob>();
 		for(AbstractJob job: wfdm.getWorkflow().getJobs()) {
@@ -213,7 +212,6 @@ public class WorkflowApp {
 				pjob.setWorkflowRunAccession(workflowRunAccession);
 			}
 			this.jobs.add(pjob);
-			idCount++;
 			for(Job parent: job.getParents()) {
 				pjob.addParent(this.getOozieJobObject((AbstractJob)parent));
 			}
@@ -229,7 +227,7 @@ public class WorkflowApp {
 							AbstractJob pfjob = new BashJob("provisionFile_in");
 							pfjob.addFile(file);
 							OozieProvisionFileJob parentPfjob = new OozieProvisionFileJob(pfjob, file,
-									pfjob.getAlgo()+"_"+jobs.size());
+									pfjob.getAlgo()+"_"+jobs.size(), wfdm.getConfigs().get("oozie_working_dir"));
 							parentPfjob.addParent(oJob0);
 							parentPfjob.setMetadataWriteback(metadatawriteback);
 							if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
@@ -245,7 +243,7 @@ public class WorkflowApp {
 							AbstractJob pfjob = new BashJob("provisionFile_out");
 							pfjob.addFile(file);
 							OozieProvisionFileJob parentPfjob = new OozieProvisionFileJob(pfjob, file,
-									pfjob.getAlgo()+"_"+jobs.size());
+									pfjob.getAlgo()+"_"+jobs.size(), wfdm.getConfigs().get("oozie_working_dir"));
 							parentPfjob.addParent(pjob);
 							parentPfjob.setMetadataWriteback(metadatawriteback);
 							parentPfjob.setMetadataOutputPrefix(wfdm.getMetadata_output_file_prefix());
@@ -300,6 +298,7 @@ public class WorkflowApp {
 			}
 		}
 		this.setEndJob();
+		this.setAccessionFileRelations(oJob0);
 	}
 	
 	/**
@@ -393,4 +392,10 @@ public class WorkflowApp {
 		}
 	}
 	
+	private void setAccessionFileRelations(OozieJob parent) {
+		for(OozieJob pjob: parent.getChildren()) {
+			pjob.addParentAccessionFile(parent.getAccessionFile());
+			setAccessionFileRelations(pjob);
+		}
+	}
 }
