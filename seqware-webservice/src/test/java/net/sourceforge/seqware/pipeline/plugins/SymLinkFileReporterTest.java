@@ -138,7 +138,7 @@ public class SymLinkFileReporterTest extends PluginTest {
     public void testGetAllFilesAndSymlinks() {
         launchPlugin("--output-filename", outputFilename, "--dump-all", 
                 "--no-links");
-        examineFile(fullOutputFilename, 119, 34, 6);
+        examineFile(fullOutputFilename, 118, 34, 6);
 //        examineDirectory(13, studyDir);
     }
 
@@ -147,7 +147,7 @@ public class SymLinkFileReporterTest extends PluginTest {
         launchPlugin("--output-filename", outputFilename, "--dump-all", 
                 "--no-links",
                 "--link", "s");
-        examineFile(fullOutputFilename, 119, 34, 6);
+        examineFile(fullOutputFilename, 118, 34, 6);
 //        examineDirectory(13, studyDir);
     }
 
@@ -156,7 +156,7 @@ public class SymLinkFileReporterTest extends PluginTest {
         launchPlugin("--output-filename", outputFilename, "--dump-all", 
                 "--no-links",
                 "--file-type", "application/bam");
-        examineFile(fullOutputFilename, 19, 34, 6);
+        examineFile(fullOutputFilename, 18, 34, 6);
 //        examineDirectory(1, studyDir);
     }
 
@@ -165,7 +165,7 @@ public class SymLinkFileReporterTest extends PluginTest {
         launchPlugin("--output-filename", outputFilename, "--dump-all", 
                 "--no-links",
                 "--prod-format");
-        examineFile(fullOutputFilename, 119, 34, 6);
+        examineFile(fullOutputFilename, 118, 34, 6);
 //        for (String dir : allDirs) {
 //            examineDirectory(4, dir + "/-/null/null");
 //        }
@@ -177,7 +177,7 @@ public class SymLinkFileReporterTest extends PluginTest {
         launchPlugin("--output-filename", outputFilename, "--dump-all", 
                 "--no-links",
                 "--link", "P");
-        examineFile(fullOutputFilename, 119, 34, 6);
+        examineFile(fullOutputFilename, 118, 34, 6);
 //        examineDirectory(0, studyDir);
     }
 
@@ -185,7 +185,7 @@ public class SymLinkFileReporterTest extends PluginTest {
     public void testGetAllFilesNoLinks() {
         launchPlugin("--output-filename", outputFilename, "--dump-all", "--no-links");
 
-        examineFile(fullOutputFilename, 119, 34, 6);
+        examineFile(fullOutputFilename, 118, 34, 6);
         Assert.assertFalse("The symlinks directory was created even though it was specified no-links", new File(studyDir).exists());
     }
 
@@ -195,14 +195,14 @@ public class SymLinkFileReporterTest extends PluginTest {
                 "--no-links",
                 "--show-failed-and-running", "--show-status");
 
-        examineFile(fullOutputFilename, 126, 35, 7);
+        examineFile(fullOutputFilename, 125, 35, 7);
 //        examineDirectory(13, studyDir);
     }
 
     @Test
     public void testGetAllFilesAndSymlinksWithDuplicates() {
         launchPlugin("--output-filename", outputFilename, "--dump-all", "--no-links","--duplicates");
-        examineFile(fullOutputFilename, 130, 34, 6);
+        examineFile(fullOutputFilename, 129, 34, 6);
 //        examineDirectory(13, studyDir);
     }
 
