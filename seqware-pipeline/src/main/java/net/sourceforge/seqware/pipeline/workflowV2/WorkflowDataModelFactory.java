@@ -158,6 +158,7 @@ public class WorkflowDataModelFactory {
         	int workflowAccession = Integer.parseInt((String)options.valueOf("workflow-accession"));
         	int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession);
         	configs.put("workflow-run-accession", ""+workflowrunaccession);
+        	ret.setWorkflow_run_accession(""+workflowrunaccession);
         }
 		ret.setConfigs(configs);
 		
@@ -353,6 +354,7 @@ public class WorkflowDataModelFactory {
     	    metadataWriteback = false;
     	}
     	map.put("metadata", Boolean.toString(metadataWriteback));
+    	model.setMetadataWriteBack(metadataWriteback);
     	//metadata-output-file-prefix
     	if (options.has("metadata-output-file-prefix")) {
 //    		map.put("metadata-output-file-prefix", (String) options.valueOf("metadata-output-file-prefix"));

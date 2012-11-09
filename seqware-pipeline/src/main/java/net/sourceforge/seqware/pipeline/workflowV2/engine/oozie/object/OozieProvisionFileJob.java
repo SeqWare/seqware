@@ -11,8 +11,8 @@ public class OozieProvisionFileJob extends OozieJob {
 	private String outputDir;
 	private SqwFile file;
 	
-	public OozieProvisionFileJob(AbstractJob job, SqwFile file, String name) {
-		super(job, name, null);
+	public OozieProvisionFileJob(AbstractJob job, SqwFile file, String name, String oozie_working_dir) {
+		super(job, name, oozie_working_dir);
 		this.file = file;
 	}
 
@@ -75,9 +75,7 @@ public class OozieProvisionFileJob extends OozieJob {
 		mainClass.setText("net.sourceforge.seqware.pipeline.runner.Runner");
 		javaE.addContent(mainClass);
 		
-		Element arg0 = new Element("arg",WorkflowApp.NAMESPACE);
-		arg0.setText("--no-metadata");
-		javaE.addContent(arg0);
+		this.buildMetadataString(javaE);
 		
 		Element arg1 = new Element("arg", WorkflowApp.NAMESPACE);
 		arg1.setText("--module");
