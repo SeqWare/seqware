@@ -26,6 +26,11 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 	private File dir;
 	private String jobId;
 	private AbstractWorkflowDataModel dataModel;
+	
+	public OozieWorkflowEngine(AbstractWorkflowDataModel objectModel) {
+		this.dataModel = objectModel;
+	}
+	
 	@Override
 	public ReturnValue launchWorkflow(AbstractWorkflowDataModel objectModel) {
 		//parse objectmodel 
@@ -34,13 +39,13 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 		this.setupEnvironment();
 		this.parseDataModel(objectModel);
 		this.setupHDFS(objectModel);
-		ret = this.runWorkflow(objectModel);
+		ret = this.runWorkflow();
 		return ret;
 	}
 	
-	private ReturnValue runWorkflow(AbstractWorkflowDataModel objectModel) {
+	private ReturnValue runWorkflow() {
 		ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-	    OozieClient wc = new OozieClient(this.dataModel.getEnv().getOOZIE_URL());
+	    OozieClient wc = this.getOozieClient();
 
 	    try {
 		    Properties conf = wc.createConfiguration();
@@ -201,19 +206,70 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 	}
 
 	@Override
-	public String getStatus(String id) {
-		return null;
+	public String getStatus(String id)  {
+		OozieClient oc = this.getOozieClient();
+		try {
+			WorkflowJob wfJob = oc.getJobInfo(id);
+			if(wfJob == null)
+				return null;
+			return wfJob.getStatus().toString();
+		} catch (OozieClientException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override
+	/**
+	 * get the first failed job's error message
+	 */
 	public String getStdErr(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		OozieClient oc = this.getOozieClient();
+		StringBuilder sb = new StringBuilder();
+		try {
+			WorkflowJob wfJob = oc.getJobInfo(id);
+			
+			if(wfJob == null)
+				return null;
+			for (WorkflowAction action : wfJob.getActions()) {
+				if(action.getErrorMessage()!=null) {
+		        	sb.append(MessageFormat.format("   Name: {0} Type: {1} ErrorMessage: {2}", action.getName(),
+		               action.getType(), action.getErrorMessage()));
+		        	sb.append("\n");
+				}
+	        }
+			return sb.toString();
+		} catch (OozieClientException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override
 	public String getStdOut(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		OozieClient oc = this.getOozieClient();
+		StringBuilder sb = new StringBuilder();
+		try {
+			WorkflowJob wfJob = oc.getJobInfo(id);
+			
+			if(wfJob == null)
+				return null;
+			for (WorkflowAction action : wfJob.getActions()) {
+				if(action.getErrorMessage()!=null) {
+		        	sb.append(MessageFormat.format("   Name: {0} Type: {1} ErrorMessage: {2}", action.getName(),
+		               action.getType(), action.getStatus()));
+		        	sb.append("\n");
+				}
+	        }
+			return sb.toString();
+		} catch (OozieClientException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	private OozieClient getOozieClient() {
+	    OozieClient oc = new OozieClient(this.dataModel.getEnv().getOOZIE_URL());
+	    return oc;
 	}
 }
