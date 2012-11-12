@@ -40,12 +40,4 @@
 
 
   <url>http://maven.apache.org</url>
-    <dependencies>
-        <dependency>
-            <groupId>com.github.seqware</groupId>
-            <artifactId>seqware-pipeline</artifactId>
-            <version>0.13.5-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-    </dependencies>
 </project>
