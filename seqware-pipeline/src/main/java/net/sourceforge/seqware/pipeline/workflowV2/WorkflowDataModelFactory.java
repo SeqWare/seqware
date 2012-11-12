@@ -328,12 +328,10 @@ public class WorkflowDataModelFactory {
     	}*/
     	//merge workflow-accession
     	if(options.has("workflow-accession")) {
-    		//map.put("workflow-accession", (String) options.valueOf("workflow-accession"));
     		model.setWorkflow_accession((String) options.valueOf("workflow-accession"));
     	}
     	//merge "workflow-run-accession"
     	if(options.has("workflow-run-accession")) {
-    		//map.put("workflow-run-accession", (String) options.valueOf("workflow-run-accession"));
     		model.setWorkflow_run_accession((String) options.valueOf("workflow-run-accession"));
     	}
     	//merge schedule
@@ -367,12 +365,10 @@ public class WorkflowDataModelFactory {
     	model.setMetadataWriteBack(metadataWriteback);
     	//metadata-output-file-prefix
     	if (options.has("metadata-output-file-prefix")) {
-//    		map.put("metadata-output-file-prefix", (String) options.valueOf("metadata-output-file-prefix"));
     		model.setMetadata_output_file_prefix((String) options.valueOf("metadata-output-file-prefix"));
     	}
     	//metadata-output-dir
     	if (options.has("metadata-output-dir")) {
-//    		map.put("metadata-output-dir", (String) options.valueOf("metadata-output-dir"));
     		model.setMetadata_output_dir((String) options.valueOf("metadata-output-dir"));
     	}
     	//workflow_engine
@@ -381,15 +377,4 @@ public class WorkflowDataModelFactory {
     	}
     }
 
-/*    private void setupProvisionedPath(Map<String,SqwFile> map) {
-    	int inCount = 0;
-    	for(Map.Entry<String, SqwFile> entry: map.entrySet()) {
-    		if(entry.getValue().isInput()) {
-    			SqwFile file = entry.getValue();
-    			String fileName = FilenameUtils.getName(file.getSourcePath());
-    			entry.getValue().setProvisionedPath("provisionfiles/"+inCount+"/"+fileName);
-    			inCount ++;
-    		}
-    	}
-    }*/
 }

@@ -363,4 +363,16 @@ public abstract class AbstractWorkflowDataModel  {
 		this.workflow_engine = workflow_engine;
 	}
 	
+	/**
+	 * get the user defined INI files properties
+	 * @param key
+	 * @return value of the key.
+	 * @throws Exception 
+	 */
+	public String getProperty(String key) throws Exception {
+		if(!this.configs.containsKey(key))
+			throw new Exception("Key not found");
+		return configs.get(key);
+	}
+	
 }
