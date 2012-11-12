@@ -1,3 +1,4 @@
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -9,6 +10,8 @@
     <properties>
         <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
         <netbeans.compile.on.save>all</netbeans.compile.on.save>
+        <seqware_meta_db_name>test_seqware_meta_db</seqware_meta_db_name>
+        <seqware_meta_db_port>5432</seqware_meta_db_port>
     </properties>
     
     <parent>
@@ -20,6 +23,148 @@
 
     <build>
         <plugins>
+
+  <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-plugin</artifactId>
+		<!-- <version>7.0.0.pre5</version> -->
+                <version>6.1.26</version>
+                <configuration>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+		<!-- next three properties added for IT testing --> 
+                    <stopPort>9999</stopPort>
+                    <stopKey>STOP</stopKey>
+                   <!--  <contextPath>/</contextPath> -->
+
+                    <connectors>
+                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector"> 
+                        <!-- <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector"> -->
+                            <port>8889</port>
+                            <maxIdleTime>60000</maxIdleTime>
+                        </connector>
+                    </connectors>
+                </configuration>
+                <executions>
+                    <execution>
+			<!-- this execution handles jetty:run SEQWARE-1286 -->
+                        <id>default-cli</id>
+		        <phase>test-compile</phase>	
+                        <configuration>
+                            <connectors>
+                               <!-- <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector"> -->
+                               <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                                    <port>8889</port>
+                                </connector>
+                            </connectors>
+                            <scanIntervalSeconds>0</scanIntervalSeconds>
+                        </configuration>
+                    </execution>
+                    <execution>
+			<!-- this execution handles when jetty is run through the normal lifecycle process -->
+                        <id>start-jetty</id>
+                        <!-- changed for IT testing <phase>test-compile</phase> -->
+                        <phase>test-compile</phase>	
+		        <!-- <phase>pre-integration-test</phase> -->	
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+		            <skip>${skipITs}</skip>
+                            <connectors>
+                               <!-- <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector"> -->
+                                <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                                    <port>8889</port>
+                                </connector>
+                            </connectors>
+                            <scanIntervalSeconds>0</scanIntervalSeconds>
+                            <daemon>true</daemon>
+                        </configuration>
+                    </execution>
+		   <!-- re-enabled for IT testing -->
+                    <execution>
+                        <id>stop-jetty</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+      <plugin>
+          <!-- hacked from, some of their syntax did not compile http://mojo.codehaus.org/sql-maven-plugin/examples/execute.html -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>sql-maven-plugin</artifactId>
+        <version>1.5</version>
+
+        <dependencies>
+          <!-- specify the dependent jdbc driver here -->
+          <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+          </dependency>
+        </dependencies>
+
+        <!-- common configuration shared by all executions -->
+        <configuration>
+          <driver>org.postgresql.Driver</driver>
+          <username>seqware</username>
+          <password>seqware</password>
+          <!--all executions are ignored if -Dmaven.test.skip=true-->
+          <skip>${skipITs}</skip>
+        </configuration>
+
+        <executions>
+          <execution>
+            <id>drop-db-before-test-if-any</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <!-- need another database to drop the targeted one -->
+              <url>jdbc:postgresql://localhost:5432/postgres</url>
+              <autocommit>true</autocommit>
+              <!-- it would be nice to use maven property here for the name, but no joy -->
+              <sqlCommand>DROP DATABASE IF EXISTS test_seqware_meta_db</sqlCommand>
+              <!-- ignore error when database is not avaiable -->
+              <onError>continue</onError>
+            </configuration>
+          </execution>
+          
+          <execution>
+            <id>create-db</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <url>jdbc:postgresql://localhost:5432/postgres</url>
+              <autocommit>true</autocommit>
+              <!-- it would be nice to use maven property here for the name, but no joy -->
+              <sqlCommand>CREATE DATABASE test_seqware_meta_db</sqlCommand>
+            </configuration>
+          </execution>
+
+	  <!-- this would be good to resolve SEQWARE-1225. Maven binds multiple executions to the same phase in pom.xml order.
+		This should have worked, but it doesn't seem to for some reason. Maybe Jetty takes too long to shutdown   
+          <execution>
+            <id>drop-db-after-test</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <url>jdbc:postgresql://localhost:5432/postgres</url>
+              <autocommit>true</autocommit>
+              <sqlCommand>DROP DATABASE test_seqware_meta_db</sqlCommand>
+            </configuration>
+          </execution>
+	  -->
+
+        </executions>
+      </plugin>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${maven-war-plugin.version}</version>
@@ -37,7 +182,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>tomcat-maven-plugin</artifactId>
 <!-- snapshot was here but commented out originally, using the latest released version as checked by mvn help:describe -DgroupId=org.codehaus.mojo  -DartifactId=tomcat-maven-plugin -Dfull=true | less -->
-		   <version>1.1</version>
+                <version>1.1</version>
 <!--                <version>1.2-SNAPSHOT</version>-->
                 <configuration>
                     <mode>war</mode>
@@ -73,7 +218,7 @@
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
 <!-- try this as an integration test instead -->
-		    <skipTests>true</skipTests>
+                    <skipTests>true</skipTests>
                     <argLine>-Xms512m -Xmx512m</argLine>
                     <forkMode>pertest</forkMode>
                     <includes>
@@ -88,81 +233,32 @@
                 <version>${maven-failsafe-plugin.version}</version>
 			
                 <executions>
-          <execution>
-            <id>integration-test</id>
-            <goals>
-              <goal>integration-test</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>verify</id>
-            <goals>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>verify</id>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
 
                 <configuration>
                     <argLine>-Xms512m -Xmx512m</argLine>
                     <forkMode>pertest</forkMode>
+                    <!-- enforce that our WSResourceTests run before the plugin tests, this sucks and our tests shouldn't have state --> 
+		    <runOrder>reversealphabetical</runOrder>
                     <includes>
                         <include>**/WSResourceTestSuite.java</include>
+                        <include>**/plugins/*.java</include>
                     </includes>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
-		<!-- <version>7.0.0.pre5</version> -->
-	        <version>6.1.26</version>
-                <configuration>
-		    <skip>${skipITs}</skip>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
-		<!-- next three properties added for IT testing --> 
-		    <stopPort>9999</stopPort>
-          	    <stopKey>STOP</stopKey>
-                   <!--  <contextPath>/</contextPath> -->
-
-                    <connectors>
-                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector"> 
-                        <!-- <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector"> -->
-                            <port>8889</port>
-                            <maxIdleTime>60000</maxIdleTime>
-                        </connector>
-                    </connectors>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>start-jetty</id>
-                        <!-- changed for IT testing <phase>test-compile</phase> -->
-		        <phase>test-compile</phase>	
-		        <!-- <phase>pre-integration-test</phase> -->	
-                        <goals>
-			    <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <connectors>
-                               <!-- <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector"> -->
-                               <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-                                    <port>8889</port>
-                                </connector>
-                            </connectors>
-                            <scanIntervalSeconds>0</scanIntervalSeconds>
-                            <daemon>true</daemon>
-                        </configuration>
-                    </execution>
-		   <!-- re-enabled for IT testing -->
-                   <execution>
-                        <id>stop-jetty</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                   </execution>
-                </executions>
-            </plugin>
-        </plugins>
+          </plugins>
     </build>
 
 
@@ -303,6 +399,11 @@
                     <groupId>com.github.seqware</groupId>
                     <artifactId>seqware-common</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+                
             </exclusions>
         </dependency>
         <dependency>
@@ -453,6 +554,12 @@
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>
