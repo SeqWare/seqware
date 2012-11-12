@@ -9,7 +9,7 @@
   <description>SeqWare Java workflow archetype</description>
 
     <parent> 
-        <version>0.13.4</version> 
+        <version>0.13.5</version> 
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
     </parent>
@@ -38,14 +38,5 @@
     </pluginManagement>
   </build>
 
-
   <url>http://maven.apache.org</url>
-    <dependencies>
-        <dependency>
-            <groupId>com.github.seqware</groupId>
-            <artifactId>seqware-pipeline</artifactId>
-            <version>0.13.4</version>
-            <type>jar</type>
-        </dependency>
-    </dependencies>
 </project>
