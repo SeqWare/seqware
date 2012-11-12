@@ -75,11 +75,11 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 		 }
 	     
 	 	 ReturnValue retPegasus = engine.launchWorkflow(dataModel);
-	     if(!Boolean.parseBoolean(dataModel.getConfigs().get("metadata"))) {
-	     return retPegasus;
+	     if(!dataModel.isMetadataWriteBack()) {
+	    	 return retPegasus;
 	     }
 	     // metadataWriteback
-	     String wra = dataModel.getConfigs().get("workflow-run-accession");
+	     String wra = dataModel.getWorkflow_run_accession();
 	    
 	     if(wra==null || wra.isEmpty()) {
 	     return retPegasus;

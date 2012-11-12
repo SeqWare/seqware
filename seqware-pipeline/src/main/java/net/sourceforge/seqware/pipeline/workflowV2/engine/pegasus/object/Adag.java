@@ -103,7 +103,7 @@ public class Adag  {
 
 	
 	private void parseWorkflow(AbstractWorkflowDataModel wfdm) {
-		boolean metadatawriteback = Boolean.parseBoolean(wfdm.getConfigs().get("metadata"));
+		boolean metadatawriteback = wfdm.isMetadataWriteBack();
 		List<PegasusJob> parents = new ArrayList<PegasusJob>();
 		//mkdir data job
 		AbstractJob job0 = new BashJob("createdirs");
