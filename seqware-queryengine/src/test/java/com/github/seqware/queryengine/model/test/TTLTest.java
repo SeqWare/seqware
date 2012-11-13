@@ -26,8 +26,8 @@ public class TTLTest {
     private static Reference r1;
     private static Group group, viewerGroup;
     private static User marshmallowUser, titanicUser;
-    private static AnalysisSet aSet;
-    private static Analysis a1;
+    private static AnalysisType aSet;
+    private static AnalysisRun a1;
 
     /**
      * <p>setupTests.</p>
@@ -49,7 +49,7 @@ public class TTLTest {
         Calendar calendar = new GregorianCalendar();
         calendar.add(Calendar.HOUR, 10);
         rSet.setTTL(calendar.getTimeInMillis(), true);
-        aSet = mManager.buildAnalysisSet().setName("FP").setDescription("Funky program").build();
+        aSet = mManager.buildAnalysisType().setName("FP").setDescription("Funky program").build();
         r1 = mManager.buildReference().setName("ref1").build();
         rSet.add(r1);
         group = mManager.buildGroup().setName("Developers").setDescription("Users that are working on new stuff").build();

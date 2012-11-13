@@ -62,11 +62,11 @@ public class KryoSerialization implements SerializationInterface {
         serializer.register(Reference.class, 5);
         serializer.register(Tag.class, 6);
         serializer.register(InMemoryTagSet.class, 7);
-        serializer.register(InMemoryAnalysisSet.class, 8);
+        serializer.register(InMemoryAnalysisType.class, 8);
         serializer.register(InMemoryGroup.class, 9);
         serializer.register(InMemoryQueryFutureImpl.class, 10);
         serializer.register(InMemoryFeatureSet.class, 11);
-        serializer.register(Analysis.class, 12);
+        serializer.register(AnalysisRun.class, 12);
         serializer.register(InMemoryQueryFutureImpl.class, 13);
         serializer.register(InMemoryReference.class, 14);
         serializer.register(HashSet.class, 15);

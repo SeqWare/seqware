@@ -17,8 +17,8 @@
 package com.github.seqware.queryengine.impl.protobufIO;
 
 import com.github.seqware.queryengine.dto.QueryEngine;
-import com.github.seqware.queryengine.dto.QueryEngine.AnalysisPB;
-import com.github.seqware.queryengine.model.Analysis;
+import com.github.seqware.queryengine.dto.QueryEngine.AnalysisRunPB;
+import com.github.seqware.queryengine.model.AnalysisRun;
 import com.github.seqware.queryengine.model.impl.inMemory.InMemoryQueryFutureImpl;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.apache.log4j.Logger;
@@ -29,17 +29,17 @@ import org.apache.log4j.Logger;
  * @author dyuen
  * @version $Id: $Id
  */
-public class AnalysisIO implements ProtobufTransferInterface<AnalysisPB, Analysis>{
+public class AnalysisRunIO implements ProtobufTransferInterface<AnalysisRunPB, AnalysisRun>{
 
     /** {@inheritDoc} */
     @Override
-    public Analysis pb2m(AnalysisPB pb) {
-        Analysis.Builder builder = InMemoryQueryFutureImpl.newBuilder();
+    public AnalysisRun pb2m(AnalysisRunPB pb) {
+        AnalysisRun.Builder builder = InMemoryQueryFutureImpl.newBuilder();
 //        builder = pb.hasFirstName() ? builder.setFirstName(pb.getFirstName()) : builder;
 //        builder = pb.hasLastName()  ? builder.setLastName(pb.getFirstName()) : builder;
 //        builder = pb.hasEmailAddress() ? builder.setEmailAddress(pb.getEmailAddress()) : builder;
 //        builder = pb.hasPassword() ? builder.setPassword(pb.getPassword()) : builder;
-        Analysis user = builder.build();
+        AnalysisRun user = builder.build();
         UtilIO.handlePB2Atom(pb.getAtom(), user);
         UtilIO.handlePB2Mol(pb.getMol(), user);
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && pb.hasPrecedingVersion()){
@@ -51,8 +51,8 @@ public class AnalysisIO implements ProtobufTransferInterface<AnalysisPB, Analysi
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPB m2pb(Analysis atom) {
-        QueryEngine.AnalysisPB.Builder builder = QueryEngine.AnalysisPB.newBuilder();
+    public AnalysisRunPB m2pb(AnalysisRun atom) {
+        QueryEngine.AnalysisRunPB.Builder builder = QueryEngine.AnalysisRunPB.newBuilder();
 //        builder = atom.getFirstName() != null ? builder.setFirstName(atom.getFirstName()) : builder;
 //        builder = atom.getLastName() != null ? builder.setLastName(atom.getFirstName()) : builder;
 //        builder = atom.getEmailAddress() != null ? builder.setEmailAddress(atom.getEmailAddress()) : builder;
@@ -60,17 +60,17 @@ public class AnalysisIO implements ProtobufTransferInterface<AnalysisPB, Analysi
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), atom));
         builder.setMol(UtilIO.handleMol2PB(builder.getMol(), atom));
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && atom.getPrecedingVersion() != null){
-            builder.setPrecedingVersion(m2pb((Analysis)atom.getPrecedingVersion()));
+            builder.setPrecedingVersion(m2pb((AnalysisRun)atom.getPrecedingVersion()));
         }
-        AnalysisPB userpb = builder.build();
+        AnalysisRunPB userpb = builder.build();
         return userpb;
     }
     
     /** {@inheritDoc} */
     @Override
-    public Analysis byteArr2m(byte[] arr) {
+    public AnalysisRun byteArr2m(byte[] arr) {
         try {
-            QueryEngine.AnalysisPB userpb = QueryEngine.AnalysisPB.parseFrom(arr);
+            QueryEngine.AnalysisRunPB userpb = QueryEngine.AnalysisRunPB.parseFrom(arr);
             return pb2m(userpb);
         } catch (InvalidProtocolBufferException ex) {
             Logger.getLogger(FeatureSetIO.class.getName()).fatal("Invalid PB found for Analysis", ex);
