@@ -112,10 +112,10 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
 
     /** {@inheritDoc} */
     @Override
-    public SeqWareIterable<AnalysisSet> getAnalysisSets() {
+    public SeqWareIterable<AnalysisType> getAnalysisTypes() {
         if (storage instanceof HBaseStorage) {
-            return handleTableScan(AnalysisSet.class, AnalysisSet.prefix);
+            return handleTableScan(AnalysisType.class, AnalysisType.prefix);
         }
-        return super.getAnalysisSets();
+        return super.getAnalysisTypes();
     }
 }

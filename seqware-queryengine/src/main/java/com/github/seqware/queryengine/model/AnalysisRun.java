@@ -9,23 +9,23 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * An Analysis object represents specific calls to analysis components, most of
+ * An AnalysisRun object represents specific calls to analysis components, most of
  * which will be implemented as an analysis plug-in on the backend. An example
  * would be a coding consequence plug-in.
  *
  * @author dyuen
  * @version $Id: $Id
  */
-public abstract class Analysis<ReturnType> extends MoleculeImpl<Analysis> implements QueryFuture<ReturnType> {
+public abstract class AnalysisRun<ReturnType> extends MoleculeImpl<AnalysisRun> implements QueryFuture<ReturnType> {
 
-    /** Constant <code>prefix="Analysis"</code> */
+    /** Constant <code>prefix="AnalysisRun"</code> */
     public final static String prefix = "Analysis";
     private List<Object> parameters = new ArrayList<Object>();
 
     /**
      * Create a new analysis
      */
-    protected Analysis() {
+    protected AnalysisRun() {
         super();
     }
 
@@ -56,7 +56,7 @@ public abstract class Analysis<ReturnType> extends MoleculeImpl<Analysis> implem
 
     /** {@inheritDoc} */
     @Override
-    public abstract Analysis.Builder toBuilder();
+    public abstract AnalysisRun.Builder toBuilder();
 
     /**
      * Set up the analysis plug-in
@@ -67,34 +67,34 @@ public abstract class Analysis<ReturnType> extends MoleculeImpl<Analysis> implem
 
     public abstract static class Builder extends BaseBuilder {
 
-        public Analysis analysis;
+        public AnalysisRun analysis;
 
         /**
          * Set the group for the current Atom
          *
          * @param group
          */
-        public Analysis.Builder setParameters(List<Object> parameters) {
+        public AnalysisRun.Builder setParameters(List<Object> parameters) {
             analysis.parameters = parameters;
             return this;
         }
 
-        public Analysis.Builder setPlugin(AnalysisPluginInterface plugin) {
+        public AnalysisRun.Builder setPlugin(AnalysisPluginInterface plugin) {
             analysis.setPlugin(plugin);
             return this;
         }
 
         @Override
-        public abstract Analysis build();
+        public abstract AnalysisRun build();
 
         @Override
-        public Analysis.Builder setManager(CreateUpdateManager aThis) {
+        public AnalysisRun.Builder setManager(CreateUpdateManager aThis) {
             analysis.setManager(aThis);
             return this;
         }
         
         @Override
-        public Analysis.Builder setFriendlyRowKey(String rowKey) {
+        public AnalysisRun.Builder setFriendlyRowKey(String rowKey) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
     }

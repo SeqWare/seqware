@@ -159,18 +159,18 @@ public interface QueryInterface {
      *
      * @return something iterable that iterates through all Analyses
      */
-    public SeqWareIterable<Analysis> getAnalyses();
+    public SeqWareIterable<AnalysisRun> getAnalyses();
 
 //    // ANALYSIS SET
     /**
-     * <p>getAnalysisSets.</p>
+     * <p>getAnalysisTypes.</p>
      *
-     * @return something iterable that iterates through all AnalysisSets
+     * @return something iterable that iterates through all AnalysisTypes
      */
-    public SeqWareIterable<AnalysisSet> getAnalysisSets();
-//    public void addAnalysisSet(AnalysisSet newAnalysisSet);
-//    public void updateAnalysisSet(AnalysisSet AnalysisSet);
-//    public void setAnalysisSetACL(ACL acl, AnalysisSet analysisSet);
+    public SeqWareIterable<AnalysisType> getAnalysisTypes();
+//    public void addAnalysisSet(AnalysisType newAnalysisSet);
+//    public void updateAnalysisSet(AnalysisType AnalysisType);
+//    public void setAnalysisSetACL(ACL acl, AnalysisType analysisSet);
 //
 //    // ANALYSIS PLUGIN METHODS
 

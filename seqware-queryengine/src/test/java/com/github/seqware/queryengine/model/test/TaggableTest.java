@@ -29,8 +29,8 @@ public class TaggableTest {
     private static Reference r1;
     private static Group group;
     private static User u1;
-    private static AnalysisSet aSet;
-    private static Analysis a;
+    private static AnalysisType aSet;
+    private static AnalysisRun a;
     private static Tag ts1, ts2, ts3;
     private static Tag t1a, t1b, t1c, t2a, t2b, t2c, t3a;
 
@@ -54,8 +54,8 @@ public class TaggableTest {
         tSet1 = mManager.buildTagSet().setName("Funky tags").build();
         tSet2 = mManager.buildTagSet().setName("Unfunky tags").build();
         rSet = mManager.buildReferenceSet().setName("Minbar").setOrganism("Minbari").build();
-        aSet = mManager.buildAnalysisSet().setName("FP").setDescription("Funky program").build();
-        // only for testing, Analysis classes 
+        aSet = mManager.buildAnalysisType().setName("FP").setDescription("Funky program").build();
+        // only for testing, AnalysisRun classes 
         a = mManager.buildAnalysis().setParameters(new ArrayList<Object>()).setPlugin(new InMemoryFeaturesAllPlugin()).build();
         r1 = mManager.buildReference().setName("ref1").build();
         rSet.add(r1);

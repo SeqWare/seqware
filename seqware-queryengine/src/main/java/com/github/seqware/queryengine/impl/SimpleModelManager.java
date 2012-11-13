@@ -20,7 +20,7 @@ import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.CreateUpdateManager.State;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.*;
-import com.github.seqware.queryengine.model.Analysis.Builder;
+import com.github.seqware.queryengine.model.AnalysisRun.Builder;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.model.impl.inMemory.*;
@@ -100,7 +100,7 @@ public class SimpleModelManager implements CreateUpdateManager {
 
         // order in order to avoid problems when sets are flushed before their elements (leading to unpopulated 
         // timestamp values) (order is now irrelevant since timestamps are generated locally)
-        //Class[] classOrder = {Feature.class, Tag.class, User.class, Reference.class, Analysis.class, FeatureSet.class, Group.class, TagSet.class, ReferenceSet.class, AnalysisSet.class};
+        //Class[] classOrder = {Feature.class, Tag.class, User.class, Reference.class, AnalysisRun.class, FeatureSet.class, Group.class, TagSet.class, ReferenceSet.class, AnalysisType.class};
         for (Entry<String, List<Atom>> e : sortedStore.entrySet()) {
             List<Atom> s1 = e.getValue();
             if (s1 != null && !s1.isEmpty()) {
@@ -327,10 +327,10 @@ public class SimpleModelManager implements CreateUpdateManager {
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisSet.Builder buildAnalysisSet() {
-        AnalysisSet.Builder aSet = null;
+    public AnalysisType.Builder buildAnalysisType() {
+        AnalysisType.Builder aSet = null;
         if (backend instanceof SimplePersistentBackEnd) {
-            aSet = InMemoryAnalysisSet.newBuilder().setManager(this);
+            aSet = InMemoryAnalysisType.newBuilder().setManager(this);
         }
         assert (aSet != null);
         return aSet;
@@ -427,7 +427,7 @@ public class SimpleModelManager implements CreateUpdateManager {
     /** {@inheritDoc} */
     @Override
     public Builder buildAnalysis() {
-        Analysis.Builder aSet = null;
+        AnalysisRun.Builder aSet = null;
         if (backend instanceof SimplePersistentBackEnd) {
             return InMemoryQueryFutureImpl.newBuilder().setManager(this);
         }
