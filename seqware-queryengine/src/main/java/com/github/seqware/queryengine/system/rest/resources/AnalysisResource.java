@@ -17,15 +17,15 @@
 package com.github.seqware.queryengine.system.rest.resources;
 
 import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.model.Analysis;
+import com.github.seqware.queryengine.model.AnalysisRun;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 
 /**
- * Analysis resource.
+ * AnalysisRun resource.
  *
  * @author dyuen
  */
-public class AnalysisResource extends GenericElementResource<Analysis> {
+public class AnalysisResource extends GenericElementResource<AnalysisRun> {
 
     @Override
     public final String getClassName() {
@@ -34,7 +34,7 @@ public class AnalysisResource extends GenericElementResource<Analysis> {
 
     @Override
     public final Class getModelClass() {
-        return Analysis.class;
+        return AnalysisRun.class;
     }
     
     @Override

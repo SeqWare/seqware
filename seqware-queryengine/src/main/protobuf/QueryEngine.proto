@@ -110,20 +110,20 @@ message ReferenceSetPB {
     repeated SGIDPB referenceIDs = 12;
 }
 
-message AnalysisPB {
+message AnalysisRunPB {
     // atom/molecule stuff
     optional AtomPB atom = 1;
-    optional AnalysisPB precedingVersion = 2;
+    optional AnalysisRunPB precedingVersion = 2;
     //optional ACLPB acl = 3; // deprecated
     optional MoleculePB mol = 4;
     // Reference-specific
     optional bytes parameters = 10;
 }
 
-message AnalysisSetPB {
+message AnalysisTypePB {
     // atom/molecule stuff
     optional AtomPB atom = 1;
-    optional AnalysisSetPB precedingVersion = 2;
+    optional AnalysisTypePB precedingVersion = 2;
     //optional ACLPB acl = 3; // deprecated
     optional MoleculePB mol = 4;
     // Reference-specific

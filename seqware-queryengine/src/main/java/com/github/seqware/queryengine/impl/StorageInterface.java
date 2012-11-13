@@ -39,8 +39,8 @@ public abstract class StorageInterface {
     /**
      * These tables are always created with the same names
      */
-    public final BiMap<Class, String> directBIMap = new ImmutableBiMap.Builder<Class, String>().put(Analysis.class, Analysis.prefix)
-            .put(AnalysisSet.class, AnalysisSet.prefix).put(Reference.class, Reference.prefix).put(ReferenceSet.class, ReferenceSet.prefix)
+    public final BiMap<Class, String> directBIMap = new ImmutableBiMap.Builder<Class, String>().put(AnalysisRun.class, AnalysisRun.prefix)
+            .put(AnalysisType.class, AnalysisType.prefix).put(Reference.class, Reference.prefix).put(ReferenceSet.class, ReferenceSet.prefix)
             .put(Tag.class, Tag.prefix).put(TagSet.class, TagSet.prefix).put(User.class, User.prefix).put(Group.class, Group.prefix)
             .put(FeatureSet.class, FeatureSet.prefix).build();
     

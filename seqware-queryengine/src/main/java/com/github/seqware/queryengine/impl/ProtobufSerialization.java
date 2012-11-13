@@ -34,7 +34,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 public class ProtobufSerialization implements SerializationInterface {
 
     public final static BiMap<Class, ProtobufTransferInterface> biMap = new ImmutableBiMap.Builder<Class, ProtobufTransferInterface>().put(FeatureList.class, new FeatureListIO())
-            .put(FeatureSet.class, new FeatureSetIO()).put(Analysis.class, new AnalysisIO()).put(AnalysisSet.class, new AnalysisSetIO())
+            .put(FeatureSet.class, new FeatureSetIO()).put(AnalysisRun.class, new AnalysisRunIO()).put(AnalysisType.class, new AnalysisTypeIO())
             .put(Reference.class, new ReferenceIO()).put(ReferenceSet.class, new ReferenceSetIO()).put(Tag.class, new TagIO())
             .put(TagSet.class, new TagSetIO()).put(User.class, new UserIO()).put(Group.class, new GroupIO())
             .build();

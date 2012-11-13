@@ -16,7 +16,7 @@
  */
 package com.github.seqware.queryengine.model.impl.inMemory;
 
-import com.github.seqware.queryengine.model.Analysis;
+import com.github.seqware.queryengine.model.AnalysisRun;
 import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
 
 /**
@@ -25,7 +25,7 @@ import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
  * @author dyuen
  * @version $Id: $Id
  */
-public class InMemoryQueryFutureImpl<T> extends Analysis {
+public class InMemoryQueryFutureImpl<T> extends AnalysisRun {
     
     private static final long serialVersionUID = 1L;
     
@@ -51,17 +51,17 @@ public class InMemoryQueryFutureImpl<T> extends Analysis {
     }
 
     /**
-     * Create a new AnalysisSet builder
+     * Create a new AnalysisRun builder
      *
-     * @return a {@link com.github.seqware.queryengine.model.Analysis.Builder} object.
+     * @return a {@link com.github.seqware.queryengine.model.AnalysisRun.Builder} object.
      */
-    public static Analysis.Builder newBuilder() {
+    public static AnalysisRun.Builder newBuilder() {
         return new InMemoryQueryFutureImpl.Builder();
     }
 
     /** {@inheritDoc} */
     @Override
-    public Analysis.Builder toBuilder() {
+    public AnalysisRun.Builder toBuilder() {
         InMemoryQueryFutureImpl.Builder b = new InMemoryQueryFutureImpl.Builder();
         b.analysis = (InMemoryQueryFutureImpl) this.copy(true);
         b.setParameters(this.getParameters());
@@ -83,23 +83,23 @@ public class InMemoryQueryFutureImpl<T> extends Analysis {
     /** {@inheritDoc} */
     @Override
     public Class getHBaseClass() {
-        return Analysis.class;
+        return AnalysisRun.class;
     }
 
     /** {@inheritDoc} */
     @Override
     public String getHBasePrefix() {
-        return Analysis.prefix;
+        return AnalysisRun.prefix;
     }
 
-    public static class Builder extends Analysis.Builder {
+    public static class Builder extends AnalysisRun.Builder {
 
         public Builder() {
             analysis = new InMemoryQueryFutureImpl();
         }
 
         @Override
-        public Analysis build() {
+        public AnalysisRun build() {
             if (analysis.getParameters() == null /**|| analysis.getPlugin() == null**/) {
                 throw new RuntimeException("Invalid build of Analysis");
             }

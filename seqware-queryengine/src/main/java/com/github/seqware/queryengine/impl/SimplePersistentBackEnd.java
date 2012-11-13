@@ -157,8 +157,8 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     
     /** {@inheritDoc} */
     @Override
-    public SeqWareIterable<Analysis> getAnalyses() {
-        return getAllOfClass(Analysis.class);
+    public SeqWareIterable<AnalysisRun> getAnalyses() {
+        return getAllOfClass(AnalysisRun.class);
     }
 
     /** {@inheritDoc} */
@@ -199,8 +199,8 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
 
     /** {@inheritDoc} */
     @Override
-    public SeqWareIterable<AnalysisSet> getAnalysisSets() {
-        return getAllOfClass(AnalysisSet.class);
+    public SeqWareIterable<AnalysisType> getAnalysisTypes() {
+        return getAllOfClass(AnalysisType.class);
     }
 
     /** {@inheritDoc} */

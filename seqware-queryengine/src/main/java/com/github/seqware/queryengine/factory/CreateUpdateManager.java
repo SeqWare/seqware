@@ -124,7 +124,7 @@ public interface CreateUpdateManager {
      *
      * @return analysis
      */
-    public Analysis.Builder buildAnalysis();
+    public AnalysisRun.Builder buildAnalysis();
 
     /**
      * Build a set of tags
@@ -138,7 +138,7 @@ public interface CreateUpdateManager {
      *
      * @return an analysis set
      */
-    public AnalysisSet.Builder buildAnalysisSet();
+    public AnalysisType.Builder buildAnalysisType();
 
     /**
      * Build a user

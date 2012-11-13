@@ -18,33 +18,33 @@ package com.github.seqware.queryengine.impl.protobufIO;
 
 
 import com.github.seqware.queryengine.dto.QueryEngine;
-import com.github.seqware.queryengine.dto.QueryEngine.AnalysisSetPB;
+import com.github.seqware.queryengine.dto.QueryEngine.AnalysisTypePB;
 import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.model.Analysis;
-import com.github.seqware.queryengine.model.AnalysisSet;
+import com.github.seqware.queryengine.model.AnalysisRun;
+import com.github.seqware.queryengine.model.AnalysisType;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
-import com.github.seqware.queryengine.model.impl.inMemory.InMemoryAnalysisSet;
+import com.github.seqware.queryengine.model.impl.inMemory.InMemoryAnalysisType;
 import com.github.seqware.queryengine.util.SGID;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
- * <p>AnalysisSetIO class.</p>
+ * <p>AnalysisTypeIO class.</p>
  *
  * @author dyuen
  * @version $Id: $Id
  */
-public class AnalysisSetIO implements ProtobufTransferInterface<AnalysisSetPB, AnalysisSet>{
+public class AnalysisTypeIO implements ProtobufTransferInterface<AnalysisTypePB, AnalysisType>{
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisSet pb2m(AnalysisSetPB pb) {
-        AnalysisSet.Builder builder = InMemoryAnalysisSet.newBuilder();
+    public AnalysisType pb2m(AnalysisTypePB pb) {
+        AnalysisType.Builder builder = InMemoryAnalysisType.newBuilder();
         builder = pb.hasName() ? builder.setName(pb.getName()) : builder;
         builder = pb.hasDescription() ? builder.setDescription(pb.getDescription()) : builder;
-        AnalysisSet user = builder.build();
+        AnalysisType user = builder.build();
         UtilIO.handlePB2Atom(pb.getAtom(), (AtomImpl)user);
         UtilIO.handlePB2Mol(pb.getMol(), (MoleculeImpl)user);
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && pb.hasPrecedingVersion()){
@@ -54,7 +54,7 @@ public class AnalysisSetIO implements ProtobufTransferInterface<AnalysisSetPB, A
         for(int i = 0; i < sgidArr.length; i++){
             sgidArr[i] = (SGIDIO.pb2m(pb.getAnalysisIDs(i)));
         }
-        List<Analysis> atomsBySGID = SWQEFactory.getQueryInterface().getAtomsBySGID(Analysis.class, sgidArr);
+        List<AnalysisRun> atomsBySGID = SWQEFactory.getQueryInterface().getAtomsBySGID(AnalysisRun.class, sgidArr);
         if (atomsBySGID != null && atomsBySGID.size() > 0) {user.add(atomsBySGID);}
         return user;
     }
@@ -62,8 +62,8 @@ public class AnalysisSetIO implements ProtobufTransferInterface<AnalysisSetPB, A
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisSetPB m2pb(AnalysisSet aSet) {
-        QueryEngine.AnalysisSetPB.Builder builder = QueryEngine.AnalysisSetPB.newBuilder();
+    public AnalysisTypePB m2pb(AnalysisType aSet) {
+        QueryEngine.AnalysisTypePB.Builder builder = QueryEngine.AnalysisTypePB.newBuilder();
         builder = aSet.getName() != null ? builder.setName(aSet.getName()) : builder;
         builder = aSet.getDescription() != null ? builder.setDescription(aSet.getDescription()) : builder;
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), (AtomImpl)aSet));
@@ -71,21 +71,21 @@ public class AnalysisSetIO implements ProtobufTransferInterface<AnalysisSetPB, A
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && aSet.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(aSet.getPrecedingVersion()));
         }
-        for(Analysis ref : aSet){
+        for(AnalysisRun ref : aSet){
             builder.addAnalysisIDs(SGIDIO.m2pb(ref.getSGID()));
         }
-        AnalysisSetPB userpb = builder.build();
+        AnalysisTypePB userpb = builder.build();
         return userpb;
     }
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisSet byteArr2m(byte[] arr) {
+    public AnalysisType byteArr2m(byte[] arr) {
         try {
-            QueryEngine.AnalysisSetPB userpb = QueryEngine.AnalysisSetPB.parseFrom(arr);
+            QueryEngine.AnalysisTypePB userpb = QueryEngine.AnalysisTypePB.parseFrom(arr);
             return pb2m(userpb);
         } catch (InvalidProtocolBufferException ex) {
-            Logger.getLogger(FeatureSetIO.class.getName()).fatal("Invalid PB found for AnalysisSet", ex);
+            Logger.getLogger(FeatureSetIO.class.getName()).fatal("Invalid PB found for AnalysisType", ex);
         }
         return null;
     }

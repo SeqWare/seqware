@@ -360,7 +360,7 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
         @Override
         public FeatureSet build() {
             if (aSet.getReferenceID() == null && aSet.getManager() != null) {
-                throw new RuntimeException("Invalid build of AnalysisSet");
+                throw new RuntimeException("Invalid build of AnalysisType");
             }
             if (aSet.getManager() != null) {
                 aSet.getManager().objectCreated(aSet);
