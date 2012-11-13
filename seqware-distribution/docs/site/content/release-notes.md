@@ -9,6 +9,43 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 0.13.5 (2012-11-13)
+
+### Defect
+* [SEQWARE-1224] - Genome Informatics talk and admin tutorial recovery
+* [SEQWARE-1330] - Metadata add sequencer run error, possibly test db related
+* [SEQWARE-1344] - NullPointer in webservice while marshalling XML
+
+### Improvement
+* [SEQWARE-1267] - Prepare TorBUG talk for 10/31
+* [SEQWARE-1283] - non-informative error message, seqware crashes with NullPointerException
+
+### Task
+* [SEQWARE-1255] - Audit SeqWare resources
+* [SEQWARE-1310] - implements oozie workflow engine
+* [SEQWARE-1316] - Problem with ius (addIUS) command line api in seqware-full-0.13.4-SNAPSHOT.jar
+* [SEQWARE-1318] - Work with tim to make sure sequencer_run, lane, and IUS writeback on the command line work.
+* [SEQWARE-1327] - Setup and run tutorials on Pig for Pig-Fest
+* [SEQWARE-1336] - prepare for AWG talk
+* [SEQWARE-1338] - Write-up six month plan for Query Engine/SeqWare as a whole
+* [SEQWARE-1339] - Create one-page high quality specifications
+
+### Technical task
+* [SEQWARE-863] - get reports/workflowruns error
+* [SEQWARE-1097] - Add md5sum and size as Optional Fields to FileLinker Script
+* [SEQWARE-1149] - Finish specification for RESTful web service
+* [SEQWARE-1150] - Investigate web service options presented
+* [SEQWARE-1261] - Resurrect BI for OHS
+* [SEQWARE-1270] - thow exception if ini key is referenced but never setup
+* [SEQWARE-1286] - Jetty should run when you call it explicitly
+* [SEQWARE-1289] - add getStatus() getStdErr() getStdOut() in workflowEngine interface
+* [SEQWARE-1308] - release simplifed workflow for Morgan to try
+* [SEQWARE-1311] - install oozie in VM
+* [SEQWARE-1312] - write a HelloWorld oozie sample
+* [SEQWARE-1313] - implements oozie workflow engine by extending the abstractworkflowengine
+* [SEQWARE-1314] - read the oozie doc
+* [SEQWARE-1315] - generate oozie xml from object model
+
 ## 0.13.4 (2012-10-22)
 
 ### Defect
