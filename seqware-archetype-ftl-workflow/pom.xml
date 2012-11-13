@@ -9,7 +9,7 @@
   <description>SeqWare FTL workflow archetype</description>
 
     <parent> 
-        <version>0.13.5-SNAPSHOT</version> 
+        <version>0.13.6-SNAPSHOT</version> 
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
     </parent>
@@ -40,12 +40,4 @@
 
 
   <url>http://maven.apache.org</url>
-    <dependencies>
-        <dependency>
-            <groupId>com.github.seqware</groupId>
-            <artifactId>seqware-pipeline</artifactId>
-            <version>0.13.5-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-    </dependencies>
 </project>
