@@ -57,4 +57,5 @@ public interface ProcessingRelationshipDAO {
    */
   public List<ProcessingRelationship> list();
 
+  public List<ProcessingRelationship> listByParentProcessingId(int processingId);
 }

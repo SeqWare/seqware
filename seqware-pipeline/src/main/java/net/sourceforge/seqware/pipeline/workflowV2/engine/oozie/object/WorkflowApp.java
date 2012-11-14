@@ -155,9 +155,10 @@ public class WorkflowApp {
 				wfdm.getEnv().getOOZIE_WORK_DIR());
 		oJob0.setMetadataWriteback(metadatawriteback);
 		//if has parent-accessions, assign it to first job
-		String parentAccession = wfdm.getParent_accessions();
+		Collection<String> parentAccession = wfdm.getParentAccessions();
 		if(parentAccession!=null && !parentAccession.isEmpty()) {
-			oJob0.setParentAccession(parentAccession);
+			//FIXME 
+			oJob0.setParentAccession(parentAccession.toString());
 		}
 		String workflowRunAccession = wfdm.getWorkflow_run_accession();
 		if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
