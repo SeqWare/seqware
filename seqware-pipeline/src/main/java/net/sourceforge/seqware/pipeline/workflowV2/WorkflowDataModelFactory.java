@@ -310,8 +310,7 @@ public class WorkflowDataModelFactory {
 	    			}
     		    }
     		}
-    		//map.put("parent-accessions", org.apache.commons.lang.StringUtils.join(parentAccessions,","));
-    		model.setParent_accessions(org.apache.commons.lang.StringUtils.join(parentAccessions,","));
+    		model.setParentAccessions(parentAccessions);
     	}
     	//merge 
     	// link-workflow-run-to-parents

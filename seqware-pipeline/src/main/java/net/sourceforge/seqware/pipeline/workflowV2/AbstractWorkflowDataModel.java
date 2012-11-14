@@ -23,7 +23,7 @@ public abstract class AbstractWorkflowDataModel  {
     private boolean metadataWriteBack;
     private Map<String,SqwFile> files;
     private Collection<String> dirs;
-    private String parent_accessions;
+    private Collection<String> parentAccessions;
     private String workflow_accession;
     private String workflow_run_accession;
     private String random;
@@ -40,6 +40,7 @@ public abstract class AbstractWorkflowDataModel  {
     	this.configs = new HashMap<String,String>();
     	this.workflow = new Workflow();
     	this.dirs = new ArrayList<String>();
+    	this.parentAccessions = new ArrayList<String>();
     }
     
     /**
@@ -278,16 +279,16 @@ public abstract class AbstractWorkflowDataModel  {
 	 * 
 	 * @return parent_accessions separated by ","
 	 */
-	public String getParent_accessions() {
-		return parent_accessions;
+	public Collection<String> getParentAccessions() {
+		return this.parentAccessions;
 	}
 
 	/**
 	 * 
 	 * @param parent_accessions parent_accessions separated by ","
 	 */
-	public void setParent_accessions(String parent_accessions) {
-		this.parent_accessions = parent_accessions;
+	void setParentAccessions(Collection<String> parentAccessions) {
+		this.parentAccessions.addAll(parentAccessions);
 	}
 
 	/**
@@ -302,7 +303,7 @@ public abstract class AbstractWorkflowDataModel  {
 	 * set workflow_accession 
 	 * @param workflow_accession 
 	 */
-	public void setWorkflow_accession(String workflow_accession) {
+	void setWorkflow_accession(String workflow_accession) {
 		this.workflow_accession = workflow_accession;
 	}
 
@@ -318,7 +319,7 @@ public abstract class AbstractWorkflowDataModel  {
 	 * set workflow run accession
 	 * @param workflow_run_accession
 	 */
-	public void setWorkflow_run_accession(String workflow_run_accession) {
+	void setWorkflow_run_accession(String workflow_run_accession) {
 		this.workflow_run_accession = workflow_run_accession;
 	}
 
@@ -334,7 +335,7 @@ public abstract class AbstractWorkflowDataModel  {
 	 * set output file prefix, used by provisionfiles output
 	 * @param metadata_output_file_prefix
 	 */
-	public void setMetadata_output_file_prefix(
+	void setMetadata_output_file_prefix(
 			String metadata_output_file_prefix) {
 		this.metadata_output_file_prefix = metadata_output_file_prefix;
 	}
@@ -343,7 +344,7 @@ public abstract class AbstractWorkflowDataModel  {
 		return metadata_output_dir;
 	}
 
-	public void setMetadata_output_dir(String metadata_output_dir) {
+	void setMetadata_output_dir(String metadata_output_dir) {
 		this.metadata_output_dir = metadata_output_dir;
 	}
 

@@ -1,5 +1,10 @@
 package net.sourceforge.seqware.pipeline.workflowV2.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -14,10 +19,12 @@ public class SqwFile {
 	private boolean input;
 	private boolean forceCopy;
 	private String uniqueDir;
+	private List<String> parentAccessions;
 	
 	public SqwFile() {
 		//need to create a random directory for later reference
 		this.uniqueDir = Long.toString(System.nanoTime());
+		this.parentAccessions = new ArrayList<String>();
 	}
 	
 	public String getType() {
@@ -107,5 +114,17 @@ public class SqwFile {
 	 */
 	public String getUniqueDir() {
 		return this.uniqueDir;
+	}
+	
+	/**
+	 * set the parent accessions for provision file job
+	 * @param parentAccessions
+	 */
+	public void setParentAccessions(String[] parentAccessions) {
+		this.parentAccessions.addAll(Arrays.asList(parentAccessions));
+	}
+	
+	public Collection<String> getParentAccessions() {
+		return this.parentAccessions;
 	}
 }

@@ -76,4 +76,9 @@ public interface Job {
 	 * @return
 	 */
 	public boolean hasMetadataWriteback();
+	/**
+	 * set parent accessiosns for the job
+	 * @param parentAccessions
+	 */
+	public void setParentAccessions(String[] parentAccessions);
 }
