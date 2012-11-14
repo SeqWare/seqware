@@ -58,4 +58,11 @@ public class ProcessingRelationshipServiceImpl implements ProcessingRelationship
         return dao.list();
     }
 
+    @Override
+    public List<ProcessingRelationship> listByParentProcessingId(int processingId) {
+        return dao.listByParentProcessingId(processingId);
+    }
+
+
+
 }
