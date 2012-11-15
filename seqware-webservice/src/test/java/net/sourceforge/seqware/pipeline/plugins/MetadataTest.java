@@ -25,14 +25,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.sourceforge.seqware.common.module.ReturnValue;
 import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
 /**
- * Runs the tests for the Metadata plugin indicated on this page:https://wiki.oicr.on.ca/x/Jga5Ag
- * 
+ * Runs the tests for the Metadata plugin indicated on this
+ * page:https://wiki.oicr.on.ca/x/Jga5Ag
+ *
  * @author mtaschuk
  */
 public class MetadataTest extends PluginTest {
@@ -54,7 +56,6 @@ public class MetadataTest extends PluginTest {
         errStream = new ByteArrayOutputStream();
         PrintStream pso = new PrintStream(outStream);
         PrintStream pse = new PrintStream(errStream) {
-
             @Override
             public PrintStream append(CharSequence csq) {
 //                systemErr.append(csq);
@@ -128,10 +129,10 @@ public class MetadataTest extends PluginTest {
 
     private void checkErrors(String s) {
         Matcher matcher = errorPattern.matcher(s);
-        systemErr.println("~~~~~~~~~~"+s);
+        systemErr.println("~~~~~~~~~~" + s);
         Assert.assertFalse("Output contains errors:" + s, matcher.find());
 //        systemErr.println("~~~~~~~~~~"+matcher.group());
-        
+
     }
 
     private void checkFields(Map<String, String> expectedFields) {
@@ -390,20 +391,116 @@ public class MetadataTest extends PluginTest {
     }
 
     //////////////////////////////////////////////////Negative tests
-//    @Test
-//    public void testCreateSampleFail() {
-//        String eAcc = "8350";
-//
-//        instance.setParams(Arrays.asList("--table", "sample", "--create",
-//                "--field", "experiment_accession::" + eAcc,
-//                "--field", "title::sampletitle",
-//                "--field", "description::sampledescription",
-//                "--field", "organism_id::31"));
-//        checkReturnValue(ReturnValue.SUCCESS, instance.parse_parameters());
-//        checkReturnValue(ReturnValue.SUCCESS, instance.init());
-//        checkReturnValue(ReturnValue.SUCCESS, instance.do_run());
-//
-//    }
+    // re-enabled to test SEQWARE-1331
+    @Test
+    public void testCreateSampleFail() {
+        String eAcc = "8350";
+
+        instance.setParams(Arrays.asList("--table", "sample", "--create",
+                "--field", "experiment_accession::" + eAcc,
+                "--field", "title::sampletitle",
+                "--field", "description::sampledescription",
+                "--field", "organism_id::31"));
+        checkExpectedFailure();
+    }
+
+    @Test
+    public void testCreateStudyFail() {
+        instance.setParams(Arrays.asList("--table", "study", "--create",
+                "--field", "title::alal" + System.currentTimeMillis(),
+                "--field", "description::alal",
+                "--field", "accession::1235",
+                "--field", "center_name::oicr",
+                "--field", "center_project_name::mine",
+                "--field", "study_type::42"));
+        checkExpectedFailure();
+    }
+
+    @Test
+    public void testCreateExperimentFail() {
+        String sAcc = "120";
+
+        instance.setParams(Arrays.asList("--table", "experiment", "--create",
+                "--field", "study_accession::" + sAcc,
+                "--field", "title::experimenttitle" + System.currentTimeMillis(),
+                "--field", "description::\"Experiment Description\"",
+                "--field", "platform_id::42"));
+        checkExpectedFailure();
+    }
+
+    @Test
+    public void testCreateSequencerRunFail() {
+        instance.setParams(Arrays.asList("--table", "sequencer_run", "--create",
+                "--field", "name::SR" + System.currentTimeMillis(),
+                "--field", "description::SRD",
+                "--field", "platform_accession::20000",
+                "--field", "paired_end::true",
+                "--field", "skip::false"));
+        checkExpectedFailure();
+    }
+
+    @Test
+    public void testCreateLaneFail() {
+        String rAcc = "20000";
+
+        instance.setParams(Arrays.asList("--table", "lane", "--create",
+                "--field", "name::lane",
+                "--field", "description::description",
+                "--field", "cycle_descriptor::{F*120}{..}{R*120}",
+                "--field", "sequencer_run_accession::" + rAcc,
+                "--field", "library_strategy_accession::1",
+                "--field", "study_type_accession::1",
+                "--field", "library_selection_accession::1",
+                "--field", "library_source_accession::1",
+                "--field", "skip::false"));
+        checkExpectedFailure();
+    }
+
+    @Test
+    public void testCreateIUSWrongLaneFail() {
+        String lAcc = laneAccession;
+        if (lAcc == null) {
+            lAcc = "4707";
+        }
+        String sAcc = sampleAccession;
+        if (sAcc == null) {
+            sAcc = "4760";
+        }
+        // set an invalid lAcc 
+        lAcc = "20000";
+
+        instance.setParams(Arrays.asList("--table", "ius", "--create",
+                "--field", "name::ius",
+                "--field", "description::des",
+                "--field", "lane_accession::" + lAcc,
+                "--field", "sample_accession::" + sAcc,
+                "--field", "skip::false",
+                "--field", "barcode::NoIndex"));
+        checkExpectedFailure();
+    }
+    
+    @Test
+    public void testCreateIUSWrongSampleFail() {
+        String lAcc = laneAccession;
+        if (lAcc == null) {
+            lAcc = "4707";
+        }
+        String sAcc = sampleAccession;
+        if (sAcc == null) {
+            sAcc = "4760";
+        }
+        // set an invalid accession
+        sAcc = "20000";
+
+        instance.setParams(Arrays.asList("--table", "ius", "--create",
+                "--field", "name::ius",
+                "--field", "description::des",
+                "--field", "lane_accession::" + lAcc,
+                "--field", "sample_accession::" + sAcc,
+                "--field", "skip::false",
+                "--field", "barcode::NoIndex"));
+        checkExpectedFailure();
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     private String getAndCheckSwid(String s) throws NumberFormatException {
@@ -419,8 +516,20 @@ public class MetadataTest extends PluginTest {
         //This doesn't catch logs that are sent to Log4J
         @Override
         protected void succeeded(Description d) {
-            checkErrors(getErr());
-            checkErrors(getOut());
+            // do not fail on tests that intend on failing
+            if (!d.getMethodName().endsWith("Fail")) {
+                checkErrors(getErr());
+                checkErrors(getOut());
+            }
         }
     };
+
+    /**
+     * Run an instance with an error and/or failure expected
+     */
+    private void checkExpectedFailure() {
+        checkReturnValue(ReturnValue.SUCCESS, instance.parse_parameters());
+        checkReturnValue(ReturnValue.SUCCESS, instance.init());
+        checkReturnValue(ReturnValue.FAILURE, instance.do_run());
+    }
 }

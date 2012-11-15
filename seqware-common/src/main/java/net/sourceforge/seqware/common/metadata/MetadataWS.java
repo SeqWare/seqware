@@ -2394,7 +2394,8 @@ public class MetadataWS extends Metadata {
         }
         cResource.release();
       }
-      // testNull(parent, clazz, searchString);
+      // SEQWARE-1331, this was commented out for some reason, but that causes the checking of incorrect accessions to fail
+      testNull(parent, clazz, searchString);
       return parent;
     }
 
