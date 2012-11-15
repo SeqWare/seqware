@@ -31,6 +31,7 @@ public class OozieJob {
 		this.parents = new ArrayList<OozieJob>();
 		this.children = new ArrayList<OozieJob>();
 		this.parentAccessionFiles = new ArrayList<String>();
+		this.parentAccessions = new ArrayList<String>();
 	}
 	
 	public Element serializeXML() {
