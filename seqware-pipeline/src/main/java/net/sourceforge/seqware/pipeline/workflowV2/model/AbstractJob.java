@@ -217,8 +217,8 @@ public class AbstractJob implements Job {
 	}
 
 	@Override
-	public void setParentAccessions(String[] parentAccessions) {
-		this.parentAccessions.addAll(Arrays.asList(parentAccessions));
+	public void setParentAccessions(Collection<String> parentAccessions) {
+		this.parentAccessions.addAll(parentAccessions);
 	}
 	
 	public Collection<String> getParentAccessions() {
