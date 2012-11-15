@@ -157,9 +157,13 @@ public class WorkflowDataModelFactory {
         ret.getEnv().setOOZIE_JOBTRACKER(config.get("OOZIE_JOBTRACKER"));
         ret.getEnv().setOOZIE_NAMENODE(config.get("OOZIE_NAMENODE"));
         ret.getEnv().setOOZIE_QUEUENAME(config.get("OOZIE_QUEUENAME"));
-        ret.getEnv().setHADOOP_CORE_XML(config.get("HADOOP_CORE_XML"));
-        ret.getEnv().setHADOOP_HDFS_SITE_XML(config.get("HADOOP_HDFS_SITE_XML"));
-        ret.getEnv().setHADOOP_MAPRED_SITE_XML(config.get("HADOOP_MAPRED_SITE_XML"));
+        ret.getEnv().setHbase_master(config.get("hbase.master"));
+        ret.getEnv().setHbase_zookeeper_quorum(config.get("hbase.zookeeper.quorum"));
+        ret.getEnv().setHbase_zookeeper_property_clientPort(config.get("hbase.zookeeper.property.clientPort"));
+        ret.getEnv().setMapred_job_tracker(config.get("mapred.job.tracker"));
+        ret.getEnv().setFs_default_name(config.get("fs.default.name"));
+        ret.getEnv().setFs_defaultFS(config.get("fs.defaultFS"));
+        ret.getEnv().setFs_hdfs_impl(config.get("fs.hdfs.impl"));
         ret.getEnv().setOOZIE_WORK_DIR(config.get("OOZIE_WORK_DIR"));
         ret.getEnv().setOOZIE_APP_PATH(config.get("OOZIE_APP_PATH"));
         
