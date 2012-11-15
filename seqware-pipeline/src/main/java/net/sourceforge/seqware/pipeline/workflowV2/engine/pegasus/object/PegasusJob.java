@@ -28,7 +28,7 @@ public class PegasusJob {
 	private List<PegasusJob> children;
 	protected static String NS = "seqware";
 	private boolean metadataWriteback;
-	protected String parentAccession;
+	protected List<String> parentAccessions;
 	protected String wfrAccession;
 	protected boolean wfrAncesstor;
 	protected List<String> parentAccessionFiles;
@@ -41,6 +41,7 @@ public class PegasusJob {
 		this.parents = new ArrayList<PegasusJob>();
 		this.children = new ArrayList<PegasusJob>();
 		this.parentAccessionFiles = new ArrayList<String>();
+		this.parentAccessions = new ArrayList<String>();
 	}
 	
 	public Element serializeXML() {
@@ -165,12 +166,9 @@ public class PegasusJob {
 		this.metadataWriteback = metadataWriteback;
 	}
 
-	public String getParentAccession() {
-		return parentAccession;
-	}
 
-	public void setParentAccession(String parentAccession) {
-		this.parentAccession = parentAccession;
+	public void setParentAccessions(Collection<String> parentAccessions) {
+		this.parentAccessions.addAll(parentAccessions);
 	}
 
 	public String getWorkflowRunAccession() {
@@ -207,8 +205,10 @@ public class PegasusJob {
 			sb.append("--no-metadata").append("\n");
 		}
 		
-		if(this.parentAccession!=null){
-			sb.append("--metadata-parent-accession " + this.parentAccession).append("\n");
+		if(!this.parentAccessions.isEmpty()){
+			for(String pa: this.parentAccessions) {
+				sb.append("--metadata-parent-accession " + pa).append("\n");
+			}
 		}
 		if(this.wfrAccession!=null) {
 			if(!this.wfrAncesstor) {
