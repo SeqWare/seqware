@@ -280,7 +280,7 @@ public abstract class AbstractWorkflowDataModel  {
 	 * @return parent_accessions separated by ","
 	 */
 	public Collection<String> getParentAccessions() {
-		return this.parentAccessions;
+		return new ArrayList<String>(this.parentAccessions);
 	}
 
 	/**
@@ -360,7 +360,7 @@ public abstract class AbstractWorkflowDataModel  {
 	 * default is pegasus
 	 * @param workflow_engine
 	 */
-	public void setWorkflow_engine(String workflow_engine) {
+	void setWorkflow_engine(String workflow_engine) {
 		this.workflow_engine = workflow_engine;
 	}
 	
