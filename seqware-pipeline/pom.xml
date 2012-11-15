@@ -11,7 +11,7 @@
     <parent>
         <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
-        <version>0.13.5-SNAPSHOT</version>
+        <version>0.13.6-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -218,7 +218,7 @@
                             <excludes><exclude>**/RunnerTest.java</exclude>
 			    <exclude>${exclude.tests}</exclude>
 			    <exclude>**/BasicDeciderTest.java</exclude>
-			    </excludes>
+			</excludes>
 			    
                         </configuration>
                     </execution>
@@ -234,8 +234,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
