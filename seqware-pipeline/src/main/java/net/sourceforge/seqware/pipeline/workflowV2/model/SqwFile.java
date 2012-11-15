@@ -120,8 +120,8 @@ public class SqwFile {
 	 * set the parent accessions for provision file job
 	 * @param parentAccessions
 	 */
-	public void setParentAccessions(String[] parentAccessions) {
-		this.parentAccessions.addAll(Arrays.asList(parentAccessions));
+	public void setParentAccessions(Collection<String> parentAccessions) {
+		this.parentAccessions.addAll(parentAccessions);
 	}
 	
 	public Collection<String> getParentAccessions() {
