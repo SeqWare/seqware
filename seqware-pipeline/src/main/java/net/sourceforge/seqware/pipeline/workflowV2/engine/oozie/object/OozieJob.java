@@ -13,7 +13,7 @@ public class OozieJob {
 	protected String okTo = "end";
 	//private String errorTo; always to fail now
 	protected String name;
-	protected String parentAccession;
+	protected Collection<String> parentAccessions;
 	protected String wfrAccession;
 	protected boolean wfrAncesstor;
 	protected AbstractJob jobObj;
@@ -120,8 +120,8 @@ public class OozieJob {
 		return javaE;
 	}
 	
-	public void setParentAccession(String parentAccession) {
-		this.parentAccession = parentAccession;
+	public void setParentAccessions(Collection<String> parentAccessions) {
+		this.parentAccessions.addAll(parentAccessions);
 	}
 
 	public boolean hasMetadataWriteback() {
@@ -213,14 +213,16 @@ public class OozieJob {
 		javaElement.addContent(metaArg);
 		
 		
-		if(this.parentAccession!=null){
-			Element paArg = new Element("arg", WorkflowApp.NAMESPACE);
-			paArg.setText("--metadata-parent-accession");
-			javaElement.addContent(paArg);
-			
-			Element paVal = new Element("arg", WorkflowApp.NAMESPACE);
-			paVal.setText(this.parentAccession);
-			javaElement.addContent(paVal);
+		if(this.parentAccessions!=null && !this.parentAccessions.isEmpty()){
+			for(String pa: this.parentAccessions) {
+				Element paArg = new Element("arg", WorkflowApp.NAMESPACE);
+				paArg.setText("--metadata-parent-accession");
+				javaElement.addContent(paArg);
+				
+				Element paVal = new Element("arg", WorkflowApp.NAMESPACE);
+				paVal.setText(pa);
+				javaElement.addContent(paVal);
+			}
 		}
 		
 		if(this.wfrAccession!=null) {

@@ -157,8 +157,7 @@ public class WorkflowApp {
 		//if has parent-accessions, assign it to first job
 		Collection<String> parentAccession = wfdm.getParentAccessions();
 		if(parentAccession!=null && !parentAccession.isEmpty()) {
-			//FIXME 
-			oJob0.setParentAccession(parentAccession.toString());
+			oJob0.setParentAccessions(parentAccession);
 		}
 		String workflowRunAccession = wfdm.getWorkflow_run_accession();
 		if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
