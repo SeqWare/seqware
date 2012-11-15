@@ -152,12 +152,23 @@ public class WorkflowDataModelFactory {
         ret.getEnv().setPegasusConfigDir(config.get("SW_PEGASUS_CONFIG_DIR"));
         ret.getEnv().setDaxDir(config.get("SW_DAX_DIR"));
         ret.getEnv().setSwCluster(config.get("SW_CLUSTER"));
+        ret.getEnv().setOOZIE_URL(config.get("OOZIE_URL"));
+        ret.getEnv().setOOZIE_APP_ROOT(config.get("OOZIE_APP_ROOT"));
+        ret.getEnv().setOOZIE_JOBTRACKER(config.get("OOZIE_JOBTRACKER"));
+        ret.getEnv().setOOZIE_NAMENODE(config.get("OOZIE_NAMENODE"));
+        ret.getEnv().setOOZIE_QUEUENAME(config.get("OOZIE_QUEUENAME"));
+        ret.getEnv().setHADOOP_CORE_XML(config.get("HADOOP_CORE_XML"));
+        ret.getEnv().setHADOOP_HDFS_SITE_XML(config.get("HADOOP_HDFS_SITE_XML"));
+        ret.getEnv().setHADOOP_MAPRED_SITE_XML(config.get("HADOOP_MAPRED_SITE_XML"));
+        ret.getEnv().setOOZIE_WORK_DIR(config.get("OOZIE_WORK_DIR"));
+        ret.getEnv().setOOZIE_APP_PATH(config.get("OOZIE_APP_PATH"));
         
         //get workflow-run-accession
-        if(options.has(("workflow-accession"))) {
+        if(options.has("status") == false && options.has(("workflow-accession"))) {
         	int workflowAccession = Integer.parseInt((String)options.valueOf("workflow-accession"));
         	int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession);
         	configs.put("workflow-run-accession", ""+workflowrunaccession);
+        	ret.setWorkflow_run_accession(""+workflowrunaccession);
         }
 		ret.setConfigs(configs);
 		
@@ -299,8 +310,7 @@ public class WorkflowDataModelFactory {
 	    			}
     		    }
     		}
-    		//map.put("parent-accessions", org.apache.commons.lang.StringUtils.join(parentAccessions,","));
-    		model.setParent_accessions(org.apache.commons.lang.StringUtils.join(parentAccessions,","));
+    		model.setParentAccessions(parentAccessions);
     	}
     	//merge 
     	// link-workflow-run-to-parents
@@ -317,12 +327,10 @@ public class WorkflowDataModelFactory {
     	}*/
     	//merge workflow-accession
     	if(options.has("workflow-accession")) {
-    		//map.put("workflow-accession", (String) options.valueOf("workflow-accession"));
     		model.setWorkflow_accession((String) options.valueOf("workflow-accession"));
     	}
     	//merge "workflow-run-accession"
     	if(options.has("workflow-run-accession")) {
-    		//map.put("workflow-run-accession", (String) options.valueOf("workflow-run-accession"));
     		model.setWorkflow_run_accession((String) options.valueOf("workflow-run-accession"));
     	}
     	//merge schedule
@@ -349,31 +357,23 @@ public class WorkflowDataModelFactory {
     	}
     	//metadatawriteback
     	boolean metadataWriteback = true;
-    	if (options.has("no-metadata") || options.has("no-meta-db")) {
+    	if (options.has("no-metadata") || options.has("no-meta-db") || options.has("status")) {
     	    metadataWriteback = false;
     	}
     	map.put("metadata", Boolean.toString(metadataWriteback));
+    	model.setMetadataWriteBack(metadataWriteback);
     	//metadata-output-file-prefix
     	if (options.has("metadata-output-file-prefix")) {
-//    		map.put("metadata-output-file-prefix", (String) options.valueOf("metadata-output-file-prefix"));
     		model.setMetadata_output_file_prefix((String) options.valueOf("metadata-output-file-prefix"));
     	}
     	//metadata-output-dir
     	if (options.has("metadata-output-dir")) {
-//    		map.put("metadata-output-dir", (String) options.valueOf("metadata-output-dir"));
     		model.setMetadata_output_dir((String) options.valueOf("metadata-output-dir"));
+    	}
+    	//workflow_engine
+    	if (options.has("workflow-engine")) {
+    		model.setWorkflow_engine((String) options.valueOf("workflow-engine"));
     	}
     }
 
-/*    private void setupProvisionedPath(Map<String,SqwFile> map) {
-    	int inCount = 0;
-    	for(Map.Entry<String, SqwFile> entry: map.entrySet()) {
-    		if(entry.getValue().isInput()) {
-    			SqwFile file = entry.getValue();
-    			String fileName = FilenameUtils.getName(file.getSourcePath());
-    			entry.getValue().setProvisionedPath("provisionfiles/"+inCount+"/"+fileName);
-    			inCount ++;
-    		}
-    	}
-    }*/
 }

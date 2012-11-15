@@ -131,5 +131,29 @@ public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
 		return retPegasus;
 
 	}
+
+	@Override
+	public String getId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getStatus(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getStdErr(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getStdOut(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
