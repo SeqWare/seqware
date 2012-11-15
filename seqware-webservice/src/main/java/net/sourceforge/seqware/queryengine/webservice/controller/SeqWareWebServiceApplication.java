@@ -49,6 +49,7 @@ import net.sourceforge.seqware.webservice.resources.tables.LibrariesResource;
 import net.sourceforge.seqware.webservice.resources.tables.LibraryResource;
 import net.sourceforge.seqware.webservice.resources.tables.ProcessIDResource;
 import net.sourceforge.seqware.webservice.resources.tables.ProcessResource;
+import net.sourceforge.seqware.webservice.resources.tables.ProcessingStructureResource;
 import net.sourceforge.seqware.webservice.resources.tables.RootSampleResource;
 import net.sourceforge.seqware.webservice.resources.tables.SampleIDResource;
 import net.sourceforge.seqware.webservice.resources.tables.SampleResource;
@@ -332,6 +333,7 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/" + version + "/static", directory);
 
 
+        router.attach("/processingstructure",new ProcessingStructureResource(getContext()));
         guard.setNext(router);
         return guard;
 
