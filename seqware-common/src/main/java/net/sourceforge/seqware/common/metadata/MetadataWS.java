@@ -2381,6 +2381,8 @@ public class MetadataWS extends Metadata {
         parent = null;
       } catch (ResourceException e) {
         Log.error("MetadataWS.findObject with search string "+searchString+" encountered error "+ e.getMessage());
+        Log.error(" please check that the object you are looking for exists in the MetaDB");
+        
         parent = null;
       } finally {
         if (result != null) {
