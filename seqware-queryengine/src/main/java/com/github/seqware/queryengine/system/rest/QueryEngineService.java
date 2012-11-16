@@ -22,11 +22,11 @@ import com.sun.jersey.api.core.ResourceConfig;
 import com.wordnik.swagger.annotations.Api;
 import java.io.IOException;
 import java.net.URI;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.UriBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import com.wordnik.swagger.jaxrs.JavaApiListing;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 
 
@@ -37,6 +37,9 @@ import com.wordnik.swagger.jaxrs.JavaApiListing;
  *
  * @author dyuen
  */
+@Path("/resources")
+@Api("/resources")
+@Produces({"application/json"})
 public class QueryEngineService extends JavaApiListing {
     
     public QueryEngineService(){
