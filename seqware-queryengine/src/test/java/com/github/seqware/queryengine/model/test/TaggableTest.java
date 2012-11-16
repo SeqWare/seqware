@@ -5,7 +5,7 @@ import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.interfaces.Taggable;
 import com.github.seqware.queryengine.model.interfaces.Taggable.NestedLevel;
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.plugins.PluginInterface;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
 import java.util.*;
 import junit.framework.Assert;
@@ -29,8 +29,8 @@ public class TaggableTest {
     private static Reference r1;
     private static Group group;
     private static User u1;
-    private static AnalysisType aSet;
-    private static AnalysisRun a;
+    private static Plugin aSet;
+    private static PluginRun a;
     private static Tag ts1, ts2, ts3;
     private static Tag t1a, t1b, t1c, t2a, t2b, t2c, t3a;
 
@@ -54,9 +54,9 @@ public class TaggableTest {
         tSet1 = mManager.buildTagSet().setName("Funky tags").build();
         tSet2 = mManager.buildTagSet().setName("Unfunky tags").build();
         rSet = mManager.buildReferenceSet().setName("Minbar").setOrganism("Minbari").build();
-        aSet = mManager.buildAnalysisType().setName("FP").setDescription("Funky program").build();
-        // only for testing, AnalysisRun classes 
-        a = mManager.buildAnalysis().setParameters(new ArrayList<Object>()).setPlugin(new InMemoryFeaturesAllPlugin()).build();
+        aSet = mManager.buildPlugin().setName("FP").setDescription("Funky program").build();
+        // only for testing, PluginRun classes 
+        a = mManager.buildPluginRun().setParameters(new ArrayList<Object>()).setPlugin(new InMemoryFeaturesAllPlugin()).build();
         r1 = mManager.buildReference().setName("ref1").build();
         rSet.add(r1);
         group = mManager.buildGroup().setName("Developers").setDescription("Users that are working on new stuff").build();
@@ -153,10 +153,10 @@ public class TaggableTest {
             tagException = true;
         }
         Assert.assertTrue(tagException);
-        for (AnalysisPluginInterface api : SWQEFactory.getQueryInterface().getAnalysisPlugins()) {
+        for (PluginInterface api : SWQEFactory.getQueryInterface().getPluginInterfaces()) {
             Assert.assertTrue(!(api instanceof Taggable));
         }
-        Assert.assertTrue(SWQEFactory.getQueryInterface().getAnalysisPlugins().getCount() > 0);
+        Assert.assertTrue(SWQEFactory.getQueryInterface().getPluginInterfaces().getCount() > 0);
     }
 
     /**

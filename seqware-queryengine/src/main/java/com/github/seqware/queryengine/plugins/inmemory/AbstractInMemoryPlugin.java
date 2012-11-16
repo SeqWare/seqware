@@ -17,7 +17,7 @@
 package com.github.seqware.queryengine.plugins.inmemory;
 
 import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.plugins.PluginInterface;
 
 /**
  * Base class for all in-memory plug-ins
@@ -25,13 +25,13 @@ import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
  * @author dyuen
  * @version $Id: $Id
  */
-public abstract class AbstractInMemoryPlugin implements AnalysisPluginInterface {
+public abstract class AbstractInMemoryPlugin implements PluginInterface {
 
     protected FeatureSet inputSet;
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue test() {
+    public PluginInterface.ReturnValue test() {
         /**
          * do nothing
          */
@@ -40,7 +40,7 @@ public abstract class AbstractInMemoryPlugin implements AnalysisPluginInterface 
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue verifyParameters() {
+    public PluginInterface.ReturnValue verifyParameters() {
         /**
          * do nothing
          */
@@ -49,7 +49,7 @@ public abstract class AbstractInMemoryPlugin implements AnalysisPluginInterface 
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue verifyInput() {
+    public PluginInterface.ReturnValue verifyInput() {
         /**
          * do nothing
          */
@@ -58,7 +58,7 @@ public abstract class AbstractInMemoryPlugin implements AnalysisPluginInterface 
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue filterInit() {
+    public PluginInterface.ReturnValue filterInit() {
         /**
          * do nothing
          */
@@ -67,7 +67,7 @@ public abstract class AbstractInMemoryPlugin implements AnalysisPluginInterface 
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue filter() {
+    public PluginInterface.ReturnValue filter() {
         /**
          * do nothing
          */
@@ -76,7 +76,7 @@ public abstract class AbstractInMemoryPlugin implements AnalysisPluginInterface 
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue verifyOutput() {
+    public PluginInterface.ReturnValue verifyOutput() {
         /**
          * do nothing
          */
@@ -85,7 +85,7 @@ public abstract class AbstractInMemoryPlugin implements AnalysisPluginInterface 
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue cleanup() {
+    public PluginInterface.ReturnValue cleanup() {
         /**
          * do nothing
          */

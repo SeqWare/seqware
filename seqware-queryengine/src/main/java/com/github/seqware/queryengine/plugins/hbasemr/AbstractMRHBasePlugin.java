@@ -23,7 +23,7 @@ import com.github.seqware.queryengine.impl.HBaseStorage;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.impl.lazy.LazyFeatureSet;
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.plugins.PluginInterface;
 import com.github.seqware.queryengine.plugins.MapReducePlugin;
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +68,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue init(FeatureSet inputSet, Object... parameters) {
+    public PluginInterface.ReturnValue init(FeatureSet inputSet, Object... parameters) {
         try {
             CreateUpdateManager manager = SWQEFactory.getModelManager();
             //outputSet should attach to the original reference
@@ -131,7 +131,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
             job.setJarByClass(AbstractMRHBasePlugin.class);
             // submit the job, but do not block
             job.submit();
-            return new AnalysisPluginInterface.ReturnValue();
+            return new PluginInterface.ReturnValue();
         } catch (URISyntaxException ex) {
             java.util.logging.Logger.getLogger(AbstractMRHBasePlugin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
@@ -162,7 +162,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue test() {
+    public PluginInterface.ReturnValue test() {
         /**
          * do nothing
          */
@@ -171,7 +171,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue verifyParameters() {
+    public PluginInterface.ReturnValue verifyParameters() {
         /**
          * do nothing
          */
@@ -180,7 +180,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue verifyInput() {
+    public PluginInterface.ReturnValue verifyInput() {
         /**
          * do nothing
          */
@@ -189,7 +189,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue filterInit() {
+    public PluginInterface.ReturnValue filterInit() {
         /**
          * do nothing
          */
@@ -198,7 +198,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue filter() {
+    public PluginInterface.ReturnValue filter() {
         /**
          * do nothing
          */
@@ -207,7 +207,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue mapInit() {
+    public PluginInterface.ReturnValue mapInit() {
         /**
          * do nothing
          */
@@ -216,7 +216,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue reduceInit() {
+    public PluginInterface.ReturnValue reduceInit() {
         /**
          * do nothing
          */
@@ -225,7 +225,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue verifyOutput() {
+    public PluginInterface.ReturnValue verifyOutput() {
         /**
          * do nothing
          */
@@ -234,7 +234,7 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface.ReturnValue cleanup() {
+    public PluginInterface.ReturnValue cleanup() {
         /**
          * do nothing
          */
@@ -261,14 +261,14 @@ public abstract class AbstractMRHBasePlugin<ReturnType> implements MapReducePlug
     @Override
     public ReturnValue map(Feature atom, FeatureSet mappedSet) {
         // doesn't really do anything
-        return new AnalysisPluginInterface.ReturnValue();
+        return new PluginInterface.ReturnValue();
     }
 
     /** {@inheritDoc} */
     @Override
     public ReturnValue reduce(FeatureSet mappedSet, FeatureSet resultSet) {
         // doesn't really do anything
-        return new AnalysisPluginInterface.ReturnValue();
+        return new PluginInterface.ReturnValue();
     }
 
     /** {@inheritDoc} */

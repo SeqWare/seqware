@@ -17,28 +17,28 @@
 package com.github.seqware.queryengine.system.rest.resources;
 
 import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.model.AnalysisType;
+import com.github.seqware.queryengine.model.PluginRun;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 
 /**
- * AnalysisType resource.
+ * PluginRun resource.
  *
  * @author dyuen
  */
-public class AnalysisTypeResource extends GenericSetResource<AnalysisType> {
+public class PluginRunResource extends GenericElementResource<PluginRun> {
 
     @Override
     public final String getClassName() {
-        return "AnalysisType";
+        return "PluginRun";
     }
 
     @Override
     public final Class getModelClass() {
-        return AnalysisType.class;
+        return PluginRun.class;
     }
     
     @Override
     public final SeqWareIterable getElements() {
-        return SWQEFactory.getQueryInterface().getAnalysisTypes();
+        return SWQEFactory.getQueryInterface().getPluginRuns();
     }
 }

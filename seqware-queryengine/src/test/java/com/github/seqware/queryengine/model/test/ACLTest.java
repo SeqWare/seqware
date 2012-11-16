@@ -31,8 +31,8 @@ public class ACLTest {
     private static Reference r1;
     private static Group group, viewerGroup;
     private static User marshmallowUser, titanicUser;
-    private static AnalysisType aSet;
-    private static AnalysisRun a1;
+    private static Plugin aSet;
+    private static PluginRun a1;
 
     /**
      * <p>setupTests.</p>
@@ -49,14 +49,14 @@ public class ACLTest {
         fSet.add(testFeatures);
         tSet1 = mManager.buildTagSet().setName("Funky tags").build();
         rSet = mManager.buildReferenceSet().setName("Minbar").setOrganism("Minbari").build();
-        aSet = mManager.buildAnalysisType().setName("FP").setDescription("Funky program").build();
+        aSet = mManager.buildPlugin().setName("FP").setDescription("Funky program").build();
         r1 = mManager.buildReference().setName("ref1").build();
         rSet.add(r1);
         group = mManager.buildGroup().setName("Developers").setDescription("Users that are working on new stuff").build();
         viewerGroup = mManager.buildGroup().setName("Viewers").setDescription("Users that are just looking at stuff").build();
         marshmallowUser = mManager.buildUser().setFirstName("Joe").setLastName("Smith").setEmailAddress("joe.smith@googly.com").setPassword("password").build();
         titanicUser = mManager.buildUser().setFirstName("Deanna").setLastName("Troi").setEmailAddress("deanna.troi@googly.com").setPassword("password").build();
-        a1 = mManager.buildAnalysis().setParameters(new ArrayList()).setPlugin(new InMemoryFeaturesAllPlugin()).build();
+        a1 = mManager.buildPluginRun().setParameters(new ArrayList()).setPlugin(new InMemoryFeaturesAllPlugin()).build();
         group.add(marshmallowUser);
         viewerGroup.add(titanicUser);
 

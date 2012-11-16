@@ -16,8 +16,8 @@
  */
 package com.github.seqware.queryengine.model.impl.inMemory;
 
-import com.github.seqware.queryengine.model.AnalysisRun;
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.model.PluginRun;
+import com.github.seqware.queryengine.plugins.PluginInterface;
 
 /**
  * <p>InMemoryQueryFutureImpl class.</p>
@@ -25,11 +25,11 @@ import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
  * @author dyuen
  * @version $Id: $Id
  */
-public class InMemoryQueryFutureImpl<T> extends AnalysisRun {
+public class InMemoryQueryFutureImpl<T> extends PluginRun {
     
     private static final long serialVersionUID = 1L;
     
-    private transient AnalysisPluginInterface<T> plugin;
+    private transient PluginInterface<T> plugin;
 
     /**
      * <p>Constructor for InMemoryQueryFutureImpl.</p>
@@ -51,59 +51,59 @@ public class InMemoryQueryFutureImpl<T> extends AnalysisRun {
     }
 
     /**
-     * Create a new AnalysisRun builder
+     * Create a new PluginRun builder
      *
-     * @return a {@link com.github.seqware.queryengine.model.AnalysisRun.Builder} object.
+     * @return a {@link com.github.seqware.queryengine.model.PluginRun.Builder} object.
      */
-    public static AnalysisRun.Builder newBuilder() {
+    public static PluginRun.Builder newBuilder() {
         return new InMemoryQueryFutureImpl.Builder();
     }
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisRun.Builder toBuilder() {
+    public PluginRun.Builder toBuilder() {
         InMemoryQueryFutureImpl.Builder b = new InMemoryQueryFutureImpl.Builder();
-        b.analysis = (InMemoryQueryFutureImpl) this.copy(true);
+        b.pluginRun = (InMemoryQueryFutureImpl) this.copy(true);
         b.setParameters(this.getParameters());
         return b;
     }
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisPluginInterface<T> getPlugin() {
+    public PluginInterface<T> getPlugin() {
         return plugin;
     }
 
     /** {@inheritDoc} */
     @Override
-    protected void setPlugin(AnalysisPluginInterface plugin) {
+    protected void setPlugin(PluginInterface plugin) {
         this.plugin = plugin;
     }
 
     /** {@inheritDoc} */
     @Override
     public Class getHBaseClass() {
-        return AnalysisRun.class;
+        return PluginRun.class;
     }
 
     /** {@inheritDoc} */
     @Override
     public String getHBasePrefix() {
-        return AnalysisRun.prefix;
+        return PluginRun.prefix;
     }
 
-    public static class Builder extends AnalysisRun.Builder {
+    public static class Builder extends PluginRun.Builder {
 
         public Builder() {
-            analysis = new InMemoryQueryFutureImpl();
+            pluginRun = new InMemoryQueryFutureImpl();
         }
 
         @Override
-        public AnalysisRun build() {
-            if (analysis.getParameters() == null /**|| analysis.getPlugin() == null**/) {
-                throw new RuntimeException("Invalid build of Analysis");
+        public PluginRun build() {
+            if (pluginRun.getParameters() == null /**|| pluginRun.getPlugin() == null**/) {
+                throw new RuntimeException("Invalid build of pluginrun");
             }
-            return analysis;
+            return pluginRun;
         }
     }
 }
