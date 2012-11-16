@@ -12,7 +12,7 @@ import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
  * @author jbaran
  * @version $Id: $Id
  */
-public interface MapReducePlugin<T extends Atom, S extends MolSetInterface> extends AnalysisPluginInterface {
+public interface MapReducePlugin<T extends Atom, S extends MolSetInterface> extends PluginInterface {
 
     /**
      * Mapping implementation that singles out desired atoms into a mapped set.

@@ -34,7 +34,7 @@ import com.github.seqware.queryengine.model.FeatureSet;
  * @author boconnor
  * @version $Id: $Id
  */
-public interface AnalysisPluginInterface<T> {
+public interface PluginInterface<T> {
 
     /**
      * Initialize this plug-in, this is called once when the plug-in is starting
@@ -42,56 +42,56 @@ public interface AnalysisPluginInterface<T> {
      *
      * @param set input feature set that we will be operating on
      * @param parameters parameters that the plug-in will require
-     * @return a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue} object.
+     * @return a {@link com.github.seqware.queryengine.plugins.PluginInterface.ReturnValue} object.
      */
     public ReturnValue init(FeatureSet set, Object ... parameters);
 
     /**
      * <p>test.</p>
      *
-     * @return a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue} object.
+     * @return a {@link com.github.seqware.queryengine.plugins.PluginInterface.ReturnValue} object.
      */
     public ReturnValue test();
 
     /**
      * <p>verifyParameters.</p>
      *
-     * @return a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue} object.
+     * @return a {@link com.github.seqware.queryengine.plugins.PluginInterface.ReturnValue} object.
      */
     public ReturnValue verifyParameters();
 
     /**
      * <p>verifyInput.</p>
      *
-     * @return a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue} object.
+     * @return a {@link com.github.seqware.queryengine.plugins.PluginInterface.ReturnValue} object.
      */
     public ReturnValue verifyInput();
 
     /**
      * <p>filterInit.</p>
      *
-     * @return a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue} object.
+     * @return a {@link com.github.seqware.queryengine.plugins.PluginInterface.ReturnValue} object.
      */
     public ReturnValue filterInit();
 
     /**
      * <p>filter.</p>
      *
-     * @return a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue} object.
+     * @return a {@link com.github.seqware.queryengine.plugins.PluginInterface.ReturnValue} object.
      */
     public ReturnValue filter();
 
     /**
      * <p>verifyOutput.</p>
      *
-     * @return a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue} object.
+     * @return a {@link com.github.seqware.queryengine.plugins.PluginInterface.ReturnValue} object.
      */
     public ReturnValue verifyOutput();
 
     /**
      * <p>cleanup.</p>
      *
-     * @return a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface.ReturnValue} object.
+     * @return a {@link com.github.seqware.queryengine.plugins.PluginInterface.ReturnValue} object.
      */
     public ReturnValue cleanup();
     
@@ -105,7 +105,7 @@ public interface AnalysisPluginInterface<T> {
     /**
      * Blocking call to get the final result of the plug-in
      *
-     * @return T containing results of the analysis
+     * @return T containing results of the pluginrun
      */
     public T getFinalResult();
     

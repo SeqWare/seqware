@@ -18,43 +18,43 @@ package com.github.seqware.queryengine.impl.protobufIO;
 
 
 import com.github.seqware.queryengine.dto.QueryEngine;
-import com.github.seqware.queryengine.dto.QueryEngine.AnalysisTypePB;
+import com.github.seqware.queryengine.dto.QueryEngine.PluginPB;
 import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.model.AnalysisRun;
-import com.github.seqware.queryengine.model.AnalysisType;
+import com.github.seqware.queryengine.model.Plugin;
+import com.github.seqware.queryengine.model.PluginRun;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
-import com.github.seqware.queryengine.model.impl.inMemory.InMemoryAnalysisType;
+import com.github.seqware.queryengine.model.impl.inMemory.InMemoryPlugin;
 import com.github.seqware.queryengine.util.SGID;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
- * <p>AnalysisTypeIO class.</p>
+ * <p>PluginIO class.</p>
  *
  * @author dyuen
  * @version $Id: $Id
  */
-public class AnalysisTypeIO implements ProtobufTransferInterface<AnalysisTypePB, AnalysisType>{
+public class PluginIO implements ProtobufTransferInterface<PluginPB, Plugin>{
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisType pb2m(AnalysisTypePB pb) {
-        AnalysisType.Builder builder = InMemoryAnalysisType.newBuilder();
+    public Plugin pb2m(PluginPB pb) {
+        Plugin.Builder builder = InMemoryPlugin.newBuilder();
         builder = pb.hasName() ? builder.setName(pb.getName()) : builder;
         builder = pb.hasDescription() ? builder.setDescription(pb.getDescription()) : builder;
-        AnalysisType user = builder.build();
+        Plugin user = builder.build();
         UtilIO.handlePB2Atom(pb.getAtom(), (AtomImpl)user);
         UtilIO.handlePB2Mol(pb.getMol(), (MoleculeImpl)user);
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && pb.hasPrecedingVersion()){
            user.setPrecedingVersion(pb2m(pb.getPrecedingVersion()));
         }
-        SGID[] sgidArr = new SGID[pb.getAnalysisIDsCount()];
+        SGID[] sgidArr = new SGID[pb.getPluginRunIDsCount()];
         for(int i = 0; i < sgidArr.length; i++){
-            sgidArr[i] = (SGIDIO.pb2m(pb.getAnalysisIDs(i)));
+            sgidArr[i] = (SGIDIO.pb2m(pb.getPluginRunIDs(i)));
         }
-        List<AnalysisRun> atomsBySGID = SWQEFactory.getQueryInterface().getAtomsBySGID(AnalysisRun.class, sgidArr);
+        List<PluginRun> atomsBySGID = SWQEFactory.getQueryInterface().getAtomsBySGID(PluginRun.class, sgidArr);
         if (atomsBySGID != null && atomsBySGID.size() > 0) {user.add(atomsBySGID);}
         return user;
     }
@@ -62,8 +62,8 @@ public class AnalysisTypeIO implements ProtobufTransferInterface<AnalysisTypePB,
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisTypePB m2pb(AnalysisType aSet) {
-        QueryEngine.AnalysisTypePB.Builder builder = QueryEngine.AnalysisTypePB.newBuilder();
+    public PluginPB m2pb(Plugin aSet) {
+        QueryEngine.PluginPB.Builder builder = QueryEngine.PluginPB.newBuilder();
         builder = aSet.getName() != null ? builder.setName(aSet.getName()) : builder;
         builder = aSet.getDescription() != null ? builder.setDescription(aSet.getDescription()) : builder;
         builder.setAtom(UtilIO.handleAtom2PB(builder.getAtom(), (AtomImpl)aSet));
@@ -71,21 +71,21 @@ public class AnalysisTypeIO implements ProtobufTransferInterface<AnalysisTypePB,
         if (ProtobufTransferInterface.PERSIST_VERSION_CHAINS && aSet.getPrecedingVersion() != null){
             builder.setPrecedingVersion(m2pb(aSet.getPrecedingVersion()));
         }
-        for(AnalysisRun ref : aSet){
-            builder.addAnalysisIDs(SGIDIO.m2pb(ref.getSGID()));
+        for(PluginRun ref : aSet){
+            builder.addPluginRunIDs(SGIDIO.m2pb(ref.getSGID()));
         }
-        AnalysisTypePB userpb = builder.build();
+        PluginPB userpb = builder.build();
         return userpb;
     }
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisType byteArr2m(byte[] arr) {
+    public Plugin byteArr2m(byte[] arr) {
         try {
-            QueryEngine.AnalysisTypePB userpb = QueryEngine.AnalysisTypePB.parseFrom(arr);
+            QueryEngine.PluginPB userpb = QueryEngine.PluginPB.parseFrom(arr);
             return pb2m(userpb);
         } catch (InvalidProtocolBufferException ex) {
-            Logger.getLogger(FeatureSetIO.class.getName()).fatal("Invalid PB found for AnalysisType", ex);
+            Logger.getLogger(FeatureSetIO.class.getName()).fatal("Invalid PB found for Plugin", ex);
         }
         return null;
     }

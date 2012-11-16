@@ -24,9 +24,9 @@ import javax.ws.rs.Produces;
  *
  * @author dyuen
  */
-@Path("/analysistype.json")
-@Api(value = "/analysistype", description = "Operations about analysistypes"/*, listingPath="/resources.json/referenceset"*/)
+@Path("/pluginrun.json")
+@Api(value = "/pluginrun", description = "Operations about pluginrun"/*, listingPath="/resources.json/referenceset"*/)
 @Produces({"application/json"})
-public class AnalysisTypeResourceJSON extends AnalysisTypeResource{
+public class PluginRunResourceJSON extends PluginRunResource{
     
 }

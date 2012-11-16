@@ -12,7 +12,7 @@ import com.github.seqware.queryengine.model.interfaces.MolSetInterface;
  * @author jbaran
  * @version $Id: $Id
  */
-public interface ScanPlugin<T extends Atom, S extends MolSetInterface> extends AnalysisPluginInterface{
+public interface ScanPlugin<T extends Atom, S extends MolSetInterface> extends PluginInterface{
     /**
      * Scanner implementation that processes atoms and aggregates results in a new set.
      *
