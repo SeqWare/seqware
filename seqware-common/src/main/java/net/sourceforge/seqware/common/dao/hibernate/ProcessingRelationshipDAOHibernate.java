@@ -1,6 +1,7 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.seqware.common.dao.ProcessingRelationshipDAO;
@@ -72,5 +73,19 @@ public class ProcessingRelationshipDAOHibernate extends HibernateDaoSupport impl
     @Override
     public List<ProcessingRelationship> list() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+
+
+    @Override
+    public List<ProcessingRelationship> listByParentProcessingId(int processingId) {
+        List<ProcessingRelationship> ret = new ArrayList<ProcessingRelationship>();
+        String query = "from ProcessingRelationship as pl where pl.processingByParentId.processingId = ?";
+        Object[] parameters = { processingId };
+        List list = this.getHibernateTemplate().find(query, parameters);
+        for(Object obj: list) {
+            ret.add((ProcessingRelationship) obj);
+        }
+        return ret;    
     }
 }
