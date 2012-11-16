@@ -88,13 +88,18 @@
                     <mode>war</mode>
                 </configuration>
             </plugin>
-
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>${maven-jar-plugin.version}</version>
                 <executions>
+                    <execution>
+                        <id>make-a-jar</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
                     <execution>
                         <goals>
                             <goal>test-jar</goal>
@@ -284,7 +289,7 @@ never
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase</artifactId>
             <!-- current public version
-                                      		    <version>0.94.0</version>
+                                              		    <version>0.94.0</version>
             -->
             <!-- current Cloudera stable -->
             <version>0.92.1-cdh4.0.0</version>
@@ -373,7 +378,7 @@ never
             <artifactId>hadoop-tools</artifactId>
             <groupId>org.apache.hadoop</groupId>
             <!-- current public version
-                                  		    <version>1.0.3</version>
+                                          		    <version>1.0.3</version>
    	        -->
             <!-- current Cloudera stable -->
             <version>2.0.0-mr1-cdh4.0.0</version>

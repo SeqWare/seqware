@@ -19,6 +19,7 @@ package com.github.seqware.queryengine.system.rest.resources;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.util.SeqWareIterable;
+import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiError;
 import com.wordnik.swagger.annotations.ApiErrors;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -27,6 +28,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -36,6 +38,9 @@ import javax.ws.rs.core.Response;
  *
  * @author dyuen
  */
+@Path("/tagset")
+@Api(value = "/tagset", description = "Operations about tagsets"/*, listingPath="/resources.json/referenceset"*/)
+@Produces({"application/json"})
 public class TagSetResource extends GenericMutableSetResource<TagSet> {
 
     @Override

@@ -19,12 +19,18 @@ package com.github.seqware.queryengine.system.rest.resources;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Plugin;
 import com.github.seqware.queryengine.util.SeqWareIterable;
+import com.wordnik.swagger.annotations.Api;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 /**
  * Plugin resource.
  *
  * @author dyuen
  */
+@Path("/plugin")
+@Api(value = "/plugin", description = "Operations about plugins"/*, listingPath="/resources.json/referenceset"*/)
+@Produces({"application/json"})
 public class PluginResource extends GenericSetResource<Plugin> {
 
     @Override
