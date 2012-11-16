@@ -31,23 +31,23 @@ public class ProcessingDataStructure2Dot extends Plugin {
 		parser
         .accepts(
             "sw-db-server",
-            "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.")
-        .withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location.");
+            "Optional: database server.")
+        .withRequiredArg().ofType(String.class).describedAs("Database Server.");
 		parser
         .accepts(
             "sw-db",
-            "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.")
-        .withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location.");
+            "Optional: database name")
+        .withRequiredArg().ofType(String.class).describedAs("Database Name.");
 		parser
         .accepts(
             "sw-db-user",
-            "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.")
-        .withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location.");
+            "Optional: database user")
+        .withRequiredArg().ofType(String.class).describedAs("Database User.");
 		parser
         .accepts(
             "sw-db-pass",
-            "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.")
-        .withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location.");
+            "Optional: password")
+        .withRequiredArg().ofType(String.class).describedAs("Password.");
 		parser
         .accepts(
             "parent-accession",
@@ -56,8 +56,8 @@ public class ProcessingDataStructure2Dot extends Plugin {
 		parser
         .accepts(
             "output-file",
-            "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.")
-        .withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location. ");
+            "Optional: file name")
+        .withRequiredArg().ofType(String.class).describedAs("Output File Name");
 
 	}
 	
@@ -95,10 +95,8 @@ public class ProcessingDataStructure2Dot extends Plugin {
 	    try {
 			this.buildDotTree(metadb, parentAccession, new File(output));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return ret;
