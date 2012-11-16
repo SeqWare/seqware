@@ -86,10 +86,8 @@ public class SequencerRunIdFilesResource extends BasicRestlet {
 
         FindAllTheFiles fatf = new FindAllTheFiles();
         for (Lane l : sr.getLanes()) {
-            Log.stdout("Lane: " + l);
             returnValues.addAll(fatf.filesFromLane(l, null, null));
         }
-        Log.stdout("Size of return values:" + returnValues.size());
         return returnValues;
     }
 }
