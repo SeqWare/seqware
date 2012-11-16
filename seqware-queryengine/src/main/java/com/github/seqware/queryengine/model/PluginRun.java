@@ -3,34 +3,34 @@ package com.github.seqware.queryengine.model;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.plugins.PluginInterface;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * An AnalysisRun object represents specific calls to analysis components, most of
- * which will be implemented as an analysis plug-in on the backend. An example
+ * An PluginRun object represents specific calls to pluginRun components, most of
+ * which will be implemented as an pluginRun plug-in on the backend. An example
  * would be a coding consequence plug-in.
  *
  * @author dyuen
  * @version $Id: $Id
  */
-public abstract class AnalysisRun<ReturnType> extends MoleculeImpl<AnalysisRun> implements QueryFuture<ReturnType> {
+public abstract class PluginRun<ReturnType> extends MoleculeImpl<PluginRun> implements QueryFuture<ReturnType> {
 
-    /** Constant <code>prefix="AnalysisRun"</code> */
-    public final static String prefix = "Analysis";
+    /** Constant <code>prefix="PluginRun"</code> */
+    public final static String prefix = "PluginRun";
     private List<Object> parameters = new ArrayList<Object>();
 
     /**
-     * Create a new analysis
+     * Create a new pluginrun
      */
-    protected AnalysisRun() {
+    protected PluginRun() {
         super();
     }
 
     /**
-     * Get the parameters for this particular creation of an analysis plug-in
+     * Get the parameters for this particular creation of an pluginRun plug-in
      *
      * @return parameters for the plugin
      */
@@ -39,12 +39,12 @@ public abstract class AnalysisRun<ReturnType> extends MoleculeImpl<AnalysisRun> 
     }
 
     /**
-     * Get analysis plugin
+     * Get pluginRun plugin
      *
      * @return This returns the actual plugin that was used to create this
-     * instance of an analysis.
+     * instance of an pluginRun.
      */
-    public abstract AnalysisPluginInterface getPlugin();
+    public abstract PluginInterface getPlugin();
 
     /** {@inheritDoc} */
     @Override
@@ -56,45 +56,45 @@ public abstract class AnalysisRun<ReturnType> extends MoleculeImpl<AnalysisRun> 
 
     /** {@inheritDoc} */
     @Override
-    public abstract AnalysisRun.Builder toBuilder();
+    public abstract PluginRun.Builder toBuilder();
 
     /**
-     * Set up the analysis plug-in
+     * Set up the pluginRun plug-in
      *
      * @param plugin Set the plug-in used to create this plug-in (should be in the builder)
      */
-    protected abstract void setPlugin(AnalysisPluginInterface plugin);
+    protected abstract void setPlugin(PluginInterface plugin);
 
     public abstract static class Builder extends BaseBuilder {
 
-        public AnalysisRun analysis;
+        public PluginRun pluginRun;
 
         /**
          * Set the group for the current Atom
          *
          * @param group
          */
-        public AnalysisRun.Builder setParameters(List<Object> parameters) {
-            analysis.parameters = parameters;
+        public PluginRun.Builder setParameters(List<Object> parameters) {
+            pluginRun.parameters = parameters;
             return this;
         }
 
-        public AnalysisRun.Builder setPlugin(AnalysisPluginInterface plugin) {
-            analysis.setPlugin(plugin);
+        public PluginRun.Builder setPlugin(PluginInterface plugin) {
+            pluginRun.setPlugin(plugin);
             return this;
         }
 
         @Override
-        public abstract AnalysisRun build();
+        public abstract PluginRun build();
 
         @Override
-        public AnalysisRun.Builder setManager(CreateUpdateManager aThis) {
-            analysis.setManager(aThis);
+        public PluginRun.Builder setManager(CreateUpdateManager aThis) {
+            pluginRun.setManager(aThis);
             return this;
         }
         
         @Override
-        public AnalysisRun.Builder setFriendlyRowKey(String rowKey) {
+        public PluginRun.Builder setFriendlyRowKey(String rowKey) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
     }

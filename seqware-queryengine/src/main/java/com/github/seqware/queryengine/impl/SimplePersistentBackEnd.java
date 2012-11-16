@@ -16,13 +16,15 @@
  */
 package com.github.seqware.queryengine.impl;
 
+import com.github.seqware.queryengine.backInterfaces.BackEndInterface;
+import com.github.seqware.queryengine.backInterfaces.StorageInterface;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import com.github.seqware.queryengine.model.impl.FeatureList;
 import com.github.seqware.queryengine.model.impl.inMemory.InMemoryQueryFutureImpl;
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.plugins.PluginInterface;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByRangePlugin;
 import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByTagPlugin;
@@ -45,7 +47,7 @@ import org.apache.log4j.Logger;
  */
 public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface {
 
-    private Map<Class, AnalysisPluginInterface> pluginMap = new HashMap<Class, AnalysisPluginInterface>();
+    private Map<Class, PluginInterface> pluginMap = new HashMap<Class, PluginInterface>();
     protected StorageInterface storage;
 
     /**
@@ -157,8 +159,8 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     
     /** {@inheritDoc} */
     @Override
-    public SeqWareIterable<AnalysisRun> getAnalyses() {
-        return getAllOfClass(AnalysisRun.class);
+    public SeqWareIterable<PluginRun> getPluginRuns() {
+        return getAllOfClass(PluginRun.class);
     }
 
     /** {@inheritDoc} */
@@ -199,20 +201,20 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
 
     /** {@inheritDoc} */
     @Override
-    public SeqWareIterable<AnalysisType> getAnalysisTypes() {
-        return getAllOfClass(AnalysisType.class);
+    public SeqWareIterable<Plugin> getPlugins() {
+        return getAllOfClass(Plugin.class);
     }
 
     /** {@inheritDoc} */
     @Override
-    public SeqWareIterable<AnalysisPluginInterface> getAnalysisPlugins() {
+    public SeqWareIterable<PluginInterface> getPluginInterfaces() {
         return new InMemoryIterable(this.pluginMap.values());
     }
 
     /** {@inheritDoc} */
     @Override
     public QueryFuture getFeaturesByAttributes(int hours, FeatureSet set, RPNStack constraints) {
-        AnalysisPluginInterface plugin = new LazyFeaturesByAttributesPlugin();
+        PluginInterface plugin = new LazyFeaturesByAttributesPlugin();
         List<TagSet> tagSets = new LinkedList<TagSet>();
         // If there are hierarchical occurrences to be checked, retrieve the tag set now, so that paths in
         // trees can be resolved later on.
@@ -228,7 +230,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     /** {@inheritDoc} */
     @Override
     public QueryFuture getFeatures(int hours, FeatureSet set) {
-        AnalysisPluginInterface plugin = new InMemoryFeaturesAllPlugin();
+        PluginInterface plugin = new InMemoryFeaturesAllPlugin();
         plugin.init(set);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
@@ -236,7 +238,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     /** {@inheritDoc} */
     @Override
     public QueryFuture getFeaturesByRange(int hours, FeatureSet set, Location location, String structure, long start, long stop) {
-        AnalysisPluginInterface plugin = new InMemoryFeaturesByRangePlugin();
+        PluginInterface plugin = new InMemoryFeaturesByRangePlugin();
         plugin.init(set, location, structure, start, stop);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
@@ -244,7 +246,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
     /** {@inheritDoc} */
     @Override
     public QueryFuture getFeaturesByTag(int hours, FeatureSet set, String subject, String predicate, String object) {
-        AnalysisPluginInterface plugin = new InMemoryFeaturesByTagPlugin();
+        PluginInterface plugin = new InMemoryFeaturesByTagPlugin();
         plugin.init(set, subject, predicate, object);
         return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
     }
@@ -332,9 +334,9 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
 
     /** {@inheritDoc} */
     @Override
-    public <ReturnValue> QueryFuture<ReturnValue> getFeaturesByPlugin(int hours, Class<? extends AnalysisPluginInterface> pluginClass, FeatureSet set, Object... parameters) {
+    public <ReturnValue> QueryFuture<ReturnValue> getFeaturesByPlugin(int hours, Class<? extends PluginInterface> pluginClass, FeatureSet set, Object... parameters) {
         try {
-            AnalysisPluginInterface plugin = pluginClass.newInstance();
+            PluginInterface plugin = pluginClass.newInstance();
             plugin.init(set, parameters);
             return InMemoryQueryFutureImpl.newBuilder().setPlugin(plugin).build();
         } catch (InstantiationException ex) {
@@ -347,7 +349,7 @@ public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface
 
     /** {@inheritDoc} */
     @Override
-    public void installAnalysisPlugin(AnalysisPluginInterface plugin) {
+    public void installPlugin(PluginInterface plugin) {
         this.pluginMap.put(plugin.getClass(), plugin);
     }
 }

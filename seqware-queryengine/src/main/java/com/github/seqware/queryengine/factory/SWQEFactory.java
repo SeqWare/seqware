@@ -16,6 +16,9 @@
  */
 package com.github.seqware.queryengine.factory;
 
+import com.github.seqware.queryengine.backInterfaces.BackEndInterface;
+import com.github.seqware.queryengine.backInterfaces.SerializationInterface;
+import com.github.seqware.queryengine.backInterfaces.StorageInterface;
 import com.github.seqware.queryengine.impl.*;
 import com.github.seqware.queryengine.model.QueryInterface;
 

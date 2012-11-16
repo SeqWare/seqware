@@ -16,29 +16,17 @@
  */
 package com.github.seqware.queryengine.system.rest.resources;
 
-import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.model.AnalysisRun;
-import com.github.seqware.queryengine.util.SeqWareIterable;
+import com.wordnik.swagger.annotations.Api;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 /**
- * AnalysisRun resource.
  *
  * @author dyuen
  */
-public class AnalysisResource extends GenericElementResource<AnalysisRun> {
-
-    @Override
-    public final String getClassName() {
-        return "Analysis";
-    }
-
-    @Override
-    public final Class getModelClass() {
-        return AnalysisRun.class;
-    }
+@Path("/plugin.json")
+@Api(value = "/plugin", description = "Operations about plugins"/*, listingPath="/resources.json/referenceset"*/)
+@Produces({"application/json"})
+public class PluginResourceJSON extends PluginResource{
     
-    @Override
-    public final SeqWareIterable getElements() {
-        return SWQEFactory.getQueryInterface().getAnalyses();
-    }
 }

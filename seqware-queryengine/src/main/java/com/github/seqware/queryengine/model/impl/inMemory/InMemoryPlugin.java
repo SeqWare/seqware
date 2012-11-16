@@ -1,17 +1,17 @@
 package com.github.seqware.queryengine.model.impl.inMemory;
 
-import com.github.seqware.queryengine.model.AnalysisRun;
-import com.github.seqware.queryengine.model.AnalysisType;
+import com.github.seqware.queryengine.model.PluginRun;
+import com.github.seqware.queryengine.model.Plugin;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 
 /**
- * An in-memory representation of a AnalysisType.
+ * An in-memory representation of a Plugin.
  *
  * @author dyuen
  * @version $Id: $Id
  */
-public class InMemoryAnalysisType extends AbstractInMemorySet<AnalysisType, AnalysisRun> implements AnalysisType{
+public class InMemoryPlugin extends AbstractInMemorySet<Plugin, PluginRun> implements Plugin{
     private String name = null;
     private String description = null;
     
@@ -31,40 +31,40 @@ public class InMemoryAnalysisType extends AbstractInMemorySet<AnalysisType, Anal
     /**
      * <p>newBuilder.</p>
      *
-     * @return a {@link com.github.seqware.queryengine.model.AnalysisType.Builder} object.
+     * @return a {@link com.github.seqware.queryengine.model.Plugin.Builder} object.
      */
-    public static AnalysisType.Builder newBuilder() {
-        return new InMemoryAnalysisType.Builder();
+    public static Plugin.Builder newBuilder() {
+        return new InMemoryPlugin.Builder();
     }
 
     /** {@inheritDoc} */
     @Override
-    public AnalysisType.Builder toBuilder() {
-        InMemoryAnalysisType.Builder b = new InMemoryAnalysisType.Builder();
-        b.aSet = (InMemoryAnalysisType) this.copy(true);
+    public Plugin.Builder toBuilder() {
+        InMemoryPlugin.Builder b = new InMemoryPlugin.Builder();
+        b.aSet = (InMemoryPlugin) this.copy(true);
         return b;
     }
 
     /** {@inheritDoc} */
     @Override
     public Class getHBaseClass() {
-        return AnalysisType.class;
+        return Plugin.class;
     }
 
     /** {@inheritDoc} */
     @Override
     public String getHBasePrefix() {
-        return AnalysisType.prefix;
+        return Plugin.prefix;
     }
 
-    public static class Builder extends AnalysisType.Builder {
+    public static class Builder extends Plugin.Builder {
         
         public Builder(){
-            aSet = new InMemoryAnalysisType();
+            aSet = new InMemoryPlugin();
         }
 
         @Override
-        public AnalysisType build(boolean newObject) {
+        public Plugin build(boolean newObject) {
             if(((AtomImpl)aSet).getManager() != null){
                 ((AtomImpl)aSet).getManager().objectCreated((Atom)aSet);
             }
@@ -72,14 +72,14 @@ public class InMemoryAnalysisType extends AbstractInMemorySet<AnalysisType, Anal
         }
 
         @Override
-        public InMemoryAnalysisType.Builder setName(String name) {
-            ((InMemoryAnalysisType)aSet).name = name;
+        public InMemoryPlugin.Builder setName(String name) {
+            ((InMemoryPlugin)aSet).name = name;
             return this;
         }
         
         @Override
-        public InMemoryAnalysisType.Builder setDescription(String description) {
-            ((InMemoryAnalysisType)aSet).description = description;
+        public InMemoryPlugin.Builder setDescription(String description) {
+            ((InMemoryPlugin)aSet).description = description;
             return this;
         }
     }

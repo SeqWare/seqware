@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.queryengine.impl;
+package com.github.seqware.queryengine.backInterfaces;
 
 import com.github.seqware.queryengine.model.Atom;
 

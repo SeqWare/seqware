@@ -16,6 +16,7 @@
  */
 package com.github.seqware.queryengine.impl;
 
+import com.github.seqware.queryengine.backInterfaces.SerializationInterface;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -62,11 +63,11 @@ public class KryoSerialization implements SerializationInterface {
         serializer.register(Reference.class, 5);
         serializer.register(Tag.class, 6);
         serializer.register(InMemoryTagSet.class, 7);
-        serializer.register(InMemoryAnalysisType.class, 8);
+        serializer.register(InMemoryPlugin.class, 8);
         serializer.register(InMemoryGroup.class, 9);
         serializer.register(InMemoryQueryFutureImpl.class, 10);
         serializer.register(InMemoryFeatureSet.class, 11);
-        serializer.register(AnalysisRun.class, 12);
+        serializer.register(PluginRun.class, 12);
         serializer.register(InMemoryQueryFutureImpl.class, 13);
         serializer.register(InMemoryReference.class, 14);
         serializer.register(HashSet.class, 15);

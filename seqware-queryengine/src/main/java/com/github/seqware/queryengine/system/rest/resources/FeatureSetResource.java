@@ -56,7 +56,7 @@ public class FeatureSetResource extends GenericSetResource<FeatureSet> {
     }
     
     /**
-     * Create new analysis event to create a query, monitor the query, and return a new feature set when ready.
+     * Create new pluginrun event to create a query, monitor the query, and return a new feature set when ready.
      * @param sgid rowkey of featureset to operate on
      * @param query query in our query language
      * @param ttl time in hours for the results to live 
@@ -64,7 +64,7 @@ public class FeatureSetResource extends GenericSetResource<FeatureSet> {
      */
     @POST
     @Path("/{sgid}/query")
-    @ApiOperation(value = "Create new analysis event to monitor query", notes = "This can only be done by an authenticated user.")
+    @ApiOperation(value = "Create new pluginrun event to monitor query", notes = "This can only be done by an authenticated user.")
     @ApiErrors(value = {
         @ApiError(code = INVALID_ID, reason = "Invalid element supplied"),
         @ApiError(code = INVALID_SET, reason = "Element not found")})

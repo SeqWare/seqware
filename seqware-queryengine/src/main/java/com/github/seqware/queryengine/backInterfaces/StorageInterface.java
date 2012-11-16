@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.queryengine.impl;
+package com.github.seqware.queryengine.backInterfaces;
 
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.FeatureList;
@@ -39,8 +39,8 @@ public abstract class StorageInterface {
     /**
      * These tables are always created with the same names
      */
-    public final BiMap<Class, String> directBIMap = new ImmutableBiMap.Builder<Class, String>().put(AnalysisRun.class, AnalysisRun.prefix)
-            .put(AnalysisType.class, AnalysisType.prefix).put(Reference.class, Reference.prefix).put(ReferenceSet.class, ReferenceSet.prefix)
+    public final BiMap<Class, String> directBIMap = new ImmutableBiMap.Builder<Class, String>().put(PluginRun.class, PluginRun.prefix)
+            .put(Plugin.class, Plugin.prefix).put(Reference.class, Reference.prefix).put(ReferenceSet.class, ReferenceSet.prefix)
             .put(Tag.class, Tag.prefix).put(TagSet.class, TagSet.prefix).put(User.class, User.prefix).put(Group.class, Group.prefix)
             .put(FeatureSet.class, FeatureSet.prefix).build();
     
