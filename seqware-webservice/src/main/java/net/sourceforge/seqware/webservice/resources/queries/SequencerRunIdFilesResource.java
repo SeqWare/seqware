@@ -16,17 +16,17 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import java.util.List;
-import net.sourceforge.seqware.common.business.LaneService;
+import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
-import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.Lane;
+import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.lists.ReturnValueList;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
@@ -53,27 +53,22 @@ public class SequencerRunIdFilesResource extends BasicRestlet {
         super(context);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(Request request, Response response) {
         authenticate(request.getChallengeResponse().getIdentifier());
-        try {
-            String id = request.getAttributes().get("sequencerRunId").toString();
+        String id = request.getAttributes().get("sequencerRunId").toString();
 
-            List<ReturnValue> returnValues = hello(Integer.parseInt(id));
+        List<ReturnValue> returnValues = hello(Integer.parseInt(id));
 
-            ReturnValueList list = new ReturnValueList();
-            list.setList(returnValues);
+        ReturnValueList list = new ReturnValueList();
+        list.setList(returnValues);
 
-            JaxbObject<ReturnValueList> jaxbTool = new JaxbObject<ReturnValueList>();
-
-            Document line = XmlTools.marshalToDocument(jaxbTool, returnValues);
-
-            response.setEntity(XmlTools.getRepresentation(line));
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            response.setStatus(Status.SERVER_ERROR_INTERNAL);
-        }
+        JaxbObject<ReturnValueList> jaxbTool = new JaxbObject<ReturnValueList>();
+        Document line = XmlTools.marshalToDocument(jaxbTool, list);
+        response.setEntity(XmlTools.getRepresentation(line));
     }
 
     /**
@@ -83,23 +78,18 @@ public class SequencerRunIdFilesResource extends BasicRestlet {
      * @return a {@link java.util.List} object.
      * @throws java.sql.SQLException if any.
      */
-    public List<ReturnValue> hello(int srSWA) throws SQLException {
+    public List<ReturnValue> hello(int srSWA){
         List<ReturnValue> returnValues = new ArrayList<ReturnValue>();
-        try {
-            ResultSet rs = DBAccess.get().executeQuery("SELECT l.lane_id FROM lane l, sequencer_run sr "
-                    + "WHERE l.sequencer_run_id=sr.sequencer_run_id AND "
-                    + "sr.sw_accession = " + srSWA);
 
-            while (rs.next()) {
-                LaneService ss = BeanFactory.getLaneServiceBean();
+        SequencerRunService srs = BeanFactory.getSequencerRunServiceBean();
+        SequencerRun sr = (SequencerRun) testIfNull(srs.findBySWAccession(srSWA));
 
-                FindAllTheFiles fatf = new FindAllTheFiles();
-                Lane lane = (Lane) testIfNull(ss.findByID(rs.getInt("lane_id")));
-                returnValues = fatf.filesFromLane(lane, null, null);
-            }
-        } finally {
-            DBAccess.close();
+        FindAllTheFiles fatf = new FindAllTheFiles();
+        for (Lane l : sr.getLanes()) {
+            Log.stdout("Lane: " + l);
+            returnValues.addAll(fatf.filesFromLane(l, null, null));
         }
+        Log.stdout("Size of return values:" + returnValues.size());
         return returnValues;
     }
 }
