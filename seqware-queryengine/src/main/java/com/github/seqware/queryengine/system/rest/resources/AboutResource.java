@@ -19,11 +19,13 @@ package com.github.seqware.queryengine.system.rest.resources;
 import com.github.seqware.queryengine.Constants;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.google.gson.Gson;
+import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.jaxrs.JavaHelp;
 import java.util.Map;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 /**
@@ -32,6 +34,9 @@ import javax.ws.rs.core.Response;
  *
  * @author dyuen
  */
+@Path("/about")
+@Api(value = "/about", description = "Metadata about this service"/*, listingPath="/resources.json/referenceset"*/)
+@Produces({"application/json"})
 public class AboutResource extends JavaHelp {
 
     public class BagOfVersionInfo {

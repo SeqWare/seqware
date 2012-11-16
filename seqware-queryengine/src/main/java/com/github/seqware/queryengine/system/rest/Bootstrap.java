@@ -14,19 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.queryengine.system.rest.resources;
+package com.github.seqware.queryengine.system.rest;
 
-import com.wordnik.swagger.annotations.Api;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import com.wordnik.swagger.jaxrs.JaxrsApiReader;
+import javax.servlet.http.HttpServlet;
 
 /**
- *
+ * Swagger hack to remove format string from their json file locations.
+ * Seen in their tutorial at https://github.com/wordnik/swagger-core/wiki/java-jax-rs
  * @author dyuen
  */
-@Path("/referenceset.json")
-@Api(value = "/referenceset", description = "Operations about referencesets"/*, listingPath="/resources.json/referenceset"*/)
-@Produces({"application/json"})
-public class ReferenceSetResourceJSON extends ReferenceSetResource{
-    
+public class Bootstrap extends HttpServlet {
+  static {
+	  JaxrsApiReader.setFormatString("");
+  }
 }
