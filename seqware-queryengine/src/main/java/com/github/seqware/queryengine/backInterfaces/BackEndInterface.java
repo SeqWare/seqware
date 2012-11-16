@@ -16,46 +16,13 @@
  */
 package com.github.seqware.queryengine.backInterfaces;
 
-import com.github.seqware.queryengine.model.Atom;
+import com.github.seqware.queryengine.model.QueryInterface;
 
 /**
- * This interface specifies operations to persist, update, and add objects to
- * the back-end without knowing about the specific database back-end.
- *
+ * A singular interface that needs to be implemented in order for a back-end
+ * developer to add support for a particular new back-end.
  * @author dyuen
- * @version $Id: $Id
  */
-public interface BackEndInterface {
-         
-    /**
-     * Store obj in the back-end.
-     *
-     * @param obj Object to be created
-     */
-    public void store(Atom ... obj);
-    
-    
-    /**
-     * Crawl through obj and update changes in the back-end.
-     *
-     * @param obj Object to be updated in the back-end
-     */
-    public void update(Atom ... obj);
-    
-    /**
-     * Update the obj using the latest information from the back-end
-     *
-     * @param obj Object to be refreshed from the back-end
-     * @return Due to copy-on-write, this may return a new object with
-     * updated information
-     */
-    public Atom refresh(Atom obj) ;
-    
-//    /**
-//     * Delete obj (will cascade in the case of sets to their 
-//     * children)
-//     * @param obj Object to be deleted from the back-end
-//     */
-//    public void delete(Atom obj); 
+public interface BackEndInterface extends LowLevelBackEndInterface, QueryInterface {
     
 }

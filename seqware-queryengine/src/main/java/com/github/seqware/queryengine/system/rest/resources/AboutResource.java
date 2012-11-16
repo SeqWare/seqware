@@ -41,7 +41,7 @@ public class AboutResource extends JavaHelp {
 
     public class BagOfVersionInfo {
 
-        private String backend = SWQEFactory.getBackEnd().getClass().toString();
+        private String backend = SWQEFactory.getQueryInterface().getClass().toString();
         private String modelManager = SWQEFactory.getModelManager().getClass().toString();
         private String serialization = SWQEFactory.getSerialization().getClass().toString();
         private String storage = SWQEFactory.getStorage().getClass().toString();

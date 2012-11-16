@@ -46,7 +46,7 @@ import org.apache.log4j.Logger;
 public class SimpleModelManager implements CreateUpdateManager {
 
     private Map<String, AtomStatePair> dirtySet = new HashMap<String, AtomStatePair>();
-    private BackEndInterface backend = SWQEFactory.getBackEnd();
+    private BackEndInterface backend = (BackEndInterface)SWQEFactory.getQueryInterface();
 
     /**
      * <p>buildFeatureSetInternal.</p>

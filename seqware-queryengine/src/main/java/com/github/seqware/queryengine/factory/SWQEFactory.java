@@ -16,7 +16,7 @@
  */
 package com.github.seqware.queryengine.factory;
 
-import com.github.seqware.queryengine.backInterfaces.BackEndInterface;
+import com.github.seqware.queryengine.backInterfaces.LowLevelBackEndInterface;
 import com.github.seqware.queryengine.backInterfaces.SerializationInterface;
 import com.github.seqware.queryengine.backInterfaces.StorageInterface;
 import com.github.seqware.queryengine.impl.*;
@@ -43,26 +43,26 @@ public class SWQEFactory {
         IN_MEMORY {
 
             @Override
-            BackEndInterface buildBackEnd(StorageInterface i) {
+            QueryInterface buildBackEnd(StorageInterface i) {
                 return new SimplePersistentBackEnd(i);
             }
         },
         HBASE {
 
             @Override
-            BackEndInterface buildBackEnd(StorageInterface i) {
+            QueryInterface buildBackEnd(StorageInterface i) {
                 return new HBasePersistentBackEnd(i);
             }
         },
         MRHBASE{
             @Override
-            BackEndInterface buildBackEnd(StorageInterface i){
+            QueryInterface buildBackEnd(StorageInterface i){
                 return new MRHBasePersistentBackEnd(i);
             }
         }
         ;
 
-        abstract BackEndInterface buildBackEnd(StorageInterface i);
+        abstract QueryInterface buildBackEnd(StorageInterface i);
     };
 
     /**
@@ -133,7 +133,7 @@ public class SWQEFactory {
     private static Serialization_Type current_serialization = DEFAULT_SERIALIZATION;
     private static SerializationInterface serialInstance = null;
     private static StorageInterface storeInstance = null;
-    private static BackEndInterface instance = null;
+    private static QueryInterface instance = null;
 
     /**
      * Get a reference to the current operating serialization method
@@ -169,18 +169,6 @@ public class SWQEFactory {
             instance = null;
             ref.closeStorage();
         }
-    }
-
-    /**
-     * Get a reference to the currently operating back-end
-     *
-     * @return backEnd reference to access underlying DB operations
-     */
-    public static BackEndInterface getBackEnd() {
-        if (instance == null) {
-            instance = current_backend.buildBackEnd(getStorage());
-        }
-        return instance;
     }
 
     /**

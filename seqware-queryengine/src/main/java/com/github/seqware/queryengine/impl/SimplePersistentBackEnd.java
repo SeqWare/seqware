@@ -45,7 +45,7 @@ import org.apache.log4j.Logger;
  * @author jbaran
  * @version $Id: $Id
  */
-public class SimplePersistentBackEnd implements BackEndInterface, QueryInterface {
+public class SimplePersistentBackEnd implements BackEndInterface {
 
     private Map<Class, PluginInterface> pluginMap = new HashMap<Class, PluginInterface>();
     protected StorageInterface storage;
