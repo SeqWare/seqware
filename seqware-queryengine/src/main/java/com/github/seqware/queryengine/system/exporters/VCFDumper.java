@@ -149,7 +149,7 @@ public class VCFDumper {
 
         boolean caughtNonVCF = false;
         boolean mrSuccess = false;
-        if (SWQEFactory.getBackEnd() instanceof MRHBasePersistentBackEnd) {
+        if (SWQEFactory.getQueryInterface() instanceof MRHBasePersistentBackEnd) {
             // hack to use VCF MR
             if (SWQEFactory.getModelManager() instanceof MRHBaseModelManager) {
                 try {

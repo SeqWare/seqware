@@ -290,7 +290,7 @@ public class QueryInterfaceTest implements Benchmarking {
         count = (int) resultSet.getCount();
         Assert.assertTrue("Setting a query constraints over one feature attribute and testing the value of a specific tag failed, expected 2 and found " + count, count == 2);
 
-        if (!(SWQEFactory.getBackEnd() instanceof HBasePersistentBackEnd)) {
+        if (!(SWQEFactory.getQueryInterface() instanceof HBasePersistentBackEnd)) {
             // in-memory models are too slow for the following test
             return;
         }
