@@ -7,10 +7,15 @@
 */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import joptsimple.OptionException;
+import joptsimple.OptionParser;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -167,6 +172,19 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     	}
     	return wfEngine;
     }
+    
+
+    @Override
+    public ReturnValue parse_parameters() {
+        ReturnValue ret = super.parse_parameters();
+        if(options.has("help") || options.has("h") || options.has("?")) {
+        	this.get_syntax();
+        	ret.setExitStatus(ReturnValue.STDOUTERR);
+        }
+
+        return ret;
+      }
+      
 }
 
 
