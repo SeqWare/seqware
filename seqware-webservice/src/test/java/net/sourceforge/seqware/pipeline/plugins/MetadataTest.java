@@ -404,40 +404,43 @@ public class MetadataTest extends PluginTest {
         checkExpectedFailure();
     }
 
-    @Test
-    public void testCreateStudyFail() {
-        instance.setParams(Arrays.asList("--table", "study", "--create",
-                "--field", "title::alal" + System.currentTimeMillis(),
-                "--field", "description::alal",
-                "--field", "accession::1235",
-                "--field", "center_name::oicr",
-                "--field", "center_project_name::mine",
-                "--field", "study_type::42"));
-        checkExpectedFailure();
-    }
+    // See SEQWARE-1374
+//    @Test
+//    public void testCreateStudyFail() {
+//        instance.setParams(Arrays.asList("--table", "study", "--create",
+//                "--field", "title::alal" + System.currentTimeMillis(),
+//                "--field", "description::alal",
+//                "--field", "accession::1235",
+//                "--field", "center_name::oicr",
+//                "--field", "center_project_name::mine",
+//                "--field", "study_type::42"));
+//        checkExpectedFailure();
+//    }
 
-    @Test
-    public void testCreateExperimentFail() {
-        String sAcc = "120";
+    // See SEQWARE-1374
+//    @Test
+//    public void testCreateExperimentFail() {
+//        String sAcc = "120";
+//
+//        instance.setParams(Arrays.asList("--table", "experiment", "--create",
+//                "--field", "study_accession::" + sAcc,
+//                "--field", "title::experimenttitle" + System.currentTimeMillis(),
+//                "--field", "description::\"Experiment Description\"",
+//                "--field", "platform_id::42"));
+//        checkExpectedFailure();
+//    }
 
-        instance.setParams(Arrays.asList("--table", "experiment", "--create",
-                "--field", "study_accession::" + sAcc,
-                "--field", "title::experimenttitle" + System.currentTimeMillis(),
-                "--field", "description::\"Experiment Description\"",
-                "--field", "platform_id::42"));
-        checkExpectedFailure();
-    }
-
-    @Test
-    public void testCreateSequencerRunFail() {
-        instance.setParams(Arrays.asList("--table", "sequencer_run", "--create",
-                "--field", "name::SR" + System.currentTimeMillis(),
-                "--field", "description::SRD",
-                "--field", "platform_accession::20000",
-                "--field", "paired_end::true",
-                "--field", "skip::false"));
-        checkExpectedFailure();
-    }
+    // See SEQWARE-1374
+//    @Test
+//    public void testCreateSequencerRunFail() {
+//        instance.setParams(Arrays.asList("--table", "sequencer_run", "--create",
+//                "--field", "name::SR" + System.currentTimeMillis(),
+//                "--field", "description::SRD",
+//                "--field", "platform_accession::20000",
+//                "--field", "paired_end::true",
+//                "--field", "skip::false"));
+//        checkExpectedFailure();
+//    }
 
     @Test
     public void testCreateLaneFail() {
