@@ -16,14 +16,10 @@
  */
 package net.sourceforge.seqware.pipeline.deciders;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Collections;
-import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.metadata.*;
+import net.sourceforge.seqware.pipeline.plugins.PluginTest;
 import org.junit.*;
-import joptsimple.OptionParser;
 import static org.junit.Assert.*;
 
 /**
@@ -33,55 +29,19 @@ import static org.junit.Assert.*;
  * @version $Id: $Id
  * @since 0.13.3
  */
-public class BasicDeciderTest {
-  private static Metadata metadata;
-  private BasicDecider instance;
+public class BasicDeciderTest extends PluginTest {
   /**
    * <p>Constructor for BasicDeciderTest.</p>
    */
   public BasicDeciderTest() {
   }
-
-  /**
-   * <p>setUpClass.</p>
-   *
-   * @throws java.lang.Exception if any.
-   */
-  @BeforeClass
-  public static void setUpClass() throws Exception {
-	metadata = new MetadataWS();
-	metadata.init("http://localhost:8889/seqware-webservice", "admin@admin.com", "admin");
-
-  }
-
-  /**
-   * <p>tearDownClass.</p>
-   *
-   * @throws java.lang.Exception if any.
-   */
-  @AfterClass
-  public static void tearDownClass() throws Exception {
-	metadata.clean_up();
-  }
-  
-  /**
-   * <p>setUp.</p>
-   */
-  @Before
-  public void setUp() {
-  	instance = new BasicDecider();
-	instance.setMetadata(metadata);
-	instance.setParams(Collections.EMPTY_LIST);
-	instance.parse_parameters();
-	instance.init();
-  }
-  
-  /**
-   * <p>tearDown.</p>
-   */
-  @After
-  public void tearDown() {
-  }
+    @Before
+    @Override
+    public void setUp() {
+        super.setUp();
+        instance = new BasicDecider();
+        instance.setMetadata(metadata);
+    }
 
   /**
    * <p>testCompareWorkflowRunFiles_Same.</p>
@@ -94,7 +54,7 @@ public class BasicDeciderTest {
 	String workflowRunAcc="6654";	
 
       	//assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-	assertFalse(instance.compareWorkflowRunFiles(workflowRunAcc, filesToRun));
+	assertFalse(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun));
     }
   
   /**
@@ -110,7 +70,7 @@ public class BasicDeciderTest {
 	String workflowRunAcc="6654";	
 
       	//assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-	assertTrue(instance.compareWorkflowRunFiles(workflowRunAcc, filesToRun));
+	assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun));
     }
 
   /**
@@ -125,7 +85,7 @@ public class BasicDeciderTest {
 	String workflowRunAcc="6654";	
 
       	//assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-	assertTrue(instance.compareWorkflowRunFiles(workflowRunAcc, filesToRun));
+	assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun));
     }
 
   /**
@@ -140,7 +100,7 @@ public class BasicDeciderTest {
 	String workflowRunAcc="6654";	
 
       	//assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-	assertFalse(instance.compareWorkflowRunFiles(workflowRunAcc, filesToRun));
+	assertFalse(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun));
     }
 
 
