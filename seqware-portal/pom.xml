@@ -399,7 +399,5 @@
             <artifactId>guava</artifactId>
         </dependency>            
     </dependencies>
-    <properties>
-        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
-    </properties>
+    <properties></properties>
 </project>
