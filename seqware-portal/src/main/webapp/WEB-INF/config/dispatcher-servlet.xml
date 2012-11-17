@@ -1359,6 +1359,7 @@
 		<property name="host" value="smtp.gmail.com" />
 		<property name="port" value="465" />
 		<property name="username" value="mail.nimbus.portal@gmail.com" />
+                <!-- this isn't really the password, nobody panic! -->
 		<property name="password" value="p@$$nimbusm@il"/>
 
 		 <property name="javaMailProperties">
