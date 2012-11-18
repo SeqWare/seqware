@@ -31,9 +31,6 @@ sudo gem install rainpress
 Source code is here:
 seqware/seqware-distribution/docs/site
 
-Prototype code is here:
-seqware/seqware-distribution/docs/site-prototype
-
 Compile the site:
 nanoc compile
 

@@ -27,7 +27,9 @@ import org.apache.commons.codec.binary.Base64;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.HttpMethod;
+import com.amazonaws.Protocol;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -350,8 +352,8 @@ public class ProvisionFilesUtil {
    * @param output a {@link java.lang.String} object.
    * @return true if OK
    */
-  public boolean putToS3(BufferedInputStream reader, String output) {
-    return (putToS3(reader, output, null, null));
+  public boolean putToS3(BufferedInputStream reader, String output, int connectionTimeout, int maxConnections, int maxErrorRetry, int socketTimeout) {
+    return (putToS3(reader, output, connectionTimeout, maxConnections, maxErrorRetry, socketTimeout, null, null));
   }
 
   /**
@@ -363,7 +365,7 @@ public class ProvisionFilesUtil {
    * @param encryptCipher a {@link javax.crypto.Cipher} object.
    * @return true if OK
    */
-  public boolean putToS3(InputStream reader, String output, Cipher decryptCipher, Cipher encryptCipher) {
+  public boolean putToS3(InputStream reader, String output, int connectionTimeout, int maxConnections, int maxErrorRetry, int socketTimeout, Cipher decryptCipher, Cipher encryptCipher) {
 
     // can encode the access key and secret key within the URL
     // see http://www.cs.rutgers.edu/~watrous/user-pass-url.html
@@ -415,9 +417,17 @@ public class ProvisionFilesUtil {
       ObjectMetadata omd = new ObjectMetadata();
       // this is the size of what's being read
       omd.setContentLength(this.inputSize);
-      TransferManager tm = new TransferManager(new BasicAWSCredentials(accessKey, secretKey));
-      AmazonS3 s3 = tm.getAmazonS3Client();
-              //new AmazonS3Client(new BasicAWSCredentials(accessKey, secretKey));
+      // just encrypt everything via Server-Side encryption, see http://docs.amazonwebservices.com/AmazonS3/latest/dev/SSEUsingJavaSDK.html
+      omd.setServerSideEncryption(ObjectMetadata.AES_256_SERVER_SIDE_ENCRYPTION);
+      BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+      ClientConfiguration config = new ClientConfiguration();
+      config.setConnectionTimeout(connectionTimeout);
+      config.setMaxConnections(maxConnections);
+      config.setMaxErrorRetry(maxErrorRetry);
+      config.setProtocol(Protocol.HTTPS);
+      config.setSocketTimeout(socketTimeout);
+      AmazonS3Client s3 = new AmazonS3Client(credentials, config);
+      TransferManager tm = new TransferManager(s3);
 
       // if reading from a local file and not decrypting or encrypting then we can use the API call below that works on a file
       if (this.inputFile != null && decryptCipher == null && encryptCipher == null) {

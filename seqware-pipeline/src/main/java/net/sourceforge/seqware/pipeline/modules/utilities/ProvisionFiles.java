@@ -28,6 +28,8 @@ import net.sourceforge.seqware.common.util.filetools.ProvisionFilesUtil;
 import net.sourceforge.seqware.pipeline.module.Module;
 import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 
+import com.amazonaws.ClientConfiguration;
+
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -58,6 +60,13 @@ public class ProvisionFiles extends Module {
   protected String algorithmName = "ProvisionFiles";
   private ProvisionFilesUtil filesUtil = new ProvisionFilesUtil();
   private static final String DATA_ENCRYPTION_ALGORITHM = "DESede";
+  
+  // S3 specific options
+  protected int s3ConnectionTimeout = ClientConfiguration.DEFAULT_SOCKET_TIMEOUT;
+  protected int s3MaxConnections = ClientConfiguration.DEFAULT_MAX_CONNECTIONS;
+  protected int s3MaxErrorRetry = ClientConfiguration.DEFAULT_MAX_RETRIES;
+  protected int s3SocketTimeout = ClientConfiguration.DEFAULT_SOCKET_TIMEOUT;
+  protected boolean useS3ServerSideEncryption = true;
 
   // FIXME: users have requested the ability to specify a single input file and
   // a single output file so they can copy and rename
@@ -113,6 +122,26 @@ public class ProvisionFiles extends Module {
         .accepts(
             "skip-if-missing",
             "Optional: useful for workflows with variable output files, this will silently skip any missing inputs (this is a little dangerous).");
+    parser
+        .accepts(
+            "s3-connection-timeout",
+            "Optional: Sets the amount of time to wait (in milliseconds) when initially establishing a connection before giving up and timing out. Default is "+s3ConnectionTimeout).withRequiredArg();
+    parser
+        .accepts(
+            "s3-max-connections",
+            "Optional: Sets the maximum number of allowed open HTTPS connections. Default is "+s3MaxConnections).withRequiredArg();
+    parser
+        .accepts(
+            "s3-max-error-retries",
+            "Optional: Sets the maximum number of retry attempts for failed retryable requests (ex: 5xx error responses from services). Default is "+s3MaxErrorRetry).withRequiredArg();
+    parser
+        .accepts(
+            "s3-max-socket-timeout",
+            "Optional: Sets the amount of time to wait (in milliseconds) for data to be transfered over an established, open connection before the connection times out and is closed. A value of 0 means infinity, and isn't recommended. Default is "+s3SocketTimeout).withRequiredArg();
+    parser
+        .accepts(
+            "s3-no-server-side-encryption",
+            "Optional: If specified, do not use S3 server-side encryption. Default is to use S3 server-side encryption for S3 destinations.");
     return (parser);
   }
 
@@ -441,6 +470,7 @@ public class ProvisionFiles extends Module {
     if (output.startsWith("s3://")) {
 
       // put to S3
+      // LEFT OFF HERE!!
       result = filesUtil.putToS3(reader, output, decryptCipher, encryptCipher);
 
     } else if (output.startsWith("http://") || output.startsWith("https://")) {
