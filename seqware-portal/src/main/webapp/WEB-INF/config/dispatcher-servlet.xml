@@ -588,6 +588,20 @@
 			<ref bean="studyService"/>
 		</property>
 	</bean>
+        
+        <bean id="studyTableController"
+		class="net.sourceforge.solexatools.webapp.controller.StudyTableController">
+		<property name="studyService">
+		<ref bean="studyService"/>
+		</property>
+	</bean>
+
+	<bean id="studyTableControllerDetails"
+		class="net.sourceforge.solexatools.webapp.controller.StudyTableControllerDetails">
+		<property name="studyService">
+		<ref bean="studyService"/>
+		</property>
+	</bean>
 
 	<bean id="studyReportController"
 		class="net.sourceforge.solexatools.webapp.controller.StudyReportController"
@@ -1507,6 +1521,8 @@
 				<prop key="**/studyUpdateSetup.htm">studySetupController</prop>
 				<prop key="**/studyUpdate.htm">studyController</prop>
 				<prop key="**/myStudyList.htm">studyListController</prop>
+                                <prop key="**/myStudyTable.htm">studyTableController</prop>
+				<prop key="**/myStudyTableDetails.htm">studyTableControllerDetails</prop>
 				<prop key="**/allStudyList.htm">studyListController</prop>
         		<prop key="**/studyListDetails.htm">studyListDetailsController</prop>
 				<!--prop key="**/mySharedStudyListDetails.htm">mySharedStudyListDetailsController</prop-->
