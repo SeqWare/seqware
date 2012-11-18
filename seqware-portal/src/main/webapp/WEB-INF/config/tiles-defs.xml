@@ -357,6 +357,11 @@
 		<put name="title" 		value="Nimbus Informatics"/>
 		<put name="content" 	value="/WEB-INF/jsp/AnalisysTable.jsp" type="page"/>
 	</definition>
+        
+        <definition name="/WEB-INF/jsp/StudyTable.jsp" 		extends=".nimbus">
+		<put name="title" 		value="Nimbus Informatics"/>
+		<put name="content" 	value="/WEB-INF/jsp/StudyTable.jsp" type="page"/>
+	</definition>
 
 	<definition name="/WEB-INF/jsp/BulkDownloadList.jsp" 		extends=".nimbus">
 		<put name="title" 		value="Nimbus Informatics"/>
