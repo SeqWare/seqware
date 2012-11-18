@@ -43,22 +43,10 @@ public class StudyTableController extends BaseCommandController {
       return new ModelAndView("redirect:/login.htm");
     }
 
-    initSortingTreeAttr(request);
-
     ModelAndView modelAndView = new ModelAndView("StudyTable");
     modelAndView.addObject("registration", registration);
 
     return modelAndView;
-  }
-
-  private void initSortingTreeAttr(HttpServletRequest request) {
-    HttpSession session = request.getSession(false);
-    if (session.getAttribute("ascMyListAnalysis") == null) {
-      session.setAttribute("ascMyListAnalysis", true);
-      session.setAttribute("ascMySharedAnalysises", true);
-      session.setAttribute("ascAnalysisesSharedWithMe", true);
-      session.setAttribute("ascMyRunningListAnalysis", true);
-    }
   }
 
   public StudyService getStudyService() {
