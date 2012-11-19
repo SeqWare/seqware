@@ -33,6 +33,13 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
+ * 
+ * TODO:
+ * 
+ *  * it would be best if this controller would actually render the workflow_runs
+ *    too. That will require paging to work properly in the Hibernate layer
+ *    which VRP never actually did (no wonder the app is so slow!).
+ * 
  * RegistrationSetupController
  *
  * @author boconnor
@@ -98,6 +105,8 @@ public class StudyTableControllerDetails extends BaseCommandController {
       if (qtype != null && !"".equals(qtype) && query != null && !"".equals(query)) {
         search_query = " and cast(wr." + qtype + " as string) like '%" + query + "%'";
       }
+      
+      // LEFT OFF HERE!!!
 
       studies = studyService.list(registration);
 
@@ -150,6 +159,20 @@ public class StudyTableControllerDetails extends BaseCommandController {
 
         for (Sample sample : exp.getSamples()) {
 
+          ArrayList<String> sampleStrs = new ArrayList<String>();
+          getSampleStrings(sample.getTitle(), sample, sampleStrs);
+          for (String sampleStr : sampleStrs) {
+            List<String> cellsModel = new LinkedList<String>();
+
+            cellsModel.add(study.getTitle());
+            cellsModel.add(study.getCreateTimestamp().toString());
+            cellsModel.add(exp.getTitle());
+            cellsModel.add(sampleStr);
+            cellsModel.add("workflows");
+            Flexigrid.Cells cells = flexigrid.new Cells(cellsModel);
+            flexigrid.addRow(cells);
+          }
+          /* // not doing this right now
           HashMap<WorkflowRun, String> workflows = new HashMap<WorkflowRun, String>();
           getWorkflowRuns(sample, workflows, "");
 
@@ -168,12 +191,29 @@ public class StudyTableControllerDetails extends BaseCommandController {
             Flexigrid.Cells cells = flexigrid.new Cells(cellsModel);
             flexigrid.addRow(cells);
           }
-        }
+          */
+        }   
       }
     }
     return flexigrid;
   }
-
+  
+  /**
+   * This finds all the possible paths to leaf sample nodes.
+   * @param currString
+   * @param s
+   * @param sampleStrs 
+   */
+  private void getSampleStrings(String currString, Sample s, ArrayList<String> sampleStrs) {
+    if (s.getChildren() == null || s.getChildren().size() == 0) {
+      sampleStrs.add(currString);
+    } else {
+      for (Sample s2 : s.getChildren()) {
+        getSampleStrings(currString + " / " + s2.getTitle(), s2, sampleStrs);
+      }
+    }
+  }
+  
   private void getWorkflowRuns(Sample sample, HashMap<WorkflowRun, String> workflows, String sampleString) {
     
     String sampleStr = sampleString + " / " + sample.getTitle();
