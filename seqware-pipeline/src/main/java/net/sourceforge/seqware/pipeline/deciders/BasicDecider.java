@@ -398,18 +398,19 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     private void addFileToLists(ReturnValue file, FileMetadata fm, List<String> workflowParentAccessionsToRun,
             List<String> parentAccessionsToRun, List<String> filesToRun) {
-        if (test) {
-            String studyName = (String) options.valueOf("study-name");
-            try {
-                StringWriter writer = new StringWriter();
-                FindAllTheFiles.print(writer, file, studyName, true, fm);
-                Log.stdout(writer.getBuffer().toString().trim());
-            } catch (IOException ex) {
-                Logger.getLogger(BasicDecider.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
 
         if (checkFileDetails(file, fm)) {
+            if (test) {
+                String studyName = (String) options.valueOf("study-name");
+                try {
+                    StringWriter writer = new StringWriter();
+                    FindAllTheFiles.print(writer, file, studyName, true, fm);
+                    Log.stdout(writer.getBuffer().toString().trim());
+                } catch (IOException ex) {
+                    Logger.getLogger(BasicDecider.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
             filesToRun.add(fm.getFilePath());
             parentAccessionsToRun.add(file.getAttribute(Header.PROCESSING_SWID.getTitle()));
 
