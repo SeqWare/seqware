@@ -29,7 +29,7 @@ import javax.ws.rs.Produces;
  * @author dyuen
  */
 @Path("/referenceset")
-@Api(value = "/referenceset", description = "Operations about referencesets"/*, listingPath="/resources.json/referenceset"*/)
+@Api(value = "/referenceset", description = "Operations about referencesets", listingPath="/resources/referenceset")
 @Produces({"application/json"})
 public class ReferenceSetResource extends GenericMutableSetResource<ReferenceSet> {
 

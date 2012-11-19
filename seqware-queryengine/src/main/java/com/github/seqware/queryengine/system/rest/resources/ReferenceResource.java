@@ -29,7 +29,7 @@ import javax.ws.rs.Produces;
  * @author dyuen
  */
 @Path("/reference")
-@Api(value = "/reference", description = "Operations about references"/*, listingPath="/resources.json/referenceset"*/)
+@Api(value = "/reference", description = "Operations about references", listingPath="/resources/reference")
 @Produces({"application/json"})
 public class ReferenceResource extends GenericElementResource<Reference> {
 
