@@ -110,38 +110,46 @@ public class Metadata extends Plugin {
       for (String table : new String[]{"study", "experiment", "sample", "sequencer_run", "ius", "lane"}) {
         print(table + "\n");
       }
-
+      this.closeBufferWriter();
     } else if (options.has("table") && options.has("list")) {
       // list the table's contents
     } else if (options.has("table") && options.has("list-fields")) {
       // list the fields for this table
-      return (listFields((String) options.valueOf("table")));
+    	ret = (listFields((String) options.valueOf("table")));
+    	this.closeBufferWriter();
+      return ret;
     } else if (options.has("table") && options.has("create") && options.has("field")) {
 
       // create a row with these fields
       if ("study".equals((String) options.valueOf("table"))) {
-
-        return (addStudy());
+    	  ret = addStudy();
+    	  this.closeBufferWriter();
+        return ret;
 
       } else if ("experiment".equals((String) options.valueOf("table"))) {
-
-        return (addExperiment());
+    	  ret = addExperiment();
+    	  this.closeBufferWriter();
+        return ret;
 
       } else if ("sample".equals((String) options.valueOf("table"))) {
-
-        return (addSample());
+    	  ret = addSample();
+    	  this.closeBufferWriter();
+        return ret;
 
       } else if ("sequencer_run".equals((String) options.valueOf("table"))) {
-
-        return (addSequencerRun());
+    	  ret = addSequencerRun();
+    	  this.closeBufferWriter();
+        return ret;
 
       } else if ("lane".equals((String) options.valueOf("table"))) {
-
-        return (addLane());
+    	  ret = addLane();
+    	  this.closeBufferWriter();
+        return ret;
 
       } else if ("ius".equals((String) options.valueOf("table"))) {
-
-        return (addIUS());
+    	  ret = addIUS();
+    	  this.closeBufferWriter();
+        return ret;
 
       } else {
         Logger.getLogger(Metadata.class.getName()).log(Level.SEVERE, "This tool does not know how to save to the " + options.valueOf("table") + " table.", "");
@@ -389,5 +397,13 @@ public class Metadata extends Plugin {
     return "This plugin lets you list, read, and write to a collection of tables in the underlying MetaDB. "
             + "This makes it easier to automate the creation of entities in the database which can be used as "
             + "parents for file uploads and triggered workflows.";
+  }
+  
+  private void closeBufferWriter() {
+	  try {
+		this.bw.close();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
   }
 }
