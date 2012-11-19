@@ -94,8 +94,8 @@ public class StudyIdFilesTSVResource extends BasicRestlet {
 					}
 
 					try {
-						returnValues = FindAllTheFiles.filterReturnValues(returnValues, study.getTitle(), fileType, duplicates, showFailedAndRunning, showStatus);
-						FindAllTheFiles.printTSVFile(new PrintWriter(out), showStatus, returnValues, study.getTitle());
+						returnValues = FindAllTheFiles.filterReturnValues(returnValues, fileType, duplicates, showFailedAndRunning, showStatus);
+						FindAllTheFiles.printTSVFile(new PrintWriter(out), showStatus, returnValues);
 					} catch (IOException ex) {
 						Log.error("Error writing to StringWriter.", ex);
 						//response.setStatus(Status.SERVER_ERROR_INTERNAL, "Error writing to "
@@ -141,8 +141,8 @@ public class StudyIdFilesTSVResource extends BasicRestlet {
         StringWriter writer = new StringWriter();
 
         try {
-            returnValues = FindAllTheFiles.filterReturnValues(returnValues, study.getTitle(), fileType, duplicates, showFailedAndRunning, showStatus);
-            FindAllTheFiles.printTSVFile(writer, showStatus, returnValues, study.getTitle());
+            returnValues = FindAllTheFiles.filterReturnValues(returnValues, fileType, duplicates, showFailedAndRunning, showStatus);
+            FindAllTheFiles.printTSVFile(writer, showStatus, returnValues);
         } catch (IOException ex) {
             Log.error("Error writing to StringWriter.", ex);
             response.setStatus(Status.SERVER_ERROR_INTERNAL, "Error writing to "

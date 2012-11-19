@@ -442,7 +442,15 @@ public interface MetadataInterface {
    * @return a {@link java.util.List} object.
    */
   public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName);
-
+  
+  
+  /**
+   * <p>findAllFilesAssociatedWithStudies.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
+  public List<ReturnValue> findAllFilesAssociatedWithStudies();
+  
   /**
    * <p>saveFileForIus.</p>
    *

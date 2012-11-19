@@ -599,4 +599,10 @@ public class MetadataNoConnection extends Metadata {
     // TODO Auto-generated method stub
 
   }
+  
+    /** {@inheritDoc} */
+    @Override
+    public List<ReturnValue> findAllFilesAssociatedWithStudies() {
+        return new ArrayList<ReturnValue>();
+    }
 }

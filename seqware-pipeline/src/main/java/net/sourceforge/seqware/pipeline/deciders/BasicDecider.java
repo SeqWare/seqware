@@ -62,9 +62,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     public BasicDecider() {
         super();
         parser.acceptsAll(Arrays.asList("wf-accession"), "The workflow accession of the workflow").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("study-name"), "Full study name. One of sample-name, study-name or sequencer-run-name is required.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("sample-name"), "Full sample name. One of sample-name, study-name or sequencer-run-name  is required.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("sequencer-run-name"), "Full sequencer run name. One of sample-name, study-name or sequencer-run-name is required.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("study-name"), "Full study name. One of sample-name, study-name, sequencer-run-name or all is required.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("sample-name"), "Full sample name. One of sample-name, study-name, sequencer-run-name or all is required.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("sequencer-run-name"), "Full sequencer run name. One of sample-name, study-name, sequencer-run-name or all is required.").withRequiredArg();
+        parser.accepts("all", "Run everything. One of sample-name, study-name, sequencer-run-name or all is required.");
         parser.acceptsAll(Arrays.asList("group-by"), "Optional: Group by one of the headings in FindAllTheFiles. Default: FILE_SWA. One of LANE_SWA or IUS_SWA.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("parent-wf-accessions"), "The workflow accessions of the parent workflows, comma-separated with no spaces. May also specify the meta-type.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("meta-types"), "The comma-separated meta-type(s) of the files to run this workflow with. Alternatively, use parent-wf-accessions.").withRequiredArg();
@@ -91,9 +92,12 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      */
     public ReturnValue init() {
 
-        if (!options.has("study-name") && !options.has("sample-name") && !options.has("sequencer-run-name")) {
+        if (options.has("study-name")
+                ^ options.has("sample-name")
+                ^ options.has("sequencer-run-name")
+                ^ options.has("all")) {
             Log.stdout(this.get_syntax());
-            Log.error("Please provide either a study-name, sample-name or sequencer-run-name");
+            Log.error("Please provide one of sample-name, study-name, sequencer-run-name or all");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
 
@@ -250,7 +254,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         Map<String, List<ReturnValue>> mappedFiles = null;
 
 
-        if (options.has("study-name")) {
+        if (options.has("all")) {
+            List<ReturnValue> vals = metaws.findAllFilesAssociatedWithStudies();
+            mappedFiles = separateFiles(vals, groupBy);
+        } else if (options.has("study-name")) {
             String studyName = (String) options.valueOf("study-name");
             List<ReturnValue> vals = metaws.findFilesAssociatedWithAStudy(studyName);
             mappedFiles = separateFiles(vals, groupBy);
@@ -404,10 +411,9 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private void addFileToSets(ReturnValue file, FileMetadata fm, Collection<String> workflowParentAccessionsToRun,
             Collection<String> parentAccessionsToRun, Collection<String> filesToRun) {
         if (test) {
-            String studyName = (String) options.valueOf("study-name");
             try {
                 StringWriter writer = new StringWriter();
-                FindAllTheFiles.print(writer, file, studyName, true, fm);
+                FindAllTheFiles.print(writer, file, true, fm);
                 Log.stdout(writer.getBuffer().toString().trim());
             } catch (IOException ex) {
                 Logger.getLogger(BasicDecider.class.getName()).log(Level.SEVERE, null, ex);
