@@ -16,35 +16,21 @@
  */
 package com.github.seqware.queryengine.system.rest.resources;
 
-import com.github.seqware.queryengine.factory.SWQEFactory;
-import com.github.seqware.queryengine.model.Group;
-import com.github.seqware.queryengine.util.SeqWareIterable;
 import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.jaxrs.JavaHelp;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 /**
- * Group resource.
  *
  * @author dyuen
  */
-@Path("/group")
-@Api(value = "/group", description = "Operations about groups", listingPath="/resources/group")
+@Path("/resources.json/plugin")
+@Api(value = "/plugin",
+  description = "Operations about plugins",
+  listingPath = "/resources.json/plugin",
+  listingClass = "com.github.seqware.queryengine.system.rest.resources.PluginResource")
 @Produces({"application/json"})
-public class GroupResource extends GenericMutableSetResource<Group> {
-
-    @Override
-    public final String getClassName() {
-        return "Group";
-    }
-
-    @Override
-    public final Class getModelClass() {
-        return Group.class;
-    }
+public class PluginListingResource extends JavaHelp{
     
-    @Override
-    public final SeqWareIterable getElements() {
-        return SWQEFactory.getQueryInterface().getGroups();
-    }
 }

@@ -41,7 +41,7 @@ import javax.ws.rs.core.Response;
  * @author dyuen
  */
 @Path("/featureset")
-@Api(value = "/featureset", description = "Operations about featuresets"/*, listingPath="/resources.json/referenceset"*/)
+@Api(value = "/featureset", description = "Operations about featuresets", listingPath = "/resources/featureset")
 @Produces({"application/json"})
 public class FeatureSetResource extends GenericSetResource<FeatureSet> {
 
@@ -54,18 +54,20 @@ public class FeatureSetResource extends GenericSetResource<FeatureSet> {
     public final Class getModelClass() {
         return FeatureSet.class;
     }
-    
+
     @Override
     public final SeqWareIterable getElements() {
         return SWQEFactory.getQueryInterface().getFeatureSets();
     }
-    
+
     /**
-     * Create new pluginrun event to create a query, monitor the query, and return a new feature set when ready.
+     * Create new pluginrun event to create a query, monitor the query, and
+     * return a new feature set when ready.
+     *
      * @param sgid rowkey of featureset to operate on
      * @param query query in our query language
-     * @param ttl time in hours for the results to live 
-     * @return 
+     * @param ttl time in hours for the results to live
+     * @return
      */
     @POST
     @Path("/{sgid}/query")
@@ -73,60 +75,80 @@ public class FeatureSetResource extends GenericSetResource<FeatureSet> {
     @ApiErrors(value = {
         @ApiError(code = INVALID_ID, reason = "Invalid element supplied"),
         @ApiError(code = INVALID_SET, reason = "Element not found")})
-    public Response updateElementPermissions(
-            @ApiParam(value = "rowkey that needs to be updated", required = true) 
+    public Response runQuery(
+            @ApiParam(value = "rowkey that needs to be updated", required = true)
             @PathParam("sgid") String sgid,
             @ApiParam(value = "query", required = true)
             @QueryParam(value = "query") String query,
             @ApiParam(value = "ttl", required = false)
-            @QueryParam(value = "ttl") int ttl
-            ) {
+            @QueryParam(value = "ttl") int ttl) {
         // make this an overrideable method in the real version
         //userData.addUser(user);
         return Response.ok().entity("").build();
     }
-    
+
     /**
-     * Return the features that belong to the specified feature set either in JSON or VCF
+     * Return the features that belong to the specified feature set in
+     * VCF
+     *
      * @param sgid rowkey of featureset to operate on
-     * @return 
+     * @return
      */
     @GET
-    @Path("/{sgid}/features")
-    @ApiOperation(value = "List features in a featureset", notes = "This can only be done by an authenticated user.")
+    @Path("/{sgid}")
+    @ApiOperation(value = "List features in a featureset in VCF", notes = "This can only be done by an authenticated user.")
     @ApiErrors(value = {
         @ApiError(code = INVALID_ID, reason = "Invalid element supplied"),
         @ApiError(code = INVALID_SET, reason = "Element not found")})
-    public Response getFeatureListing(
-            @ApiParam(value = "rowkey that needs to be updated", required = true) 
-            @PathParam("sgid") String sgid,
-            @ApiParam(value = "format of output", required = false, allowableValues = "JSON,VCF")
-            @DefaultValue(value = "JSON")
-            @QueryParam(value = "format") String format
-            ) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getVCFFeatureListing(
+            @ApiParam(value = "rowkey that needs to be updated", required = true)
+            @PathParam("sgid") String sgid) {
         // make this an overrideable method in the real version
         //userData.addUser(user);
         return Response.ok().entity("").build();
     }
     
     /**
+     * Return a specific feature in JSON
+     *
+     * @param sgid rowkey of featureset to operate on
+     * @return
+     */
+    @GET
+    @Path("/{sgid}/{fsgid}")
+    @ApiOperation(value = "Get a specific feature in a featureset in JSON", notes = "This can only be done by an authenticated user.")
+    @ApiErrors(value = {
+        @ApiError(code = INVALID_ID, reason = "Invalid element supplied"),
+        @ApiError(code = INVALID_SET, reason = "Element not found")})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getJSONFeature(
+            @ApiParam(value = "rowkey of featureset to find feature in", required = true)
+            @PathParam("sgid") String sgid,
+            @ApiParam(value = "rowkey of feature", required = true)
+            @QueryParam(value = "sgid") String fsgid) {
+        // make this an overrideable method in the real version
+        //userData.addUser(user);
+        return Response.ok().entity("").build();
+    }
+
+    /**
      * Upload a raw variant file to create a new featureset
+     *
      * @param sgid rowkey of ontology to create
-     * @return 
+     * @return
      */
     @POST
-    @Path("/createWithRaw")
     @ApiOperation(value = "Create a new featureset with a raw data file", notes = "This can only be done by an authenticated user.")
     @ApiErrors(value = {
         @ApiError(code = RESOURCE_EXISTS, reason = "Resource already exists")})
     @Consumes(MediaType.TEXT_PLAIN)
-    public Response updateElementPermissions(
-            @ApiParam(value = "rowkey that needs to be updated", required = false) 
+    public Response uploadRawVCFfile(
+            @ApiParam(value = "tagset rowkey that needs to be updated", required = false)
             @PathParam("sgid") String sgid,
             @ApiParam(value = "format of input", required = true, allowableValues = "VCF,GFF3,GVF")
             @DefaultValue(value = "VCF")
-            @QueryParam(value = "format") String format
-            ) {
+            @QueryParam(value = "format") String format) {
         // make this an overrideable method in the real version
         //userData.addUser(user);
         return Response.ok().entity("").build();

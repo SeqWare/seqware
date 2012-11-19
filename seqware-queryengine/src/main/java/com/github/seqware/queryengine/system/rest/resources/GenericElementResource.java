@@ -29,24 +29,23 @@ import com.github.seqware.queryengine.model.interfaces.ACL;
 import com.github.seqware.queryengine.system.rest.exception.InvalidIDException;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import com.google.gson.Gson;
-import com.google.protobuf.Message;
 import com.wordnik.swagger.annotations.ApiError;
 import com.wordnik.swagger.annotations.ApiErrors;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.jaxrs.JavaHelp;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -55,7 +54,7 @@ import javax.ws.rs.core.Response;
  *
  * @author dyuen
  */
-public abstract class GenericElementResource<T extends Atom> extends JavaHelp {
+public abstract class GenericElementResource<T extends Atom> {
 
     public static final int INVALID_ID = 400;
     public static final int INVALID_SET = 404;
@@ -69,7 +68,6 @@ public abstract class GenericElementResource<T extends Atom> extends JavaHelp {
      * @return list of resources
      */
     @GET
-    @Path(value = "/list")
     @ApiOperation(value = "List all available elements by rowkey", notes = "This lists the raw rowkeys used to uniquely identify each chain of entities.", responseClass = "com.github.seqware.queryengine.model.Atom")
     public final Response featuresRequest() {
         // Check whether the dsn contains the type of store, or not:
@@ -90,16 +88,14 @@ public abstract class GenericElementResource<T extends Atom> extends JavaHelp {
      */
     @GET
     @Path(value = "/{sgid}")
-    @ApiOperation(value = "Find a specific element by rowkey", notes = "Add extra notes here", responseClass = "com.github.seqware.queryengine.model.Atom")
+    @ApiOperation(value = "Find a specific element by rowkey in JSON", notes = "Add extra notes here", responseClass = "com.github.seqware.queryengine.model.Atom")
     @ApiErrors(value = {
         @ApiError(code = INVALID_ID, reason = "Invalid ID supplied"),
         @ApiError(code = INVALID_SET, reason = "set not found")})
-    public final Response featureByIDRequest (
+    @Produces(MediaType.APPLICATION_JSON)
+    public final Response featureByIDRequest(
             @ApiParam(value = "id of set to be fetched", required = true)
-            @PathParam(value = "sgid") String sgid,
-            @ApiParam(value = "format of output", required = false)
-            @DefaultValue(value = "JSON")
-            @QueryParam(value = "format") String format) throws InvalidIDException {
+            @PathParam(value = "sgid") String sgid) throws InvalidIDException {
         // Check whether the dsn contains the type of store, or not:
         //        if (!dsn.matches("^[a-zA-Z]+[0-9a-zA-Z_]*\\.[a-zA-Z]+[0-9a-zA-Z_]*\\.[a-zA-Z]+[0-9a-zA-Z_]*$"))
         //            return this.getUnsupportedOperationResponse();
@@ -110,22 +106,17 @@ public abstract class GenericElementResource<T extends Atom> extends JavaHelp {
             throw new InvalidIDException(INVALID_ID, "ID not found");
         }
 
-        String toString = null;
-        if (format.equals("JSON")) {
-            ObjectMapper mapper = new ObjectMapper();
-            VisibilityChecker<?> visibilityChecker =  mapper.getVisibilityChecker().withFieldVisibility(Visibility.PUBLIC_ONLY);  
-            mapper.setVisibilityChecker(visibilityChecker);  
-            try {
-                toString = mapper.writeValueAsString(latestAtomByRowKey);
-            } catch (IOException ex) {
-                Logger.getLogger(GenericElementResource.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
-            }
-        } else {
-            ProtobufTransferInterface tIO = gettIO();
-            Message m2pb = tIO.m2pb(latestAtomByRowKey);
-            toString = m2pb.toString();
+        String toString;
+        ObjectMapper mapper = new ObjectMapper();
+        VisibilityChecker<?> visibilityChecker = mapper.getVisibilityChecker().withFieldVisibility(Visibility.PUBLIC_ONLY);
+        mapper.setVisibilityChecker(visibilityChecker);
+        try {
+            toString = mapper.writeValueAsString(latestAtomByRowKey);
+        } catch (IOException ex) {
+            Logger.getLogger(GenericElementResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
+
         return Response.ok(toString.toString())/*.header("Access-Control-Allow-Origin", "*").header("QE-Status", "200")*/.build();
     }
 

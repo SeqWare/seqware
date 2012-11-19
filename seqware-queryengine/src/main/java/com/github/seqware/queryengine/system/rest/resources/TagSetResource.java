@@ -27,7 +27,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -39,7 +38,7 @@ import javax.ws.rs.core.Response;
  * @author dyuen
  */
 @Path("/tagset")
-@Api(value = "/tagset", description = "Operations about tagsets"/*, listingPath="/resources.json/referenceset"*/)
+@Api(value = "/tagset", description = "Operations about tagsets", listingPath="/resources.json/tagset")
 @Produces({"application/json"})
 public class TagSetResource extends GenericMutableSetResource<TagSet> {
 
@@ -64,12 +63,11 @@ public class TagSetResource extends GenericMutableSetResource<TagSet> {
      * @return 
      */
     @POST
-    @Path("/createWithOBO")
     @ApiOperation(value = "Create new ontology from an OBO file", notes = "This can only be done by an authenticated user.")
     @ApiErrors(value = {
         @ApiError(code = RESOURCE_EXISTS, reason = "Resource already exists")})
     @Consumes(MediaType.TEXT_PLAIN)
-    public Response updateElementPermissions(
+    public Response uploadOBO(
             @ApiParam(value = "rowkey that needs to be updated", required = true) 
             @QueryParam("sgid") String sgid
             ) {

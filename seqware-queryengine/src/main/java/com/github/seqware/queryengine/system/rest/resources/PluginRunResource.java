@@ -29,7 +29,7 @@ import javax.ws.rs.Produces;
  * @author dyuen
  */
 @Path("/pluginrun")
-@Api(value = "/pluginrun", description = "Operations about pluginrun"/*, listingPath="/resources.json/referenceset"*/)
+@Api(value = "/pluginrun", description = "Operations about pluginrun", listingPath="/resources/pluginrun")
 @Produces({"application/json"})
 public class PluginRunResource extends GenericElementResource<PluginRun> {
 
