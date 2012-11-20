@@ -431,7 +431,7 @@ public class SimpleModelManager implements CreateUpdateManager {
     public Builder buildPluginRun() {
         PluginRun.Builder aSet = null;
         if (backend instanceof SimplePersistentBackEnd) {
-            return InMemoryQueryFutureImpl.newBuilder().setManager(this);
+            return PluginRun.newBuilder().setManager(this);
         }
         assert (aSet != null);
         return aSet;

@@ -4,7 +4,8 @@ import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.interfaces.TTLable;
-import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryPluginRunner;
+import com.github.seqware.queryengine.plugins.plugins.FeaturesAllPlugin;
 import java.util.*;
 import junit.framework.Assert;
 import org.junit.BeforeClass;
@@ -58,7 +59,7 @@ public class TTLTest {
         marshmallowUser.setTTL(10, true);
         titanicUser = mManager.buildUser().setFirstName("Deanna").setLastName("Troi").setEmailAddress("deanna.troi@googly.com").setPassword("password").build();
         titanicUser.setTTL(5, false);
-        a1 = mManager.buildPluginRun().setParameters(new ArrayList()).setPlugin(new InMemoryFeaturesAllPlugin()).build();
+        a1 = mManager.buildPluginRun().setParameters(new ArrayList()).setPluginRunner(SWQEFactory.getPluginRunner(null, null)).build();
         a1.setTTL(TTLable.FOREVER, true);
         group.add(marshmallowUser);
         viewerGroup.add(titanicUser);

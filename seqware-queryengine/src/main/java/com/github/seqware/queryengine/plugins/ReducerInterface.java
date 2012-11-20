@@ -14,26 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.queryengine.plugins.inmemory;
-
-import com.github.seqware.queryengine.model.Feature;
-import java.io.Serializable;
+package com.github.seqware.queryengine.plugins;
 
 /**
- * Interface for matching functions that we can quickly use in both in-memory and M/R plug-ins.
  *
  * @author dyuen
- * @version $Id: $Id
  */
-public interface FeatureFilter extends Serializable{
-    
-    /**
-     * <p>featurePasses.</p>
-     *
-     * @param f a {@link com.github.seqware.queryengine.model.Feature} object.
-     * @param parameters a {@link java.lang.Object} object.
-     * @return a boolean.
-     */
-    public boolean featurePasses(Feature f, Object ... parameters);
+public interface ReducerInterface<REDUCEKEYOUT, REDUCEVALUEOUT> {
+
+    public void write(REDUCEKEYOUT val, REDUCEVALUEOUT text);
+
     
 }

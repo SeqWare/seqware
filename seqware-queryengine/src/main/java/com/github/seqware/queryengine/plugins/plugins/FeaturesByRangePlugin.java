@@ -14,11 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.queryengine.plugins.inmemory;
+package com.github.seqware.queryengine.plugins.plugins;
 
 import com.github.seqware.queryengine.model.Feature;
+import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryInterface;
 import com.github.seqware.queryengine.model.QueryInterface.Location;
+import com.github.seqware.queryengine.plugins.MapperInterface;
+import com.github.seqware.queryengine.plugins.ReducerInterface;
+import java.util.Collection;
 
 /**
  * Retrieves features based on their chromosomal location.
@@ -26,12 +30,12 @@ import com.github.seqware.queryengine.model.QueryInterface.Location;
  * @author jbaran
  * @version $Id: $Id
  */
-public class InMemoryFeaturesByRangePlugin extends InMemoryFeaturesByFilterPlugin {
+public class FeaturesByRangePlugin extends FeaturesByFilterPlugin {
 
      /** {@inheritDoc} */
      @Override
     protected FeatureFilter getFilter() {
-        return new InMemoryFeaturesByRangePlugin.FeaturesByRangeFilter();
+        return new FeaturesByRangePlugin.FeaturesByRangeFilter();
     }
     
     public static class FeaturesByRangeFilter implements FeatureFilter {

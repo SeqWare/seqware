@@ -14,27 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.queryengine.plugins.inmemory;
+package com.github.seqware.queryengine.plugins.plugins;
 
 import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.plugins.ScanPlugin;
-import java.util.Iterator;
+import java.io.Serializable;
 
 /**
- * Base class for all in-memory plug-ins that do Scan
+ * Interface for matching functions that we can quickly use in both in-memory and M/R plug-ins.
  *
  * @author dyuen
  * @version $Id: $Id
  */
-public abstract class AbstractScanInMemoryPlugin extends AbstractInMemoryPlugin implements ScanPlugin<Feature, FeatureSet> {
-
-    /** {@inheritDoc} */
-    @Override
-    public void performInMemoryRun() {
-        for (Iterator<Feature> it = this.inputSet.iterator(); it.hasNext();) {
-            Feature f = it.next();
-            scan(f, null);
-        }
-    }
+public interface FeatureFilter extends Serializable{
+    
+    /**
+     * <p>featurePasses.</p>
+     *
+     * @param f a {@link com.github.seqware.queryengine.model.Feature} object.
+     * @param parameters a {@link java.lang.Object} object.
+     * @return a boolean.
+     */
+    public boolean featurePasses(Feature f, Object ... parameters);
+    
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.queryengine.plugins.inmemory;
+package com.github.seqware.queryengine.plugins.plugins;
 
 import com.github.seqware.queryengine.kernel.RPNStack;
 import com.github.seqware.queryengine.kernel.RPNStack.Constant;
@@ -41,7 +41,7 @@ import java.util.Map;
  * @author jbaran
  * @version $Id: $Id
  */
-public class InMemoryFeaturesByAttributesPlugin extends InMemoryFeaturesByFilterPlugin {
+public class FeaturesByAttributesPlugin extends FeaturesByFilterPlugin {
 
     /** {@inheritDoc} */
     @Override

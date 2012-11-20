@@ -6,7 +6,8 @@ import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.interfaces.Taggable;
 import com.github.seqware.queryengine.model.interfaces.Taggable.NestedLevel;
 import com.github.seqware.queryengine.plugins.PluginInterface;
-import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryPluginRunner;
+import com.github.seqware.queryengine.plugins.plugins.FeaturesAllPlugin;
 import java.util.*;
 import junit.framework.Assert;
 import static org.junit.Assert.fail;
@@ -56,7 +57,7 @@ public class TaggableTest {
         rSet = mManager.buildReferenceSet().setName("Minbar").setOrganism("Minbari").build();
         aSet = mManager.buildPlugin().setName("FP").setDescription("Funky program").build();
         // only for testing, PluginRun classes 
-        a = mManager.buildPluginRun().setParameters(new ArrayList<Object>()).setPlugin(new InMemoryFeaturesAllPlugin()).build();
+        a = mManager.buildPluginRun().setParameters(new ArrayList<Object>()).setPluginRunner(SWQEFactory.getPluginRunner(null, null)).build();
         r1 = mManager.buildReference().setName("ref1").build();
         rSet.add(r1);
         group = mManager.buildGroup().setName("Developers").setDescription("Users that are working on new stuff").build();
