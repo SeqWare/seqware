@@ -24,6 +24,7 @@ import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.metadata.MetadataWS;
+import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -252,25 +253,41 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     public ReturnValue do_run() {
         String groupBy = header.getTitle();
         Map<String, List<ReturnValue>> mappedFiles = null;
-
+        List<ReturnValue> vals = null;
 
         if (options.has("all")) {
-            List<ReturnValue> vals = metaws.findAllFilesAssociatedWithStudies();
-            mappedFiles = separateFiles(vals, groupBy);
+            List<ReturnValue> rv;
+            List<Study> studies = metadata.getAllStudies();
+            for (Study study : studies) {
+                String name = study.getTitle();
+                Log.stdout("Retrieving study " + name);
+                rv = metadata.findFilesAssociatedWithAStudy(name);
+                mappedFiles = separateFiles(rv, groupBy);
+                launchWorkflows(mappedFiles);
+                if (ret.getExitStatus() != ReturnValue.SUCCESS) {
+                    break;
+                }
+            }
+            return ret;
         } else if (options.has("study-name")) {
             String studyName = (String) options.valueOf("study-name");
-            List<ReturnValue> vals = metaws.findFilesAssociatedWithAStudy(studyName);
-            mappedFiles = separateFiles(vals, groupBy);
+            vals = metaws.findFilesAssociatedWithAStudy(studyName);
         } else if (options.has("sample-name")) {
             String sampleName = (String) options.valueOf("sample-name");
-            List<ReturnValue> vals = metaws.findFilesAssociatedWithASample(sampleName);
-            mappedFiles = separateFiles(vals, groupBy);
+            vals = metaws.findFilesAssociatedWithASample(sampleName);
         } else if (options.has("sequencer-run-name")) {
             String runName = (String) options.valueOf("sequencer-run-name");
-            List<ReturnValue> vals = metaws.findFilesAssociatedWithASequencerRun(runName);
-            mappedFiles = separateFiles(vals, groupBy);
+            vals = metaws.findFilesAssociatedWithASequencerRun(runName);
+        } else {
+            Log.error("Unknown option");
         }
 
+        mappedFiles = separateFiles(vals, groupBy);
+        launchWorkflows(mappedFiles);
+        return ret;
+    }
+
+    private void launchWorkflows(Map<String, List<ReturnValue>> mappedFiles) {
         if (mappedFiles != null) {
 
             for (String key : mappedFiles.keySet()) {
@@ -347,8 +364,9 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 }
 
             }
+        } else {
+            Log.stdout("There are no files");
         }
-        return ret;
     }
 
     /**
