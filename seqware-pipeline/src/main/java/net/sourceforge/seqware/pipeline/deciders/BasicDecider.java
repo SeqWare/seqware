@@ -258,7 +258,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             List<ReturnValue> vals = metaws.findFilesAssociatedWithASample(sampleName);
             mappedFiles = separateFiles(vals, groupBy);
         }
-
+ 
         if (mappedFiles != null) {
 
             for (String key : mappedFiles.keySet()) {
@@ -311,6 +311,14 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     iniFiles = new ArrayList<String>();
                     iniFiles.add(createIniFile(fileString, parentAccessionString));
 
+                	ReturnValue newRet = this.do_finalCheck(fileString, parentAccessionString);
+                	if (newRet.getExitStatus() != ReturnValue.SUCCESS) {
+                	      Log.stderr("The method do_finalCheck exited abnormally so the Runner will terminate here!");
+                	      Log.stderr("Return value was: " + newRet.getExitStatus());
+                	      ret = newRet;
+                	      return ret;
+                	} 
+                	
                     if (test || (!rerun && !forceRunAll)) {
                         //don't run, but report it
                         Log.debug("NOT RUNNING. test=" + test + " or (!rerun=" + !rerun + " and !forceRunAll=" + !forceRunAll + ")");
@@ -625,5 +633,17 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     public void setWorkflowAccessionsToCheck(Set<String> workflowAccessions) {
         this.workflowAccessionsToCheck = workflowAccessions;
+    }
+    
+    /**
+     * allow to user to do the final check and decide to run or cancel the decider
+     * e.g. check if all files are present
+     * @param commaSeparatedFilePaths
+     * @param commaSeparatedParentAccessions
+     * @return
+     */
+    protected ReturnValue do_finalCheck(String commaSeparatedFilePaths, String commaSeparatedParentAccessions) {
+    	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+    	return ret;
     }
 }
