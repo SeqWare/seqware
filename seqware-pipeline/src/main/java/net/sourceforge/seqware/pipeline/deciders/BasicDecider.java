@@ -92,10 +92,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      */
     public ReturnValue init() {
 
-        if (options.has("study-name")
+        if (!(options.has("study-name")
                 ^ options.has("sample-name")
                 ^ options.has("sequencer-run-name")
-                ^ options.has("all")) {
+                ^ options.has("all"))) {
             Log.stdout(this.get_syntax());
             Log.error("Please provide one of sample-name, study-name, sequencer-run-name or all");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
