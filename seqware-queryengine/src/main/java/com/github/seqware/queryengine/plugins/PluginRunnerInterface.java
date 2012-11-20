@@ -14,21 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.queryengine.plugins.hbasemr;
+package com.github.seqware.queryengine.plugins;
 
-import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByRangePlugin;
+import java.io.Serializable;
 
 /**
- * Implements queries by range operations
- *
+ * Base interface for plug-in runners.
+ * 
+ * Plug-in runners perform the actual task of running plug-ins, hiding away the 
+ * details of interacting with specific backend types. 
+ * 
  * @author dyuen
- * @version $Id: $Id
  */
-public class MRFeaturesByRangePlugin extends MRFeaturesByFilterPlugin {
+public interface PluginRunnerInterface<ResultType> extends Serializable{
+        
+    public ResultType get();
 
-    /** {@inheritDoc} */
-    @Override
-    public Object[] getInternalParameters() {
-        return new Object[]{new InMemoryFeaturesByRangePlugin.FeaturesByRangeFilter()};
-    }
+    public PluginInterface getPlugin();
+
 }

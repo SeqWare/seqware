@@ -2,25 +2,30 @@ package com.github.seqware.queryengine.model;
 
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
+import com.github.seqware.queryengine.model.impl.inMemory.InMemoryFeatureSet;
 import com.github.seqware.queryengine.model.interfaces.BaseBuilder;
-import com.github.seqware.queryengine.plugins.PluginInterface;
+import com.github.seqware.queryengine.plugins.PluginRunnerInterface;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * An PluginRun object represents specific calls to pluginRun components, most of
- * which will be implemented as an pluginRun plug-in on the backend. An example
- * would be a coding consequence plug-in.
+ * An PluginRun object represents specific calls to pluginRun components, most
+ * of which will be implemented as an pluginRun plug-in on the backend. An
+ * example would be a coding consequence plug-in.
  *
  * @author dyuen
  * @version $Id: $Id
  */
-public abstract class PluginRun<ReturnType> extends MoleculeImpl<PluginRun> implements QueryFuture<ReturnType> {
+public final class PluginRun<ReturnType> extends MoleculeImpl<PluginRun> implements QueryFuture<ReturnType> {
 
-    /** Constant <code>prefix="PluginRun"</code> */
+    /**
+     * Constant
+     * <code>prefix="PluginRun"</code>
+     */
     public final static String prefix = "PluginRun";
     private List<Object> parameters = new ArrayList<Object>();
+    private PluginRunnerInterface<ReturnType> pluginRunner;
 
     /**
      * Create a new pluginrun
@@ -37,6 +42,22 @@ public abstract class PluginRun<ReturnType> extends MoleculeImpl<PluginRun> impl
     public List<Object> getParameters() {
         return Collections.unmodifiableList(parameters);
     }
+    
+    /**
+     * <p>newBuilder.</p>
+     *
+     * @return a {@link com.github.seqware.queryengine.model.FeatureSet.Builder} object.
+     */
+    public static PluginRun.Builder newBuilder() {
+        return new PluginRun.Builder();
+    }
+
+    @Override
+    public PluginRun.Builder toBuilder() {
+        PluginRun.Builder b = new PluginRun.Builder();
+        b.pRun = this.copy(true);
+        return b;
+    }
 
     /**
      * Get pluginRun plugin
@@ -44,30 +65,40 @@ public abstract class PluginRun<ReturnType> extends MoleculeImpl<PluginRun> impl
      * @return This returns the actual plugin that was used to create this
      * instance of an pluginRun.
      */
-    public abstract PluginInterface getPlugin();
-
-    /** {@inheritDoc} */
-    @Override
-    public abstract ReturnType get();
-
-    /** {@inheritDoc} */
-    @Override
-    public abstract boolean isDone();
-
-    /** {@inheritDoc} */
-    @Override
-    public abstract PluginRun.Builder toBuilder();
+    public PluginRunnerInterface getPluginRunner() {
+        return this.pluginRunner;
+    }
 
     /**
-     * Set up the pluginRun plug-in
-     *
-     * @param plugin Set the plug-in used to create this plug-in (should be in the builder)
+     * {@inheritDoc}
      */
-    protected abstract void setPlugin(PluginInterface plugin);
+    @Override
+    public ReturnType get() {
+        return pluginRunner.get();
+    }
 
-    public abstract static class Builder extends BaseBuilder {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isDone() {
+        return pluginRunner.getPlugin().isComplete();
+    }
 
-        public PluginRun pluginRun;
+    @Override
+    public Class getHBaseClass() {
+        return PluginRun.class;
+    }
+
+    @Override
+    public String getHBasePrefix() {
+        return "PluginRun";
+    }
+
+    public static class Builder extends BaseBuilder {
+        private PluginRun pRun = new PluginRun();
+        private List<Object> parameters;
+        private PluginRunnerInterface pluginRunner;
 
         /**
          * Set the group for the current Atom
@@ -75,24 +106,36 @@ public abstract class PluginRun<ReturnType> extends MoleculeImpl<PluginRun> impl
          * @param group
          */
         public PluginRun.Builder setParameters(List<Object> parameters) {
-            pluginRun.parameters = parameters;
+            this.parameters = parameters;
             return this;
         }
 
-        public PluginRun.Builder setPlugin(PluginInterface plugin) {
-            pluginRun.setPlugin(plugin);
+        public PluginRun.Builder setPluginRunner(PluginRunnerInterface pluginRunner) {
+            this.pluginRunner = pluginRunner;
             return this;
         }
 
         @Override
-        public abstract PluginRun build();
+        public PluginRun build() {
+            // TODO: add this check when persisting results for real
+            //if (parameters == null && pluginRunner == null) {
+            //    throw new RuntimeException("Invalid build of PluginRun");
+            //}
+            pRun.pluginRunner = pluginRunner;
+            pRun.parameters = parameters;
+            
+            if (pRun.getManager() != null) {
+                pRun.getManager().objectCreated(pRun);
+            }
+            return pRun;
+        }
 
         @Override
         public PluginRun.Builder setManager(CreateUpdateManager aThis) {
-            pluginRun.setManager(aThis);
+            pRun.setManager(aThis);
             return this;
         }
-        
+
         @Override
         public PluginRun.Builder setFriendlyRowKey(String rowKey) {
             throw new UnsupportedOperationException("Not supported yet.");

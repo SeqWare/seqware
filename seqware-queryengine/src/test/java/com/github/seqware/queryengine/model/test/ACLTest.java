@@ -6,7 +6,8 @@ import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.MoleculeImpl;
 import com.github.seqware.queryengine.model.interfaces.ACL;
 import com.github.seqware.queryengine.model.interfaces.ACLable;
-import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryPluginRunner;
+import com.github.seqware.queryengine.plugins.plugins.FeaturesAllPlugin;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -56,7 +57,7 @@ public class ACLTest {
         viewerGroup = mManager.buildGroup().setName("Viewers").setDescription("Users that are just looking at stuff").build();
         marshmallowUser = mManager.buildUser().setFirstName("Joe").setLastName("Smith").setEmailAddress("joe.smith@googly.com").setPassword("password").build();
         titanicUser = mManager.buildUser().setFirstName("Deanna").setLastName("Troi").setEmailAddress("deanna.troi@googly.com").setPassword("password").build();
-        a1 = mManager.buildPluginRun().setParameters(new ArrayList()).setPlugin(new InMemoryFeaturesAllPlugin()).build();
+        a1 = mManager.buildPluginRun().setParameters(new ArrayList()).setPluginRunner(SWQEFactory.getPluginRunner(null, null)).build();
         group.add(marshmallowUser);
         viewerGroup.add(titanicUser);
 

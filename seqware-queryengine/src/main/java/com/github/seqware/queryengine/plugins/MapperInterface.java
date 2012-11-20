@@ -14,19 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.queryengine.plugins.hbasemr;
+package com.github.seqware.queryengine.plugins;
 
-import org.apache.hadoop.mapreduce.Reducer;
+import com.github.seqware.queryengine.model.FeatureSet;
 
 /**
- * Base reducer class used by all plug-ins.
- * Should be populated similar to {@link com.github.seqware.queryengine.plugins.hbasemr.QEMapper} when parameters are needed for
- * Reducers for plugins.
  *
  * @author dyuen
- * @version $Id: $Id
  */
-public class QEReducer<KEYIN,VALUEIN,KEYOUT,VALUEOUT> extends Reducer<KEYIN,VALUEIN,KEYOUT,VALUEOUT> {
+public interface MapperInterface<KEYOUT, VALUEOUT> {
+
+    public void write(KEYOUT textKey, VALUEOUT text);
+
+    /**
+     * Counter enumeration to count the actual rows.
+     */
+    public static enum Counters {
+
+        ROWS
+    }
+
+    public void incrementCounter();
     
-    
+    public Object[] getExt_parameters();
+
+    public Object[] getInt_parameters();
+
+    public FeatureSet getSourceSet();
+
+    public FeatureSet getDestSet();
 }

@@ -15,8 +15,7 @@ import com.github.seqware.queryengine.kernel.RPNStack.TagOccurrence;
 import com.github.seqware.queryengine.kernel.RPNStack.TagValuePresence;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.plugins.PluginInterface;
-import com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesByAttributesPlugin;
-import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByAttributesPlugin;
+import com.github.seqware.queryengine.plugins.plugins.FeaturesByAttributesPlugin;
 import com.github.seqware.queryengine.system.importers.OBOImporter;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.File;
@@ -210,10 +209,10 @@ public class QueryInterfaceTest implements Benchmarking {
         // only use the M/R plugin for this test if using MR
         if (SWQEFactory.getModelManager() instanceof MRHBaseModelManager) {
             // pretend that the included com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesByAttributesPlugin is an external plug-in
-            arbitraryPlugin = MRFeaturesByAttributesPlugin.class;
+            arbitraryPlugin = FeaturesByAttributesPlugin.class;
         } else {
             // pretend the equivalent for a non-HBase back-end
-            arbitraryPlugin = InMemoryFeaturesByAttributesPlugin.class;
+            arbitraryPlugin = FeaturesByAttributesPlugin.class;
         }
         // get a FeatureSet from the back-end
         QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeaturesByPlugin(0, arbitraryPlugin, aSet, new RPNStack(
