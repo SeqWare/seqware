@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.queryengine.plugins.inmemory;
+package com.github.seqware.queryengine.plugins.plugins;
 
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.Tag;
@@ -22,17 +22,17 @@ import java.util.Arrays;
 import org.apache.commons.lang.ArrayUtils;
 
 /**
- * <p>InMemoryFeaturesByTagPlugin class.</p>
+ * <p>FeaturesByTagPlugin class.</p>
  *
  * @author dyuen
  * @version $Id: $Id
  */
-public class InMemoryFeaturesByTagPlugin extends InMemoryFeaturesByFilterPlugin {
+public class FeaturesByTagPlugin extends FeaturesByFilterPlugin {
 
     /** {@inheritDoc} */
     @Override
     protected FeatureFilter getFilter() {
-        return new InMemoryFeaturesByTagPlugin.FeaturesByTagFilter();
+        return new FeaturesByTagPlugin.FeaturesByTagFilter();
     }
     
     public static class FeaturesByTagFilter implements FeatureFilter {

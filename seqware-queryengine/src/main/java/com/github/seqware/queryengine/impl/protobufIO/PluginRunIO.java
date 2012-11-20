@@ -19,7 +19,6 @@ package com.github.seqware.queryengine.impl.protobufIO;
 import com.github.seqware.queryengine.dto.QueryEngine;
 import com.github.seqware.queryengine.dto.QueryEngine.PluginRunPB;
 import com.github.seqware.queryengine.model.PluginRun;
-import com.github.seqware.queryengine.model.impl.inMemory.InMemoryQueryFutureImpl;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.apache.log4j.Logger;
 
@@ -34,7 +33,7 @@ public class PluginRunIO implements ProtobufTransferInterface<PluginRunPB, Plugi
     /** {@inheritDoc} */
     @Override
     public PluginRun pb2m(PluginRunPB pb) {
-        PluginRun.Builder builder = InMemoryQueryFutureImpl.newBuilder();
+        PluginRun.Builder builder = PluginRun.newBuilder();
 //        builder = pb.hasFirstName() ? builder.setFirstName(pb.getFirstName()) : builder;
 //        builder = pb.hasLastName()  ? builder.setLastName(pb.getFirstName()) : builder;
 //        builder = pb.hasEmailAddress() ? builder.setEmailAddress(pb.getEmailAddress()) : builder;

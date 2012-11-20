@@ -17,6 +17,11 @@
 package com.github.seqware.queryengine.plugins;
 
 import com.github.seqware.queryengine.model.FeatureSet;
+import com.github.seqware.queryengine.util.SGID;
+import java.io.Serializable;
+import org.apache.commons.lang.SerializationUtils;
+import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.mapreduce.OutputFormat;
 
 /**
  * This will describe the interface custom plugins must conform to. Details are
@@ -34,7 +39,14 @@ import com.github.seqware.queryengine.model.FeatureSet;
  * @author boconnor
  * @version $Id: $Id
  */
-public interface PluginInterface<T> {
+public interface PluginInterface extends Serializable {
+    
+    public enum ResultMechanism {
+        COUNTER, /** return a counter incremented on the context */
+        SGID, /** return an id value that has been manipulated */
+        BATCHEDFEATURESET, /** version a featureset and then return it */
+        FILE /** return a specific file */
+    }
 
     /**
      * Initialize this plug-in, this is called once when the plug-in is starting
@@ -44,7 +56,7 @@ public interface PluginInterface<T> {
      * @param parameters parameters that the plug-in will require
      * @return a {@link com.github.seqware.queryengine.plugins.PluginInterface.ReturnValue} object.
      */
-    public ReturnValue init(FeatureSet set, Object ... parameters);
+    public void init(FeatureSet set, Object... parameters);
 
     /**
      * <p>test.</p>
@@ -102,14 +114,19 @@ public interface PluginInterface<T> {
      */
     public boolean isComplete();
     
-    /**
-     * Blocking call to get the final result of the plug-in
-     *
-     * @return T containing results of the pluginrun
-     */
-    public T getFinalResult();
-    
     public class ReturnValue{
         
     }
+    
+    public Object[] getInternalParameters();
+    
+    public ResultMechanism getResultMechanism();
+    
+    public Class<?> getResultClass();
+    
+    public Class<?> getOutputClass();
+    
+    public byte[] handleSerialization(Object... parameters);
+    
+    public Object[] handleDeserialization(byte[] data);
 }

@@ -14,29 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.seqware.queryengine.plugins.inmemory;
+package com.github.seqware.queryengine.plugins.plugins;
 
 import com.github.seqware.queryengine.model.Feature;
-import com.github.seqware.queryengine.model.FeatureSet;
-import com.github.seqware.queryengine.plugins.MapReducePlugin;
 
 /**
- * Base class for all in-memory plug-ins that do MR
+ * <p>FeaturesAllPlugin class.</p>
  *
  * @author dyuen
  * @version $Id: $Id
  */
-public abstract class AbstractMRInMemoryPlugin extends AbstractInMemoryPlugin implements MapReducePlugin<Feature, FeatureSet> {
+public class FeaturesAllPlugin extends FeaturesByFilterPlugin {
 
     /** {@inheritDoc} */
     @Override
-    public void performInMemoryRun() {
-        // TODO Set of mapped features is currently not used.
-        for (Feature f : inputSet) {
-            map(f, null);
-        }
-        for (Feature f : inputSet) {
-            reduce(null, null);
+    protected FeatureFilter getFilter() {
+        return new FeaturesAllPlugin.FeaturesAllFilter();
+    }
+
+    public static class FeaturesAllFilter implements FeatureFilter {
+
+        @Override
+        public boolean featurePasses(Feature f, Object... parameters) {
+            // everything passes
+            return true;
         }
     }
 }
