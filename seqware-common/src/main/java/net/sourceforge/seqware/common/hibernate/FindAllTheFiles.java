@@ -693,14 +693,13 @@ public class FindAllTheFiles {
    *
    * @param out a {@link java.io.Writer} object.
    * @param returnValues a {@link java.util.List} object.
-   * @param studyName a {@link java.lang.String} object.
    * @param fileType a {@link java.lang.String} object.
    * @param duplicates a boolean.
    * @param showFailedAndRunning a boolean.
    * @param showStatus a boolean.
    * @throws java.io.IOException if any.
    */
-  public static void filterReturnValuesV2(Writer out, List<ReturnValue> returnValues, String studyName,
+  public static void filterReturnValuesV2(Writer out, List<ReturnValue> returnValues, 
       String fileType, boolean duplicates, boolean showFailedAndRunning, boolean showStatus) throws IOException {
 
     List<ReturnValue> newReturnValues = new ArrayList<ReturnValue>();
@@ -764,7 +763,7 @@ public class FindAllTheFiles {
       replaceSpaces(rv, FindAllTheFiles.WORKFLOW_NAME);
 
       for (FileMetadata fm : rv.getFiles()) {
-        print(out, rv, studyName, showStatus, fm);
+        print(out, rv, showStatus, fm);
       }
 
       newReturnValues.add(rv);
@@ -776,7 +775,6 @@ public class FindAllTheFiles {
    * <p>filterReturnValues.</p>
    *
    * @param returnValues a {@link java.util.List} object.
-   * @param studyName a {@link java.lang.String} object.
    * @param fileType a {@link java.lang.String} object.
    * @param duplicates a boolean.
    * @param showFailedAndRunning a boolean.
@@ -784,7 +782,7 @@ public class FindAllTheFiles {
    * @return a {@link java.util.List} object.
    * @throws java.io.IOException if any.
    */
-  public static List<ReturnValue> filterReturnValues(List<ReturnValue> returnValues, String studyName, String fileType,
+  public static List<ReturnValue> filterReturnValues(List<ReturnValue> returnValues, String fileType,
       boolean duplicates, boolean showFailedAndRunning, boolean showStatus) throws IOException {
 
     List<ReturnValue> newReturnValues = new ArrayList<ReturnValue>();
@@ -858,17 +856,16 @@ public class FindAllTheFiles {
    * @param writer a {@link java.io.Writer} object.
    * @param showStatus a boolean.
    * @param returnValues a {@link java.util.List} object.
-   * @param studyName a {@link java.lang.String} object.
    * @throws java.io.IOException if any.
    */
-  public static void printTSVFile(Writer writer, boolean showStatus, List<ReturnValue> returnValues, String studyName)
+  public static void printTSVFile(Writer writer, boolean showStatus, List<ReturnValue> returnValues)
       throws IOException {
     Log.info("Creating TSV file");
     // Write the Excel file
     printHeader(writer, showStatus);
     for (ReturnValue rv : returnValues) {
       for (FileMetadata fm : rv.getFiles()) {
-        print(writer, rv, studyName, showStatus, fm);
+        print(writer, rv, showStatus, fm);
       }
     }
   }
@@ -887,11 +884,10 @@ public class FindAllTheFiles {
    * @throws java.io.IOException if any.
    * @param writer a {@link java.io.Writer} object.
    * @param ret a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-   * @param studyName a {@link java.lang.String} object.
    * @param showStatus a boolean.
    * @param fm a {@link net.sourceforge.seqware.common.module.FileMetadata} object.
    */
-  public static void print(Writer writer, ReturnValue ret, String studyName, boolean showStatus, FileMetadata fm)
+  public static void print(Writer writer, ReturnValue ret, boolean showStatus, FileMetadata fm)
       throws IOException {
     StringBuilder parentSampleTag = new StringBuilder();
     StringBuilder sampleTag = new StringBuilder();
@@ -922,7 +918,7 @@ public class FindAllTheFiles {
     }
     StringBuilder sb = new StringBuilder();
     sb.append(ret.getAttribute(PROCESSING_DATE)).append("\t");
-    sb.append(studyName).append("\t");
+    sb.append(ret.getAttribute(STUDY_TITLE)).append("\t");
     sb.append(ret.getAttribute(STUDY_SWA)).append("\t");
     sb.append(studyTag.toString()).append("\t");
     sb.append(ret.getAttribute(EXPERIMENT_NAME)).append("\t");

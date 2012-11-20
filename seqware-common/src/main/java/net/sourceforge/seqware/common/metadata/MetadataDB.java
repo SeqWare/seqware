@@ -1834,7 +1834,7 @@ public class MetadataDB extends Metadata {
    */
   @Override
   public void annotateIUS(int laneSWID, Set<IUSAttribute> iusAtts) {
-    // TODO Auto-generated method stub
+    throw new NotImplementedException("This annotateIUS method is not supported through the direct MetaDB connection!");
   }
 
   /**
@@ -1842,7 +1842,7 @@ public class MetadataDB extends Metadata {
    */
   @Override
   public void annotateLane(int laneSWID, Set<LaneAttribute> laneAtts) {
-    // TODO Auto-generated method stub
+    throw new NotImplementedException("This annotateLane method is not supported through the direct MetaDB connection!");
   }
 
   /**
@@ -1850,7 +1850,7 @@ public class MetadataDB extends Metadata {
    */
   @Override
   public void annotateSequencerRun(int sequencerRunSWID, Set<SequencerRunAttribute> sequencerRunAtts) {
-    // TODO Auto-generated method stub
+    throw new NotImplementedException("This annotateSequencerRun method is not supported through the direct MetaDB connection!");
   }
 
   /**
@@ -1858,7 +1858,7 @@ public class MetadataDB extends Metadata {
    */
   @Override
   public void annotateExperiment(int experimentSWID, Set<ExperimentAttribute> atts) {
-    // TODO Auto-generated method stub
+      throw new NotImplementedException("This annotateExperiment method is not supported through the direct MetaDB connection!");
   }
 
   /**
@@ -1866,7 +1866,7 @@ public class MetadataDB extends Metadata {
    */
   @Override
   public void annotateProcessing(int processingSWID, Set<ProcessingAttribute> atts) {
-    // TODO Auto-generated method stub
+      throw new NotImplementedException("This annotateProcessing method is not supported through the direct MetaDB connection!");
   }
 
   /**
@@ -1874,7 +1874,7 @@ public class MetadataDB extends Metadata {
    */
   @Override
   public void annotateSample(int sampleSWID, Set<SampleAttribute> atts) {
-    // TODO Auto-generated method stub
+      throw new NotImplementedException("This annotateSample method is not supported through the direct MetaDB connection!");
   }
 
   /**
@@ -1882,7 +1882,7 @@ public class MetadataDB extends Metadata {
    */
   @Override
   public void annotateStudy(int studySWID, Set<StudyAttribute> atts) {
-    // TODO Auto-generated method stub
+      throw new NotImplementedException("This annotateStudy method is not supported through the direct MetaDB connection!");
   }
 
   /**
@@ -1890,7 +1890,7 @@ public class MetadataDB extends Metadata {
    */
   @Override
   public void annotateWorkflow(int workflowSWID, Set<WorkflowAttribute> atts) {
-    // TODO Auto-generated method stub
+    throw new NotImplementedException("This annotateWorkflow method is not supported through the direct MetaDB connection!");
   }
 
   /**
@@ -1898,42 +1898,56 @@ public class MetadataDB extends Metadata {
    */
   @Override
   public void annotateWorkflowRun(int workflowSWID, Set<WorkflowRunAttribute> atts) {
-    // TODO Auto-generated method stub
+      throw new NotImplementedException("This annotateWorkflowRun method is not supported through the direct MetaDB connection!");
   }
 
+    @Override
   public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip) {
-    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    throw new NotImplementedException("This addSequencerRun method is not supported through the direct MetaDB connection!");
   }
 
+    @Override
   public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip) {
-    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    throw new NotImplementedException("This addLane method is not supported through the direct MetaDB connection!");
   }
 
+    @Override
   public ReturnValue addIUS(Integer laneAccession, Integer sampleAccession, String name, String description, String barcode, boolean skip) {
-    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    throw new NotImplementedException("This addIUS method is not supported through the direct MetaDB connection!");
   }
 
+    @Override
   public List<Platform> getPlatforms() {
-    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    throw new NotImplementedException("This getPlatforms method is not supported through the direct MetaDB connection!");
   }
 
+    @Override
   public List<Organism> getOrganisms() {
-    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    throw new NotImplementedException("This getOrganisms method is not supported through the direct MetaDB connection!");
   }
 
+    @Override
   public List<StudyType> getStudyTypes() {
-    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    throw new NotImplementedException("This getStudyTypes method is not supported through the direct MetaDB connection!");
   }
 
+    @Override
   public List<LibraryStrategy> getLibraryStrategies() {
-    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    throw new NotImplementedException("This getLibraryStrategies method is not supported through the direct MetaDB connection!");
   }
 
+    @Override
   public List<LibrarySelection> getLibrarySelections() {
-    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    throw new NotImplementedException("This getLibrarySelections method is not supported through the direct MetaDB connection!");
   }
 
+    @Override
   public List<LibrarySource> getLibrarySource() {
-    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    throw new NotImplementedException("This getLibrarySource method is not supported through the direct MetaDB connection!");
   }
+
+    @Override
+    public List<ReturnValue> findAllFilesAssociatedWithStudies() {
+        throw new NotImplementedException("This findAllFilesAssociatedWithStudies method is not supported through the direct MetaDB connection!");
+    }
 }

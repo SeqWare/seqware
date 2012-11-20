@@ -41,14 +41,14 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = PluginInterface.class)
 public class SymLinkFileReporter extends Plugin {
-    
+
     ReturnValue ret = new ReturnValue();
     private final String LINKTYPE_SYM = "s";
     private String fileType = FindAllTheFiles.FILETYPE_ALL;
     private String linkType = LINKTYPE_SYM;
     private String csvFileName = null;
     private BufferedWriter writer;
-    
+
     /**
      * <p>Constructor for SymLinkFileReporter.</p>
      */
@@ -70,21 +70,27 @@ public class SymLinkFileReporter extends Plugin {
         parser.acceptsAll(Arrays.asList("show-status"), "Show the workflow run status in the output CSV.");
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ReturnValue init() {
-        
+
         return ret;
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ReturnValue do_test() {
         return ret;
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ReturnValue do_run() {
         String currentDir = new File(".").getAbsolutePath();
@@ -130,7 +136,7 @@ public class SymLinkFileReporter extends Plugin {
         }
         return ret;
     }
-    
+
     private void initWriter(String currentDir, String string) throws IOException {
         String filename = new Date().toString().replace(" ", "_") + "__" + string;
         if (options.has("output-filename")) {
@@ -139,57 +145,53 @@ public class SymLinkFileReporter extends Plugin {
         csvFileName = currentDir + File.separator + filename + ".csv";
         writer = new BufferedWriter(new FileWriter(csvFileName, true));
     }
-    
+
     private ReturnValue reportOnStudy(String studyName, String rootDirectory) throws IOException {
         println("Searching for study with title: " + studyName);
         List<ReturnValue> returnValues = metadata.findFilesAssociatedWithAStudy(studyName);
-        okGo(returnValues, rootDirectory, studyName);
+        okGo(returnValues, rootDirectory);
         return ret;
     }
-    
+
     private ReturnValue reportOnSample(String sampleName, String rootDirectory) throws IOException {
         println("Searching for sample with title: " + sampleName);
         List<ReturnValue> returnValues = metadata.findFilesAssociatedWithASample(sampleName);
-        okGo(returnValues, rootDirectory, null);
+        okGo(returnValues, rootDirectory);
         return ret;
     }
-    
+
     private ReturnValue reportOnSequencerRun(String sequencerRun, String rootDirectory) throws IOException {
         println("Searching for sequencer run with name: " + sequencerRun);
         List<ReturnValue> returnValues = metadata.findFilesAssociatedWithASequencerRun(sequencerRun);
-        okGo(returnValues, rootDirectory, null);
+        okGo(returnValues, rootDirectory);
         return ret;
     }
-    
+
     private ReturnValue reportAll(String rootDirectory) throws IOException {
         println("Dumping all studies to file");
-        List<Study> studies = metadata.getAllStudies();
-        for (Study study : studies) {
-            String name = study.getTitle();
-            println("Dumping study: " + name);
-            List<ReturnValue> returnValues = metadata.findFilesAssociatedWithAStudy(name);
-            okGo(returnValues, rootDirectory, name);
-        }
+        List<ReturnValue> returnValues = metadata.findAllFilesAssociatedWithStudies();
+        okGo(returnValues, rootDirectory);
         return ret;
     }
-    
-    private void okGo(List<ReturnValue> returnValues, String rootDirectory, String studyName) throws IOException {
+
+    private void okGo(List<ReturnValue> returnValues, String rootDirectory) throws IOException {
         println("There are " + returnValues.size() + " files in total before filtering");
         println("Saving symlinks and creating CSV file");
-        
-        returnValues = FindAllTheFiles.filterReturnValues(returnValues, studyName,
+
+        returnValues = FindAllTheFiles.filterReturnValues(returnValues,
                 fileType, options.has("duplicates"), options.has("show-failed-and-running"),
                 options.has("show-status"));
-        
-        
+
+
         FindAllTheFiles.printTSVFile(writer, options.has("show-status"),
-                returnValues, studyName);
-        
+                returnValues);
+
         for (ReturnValue rv : returnValues) {
             StringBuilder directory = new StringBuilder();
             directory.append(rootDirectory).append(File.separator);
 
             //First pull all of the required information out of the ReturnValue
+            String studyName = rv.getAttribute(FindAllTheFiles.STUDY_TITLE);
             String studySwa = rv.getAttribute(FindAllTheFiles.STUDY_SWA);
             String parentSampleName = rv.getAttribute(FindAllTheFiles.PARENT_SAMPLE_NAME);
             String parentSampleSwa = rv.getAttribute(FindAllTheFiles.PARENT_SAMPLE_SWA);
@@ -205,7 +207,7 @@ public class SymLinkFileReporter extends Plugin {
             String workflowName = rv.getAttribute(FindAllTheFiles.WORKFLOW_NAME);
             String workflowSwa = rv.getAttribute(FindAllTheFiles.WORKFLOW_SWA);
             String workflowVersion = rv.getAttribute(FindAllTheFiles.WORKFLOW_VERSION);
-            
+
             if (!options.has("no-links")) {
                 ///Save in the format requested
                 if (options.has("prod-format")) {
@@ -220,16 +222,16 @@ public class SymLinkFileReporter extends Plugin {
                     directory.append(parentSampleName).append("-").append(parentSampleSwa);
                     directory.append(File.separator);
                     directory.append(sampleName).append("-").append(sampleSwa);
-                    
+
                     saveSeqwareFileName(directory.toString(), workflowName, workflowSwa,
                             workflowRunName, workflowRunSwa, sequencerRunName,
                             sequencerRunSwa, laneNum, iusTag, iusSwa, sampleName,
                             sampleSwa, rv);
                 }
             }
-            
+
         }
-        
+
     }
 
     /**
@@ -265,7 +267,7 @@ public class SymLinkFileReporter extends Plugin {
         directory.append(workflowName).append("-").append(workflowVersion);
         directory.append(File.separator);
         directory.append(sampleName).append("-").append(sampleSwa);
-        
+
         saveFiles(rv.getFiles(), "", directory.toString());
     }
 
@@ -291,8 +293,8 @@ public class SymLinkFileReporter extends Plugin {
             String sequencerRunName, String sequencerRunSwa, String laneNum,
             String iusTag, String iusSwa, String sampleName, String sampleSwa,
             ReturnValue rv) {
-        
-        
+
+
         StringBuilder fileNamePrefix = new StringBuilder();
         fileNamePrefix.append(workflowName).append("-");
         fileNamePrefix.append(workflowSwa).append("__");
@@ -331,8 +333,8 @@ public class SymLinkFileReporter extends Plugin {
                         filename = pieces.substring(0, 143 - ext.length()) + ext;
                     }
                 }
-                
-                
+
+
                 try {
                     (new File(directory)).mkdirs();
                     Process process = Runtime.getRuntime().exec(
@@ -355,7 +357,7 @@ public class SymLinkFileReporter extends Plugin {
             return FindAllTheFiles.FILETYPE_ALL;
         }
     }
-    
+
     private String getLinkType() {
         if (options.has("link")) {
             return (String) options.valueOf("link");
@@ -363,14 +365,18 @@ public class SymLinkFileReporter extends Plugin {
             return LINKTYPE_SYM;
         }
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ReturnValue clean_up() {
         return ret;
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String get_description() {
         return "Create a nested tree structure of all of the output files from a "
