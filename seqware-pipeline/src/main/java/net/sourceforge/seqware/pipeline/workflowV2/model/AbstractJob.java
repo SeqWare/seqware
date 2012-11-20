@@ -1,7 +1,10 @@
 package net.sourceforge.seqware.pipeline.workflowV2.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+
 import net.sourceforge.seqware.pipeline.workflowV2.model.Requirement.Type;
 
 
@@ -18,6 +21,7 @@ public class AbstractJob implements Job {
 	private String cp;
 	private String mainclass;
 	protected boolean hasMetadataWriteback;
+	private List<String> parentAccessions;
 	
 	/**
 	 * for bash Job
@@ -25,6 +29,7 @@ public class AbstractJob implements Job {
 	 */
 	public AbstractJob(String algo) {
 		this(algo, "", "");
+		this.parentAccessions = new ArrayList<String>();
 	}
 	
 	/**
@@ -209,6 +214,15 @@ public class AbstractJob implements Job {
 	 */
 	public boolean hasMetadataWriteback() {
 		return this.hasMetadataWriteback;
+	}
+
+	@Override
+	public void setParentAccessions(Collection<String> parentAccessions) {
+		this.parentAccessions.addAll(parentAccessions);
+	}
+	
+	public Collection<String> getParentAccessions() {
+		return this.parentAccessions;
 	}
 
 }

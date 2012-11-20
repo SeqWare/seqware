@@ -19,14 +19,16 @@ The [API](http://seqware.github.com/webservice-api/) covers the SeqWare Web Serv
 	Revert the links back to index.html when this is fixed
 --> 
 
-The Javadoc for the release of the last stable version (0.12.5.1) can be found [here](/javadoc/svn_0.12.5.1/apidocs/overview-summary.html).
-The Javadoc for the testing of the last stable version (0.12.5.1) can be found [here](/javadoc/svn_0.12.5.1/testapidocs/overview-summary.html).
+The Javadoc for the release of the last stable version (0.12.5.1) can be found [here](/javadoc/svn_0.12.5.1/apidocs/index.html).
+The Javadoc for the testing of the last stable version (0.12.5.1) can be found [here](/javadoc/svn_0.12.5.1/testapidocs/index.html).
 
-The Javadoc for the release of the last unstable version (0.13.4) can be found [here](/javadoc/git_0.13.4/apidocs/overview-summary.html).
-The Javadoc for the testing of the last unstable version (0.13.4) can be found [here](/javadoc/git_0.13.4/testapidocs/overview-summary.html).
+The Javadoc for the release of the last unstable version (0.13.5) can be found [here](/javadoc/git_0.13.5/apidocs/index.html).
+The Javadoc for the testing of the last unstable version (0.13.5) can be found [here](/javadoc/git_0.13.5/testapidocs/index.html).
 
 ### Older Javadoc Releases
-The Javadoc for the release of version 0.13.3 can be found [here](/javadoc/git_0.13.3/apidocs/overview-summary.html).
-The Javadoc for the testing of version 0.13.3 can be found [here](/javadoc/git_0.13.3/testapidocs/overview-summary.html).
+The Javadoc for the release of version (0.13.4) can be found [here](/javadoc/git_0.13.4/apidocs/index.html).
+The Javadoc for the testing of version (0.13.4) can be found [here](/javadoc/git_0.13.4/testapidocs/index.html).
+The Javadoc for the release of version (0.13.3) can be found [here](/javadoc/git_0.13.3/apidocs/index.html).
+The Javadoc for the testing of version (0.13.3) can be found [here](/javadoc/git_0.13.3/testapidocs/index.html).
 
-The Javadoc for the release of version 0.12.5 can be found [here](/javadoc/svn_0.12.5/overview-summary.html)
+The Javadoc for the release of version 0.12.5 can be found [here](/javadoc/svn_0.12.5/index.html)

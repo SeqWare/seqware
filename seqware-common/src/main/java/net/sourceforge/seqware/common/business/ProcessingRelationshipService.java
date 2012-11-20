@@ -64,5 +64,7 @@ public interface ProcessingRelationshipService {
    * @return a {@link java.util.List} object.
    */
   public List<ProcessingRelationship> list();
+  
+  public List<ProcessingRelationship> listByParentProcessingId(int parentId);
 
 }
