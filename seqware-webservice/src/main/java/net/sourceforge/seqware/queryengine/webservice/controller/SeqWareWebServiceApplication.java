@@ -20,6 +20,7 @@ import net.sourceforge.seqware.webservice.resources.filters.WorkflowRunsFilter;
 import net.sourceforge.seqware.webservice.resources.queries.CycleCheckResource;
 import net.sourceforge.seqware.webservice.resources.queries.ProcessIdProcessResource;
 import net.sourceforge.seqware.webservice.resources.queries.RunWorkflowResource;
+import net.sourceforge.seqware.webservice.resources.queries.SampleHierarchyResource;
 import net.sourceforge.seqware.webservice.resources.queries.SampleIdFilesResource;
 import net.sourceforge.seqware.webservice.resources.queries.SequencerRunIdFilesResource;
 import net.sourceforge.seqware.webservice.resources.queries.SequencerRunReportResource;
@@ -334,6 +335,7 @@ public class SeqWareWebServiceApplication extends WadlApplication {
 
 
         router.attach("/processingstructure",new ProcessingStructureResource(getContext()));
+        router.attach("/sample/parents",new SampleHierarchyResource(getContext()));
         guard.setNext(router);
         return guard;
 
