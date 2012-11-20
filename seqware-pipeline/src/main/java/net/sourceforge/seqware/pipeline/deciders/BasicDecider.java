@@ -41,7 +41,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = PluginInterface.class)
 public class BasicDecider extends Plugin implements DeciderInterface {
-
+    
     protected ReturnValue ret = new ReturnValue();
     private MetadataWS metaws;
     private Header header = Header.FILE_SWA;
@@ -59,7 +59,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private ArrayList<String> iniFiles;
     private Boolean runNow = null;
     private Boolean skipStuff = null;
-
+    private int launchMax = Integer.MAX_VALUE,launched=0;
+    
     public BasicDecider() {
         super();
         parser.acceptsAll(Arrays.asList("wf-accession"), "The workflow accession of the workflow").withRequiredArg();
@@ -82,10 +83,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         parser.acceptsAll(Arrays.asList("schedule"), "Schedule this workflow to be run rather than running it immediately. See also: --run");
         parser.acceptsAll(Arrays.asList("run"), "Run this workflow now. This is the default behaviour. See also: --schedule");
         parser.acceptsAll(Arrays.asList("ignore-skip-flag"), "Ignores any 'skip' flags on lanes, IUSes, sequencer runs, samples, etc. Use caution.");
-
+        parser.acceptsAll(Arrays.asList("launch-max"), "The maximum number of jobs to launch at once. Default: infinite.").withRequiredArg();
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
-
+    
     @Override
     /**
      * This method is intended to be called AFTER any implementing class's init
@@ -101,7 +102,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             Log.error("Please provide one of sample-name, study-name, sequencer-run-name or all");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
-
+        
         try {
             ResourceBundle rb = PropertyResourceBundle.getBundle("decider");
             String parents = rb.getString("parent-workflow-accessions");
@@ -117,7 +118,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             if (checks != null && !checks.trim().isEmpty()) {
                 List<String> cwa = Arrays.asList(checks.split(","));
                 this.setWorkflowAccessionsToCheck(new TreeSet(cwa));
-
+                
             }
         } catch (MissingResourceException e) {
             Log.debug("No decider resource found: ", e);
@@ -137,13 +138,13 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 sb.append("group-by attribute must be one of the following: \n");
                 for (Header h : Header.values()) {
                     sb.append("\t").append(h.name()).append("\n");
-
+                    
                 }
                 Log.stdout(sb.toString());
                 ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
             }
         }
-
+        
         if (options.has("wf-accession")) {
             workflowAccession = (String) options.valueOf("wf-accession");
         } else if (workflowAccession == null) {
@@ -166,9 +167,9 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             metaTypes = Arrays.asList(mt.split(","));
             hasFilter = true;
         }
-
-
-
+        
+        
+        
         if (!hasFilter && parentWorkflowAccessions.isEmpty() && metaTypes == null) {
             Log.error("You must run a decider with parent-wf-accessions or meta-types (or both).");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
@@ -181,7 +182,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         //Optionally you can force the decider to re-run all possibilities in
         //the database with force-run-all.
         if (options.has("check-wf-accessions")) {
-
+            
             String pas = (String) options.valueOf("check-wf-accessions");
             Log.debug("Pas = " + pas);
             if (pas.contains(",")) {
@@ -210,17 +211,17 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 Log.error(ex);
             }
         }
-
+        
         if (skipStuff == null) {
             skipStuff = !options.has("ignore-skip-flag");
         }
-
-
+        
+        
         if (metadataWriteback == null) {
             metadataWriteback = !(options.has("no-metadata") || options.has("no-meta-db"));
         }
-
-
+        
+        
         if (runNow == null) {
             if (options.has("schedule")) {
                 runNow = false;
@@ -228,8 +229,17 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 runNow = true;
             }
         }
-
-
+        
+        if (options.has("launch-max")) {
+            try {
+                launchMax = Integer.parseInt(options.valueOf("launch-max").toString());
+            } catch (NumberFormatException e) {
+                Log.error("The launch-max parameter must be an integer. Unparseable integer: " + options.valueOf("launch-max").toString());
+            }
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+        }
+        
+        
         if (metadata instanceof MetadataDB) {
             metaws = new MetadataWS();
             ret = metaws.init(config.get("SW_REST_URL"), config.get("SW_REST_USER"), config.get("SW_REST_PASS"));
@@ -243,12 +253,12 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         }
         return ret;
     }
-
+    
     @Override
     public ReturnValue do_test() {
         return ReturnValue.featureNotImplemented();
     }
-
+    
     @Override
     public ReturnValue do_run() {
         String groupBy = header.getTitle();
@@ -289,14 +299,14 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     private void launchWorkflows(Map<String, List<ReturnValue>> mappedFiles) {
         if (mappedFiles != null) {
-
+            
             for (String key : mappedFiles.keySet()) {
-
+                
                 parentAccessionsToRun = new HashSet<String>();
                 filesToRun = new HashSet<String>();
                 workflowParentAccessionsToRun = new HashSet<String>();
-
-
+                
+                
                 List<String> previousWorkflowRuns = new ArrayList<String>();
 
                 //for each grouping (e.g. sample), iterate through the files
@@ -327,7 +337,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                                         parentAccessionsToRun, filesToRun);
                             }
                         }
-
+                        
                     }
                 }//end iterate through files
 
@@ -339,12 +349,12 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     boolean rerun = rerunWorkflowRun(previousWorkflowRuns, filesToRun);
                     iniFiles = new ArrayList<String>();
                     iniFiles.add(createIniFile(fileString, parentAccessionString));
-
+                    
                     if (test || (!rerun && !forceRunAll)) {
                         //don't run, but report it
                         Log.debug("NOT RUNNING. test=" + test + " or (!rerun=" + !rerun + " and !forceRunAll=" + !forceRunAll + ")");
                         ret = do_summary();
-                    } else {
+                    } else if (launched++<launchMax){
                         //construct the INI and run it
                         Log.debug("RUNNING");
                         // setup workflow object
@@ -359,10 +369,14 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                                     (ArrayList) workflowParentAccessionsToRun, false, options.nonOptionArguments());
                         }
                     }
+                    else {
+                        Log.info("The maximum number of jobs has been launched. The next jobs will be launched when the decider runs again.");
+                        ret.setExitStatus(ReturnValue.QUEUED);
+                    }
                 } else {
                     Log.debug("Why are we here, seriously!?");
                 }
-
+                
             }
         } else {
             Log.stdout("There are no files");
@@ -394,7 +408,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * files in the workflow run than in the filesToRun.
      */
     public boolean compareWorkflowRunFiles(String workflowRunAcc, Collection<String> filesToRun) {
-
+        
         String report = metaws.getWorkflowRunReport(Integer.parseInt(workflowRunAcc));
         String[] lines = report.split("\n");
         String[] header = lines[0].split("\t");
@@ -403,10 +417,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         for (int i = 0; i < header.length; i++) {
             map.put(header[i].trim(), data[i].trim());
         }
-
+        
         String ranOn = map.get("Input File Paths");
         String[] ranOnFiles = ranOn.split(",");
-
+        
         if (ranOnFiles.length < filesToRun.size()) {
             return true;
         } else if (ranOnFiles.length == filesToRun.size()) {
@@ -425,7 +439,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             return false;
         }
     }
-
+    
     private void addFileToSets(ReturnValue file, FileMetadata fm, Collection<String> workflowParentAccessionsToRun,
             Collection<String> parentAccessionsToRun, Collection<String> filesToRun) {
         if (test) {
@@ -437,20 +451,20 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 Logger.getLogger(BasicDecider.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
+        
         if (checkFileDetails(file, fm)) {
             filesToRun.add(fm.getFilePath());
             parentAccessionsToRun.add(file.getAttribute(Header.PROCESSING_SWID.getTitle()));
-
+            
             String swid = file.getAttribute(Header.IUS_SWA.getTitle());
             if (swid == null || swid.trim().isEmpty()) {
                 swid = file.getAttribute(Header.LANE_SWA.getTitle());
             }
             workflowParentAccessionsToRun.add(swid);
-
+            
         }
     }
-
+    
     protected String commaSeparateMy(Collection<String> list) {
         StringBuilder sb = new StringBuilder();
         for (String s : list) {
@@ -461,34 +475,34 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         }
         return sb.toString();
     }
-
+    
     private String createIniFile(String commaSeparatedFilePaths, String commaSeparatedParentAccessions) {
         String iniPath = "";
-
+        
         Map<String, String> iniFileMap = new TreeMap<String, String>();
         SortedSet<WorkflowParam> wps = metaws.getWorkflowParams(workflowAccession);
         for (WorkflowParam param : wps) {
             iniFileMap.put(param.getKey(), param.getDefaultValue());
         }
-
+        
         Map<String, String> iniParameters = modifyIniFile(commaSeparatedFilePaths, commaSeparatedParentAccessions);
-
+        
         for (String param : iniParameters.keySet()) {
             iniFileMap.put(param, iniParameters.get(param));
         }
-
+        
         PrintWriter writer = null;
         File file = null;
         try {
             file = File.createTempFile("" + random.nextInt(), ".ini");
             writer = new PrintWriter(new FileWriter(file), true);
-
+            
             for (String key : iniFileMap.keySet()) {
                 StringBuilder sb = new StringBuilder();
                 sb.append(key).append("=").append(iniFileMap.get(key));
                 writer.println(sb.toString());
             }
-
+            
         } catch (IOException ex) {
             Logger.getLogger(BasicDecider.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -500,7 +514,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             iniPath = file.getAbsolutePath();
         }
         return iniPath;
-
+        
     }
 
     /**
@@ -526,13 +540,13 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         }
         return true;
     }
-
+    
     protected Map<String, String> modifyIniFile(String commaSeparatedFilePaths, String commaSeparatedParentAccessions) {
         Map<String, String> iniFileMap = new TreeMap<String, String>();
         iniFileMap.put("input_files", commaSeparatedFilePaths);
         return iniFileMap;
     }
-
+    
     protected String handleGroupByAttribute(String attribute) {
         return attribute;
     }
@@ -546,9 +560,9 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         //group files according to the designated header (e.g. sample SWID)
         for (ReturnValue r : vals) {
             String currVal = r.getAttributes().get(groupBy);
-
+            
             currVal = handleGroupByAttribute(currVal);
-
+            
             List<ReturnValue> vs = map.get(currVal);
             if (vs == null) {
                 vs = new ArrayList<ReturnValue>();
@@ -556,16 +570,16 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             vs.add(r);
             map.put(currVal, vs);
         }
-
+        
         return map;
-
+        
     }
-
+    
     @Override
     public ReturnValue clean_up() {
         return ReturnValue.featureNotImplemented();
     }
-
+    
     @Override
     public ReturnValue do_summary() {
         StringBuilder command = new StringBuilder();
@@ -579,78 +593,78 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         command.append("--link-workflow-run-to-parents").append(" ").append(commaSeparateMy(workflowParentAccessionsToRun)).append(" ");
         command.append(options.nonOptionArguments());
         command.append("\n");
-
+        
         Log.stdout(command.toString());
-
+        
         return ret;
     }
-
+    
     @Override
     public String get_description() {
         String description = super.get_description();
         return description;
     }
-
+    
     public Boolean getForceRunAll() {
         return forceRunAll;
     }
-
+    
     public void setForceRunAll(Boolean forceRunAll) {
         this.forceRunAll = forceRunAll;
     }
-
+    
     public Header getHeader() {
         return header;
     }
-
+    
     public void setHeader(Header header) {
         this.header = header;
     }
-
+    
     public List<String> getMetaType() {
         return metaTypes;
     }
-
+    
     public void setMetaType(List<String> metaType) {
         this.metaTypes = metaType;
     }
-
+    
     public Boolean getMetadataWriteback() {
         return metadataWriteback;
     }
-
+    
     public void setMetadataWriteback(Boolean metadataWriteback) {
         this.metadataWriteback = metadataWriteback;
     }
-
+    
     public Set<String> getParentWorkflowAccessions() {
         return parentWorkflowAccessions;
     }
-
+    
     public void setParentWorkflowAccessions(Set<String> parentWorkflowAccessions) {
         this.parentWorkflowAccessions = parentWorkflowAccessions;
     }
-
+    
     public Boolean getTest() {
         return test;
     }
-
+    
     public void setTest(Boolean test) {
         this.test = test;
     }
-
+    
     public String getWorkflowAccession() {
         return workflowAccession;
     }
-
+    
     public void setWorkflowAccession(String workflowAccession) {
         this.workflowAccession = workflowAccession;
     }
-
+    
     public Set<String> getWorkflowAccessionsToCheck() {
         return workflowAccessionsToCheck;
     }
-
+    
     public void setWorkflowAccessionsToCheck(Set<String> workflowAccessions) {
         this.workflowAccessionsToCheck = workflowAccessions;
     }
