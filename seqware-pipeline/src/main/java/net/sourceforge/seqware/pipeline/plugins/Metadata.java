@@ -401,6 +401,7 @@ public class Metadata extends Plugin {
   
   private void closeBufferWriter() {
 	  try {
+              if(this.bw!=null)
 		this.bw.close();
 	} catch (IOException e) {
 		e.printStackTrace();
