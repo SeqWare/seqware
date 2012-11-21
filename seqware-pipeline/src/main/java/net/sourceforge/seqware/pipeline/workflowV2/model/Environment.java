@@ -26,11 +26,17 @@ public class Environment {
 	private String OOZIE_JOBTRACKER;
 	private String OOZIE_NAMENODE;
 	private String OOZIE_QUEUENAME;
-	private String HADOOP_CORE_XML;
-	private String HADOOP_HDFS_SITE_XML;
-	private String HADOOP_MAPRED_SITE_XML;
+
 	private String OOZIE_WORK_DIR;
 	private String OOZIE_APP_PATH;
+	
+	private String hbase_zookeeper_quorum;
+	private String hbase_zookeeper_property_clientPort;
+	private String hbase_master;
+	private String mapred_job_tracker;
+	private String fs_default_name;
+	private String fs_defaultFS;
+	private String fs_hdfs_impl;
 	
 	/**
 	 * 
@@ -139,24 +145,6 @@ public class Environment {
 	public void setOOZIE_QUEUENAME(String oOZIE_QUEUENAME) {
 		OOZIE_QUEUENAME = oOZIE_QUEUENAME;
 	}
-	public String getHADOOP_CORE_XML() {
-		return HADOOP_CORE_XML;
-	}
-	public void setHADOOP_CORE_XML(String hADOOP_CORE_XML) {
-		HADOOP_CORE_XML = hADOOP_CORE_XML;
-	}
-	public String getHADOOP_HDFS_SITE_XML() {
-		return HADOOP_HDFS_SITE_XML;
-	}
-	public void setHADOOP_HDFS_SITE_XML(String hADOOP_HDFS_SITE_XML) {
-		HADOOP_HDFS_SITE_XML = hADOOP_HDFS_SITE_XML;
-	}
-	public String getHADOOP_MAPRED_SITE_XML() {
-		return HADOOP_MAPRED_SITE_XML;
-	}
-	public void setHADOOP_MAPRED_SITE_XML(String hADOOP_MAPRED_SITE_XML) {
-		HADOOP_MAPRED_SITE_XML = hADOOP_MAPRED_SITE_XML;
-	}
 	public String getOOZIE_WORK_DIR() {
 		return OOZIE_WORK_DIR;
 	}
@@ -168,6 +156,49 @@ public class Environment {
 	}
 	public void setOOZIE_APP_PATH(String oOZIE_APP_PATH) {
 		OOZIE_APP_PATH = oOZIE_APP_PATH;
+	}
+	public String getHbase_zookeeper_quorum() {
+		return hbase_zookeeper_quorum;
+	}
+	public void setHbase_zookeeper_quorum(String hbase_zookeeper_quorum) {
+		this.hbase_zookeeper_quorum = hbase_zookeeper_quorum;
+	}
+	public String getHbase_zookeeper_property_clientPort() {
+		return hbase_zookeeper_property_clientPort;
+	}
+	public void setHbase_zookeeper_property_clientPort(
+			String hbase_zookeeper_property_clientPort) {
+		this.hbase_zookeeper_property_clientPort = hbase_zookeeper_property_clientPort;
+	}
+	public String getHbase_master() {
+		return hbase_master;
+	}
+	public void setHbase_master(String hbase_master) {
+		this.hbase_master = hbase_master;
+	}
+	public String getMapred_job_tracker() {
+		return mapred_job_tracker;
+	}
+	public void setMapred_job_tracker(String mapred_job_tracker) {
+		this.mapred_job_tracker = mapred_job_tracker;
+	}
+	public String getFs_default_name() {
+		return fs_default_name;
+	}
+	public void setFs_default_name(String fs_default_name) {
+		this.fs_default_name = fs_default_name;
+	}
+	public String getFs_defaultFS() {
+		return fs_defaultFS;
+	}
+	public void setFs_defaultFS(String fs_defaultFS) {
+		this.fs_defaultFS = fs_defaultFS;
+	}
+	public String getFs_hdfs_impl() {
+		return fs_hdfs_impl;
+	}
+	public void setFs_hdfs_impl(String fs_hdfs_impl) {
+		this.fs_hdfs_impl = fs_hdfs_impl;
 	}
 	
 }
