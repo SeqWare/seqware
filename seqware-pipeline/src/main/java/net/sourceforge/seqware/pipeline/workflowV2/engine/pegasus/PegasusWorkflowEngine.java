@@ -15,6 +15,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 
 public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
 
+	private ReturnValue statusRet;
 	@Override
 	/**
 	 * launch the workflow defined in the object model
@@ -24,6 +25,7 @@ public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
 		ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 		File dax = this.parseDataModel(objectModel);
 		ret = this.runWorkflow(objectModel, dax);
+		this.statusRet = ret;
 		return ret;
 	}
 
@@ -140,20 +142,35 @@ public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
 
 	@Override
 	public String getStatus(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		if(this.statusRet == null)
+			return null;
+		String stdOut = this.getStdOut("");
+	    Pattern p = Pattern.compile("(pegasus-status -l \\S+)");
+	    Matcher m = p.matcher(stdOut);
+	    String statusCmd = null;
+	    if (m.find()) {
+	    	statusCmd = m.group(1);
+	    }
+	    return statusCmd;
 	}
 
 	@Override
 	public String getStdErr(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		if(this.statusRet == null)
+			return null;
+		return this.statusRet.getStderr();
 	}
 
 	@Override
 	public String getStdOut(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		if(this.statusRet == null)
+			return null;
+		return this.statusRet.getStdout();
+	}
+
+	@Override
+	public String getStatus() {
+		return this.getStatus("");
 	}
 	
 }

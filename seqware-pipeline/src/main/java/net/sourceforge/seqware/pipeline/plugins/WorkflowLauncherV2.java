@@ -95,21 +95,7 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 	     //int workflowrun = this.metadata.get_workflow_run_id(workflowrunaccession);
 	    
 	     // figure out the status command
-	     String stdOut = retPegasus.getStdout();
-	     Pattern p = Pattern.compile("(pegasus-status -l \\S+)");
-	     Matcher m = p.matcher(stdOut);
-	     String statusCmd = null;
-	     if (m.find()) {
-	     statusCmd = m.group(1);
-	     }
-	
-	     // look for the status directory
-	     p = Pattern.compile("pegasus-status -l (\\S+)");
-	     m = p.matcher(stdOut);
-	     String statusDir = null;
-	     if (m.find()) {
-	     statusDir = m.group(1);
-	     }
+	     String statusCmd = engine.getStatus();
 	
 	     List<String> parentsLinkedToWR = new ArrayList<String>();
 		 	if (options.has("link-workflow-run-to-parents")) {
