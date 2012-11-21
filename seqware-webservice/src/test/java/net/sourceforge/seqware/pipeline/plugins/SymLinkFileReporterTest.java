@@ -60,6 +60,13 @@ public class SymLinkFileReporterTest extends PluginTest {
     }
 
     @Test
+    public void testGetSequencerRunFiles() {
+        launchPlugin("--output-filename", outputFilename, "--sequencer-run", "SRKDKJKLFJKLJ90040", "--no-links");
+        examineFile(fullOutputFilename, 76, 34, 10);
+    }
+    
+    
+    @Test
     public void testGetStudyFilesAndSymlinks() {
         launchPlugin("--output-filename", outputFilename, "--study", "AbcCo_Exome_Sequencing", 
                 "--no-links");
