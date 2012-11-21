@@ -352,10 +352,24 @@ public class ProvisionFilesUtil {
    * @param output a {@link java.lang.String} object.
    * @return true if OK
    */
+  public boolean putToS3(BufferedInputStream reader, String output){
+      return (putToS3(reader, output, ClientConfiguration.DEFAULT_SOCKET_TIMEOUT, ClientConfiguration.DEFAULT_MAX_CONNECTIONS, ClientConfiguration.DEFAULT_MAX_RETRIES, ClientConfiguration.DEFAULT_SOCKET_TIMEOUT));
+  }
+  
+  /**
+   * 
+   * @param reader
+   * @param output
+   * @param connectionTimeout
+   * @param maxConnections
+   * @param maxErrorRetry
+   * @param socketTimeout
+   * @return 
+   */
   public boolean putToS3(BufferedInputStream reader, String output, int connectionTimeout, int maxConnections, int maxErrorRetry, int socketTimeout) {
     return (putToS3(reader, output, connectionTimeout, maxConnections, maxErrorRetry, socketTimeout, null, null));
   }
-
+  
   /**
    * Copy file using reader into output.
    *
@@ -364,6 +378,22 @@ public class ProvisionFilesUtil {
    * @param decryptCipher a {@link javax.crypto.Cipher} object.
    * @param encryptCipher a {@link javax.crypto.Cipher} object.
    * @return true if OK
+   */
+  public boolean putToS3(InputStream reader, String output, Cipher decryptCipher, Cipher encryptCipher) {
+      return putToS3(reader, output,  ClientConfiguration.DEFAULT_SOCKET_TIMEOUT, ClientConfiguration.DEFAULT_MAX_CONNECTIONS, ClientConfiguration.DEFAULT_MAX_RETRIES, ClientConfiguration.DEFAULT_SOCKET_TIMEOUT, decryptCipher, encryptCipher);
+  }
+
+  /**
+   * 
+   * @param reader
+   * @param output
+   * @param connectionTimeout
+   * @param maxConnections
+   * @param maxErrorRetry
+   * @param socketTimeout
+   * @param decryptCipher
+   * @param encryptCipher
+   * @return 
    */
   public boolean putToS3(InputStream reader, String output, int connectionTimeout, int maxConnections, int maxErrorRetry, int socketTimeout, Cipher decryptCipher, Cipher encryptCipher) {
 
