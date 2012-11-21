@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>seqware-queryengine</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <name>seqware-queryengine</name>
     <description>SeqWare Query Backend</description>
