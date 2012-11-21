@@ -279,4 +279,9 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 	    OozieClient oc = new OozieClient(this.dataModel.getEnv().getOOZIE_URL());
 	    return oc;
 	}
+
+	@Override
+	public String getStatus() {
+		return this.getStatus(this.getId());
+	}
 }
