@@ -93,9 +93,16 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 	 */
 	private void setupHDFS(AbstractWorkflowDataModel objectModel) {
 		Configuration conf = new Configuration();
-		conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_CORE_XML()));
-		conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_HDFS_SITE_XML()));
-		conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_MAPRED_SITE_XML()));
+		conf.set("hbase.zookeeper.quorum", this.dataModel.getEnv().getHbase_zookeeper_quorum());
+		conf.set("hbase.zookeeper.property.clientPort", this.dataModel.getEnv().getHbase_zookeeper_property_clientPort());
+		conf.set("hbase.master", this.dataModel.getEnv().getHbase_master());
+		conf.set("mapred.job.tracker", this.dataModel.getEnv().getMapred_job_tracker());
+		conf.set("fs.default.name", this.dataModel.getEnv().getFs_default_name());
+		conf.set("fs.defaultFS", this.dataModel.getEnv().getFs_defaultFS());
+		conf.set("fs.hdfs.impl", this.dataModel.getEnv().getFs_hdfs_impl());
+		//conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_CORE_XML()));
+		//conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_HDFS_SITE_XML()));
+		//conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_MAPRED_SITE_XML()));
 
 		FileSystem fileSystem = null;
 		try {
@@ -271,5 +278,10 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 	private OozieClient getOozieClient() {
 	    OozieClient oc = new OozieClient(this.dataModel.getEnv().getOOZIE_URL());
 	    return oc;
+	}
+
+	@Override
+	public String getStatus() {
+		return this.getStatus(this.getId());
 	}
 }

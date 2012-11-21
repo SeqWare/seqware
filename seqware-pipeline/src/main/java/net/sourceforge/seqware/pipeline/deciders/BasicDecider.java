@@ -293,11 +293,12 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         }
 
         mappedFiles = separateFiles(vals, groupBy);
-        launchWorkflows(mappedFiles);
+        ret = launchWorkflows(mappedFiles);
         return ret;
     }
 
-    private void launchWorkflows(Map<String, List<ReturnValue>> mappedFiles) {
+
+    private ReturnValue launchWorkflows(Map<String, List<ReturnValue>> mappedFiles) {
         if (mappedFiles != null) {
             
             for (String key : mappedFiles.keySet()) {
@@ -349,7 +350,16 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     boolean rerun = rerunWorkflowRun(previousWorkflowRuns, filesToRun);
                     iniFiles = new ArrayList<String>();
                     iniFiles.add(createIniFile(fileString, parentAccessionString));
-                    
+
+
+                	ReturnValue newRet = this.do_finalCheck(fileString, parentAccessionString);
+                	if (newRet.getExitStatus() != ReturnValue.SUCCESS) {
+                	      Log.stderr("The method do_finalCheck exited abnormally so the Runner will terminate here!");
+                	      Log.stderr("Return value was: " + newRet.getExitStatus());
+                	      ret = newRet;
+                	      return ret;
+                	} 
+                	
                     if (test || (!rerun && !forceRunAll)) {
                         //don't run, but report it
                         Log.debug("NOT RUNNING. test=" + test + " or (!rerun=" + !rerun + " and !forceRunAll=" + !forceRunAll + ")");
@@ -381,6 +391,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         } else {
             Log.stdout("There are no files");
         }
+        return ret;
     }
 
     /**
@@ -442,18 +453,18 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     
     private void addFileToSets(ReturnValue file, FileMetadata fm, Collection<String> workflowParentAccessionsToRun,
             Collection<String> parentAccessionsToRun, Collection<String> filesToRun) {
-        if (test) {
-            String studyName = (String) options.valueOf("study-name");
-            try {
-                StringWriter writer = new StringWriter();
-                FindAllTheFiles.print(writer, file, studyName, true, fm);
-                Log.stdout(writer.getBuffer().toString().trim());
-            } catch (IOException ex) {
-                Logger.getLogger(BasicDecider.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
         if (checkFileDetails(file, fm)) {
+            if (test) {
+                String studyName = (String) options.valueOf("study-name");
+                try {
+                    StringWriter writer = new StringWriter();
+                    FindAllTheFiles.print(writer, file, studyName, true, fm);
+                    Log.stdout(writer.getBuffer().toString().trim());
+                } catch (IOException ex) {
+                    Logger.getLogger(BasicDecider.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
             filesToRun.add(fm.getFilePath());
             parentAccessionsToRun.add(file.getAttribute(Header.PROCESSING_SWID.getTitle()));
             
@@ -668,5 +679,17 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     
     public void setWorkflowAccessionsToCheck(Set<String> workflowAccessions) {
         this.workflowAccessionsToCheck = workflowAccessions;
+    }
+    
+    /**
+     * allow to user to do the final check and decide to run or cancel the decider
+     * e.g. check if all files are present
+     * @param commaSeparatedFilePaths
+     * @param commaSeparatedParentAccessions
+     * @return
+     */
+    protected ReturnValue do_finalCheck(String commaSeparatedFilePaths, String commaSeparatedParentAccessions) {
+    	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+    	return ret;
     }
 }

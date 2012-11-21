@@ -7,10 +7,15 @@
 */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import joptsimple.OptionException;
+import joptsimple.OptionParser;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -90,21 +95,7 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 	     //int workflowrun = this.metadata.get_workflow_run_id(workflowrunaccession);
 	    
 	     // figure out the status command
-	     String stdOut = retPegasus.getStdout();
-	     Pattern p = Pattern.compile("(pegasus-status -l \\S+)");
-	     Matcher m = p.matcher(stdOut);
-	     String statusCmd = null;
-	     if (m.find()) {
-	     statusCmd = m.group(1);
-	     }
-	
-	     // look for the status directory
-	     p = Pattern.compile("pegasus-status -l (\\S+)");
-	     m = p.matcher(stdOut);
-	     String statusDir = null;
-	     if (m.find()) {
-	     statusDir = m.group(1);
-	     }
+	     String statusCmd = engine.getStatus();
 	
 	     List<String> parentsLinkedToWR = new ArrayList<String>();
 		 	if (options.has("link-workflow-run-to-parents")) {
@@ -167,6 +158,19 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     	}
     	return wfEngine;
     }
+    
+
+    @Override
+    public ReturnValue parse_parameters() {
+        ReturnValue ret = super.parse_parameters();
+        if(options.has("help") || options.has("h") || options.has("?")) {
+        	this.get_syntax();
+        	ret.setExitStatus(ReturnValue.STDOUTERR);
+        }
+
+        return ret;
+      }
+      
 }
 
 
