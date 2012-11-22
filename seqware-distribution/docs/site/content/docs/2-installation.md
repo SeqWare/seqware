@@ -37,7 +37,7 @@ your OS's package management system) the VirtualBox application. This is a
 great piece of software that will let you run the SeqWare CentOS VM on whatever
 OS you currently have.
 
-* [Oracle Virtual Box](http://amzn.com/B0043EWVDI)
+* [Oracle Virtual Box](https://www.virtualbox.org/)
 
 Next, you will need to download our current VM image which is linked below.
 Please make sure you are using the latest version, when we post a new one we
