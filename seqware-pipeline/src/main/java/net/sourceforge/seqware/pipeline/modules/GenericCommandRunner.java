@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class GenericCommandRunner extends Module {
         parser.accepts(
                 "gcr-skip-if-missing",
                 "If the registered output files don't exist don't worry about it. Useful for workflows that can produce variable file outputs but also potentially dangerous.");
-
+        parser.accepts("gcr-check-output-file", "Specify the path to the file.").withRequiredArg();
         return (parser);
     }
 
@@ -356,6 +357,10 @@ public class GenericCommandRunner extends Module {
 
         // note the time do_run finishes
         ret.setRunStopTstmp(new Date());
+        
+        if (options.has("gcr-check-output-file")) {
+        	ret = this.checkOutputFile();
+        }
         return (ret);
 
     }
@@ -412,5 +417,18 @@ public class GenericCommandRunner extends Module {
         }
 
         return (ret);
+    }
+    
+    private ReturnValue checkOutputFile() {
+    	ReturnValue newret = new ReturnValue(ReturnValue.SUCCESS);
+    	 List<String> files = (List<String>) options.valuesOf("gcr-check-output-file");
+         for (String file : files) {
+             if (FileTools.fileExistsAndNotEmpty(new File(file)).getExitStatus() != ReturnValue.SUCCESS) {
+                 Log.error("File does not exist or is not readable: " + file);
+                 newret.setExitStatus(ReturnValue.FILENOTREADABLE);
+                 return (newret);
+             }
+         }
+         return newret;
     }
 }
