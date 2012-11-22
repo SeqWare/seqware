@@ -181,7 +181,7 @@ public class ProcessingStructureResource extends BasicRestlet {
 		
 		@Override
 		public String toString() {
-			return this.algo + "-" + this.swAccessionId;
+			return this.algo + "__" + this.swAccessionId;
 		}
 		
 		public List<DotNode> getChildren() {
