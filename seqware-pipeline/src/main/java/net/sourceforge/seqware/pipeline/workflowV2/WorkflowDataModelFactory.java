@@ -60,6 +60,8 @@ public class WorkflowDataModelFactory {
 	    	bundlePath = (String) options.valueOf("provisioned-bundle-dir");
 	    }
 	    File bundle = new File(bundlePath);
+	    //change to absolute path
+	    bundlePath = bundle.getAbsolutePath();
 	    Log.info("Bundle Path: " + bundlePath);
 	    if (bundle == null || !bundle.exists()) {
 	        Log.error("ERROR: Bundle is null or doesn't exist! The bundle must be either a zip file or a directory structure.");
