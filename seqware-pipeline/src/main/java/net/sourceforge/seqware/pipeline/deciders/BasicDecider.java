@@ -235,8 +235,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 launchMax = Integer.parseInt(options.valueOf("launch-max").toString());
             } catch (NumberFormatException e) {
                 Log.error("The launch-max parameter must be an integer. Unparseable integer: " + options.valueOf("launch-max").toString());
-            }
-            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            }            
         }
         
         
