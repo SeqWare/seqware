@@ -70,6 +70,7 @@ The numbers used to identify  the archetypes (660,661,662) will vary, so you wil
 	package: net.sf.seqware
 	workflowDirectoryName: helloworld_example
 	workflowName: HelloWorldExample
+	workflowVersion: 1.0
 
 * groupId
 : The workflow belongs to this group. This group id is part of the workflow's unique identity.
@@ -84,16 +85,20 @@ The numbers used to identify  the archetypes (660,661,662) will vary, so you wil
 * workflowName
 : A unique camel case workflow name.
 
+<!-- this explicit pre tag should be avoided, but the automatic nanoc formatting does not 
+seem to work here -->
+<pre>
 	$ cd workflow-helloworld-example
-
 	$ ls
-
-	pom.xml  workflow  workflow.properties
+	pom.xml src workflow  workflow.properties
+</pre>
 
 * pom.xml
 : A maven project file. Edit this to change the version of the workflow and to add or modify workflow dependencies such as program, modules and data.
 * workflow
 : This directory contains the workflow skeleton. Look in here to modify the workflow .ini, .java files (Java workflow) or workflow.ftl(FTL workflow). The examples of Java and FTL can be found <a href="/docs/15-workflow-examples/">here</a>.
+* src 
+: This directory contains the Java client. Look in here to modify the .java files (Java workflow). The examples of Java and FTL can be found <a href="/docs/15-workflow-examples/">here</a>.
 * workflow.properties
 : Edit the description and workflow names in this file.
 
