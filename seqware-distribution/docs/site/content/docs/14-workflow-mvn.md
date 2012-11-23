@@ -27,7 +27,7 @@ If you are working on a development version and encounter errors, you can skip t
 ##Usage
 
 
-Change to a directory where you want to create a new workflow bundle.
+The rest of this tutorial was performed on a development version of the SeqWare CentOS VM using 0.13.6-SNAPSHOT. Change to a directory where you want to create a new workflow bundle.
 
 	$ cd /home/seqware/SeqWare  
 	$ mkdir maven-bundles 
@@ -36,42 +36,67 @@ Change to a directory where you want to create a new workflow bundle.
 Run the command to create a new workflow or module skeleton. The new code will be placed in a child directory.
 
 	$ mvn archetype:generate
-
 	...
-	660: local -> com.github.seqware:seqware-archetype-workflow (SeqWare workflow archetype)
-	661: local -> com.github.seqware:seqware-archetype-java-workflow (SeqWare Java workflow archetype)
-	662: local -> com.github.seqware:seqware-archetype-ftl-workflow (SeqWare FTL workflow archetype)
-	Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains): 205:
+	62: local -> com.github.seqware:seqware-archetype-java-workflow (SeqWare Java workflow archetype)
+	63: local -> com.github.seqware:seqware-archetype-ftl-workflow (SeqWare FTL workflow archetype)
+	64: local -> com.github.seqware:seqware-archetype-module (SeqWare module archetype)
+	65: local -> com.github.seqware:seqware-archetype-workflow (SeqWare workflow archetype)
+	66: local -> com.github.seqware:seqware-archetype-simple-workflow (A very simple SeqWare workflow archetype)
+	Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains): 16:
 
-The numbers used to identify  the archetypes (660,661,662) will vary, so you will need to scan through the list to find the SeqWare archetype you're looking for.
+The numbers used to identify  the archetypes (62 through 66) will vary, so you will need to scan through the list to find the SeqWare archetype you're looking for.
 
-661: if you want to write your workflow using Java objects.
+62: if you want to write your workflow using Java objects.
 
-662: if you want to write your workflow using FTL.
+63: if you want to write your workflow using FTL.
 
-<b>SeqWare WorkflowV2 Archetype</b>
+### SeqWare WorkflowV2 Archetype
 
-	$ mvn archetype:generate
-	...
-	660: local -> com.github.seqware:seqware-archetype-workflow (SeqWare workflow archetype)
-	661: local -> com.github.seqware:seqware-archetype-java-workflow (SeqWare Java workflow archetype)
-	662: local -> com.github.seqware:seqware-archetype-ftl-workflow (SeqWare FTL workflow archetype)
-	Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains): 205: 661
+In order to work on workflows that use the Java simplified workflow, use 62. Use the following options:
+
+	Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains): 16: 62
 	Define value for property 'groupId': : net.sf.seqware
-	Define value for property 'artifactId': : workflow-helloworld-example
+	Define value for property 'artifactId': : helloworld
 	Define value for property 'version': 1.0-SNAPSHOT: 1.0
 	Define value for property 'package': net.sf.seqware:
-	Define value for property 'workflowDirectoryName': : helloworld_example
-	Define value for property 'workflowName': : HelloWorldExample
+	Define value for property 'workflowDirectoryName': : helloworld
+	Define value for property 'workflowName': : helloworld
+	Define value for property 'workflowVersion': : 1.0
 	Confirm properties configuration:
 	groupId: net.sf.seqware
-	artifactId: workflow-helloworld-example
+	artifactId: helloworld
 	version: 1.0
 	package: net.sf.seqware
-	workflowDirectoryName: helloworld_example
-	workflowName: HelloWorldExample
+	workflowDirectoryName: helloworld
+	workflowName: helloworld
 	workflowVersion: 1.0
+	Y: Y
+	[INFO] ----------------------------------------------------------------------------
+	[INFO] Using following parameters for creating project from Archetype: seqware-archetype-java-workflow:0.13.6-SNAPSHOT
+	[INFO] ----------------------------------------------------------------------------
+	[INFO] Parameter: groupId, Value: net.sf.seqware
+	[INFO] Parameter: artifactId, Value: helloworld
+	[INFO] Parameter: version, Value: 1.0
+	[INFO] Parameter: package, Value: net.sf.seqware
+	[INFO] Parameter: packageInPathFormat, Value: net/sf/seqware
+	[INFO] Parameter: package, Value: net.sf.seqware
+	[INFO] Parameter: version, Value: 1.0
+	[INFO] Parameter: workflowName, Value: helloworld
+	[INFO] Parameter: groupId, Value: net.sf.seqware
+	[INFO] Parameter: workflowDirectoryName, Value: helloworld
+	[INFO] Parameter: workflowVersion, Value: 1.0
+	[INFO] Parameter: artifactId, Value: helloworld
+	[INFO] project created from Archetype in dir: /home/seqware/SeqWare/maven-bundles/helloworld
+	[INFO] ------------------------------------------------------------------------
+	[INFO] BUILD SUCCESSFUL
+	[INFO] ------------------------------------------------------------------------
+	[INFO] Total time: 4 minutes 35 seconds
+	[INFO] Finished at: Fri Nov 23 14:45:24 EST 2012
+	[INFO] Final Memory: 23M/166M
+	[INFO] ------------------------------------------------------------------------
 
+
+Note the following conventions:
 * groupId
 : The workflow belongs to this group. This group id is part of the workflow's unique identity.
 * artifactId
@@ -100,10 +125,9 @@ seem to work here -->
 * src 
 : This directory contains the Java client. Look in here to modify the .java files (Java workflow). The examples of Java and FTL can be found <a href="/docs/15-workflow-examples/">here</a>.
 * workflow.properties
-: Edit the description and workflow names in this file.
+: You can edit the description and workflow names in this file.
 
-
-## Variables
+#### Variables
 
 Automatically Defined
 * ${date}: a string representing the date the DAX was created, this is always defined so consider this a reserved variable name. 
@@ -118,36 +142,79 @@ Automatically Defined
 
 The archetype is just a template for the workflow bundle.  You need to use "mvn install" to actually build the workflow bundle.
 
-	$ mvn install
-	[INFO] Scanning for projects...
-	[INFO] 	------------------------------------------------------------------------
-	[INFO] Building seqware-workflow
+	[seqware@seqwarevm maven-bundles]$ cd helloworld/
+	[seqware@seqwarevm helloworld]$ mvn install
+	[INFO] Scanning for projects...                                                                                       
+	[INFO] ------------------------------------------------------------------------                                       
+	[INFO] Building seqware-workflow                                                                                      
+	[INFO]    task-segment: [install]                                                                                     
+	[INFO] ------------------------------------------------------------------------                                       
+	[INFO] [properties:read-project-properties {execution: properties-maven-plugin-execution}]                            
+	[debug] execute contextualize                                                                                         
+	[INFO] [resources:copy-resources {execution: copy-resources}]                                                         
+	[INFO] Using 'UTF-8' encoding to copy filtered resources.                                                             
+	[INFO] Copying 3 resources                                                                                            
+	[debug] execute contextualize                                                                                         
+	[INFO] [resources:resources {execution: default-resources}]                                                           
+	[INFO] Using 'UTF-8' encoding to copy filtered resources.    
 	...
-	[INFO] 	-----------------------------------------------------	-------------------
+	main:
+	[INFO] Executed tasks
+	[INFO] [antrun:run {execution: chmod-perl}]
+	[INFO] Executing tasks
+
+	main:
+	[INFO] Executed tasks
+	[INFO] ------------------------------------------------------------------------
 	[INFO] BUILD SUCCESSFUL
-	[INFO] 	------------------------------------------------------------------------
-	[INFO] Total time: 22 seconds
-	[INFO] Finished at: Wed Feb 22 15:22:05 EST 2012
-	[INFO] Final Memory: 46M/448M
-	[INFO] 	------------------------------------------------------------------------
+	[INFO] ------------------------------------------------------------------------
+	[INFO] Total time: 26 seconds
+	[INFO] Finished at: Fri Nov 23 14:48:15 EST 2012
+	[INFO] Final Memory: 67M/423M
+	[INFO] ------------------------------------------------------------------------
+
 
 ##Testing the Workflow
 
-	java -jar target/Workflow_Bundle_vep_1.0_SeqWare_0.12.5-SNAPSHOT/Workflow_Bundle_vep/1.0/lib/seqware-distribution-0.12.5-SNAPSHOT-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncherV2 --  --provisioned-bundle-dir target/Workflow_Bundle_vep_1.0_SeqWare_0.12.5-SNAPSHOT/ --workflow vep --version 1.0 --ini-files target/Workflow_Bundle_vep_1.0_SeqWare_0.12.5-SNAPSHOT/Workflow_Bundle_vep/1.0/config/workflow.ini --wait
-	
-output:
+You can first get an idea of what parameters are needed by displaying the help message
 
-	SUBMITTING TO PEGASUS: pegasus-plan -Dpegasus.user.properties=/u/seqwaretest/.seqware/pegasus/properties --dax /tmp/dax63588764095847722002087051279420911 --dir /u/seqwaretest/seqware-development/pegasus-dax -o sqwstage.hpc.oicr.on.ca --force --submit -s sqwstage.hpc.oicr.on.ca
-	PEGASUS STATUS COMMAND: pegasus-status -l /u/seqwaretest/seqware-development/pegasus-dax/seqwaretest/pegasus/vep/run0043
+	[seqware@seqwarevm maven-bundles]$ java -jar helloworld/target/Workflow_Bundle_helloworld_1.0_SeqWare_0.13.6-SNAPSHOT/Workflow_Bundle_helloworld/1.0/lib/seqware-distribution-0.13.6-SNAPSHOT-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncherV2 -- --help
+	Running Plugin: net.sourceforge.seqware.pipeline.plugins.WorkflowLauncherV2
+	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.WorkflowLauncherV2@2fcac6db
+	Option                                  Description                                    
+	------                                  -----------                                    
+	-?, -h, --help                          Provides this help message.                    
+	-b, --bundle, --provisioned-bundle-dir  The path to a bundle zip file. You can         
+						  specify this or the workflow-                
+						  accession of an already installed            
+						  bundle.                                      
+	--host                                  If specified, the scheduled workflow           
+						  will only be launched if this                
+						  parameter value and the host field           
+						  in the workflow run table match.             
+						  This is a mechanism to target                
+						  workflows to particular servers for          
+						  launching.                     
+	...
+
+You can then test the workflow with:
+
+	[seqware@seqwarevm maven-bundles]$ java -jar helloworld/target/Workflow_Bundle_helloworld_1.0_SeqWare_0.13.6-SNAPSHOT/Workflow_Bundle_helloworld/1.0/lib/seqware-distribution-0.13.6-SNAPSHOT-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncherV2 -- --provisioned-bundle-dir /home/seqware/SeqWare/maven-bundles/helloworld/target/Workflow_Bundle_helloworld_1.0_SeqWare_0.13.6-SNAPSHOT --workflow helloworld --version 1.0 --ini-files helloworld/target/Workflow_Bundle_helloworld_1.0_SeqWare_0.13.6-SNAPSHOT/Workflow_Bundle_helloworld/1.0/config/workflow.ini --wait
+	Running Plugin: net.sourceforge.seqware.pipeline.plugins.WorkflowLauncherV2
+	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.WorkflowLauncherV2@4d865b28
+	  INI FILE: helloworld/target/Workflow_Bundle_helloworld_1.0_SeqWare_0.13.6-SNAPSHOT/Workflow_Bundle_helloworld/1.0/config/workflow.ini
+	CREATING DAX IN: /tmp/dax5419643624422120164178112195381539
+	SUBMITTING TO PEGASUS: pegasus-plan -Dpegasus.user.properties=/home/seqware/.seqware/pegasus/properties --dax /tmp/dax5419643624422120164178112195381539 --dir /home/seqware/SeqWare/pegasus-dax -o seqwarevm --force --submit -s seqwarevm
+	PEGASUS STATUS COMMAND: pegasus-status -l /home/seqware/SeqWare/pegasus-dax/seqware/pegasus/helloworld/run0002
 	MONITORING PEGASUS STATUS:
-	RUNNING: step 1 of 33 (3%)
-	RUNNING: step 2 of 33 (6%)
-	RUNNING: step 3 of 33 (9%)
-	RUNNING: step 8 of 33 (24%)
-	RUNNING: step 18 of 33 (54%)
-	RUNNING: step 26 of 33 (78%)
-	RUNNING: step 29 of 33 (87%)
-	RUNNING: step 30 of 33 (90%)
-	RUNNING: step 31 of 33 (93%)
-	RUNNING: step 32 of 33 (96%)
+	RUNNING: step 1 of 7 (14%)
+	RUNNING: step 2 of 7 (28%)
+	RUNNING: step 3 of 7 (42%)
+	RUNNING: step 4 of 7 (57%)
+	RUNNING: step 5 of 7 (71%)
+	RUNNING: step 6 of 7 (85%)
 	WORKFLOW COMPLETED SUCCESSFULLY!
+	You have new mail in /var/spool/mail/seqware
+	[seqware@seqwarevm maven-bundles]$
+
+This ends the tutorial on creating new workflows using Maven archetypes. 
