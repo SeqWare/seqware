@@ -97,6 +97,7 @@ In order to work on workflows that use the Java simplified workflow, use 62. Use
 
 
 Note the following conventions:
+
 * groupId
 : The workflow belongs to this group. This group id is part of the workflow's unique identity.
 * artifactId
@@ -130,6 +131,7 @@ seem to work here -->
 #### Variables
 
 Automatically Defined
+
 * ${date}: a string representing the date the DAX was created, this is always defined so consider this a reserved variable name. 
 
 * ${random}: a randomly generated string, this is always defined so consider this a reserved variable name. 
@@ -173,6 +175,7 @@ The archetype is just a template for the workflow bundle.  You need to use "mvn 
 	[INFO] Final Memory: 67M/423M
 	[INFO] ------------------------------------------------------------------------
 
+At this junction, one would normally want to edit the workflow by modifying the WorkflowClient. However, since this just an example we will proceed onto testing.
 
 ##Testing the Workflow
 
@@ -218,3 +221,4 @@ You can then test the workflow with:
 	[seqware@seqwarevm maven-bundles]$
 
 This ends the tutorial on creating new workflows using Maven archetypes. 
+The next step is to look at examples of workflows at [Workflow Examples](/docs/15-workflow-examples/).
