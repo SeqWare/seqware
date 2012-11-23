@@ -172,7 +172,7 @@ public class WorkflowDataModelFactory {
         if(options.has("status") == false && options.has(("workflow-accession"))) {
         	int workflowAccession = Integer.parseInt((String)options.valueOf("workflow-accession"));
         	int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession);
-        	configs.put("workflow-run-accession", ""+workflowrunaccession);
+        	//configs.put("workflow-run-accession", ""+workflowrunaccession);
         	ret.setWorkflow_run_accession(""+workflowrunaccession);
         }
 		ret.setConfigs(configs);
@@ -239,7 +239,7 @@ public class WorkflowDataModelFactory {
 		    ret.put("workflow_version", wf.getAttributeValue("version"));
 		    ret.put("seqware_version", wf.getAttributeValue("seqware_version"));
 		    ret.put("description", wf.getChildText("description"));
-		    String basedir = wf.getAttributeValue("basedir");
+		    String basedir = wf.getAttributeValue("basedir").replaceFirst("\\$\\{workflow_bundle_dir\\}",bundleDir);
 		    ret.put("basedir", wf.getAttributeValue("basedir"));
 		    //parse the workflow_directory_name
 		    String[] _arr = basedir.split("/");

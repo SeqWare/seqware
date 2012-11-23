@@ -21,13 +21,13 @@ public class OozieWorkflowXmlGenerator {
 	 * @param output
 	 * @return
 	 */
-    public ReturnValue generateWorkflowXml(AbstractWorkflowDataModel wfdm, String output) {
+    public ReturnValue generateWorkflowXml(AbstractWorkflowDataModel wfdm, String output, String dir) {
     	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-    	ret = this.createWorkflowXml(wfdm, output);
+    	ret = this.createWorkflowXml(wfdm, output, dir);
     	return ret;
     }
     
-    private ReturnValue createWorkflowXml(AbstractWorkflowDataModel wfdm, String output) {
+    private ReturnValue createWorkflowXml(AbstractWorkflowDataModel wfdm, String output, String dir) {
     	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
     	File dax = new File(output);
     	// write to dax
@@ -35,7 +35,7 @@ public class OozieWorkflowXmlGenerator {
     	try {
     	    OutputStream out = new FileOutputStream(dax);
     	    XMLOutputter serializer = new XMLOutputter(Format.getPrettyFormat());
-    	    WorkflowApp adag = new WorkflowApp(wfdm);
+    	    WorkflowApp adag = new WorkflowApp(wfdm, dir);
     	    doc.setRootElement(adag.serializeXML());
     	    serializer.output(doc, out);
 
