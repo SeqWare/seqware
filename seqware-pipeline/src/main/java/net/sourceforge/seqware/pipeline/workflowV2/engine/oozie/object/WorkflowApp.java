@@ -9,11 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
-import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.PegasusJavaJob;
-import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.PegasusJavaSeqwareModuleJob;
-import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.PegasusJob;
-import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.PegasusPerlJob;
-import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.ProvisionFilesJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.BashJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.JavaJob;
@@ -31,10 +26,12 @@ public class WorkflowApp {
 	private List<OozieJob> jobs;
 	private String lastJoin;
     private Map<SqwFile, OozieJob> fileJobMap;
+    private String unqiueWorkingDir;
 
 	
-	public WorkflowApp(AbstractWorkflowDataModel wfdm) {
+	public WorkflowApp(AbstractWorkflowDataModel wfdm, String dir) {
 		this.wfdm = wfdm;
+		this.unqiueWorkingDir = dir;
 		this.jobs = new ArrayList<OozieJob>();
 		this.fileJobMap = new HashMap<SqwFile, OozieJob>();
 		this.parseDataModel(wfdm);
@@ -152,7 +149,7 @@ public class WorkflowApp {
 		}
 		
 		OozieJob oJob0 = new OozieJob(job0, "start_"+this.jobs.size(), 
-				wfdm.getEnv().getOOZIE_WORK_DIR());
+				this.unqiueWorkingDir);
 		oJob0.setMetadataWriteback(metadatawriteback);
 		//if has parent-accessions, assign it to first job
 		Collection<String> parentAccession = wfdm.getParentAccessions();
@@ -331,12 +328,12 @@ public class WorkflowApp {
 			//ret = new PegasusJavaJob(job,wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
 		} else if(job instanceof PerlJob) {
 			ret = new OozieJob(job, job.getAlgo() + "_" + this.jobs.size(), 
-					wfdm.getEnv().getOOZIE_WORK_DIR());
+					this.unqiueWorkingDir);
 		} else if (job instanceof JavaSeqwareModuleJob){
 			//ret = new PegasusJavaSeqwareModuleJob(job, wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
 		} else {
 			ret = new OozieJob(job, job.getAlgo() + "_" + this.jobs.size(), 
-					wfdm.getEnv().getOOZIE_WORK_DIR());
+					this.unqiueWorkingDir);
 		}
 		return ret;
 	}
