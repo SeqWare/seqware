@@ -6,7 +6,10 @@ markdown:              basic
 
 ---
 
-Java Example
+## Java Simplified Workflow Bundles
+
+As described in [Creating New Workflow Bundles and Modules Using Maven Archetypes](/docs/14-workflow-mvn/), new Java simplified workflow bundles are created through the <code>mvn archetype:generate</code> command and the <code>com.github.seqware:seqware-archetype-java-workflow (SeqWare Java workflow archetype)</code>.
+
 	package net.sourceforge.seqware;
 
 
@@ -111,7 +114,9 @@ Java Example
 
 	}
 
-FTL Examples
+As described in [Creating New Workflow Bundles and Modules Using Maven Archetypes](/docs/14-workflow-mvn/), new FTL workflow bundles are created through the <code>mvn archetype:generate</code> command and the <code>com.github.seqware:seqware-archetype-ftl-workflow (SeqWare FTL workflow archetype)</code>.
+
+The following is a more complex example than that provided by the basic archetype generate command.
 
 	<workflow>
 		<files>
