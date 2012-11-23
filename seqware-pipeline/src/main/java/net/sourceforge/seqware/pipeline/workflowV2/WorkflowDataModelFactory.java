@@ -240,7 +240,7 @@ public class WorkflowDataModelFactory {
 		    ret.put("seqware_version", wf.getAttributeValue("seqware_version"));
 		    ret.put("description", wf.getChildText("description"));
 		    String basedir = wf.getAttributeValue("basedir").replaceFirst("\\$\\{workflow_bundle_dir\\}",bundleDir);
-		    ret.put("basedir", wf.getAttributeValue("basedir"));
+		    ret.put("basedir", basedir);
 		    //parse the workflow_directory_name
 		    String[] _arr = basedir.split("/");
 		    if(_arr.length > 2) {
