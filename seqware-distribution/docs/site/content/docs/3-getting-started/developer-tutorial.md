@@ -416,6 +416,5 @@ Now that this is installed you can trigger it just like you have done in the [Us
 
 ## Next Steps
 
+The step-by-step guide at [Creating New Workflow Bundles and Modules Using Maven Archetypes](/docs/14-workflow-mvn/) gives an introduction on how to create new workflows.
 The guide [How to Write a Workflow Bundle](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_Write_a_Bundled_Workflow) on the public SeqWare project wiki goes into very detailed information about workflow bundles, how to create them, the syntax they use, and other key information. In the near future this will be migrated to this site but the directions there should still be up to date.
-
-
