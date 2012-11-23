@@ -296,13 +296,13 @@ public class Adag  {
 	private PegasusJob createPegasusJobObject(AbstractJob job, AbstractWorkflowDataModel wfdm) {
 		PegasusJob ret = null;
 		if(job instanceof JavaJob) {
-			ret = new PegasusJavaJob(job,wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
+			ret = new PegasusJavaJob(job,wfdm.getWorkflowBaseDir(), wfdm.getSeqware_version());
 		} else if(job instanceof PerlJob) {
-			ret = new PegasusPerlJob(job, wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
+			ret = new PegasusPerlJob(job, wfdm.getWorkflowBaseDir(), wfdm.getSeqware_version());
 		} else if (job instanceof JavaSeqwareModuleJob){
-			ret = new PegasusJavaSeqwareModuleJob(job, wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
+			ret = new PegasusJavaSeqwareModuleJob(job, wfdm.getWorkflowBaseDir(), wfdm.getSeqware_version());
 		} else {
-			ret = new PegasusJob(job, wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
+			ret = new PegasusJob(job, wfdm.getWorkflowBaseDir(), wfdm.getSeqware_version());
 		}
 		return ret;
 	}
