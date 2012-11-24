@@ -1,4 +1,4 @@
-package net.sourceforge.seqware;
+package ${package};
 
 
 import java.util.Map;
