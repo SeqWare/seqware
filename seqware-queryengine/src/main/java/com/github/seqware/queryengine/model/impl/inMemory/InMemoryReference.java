@@ -31,7 +31,7 @@ public class InMemoryReference extends AbstractInMemorySet<Reference, FeatureSet
     }
     
     /**
-     * Create a new AnalysisSet builder
+     * Create a new Reference builder
      *
      * @return a {@link com.github.seqware.queryengine.model.Reference.Builder} object.
      */
