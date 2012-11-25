@@ -30,7 +30,7 @@ import org.w3c.dom.Document;
 
 /**
  *
- * @author mtaschuk
+ * @author dyuen
  */
 public class SequencerRunResourceTest extends DatabaseResourceTest {
 

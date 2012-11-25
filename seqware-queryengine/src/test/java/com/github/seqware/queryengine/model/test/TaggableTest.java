@@ -5,8 +5,9 @@ import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.interfaces.Taggable;
 import com.github.seqware.queryengine.model.interfaces.Taggable.NestedLevel;
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
-import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
+import com.github.seqware.queryengine.plugins.PluginInterface;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryPluginRunner;
+import com.github.seqware.queryengine.plugins.plugins.FeaturesAllPlugin;
 import java.util.*;
 import junit.framework.Assert;
 import static org.junit.Assert.fail;
@@ -29,8 +30,8 @@ public class TaggableTest {
     private static Reference r1;
     private static Group group;
     private static User u1;
-    private static AnalysisSet aSet;
-    private static Analysis a;
+    private static Plugin aSet;
+    private static PluginRun a;
     private static Tag ts1, ts2, ts3;
     private static Tag t1a, t1b, t1c, t2a, t2b, t2c, t3a;
 
@@ -54,9 +55,9 @@ public class TaggableTest {
         tSet1 = mManager.buildTagSet().setName("Funky tags").build();
         tSet2 = mManager.buildTagSet().setName("Unfunky tags").build();
         rSet = mManager.buildReferenceSet().setName("Minbar").setOrganism("Minbari").build();
-        aSet = mManager.buildAnalysisSet().setName("FP").setDescription("Funky program").build();
-        // only for testing, Analysis classes 
-        a = mManager.buildAnalysis().setParameters(new ArrayList<Object>()).setPlugin(new InMemoryFeaturesAllPlugin()).build();
+        aSet = mManager.buildPlugin().setName("FP").setDescription("Funky program").build();
+        // only for testing, PluginRun classes 
+        a = mManager.buildPluginRun().setParameters(new ArrayList<Object>()).setPluginRunner(SWQEFactory.getPluginRunner(null, null)).build();
         r1 = mManager.buildReference().setName("ref1").build();
         rSet.add(r1);
         group = mManager.buildGroup().setName("Developers").setDescription("Users that are working on new stuff").build();
@@ -153,10 +154,10 @@ public class TaggableTest {
             tagException = true;
         }
         Assert.assertTrue(tagException);
-        for (AnalysisPluginInterface api : SWQEFactory.getQueryInterface().getAnalysisPlugins()) {
+        for (PluginInterface api : SWQEFactory.getQueryInterface().getPluginInterfaces()) {
             Assert.assertTrue(!(api instanceof Taggable));
         }
-        Assert.assertTrue(SWQEFactory.getQueryInterface().getAnalysisPlugins().getCount() > 0);
+        Assert.assertTrue(SWQEFactory.getQueryInterface().getPluginInterfaces().getCount() > 0);
     }
 
     /**
@@ -285,10 +286,10 @@ public class TaggableTest {
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         Tag ta = ts1.toBuilder().setValue("Test_String").build();
         Tag tb = ts1.toBuilder().setValue("Test_String".getBytes()).build();
-        Tag tc = ts1.toBuilder().setValue(new Float(0.1f)).build();
-        Tag td = ts1.toBuilder().setValue(new Double(0.1)).build();
-        Tag te = ts1.toBuilder().setValue(new Long(1)).build();
-        Tag tf = ts1.toBuilder().setValue(new Integer(10)).build();
+        Tag tc = ts1.toBuilder().setValue(Float.valueOf(0.1f)).build();
+        Tag td = ts1.toBuilder().setValue(Double.valueOf(0.1)).build();
+        Tag te = ts1.toBuilder().setValue(Long.valueOf(1)).build();
+        Tag tf = ts1.toBuilder().setValue(Integer.valueOf(10)).build();
         Tag tg = ts1.toBuilder().setValue(fSet.getSGID()).build();
         User u = mManager.buildUser().setFirstName("John").setLastName("Smith").setEmailAddress("john.smith@googly.com").setPassword("password").build();
         u.associateTag(ta);
