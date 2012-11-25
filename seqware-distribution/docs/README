@@ -28,6 +28,17 @@ sudo gem install rubypants
 sudo gem install builder
 sudo gem install rainpress
 
+Hack on Linux Mint 13:
+
+I had problems compiling the site until I commented out the following on line 23 of /var/lib/gems/1.9.1/gems/sass-3.2.3/lib/sass/importers/filesystem.rb
+
+      # @see Base#find_relative
+      def find_relative(name, base, options)
+        #_find(File.dirname(base), name, options)
+      end
+
+Be careful with this, I have no idea if I broke anything by doing this.
+
 Source code is here:
 seqware/seqware-distribution/docs/site
 
