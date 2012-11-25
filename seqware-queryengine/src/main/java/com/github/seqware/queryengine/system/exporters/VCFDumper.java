@@ -22,8 +22,8 @@ import com.github.seqware.queryengine.impl.MRHBasePersistentBackEnd;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
-import com.github.seqware.queryengine.plugins.hbasemr.MRVCFDumperPlugin;
+import com.github.seqware.queryengine.plugins.PluginInterface;
+import com.github.seqware.queryengine.plugins.plugins.VCFDumperPlugin;
 import com.github.seqware.queryengine.system.Utility;
 import com.github.seqware.queryengine.system.importers.workers.ImportConstants;
 import com.github.seqware.queryengine.system.importers.workers.VCFVariantImportWorker;
@@ -149,13 +149,13 @@ public class VCFDumper {
 
         boolean caughtNonVCF = false;
         boolean mrSuccess = false;
-        if (SWQEFactory.getBackEnd() instanceof MRHBasePersistentBackEnd) {
+        if (SWQEFactory.getQueryInterface() instanceof MRHBasePersistentBackEnd) {
             // hack to use VCF MR
             if (SWQEFactory.getModelManager() instanceof MRHBaseModelManager) {
                 try {
                     // pretend that the included com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesByAttributesPlugin is an external plug-in
-                    Class<? extends AnalysisPluginInterface> arbitraryPlugin;
-                    arbitraryPlugin = MRVCFDumperPlugin.class;
+                    Class<? extends PluginInterface> arbitraryPlugin;
+                    arbitraryPlugin = VCFDumperPlugin.class;
                     // get a FeatureSet from the back-end
                     QueryFuture<File> future = SWQEFactory.getQueryInterface().getFeaturesByPlugin(0, arbitraryPlugin, fSet);
                     File get = future.get();

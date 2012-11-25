@@ -20,7 +20,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.KryoSerializable;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.github.seqware.queryengine.impl.StorageInterface;
+import com.github.seqware.queryengine.backInterfaces.StorageInterface;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;

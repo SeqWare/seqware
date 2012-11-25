@@ -1,5 +1,6 @@
 package com.github.seqware.queryengine.model.impl;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.seqware.queryengine.dto.QESupporting.TagPB;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
@@ -204,6 +205,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      *
      * @return a {@link com.github.seqware.queryengine.factory.CreateUpdateManager} object.
      */
+    @JsonIgnore
     public CreateUpdateManager getManager() {
         // happens pretty often now when building model objects
 //        if (manager == null){
@@ -353,6 +355,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      *
      * @return a {@link java.lang.Class} object.
      */
+    @JsonIgnore
     public abstract Class getHBaseClass();
 
     /**
@@ -360,6 +363,7 @@ public abstract class AtomImpl<T extends Atom> implements Atom<T> {
      *
      * @return a {@link java.lang.String} object.
      */
+    @JsonIgnore
     public abstract String getHBasePrefix();
 
     public static class TagValueIterable implements SeqWareIterable<Tag> {
