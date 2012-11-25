@@ -36,11 +36,11 @@ public class VCFImportExportModelTest extends VCFImportExportTest {
     @Test
     @Override
     public void testNormalVCFImport() {
-        if (!(SWQEFactory.getBackEnd() instanceof HBasePersistentBackEnd)){
+        if (!(SWQEFactory.getQueryInterface() instanceof HBasePersistentBackEnd)){
             // in-memory models are too slow for the following test
             return;
         }
-        super.testNormalVCFImport();;
+        super.testNormalVCFImport();
     }
 
     /** {@inheritDoc} */
