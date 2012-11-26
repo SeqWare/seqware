@@ -17,7 +17,7 @@
     <parent>
         <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
-        <version>0.13.5</version>
+        <version>0.13.6-RC</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -549,6 +549,10 @@
         <dependency>
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.ext.freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.jee</groupId>
+            <artifactId>org.restlet.ext.json</artifactId>
         </dependency>
         <dependency>
             <groupId>org.restlet.jee</groupId>

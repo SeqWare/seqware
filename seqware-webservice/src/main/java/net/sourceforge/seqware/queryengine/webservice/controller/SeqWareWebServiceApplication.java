@@ -20,6 +20,7 @@ import net.sourceforge.seqware.webservice.resources.filters.WorkflowRunsFilter;
 import net.sourceforge.seqware.webservice.resources.queries.CycleCheckResource;
 import net.sourceforge.seqware.webservice.resources.queries.ProcessIdProcessResource;
 import net.sourceforge.seqware.webservice.resources.queries.RunWorkflowResource;
+import net.sourceforge.seqware.webservice.resources.queries.SampleHierarchyResource;
 import net.sourceforge.seqware.webservice.resources.queries.SampleIdFilesResource;
 import net.sourceforge.seqware.webservice.resources.queries.SequencerRunIdFilesResource;
 import net.sourceforge.seqware.webservice.resources.queries.SequencerRunReportResource;
@@ -49,6 +50,7 @@ import net.sourceforge.seqware.webservice.resources.tables.LibrariesResource;
 import net.sourceforge.seqware.webservice.resources.tables.LibraryResource;
 import net.sourceforge.seqware.webservice.resources.tables.ProcessIDResource;
 import net.sourceforge.seqware.webservice.resources.tables.ProcessResource;
+import net.sourceforge.seqware.webservice.resources.tables.ProcessingStructureResource;
 import net.sourceforge.seqware.webservice.resources.tables.RootSampleResource;
 import net.sourceforge.seqware.webservice.resources.tables.SampleIDResource;
 import net.sourceforge.seqware.webservice.resources.tables.SampleResource;
@@ -332,6 +334,8 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/" + version + "/static", directory);
 
 
+        router.attach("/processingstructure",new ProcessingStructureResource(getContext()));
+        router.attach("/sample/parents",new SampleHierarchyResource(getContext()));
         guard.setNext(router);
         return guard;
 

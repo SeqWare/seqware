@@ -3,7 +3,7 @@ package com.github.seqware.queryengine.model.impl.lazy;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.impl.SimplePersistentBackEnd;
-import com.github.seqware.queryengine.impl.StorageInterface;
+import com.github.seqware.queryengine.backInterfaces.StorageInterface;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.Reference;
@@ -360,7 +360,7 @@ public class LazyFeatureSet extends FeatureSet implements LazyMolSet<FeatureSet,
         @Override
         public FeatureSet build() {
             if (aSet.getReferenceID() == null && aSet.getManager() != null) {
-                throw new RuntimeException("Invalid build of AnalysisSet");
+                throw new RuntimeException("Invalid build of Plugin");
             }
             if (aSet.getManager() != null) {
                 aSet.getManager().objectCreated(aSet);

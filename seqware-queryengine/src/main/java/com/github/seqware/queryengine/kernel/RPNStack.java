@@ -146,7 +146,6 @@ public class RPNStack implements Serializable {
     public static class TagValue extends Parameter {
 
         private String tagSetRowKey;
-        private Object value;
 
         public TagValue(String tagSetRowKey, String key) {
             super(key);
@@ -155,10 +154,6 @@ public class RPNStack implements Serializable {
 
         public String getTagSetRowKey() {
             return tagSetRowKey;
-        }
-
-        public Object getValue() {
-            return this.value;
         }
     }
 
