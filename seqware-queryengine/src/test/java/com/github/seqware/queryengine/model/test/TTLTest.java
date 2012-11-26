@@ -4,7 +4,8 @@ import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.interfaces.TTLable;
-import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesAllPlugin;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryPluginRunner;
+import com.github.seqware.queryengine.plugins.plugins.FeaturesAllPlugin;
 import java.util.*;
 import junit.framework.Assert;
 import org.junit.BeforeClass;
@@ -26,8 +27,8 @@ public class TTLTest {
     private static Reference r1;
     private static Group group, viewerGroup;
     private static User marshmallowUser, titanicUser;
-    private static AnalysisSet aSet;
-    private static Analysis a1;
+    private static Plugin aSet;
+    private static PluginRun a1;
 
     /**
      * <p>setupTests.</p>
@@ -49,7 +50,7 @@ public class TTLTest {
         Calendar calendar = new GregorianCalendar();
         calendar.add(Calendar.HOUR, 10);
         rSet.setTTL(calendar.getTimeInMillis(), true);
-        aSet = mManager.buildAnalysisSet().setName("FP").setDescription("Funky program").build();
+        aSet = mManager.buildPlugin().setName("FP").setDescription("Funky program").build();
         r1 = mManager.buildReference().setName("ref1").build();
         rSet.add(r1);
         group = mManager.buildGroup().setName("Developers").setDescription("Users that are working on new stuff").build();
@@ -58,7 +59,7 @@ public class TTLTest {
         marshmallowUser.setTTL(10, true);
         titanicUser = mManager.buildUser().setFirstName("Deanna").setLastName("Troi").setEmailAddress("deanna.troi@googly.com").setPassword("password").build();
         titanicUser.setTTL(5, false);
-        a1 = mManager.buildAnalysis().setParameters(new ArrayList()).setPlugin(new InMemoryFeaturesAllPlugin()).build();
+        a1 = mManager.buildPluginRun().setParameters(new ArrayList()).setPluginRunner(SWQEFactory.getPluginRunner(null, null)).build();
         a1.setTTL(TTLable.FOREVER, true);
         group.add(marshmallowUser);
         viewerGroup.add(titanicUser);
