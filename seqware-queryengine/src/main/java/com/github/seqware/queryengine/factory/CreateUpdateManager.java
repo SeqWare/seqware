@@ -120,11 +120,11 @@ public interface CreateUpdateManager {
     public ReferenceSet.Builder buildReferenceSet();
 
     /**
-     * Build a new analysis
+     * Build a new pluginRun
      *
-     * @return analysis
+     * @return pluginrun
      */
-    public Analysis.Builder buildAnalysis();
+    public PluginRun.Builder buildPluginRun();
 
     /**
      * Build a set of tags
@@ -134,11 +134,11 @@ public interface CreateUpdateManager {
     public TagSet.Builder buildTagSet();
 
     /**
-     * Build an analysis set
+     * Build a plugin
      *
-     * @return an analysis set
+     * @return a plugin builder
      */
-    public AnalysisSet.Builder buildAnalysisSet();
+    public Plugin.Builder buildPlugin();
 
     /**
      * Build a user

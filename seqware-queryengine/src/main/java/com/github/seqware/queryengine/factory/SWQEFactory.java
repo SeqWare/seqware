@@ -16,8 +16,16 @@
  */
 package com.github.seqware.queryengine.factory;
 
+import com.github.seqware.queryengine.backInterfaces.SerializationInterface;
+import com.github.seqware.queryengine.backInterfaces.StorageInterface;
 import com.github.seqware.queryengine.impl.*;
+import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryInterface;
+import com.github.seqware.queryengine.plugins.MapReducePlugin;
+import com.github.seqware.queryengine.plugins.PluginInterface;
+import com.github.seqware.queryengine.plugins.PluginRunnerInterface;
+import com.github.seqware.queryengine.plugins.hbasemr.MRHBasePluginRunner;
+import com.github.seqware.queryengine.plugins.inmemory.InMemoryPluginRunner;
 
 /**
  * This is the SeqWare Query Engine factory and should be used as the primary
@@ -28,6 +36,18 @@ import com.github.seqware.queryengine.model.QueryInterface;
  * @version $Id: $Id
  */
 public class SWQEFactory {
+
+    public static PluginRunnerInterface getPluginRunner(PluginInterface plugin, FeatureSet inputSet, Object ... parameters) {
+        if (plugin == null){
+            return null;
+        }
+        if (current_backend == Model_Type.MRHBASE){
+            MapReducePlugin mrPlugin = (MapReducePlugin)plugin;
+            return new MRHBasePluginRunner(mrPlugin, inputSet, parameters);
+        } else{
+            return new InMemoryPluginRunner(plugin, inputSet, parameters);
+        }
+    }
 
     /**
      * '
@@ -40,26 +60,26 @@ public class SWQEFactory {
         IN_MEMORY {
 
             @Override
-            BackEndInterface buildBackEnd(StorageInterface i) {
+            QueryInterface buildBackEnd(StorageInterface i) {
                 return new SimplePersistentBackEnd(i);
             }
         },
         HBASE {
 
             @Override
-            BackEndInterface buildBackEnd(StorageInterface i) {
+            QueryInterface buildBackEnd(StorageInterface i) {
                 return new HBasePersistentBackEnd(i);
             }
         },
         MRHBASE{
             @Override
-            BackEndInterface buildBackEnd(StorageInterface i){
+            QueryInterface buildBackEnd(StorageInterface i){
                 return new MRHBasePersistentBackEnd(i);
             }
         }
         ;
 
-        abstract BackEndInterface buildBackEnd(StorageInterface i);
+        abstract QueryInterface buildBackEnd(StorageInterface i);
     };
 
     /**
@@ -130,7 +150,7 @@ public class SWQEFactory {
     private static Serialization_Type current_serialization = DEFAULT_SERIALIZATION;
     private static SerializationInterface serialInstance = null;
     private static StorageInterface storeInstance = null;
-    private static BackEndInterface instance = null;
+    private static QueryInterface instance = null;
 
     /**
      * Get a reference to the current operating serialization method
@@ -166,18 +186,6 @@ public class SWQEFactory {
             instance = null;
             ref.closeStorage();
         }
-    }
-
-    /**
-     * Get a reference to the currently operating back-end
-     *
-     * @return backEnd reference to access underlying DB operations
-     */
-    public static BackEndInterface getBackEnd() {
-        if (instance == null) {
-            instance = current_backend.buildBackEnd(getStorage());
-        }
-        return instance;
     }
 
     /**

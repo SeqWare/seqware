@@ -123,6 +123,9 @@ public class WorkflowRunReportResource
                 } else { // full report
                   toString(results, builder);
                 }
+            } else if(wId == null && wrId == null) {
+                String errMsg = "Improperly format, you need to provide a workflow ID or workflowRun ID";
+                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,errMsg);
             } else {
                 Collection<WorkflowRunReportRow> rows = cfc.getAllRuns();
                 for (WorkflowRunReportRow results : rows) {

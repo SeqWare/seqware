@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -103,7 +104,7 @@ public class Adag  {
 
 	
 	private void parseWorkflow(AbstractWorkflowDataModel wfdm) {
-		boolean metadatawriteback = Boolean.parseBoolean(wfdm.getConfigs().get("metadata"));
+		boolean metadatawriteback = wfdm.isMetadataWriteBack();
 		List<PegasusJob> parents = new ArrayList<PegasusJob>();
 		//mkdir data job
 		AbstractJob job0 = new BashJob("createdirs");
@@ -118,9 +119,9 @@ public class Adag  {
 		pjob0.setId(this.jobs.size());
 		pjob0.setMetadataWriteback(metadatawriteback);
 		//if has parent-accessions, assign it to first job
-		String parentAccession = wfdm.getParent_accessions();
+		Collection<String> parentAccession = wfdm.getParentAccessions();
 		if(parentAccession!=null && !parentAccession.isEmpty()) {
-			pjob0.setParentAccession(parentAccession);
+			pjob0.setParentAccessions(parentAccession);
 		}
 		String workflowRunAccession = wfdm.getWorkflow_run_accession();
 		if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
@@ -136,25 +137,29 @@ public class Adag  {
 			Collection<PegasusJob> newParents = new ArrayList<PegasusJob>();
 			for(Map.Entry<String,SqwFile> entry: wfdm.getFiles().entrySet()) {
 				AbstractJob job = new BashJob("provisionFile_"+entry.getKey());
-				job.addFile(entry.getValue());
-				ProvisionFilesJob pjob = new ProvisionFilesJob(job,wfdm.getWorkflowBaseDir(), entry.getValue(),
+				SqwFile file = entry.getValue();
+				job.addFile(file);
+				ProvisionFilesJob pjob = new ProvisionFilesJob(job,wfdm.getWorkflowBaseDir(), file,
 						wfdm.getTags().get("seqware_version"));
 				pjob.setId(this.jobs.size());
 				pjob.setMetadataWriteback(metadatawriteback);
 				if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
 					pjob.setWorkflowRunAccession(workflowRunAccession);
 				}
+				if(!file.getParentAccessions().isEmpty()) {
+					pjob.setParentAccessions(file.getParentAccessions());
+				}
 				this.jobs.add(pjob);
-				this.fileJobMap.put(entry.getValue(), pjob);
+				this.fileJobMap.put(file, pjob);
 	
 				//handle in 
-				if(entry.getValue().isInput()) {
+				if(file.isInput()) {
 					newParents.add(pjob);
 					for(PegasusJob parent: parents) {
 						pjob.addParent(parent);
 					}
 					//add mkdir to the first job, then set the file path
-					String outputDir = "provisionfiles/" + entry.getValue().getUniqueDir() ;
+					String outputDir = "provisionfiles/" + file.getUniqueDir() ;
 					job0.getCommand().addArgument("mkdir -p " + outputDir + "; ");
 					pjob.setOutputDir(outputDir);
 				} else {
@@ -177,6 +182,9 @@ public class Adag  {
 			pjob.setMetadataWriteback(metadatawriteback);
 			if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
 				pjob.setWorkflowRunAccession(workflowRunAccession);
+			}
+			if(!job.getParentAccessions().isEmpty()) {
+				pjob.setParentAccessions(job.getParentAccessions());
 			}
 			this.jobs.add(pjob);
 			idCount++;
@@ -202,6 +210,9 @@ public class Adag  {
 							if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
 								parentPfjob.setWorkflowRunAccession(workflowRunAccession);
 							}
+							if(!file.getParentAccessions().isEmpty()) {
+								parentPfjob.setParentAccessions(file.getParentAccessions());
+							}
 							this.jobs.add(parentPfjob);
 							parentPfjob.setOutputDir("provisionfiles/"+file.getUniqueDir()) ;
 							pjob.addParent(parentPfjob);	
@@ -220,6 +231,9 @@ public class Adag  {
 							parentPfjob.setOutputDir(wfdm.getMetadata_output_dir());
 							if(workflowRunAccession!=null && !workflowRunAccession.isEmpty()) {
 								parentPfjob.setWorkflowRunAccession(workflowRunAccession);
+							}
+							if(!file.getParentAccessions().isEmpty()) {
+								parentPfjob.setParentAccessions(file.getParentAccessions());
 							}
 							this.jobs.add(parentPfjob);
 							hasProvisionOut.put(pjob, parentPfjob);
@@ -282,13 +296,13 @@ public class Adag  {
 	private PegasusJob createPegasusJobObject(AbstractJob job, AbstractWorkflowDataModel wfdm) {
 		PegasusJob ret = null;
 		if(job instanceof JavaJob) {
-			ret = new PegasusJavaJob(job,wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
+			ret = new PegasusJavaJob(job,wfdm.getWorkflowBaseDir(), wfdm.getSeqware_version());
 		} else if(job instanceof PerlJob) {
-			ret = new PegasusPerlJob(job, wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
+			ret = new PegasusPerlJob(job, wfdm.getWorkflowBaseDir(), wfdm.getSeqware_version());
 		} else if (job instanceof JavaSeqwareModuleJob){
-			ret = new PegasusJavaSeqwareModuleJob(job, wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
+			ret = new PegasusJavaSeqwareModuleJob(job, wfdm.getWorkflowBaseDir(), wfdm.getSeqware_version());
 		} else {
-			ret = new PegasusJob(job, wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
+			ret = new PegasusJob(job, wfdm.getWorkflowBaseDir(), wfdm.getSeqware_version());
 		}
 		return ret;
 	}
