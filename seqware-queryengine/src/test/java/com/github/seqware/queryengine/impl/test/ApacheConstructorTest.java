@@ -28,7 +28,7 @@ public class ApacheConstructorTest  {
     public ApacheConstructorTest() {
         ApacheConstructorTest.testID = UUID.randomUUID();
         SWQEFactory.setFactoryBackendType(SWQEFactory.Model_Type.IN_MEMORY, SWQEFactory.Storage_Type.FILE_STORAGE, SWQEFactory.Serialization_Type.APACHE);
-        backend = (SimplePersistentBackEnd) SWQEFactory.getBackEnd();
+        backend = (SimplePersistentBackEnd) SWQEFactory.getQueryInterface();
         CreateUpdateManager mManager = SWQEFactory.getModelManager();
         aSet = mManager.buildFeatureSet().setReference(mManager.buildReference().setName("Dummy_ref").build()).build();
         // create and store some features

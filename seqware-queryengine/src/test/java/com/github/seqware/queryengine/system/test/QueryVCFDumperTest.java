@@ -90,36 +90,37 @@ public class QueryVCFDumperTest {
         Assert.assertTrue("Could not import VCF for test", originalSet != null);
     }
 
-    /**
-     * <p>testQueryVCFDumperByClass.</p>
-     */
-    @Test
-    public void testQueryVCFDumperByClass() {
-        File keyValueFile = null;
-        try {
-            keyValueFile = File.createTempFile("keyValue", "txt");
-        } catch (IOException ex) {
-            Logger.getLogger(QueryVCFDumperTest.class.getName()).fatal(null, ex);
-            Assert.fail("Could not create output for test");
-        }
-
-        List<String> argList = new ArrayList<String>();
-        argList.addAll(Arrays.asList(new String[]{"-f", originalSet.getRowKey(),
-                    "-k", keyValueFile.getAbsolutePath(), "-p", "com.github.seqware.queryengine.system.test.queryDumper.VCFDumperParameterExample",
-                    "-o", outputFile.getAbsolutePath()}));
-        Stack<SGID> runMain = QueryVCFDumper.runMain(argList.toArray(new String[argList.size()]));
-
-        Assert.assertTrue("should have four resulting feature sets, had " + runMain.size(), runMain.size() == 4);
-        Assert.assertTrue("starting feature set was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 173);
-        Assert.assertTrue("first query was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 37);
-        Assert.assertTrue("second query was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 10);
-        // tagset will now vary by execution
-        Assert.assertTrue("third query was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 3);
-
-        // test comparison
-        String curDir = System.getProperty("user.dir");
-        SOFeatureImporterTest.matchOutputToControl(outputFile, false, new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated_dumperControl.vcf"));
-    }
+// We won't be supporting this anymore with the advent of a proper query language     
+//    /**
+//     * <p>testQueryVCFDumperByClass.</p>
+//     */
+//    @Test
+//    public void testQueryVCFDumperByClass() {
+//        File keyValueFile = null;
+//        try {
+//            keyValueFile = File.createTempFile("keyValue", "txt");
+//        } catch (IOException ex) {
+//            Logger.getLogger(QueryVCFDumperTest.class.getName()).fatal(null, ex);
+//            Assert.fail("Could not create output for test");
+//        }
+//
+//        List<String> argList = new ArrayList<String>();
+//        argList.addAll(Arrays.asList(new String[]{"-f", originalSet.getRowKey(),
+//                    "-k", keyValueFile.getAbsolutePath(), "-p", "com.github.seqware.queryengine.system.test.queryDumper.VCFDumperParameterExample",
+//                    "-o", outputFile.getAbsolutePath()}));
+//        Stack<SGID> runMain = QueryVCFDumper.runMain(argList.toArray(new String[argList.size()]));
+//
+//        Assert.assertTrue("should have four resulting feature sets, had " + runMain.size(), runMain.size() == 4);
+//        Assert.assertTrue("starting feature set was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 173);
+//        Assert.assertTrue("first query was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 37);
+//        Assert.assertTrue("second query was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 10);
+//        // tagset will now vary by execution
+//        Assert.assertTrue("third query was incorrect", SWQEFactory.getQueryInterface().getLatestAtomBySGID(runMain.pop(), FeatureSet.class).getCount() == 3);
+//
+//        // test comparison
+//        String curDir = System.getProperty("user.dir");
+//        SOFeatureImporterTest.matchOutputToControl(outputFile, false, new File(curDir + "/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated_dumperControl.vcf"));
+//    }
 
     /**
      * <p>testFirstVCFQueryDumper.</p>
