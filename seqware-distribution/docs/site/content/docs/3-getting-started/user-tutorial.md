@@ -34,7 +34,7 @@ Please launch your local VM in VirtualBox and login as user <kbd>seqware</kbd>, 
 
 SeqWare is open source architecture built mostly in Java. In the <kbd>/home/seqware/SeqWare</kbd> directory you will see a jar file. This contains SeqWare Pipeline code that will allow you to interact with the SeqWare Web service (actually either on a VM, installed on another local machine/cluster, or in the cloud) that controls, among other things, workflow execution. This jar is, essentially, the command line interface for the whole SeqWare project.
 
-<p class="warning"><strong>Tip:</strong> The VM will contain a recent version of the jar that we have validated with this tutorial.  You may want to upgrade to the latest version, though, which you can download from our continuous build server. Please choose the jar that has the -full suffix, e.g. <a href="http://jenkins.res.oicr.on.ca/job/seqware/lastStableBuild/net.sourceforge.seqware$seqware-distribution/">seqware-distribution-0.12.5-SNAPSHOT-full.jar</a>. Keep in mind we make no promises that the latest version will be bug free!</p>
+<p class="warning"><strong>Tip:</strong> The VM will contain a recent version of the jar that we have validated with this tutorial.  You may want to upgrade to the latest version, though, which you can download from our continuous build server. Please choose the jar that has the -full suffix, e.g. <a href="http://jenkins.res.oicr.on.ca/job/seqware_github/lastStableBuild/com.github.seqware$seqware-distribution/">seqware-distribution-0.13.6-SNAPSHOT-full.jar</a>. Keep in mind we make no promises that the latest version will be bug free!</p>
 
 ## The SeqWare Settings File
 
@@ -91,7 +91,7 @@ You can do this either with the [Portal](http://SeqWarePortal "SeqWare Portal") 
 
 ### Via the Portal
 
-First, login to the portal, the URL is http://localhost:8080/SeqWarePortal and you will need to use the browser inside the VM to access this. The default username is <kbd>admin@admin.com</kdb> and the default password is <kbd>admin</kdb>.  Feel free to change your password in the web app.
+First, login to the portal, the URL is http://localhost:8080/SeqWarePortal and you will need to use the browser inside the VM to access this. The default username is <kbd>admin@admin.com</kbd> and the default password is <kbd>admin</kbd>.  Feel free to change your password in the web app.
 
 <p class="warning"><strong>Tip:</strong>You could setup the VM so it gets a "real" IP address on your network, in which case you could access both the Portal and Web Service via any computer on your network.</p>
 
@@ -291,7 +291,7 @@ Keep in mind two things:
 Once a workflow has finished running you will want to list out the associated files and download the results.  While you can use the Portal for downloading files the best way to get files in bulk is to use our reporting tool. This produces a tab-delimited file that lists all the files produced for the workflows you are interested in.  You can then use the same ProvisionFiles utility above to pull files back.  Since the report produces a simple tab-delimited file you can easily automate the downloading of results by looping over the output files and calling ProvisionFiles using a script.
 
 <pre>
-	java -jar seqware-pipeline-0.12.5.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 7 --study Test
+	java -jar seqware-pipeline-0.12.5.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 7 --study 'New Test Study'
 </pre>
 
 The output here is a study_report.csv file that contains a line for each file (both those uploaded and those produced by workflows).  You can also filter by file types, for example if you want to see report bundles (not applicable to the HelloWorld workflow but you get the idea):
