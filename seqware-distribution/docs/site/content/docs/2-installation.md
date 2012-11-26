@@ -144,6 +144,6 @@ wiki](https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Creating_a_
 
 ## Next Step
 
-Now that you have seen how to launch either a local of cloud-based SeqWare instance follow the 
+Now that you have seen how to launch either a local or cloud-based SeqWare instance follow the 
 "[Getting Started](/docs/3-getting-started/)" guide to see how to run the sample HelloWorld
 workflow.
