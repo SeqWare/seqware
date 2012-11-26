@@ -375,7 +375,10 @@ public class WorkflowTools {
       
       if (failedJobLogFile != null && failedJobLogFile.exists() && failedJobLogFile.canRead()) {
         try {
-
+          if(failedJobLogFile.length()<=0) {
+        	  Logger.getLogger(WorkflowTools.class.getName()).log(Level.SEVERE, "empty file: " + failedJobLogFile.getAbsolutePath());
+        	  return new HashMap<String, HashMap<String,String>>();
+          }
           Log.info("  + Parsing file: " + failedJobLogFile.getAbsolutePath());
 
           SAXParserFactory factory = SAXParserFactory.newInstance();

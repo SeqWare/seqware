@@ -625,12 +625,30 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         this.forceRunAll = forceRunAll;
     }
     
+    /**
+     * use getGroupingStrategy
+     * @return
+     */
+    @Deprecated
     public Header getHeader() {
         return header;
     }
     
+    public Header getGroupingStrategy() {
+    	return this.header;
+    }
+    
+    /**
+     * use setGroupingStrategy
+     * @param header
+     */
+    @Deprecated
     public void setHeader(Header header) {
         this.header = header;
+    }
+    
+    public void setGroupingStrategy(Header strategy) {
+    	this.header = strategy;
     }
     
     public List<String> getMetaType() {
