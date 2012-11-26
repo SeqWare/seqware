@@ -14,7 +14,7 @@ SeqWare currently provides 5 main tools specifically designed to support massive
 * **Portal**: a LIMS-like web application to manage samples, record computational events, and present results back to end users.
 * **Pipeline**: a workflow engine that is capable of wrapping and combining other tools (BFAST, BWA, SAMtools, etc) into complex pipelines, recording metadata about the analysis, and facilitates automation of pipelines based on metadata.
 * **Web Service**: a programmatic API that lets people build new tools on top of the project
-* **Query Engine**: a NOSQL database designed to store and query variants and other events inferred from sequence data.
+* **Query Engine**: a NoSQL database designed to store and query variants and other events inferred from sequence data.
 
 <img width="600" src="/assets/images/seqware_arch.png"/>
 

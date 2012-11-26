@@ -37,7 +37,7 @@ your OS's package management system) the VirtualBox application. This is a
 great piece of software that will let you run the SeqWare CentOS VM on whatever
 OS you currently have.
 
-* [Oracle Virtual Box](http://amzn.com/B0043EWVDI)
+* [Oracle Virtual Box](https://www.virtualbox.org/)
 
 Next, you will need to download our current VM image which is linked below.
 Please make sure you are using the latest version, when we post a new one we
@@ -144,6 +144,6 @@ wiki](https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Creating_a_
 
 ## Next Step
 
-Now that you have seen how to launch either a local of cloud-based SeqWare instance follow the 
+Now that you have seen how to launch either a local or cloud-based SeqWare instance follow the 
 "[Getting Started](/docs/3-getting-started/)" guide to see how to run the sample HelloWorld
 workflow.

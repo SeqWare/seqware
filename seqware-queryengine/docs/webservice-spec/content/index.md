@@ -4,9 +4,7 @@ title: Generic Feature Store API
 
 # The Generic Feature Store API
 
-This describes the resources that make up the official Generic Feature Store API. If
-you have any problems or requests please contact
-[Stuart Watt](mailto:stuart.watt@oicr.on.ca).
+This describes the resources that make up the official Generic Feature Store API.
 
 For the new API, start browsing the resources on the right >>
 

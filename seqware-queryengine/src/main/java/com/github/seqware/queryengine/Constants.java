@@ -107,7 +107,7 @@ public class Constants {
          * use HBOOT to configure HBase to use OICR's HBase cluster, use LOCAL
          * to configure HBase for use on a local machine.
          */
-        HBASE_PROPERTIES("QE_HBASE_PROPERTIES", HBOOT, Map.class);
+        HBASE_PROPERTIES("QE_HBASE_PROPERTIES", LOCAL, Map.class);
         private final String term_name;
         private final Object term_default;
         private Class type;
