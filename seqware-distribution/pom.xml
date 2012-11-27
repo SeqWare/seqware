@@ -50,7 +50,7 @@
             <descriptors>
               <descriptor>src/assemble/seqware-pipeline-full.xml</descriptor>
             </descriptors>
-            <finalName>seqware</finalName>
+            <!-- <finalName>seqware</finalName> -->
           </configuration>
         </execution>
 	<execution>
@@ -63,7 +63,7 @@
             <descriptors>
               <descriptor>src/assemble/seqware-queryengine.xml</descriptor>
             </descriptors>
-            <finalName>seqware</finalName>
+            <!-- <finalName>seqware</finalName> -->
           </configuration>
         </execution>
       </executions>

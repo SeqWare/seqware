@@ -23,3 +23,27 @@ By the end of these tutorials you will:
 * see how to connect a local VM to a local cluster for running large-scale workflows
 * see how to launch a cluster on Amazon’s cloud for running large-scale workflows
 * more to come
+
+## How to Launch
+* note for multi-users will be researched and put here
+* should be a a parameter of some kind
+
+## How to Monitor
+
+### Cron Job
+### Workflow Run Reporter
+
+## How to Recover Workflows
+### Condor (brief)
+
+
+## How to Cancel Workflows
+
+## How to Clean-up
+
+
+## Coming Soon
+
+Note what people are going to want to back-up
+Tutorials for other admin tasks
+

@@ -81,13 +81,32 @@ SW_DB=test_seqware_meta_db
 # most likely not used here at OICR
 AWS_ACCESS_KEY=lksjdflksjdklf
 AWS_SECRET_KEY=slkdjfeoiksdlkjflksjejlfkjeloijxelkj
+
+#
+# Settings for Oozie Workflow Engine
+#
+OOZIE_URL=http://localhost:11000/oozie 
+OOZIE_APP_ROOT=seqware_workflow 
+OOZIE_APP_PATH=hdfs://localhost:8020/user/seqware/ 
+OOZIE_JOBTRACKER=localhost:8021
+OOZIE_NAMENODE=hdfs://localhost:8020 
+OOZIE_QUEUENAME=default
+    
+HBASE.ZOOKEEPER.QUORUM=localhost 
+HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT=2181
+HBASE.MASTER=localhost:60000
+MAPRED.JOB.TRACKER=localhost:8021
+FS.DEFAULT.NAME=hdfs://localhost:8020 
+FS.DEFAULTFS=hdfs://localhost:8020 
+FS.HDFS.IMPL=org.apache.hadoop.hdfs.DistributedFileSystem 
+OOZIE_WORK_DIR=/home/seqware/oozie
 </pre>
 
 ## Creating Studies, Experiments, and Samples
 
 SeqWare MetaDB lets you track studies, experiment, and samples and then link those to files (like FASTQ or something similar). You can then run workflows on those files, track the resulting files, and use those files for the next workflow.  You will want to set up your study, experiments, and samples before uploading your text or other data files.  This ensures you have “parents” to attach these files to.  Otherwise you will not be able to use them as parameters for workflows. 
 
-You can do this either with the [Portal](http://SeqWarePortal "SeqWare Portal") or via the command line tools below.
+You can do this either with the [Portal](/docs/5-portal/) or via the command line tools below.
 
 ### Via the Portal
 
