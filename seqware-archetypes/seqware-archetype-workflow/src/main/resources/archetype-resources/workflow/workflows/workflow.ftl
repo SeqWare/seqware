@@ -56,6 +56,7 @@ This is a sample HelloWorld workflow. Use it as a template to build your own wor
   </dependency>  
 -->
 <#assign using_helloworldexample_module = false/>
+<#assign manual_output = true/>
 
 <!-- BASE FILE NAME -->
 <#-- Set the basename from input file name -->
@@ -183,7 +184,11 @@ This is a sample HelloWorld workflow. Use it as a template to build your own wor
       --metadata-parent-accession-file ${data_dir}/${parentAlgo}_accession
       --metadata-processing-accession-file ${data_dir}/${algo}_accession
       --metadata-output-file-prefix ${output_prefix}
-      --metadata-workflow-run-ancestor-accession ${workflow_run_accession}    
+      <#if using_helloworldexample_module >
+      --metadata-workflow-run-ancestor-accession ${workflow_run_accession} 
+      <#else>
+      --metadata-workflow-run-accession ${workflow_run_accession} 
+      </#if>   
       --module net.sourceforge.seqware.pipeline.modules.GenericCommandRunner
       --
       --gcr-algorithm HelloWorldGenericCommandRunner
@@ -208,7 +213,11 @@ This is a sample HelloWorld workflow. Use it as a template to build your own wor
       --
       --force-copy
       --input-file ${data_dir}/${basename}.hello
+      <#if manual_output >
+      --output-dir ${output_prefix}${output_dir}/seqware-${seqware_version}_HelloWorld-${workflow_version}
+      <#else>
       --output-dir ${output_prefix}${output_dir}/seqware-${seqware_version}_HelloWorld-${workflow_version}/${random}
+      </#if>
     </argument>
 
     <profile namespace="globus" key="jobtype">condor</profile>
