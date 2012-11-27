@@ -167,7 +167,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 		File file = new File(this.dir,"workflow.xml");
 		//generate dax
 		OozieWorkflowXmlGenerator daxv2 = new OozieWorkflowXmlGenerator();
-		daxv2.generateWorkflowXml(objectModel, file.getAbsolutePath());
+		daxv2.generateWorkflowXml(objectModel, file.getAbsolutePath(), this.dir.getAbsolutePath());
 		return file;
 	}
 	
