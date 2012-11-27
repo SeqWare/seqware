@@ -139,10 +139,9 @@ configure it to submit jobs to a real cluster since the
 Pegasus/Condor/Globus/SGE stack are difficult to setup correctly.</p>
 
 This guide will be ported to this manual but for now the best instructions for
-setting up SeqWare from scratch can be found on our [SourceForge
-wiki](https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Creating_a_SeqWare_VM).
+setting up SeqWare from scratch can be found on our [Installing from Scratch guide](/docs/2a-installation-from-scratch/).
 
-## Next Step
+## Next Steps
 
 Now that you have seen how to launch either a local or cloud-based SeqWare instance follow the 
 "[Getting Started](/docs/3-getting-started/)" guide to see how to run the sample HelloWorld
