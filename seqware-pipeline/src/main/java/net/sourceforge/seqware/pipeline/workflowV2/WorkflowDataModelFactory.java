@@ -60,6 +60,8 @@ public class WorkflowDataModelFactory {
 	    	bundlePath = (String) options.valueOf("provisioned-bundle-dir");
 	    }
 	    File bundle = new File(bundlePath);
+	    //change to absolute path
+	    bundlePath = bundle.getAbsolutePath();
 	    Log.info("Bundle Path: " + bundlePath);
 	    if (bundle == null || !bundle.exists()) {
 	        Log.error("ERROR: Bundle is null or doesn't exist! The bundle must be either a zip file or a directory structure.");
@@ -121,7 +123,11 @@ public class WorkflowDataModelFactory {
 		//set name, version in workflow
 		ret.setName(metaInfo.get("name"));
 		ret.setVersion(metaInfo.get("workflow_version"));
+		ret.setBundle_version(metaInfo.get("bundle_version"));
+		ret.setSeqware_version(metaInfo.get("seqware_version"));
+		ret.setWorkflow_directory_name(metaInfo.get("workflow_directory_name"));
 		ret.setWorkflowBundleDir(bundlePath);
+		ret.setWorkflowBasedir(metaInfo.get("basedir"));
 		//set memory, network, compute to environment
 		ret.getEnv().setCompute(metaInfo.get("compute"));
 		ret.getEnv().setNetwork(metaInfo.get("network"));
@@ -129,11 +135,6 @@ public class WorkflowDataModelFactory {
 		
 		//load ini config
 		Map<String, String> configs = this.loadIniConfigs();
-		configs.put("workflow_bundle_dir", bundlePath);
-		configs.put("workflow_name", ret.getName());
-        String basedir = bundlePath + File.separator + "Workflow_Bundle_"+ret.getName()+ File.separator + ret.getVersion();
-		configs.put("workflow_base_dir", basedir);	
-		//Log.error("basedir " + basedir);
 		
 		//merge command line option with configs
 		this.mergeCmdOptions(ret);
@@ -171,7 +172,7 @@ public class WorkflowDataModelFactory {
         if(options.has("status") == false && options.has(("workflow-accession"))) {
         	int workflowAccession = Integer.parseInt((String)options.valueOf("workflow-accession"));
         	int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession);
-        	configs.put("workflow-run-accession", ""+workflowrunaccession);
+        	//configs.put("workflow-run-accession", ""+workflowrunaccession);
         	ret.setWorkflow_run_accession(""+workflowrunaccession);
         }
 		ret.setConfigs(configs);
@@ -238,6 +239,16 @@ public class WorkflowDataModelFactory {
 		    ret.put("workflow_version", wf.getAttributeValue("version"));
 		    ret.put("seqware_version", wf.getAttributeValue("seqware_version"));
 		    ret.put("description", wf.getChildText("description"));
+		    String basedir = wf.getAttributeValue("basedir").replaceFirst("\\$\\{workflow_bundle_dir\\}",bundleDir);
+		    ret.put("basedir", basedir);
+		    //parse the workflow_directory_name
+		    String[] _arr = basedir.split("/");
+		    if(_arr.length > 2) {
+		    	String tmp = _arr[1];
+		    	String[] _arrtmp = tmp.split("_", 3);
+		    	if(_arrtmp.length == 3)
+		    		ret.put("workflow_directory_name", _arrtmp[2]);
+		    }
 		    Element command = wf.getChild("workflow_command");
 		    if(command != null)
 		    	ret.put("workflow_command", command.getAttributeValue("command").replaceFirst("\\$\\{workflow_bundle_dir\\}",bundleDir));
