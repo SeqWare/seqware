@@ -130,6 +130,10 @@ public class WorkflowTools {
   public ReturnValue watchWorkflow(String statusCmd, String statusDir, int cycles) {
 
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+    
+    // first if I don't own this directory then I need to abort!
+    File statusDirFile = new File(statusDir);
+    if (statusDirFile)
 
     boolean cont = true;
     int currCycle = 0;
