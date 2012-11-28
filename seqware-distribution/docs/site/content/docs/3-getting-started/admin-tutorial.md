@@ -50,6 +50,7 @@ The Workflow Run Reporter is a command-line tool that will generated a tab-separ
  
 #### Requirements
 In order to run the WorkflowRunReporter plugin, you must have the following available to you:
+
 * SeqWare Pipeline JAR (0.12.0 or higher)
 * SeqWare settings file set up to contact the SeqWare Web service (contact your local SeqWare admin to get the path)
 
@@ -137,6 +138,7 @@ Take a look at the guide for [creating a SeqWare VM](/docs/2a-installation-from-
 ## Coming Soon
 
 We are also preparing guides which will walk administrators through
+
 * Hooking up to an SGE cluster (Pegasus)
 * Hooking up to an Oozie cluster
 * Hooking up to an LSF cluster
