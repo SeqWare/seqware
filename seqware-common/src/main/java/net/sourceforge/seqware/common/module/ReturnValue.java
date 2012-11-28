@@ -138,6 +138,8 @@ public class ReturnValue implements Serializable{
     public static final int RETURNEDHELPMSG = 110;
     /** Constant <code>INVALIDPLUGIN=120</code> */
     public static final int INVALIDPLUGIN = 120;
+    /** Constant <code>UNKNOWN=130</code> */
+    public static final int UNKNOWN = 130;
     // Data Members for Return Type
     protected String stdout = "";
     protected String stderr = "";
