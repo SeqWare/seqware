@@ -60,6 +60,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private Boolean runNow = null;
     private Boolean skipStuff = null;
     private int launchMax = Integer.MAX_VALUE,launched=0;
+    private int rerunMax = 5;
     
     public BasicDecider() {
         super();
@@ -84,6 +85,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         parser.acceptsAll(Arrays.asList("run"), "Run this workflow now. This is the default behaviour. See also: --schedule");
         parser.acceptsAll(Arrays.asList("ignore-skip-flag"), "Ignores any 'skip' flags on lanes, IUSes, sequencer runs, samples, etc. Use caution.");
         parser.acceptsAll(Arrays.asList("launch-max"), "The maximum number of jobs to launch at once. Default: infinite.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("rerun-max"), "The maximum time to re-launch a workflowrun if failed. Default: 5.").withRequiredArg();
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
     
@@ -239,6 +241,15 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             }            
         }
         
+        if (options.has("rerun-max")) {
+            try {
+                rerunMax = Integer.parseInt(options.valueOf("rerun-max").toString());
+            } catch (NumberFormatException e) {
+                Log.error("The rerun-max parameter must be an integer. Unparseable integer: " + options.valueOf("rerun-max").toString());
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            }                    	
+        }
+        
         
         if (metadata instanceof MetadataDB) {
             metaws = new MetadataWS();
@@ -348,6 +359,14 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     Log.debug("FileString: " + fileString);
                     //check if this workflow has been run before
                     boolean rerun = rerunWorkflowRun(previousWorkflowRuns, filesToRun);
+                    
+                    
+                    if(rerun) {
+                    	/**
+                    	 * check if the workflowrun is processing or failed multiple times, if yes, don't rerun it
+                    	 */
+                    	rerun = ! this.isProcessingOrMultipleFailed(parentAccessionString, files);
+                    }
                     iniFiles = new ArrayList<String>();
                     iniFiles.add(createIniFile(fileString, parentAccessionString));
 
@@ -709,5 +728,24 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     protected ReturnValue do_finalCheck(String commaSeparatedFilePaths, String commaSeparatedParentAccessions) {
     	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
     	return ret;
+    }
+    
+    /**
+     * check all the return value, if one of the status is not failed, then skip. 
+     * if all failed and the number of failed less than rerunMax, return true
+     * @param swAcc
+     * @param files
+     * @return
+     */
+    private boolean isProcessingOrMultipleFailed(String swAcc, List<ReturnValue> files) {
+    	for(ReturnValue r: files) {
+    		String status = r.getAttributes().get("Workflow Run Status");
+    		if(!"failed".equals(status)) {
+    			return true;
+    		}
+    	}
+    	if(files.size() >= this.rerunMax)
+    		return true;
+    	return false;
     }
 }
