@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -55,9 +56,12 @@ public class WorkflowStatusChecker extends Plugin {
     public WorkflowStatusChecker() {
         super();
         parser.acceptsAll(Arrays.asList("status-cmd", "s"),
-                "Optional: the Pegasus status command").withRequiredArg();
+                "Optional: the Pegasus status command, if you specify this option the command will be run, potentially displaying the summarized/parsed errors, but the database will not be updated.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("workflow-run-accession", "wra"), "Optional: this will cause the program to only check the status of this particular workflow run.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("host"), "Optional: if specified, only workflow runs scheduled to the specified host will be checked.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("host", "h"), "Optional: if specified, only workflow runs scheduled to the specified host will be checked.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("username", "u"), "Optional: if specified, only workflow runs scheduled for this user will be checked.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("check-failed", "cf"), "Optional: if specified, workflow runs that have previously failed will be re-checked.");
+        parser.acceptsAll(Arrays.asList("check-unknown", "cu"), "Optional: if specified, workflow runs that have previously marked unknown will be re-checked.");
 
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
@@ -100,27 +104,36 @@ public class WorkflowStatusChecker extends Plugin {
             // get a list of running workflows
             List<WorkflowRun> runningWorkflows = this.metadata.getWorkflowRunsByStatus(metadata.RUNNING);
             runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(metadata.PENDING));
+            if(options.has("check-failed")) {
+              runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(metadata.FAILED));
+            }
+            if(options.has("check-unknown")) {
+              runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(metadata.UNKNOWN));
+            }
 
             // loop over running workflows and check their status
             for (WorkflowRun wr : runningWorkflows) {
 
-                boolean process = false;
-
+              boolean hostMatch = true;
+              boolean userMatch = true;
+              boolean workflowRunAccessionMatch = true;
+              
                 if (options.has("host") && options.valueOf("host") != null
-                        && ((String) options.valueOf("host")).equals(wr.getHost())) {
-                    process = true;
+                        && !((String) options.valueOf("host")).equals(wr.getHost())) {
+                    hostMatch = false;
+                }
+                
+                if (options.has("username") && options.valueOf("username") != null 
+                        && !((String) options.valueOf("username")).equals(wr.getOwner().getEmailAddress())) {
+                  userMatch = false;
                 }
 
                 if (options.has("workflow-run-accession") && options.valueOf("workflow-run-accession") != null
-                        && ((String) options.valueOf("workflow-run-accession")).equals(wr.getSwAccession().toString())) {
-                    process = true;
+                        && !((String) options.valueOf("workflow-run-accession")).equals(wr.getSwAccession().toString())) {
+                    workflowRunAccessionMatch = false;
                 }
 
-                if (!options.has("host") && !options.has("workflow-run-accession")) {
-                    process = true;
-                }
-
-                if (process) {
+                if (hostMatch && userMatch && workflowRunAccessionMatch) {
                     ReturnValue currRet = checkWorkflow(wr.getStatusCmd());
                     if (currRet.getExitStatus() == ReturnValue.SUCCESS) {
                         this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), "completed",
@@ -136,7 +149,7 @@ public class WorkflowStatusChecker extends Plugin {
                                 currRet.getStderr(), currRet.getStdout());
                         
                     } else if (currRet.getExitStatus() == ReturnValue.FAILURE) {
-                        Log.error("ERROR: problems watching workflow");
+                        Log.error("WORKFLOW FAILURE: this workflow has failed and this status will be saved to the DB.");
                         // need to save back to the DB if watching
 
                         this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), "failed",
@@ -145,8 +158,12 @@ public class WorkflowStatusChecker extends Plugin {
                                 Integer.parseInt(currRet.getAttribute("totalSteps")),
                                 currRet.getStderr(), currRet.getStdout());
 
-                        ret.setExitStatus(ReturnValue.FAILURE);
-                        return (ret);
+
+                    } else if (currRet.getExitStatus() == ReturnValue.UNKNOWN) {
+                        Log.error("ERROR: the workflow status has returned UNKNOWN, this is typically if the workflow status command points"
+                                + "to a non-existant directory or a directory that is not writable. No information will be saved to the"
+                                + "DB since the workflow state cannot be determined!");
+
                     }
                 }
             }
@@ -164,7 +181,12 @@ public class WorkflowStatusChecker extends Plugin {
     @Override
     public String get_description() {
         return "This plugin lets you monitor the status of running workflows and updates"
-                + "the metadata object with their status.";
+                + "the metadata object with their status.  Keep in mind a few things: 1) if the status command is specified no data "
+                + "will be saved to the DB, this tool is just useful for gathering error reports, 2) status commands that are malformed "
+                + "or whose status directory is not present on the filesystem will be skipped and an error noted, 3) by default every running or unknown "
+                + "workflow_run in the database will be checked, use --host and --username to constrain the workflows checked, and "
+                + "you can specify a username other than your own (from .seqware/settings) but, in this case, the update to the database will not work properly "
+                + "unless you are an admin user.";
     }
 
     /**
