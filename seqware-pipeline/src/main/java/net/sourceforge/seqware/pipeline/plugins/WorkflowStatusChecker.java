@@ -123,8 +123,10 @@ public class WorkflowStatusChecker extends Plugin {
                     hostMatch = false;
                 }
                 
+                Log.stdout("username: "+wr.getOwner());
+                
                 if (options.has("username") && options.valueOf("username") != null 
-                        && !((String) options.valueOf("username")).equals(wr.getOwner().getEmailAddress())) {
+                        && wr.getOwner() != null && !((String) options.valueOf("username")).equals(wr.getOwner().getEmailAddress())) {
                   userMatch = false;
                 }
 
