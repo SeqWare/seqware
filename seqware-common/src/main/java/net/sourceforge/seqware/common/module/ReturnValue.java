@@ -56,7 +56,8 @@ public class ReturnValue implements Serializable{
         PROCESSING(100, "Processing"),
         QUEUED(101, "Queued"),
         RETURNEDHELPMSG(110, "A help message has been returned"),
-        INVALIDPLUGIN(120, "The plugin is invalid");
+        INVALIDPLUGIN(120, "The plugin is invalid"),
+        UNKNOWN(130, "Typically used for workflow status when the state cannot be determined");
         private final int status;
         private final String meaning;
 

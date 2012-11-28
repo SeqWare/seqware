@@ -70,6 +70,7 @@ public class WorkflowTools {
     // check to make sure the command was OK
     if (ret.getExitStatus() != ReturnValue.SUCCESS) {
       Log.error("the status command failed: " + statusCmd);
+      ret.setExitStatus(ReturnValue.UNKNOWN);
       return (ret);
     }
 
@@ -86,8 +87,10 @@ public class WorkflowTools {
       ret.setExitStatus(ReturnValue.FAILURE);
     } else if (ret.getStdout().contains("COMPLETED") && ret.getStdout().contains("100%")) {
       ret.setExitStatus(ReturnValue.SUCCESS);
-    } else {
+    } else if (ret.getStdout().contains("RUNNING")) {
       ret.setExitStatus(ReturnValue.PROCESSING);
+    } else {
+      ret.setExitStatus(ReturnValue.UNKNOWN);
     }
 
     return (ret);
@@ -168,8 +171,6 @@ public class WorkflowTools {
             }
           }
           Log.error("Workflow failed");
-          // TODO: need to save stderr and stdout back to the database
-          // this.metadata.update_workflow_run(workflowRunId, pegasusCmd, template, statusDir, statusCmd, outputDir, stdOut, stdOut);
           cont = false;
         }
       } else if (statusReturn.getExitStatus() == ReturnValue.SUCCESS) {
@@ -179,8 +180,16 @@ public class WorkflowTools {
           cont = false;
           ret.setExitStatus(ReturnValue.SUCCESS);
           ret.setProcessExitStatus(ReturnValue.SUCCESS);
-          // TODO: need to save stderr and stdout back to the database
-          // this.metadata.update_workflow_run(workflowRunId, pegasusCmd, template, statusDir, statusCmd, outputDir, stdOut, stdOut);
+          this.percentage = 100;
+          this.currStep = this.totalSteps;
+        }
+      } else if (statusReturn.getExitStatus() == ReturnValue.UNKNOWN) {
+        finishedCounts--;
+        if (finishedCounts < 1) {
+          Log.stdout("WORKFLOW STATE UNKNOWN!");
+          cont = false;
+          ret.setExitStatus(ReturnValue.UNKNOWN);
+          ret.setProcessExitStatus(ReturnValue.UNKNOWN);
         }
       } else if (cycles > 0 && currCycle > cycles && currCycle > statusCounts) {
         cont = false;
