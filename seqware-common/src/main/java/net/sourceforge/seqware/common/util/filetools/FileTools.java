@@ -31,6 +31,7 @@ import ch.enterag.utils.zip.EntryInputStream;
 import ch.enterag.utils.zip.EntryOutputStream;
 import ch.enterag.utils.zip.FileEntry;
 import ch.enterag.utils.zip.Zip64File;
+import net.sourceforge.seqware.common.util.runtools.RunTools;
 
 /**
  * <p>FileTools class.</p>
@@ -797,6 +798,44 @@ public class FileTools {
       e.printStackTrace();
     }
     return ret;
+  }
+  
+  /**
+   * This tool uses the 'whoami' and 'stat' commands to verify if
+   * the current users running this program is the owner for the 
+   * specified file or directory.
+   * 
+   * @param path
+   * @return 
+   */
+  public static boolean isFileOwner(String path) {
+      
+        String fileOwner = null;
+        String programRunner = null;
+      
+        ArrayList<String> theCommand = new ArrayList<String>();
+        theCommand.add("bash");
+        theCommand.add("-lc");
+        theCommand.add("whoami");
+        
+        ReturnValue ret = RunTools.runCommand(theCommand.toArray(new String[0]));
+        if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+            String stdout = ret.getStdout();
+            stdout = stdout.trim();
+            programRunner = stdout;
+        } else {
+            Log.error("Can't figure out the username using 'whoami' "+ret.getStderr());
+            return(false);
+        }
+        
+        theCommand = new ArrayList<String>();
+        theCommand.add("bash");
+        theCommand.add("-lc");
+        theCommand.add("stat "+path);
+        
+        // LEFT OFF HERE
+      
+      return(false);
   }
 
 }
