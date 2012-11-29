@@ -153,8 +153,7 @@ public class WorkflowStatusChecker extends Plugin {
               boolean statusMatch = true;
               
                 if (options.has("workflow-accession") && options.valueOf("workflow-accession") != null
-                        //TODO: this does not work
-                       /* && !((String) options.valueOf("workflow-accession")).equals(wr.getWorkflowAccession())*/) {
+                       && !((String) options.valueOf("workflow-accession")).equals(wr.getWorkflowAccession())) {
                     hostMatch = false;
                 }
               
@@ -166,8 +165,7 @@ public class WorkflowStatusChecker extends Plugin {
                 Log.stdout("username: "+wr.getOwner());
                 
                 if (options.has("username") && options.valueOf("username") != null 
-                        //TODO: this does not work
-                /*        && wr.getOwnerUsername() != null && !((String) options.valueOf("username")).equals(wr.getOwnerUsername())*/) {
+                        && wr.getOwnerUserName() != null && !((String) options.valueOf("username")).equals(wr.getOwnerUserName())) {
                   userMatch = false;
                 }
 
