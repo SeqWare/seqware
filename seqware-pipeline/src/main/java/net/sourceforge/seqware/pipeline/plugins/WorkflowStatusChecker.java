@@ -18,19 +18,13 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.runtools.RunTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
@@ -49,6 +43,10 @@ public class WorkflowStatusChecker extends Plugin {
     ReturnValue ret = new ReturnValue();
     // NOTE: this is shared with WorkflowLauncher so only one can run at a time
     String appID = "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusCheckerOrLauncher";
+    
+    // variables for use in the app
+    String hostname = null;
+    String username = null;
 
     /**
      * <p>Constructor for WorkflowStatusChecker.</p>
@@ -58,8 +56,8 @@ public class WorkflowStatusChecker extends Plugin {
         parser.acceptsAll(Arrays.asList("status-cmd", "s"),
                 "Optional: the Pegasus status command, if you specify this option the command will be run, potentially displaying the summarized/parsed errors, but the database will not be updated.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("workflow-run-accession", "wra"), "Optional: this will cause the program to only check the status of this particular workflow run.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("host", "h"), "Optional: if specified, only workflow runs scheduled to the specified host will be checked.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("username", "u"), "Optional: if specified, only workflow runs scheduled for this user will be checked.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("workflow-accession", "wra"), "Optional: this will cause the program to only check the status of workflow runs that are this type of workflow.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("force-host", "fh"), "Optional: if specified, workflow runs scheduled to this specified host will be checked even if this is not the current host (a dangerous option).").withRequiredArg();
         parser.acceptsAll(Arrays.asList("check-failed", "cf"), "Optional: if specified, workflow runs that have previously failed will be re-checked.");
         parser.acceptsAll(Arrays.asList("check-unknown", "cu"), "Optional: if specified, workflow runs that have previously marked unknown will be re-checked.");
 
@@ -78,6 +76,40 @@ public class WorkflowStatusChecker extends Plugin {
                     + " this most likely means the application is alredy running and this instance will exit!");
             ret.setExitStatus(ReturnValue.FAILURE);
         }
+        
+        // bail out if failed
+        if (ret.getExitStatus() != ReturnValue.SUCCESS) {
+            return(ret);
+        }
+        
+        // find the hostname or use --force-host
+        if (options.has("force-host") && options.valueOf("force-host") != null) {
+            this.hostname = (String) options.valueOf("force-host");
+        } else {
+            ArrayList<String> theCommand = new ArrayList<String>();
+            theCommand = new ArrayList<String>();
+            theCommand.add("bash");
+            theCommand.add("-lc");
+            theCommand.add("hostname --long");
+            ret = RunTools.runCommand(theCommand.toArray(new String[0]));
+            if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+                String stdout = ret.getStdout();
+                stdout = stdout.trim();
+                this.hostname = stdout;
+            } else {
+                Log.error("Can't figure out the hostname using 'hostname --long' "+ret.getStdout());
+                return(ret);
+            }
+        }
+        
+        // figure out the username
+        this.username = this.config.get("SW_REST_USER");
+        
+        
+        Log.stdout("hostname: "+hostname+" username: "+username);
+        
+        ret.setExitStatus(ReturnValue.FAILURE);
+        
         return ret;
 
     }
@@ -117,16 +149,23 @@ public class WorkflowStatusChecker extends Plugin {
               boolean hostMatch = true;
               boolean userMatch = true;
               boolean workflowRunAccessionMatch = true;
+              boolean workflowAccessionMatch = true;
+              boolean statusMatch = true;
               
-                if (options.has("host") && options.valueOf("host") != null
-                        && !((String) options.valueOf("host")).equals(wr.getHost())) {
+                if (options.has("workflow-accession") && options.valueOf("workflow-accession") != null
+                        && !((String) options.valueOf("workflow-accession")).equals(wr.getWorkflowAccession())) {
+                    hostMatch = false;
+                }
+              
+                if (options.has("force-host") && options.valueOf("force-host") != null
+                        && !((String) options.valueOf("force-host")).equals(wr.getHost())) {
                     hostMatch = false;
                 }
                 
                 Log.stdout("username: "+wr.getOwner());
                 
                 if (options.has("username") && options.valueOf("username") != null 
-                        && wr.getOwner() != null && !((String) options.valueOf("username")).equals(wr.getOwner().getEmailAddress())) {
+                        && wr.getOwnerUsername() != null && !((String) options.valueOf("username")).equals(wr.getOwnerUsername())) {
                   userMatch = false;
                 }
 
@@ -163,7 +202,7 @@ public class WorkflowStatusChecker extends Plugin {
 
                     } else if (currRet.getExitStatus() == ReturnValue.UNKNOWN) {
                         Log.error("ERROR: the workflow status has returned UNKNOWN, this is typically if the workflow status command points"
-                                + "to a non-existant directory or a directory that is not writable. No information will be saved to the"
+                                + "to a non-existant directory or a directory that is not writable or owned by you. No information will be saved to the"
                                 + "DB since the workflow state cannot be determined!");
 
                     }
@@ -186,9 +225,9 @@ public class WorkflowStatusChecker extends Plugin {
                 + "the metadata object with their status.  Keep in mind a few things: 1) if the status command is specified no data "
                 + "will be saved to the DB, this tool is just useful for gathering error reports, 2) status commands that are malformed "
                 + "or whose status directory is not present on the filesystem will be skipped and an error noted, 3) by default every running or unknown "
-                + "workflow_run in the database will be checked, use --host and --username to constrain the workflows checked, and "
-                + "you can specify a username other than your own (from .seqware/settings) but, in this case, the update to the database will not work properly "
-                + "unless you are an admin user.";
+                + "workflow_run in the database will be checked if they are owned by the username in your .seqware/settings file "
+                + "and the hostname is the same as 'hostname --long', and 4) you can force the checking of workflows with a particular "
+                + "host value but be careful with that.";
     }
 
     /**
