@@ -131,9 +131,11 @@ public class WorkflowTools {
 
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
     
-    // first if I don't own this directory then I need to abort!
+    //TODO: first if I don't own this directory then I need to abort!
     File statusDirFile = new File(statusDir);
-    if (statusDirFile)
+    if (statusDirFile /** is not owned*/ != null){
+        /** abort! */
+    }
 
     boolean cont = true;
     int currCycle = 0;
