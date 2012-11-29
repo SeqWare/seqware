@@ -1,0 +1,112 @@
+/*
+ *  Copyright (C) 2011 SeqWare
+ * 
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ * 
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package net.sourceforge.seqware.common.util.filetools;
+
+import java.io.File;
+import net.sourceforge.seqware.common.util.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+/**
+ * <p>FileToolsTest class.</p>
+ *
+ * @author boconnor
+ * @version $Id: $Id
+ * @since 0.13.3
+ */
+public class FileToolsTest {
+
+    /**
+     * <p>Constructor for FileToolsTest.</p>
+     */
+    public FileToolsTest() {
+    }
+
+    /**
+     * <p>setUpClass.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+    }
+
+    /**
+     * <p>tearDownClass.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
+
+    /**
+     * <p>setUp.</p>
+     */
+    @Before
+    public void setUp() {
+    }
+
+    /**
+     * <p>tearDown.</p>
+     */
+    @After
+    public void tearDown() {
+    }
+
+    
+    /**
+     * <p>testIsFileOwner.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
+    @Test
+    public void testIsFileOwner() throws Exception {
+      
+        String path = getClass().getResource("FileToolsTest.txt").getPath();
+        boolean isOwner = FileTools.isFileOwner(path);
+        assertTrue(isOwner);
+        
+        // don't do this if you are root for some reason
+        if (!"root".equals(System.getProperty("user.name"))) {
+          // assumes the root filesystem is owned by 
+          isOwner = FileTools.isFileOwner(File.separator);
+          assertFalse(isOwner);
+        }
+    }
+
+        /**
+     * <p>testIsFileOwner.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
+    @Test
+    public void testWhoAmI() throws Exception {
+      
+      // you can override this but I'm guessing people won't for testing
+      String username = System.getProperty("user.name");
+      
+      assertEquals(username, FileTools.whoAmI());
+      
+    }
+
+}
