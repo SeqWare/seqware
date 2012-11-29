@@ -39,6 +39,9 @@ public class Workflow implements Serializable, Comparable<Workflow>, Permissions
   private String host;
   private String username;
   private String permanentBundleLocation;
+  private String workflowClass;
+  private String workflowType;
+  private String workflowEngine;
 
   private Date createTimestamp;
   private Date updateTimestamp;
@@ -636,6 +639,30 @@ public class Workflow implements Serializable, Comparable<Workflow>, Permissions
   public String getPermanentBundleLocation() {
     return permanentBundleLocation;
   }
+
+    public String getWorkflowClass() {
+        return workflowClass;
+    }
+
+    public void setWorkflowClass(String workflowClass) {
+        this.workflowClass = workflowClass;
+    }
+
+    public String getWorkflowType() {
+        return workflowType;
+    }
+
+    public void setWorkflowType(String workflowType) {
+        this.workflowType = workflowType;
+    }
+
+    public String getWorkflowEngine() {
+        return workflowEngine;
+    }
+
+    public void setWorkflowEngine(String workflowEngine) {
+        this.workflowEngine = workflowEngine;
+    }
 
   /**
    * <p>Setter for the field <code>permanentBundleLocation</code>.</p>

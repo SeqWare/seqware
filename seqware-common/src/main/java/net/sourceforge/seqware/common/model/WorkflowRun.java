@@ -76,6 +76,8 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
   private String stdErr;
   private String stdOut;
   private Set<WorkflowRunAttribute> workflowRunAttributes = new TreeSet<WorkflowRunAttribute>();
+  private String workflowEngine;
+  
   /**
    * <p>Constructor for WorkflowRun.</p>
    */
@@ -700,7 +702,9 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
     wr.setStdOut(newWR.getStdOut());
 
     Registration owner = newWR.getOwner();
+    System.out.println("cloneToHibernate: owner is null? " + owner == null);
     if (owner != null) {
+        System.out.println("cloneToHibernate: owner is " + newWR.getOwner().toString());
       RegistrationService rs = BeanFactory.getRegistrationServiceBean();
       Registration o = rs.findByEmailAddressAndPassword(owner.getEmailAddress(), owner.getPassword());
       if (o != null) {
@@ -812,6 +816,7 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
         wr.setStdOut(rs.getString("stdout"));
 
         // owner
+        
         // workflowid
 
       }
@@ -871,5 +876,15 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
   public void setWorkflowRunAttributes(Set<WorkflowRunAttribute> workflowRunAttributes) {
     this.workflowRunAttributes = workflowRunAttributes;
   }
+
+    public String getWorkflowEngine() {
+        return workflowEngine;
+    }
+
+    public void setWorkflowEngine(String workflowEngine) {
+        this.workflowEngine = workflowEngine;
+    }
+  
+  
 
 }
