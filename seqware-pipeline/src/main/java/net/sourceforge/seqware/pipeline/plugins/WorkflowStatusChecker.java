@@ -108,7 +108,7 @@ public class WorkflowStatusChecker extends Plugin {
         
         Log.stdout("hostname: "+hostname+" username: "+username);
         
-        ret.setExitStatus(ReturnValue.FAILURE);
+        ret.setExitStatus(ReturnValue.SUCCESS);
         
         return ret;
 
@@ -162,7 +162,9 @@ public class WorkflowStatusChecker extends Plugin {
                     hostMatch = false;
                 }
                 
-                Log.stdout("username: "+wr.getOwner());
+                Log.stdout("owner: "+wr.getOwner());
+                Log.stdout("ownerUserName: "+wr.getOwnerUserName());
+                Log.stdout("workflowAccession: "+wr.getWorkflowAccession());
                 
                 if (options.has("username") && options.valueOf("username") != null 
                         && wr.getOwnerUserName() != null && !((String) options.valueOf("username")).equals(wr.getOwnerUserName())) {
