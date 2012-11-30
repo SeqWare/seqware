@@ -339,10 +339,13 @@ public class MetadataNoConnection extends Metadata {
     return new ArrayList<String>();
   }
 
-  /** {@inheritDoc} */
-  public ReturnValue addWorkflow(String name, String version, String description, String baseCommand,
-      String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip,
-      boolean storeArchiveZip) {
+    /**
+     * {@inheritDoc}
+     *
+     */
+    
+    
+  public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflow_class, String workflow_type, String workflow_engine) {
     logger.info("No metadata connection");
     ReturnValue finished = new ReturnValue(ReturnValue.PROCESSING);
     finished.setExitStatus(ReturnValue.SUCCESS);

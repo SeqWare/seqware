@@ -384,23 +384,22 @@ public interface MetadataInterface {
    */
   List<ReturnValue> findFilesAssociatedWithASample(String sampleName);
 
-  /**
-   * <p>addWorkflow.</p>
-   *
-   * @param name a {@link java.lang.String} object.
-   * @param version a {@link java.lang.String} object.
-   * @param description a {@link java.lang.String} object.
-   * @param baseCommand a {@link java.lang.String} object.
-   * @param configFile a {@link java.lang.String} object.
-   * @param templateFile a {@link java.lang.String} object.
-   * @param provisionDir a {@link java.lang.String} object.
-   * @param storeProvisionDir a boolean.
-   * @param archiveZip a {@link java.lang.String} object.
-   * @param storeArchiveZip a boolean.
-   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-   */
-  ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile,
-      String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip);
+    /**
+     * <p>addWorkflow.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param version a {@link java.lang.String} object.
+     * @param description a {@link java.lang.String} object.
+     * @param baseCommand a {@link java.lang.String} object.
+     * @param configFile a {@link java.lang.String} object.
+     * @param templateFile a {@link java.lang.String} object.
+     * @param provisionDir a {@link java.lang.String} object.
+     * @param storeProvisionDir a boolean.
+     * @param archiveZip a {@link java.lang.String} object.
+     * @param storeArchiveZip a boolean.
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
+  ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflowClass, String workflowType, String workflowEngine);
 
   /**
    * <p>updateWorkflow.</p>
