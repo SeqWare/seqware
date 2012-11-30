@@ -72,6 +72,11 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
      */
     @Override
     public ReturnValue do_run() {
+        // this needs cleanup, but if we want to schedule just defer to the old launcher
+        if (options.has("schedule")){
+            return super.do_run();
+        }
+        
         boolean newLauncherRequired = determineLauncher();
         if (!newLauncherRequired) {
         	return super.do_run();
