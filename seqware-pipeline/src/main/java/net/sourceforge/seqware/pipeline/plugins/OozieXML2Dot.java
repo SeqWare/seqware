@@ -145,6 +145,11 @@ public class OozieXML2Dot extends Plugin {
 		}
 	}
 	
+	   @Override
+	   public String get_description() {
+	      return "This take an input file of oozie workflow xml, and translate the relation of all actions into dot format";
+	   }
+	
 	private void visitNode(DotNode node, FileWriter fw, Collection<String> all) throws IOException {
 		for(DotNode child: node.getChildren()) {
 			String w = node.toString() + "  ->  " + child.toString();
