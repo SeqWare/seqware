@@ -599,4 +599,10 @@ public class MetadataNoConnection extends Metadata {
     // TODO Auto-generated method stub
 
   }
+
+@Override
+public String getProcessingRelations(String swAccession) {
+	// TODO Auto-generated method stub
+	return null;
+}
 }
