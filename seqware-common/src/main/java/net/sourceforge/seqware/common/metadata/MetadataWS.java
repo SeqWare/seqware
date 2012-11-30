@@ -111,13 +111,14 @@ public class MetadataWS extends Metadata {
 
   }
 
-  /**
-   * {@inheritDoc}
-   */
+    /**
+     * {@inheritDoc}
+     *
+     */
+    
+    
   @Override
-  public ReturnValue addWorkflow(String name, String version, String description, String baseCommand,
-          String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip,
-          boolean storeArchiveZip) {
+  public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflow_class, String workflow_type, String workflow_engine) {
 
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -148,6 +149,9 @@ public class MetadataWS extends Metadata {
     }
     // workflow.setUpdateTimestamp(new Date());
     // workflow.setOwner(owner);
+    workflow.setWorkflowClass(workflow_class);
+    workflow.setWorkflowType(workflow_type);
+    workflow.setWorkflowEngine(workflow_engine);
 
     Log.info("Posting workflow");
     try {
