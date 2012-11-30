@@ -2075,11 +2075,11 @@ public class MetadataWS extends Metadata {
       try {
         processing = findProcessing(searchString);
       } catch (IOException ex) {
-        Log.debug("Processing does not exist. Continuing.", ex);
+        Log.debug("Processing does not exist. Continuing.");
       } catch (JAXBException ex) {
         Log.error(ex);
       } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
+        Log.debug("Sample does not exist. Continuing.");
       }
       return processing;
     }
@@ -2089,11 +2089,11 @@ public class MetadataWS extends Metadata {
       try {
         lane = findLane(searchString);
       } catch (IOException ex) {
-        Log.debug("Lane does not exist. Continuing.", ex);
+        Log.debug("Lane does not exist. Continuing.");
       } catch (JAXBException ex) {
         Log.error(ex);
       } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
+        Log.debug("Lane does not exist. Continuing.");
       }
       return lane;
     }
@@ -2103,11 +2103,11 @@ public class MetadataWS extends Metadata {
       try {
         ius = findIUS(searchString);
       } catch (IOException ex) {
-        Log.debug("IUS does not exist. Continuing.", ex);
+        Log.debug("IUS does not exist. Continuing.");
       } catch (JAXBException ex) {
         Log.error(ex);
       } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
+        Log.debug("IUS does not exist. Continuing.");
       }
       return ius;
     }
@@ -2117,11 +2117,11 @@ public class MetadataWS extends Metadata {
       try {
         sr = findSequencerRun(searchString);
       } catch (IOException ex) {
-        Log.debug("SequencerRun does not exist. Continuing.", ex);
+        Log.debug("SequencerRun does not exist. Continuing.");
       } catch (JAXBException ex) {
         Log.error(ex);
       } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
+        Log.debug("SequencerRun does not exist. Continuing.");
       }
       return sr;
     }
@@ -2131,11 +2131,11 @@ public class MetadataWS extends Metadata {
       try {
         study = findStudy(searchString);
       } catch (IOException ex) {
-        Log.debug("Study does not exist. Continuing.", ex);
+        Log.debug("Study does not exist. Continuing.");
       } catch (JAXBException ex) {
         Log.error(ex);
       } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
+        Log.debug("Study does not exist. Continuing.");
       }
       return study;
     }
@@ -2145,11 +2145,11 @@ public class MetadataWS extends Metadata {
       try {
         experiment = findExperiment(searchString);
       } catch (IOException ex) {
-        Log.debug("Experiment does not exist. Continuing.", ex);
+        Log.debug("Experiment does not exist. Continuing.");
       } catch (JAXBException ex) {
         Log.error(ex);
       } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
+        Log.debug("Experiment does not exist. Continuing.");
       }
       return experiment;
     }
@@ -2159,9 +2159,9 @@ public class MetadataWS extends Metadata {
       try {
         sample = findSample(searchString);
       } catch (IOException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
+        Log.debug("Sample does not exist. Continuing.");
       } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
+        Log.debug("Sample does not exist. Continuing.");
       } catch (JAXBException ex) {
         Log.error(ex);
       }
