@@ -75,6 +75,7 @@ public class ProcessingDataStructure2Dot extends Plugin {
 
 	@Override
 	public ReturnValue do_run() {
+
 		//has to use metadatadb here since there is no webservice api available
 	    MetadataDB metadb = new MetadataDB();
 	    String db_server = (String)options.valueOf("sw-db-server");
@@ -102,6 +103,11 @@ public class ProcessingDataStructure2Dot extends Plugin {
 		return ret;
 	}
 
+	   @Override
+	   public String get_description() {
+	      return "This plugin will take in a sw_accession of a processing, and translate the hierarchy of the processing relationship into dot format";
+	   }
+	   
 	@Override
 	public ReturnValue clean_up() {
 		// TODO Auto-generated method stub
