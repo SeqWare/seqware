@@ -570,11 +570,11 @@ public class Bundle {
       //String templatePath = w.getTemplatePath().replaceAll("\\$\\{workflow_bundle_dir\\}", getOutputDir());
 
       if (packageIntoZip && unzipIntoDir) {
-        ret = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(), w.getTemplatePath(), this.outputDir, true, this.outputZip, true);
+        ret = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(), w.getTemplatePath(), this.outputDir, true, this.outputZip, true, w.getWorkflowClass(), w.getWorkflowType(), w.getWorkflowEngine());
       } else if (packageIntoZip && !unzipIntoDir) {
-        ret = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(), w.getTemplatePath(), this.outputDir, false, this.outputZip, true);
+        ret = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(), w.getTemplatePath(), this.outputDir, false, this.outputZip, true, w.getWorkflowClass(), w.getWorkflowType(), w.getWorkflowEngine());
       } else if (!packageIntoZip && unzipIntoDir) {
-        ret = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(), w.getTemplatePath(), this.outputDir, true, this.outputZip, false);
+        ret = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(), w.getTemplatePath(), this.outputDir, true, this.outputZip, false, w.getWorkflowClass(), w.getWorkflowType(), w.getWorkflowEngine());
       } else {
         Log.error("You need to specify an workflow bundle dir, workflow bundle zip file or both when you install a workflow.");
         ret.setExitStatus(ReturnValue.FAILURE);
