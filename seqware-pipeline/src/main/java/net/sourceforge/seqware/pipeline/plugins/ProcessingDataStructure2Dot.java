@@ -1,8 +1,10 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,7 +19,6 @@ import org.openide.util.lookup.ServiceProvider;
 
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 
@@ -30,29 +31,9 @@ public class ProcessingDataStructure2Dot extends Plugin {
 		super();
 		parser
         .accepts(
-            "sw-db-server",
-            "Optional: database server.")
-        .withRequiredArg().ofType(String.class).describedAs("Database Server.");
-		parser
-        .accepts(
-            "sw-db",
-            "Optional: database name")
-        .withRequiredArg().ofType(String.class).describedAs("Database Name.");
-		parser
-        .accepts(
-            "sw-db-user",
-            "Optional: database user")
-        .withRequiredArg().ofType(String.class).describedAs("Database User.");
-		parser
-        .accepts(
-            "sw-db-pass",
-            "Optional: password")
-        .withRequiredArg().ofType(String.class).describedAs("Password.");
-		parser
-        .accepts(
             "parent-accession",
-            "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.")
-        .withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location.");
+            "The SWID of the processing")
+        .withRequiredArg().ofType(String.class).describedAs("The SWID of the processing.");
 		parser
         .accepts(
             "output-file",
@@ -75,31 +56,24 @@ public class ProcessingDataStructure2Dot extends Plugin {
 
 	@Override
 	public ReturnValue do_run() {
-
-		//has to use metadatadb here since there is no webservice api available
-	    MetadataDB metadb = new MetadataDB();
-	    String db_server = (String)options.valueOf("sw-db-server");
-	    String db = (String)options.valueOf("sw-db");
-	    String db_user = (String)options.valueOf("sw-db-user");
-	    String db_pass = (String)options.valueOf("sw-db-pass");
-	    String parentAccession = (String)options.valueOf("parent-accession");
-	    String output = (String)options.valueOf("output-file");
-	    
-	    String connection = "jdbc:postgresql://" + db_server + "/" + db;
-	    ReturnValue ret = metadb.init(connection, db_user, db_pass);
-	    if (ret.getExitStatus() != ReturnValue.SUCCESS) {
-	      Log.stderr("ERROR connecting to metadata DB "+connection+" "+config.get("SW_DB_USER")+" "+config.get("SW_DB_PASS"));
-	      Log.stderr(ret.getStderr());
-	      System.exit(ret.getExitStatus());
-	    }
-	    
-	    try {
-			this.buildDotTree(metadb, parentAccession, new File(output));
-		} catch (SQLException e) {
-			e.printStackTrace();
+		String swAccession = (String) options.valueOf("parent-accession");
+		String outputFile = (String) options.valueOf("output-file");
+		String output = metadata.getProcessingRelations(swAccession);
+		Writer writer = null;
+		try {
+			writer = new BufferedWriter(new FileWriter(outputFile));
+			writer.write(output);
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				writer.flush();
+				writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+
 		return ret;
 	}
 

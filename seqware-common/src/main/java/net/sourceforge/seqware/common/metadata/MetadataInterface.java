@@ -704,4 +704,11 @@ public interface MetadataInterface {
    * @return a {@link java.util.SortedSet} object.
    */
   public SortedSet<WorkflowParam> getWorkflowParams(String swAccession);
+  
+  /**
+   * <p>getProcessingRelations.</p>
+   * @param swAccession
+   * @return a Dot format string
+   */
+  public String getProcessingRelations(String swAccession);
 }
