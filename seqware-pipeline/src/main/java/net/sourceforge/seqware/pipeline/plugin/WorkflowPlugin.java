@@ -13,11 +13,9 @@ package net.sourceforge.seqware.pipeline.plugin;
 
 import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -208,7 +206,7 @@ public abstract class WorkflowPlugin extends Plugin {
 		&& options.has("workflow")
 		&& options.has("version") && options.has("ini-files")) {
 
-	    // then your launching direclty and not something that has been
+	    // then your launching directly and not something that has been
 	    // installed
 	    Log.info("FYI: You are running the workflow without metadata writeback since you are running directly from a bundle zip file or directory.");
 	    // then run the workflow specified
