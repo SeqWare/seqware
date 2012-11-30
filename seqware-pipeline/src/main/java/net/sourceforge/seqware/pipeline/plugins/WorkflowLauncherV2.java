@@ -7,10 +7,12 @@
 */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +26,7 @@ import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowDataModelFactory;
+import net.sourceforge.seqware.pipeline.workflowV2.WorkflowV2Utility;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.OozieWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.PegasusWorkflowEngine;
 import org.openide.util.lookup.ServiceProvider;
@@ -68,9 +71,19 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 */
     @Override
     public ReturnValue do_run() {
+        boolean newLauncherRequired = determineLauncher();
+        
 
-	     WorkflowDataModelFactory factory = new WorkflowDataModelFactory(options, config, params, metadata);
-	     AbstractWorkflowDataModel dataModel = factory.getWorkflowDataModel();
+             AbstractWorkflowDataModel dataModel;
+             try{
+                final WorkflowDataModelFactory factory = new WorkflowDataModelFactory(options, config, params, metadata);
+                dataModel = factory.getWorkflowDataModel();
+             } catch (Exception e){
+                Log.error("I don't understand the combination of arguments you gave!");
+                Log.info(this.get_syntax());
+                ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
+                return ret;
+             }
 	    
 	     // set up workflow engine
 	     AbstractWorkflowEngine engine = this.getWorkflowEngine(dataModel);
@@ -170,6 +183,31 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
 
         return ret;
       }
+
+    /**
+     * 
+     * @return true iff we want to use the new launcher
+     */
+    private boolean determineLauncher() {
+        final String bundlePath = WorkflowV2Utility.determineRelativeBundlePath(options);
+        final File bundle = new File(bundlePath);
+        // determine whether we're really dealing with a new bundle or whether we should delegate to the old launcher
+        final Map<String, String> parseMetaInfo = WorkflowV2Utility.parseMetaInfo(bundle);
+        // if we specify workflow_class, workflow_template_path and the hints in the requirements we should be 
+        // able to determine which actual launcher to delegate to
+        // if we need a workflow_class, then we always use the new launcher
+        if (parseMetaInfo.containsKey(WorkflowV2Utility.WORKFLOW_CLASS)){
+            /** continue onwards */
+            return true;
+        }
+        // if Oozie is required or a if ftl2 is a requirement, we use the new launcher
+        else if (parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_ENGINE).contains("Oozie") || parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_TYPE).contains("ftl2")){
+         // continue onwards */
+            return true;
+        } 
+        // otherwise, we fall through to the old launcher
+        return false;
+    }
       
 }
 
