@@ -1936,4 +1936,10 @@ public class MetadataDB extends Metadata {
   public List<LibrarySource> getLibrarySource() {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
+
+	@Override
+	public String getProcessingRelations(String swAccession) {
+	
+		return null;
+	}
 }

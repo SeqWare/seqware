@@ -2571,4 +2571,10 @@ public class MetadataWS extends Metadata {
       return parent;
     }
   }
+
+	@Override
+	public String getProcessingRelations(String swAccession) {
+	    String report = (String) ll.getString("/processingstructure?swAccession=" + swAccession);
+	    return report;
+	}
 }
