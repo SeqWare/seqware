@@ -89,15 +89,18 @@ public class WorkflowV2Utility {
             ret.put("workflow_version", wf.getAttributeValue("version"));
             ret.put("seqware_version", wf.getAttributeValue("seqware_version"));
             ret.put("description", wf.getChildText("description"));
-            String basedir = wf.getAttributeValue("basedir").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir);
-            ret.put("basedir", basedir);
-            //parse the workflow_directory_name
-            String[] _arr = basedir.split("/");
-            if (_arr.length > 2) {
-                String tmp = _arr[1];
-                String[] _arrtmp = tmp.split("_", 3);
-                if (_arrtmp.length == 3) {
-                    ret.put("workflow_directory_name", _arrtmp[2]);
+            String basedir = wf.getAttributeValue("basedir");
+            if(basedir!=null) {
+            	basedir = wf.getAttributeValue("basedir").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir);
+            	ret.put("basedir", basedir);
+                //parse the workflow_directory_name
+                String[] _arr = basedir.split("/");
+                if (_arr.length > 2) {
+                    String tmp = _arr[1];
+                    String[] _arrtmp = tmp.split("_", 3);
+                    if (_arrtmp.length == 3) {
+                        ret.put("workflow_directory_name", _arrtmp[2]);
+                    }
                 }
             }
             Element command = wf.getChild("workflow_command");
