@@ -813,6 +813,36 @@ public class FileTools {
         String fileOwner = null;
         String programRunner = null;
       
+        programRunner = FileTools.whoAmI();
+        
+        ArrayList<String> theCommand = new ArrayList<String>();
+        theCommand = new ArrayList<String>();
+        theCommand.add("bash");
+        theCommand.add("-lc");
+        theCommand.add("stat "+path);
+        
+        ReturnValue ret = RunTools.runCommand(theCommand.toArray(new String[0]));
+        
+        if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+            String stdout = ret.getStdout();
+            stdout = stdout.trim();
+            return(stdout.contains(programRunner));
+        } else {
+            Log.error("Can't figure out the file ownership "+ret.getStderr());
+            return(false);
+        }
+
+  }
+  
+  /**
+   * This tool uses the 'whoami' command to find the current user
+   * versus the user.name method.
+   * 
+   * @param path
+   * @return 
+   */
+  public static String whoAmI() {
+      
         ArrayList<String> theCommand = new ArrayList<String>();
         theCommand.add("bash");
         theCommand.add("-lc");
@@ -822,20 +852,11 @@ public class FileTools {
         if (ret.getExitStatus() == ReturnValue.SUCCESS) {
             String stdout = ret.getStdout();
             stdout = stdout.trim();
-            programRunner = stdout;
+            return(stdout);
         } else {
             Log.error("Can't figure out the username using 'whoami' "+ret.getStderr());
-            return(false);
+            return(null);
         }
-        
-        theCommand = new ArrayList<String>();
-        theCommand.add("bash");
-        theCommand.add("-lc");
-        theCommand.add("stat "+path);
-        
-        // LEFT OFF HERE
-      
-      return(false);
   }
 
 }
