@@ -74,12 +74,13 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
     public ReturnValue do_run() {
         boolean newLauncherRequired = determineLauncher();
         if (!newLauncherRequired) {
-            Plugin oldLauncher = new WorkflowLauncher();
+        	return super.do_run();
+/*            Plugin oldLauncher = new WorkflowLauncher();
             oldLauncher.setParams(Arrays.asList(params));
             oldLauncher.parse_parameters();
             oldLauncher.init();
             ReturnValue oldret = oldLauncher.do_run();
-            return oldret;
+            return oldret;*/
         }
 
 
@@ -210,7 +211,10 @@ public class WorkflowLauncherV2 extends WorkflowPlugin {
              */
             return true;
         } // if Oozie is required or a if ftl2 is a requirement, we use the new launcher
-        else if (parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_ENGINE).contains("Oozie") || parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_TYPE).contains("ftl2")) {
+        else if ((parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_ENGINE)!=null 
+        		&& parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_ENGINE).contains("Oozie")) || 
+        		(parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_TYPE)!=null &&
+        		parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_TYPE).contains("ftl2"))) {
             // continue onwards */
             return true;
         }
