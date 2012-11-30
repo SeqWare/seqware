@@ -110,45 +110,37 @@ public class Metadata extends Plugin {
       for (String table : new String[]{"study", "experiment", "sample", "sequencer_run", "ius", "lane"}) {
         print(table + "\n");
       }
-      this.closeBufferWriter();
     } else if (options.has("table") && options.has("list")) {
       // list the table's contents
     } else if (options.has("table") && options.has("list-fields")) {
       // list the fields for this table
     	ret = (listFields((String) options.valueOf("table")));
-    	this.closeBufferWriter();
       return ret;
     } else if (options.has("table") && options.has("create") && options.has("field")) {
 
       // create a row with these fields
       if ("study".equals((String) options.valueOf("table"))) {
     	  ret = addStudy();
-    	  this.closeBufferWriter();
         return ret;
 
       } else if ("experiment".equals((String) options.valueOf("table"))) {
     	  ret = addExperiment();
-    	  this.closeBufferWriter();
         return ret;
 
       } else if ("sample".equals((String) options.valueOf("table"))) {
     	  ret = addSample();
-    	  this.closeBufferWriter();
         return ret;
 
       } else if ("sequencer_run".equals((String) options.valueOf("table"))) {
     	  ret = addSequencerRun();
-    	  this.closeBufferWriter();
         return ret;
 
       } else if ("lane".equals((String) options.valueOf("table"))) {
     	  ret = addLane();
-    	  this.closeBufferWriter();
         return ret;
 
       } else if ("ius".equals((String) options.valueOf("table"))) {
     	  ret = addIUS();
-    	  this.closeBufferWriter();
         return ret;
 
       } else {
@@ -386,6 +378,7 @@ public class Metadata extends Plugin {
    */
   @Override
   public ReturnValue clean_up() {
+	  this.closeBufferWriter();
     return ret;
   }
 
