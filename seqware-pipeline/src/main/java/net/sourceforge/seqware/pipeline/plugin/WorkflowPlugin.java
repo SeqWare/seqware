@@ -1,7 +1,7 @@
 /**
  * @author briandoconnor@gmail.com
  *
- * The WorkflowLauncher is responsible for launching workflows with or without
+ * The WorkflowPlugin is responsible for launching workflows with or without
  * metadata writeback.
  *
  * rules for command construction cd $cwd && $command --workflow-accession
@@ -40,7 +40,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author boconnor
  */
 @ServiceProvider(service = PluginInterface.class)
-public class WorkflowLauncher extends Plugin {
+public class WorkflowPlugin extends Plugin {
 
     protected ReturnValue ret = new ReturnValue();
     // NOTE: this is shared with WorkflowStatusChecker so only one can run at a
@@ -50,7 +50,7 @@ public class WorkflowLauncher extends Plugin {
     private String username;
     private String programRunner;
 
-    public WorkflowLauncher() {
+    public WorkflowPlugin() {
 	super();
 	/*
 	 * You should specify --workflow --version and --bundle or
@@ -372,7 +372,7 @@ public class WorkflowLauncher extends Plugin {
         final boolean newLauncherRequired = determineLauncher();
         if (!newLauncherRequired) {
         	return do_old_run();
-/*            Plugin oldLauncher = new WorkflowLauncher();
+/*            Plugin oldLauncher = new WorkflowPlugin();
             oldLauncher.setParams(Arrays.asList(params));
             oldLauncher.parse_parameters();
             oldLauncher.init();
