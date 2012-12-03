@@ -14,7 +14,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package net.sourceforge.seqware.common.util.filetools;
 
 import java.io.File;
@@ -35,78 +34,76 @@ import static org.junit.Assert.*;
  */
 public class FileToolsTest {
 
-    /**
-     * <p>Constructor for FileToolsTest.</p>
-     */
-    public FileToolsTest() {
-    }
+  /**
+   * <p>Constructor for FileToolsTest.</p>
+   */
+  public FileToolsTest() {
+  }
 
-    /**
-     * <p>setUpClass.</p>
-     *
-     * @throws java.lang.Exception if any.
-     */
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
+  /**
+   * <p>setUpClass.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
+  @BeforeClass
+  public static void setUpClass() throws Exception {
+  }
 
-    /**
-     * <p>tearDownClass.</p>
-     *
-     * @throws java.lang.Exception if any.
-     */
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
+  /**
+   * <p>tearDownClass.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
+  @AfterClass
+  public static void tearDownClass() throws Exception {
+  }
 
-    /**
-     * <p>setUp.</p>
-     */
-    @Before
-    public void setUp() {
-    }
+  /**
+   * <p>setUp.</p>
+   */
+  @Before
+  public void setUp() {
+  }
 
-    /**
-     * <p>tearDown.</p>
-     */
-    @After
-    public void tearDown() {
-    }
+  /**
+   * <p>tearDown.</p>
+   */
+  @After
+  public void tearDown() {
+  }
 
-    
-    /**
-     * <p>testIsFileOwner.</p>
-     *
-     * @throws java.lang.Exception if any.
-     */
-    @Test
-    public void testIsFileOwner() throws Exception {
-      
-        String path = getClass().getResource("FileToolsTest.txt").getPath();
-        boolean isOwner = FileTools.isFileOwner(path);
-        assertTrue(isOwner);
-        
-        // don't do this if you are root for some reason
-        if (!"root".equals(System.getProperty("user.name"))) {
-          // assumes the root filesystem is owned by 
-          isOwner = FileTools.isFileOwner(File.separator);
-          assertFalse(isOwner);
-        }
-    }
+  /**
+   * <p>testIsFileOwner.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
+  @Test
+  public void testIsFileOwner() throws Exception {
 
-        /**
-     * <p>testIsFileOwner.</p>
-     *
-     * @throws java.lang.Exception if any.
-     */
-    @Test
-    public void testWhoAmI() throws Exception {
-      
-      // you can override this but I'm guessing people won't for testing
-      String username = System.getProperty("user.name");
-      
-      assertEquals(username, FileTools.whoAmI());
-      
-    }
+    String path = FileToolsTest.class.getResource("FileToolsTest.txt").getPath();
+    boolean isOwner = FileTools.isFileOwner(path);
+    assertTrue(isOwner);
 
+    // don't do this if you are root for some reason
+    if (!"root".equals(System.getProperty("user.name"))) {
+      // assumes the root filesystem is owned by 
+      isOwner = FileTools.isFileOwner(File.separator);
+      assertFalse(isOwner);
+    }
+  }
+
+  /**
+   * <p>testIsFileOwner.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
+  @Test
+  public void testWhoAmI() throws Exception {
+
+    // you can override this but I'm guessing people won't for testing
+    String username = System.getProperty("user.name");
+
+    assertEquals(username, FileTools.whoAmI());
+
+  }
 }
