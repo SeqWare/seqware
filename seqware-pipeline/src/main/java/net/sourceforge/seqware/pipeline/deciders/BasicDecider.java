@@ -194,7 +194,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             } else {
                 workflowAccessionsToCheck.add(pas.trim());
             }
-            workflowAccessionsToCheck.add(workflowAccession);
+            //Separate out this logic
+            //workflowAccessionsToCheck.add(workflowAccession);
         }
         if (forceRunAll == null) {
             forceRunAll = options.has("force-run-all");
@@ -284,7 +285,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 Log.stdout("Retrieving study " + name);
                 rv = metadata.findFilesAssociatedWithAStudy(name);
                 mappedFiles = separateFiles(rv, groupBy);
-                launchWorkflows(mappedFiles);
+                ret = launchWorkflows(mappedFiles);
                 if (ret.getExitStatus() != ReturnValue.SUCCESS) {
                     break;
                 }
@@ -325,9 +326,13 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 for (ReturnValue file : files) {
                     String wfAcc = file.getAttribute(Header.WORKFLOW_SWA.getTitle());
 //                    Log.debug(Header.WORKFLOW_SWA.getTitle() + ": WF accession is " + wfAcc);
-                    // this sample has been run before
-                    if (wfAcc != null && workflowAccessionsToCheck.contains(wfAcc)) {
-                        previousWorkflowRuns.add(file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
+                    //We're allowing everything that produced this type of file 
+                    //other than the same workflow
+                    if (wfAcc != null) {
+                        if (workflowAccessionsToCheck.contains(wfAcc) || workflowAccession.equals(wfAcc)) {
+                            Log.debug("Found previous workflow run:" + file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
+                            previousWorkflowRuns.add(file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
+                        }
                     }
 
                     //if there is no parent accessions, or if the parent accession is correct
@@ -399,7 +404,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                         ret.setExitStatus(ReturnValue.QUEUED);
                     }
                 } else {
-                    Log.debug("Why are we here, seriously!?");
+                    Log.debug("Cannot run: parentAccessions: "+parentAccessionsToRun.size() + " filesToRun: "+ filesToRun.size()+ " workflowParentAccessions: "+ workflowParentAccessionsToRun.size());
                 }
 
             }
@@ -416,7 +421,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      */
     public boolean rerunWorkflowRun(Collection<String> previousWorkflowRuns, Collection<String> filesToRun) {
         boolean rerun = true;
-        int numberFailed=0;
+        int numberFailed = 0;
+        Log.debug("Check previous workflow runs: "+previousWorkflowRuns.size());
         for (String workflowRunAcc : previousWorkflowRuns) {
             String report = metaws.getWorkflowRunReport(Integer.parseInt(workflowRunAcc));
             String[] lines = report.split("\n");
@@ -424,29 +430,44 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             String[] data = lines[1].split("\t");
             Map<String, String> map = new TreeMap<String, String>();
             for (int i = 0; i < reportHeader.length; i++) {
+                Log.debug("Workflow Run Report item: " + reportHeader[i].trim() + "->" + data[i].trim());
                 map.put(reportHeader[i].trim(), data[i].trim());
             }
 
-            String ranOn = map.get("Input File Paths");
-            String[] ranOnFiles = ranOn.split(",");
-            if (!compareWorkflowRunFiles(ranOnFiles, filesToRun)) {
-                Log.error("There are fewer files to run on in the database than were previously run on this sample!");
-                Log.error("Files found to run in database: " + filesToRun.size());
-                Log.error("But yet workflow run " + workflowRunAcc + " ran on " + ranOnFiles.length);
-                rerun = false;
-            }
-            String status =map.get("Workflow Run Status");
-            if (!"failed".equals(status)) {
-                Log.debug("The status is " + status + " so not running this workflow");
+            String[] wf = map.get("Workflow").trim().split("\\s");
+            String wfAccession = new Integer(metadata.getWorkflowAccession(wf[0], wf[1])).toString();
+            if (wfAccession.equals(wfAccession)) {
+                Log.debug("Current wf-accession found, "+wfAccession+" run "+workflowRunAcc );
+                String ranOn = map.get("Input File Paths");
+                String[] ranOnFiles = ranOn.split(",");
+                if (!compareWorkflowRunFiles(ranOnFiles, filesToRun)) {
+                    Log.error("There are fewer files to run on in the database than were previously run on this sample!");
+                    Log.error("Files found to run in database: " + filesToRun.size());
+                    Log.error("But yet workflow run " + workflowRunAcc + " ran on " + ranOnFiles.length);
+                    rerun = false;
+                }
+                String status = map.get("Workflow Run Status");
+                Log.debug("Status is " + status);
+                if (!"failed".equals(status)) {
+                    Log.debug("The status is " + status + " so not running this workflow");
+                    rerun = false;
+                } else {
+                    Log.debug("The status is failed:" + numberFailed);
+                    numberFailed++;
+                }
+            } else if (workflowAccessionsToCheck.contains(wfAccession))
+            {
+                Log.debug("check wf-accession found, "+wfAccession+" run "+workflowRunAcc );
                 rerun=false;
-            } else {
-                numberFailed++;
-            }            
+            }
+            else {
+                Log.error("There is a workflow accession in previous runs that is not in check-wf-accessions or wf-accession: "+wfAccession);
+            }
         }
-        
+
         if (numberFailed >= this.rerunMax) {
             Log.debug("This workflow has failed " + rerunMax + " times: not running");
-            rerun=false;
+            rerun = false;
         }
         return rerun;
     }
