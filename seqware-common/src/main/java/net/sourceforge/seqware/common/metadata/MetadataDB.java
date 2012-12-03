@@ -1956,4 +1956,16 @@ public class MetadataDB extends Metadata {
   public List<LibrarySource> getLibrarySource() {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
+
+  @Override
+  public String getWorkflowRunReportStdErr(int workflowRunSWID) {
+    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+  }
+
+  @Override
+  public String getWorkflowRunReportStdOut(int workflowRunSWID) {
+    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+  }
+  
+  
 }

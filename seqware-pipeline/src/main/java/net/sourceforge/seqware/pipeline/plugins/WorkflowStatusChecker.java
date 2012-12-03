@@ -57,7 +57,7 @@ public class WorkflowStatusChecker extends Plugin {
     parser.acceptsAll(Arrays.asList("status-cmd", "s"),
             "Optional: the Pegasus status command, if you specify this option the command will be run, potentially displaying the summarized/parsed errors, but the database will not be updated.").withRequiredArg();
     parser.acceptsAll(Arrays.asList("workflow-run-accession", "wra"), "Optional: this will cause the program to only check the status of this particular workflow run.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("workflow-accession", "wra"), "Optional: this will cause the program to only check the status of workflow runs that are this type of workflow.").withRequiredArg();
+    parser.acceptsAll(Arrays.asList("workflow-accession", "wa"), "Optional: this will cause the program to only check the status of workflow runs that are this type of workflow.").withRequiredArg();
     parser.acceptsAll(Arrays.asList("force-host", "fh"), "Optional: if specified, workflow runs scheduled to this specified host will be checked even if this is not the current host (a dangerous option).").withRequiredArg();
     parser.acceptsAll(Arrays.asList("check-failed", "cf"), "Optional: if specified, workflow runs that have previously failed will be re-checked.");
     parser.acceptsAll(Arrays.asList("check-unknown", "cu"), "Optional: if specified, workflow runs that have previously marked unknown will be re-checked.");
