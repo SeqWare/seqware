@@ -1134,13 +1134,14 @@ public class MetadataWS extends Metadata {
     return ret;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+    /**
+     * {@inheritDoc}
+     *
+     * @param workflowEngine the value of workflowEngine
+     */
+    
   @Override
-  public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
-          String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
-          String stdErr, String stdOut) {
+  public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps, String stdErr, String stdOut, String workflowEngine) {
     int accession = 0;
     try {
       WorkflowRun wr = ll.findWorkflowRun("?id=" + workflowRunId);
@@ -1156,6 +1157,7 @@ public class MetadataWS extends Metadata {
       wr.setHost(host);
       wr.setStdErr(stdErr);
       wr.setStdOut(stdOut);
+      wr.setWorkflowEngine(workflowEngine);
 
       ll.updateWorkflowRun("/" + accession, wr);
     } catch (Exception e) {
