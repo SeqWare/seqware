@@ -31,6 +31,8 @@ import ch.enterag.utils.zip.EntryInputStream;
 import ch.enterag.utils.zip.EntryOutputStream;
 import ch.enterag.utils.zip.FileEntry;
 import ch.enterag.utils.zip.Zip64File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.sourceforge.seqware.common.util.runtools.RunTools;
 
 /**
@@ -133,8 +135,9 @@ public class FileTools {
     }
 
     // Start with file zero, or return error if no files available
-    if (numFiles <= 0)
+    if (numFiles <= 0) {
       return -4;
+    }
 
     // Read lines
     try {
@@ -368,7 +371,7 @@ public class FileTools {
    * @return a boolean.
    */
   public static boolean zipDirectoryRecursive(File path, File zipFileName, String excludeRegEx, boolean relative,
-      boolean compress) {
+          boolean compress) {
     ArrayList<File> filesToZip = new ArrayList<File>();
     if (path.exists()) {
       File[] files = path.listFiles();
@@ -450,7 +453,7 @@ public class FileTools {
    * @return a boolean.
    */
   public static boolean zipDirectoryRecursiveOld(File path, File zipFileName, String excludeRegEx, boolean relative,
-      boolean compress) {
+          boolean compress) {
     ArrayList<File> filesToZip = new ArrayList<File>();
     if (path.exists()) {
       File[] files = path.listFiles();
@@ -528,7 +531,7 @@ public class FileTools {
    * @return a boolean.
    */
   public static boolean zipListFileRecursiveOld(List<File> filesToZip, File zipFileName, String cutPrefix,
-      String excludeRegEx,/* boolean relative, */boolean compress) {
+          String excludeRegEx,/* boolean relative, */ boolean compress) {
 
     try {
       byte[] buffer = new byte[18024];
@@ -765,8 +768,9 @@ public class FileTools {
     byte[] buffer = new byte[1024];
     int len;
 
-    while ((len = in.read(buffer)) >= 0)
+    while ((len = in.read(buffer)) >= 0) {
       out.write(buffer, 0, len);
+    }
 
     in.close();
     out.close();
@@ -787,8 +791,9 @@ public class FileTools {
       String line = null;
       while ((line = freader.readLine()) != null) {
         String[] args = line.split("\t");
-        if (args.length < 2)
+        if (args.length < 2) {
           continue;
+        }
         ret.put(args[0], args[1]);
       }
       freader.close();
@@ -799,64 +804,69 @@ public class FileTools {
     }
     return ret;
   }
-  
+
   /**
-   * This tool uses the 'whoami' and 'stat' commands to verify if
-   * the current users running this program is the owner for the 
-   * specified file or directory.
-   * 
+   * This tool uses the 'whoami' and 'stat' commands to verify if the current
+   * users running this program is the owner for the specified file or
+   * directory.
+   *
    * @param path
-   * @return 
+   * @return
    */
   public static boolean isFileOwner(String path) {
-      
-        String fileOwner = null;
-        String programRunner = null;
-      
-        programRunner = FileTools.whoAmI();
-        
-        ArrayList<String> theCommand = new ArrayList<String>();
-        theCommand = new ArrayList<String>();
-        theCommand.add("bash");
-        theCommand.add("-lc");
-        theCommand.add("stat "+path);
-        
-        ReturnValue ret = RunTools.runCommand(theCommand.toArray(new String[0]));
-        
-        if (ret.getExitStatus() == ReturnValue.SUCCESS) {
-            String stdout = ret.getStdout();
-            stdout = stdout.trim();
-            return(stdout.contains(programRunner));
-        } else {
-            Log.error("Can't figure out the file ownership "+ret.getStderr());
-            return(false);
-        }
+
+    String programRunner = null;
+
+    programRunner = FileTools.whoAmI();
+
+    ArrayList<String> theCommand = new ArrayList<String>();
+    theCommand = new ArrayList<String>();
+    theCommand.add("bash");
+    theCommand.add("-lc");
+    theCommand.add("stat " + path);
+
+    ReturnValue ret = RunTools.runCommand(theCommand.toArray(new String[0]));
+
+    if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+
+      String stdout = ret.getStdout();
+      stdout = stdout.trim();
+      boolean result = false;
+      Pattern p = Pattern.compile(".*Uid:\\s*\\(\\s*\\d*/" + programRunner + "\\).*", Pattern.DOTALL);
+      Matcher m = p.matcher(stdout);
+      if (m.find()) {
+        result = true;
+      }
+      return (result);
+    } else {
+      Log.error("Can't figure out the file ownership " + ret.getStderr());
+      return (false);
+    }
 
   }
-  
+
   /**
-   * This tool uses the 'whoami' command to find the current user
-   * versus the user.name method.
-   * 
+   * This tool uses the 'whoami' command to find the current user versus the
+   * user.name method.
+   *
    * @param path
-   * @return 
+   * @return
    */
   public static String whoAmI() {
-      
-        ArrayList<String> theCommand = new ArrayList<String>();
-        theCommand.add("bash");
-        theCommand.add("-lc");
-        theCommand.add("whoami");
-        
-        ReturnValue ret = RunTools.runCommand(theCommand.toArray(new String[0]));
-        if (ret.getExitStatus() == ReturnValue.SUCCESS) {
-            String stdout = ret.getStdout();
-            stdout = stdout.trim();
-            return(stdout);
-        } else {
-            Log.error("Can't figure out the username using 'whoami' "+ret.getStderr());
-            return(null);
-        }
-  }
 
+    ArrayList<String> theCommand = new ArrayList<String>();
+    theCommand.add("bash");
+    theCommand.add("-lc");
+    theCommand.add("whoami");
+
+    ReturnValue ret = RunTools.runCommand(theCommand.toArray(new String[0]));
+    if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+      String stdout = ret.getStdout();
+      stdout = stdout.trim();
+      return (stdout);
+    } else {
+      Log.error("Can't figure out the username using 'whoami' " + ret.getStderr());
+      return (null);
+    }
+  }
 }
