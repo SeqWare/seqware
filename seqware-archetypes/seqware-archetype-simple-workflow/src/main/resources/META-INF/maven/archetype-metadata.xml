@@ -4,10 +4,10 @@
                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <requiredProperties>
         <requiredProperty key="package">
-            <defaultValue>net.sf.seqware</defaultValue>
+            <defaultValue>com.github.seqware</defaultValue>
         </requiredProperty>
         <requiredProperty key="groupId">
-            <defaultValue>net.sf.seqware</defaultValue>
+            <defaultValue>com.github.seqware</defaultValue>
         </requiredProperty>
         <requiredProperty key="workflowDirectoryName">
             <defaultValue>${artifactId}</defaultValue>
