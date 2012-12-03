@@ -33,6 +33,7 @@ import ch.enterag.utils.zip.FileEntry;
 import ch.enterag.utils.zip.Zip64File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.util.runtools.RunTools;
 
 /**
@@ -832,7 +833,7 @@ public class FileTools {
       String stdout = ret.getStdout();
       stdout = stdout.trim();
       boolean result = false;
-      Pattern p = Pattern.compile(".*Uid:\\s*\\(\\s*\\d*/" + programRunner + "\\).*", Pattern.DOTALL);
+      Pattern p = Pattern.compile(".*Uid:\\s*\\(\\s*\\d*\\s*/\\s*" + programRunner + "\\s*\\).*", Pattern.DOTALL);
       Matcher m = p.matcher(stdout);
       if (m.find()) {
         result = true;
@@ -869,4 +870,44 @@ public class FileTools {
       return (null);
     }
   }
+  
+  /**
+   * Get the localhost and a return value describing the failure condition
+   * if we are unable to get the localhost
+   * @param options
+   * @return 
+   */
+  public static LocalhostPair getLocalhost(OptionSet options) {
+        String hostname = null;
+        ReturnValue returnValue = null;
+        // find the hostname or use --force-host
+        if (options.has("force-host") && options.valueOf("force-host") != null) {
+            hostname = (String) options.valueOf("force-host");
+        } else {
+            ArrayList<String> theCommand = new ArrayList<String>();
+            theCommand.add("bash");
+            theCommand.add("-lc");
+            theCommand.add("hostname --long");
+            returnValue = RunTools.runCommand(theCommand.toArray(new String[0]));
+            if (returnValue.getExitStatus() == ReturnValue.SUCCESS) {
+                String stdout = returnValue.getStdout();
+                stdout = stdout.trim();
+                hostname = stdout;
+            } else {
+                Log.error("Can't figure out the hostname using 'hostname --long' " + returnValue.getStdout());
+                return new LocalhostPair(hostname, returnValue);
+            }
+        }
+        return new LocalhostPair(hostname, returnValue);
+    }
+    
+    public static class LocalhostPair {
+        public final String hostname;
+        public final ReturnValue returnValue;
+        
+        public LocalhostPair(String hostname, ReturnValue returnValue){
+            this.hostname = hostname;
+            this.returnValue = returnValue;
+        }
+    }
 }
