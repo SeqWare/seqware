@@ -942,7 +942,7 @@ public class MetadataDB extends Metadata {
    */
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
           String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
-          String stdErr, String stdOut) {
+          String stdErr, String stdOut, String workflowengine) {
 
     // metadata.update_workflow_run(workflowRunId, pegasusCmd, template,
     // "pending", statusCmd, wi.getWorkflowDir(), daxReader.toString(),
@@ -959,8 +959,10 @@ public class MetadataDB extends Metadata {
               + formatSQL(dax, null) + ", status_cmd = " + formatSQL(statusCmd, null) + ", current_working_dir = "
               + formatSQL(workingDirectory, null) + ", ini_file = " + formatSQL(ini, null) + ", host = "
               + formatSQL(host, null) + ", stderr = " + formatSQL(stdErr, null) + ", stdout = " + formatSQL(stdOut, null)
-              + ", update_tstmp='" + new Timestamp(System.currentTimeMillis()) + "' where workflow_run_id = "
-              + workflowRunId;
+              + ", workflow_engine = " + formatSQL(workflowengine, null) 
+              + ", update_tstmp='" + new Timestamp(System.currentTimeMillis())
+              + "' where workflow_run_id = "+ workflowRunId;
+            
       executeUpdate(sql);
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql + "\n" + e.getMessage());
