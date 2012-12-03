@@ -1642,6 +1642,22 @@ public class MetadataWS extends Metadata {
   }
 
   /**
+   * {@inheritDoc} 
+   */
+  @Override
+  public String getWorkflowRunReportStdErr(int workflowRunSWID) {
+    return(ll.getString("/reports/workflowruns/" + workflowRunSWID + "/stderr"));
+  }
+
+  /**
+   * {@inheritDoc} 
+   */
+  @Override
+  public String getWorkflowRunReportStdOut(int workflowRunSWID) {
+    return(ll.getString("/reports/workflowruns/" + workflowRunSWID + "/stdout"));
+  }
+  
+  /**
    * {@inheritDoc}
    */
   @Override
