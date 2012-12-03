@@ -602,4 +602,16 @@ public class MetadataNoConnection extends Metadata {
     // TODO Auto-generated method stub
 
   }
+
+  @Override
+  public String getWorkflowRunReportStdErr(int workflowRunSWID) {
+    return("");
+  }
+
+  @Override
+  public String getWorkflowRunReportStdOut(int workflowRunSWID) {
+    return("");
+  }
+  
+  
 }

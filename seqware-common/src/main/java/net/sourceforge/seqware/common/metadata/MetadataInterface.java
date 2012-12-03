@@ -668,6 +668,22 @@ public interface MetadataInterface {
    * @return a {@link java.lang.String} object.
    */
   public String getWorkflowRunReport(int workflowRunSWID);
+  
+  /**
+   * <p>getWorkflowRunReportStdErr.</p>
+   *
+   * @param workflowRunSWID a int.
+   * @return a {@link java.lang.String} object.
+   */
+  public String getWorkflowRunReportStdErr(int workflowRunSWID);  
+  
+  /**
+   * <p>getWorkflowRunReportStdOut.</p>
+   *
+   * @param workflowRunSWID a int.
+   * @return a {@link java.lang.String} object.
+   */
+  public String getWorkflowRunReportStdOut(int workflowRunSWID);
 
   /**
    * <p>getWorkflowRunReport.</p>
