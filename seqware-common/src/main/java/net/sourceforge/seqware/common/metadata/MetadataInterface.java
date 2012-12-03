@@ -354,27 +354,27 @@ public interface MetadataInterface {
    */
   boolean linkWorkflowRunAndParent(int workflowRunId, int parentAccession) throws SQLException;
 
-  /**
-   * <p>update_workflow_run.</p>
-   *
-   * @param workflowRunId a int.
-   * @param pegasusCmd a {@link java.lang.String} object.
-   * @param workflowTemplate a {@link java.lang.String} object.
-   * @param status a {@link java.lang.String} object.
-   * @param statusCmd a {@link java.lang.String} object.
-   * @param workingDirectory a {@link java.lang.String} object.
-   * @param dax a {@link java.lang.String} object.
-   * @param ini a {@link java.lang.String} object.
-   * @param host a {@link java.lang.String} object.
-   * @param currStep a int.
-   * @param totalSteps a int.
-   * @param stdErr a {@link java.lang.String} object.
-   * @param stdOut a {@link java.lang.String} object.
-   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-   */
-  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
-      String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
-      String stdErr, String stdOut);
+    /**
+     * <p>update_workflow_run.</p>
+     *
+     * @param workflowRunId a int.
+     * @param pegasusCmd a {@link java.lang.String} object.
+     * @param workflowTemplate a {@link java.lang.String} object.
+     * @param status a {@link java.lang.String} object.
+     * @param statusCmd a {@link java.lang.String} object.
+     * @param workingDirectory a {@link java.lang.String} object.
+     * @param dax a {@link java.lang.String} object.
+     * @param ini a {@link java.lang.String} object.
+     * @param host a {@link java.lang.String} object.
+     * @param currStep a int.
+     * @param totalSteps a int.
+     * @param stdErr a {@link java.lang.String} object.
+     * @param stdOut a {@link java.lang.String} object.
+     * @param workflowEngine the value of workflowEngine
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
+    
+  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps, String stdErr, String stdOut, String workflowEngine);
 
   /**
    * <p>findFilesAssociatedWithASample.</p>
