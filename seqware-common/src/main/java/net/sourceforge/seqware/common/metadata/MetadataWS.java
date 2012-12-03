@@ -1644,7 +1644,7 @@ public class MetadataWS extends Metadata {
    */
   @Override
   public String getWorkflowRunReportStdErr(int workflowRunSWID) {
-    return(ll.getString("/reports/workflowruns/" + workflowRunSWID + "/stderr"));
+    return((String)ll.getString("/reports/workflowruns/" + workflowRunSWID + "/stderr"));
   }
 
   /**
@@ -1652,7 +1652,7 @@ public class MetadataWS extends Metadata {
    */
   @Override
   public String getWorkflowRunReportStdOut(int workflowRunSWID) {
-    return(ll.getString("/reports/workflowruns/" + workflowRunSWID + "/stdout"));
+    return((String)ll.getString("/reports/workflowruns/" + workflowRunSWID + "/stdout"));
   }
   
   /**
