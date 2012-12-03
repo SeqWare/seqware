@@ -21,10 +21,12 @@ import it.sauronsoftware.junique.JUnique;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
+import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
 import net.sourceforge.seqware.common.util.runtools.RunTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
@@ -84,26 +86,12 @@ public class WorkflowStatusChecker extends Plugin {
     if (ret.getExitStatus() != ReturnValue.SUCCESS) {
       return (ret);
     }
-
-    // find the hostname or use --force-host
-    if (options.has("force-host") && options.valueOf("force-host") != null) {
-      this.hostname = (String) options.valueOf("force-host");
-    } else {
-      ArrayList<String> theCommand = new ArrayList<String>();
-      theCommand = new ArrayList<String>();
-      theCommand.add("bash");
-      theCommand.add("-lc");
-      theCommand.add("hostname --long");
-      ret = RunTools.runCommand(theCommand.toArray(new String[0]));
-      if (ret.getExitStatus() == ReturnValue.SUCCESS) {
-        String stdout = ret.getStdout();
-        stdout = stdout.trim();
-        this.hostname = stdout;
+      LocalhostPair localhost = FileTools.getLocalhost(options);
+      if (localhost.returnValue.getExitStatus() != ReturnValue.SUCCESS) {
+          return (localhost.returnValue);
       } else {
-        Log.error("Can't figure out the hostname using 'hostname --long' " + ret.getStdout());
-        return (ret);
+          this.hostname = localhost.hostname;
       }
-    }
 
     // figure out the username
     if (this.config.get("SW_REST_USER") == null || "".equals(this.config.get("SW_REST_USER"))) {
@@ -202,14 +190,14 @@ public class WorkflowStatusChecker extends Plugin {
             this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), "completed",
                     wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
                     wr.getHost(), Integer.parseInt(currRet.getAttribute("currStep")),
-                    Integer.parseInt(currRet.getAttribute("totalSteps")), currRet.getStderr(), currRet.getStdout());
+                    Integer.parseInt(currRet.getAttribute("totalSteps")), currRet.getStderr(), currRet.getStdout(), wr.getWorkflowEngine());
 
           } else if (currRet.getExitStatus() == ReturnValue.PROCESSING) {
             this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), "running",
                     wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
                     wr.getHost(), Integer.parseInt(currRet.getAttribute("currStep")),
                     Integer.parseInt(currRet.getAttribute("totalSteps")),
-                    currRet.getStderr(), currRet.getStdout());
+                    currRet.getStderr(), currRet.getStdout(), null);
 
           } else if (currRet.getExitStatus() == ReturnValue.FAILURE) {
             Log.error("WORKFLOW FAILURE: this workflow has failed and this status will be saved to the DB.");
@@ -217,7 +205,7 @@ public class WorkflowStatusChecker extends Plugin {
                     wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
                     wr.getHost(), Integer.parseInt(currRet.getAttribute("currStep")),
                     Integer.parseInt(currRet.getAttribute("totalSteps")),
-                    currRet.getStderr(), currRet.getStdout());
+                    currRet.getStderr(), currRet.getStdout(), null);
 
 
           } else if (currRet.getExitStatus() == ReturnValue.UNKNOWN) {
@@ -284,4 +272,6 @@ public class WorkflowStatusChecker extends Plugin {
     return(statusDir);
 
   }
+
+    
 }

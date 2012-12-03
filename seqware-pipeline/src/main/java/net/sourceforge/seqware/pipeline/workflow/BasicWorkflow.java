@@ -517,7 +517,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 			wi.getTemplatePath(), "failed", statusCmd,
 			wi.getWorkflowDir(), daxBuffer.toString(),
 			mapBuffer.toString(), wr.getHost(), 0, 0,
-			retPegasus.getStderr(), retPegasus.getStdout());
+			retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine());
 	    }
 	    return (retPegasus);
 	}
@@ -528,7 +528,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 		    wi.getTemplatePath(), "pending", statusCmd,
 		    wi.getWorkflowDir(), daxBuffer.toString(),
 		    mapBuffer.toString(), wr.getHost(), 0, 0,
-		    retPegasus.getStderr(), retPegasus.getStdout());
+		    retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine());
 	}
   
   Log.stdout("PEGASUS STATUS COMMAND: " + statusCmd);
@@ -558,7 +558,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 				    .getAttribute("currStep")), Integer
 				    .parseInt(watchedResult
 					    .getAttribute("totalSteps")),
-			    retPegasus.getStderr(), retPegasus.getStdout());
+			    retPegasus.getStderr(), retPegasus.getStdout(), null);
 		}
 
 	    } else if (watchedResult.getExitStatus() == ReturnValue.FAILURE) {
@@ -574,7 +574,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 				    .parseInt(watchedResult
 					    .getAttribute("totalSteps")),
 			    watchedResult.getStderr(), watchedResult
-				    .getStdout());
+				    .getStdout(), null);
 		}
 		ret.setExitStatus(ReturnValue.FAILURE);
 		return (ret);
@@ -713,7 +713,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	    this.metadata.update_workflow_run(workflowRunId, wi.getCommand(),
 		    wi.getTemplatePath(), "submitted", null,
 		    wi.getWorkflowDir(), null, mapBuffer.toString(), null, 0,
-		    0, null, null);
+		    0, null, null, null);
 
 	} else {
 	    Log.error("you can't schedule a workflow run unless you have metadata writeback turned on.");
