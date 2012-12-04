@@ -148,6 +148,8 @@ public class WorkflowRunReportResource
         builder.append("Workflow").append("\t");
         builder.append("Workflow Run SWID").append("\t");
         builder.append("Workflow Run Status").append("\t");
+        builder.append("Workflow Run Create Timestamp").append("\t");
+        builder.append("Workflow Run Host").append("\t");
         builder.append("Workflow Run Status Command").append("\t");
         builder.append("Library Sample Names").append("\t");
         builder.append("Library Sample SWIDs").append("\t");
@@ -195,6 +197,8 @@ public class WorkflowRunReportResource
         builder.append(wrrr.getWorkflowRun().getWorkflow().getName()).append(" ").append(wrrr.getWorkflowRun().getWorkflow().getVersion()).append("\t");
         builder.append(wrrr.getWorkflowRun().getSwAccession()).append("\t");
         builder.append(wrrr.getWorkflowRun().getStatus()).append("\t");
+        builder.append(wrrr.getWorkflowRun().getCreateTimestamp().toString()).append("\t");
+        builder.append(wrrr.getWorkflowRun().getHost()).append("\t");
         builder.append(wrrr.getWorkflowRun().getStatusCmd()).append("\t");
 
         parseSamples(builder, wrrr.getLibrarySamples());
