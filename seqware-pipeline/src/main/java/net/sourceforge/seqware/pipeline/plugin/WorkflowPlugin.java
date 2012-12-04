@@ -110,7 +110,7 @@ public class WorkflowPlugin extends Plugin {
 		"Optional: a flag that indicates the launcher should launch a workflow then monitor it's progress, waiting for it to exit, and returning 0 if everything is OK, non-zero if there are errors. This is useful for testing or if something else is calling the WorkflowLauncher. Without this option the launcher will immediately return with a 0 return value regardless if the workflow ultimately works.");
 	parser.acceptsAll(Arrays.asList("metadata", "m"), 
                 "Specify the path to the metadata.xml file.").withRequiredArg();
-	parser.acceptsAll(Arrays.asList(HOST,"h"), 
+	parser.acceptsAll(Arrays.asList(HOST,"ho"), 
                 "Used only in combination with --schedule to schedule onto a specific host").withRequiredArg();
         parser.acceptsAll(
 		Arrays.asList(FORCE_HOST, "fh"),
