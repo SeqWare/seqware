@@ -174,11 +174,14 @@ public class WorkflowV2Utility {
         // able to determine which actual launcher to delegate to
         // if we need a workflow_class, then we always use the new launcher
         if (workflowClass != null) {
+            Log.stdout("requiresNewLauncher - byClass " + workflowClass);
             return true;
         } // if Oozie is required or a if ftl2 is a requirement, we use the new launcher
-        else if ((workflowEngine!=null && workflowEngine.contains("Oozie")) || (workflowType !=null && workflowType.contains("ftl2"))) {
+        else if ((workflowEngine!=null && workflowEngine.contains("Oozie") && !workflowEngine.contains("Pegasus")) || (workflowType !=null && workflowType.contains("ftl2"))) {
+            Log.stdout("requiresNewLauncher - byEngine or Type " + workflowEngine + " " + workflowType);
             return true;
         }
+        Log.stdout("requiresNewLauncher - fall-through");
         // otherwise, we fall through to the old launcher
         return false;
     }
