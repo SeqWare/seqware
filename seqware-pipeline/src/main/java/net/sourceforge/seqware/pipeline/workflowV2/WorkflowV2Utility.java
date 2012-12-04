@@ -31,7 +31,9 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 /**
- * Utility methods that have been refactored out
+ * Utility methods that have been refactored out.
+ * These can hopefully be placed eventually in something like Workflow so that they 
+ * can be re-used. 
  *
  * @author dyuen
  */

@@ -339,8 +339,8 @@ public class WorkflowPlugin extends Plugin {
         // ensure that scheduling is done in conjunction with a host
         if (options.has(SCHEDULE)) {
             // this needs cleanup, but if we want to schedule just defer to the old launcher
-            oldReturnValue = doOldRun();
             // we also need to handle scheduled runs that are relevant to the new launcher            
+            oldReturnValue = doOldRun();
         } else if ((options.has("bundle") || options
                 .has("provisioned-bundle-dir"))
                 && options.has("workflow")
@@ -352,7 +352,7 @@ public class WorkflowPlugin extends Plugin {
             ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
         }
 
-        if (oldReturnValue.getReturnValue() != ReturnValue.SUCCESS){
+        if (oldReturnValue != null && oldReturnValue.getReturnValue() != ReturnValue.SUCCESS){
             ret = oldReturnValue;
         }
         return ret;
@@ -400,7 +400,7 @@ public class WorkflowPlugin extends Plugin {
         if (!newLauncherRequired) {
             return doOldRun();
         }
-        return launchNewWorkflow(options, config, params, metadata);
+        return launchNewWorkflow(options, config, params, metadata, null, null);
     }
 
     /**
@@ -464,7 +464,7 @@ public class WorkflowPlugin extends Plugin {
                             .getSwAccession().toString(),
                             metadataWriteback, options.has("wait"));
                     } else{
-                        this.launchNewWorkflow(options, config, params, metadata);
+                        this.launchNewWorkflow(options, config, params, metadata, wr.getWorkflowAccession(), wr.getSwAccession());
                     }
                 } else{
                     Log.stdout("Invalid run by host check: " + wr.getSwAccession());
@@ -480,14 +480,15 @@ public class WorkflowPlugin extends Plugin {
      * @param config
      * @param params
      * @param metadata
+     * @param workflowAccession
      * @return 
      */
-    public static ReturnValue launchNewWorkflow(OptionSet options, Map<String, String> config, String[] params, Metadata metadata) {
+    public static ReturnValue launchNewWorkflow(OptionSet options, Map<String, String> config, String[] params, Metadata metadata, Integer workflowAccession, Integer workflowRunAccession) {
         ReturnValue ret = new ReturnValue();
         AbstractWorkflowDataModel dataModel;
         try {
             final WorkflowDataModelFactory factory = new WorkflowDataModelFactory(options, config, params, metadata);
-            dataModel = factory.getWorkflowDataModel();
+            dataModel = factory.getWorkflowDataModel(workflowAccession, workflowRunAccession);
         } catch (Exception e) {
             ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
             return ret;
