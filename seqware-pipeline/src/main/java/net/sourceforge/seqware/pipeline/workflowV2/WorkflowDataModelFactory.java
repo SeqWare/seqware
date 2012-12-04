@@ -95,6 +95,7 @@ public class WorkflowDataModelFactory {
         Class<?> clazz = null;
         if (workflow_java) {
             String clazzPath = metaInfo.get("classes");
+            Log.stdout("looking for classes at " + clazzPath);
             Log.info("CLASSPATH: " + clazzPath);
             // get user defined classes
             WorkflowClassFinder finder = new WorkflowClassFinder();
@@ -105,14 +106,16 @@ public class WorkflowDataModelFactory {
                     Object object = clazz.newInstance();
                     dataModel = (AbstractWorkflowDataModel) object;
                 } catch (InstantiationException ex) {
-                    Log.error(ex);
+                    Log.error(ex, ex);
                 } catch (IllegalAccessException ex) {
-                    Log.error(ex);
+                    Log.error(ex, ex);
                 } catch (SecurityException ex) {
-                    Log.error(ex);
+                    Log.error(ex, ex);
                 } catch (IllegalArgumentException ex) {
-                    Log.error(ex);
+                    Log.error(ex, ex);
                 }
+            }else{
+                Log.stdout("failed looking for classes at " + clazzPath);
             }
         } else {
             dataModel = new XmlWorkflowDataModel();
