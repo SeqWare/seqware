@@ -368,8 +368,16 @@ public class WorkflowPlugin extends Plugin {
         if (options.has("schedule")){
             return do_old_run();
         }
-        
-        final boolean newLauncherRequired = determineLauncher();
+        boolean newLauncherRequired = true;
+        try{
+            newLauncherRequired = determineLauncher();
+        } catch(Exception e){
+            // this is ugly, clean this up during integration test work
+            Log.error("I don't understand the combination of arguments you gave!");
+	    Log.info(this.get_syntax());
+	    ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
+            return ret;
+        }
         if (!newLauncherRequired) {
         	return do_old_run();
 /*            Plugin oldLauncher = new WorkflowPlugin();
