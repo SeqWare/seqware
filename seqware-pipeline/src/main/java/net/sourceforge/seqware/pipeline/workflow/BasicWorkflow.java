@@ -286,7 +286,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	// get the workflow run
 	WorkflowRun wr = this.metadata
 		.getWorkflowRunWithWorkflow(workflowRunAccession);
-
+        
 	// the map
 	HashMap<String, String> map = new HashMap<String, String>();
 
