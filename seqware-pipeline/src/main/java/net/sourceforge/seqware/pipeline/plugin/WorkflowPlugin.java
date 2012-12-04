@@ -45,6 +45,7 @@ public class WorkflowPlugin extends Plugin {
     public static final String FORCE_HOST = "force-host";
     public static final String HOST = "host";
     public static final String SCHEDULE = "schedule";
+    public static final String LAUNCH_SCHEDULED = "launch-scheduled";
 
     protected ReturnValue ret = new ReturnValue();
     // NOTE: this is shared with WorkflowStatusChecker so only one can run at a
@@ -73,7 +74,7 @@ public class WorkflowPlugin extends Plugin {
 		Arrays.asList(SCHEDULE, "s"),
 		"Optional: If this, the workflow-accession, and ini-files are all specified this will cause the workflow to be scheduled in the workflow run table rather than directly run. Useful if submitting the workflow to a remote server.");
 	parser.acceptsAll(
-		Arrays.asList("launch-scheduled", "ls"),
+		Arrays.asList(LAUNCH_SCHEDULED, "ls"),
 		"Optional: If this parameter is given (which can optionally have a comma separated list of workflow run accessions) all the workflows that have been scheduled in the database will have their commands constructed and executed on this machine (thus launching those workflows). This command can only be run on a machine capable of submitting workflows (e.g. a cluster submission host!). If you're submitting a workflow remotely you want to use the --schedule option instead.")
 		.withOptionalArg();
 	parser.acceptsAll(
@@ -291,7 +292,7 @@ public class WorkflowPlugin extends Plugin {
 		    iniFiles, false, new ArrayList<String>(),
 		    new ArrayList<String>(), options.has("wait"), nonOptions);
 
-	} else if (options.has("launch-scheduled")) {
+	} else if (options.has(LAUNCH_SCHEDULED)) {
 	    // check to see if this code is already running, if so exit
 	    try {
 		JUnique.acquireLock(appID);
@@ -337,11 +338,11 @@ public class WorkflowPlugin extends Plugin {
     public ReturnValue do_run() {
         ReturnValue oldReturnValue = null;
         // ensure that scheduling is done in conjunction with a host
-        if (options.has(SCHEDULE)) {
+        if (options.has(SCHEDULE) || options.has(LAUNCH_SCHEDULED)) {
             // this needs cleanup, but if we want to schedule just defer to the old launcher
             // we also need to handle scheduled runs that are relevant to the new launcher            
             oldReturnValue = doOldRun();
-        } else if ((options.has("bundle") || options
+        }  else if ((options.has("bundle") || options
                 .has("provisioned-bundle-dir"))
                 && options.has("workflow")
                 && options.has("version") && options.has("ini-files")) {
@@ -431,7 +432,7 @@ public class WorkflowPlugin extends Plugin {
         // then you are either launching all workflows scheduled in the DB
         // workflow_run table or just particular ones
         List<String> scheduledAccessions = (List<String>) options
-                .valuesOf("launch-scheduled");
+                .valuesOf(LAUNCH_SCHEDULED);
 
         // BIG ISSUE: HOW DO YOU GO FROM WORKFLOW_RUN BACK TO WORKFLOW VIA
         // WEB SERVICE!?
