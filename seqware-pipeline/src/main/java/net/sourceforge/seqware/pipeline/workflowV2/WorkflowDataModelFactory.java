@@ -160,7 +160,7 @@ public class WorkflowDataModelFactory {
             int workflowAccession = Integer.parseInt((String) options.valueOf("workflow-accession"));
             int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession);
             //configs.put("workflow-run-accession", ""+workflowrunaccession);
-            ret.setWorkflow_run_accession("" + workflowrunaccession);
+            ret.setWorkflow_run_accession(String.valueOf(workflowrunaccession));
         }
         ret.setConfigs(configs);
 
@@ -181,15 +181,15 @@ public class WorkflowDataModelFactory {
                 m = clazz.getMethod("buildWorkflow");
                 m.invoke(ret);
             } catch (SecurityException e) {
-                e.printStackTrace();
+                Log.error(e);
             } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+                Log.error(e);
             } catch (IllegalArgumentException e) {
-                e.printStackTrace();
+                Log.error(e);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                Log.error(e);
             } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                Log.error(e);
             }
         } else {
             WorkflowXmlParser xmlParser = new WorkflowXmlParser();
