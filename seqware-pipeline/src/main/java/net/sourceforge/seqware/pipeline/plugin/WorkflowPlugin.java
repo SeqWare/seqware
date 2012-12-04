@@ -494,6 +494,7 @@ public class WorkflowPlugin extends Plugin {
             final WorkflowDataModelFactory factory = new WorkflowDataModelFactory(options, config, params, metadata);
             dataModel = factory.getWorkflowDataModel(workflowAccession, workflowRunAccession);
         } catch (Exception e) {
+            Log.fatal(e, e);
             ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
             return ret;
         }
