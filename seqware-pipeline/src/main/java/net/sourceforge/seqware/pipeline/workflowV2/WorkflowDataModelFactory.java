@@ -56,12 +56,15 @@ public class WorkflowDataModelFactory {
         assert(workflowAccession == null && workflowRunAccession == null || workflowAccession != null && workflowRunAccession != null);
         String bundlePath = null;        
         Map<String, String> metaInfo = null;
+        Log.stdout("factory attempting to find bundle");
         if (workflowAccession != null) {
+            Log.stdout("factory attempting to find bundle from DB");
             // this execution path is hacked in for running from the database and can be refactored into BasicWorkflow
             metaInfo = this.metadata.get_workflow_info(workflowAccession);
             WorkflowInfo wi = BasicWorkflow.parseWorkflowMetadata(config);
             bundlePath = wi.getWorkflowDir();
         } else {
+            Log.stdout("factory attempting to find bundle from options");
             bundlePath = WorkflowV2Utility.determineRelativeBundlePath(options);
             File bundle = new File(bundlePath);
             //change to absolute path
