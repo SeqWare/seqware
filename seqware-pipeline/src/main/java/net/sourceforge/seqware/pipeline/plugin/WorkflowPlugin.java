@@ -460,11 +460,13 @@ public class WorkflowPlugin extends Plugin {
                                     .toString());
                     boolean requiresNewLauncher = WorkflowV2Utility.requiresNewLauncher(wrWithWorkflow.getWorkflow());
                     if (!requiresNewLauncher){
+                        Log.stdout("Launching via old launcher: " + wr.getSwAccession());
                       w.launchScheduledBundle(wrWithWorkflow.getWorkflow()
                             .getSwAccession().toString(), wr
                             .getSwAccession().toString(),
                             metadataWriteback, options.has("wait"));
                     } else{
+                        Log.stdout("Launching via new launcher: " + wr.getSwAccession());
                         this.launchNewWorkflow(options, config, params, metadata, wr.getWorkflowAccession(), wr.getSwAccession());
                     }
                 } else{
@@ -485,6 +487,7 @@ public class WorkflowPlugin extends Plugin {
      * @return 
      */
     public static ReturnValue launchNewWorkflow(OptionSet options, Map<String, String> config, String[] params, Metadata metadata, Integer workflowAccession, Integer workflowRunAccession) {
+        Log.stdout("launching new workflow");
         ReturnValue ret = new ReturnValue();
         AbstractWorkflowDataModel dataModel;
         try {
@@ -494,6 +497,8 @@ public class WorkflowPlugin extends Plugin {
             ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
             return ret;
         }
+        
+        Log.stdout("constructed dataModel");
 
         // set up workflow engine
         AbstractWorkflowEngine engine = WorkflowPlugin.getWorkflowEngine(dataModel);
@@ -506,6 +511,9 @@ public class WorkflowPlugin extends Plugin {
         if (!dataModel.isMetadataWriteBack()) {
             return retPegasus;
         }
+        
+        Log.stdout("attempting metadata writeback");
+        
         // metadataWriteback
         String wra = dataModel.getWorkflow_run_accession();
 
