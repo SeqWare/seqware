@@ -42,6 +42,10 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = PluginInterface.class)
 public class WorkflowPlugin extends Plugin {
 
+    public static final String FORCE_HOST = "force-host";
+    public static final String HOST = "host";
+    public static final String SCHEDULE = "schedule";
+
     protected ReturnValue ret = new ReturnValue();
     // NOTE: this is shared with WorkflowStatusChecker so only one can run at a
     // time
@@ -68,7 +72,7 @@ public class WorkflowPlugin extends Plugin {
 		"Optional: The sw_accession of the workflow that this run of a workflow should be associated with (via the workflow_id in the workflow_run_table). Specify this or the workflow, version, and bundle.")
 		.withRequiredArg();
 	parser.acceptsAll(
-		Arrays.asList("schedule", "s"),
+		Arrays.asList(SCHEDULE, "s"),
 		"Optional: If this, the workflow-accession, and ini-files are all specified this will cause the workflow to be scheduled in the workflow run table rather than directly run. Useful if submitting the workflow to a remote server.");
 	parser.acceptsAll(
 		Arrays.asList("launch-scheduled", "ls"),
@@ -104,10 +108,12 @@ public class WorkflowPlugin extends Plugin {
 	parser.acceptsAll(
 		Arrays.asList("wait"),
 		"Optional: a flag that indicates the launcher should launch a workflow then monitor it's progress, waiting for it to exit, and returning 0 if everything is OK, non-zero if there are errors. This is useful for testing or if something else is calling the WorkflowLauncher. Without this option the launcher will immediately return with a 0 return value regardless if the workflow ultimately works.");
-	parser.acceptsAll(Arrays.asList("metadata", "m"),
-		"Specify the path to the metadata.xml file.").withRequiredArg();
-	parser.acceptsAll(
-		Arrays.asList("host"),
+	parser.acceptsAll(Arrays.asList("metadata", "m"), 
+                "Specify the path to the metadata.xml file.").withRequiredArg();
+	parser.acceptsAll(Arrays.asList(HOST,"h"), 
+                "Used only in combination with --schedule to schedule onto a specific host").withRequiredArg();
+        parser.acceptsAll(
+		Arrays.asList(FORCE_HOST, "fh"),
 		"If specified, the scheduled workflow will only be launched if this parameter value and the host field in the workflow run table match. This is a mechanism to target workflows to particular servers for launching.")
 		.withRequiredArg();
 	// options ported over from WorkflowLauncherV2
@@ -128,7 +134,6 @@ public class WorkflowPlugin extends Plugin {
                 .withRequiredArg().ofType(String.class).describedAs("Workflow Engine");
         parser.accepts("status", "Optional: Get the workflow status by ID").withRequiredArg().ofType(String.class).describedAs("Job ID");
         // new launcher parameters from SEQWARE-1134
-        parser.acceptsAll(Arrays.asList("force-host", "fh"), "Optional: if specified, workflow runs scheduled to this specified host will be checked even if this is not the current host (a dangerous option).").withRequiredArg();
         
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
@@ -233,19 +238,20 @@ public class WorkflowPlugin extends Plugin {
 	if (options.has("workflow-accession") && options.has("ini-files")) {
 
 	    // then you're scheduling a workflow that has been installed
-	    if (options.has("schedule")) {
-                if (!options.has("host")){
+	    if (options.has(SCHEDULE)) {
+                if (!options.has(HOST)){
                     Log.error("host parameter is required when scheduling");
                     Log.info(this.get_syntax());
                     ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
                     return ret;
                 }
-		Log.info("You are scheduling a workflow to run by adding it to the metadb.");
+                String host = (String)options.valueOf(HOST);
+		Log.info("You are scheduling a workflow to run on "+host+" by adding it to the metadb.");
 		ret = w.scheduleInstalledBundle(
 			(String) options.valueOf("workflow-accession"),
 			(String) options.valueOf("workflow-run-accession"),
 			iniFiles, metadataWriteback, parentAccessions,
-			parentsLinkedToWR, false, nonOptions);
+			parentsLinkedToWR, false, nonOptions, host);
 	    } else {
 		// then your running locally but taking info saved in the
 		// workflow table from the DB
@@ -319,10 +325,15 @@ public class WorkflowPlugin extends Plugin {
                 
 		if (scheduledAccessions.isEmpty() || (scheduledAccessions.size() > 0 && scheduledAccessions
 				.contains(wr.getSwAccession().toString()))) {
-		    if (!options.has("host")
-			    || (options.has("host")
-				    && options.valueOf("host") != null && options
-				    .valueOf("host").equals(wr.getHost()))) {
+                    // three conditions are
+                    // 1) we match with the localhost matching the host parameter in the database
+                    boolean localMatch = !options.has(FORCE_HOST) && hostname.equals(wr.getHost());
+                    // 2) we match with the forcehost parameter with no parameters matching null in the database
+                    boolean forceHostNull = options.has(FORCE_HOST) && !options.hasArgument(FORCE_HOST) && wr.getHost() == null;
+                    // 3) we match with the forcehost parameter matching an actual value in the database
+                    boolean actualForceHostMatch = options.has(FORCE_HOST) && hostname.equals(wr.getHost());
+                    
+		    if (localMatch || forceHostNull || actualForceHostMatch) {
 			WorkflowRun wrWithWorkflow = this.metadata
 				.getWorkflowRunWithWorkflow(wr.getSwAccession()
 					.toString());
@@ -363,9 +374,14 @@ public class WorkflowPlugin extends Plugin {
     
     @Override
     public ReturnValue do_run() {
+        // ensure that scheduling is done in conjunction with a host
+        if (options.has(HOST) && !options.has(SCHEDULE)){
+            ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
+            return ret;
+        }
         
         // this needs cleanup, but if we want to schedule just defer to the old launcher
-        if (options.has("schedule")){
+        if (options.has(SCHEDULE)){
             return do_old_run();
         }
         boolean newLauncherRequired = true;
