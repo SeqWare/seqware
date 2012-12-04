@@ -36,6 +36,9 @@ public class Workflow implements Serializable, Comparable<Workflow>, Permissions
   private String cwd;
   private String command;
   private String template;
+  /**
+   * @deprecated this does not seem to be in use and probably should not be
+   */
   private String host;
   private String username;
   private String permanentBundleLocation;
@@ -321,7 +324,7 @@ public class Workflow implements Serializable, Comparable<Workflow>, Permissions
 
   /**
    * <p>Getter for the field <code>host</code>.</p>
-   *
+   * @deprecated 
    * @return a {@link java.lang.String} object.
    */
   public String getHost() {
@@ -330,7 +333,7 @@ public class Workflow implements Serializable, Comparable<Workflow>, Permissions
 
   /**
    * <p>Setter for the field <code>host</code>.</p>
-   *
+   * @deprecated 
    * @param host a {@link java.lang.String} object.
    */
   public void setHost(String host) {
