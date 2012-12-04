@@ -746,7 +746,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * @param workflowMetadata
      * @return
      */
-    private WorkflowInfo parseWorkflowMetadata(Map<String, String> m) {
+    public static WorkflowInfo parseWorkflowMetadata(Map<String, String> m) {
 	WorkflowInfo wi = new WorkflowInfo();
 	wi.setCommand(m.get("cmd"));
 	wi.setName(m.get("name"));
@@ -757,6 +757,9 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	wi.setTemplatePath(m.get("workflow_template"));
 	wi.setWorkflowAccession(Integer.parseInt(m.get("workflow_accession")));
 	wi.setPermBundleLocation(m.get("permanent_bundle_location"));
+        wi.setWorkflowClass(m.get("workflow_class"));
+        wi.setWorkflowEngine(m.get("workflow_engine"));
+        wi.setWorkflowType(m.get("workflow_type"));
 	return (wi);
     }
 
