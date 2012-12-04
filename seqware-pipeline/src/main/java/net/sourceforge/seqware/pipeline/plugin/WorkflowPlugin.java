@@ -13,16 +13,16 @@ package net.sourceforge.seqware.pipeline.plugin;
 
 import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import joptsimple.OptionSet;
+import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
-import net.sourceforge.seqware.common.util.runtools.RunTools;
 import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
 import net.sourceforge.seqware.pipeline.workflow.Workflow;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
@@ -51,8 +51,6 @@ public class WorkflowPlugin extends Plugin {
     // time
     protected String appID = "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusCheckerOrLauncher";
     private String hostname;
-    private String username;
-    private String programRunner;
 
     public WorkflowPlugin() {
 	super();
@@ -133,7 +131,6 @@ public class WorkflowPlugin extends Plugin {
                 "Optional: Specifies a workflow engine, we support Oozie and Pegasus. Default is Pegasus.")
                 .withRequiredArg().ofType(String.class).describedAs("Workflow Engine");
         parser.accepts("status", "Optional: Get the workflow status by ID").withRequiredArg().ofType(String.class).describedAs("Job ID");
-        // new launcher parameters from SEQWARE-1134
         
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
@@ -149,6 +146,11 @@ public class WorkflowPlugin extends Plugin {
             return (localhost.returnValue);
         } else {
             this.hostname = localhost.hostname;
+        }
+        
+        if (options.has(HOST) && !options.has(SCHEDULE)) {
+            ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
+            return ret;
         }
 
         ret.setExitStatus(ReturnValue.SUCCESS);
@@ -172,7 +174,7 @@ public class WorkflowPlugin extends Plugin {
      * not understand scheduling. 
      * @return 
      */
-    public ReturnValue do_old_run() {
+    public ReturnValue doOldRun() {
 
 	/*
 	 * 
@@ -301,50 +303,8 @@ public class WorkflowPlugin extends Plugin {
 			e);
 		ret.setExitStatus(ReturnValue.FAILURE);
 	    }
-	    // LEFT OFF HERE, not sure if the workflow will come back from the
-	    // web service!?
 
-	    // then you are either launching all workflows scheduled in the DB
-	    // workflow_run table or just particular ones
-	    List<String> scheduledAccessions = (List<String>) options
-		    .valuesOf("launch-scheduled");
-
-	    // BIG ISSUE: HOW DO YOU GO FROM WORKFLOW_RUN BACK TO WORKFLOW VIA
-	    // WEB SERVICE!?
-
-	    // then need to loop over these and just launch those workflows or
-	    // launch all if accession not specified
-	    List<WorkflowRun> scheduledWorkflows = this.metadata
-		    .getWorkflowRunsByStatus("submitted");
-
-	    Log.stdout("Number of submitted workflows: "
-		    + scheduledWorkflows.size());
-
-	    for (WorkflowRun wr : scheduledWorkflows) {                 
-		Log.stdout("Working Run: " + wr.getSwAccession());
-                
-		if (scheduledAccessions.isEmpty() || (scheduledAccessions.size() > 0 && scheduledAccessions
-				.contains(wr.getSwAccession().toString()))) {
-                    // three conditions are
-                    // 1) we match with the localhost matching the host parameter in the database
-                    boolean localMatch = !options.has(FORCE_HOST) && hostname.equals(wr.getHost());
-                    // 2) we match with the forcehost parameter with no parameters matching null in the database
-                    boolean forceHostNull = options.has(FORCE_HOST) && !options.hasArgument(FORCE_HOST) && wr.getHost() == null;
-                    // 3) we match with the forcehost parameter matching an actual value in the database
-                    boolean actualForceHostMatch = options.has(FORCE_HOST) && hostname.equals(wr.getHost());
-                    
-		    if (localMatch || forceHostNull || actualForceHostMatch) {
-			WorkflowRun wrWithWorkflow = this.metadata
-				.getWorkflowRunWithWorkflow(wr.getSwAccession()
-					.toString());
-			w.launchScheduledBundle(wrWithWorkflow.getWorkflow()
-				.getSwAccession().toString(), wr
-				.getSwAccession().toString(),
-				metadataWriteback, options.has("wait"));
-		    }
-		}
-	    }
-
+            launchScheduledWorkflows(w, metadataWriteback);
 	} else {
 	    Log.error("I don't understand the combination of arguments you gave!");
 	    Log.info(this.get_syntax());
@@ -364,8 +324,9 @@ public class WorkflowPlugin extends Plugin {
 	return ret;
     }
 
+    @Override
     public String get_description() {
-	return ("A plugin that lets you launch workflow bundles once you have installed them via the BundleManager.");
+	return "A plugin that lets you launch workflow bundles once you have installed them via the BundleManager.";
     }
 
     protected BasicWorkflow createWorkflow() {
@@ -374,50 +335,166 @@ public class WorkflowPlugin extends Plugin {
     
     @Override
     public ReturnValue do_run() {
+        ReturnValue oldReturnValue = null;
         // ensure that scheduling is done in conjunction with a host
-        if (options.has(HOST) && !options.has(SCHEDULE)){
-            ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
-            return ret;
-        }
-        
-        // this needs cleanup, but if we want to schedule just defer to the old launcher
-        if (options.has(SCHEDULE)){
-            return do_old_run();
-        }
-        boolean newLauncherRequired = true;
-        try{
-            newLauncherRequired = determineLauncher();
-        } catch(Exception e){
-            // this is ugly, clean this up during integration test work
+        if (options.has(SCHEDULE)) {
+            // this needs cleanup, but if we want to schedule just defer to the old launcher
+            oldReturnValue = doOldRun();
+            // we also need to handle scheduled runs that are relevant to the new launcher            
+        } else if ((options.has("bundle") || options
+                .has("provisioned-bundle-dir"))
+                && options.has("workflow")
+                && options.has("version") && options.has("ini-files")) {
+            ret = launchSingleWorkflow();
+        } else {
             Log.error("I don't understand the combination of arguments you gave!");
-	    Log.info(this.get_syntax());
-	    ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
-            return ret;
-        }
-        if (!newLauncherRequired) {
-        	return do_old_run();
-/*            Plugin oldLauncher = new WorkflowPlugin();
-            oldLauncher.setParams(Arrays.asList(params));
-            oldLauncher.parse_parameters();
-            oldLauncher.init();
-            ReturnValue oldret = oldLauncher.do_run();
-            return oldret;*/
+            Log.info(this.get_syntax());
+            ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
         }
 
+        if (oldReturnValue.getReturnValue() != ReturnValue.SUCCESS){
+            ret = oldReturnValue;
+        }
+        return ret;
 
-        AbstractWorkflowDataModel dataModel;
+    }
+
+    public static AbstractWorkflowEngine getWorkflowEngine(AbstractWorkflowDataModel dataModel) {
+        AbstractWorkflowEngine wfEngine = null;
+        String engine = dataModel.getWorkflow_engine();
+        if (engine == null || !engine.equals("oozie")) {
+            wfEngine = new PegasusWorkflowEngine();
+        } else {
+            wfEngine = new OozieWorkflowEngine(dataModel);
+        }
+        return wfEngine;
+    }
+
+    @Override
+    public ReturnValue parse_parameters() {
+        ReturnValue ret = super.parse_parameters();
+        if (options.has("help") || options.has("h") || options.has("?")) {
+            this.get_syntax();
+            ret.setExitStatus(ReturnValue.STDOUTERR);
+        }
+
+        return ret;
+    }
+
+    /**
+     * Processes a single workflow
+     * @return
+     * @throws NumberFormatException 
+     */
+    public ReturnValue launchSingleWorkflow() {
+        boolean newLauncherRequired = true;
         try {
-            final WorkflowDataModelFactory factory = new WorkflowDataModelFactory(options, config, params, metadata);
-            dataModel = factory.getWorkflowDataModel();
+            newLauncherRequired = WorkflowV2Utility.requiresNewLauncher(options);
         } catch (Exception e) {
+            // this is ugly, clean this up during integration test work
             Log.error("I don't understand the combination of arguments you gave!");
             Log.info(this.get_syntax());
             ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
             return ret;
         }
+        if (!newLauncherRequired) {
+            return doOldRun();
+        }
+        return launchNewWorkflow(options, config, params, metadata);
+    }
+
+    /**
+     * Check whether a particular workflow run is valid on this host
+     * @param wr
+     * @return 
+     */
+    private boolean isWorkflowRunValidByLocalhost(WorkflowRun wr) {
+        // three conditions are
+        // 1) we match with the localhost matching the host parameter in the database
+        final boolean localMatch = !options.has(FORCE_HOST) && hostname.equals(wr.getHost());
+        // 2) we match with the forcehost parameter with no parameters matching null in the database
+        final boolean forceHostNull = options.has(FORCE_HOST) && !options.hasArgument(FORCE_HOST) && wr.getHost() == null;
+        // 3) we match with the forcehost parameter matching an actual value in the database
+        final boolean actualForceHostMatch = options.has(FORCE_HOST) && hostname.equals(wr.getHost());
+        return localMatch || forceHostNull || actualForceHostMatch;
+    }
+
+    /**
+     * Grab valid scheduled workflows from the database and run them
+     * @param w
+     * @param metadataWriteback 
+     */
+    private void launchScheduledWorkflows(BasicWorkflow w, boolean metadataWriteback) {
+        // LEFT OFF HERE, not sure if the workflow will come back from the
+	// web service!?
+        
+        // then you are either launching all workflows scheduled in the DB
+        // workflow_run table or just particular ones
+        List<String> scheduledAccessions = (List<String>) options
+                .valuesOf("launch-scheduled");
+
+        // BIG ISSUE: HOW DO YOU GO FROM WORKFLOW_RUN BACK TO WORKFLOW VIA
+        // WEB SERVICE!?
+
+        // then need to loop over these and just launch those workflows or
+        // launch all if accession not specified
+        List<WorkflowRun> scheduledWorkflows = this.metadata
+                .getWorkflowRunsByStatus("submitted");
+
+        Log.stdout("Number of submitted workflows: "
+                + scheduledWorkflows.size());
+
+        for (WorkflowRun wr : scheduledWorkflows) {                 
+            Log.stdout("Working Run: " + wr.getSwAccession());
+            
+            if (scheduledAccessions.isEmpty() || (scheduledAccessions.size() > 0 && scheduledAccessions
+                            .contains(wr.getSwAccession().toString()))) {
+                
+                boolean validWorkflowRunByHost = isWorkflowRunValidByLocalhost(wr);
+                
+                if (validWorkflowRunByHost) {
+                    Log.stdout("Valid run by host check: " + wr.getSwAccession());
+                    WorkflowRun wrWithWorkflow = this.metadata
+                            .getWorkflowRunWithWorkflow(wr.getSwAccession()
+                                    .toString());
+                    boolean requiresNewLauncher = WorkflowV2Utility.requiresNewLauncher(wrWithWorkflow.getWorkflow());
+                    if (!requiresNewLauncher){
+                      w.launchScheduledBundle(wrWithWorkflow.getWorkflow()
+                            .getSwAccession().toString(), wr
+                            .getSwAccession().toString(),
+                            metadataWriteback, options.has("wait"));
+                    } else{
+                        this.launchNewWorkflow(options, config, params, metadata);
+                    }
+                } else{
+                    Log.stdout("Invalid run by host check: " + wr.getSwAccession());
+                }
+            }
+        }
+    }
+
+    /**
+     * Separating out the launching of a new workflow.
+     * This way, we can eventually refactor this to the Workflow object.
+     * @param options
+     * @param config
+     * @param params
+     * @param metadata
+     * @return 
+     */
+    public static ReturnValue launchNewWorkflow(OptionSet options, Map<String, String> config, String[] params, Metadata metadata) {
+        ReturnValue ret = new ReturnValue();
+        AbstractWorkflowDataModel dataModel;
+        try {
+            final WorkflowDataModelFactory factory = new WorkflowDataModelFactory(options, config, params, metadata);
+            dataModel = factory.getWorkflowDataModel();
+        } catch (Exception e) {
+            ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
+            return ret;
+        }
 
         // set up workflow engine
-        AbstractWorkflowEngine engine = this.getWorkflowEngine(dataModel);
+        AbstractWorkflowEngine engine = WorkflowPlugin.getWorkflowEngine(dataModel);
         if (options.has("status")) {
             Log.stdout("status: " + engine.getStatus((String) options.valueOf("status")));
             return new ReturnValue(ReturnValue.SUCCESS);
@@ -435,7 +512,7 @@ public class WorkflowPlugin extends Plugin {
         }
 
         int workflowrunId = Integer.parseInt(wra);
-        int workflowrunaccession = this.metadata.get_workflow_run_accession(workflowrunId);
+        int workflowrunaccession = metadata.get_workflow_run_accession(workflowrunId);
         //int workflowrun = this.metadata.get_workflow_run_id(workflowrunaccession);
 
         // figure out the status command
@@ -459,7 +536,7 @@ public class WorkflowPlugin extends Plugin {
         // need to link all the parents to this workflow run accession
         for (String parentLinkedToWR : parentsLinkedToWR) {
             try {
-                this.metadata.linkWorkflowRunAndParent(workflowrunId,
+                metadata.linkWorkflowRunAndParent(workflowrunId,
                         Integer.parseInt(parentLinkedToWR));
             } catch (Exception e) {
                 Log.error(e.getMessage());
@@ -480,7 +557,7 @@ public class WorkflowPlugin extends Plugin {
                     "", wr.getHost(), 0, 0,
                     retPegasus.getStderr(), retPegasus.getStdout(), engine.getClass().getSimpleName());
 
-            return (retPegasus);
+            return retPegasus;
         } else {
             metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                     dataModel.getTags().get("workflow_template"), "completed",
@@ -489,57 +566,5 @@ public class WorkflowPlugin extends Plugin {
                     retPegasus.getStderr(), retPegasus.getStdout(), engine.getClass().getSimpleName());
             return ret;
         }
-
-    }
-
-    private AbstractWorkflowEngine getWorkflowEngine(AbstractWorkflowDataModel dataModel) {
-        AbstractWorkflowEngine wfEngine = null;
-        String engine = dataModel.getWorkflow_engine();
-        if (engine == null || !engine.equals("oozie")) {
-            wfEngine = new PegasusWorkflowEngine();
-        } else {
-            wfEngine = new OozieWorkflowEngine(dataModel);
-        }
-        return wfEngine;
-    }
-
-    @Override
-    public ReturnValue parse_parameters() {
-        ReturnValue ret = super.parse_parameters();
-        if (options.has("help") || options.has("h") || options.has("?")) {
-            this.get_syntax();
-            ret.setExitStatus(ReturnValue.STDOUTERR);
-        }
-
-        return ret;
-    }
-
-    /**
-     *
-     * @return true iff we want to use the new launcher
-     */
-    private boolean determineLauncher() {
-        final String bundlePath = WorkflowV2Utility.determineRelativeBundlePath(options);
-        final File bundle = new File(bundlePath);
-        // determine whether we're really dealing with a new bundle or whether we should delegate to the old launcher
-        final Map<String, String> parseMetaInfo = WorkflowV2Utility.parseMetaInfo(bundle);
-        // if we specify workflow_class, workflow_template_path and the hints in the requirements we should be 
-        // able to determine which actual launcher to delegate to
-        // if we need a workflow_class, then we always use the new launcher
-        if (parseMetaInfo.containsKey(WorkflowV2Utility.WORKFLOW_CLASS)) {
-            /**
-             * continue onwards
-             */
-            return true;
-        } // if Oozie is required or a if ftl2 is a requirement, we use the new launcher
-        else if ((parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_ENGINE)!=null 
-        		&& parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_ENGINE).contains("Oozie")) || 
-        		(parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_TYPE)!=null &&
-        		parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_TYPE).contains("ftl2"))) {
-            // continue onwards */
-            return true;
-        }
-        // otherwise, we fall through to the old launcher
-        return false;
     }
 }
