@@ -333,7 +333,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 workflowParentAccessionsToRun = new HashSet<String>();
 
 
-                List<String> previousWorkflowRuns = new ArrayList<String>();
+                List<ReturnValue> previousWorkflowRuns = new ArrayList<ReturnValue>();
 
                 //for each grouping (e.g. sample), iterate through the files
                 List<ReturnValue> files = mappedFiles.get(key);
@@ -342,7 +342,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 //                    Log.debug(Header.WORKFLOW_SWA.getTitle() + ": WF accession is " + wfAcc);
                     // this sample has been run before
                     if (wfAcc != null && workflowAccessionsToCheck.contains(wfAcc)) {
-                        previousWorkflowRuns.add(file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
+                        previousWorkflowRuns.add(file);
                     }
 
                     //if there is no parent accessions, or if the parent accession is correct
@@ -386,14 +386,15 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     }
 
                     if (test || (!rerun && !forceRunAll)) {
-                        Log.stdout("Not launching:");
+                        Log.stdout("Not launching.");
                         Log.debug("test=" + test + " or (!rerun=" + !rerun + " and !forceRunAll=" + !forceRunAll + ")");
                         ret = do_summary();
                     } else if (launched++ < launchMax) {
                         //construct the INI and run it
-                        Log.stdout("Launching:");
+                        
                         ArrayList<String> runArgs = constructCommand();
                         PluginRunner.main(runArgs.toArray(new String[runArgs.size()]));
+                        Log.stdout("Launching.");
                         do_summary();
 
                     } else {
@@ -445,11 +446,18 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * any workflow so far, or if the filesToRun have different filepaths than
      * those that have been run before.
      */
-    public boolean rerunWorkflowRun(Collection<String> previousWorkflowRuns, Collection<String> filesToRun) {
+    public boolean rerunWorkflowRun(Collection<ReturnValue> previousWorkflowRuns, Collection<String> filesToRun) {
         boolean rerun = true;
-        for (String workflowRunAcc : previousWorkflowRuns) {
-            if (!compareWorkflowRunFiles(workflowRunAcc, filesToRun)) {
-                rerun = false;
+        for (ReturnValue workflowRun : previousWorkflowRuns) {
+            if (workflowAccession.equals(workflowRun.getAttribute(Header.WORKFLOW_SWA.getTitle()))) {
+                String workflowRunAcc = workflowRun.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle());
+                if (!compareWorkflowRunFiles(workflowRunAcc, filesToRun)) {
+                    rerun = false;
+                    break;
+                }
+            } else {
+                rerun=false;
+                break;
             }
         }
         return rerun;
