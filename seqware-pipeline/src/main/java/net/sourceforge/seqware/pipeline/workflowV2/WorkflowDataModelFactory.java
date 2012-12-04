@@ -81,6 +81,7 @@ public class WorkflowDataModelFactory {
                 return null;
             }
         }
+        Log.stdout("bundle for workflowdatamodel found");
 
         //check FTL exist?
         boolean workflow_java = true;
@@ -116,6 +117,7 @@ public class WorkflowDataModelFactory {
         } else {
             dataModel = new XmlWorkflowDataModel();
         }
+        Log.stdout("datamodel generated");
         //load metadata.xml
         dataModel.setTags(metaInfo);
         //set name, version in workflow
@@ -131,6 +133,7 @@ public class WorkflowDataModelFactory {
         dataModel.getEnv().setNetwork(metaInfo.get("network"));
         dataModel.getEnv().setMemory(metaInfo.get("memory"));
 
+        Log.stdout("loading ini files");
         //load ini config
         Map<String, String> configs = this.loadIniConfigs(workflowAccession, workflowRunAccession);
 
@@ -208,6 +211,7 @@ public class WorkflowDataModelFactory {
         }
         //set wait
         dataModel.setWait(this.options.has("wait"));
+        Log.stdout("returning datamodel");
         return dataModel;
     }
 
@@ -227,6 +231,7 @@ public class WorkflowDataModelFactory {
         // the map
 	HashMap<String, String> map = new HashMap<String, String>();
         if (workflowAccession != null) {
+            Log.stdout("loading ini files from DB");
             // TODO: this code is from BasicWorkflow, make a notice of that when refactoring
 
             // get the workflow run
@@ -263,7 +268,7 @@ public class WorkflowDataModelFactory {
             // via the DB rather than ini_file field
             map.putAll(MapTools.iniString2Map(wr.getIniFile()));
         } else {
-
+            Log.stdout("loading ini files from options");
 
             Map<String, String> ret = new HashMap<String, String>();
             //set conifg, pass the config files to Map<String,String>, also put the .settings to Map<String,String>
