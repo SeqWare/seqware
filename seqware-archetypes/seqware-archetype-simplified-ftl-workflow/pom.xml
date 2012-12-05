@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>seqware-archetype-ftl-workflow</artifactId>
+  <artifactId>seqware-archetype-simplified-ftl-workflow</artifactId>
   <packaging>maven-archetype</packaging>
 
-  <name>seqware-archetype-ftl-workflow</name>
+  <name>seqware-archetype-simplified-ftl-workflow</name>
   <description>SeqWare FTL workflow archetype</description>
 
     <parent> 
