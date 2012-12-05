@@ -1671,6 +1671,7 @@ public class MetadataDB extends Metadata {
         wr.setHost(rs.getString("host"));
         wr.setCurrentWorkingDir(rs.getString("current_working_dir"));
         wr.setCreateTimestamp(rs.getDate("create_tstmp"));
+        // FIXME: need to update with workflow engine etc
         results.add(wr);
       }
     } catch (SQLException e) {
