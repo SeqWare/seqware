@@ -94,12 +94,15 @@ public class WorkflowDataModelFactory {
         AbstractWorkflowDataModel dataModel = null;
         Class<?> clazz = null;
         if (workflow_java) {
-            String clazzPath = metaInfo.get("classes");
-            Log.stdout("looking for classes at " + clazzPath);
-            Log.info("CLASSPATH: " + clazzPath);
-            // get user defined classes
+//            String clazzPath = metaInfo.get("classes");
+//            Log.stdout("looking for classes at " + clazzPath);
+//            Log.info("CLASSPATH: " + clazzPath);
+//            // get user defined classes
+            String classpath = metaInfo.get("workflow_class");
+            Log.stdout("Attempting to instantiate " + classpath);
             WorkflowClassFinder finder = new WorkflowClassFinder();
-            clazz = finder.findFirstWorkflowClass(clazzPath);
+            clazz = finder.findFirstWorkflowClass(classpath);
+            
             if (null != clazz) {
                 Log.debug("using java object");
                 try {
@@ -115,7 +118,7 @@ public class WorkflowDataModelFactory {
                     Log.error(ex, ex);
                 }
             }else{
-                Log.stdout("failed looking for classes at " + clazzPath);
+                Log.stdout("failed looking for classes at " + classpath);
             }
         } else {
             dataModel = new XmlWorkflowDataModel();
