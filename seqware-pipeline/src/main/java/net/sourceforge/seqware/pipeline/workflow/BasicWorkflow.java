@@ -746,7 +746,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * @param workflowMetadata
      * @return
      */
-    public static WorkflowInfo parseWorkflowMetadata(Map<String, String> m) {
+    private WorkflowInfo parseWorkflowMetadata(Map<String, String> m) {
 	WorkflowInfo wi = new WorkflowInfo();
 	wi.setCommand(m.get("cmd"));
 	wi.setName(m.get("name"));
