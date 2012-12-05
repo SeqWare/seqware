@@ -45,6 +45,16 @@ public class WorkflowDataModelFactory {
     }
 
 
+    /**
+     * a simple method to replace the ${workflow_bundle_dir} variable
+     * (copied from BasicWorkflow)
+     * @param input
+     * @param wbd
+     * @return
+     */
+    private String replaceWBD(String input, String wbd) {
+	return (input.replaceAll("\\$\\{workflow_bundle_dir\\}", wbd));
+    }
 
     /**
      * load metadata.xml, if FTL, parse the FTL to XML, and translate it to Java
@@ -63,11 +73,12 @@ public class WorkflowDataModelFactory {
             // this execution path is hacked in for running from the database and can be refactored into BasicWorkflow
             metaInfo = this.metadata.get_workflow_info(workflowAccession);
             WorkflowInfo wi = BasicWorkflow.parseWorkflowMetadata(config);
-            if (BasicWorkflow.provisionBundleAndUpdateWorkflowInfo(wi, this.metadata, this.config).getExitStatus() != ReturnValue.SUCCESS) {
-               Log.error("ERROR: Cannot provision bundle");
-               return null;
-            }
             bundlePath = wi.getWorkflowDir();
+            //looking at path  
+            Log.stdout("new bundle should be at " + wi.getWorkflowDir());
+            // doing substituion for workflow_class
+            wi.setWorkflowClass(replaceWBD(wi.getWorkflowClass(),bundlePath));
+            Log.stdout("workflow class changed to " + wi.getWorkflowClass());   
         } else {
             Log.stdout("factory attempting to find bundle from options");
             bundlePath = WorkflowV2Utility.determineRelativeBundlePath(options);
