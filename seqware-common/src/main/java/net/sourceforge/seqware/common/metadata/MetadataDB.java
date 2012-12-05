@@ -32,6 +32,7 @@ import net.sourceforge.seqware.common.model.SequencerRunAttribute;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.model.StudyType;
+import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -1969,6 +1970,11 @@ public class MetadataDB extends Metadata {
   public String getWorkflowRunReportStdOut(int workflowRunSWID) {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
+
+    @Override
+    public Workflow getWorkflow(int workflowAccession) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
   
   
 }

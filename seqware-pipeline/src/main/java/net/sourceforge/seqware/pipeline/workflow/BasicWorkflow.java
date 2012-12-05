@@ -755,11 +755,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	wi.setConfigPath(m.get("base_ini_file"));
 	wi.setWorkflowDir(m.get("current_working_dir"));
 	wi.setTemplatePath(m.get("workflow_template"));
-	try{
-            wi.setWorkflowAccession(Integer.parseInt(m.get("workflow_accession")));
-        } catch(NumberFormatException e){
-            Log.info("Unable to format workflow_accession '"+m.get("workflow_accession")+"' when parsing metadata");
-        }
+        wi.setWorkflowAccession(Integer.parseInt(m.get("workflow_accession")));
 	wi.setPermBundleLocation(m.get("permanent_bundle_location"));
         wi.setWorkflowClass(m.get("workflow_class"));
         wi.setWorkflowEngine(m.get("workflow_engine"));

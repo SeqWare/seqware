@@ -64,46 +64,37 @@ public class WorkflowDataModelFactory {
      * @return
      */
     public AbstractWorkflowDataModel getWorkflowDataModel(Integer workflowAccession, Integer workflowRunAccession) {
-        assert(workflowAccession == null && workflowRunAccession == null || workflowAccession != null && workflowRunAccession != null);
-        String bundlePath = null;        
+        String bundlePath = null;
         Map<String, String> metaInfo = null;
-        Log.stdout("factory attempting to find bundle");
+        Log.info("factory attempting to find bundle");
         if (workflowAccession != null) {
-            Log.stdout("factory attempting to find bundle from DB");
+            Log.info("factory attempting to find bundle from DB");
             // this execution path is hacked in for running from the database and can be refactored into BasicWorkflow
             metaInfo = this.metadata.get_workflow_info(workflowAccession);
             //we've found out the bundle location as of this point
             //we need to grab the current_working_dir out
             //use it to follow the same method determining a bundle path like below, the WorkflowV2Utility.parseMetaInfo does the substitution instead of BasicWorkflow in
             //Yong's code
-            
-            
-//            WorkflowInfo wi = BasicWorkflow.parseWorkflowMetadata(metaInfo);
-//            bundlePath = wi.getWorkflowDir();
-//            //looking at path  
-//            Log.stdout("new bundle should be at " + wi.getWorkflowDir());
-//            // doing substituion for workflow_class
-//            wi.setWorkflowClass(replaceWBD(wi.getWorkflowClass(),bundlePath));
-//            Log.stdout("workflow class changed to " + wi.getWorkflowClass());   
+            bundlePath = metaInfo.get("current_working_dir");
         } else {
-            Log.stdout("factory attempting to find bundle from options");
+            Log.info("factory attempting to find bundle from options");
             bundlePath = WorkflowV2Utility.determineRelativeBundlePath(options);
-            File bundle = new File(bundlePath);
-            //change to absolute path
-            bundlePath = bundle.getAbsolutePath();
-            Log.info("Bundle Path: " + bundlePath);
-            if (bundle == null || !bundle.exists()) {
-                Log.error("ERROR: Bundle is null or doesn't exist! The bundle must be either a zip file or a directory structure.");
-                return null;
-            }
-
-            metaInfo = WorkflowV2Utility.parseMetaInfo(bundle);
-            if (metaInfo == null) {
-                Log.error("ERROR: Bundle structure is incorrect, unable to parse metadata.");
-                return null;
-            }
         }
-        Log.stdout("bundle for workflowdatamodel found");
+        File bundle = new File(bundlePath);
+        //change to absolute path
+        bundlePath = bundle.getAbsolutePath();
+        Log.info("Bundle Path: " + bundlePath);
+        if (bundle == null || !bundle.exists()) {
+            Log.error("ERROR: Bundle is null or doesn't exist! The bundle must be either a zip file or a directory structure.");
+            return null;
+        }
+
+        metaInfo = WorkflowV2Utility.parseMetaInfo(bundle);
+        if (metaInfo == null) {
+            Log.error("ERROR: Bundle structure is incorrect, unable to parse metadata.");
+            return null;
+        }
+        Log.info("bundle for workflowdatamodel found");
 
         //check FTL exist?
         boolean workflow_java = true;
@@ -145,7 +136,7 @@ public class WorkflowDataModelFactory {
         } else {
             dataModel = new XmlWorkflowDataModel();
         }
-        Log.stdout("datamodel generated");
+        Log.info("datamodel generated");
         //load metadata.xml
         dataModel.setTags(metaInfo);
         //set name, version in workflow
@@ -161,7 +152,7 @@ public class WorkflowDataModelFactory {
         dataModel.getEnv().setNetwork(metaInfo.get("network"));
         dataModel.getEnv().setMemory(metaInfo.get("memory"));
 
-        Log.stdout("loading ini files");
+        Log.info("loading ini files");
         //load ini config
         Map<String, String> configs = this.loadIniConfigs(workflowAccession, workflowRunAccession);
 
@@ -203,6 +194,10 @@ public class WorkflowDataModelFactory {
             int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession_options);
             //configs.put("workflow-run-accession", ""+workflowrunaccession);
             dataModel.setWorkflow_run_accession(String.valueOf(workflowrunaccession));
+        } else if (options.has("status") == false && workflowAccession != null){
+            int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession);
+            //configs.put("workflow-run-accession", ""+workflowrunaccession);
+            dataModel.setWorkflow_run_accession(String.valueOf(workflowrunaccession));
         }
         dataModel.setConfigs(configs);
 
@@ -239,7 +234,7 @@ public class WorkflowDataModelFactory {
         }
         //set wait
         dataModel.setWait(this.options.has("wait"));
-        Log.stdout("returning datamodel");
+        Log.info("returning datamodel");
         return dataModel;
     }
 
@@ -258,8 +253,8 @@ public class WorkflowDataModelFactory {
     private Map<String, String> loadIniConfigs(Integer workflowAccession, Integer workflowRunAccession) {
         // the map
 	HashMap<String, String> map = new HashMap<String, String>();
-        if (workflowAccession != null) {
-            Log.stdout("loading ini files from DB");
+        if (workflowRunAccession != null) {
+            Log.info("loading ini files from DB");
             // TODO: this code is from BasicWorkflow, make a notice of that when refactoring
 
             // get the workflow run
@@ -296,7 +291,7 @@ public class WorkflowDataModelFactory {
             // via the DB rather than ini_file field
             map.putAll(MapTools.iniString2Map(wr.getIniFile()));
         } else {
-            Log.stdout("loading ini files from options");
+            Log.info("loading ini files from options");
 
             Map<String, String> ret = new HashMap<String, String>();
             //set conifg, pass the config files to Map<String,String>, also put the .settings to Map<String,String>
