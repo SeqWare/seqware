@@ -50,13 +50,16 @@ public class WorkflowClassFinder {
 
 	/**
 	 * find the first .class in the clazzPath
+         * 
+         * This has been modified to locate a specific class
+         * 
 	 * @param clazzPath
 	 * @return
 	 */
 	public Class<?> findFirstWorkflowClass(String clazzPath) {
 
 		String candidateClassesLocationPattern = "file:" + 
-			clazzPath + "**" + FOLDERS_SEPARATOR_AS_STRING + "*.class";
+			clazzPath /*+ "**" + FOLDERS_SEPARATOR_AS_STRING + "*.class"*/;
 		Resource[] resources = null;
 
 		try {

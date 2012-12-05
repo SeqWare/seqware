@@ -127,22 +127,41 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * lets you run workflows on a different host from where this command line
      * tool is run but requires an external process to launch workflows that
      * have been scheduled.
+     *
+     * @param scheduledHost the value of scheduledHost
      */
+    
     public ReturnValue scheduleInstalledBundle(String workflowAccession,
 	    String workflowRunAccession, ArrayList<String> iniFiles,
 	    boolean metadataWriteback, ArrayList<String> parentAccessions,
 	    ArrayList<String> parentsLinkedToWR, boolean wait,
 	    List<String> cmdLineOptions) {
 
-	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+	return scheduleInstalledBundle(workflowAccession, workflowRunAccession, iniFiles, metadataWriteback, parentAccessions, parentsLinkedToWR, wait, cmdLineOptions, null);
+    }
 
-	Map<String, String> workflowMetadata = this.metadata
-		.get_workflow_info(Integer.parseInt(workflowAccession));
-	WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
-	scheduleWorkflow(wi, workflowRunAccession, iniFiles, metadataWriteback,
-		parentAccessions, parentsLinkedToWR, wait, cmdLineOptions);
+    /**
+     * {@inheritDoc}
+     *
+     * This method just needs a sw_accession value from the workflow table and
+     * an ini file(s) in order to schedule a workflow. All needed info is pulled
+     * from the workflow table which was populated when the workflow was
+     * installed. Keep in mind this does not actually trigger anything, it just
+     * schedules the workflow to run by adding to the workflow_run table. This
+     * lets you run workflows on a different host from where this command line
+     * tool is run but requires an external process to launch workflows that
+     * have been scheduled.
+     */
+    public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession, ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, String scheduledHost) {
+        ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
-	return (ret);
+        Map<String, String> workflowMetadata = this.metadata
+                .get_workflow_info(Integer.parseInt(workflowAccession));
+        WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
+        scheduleWorkflow(wi, workflowRunAccession, iniFiles, metadataWriteback,
+                parentAccessions, parentsLinkedToWR, wait, cmdLineOptions, scheduledHost);
+
+        return (ret);
     }
 
     /**
@@ -267,7 +286,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	// get the workflow run
 	WorkflowRun wr = this.metadata
 		.getWorkflowRunWithWorkflow(workflowRunAccession);
-
+        
 	// the map
 	HashMap<String, String> map = new HashMap<String, String>();
 
@@ -592,11 +611,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	return (ret);
     }
 
-    private ReturnValue scheduleWorkflow(WorkflowInfo wi,
-	    String workflowRunAccession, ArrayList<String> iniFiles,
-	    boolean metadataWriteback, ArrayList<String> parentAccessions,
-	    ArrayList<String> parentsLinkedToWR, boolean wait,
-	    List<String> cmdLineOptions) {
+    private ReturnValue scheduleWorkflow(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, String scheduledHost) {
 
 	// keep this id handy
 	int workflowRunId = 0;
@@ -712,7 +727,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
 	    this.metadata.update_workflow_run(workflowRunId, wi.getCommand(),
 		    wi.getTemplatePath(), "submitted", null,
-		    wi.getWorkflowDir(), null, mapBuffer.toString(), null, 0,
+		    wi.getWorkflowDir(), null, mapBuffer.toString(), scheduledHost, 0,
 		    0, null, null, null);
 
 	} else {
@@ -731,7 +746,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * @param workflowMetadata
      * @return
      */
-    private WorkflowInfo parseWorkflowMetadata(Map<String, String> m) {
+    public static WorkflowInfo parseWorkflowMetadata(Map<String, String> m) {
 	WorkflowInfo wi = new WorkflowInfo();
 	wi.setCommand(m.get("cmd"));
 	wi.setName(m.get("name"));
@@ -740,8 +755,15 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	wi.setConfigPath(m.get("base_ini_file"));
 	wi.setWorkflowDir(m.get("current_working_dir"));
 	wi.setTemplatePath(m.get("workflow_template"));
-	wi.setWorkflowAccession(Integer.parseInt(m.get("workflow_accession")));
+	try{
+            wi.setWorkflowAccession(Integer.parseInt(m.get("workflow_accession")));
+        } catch(NumberFormatException e){
+            Log.info("Unable to format workflow_accession '"+m.get("workflow_accession")+"' when parsing metadata");
+        }
 	wi.setPermBundleLocation(m.get("permanent_bundle_location"));
+        wi.setWorkflowClass(m.get("workflow_class"));
+        wi.setWorkflowEngine(m.get("workflow_engine"));
+        wi.setWorkflowType(m.get("workflow_type"));
 	return (wi);
     }
 

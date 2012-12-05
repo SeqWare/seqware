@@ -853,6 +853,9 @@ public class MetadataWS extends Metadata {
       map.put("update_tstmp", workflow.getUpdateTimestamp().toString());
       map.put("workflow_accession", workflow.getSwAccession().toString());
       map.put("permanent_bundle_location", workflow.getPermanentBundleLocation());
+      map.put("workflow_engine", workflow.getWorkflowEngine());
+      map.put("workflow_type", workflow.getWorkflowType());
+      map.put("workflow_class", workflow.getWorkflowClass());
 
     } catch (Exception e) {
       e.printStackTrace();
