@@ -77,6 +77,9 @@ should be almost everything you need to be build more complex workflows.
     <profile namespace="globus" key="count">1</profile>
     <profile namespace="globus" key="maxmemory">2000</profile>
 
+    <!-- Prejob to make output directory -->
+    <@requires_dir "${data_dir}"/>
+
   </job>
 
   <!-- HelloWorld job, just calls a simple script. -->
@@ -95,9 +98,6 @@ should be almost everything you need to be build more complex workflows.
     <profile namespace="globus" key="jobtype">condor</profile>
     <profile namespace="globus" key="count">1</profile>
     <profile namespace="globus" key="maxmemory">2000</profile>
-
-    <!-- Prejob to make output directory -->
-    <@requires_dir "${data_dir}"/>
 
   </job>
 
