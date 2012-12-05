@@ -182,6 +182,9 @@ public class WorkflowStatusChecker extends Plugin {
         if (statusDir != null && !FileTools.isFileOwner(statusDir)) {
           userMatch = false;
           Log.info("You don't own the status directory: "+wr.getStatusCmd());
+        } else if (statusDir == null) {
+          userMatch = false;
+          Log.info("The status directory can't be parsed!: "+wr.getStatusCmd());
         }
 
         if (hostMatch && userMatch && workflowRunAccessionMatch && workflowAccessionMatch) {
@@ -263,9 +266,14 @@ public class WorkflowStatusChecker extends Plugin {
   }
   
   private String findStatusDir(String statusCmd) {
+   
+    String statusDir = null;
+    if (statusCmd == null || "".equals(statusCmd)) {
+      return(statusDir);
+    }
     Pattern p = Pattern.compile("pegasus-status -l (\\S+)");
     Matcher m = p.matcher(statusCmd);
-    String statusDir = null;
+    
     if (m.find()) {
       statusDir = m.group(1);
     }
