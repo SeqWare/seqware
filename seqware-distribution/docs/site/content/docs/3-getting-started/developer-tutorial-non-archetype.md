@@ -19,9 +19,6 @@ By the end of these tutorials you will:
 * generate a report on the outputs of your workflows in Pipeline and Portal
 * be prepared to move on to more detailed documentation for each sub-project
 
-
-<p class="warning"><strong>WARNING:</strong>When these directions are updated to include Maven archetypes.  The traditional maven archetypes do not mark items in the ${workflow_bundle_dir}/bin as executable.  This will cause workflows to immediatly fail and you have to "chmod" the binaries in the workflow bundles created with "mvn install". For example "chmod -R a+x Workflow_Bundle_simple-legacy-ftl-workflow/1.0-SNAPSHOT/bin/*".</p>
-
 ## First Steps
 
 Please launch your local VM in VirtualBox and login as user <kbd>seqware</kbd>, password <kbd>seqware</kbd> at this time. Click on the "SeqWare Directory" link on the desktop which will open a terminal to the location where we installed the SeqWare tools. 
