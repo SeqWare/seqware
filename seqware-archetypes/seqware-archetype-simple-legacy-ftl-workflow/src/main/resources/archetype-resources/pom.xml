@@ -185,6 +185,38 @@
                   </goals>
               </execution>
               <execution>
+                  <id>chmod-globus</id>
+                  <phase> install </phase>
+                  <configuration>
+                      <target>
+                          <chmod perm="555">
+                              <fileset dir="${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin/globus">
+                                  <filename name="**/*"/>
+                              </fileset>                  
+                          </chmod>
+                      </target>
+                  </configuration>
+                  <goals>
+                      <goal>run</goal>
+                  </goals>
+              </execution>
+              <execution>
+                  <id>chmod-gnu</id>
+                  <phase> install </phase>
+                  <configuration>
+                      <target>
+                          <chmod perm="555">
+                              <fileset dir="${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin/gnu-coreutils-5.67">
+                                  <filename name="**/*"/>
+                              </fileset>                  
+                          </chmod>
+                      </target>
+                  </configuration>
+                  <goals>
+                      <goal>run</goal>
+                  </goals>
+              </execution>
+              <execution>
                   <id>chmod-perl</id>
                   <phase> install </phase>
                   <configuration>
