@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import joptsimple.OptionSet;
+import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.util.Log;
 import org.apache.commons.io.FileUtils;
 import org.jdom.Document;
@@ -30,7 +31,9 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 /**
- * Utility methods that have been refactored out
+ * Utility methods that have been refactored out.
+ * These can hopefully be placed eventually in something like Workflow so that they 
+ * can be re-used. 
  *
  * @author dyuen
  */
@@ -157,5 +160,41 @@ public class WorkflowV2Utility {
             bundlePath = (String) options.valueOf("provisioned-bundle-dir");
         }
         return bundlePath;
+    }
+    
+    public static boolean requiresNewLauncher(Workflow workflow){
+        String workflowClass = workflow.getWorkflowClass();
+        String workflowEngine = workflow.getWorkflowEngine();
+        String workflowType = workflow.getWorkflowType();
+        return requiresNewLauncher(workflowClass, workflowEngine, workflowType);
+    }
+    
+    public static boolean requiresNewLauncher(String workflowClass, String workflowEngine, String workflowType){
+         // if we specify workflow_class, workflow_template_path and the hints in the requirements we should be 
+        // able to determine which actual launcher to delegate to
+        // if we need a workflow_class, then we always use the new launcher
+        if (workflowClass != null) {
+            Log.stdout("requiresNewLauncher - byClass " + workflowClass);
+            return true;
+        } // if Oozie is required or a if ftl2 is a requirement, we use the new launcher
+        else if ((workflowEngine!=null && workflowEngine.contains("Oozie") && !workflowEngine.contains("Pegasus")) || (workflowType !=null && workflowType.contains("ftl2"))) {
+            Log.stdout("requiresNewLauncher - byEngine or Type " + workflowEngine + " " + workflowType);
+            return true;
+        }
+        Log.stdout("requiresNewLauncher - fall-through");
+        // otherwise, we fall through to the old launcher
+        return false;
+    }
+    
+    public static boolean requiresNewLauncher(OptionSet options) {
+        final String bundlePath = WorkflowV2Utility.determineRelativeBundlePath(options);
+        final File bundle = new File(bundlePath);
+        // determine whether we're really dealing with a new bundle or whether we should delegate to the old launcher
+        final Map<String, String> parseMetaInfo = WorkflowV2Utility.parseMetaInfo(bundle);
+        
+        String workflowClass = parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_CLASS);
+        String workflowEngine = parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_ENGINE);
+        String workflowType = parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_TYPE);
+        return requiresNewLauncher(workflowClass, workflowEngine, workflowType); 
     }
 }
