@@ -887,6 +887,20 @@ public class MetadataWS extends Metadata {
     return accession;
 
   }
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Workflow getWorkflow(int workflowAccession) {
+    Workflow wf = null;
+    try {
+      wf = ll.findWorkflow("/" + Integer.toString(workflowAccession));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return (wf);
+  }
 
   /**
    * {@inheritDoc}

@@ -46,6 +46,7 @@ public class WorkflowPlugin extends Plugin {
     public static final String HOST = "host";
     public static final String SCHEDULE = "schedule";
     public static final String LAUNCH_SCHEDULED = "launch-scheduled";
+    public static final String WAIT = "wait";
 
     protected ReturnValue ret = new ReturnValue();
     // NOTE: this is shared with WorkflowStatusChecker so only one can run at a
@@ -105,7 +106,7 @@ public class WorkflowPlugin extends Plugin {
 		Arrays.asList("no-meta-db", "no-metadata"),
 		"Optional: a flag that prevents metadata writeback (which is done by default) by the WorkflowLauncher and that is subsequently passed to the called workflow which can use it to determine if they should write metadata at runtime on the cluster.");
 	parser.acceptsAll(
-		Arrays.asList("wait"),
+		Arrays.asList(WAIT),
 		"Optional: a flag that indicates the launcher should launch a workflow then monitor it's progress, waiting for it to exit, and returning 0 if everything is OK, non-zero if there are errors. This is useful for testing or if something else is calling the WorkflowLauncher. Without this option the launcher will immediately return with a 0 return value regardless if the workflow ultimately works.");
 	parser.acceptsAll(Arrays.asList("metadata", "m"), 
                 "Specify the path to the metadata.xml file.").withRequiredArg();
@@ -149,7 +150,7 @@ public class WorkflowPlugin extends Plugin {
             this.hostname = localhost.hostname;
         }
         
-        if (options.has(HOST) && !options.has(SCHEDULE)) {
+        if (options.has(HOST) && (!options.has(SCHEDULE) && !options.has(WAIT))) {
             ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
             return ret;
         }
@@ -263,7 +264,7 @@ public class WorkflowPlugin extends Plugin {
 			(String) options.valueOf("workflow-accession"),
 			(String) options.valueOf("workflow-run-accession"),
 			iniFiles, metadataWriteback, parentAccessions,
-			parentsLinkedToWR, options.has("wait"), nonOptions);
+			parentsLinkedToWR, options.has(WAIT), nonOptions);
 	    }
 
 	} else if ((options.has("bundle") || options
@@ -290,7 +291,7 @@ public class WorkflowPlugin extends Plugin {
 	    // since this is not supported for bundle running!
 	    ret = w.launchBundle(workflow, version, metadataFile, bundlePath,
 		    iniFiles, false, new ArrayList<String>(),
-		    new ArrayList<String>(), options.has("wait"), nonOptions);
+		    new ArrayList<String>(), options.has(WAIT), nonOptions);
 
 	} else if (options.has(LAUNCH_SCHEDULED)) {
 	    // check to see if this code is already running, if so exit
@@ -342,11 +343,15 @@ public class WorkflowPlugin extends Plugin {
             // this needs cleanup, but if we want to schedule just defer to the old launcher
             // we also need to handle scheduled runs that are relevant to the new launcher            
             oldReturnValue = doOldRun();
+        } else if (options.has("workflow-accession") && options.has("ini-files")) {
+           // then your running locally but taking info saved in the
+	   // workflow table from the DB
+           ret = launchSingleWorkflow(true);
         }  else if ((options.has("bundle") || options
                 .has("provisioned-bundle-dir"))
                 && options.has("workflow")
                 && options.has("version") && options.has("ini-files")) {
-            ret = launchSingleWorkflow();
+           ret = launchSingleWorkflow(false);
         } else {
             Log.error("I don't understand the combination of arguments you gave!");
             Log.info(this.get_syntax());
@@ -384,16 +389,25 @@ public class WorkflowPlugin extends Plugin {
 
     /**
      * Processes a single workflow
+     * @param readFromDB read bundle from the database
      * @return
      * @throws NumberFormatException 
      */
-    public ReturnValue launchSingleWorkflow() {
+    public ReturnValue launchSingleWorkflow(boolean readFromDB) {
         boolean newLauncherRequired = true;
         try {
-            newLauncherRequired = WorkflowV2Utility.requiresNewLauncher(options);
+            if (readFromDB) {
+                String valueOf = (String)options.valueOf("workflow-accession");
+                int workflowAccession = Integer.valueOf(valueOf);
+                net.sourceforge.seqware.common.model.Workflow workflow = this.metadata.getWorkflow(workflowAccession);
+                newLauncherRequired = WorkflowV2Utility.requiresNewLauncher(workflow);
+                return launchNewWorkflow(options, config, params, metadata, workflowAccession, null);
+            } else{
+                newLauncherRequired = WorkflowV2Utility.requiresNewLauncher(options);
+            }            
         } catch (Exception e) {
             // this is ugly, clean this up during integration test work
-            Log.error("I don't understand the combination of arguments you gave!");
+            Log.error("Error parsing provided bundle", e);
             Log.info(this.get_syntax());
             ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
             return ret;
@@ -464,7 +478,7 @@ public class WorkflowPlugin extends Plugin {
                       w.launchScheduledBundle(wrWithWorkflow.getWorkflow()
                             .getSwAccession().toString(), wr
                             .getSwAccession().toString(),
-                            metadataWriteback, options.has("wait"));
+                            metadataWriteback, options.has(WAIT));
                     } else{
                         Log.stdout("Launching via new launcher: " + wr.getSwAccession());
                         this.launchNewWorkflow(options, config, params, metadata, wr.getWorkflowAccession(), wr.getSwAccession());
@@ -487,7 +501,7 @@ public class WorkflowPlugin extends Plugin {
      * @return 
      */
     public static ReturnValue launchNewWorkflow(OptionSet options, Map<String, String> config, String[] params, Metadata metadata, Integer workflowAccession, Integer workflowRunAccession) {
-        Log.stdout("launching new workflow");
+        Log.info("launching new workflow");
         ReturnValue ret = new ReturnValue();
         AbstractWorkflowDataModel dataModel;
         try {
@@ -499,7 +513,7 @@ public class WorkflowPlugin extends Plugin {
             return ret;
         }
         
-        Log.stdout("constructed dataModel");
+        Log.info("constructed dataModel");
 
         // set up workflow engine
         AbstractWorkflowEngine engine = WorkflowPlugin.getWorkflowEngine(dataModel);
@@ -513,7 +527,7 @@ public class WorkflowPlugin extends Plugin {
             return retPegasus;
         }
         
-        Log.stdout("attempting metadata writeback");
+        Log.info("attempting metadata writeback");
         
         // metadataWriteback
         String wra = dataModel.getWorkflow_run_accession();
