@@ -72,13 +72,19 @@ public class WorkflowDataModelFactory {
             Log.stdout("factory attempting to find bundle from DB");
             // this execution path is hacked in for running from the database and can be refactored into BasicWorkflow
             metaInfo = this.metadata.get_workflow_info(workflowAccession);
-            WorkflowInfo wi = BasicWorkflow.parseWorkflowMetadata(config);
-            bundlePath = wi.getWorkflowDir();
-            //looking at path  
-            Log.stdout("new bundle should be at " + wi.getWorkflowDir());
-            // doing substituion for workflow_class
-            wi.setWorkflowClass(replaceWBD(wi.getWorkflowClass(),bundlePath));
-            Log.stdout("workflow class changed to " + wi.getWorkflowClass());   
+            //we've found out the bundle location as of this point
+            //we need to grab the current_working_dir out
+            //use it to follow the same method determining a bundle path like below, the WorkflowV2Utility.parseMetaInfo does the substitution instead of BasicWorkflow in
+            //Yong's code
+            
+            
+//            WorkflowInfo wi = BasicWorkflow.parseWorkflowMetadata(metaInfo);
+//            bundlePath = wi.getWorkflowDir();
+//            //looking at path  
+//            Log.stdout("new bundle should be at " + wi.getWorkflowDir());
+//            // doing substituion for workflow_class
+//            wi.setWorkflowClass(replaceWBD(wi.getWorkflowClass(),bundlePath));
+//            Log.stdout("workflow class changed to " + wi.getWorkflowClass());   
         } else {
             Log.stdout("factory attempting to find bundle from options");
             bundlePath = WorkflowV2Utility.determineRelativeBundlePath(options);
