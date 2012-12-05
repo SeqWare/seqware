@@ -232,6 +232,22 @@
                       <goal>run</goal>
                   </goals>
               </execution>
+              <execution>
+                  <id>chmod-script</id>
+                  <phase> install </phase>
+                  <configuration>
+                      <target>
+                          <chmod perm="555">
+                              <fileset dir="${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin">
+                                  <filename name="**/hello.sh"/>
+                              </fileset>                  
+                          </chmod>
+                      </target>
+                  </configuration>
+                  <goals>
+                      <goal>run</goal>
+                  </goals>
+              </execution>
           </executions>
       </plugin>
     </plugins>
