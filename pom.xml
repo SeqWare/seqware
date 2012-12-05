@@ -124,11 +124,11 @@
         <module>seqware-webservice-dto</module>
         <module>seqware-webservice</module>
         <module>seqware-portal</module>
-        <module>seqware-archetype-java-workflow</module>
-    	<module>seqware-archetype-ftl-workflow</module>
-		<module>seqware-archetypes/seqware-archetype-module</module>
-        <module>seqware-archetypes/seqware-archetype-workflow</module>
-        <module>seqware-archetypes/seqware-archetype-simple-workflow</module>
+        <module>seqware-archetypes/seqware-archetype-java-workflow</module>
+    	<module>seqware-archetypes/seqware-archetype-simplified-ftl-workflow</module>
+	<module>seqware-archetypes/seqware-archetype-module</module>
+        <module>seqware-archetypes/seqware-archetype-legacy-ftl-workflow</module>
+        <module>seqware-archetypes/seqware-archetype-simple-legacy-ftl-workflow</module>
         <module>seqware-distribution</module>
     </modules>
 

@@ -1,27 +1,25 @@
 package net.sourceforge.seqware.pipeline.workflowV2;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.SortedSet;
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
+import net.sourceforge.seqware.common.model.WorkflowParam;
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
+import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
+import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.StringUtils;
 import net.sourceforge.seqware.pipeline.workflowV2.model.XmlWorkflowDataModel;
-import org.apache.commons.io.FileUtils;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
 
 /**
  * a utils class for creating the AbstractWorkflowDataModel, by reading the
@@ -50,26 +48,40 @@ public class WorkflowDataModelFactory {
     /**
      * load metadata.xml, if FTL, parse the FTL to XML, and translate it to Java
      * based Object if Java, load the class.
-     *
+     * @param workflowAccession if this is present, we grab metadata information from 
+     * the database, not the options
      * @return
      */
-    public AbstractWorkflowDataModel getWorkflowDataModel() {
-        String bundlePath = WorkflowV2Utility.determineRelativeBundlePath(options);
-        File bundle = new File(bundlePath);
-        
-        //change to absolute path
-        bundlePath = bundle.getAbsolutePath();
-        Log.info("Bundle Path: " + bundlePath);
-        if (bundle == null || !bundle.exists()) {
-            Log.error("ERROR: Bundle is null or doesn't exist! The bundle must be either a zip file or a directory structure.");
-            return null;
-        }
+    public AbstractWorkflowDataModel getWorkflowDataModel(Integer workflowAccession, Integer workflowRunAccession) {
+        assert(workflowAccession == null && workflowRunAccession == null || workflowAccession != null && workflowRunAccession != null);
+        String bundlePath = null;        
+        Map<String, String> metaInfo = null;
+        Log.stdout("factory attempting to find bundle");
+        if (workflowAccession != null) {
+            Log.stdout("factory attempting to find bundle from DB");
+            // this execution path is hacked in for running from the database and can be refactored into BasicWorkflow
+            metaInfo = this.metadata.get_workflow_info(workflowAccession);
+            WorkflowInfo wi = BasicWorkflow.parseWorkflowMetadata(config);
+            bundlePath = wi.getWorkflowDir();
+        } else {
+            Log.stdout("factory attempting to find bundle from options");
+            bundlePath = WorkflowV2Utility.determineRelativeBundlePath(options);
+            File bundle = new File(bundlePath);
+            //change to absolute path
+            bundlePath = bundle.getAbsolutePath();
+            Log.info("Bundle Path: " + bundlePath);
+            if (bundle == null || !bundle.exists()) {
+                Log.error("ERROR: Bundle is null or doesn't exist! The bundle must be either a zip file or a directory structure.");
+                return null;
+            }
 
-        Map<String, String> metaInfo = WorkflowV2Utility.parseMetaInfo(bundle);
-        if (metaInfo == null){
-             Log.error("ERROR: Bundle structure is incorrect, unable to parse metadata.");
-             return null;
+            metaInfo = WorkflowV2Utility.parseMetaInfo(bundle);
+            if (metaInfo == null) {
+                Log.error("ERROR: Bundle structure is incorrect, unable to parse metadata.");
+                return null;
+            }
         }
+        Log.stdout("bundle for workflowdatamodel found");
 
         //check FTL exist?
         boolean workflow_java = true;
@@ -79,125 +91,134 @@ public class WorkflowDataModelFactory {
 
 
         //Java object or FTL
-        AbstractWorkflowDataModel ret = null;
+        AbstractWorkflowDataModel dataModel = null;
         Class<?> clazz = null;
         if (workflow_java) {
-            String clazzPath = metaInfo.get("classes");
-            Log.info("CLASSPATH: " + clazzPath);
-            // get user defined classes
+//            String clazzPath = metaInfo.get("classes");
+//            Log.stdout("looking for classes at " + clazzPath);
+//            Log.info("CLASSPATH: " + clazzPath);
+//            // get user defined classes
+            String classpath = metaInfo.get("workflow_class");
+            Log.stdout("Attempting to instantiate " + classpath);
             WorkflowClassFinder finder = new WorkflowClassFinder();
-            clazz = finder.findFirstWorkflowClass(clazzPath);
+            clazz = finder.findFirstWorkflowClass(classpath);
+            
             if (null != clazz) {
                 Log.debug("using java object");
                 try {
                     Object object = clazz.newInstance();
-                    ret = (AbstractWorkflowDataModel) object;
+                    dataModel = (AbstractWorkflowDataModel) object;
                 } catch (InstantiationException ex) {
-                    Log.error(ex);
+                    Log.error(ex, ex);
                 } catch (IllegalAccessException ex) {
-                    Log.error(ex);
+                    Log.error(ex, ex);
                 } catch (SecurityException ex) {
-                    Log.error(ex);
+                    Log.error(ex, ex);
                 } catch (IllegalArgumentException ex) {
-                    Log.error(ex);
+                    Log.error(ex, ex);
                 }
+            }else{
+                Log.stdout("failed looking for classes at " + classpath);
             }
         } else {
-            ret = new XmlWorkflowDataModel();
+            dataModel = new XmlWorkflowDataModel();
         }
+        Log.stdout("datamodel generated");
         //load metadata.xml
-        ret.setTags(metaInfo);
+        dataModel.setTags(metaInfo);
         //set name, version in workflow
-        ret.setName(metaInfo.get("name"));
-        ret.setVersion(metaInfo.get("workflow_version"));
-        ret.setBundle_version(metaInfo.get("bundle_version"));
-        ret.setSeqware_version(metaInfo.get("seqware_version"));
-        ret.setWorkflow_directory_name(metaInfo.get("workflow_directory_name"));
-        ret.setWorkflowBundleDir(bundlePath);
-        ret.setWorkflowBasedir(metaInfo.get("basedir"));
+        dataModel.setName(metaInfo.get("name"));
+        dataModel.setVersion(metaInfo.get("workflow_version"));
+        dataModel.setBundle_version(metaInfo.get("bundle_version"));
+        dataModel.setSeqware_version(metaInfo.get("seqware_version"));
+        dataModel.setWorkflow_directory_name(metaInfo.get("workflow_directory_name"));
+        dataModel.setWorkflowBundleDir(bundlePath);
+        dataModel.setWorkflowBasedir(metaInfo.get("basedir"));
         //set memory, network, compute to environment
-        ret.getEnv().setCompute(metaInfo.get("compute"));
-        ret.getEnv().setNetwork(metaInfo.get("network"));
-        ret.getEnv().setMemory(metaInfo.get("memory"));
+        dataModel.getEnv().setCompute(metaInfo.get("compute"));
+        dataModel.getEnv().setNetwork(metaInfo.get("network"));
+        dataModel.getEnv().setMemory(metaInfo.get("memory"));
 
+        Log.stdout("loading ini files");
         //load ini config
-        Map<String, String> configs = this.loadIniConfigs();
+        Map<String, String> configs = this.loadIniConfigs(workflowAccession, workflowRunAccession);
 
         //merge command line option with configs
-        this.mergeCmdOptions(ret);
+        this.mergeCmdOptions(dataModel);
         //merge version, and name ??? TODO 
 
         //set random, date, wait
         // magic variables always set
         Date date = new Date();
-        ret.setDate(date.toString());
+        dataModel.setDate(date.toString());
 
         //set random
         Random rand = new Random(System.currentTimeMillis());
         int randInt = rand.nextInt(100000000);
-        ret.setRandom("" + randInt);
+        dataModel.setRandom("" + randInt);
         //copy some properties from .settings to configs
-        ret.getEnv().setPegasusConfigDir(config.get("SW_PEGASUS_CONFIG_DIR"));
-        ret.getEnv().setDaxDir(config.get("SW_DAX_DIR"));
-        ret.getEnv().setSwCluster(config.get("SW_CLUSTER"));
-        ret.getEnv().setOOZIE_URL(config.get("OOZIE_URL"));
-        ret.getEnv().setOOZIE_APP_ROOT(config.get("OOZIE_APP_ROOT"));
-        ret.getEnv().setOOZIE_JOBTRACKER(config.get("OOZIE_JOBTRACKER"));
-        ret.getEnv().setOOZIE_NAMENODE(config.get("OOZIE_NAMENODE"));
-        ret.getEnv().setOOZIE_QUEUENAME(config.get("OOZIE_QUEUENAME"));
-        ret.getEnv().setHbase_master(config.get("HBASE.MASTER"));
-        ret.getEnv().setHbase_zookeeper_quorum(config.get("HBASE.ZOOKEEPER.QUORUM"));
-        ret.getEnv().setHbase_zookeeper_property_clientPort(config.get("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT"));
-        ret.getEnv().setMapred_job_tracker(config.get("MAPRED.JOB.TRACKER"));
-        ret.getEnv().setFs_default_name(config.get("FS.DEFAULT.NAME"));
-        ret.getEnv().setFs_defaultFS(config.get("FS.DEFAULTFS"));
-        ret.getEnv().setFs_hdfs_impl(config.get("FS.HDFS.IMPL"));
-        ret.getEnv().setOOZIE_WORK_DIR(config.get("OOZIE_WORK_DIR"));
-        ret.getEnv().setOOZIE_APP_PATH(config.get("OOZIE_APP_PATH"));
+        dataModel.getEnv().setPegasusConfigDir(config.get("SW_PEGASUS_CONFIG_DIR"));
+        dataModel.getEnv().setDaxDir(config.get("SW_DAX_DIR"));
+        dataModel.getEnv().setSwCluster(config.get("SW_CLUSTER"));
+        dataModel.getEnv().setOOZIE_URL(config.get("OOZIE_URL"));
+        dataModel.getEnv().setOOZIE_APP_ROOT(config.get("OOZIE_APP_ROOT"));
+        dataModel.getEnv().setOOZIE_JOBTRACKER(config.get("OOZIE_JOBTRACKER"));
+        dataModel.getEnv().setOOZIE_NAMENODE(config.get("OOZIE_NAMENODE"));
+        dataModel.getEnv().setOOZIE_QUEUENAME(config.get("OOZIE_QUEUENAME"));
+        dataModel.getEnv().setHbase_master(config.get("HBASE.MASTER"));
+        dataModel.getEnv().setHbase_zookeeper_quorum(config.get("HBASE.ZOOKEEPER.QUORUM"));
+        dataModel.getEnv().setHbase_zookeeper_property_clientPort(config.get("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT"));
+        dataModel.getEnv().setMapred_job_tracker(config.get("MAPRED.JOB.TRACKER"));
+        dataModel.getEnv().setFs_default_name(config.get("FS.DEFAULT.NAME"));
+        dataModel.getEnv().setFs_defaultFS(config.get("FS.DEFAULTFS"));
+        dataModel.getEnv().setFs_hdfs_impl(config.get("FS.HDFS.IMPL"));
+        dataModel.getEnv().setOOZIE_WORK_DIR(config.get("OOZIE_WORK_DIR"));
+        dataModel.getEnv().setOOZIE_APP_PATH(config.get("OOZIE_APP_PATH"));
 
         //get workflow-run-accession
         if (options.has("status") == false && options.has(("workflow-accession"))) {
-            int workflowAccession = Integer.parseInt((String) options.valueOf("workflow-accession"));
-            int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession);
+            int workflowAccession_options = Integer.parseInt((String) options.valueOf("workflow-accession"));
+            int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession_options);
             //configs.put("workflow-run-accession", ""+workflowrunaccession);
-            ret.setWorkflow_run_accession("" + workflowrunaccession);
+            dataModel.setWorkflow_run_accession(String.valueOf(workflowrunaccession));
         }
-        ret.setConfigs(configs);
+        dataModel.setConfigs(configs);
 
         //parse XML or Java Object for
         if (workflow_java) {
             try {
                 Method m = null;
                 m = clazz.getMethod("setupDirectory");
-                m.invoke(ret);
+                m.invoke(dataModel);
                 m = clazz.getMethod("setupFiles");
-                m.invoke(ret);
+                m.invoke(dataModel);
                 //handle the provisionedPath
-                //this.setupProvisionedPath(ret.getFiles());
+                //this.setupProvisionedPath(dataModel.getFiles());
                 m = clazz.getMethod("setupWorkflow");
-                m.invoke(ret);
+                m.invoke(dataModel);
                 m = clazz.getMethod("setupEnvironment");
-                m.invoke(ret);
+                m.invoke(dataModel);
                 m = clazz.getMethod("buildWorkflow");
-                m.invoke(ret);
+                m.invoke(dataModel);
             } catch (SecurityException e) {
-                e.printStackTrace();
+                Log.error(e);
             } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+                Log.error(e);
             } catch (IllegalArgumentException e) {
-                e.printStackTrace();
+                Log.error(e);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                Log.error(e);
             } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                Log.error(e);
             }
         } else {
             WorkflowXmlParser xmlParser = new WorkflowXmlParser();
-            xmlParser.parseXml(ret, metaInfo.get("workflow_template"));
+            xmlParser.parseXml(dataModel, metaInfo.get("workflow_template"));
         }
         //set wait
-        ret.setWait(this.options.has("wait"));
-        return ret;
+        dataModel.setWait(this.options.has("wait"));
+        Log.stdout("returning datamodel");
+        return dataModel;
     }
 
     private Map<String, String> resolveMap(Map<String, String> input) {
@@ -212,25 +233,67 @@ public class WorkflowDataModelFactory {
         return result;
     }
 
-    private Map<String, String> loadIniConfigs() {
-        Map<String, String> ret = new HashMap<String, String>();
-        //set conifg, pass the config files to Map<String,String>, also put the .settings to Map<String,String>
-        // ini-files
-        ArrayList<String> iniFiles = new ArrayList<String>();
-        if (options.has("ini-files")) {
-            List opts = options.valuesOf("ini-files");
-            for (Object opt : opts) {
-                String[] tokens = ((String) opt).split(",");
-                for (String t : tokens) {
-                    iniFiles.add(t);
+    private Map<String, String> loadIniConfigs(Integer workflowAccession, Integer workflowRunAccession) {
+        // the map
+	HashMap<String, String> map = new HashMap<String, String>();
+        if (workflowAccession != null) {
+            Log.stdout("loading ini files from DB");
+            // TODO: this code is from BasicWorkflow, make a notice of that when refactoring
+
+            // get the workflow run
+            WorkflowRun wr = this.metadata.getWorkflowRunWithWorkflow(workflowRunAccession.toString());
+            // iterate over all the generic default params
+            // these params are created when a workflow is installed
+            SortedSet<WorkflowParam> workflowParams = this.metadata
+                    .getWorkflowParams(workflowAccession.toString());
+            for (WorkflowParam param : workflowParams) {
+                map.put(param.getKey(), param.getValue());
+            }
+
+            // FIXME: this needs to be implemented otherwise portal submitted won't
+            // work!
+            // now iterate over the params specific for this workflow run
+            // this is where the SeqWare Portal will populate parameters for
+            // a scheduled workflow
+	/*
+             * workflowParams =
+             * this.metadata.getWorkflowRunParams(workflowRunAccession);
+             * for(WorkflowParam param : workflowParams) { map.put(param.getKey(),
+             * param.getValue()); }
+             */
+
+            // Workflow Runs that are scheduled by the web service don't populate
+            // their
+            // params into the workflow_run_params table but, instead, directly
+            // write
+            // to the ini field.
+            // FIXME: the web service should just use the same approach as the
+            // Portal
+            // and this will make it more robust to pass in the
+            // parent_processing_accession
+            // via the DB rather than ini_file field
+            map.putAll(MapTools.iniString2Map(wr.getIniFile()));
+        } else {
+            Log.stdout("loading ini files from options");
+
+            Map<String, String> ret = new HashMap<String, String>();
+            //set conifg, pass the config files to Map<String,String>, also put the .settings to Map<String,String>
+            // ini-files
+            ArrayList<String> iniFiles = new ArrayList<String>();
+            if (options.has("ini-files")) {
+                List opts = options.valuesOf("ini-files");
+                for (Object opt : opts) {
+                    String[] tokens = ((String) opt).split(",");
+                    for (String t : tokens) {
+                        iniFiles.add(t);
+                    }
                 }
             }
-        }
-        Map<String, String> map = new HashMap<String, String>();
-        for (String ini : iniFiles) {
-            Log.stdout("  INI FILE: " + ini);
-            if ((new File(ini)).exists()) {
-                MapTools.ini2Map(ini, map);
+            for (String ini : iniFiles) {
+                Log.stdout("  INI FILE: " + ini);
+                if ((new File(ini)).exists()) {
+                    MapTools.ini2Map(ini, map);
+                }
             }
         }
         // allow the command line options to override options in the map
@@ -239,7 +302,7 @@ public class WorkflowDataModelFactory {
         MapTools.cli2Map(this.params, map);
         MapTools.mapExpandVariables(map);
 
-        ret = this.resolveMap(map);
+        Map<String, String> ret = this.resolveMap(map);
         return ret;
     }
 
