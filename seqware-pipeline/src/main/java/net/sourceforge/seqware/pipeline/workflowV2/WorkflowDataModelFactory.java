@@ -14,6 +14,7 @@ import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
@@ -62,6 +63,10 @@ public class WorkflowDataModelFactory {
             // this execution path is hacked in for running from the database and can be refactored into BasicWorkflow
             metaInfo = this.metadata.get_workflow_info(workflowAccession);
             WorkflowInfo wi = BasicWorkflow.parseWorkflowMetadata(config);
+            if (BasicWorkflow.provisionBundleAndUpdateWorkflowInfo(wi, this.metadata, this.config).getExitStatus() != ReturnValue.SUCCESS) {
+               Log.error("ERROR: Cannot provision bundle");
+               return null;
+            }
             bundlePath = wi.getWorkflowDir();
         } else {
             Log.stdout("factory attempting to find bundle from options");
