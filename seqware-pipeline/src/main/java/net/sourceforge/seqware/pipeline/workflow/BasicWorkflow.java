@@ -379,7 +379,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	// and it will go through each field and update the
 	// ${workflow_bundle_dir} variable to be a real path (which
 	// makes some of the calls below to replaceWBD redundant but harmless
-	if (provisionBundleAndUpdateWorkflowInfo(wi, this.metadata, this.config).getExitStatus() != ReturnValue.SUCCESS) {
+	if (provisionBundleAndUpdateWorkflowInfo(wi).getExitStatus() != ReturnValue.SUCCESS) {
 	    ret.setExitStatus(ReturnValue.FAILURE);
 	    Log.error("Problem getting workflow bundle");
 	    return (ret);
@@ -788,7 +788,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * 
      * @param wi
      */
-    public static ReturnValue provisionBundleAndUpdateWorkflowInfo(WorkflowInfo wi, Metadata metadata, Map<String, String> config) {
+    private ReturnValue provisionBundleAndUpdateWorkflowInfo(WorkflowInfo wi) {
 
 	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -807,7 +807,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
 	    // find the perm loc
 	    String permLoc = wi.getPermBundleLocation();
-	    String newWorkflowBundleDir = getAndProvisionBundle(permLoc, metadata, config);
+	    String newWorkflowBundleDir = getAndProvisionBundle(permLoc);
 
 	    // if its null then something went wrong
 	    if (newWorkflowBundleDir == null) {
@@ -822,7 +822,6 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 		    newWorkflowBundleDir));
 	    wi.setTemplatePath(replaceWBD(wi.getTemplatePath(),
 		    newWorkflowBundleDir));
-
 	}
 
 	return (ret);
@@ -834,8 +833,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * @param permLoc
      * @return
      */
-    private static String getAndProvisionBundle(String permLoc, Metadata metadata, Map<String, String> config) {
-        // TODO  making this static sucks, but I think I need to do this temporarily
+    private String getAndProvisionBundle(String permLoc) {
 	String result = null;
 	Bundle bundle = new Bundle(metadata, config);
 	ReturnValue ret = null;
