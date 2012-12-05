@@ -379,7 +379,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	// and it will go through each field and update the
 	// ${workflow_bundle_dir} variable to be a real path (which
 	// makes some of the calls below to replaceWBD redundant but harmless
-	if (provisionBundleAndUpdateWorkflowInfo(wi).getExitStatus() != ReturnValue.SUCCESS) {
+	if (provisionBundleAndUpdateWorkflowInfo(wi, this.metadata, this.config).getExitStatus() != ReturnValue.SUCCESS) {
 	    ret.setExitStatus(ReturnValue.FAILURE);
 	    Log.error("Problem getting workflow bundle");
 	    return (ret);
@@ -774,7 +774,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * @param wbd
      * @return
      */
-    private String replaceWBD(String input, String wbd) {
+    private static String replaceWBD(String input, String wbd) {
 	return (input.replaceAll("\\$\\{workflow_bundle_dir\\}", wbd));
     }
 
@@ -788,7 +788,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * 
      * @param wi
      */
-    private ReturnValue provisionBundleAndUpdateWorkflowInfo(WorkflowInfo wi) {
+    public static ReturnValue provisionBundleAndUpdateWorkflowInfo(WorkflowInfo wi, Metadata metadata, Map<String, String> config) {
 
 	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -807,7 +807,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
 	    // find the perm loc
 	    String permLoc = wi.getPermBundleLocation();
-	    String newWorkflowBundleDir = getAndProvisionBundle(permLoc);
+	    String newWorkflowBundleDir = getAndProvisionBundle(permLoc, metadata, config);
 
 	    // if its null then something went wrong
 	    if (newWorkflowBundleDir == null) {
@@ -834,9 +834,10 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * @param permLoc
      * @return
      */
-    private String getAndProvisionBundle(String permLoc) {
+    private static String getAndProvisionBundle(String permLoc, Metadata metadata, Map<String, String> config) {
+        // TODO  making this static sucks, but I think I need to do this temporarily
 	String result = null;
-	Bundle bundle = new Bundle(this.metadata, this.config);
+	Bundle bundle = new Bundle(metadata, config);
 	ReturnValue ret = null;
 	if (permLoc.startsWith("s3://")) {
 	    ret = bundle.unpackageBundleFromS3(permLoc);
