@@ -102,6 +102,9 @@ This is a sample HelloWorld workflow. Use it as a template to build your own wor
     <profile namespace="globus" key="jobtype">condor</profile>
     <profile namespace="globus" key="count">1</profile>
     <profile namespace="globus" key="maxmemory">2000</profile>
+    
+    <!-- Prejob to make output directory -->
+    <@requires_dir "${data_dir}"/>
 
   </job>
 

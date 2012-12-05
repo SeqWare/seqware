@@ -395,13 +395,13 @@ public class WorkflowPlugin extends Plugin {
      */
     public ReturnValue launchSingleWorkflow(boolean readFromDB) {
         boolean newLauncherRequired = true;
+        Integer workflowAccession = null;
         try {
             if (readFromDB) {
                 String valueOf = (String)options.valueOf("workflow-accession");
-                int workflowAccession = Integer.valueOf(valueOf);
+                workflowAccession = Integer.valueOf(valueOf);
                 net.sourceforge.seqware.common.model.Workflow workflow = this.metadata.getWorkflow(workflowAccession);
                 newLauncherRequired = WorkflowV2Utility.requiresNewLauncher(workflow);
-                return launchNewWorkflow(options, config, params, metadata, workflowAccession, null);
             } else{
                 newLauncherRequired = WorkflowV2Utility.requiresNewLauncher(options);
             }            
@@ -415,7 +415,7 @@ public class WorkflowPlugin extends Plugin {
         if (!newLauncherRequired) {
             return doOldRun();
         }
-        return launchNewWorkflow(options, config, params, metadata, null, null);
+        return launchNewWorkflow(options, config, params, metadata, workflowAccession, null);
     }
 
     /**

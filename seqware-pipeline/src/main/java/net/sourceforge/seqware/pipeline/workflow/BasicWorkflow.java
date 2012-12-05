@@ -770,7 +770,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * @param wbd
      * @return
      */
-    private static String replaceWBD(String input, String wbd) {
+    private String replaceWBD(String input, String wbd) {
 	return (input.replaceAll("\\$\\{workflow_bundle_dir\\}", wbd));
     }
 
@@ -831,7 +831,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      */
     private String getAndProvisionBundle(String permLoc) {
 	String result = null;
-	Bundle bundle = new Bundle(metadata, config);
+	Bundle bundle = new Bundle(this.metadata, this.config);
 	ReturnValue ret = null;
 	if (permLoc.startsWith("s3://")) {
 	    ret = bundle.unpackageBundleFromS3(permLoc);
