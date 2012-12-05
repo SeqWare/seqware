@@ -24,6 +24,7 @@ import net.sourceforge.seqware.common.model.SequencerRunAttribute;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.model.StudyType;
+import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -612,6 +613,12 @@ public class MetadataNoConnection extends Metadata {
   public String getWorkflowRunReportStdOut(int workflowRunSWID) {
     return("");
   }
+
+    @Override
+    public Workflow getWorkflow(int workflowAccession) {
+        logger.info("No metadata connection");
+        return null;
+    }
   
   
 }

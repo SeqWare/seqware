@@ -116,16 +116,16 @@ public class WorkflowV2Utility {
             }
             Element java_class = wf.getChild(WORKFLOW_CLASS);
             if (java_class != null) {
-                ret.put(WORKFLOW_CLASS, template.getAttributeValue("path").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir));
+                ret.put(WORKFLOW_CLASS, java_class.getAttributeValue("path").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir));
             }
             Element config = wf.getChild("config");
             if (config != null) {
                 ret.put("config", config.getAttributeValue("path").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir));
             }
-            Element classes = wf.getChild("classes");
-            if (classes != null) {
-                ret.put("classes", classes.getAttributeValue("path").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir));
-            }
+//            Element classes = wf.getChild("classes");
+//            if (classes != null) {
+//                ret.put("classes", classes.getAttributeValue("path").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir));
+//            }
             Element build = wf.getChild("build");
             if (build != null) {
                 ret.put("build", build.getAttributeValue("command").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir));

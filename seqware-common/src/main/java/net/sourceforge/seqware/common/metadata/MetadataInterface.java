@@ -25,6 +25,7 @@ import net.sourceforge.seqware.common.model.SequencerRunAttribute;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.model.StudyType;
+import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -719,4 +720,11 @@ public interface MetadataInterface {
    * @return a {@link java.util.SortedSet} object.
    */
   public SortedSet<WorkflowParam> getWorkflowParams(String swAccession);
+  
+  /**
+   * Get a workflow
+   * @param workflowAccession
+   * @return 
+   */
+  public Workflow getWorkflow(int workflowAccession);
 }
