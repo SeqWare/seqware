@@ -50,11 +50,18 @@ public class WorkflowClassFinder {
 
 	/**
 	 * find the first .class in the clazzPath
+         * 
+         * This has been modified to locate a specific class. The name of the method is now totally misleading.
+         * We are loading a specific class. 
+         * 
 	 * @param clazzPath
 	 * @return
 	 */
 	public Class<?> findFirstWorkflowClass(String clazzPath) {
-
+                String classWithoutJava = clazzPath.substring(0, clazzPath.length()-5);
+                String classPathWithoutClass = clazzPath.substring(0, clazzPath.lastIndexOf("classes")+8);
+                clazzPath = classPathWithoutClass;
+                
 		String candidateClassesLocationPattern = "file:" + 
 			clazzPath + "**" + FOLDERS_SEPARATOR_AS_STRING + "*.class";
 		Resource[] resources = null;
@@ -72,9 +79,14 @@ public class WorkflowClassFinder {
 			try {
 				//get the path
 				String path = resource.getFile().getPath();
-				String qPath = path.substring(clazzPath.length(),path.length() 
+				String qPath = path.substring(classPathWithoutClass.length(),path.length() 
 					- ".class".length());
 				qPath = qPath.replaceAll(FOLDERS_SEPARATOR_AS_STRING, ".");
+                                
+                                if (!path.contains(classWithoutJava)){
+                                    continue;
+                                }
+                                
 				URL url = new URL("file://"+clazzPath);
 				URL[] urls = new URL[]{url};
 				ClassLoader cl = new URLClassLoader(urls);				
@@ -83,9 +95,9 @@ public class WorkflowClassFinder {
 				return cls;
 				
 			} catch (IOException ex) {
-				Log.error(ex);
+				Log.error(ex, ex);
 			} catch (ClassNotFoundException ex) {
-				Log.error(ex);
+				Log.error(ex, ex);
 			}
 		}
 		return null;

@@ -20,9 +20,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
+import net.sourceforge.seqware.common.business.RegistrationService;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.Registration;
+import net.sourceforge.seqware.common.model.RegistrationDTO;
+import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.lists.WorkflowRunList2;
@@ -69,7 +72,15 @@ public class WorkflowRunResource extends DatabaseResource {
 
             Document line = XmlTools.marshalToDocument(jaxbTool, dto);
             getResponse().setEntity(XmlTools.getRepresentation(line));
-        } else { 
+        } else if (queryValues.get("email") != null) {
+            // SEQWARE-1134
+            RegistrationService rs = BeanFactory.getRegistrationServiceBean();
+            RegistrationDTO regDTO = (RegistrationDTO)testIfNull(rs.findByEmailAddress(queryValues.get("email")));
+            Integer registrationId = regDTO.getRegistrationId();
+            List<WorkflowRun> runs = ss.findByOwnerID(registrationId);
+            respondWithList(runs, copier);
+        } 
+        else { 
             
             List<WorkflowRun> runs = null;
             if (queryValues.get("status") != null) {
@@ -77,19 +88,7 @@ public class WorkflowRunResource extends DatabaseResource {
             } else {
                 runs = (List<WorkflowRun>) testIfNull(ss.list());
             }
-            
-            WorkflowRunList2 eList = new WorkflowRunList2();
-            ArrayList<WorkflowRun> list = new ArrayList<WorkflowRun>();
-            JaxbObject<WorkflowRunList2> jaxbTool = new JaxbObject<WorkflowRunList2>();
-
-            for (WorkflowRun run : runs) {
-                WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, run);
-                list.add(dto);
-            }
-            eList.setList(list);
-            Document line = XmlTools.marshalToDocument(jaxbTool, eList);
-            getResponse().setEntity(XmlTools.getRepresentation(line));
-            
+            respondWithList(runs, copier);
         }
     }
 
@@ -157,5 +156,19 @@ public class WorkflowRunResource extends DatabaseResource {
         Integer id = wrs.insert(registration, p);
         WorkflowRun wr = wrs.findBySWAccession(id);
         return wr;
+    }
+
+    private void respondWithList(List<WorkflowRun> runs, Hibernate3DtoCopier copier) {
+        WorkflowRunList2 eList = new WorkflowRunList2();
+        ArrayList<WorkflowRun> list = new ArrayList<WorkflowRun>();
+        JaxbObject<WorkflowRunList2> jaxbTool = new JaxbObject<WorkflowRunList2>();
+
+        for (WorkflowRun run : runs) {
+            WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, run);
+            list.add(dto);
+        }
+        eList.setList(list);
+        Document line = XmlTools.marshalToDocument(jaxbTool, eList);
+        getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 }

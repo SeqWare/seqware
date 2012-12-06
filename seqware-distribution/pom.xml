@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent> 
-        <version>0.13.6-RC</version> 
+        <version>0.13.6</version> 
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
         <relativePath>../pom.xml</relativePath> 
@@ -50,7 +50,7 @@
             <descriptors>
               <descriptor>src/assemble/seqware-pipeline-full.xml</descriptor>
             </descriptors>
-            <finalName>seqware</finalName>
+            <!-- <finalName>seqware</finalName> -->
           </configuration>
         </execution>
 	<execution>
@@ -63,7 +63,7 @@
             <descriptors>
               <descriptor>src/assemble/seqware-queryengine.xml</descriptor>
             </descriptors>
-            <finalName>seqware</finalName>
+            <!-- <finalName>seqware</finalName> -->
           </configuration>
         </execution>
       </executions>
