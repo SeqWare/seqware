@@ -127,22 +127,41 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * lets you run workflows on a different host from where this command line
      * tool is run but requires an external process to launch workflows that
      * have been scheduled.
+     *
+     * @param scheduledHost the value of scheduledHost
      */
+    
     public ReturnValue scheduleInstalledBundle(String workflowAccession,
 	    String workflowRunAccession, ArrayList<String> iniFiles,
 	    boolean metadataWriteback, ArrayList<String> parentAccessions,
 	    ArrayList<String> parentsLinkedToWR, boolean wait,
 	    List<String> cmdLineOptions) {
 
-	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+	return scheduleInstalledBundle(workflowAccession, workflowRunAccession, iniFiles, metadataWriteback, parentAccessions, parentsLinkedToWR, wait, cmdLineOptions, null);
+    }
 
-	Map<String, String> workflowMetadata = this.metadata
-		.get_workflow_info(Integer.parseInt(workflowAccession));
-	WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
-	scheduleWorkflow(wi, workflowRunAccession, iniFiles, metadataWriteback,
-		parentAccessions, parentsLinkedToWR, wait, cmdLineOptions);
+    /**
+     * {@inheritDoc}
+     *
+     * This method just needs a sw_accession value from the workflow table and
+     * an ini file(s) in order to schedule a workflow. All needed info is pulled
+     * from the workflow table which was populated when the workflow was
+     * installed. Keep in mind this does not actually trigger anything, it just
+     * schedules the workflow to run by adding to the workflow_run table. This
+     * lets you run workflows on a different host from where this command line
+     * tool is run but requires an external process to launch workflows that
+     * have been scheduled.
+     */
+    public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession, ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, String scheduledHost) {
+        ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
-	return (ret);
+        Map<String, String> workflowMetadata = this.metadata
+                .get_workflow_info(Integer.parseInt(workflowAccession));
+        WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
+        scheduleWorkflow(wi, workflowRunAccession, iniFiles, metadataWriteback,
+                parentAccessions, parentsLinkedToWR, wait, cmdLineOptions, scheduledHost);
+
+        return (ret);
     }
 
     /**
@@ -267,7 +286,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	// get the workflow run
 	WorkflowRun wr = this.metadata
 		.getWorkflowRunWithWorkflow(workflowRunAccession);
-
+        
 	// the map
 	HashMap<String, String> map = new HashMap<String, String>();
 
@@ -517,7 +536,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 			wi.getTemplatePath(), "failed", statusCmd,
 			wi.getWorkflowDir(), daxBuffer.toString(),
 			mapBuffer.toString(), wr.getHost(), 0, 0,
-			retPegasus.getStderr(), retPegasus.getStdout());
+			retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine());
 	    }
 	    return (retPegasus);
 	}
@@ -528,7 +547,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 		    wi.getTemplatePath(), "pending", statusCmd,
 		    wi.getWorkflowDir(), daxBuffer.toString(),
 		    mapBuffer.toString(), wr.getHost(), 0, 0,
-		    retPegasus.getStderr(), retPegasus.getStdout());
+		    retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine());
 	}
   
   Log.stdout("PEGASUS STATUS COMMAND: " + statusCmd);
@@ -558,7 +577,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 				    .getAttribute("currStep")), Integer
 				    .parseInt(watchedResult
 					    .getAttribute("totalSteps")),
-			    retPegasus.getStderr(), retPegasus.getStdout());
+			    retPegasus.getStderr(), retPegasus.getStdout(), null);
 		}
 
 	    } else if (watchedResult.getExitStatus() == ReturnValue.FAILURE) {
@@ -574,7 +593,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 				    .parseInt(watchedResult
 					    .getAttribute("totalSteps")),
 			    watchedResult.getStderr(), watchedResult
-				    .getStdout());
+				    .getStdout(), null);
 		}
 		ret.setExitStatus(ReturnValue.FAILURE);
 		return (ret);
@@ -592,11 +611,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	return (ret);
     }
 
-    private ReturnValue scheduleWorkflow(WorkflowInfo wi,
-	    String workflowRunAccession, ArrayList<String> iniFiles,
-	    boolean metadataWriteback, ArrayList<String> parentAccessions,
-	    ArrayList<String> parentsLinkedToWR, boolean wait,
-	    List<String> cmdLineOptions) {
+    private ReturnValue scheduleWorkflow(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, String scheduledHost) {
 
 	// keep this id handy
 	int workflowRunId = 0;
@@ -712,8 +727,8 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
 	    this.metadata.update_workflow_run(workflowRunId, wi.getCommand(),
 		    wi.getTemplatePath(), "submitted", null,
-		    wi.getWorkflowDir(), null, mapBuffer.toString(), null, 0,
-		    0, null, null);
+		    wi.getWorkflowDir(), null, mapBuffer.toString(), scheduledHost, 0,
+		    0, null, null, null);
 
 	} else {
 	    Log.error("you can't schedule a workflow run unless you have metadata writeback turned on.");
@@ -740,8 +755,11 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	wi.setConfigPath(m.get("base_ini_file"));
 	wi.setWorkflowDir(m.get("current_working_dir"));
 	wi.setTemplatePath(m.get("workflow_template"));
-	wi.setWorkflowAccession(Integer.parseInt(m.get("workflow_accession")));
+        wi.setWorkflowAccession(Integer.parseInt(m.get("workflow_accession")));
 	wi.setPermBundleLocation(m.get("permanent_bundle_location"));
+        wi.setWorkflowClass(m.get("workflow_class"));
+        wi.setWorkflowEngine(m.get("workflow_engine"));
+        wi.setWorkflowType(m.get("workflow_type"));
 	return (wi);
     }
 
@@ -800,7 +818,6 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 		    newWorkflowBundleDir));
 	    wi.setTemplatePath(replaceWBD(wi.getTemplatePath(),
 		    newWorkflowBundleDir));
-
 	}
 
 	return (ret);

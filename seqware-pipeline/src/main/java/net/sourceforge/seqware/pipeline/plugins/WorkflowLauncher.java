@@ -13,7 +13,6 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
-
 import org.openide.util.lookup.ServiceProvider;
 
 /**
