@@ -32,6 +32,7 @@ import net.sourceforge.seqware.common.model.SequencerRunAttribute;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.model.StudyType;
+import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -942,7 +943,7 @@ public class MetadataDB extends Metadata {
    */
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
           String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
-          String stdErr, String stdOut) {
+          String stdErr, String stdOut, String workflowengine) {
 
     // metadata.update_workflow_run(workflowRunId, pegasusCmd, template,
     // "pending", statusCmd, wi.getWorkflowDir(), daxReader.toString(),
@@ -959,8 +960,10 @@ public class MetadataDB extends Metadata {
               + formatSQL(dax, null) + ", status_cmd = " + formatSQL(statusCmd, null) + ", current_working_dir = "
               + formatSQL(workingDirectory, null) + ", ini_file = " + formatSQL(ini, null) + ", host = "
               + formatSQL(host, null) + ", stderr = " + formatSQL(stdErr, null) + ", stdout = " + formatSQL(stdOut, null)
-              + ", update_tstmp='" + new Timestamp(System.currentTimeMillis()) + "' where workflow_run_id = "
-              + workflowRunId;
+              + ", workflow_engine = " + formatSQL(workflowengine, null) 
+              + ", update_tstmp='" + new Timestamp(System.currentTimeMillis())
+              + "' where workflow_run_id = "+ workflowRunId;
+            
       executeUpdate(sql);
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql + "\n" + e.getMessage());
@@ -1322,12 +1325,13 @@ public class MetadataDB extends Metadata {
     this.sql = sql;
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  public ReturnValue addWorkflow(String name, String version, String description, String baseCommand,
-          String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip,
-          boolean storeArchiveZip) {
+    /**
+     * {@inheritDoc}
+     *
+     */
+    
+    
+  public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflowClass, String workflowType, String workflowEngine) {
 
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -1342,7 +1346,7 @@ public class MetadataDB extends Metadata {
     StringBuffer sql = new StringBuffer();
     try {
 
-      sql.append("INSERT INTO workflow (name, description, version, base_ini_file, cmd, current_working_dir, permanent_bundle_location, workflow_template, create_tstmp, update_tstmp) "
+      sql.append("INSERT INTO workflow (name, description, version, base_ini_file, cmd, current_working_dir, permanent_bundle_location, workflow_template, create_tstmp, update_tstmp, workflow_engine, workflow_class, workflow_type) "
               + "VALUES( '"
               + name
               + "', '"
@@ -1353,7 +1357,23 @@ public class MetadataDB extends Metadata {
               + configFile
               + "', '"
               + command
-              + "', '" + provisionDir + "', '" + archiveZip + "', '" + templateFile + "', now(), now())");
+              + "', '" 
+              + provisionDir 
+              + "', '" 
+              + archiveZip 
+              + "', '" 
+              + templateFile 
+              + "', '" 
+              + "now()"
+              + "', '" 
+              + "now()"
+              + "', '" 
+              + workflowEngine
+              + "', '" 
+              + workflowClass
+              + "', '" 
+              + workflowType
+              + ")");
 
       // get back last ID value
       workflowId = InsertAndReturnNewPrimaryKey(sql.toString(), "workflow_workflow_id_seq");
@@ -1439,7 +1459,7 @@ public class MetadataDB extends Metadata {
   public Map<String, String> get_workflow_info(int workflowAccession) {
 
     HashMap<String, String> map = new HashMap<String, String>();
-    String sql = "SELECT name, description, version, base_ini_file, cmd, current_working_dir, workflow_template, create_tstmp, update_tstmp, permanent_bundle_location FROM workflow where sw_accession = "
+    String sql = "SELECT name, description, version, base_ini_file, cmd, current_working_dir, workflow_template, create_tstmp, update_tstmp, permanent_bundle_location, workflow_engine, workflow_type, workflow_class FROM workflow where sw_accession = "
             + workflowAccession;
     ResultSet rs;
 
@@ -1457,6 +1477,9 @@ public class MetadataDB extends Metadata {
         map.put("update_tstmp", rs.getString("update_tstmp"));
         map.put("workflow_accession", new Integer(workflowAccession).toString());
         map.put("permanent_bundle_location", rs.getString("permanent_bundle_location"));
+        map.put("workflow_engine", rs.getString("workflow_engine"));
+        map.put("workflow_type", rs.getString("workflow_type"));
+        map.put("workflow_class", rs.getString("workflow_class"));
       }
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
@@ -1649,6 +1672,7 @@ public class MetadataDB extends Metadata {
         wr.setHost(rs.getString("host"));
         wr.setCurrentWorkingDir(rs.getString("current_working_dir"));
         wr.setCreateTimestamp(rs.getDate("create_tstmp"));
+        // FIXME: need to update with workflow engine etc
         results.add(wr);
       }
     } catch (SQLException e) {
@@ -1936,4 +1960,21 @@ public class MetadataDB extends Metadata {
   public List<LibrarySource> getLibrarySource() {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
+
+  @Override
+  public String getWorkflowRunReportStdErr(int workflowRunSWID) {
+    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+  }
+
+  @Override
+  public String getWorkflowRunReportStdOut(int workflowRunSWID) {
+    throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+  }
+
+    @Override
+    public Workflow getWorkflow(int workflowAccession) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+  
+  
 }
