@@ -150,10 +150,11 @@ public class WorkflowPlugin extends Plugin {
             this.hostname = localhost.hostname;
         }
         
-        if (options.has(HOST) && (!options.has(SCHEDULE) && !options.has(WAIT))) {
-            ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
-            return ret;
-        }
+        // wrong assumption here I think, --host is possible even when not scheduling or waiting 
+//        if (options.has(HOST) && (!options.has(SCHEDULE) && !options.has(WAIT))) {
+//            ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
+//            return ret;
+//        }
 
         ret.setExitStatus(ReturnValue.SUCCESS);
         return ret;
