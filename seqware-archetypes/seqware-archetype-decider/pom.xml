@@ -12,6 +12,7 @@
         <version>0.13.6-SNAPSHOT</version> 
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
+	<relativePath>../../pom.xml</relativePath>
     </parent>
 
     <properties>
