@@ -9,7 +9,7 @@
   <description>SeqWare FTL workflow archetype</description>
 
     <parent> 
-        <version>0.13.6</version> 
+        <version>0.13.6-SNAPSHOT</version> 
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
     </parent>
