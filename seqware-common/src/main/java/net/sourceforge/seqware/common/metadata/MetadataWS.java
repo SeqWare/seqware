@@ -111,13 +111,14 @@ public class MetadataWS extends Metadata {
 
   }
 
-  /**
-   * {@inheritDoc}
-   */
+    /**
+     * {@inheritDoc}
+     *
+     */
+    
+    
   @Override
-  public ReturnValue addWorkflow(String name, String version, String description, String baseCommand,
-          String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip,
-          boolean storeArchiveZip) {
+  public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflow_class, String workflow_type, String workflow_engine) {
 
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -148,6 +149,9 @@ public class MetadataWS extends Metadata {
     }
     // workflow.setUpdateTimestamp(new Date());
     // workflow.setOwner(owner);
+    workflow.setWorkflowClass(workflow_class);
+    workflow.setWorkflowType(workflow_type);
+    workflow.setWorkflowEngine(workflow_engine);
 
     Log.info("Posting workflow");
     try {
@@ -849,6 +853,9 @@ public class MetadataWS extends Metadata {
       map.put("update_tstmp", workflow.getUpdateTimestamp().toString());
       map.put("workflow_accession", workflow.getSwAccession().toString());
       map.put("permanent_bundle_location", workflow.getPermanentBundleLocation());
+      map.put("workflow_engine", workflow.getWorkflowEngine());
+      map.put("workflow_type", workflow.getWorkflowType());
+      map.put("workflow_class", workflow.getWorkflowClass());
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -879,6 +886,20 @@ public class MetadataWS extends Metadata {
     }
     return accession;
 
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Workflow getWorkflow(int workflowAccession) {
+    Workflow wf = null;
+    try {
+      wf = ll.findWorkflow("/" + Integer.toString(workflowAccession));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return (wf);
   }
 
   /**
@@ -1130,13 +1151,14 @@ public class MetadataWS extends Metadata {
     return ret;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+    /**
+     * {@inheritDoc}
+     *
+     * @param workflowEngine the value of workflowEngine
+     */
+    
   @Override
-  public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
-          String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
-          String stdErr, String stdOut) {
+  public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps, String stdErr, String stdOut, String workflowEngine) {
     int accession = 0;
     try {
       WorkflowRun wr = ll.findWorkflowRun("?id=" + workflowRunId);
@@ -1152,6 +1174,7 @@ public class MetadataWS extends Metadata {
       wr.setHost(host);
       wr.setStdErr(stdErr);
       wr.setStdOut(stdOut);
+      wr.setWorkflowEngine(workflowEngine);
 
       ll.updateWorkflowRun("/" + accession, wr);
     } catch (Exception e) {
@@ -1635,6 +1658,22 @@ public class MetadataWS extends Metadata {
     return report;
   }
 
+  /**
+   * {@inheritDoc} 
+   */
+  @Override
+  public String getWorkflowRunReportStdErr(int workflowRunSWID) {
+    return((String)ll.getString("/reports/workflowruns/" + workflowRunSWID + "/stderr"));
+  }
+
+  /**
+   * {@inheritDoc} 
+   */
+  @Override
+  public String getWorkflowRunReportStdOut(int workflowRunSWID) {
+    return((String)ll.getString("/reports/workflowruns/" + workflowRunSWID + "/stdout"));
+  }
+  
   /**
    * {@inheritDoc}
    */

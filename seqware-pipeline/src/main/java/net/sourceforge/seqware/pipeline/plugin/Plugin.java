@@ -106,9 +106,7 @@ public abstract class Plugin implements PluginInterface {
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
     try {
       options = parser.parse(params);
-    } catch (OptionException e) {
-      Log.error(e.getMessage());
-     
+    } catch (OptionException e) {     
       get_syntax();
       ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
     }
