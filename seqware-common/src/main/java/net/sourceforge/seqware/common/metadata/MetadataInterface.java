@@ -25,6 +25,7 @@ import net.sourceforge.seqware.common.model.SequencerRunAttribute;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.model.StudyType;
+import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -354,27 +355,27 @@ public interface MetadataInterface {
    */
   boolean linkWorkflowRunAndParent(int workflowRunId, int parentAccession) throws SQLException;
 
-  /**
-   * <p>update_workflow_run.</p>
-   *
-   * @param workflowRunId a int.
-   * @param pegasusCmd a {@link java.lang.String} object.
-   * @param workflowTemplate a {@link java.lang.String} object.
-   * @param status a {@link java.lang.String} object.
-   * @param statusCmd a {@link java.lang.String} object.
-   * @param workingDirectory a {@link java.lang.String} object.
-   * @param dax a {@link java.lang.String} object.
-   * @param ini a {@link java.lang.String} object.
-   * @param host a {@link java.lang.String} object.
-   * @param currStep a int.
-   * @param totalSteps a int.
-   * @param stdErr a {@link java.lang.String} object.
-   * @param stdOut a {@link java.lang.String} object.
-   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-   */
-  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
-      String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
-      String stdErr, String stdOut);
+    /**
+     * <p>update_workflow_run.</p>
+     *
+     * @param workflowRunId a int.
+     * @param pegasusCmd a {@link java.lang.String} object.
+     * @param workflowTemplate a {@link java.lang.String} object.
+     * @param status a {@link java.lang.String} object.
+     * @param statusCmd a {@link java.lang.String} object.
+     * @param workingDirectory a {@link java.lang.String} object.
+     * @param dax a {@link java.lang.String} object.
+     * @param ini a {@link java.lang.String} object.
+     * @param host a {@link java.lang.String} object.
+     * @param currStep a int.
+     * @param totalSteps a int.
+     * @param stdErr a {@link java.lang.String} object.
+     * @param stdOut a {@link java.lang.String} object.
+     * @param workflowEngine the value of workflowEngine
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
+    
+  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps, String stdErr, String stdOut, String workflowEngine);
 
   /**
    * <p>findFilesAssociatedWithASample.</p>
@@ -384,23 +385,22 @@ public interface MetadataInterface {
    */
   List<ReturnValue> findFilesAssociatedWithASample(String sampleName);
 
-  /**
-   * <p>addWorkflow.</p>
-   *
-   * @param name a {@link java.lang.String} object.
-   * @param version a {@link java.lang.String} object.
-   * @param description a {@link java.lang.String} object.
-   * @param baseCommand a {@link java.lang.String} object.
-   * @param configFile a {@link java.lang.String} object.
-   * @param templateFile a {@link java.lang.String} object.
-   * @param provisionDir a {@link java.lang.String} object.
-   * @param storeProvisionDir a boolean.
-   * @param archiveZip a {@link java.lang.String} object.
-   * @param storeArchiveZip a boolean.
-   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-   */
-  ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile,
-      String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip);
+    /**
+     * <p>addWorkflow.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param version a {@link java.lang.String} object.
+     * @param description a {@link java.lang.String} object.
+     * @param baseCommand a {@link java.lang.String} object.
+     * @param configFile a {@link java.lang.String} object.
+     * @param templateFile a {@link java.lang.String} object.
+     * @param provisionDir a {@link java.lang.String} object.
+     * @param storeProvisionDir a boolean.
+     * @param archiveZip a {@link java.lang.String} object.
+     * @param storeArchiveZip a boolean.
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
+  ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflowClass, String workflowType, String workflowEngine);
 
   /**
    * <p>updateWorkflow.</p>
@@ -669,6 +669,22 @@ public interface MetadataInterface {
    * @return a {@link java.lang.String} object.
    */
   public String getWorkflowRunReport(int workflowRunSWID);
+  
+  /**
+   * <p>getWorkflowRunReportStdErr.</p>
+   *
+   * @param workflowRunSWID a int.
+   * @return a {@link java.lang.String} object.
+   */
+  public String getWorkflowRunReportStdErr(int workflowRunSWID);  
+  
+  /**
+   * <p>getWorkflowRunReportStdOut.</p>
+   *
+   * @param workflowRunSWID a int.
+   * @return a {@link java.lang.String} object.
+   */
+  public String getWorkflowRunReportStdOut(int workflowRunSWID);
 
   /**
    * <p>getWorkflowRunReport.</p>
@@ -704,4 +720,11 @@ public interface MetadataInterface {
    * @return a {@link java.util.SortedSet} object.
    */
   public SortedSet<WorkflowParam> getWorkflowParams(String swAccession);
+  
+  /**
+   * Get a workflow
+   * @param workflowAccession
+   * @return 
+   */
+  public Workflow getWorkflow(int workflowAccession);
 }

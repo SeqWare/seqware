@@ -8,23 +8,53 @@ package net.sourceforge.seqware.common.util.workflowtools;
  */
 public class WorkflowInfo {
 
-  String name;
-  String version;
-  String description;
-  String testCmd;
-  String templatePath;
-  String configPath;
-  String computeReq;
-  String memReq;
-  String networkReq;
-  String command;
-  String workflowDir;
-  String host;
-  String permBundleLocation;
-  int workflowAccession = 0;
+  private String name;
+  private String version;
+  private String description;
+  private String testCmd;
+  private String templatePath;
+  private String configPath;
+  private String computeReq;
+  private String memReq;
+  private String networkReq;
+  private String command;
+  private String workflowDir;
+  private String host;
+  private String permBundleLocation;
+  private int workflowAccession = 0;
   private String classesDir;
   private String baseDir;
   private String workflow_sqw_version;
+  private String workflowClass;
+  private String workflowType;
+  private String workflowEngine;
+
+    public String getWorkflowClass() {
+        return workflowClass;
+    }
+
+    public void setWorkflowClass(String workflowClass) {
+        this.workflowClass = workflowClass;
+    }
+
+    public String getWorkflowType() {
+        return workflowType;
+    }
+
+    public void setWorkflowType(String workflowType) {
+        this.workflowType = workflowType;
+    }
+
+    public String getWorkflowEngine() {
+        return workflowEngine;
+    }
+
+    public void setWorkflowEngine(String workflowEngine) {
+        this.workflowEngine = workflowEngine;
+    }
+  
+  
+  
 
     /**
      * <p>Getter for the field <code>permBundleLocation</code>.</p>

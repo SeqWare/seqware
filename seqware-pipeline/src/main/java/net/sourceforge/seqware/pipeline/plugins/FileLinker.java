@@ -98,7 +98,7 @@ public class FileLinker extends Plugin {
 
          // update the workflow run to reflect success
          ReturnValue rv = metadata.update_workflow_run(workflowRunId, null, null, Metadata.SUCCESS, null, currentDir, null, null,
-               null, 0, 0, null, null);
+               null, 0, 0, null, null, null);
          if (rv.getExitStatus() != ReturnValue.SUCCESS) {
             Log.error("Failure in updating the workflow run " + workflowRunId + ". The workflow_run accession may be incorrect.");
             ret.setExitStatus(ReturnValue.FAILURE);

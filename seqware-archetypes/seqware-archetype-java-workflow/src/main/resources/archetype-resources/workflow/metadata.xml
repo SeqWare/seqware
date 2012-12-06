@@ -1,0 +1,13 @@
+<bundle version="${version}">
+  <workflow name="${workflow-name}" version="${workflow-version}" seqware_version="${seqware-version}"
+  basedir="${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}">
+    <description>${workflow-description}</description>
+    <test command="java -jar ${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/lib/seqware-distribution-${seqware-version}-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --no-metadata --provisioned-bundle-dir ${workflow_bundle_dir} --workflow ${workflow-name} --version ${workflow-version} --ini-files ${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/config/workflow.ini "/>
+    <workflow_command command="java -jar ${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/lib/seqware-distribution-${seqware-version}-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --bundle ${workflow_bundle_dir} --workflow ${workflow-name} --version ${workflow-version} "/>
+    <workflow_template path=""/>
+    <workflow_class path="${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/classes/${workflow-package}/WorkflowClient.java"/>
+    <config path="${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/config/workflow.ini"/>
+    <build command="ant -f ${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/build.xml"/>
+    <requirements compute="single" memory="20M" network="local"  workflow_engine="Pegasus,Oozie" workflow_type="java"/>
+  </workflow>
+</bundle>
