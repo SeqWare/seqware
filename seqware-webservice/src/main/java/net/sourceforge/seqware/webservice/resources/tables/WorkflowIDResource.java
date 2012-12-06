@@ -152,6 +152,9 @@ public class WorkflowIDResource extends DatabaseIDResource {
             workflow.setUsername(username);
             workflow.setVersion(version);
             workflow.setUpdateTimestamp(new Date());
+            workflow.setWorkflowClass(newWorkflow.getWorkflowClass());
+            workflow.setWorkflowType(newWorkflow.getWorkflowType());
+            workflow.setWorkflowEngine(newWorkflow.getWorkflowEngine());
 
             if (owner != null) {
                 RegistrationService rs = BeanFactory.getRegistrationServiceBean();

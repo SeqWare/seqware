@@ -174,12 +174,18 @@ public class MetadataDB {
     try {
       s = c.createStatement();
       ResultSet rs = null;
-      rs = s.executeQuery("select workflow_run_id, status from workflow_run where sw_accession = "+workflowRunAccession);
+      rs = s.executeQuery("select workflow_run_id, status, create_tstmp, update_tstmp, host from workflow_run where sw_accession = "+workflowRunAccession);
 
       if (rs.next()) {
         workflowRunId = rs.getInt(1);
         String status = rs.getString(2);
+        Timestamp start = rs.getTimestamp(3);
+        Timestamp stop = rs.getTimestamp(4);
+        String host = rs.getString(5);
         d.put("status", status);
+        d.put("create_tsmp", start.toString());
+        d.put("update_tstmp", stop.toString());
+        d.put("host", host);
       }
       rs.close();
       

@@ -94,7 +94,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         Session s = getSessionFactory().getCurrentSession();
         SQLQuery sqlquery = s.createSQLQuery("select workflow_run_id, workflow_id,  owner_id,  name,  ini_file,  cmd, "
                 + " workflow_template,  status,  status_cmd,  seqware_revision,  host,  current_working_dir, "
-                + "username,  create_tstmp,  update_tstmp,  sw_accession, stderr, stdout from workflow_run");
+                + "username,  create_tstmp,  update_tstmp,  sw_accession, stderr, stdout, workflow_engine from workflow_run");
         sqlquery.addEntity(WorkflowRun.class);
         List list = sqlquery.list();
         for(Object obj: list) {
