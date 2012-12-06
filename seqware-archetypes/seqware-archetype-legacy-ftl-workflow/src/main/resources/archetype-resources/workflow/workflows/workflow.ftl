@@ -87,7 +87,7 @@ This is a sample HelloWorld workflow. Use it as a template to build your own wor
 <!-- Part 1: Define all jobs -->
 
    <!-- Provision input file, make link if local file, copy from HTTP/S3 otherwise -->
-  <job id="IDPRE2" namespace="seqware" name="java" version="${java_version}">
+  <job id="IDPRE1" namespace="seqware" name="java" version="${java_version}">
     <argument>
       -Xmx1000M
       -classpath ${workflow_bundle_dir}/${workflow_name}/classes:${workflow_bundle_dir}/${workflow_name}/lib/seqware-distribution-${seqware_version}-full.jar
@@ -184,13 +184,17 @@ This is a sample HelloWorld workflow. Use it as a template to build your own wor
       -classpath ${workflow_bundle_dir}/${workflow_name}/classes:${workflow_bundle_dir}/${workflow_name}/lib/seqware-distribution-${seqware_version}-full.jar
       net.sourceforge.seqware.pipeline.runner.Runner
       --${metadata}  
-      --metadata-parent-accession-file ${data_dir}/${parentAlgo}_accession
-      --metadata-processing-accession-file ${data_dir}/${algo}_accession
       --metadata-output-file-prefix ${output_prefix}
       <#if using_helloworldexample_module >
       --metadata-workflow-run-ancestor-accession ${workflow_run_accession} 
+      --metadata-parent-accession-file ${data_dir}/${parentAlgo}_accession
+      --metadata-processing-accession-file ${data_dir}/${algo}_accession
       <#else>
       --metadata-workflow-run-accession ${workflow_run_accession} 
+      <#list parentAccessions?split(",") as pa>
+      --metadata-parent-accession ${pa}
+      </#list>
+      --metadata-processing-accession-file ${data_dir}/${algo}_accession
       </#if>   
       --module net.sourceforge.seqware.pipeline.modules.GenericCommandRunner
       --
@@ -236,7 +240,7 @@ This is a sample HelloWorld workflow. Use it as a template to build your own wor
   <!-- Define task group dependencies -->
 <#if using_helloworldexample_module >
   <child ref="ID001">
-    <parent ref="IDPRE2"/>
+    <parent ref="IDPRE1"/>
   </child>
   <child ref="ID002">
     <parent ref="ID001"/>
@@ -249,7 +253,7 @@ This is a sample HelloWorld workflow. Use it as a template to build your own wor
   </child>
 <#else>
   <child ref="ID003">
-     <parent ref="IDPRE2"/>
+     <parent ref="IDPRE1"/>
    </child>
   <child ref="IDPOST1">
     <parent ref="ID003"/>
