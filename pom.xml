@@ -7,7 +7,7 @@
     <url>https://github.com/SeqWare/seqware</url>
 
     <properties>
- 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <aws-java-sdk.version>1.3.0</aws-java-sdk.version>
         <jackson.version>1.9.4</jackson.version>
@@ -30,14 +30,14 @@
         <maven-assembly-plugin.version>2.3</maven-assembly-plugin.version>
         <jetty-maven-plugin.version>7.0.0.pre5</jetty-maven-plugin.version>
         <github.url>scm:git:git@github.com:SeqWare/seqware.git</github.url>
-	<maven-jar-plugin.version>2.2</maven-jar-plugin.version>
-	<maven-clean-plugin.version>2.5</maven-clean-plugin.version>
-	<maven-surefire-plugin.version>2.11</maven-surefire-plugin.version>
-	<maven-failsafe-plugin.version>2.12.3</maven-failsafe-plugin.version>
-	<maven-war-plugin.version>2.1.1</maven-war-plugin.version>
-	<skipITs>true</skipITs>
-	<findbugs.version>2.5.2</findbugs.version>
-	<maven-pmd-plugin.version>2.7.1</maven-pmd-plugin.version>
+        <maven-jar-plugin.version>2.2</maven-jar-plugin.version>
+        <maven-clean-plugin.version>2.5</maven-clean-plugin.version>
+        <maven-surefire-plugin.version>2.11</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>2.12.3</maven-failsafe-plugin.version>
+        <maven-war-plugin.version>2.1.1</maven-war-plugin.version>
+        <skipITs>true</skipITs>
+        <findbugs.version>2.5.2</findbugs.version>
+        <maven-pmd-plugin.version>2.7.1</maven-pmd-plugin.version>
     </properties>
 
     <scm>
@@ -46,21 +46,21 @@
         <url>${github.url}</url>
     </scm>
     <distributionManagement>
-       <repository>
-        <id>wrench.res.oicr.on.ca</id>
-        <name>wrench.res.oicr.on.ca-releases</name>
-        <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-release</url>
-        <uniqueVersion>false</uniqueVersion>
-       </repository>
+        <repository>
+            <id>wrench.res.oicr.on.ca</id>
+            <name>wrench.res.oicr.on.ca-releases</name>
+            <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-release</url>
+            <uniqueVersion>false</uniqueVersion>
+        </repository>
     </distributionManagement>
 
     <artifactId>seqware</artifactId>
     <packaging>pom</packaging>
     <groupId>com.github.seqware</groupId>
-    <version>0.13.6-RC</version>
+    <version>0.13.6</version>
 
     <repositories>
-	 <repository>
+        <repository>
             <id>seqware.sourceforge.net</id>
             <name>SeqWare Maven Repository</name>
             <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-release</url>
@@ -98,7 +98,7 @@
             <name>Plexus</name>
             <url>http://repo1.maven.org/maven2/org/codehaus/plexus/</url>
         </repository>
-	<repository>
+        <repository>
             <id>ibiblio.org</id>
             <name>Maven Mirror</name>
             <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
@@ -118,17 +118,18 @@
     <modules>
         <module>seqware-queryengine</module>
         <module>seqware-queryengine-legacy</module>
-		<module>seqware-meta-db</module>
+        <module>seqware-meta-db</module>
         <module>seqware-common</module>
         <module>seqware-pipeline</module>
         <module>seqware-webservice-dto</module>
         <module>seqware-webservice</module>
         <module>seqware-portal</module>
-        <module>seqware-archetype-java-workflow</module>
-    	<module>seqware-archetype-ftl-workflow</module>
-		<module>seqware-archetypes/seqware-archetype-module</module>
-        <module>seqware-archetypes/seqware-archetype-workflow</module>
-        <module>seqware-archetypes/seqware-archetype-simple-workflow</module>
+        <module>seqware-archetypes/seqware-archetype-decider</module>
+        <module>seqware-archetypes/seqware-archetype-java-workflow</module>
+    	<module>seqware-archetypes/seqware-archetype-simplified-ftl-workflow</module>
+	<module>seqware-archetypes/seqware-archetype-module</module>
+        <module>seqware-archetypes/seqware-archetype-legacy-ftl-workflow</module>
+        <module>seqware-archetypes/seqware-archetype-simple-legacy-ftl-workflow</module>
         <module>seqware-distribution</module>
     </modules>
 
@@ -146,56 +147,56 @@
     </organization>
 
     <dependencyManagement>
-            <dependencies>
-	 <!-- while moving to HubFlow, the combination of HubFlow and maven:prepare is causing problems.
-		release:update-versions seems to have an easier time with versions defined here -->
-	    <dependency>
-		<groupId>com.github.seqware</groupId>
-		<artifactId>seqware-queryengine</artifactId>
-		<version>${project.version}</version>
-	    </dependency>
-	    <dependency>
-		<groupId>com.github.seqware</groupId>
-		<artifactId>seqware-queryengine-legacy</artifactId>
-		<version>${project.version}</version>
-	    </dependency>
-	    <dependency>
-		<groupId>com.github.seqware</groupId>
-		<artifactId>seqware-meta-db</artifactId>
-		<version>${project.version}</version>
-	    </dependency>
-	    <dependency>
-		<groupId>com.github.seqware</groupId>
-		<artifactId>seqware-common</artifactId>
-		<version>${project.version}</version>
-	    </dependency>
-	    <dependency>
-		<groupId>com.github.seqware</groupId>
-		<artifactId>seqware-pipeline</artifactId>
-		<version>${project.version}</version>
-	    </dependency>
-	    <dependency>
-		<groupId>com.github.seqware</groupId>
-		<artifactId>seqware-webservice-dto</artifactId>
-		<version>${project.version}</version>
-	    </dependency>
-	    <dependency>
-		<groupId>com.github.seqware</groupId>
-		<artifactId>seqware-webservice</artifactId>
-		<version>${project.version}</version>
-	    </dependency>
-	    <dependency>
-		<groupId>com.github.seqware</groupId>
-		<artifactId>seqware-portal</artifactId>
-		<version>${project.version}</version>
-	    </dependency>
-	    <dependency>
-		<groupId>com.github.seqware</groupId>
-		<artifactId>seqware-distribution</artifactId>
-		<version>${project.version}</version>
-	    </dependency>
+        <dependencies>
+            <!-- while moving to HubFlow, the combination of HubFlow and maven:prepare is causing problems.
+          		release:update-versions seems to have an easier time with versions defined here -->
+            <dependency>
+                <groupId>com.github.seqware</groupId>
+                <artifactId>seqware-queryengine</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.seqware</groupId>
+                <artifactId>seqware-queryengine-legacy</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.seqware</groupId>
+                <artifactId>seqware-meta-db</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.seqware</groupId>
+                <artifactId>seqware-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.seqware</groupId>
+                <artifactId>seqware-pipeline</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.seqware</groupId>
+                <artifactId>seqware-webservice-dto</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.seqware</groupId>
+                <artifactId>seqware-webservice</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.seqware</groupId>
+                <artifactId>seqware-portal</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.seqware</groupId>
+                <artifactId>seqware-distribution</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-         <!-- Amazon Web Services SDK dependencies -->
+            <!-- Amazon Web Services SDK dependencies -->
             <dependency>
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk</artifactId>
@@ -487,7 +488,7 @@
                     <artifactId>jetty-maven-plugin</artifactId>
                     <version>${jetty-maven-plugin.version}</version>
                 </plugin>
-		<plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jxr-plugin</artifactId>
                     <version>2.3</version>
@@ -500,7 +501,7 @@
                         <source>1.6</source>
                         <target>1.6</target>
                         <showDeprecation>true</showDeprecation>
-			<!-- added forkMode, the full GitHub mvn compile seems to blow up with an OutOfMemoryError -->
+                        <!-- added forkMode, the full GitHub mvn compile seems to blow up with an OutOfMemoryError -->
                         <fork>true</fork>
                     </configuration>
                     <dependencies>
@@ -516,34 +517,34 @@
                         </dependency>
                     </dependencies>
                 </plugin>
-		<plugin>
-		    <groupId>org.codehaus.mojo</groupId>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
                     <artifactId>findbugs-maven-plugin</artifactId>
-		    <version>${findbugs.version}</version>
-		    <configuration>
-      			<findbugsXmlOutput>true</findbugsXmlOutput>
-      			<findbugsXmlWithMessages>true</findbugsXmlWithMessages>
-      			<xmlOutput>true</xmlOutput>
-   		    </configuration>
+                    <version>${findbugs.version}</version>
+                    <configuration>
+                        <findbugsXmlOutput>true</findbugsXmlOutput>
+                        <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
+                        <xmlOutput>true</xmlOutput>
+                    </configuration>
                 </plugin>
- 	        <plugin>
-        		<groupId>org.apache.maven.plugins</groupId>
-        		<artifactId>maven-release-plugin</artifactId>
-        		<version>2.3.2</version>
-	      	</plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.3.2</version>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
                     <version>${maven-pmd-plugin.version}</version>
                     <configuration>
-                    	<targetJdk>1.6</targetJdk>
- 		    </configuration>
+                        <targetJdk>1.6</targetJdk>
+                    </configuration>
                 </plugin>
-		<plugin>
-      		    <groupId>org.codehaus.mojo</groupId>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
                     <version>1.3.1</version>
-		</plugin>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -551,20 +552,20 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
-	    <plugin>
-        	<groupId>org.apache.maven.plugins</groupId>
-        	<artifactId>maven-jxr-plugin</artifactId>
-        	<version>2.3</version>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.3</version>
             </plugin>
         </plugins>
     </build>
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jxr-plugin</artifactId>
-        <version>2.3</version>
-      </plugin>
-    </plugins>
-  </reporting>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.3</version>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>

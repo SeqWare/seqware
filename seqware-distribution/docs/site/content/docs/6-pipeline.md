@@ -17,7 +17,7 @@ markdown:              basic
 * [Writing Workflows](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_Write_a_Bundled_Workflow) : A series of analysis tools and modules chained together to produce a particular result
 * [Writing Modules](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Developing_New_SeqWare_Pipeline_Modules) : Java wrappers around tools for use in a workflow
 * [Command-Line Tools](/manuals/command_line_tools/) : Tools to create samples, experiments and studies on the command line, upload data, launch workflows, and more.
-* [SeqWare Conventions](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Module_Conventions): File MIME-types, Error codes
+* [SeqWare Conventions](/docs/16-module-conventions/): File MIME-types, Error codes
 * [Generic Pipeline Modules](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Available_Modules) : Generic Modules for your workflows
 * <a href="/docs/14-workflow-mvn/">Creating Workflows Using Maven Archetypes</a>: Creating New Workflow Bundles and Modules Using Maven Archetypes.
 
