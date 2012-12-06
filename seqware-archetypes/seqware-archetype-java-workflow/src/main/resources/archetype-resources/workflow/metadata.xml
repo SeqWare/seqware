@@ -8,6 +8,6 @@
     <workflow_class path="${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/classes/${workflow-package}/WorkflowClient.java"/>
     <config path="${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/config/workflow.ini"/>
     <build command="ant -f ${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/build.xml"/>
-    <requirements compute="single" memory="20M" network="local"  workflow_engine="Pegasus,Oozie" workflow_type="ftl"/>
+    <requirements compute="single" memory="20M" network="local"  workflow_engine="Pegasus,Oozie" workflow_type="java"/>
   </workflow>
 </bundle>
