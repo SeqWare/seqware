@@ -92,6 +92,14 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         parser.acceptsAll(Arrays.asList("host", "ho"), "Used only in combination with --schedule to schedule onto a specific host. If not provided, the default is the local host").withRequiredArg();
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String get_description() {
+        return ("The decider from which all other deciders came");
+    }
 
     @Override
     /**
@@ -780,12 +788,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         Log.stdout(command.toString());
 
         return ret;
-    }
-
-    @Override
-    public String get_description() {
-        String description = super.get_description();
-        return description;
     }
 
     public Boolean getForceRunAll() {
