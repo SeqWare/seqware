@@ -89,7 +89,7 @@ public class MetadataWSTest {
                 + "/sqwprod/Workflow_Bundle_GATKRecalibrationAndVariantCalling_"
                 + "1.2.29_SeqWare_0.10.0/");
         int expResult = ReturnValue.SUCCESS;
-        ReturnValue result = instance.addWorkflow(name, version, description, baseCommand, configFile.getAbsolutePath(), templateFile.getAbsolutePath(), provisionDir.getAbsolutePath(), true, "", false);
+        ReturnValue result = instance.addWorkflow(name, version, description, baseCommand, configFile.getAbsolutePath(), templateFile.getAbsolutePath(), provisionDir.getAbsolutePath(), true, "", false, null, null, null);
         Assert.assertEquals(expResult, result.getExitStatus());
 
     }
@@ -456,8 +456,9 @@ public class MetadataWSTest {
         String dax = "test dax";
         String ini = "test ini";
         String host = "localhost";
+        String testEngine = "test engine";
         int expResult = 2862;
-        ReturnValue result = instance.update_workflow_run(workflowRunId, pegasusCmd, workflowTemplate, status, statusCmd, workingDirectory, dax, ini, host, 0, 0, null, null);
+        ReturnValue result = instance.update_workflow_run(workflowRunId, pegasusCmd, workflowTemplate, status, statusCmd, workingDirectory, dax, ini, host, 0, 0, null, null, testEngine);
         Assert.assertEquals(expResult, result.getReturnValue());
         testTimestamp("select update_tstmp from workflow_run "
                 + "where workflow_run_id=32;", "update_tstmp", beforeDate);

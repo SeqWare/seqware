@@ -29,10 +29,12 @@ import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.filetools.FileTools;
+import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
 import net.sourceforge.seqware.pipeline.decider.DeciderInterface;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
-import net.sourceforge.seqware.pipeline.workflow.Workflow;
+import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -61,6 +63,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private Boolean skipStuff = null;
     private int launchMax = Integer.MAX_VALUE, launched = 0;
     private int rerunMax = 5;
+    private String host = null;
 
     public BasicDecider() {
         super();
@@ -86,6 +89,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         parser.acceptsAll(Arrays.asList("ignore-skip-flag"), "Ignores any 'skip' flags on lanes, IUSes, sequencer runs, samples, etc. Use caution.");
         parser.acceptsAll(Arrays.asList("launch-max"), "The maximum number of jobs to launch at once. Default: infinite.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("rerun-max"), "The maximum time to re-launch a workflowrun if failed. Default: 5.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("host", "ho"), "Used only in combination with --schedule to schedule onto a specific host. If not provided, the default is the local host").withRequiredArg();
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
@@ -150,7 +154,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         if (options.has("wf-accession")) {
             workflowAccession = (String) options.valueOf("wf-accession");
         } else if (workflowAccession == null) {
-            Log.error("Must specify the workflow-acccession of the workflow to run");
+            Log.error("Must specify the workflow-accession of the workflow to run");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
 
@@ -233,6 +237,23 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             }
         }
 
+        LocalhostPair localhostPair = FileTools.getLocalhost(options);
+        String localhost = localhostPair.hostname;
+        if (host == null) {
+            if (options.has("host") || options.has("ho")) {
+                host = (String) options.valueOf("host");
+            } else {
+                host = localhost;
+            }
+        }
+        if (localhostPair.returnValue.getExitStatus() != ReturnValue.SUCCESS && host == null) {
+            Log.error("Could not determine localhost: Return value " + localhostPair.returnValue.getExitStatus());
+            Log.error("Please supply it on the command line with --host");
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+        } else if (!host.equals(localhost)) {
+            Log.warn("The localhost and the scheduling host are not the same: " + localhost + " and " + host + ". Proceeding anyway.");
+        }
+
         if (options.has("launch-max")) {
             try {
                 launchMax = Integer.parseInt(options.valueOf("launch-max").toString());
@@ -251,6 +272,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             }
         }
 
+        if (workflowAccession == null || "".equals(workflowAccession)) {
+            Log.error("The wf-accession must be defined.");
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+        }
 
         if (metadata instanceof MetadataDB) {
             metaws = new MetadataWS();
@@ -318,8 +343,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 filesToRun = new HashSet<String>();
                 workflowParentAccessionsToRun = new HashSet<String>();
 
-
-                List<String> previousWorkflowRuns = new ArrayList<String>();
+                List<ReturnValue> previousWorkflowRuns = new ArrayList<ReturnValue>();
 
                 //for each grouping (e.g. sample), iterate through the files
                 List<ReturnValue> files = mappedFiles.get(key);
@@ -331,9 +355,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     if (wfAcc != null) {
                         if (workflowAccessionsToCheck.contains(wfAcc) || workflowAccession.equals(wfAcc)) {
                             Log.debug("Found previous workflow run:" + file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
-                            previousWorkflowRuns.add(file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
+                            //previousWorkflowRuns.add(file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
+                            previousWorkflowRuns.add(file);
                         }
                     }
+
 
                     //if there is no parent accessions, or if the parent accession is correct
                     //this makes an assumption that if the wfAcc is null then the parentWorkflowAccessions will be empty
@@ -364,11 +390,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     //check if this workflow has been run before
                     boolean rerun = rerunWorkflowRun(previousWorkflowRuns, filesToRun);
 
-
-
                     iniFiles = new ArrayList<String>();
                     iniFiles.add(createIniFile(fileString, parentAccessionString));
-
 
                     ReturnValue newRet = this.doFinalCheck(fileString, parentAccessionString);
                     if (newRet.getExitStatus() != ReturnValue.SUCCESS) {
@@ -388,17 +411,24 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     } else if (launched++ < launchMax) {
                         //construct the INI and run it
                         Log.debug("RUNNING");
-                        // setup workflow object
-                        Workflow w = new Workflow(metadata, config);
-                        if (runNow) {
-                            ret = w.launchInstalledBundle(workflowAccession, null,
-                                    iniFiles, metadataWriteback, new ArrayList(parentAccessionsToRun),
-                                    new ArrayList(workflowParentAccessionsToRun), false, options.nonOptionArguments());
-                        } else {
-                            ret = w.scheduleInstalledBundle(workflowAccession, null,
-                                    iniFiles, metadataWriteback, new ArrayList(parentAccessionsToRun),
-                                    new ArrayList(workflowParentAccessionsToRun), false, options.nonOptionArguments());
-                        }
+//                        // setup workflow object
+//                        Workflow w = new Workflow(metadata, config);
+//                        if (runNow) {
+//                            ret = w.launchInstalledBundle(workflowAccession, null,
+//                                    iniFiles, metadataWriteback, new ArrayList(parentAccessionsToRun),
+//                                    new ArrayList(workflowParentAccessionsToRun), false, options.nonOptionArguments());
+//                        } else {
+//                            ret = w.scheduleInstalledBundle(workflowAccession, null,
+//                                    iniFiles, metadataWriteback, new ArrayList(parentAccessionsToRun),
+//                                    new ArrayList(workflowParentAccessionsToRun), false, options.nonOptionArguments());
+//                        }
+                        //construct the INI and run it
+                        
+                        ArrayList<String> runArgs = constructCommand();
+                        PluginRunner.main(runArgs.toArray(new String[runArgs.size()]));
+                        Log.stdout("Launching.");
+                        do_summary();
+                        
                     } else {
                         Log.info("The maximum number of jobs has been launched. The next jobs will be launched when the decider runs again.");
                         ret.setExitStatus(ReturnValue.QUEUED);
@@ -414,54 +444,96 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         return ret;
     }
 
+    protected ArrayList<String> constructCommand() {
+        ArrayList<String> runArgs = new ArrayList<String>();
+        runArgs.add("--plugin");
+        runArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher");
+        runArgs.add("--");
+        runArgs.add("--workflow-accession");
+        runArgs.add(workflowAccession);
+        runArgs.add("--ini-files");
+        runArgs.add(commaSeparateMy(iniFiles));
+        if (!metadataWriteback) {
+            runArgs.add("--no-metadata");
+        }
+        runArgs.add("--parent-accessions");
+        runArgs.add(commaSeparateMy(parentAccessionsToRun));
+        runArgs.add("--link-workflow-run-to-parents");
+        runArgs.add(commaSeparateMy(workflowParentAccessionsToRun));
+        if (!runNow) {
+            runArgs.add("--schedule");
+        }
+        runArgs.add("--host");
+        runArgs.add(host);
+
+        runArgs.add("--");
+        for (String s : options.nonOptionArguments()) {
+            runArgs.add(s);
+        }
+        return runArgs;
+    }
+
     /**
      * Returns true only if there are more files to run than have been run on
      * any workflow so far, or if the filesToRun have different filepaths than
      * those that have been run before.
      */
-    public boolean rerunWorkflowRun(Collection<String> previousWorkflowRuns, Collection<String> filesToRun) {
+    public boolean rerunWorkflowRun(Collection<ReturnValue> previousWorkflowRuns, Collection<String> filesToRun) {
         boolean rerun = true;
+        
+        //TODO: not sure where this number failed should be populated from after refactoring to use ReturnValue
         int numberFailed = 0;
-        Log.debug("Check previous workflow runs: "+previousWorkflowRuns.size());
-        for (String workflowRunAcc : previousWorkflowRuns) {
-            String report = metaws.getWorkflowRunReport(Integer.parseInt(workflowRunAcc));
-            String[] lines = report.split("\n");
-            String[] reportHeader = lines[0].split("\t");
-            String[] data = lines[1].split("\t");
-            Map<String, String> map = new TreeMap<String, String>();
-            for (int i = 0; i < reportHeader.length; i++) {
-                Log.debug("Workflow Run Report item: " + reportHeader[i].trim() + "->" + data[i].trim());
-                map.put(reportHeader[i].trim(), data[i].trim());
-            }
-
-            String[] wf = map.get("Workflow").trim().split("\\s");
-            String wfAccession = new Integer(metadata.getWorkflowAccession(wf[0], wf[1])).toString();
-            if (wfAccession.equals(wfAccession)) {
-                Log.debug("Current wf-accession found, "+wfAccession+" run "+workflowRunAcc );
-                String ranOn = map.get("Input File Paths");
-                String[] ranOnFiles = ranOn.split(",");
-                if (!compareWorkflowRunFiles(ranOnFiles, filesToRun)) {
-                    Log.error("There are fewer files to run on in the database than were previously run on this sample!");
-                    Log.error("Files found to run in database: " + filesToRun.size());
-                    Log.error("But yet workflow run " + workflowRunAcc + " ran on " + ranOnFiles.length);
+        
+//        Log.debug("Check previous workflow runs: "+previousWorkflowRuns.size());
+//        for (String workflowRunAcc : previousWorkflowRuns) {
+//            String report = metaws.getWorkflowRunReport(Integer.parseInt(workflowRunAcc));
+//            String[] lines = report.split("\n");
+//            String[] reportHeader = lines[0].split("\t");
+//            String[] data = lines[1].split("\t");
+//            Map<String, String> map = new TreeMap<String, String>();
+//            for (int i = 0; i < reportHeader.length; i++) {
+//                Log.debug("Workflow Run Report item: " + reportHeader[i].trim() + "->" + data[i].trim());
+//                map.put(reportHeader[i].trim(), data[i].trim());
+//            }
+//
+//            String[] wf = map.get("Workflow").trim().split("\\s");
+//            String wfAccession = new Integer(metadata.getWorkflowAccession(wf[0], wf[1])).toString();
+//            if (wfAccession.equals(wfAccession)) {
+//                Log.debug("Current wf-accession found, "+wfAccession+" run "+workflowRunAcc );
+//                String ranOn = map.get("Input File Paths");
+//                String[] ranOnFiles = ranOn.split(",");
+//                if (!compareWorkflowRunFiles(ranOnFiles, filesToRun)) {
+//                    Log.error("There are fewer files to run on in the database than were previously run on this sample!");
+//                    Log.error("Files found to run in database: " + filesToRun.size());
+//                    Log.error("But yet workflow run " + workflowRunAcc + " ran on " + ranOnFiles.length);
+//                    rerun = false;
+//                }
+//                String status = map.get("Workflow Run Status");
+//                Log.debug("Status is " + status);
+//                if (!"failed".equals(status)) {
+//                    Log.debug("The status is " + status + " so not running this workflow");
+//                    rerun = false;
+//                } else {
+//                    Log.debug("The status is failed:" + numberFailed);
+//                    numberFailed++;
+//                }
+//            } else if (workflowAccessionsToCheck.contains(wfAccession))
+//            {
+//                Log.debug("check wf-accession found, "+wfAccession+" run "+workflowRunAcc );
+//                rerun=false;
+//            }
+//            else {
+//                Log.error("There is a workflow accession in previous runs that is not in check-wf-accessions or wf-accession: "+wfAccession);
+        for (ReturnValue workflowRun : previousWorkflowRuns) {
+            if (workflowAccession.equals(workflowRun.getAttribute(Header.WORKFLOW_SWA.getTitle()))) {
+                String workflowRunAcc = workflowRun.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle());
+                if (!compareWorkflowRunFiles(workflowRunAcc, filesToRun)) {
                     rerun = false;
+                    break;
                 }
-                String status = map.get("Workflow Run Status");
-                Log.debug("Status is " + status);
-                if (!"failed".equals(status)) {
-                    Log.debug("The status is " + status + " so not running this workflow");
-                    rerun = false;
-                } else {
-                    Log.debug("The status is failed:" + numberFailed);
-                    numberFailed++;
-                }
-            } else if (workflowAccessionsToCheck.contains(wfAccession))
-            {
-                Log.debug("check wf-accession found, "+wfAccession+" run "+workflowRunAcc );
+            } else {
                 rerun=false;
-            }
-            else {
-                Log.error("There is a workflow accession in previous runs that is not in check-wf-accessions or wf-accession: "+wfAccession);
+                break;
             }
         }
 
@@ -472,6 +544,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         return rerun;
     }
 
+    // leaving both versions of compareWorkflowRunFiles here, not sure which one is preferred or which came later
+    
     /**
      * Tests if the files from the workflow run (workflowRunAcc) are the same as
      * those found in the database (filesToRun). True if the filesToRun has more
@@ -498,15 +572,62 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             rerun = false;
         }
 
-
-
-
         return rerun;
+    }
+    
+    /**
+     * Tests if the files from the workflow run (workflowRunAcc) are the same as
+     * those found in the database (filesToRun). True if the filesToRun has more
+     * files than the workflow run. True if the filesToRun and the workflow run
+     * have the same number of files but with different filepaths. False if the
+     * filesToRun and the workflow run have the same number of files with the
+     * same file paths. False and prints an error message if there are more
+     * files in the workflow run than in the filesToRun.
+     */
+    public boolean compareWorkflowRunFiles(String workflowRunAcc, Collection<String> filesToRun) {
+
+        String report = metaws.getWorkflowRunReport(Integer.parseInt(workflowRunAcc));
+        String[] lines = report.split("\n");
+        String[] header = lines[0].split("\t");
+        String[] data = lines[1].split("\t");
+        Map<String, String> map = new TreeMap<String, String>();
+        for (int i = 0; i < header.length; i++) {
+            map.put(header[i].trim(), data[i].trim());
+        }
+
+        String ranOn = map.get("Input File Paths");
+        String[] ranOnFiles = ranOn.split(",");
+
+        if (ranOnFiles.length < filesToRun.size()) {
+            return true;
+        } else if (ranOnFiles.length == filesToRun.size()) {
+            boolean rerun = false;
+            for (String file : ranOnFiles) {
+                //checks to see if the files in filesToRun are different from those it has ran on previously
+                if (!filesToRun.contains(file)) {
+                    rerun = true;
+                }
+            }
+            return rerun;
+        } else {
+            Log.error("There are fewer files to run on in the database than were previously run on this sample!");
+            Log.error("Files found to run in database: " + filesToRun.size());
+            Log.error("But yet workflow run " + workflowRunAcc + " ran on " + ranOnFiles.length);
+            return false;
+        }
     }
 
     private void addFileToSets(ReturnValue file, FileMetadata fm, Collection<String> workflowParentAccessionsToRun,
             Collection<String> parentAccessionsToRun, Collection<String> filesToRun) {
         if (checkFileDetails(file, fm)) {
+            if (skipStuff) {
+                for (String key : file.getAttributes().keySet()) {
+                    if (key.contains("skip")) {
+                        Log.warn("File SWID:" + fm.getDescription() + " path " + fm.getFilePath() + " is skipped: " + key + ">" + file.getAttribute(key));
+                        return;
+                    }
+                }
+            }
             if (test) {
                 printFileMetadata(file, fm);
             }
@@ -535,10 +656,18 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     }
 
     protected String commaSeparateMy(Collection<String> list) {
+        return separateMy(list, ",");
+    }
+
+    protected String spaceSeparateMy(Collection<String> list) {
+        return separateMy(list, " ");
+    }
+
+    private String separateMy(Collection<String> list, String delimiter) {
         StringBuilder sb = new StringBuilder();
         for (String s : list) {
             if (sb.length() != 0) {
-                sb.append(",");
+                sb.append(delimiter);
             }
             sb.append(s);
         }
@@ -599,14 +728,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * @return true if the file can be added to the list, false otherwise
      */
     protected boolean checkFileDetails(ReturnValue returnValue, FileMetadata fm) {
-        if (skipStuff) {
-            for (String key : returnValue.getAttributes().keySet()) {
-                if (key.contains("skip")) {
-                    Log.warn("File SWID:" + fm.getDescription() + " path " + fm.getFilePath() + " is skipped: " + key + ">" + returnValue.getAttribute(key));
-                    return false;
-                }
-            }
-        }
         return true;
     }
 
@@ -652,15 +773,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     @Override
     public ReturnValue do_summary() {
         StringBuilder command = new StringBuilder();
-        command.append("\njava -jar seqware-pipeline-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher --").append(" ");
-        command.append("--workflow-accession").append(" ").append(workflowAccession).append(" ");
-        command.append("--ini-files").append(" ").append(commaSeparateMy(iniFiles)).append(" ");
-        if (!metadataWriteback) {
-            command.append("--no-metadata").append(" ");
-        }
-        command.append("--parent-accessions").append(" ").append(commaSeparateMy(parentAccessionsToRun)).append(" ");
-        command.append("--link-workflow-run-to-parents").append(" ").append(commaSeparateMy(workflowParentAccessionsToRun)).append(" ");
-        command.append(options.nonOptionArguments());
+        command.append("\njava -jar seqware-full.jar ");
+        command.append(spaceSeparateMy(constructCommand()));
         command.append("\n");
 
         Log.stdout(command.toString());

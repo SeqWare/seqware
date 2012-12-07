@@ -2812,7 +2812,10 @@ CREATE TABLE workflow (
     create_tstmp timestamp without time zone NOT NULL,
     update_tstmp timestamp without time zone,
     sw_accession integer DEFAULT nextval('sw_accession_seq'::regclass),
-    permanent_bundle_location text
+    permanent_bundle_location text,
+    workflow_class text,
+    workflow_type text,
+    workflow_engine text
 );
 
 
@@ -2944,7 +2947,8 @@ CREATE TABLE workflow_run (
     stdout text,
     create_tstmp timestamp without time zone NOT NULL,
     update_tstmp timestamp without time zone,
-    sw_accession integer DEFAULT nextval('sw_accession_seq'::regclass)
+    sw_accession integer DEFAULT nextval('sw_accession_seq'::regclass),
+    workflow_engine text
 );
 
 
