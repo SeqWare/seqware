@@ -74,6 +74,22 @@ public class BundleInfo {
               .getNodeValue();
           String networkReq = eElement.getElementsByTagName("requirements").item(0).getAttributes()
               .getNamedItem("network").getNodeValue();
+          
+          String workflowEngineReq = null;
+          if (null != eElement.getElementsByTagName("requirements").item(0).getAttributes().getNamedItem("workflow_engine")){
+            workflowEngineReq = eElement.getElementsByTagName("requirements").item(0).getAttributes()
+                  .getNamedItem("workflow_engine").getNodeValue();
+          }
+          String workflowTypeReq = null;
+          if (null != eElement.getElementsByTagName("requirements").item(0).getAttributes().getNamedItem("workflow_type")){
+          workflowTypeReq = eElement.getElementsByTagName("requirements").item(0).getAttributes()
+              .getNamedItem("workflow_type").getNodeValue();
+          }
+          String workflowClass = null;
+          if (null != eElement.getElementsByTagName("workflow_class").item(0)){
+            workflowClass = eElement.getElementsByTagName("workflow_class").item(0).getAttributes()
+                  .getNamedItem("path").getNodeValue();
+          }
 
           WorkflowInfo wi = new WorkflowInfo();
           wi.setName(eElement.getAttribute("name"));
@@ -89,6 +105,10 @@ public class BundleInfo {
           wi.setClassesDir(classesPath);
           wi.setBaseDir(eElement.getAttribute("basedir"));
           wi.setWorkflowSqwVersion(eElement.getAttribute("seqware_version"));
+          wi.setWorkflowClass(workflowClass);
+          wi.setWorkflowEngine(workflowEngineReq);
+          wi.setWorkflowType(workflowTypeReq);
+          
           workflows.add(wi);
 
         }

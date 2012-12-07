@@ -147,6 +147,9 @@
         <property name="host" column="host" type="string"/>
         <property name="username" column="username" type="string"/>
         <property name="template" column="workflow_template" type="string"/>
+        <property name="workflowClass" column="workflow_class" type="string"/>
+        <property name="workflowType" column="workflow_type" type="string"/>
+        <property name="workflowEngine" column="workflow_engine" type="string"/>
 
         <many-to-one
             name="owner"
@@ -433,6 +436,7 @@
         <property name="stdOut" column="stdout" type="string"/>
         <!-- <property name="dax" type="string" column="dax" /> -->
         <property name="iniFile" type="string" column="ini_file" />
+        <property name="workflowEngine" type="string" column="workflow_engine"/>
 
         <many-to-one
             name="owner"
