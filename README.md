@@ -106,6 +106,41 @@ You can also build individual components such as the new query engine with:
     cd seqware-queryengine
     mvn clean install
 
+CREATING WORKFLOWS USING MAVEN ARCHETYPES
+-----------------------------------------
+
+The normal incantation to create new workflows would be:
+
+	mvn archetype:generate
+	...
+	Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains): 228: 685
+	[INFO] Using property: groupId = net.sf.seqware
+	Define value for property 'artifactId': : helloworld
+	Define value for property 'version':  1.0-SNAPSHOT: : 1.0
+	[INFO] Using property: package = net.sf.seqware
+	Confirm properties configuration:
+	groupId: net.sf.seqware
+	artifactId: helloworld
+	version: 1.0
+	package: net.sf.seqware
+	 Y: : Y
+
+Across our archetypes, this will usually only prompt you for the workflow name and version while auto-populating other properties. If you wish to override these values, the incantation would be of the format:
+
+	mvn archetype:generate -Dpackage=ca.on.oicr.pde -DgroupId=ca.on.oicr.pde
+	...
+	Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains): 228: 685
+	[INFO] Using property: groupId = ca.on.oicr.pde
+	Define value for property 'artifactId': : helloworld2
+	Define value for property 'version':  1.0-SNAPSHOT: : 1.0
+	[INFO] Using property: package = ca.on.oicr.pde
+	Confirm properties configuration:
+	groupId: ca.on.oicr.pde
+	artifactId: helloworld2
+	version: 1.0
+	package: ca.on.oicr.pde
+	 Y: : Y
+
 <!-- With the latest update to the query engine, we use an integrated maven plugin to spin up a mini-hbase cluster courtesy of wibidata, but these 
      instructions may still be transferred to the website to explain how to setup an HBase cluster
 

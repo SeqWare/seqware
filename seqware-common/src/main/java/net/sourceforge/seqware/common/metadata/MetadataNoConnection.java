@@ -24,6 +24,7 @@ import net.sourceforge.seqware.common.model.SequencerRunAttribute;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.model.StudyType;
+import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -293,7 +294,7 @@ public class MetadataNoConnection extends Metadata {
   @Override
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
       String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
-      String stdErr, String stdOut) {
+      String stdErr, String stdOut, String workflowEngine) {
     logger.info("No metadata connection");
     ReturnValue finished = new ReturnValue(ReturnValue.PROCESSING);
     finished.setExitStatus(ReturnValue.SUCCESS);
@@ -339,10 +340,13 @@ public class MetadataNoConnection extends Metadata {
     return new ArrayList<String>();
   }
 
-  /** {@inheritDoc} */
-  public ReturnValue addWorkflow(String name, String version, String description, String baseCommand,
-      String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip,
-      boolean storeArchiveZip) {
+    /**
+     * {@inheritDoc}
+     *
+     */
+    
+    
+  public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflow_class, String workflow_type, String workflow_engine) {
     logger.info("No metadata connection");
     ReturnValue finished = new ReturnValue(ReturnValue.PROCESSING);
     finished.setExitStatus(ReturnValue.SUCCESS);
@@ -600,9 +604,26 @@ public class MetadataNoConnection extends Metadata {
 
   }
 
-@Override
-public String getProcessingRelations(String swAccession) {
-	// TODO Auto-generated method stub
-	return null;
-}
+
+    @Override
+    public String getProcessingRelations(String swAccession) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getWorkflowRunReportStdErr(int workflowRunSWID) {
+        return ("");
+    }
+
+    @Override
+    public String getWorkflowRunReportStdOut(int workflowRunSWID) {
+        return ("");
+    }
+
+    @Override
+    public Workflow getWorkflow(int workflowAccession) {
+        logger.info("No metadata connection");
+        return null;
+    }
 }
