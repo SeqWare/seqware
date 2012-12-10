@@ -161,8 +161,6 @@ net.sourceforge.seqware.pipeline.plugins.ModuleRunner
 
 Description: A wrapper around Runner which will either list all Modules in the classpath (if no args are passed) or trigger a specific Module. Great for running Modules standalone.
 
-| Command-line option | Description |
-|--------------------|--------------|
 
 ##  ProcessingDataStructure2Dot
 net.sourceforge.seqware.pipeline.plugins.ProcessingDataStructure2Dot
