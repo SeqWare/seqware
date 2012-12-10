@@ -24,6 +24,7 @@ import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -31,13 +32,11 @@ public class FileLinkerParser {
 
    private static final Logger log = LoggerFactory.getLogger(FileLinkerParser.class);
 
-   private final static String UTF8 = "UTF8";
-
-   public static Map<Integer, FileMetadata> parse(String filename) throws FileNotFoundException {
+   public static Map<Integer, List<FileMetadata>> parse(String filename) throws FileNotFoundException {
       return parse(filename, '\t');
    }
 
-   public static Map<Integer, FileMetadata> parse(String filename, char separator) throws FileNotFoundException {
+   public static Map<Integer, List<FileMetadata>> parse(String filename, char separator) throws FileNotFoundException {
       checkNotNull(filename);
       checkElementIndex(0, filename.length());
       checkNotNull(separator);
@@ -75,8 +74,8 @@ public class FileLinkerParser {
       return defaultUsers;
    }
 
-   private static Map<Integer, FileMetadata> fileMetadataFromFileInfo(List<FileLinkerLine> lines) {
-      Map<Integer, FileMetadata> result = Maps.newHashMap();
+   private static Map<Integer, List<FileMetadata>> fileMetadataFromFileInfo(List<FileLinkerLine> lines) {
+      Map<Integer, List<FileMetadata>> result = Maps.newHashMap();
       for (FileLinkerLine line : lines) {
          FileMetadata fileMetadata = new FileMetadata();
          fileMetadata.setMetaType(line.getMimeType());
@@ -87,7 +86,13 @@ public class FileLinkerParser {
          if (line.getSize() != null) {
             fileMetadata.setSize(line.getSize());
          }
-         result.put(line.getSeqwareAccession(), fileMetadata);
+         if(result.containsKey(line.getSeqwareAccession())) {
+            result.get(line.getSeqwareAccession()).add(fileMetadata);
+         } else {
+            List<FileMetadata> fileMetadataList = Lists.newArrayList();
+            fileMetadataList.add(fileMetadata);
+            result.put(line.getSeqwareAccession(), fileMetadataList);
+         }
       }
       return result;
    }
