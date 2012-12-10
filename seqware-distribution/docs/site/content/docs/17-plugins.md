@@ -12,6 +12,7 @@ net.sourceforge.seqware.pipeline.deciders.BasicDecider
 
 
 | Command-line option | Description |
+|--------------------|--------------|
 |--all|Run everything. One of sample-name, study-name, sequencer-run-name or all is required.|
 |--check-wf-accessions|The comma-separated, no spaces, workflow accessions of the workflow that perform the same function (e.g. older versions). Any files that have been processed with these workflows will be skipped.|
 |--force-run-all|Forces the decider to run all matches regardless of whether they've been run before or not|
@@ -36,6 +37,7 @@ net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin
 A plugin that lets you launch workflow bundles once you have installed them via the BundleManager.
 
 | Command-line option | Description |
+|--------------------|--------------|
 |--?, --h, --help|Provides this help message.|
 |--b, --bundle, --provisioned-bundle-dir|The path to a bundle zip file. You can specify this or the workflow-accession of an already installed bundle.|
 |--fh, --force-host|If specified, the scheduled workflow will only be launched if this parameter value and the host field in the workflow run table match. This is a mechanism to target workflows to particular servers for launching.|
@@ -62,6 +64,7 @@ net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator
 Experimental plugin. Allows the annotation of objects in the database with 'skip' values.
 
 | Command-line option | Description |
+|--------------------|--------------|
 |--e, --experiment-accession|The SWID of the Experiment to annotate. One of the -accession options is required.|
 |--file|The CSV file for bulk insert|
 |--i, --ius-accession|The SWID of the IUS to annotate. One of the -accession options is required.|
@@ -82,6 +85,7 @@ net.sourceforge.seqware.pipeline.plugins.BundleManager
 A plugin that lets you create, test, and install workflow bundles.
 
 | Command-line option | Description |
+|--------------------|--------------|
 |--?, --h, --help|Optional: Provides this help message.|
 |--b, --bundle|The path to a bundle zip file, can specify this or the workflow-run-accession of an already-installed bundle.|
 |--download|Downloads a workflow bundle zip. This must be used in conjunction with a workflow name and version.|
@@ -106,6 +110,7 @@ net.sourceforge.seqware.pipeline.plugins.CycleChecker
 Checks for cycles in the sample hierarchy and processing hierarchy of a particular study and prints some information about the study
 
 | Command-line option | Description |
+|--------------------|--------------|
 |--study-accession|The SeqWare accession of the study you want to check|
 
 ##  FileLinker
@@ -114,6 +119,7 @@ net.sourceforge.seqware.pipeline.plugins.FileLinker
 Takes a list of files and enters them into the database, linking them with the appropriate IUSes and creating workflow runs for the 'FileImport' workflow. For more information, see https://sourceforge.net/apps/mediawiki/seqware/index.php?title=FileLinker
 
 | Command-line option | Description |
+|--------------------|--------------|
 |--csv-separator||
 |--file-list-file|A file containing the necessary information, with each line in the format parent_sw_accession, file path and mime-type. parent_sw_accession is either an IUS or a Lane.|
 |--workflow-accession|The sw_accession of the Import files workflow|
@@ -124,6 +130,7 @@ net.sourceforge.seqware.pipeline.plugins.HelloWorld
 A very simple HelloWorld to show how to make plugins.
 
 | Command-line option | Description |
+|--------------------|--------------|
 |--?, --h, --help|Provides this help message.|
 
 ##  MarkdownPlugin
@@ -132,6 +139,7 @@ net.sourceforge.seqware.pipeline.plugins.MarkdownPlugin
 A plugin that generates markdown documentation for all plugins.
 
 | Command-line option | Description |
+|--------------------|--------------|
 |--?, --h, --help|Provides this help message.|
 
 ##  Metadata
@@ -140,6 +148,7 @@ net.sourceforge.seqware.pipeline.plugins.Metadata
 This plugin lets you list, read, and write to a collection of tables in the underlying MetaDB. This makes it easier to automate the creation of entities in the database which can be used as parents for file uploads and triggered workflows.
 
 | Command-line option | Description |
+|--------------------|--------------|
 |--c, --create|Optional: indicates you want to create a new row, must supply --table and all the required --field params.|
 |--f, --field|Optional: the field you are interested in writing. This is encoded as '<field_name>::<value>', you should use single quotes when the value includes spaces. You supply multiple --field arguments for a given table insert.|
 |--lf, --list-fields|Optional: if provided along with the --table option this will list out the fields for that table and their type.|
@@ -153,6 +162,7 @@ net.sourceforge.seqware.pipeline.plugins.ModuleRunner
 Description: A wrapper around Runner which will either list all Modules in the classpath (if no args are passed) or trigger a specific Module. Great for running Modules standalone.
 
 | Command-line option | Description |
+|--------------------|--------------|
 
 ##  ProcessingDataStructure2Dot
 net.sourceforge.seqware.pipeline.plugins.ProcessingDataStructure2Dot
@@ -160,6 +170,7 @@ net.sourceforge.seqware.pipeline.plugins.ProcessingDataStructure2Dot
 
 
 | Command-line option | Description |
+|--------------------|--------------|
 |--output-file|Optional: file name|
 |--parent-accession|Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.|
 |--sw-db|Optional: database name|
@@ -173,6 +184,7 @@ net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter
 Prints a tab-delimited file describing the sequencer run, lane, sample, and algorithms run on every IUS in the database. For more information, see https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Sequencer_Run_Reporter
 
 | Command-line option | Description |
+|--------------------|--------------|
 |--output, --output-filename|Name of the output tab-delimited file.|
 
 ##  SymLinkFileReporter
@@ -181,6 +193,7 @@ net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter
 Create a nested tree structure of all of the output files from a particular sample, or all of the samples in a study by using the SymLinkFileReporter plugin. This plugin also creates a CSV file with all of the accompanying information for every file. For more information, see https://sourceforge.net/apps/mediawiki/seqware/index.php?title=SymLink_Reporter
 
 | Command-line option | Description |
+|--------------------|--------------|
 |--dump-all|Optional: Dumps all of the studies in the database to one file.|
 |--duplicates|Optional: Allow duplications at the file path level|
 |--f, --file-type|Optional: The file type to filter on. Only this type will be linked. Default is all files. Permissible file metatypes can found on the SeqWare Sourceforce Wiki under 'Module Conventions'|
@@ -201,6 +214,7 @@ net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher
 A plugin that lets you launch workflow bundles once you have installed them via the BundleManager.
 
 | Command-line option | Description |
+|--------------------|--------------|
 |--?, --h, --help|Provides this help message.|
 |--b, --bundle, --provisioned-bundle-dir|The path to a bundle zip file. You can specify this or the workflow-accession of an already installed bundle.|
 |--fh, --force-host|If specified, the scheduled workflow will only be launched if this parameter value and the host field in the workflow run table match. This is a mechanism to target workflows to particular servers for launching.|
@@ -227,6 +241,7 @@ net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter
 This plugin creates a tab-separated file that describes one or more workflow runs, including the identity, library samples and input and output files. For more information, see https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Workflow_Run_Reporter
 
 | Command-line option | Description |
+|--------------------|--------------|
 |--o, --output-filename|Optional: The output filename|
 |--stdout|Prints to standard out instead of to a file|
 |--t, --time-period|Dates to check for workflow runs. Dates are in format YYYY-MM-DD. If one date is provided, from that point to the present is checked. If two, separated by hyphen YYYY-MM-DDL:YYYY-MM-DD then it checks that range|
@@ -241,6 +256,7 @@ net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker
 This plugin lets you monitor the status of running workflows and updatesthe metadata object with their status.  Keep in mind a few things: 1) if the status command is specified no data will be saved to the DB, this tool is just useful for gathering error reports, 2) status commands that are malformed or whose status directory is not present on the filesystem will be skipped and an error noted, 3) by default every running or unknown workflow_run in the database will be checked if they are owned by the username in your .seqware/settings file and the hostname is the same as 'hostname --long', and 4) you can force the checking of workflows with a particular host value but be careful with that.
 
 | Command-line option | Description |
+|--------------------|--------------|
 |--cf, --check-failed|Optional: if specified, workflow runs that have previously failed will be re-checked.|
 |--check-unknown, --cu|Optional: if specified, workflow runs that have previously marked unknown will be re-checked.|
 |--fh, --force-host|Optional: if specified, workflow runs scheduled to this specified host will be checked even if this is not the current host (a dangerous option).|

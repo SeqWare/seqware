@@ -250,6 +250,7 @@ public class MarkdownPlugin extends Plugin {
         public String format(Map<String, ? extends OptionDescriptor> options) {
             StringBuffer buffer = new StringBuffer();
             buffer.append("| Command-line option | Description |\n");
+            buffer.append("|--------------------|--------------|\n");
             // not sure why options are reported once per
             Set<String> done = new HashSet<String>();
             for(Entry<String, ? extends OptionDescriptor> e : options.entrySet()){
