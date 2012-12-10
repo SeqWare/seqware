@@ -1200,6 +1200,13 @@
     	</property>
  	</bean>
 
+	<bean id="retryAnalysisWorkflow"
+    	class="net.sourceforge.solexatools.webapp.controller.RetryAnalysisWorkflowController">
+		<property name="workflowRunService">
+      		<ref bean="workflowRunService"/>
+    	</property>
+ 	</bean>
+
 	<bean id="analisysRunningListDetailsController"
       class="net.sourceforge.solexatools.webapp.controller.AnalisysRunningListDetailsController">
 	  <property name="workflowRunService">
@@ -1561,6 +1568,7 @@
 				<prop key="**/analisysShare.htm">analisysEventController</prop>
 				<prop key="**/analisysCancel.htm">analisysEventController</prop>
 				<prop key="**/cancelAnalysisWorkflow.htm">cancelAnalysisWorkflow</prop><!--ajax request-->
+				<prop key="**/retryAnalysisWorkflow.htm">retryAnalysisWorkflow</prop><!--ajax request-->
 				
 				<!-- Experiment -->
         		<prop key="**/experimentSetup.htm">experimentSetupController</prop>
