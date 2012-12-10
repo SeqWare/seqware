@@ -248,6 +248,9 @@ public class MarkdownPlugin extends Plugin {
 
         @Override
         public String format(Map<String, ? extends OptionDescriptor> options) {
+            if (options.isEmpty()){
+                return new String();
+            }
             StringBuffer buffer = new StringBuffer();
             buffer.append("| Command-line option | Description |\n");
             buffer.append("|--------------------|--------------|\n");
