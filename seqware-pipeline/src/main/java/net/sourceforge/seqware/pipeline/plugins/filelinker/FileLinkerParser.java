@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -30,17 +31,21 @@ import com.google.common.collect.Sets;
 
 public class FileLinkerParser {
 
+   private static final String UTF8 = "UTF8";
+
    private static final Logger log = LoggerFactory.getLogger(FileLinkerParser.class);
 
-   public static Map<Integer, List<FileMetadata>> parse(String filename) throws FileNotFoundException {
+   public static Map<Integer, List<FileMetadata>> parse(String filename) throws FileNotFoundException,
+         UnsupportedEncodingException {
       return parse(filename, '\t');
    }
 
-   public static Map<Integer, List<FileMetadata>> parse(String filename, char separator) throws FileNotFoundException {
+   public static Map<Integer, List<FileMetadata>> parse(String filename, char separator) throws FileNotFoundException,
+         UnsupportedEncodingException {
       checkNotNull(filename);
       checkElementIndex(0, filename.length());
       checkNotNull(separator);
-      BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
+      BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filename), UTF8));
       List<FileLinkerLine> lines = getFileInfo(br, separator);
       requiredValuesPresent(lines);
       return fileMetadataFromFileInfo(lines);
@@ -86,7 +91,7 @@ public class FileLinkerParser {
          if (line.getSize() != null) {
             fileMetadata.setSize(line.getSize());
          }
-         if(result.containsKey(line.getSeqwareAccession())) {
+         if (result.containsKey(line.getSeqwareAccession())) {
             result.get(line.getSeqwareAccession()).add(fileMetadata);
          } else {
             List<FileMetadata> fileMetadataList = Lists.newArrayList();
@@ -110,10 +115,8 @@ public class FileLinkerParser {
                   i + 2, line);
          }
       }
-      if (!hasRequiredValues) {
-         throw new FileLinkerLineException("Csv file missing required values on the following lines: "
-               + Arrays.toString(badLines.toArray()));
-      }
+      if (!hasRequiredValues) { throw new FileLinkerLineException("Csv file missing required values on the following lines: "
+            + Arrays.toString(badLines.toArray())); }
    }
 
 }
