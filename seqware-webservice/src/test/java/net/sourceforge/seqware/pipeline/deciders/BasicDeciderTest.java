@@ -16,8 +16,11 @@
  */
 package net.sourceforge.seqware.pipeline.deciders;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugins.PluginTest;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -43,6 +46,21 @@ public class BasicDeciderTest extends PluginTest {
         instance.setMetadata(metadata);
     }
 
+    @Test
+    public void testListAllStudies() {
+        String[] params = {"--all", "--wf-accession", "4", "--parent-wf-accessions", "5", "test"};
+        String redirected = launchAndCaptureOutput(params);
+        String[] split = redirected.split("study");
+        // five studies in test DB mean the output splits into 7 parts
+        Assert.assertTrue("output does not contain five studies", split.length == 7);       
+        // uh oh, does this mean that there are no files associated in the testDB?
+    }
+    
+  
+  /** 
+   * The tests below were already here, but they don't seem to do anything. 
+   */
+  
   /**
    * <p>testCompareWorkflowRunFiles_Same.</p>
    */
@@ -103,8 +121,14 @@ public class BasicDeciderTest extends PluginTest {
 //	assertFalse(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun));
     }
 
-
-
+    protected String launchAndCaptureOutput(String[] params) {
+        ByteArrayOutputStream testOut = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(testOut));
+        launchPlugin(params);
+        String redirected = testOut.toString();
+        System.setOut(System.out);
+        return redirected;
+    }
 
   
 }
