@@ -1493,14 +1493,10 @@ public class MetadataDB extends Metadata {
    * {@inheritDoc}
    */
   @Override
-  public ReturnValue saveFileForIus(int workflowRunId, int iusAccession, FileMetadata file) {
+  public ReturnValue saveFileForIus(int workflowRunId, int iusAccession, FileMetadata file, int processingId) {
     ReturnValue returnVal = new ReturnValue(ReturnValue.SUCCESS);
-    int processingId = Integer.MIN_VALUE;
     try {
       int fileId = insertFileRecord(file);
-      processingId = add_empty_processing_event_by_parent_accession(new int[]{iusAccession}).getReturnValue();
-      returnVal.setAlgorithm("fileImport");
-      update_processing_event(processingId, returnVal);
       if (!linkWorkflowRunAndParent(workflowRunId, iusAccession)) {
         update_processing_status(processingId, Metadata.FAILED);
         returnVal = new ReturnValue(ReturnValue.INVALIDPARAMETERS);
