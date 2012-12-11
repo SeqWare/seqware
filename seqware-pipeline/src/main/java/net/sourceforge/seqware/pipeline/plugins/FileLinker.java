@@ -18,6 +18,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +83,10 @@ public class FileLinker extends Plugin {
             swaToFileMap = FileLinkerParser.parse(filename, separator.value(options).charAt(0));
          } catch (FileNotFoundException e) {
             ret.setExitStatus(ReturnValue.INVALIDFILE);
+            ret.setDescription(e.getMessage());
+            return ret;
+         } catch (UnsupportedEncodingException e) {
+            ret.setExitStatus(ReturnValue.FILENOTREADABLE);
             ret.setDescription(e.getMessage());
             return ret;
          }
