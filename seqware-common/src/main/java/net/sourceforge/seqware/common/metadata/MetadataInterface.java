@@ -449,9 +449,10 @@ public interface MetadataInterface {
    * @param workflowRunId a int.
    * @param iusAccession a int.
    * @param file a {@link net.sourceforge.seqware.common.module.FileMetadata} object.
+   * @param processingId Id of processing node File nodes will be attached to.
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
-  public ReturnValue saveFileForIus(int workflowRunId, int iusAccession, FileMetadata file);
+  public ReturnValue saveFileForIus(int workflowRunId, int iusAccession, FileMetadata file, int processingId);
 
   /**
    * <p>isDuplicateFile.</p>
