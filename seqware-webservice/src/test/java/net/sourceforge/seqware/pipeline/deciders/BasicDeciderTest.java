@@ -117,7 +117,7 @@ public class BasicDeciderTest extends PluginTest {
         instance.setMetadata(metadata);
         
         // a halting decider should launch twice after denying one launch, but when force-run-all is used, it goes back to 3
-        String[] params = {"--all", "--wf-accession", "6685", "--parent-wf-accessions", "4767", "--force-run-all"};
+        String[] params = {"--all", "--wf-accession", "6685", "--parent-wf-accessions", "4767", "--force-run-all", "--test"};
         launchAndCaptureOutput(params);
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
@@ -140,7 +140,7 @@ public class BasicDeciderTest extends PluginTest {
         instance.setMetadata(metadata);
         
         // a halting decider should launch twice after denying one launch
-        String[] params = {"--all", "--wf-accession", "6685", "--parent-wf-accessions", "4767"};
+        String[] params = {"--all", "--wf-accession", "6685", "--parent-wf-accessions", "4767", "--test"};
         launchAndCaptureOutput(params);
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
@@ -157,7 +157,7 @@ public class BasicDeciderTest extends PluginTest {
     
     @Test
     public void testMetaTypes() {
-        String[] params = {"--all", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip"};
+        String[] params = {"--all", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--test"};
         launchAndCaptureOutput(params);
         TestingDecider decider = (TestingDecider) instance;
         // we expect to see 133 files in total
@@ -169,14 +169,14 @@ public class BasicDeciderTest extends PluginTest {
     public void testSEQWARE1297Failed() {
         TestingDecider decider = (TestingDecider) instance;
         
-        String[] params = new String[]{"--all", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "10"};
+        String[] params = new String[]{"--all", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "10", "--test"};
         launchAndCaptureOutput(params);
         decider = (TestingDecider) instance;
         // we expect to see 133 files in total
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
         Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 95);
         
-        params = new String[]{"--all", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "1"};
+        params = new String[]{"--all", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "1", "--test"};
         launchAndCaptureOutput(params);
         // we expect to see 133 files in total
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
