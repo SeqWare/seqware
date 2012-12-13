@@ -174,7 +174,7 @@ public class SymLinkFileReporter extends Plugin {
     }
     
     private void okGo(List<ReturnValue> returnValues, String rootDirectory, String studyName) throws IOException {
-        println("There are " + returnValues.size() + " files in total before filtering");
+        println("There are " + returnValues.size() + " returnValues in total before filtering");
         println("Saving symlinks and creating CSV file");
         
         returnValues = FindAllTheFiles.filterReturnValues(returnValues, studyName,
