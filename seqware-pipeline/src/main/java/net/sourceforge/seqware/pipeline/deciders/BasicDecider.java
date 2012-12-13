@@ -415,6 +415,9 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     if (test || !rerun) {
                         //don't run, but report it
                         Log.debug("NOT RUNNING. test=" + test + " or !rerun=" + !rerun);
+                        if (rerun) {
+                            reportLaunch();
+                        }
                         ret = do_summary();
                     } else if (launched++ < launchMax) {
                         //construct the INI and run it
@@ -431,6 +434,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 //                                    new ArrayList(workflowParentAccessionsToRun), false, options.nonOptionArguments());
 //                        }
                         //construct the INI and run it
+                        boolean proceed = reportLaunch();
+                        if (!proceed){
+                            Log.debug("NOT RUNNING. test=" + test + " or !rerun=" + !rerun);
+                            continue;
+                        }
                         
                         ArrayList<String> runArgs = constructCommand();
                         PluginRunner.main(runArgs.toArray(new String[runArgs.size()]));
@@ -492,57 +500,27 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         //TODO: not sure where this number failed should be populated from after refactoring to use ReturnValue
         int numberFailed = 0;
         
-//        Log.debug("Check previous workflow runs: "+previousWorkflowRuns.size());
-//        for (String workflowRunAcc : previousWorkflowRuns) {
-//            String report = metaws.getWorkflowRunReport(Integer.parseInt(workflowRunAcc));
-//            String[] lines = report.split("\n");
-//            String[] reportHeader = lines[0].split("\t");
-//            String[] data = lines[1].split("\t");
-//            Map<String, String> map = new TreeMap<String, String>();
-//            for (int i = 0; i < reportHeader.length; i++) {
-//                Log.debug("Workflow Run Report item: " + reportHeader[i].trim() + "->" + data[i].trim());
-//                map.put(reportHeader[i].trim(), data[i].trim());
-//            }
-//
-//            String[] wf = map.get("Workflow").trim().split("\\s");
-//            String wfAccession = new Integer(metadata.getWorkflowAccession(wf[0], wf[1])).toString();
-//            if (wfAccession.equals(wfAccession)) {
-//                Log.debug("Current wf-accession found, "+wfAccession+" run "+workflowRunAcc );
-//                String ranOn = map.get("Input File Paths");
-//                String[] ranOnFiles = ranOn.split(",");
-//                if (!compareWorkflowRunFiles(ranOnFiles, filesToRun)) {
-//                    Log.error("There are fewer files to run on in the database than were previously run on this sample!");
-//                    Log.error("Files found to run in database: " + filesToRun.size());
-//                    Log.error("But yet workflow run " + workflowRunAcc + " ran on " + ranOnFiles.length);
-//                    rerun = false;
-//                }
-//                String status = map.get("Workflow Run Status");
-//                Log.debug("Status is " + status);
-//                if (!"failed".equals(status)) {
-//                    Log.debug("The status is " + status + " so not running this workflow");
-//                    rerun = false;
-//                } else {
-//                    Log.debug("The status is failed:" + numberFailed);
-//                    numberFailed++;
-//                }
-//            } else if (workflowAccessionsToCheck.contains(wfAccession))
-//            {
-//                Log.debug("check wf-accession found, "+wfAccession+" run "+workflowRunAcc );
-//                rerun=false;
-//            }
-//            else {
-//                Log.error("There is a workflow accession in previous runs that is not in check-wf-accessions or wf-accession: "+wfAccession);
         for (ReturnValue workflowRun : previousWorkflowRuns) {
-            if (workflowAccession.equals(workflowRun.getAttribute(Header.WORKFLOW_SWA.getTitle()))) {
+            String previousSWID = workflowRun.getAttribute(Header.WORKFLOW_SWA.getTitle());
+            if (workflowAccession.equals(previousSWID)) {
                 String workflowRunAcc = workflowRun.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle());
-                if (!compareWorkflowRunFiles(workflowRunAcc, filesToRun)) {
+                boolean shouldRerun = compareWorkflowRunFiles(workflowRunAcc, filesToRun);
+                boolean failed = isWorkflowRunWithFailureStatus(workflowRunAcc);
+                                
+                if (!shouldRerun && !failed) {
+                    // means that we detected one run with the same files which did not fail
+                    // thus, we do not need to rerun
                     rerun = false;
                     break;
                 }
-            } else {
-                rerun=false;
-                break;
-            }
+                if (failed){
+                    numberFailed++;
+                } else {
+                    Log.stdout("failing " + workflowRunAcc + " since it doesn't currently have a status of failed");
+                    rerun = false;
+                    break;
+                }
+            } 
         }
 
         if (numberFailed >= this.rerunMax) {
@@ -551,36 +529,18 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         }
         return rerun;
     }
-
-    // leaving both versions of compareWorkflowRunFiles here, not sure which one is preferred or which came later
     
-    /**
-     * Tests if the files from the workflow run (workflowRunAcc) are the same as
-     * those found in the database (filesToRun). True if the filesToRun has more
-     * files than the workflow run. True if the filesToRun and the workflow run
-     * have the same number of files but with different filepaths. False if the
-     * filesToRun and the workflow run have the same number of files with the
-     * same file paths. False and prints an error message if there are more
-     * files in the workflow run than in the filesToRun.
-     */
-    public boolean compareWorkflowRunFiles(String[] ranOnFiles, Collection<String> filesToRun) {
-        boolean rerun;
-
-        if (ranOnFiles.length < filesToRun.size()) {
-            rerun = true;
-        } else if (ranOnFiles.length == filesToRun.size()) {
-            rerun = false;
-            for (String file : ranOnFiles) {
-                //checks to see if the files in filesToRun are different from those it has ran on previously
-                if (!filesToRun.contains(file)) {
-                    rerun = true;
-                }
-            }
-        } else {
-            rerun = false;
+    public boolean isWorkflowRunWithFailureStatus(String workflowRunAcc) {
+        boolean failure = false;
+        Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
+        String status = map.get("Workflow Run Status");
+        Log.debug("Status is " + status);
+        if (!"failed".equals(status)) {
+            Log.debug("The status is " + status + " so not running this workflow");
+        }else{
+            failure = true;
         }
-
-        return rerun;
+        return failure;
     }
     
     /**
@@ -593,15 +553,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * files in the workflow run than in the filesToRun.
      */
     public boolean compareWorkflowRunFiles(String workflowRunAcc, Collection<String> filesToRun) {
-
-        String report = metaws.getWorkflowRunReport(Integer.parseInt(workflowRunAcc));
-        String[] lines = report.split("\n");
-        String[] header = lines[0].split("\t");
-        String[] data = lines[1].split("\t");
-        Map<String, String> map = new TreeMap<String, String>();
-        for (int i = 0; i < header.length; i++) {
-            map.put(header[i].trim(), data[i].trim());
-        }
+        Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
 
         String ranOn = map.get("Input File Paths");
         String[] ranOnFiles = ranOn.split(",");
@@ -899,5 +851,25 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private boolean isProcessingOrMultipleFailed(List<ReturnValue> files) {
 
         return false;
+    }
+
+    /**
+     * Report an actual launch of a workflow for testing purpose
+     * @return false iff we don't actually want to launch
+     */
+    protected boolean reportLaunch() {
+        return true;
+    }
+
+    private Map<String, String> generateWorkflowRunMap(String workflowRunAcc) throws NumberFormatException {
+        String report = metaws.getWorkflowRunReport(Integer.parseInt(workflowRunAcc));
+        String[] lines = report.split("\n");
+        String[] header = lines[0].split("\t");
+        String[] data = lines[1].split("\t");
+        Map<String, String> map = new TreeMap<String, String>();
+        for (int i = 0; i < header.length; i++) {
+            map.put(header[i].trim(), data[i].trim());
+        }
+        return map;
     }
 }
