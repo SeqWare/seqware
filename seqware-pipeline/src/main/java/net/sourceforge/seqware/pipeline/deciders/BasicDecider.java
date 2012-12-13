@@ -433,13 +433,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 //                                    iniFiles, metadataWriteback, new ArrayList(parentAccessionsToRun),
 //                                    new ArrayList(workflowParentAccessionsToRun), false, options.nonOptionArguments());
 //                        }
-                        //construct the INI and run it
-                        boolean proceed = reportLaunch();
-                        if (!proceed){
-                            Log.debug("NOT RUNNING. test=" + test + " or !rerun=" + !rerun);
-                            continue;
-                        }
-                        
+                        //construct the INI and run it                     
                         ArrayList<String> runArgs = constructCommand();
                         PluginRunner.main(runArgs.toArray(new String[runArgs.size()]));
                         Log.stdout("Launching.");
