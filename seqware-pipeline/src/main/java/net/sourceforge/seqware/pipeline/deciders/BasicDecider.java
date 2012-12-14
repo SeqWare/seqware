@@ -88,7 +88,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         parser.acceptsAll(Arrays.asList("run"), "Run this workflow now. This is the default behaviour. See also: --schedule");
         parser.acceptsAll(Arrays.asList("ignore-skip-flag"), "Ignores any 'skip' flags on lanes, IUSes, sequencer runs, samples, etc. Use caution.");
         parser.acceptsAll(Arrays.asList("launch-max"), "The maximum number of jobs to launch at once. Default: infinite.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("rerun-max"), "The maximum time to re-launch a workflowrun if failed. Default: 5.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("rerun-max"), "The maximum number of times to re-launch a workflowrun if failed. Default: 5.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("host", "ho"), "Used only in combination with --schedule to schedule onto a specific host. If not provided, the default is the local host").withRequiredArg();
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
@@ -316,7 +316,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             for (Study study : studies) {
                 String name = study.getTitle();
                 Log.stdout("Retrieving study " + name);
-                rv = metadata.findFilesAssociatedWithAStudy(name);
+                rv = metadata.findFilesAssociatedWithAStudy(name, false);
                 mappedFiles = separateFiles(rv, groupBy);
                 ret = launchWorkflows(mappedFiles);
                 if (ret.getExitStatus() != ReturnValue.SUCCESS) {
@@ -326,13 +326,13 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             return ret;
         } else if (options.has("study-name")) {
             String studyName = (String) options.valueOf("study-name");
-            vals = metaws.findFilesAssociatedWithAStudy(studyName);
+            vals = metaws.findFilesAssociatedWithAStudy(studyName, false);
         } else if (options.has("sample-name")) {
             String sampleName = (String) options.valueOf("sample-name");
-            vals = metaws.findFilesAssociatedWithASample(sampleName);
+            vals = metaws.findFilesAssociatedWithASample(sampleName, false);
         } else if (options.has("sequencer-run-name")) {
             String runName = (String) options.valueOf("sequencer-run-name");
-            vals = metaws.findFilesAssociatedWithASequencerRun(runName);
+            vals = metaws.findFilesAssociatedWithASequencerRun(runName, false);
         } else {
             Log.error("Unknown option");
         }
@@ -491,30 +491,32 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     public boolean rerunWorkflowRun(Collection<ReturnValue> previousWorkflowRuns, Collection<String> filesToRun) {
         boolean rerun = true;
         
-        //TODO: not sure where this number failed should be populated from after refactoring to use ReturnValue
         int numberFailed = 0;
         
         for (ReturnValue workflowRun : previousWorkflowRuns) {
             String previousSWID = workflowRun.getAttribute(Header.WORKFLOW_SWA.getTitle());
+            // only consider previous runs of the same workflow
             if (workflowAccession.equals(previousSWID)) {
                 String workflowRunAcc = workflowRun.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle());
                 boolean shouldRerun = compareWorkflowRunFiles(workflowRunAcc, filesToRun);
                 boolean failed = isWorkflowRunWithFailureStatus(workflowRunAcc);
                                 
-                if (!shouldRerun && !failed) {
-                    // means that we detected one run with the same files which did not fail
-                    // thus, we do not need to rerun
+                // the files override everything, if they say not to re-run, then don't re-run
+                if (!shouldRerun){
                     rerun = false;
                     break;
+                } else{
+                    // if we have a previous failure, count it up and proceed
+                    if (failed){
+                        numberFailed++;
+                    } else{
+                    // if we have a previous non-failure, whether submitted, pending, etc. don't rerun it
+                        Log.stdout("failing " + workflowRunAcc + " since it doesn't currently have a status of failed");
+                        rerun = false;
+                        break;
+                    }
                 }
-                if (failed){
-                    numberFailed++;
-                } else {
-                    Log.stdout("failing " + workflowRunAcc + " since it doesn't currently have a status of failed");
-                    rerun = false;
-                    break;
-                }
-            } 
+            }
         }
 
         if (numberFailed >= this.rerunMax) {
@@ -697,15 +699,34 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
 //    protected
     public Map<String, List<ReturnValue>> separateFiles(List<ReturnValue> vals, String groupBy) {
+        // separate out the leaf workflow_run records which aren't files
+        List<ReturnValue> files = new ArrayList<ReturnValue>();
+        Map<String, List<ReturnValue>> notFiles = new HashMap<String, List<ReturnValue>>();
+        String fileIndicator = FindAllTheFiles.FILE_SWA;
+        String workflowrunIndicator = FindAllTheFiles.WORKFLOW_SWA;
+        for (ReturnValue r : vals){
+            if (r.getAttributes().containsKey(fileIndicator)){
+                files.add(r);
+            } else if(r.getAttributes().containsKey(workflowrunIndicator)){
+                String iusStr = r.getAttribute(FindAllTheFiles.IUS_SWA);
+                if (!notFiles.containsKey(iusStr)){
+                    notFiles.put(iusStr, new ArrayList<ReturnValue>());
+                }
+                notFiles.get(r.getAttribute(FindAllTheFiles.IUS_SWA)).add(r);
+            }
+        }
+        Log.info("Found " + notFiles.size() + " leaf nodes that were not files");
+        
         //get files from study
-
         Map<String, List<ReturnValue>> map = new HashMap<String, List<ReturnValue>>();
 
         //group files according to the designated header (e.g. sample SWID)
-        for (ReturnValue r : vals) {
+        for (ReturnValue r : files) {
             String currVal = r.getAttributes().get(groupBy);
-
-            currVal = handleGroupByAttribute(currVal);
+            
+            if (currVal != null){
+                currVal = handleGroupByAttribute(currVal);
+            }
 
             List<ReturnValue> vs = map.get(currVal);
             if (vs == null) {
@@ -714,6 +735,23 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             vs.add(r);
             map.put(currVal, vs);
         }
+        
+        // in every group of files, if any group has a IUS that corresponds to a leaf WorkflowRun, add that leaf into that group
+        // so that it can be considered
+         for (String key : map.keySet()) {
+                Set<ReturnValue> applicableLeafs = new HashSet<ReturnValue>();
+                //for each grouping (e.g. sample), iterate through the files
+                List<ReturnValue> filesInGroup = map.get(key);
+                for(ReturnValue f : files){
+                    String ius = f.getAttribute(FindAllTheFiles.IUS_SWA);
+                    List<ReturnValue> get = notFiles.get(ius);
+                    if (get != null){
+                        applicableLeafs.addAll(get);
+                    }
+                }
+                Log.trace("Adding " + applicableLeafs.size() + " applicable leaf nodes that were not files to the group key: " + key);
+                map.get(key).addAll(applicableLeafs);
+         }
 
         return map;
 

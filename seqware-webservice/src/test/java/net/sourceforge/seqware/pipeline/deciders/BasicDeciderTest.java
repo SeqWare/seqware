@@ -28,7 +28,6 @@ import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.PluginTest;
-import org.apache.commons.lang.StringUtils;
 import org.junit.*;
 
 /**
@@ -39,12 +38,6 @@ import org.junit.*;
  * @since 0.13.3
  */
 public class BasicDeciderTest extends PluginTest {
-
-    /**
-     * <p>Constructor for BasicDeciderTest.</p>
-     */
-    public BasicDeciderTest() {
-    }
 
     @Before
     @Override
@@ -59,10 +52,7 @@ public class BasicDeciderTest extends PluginTest {
     public void testListAllFiles() {
         // this is actually a bit misnamed, we return all files that are associated with all studies
         String[] params = {"--all", "--wf-accession", "4", "--parent-wf-accessions", "5", "--test"};
-        String redirected = launchAndCaptureOutput(params);
-        String[] split = redirected.split("study");
-        // five studies in test DB mean the output splits into 7 parts
-        Assert.assertTrue("output does not contain five studies", split.length == 7);
+        launchAndCaptureOutput(params);
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
         // we expect to see 133 files in total
@@ -162,26 +152,34 @@ public class BasicDeciderTest extends PluginTest {
         TestingDecider decider = (TestingDecider) instance;
         // we expect to see 133 files in total
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 95);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 90);
     }
     
     @Test
-    public void testSEQWARE1297Failed() {
+    public void testSEQWARE1297DoNotLaunchProcessingWorkflows() {
+        String[] params = {"--sample", "Sample_Tumour", "--wf-accession", "2860", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--test"};
+        launchAndCaptureOutput(params);
         TestingDecider decider = (TestingDecider) instance;
-        
-        String[] params = new String[]{"--all", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "10", "--test"};
+        // we expect to see 133 files in total
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 39);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 0);
+    }
+    
+    
+    @Test
+    public void testSEQWARE1297DoNotLaunchFailedWorkflows() {
+        TestingDecider decider = (TestingDecider) instance;
+        // trying to find a good test for this, doesn't look like there is one in the testing database?
+        String[] params = new String[]{"--sample", "", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "10", "--test"};
         launchAndCaptureOutput(params);
         decider = (TestingDecider) instance;
-        // we expect to see 133 files in total
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 95);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 68);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 52);
         
-        params = new String[]{"--all", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "1", "--test"};
+        params = new String[]{"--sample", "", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "1", "--test"};
         launchAndCaptureOutput(params);
-        // we expect to see 133 files in total
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
-        // ok, we're running five less files which seems to match "select w.sw_accession from workflow_run r, workflow w where status='failed' AND r.workflow_id = w.workflow_id;"
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 90);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 68);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 52);
     }
     
     public class HaltingDecider extends TestingDecider{

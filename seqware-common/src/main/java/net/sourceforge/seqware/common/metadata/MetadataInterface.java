@@ -384,6 +384,15 @@ public interface MetadataInterface {
    * @return a {@link java.util.List} object.
    */
   List<ReturnValue> findFilesAssociatedWithASample(String sampleName);
+  
+  /**
+   * <p>findFilesAssociatedWithASample.</p>
+   *
+   * @param sampleName a {@link java.lang.String} object.
+   * @param requireFiles
+   * @return a {@link java.util.List} object.
+   */
+  List<ReturnValue> findFilesAssociatedWithASample(String sampleName, boolean requireFiles);
 
     /**
      * <p>addWorkflow.</p>
@@ -442,6 +451,16 @@ public interface MetadataInterface {
    * @return a {@link java.util.List} object.
    */
   public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName);
+  
+  /**
+   * Somewhat misnamed for now, this can return a mix of files and bare-nodes in the 
+   * database hierarchy resulting from FileAllTheFiles.requireFiles=false
+   *
+   * @param studyName a {@link java.lang.String} object.
+   * @param requireFiles 
+   * @return a {@link java.util.List} object.
+   */
+  public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, boolean requireFiles);
 
   /**
    * <p>saveFileForIus.</p>
@@ -468,6 +487,14 @@ public interface MetadataInterface {
    * @return a {@link java.util.List} object.
    */
   public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName);
+  
+    /**
+   * <p>findFilesAssociatedWithASequencerRun.</p>
+   *
+   * @param sequencerRunName a {@link java.lang.String} object.
+   * @return a {@link java.util.List} object.
+   */
+  public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName, boolean requireFiles);
 
   /**
    * <p>getWorkflowRunsByStatus.</p>
