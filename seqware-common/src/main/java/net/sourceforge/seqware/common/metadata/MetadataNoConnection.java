@@ -31,6 +31,7 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import org.apache.commons.lang.NotImplementedException;
 
 import org.apache.log4j.Logger;
 
@@ -625,5 +626,20 @@ public class MetadataNoConnection extends Metadata {
     public Workflow getWorkflow(int workflowAccession) {
         logger.info("No metadata connection");
         return null;
+    }
+
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithASample(String sampleName, boolean requireFiles) {
+         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, boolean requireFiles) {
+         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName, boolean requireFiles) {
+         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
 }

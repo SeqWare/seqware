@@ -175,6 +175,10 @@ public class FindAllTheFiles {
   private Set<Integer> usefulProcessings = new TreeSet<Integer>();
   private Set<Integer> unUsefulProcessings = new TreeSet<Integer>();
   private Set<Integer> seenWorkflowRuns = new TreeSet<Integer>();
+  /**
+   * When true, we report only leafs that are nodes.
+   * When false, we report all leafs regardless of whether they are nodes.
+   */
   private boolean requireFiles = true;
   private Logger logger = Logger.getLogger(FindAllTheFiles.class);
 
@@ -294,11 +298,24 @@ public class FindAllTheFiles {
     // lane);
     // parseProcessingsFromWorkflowRuns(workflowRuns, currentProcessings);
     // }
+    // SEQWARE-1297 - we need to go down the ius_workflow_run link table to report 
+    // workflow_runs which may not be complete yet, but we cannot return files from it since
+    // there is ambiguity as to which ius they may belong to
+    if (!requireFiles) {
+        Set<WorkflowRun> workflowRuns = ius.getWorkflowRuns();
+        for(WorkflowRun wr : workflowRuns){
+            ReturnValue ret = createReturnValue(sample, null, study, e, ius, lane, sequencerRun, wr, wr.getWorkflow());
+            returnValues.add(ret);
+        }
+    }
+
+    
     for (Processing processing : currentProcessings) {
       filesFromProcessing(processing, e, sample, study, ius, lane, sequencerRun);
     }
 
-    if (currentProcessings.isEmpty() && !requireFiles) {
+    // if we go down ius_workflow_run then the ius is no longer a leaf
+    if (currentProcessings.isEmpty() && !requireFiles && ius.getWorkflowRuns().isEmpty()) {
       ReturnValue ret = createReturnValue(sample, null, study, e, ius, lane, sequencerRun, null, null);
       returnValues.add(ret);
     }
@@ -351,7 +368,10 @@ public class FindAllTheFiles {
     }
     int numFiles = processing.getFiles().size();
 
-    if (!requireFiles) {
+    // SEQWARE-1297
+    // before this ticket, this either reported empty processing events when we don't require files 
+    // OR we reported the files. We actually want to report the files if they are present
+    if (!requireFiles && processing.getFiles().size() == 0) {
       ReturnValue ret = createReturnValue(sample, processing, study, e, ius, lane, sequencerRun, workflowRun, workflow);
       returnValues.add(ret);
     } else {
@@ -688,89 +708,89 @@ public class FindAllTheFiles {
     this.requireFiles = requireFiles;
   }
 
-  /**
-   * <p>filterReturnValuesV2.</p>
-   *
-   * @param out a {@link java.io.Writer} object.
-   * @param returnValues a {@link java.util.List} object.
-   * @param studyName a {@link java.lang.String} object.
-   * @param fileType a {@link java.lang.String} object.
-   * @param duplicates a boolean.
-   * @param showFailedAndRunning a boolean.
-   * @param showStatus a boolean.
-   * @throws java.io.IOException if any.
-   */
-  public static void filterReturnValuesV2(Writer out, List<ReturnValue> returnValues, String studyName,
-      String fileType, boolean duplicates, boolean showFailedAndRunning, boolean showStatus) throws IOException {
-
-    List<ReturnValue> newReturnValues = new ArrayList<ReturnValue>();
-
-    Log.info("There are " + returnValues.size() + " files in total before filtering");
-    Set<FileMetadata> set = new TreeSet<FileMetadata>(new Comparator<FileMetadata>() {
-
-      @Override
-      public int compare(FileMetadata t, FileMetadata t1) {
-        return t.getFilePath().compareTo(t1.getFilePath());
-      }
-    });
-    for (ReturnValue rv : returnValues) {
-      ArrayList<FileMetadata> cloneFiles = (ArrayList<FileMetadata>) rv.getFiles().clone();
-
-      if (!duplicates) {
-        for (FileMetadata file : cloneFiles) {
-          if (!set.add(file)) {
-            Log.debug("Removing file because file is a duplicate: " + file.getFilePath());
-            rv.getFiles().remove(file);
-          }
-        }
-      }
-
-      for (FileMetadata file : cloneFiles) {
-        if (!fileType.equals(FILETYPE_ALL)) {
-          if (!file.getMetaType().equals(fileType)) {
-            Log.debug("Removing file because filetype is wrong:" + file.getMetaType() + " is not " + fileType);
-            rv.getFiles().remove(file);
-          }
-        }
-      }
-      if (rv.getFiles().isEmpty()) {
-        Log.debug("Files are empty. Skipping.");
-        continue;
-      }
-
-      // if the returnValue isn't successful, remove it
-      if (rv.getExitStatus() != ReturnValue.SUCCESS) {
-        Log.error("Exit status: " + rv.getExitStatus());
-        continue;
-      }
-
-      // if the workflow run is not successful and we don't want to see all of
-      // the files, then skip it.
-      String workflowRunStatus = rv.getAttribute(FindAllTheFiles.WORKFLOW_RUN_STATUS);
-      if (workflowRunStatus != null && !workflowRunStatus.equals(Metadata.SUCCESS)
-          && !workflowRunStatus.equals(Metadata.COMPLETED)) {
-        if (!showFailedAndRunning) {
-          Log.debug("Not showing failed or running workflow run" + workflowRunStatus);
-          continue;
-        }
-      }
-
-      replaceSpaces(rv, FindAllTheFiles.EXPERIMENT_NAME);
-      replaceSpaces(rv, FindAllTheFiles.PARENT_SAMPLE_NAME);
-      replaceSpaces(rv, FindAllTheFiles.SAMPLE_NAME);
-      replaceSpaces(rv, FindAllTheFiles.LANE_NAME);
-      replaceSpaces(rv, FindAllTheFiles.SEQUENCER_RUN_NAME);
-      replaceSpaces(rv, FindAllTheFiles.WORKFLOW_RUN_NAME);
-      replaceSpaces(rv, FindAllTheFiles.WORKFLOW_NAME);
-
-      for (FileMetadata fm : rv.getFiles()) {
-        print(out, rv, studyName, showStatus, fm);
-      }
-
-      newReturnValues.add(rv);
-    }
-    Log.info("There are " + newReturnValues.size() + " files in total after filtering");
-  }
+//  /**
+//   * <p>filterReturnValuesV2.</p>
+//   *
+//   * @param out a {@link java.io.Writer} object.
+//   * @param returnValues a {@link java.util.List} object.
+//   * @param studyName a {@link java.lang.String} object.
+//   * @param fileType a {@link java.lang.String} object.
+//   * @param duplicates a boolean.
+//   * @param showFailedAndRunning a boolean.
+//   * @param showStatus a boolean.
+//   * @throws java.io.IOException if any.
+//   */
+//  public static void filterReturnValuesV2(Writer out, List<ReturnValue> returnValues, String studyName,
+//      String fileType, boolean duplicates, boolean showFailedAndRunning, boolean showStatus) throws IOException {
+//
+//    List<ReturnValue> newReturnValues = new ArrayList<ReturnValue>();
+//
+//    Log.info("There are " + returnValues.size() + " files in total before filtering");
+//    Set<FileMetadata> set = new TreeSet<FileMetadata>(new Comparator<FileMetadata>() {
+//
+//      @Override
+//      public int compare(FileMetadata t, FileMetadata t1) {
+//        return t.getFilePath().compareTo(t1.getFilePath());
+//      }
+//    });
+//    for (ReturnValue rv : returnValues) {
+//      ArrayList<FileMetadata> cloneFiles = (ArrayList<FileMetadata>) rv.getFiles().clone();
+//
+//      if (!duplicates) {
+//        for (FileMetadata file : cloneFiles) {
+//          if (!set.add(file)) {
+//            Log.debug("Removing file because file is a duplicate: " + file.getFilePath());
+//            rv.getFiles().remove(file);
+//          }
+//        }
+//      }
+//
+//      for (FileMetadata file : cloneFiles) {
+//        if (!fileType.equals(FILETYPE_ALL)) {
+//          if (!file.getMetaType().equals(fileType)) {
+//            Log.debug("Removing file because filetype is wrong:" + file.getMetaType() + " is not " + fileType);
+//            rv.getFiles().remove(file);
+//          }
+//        }
+//      }
+//      if (rv.getFiles().isEmpty()) {
+//        Log.debug("Files are empty. Skipping.");
+//        continue;
+//      }
+//
+//      // if the returnValue isn't successful, remove it
+//      if (rv.getExitStatus() != ReturnValue.SUCCESS) {
+//        Log.error("Exit status: " + rv.getExitStatus());
+//        continue;
+//      }
+//
+//      // if the workflow run is not successful and we don't want to see all of
+//      // the files, then skip it.
+//      String workflowRunStatus = rv.getAttribute(FindAllTheFiles.WORKFLOW_RUN_STATUS);
+//      if (workflowRunStatus != null && !workflowRunStatus.equals(Metadata.SUCCESS)
+//          && !workflowRunStatus.equals(Metadata.COMPLETED)) {
+//        if (!showFailedAndRunning) {
+//          Log.debug("Not showing failed or running workflow run" + workflowRunStatus);
+//          continue;
+//        }
+//      }
+//
+//      replaceSpaces(rv, FindAllTheFiles.EXPERIMENT_NAME);
+//      replaceSpaces(rv, FindAllTheFiles.PARENT_SAMPLE_NAME);
+//      replaceSpaces(rv, FindAllTheFiles.SAMPLE_NAME);
+//      replaceSpaces(rv, FindAllTheFiles.LANE_NAME);
+//      replaceSpaces(rv, FindAllTheFiles.SEQUENCER_RUN_NAME);
+//      replaceSpaces(rv, FindAllTheFiles.WORKFLOW_RUN_NAME);
+//      replaceSpaces(rv, FindAllTheFiles.WORKFLOW_NAME);
+//
+//      for (FileMetadata fm : rv.getFiles()) {
+//        print(out, rv, studyName, showStatus, fm);
+//      }
+//
+//      newReturnValues.add(rv);
+//    }
+//    Log.info("There are " + newReturnValues.size() + " files in total after filtering");
+//  }
 
   /**
    * <p>filterReturnValues.</p>
