@@ -766,62 +766,87 @@ public class MetadataWS extends Metadata {
     return new ReturnValue(ReturnValue.SUCCESS);
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public List<ReturnValue> findFilesAssociatedWithASample(String sampleName) {
-    ReturnValueList rv = new ReturnValueList();
-    List<ReturnValue> values = new ArrayList<ReturnValue>();
-    try {
-      List<Sample> samples = ll.matchSampleName(sampleName);
-      JaxbObject<ReturnValueList> jaxb = new JaxbObject<ReturnValueList>();
-      for (Sample sample: samples)
-      {
-        rv = (ReturnValueList) ll.findObject("/samples", "/" + sample.getSwAccession() + "/files", jaxb, rv);
-        values.addAll(rv.getList());
-      }
-    } catch (Exception e) {
-      Log.error("Problem finding files associated with sample: "+sampleName,e);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithASample(String sampleName) {
+        return findFilesAssociatedWithASample(sampleName, true);
     }
-    return values;
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName) {
-    ReturnValueList rv = new ReturnValueList();
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithASample(String sampleName, boolean requireFiles) {
+        ReturnValueList rv = new ReturnValueList();
+        List<ReturnValue> values = new ArrayList<ReturnValue>();
+        try {
+            List<Sample> samples = ll.matchSampleName(sampleName);
+            JaxbObject<ReturnValueList> jaxb = new JaxbObject<ReturnValueList>();
+            String strRequireFiles = "";
+            if (!requireFiles) {
+                strRequireFiles = "?requireFiles=false";
+            }
+            for (Sample sample : samples) {
+                rv = (ReturnValueList) ll.findObject("/samples", "/" + sample.getSwAccession() + "/files" + strRequireFiles, jaxb, rv);
+                values.addAll(rv.getList());
+            }
+        } catch (Exception e) {
+            Log.error("Problem finding files associated with sample: " + sampleName, e);
+        }
+        return values;
+    }
+
+    
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, boolean requireFiles) {
+        ReturnValueList rv = new ReturnValueList();
     try {
       Study study = ll.findStudy("?title=" + studyName);
       JaxbObject<ReturnValueList> jaxb = new JaxbObject<ReturnValueList>();
-
-      rv = (ReturnValueList) ll.findObject("/studies", "/" + study.getSwAccession() + "/files", jaxb,
+      String strRequireFiles = "";
+      if (!requireFiles) {
+         strRequireFiles = "?requireFiles=false";
+      }
+      rv = (ReturnValueList) ll.findObject("/studies", "/" + study.getSwAccession() + "/files" + strRequireFiles, jaxb,
               new ReturnValueList());
     } catch (Exception e) {
       e.printStackTrace();
     }
     return rv.getList();
-  }
-
+    }
+    
   /**
    * {@inheritDoc}
    */
   @Override
-  public List<ReturnValue> findFilesAssociatedWithASequencerRun(String runName) {
-    ReturnValueList rv = new ReturnValueList();
+  public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName) {
+    return findFilesAssociatedWithAStudy(studyName, true);
+  }
+
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithASequencerRun(String runName, boolean requireFiles) {
+        ReturnValueList rv = new ReturnValueList();
     try {
       SequencerRun run = ll.findSequencerRun("?name=" + runName);
       JaxbObject<ReturnValueList> jaxb = new JaxbObject<ReturnValueList>();
-
-      rv = (ReturnValueList) ll.findObject("/sequencerruns", "/" + run.getSwAccession() + "/files", jaxb,
+      String strRequireFiles = "";
+      if (!requireFiles) {
+         strRequireFiles = "?requireFiles=false";
+      }
+      rv = (ReturnValueList) ll.findObject("/sequencerruns", "/" + run.getSwAccession() + "/files" + strRequireFiles, jaxb,
               new ReturnValueList());
     } catch (Exception e) {
       e.printStackTrace();
       // rv.setExitStatus(ReturnValue.FAILURE);
     }
     return rv.getList();
+    }
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<ReturnValue> findFilesAssociatedWithASequencerRun(String runName) {
+    return findFilesAssociatedWithASequencerRun(runName, true);
   }
 
   /**
