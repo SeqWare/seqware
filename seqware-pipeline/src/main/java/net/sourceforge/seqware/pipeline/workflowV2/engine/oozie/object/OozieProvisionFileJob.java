@@ -95,7 +95,7 @@ public class OozieProvisionFileJob extends OozieJob {
 		String output = this.outputDir;
 		if(this.file.isOutput()) {
 			inputArg = "--input-file-metadata";
-			inputValue =  this.jobObj.getAlgo() + "::" + this.file.getType() + "::";
+			inputValue =  this.jobObj.getAlgo() + "::" + this.file.getType() + "::" + this.file.getSourcePath();
 			output = this.metadataOutputPrefix + "/" + this.outputDir;
 		}
 		Element inputTE = new Element("arg", WorkflowApp.NAMESPACE);
