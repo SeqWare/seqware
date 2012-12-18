@@ -55,6 +55,10 @@ public class OozieJob {
 	public String getName() {
 		return this.name;
 	}
+
+        public String getOozieWorkingDir() {
+          return oozie_working_dir;
+        }
 	
 	private Element getJavaElement() {
 		Element javaE = new Element("java", WorkflowApp.NAMESPACE);
