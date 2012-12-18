@@ -1210,7 +1210,7 @@ public class MetadataWS extends Metadata {
    * {@inheritDoc}
    */
   @Override
-  public ReturnValue saveFileForIus(int workflowRunId, int iusAccession, FileMetadata file) {
+  public ReturnValue saveFileForIus(int workflowRunId, int iusAccession, FileMetadata file, int processingId) {
     throw new UnsupportedOperationException("Not supported yet.");
   }
 
