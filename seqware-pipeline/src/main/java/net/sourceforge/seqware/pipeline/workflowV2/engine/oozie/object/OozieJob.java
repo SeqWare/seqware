@@ -17,9 +17,9 @@ public class OozieJob {
 	protected String wfrAccession;
 	protected boolean wfrAncesstor;
 	protected AbstractJob jobObj;
-	private boolean metadataWriteback;
-	private List<OozieJob> parents;
-	private List<OozieJob> children;
+	protected boolean metadataWriteback;
+	protected List<OozieJob> parents;
+	protected List<OozieJob> children;
 	protected String oozie_working_dir;
 	protected List<String> parentAccessionFiles;
 	
@@ -60,7 +60,7 @@ public class OozieJob {
           return oozie_working_dir;
         }
 	
-	private Element getJavaElement() {
+	protected Element getJavaElement() {
 		Element javaE = new Element("java", WorkflowApp.NAMESPACE);
 		Element jobTracker = new Element("job-tracker", WorkflowApp.NAMESPACE);
 		jobTracker.setText("${jobTracker}");
