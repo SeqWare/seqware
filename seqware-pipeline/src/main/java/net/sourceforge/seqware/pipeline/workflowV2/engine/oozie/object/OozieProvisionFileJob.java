@@ -50,7 +50,7 @@ public class OozieProvisionFileJob extends OozieJob {
 		return element;
 	}
 
-	private Element getJavaElement() {
+	protected Element getJavaElement() {
 		Element javaE = new Element("java", WorkflowApp.NAMESPACE);
 		Element jobTracker = new Element("job-tracker", WorkflowApp.NAMESPACE);
 		jobTracker.setText("${jobTracker}");
