@@ -872,20 +872,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     }
 
     /**
-     * check all the return value, if one of the status is not failed, then
-     * skip. if all failed and the number of failed less than rerunMax, return
-     * true
-     *
-     * @param swAcc
-     * @param files
-     * @return
-     */
-    private boolean isProcessingOrMultipleFailed(List<ReturnValue> files) {
-
-        return false;
-    }
-
-    /**
      * Report an actual launch of a workflow for testing purpose
      * @return false iff we don't actually want to launch
      */
@@ -903,5 +889,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             map.put(header[i].trim(), data[i].trim());
         }
         return map;
+    }
+    
+    
+    public void setMetaws(MetadataWS metaws) {
+        this.metaws = metaws;
     }
 }

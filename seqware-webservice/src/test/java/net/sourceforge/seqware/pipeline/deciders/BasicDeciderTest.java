@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -46,6 +47,18 @@ public class BasicDeciderTest extends PluginTest {
         instance = new TestingDecider();
         //instance = new BasicDecider();
         instance.setMetadata(metadata);
+    }
+    
+    @Test 
+    public void testIsWorkflowRunWithFailureStatus(){
+        TestingDecider decider = (TestingDecider) instance;
+        decider.setMetaws((MetadataWS)metadata);
+        boolean pendingStatus = decider.isWorkflowRunWithFailureStatus("6602");
+        boolean failedStatus = decider.isWorkflowRunWithFailureStatus("6603");
+        boolean completedStatus = decider.isWorkflowRunWithFailureStatus("6604");
+        Assert.assertTrue("pending status was not false", pendingStatus == false);
+        Assert.assertTrue("failed status was not true", failedStatus == true);
+        Assert.assertTrue("completed status was not false", completedStatus == false);
     }
 
     @Test
@@ -136,7 +149,7 @@ public class BasicDeciderTest extends PluginTest {
         TestingDecider decider = (TestingDecider) instance;
         // we expect to see 133 files in total
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
-        // we expect to never launch with the halting decider 
+        // we expect to launch exactly twice 
         Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 2);
         
         // swap back the decider
@@ -160,7 +173,6 @@ public class BasicDeciderTest extends PluginTest {
         String[] params = {"--sample", "Sample_Tumour", "--wf-accession", "2860", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--test"};
         launchAndCaptureOutput(params);
         TestingDecider decider = (TestingDecider) instance;
-        // we expect to see 133 files in total
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 39);
         Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 0);
     }
@@ -170,6 +182,9 @@ public class BasicDeciderTest extends PluginTest {
     public void testSEQWARE1297DoNotLaunchFailedWorkflows() {
         TestingDecider decider = (TestingDecider) instance;
         // trying to find a good test for this, doesn't look like there is one in the testing database?
+        // there is one pending workflow_run as revealed by "select * from workflow_run  WHERE status = 'pending';"
+        // however, it doesn't appear to be properly linked in 
+        // see "select sh.*, s.* FROM sample_hierarchy sh , (select DISTINCT s.sample_id from workflow_run wr, ius_workflow_runs iwr, ius, sample s WHERE status = 'pending' AND wr.workflow_run_id=iwr.workflow_run_id AND iwr.ius_id=ius.ius_id AND ius.sample_id=s.sample_id) sq, sample s WHERE sh.sample_id=sq.sample_id AND s.sample_id=sh.parent_id;"
         String[] params = new String[]{"--sample", "", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "10", "--test"};
         launchAndCaptureOutput(params);
         decider = (TestingDecider) instance;
@@ -272,7 +287,8 @@ public class BasicDeciderTest extends PluginTest {
     }
 
     /**
-     * The tests below were already here when I (Denis) started work on BasicDecider , but they don't seem to do anything.
+     * The tests below were already here when I (Denis) started work on BasicDecider , but they don't seem to do anything/were commented out.
+     * I basically uncommented them and converted them to JUnit format (from some previous format)
      */
     
     /**
@@ -280,13 +296,16 @@ public class BasicDeciderTest extends PluginTest {
      */
     @Test
     public void testCompareWorkflowRunFiles_Same() {
+        TestingDecider decider = (TestingDecider) instance;
+        decider.setMetaws((MetadataWS)metadata);
+        
         List<String> filesToRun = new ArrayList<String>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R2_001_index8.fastq.gz");
         String workflowRunAcc = "6654";
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-//	assertFalse(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun));
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun) == false);
     }
 
     /**
@@ -294,6 +313,8 @@ public class BasicDeciderTest extends PluginTest {
      */
     @Test
     public void testCompareWorkflowRunFiles_Bigger() {
+        TestingDecider decider = (TestingDecider) instance;
+        decider.setMetaws((MetadataWS)metadata);
 
         List<String> filesToRun = new ArrayList<String>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
@@ -302,7 +323,7 @@ public class BasicDeciderTest extends PluginTest {
         String workflowRunAcc = "6654";
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-//	assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun));
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun));
     }
 
     /**
@@ -310,6 +331,8 @@ public class BasicDeciderTest extends PluginTest {
      */
     @Test
     public void testCompareWorkflowRunFiles_SameButDifferent() {
+        TestingDecider decider = (TestingDecider) instance;
+        decider.setMetaws((MetadataWS)metadata);
 
         List<String> filesToRun = new ArrayList<String>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
@@ -317,7 +340,7 @@ public class BasicDeciderTest extends PluginTest {
         String workflowRunAcc = "6654";
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-//	assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun));
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun));
     }
 
     /**
@@ -325,14 +348,15 @@ public class BasicDeciderTest extends PluginTest {
      */
     @Test
     public void testCompareWorkflowRunFiles_Smaller() {
-
+        TestingDecider decider = (TestingDecider) instance;
+        decider.setMetaws((MetadataWS)metadata);
 
         List<String> filesToRun = new ArrayList<String>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         String workflowRunAcc = "6654";
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-//	assertFalse(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun));
+	Assert.assertFalse(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun));
     }
 
     /**
