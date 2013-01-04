@@ -418,6 +418,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                         if (rerun) {
                             reportLaunch();
                         }
+			Log.stdout("Not launching.");
                         ret = do_summary();
                     } else if (launched++ < launchMax) {
                         //construct the INI and run it
@@ -511,7 +512,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                         numberFailed++;
                     } else{
                     // if we have a previous non-failure, whether submitted, pending, etc. don't rerun it
-                        Log.stdout("failing " + workflowRunAcc + " since it doesn't currently have a status of failed");
+                        Log.debug("Workflow run " + workflowRunAcc + " is blocking the re-run of this workflow with a non-failed, non-complete status");
                         rerun = false;
                         break;
                     }
@@ -551,14 +552,28 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     public boolean compareWorkflowRunFiles(String workflowRunAcc, Collection<String> filesToRun) {
         Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
 
-        String ranOn = map.get("Input File Paths");
-        String[] ranOnFiles = ranOn.split(",");
+        String ranOnString = map.get("Input File Meta-Types");
+        List<String> ranOnList = Arrays.asList(ranOnString.split(","));
+        List<Integer> indices = new ArrayList<Integer>();
+        for (int i=0;i<ranOnList.size(); i++)
+        {
+            if (metaTypes.contains(ranOnList.get(i).trim())) {
+                indices.add(i);
+            }
+        }
+        ranOnString = map.get("Input File Paths");
+        String[] ranOnArr = ranOnString.split(",");
+        ranOnList = new ArrayList<String>();
+        for (Integer i:indices) {
+            ranOnList.add(ranOnArr[i].trim());
+            Log.stdout("Adding item: " + ranOnArr[i]);
+        }
 
-        if (ranOnFiles.length < filesToRun.size()) {
+        if (ranOnList.size() < filesToRun.size()) {
             return true;
-        } else if (ranOnFiles.length == filesToRun.size()) {
+        } else if (ranOnList.size() == filesToRun.size()) {
             boolean rerun = false;
-            for (String file : ranOnFiles) {
+            for (String file : ranOnList) {
                 //checks to see if the files in filesToRun are different from those it has ran on previously
                 if (!filesToRun.contains(file)) {
                     rerun = true;
@@ -568,7 +583,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         } else {
             Log.error("There are fewer files to run on in the database than were previously run on this sample!");
             Log.error("Files found to run in database: " + filesToRun.size());
-            Log.error("But yet workflow run " + workflowRunAcc + " ran on " + ranOnFiles.length);
+            Log.error("But yet workflow run " + workflowRunAcc + " ran on " + ranOnList.size());
             return false;
         }
     }
