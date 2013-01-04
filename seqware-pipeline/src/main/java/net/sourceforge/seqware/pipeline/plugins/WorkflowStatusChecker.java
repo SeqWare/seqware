@@ -21,13 +21,12 @@ import it.sauronsoftware.junique.JUnique;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import joptsimple.OptionSet;
+import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
-import net.sourceforge.seqware.common.util.runtools.RunTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
@@ -45,7 +44,7 @@ public class WorkflowStatusChecker extends Plugin {
 
   ReturnValue ret = new ReturnValue();
   // NOTE: this is shared with WorkflowLauncher so only one can run at a time
-  String appID = "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusCheckerOrLauncher";
+  public static final String appID = "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusCheckerOrLauncher";
   // variables for use in the app
   String hostname = null;
   String username = null;
@@ -87,7 +86,8 @@ public class WorkflowStatusChecker extends Plugin {
       return (ret);
     }
       LocalhostPair localhost = FileTools.getLocalhost(options);
-      if (localhost.returnValue.getExitStatus() != ReturnValue.SUCCESS) {
+      // returnValue can be null if we use forcehost
+      if (localhost.returnValue != null && localhost.returnValue.getExitStatus() != ReturnValue.SUCCESS) {
           return (localhost.returnValue);
       } else {
           this.hostname = localhost.hostname;
@@ -280,6 +280,10 @@ public class WorkflowStatusChecker extends Plugin {
     return(statusDir);
 
   }
+
+    protected Metadata getMetadata() {
+        return metadata;
+    }
 
     
 }
