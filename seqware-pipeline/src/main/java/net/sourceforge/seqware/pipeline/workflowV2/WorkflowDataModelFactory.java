@@ -154,7 +154,7 @@ public class WorkflowDataModelFactory {
 
         Log.info("loading ini files");
         //load ini config
-        Map<String, String> configs = this.loadIniConfigs(workflowAccession, workflowRunAccession);
+        Map<String, String> configs = this.loadIniConfigs(workflowAccession, workflowRunAccession, bundlePath);
 
         //merge command line option with configs
         this.mergeCmdOptions(dataModel);
@@ -238,10 +238,20 @@ public class WorkflowDataModelFactory {
         return dataModel;
     }
 
-    private Map<String, String> resolveMap(Map<String, String> input) {
+    /**
+     * FIXME: this really doesn't do a very through job of variable replacing
+     * and we have multiple copies of similar code floating around, see MapTools
+     * @param input
+     * @param bundlePath
+     * @return 
+     */
+    private Map<String, String> resolveMap(Map<String, String> input, String bundlePath) {
         Map<String, String> result = new HashMap<String, String>();
         for (Map.Entry<String, String> entry : input.entrySet()) {
             String value = entry.getValue();
+            // just try to replace ${workflow_bundle_dir} if needed
+            value = replaceWBD(value, bundlePath);
+            // if it still have a variable try to find it in the hash and fill it in
             if (StringUtils.hasVariable(value)) {
                 value = StringUtils.replace(value, input);
             }
@@ -250,7 +260,7 @@ public class WorkflowDataModelFactory {
         return result;
     }
 
-    private Map<String, String> loadIniConfigs(Integer workflowAccession, Integer workflowRunAccession) {
+    private Map<String, String> loadIniConfigs(Integer workflowAccession, Integer workflowRunAccession, String bundlePath) {
         // the map
 	HashMap<String, String> map = new HashMap<String, String>();
         if (workflowRunAccession != null) {
@@ -264,7 +274,8 @@ public class WorkflowDataModelFactory {
             SortedSet<WorkflowParam> workflowParams = this.metadata
                     .getWorkflowParams(workflowAccession.toString());
             for (WorkflowParam param : workflowParams) {
-                map.put(param.getKey(), param.getValue());
+                // automatically replace ${workflow_bundle_dir} in any config file
+                map.put(param.getKey(), replaceWBD(param.getValue(), bundlePath));
             }
 
             // FIXME: this needs to be implemented otherwise portal submitted won't
@@ -307,6 +318,8 @@ public class WorkflowDataModelFactory {
                 }
             }
             for (String ini : iniFiles) {
+                //the ini file path might actually have ${workflow_bundle_dir} in the name
+                String newIni = replaceWBD(ini, bundlePath);
                 Log.stdout("  INI FILE: " + ini);
                 if ((new File(ini)).exists()) {
                     MapTools.ini2Map(ini, map);
@@ -317,9 +330,11 @@ public class WorkflowDataModelFactory {
         // Parse command line options for additional configuration. Note that we
         // do it last so it takes precedence over the INI
         MapTools.cli2Map(this.params, map);
+        // this doesn't really work as expected
         MapTools.mapExpandVariables(map);
-
-        Map<String, String> ret = this.resolveMap(map);
+        
+        // make absolutely sure the variables are defined and ${workflow_bundle_path} is filled in
+        Map<String, String> ret = this.resolveMap(map, bundlePath);
         return ret;
     }
 

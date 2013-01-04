@@ -37,6 +37,45 @@ public class OozieJavaJob extends OozieJob {
     Element value0 = new Element("value", WorkflowApp.NAMESPACE);
     value0.setText("${queueName}");
     p0.addContent(value0);
+    
+    // map memory
+    p0 = new Element("property", WorkflowApp.NAMESPACE);
+    config.addContent(p0);
+    name0 = new Element("name", WorkflowApp.NAMESPACE);
+    name0.setText("oozie.launcher.mapred.job.map.memory.mb");
+    p0.addContent(name0);
+    value0 = new Element("value", WorkflowApp.NAMESPACE);
+    value0.setText(this.getJobObject().getMaxMemory());
+    p0.addContent(value0);
+    
+    p0 = new Element("property", WorkflowApp.NAMESPACE);
+    config.addContent(p0);
+    name0 = new Element("name", WorkflowApp.NAMESPACE);
+    name0.setText("oozie.launcher.mapred.job.reduce.memory.mb");
+    p0.addContent(name0);
+    value0 = new Element("value", WorkflowApp.NAMESPACE);
+    value0.setText(this.getJobObject().getMaxMemory());
+    p0.addContent(value0);
+    
+    p0 = new Element("property", WorkflowApp.NAMESPACE);
+    config.addContent(p0);
+    name0 = new Element("name", WorkflowApp.NAMESPACE);
+    name0.setText("oozie.launcher.mapreduce.map.memory.physical.mb");
+    p0.addContent(name0);
+    value0 = new Element("value", WorkflowApp.NAMESPACE);
+    value0.setText(this.getJobObject().getMaxMemory());
+    p0.addContent(value0);
+    
+    p0 = new Element("property", WorkflowApp.NAMESPACE);
+    config.addContent(p0);
+    name0 = new Element("name", WorkflowApp.NAMESPACE);
+    name0.setText("oozie.launcher.mapreduce.reduce.memory.physical.mb");
+    p0.addContent(name0);
+    value0 = new Element("value", WorkflowApp.NAMESPACE);
+    value0.setText(this.getJobObject().getMaxMemory());
+    p0.addContent(value0);
+    
+    // add configuration
     javaE.addContent(config);
 
     Element mainClass = new Element("main-class", WorkflowApp.NAMESPACE);
