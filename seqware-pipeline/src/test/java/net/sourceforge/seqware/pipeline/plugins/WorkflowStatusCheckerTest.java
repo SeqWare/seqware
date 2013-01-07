@@ -18,19 +18,14 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import it.sauronsoftware.junique.JUnique;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.*;
@@ -40,7 +35,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -110,14 +104,49 @@ public class WorkflowStatusCheckerTest extends PowerMockTestCase{
     public void testNormalRun() throws Exception{       
         final ReturnValue ret1 = workflowStatusChecker.init();
         Assert.assertTrue(ret1.getExitStatus() == ReturnValue.SUCCESS, "workflowStatusChecker could not init");
+        mockupFakeRuns();
+        final ReturnValue ret2 = workflowStatusChecker.do_run();
+        verifyNormalRun(ret2);
+    }
+    
+    @Test 
+    public void testDoubleThreadedRun() throws Exception{       
+        final ReturnValue ret1 = workflowStatusChecker.init();
+        Assert.assertTrue(ret1.getExitStatus() == ReturnValue.SUCCESS, "workflowStatusChecker could not init");
+        mockupFakeRuns();
+        
+        when(options.has("threads-in-thread-pool")).thenReturn(true);
+        when(options.valueOf("threads-in-thread-pool")).thenReturn(2);
+        
+        final ReturnValue ret2 = workflowStatusChecker.do_run();
+        verifyNormalRun(ret2);
+    }
+    
+    @Test 
+    public void testManyThreadedRun() throws Exception{       
+        final ReturnValue ret1 = workflowStatusChecker.init();
+        Assert.assertTrue(ret1.getExitStatus() == ReturnValue.SUCCESS, "workflowStatusChecker could not init");
+        mockupFakeRuns();
+        
+        when(options.has("threads-in-thread-pool")).thenReturn(true);
+        when(options.valueOf("threads-in-thread-pool")).thenReturn(100);
+        
+        final ReturnValue ret2 = workflowStatusChecker.do_run();
+        verifyNormalRun(ret2);
+    }
 
+    /**
+     * For testing purposes, create some workflow runs and make our mocks aware of them
+     * @throws Exception 
+     */
+    private void mockupFakeRuns() throws Exception {
         // mock up some fake workflow_runs so that their status can be checked
         List<WorkflowRun> wrList = new ArrayList<WorkflowRun>();
         for (int i = 0; i < 100; i++) {
             WorkflowRun wr = new WorkflowRun();
             wr.setOwnerUserName("user");
             wr.setWorkflowAccession(42);
-            wr.setWorkflowRunId(42);
+            wr.setWorkflowRunId(42+i);
             wr.setCommand("dummyValue");
             wr.setTemplate("dummyValue");
             wr.setCurrentWorkingDir("dummyValue");
@@ -125,12 +154,12 @@ public class WorkflowStatusCheckerTest extends PowerMockTestCase{
             wr.setIniFile("dummyValue");
             wr.setWorkflowEngine("dummyValue");
             wr.setHost("localhost");
-            wr.setStatusCmd("pegasus-status -l /home/seqware/pegasus-dax/seqware/pegasus/FastqQualityReportAndFilter_0.10.0/run0022");
+            wr.setStatusCmd("pegasus-status -l /home/seqware/pegasus-dax/seqware/pegasus/FastqQualityReportAndFilter_0.10.0/run00" + 42+i);
             wrList.add(wr);
         }
         PowerMockito.mockStatic(FileTools.class);
         when(FileTools.getLocalhost(options)).thenReturn(new LocalhostPair("localhost", new ReturnValue(ReturnValue.SUCCESS)));
-        when(FileTools.isFileOwner("/home/seqware/pegasus-dax/seqware/pegasus/FastqQualityReportAndFilter_0.10.0/run0022")).thenReturn(true);
+        when(FileTools.isFileOwner(anyString())).thenReturn(true);
         final WorkflowTools workflowTools = mock(WorkflowTools.class);
         PowerMockito.whenNew(WorkflowTools.class).withAnyArguments().thenReturn(workflowTools);
 
@@ -138,10 +167,15 @@ public class WorkflowStatusCheckerTest extends PowerMockTestCase{
         fakeReturn.setAttribute("currStep", "1");
         fakeReturn.setAttribute("totalSteps", "1");
         
-        when(workflowTools.watchWorkflow("pegasus-status -l /home/seqware/pegasus-dax/seqware/pegasus/FastqQualityReportAndFilter_0.10.0/run0022", "/home/seqware/pegasus-dax/seqware/pegasus/FastqQualityReportAndFilter_0.10.0/run0022", 1)).thenReturn(fakeReturn);
+        when(workflowTools.watchWorkflow(anyString(), anyString(), anyInt())).thenReturn(fakeReturn);
         when(metadata.getWorkflowRunsByStatus(metadata.RUNNING)).thenReturn(wrList);
+    }
 
-        final ReturnValue ret2 = workflowStatusChecker.do_run();
+    /**
+     * Verify that the run returned normally and that the appropriate number of updates were make to the database
+     * @param ret2 
+     */
+    private void verifyNormalRun(final ReturnValue ret2) {
         Assert.assertTrue(ret2.getExitStatus() == ReturnValue.SUCCESS, "workflowStatusChecker ran properly");
         verify(metadata).getWorkflowRunsByStatus(metadata.RUNNING);
         verify(metadata).getWorkflowRunsByStatus(metadata.PENDING);
