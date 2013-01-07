@@ -19,6 +19,10 @@ package net.sourceforge.seqware.pipeline.plugins;
 import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sourceforge.seqware.common.metadata.Metadata;
@@ -42,13 +46,14 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = PluginInterface.class)
 public class WorkflowStatusChecker extends Plugin {
 
-  ReturnValue ret = new ReturnValue();
+  private ReturnValue ret = new ReturnValue();
   // NOTE: this is shared with WorkflowLauncher so only one can run at a time
   public static final String appID = "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusCheckerOrLauncher";
+  private static final String metadata_sync = "synch_for_metadata";
   // variables for use in the app
-  String hostname = null;
-  String username = null;
-  String programRunner = null;
+  private String hostname = null;
+  private String username = null;
+  private String programRunner = null;
 
   /**
    * <p>Constructor for WorkflowStatusChecker.</p>
@@ -62,6 +67,7 @@ public class WorkflowStatusChecker extends Plugin {
     parser.acceptsAll(Arrays.asList("force-host", "fh"), "Optional: if specified, workflow runs scheduled to this specified host will be checked even if this is not the current host (a dangerous option).").withRequiredArg();
     parser.acceptsAll(Arrays.asList("check-failed", "cf"), "Optional: if specified, workflow runs that have previously failed will be re-checked.");
     parser.acceptsAll(Arrays.asList("check-unknown", "cu"), "Optional: if specified, workflow runs that have previously marked unknown will be re-checked.");
+    parser.acceptsAll(Arrays.asList("threads-in-thread-pool", "tp"), "Optional: this will determine the number of threads to run with. Default: 1").withRequiredArg().ofType(Integer.class);
 
     ret.setExitStatus(ReturnValue.SUCCESS);
   }
@@ -77,7 +83,7 @@ public class WorkflowStatusChecker extends Plugin {
       JUnique.acquireLock(appID);
     } catch (AlreadyLockedException e) {
       Log.error("I could not get a lock for " + appID
-              + " this most likely means the application is alredy running and this instance will exit!");
+              + " this most likely means the application is already running and this instance will exit!");
       ret.setExitStatus(ReturnValue.FAILURE);
     }
 
@@ -140,85 +146,36 @@ public class WorkflowStatusChecker extends Plugin {
         runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(metadata.UNKNOWN));
       }
 
-      // loop over running workflows and check their status
-      for (WorkflowRun wr : runningWorkflows) {
-
-        boolean hostMatch = true;
-        boolean userMatch = true;
-        boolean workflowRunAccessionMatch = true;
-        boolean workflowAccessionMatch = true;
-        
-        Log.stdout("owner: " + wr.getOwner());
-        Log.stdout("ownerUserName: " + wr.getOwnerUserName());
-        Log.stdout("workflowAccession: " + wr.getWorkflowAccession());
-
-        // check that this workflow run matches the specified workflow if provided
-        if (options.has("workflow-accession") && options.valueOf("workflow-accession") != null
-                && !((String) options.valueOf("workflow-accession")).equals(wr.getWorkflowAccession())) {
-          workflowAccessionMatch = false;
+        // setup thread pool
+        ExecutorService pool = null; //Executors.newFixedThreadPool(4);
+        if (options.has("threads-in-thread-pool")){
+            int threads = (Integer)options.valueOf("threads-in-thread-pool");
+            if (threads <= 0){
+                Log.fatal("Inappropriate number of threads selected");
+                ret = new ReturnValue(ReturnValue.FAILURE);
+                return ret;
+            }
+            pool = Executors.newFixedThreadPool(threads);
+        } else{
+            pool = Executors.newSingleThreadExecutor();
         }
 
-        // check if this workflow run accession matches if provided
-        if (options.has("workflow-run-accession") && options.valueOf("workflow-run-accession") != null
-                && !((String) options.valueOf("workflow-run-accession")).equals(wr.getSwAccession().toString())) {
-          workflowRunAccessionMatch = false;
+        List<Future<?>> futures = new ArrayList<Future<?>>(runningWorkflows.size());
+        // loop over running workflows and check their status
+        for (WorkflowRun wr : runningWorkflows) {
+            futures.add(pool.submit(new CheckerThread(wr)));
         }
-
-        // check the host is either overridden or this is the same host the workflow was launched from
-        if (options.has("force-host") && options.valueOf("force-host") != null
-                && !((String) options.valueOf("force-host")).equals(wr.getHost())) {
-          hostMatch = false;
-        } else if (!options.has("force-host") && this.hostname != null && !this.hostname.equals(wr.getHost())) {
-          hostMatch = false;
+        for (Future<?> future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException ex) {
+                Log.fatal(ex);
+            } catch (ExecutionException ex) {
+                Log.fatal(ex);
+            }
         }
-
-        // check the rest API username from SeqWare settings is the same username in the DB
-        if (this.username == null || wr.getOwnerUserName() == null || !this.username.equals(wr.getOwnerUserName())) {
-          userMatch = false;
-        }
-
-        // check the owner of the status dir
-        String statusDir = findStatusDir(wr.getStatusCmd());
-        if (statusDir != null && !FileTools.isFileOwner(statusDir)) {
-          userMatch = false;
-          Log.info("You don't own the status directory: "+wr.getStatusCmd());
-        } else if (statusDir == null) {
-          userMatch = false;
-          Log.info("The status directory can't be parsed!: "+wr.getStatusCmd());
-        }
-
-        if (hostMatch && userMatch && workflowRunAccessionMatch && workflowAccessionMatch) {
-          ReturnValue currRet = checkWorkflow(wr.getStatusCmd());
-          if (currRet.getExitStatus() == ReturnValue.SUCCESS) {
-            this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), "completed",
-                    wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
-                    wr.getHost(), Integer.parseInt(currRet.getAttribute("currStep")),
-                    Integer.parseInt(currRet.getAttribute("totalSteps")), currRet.getStderr(), currRet.getStdout(), wr.getWorkflowEngine());
-
-          } else if (currRet.getExitStatus() == ReturnValue.PROCESSING) {
-            this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), "running",
-                    wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
-                    wr.getHost(), Integer.parseInt(currRet.getAttribute("currStep")),
-                    Integer.parseInt(currRet.getAttribute("totalSteps")),
-                    currRet.getStderr(), currRet.getStdout(), null);
-
-          } else if (currRet.getExitStatus() == ReturnValue.FAILURE) {
-            Log.error("WORKFLOW FAILURE: this workflow has failed and this status will be saved to the DB.");
-            this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), "failed",
-                    wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
-                    wr.getHost(), Integer.parseInt(currRet.getAttribute("currStep")),
-                    Integer.parseInt(currRet.getAttribute("totalSteps")),
-                    currRet.getStderr(), currRet.getStdout(), null);
-
-
-          } else if (currRet.getExitStatus() == ReturnValue.UNKNOWN) {
-            Log.error("ERROR: the workflow status has returned UNKNOWN, this is typically if the workflow status command points"
-                    + "to a non-existant directory or a directory that is not writable or owned by you. No information will be saved to the"
-                    + "DB since the workflow state cannot be determined!");
-
-          }
-        }
-      }
+      
+      pool.shutdown();
     }
     return ret;
   }
@@ -253,7 +210,7 @@ public class WorkflowStatusChecker extends Plugin {
    */
   private ReturnValue checkWorkflow(String statusCmd) {
 
-    System.out.println("Checking the status");
+    System.out.println("Checking the status using " + statusCmd);
     WorkflowTools workflowTools = new WorkflowTools();
     String statusDir = findStatusDir(statusCmd);
     ReturnValue ret = workflowTools.watchWorkflow(statusCmd, statusDir, 1);
@@ -285,5 +242,95 @@ public class WorkflowStatusChecker extends Plugin {
         return metadata;
     }
 
-    
+    private final class CheckerThread implements Runnable {
+
+        private final WorkflowRun wr;
+
+        protected CheckerThread(WorkflowRun wr) {
+            this.wr = wr;
+        }
+
+        @Override
+        public void run() {
+            boolean hostMatch = true;
+            boolean userMatch = true;
+            boolean workflowRunAccessionMatch = true;
+            boolean workflowAccessionMatch = true;
+
+            Log.stdout("ownerUserName: " + wr.getOwnerUserName());
+            Log.stdout("workflowAccession: " + wr.getWorkflowAccession());
+            Log.stdout("workflowRunID: " + wr.getWorkflowRunId());
+
+            // check that this workflow run matches the specified workflow if provided
+            if (options.has("workflow-accession") && options.valueOf("workflow-accession") != null
+                    && !((String) options.valueOf("workflow-accession")).equals(wr.getWorkflowAccession())) {
+                workflowAccessionMatch = false;
+            }
+
+            // check if this workflow run accession matches if provided
+            if (options.has("workflow-run-accession") && options.valueOf("workflow-run-accession") != null
+                    && !((String) options.valueOf("workflow-run-accession")).equals(wr.getSwAccession().toString())) {
+                workflowRunAccessionMatch = false;
+            }
+
+            // check the host is either overridden or this is the same host the workflow was launched from
+            if (options.has("force-host") && options.valueOf("force-host") != null
+                    && !((String) options.valueOf("force-host")).equals(wr.getHost())) {
+                hostMatch = false;
+            } else if (!options.has("force-host") && WorkflowStatusChecker.this.hostname != null && !WorkflowStatusChecker.this.equals(wr.getHost())) {
+                hostMatch = false;
+            }
+
+            // check the rest API username from SeqWare settings is the same username in the DB
+            if (WorkflowStatusChecker.this.username == null || wr.getOwnerUserName() == null || !WorkflowStatusChecker.this.username.equals(wr.getOwnerUserName())) {
+                userMatch = false;
+            }
+
+            // check the owner of the status dir
+            String statusDir = findStatusDir(wr.getStatusCmd());
+            if (statusDir != null && !FileTools.isFileOwner(statusDir)) {
+                userMatch = false;
+                Log.info("You don't own the status directory: " + wr.getStatusCmd());
+            } else if (statusDir == null) {
+                userMatch = false;
+                Log.info("The status directory can't be parsed!: " + wr.getStatusCmd());
+            }
+
+            if (hostMatch && userMatch && workflowRunAccessionMatch && workflowAccessionMatch) {      
+                ReturnValue currRet = checkWorkflow(wr.getStatusCmd());
+                if (currRet.getExitStatus() == ReturnValue.SUCCESS) {
+                    synchronized (metadata_sync) {
+                        WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), "completed",
+                                wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
+                                wr.getHost(), Integer.parseInt(currRet.getAttribute("currStep")),
+                                Integer.parseInt(currRet.getAttribute("totalSteps")), currRet.getStderr(), currRet.getStdout(), wr.getWorkflowEngine());
+                    }
+
+                } else if (currRet.getExitStatus() == ReturnValue.PROCESSING) {
+                    synchronized (metadata_sync) {
+                        WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), "running",
+                                wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
+                                wr.getHost(), Integer.parseInt(currRet.getAttribute("currStep")),
+                                Integer.parseInt(currRet.getAttribute("totalSteps")),
+                                currRet.getStderr(), currRet.getStdout(), null);
+                    }
+
+                } else if (currRet.getExitStatus() == ReturnValue.FAILURE) {
+                    Log.error("WORKFLOW FAILURE: this workflow has failed and this status will be saved to the DB.");
+                    synchronized (metadata_sync) {
+                        WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), "failed",
+                                wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
+                                wr.getHost(), Integer.parseInt(currRet.getAttribute("currStep")),
+                                Integer.parseInt(currRet.getAttribute("totalSteps")),
+                                currRet.getStderr(), currRet.getStdout(), null);
+                    }
+                } else if (currRet.getExitStatus() == ReturnValue.UNKNOWN) {
+                    Log.error("ERROR: the workflow status has returned UNKNOWN, this is typically if the workflow status command points"
+                            + "to a non-existant directory or a directory that is not writable or owned by you. No information will be saved to the"
+                            + "DB since the workflow state cannot be determined!");
+
+                }
+            }
+        }
+    }
 }
