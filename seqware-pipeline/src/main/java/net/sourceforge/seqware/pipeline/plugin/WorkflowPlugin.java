@@ -305,6 +305,7 @@ public class WorkflowPlugin extends Plugin {
 				+ " this most likely means the application is alredy running and this instance will exit!",
 			e);
 		ret.setExitStatus(ReturnValue.FAILURE);
+                return ret;
 	    }
 
             launchScheduledWorkflows(w, metadataWriteback);
