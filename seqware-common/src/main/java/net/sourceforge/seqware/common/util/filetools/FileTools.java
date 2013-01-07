@@ -746,7 +746,7 @@ public class FileTools {
     if (path.exists()) {
       File[] files = path.listFiles();
       if (files == null){
-          Log.fatal("Could not list file " + path.toString() + " you may not have read permissions");
+          Log.fatal("Could not list file " + path.toString() + " you may not have read permissions, skipping it");
           Log.stderr("Could not list file " + path.toString() + " you may not have read permissions, skipping it");
       }
       for (int i = 0; files!= null && i < files.length; i++) {
