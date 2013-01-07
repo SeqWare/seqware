@@ -680,7 +680,6 @@ public class FileTools {
     int BUFFER = 2048;
 
     try {
-
       BufferedOutputStream dest = null;
       FileInputStream fis = new FileInputStream(path);
       ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
@@ -729,26 +728,28 @@ public class FileTools {
         }
       }
       zis.close();
-
     } catch (IOException ioe) {
       Log.stderr("Unhandled exception:");
       ioe.printStackTrace();
       return (false);
     }
-
     return (true);
   }
 
   /**
    * <p>listFilesRecursive.</p>
-   *
+
    * @param path a {@link java.io.File} object.
    * @param filesArray a {@link java.util.ArrayList} object.
    */
   public static void listFilesRecursive(File path, ArrayList<File> filesArray) {
     if (path.exists()) {
       File[] files = path.listFiles();
-      for (int i = 0; i < files.length; i++) {
+      if (files == null){
+          Log.fatal("Could not list file " + path.toString() + " you may not have read permissions");
+          Log.stderr("Could not list file " + path.toString() + " you may not have read permissions, skipping it");
+      }
+      for (int i = 0; files!= null && i < files.length; i++) {
         if (files[i].isDirectory()) {
           FileTools.listFilesRecursive(files[i], filesArray);
         } else {
