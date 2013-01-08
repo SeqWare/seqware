@@ -29,7 +29,6 @@ import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
-import org.restlet.data.MediaType;
 import org.w3c.dom.Document;
 
 /**
@@ -76,6 +75,10 @@ public class StudyIdFilesResource extends BasicRestlet {
 
         StudyService ss = BeanFactory.getStudyServiceBean();
         FindAllTheFiles fatf = new FindAllTheFiles();
+        if (this.getQueryValue("requireFiles") != null){
+            boolean requireFiles = Boolean.valueOf(this.getQueryValue("requireFiles"));
+            fatf.setRequireFiles(requireFiles);
+        }
         Study study = (Study) testIfNull(ss.findBySWAccession(studySWA));
         List<ReturnValue> returnValues = fatf.filesFromStudy(study);
         return returnValues;
