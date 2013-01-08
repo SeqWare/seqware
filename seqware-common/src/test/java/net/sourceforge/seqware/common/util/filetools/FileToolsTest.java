@@ -17,9 +17,13 @@
 package net.sourceforge.seqware.common.util.filetools;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import net.sourceforge.seqware.common.util.*;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -71,6 +75,25 @@ public class FileToolsTest {
   @After
   public void tearDown() {
   }
+  
+    /**
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testSEQWARE1410() throws IOException {
+        // test on SymLinkNullPointer
+        try {
+            File sudoersFile = new File("/etc/sudoers");
+            if (!sudoersFile.exists()) {
+                Log.fatal("Could not test FileTools on file where we have no read rights");
+            }
+            ArrayList<File> files = new ArrayList<File>();
+            FileTools.listFilesRecursive(sudoersFile, files);
+        } catch (Exception e) {
+            Assert.assertTrue("Did not avoid crash when listing file with no read permissions", false);
+        } 
+    }
 
   /**
    * <p>testIsFileOwner.</p>
