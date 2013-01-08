@@ -1958,6 +1958,12 @@ public class MetadataDB extends Metadata {
   }
 
   @Override
+  public String getProcessingRelations(String swAccession) {
+
+     return null;
+  }
+
+  @Override
   public String getWorkflowRunReportStdErr(int workflowRunSWID) {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
@@ -1971,6 +1977,19 @@ public class MetadataDB extends Metadata {
     public Workflow getWorkflow(int workflowAccession) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
-  
-  
+
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithASample(String sampleName, boolean requireFiles) {
+         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, boolean requireFiles) {
+         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName, boolean requireFiles) {
+         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
 }
