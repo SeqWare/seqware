@@ -29,19 +29,20 @@
     </organization>
     
     <profiles>
-      <profile>
-	    <id>clt-test</id>
-	    <properties>
-	      <exclude.tests>nothing-to-exclude</exclude.tests>
-	    </properties>
-	  </profile>
-	</profiles>
+        <profile>
+            <id>clt-test</id>
+            <properties>
+                <exclude.tests>nothing-to-exclude</exclude.tests>
+            </properties>
+        </profile>
+    </profiles>
     
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <aspectj.version>1.6.11</aspectj.version>
         <exclude.tests>**/CommandLineToolTest.java</exclude.tests>
+        <powermock.version>1.5</powermock.version>
     </properties>
     <repositories>
         <repository>
@@ -87,11 +88,11 @@
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
-		<dependency>
-			<groupId>org.jdom</groupId>
-			<artifactId>jdom</artifactId>
-			<version>1.1</version>
-		</dependency>
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom</artifactId>
+            <version>1.1</version>
+        </dependency>
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
@@ -116,6 +117,29 @@
             <artifactId>hamcrest-all</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.objenesis</groupId>
+            <artifactId>objenesis</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>  
+            <version>1.9.5</version> 
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-testng</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>  
+        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.1.1</version>
@@ -130,7 +154,7 @@
         <dependency>
             <groupId>net.sf.jopt-simple</groupId>
             <artifactId>jopt-simple</artifactId>
-            <version>3.3</version>
+            <version>4.3</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
@@ -146,9 +170,9 @@
             <artifactId>aws-java-sdk</artifactId>
         </dependency>
         <dependency>
-  		     <groupId>org.codehaus.jackson</groupId>
-  		     <artifactId>jackson-core-asl</artifactId>
-  	    </dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+        </dependency>
         <dependency>
             <groupId>args4j</groupId>
             <artifactId>args4j</artifactId>
@@ -166,9 +190,9 @@
             <type>jar</type>
         </dependency>
         <dependency>
-	  <groupId>de.huxhorn.lilith</groupId>
-	  <artifactId>de.huxhorn.lilith.3rdparty.junique</artifactId>
-	  <version>1.0.2</version>
+            <groupId>de.huxhorn.lilith</groupId>
+            <artifactId>de.huxhorn.lilith.3rdparty.junique</artifactId>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -206,7 +230,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-		<version>2.12</version>
+                <version>2.12</version>
                 <executions>
                     <execution>
                         <phase>test</phase>
@@ -215,10 +239,11 @@
                         </goals>
                         <configuration>	
                             <testNGArtifactName>none:none</testNGArtifactName>
-                            <excludes><exclude>**/RunnerTest.java</exclude>
-			    <exclude>${exclude.tests}</exclude>
-			    <exclude>**/BasicDeciderTest.java</exclude>
-			</excludes>
+                            <excludes>
+                                <exclude>**/RunnerTest.java</exclude>
+                                <exclude>${exclude.tests}</exclude>
+                                <exclude>**/BasicDeciderTest.java</exclude>
+                            </excludes>
 			    
                         </configuration>
                     </execution>
@@ -234,10 +259,10 @@
                     </execution>
                 </executions>
             </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-      </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 </project>

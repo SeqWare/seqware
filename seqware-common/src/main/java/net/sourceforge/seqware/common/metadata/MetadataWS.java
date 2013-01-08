@@ -766,62 +766,87 @@ public class MetadataWS extends Metadata {
     return new ReturnValue(ReturnValue.SUCCESS);
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public List<ReturnValue> findFilesAssociatedWithASample(String sampleName) {
-    ReturnValueList rv = new ReturnValueList();
-    List<ReturnValue> values = new ArrayList<ReturnValue>();
-    try {
-      List<Sample> samples = ll.matchSampleName(sampleName);
-      JaxbObject<ReturnValueList> jaxb = new JaxbObject<ReturnValueList>();
-      for (Sample sample: samples)
-      {
-        rv = (ReturnValueList) ll.findObject("/samples", "/" + sample.getSwAccession() + "/files", jaxb, rv);
-        values.addAll(rv.getList());
-      }
-    } catch (Exception e) {
-      Log.error("Problem finding files associated with sample: "+sampleName,e);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithASample(String sampleName) {
+        return findFilesAssociatedWithASample(sampleName, true);
     }
-    return values;
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName) {
-    ReturnValueList rv = new ReturnValueList();
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithASample(String sampleName, boolean requireFiles) {
+        ReturnValueList rv = new ReturnValueList();
+        List<ReturnValue> values = new ArrayList<ReturnValue>();
+        try {
+            List<Sample> samples = ll.matchSampleName(sampleName);
+            JaxbObject<ReturnValueList> jaxb = new JaxbObject<ReturnValueList>();
+            String strRequireFiles = "";
+            if (!requireFiles) {
+                strRequireFiles = "?requireFiles=false";
+            }
+            for (Sample sample : samples) {
+                rv = (ReturnValueList) ll.findObject("/samples", "/" + sample.getSwAccession() + "/files" + strRequireFiles, jaxb, rv);
+                values.addAll(rv.getList());
+            }
+        } catch (Exception e) {
+            Log.error("Problem finding files associated with sample: " + sampleName, e);
+        }
+        return values;
+    }
+
+    
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, boolean requireFiles) {
+        ReturnValueList rv = new ReturnValueList();
     try {
       Study study = ll.findStudy("?title=" + studyName);
       JaxbObject<ReturnValueList> jaxb = new JaxbObject<ReturnValueList>();
-
-      rv = (ReturnValueList) ll.findObject("/studies", "/" + study.getSwAccession() + "/files", jaxb,
+      String strRequireFiles = "";
+      if (!requireFiles) {
+         strRequireFiles = "?requireFiles=false";
+      }
+      rv = (ReturnValueList) ll.findObject("/studies", "/" + study.getSwAccession() + "/files" + strRequireFiles, jaxb,
               new ReturnValueList());
     } catch (Exception e) {
       e.printStackTrace();
     }
     return rv.getList();
-  }
-
+    }
+    
   /**
    * {@inheritDoc}
    */
   @Override
-  public List<ReturnValue> findFilesAssociatedWithASequencerRun(String runName) {
-    ReturnValueList rv = new ReturnValueList();
+  public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName) {
+    return findFilesAssociatedWithAStudy(studyName, true);
+  }
+
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithASequencerRun(String runName, boolean requireFiles) {
+        ReturnValueList rv = new ReturnValueList();
     try {
       SequencerRun run = ll.findSequencerRun("?name=" + runName);
       JaxbObject<ReturnValueList> jaxb = new JaxbObject<ReturnValueList>();
-
-      rv = (ReturnValueList) ll.findObject("/sequencerruns", "/" + run.getSwAccession() + "/files", jaxb,
+      String strRequireFiles = "";
+      if (!requireFiles) {
+         strRequireFiles = "?requireFiles=false";
+      }
+      rv = (ReturnValueList) ll.findObject("/sequencerruns", "/" + run.getSwAccession() + "/files" + strRequireFiles, jaxb,
               new ReturnValueList());
     } catch (Exception e) {
       e.printStackTrace();
       // rv.setExitStatus(ReturnValue.FAILURE);
     }
     return rv.getList();
+    }
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<ReturnValue> findFilesAssociatedWithASequencerRun(String runName) {
+    return findFilesAssociatedWithASequencerRun(runName, true);
   }
 
   /**
@@ -2114,11 +2139,11 @@ public class MetadataWS extends Metadata {
       try {
         processing = findProcessing(searchString);
       } catch (IOException ex) {
-        Log.debug("Processing does not exist. Continuing.", ex);
+        Log.debug("Processing does not exist. Continuing.");
       } catch (JAXBException ex) {
         Log.error(ex);
       } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
+        Log.debug("Sample does not exist. Continuing.");
       }
       return processing;
     }
@@ -2128,11 +2153,11 @@ public class MetadataWS extends Metadata {
       try {
         lane = findLane(searchString);
       } catch (IOException ex) {
-        Log.debug("Lane does not exist. Continuing.", ex);
+        Log.debug("Lane does not exist. Continuing.");
       } catch (JAXBException ex) {
         Log.error(ex);
       } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
+        Log.debug("Lane does not exist. Continuing.");
       }
       return lane;
     }
@@ -2142,11 +2167,11 @@ public class MetadataWS extends Metadata {
       try {
         ius = findIUS(searchString);
       } catch (IOException ex) {
-        Log.debug("IUS does not exist. Continuing.", ex);
+        Log.debug("IUS does not exist. Continuing.");
       } catch (JAXBException ex) {
         Log.error(ex);
       } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
+        Log.debug("IUS does not exist. Continuing.");
       }
       return ius;
     }
@@ -2156,11 +2181,11 @@ public class MetadataWS extends Metadata {
       try {
         sr = findSequencerRun(searchString);
       } catch (IOException ex) {
-        Log.debug("SequencerRun does not exist. Continuing.", ex);
+        Log.debug("SequencerRun does not exist. Continuing.");
       } catch (JAXBException ex) {
         Log.error(ex);
       } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
+        Log.debug("SequencerRun does not exist. Continuing.");
       }
       return sr;
     }
@@ -2170,11 +2195,11 @@ public class MetadataWS extends Metadata {
       try {
         study = findStudy(searchString);
       } catch (IOException ex) {
-        Log.debug("Study does not exist. Continuing.", ex);
+        Log.debug("Study does not exist. Continuing.");
       } catch (JAXBException ex) {
         Log.error(ex);
       } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
+        Log.debug("Study does not exist. Continuing.");
       }
       return study;
     }
@@ -2184,11 +2209,11 @@ public class MetadataWS extends Metadata {
       try {
         experiment = findExperiment(searchString);
       } catch (IOException ex) {
-        Log.debug("Experiment does not exist. Continuing.", ex);
+        Log.debug("Experiment does not exist. Continuing.");
       } catch (JAXBException ex) {
         Log.error(ex);
       } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
+        Log.debug("Experiment does not exist. Continuing.");
       }
       return experiment;
     }
@@ -2198,9 +2223,9 @@ public class MetadataWS extends Metadata {
       try {
         sample = findSample(searchString);
       } catch (IOException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
+        Log.debug("Sample does not exist. Continuing.");
       } catch (NotFoundException ex) {
-        Log.debug("Sample does not exist. Continuing.", ex);
+        Log.debug("Sample does not exist. Continuing.");
       } catch (JAXBException ex) {
         Log.error(ex);
       }
@@ -2610,4 +2635,10 @@ public class MetadataWS extends Metadata {
       return parent;
     }
   }
+
+	@Override
+	public String getProcessingRelations(String swAccession) {
+	    String report = (String) ll.getString("/processingstructure?swAccession=" + swAccession);
+	    return report;
+	}
 }
