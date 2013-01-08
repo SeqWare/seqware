@@ -24,13 +24,11 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
-import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
-import net.sourceforge.seqware.common.util.Log;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -174,7 +172,7 @@ public class SymLinkFileReporter extends Plugin {
     }
     
     private void okGo(List<ReturnValue> returnValues, String rootDirectory, String studyName) throws IOException {
-        println("There are " + returnValues.size() + " files in total before filtering");
+        println("There are " + returnValues.size() + " returnValues in total before filtering");
         println("Saving symlinks and creating CSV file");
         
         returnValues = FindAllTheFiles.filterReturnValues(returnValues, studyName,
