@@ -210,7 +210,7 @@ public class WorkflowStatusChecker extends Plugin {
    */
   private ReturnValue checkWorkflow(String statusCmd) {
 
-    System.out.println("Checking the status using " + statusCmd);
+    Log.info("Checking the status using " + statusCmd);
     WorkflowTools workflowTools = new WorkflowTools();
     String statusDir = findStatusDir(statusCmd);
     ReturnValue ret = workflowTools.watchWorkflow(statusCmd, statusDir, 1);
@@ -257,9 +257,9 @@ public class WorkflowStatusChecker extends Plugin {
             boolean workflowRunAccessionMatch = true;
             boolean workflowAccessionMatch = true;
 
-            Log.stdout("ownerUserName: " + wr.getOwnerUserName());
-            Log.stdout("workflowAccession: " + wr.getWorkflowAccession());
-            Log.stdout("workflowRunID: " + wr.getWorkflowRunId());
+            Log.info("ownerUserName: " + wr.getOwnerUserName());
+            Log.info("workflowAccession: " + wr.getWorkflowAccession());
+            Log.info("workflowRunID: " + wr.getWorkflowRunId());
 
             // check that this workflow run matches the specified workflow if provided
             if (options.has("workflow-accession") && options.valueOf("workflow-accession") != null
