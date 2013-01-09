@@ -88,6 +88,13 @@ public class BasicRestlet extends Restlet {
         }
         return o;
     }
+    
+    protected String getQueryValue(String key){  
+        if (queryValues != null && queryValues.get(key) != null) {
+            return queryValues.get(key);
+        } 
+        return null;
+    }
 
 //    protected Session getSession() {
 //        SessionFactory sessionFactory = (SessionFactory) ctx.getBean("sessionFactory");

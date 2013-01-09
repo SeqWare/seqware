@@ -118,11 +118,15 @@ public class Daxgenerator {
             }
         } catch (IOException e) {
             Log.error("IOException", e);
-            System.exit(ReturnValue.PROGRAMFAILED);
+            //System.exit(ReturnValue.PROGRAMFAILED);
+            ret.setExitStatus(ReturnValue.PROGRAMFAILED);
+            return ret;
         } catch (TemplateException e) {
             // If we caught a template exception, warn and exit
             Log.error("Freemarker threw an exception: " + e.getMessage());
-            System.exit(ReturnValue.FREEMARKEREXCEPTION);
+            //System.exit(ReturnValue.FREEMARKEREXCEPTION);
+            ret.setExitStatus(ReturnValue.FREEMARKEREXCEPTION);
+            return ret;
         }
 
 

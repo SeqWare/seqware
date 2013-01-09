@@ -178,7 +178,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 			fw.write("nameNode="+this.dataModel.getEnv().getOOZIE_NAMENODE()+"\n");
 			fw.write("jobTracker="+this.dataModel.getEnv().getOOZIE_JOBTRACKER()+"\n");
 			fw.write("queueName="+this.dataModel.getEnv().getOOZIE_QUEUENAME()+"\n");
-			fw.write("oozie.wf.application.path=${nameNode}/user/${user.name}/oozie/" + this.dir.getName());
+			fw.write("oozie.wf.application.path=${nameNode}/user/${user.name}/seqware_workflow/" + this.dir.getName());
 			fw.close();
 		} catch (IOException e) {
 			e.printStackTrace();

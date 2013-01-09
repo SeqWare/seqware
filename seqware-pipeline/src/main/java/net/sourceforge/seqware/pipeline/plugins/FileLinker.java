@@ -18,7 +18,9 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import joptsimple.OptionSpec;
@@ -32,10 +34,16 @@ import net.sourceforge.seqware.pipeline.plugins.filelinker.FileLinkerParser;
 
 import org.openide.util.lookup.ServiceProvider;
 
+import com.google.common.collect.Lists;
+
+
+
 /**
  * 
- * <p>FileLinker class.</p>
- *
+ * <p>
+ * FileLinker class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -70,41 +78,48 @@ public class FileLinker extends Plugin {
 
    @Override
    public ReturnValue do_run() {
-      String currentDir = new File(".").getAbsolutePath();
+      final String currentDir = new File(".").getAbsolutePath();
 
       if (options.has("file-list-file") && options.has("workflow-accession")) {
          // parse the file
          String filename = (String) options.valueOf("file-list-file");
 
-         Map<Integer, FileMetadata> swaToFileMap = null;
+         Map<Integer, List<FileMetadata>> swaToFileMap = null;
          try {
             swaToFileMap = FileLinkerParser.parse(filename, separator.value(options).charAt(0));
          } catch (FileNotFoundException e) {
             ret.setExitStatus(ReturnValue.INVALIDFILE);
             ret.setDescription(e.getMessage());
             return ret;
-         }
-
-         // make the workflow run
-         int workflowAccession = new Integer(options.valueOf("workflow-accession").toString());
-         int workflowRunId = metadata.add_workflow_run(workflowAccession);
-         if (workflowRunId == 0) {
-            Log.error("Failure in updating the workflow run " + workflowRunId + ". The workflow_run accession may be incorrect.");
-            ret.setExitStatus(ReturnValue.SQLQUERYFAILED);
+         } catch (UnsupportedEncodingException e) {
+            ret.setExitStatus(ReturnValue.FILENOTREADABLE);
+            ret.setDescription(e.getMessage());
             return ret;
          }
+         final int workflowAccession = new Integer(options.valueOf("workflow-accession").toString());
 
-         if (!saveFiles(workflowRunId, swaToFileMap)) { return ret; }
+         for (Map.Entry<Integer, List<FileMetadata>> entry : swaToFileMap.entrySet()) {
+            // Make the workflow run, one for every IUS.
+            int workflowRunId = metadata.add_workflow_run(workflowAccession);
+            if (workflowRunId == 0) {
+               Log.error("Failure to create a new workflow run id. Value is " + workflowRunId
+                     + ". The workflow_run accession may be incorrect.");
+               ret.setExitStatus(ReturnValue.SQLQUERYFAILED);
+               return ret;
+            }
 
-         // update the workflow run to reflect success
-         ReturnValue rv = metadata.update_workflow_run(workflowRunId, null, null, Metadata.SUCCESS, null, currentDir, null, null,
-               null, 0, 0, null, null, null);
-         if (rv.getExitStatus() != ReturnValue.SUCCESS) {
-            Log.error("Failure in updating the workflow run " + workflowRunId + ". The workflow_run accession may be incorrect.");
-            ret.setExitStatus(ReturnValue.FAILURE);
-            return ret;
+            if (!saveFiles(workflowRunId, entry.getKey(), entry.getValue())) { return ret; }
+
+            // Update the workflow run to reflect success.
+            ReturnValue rv = metadata.update_workflow_run(workflowRunId, null, null, Metadata.SUCCESS, null, currentDir, null,
+                  null, null, 0, 0, null, null, null);
+            if (rv.getExitStatus() != ReturnValue.SUCCESS) {
+               Log.error("Failure in updating the workflow run " + workflowRunId
+                     + ". The workflow_run accession may be incorrect.");
+               ret.setExitStatus(ReturnValue.FAILURE);
+               return ret;
+            }
          }
-
       } else {
          println("Combination of parameters not recognized!");
          println(this.get_syntax());
@@ -113,30 +128,49 @@ public class FileLinker extends Plugin {
       return ret;
    }
 
-   private boolean saveFiles(int workflowRunId, Map<Integer, FileMetadata> swaToFileMap) {
+   private boolean saveFiles(int workflowRunId, int iusSwa, List<FileMetadata> inputFiles) {
       boolean result = true;
-      for (Map.Entry<Integer, FileMetadata> entry : swaToFileMap.entrySet()) {
-         if (!metadata.isDuplicateFile(entry.getValue().getFilePath())) {
+      List<FileMetadata> files = removeFilesThatAlreadyExistInSeqWare(inputFiles);
+      if (!files.isEmpty()) {
+         int processingId = createFileImportProcessingNode(iusSwa);
+
+         for (FileMetadata file : files) {
             ReturnValue rv;
-            if ((rv = metadata.saveFileForIus(workflowRunId, entry.getKey(), entry.getValue())).getExitStatus() != ReturnValue.SUCCESS) {
-               Log.error("Failed to add file [" + entry.getValue().getFilePath() + "] with meta data type ["
-                     + entry.getValue().getMetaType()
-                     + "] to database. Attempting to add file to entity with SeqWare Accession [" + entry.getKey()
+            if ((rv = metadata.saveFileForIus(workflowRunId, iusSwa, file, processingId)).getExitStatus() != ReturnValue.SUCCESS) {
+               Log.error("Failed to add file [" + file.getFilePath() + "] with meta data type [" + file.getMetaType()
+                     + "] to database. Attempting to add file to entity with SeqWare Accession [" + iusSwa
                      + "]. Most likely an IUS or Lane.");
                ret.setExitStatus(rv.getExitStatus());
                result = false;
                break;
             } else {
-               Log.info("Successfully added file [" + entry.getValue().getFilePath() + "] with meta data type ["
-                     + entry.getValue().getMetaType()
-                     + "] to database. SeqWare Accession [" + entry.getKey()
-                     + "].");
+               Log.info("Successfully added file [" + file.getFilePath() + "] with meta data type [" + file.getMetaType()
+                     + "] to database. SeqWare Accession [" + iusSwa + "].");
             }
-         } else {
-            Log.error("Ignored file [" + entry.getValue().getFilePath() + "]. Already exists in database.");
          }
       }
       return result;
+   }
+
+   private List<FileMetadata> removeFilesThatAlreadyExistInSeqWare(List<FileMetadata> files) {
+      List<FileMetadata> result = Lists.newArrayList();
+      for (FileMetadata file : files) {
+         if (!metadata.isDuplicateFile(file.getFilePath())) {
+            result.add(file);
+         } else {
+            Log.error("Ignored file [" + file.getFilePath() + "]. Already exists in database.");
+         }
+      }
+      return result;
+   }
+   
+   private int createFileImportProcessingNode(int iusSwa) {
+      ReturnValue processingReturnValue = new ReturnValue(ReturnValue.SUCCESS);
+      int processingId = Integer.MIN_VALUE;
+      processingId = metadata.add_empty_processing_event_by_parent_accession(new int[] { iusSwa }).getReturnValue();
+      processingReturnValue.setAlgorithm("fileImport");
+      metadata.update_processing_event(processingId, processingReturnValue);
+      return processingId;
    }
 
    @Override
