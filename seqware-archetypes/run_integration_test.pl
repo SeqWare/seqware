@@ -5,9 +5,17 @@
 
 use strict;
 
-if (@ARGV != 3) { print "Usage: run_integration_test.pl <seqware_jar_path> <workflow_name> <workflow_version>\n"; }
+if (@ARGV != 4) { print "Usage: run_integration_test.pl <seqware_jar_path> <archetype_name> <workflow_name> <workflow_version>\n"; }
 
-my ($jar, $workflow_name, $workflow_version) = @ARGV;
+my ($jar, $archetype_name, $workflow_name, $workflow_version) = @ARGV;
+
+#! trying to automatically create the archetype and build it
+
+er("CREATING ARCHTYPE", "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware -DarchetypeArtifactId=$archetype_name -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=$workflow_name -DworkflowDirectoryName=$workflow_name -DworkflowName=$workflow_name -DworkflowVersion=1.0-SNAPSHOT -B");
+chdir("$workflow_name");
+er("BUILDING ARCHTYPE", "mvn install");
+chdir("target/Workflow_Bundle_$workflow_name\_$workflow_version\_SeqWare_0.13.6.1");
+#! attempt ends here
 
 er("TESTING BUNDLEMANAGER LISTING", "java -jar $jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -l -b `pwd`");
 #er("TESTING BUNDLEMANAGER TEST", "java -jar $jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -t -b `pwd` --workflow $workflow_name --version $workflow_version");
@@ -26,7 +34,7 @@ print OUT $new_ini;
 close OUT;
 
 
-my $workflow_run_txt = er("TESTING SCHEDULING OF WORKFLOW", "java -jar $jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession $workflow_acc --schedule --parent-accessions 839 --host `hostname --long`");
+my $workflow_run_txt = er("TESTING SCHEDULING OF WORKFLOW", "java -jar $jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession $workflow_acc --schedule --parent-accessions 99 --host `hostname --long`");
 $workflow_run_txt =~ /WORKFLOW_RUN ACCESSION: (\d+)/;
 my $workflow_run_accession = $1;
 
@@ -34,13 +42,13 @@ my $workflow_run_accession = $1;
 er("TESTING LAUNCHING OF SCHEDULED WORKFLOW", "java -jar $jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher --  --launch-scheduled");
 
 
-er("TESTING LAUNCHING AND NOT WAITING FOR WORKFLOW", "java -jar $jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession $workflow_acc --parent-accessions 839 --host `hostname --long`");
+er("TESTING LAUNCHING AND NOT WAITING FOR WORKFLOW", "java -jar $jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession $workflow_acc --parent-accessions 99 --host `hostname --long`");
 
 
 er("TESTING MONITORING OF SCHEDULED/LAUNCHED WORKFLOW", "java -jar $jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker -- --workflow-run-accession $workflow_run_accession");
 
 
-er("TESTING LAUNCHING AND WAITING FOR WORKFLOW", "java -jar $jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession $workflow_acc --parent-accessions 839 --wait --host `hostname --long`");
+er("TESTING LAUNCHING AND WAITING FOR WORKFLOW", "java -jar $jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession $workflow_acc --parent-accessions 99 --wait --host `hostname --long`");
 
 
 er("TESTING LAUNCHING AND WAITING FOR WORKFLOW NO METADATA", "java -jar $jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession $workflow_acc --no-metadata --wait --host `hostname --long`");

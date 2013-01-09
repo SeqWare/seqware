@@ -240,13 +240,25 @@ We login to Hue via localhost:8888 using seqware:seqware
 We follow the instructions starting from [here](https://ccp.cloudera.com/display/CDH4DOC/HBase+Installation) and follow the pseudo-distributed sections.
 FYI, this will briefly segue into installing the zookeeper server.
 
-### Other 
-
 It looks like the Cloudera install doesn't setup HBase to survive a reboot. Fixed this via
 
 	chkconfig hbase-master on
 	chkconfig hadoop-zookeeper-server on
 	chkconfig hadoop-hbase-regionserver on
+
+### Oozie
+
+Follow the instructions [for Oozie](https://ccp.cloudera.com/display/CDH4DOC/Oozie+Installation#OozieInstallation-InstallingOozie)
+
+         oozie                              noarch                              0.9.2+26-1.cdh4.0.1.p0.1.el6                               cloudera-cdh4                               55 M
+         oozie-client                              noarch                              0.9.2+26-1.cdh4.0.1.p0.1.el6                               cloudera-cdh4                               55 M
+
+Oozie is the an alternative to the Pegasus/Condor/Globus/SGE software stack and provides a way to run SeqWare Workflows on a Hadoop cluster. We are really excited about this workflow engine and thing it may be the default backend recommended for SeqWare workflows on our VM and Amazon's cloud given it's really fast scheduling performance and ease of integration with Hadoop (so you can mix traditional Bash jobs with MapReduce, Pig, Hive, etc jobs).
+
+Please follow the directions on Cloudera carefully, you need to make sure you initialize the Oozie database properly. By default we use the built in Derby database but you may want to setup another daemon like PostgreSQL.
+
+You also will probably want to enable the web console for Oozie, in which case you will need to follow the directions to install ExtJS. This will give you a nice interface at http://<OOZIE_HOSTNAME>:11000/oozie where you can browse the running workflows.
+
 
 ## Setup SGE
 
