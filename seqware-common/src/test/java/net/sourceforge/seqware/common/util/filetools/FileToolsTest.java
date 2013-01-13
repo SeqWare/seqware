@@ -129,4 +129,17 @@ public class FileToolsTest {
     assertEquals(username, FileTools.whoAmI());
 
   }
+  
+  /**
+   * <p>testGetFilename.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
+  @Test
+  public void testGetFilename() throws Exception {
+
+    String filename = "/foo/bar/jar.txt";
+    assertEquals("jar.txt", FileTools.getFilename(filename));
+
+  }
 }
