@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
+import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.Study;
@@ -346,6 +347,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         if (mappedFiles != null) {
 
             for (String key : mappedFiles.keySet()) {
+                Log.debug("Considering key:" + key);
 
                 parentAccessionsToRun = new HashSet<String>();
                 filesToRun = new HashSet<String>();
@@ -355,6 +357,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
                 //for each grouping (e.g. sample), iterate through the files
                 List<ReturnValue> files = mappedFiles.get(key);
+                Log.debug("key:" + key + " consists of " + files.size() + " files");
+                
                 for (ReturnValue file : files) {
                     String wfAcc = file.getAttribute(Header.WORKFLOW_SWA.getTitle());
 //                    Log.debug(Header.WORKFLOW_SWA.getTitle() + ": WF accession is " + wfAcc);
@@ -412,13 +416,16 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                         rerun = true;
                     }
                     //if we're in testing mode or we don't want to rerun and we don't want to force the re-processing
-                    if (test || !rerun) {
-                        //don't run, but report it
-                        Log.debug("NOT RUNNING. test=" + test + " or !rerun=" + !rerun);
-                        if (rerun) {
+                    if (test || !rerun){
+                        // we need to simplify the logic and make it more readable here for testing
+                        if (rerun){
+                            Log.debug("NOT RUNNING. test=" + test + " or !rerun=" + !rerun);
                             reportLaunch();
+                            Log.stdout("Tested key: " + key + " would have launched");
+                        } else{
+                            Log.debug("NOT RUNNING. test=" + test + " or !rerun=" + !rerun);
+                            Log.stdout("Tested key: " + key + " would not have launched");
                         }
-			Log.stdout("Not launching.");
                         ret = do_summary();
                     } else if (launched++ < launchMax) {
                         //construct the INI and run it
@@ -494,28 +501,32 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         
         int numberFailed = 0;
         
+        int outerCount = 0;
+        int innerCount = 0;
         for (ReturnValue workflowRun : previousWorkflowRuns) {
             String previousSWID = workflowRun.getAttribute(Header.WORKFLOW_SWA.getTitle());
+            outerCount++;
             // only consider previous runs of the same workflow
             if (workflowAccession.equals(previousSWID)) {
+                innerCount++;
                 String workflowRunAcc = workflowRun.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle());
-                boolean shouldRerun = compareWorkflowRunFiles(workflowRunAcc, filesToRun);
-                boolean failed = isWorkflowRunWithFailureStatus(workflowRunAcc);
-                                
-                // the files override everything, if they say not to re-run, then don't re-run
-                if (!shouldRerun){
+                FILE_STATUS fileStatus = compareWorkflowRunFiles(workflowRunAcc, filesToRun);
+                Log.info("Workflow run " + workflowRunAcc + " has a status of " + fileStatus);
+                PREVIOUS_RUN_STATUS previousStatus = determineStatus(workflowRunAcc);
+                
+                boolean countAsFail = isCountAsFail(fileStatus, previousStatus);
+                boolean doRerun = isDoRerun(fileStatus, previousStatus);
+                
+                if (countAsFail){
+                    Log.info("Workflow run " + workflowRunAcc + " counted as a failure with a file status of " + fileStatus);
+                    Log.info("The failing run was workflow_run " + outerCount + "/" + innerCount + " out of " + previousWorkflowRuns.size());
+                    numberFailed++;
+                }
+                if (!doRerun){
+                    Log.info("Workflow run " + workflowRunAcc + " blocking re-run with a status of: " +previousStatus+"  file status of: " + fileStatus);
+                    Log.info("The blocking run was workflow_run " + outerCount + "/" + innerCount + " out of " + previousWorkflowRuns.size());
                     rerun = false;
                     break;
-                } else{
-                    // if we have a previous failure, count it up and proceed
-                    if (failed){
-                        numberFailed++;
-                    } else{
-                    // if we have a previous non-failure, whether submitted, pending, etc. don't rerun it
-                        Log.debug("Workflow run " + workflowRunAcc + " is blocking the re-run of this workflow with a non-failed, non-complete status");
-                        rerun = false;
-                        break;
-                    }
                 }
             }
         }
@@ -527,17 +538,15 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         return rerun;
     }
     
-    public boolean isWorkflowRunWithFailureStatus(String workflowRunAcc) {
-        boolean failure = false;
-        Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
-        String status = map.get("Workflow Run Status");
-        Log.debug("Status is " + status);
-        if (!"failed".equals(status)) {
-            Log.debug("The status is " + status + " so not running this workflow");
-        }else{
-            failure = true;
+    protected PREVIOUS_RUN_STATUS determineStatus(String workflowRunAcc){
+        String generateStatus = this.generateStatus(workflowRunAcc);
+        if (generateStatus.equals(Metadata.COMPLETED)){
+            return PREVIOUS_RUN_STATUS.COMPLETED;
+        } else if (generateStatus.equals(Metadata.FAILED)){
+            return PREVIOUS_RUN_STATUS.FAILED;
+        } else{
+            return PREVIOUS_RUN_STATUS.OTHER;
         }
-        return failure;
     }
     
     /**
@@ -549,7 +558,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * same file paths. False and prints an error message if there are more
      * files in the workflow run than in the filesToRun.
      */
-    public boolean compareWorkflowRunFiles(String workflowRunAcc, Collection<String> filesToRun) {
+    public FILE_STATUS compareWorkflowRunFiles(String workflowRunAcc, Collection<String> filesToRun) {
         Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
 
         String ranOnString = map.get("Input File Meta-Types");
@@ -570,7 +579,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         }
 
         if (ranOnList.size() < filesToRun.size()) {
-            return true;
+            return FILE_STATUS.MORE_CURRENT_FILES_1;
         } else if (ranOnList.size() == filesToRun.size()) {
             boolean rerun = false;
             for (String file : ranOnList) {
@@ -579,12 +588,15 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     rerun = true;
                 }
             }
-            return rerun;
+            if (rerun){
+                return FILE_STATUS.SAME_FILES_DIFFERENT_PATHS_2;
+            }
+            return FILE_STATUS.SAME_FILES_SAME_PATHS_3;
         } else {
             Log.error("There are fewer files to run on in the database than were previously run on this sample!");
             Log.error("Files found to run in database: " + filesToRun.size());
             Log.error("But yet workflow run " + workflowRunAcc + " ran on " + ranOnList.size());
-            return false;
+            return FILE_STATUS.MORE_PAST_FILES_4;
         }
     }
 
@@ -909,5 +921,81 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     
     public void setMetaws(MetadataWS metaws) {
         this.metaws = metaws;
+    }
+
+    protected String generateStatus(String workflowRunAcc) {
+        Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
+        String status = map.get("Workflow Run Status");
+        Log.debug("Status is " + status);
+        return status;
+    }
+
+    /**
+     * We now use the guideline that we only count failures when they occur on the same number of files
+     * (with the same paths)
+     * @param fileStatus
+     * @param previousStatus
+     * @return 
+     */
+    private boolean isCountAsFail(FILE_STATUS fileStatus, PREVIOUS_RUN_STATUS previousStatus) {
+        return (fileStatus == FILE_STATUS.SAME_FILES_SAME_PATHS_3 && previousStatus == PREVIOUS_RUN_STATUS.FAILED);
+    }
+
+    /**
+     * We want to re-run in a variety of conditions. a) when we have more files
+     * now and we failed in the past b) when we have more files now and we
+     * completed in the past c) when we have the same files on different paths
+     * and we failed in the past d) when we have the same files on different
+     * paths and we completed in the past e) when we have the same files on same
+     * paths and we failed in the past f) when we have more files in the past we
+     * failed in the past (but add a warning message)
+     *
+     * @param fileStatus
+     * @param previousStatus
+     * @return
+     */
+    private boolean isDoRerun(FILE_STATUS fileStatus, PREVIOUS_RUN_STATUS previousStatus) {
+        boolean strangeCondition = fileStatus == FILE_STATUS.MORE_PAST_FILES_4 && previousStatus == PREVIOUS_RUN_STATUS.FAILED;
+        if (strangeCondition){
+            Log.stderr("****** Workflow run has more files in the past but failed. We will try to re-run, but you should investigate!!!! *******");
+        }
+        return (fileStatus == FILE_STATUS.MORE_CURRENT_FILES_1 && previousStatus == PREVIOUS_RUN_STATUS.FAILED)
+                || (fileStatus == FILE_STATUS.MORE_CURRENT_FILES_1 && previousStatus == PREVIOUS_RUN_STATUS.COMPLETED)
+                || (fileStatus == FILE_STATUS.SAME_FILES_DIFFERENT_PATHS_2 && previousStatus == PREVIOUS_RUN_STATUS.FAILED)
+                || (fileStatus == FILE_STATUS.SAME_FILES_DIFFERENT_PATHS_2 && previousStatus == PREVIOUS_RUN_STATUS.COMPLETED)
+                || (fileStatus == FILE_STATUS.SAME_FILES_SAME_PATHS_3 && previousStatus == PREVIOUS_RUN_STATUS.FAILED)
+                || strangeCondition;
+    }
+    
+    /**
+     * These file statuses reflect the discussion at  
+     * https://wiki.oicr.on.ca/display/SEQWARE/2013/01/15/Jan+15%2C+2013%3A+Problematic+Basic+Decider+Logic
+     */
+    private enum FILE_STATUS{
+        /**
+         * there are more files to run in the workflow under consideration than in the past workflow_run
+         */
+        MORE_CURRENT_FILES_1,
+        /**
+         * the same (number of) files are found at different paths
+         */
+        SAME_FILES_DIFFERENT_PATHS_2,
+        /**
+         * the same files are found at the same paths
+         */
+        SAME_FILES_SAME_PATHS_3,
+        /**
+         * there are fewer files to run in the workflow under consideration than in the past workflow_run
+         */
+        MORE_PAST_FILES_4
+    }
+    
+    /**
+     * We care about three types of status, an outright fail, other (pending, running, submitted, etc.), and completed
+     */
+    protected enum PREVIOUS_RUN_STATUS{
+        FAILED,
+        OTHER,
+        COMPLETED
     }
 }
