@@ -36,6 +36,7 @@ import net.sourceforge.seqware.pipeline.decider.DeciderInterface;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
+import org.apache.commons.lang.StringUtils;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -65,6 +66,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private int launchMax = Integer.MAX_VALUE, launched = 0;
     private int rerunMax = 5;
     private String host = null;
+    private ReturnValueComparator rvcomp = new ReturnValueComparator();
 
     public BasicDecider() {
         super();
@@ -347,7 +349,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         if (mappedFiles != null) {
 
             for (String key : mappedFiles.keySet()) {
-                Log.debug("Considering key:" + key);
+                Log.info("Considering key:" + key);
 
                 parentAccessionsToRun = new HashSet<String>();
                 filesToRun = new HashSet<String>();
@@ -357,7 +359,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
                 //for each grouping (e.g. sample), iterate through the files
                 List<ReturnValue> files = mappedFiles.get(key);
-                Log.debug("key:" + key + " consists of " + files.size() + " files");
+                Log.info("key:" + key + " consists of " + files.size() + " files");
                 
                 for (ReturnValue file : files) {
                     String wfAcc = file.getAttribute(Header.WORKFLOW_SWA.getTitle());
@@ -366,7 +368,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     //other than the same workflow
                     if (wfAcc != null) {
                         if (workflowAccessionsToCheck.contains(wfAcc) || workflowAccession.equals(wfAcc)) {
-                            Log.debug("Found previous workflow run:" + file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
+                            Log.trace("Found previous workflow run:" + file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
                             //previousWorkflowRuns.add(file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
                             previousWorkflowRuns.add(file);
                         }
@@ -400,6 +402,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     String fileString = commaSeparateMy(filesToRun);
                     Log.debug("FileString: " + fileString);
                     //check if this workflow has been run before
+                    Collections.sort(previousWorkflowRuns, rvcomp);
+//                    Log.info("Sorted previousWorkflowRuns on: ");
+//                    for(ReturnValue rv : previousWorkflowRuns){
+//                        Log.info(rv.toString());
+//                    }
                     boolean rerun = rerunWorkflowRun(previousWorkflowRuns, filesToRun);
 
                     iniFiles = new ArrayList<String>();
@@ -578,6 +585,9 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             Log.stdout("Adding item: " + ranOnArr[i]);
         }
 
+        Log.info("File comparison works between: ");
+        Log.info("Ran on: " + StringUtils.join(ranOnList,','));
+        Log.info("Files to run: " + StringUtils.join(filesToRun,','));
         if (ranOnList.size() < filesToRun.size()) {
             return FILE_STATUS.MORE_CURRENT_FILES_1;
         } else if (ranOnList.size() == filesToRun.size()) {
@@ -730,19 +740,19 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         List<ReturnValue> files = new ArrayList<ReturnValue>();
         Map<String, List<ReturnValue>> notFiles = new HashMap<String, List<ReturnValue>>();
         String fileIndicator = FindAllTheFiles.FILE_SWA;
-        String workflowrunIndicator = FindAllTheFiles.WORKFLOW_SWA;
+        String workflowrunIndicator = FindAllTheFiles.WORKFLOW_RUN_SWA;
         for (ReturnValue r : vals){
             if (r.getAttributes().containsKey(fileIndicator)){
                 files.add(r);
             } else if(r.getAttributes().containsKey(workflowrunIndicator)){
-                String iusStr = r.getAttribute(FindAllTheFiles.IUS_SWA);
+                final String iusStr = r.getAttribute(FindAllTheFiles.IUS_SWA);
                 if (!notFiles.containsKey(iusStr)){
                     notFiles.put(iusStr, new ArrayList<ReturnValue>());
                 }
-                notFiles.get(r.getAttribute(FindAllTheFiles.IUS_SWA)).add(r);
+                notFiles.get(iusStr).add(r);
             }
         }
-        Log.info("Found " + notFiles.size() + " leaf nodes that were not files");
+        Log.info("Found " + notFiles.size() + " groups of leaf nodes that were not files");
         
         //get files from study
         Map<String, List<ReturnValue>> map = new HashMap<String, List<ReturnValue>>();
@@ -764,19 +774,21 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         }
         
         // in every group of files, if any group has a IUS that corresponds to a leaf WorkflowRun, add that leaf into that group
-        // so that it can be considered
+        // so that it can be considered. 
          for (String key : map.keySet()) {
                 Set<ReturnValue> applicableLeafs = new HashSet<ReturnValue>();
                 //for each grouping (e.g. sample), iterate through the files
                 List<ReturnValue> filesInGroup = map.get(key);
+                Set<String> iusConsidered = new HashSet<String>();
                 for(ReturnValue f : files){
                     String ius = f.getAttribute(FindAllTheFiles.IUS_SWA);
                     List<ReturnValue> get = notFiles.get(ius);
-                    if (get != null){
+                    if (get != null && !iusConsidered.contains(ius)){
                         applicableLeafs.addAll(get);
+                        iusConsidered.add(ius);
                     }
                 }
-                Log.trace("Adding " + applicableLeafs.size() + " applicable leaf nodes that were not files to the group key: " + key);
+                Log.info("Adding " + applicableLeafs.size() + " applicable leaf nodes that were not files to the group key: " + key);
                 map.get(key).addAll(applicableLeafs);
          }
 
@@ -997,5 +1009,13 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         FAILED,
         OTHER,
         COMPLETED
+    }
+    
+    
+    private class ReturnValueComparator implements Comparator<ReturnValue>{
+        @Override
+        public int compare(ReturnValue t, ReturnValue t1) {
+            return t.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()).compareTo(t1.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
+        }
     }
 }
