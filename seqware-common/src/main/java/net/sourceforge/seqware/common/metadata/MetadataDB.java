@@ -1992,4 +1992,9 @@ public class MetadataDB extends Metadata {
     public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName, boolean requireFiles) {
          throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
+
+    @Override
+    public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
