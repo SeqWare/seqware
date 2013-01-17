@@ -75,6 +75,7 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import org.apache.commons.lang.StringUtils;
 
 import org.restlet.Client;
 import org.restlet.Context;
@@ -2034,6 +2035,18 @@ public class MetadataWS extends Metadata {
 
   }
 
+    @Override
+    public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
+        try {
+            return ll.findWorkflowByFiles(fileAccessions, search_type);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (JAXBException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
   /*
    * public void annotateFile(int fileSWID, FileAttribute att, Boolean skip) {
    * try { Log.debug("Annotating WorkflowRun " + fileSWID + " with skip=" + skip
@@ -2321,6 +2334,14 @@ public class MetadataWS extends Metadata {
       Workflow w = new Workflow();
       JaxbObject<Workflow> jaxb = new JaxbObject<Workflow>();
       return (Workflow) findObject("/workflowruns", "/" + workflowRunAccession + "/workflow", jaxb, w);
+    }
+    
+    private List<WorkflowRun> findWorkflowByFiles(List<Integer> files, String search_type) throws IOException, JAXBException {
+      WorkflowRunList2 w = new WorkflowRunList2();
+      JaxbObject<WorkflowRunList2> jaxb = new JaxbObject<WorkflowRunList2>();
+      String fileList = StringUtils.join(files.iterator(),',');
+      WorkflowRunList2 wrl2 = (WorkflowRunList2) findObject("/reports/fileworkflowruns", "?files=" + fileList + "&search=" + search_type, jaxb, w);
+      return wrl2.getList();
     }
 
     private List<WorkflowRun> findWorkflowRuns(String searchString) throws IOException, JAXBException {

@@ -18,7 +18,9 @@ package net.sourceforge.seqware.pipeline.deciders;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -37,6 +39,8 @@ import org.junit.*;
  * @since 0.13.3
  */
 public class BasicDeciderTest extends PluginTest {
+    
+    private final List<String> fastq_gz = new ArrayList<String>();
 
     @Before
     @Override
@@ -45,6 +49,7 @@ public class BasicDeciderTest extends PluginTest {
         instance = new TestingDecider();
         //instance = new BasicDecider();
         instance.setMetadata(metadata);
+        fastq_gz.add("chemical/seq-na-fastq-gzip");
     }
     
     @Test 
@@ -301,73 +306,78 @@ public class BasicDeciderTest extends PluginTest {
      * The tests below were already here when I (Denis) started work on BasicDecider , but they don't seem to do anything/were commented out.
      */
     
-//    /**
-//     * <p>testCompareWorkflowRunFiles_Same.</p>
-//     */
-//    @Test
-//    public void testCompareWorkflowRunFiles_Same() {
-//        TestingDecider decider = (TestingDecider) instance;
-//        decider.setMetaws((MetadataWS)metadata);
-//        
-//        List<String> filesToRun = new ArrayList<String>();
-//        filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
-//        filesToRun.add("s3://abcco.uploads/s_G1_L001_R2_001_index8.fastq.gz");
-//        String workflowRunAcc = "6654";
-//
-//        //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-//	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun) == false);
-//    }
-//
-//    /**
-//     * <p>testCompareWorkflowRunFiles_Bigger.</p>
-//     */
-//    @Test
-//    public void testCompareWorkflowRunFiles_Bigger() {
-//        TestingDecider decider = (TestingDecider) instance;
-//        decider.setMetaws((MetadataWS)metadata);
-//
-//        List<String> filesToRun = new ArrayList<String>();
-//        filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
-//        filesToRun.add("s3://abcco.uploads/s_G1_L001_R2_001_index8.fastq.gz");
-//        filesToRun.add("s3://abcco.uploads/s_G1_L001_R3_001_index8.fastq.gz");
-//        String workflowRunAcc = "6654";
-//
-//        //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-//	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun));
-//    }
-//
-//    /**
-//     * <p>testCompareWorkflowRunFiles_SameButDifferent.</p>
-//     */
-//    @Test
-//    public void testCompareWorkflowRunFiles_SameButDifferent() {
-//        TestingDecider decider = (TestingDecider) instance;
-//        decider.setMetaws((MetadataWS)metadata);
-//
-//        List<String> filesToRun = new ArrayList<String>();
-//        filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
-//        filesToRun.add("s3://abcco.uploads/s_G1_L001_R3_001_index8.fastq.gz");
-//        String workflowRunAcc = "6654";
-//
-//        //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-//	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun));
-//    }
-//
-//    /**
-//     * <p>testCompareWorkflowRunFiles_Smaller.</p>
-//     */
-//    @Test
-//    public void testCompareWorkflowRunFiles_Smaller() {
-//        TestingDecider decider = (TestingDecider) instance;
-//        decider.setMetaws((MetadataWS)metadata);
-//
-//        List<String> filesToRun = new ArrayList<String>();
-//        filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
-//        String workflowRunAcc = "6654";
-//
-//        //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-//	Assert.assertFalse(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun));
-//    }
+    /**
+     * <p>testCompareWorkflowRunFiles_Same.</p>
+     */
+    @Test
+    public void testCompareWorkflowRunFiles_Same() {
+        TestingDecider decider = (TestingDecider) instance;
+        decider.setMetaws((MetadataWS)metadata);
+        decider.setMetaType(fastq_gz);
+        
+        List<String> filesToRun = new ArrayList<String>();
+        filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
+        filesToRun.add("s3://abcco.uploads/s_G1_L001_R2_001_index8.fastq.gz");
+        String workflowRunAcc = "6654";
+        
+
+        //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun) == BasicDecider.FILE_STATUS.SAME_FILES_SAME_PATHS_3);
+    }
+
+    /**
+     * <p>testCompareWorkflowRunFiles_Bigger.</p>
+     */
+    @Test
+    public void testCompareWorkflowRunFiles_Bigger() {
+        TestingDecider decider = (TestingDecider) instance;
+        decider.setMetaws((MetadataWS)metadata);
+        decider.setMetaType(fastq_gz);
+
+        List<String> filesToRun = new ArrayList<String>();
+        filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
+        filesToRun.add("s3://abcco.uploads/s_G1_L001_R2_001_index8.fastq.gz");
+        filesToRun.add("s3://abcco.uploads/s_G1_L001_R3_001_index8.fastq.gz");
+        String workflowRunAcc = "6654";
+
+        //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun) == BasicDecider.FILE_STATUS.MORE_CURRENT_FILES_1);
+    }
+
+    /**
+     * <p>testCompareWorkflowRunFiles_SameButDifferent.</p>
+     */
+    @Test
+    public void testCompareWorkflowRunFiles_SameButDifferent() {
+        TestingDecider decider = (TestingDecider) instance;
+        decider.setMetaws((MetadataWS)metadata);
+        decider.setMetaType(fastq_gz);
+
+        List<String> filesToRun = new ArrayList<String>();
+        filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
+        filesToRun.add("s3://abcco.uploads/s_G1_L001_R3_001_index8.fastq.gz");
+        String workflowRunAcc = "6654";
+
+        //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun) == BasicDecider.FILE_STATUS.SAME_FILES_DIFFERENT_PATHS_2);
+    }
+
+    /**
+     * <p>testCompareWorkflowRunFiles_Smaller.</p>
+     */
+    @Test
+    public void testCompareWorkflowRunFiles_Smaller() {
+        TestingDecider decider = (TestingDecider) instance;
+        decider.setMetaws((MetadataWS)metadata);
+        decider.setMetaType(fastq_gz);
+
+        List<String> filesToRun = new ArrayList<String>();
+        filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
+        String workflowRunAcc = "6654";
+
+        //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun) == BasicDecider.FILE_STATUS.MORE_PAST_FILES_4);
+    }
 
     /**
      * Don't use the output of this thing unless you really really have to

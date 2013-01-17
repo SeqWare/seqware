@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.LaneAttribute;
@@ -32,7 +31,6 @@ import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import org.apache.commons.lang.NotImplementedException;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -630,16 +628,25 @@ public class MetadataNoConnection extends Metadata {
 
     @Override
     public List<ReturnValue> findFilesAssociatedWithASample(String sampleName, boolean requireFiles) {
+        logger.info("No metadata connection");
          throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
 
     @Override
     public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, boolean requireFiles) {
+        logger.info("No metadata connection");
          throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
 
     @Override
     public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName, boolean requireFiles) {
+        logger.info("No metadata connection");
          throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
+        logger.info("No metadata connection");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
