@@ -7,11 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
-import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
-import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.LaneAttribute;
 import net.sourceforge.seqware.common.model.LibrarySelection;
 import net.sourceforge.seqware.common.model.LibrarySource;
@@ -19,7 +16,6 @@ import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
-import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleAttribute;
 import net.sourceforge.seqware.common.model.SequencerRunAttribute;
 import net.sourceforge.seqware.common.model.Study;
@@ -336,6 +332,14 @@ public interface MetadataInterface {
    * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
    */
   WorkflowRun getWorkflowRun(int workflowRunAccession);
+  
+  /**
+   * Returns the workflow_runs associated with a group of files.
+   * Search types are defined as:
+   * @param fileAccessions
+   * @return 
+   */
+  List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type);
 
   /**
    * <p>get_workflow_info.</p>
