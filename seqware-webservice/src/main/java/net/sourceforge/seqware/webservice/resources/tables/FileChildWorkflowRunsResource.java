@@ -102,7 +102,7 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
         eList.setList(new ArrayList());
         Log.debug("JaxbObjects started");
 
-        assert (eList.getList().isEmpty());
+        assert eList.getList().isEmpty();
         // the logic here is, we consider first workflow_run children found via the children of the processing
         // if that is empty, then we consider workflow_run found via the IUS (ius_workflow_run table)
         // if that is empty, then we consider workflow_run found via the lane (lane_workflow_run table)
@@ -147,21 +147,16 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
             //2) check if we have children in the ius_workflow_runs that are relevant
             for (Processing p : file.getProcessings()) {
                 WorkflowRun parentRun = p.getWorkflowRun();
+                if (parentRun == null){
+                    parentRun = p.getWorkflowRunByAncestorWorkflowRunId();
+                }
                 if (parentRun == null) {
                     continue;
                 }
                 parentWorkflowRuns.add(parentRun);
                 for (IUS ius : parentRun.getIus()) {
                     for (WorkflowRun anyRun : ius.getWorkflowRuns()) {
-                        // check that we are still interested
-                        // check that we have not seen this already
-                        if (parentWorkflowRuns.contains(anyRun)) {
-                            continue;
-                        }
-                        // check that this workflow run has not actually been linked up into the Processing hierarchy
-                        if (anyRun.getProcessings() != null) {
-                            continue;
-                        }
+                        isWorkflowRunAttached(parentWorkflowRuns, anyRun);
                         WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, anyRun);
                         result.add(dto);
                     }
@@ -182,21 +177,17 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
         for (File file : files) {
             //3) check if we have children in the lane_workflow_runs that are relevant
             for (Processing p : file.getProcessings()) {
-                final WorkflowRun parentRun = p.getWorkflowRun();
+                WorkflowRun parentRun = p.getWorkflowRun();
+                if (parentRun == null){
+                    parentRun = p.getWorkflowRunByAncestorWorkflowRunId();
+                }
                 if (parentRun == null) {
                     continue;
                 }
                 parentWorkflowRuns.add(parentRun);
                 for (Lane lane : parentRun.getLanes()) {
                     for (WorkflowRun anyRun : lane.getWorkflowRuns()) {
-                        // check that we are still interested
-                        if (parentWorkflowRuns.contains(anyRun)) {
-                            continue;
-                        }
-                        // check that this workflow run has not actually been linked up into the Processing hierarchy
-                        if (anyRun.getProcessings() != null) {
-                            continue;
-                        }
+                        if (isWorkflowRunAttached(parentWorkflowRuns, anyRun)) continue;
                         final WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, anyRun);
                         result.add(dto);
                     }
@@ -209,6 +200,29 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
             Log.debug("Did not find any workflow runs via lane");
         }
         return result;
+    }
+
+    /**
+     * Disallows a workflow run if it should not be considered since it is properly attached to the processing hierarchy
+     * @param parentWorkflowRuns
+     * @param anyRun
+     * @return 
+     */
+    private boolean isWorkflowRunAttached(Set<WorkflowRun> parentWorkflowRuns, WorkflowRun anyRun) {
+        if (parentWorkflowRuns.contains(anyRun)) {
+            Log.debug("Disallowed " + anyRun.getSwAccession() + " because we have seen it on the same level as a file");
+            return true;
+        }
+        // check that this workflow run has not actually been linked up into the Processing hierarchy
+        if (anyRun.getProcessings() != null && anyRun.getProcessings().size() > 0) {
+            Log.debug("Disallowed " + anyRun.getSwAccession() + " because it is already attached via Processing.workflow_run_id");
+            return true;
+        }
+        if (anyRun.getOffspringProcessings() != null && anyRun.getOffspringProcessings().size() > 0) {
+            Log.debug("Disallowed " + anyRun.getSwAccession() + " because it is already attached via Processing.ancestor_workflow_run_id");
+            return true;
+        }
+        return false;
     }
 
     public enum SEARCH_TYPE {
