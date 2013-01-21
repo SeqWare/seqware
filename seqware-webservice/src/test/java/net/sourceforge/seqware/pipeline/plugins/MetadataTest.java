@@ -17,15 +17,14 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
+import net.sourceforge.seqware.common.util.runtools.TestConsoleAdapter;
 import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
@@ -56,6 +55,7 @@ public class MetadataTest extends PluginTest {
         errStream = new ByteArrayOutputStream();
         PrintStream pso = new PrintStream(outStream);
         PrintStream pse = new PrintStream(errStream) {
+
             @Override
             public PrintStream append(CharSequence csq) {
 //                systemErr.append(csq);
@@ -416,7 +416,6 @@ public class MetadataTest extends PluginTest {
 //                "--field", "study_type::42"));
 //        checkExpectedFailure();
 //    }
-
     // See SEQWARE-1374
 //    @Test
 //    public void testCreateExperimentFail() {
@@ -429,7 +428,6 @@ public class MetadataTest extends PluginTest {
 //                "--field", "platform_id::42"));
 //        checkExpectedFailure();
 //    }
-
     // See SEQWARE-1374
 //    @Test
 //    public void testCreateSequencerRunFail() {
@@ -441,7 +439,6 @@ public class MetadataTest extends PluginTest {
 //                "--field", "skip::false"));
 //        checkExpectedFailure();
 //    }
-
     @Test
     public void testCreateLaneFail() {
         String rAcc = "20000";
@@ -481,7 +478,7 @@ public class MetadataTest extends PluginTest {
                 "--field", "barcode::NoIndex"));
         checkExpectedFailure();
     }
-    
+
     @Test
     public void testCreateIUSWrongSampleFail() {
         String lAcc = laneAccession;
@@ -504,6 +501,139 @@ public class MetadataTest extends PluginTest {
                 "--field", "barcode::NoIndex"));
         checkExpectedFailure();
     }
+    ////////////////////////////////////////////////////////////////////////////
+    /////Test interactive components
+    ////////////////////////////////////////////////////////////////////////////
+
+    @Test
+    public void testInteractiveCreateStudy() {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("Is this information correct", "y");
+        TestConsoleAdapter.initializeTestInstance().setLine(params);
+
+        launchPlugin("--table", "study", "--create",
+                "--field", "title::alal" + System.currentTimeMillis(),
+                "--field", "description::alal",
+                "--field", "accession::1235",
+                "--field", "center_name::oicr",
+                "--field", "center_project_name::mine",
+                "--field", "study_type::1", "--interactive");
+        String s = getOut();
+        studyAccession = getAndCheckSwid(s);
+        Assert.assertTrue(ConsoleAdapter.getInstance() instanceof TestConsoleAdapter);
+    }
+
+    @Test
+    public void testInteractiveCreateExperiment() {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("Is this information correct", "y");
+        TestConsoleAdapter.initializeTestInstance().setLine(params);
+
+        String sAcc = studyAccession;
+        if (sAcc == null) {
+            sAcc = "120";
+        }
+
+        launchPlugin("--table", "experiment", "--create",
+                "--field", "study_accession::" + sAcc,
+                "--field", "title::experimenttitle" + System.currentTimeMillis(),
+                "--field", "description::\"Experiment Description\"",
+                "--field", "platform_id::9", "--interactive");
+        String s = getOut();
+        experimentAccession = getAndCheckSwid(s);
+    }
+
+    @Test
+    public void testInteractiveCreateSample() {
+        String eAcc = experimentAccession;
+        if (eAcc == null) {
+            eAcc = "834";
+        }
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("Is this information correct", "y");
+        params.put("experiment_accession", eAcc);
+        params.put("description", "sampledescription");
+        params.put("organism_id","31");
+        TestConsoleAdapter.initializeTestInstance().setLine(params);
+
+        launchPlugin("--table", "sample", "--create",
+//                "--field", "experiment_accession::" + eAcc,
+//                "--field", "title::sampletitle",
+//                "--field", "description::sampledescription",
+//                "--field", "organism_id::31", 
+                "--interactive");
+        String s = getOut();
+        sampleAccession = getAndCheckSwid(s);
+    }
+
+    @Test
+    public void testInteractiveCreateSequencerRun() {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("Is this information correct", "y");
+        TestConsoleAdapter.initializeTestInstance().setLine(params);
+
+        launchPlugin("--table", "sequencer_run", "--create",
+                "--field", "name::SR" + System.currentTimeMillis(),
+                "--field", "description::SRD",
+                "--field", "platform_accession::20",
+                "--field", "paired_end::true",
+                "--field", "skip::false", "--interactive");
+        String s = getOut();
+        runAccession = getAndCheckSwid(s);
+    }
+
+    @Test
+    public void testInteractiveCreateLane() {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("Is this information correct", "y");
+        TestConsoleAdapter.initializeTestInstance().setLine(params);
+
+        String rAcc = runAccession;
+        if (rAcc == null) {
+            rAcc = "4715";
+        }
+
+        launchPlugin("--table", "lane", "--create",
+                "--field", "name::lane",
+                "--field", "description::description",
+                "--field", "cycle_descriptor::{F*120}{..}{R*120}",
+                "--field", "sequencer_run_accession::" + rAcc,
+                "--field", "library_strategy_accession::1",
+                "--field", "study_type_accession::1",
+                "--field", "library_selection_accession::1",
+                "--field", "library_source_accession::1",
+                "--field", "skip::false", "--interactive");
+        String s = getOut();
+        laneAccession = getAndCheckSwid(s);
+    }
+
+    @Test
+    public void testInteractiveCreateIUS() {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("Is this information correct", "y");
+        TestConsoleAdapter.initializeTestInstance().setLine(params);
+
+        String lAcc = laneAccession;
+        if (lAcc == null) {
+            lAcc = "4707";
+        }
+        String sAcc = sampleAccession;
+        if (sAcc == null) {
+            sAcc = "4760";
+        }
+
+        launchPlugin("--table", "ius", "--create",
+                "--field", "name::ius",
+                "--field", "description::des",
+                "--field", "lane_accession::" + lAcc,
+                "--field", "sample_accession::" + sAcc,
+                "--field", "skip::false",
+                "--field", "barcode::NoIndex", "--interactive");
+        String s = getOut();
+        getAndCheckSwid(s);
+
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     private String getAndCheckSwid(String s) throws NumberFormatException {
@@ -517,6 +647,7 @@ public class MetadataTest extends PluginTest {
     @Rule
     public TestRule watchman = new TestWatcher() {
         //This doesn't catch logs that are sent to Log4J
+
         @Override
         protected void succeeded(Description d) {
             // do not fail on tests that intend on failing
