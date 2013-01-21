@@ -16,468 +16,492 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Arrays;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import net.sourceforge.seqware.common.model.ExperimentAttribute;
-import net.sourceforge.seqware.common.model.IUSAttribute;
-import net.sourceforge.seqware.common.model.LaneAttribute;
-import net.sourceforge.seqware.common.model.ProcessingAttribute;
-import net.sourceforge.seqware.common.model.SampleAttribute;
-import net.sourceforge.seqware.common.model.SequencerRunAttribute;
-import net.sourceforge.seqware.common.model.StudyAttribute;
-import net.sourceforge.seqware.common.model.WorkflowAttribute;
-import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
+import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.model.StudyType;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * <p>AttributeAnnotator class.</p>
+ * <p>BatchImport class.</p>
  *
  * @author mtaschuk
  * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
-public class AttributeAnnotator extends Plugin {
+public class BatchMetadataInjection extends Plugin {
 
-  ReturnValue ret = new ReturnValue();
+    private ReturnValue ret = new ReturnValue();
+    private boolean createStudy = false;
 
-  /**
-   * <p>Constructor for AttributeAnnotator.</p>
-   */
-  public AttributeAnnotator() {
-    super();
-    parser.acceptsAll(Arrays.asList("sequencer-run-accession", "sr"),
-        "The SWID of the sequencer run to annotate. One of the -accession options is required.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("lane-accession", "l"),
-        "The SWID of the Lane to annotate. One of the -accession options is required.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("ius-accession", "i"),
-        "The SWID of the IUS to annotate. One of the -accession options is required.").withRequiredArg();
-
-    parser.acceptsAll(Arrays.asList("experiment-accession", "e"),
-        "The SWID of the Experiment to annotate. One of the -accession options is required.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("processing-accession", "p"),
-        "The SWID of the Processing to annotate. One of the -accession options is required.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("sample-accession", "s"),
-        "The SWID of the Sample to annotate. One of the -accession options is required.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("study-accession", "st"),
-        "The SWID of the Study to annotate. One of the -accession options is required.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("workflow-accession", "w"),
-        "The SWID of the workflow to annotate. One of the -accession options is required.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("workflow-run-accession", "wr"),
-        "The SWID of the workflow run to annotate. One of the -accession options is required.").withRequiredArg();
-    // parser.acceptsAll(Arrays.asList("file-accession", "f"),
-    // "The SWID of the file run to annotate. One of the -accession options is required.").withRequiredArg();
-
-    parser.accepts("file", "The CSV file for bulk insert").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("skip"),
-        "Optional: Sets the 'skip' flag to either true or false for sequencer-run, lane, ius, or sample only.")
-        .withRequiredArg();
-    parser.acceptsAll(Arrays.asList("key"),
-        "Optional: The field that defines this attribute. The default value is 'skip'.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("value"),
-        "Optional: The description of this field. If not specified, no attribute will be created.").withRequiredArg();
-
-    ret.setExitStatus(ReturnValue.SUCCESS);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public ReturnValue init() {
-    return ret;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public ReturnValue do_test() {
-    return ret;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public ReturnValue do_run() {
-
-    // Key/Value pair
-    String key = "skip", value = "";
-    boolean hasKey = options.has("key");
-    boolean hasValue = options.has("value");
-    if (hasKey) {
-      key = (String) options.valueOf("key");
-    }
-    if (hasValue) {
-      value = (String) options.valueOf("value");
+    /**
+     * <p>Constructor for AttributeAnnotator.</p>
+     */
+    public BatchMetadataInjection() {
+        super();
+        parser.accepts("misec-sample-sheet", "the location of the MiSec Sample Sheet").withRequiredArg();
+        parser.accepts("create-study", "Create a new study, if necessary, with the information in the file");
+        ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
-    if (options.has("file")) {
-      this.bulkInsert();
-
-      return ret;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ReturnValue init() {
+        createStudy = options.has("create-study");
+        return ret;
     }
 
-    // skip
-    Boolean skip = null;
-    boolean hasSkip = options.has("skip");
-    if (hasSkip) {
-      skip = Boolean.parseBoolean((String) options.valueOf("skip"));
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ReturnValue do_test() {
+        return ret;
     }
 
-    boolean hasSequencerRun = options.has("sequencer-run-accession");
-    boolean hasLane = options.has("lane-accession");
-    boolean hasIus = options.has("ius-accession");
-    boolean hasExperimentAccession = options.has("experiment-accession");
-    boolean hasProcessingAccession = options.has("processing-accession");
-    boolean hasSampleAccession = options.has("sample-accession");
-    boolean hasStudyAccession = options.has("study-accession");
-    boolean hasWorkflowAccession = options.has("workflow-accession");
-    boolean hasWorkflowRunAccession = options.has("workflow-run-accession");
-    boolean hasFileAccession = options.has("file-accession");
-
-    if (hasSequencerRun) {
-      Integer sequencerRunSWID = Integer.parseInt((String) options.valueOf("sequencer-run-accession"));
-      SequencerRunAttribute sra = null;
-      if (hasValue) {
-        sra = new SequencerRunAttribute();
-        sra.setTag(key);
-        sra.setValue(value);
-        // sra.setSequencerRunAttributeId(new
-        // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
-      }
-      metadata.annotateSequencerRun(sequencerRunSWID, sra, skip);
-    } else if (hasLane) {
-      Integer laneSWID = Integer.parseInt((String) options.valueOf("lane-accession"));
-      LaneAttribute la = null;
-      if (hasValue) {
-        la = new LaneAttribute();
-        la.setTag(key);
-        la.setValue(value);
-        // la.setLaneAttributeId(new
-        // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
-      }
-      metadata.annotateLane(laneSWID, la, skip);
-
-    } else if (hasIus) {
-      Integer iusSWID = Integer.parseInt((String) options.valueOf("ius-accession"));
-      IUSAttribute ia = null;
-      if (hasValue) {
-        ia = new IUSAttribute();
-        ia.setTag(key);
-        ia.setValue(value);
-        // ia.setIusAttributeId(new
-        // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
-      }
-      metadata.annotateIUS(iusSWID, ia, skip);
-    } else if (hasExperimentAccession) {
-      Integer swid = Integer.parseInt((String) options.valueOf("experiment-accession"));
-      ExperimentAttribute a = null;
-      if (hasValue) {
-        a = new ExperimentAttribute();
-        a.setTag(key);
-        a.setValue(value);
-        // a.setExperimentAttributeId(new
-        // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
-      }
-      metadata.annotateExperiment(swid, a, skip);
-    } else if (hasProcessingAccession) {
-      Integer swid = Integer.parseInt((String) options.valueOf("processing-accession"));
-      ProcessingAttribute a = null;
-      if (hasValue) {
-        a = new ProcessingAttribute();
-        a.setTag(key);
-        a.setValue(value);
-        // a.setProcessingAttributeId(new
-        // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
-      }
-      metadata.annotateProcessing(swid, a, skip);
-    } else if (hasSampleAccession) {
-      Integer swid = Integer.parseInt((String) options.valueOf("sample-accession"));
-      SampleAttribute a = null;
-      if (hasValue) {
-        a = new SampleAttribute();
-        a.setTag(key);
-        a.setValue(value);
-        // a.setSampleAttributeId(new
-        // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
-      }
-      metadata.annotateSample(swid, a, skip);
-    } else if (hasStudyAccession) {
-      Integer swid = Integer.parseInt((String) options.valueOf("study-accession"));
-      StudyAttribute a = null;
-      if (hasValue) {
-        a = new StudyAttribute();
-        a.setTag(key);
-        a.setValue(value);
-        // a.setStudyAttributeId(new
-        // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
-      }
-      metadata.annotateStudy(swid, a, skip);
-    } else if (hasWorkflowAccession) {
-      Integer swid = Integer.parseInt((String) options.valueOf("workflow-accession"));
-      WorkflowAttribute a = null;
-      if (hasValue) {
-        a = new WorkflowAttribute();
-        a.setTag(key);
-        a.setValue(value);
-      }
-      metadata.annotateWorkflow(swid, a, skip);
-    } else if (hasWorkflowRunAccession) {
-      Integer swid = Integer.parseInt((String) options.valueOf("workflow-run-accession"));
-      WorkflowRunAttribute a = null;
-      if (hasValue) {
-        a = new WorkflowRunAttribute();
-        a.setTag(key);
-        a.setValue(value);
-      }
-      metadata.annotateWorkflowRun(swid, a, skip);
-    } /*
-       * else if(hasFileAccession) { Integer swid = Integer.parseInt((String)
-       * options.valueOf("file-accession")); FileAttribute a = null; if
-       * (hasValue) { a = new FileAttribute(); a.setTag(key); a.setValue(value);
-       * } metadata.annotateFile(swid, a, skip); }
-       */
-    else {
-      println("Combination of parameters not recognized!");
-      println(this.get_syntax());
-      ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-    }
-
-    return ret;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public ReturnValue clean_up() {
-    return ret;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public String get_description() {
-    return "Experimental plugin. Allows the annotation of objects in the database with 'skip' values.";
-  }
-
-  private boolean parseFile(Map<String, Map<String, Map<String, String>>> bulkMap) {
-    String filepath = (String) options.valueOf("file");
-    File file = new File(filepath);
-    try {
-      BufferedReader freader = new BufferedReader(new FileReader(file));
-      String line = null;
-      while ((line = freader.readLine()) != null) {
-        String[] args = line.split(",");
-        if (!checkArgs(args))
-          return false;
-        Map<String, Map<String, String>> types = bulkMap.get(args[0]);
-        if (types == null) {
-          types = new HashMap<String, Map<String, String>>();
-          bulkMap.put(args[0], types);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ReturnValue do_run() {
+        if (options.has("misec-sample-sheet")) {
+            String filepath = (String) options.valueOf("misec-sample-sheet");
+            RunInfo run = parseMiSecFile(filepath);
+            inject(run);
         }
-        Map<String, String> ids = types.get(args[1]);
-        if (ids == null) {
-          ids = new LinkedHashMap<String, String>();
-          types.put(args[1], ids);
+        return ret;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ReturnValue clean_up() {
+        return ret;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String get_description() {
+        return "Import objects into the database using different file formats.";
+    }
+
+    private ReturnValue inject(RunInfo run) {
+        Study study = retrieveStudy(run);
+        return ret;
+    }
+
+    private Study retrieveStudy(RunInfo run) {
+        List<Study> studies = metadata.getAllStudies();
+        Study study = null;
+        for (Study st : studies) {
+            if (st.getTitle().equals(run.getHeader().get("Project Name"))) {
+                study = st;
+            }
         }
-        ids.put(args[2], args[3]);
-      }
-      freader.close();
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-      return false;
-    } catch (IOException ex) {
-      ex.printStackTrace();
-      return false;
-    }
-    return true;
-  }
+        if (study == null) {
+            if (createStudy) {
+                for (StudyType st : metadata.getStudyTypes()) {
+                    Log.stdout(st.toString());
+                }
+                int studyType = 4;
+                Console c = System.console();
+                String studyTypeStr = c.readLine("Type of study [Default 4] :");
+                if (!studyTypeStr.trim().isEmpty()) {
+                    studyType = Integer.parseInt(studyTypeStr);
+                }
 
-  private boolean checkArgs(String[] args) {
-    if (args.length != 4)
-      return false;
-    try {
-      Integer.parseInt(args[1]);
-    } catch (NumberFormatException e) {
-      return false;
-    }
-    return true;
-  }
-
-  private void bulkInsert() {
-    Map<String, Map<String, Map<String, String>>> bulkMap = new HashMap<String, Map<String, Map<String, String>>>();
-    if (this.parseFile(bulkMap)) {
-      for (Map.Entry<String, Map<String, Map<String, String>>> entry : bulkMap.entrySet()) {
-        if (entry.getKey().equals("w") || entry.getKey().equals("workflow-accesion")) {
-          this.bulkInsertWorkflow(entry.getValue());
+                ReturnValue r = metadata.addStudy("title", "description", null, null, "center name", "center project name", studyType);
+                int studyId = r.getReturnValue();
+            } else {
+                Log.fatal("Study does not exist. Check the name of the study or add --create-study to your parameters");
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            }
         }
-        if (entry.getKey().equals("wr") || entry.getKey().equals("workflow-run-accession")) {
-          this.bulkInsertWorkflowRun(entry.getValue());
+        return study;
+    }
+
+    protected RunInfo parseMiSecFile(String filepath) {
+        RunInfo run = new RunInfo();
+        File file = new File(filepath);
+        try {
+            BufferedReader freader = new BufferedReader(new FileReader(file));
+            Map<String, String> header = parseMiSecHeader(freader);
+
+
+            List<SampleInfo> samples = parseMiSecData(freader);
+            freader.close();
+
+            run.setHeader(header);
+            run.setSamples(samples);
+
+        } catch (FileNotFoundException e) {
+            Log.error(filepath, e);
+            ret.setExitStatus(ReturnValue.FILENOTREADABLE);
+        } catch (IOException ex) {
+            Log.error(filepath, ex);
+            ret.setExitStatus(ReturnValue.FILENOTREADABLE);
         }
-        if (entry.getKey().equals("sr") || entry.getKey().equals("sequencer-run-accession")) {
-          this.bulkInsertSequencerRun(entry.getValue());
+        return run;
+    }
+
+    protected List<SampleInfo> parseMiSecData(BufferedReader freader) throws IOException, NumberFormatException {
+        List<SampleInfo> samples = new ArrayList<SampleInfo>();
+
+        String line = freader.readLine(); //Discard header
+        while ((line = freader.readLine()) != null) {
+            String[] args = line.split(",");
+            String[] sampleInfo = args[0].split("-");
+            SampleInfo info = new SampleInfo();
+            info.setName(args[0]);
+            info.setParentSample(sampleInfo[0] + "-" + sampleInfo[1]);
+            info.setBarcode(args[5]);
+            info.setLane("1");
+            info.setOrganism(args[8].split("\\\\")[0].replace('_', ' '));
+            //info.setTargetedResequencing();
+            if (sampleInfo[2].contains("BLD")) {
+                info.setTissueType("R");
+                info.setTissuePreparation("Blood");
+            } else if (sampleInfo[2].contains("BIO")) {
+                info.setTissueType("P");
+            } else if (sampleInfo[2].contains("ARC")) {
+                info.setTissueType("A");
+            } else {
+                Log.stdout("Unknown tissue type");
+            }
+
+            info.setTissueRegion(sampleInfo[2].substring(0, 1));
+            //info.setTissueOrigin();
+            samples.add(info);
+
         }
-        if (entry.getKey().equals("l") || entry.getKey().equals("lane-accession")) {
-          this.bulkInsertLane(entry.getValue());
+        return samples;
+    }
+
+    protected Map<String, String> parseMiSecHeader(BufferedReader freader) throws IOException {
+        String line = null;
+        Map<String, String> header = new HashMap<String, String>();
+        while (!(line = freader.readLine()).startsWith("[Data]")) {
+            if (!line.startsWith("[")) {
+                String[] args = line.split(",");
+                if (args.length >= 2) {
+                    header.put(args[0].trim(), args[1].trim());
+                }
+            }
         }
-        if (entry.getKey().equals("i") || entry.getKey().equals("ius-accession")) {
-          this.bulkInsertIUS(entry.getValue());
+        return header;
+    }
+
+    protected class RunInfo {
+
+        private Map<String, String> header = null;
+        private List<SampleInfo> samples = null;
+
+        public Map<String, String> getHeader() {
+            return header;
         }
-        if (entry.getKey().equals("e") || entry.getKey().equals("experiment-accession")) {
-          this.bulkInsertExperiment(entry.getValue());
+
+        public void setHeader(Map<String, String> header) {
+            this.header = header;
         }
-        if (entry.getKey().equals("st") || entry.getKey().equals("study-accession")) {
-          this.bulkInsertStudy(entry.getValue());
+
+        public List<SampleInfo> getSamples() {
+            return samples;
         }
-        if (entry.getKey().equals("p") || entry.getKey().equals("processing-accession")) {
-          this.bulkInsertProcessing(entry.getValue());
+
+        public void setSamples(List<SampleInfo> samples) {
+            this.samples = samples;
         }
-        if (entry.getKey().equals("s") || entry.getKey().equals("sample-accession")) {
-          this.bulkInsertSample(entry.getValue());
+
+        @Override
+        public String toString() {
+            String string = "RunInfo{\n" + "HEADER\n";
+            for (String key : header.keySet()) {
+                string += key + " : " + header.get(key) + "\n";
+            }
+            for (SampleInfo sample : samples) {
+                string += sample.toString() + "\n";
+            }
+            string += '}';
+            return string;
         }
-      }
     }
-  }
 
-  private void bulkInsertSample(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<SampleAttribute> atts = new TreeSet<SampleAttribute>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        SampleAttribute a = new SampleAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateSample(swid, atts);
-    }
-  }
+    protected class Header {
 
-  private void bulkInsertProcessing(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<ProcessingAttribute> atts = new TreeSet<ProcessingAttribute>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        ProcessingAttribute a = new ProcessingAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateProcessing(swid, atts);
-    }
-  }
+        private String studyTitle;
+        private String runName;
+        
+        /**
+         * Get the value of runName
+         *
+         * @return the value of runName
+         */
+        public String getRunName() {
+            return runName;
+        }
 
-  private void bulkInsertStudy(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<StudyAttribute> atts = new TreeSet<StudyAttribute>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        StudyAttribute a = new StudyAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateStudy(swid, atts);
-    }
-  }
+        /**
+         * Set the value of runName
+         *
+         * @param runName new value of runName
+         */
+        public void setRunName(String runName) {
+            this.runName = runName;
+        }
 
-  private void bulkInsertIUS(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<IUSAttribute> atts = new TreeSet<IUSAttribute>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        IUSAttribute a = new IUSAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateIUS(swid, atts);
-    }
-  }
+        /**
+         * Get the value of studyTitle
+         *
+         * @return the value of studyTitle
+         */
+        public String getStudyTitle() {
+            return studyTitle;
+        }
 
-  private void bulkInsertExperiment(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<ExperimentAttribute> atts = new TreeSet<ExperimentAttribute>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        ExperimentAttribute a = new ExperimentAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateExperiment(swid, atts);
-    }
-  }
+        /**
+         * Set the value of studyTitle
+         *
+         * @param studyTitle new value of studyTitle
+         */
+        public void setStudyTitle(String studyTitle) {
+            this.studyTitle = studyTitle;
+        }
 
-  private void bulkInsertLane(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<LaneAttribute> atts = new TreeSet<LaneAttribute>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        LaneAttribute a = new LaneAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateLane(swid, atts);
     }
-  }
+    
+    protected class SampleInfo {
 
-  private void bulkInsertSequencerRun(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<SequencerRunAttribute> atts = new TreeSet<SequencerRunAttribute>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        SequencerRunAttribute a = new SequencerRunAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateSequencerRun(swid, atts);
-    }
-  }
+        private String blank = "";
+        private String name = blank;
+        private String tissueType = blank;
+        private String tissueRegion = blank;
+        private String tissueOrigin = blank;
+        private String tissuePreparation = blank;
+        private String targetedResequencing = blank;
+        private String templateType = blank;
+        private String lane = blank;
+        private String barcode = blank;
+        private String organism = blank;
+        private String parentSample = blank;
 
-  private void bulkInsertWorkflow(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<WorkflowAttribute> atts = new TreeSet<WorkflowAttribute>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        WorkflowAttribute a = new WorkflowAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateWorkflow(swid, atts);
-    }
-  }
+        /**
+         * Get the value of parentSample
+         *
+         * @return the value of parentSample
+         */
+        public String getParentSample() {
+            return parentSample;
+        }
 
-  private void bulkInsertWorkflowRun(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<WorkflowRunAttribute> atts = new TreeSet<WorkflowRunAttribute>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        WorkflowRunAttribute a = new WorkflowRunAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateWorkflowRun(swid, atts);
+        /**
+         * Set the value of parentSample
+         *
+         * @param parentSample new value of parentSample
+         */
+        public void setParentSample(String parentSample) {
+            this.parentSample = parentSample;
+        }
+
+        /**
+         * Get the value of organism
+         *
+         * @return the value of organism
+         */
+        public String getOrganism() {
+            return organism;
+        }
+
+        /**
+         * Set the value of organism
+         *
+         * @param organism new value of organism
+         */
+        public void setOrganism(String organism) {
+            this.organism = organism;
+        }
+
+        /**
+         * Get the value of barcode
+         *
+         * @return the value of barcode
+         */
+        public String getBarcode() {
+            return barcode;
+        }
+
+        /**
+         * Set the value of barcode
+         *
+         * @param barcode new value of barcode
+         */
+        public void setBarcode(String barcode) {
+            this.barcode = barcode;
+        }
+
+        /**
+         * Get the value of lane
+         *
+         * @return the value of lane
+         */
+        public String getLane() {
+            return lane;
+        }
+
+        /**
+         * Set the value of lane
+         *
+         * @param lane new value of lane
+         */
+        public void setLane(String lane) {
+            this.lane = lane;
+        }
+
+        /**
+         * Get the value of templateType
+         *
+         * @return the value of templateType
+         */
+        public String getTemplateType() {
+            return templateType;
+        }
+
+        /**
+         * Set the value of templateType
+         *
+         * @param templateType new value of templateType
+         */
+        public void setTemplateType(String templateType) {
+            this.templateType = templateType;
+        }
+
+        /**
+         * Get the value of targetedResequencing
+         *
+         * @return the value of targetedResequencing
+         */
+        public String getTargetedResequencing() {
+            return targetedResequencing;
+        }
+
+        /**
+         * Set the value of targetedResequencing
+         *
+         * @param targetedResequencing new value of targetedResequencing
+         */
+        public void setTargetedResequencing(String targetedResequencing) {
+            this.targetedResequencing = targetedResequencing;
+        }
+
+        /**
+         * Get the value of tissuePreparation
+         *
+         * @return the value of tissuePreparation
+         */
+        public String getTissuePreparation() {
+            return tissuePreparation;
+        }
+
+        /**
+         * Set the value of tissuePreparation
+         *
+         * @param tissuePreparation new value of tissuePreparation
+         */
+        public void setTissuePreparation(String tissuePreparation) {
+            this.tissuePreparation = tissuePreparation;
+        }
+
+        /**
+         * Get the value of tissueOrigin
+         *
+         * @return the value of tissueOrigin
+         */
+        public String getTissueOrigin() {
+            return tissueOrigin;
+        }
+
+        /**
+         * Set the value of tissueOrigin
+         *
+         * @param tissueOrigin new value of tissueOrigin
+         */
+        public void setTissueOrigin(String tissueOrigin) {
+            this.tissueOrigin = tissueOrigin;
+        }
+
+        /**
+         * Get the value of tissueRegion
+         *
+         * @return the value of tissueRegion
+         */
+        public String getTissueRegion() {
+            return tissueRegion;
+        }
+
+        /**
+         * Set the value of tissueRegion
+         *
+         * @param tissueRegion new value of tissueRegion
+         */
+        public void setTissueRegion(String tissueRegion) {
+            this.tissueRegion = tissueRegion;
+        }
+
+        /**
+         * Get the value of tissueType
+         *
+         * @return the value of tissueType
+         */
+        public String getTissueType() {
+            return tissueType;
+        }
+
+        /**
+         * Set the value of tissueType
+         *
+         * @param tissueType new value of tissueType
+         */
+        public void setTissueType(String tissueType) {
+            this.tissueType = tissueType;
+        }
+
+        /**
+         * Get the value of name
+         *
+         * @return the value of name
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * Set the value of name
+         *
+         * @param name new value of name
+         */
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return "SampleInfo{" + "\n\tname=" + name + " \n\ttissueType=" + tissueType
+                    + " \n\ttissueRegion=" + tissueRegion + " \n\ttissueOrigin=" + tissueOrigin
+                    + " \n\ttissuePreparation=" + tissuePreparation + " \n\ttargetedResequencing=" + targetedResequencing
+                    + " \n\ttemplateType=" + templateType + " \n\tlane=" + lane
+                    + " \n\tbarcode=" + barcode + " \n\torganism=" + organism + '}';
+        }
     }
-  }
 }
