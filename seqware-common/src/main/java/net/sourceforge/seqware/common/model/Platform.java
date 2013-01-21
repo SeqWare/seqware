@@ -41,13 +41,13 @@ public class Platform implements Serializable, Comparable<Platform> {
 		return(that.getName().compareTo(this.getName()));
 	}
 
-    /** {@inheritDoc} */
     @Override
-	public String toString() {
-		return new ToStringBuilder(this)
-			.append("platformId", getPlatformId())
-			.toString();
-	}
+    public String toString() {
+        return "Platform{" + "platformId=" + platformId + ", name=" + name + ", description=" + description + ", instrumentModel=" + instrumentModel + '}';
+    }
+
+    /** {@inheritDoc} */
+
 
     /** {@inheritDoc} */
     @Override
