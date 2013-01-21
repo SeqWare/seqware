@@ -126,7 +126,7 @@ public class BasicDeciderTest extends PluginTest {
         // we expect to see 133 files in total
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
         // we expect to launch 3 times 
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getFinalChecks(), decider.getFinalChecks() == 0);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getFinalChecks(), decider.getFinalChecks() == 133);
     }
     
     @Test
@@ -182,7 +182,7 @@ public class BasicDeciderTest extends PluginTest {
         TestingDecider decider = (TestingDecider) instance;
         // we expect to see 133 files in total
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 0);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 96);
     }
     
     @Test
@@ -191,7 +191,7 @@ public class BasicDeciderTest extends PluginTest {
         launchAndCaptureOutput(params);
         TestingDecider decider = (TestingDecider) instance;
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 39);
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 0);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 20);
     }
     
     
@@ -206,12 +206,12 @@ public class BasicDeciderTest extends PluginTest {
         launchAndCaptureOutput(params);
         decider = (TestingDecider) instance;
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 68);
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 0);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 57);
         
         params = new String[]{"--sample", "", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "1", "--test"};
         launchAndCaptureOutput(params);
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 68);
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 0);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 57);
     }
     
     public class HaltingDecider extends TestingDecider{
