@@ -80,10 +80,14 @@ public class StudyIdFilesTSVResource extends BasicRestlet {
             @Override
             public void write(OutputStream out) throws IOException {
                 PrintWriter writer = new PrintWriter(out);
+                try{
                 for (Study study : studies) {
                     if (handleStudy(study, writer, fatf, null)) {
                         return;
                     }
+                } 
+                } finally{
+                    writer.close();
                 }
             }
         };
@@ -98,6 +102,7 @@ public class StudyIdFilesTSVResource extends BasicRestlet {
         if (queryValues.containsKey("show-input-files")) {
             fatf.setReportInputFiles(true);
         }
+        
         Study study = (Study) testIfNull(ss.findBySWAccession(Integer.parseInt(studySWA)));
         StringWriter writer = new StringWriter();
         if (handleStudy(study, writer , fatf, null)) {
