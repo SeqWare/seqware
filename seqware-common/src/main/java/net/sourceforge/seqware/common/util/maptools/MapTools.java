@@ -75,7 +75,7 @@ public class MapTools {
                             detailsMap.put(kv[0], "");
                     }
                 // this deals with keys
-                } else if (!line.startsWith("#") && line.matches("\\S+\\s*=\\s*\\S*")) {
+                } else if (!line.startsWith("#") && line.matches("\\S+\\s*=[^=]*")) {
                     String[] kv = line.split("\\s*=\\s*");
                     if (detailsMap == null || !kv[0].equals(detailsMap.get("key"))) {
                         detailsMap = new HashMap<String, String>();
