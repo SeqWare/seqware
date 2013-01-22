@@ -975,27 +975,30 @@ public class MetadataWS extends Metadata {
     try {
       IUS ius = ll.existsIUS("/" + parentAccession);
       Lane lane = ll.existsLane("/" + parentAccession);
-      WorkflowRun wr = ll.findWorkflowRun("?id=" + workflowRunId + "&show=lanes,ius");
-      int accession = wr.getSwAccession();
+      // this one won't be able to get back lanes and ius
+      WorkflowRun wr_withoutLanes = ll.findWorkflowRun("?id=" + workflowRunId /**+ "&show=lanes,ius"*/);
+      // this will, but uses seqware accessions
+      int accession = wr_withoutLanes.getSwAccession();
+      WorkflowRun wr_withLanesAndIUS = ll.findWorkflowRun("/" + accession + "?show=lanes,ius");
       if (ius != null) {
-        SortedSet<IUS> iuses = wr.getIus();
+        SortedSet<IUS> iuses = wr_withLanesAndIUS.getIus();
         if (iuses == null) {
           iuses = new TreeSet<IUS>();
         }
         iuses.add(ius);
-        wr.setIus(iuses);
+        wr_withLanesAndIUS.setIus(iuses);
 
-        ll.updateWorkflowRun("/" + accession, wr);
+        ll.updateWorkflowRun("/" + accession, wr_withLanesAndIUS);
 
       } else if (lane != null) {
-        SortedSet<Lane> lanes = wr.getLanes();
+        SortedSet<Lane> lanes = wr_withLanesAndIUS.getLanes();
         if (lanes == null) {
           lanes = new TreeSet<Lane>();
         }
         lanes.add(lane);
-        wr.setLanes(lanes);
+        wr_withLanesAndIUS.setLanes(lanes);
 
-        ll.updateWorkflowRun("/" + accession, wr);
+        ll.updateWorkflowRun("/" + accession, wr_withLanesAndIUS);
 
       } else {
         Log.error("ERROR: SW Accession is neither a lane nor an IUS: " + parentAccession);
