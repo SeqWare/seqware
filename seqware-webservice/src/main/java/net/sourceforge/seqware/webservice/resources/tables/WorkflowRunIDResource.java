@@ -63,9 +63,8 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<WorkflowRun> jaxbTool = new JaxbObject<WorkflowRun>();
         WorkflowRunService ss = BeanFactory.getWorkflowRunServiceBean();
-        
-        WorkflowRun workflowRun = (WorkflowRun) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
-        //WorkflowRun workflowRun = getWorkflowRun(ss);
+
+        WorkflowRun workflowRun = getWorkflowRun(ss);
         WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, workflowRun);
 
         if (fields.contains("lanes")) {
