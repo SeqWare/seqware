@@ -1330,7 +1330,11 @@ public class MetadataWS extends Metadata {
           }
         }
         sb.append("\n");
-        sb.append(wp.getKey() + "=" + wp.getDefaultValue() + "\n");
+        if (wp.getDefaultValue() == null){
+            sb.append(wp.getKey() + "=" + "\n");
+        } else{
+            sb.append(wp.getKey() + "=" + wp.getDefaultValue() + "\n");
+        }
       }
 
     } catch (IOException ex) {
