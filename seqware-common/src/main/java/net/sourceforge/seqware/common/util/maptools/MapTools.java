@@ -62,6 +62,7 @@ public class MapTools {
             BufferedReader br = new BufferedReader(new FileReader(new File(iniFile)));
             String line;
             while ((line = br.readLine()) != null) {
+                // this deals with key value annotations
                 if (line.startsWith("#") && line.matches("^#\\s*key=.*$")) {
                     detailsMap = new HashMap<String, String>();
                     line = line.replaceAll("#\\s*", "");
@@ -73,13 +74,18 @@ public class MapTools {
                         else
                             detailsMap.put(kv[0], "");
                     }
-                } else if (!line.startsWith("#") && line.matches("\\S+\\s*=\\s*\\S+")) {
+                // this deals with keys
+                } else if (!line.startsWith("#") && line.matches("\\S+\\s*=\\s*\\S*")) {
                     String[] kv = line.split("\\s*=\\s*");
                     if (detailsMap == null || !kv[0].equals(detailsMap.get("key"))) {
                         detailsMap = new HashMap<String, String>();
                         detailsMap.put("key", kv[0]);
                     }
-                    detailsMap.put("default_value", kv[1]);
+                    if (kv.length == 1){
+                        detailsMap.put("default_value", "");
+                    } else{
+                        detailsMap.put("default_value", kv[1]);
+                    }
                     hm.put(kv[0], detailsMap);
                 }
             }
