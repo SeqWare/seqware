@@ -177,13 +177,17 @@ public class MetadataWS extends Metadata {
     }
 
     // foreach workflow param add an entry in the workflow_param table
+    int count = 0;
     for (String key : hm.keySet()) {
+        count++;
+        Log.info("Adding WorkflowParam: " + key);
       ReturnValue rv = addWorkflowParam(hm, key, workflow);
       if (rv.getReturnValue() != ReturnValue.SUCCESS) {
         Log.error("Problem adding WorkflowParam");
         return rv;
       }
     }
+    Log.info(count + " WorkflowParams should have been added");
     // add default params in workflow_param table
 
     // Log.info("Setting returned URI to " +
@@ -587,6 +591,17 @@ public class MetadataWS extends Metadata {
       ex.printStackTrace();
       return new ReturnValue(ReturnValue.FAILURE);
     }
+        // looks like we need to get back a workflow param object back from the database with a proper accession,
+        // otherwise we will duplicate values. This is kinda clunky.
+        SortedSet<WorkflowParam> workflowParams = this.getWorkflowParams(workflow.getSwAccession().toString());
+        for(WorkflowParam param : workflowParams){
+            if (param.getKey().equals(key)){
+                wp = param;
+                break;
+            }
+        }
+    
+    
     Log.info("Done posting workflow param");
     // TODO: need to add support for pulldowns!
     // "pulldown", in which case we need to populate the pulldown table
