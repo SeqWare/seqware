@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import net.sourceforge.seqware.common.util.runtools.TestConsoleAdapter;
 import org.junit.*;
@@ -43,6 +44,7 @@ public class MetadataTest extends PluginTest {
     private Pattern swidPattern = Pattern.compile("SWID: ([\\d]+)");
     private Pattern errorPattern = Pattern.compile("ERROR|error|Error|FATAL|fatal|Fatal|WARN|warn|Warn");
     private PrintStream systemErr = System.err;
+    private PrintStream systemOut = System.out;
 
     @Before
     @Override
@@ -509,15 +511,22 @@ public class MetadataTest extends PluginTest {
     public void testInteractiveCreateStudy() {
         Map<String, String> params = new HashMap<String, String>();
         params.put("Is this information correct", "y");
+        params.put("title", "alal" + System.currentTimeMillis());
+        params.put("description", "alal");
+        params.put("accession", "1235");
+        params.put("center_name", "oicr");
+        params.put("center_project_name", "mine");
+        params.put("study_type", "1");
         TestConsoleAdapter.initializeTestInstance().setLine(params);
 
         launchPlugin("--table", "study", "--create",
-                "--field", "title::alal" + System.currentTimeMillis(),
-                "--field", "description::alal",
-                "--field", "accession::1235",
-                "--field", "center_name::oicr",
-                "--field", "center_project_name::mine",
-                "--field", "study_type::1", "--interactive");
+                //                "--field", "title::alal" + System.currentTimeMillis(),
+                //                "--field", "description::alal",
+                //                "--field", "accession::1235",
+                //                "--field", "center_name::oicr",
+                //                "--field", "center_project_name::mine",
+                //                "--field", "study_type::1", 
+                "--interactive");
         String s = getOut();
         studyAccession = getAndCheckSwid(s);
         Assert.assertTrue(ConsoleAdapter.getInstance() instanceof TestConsoleAdapter);
@@ -525,20 +534,27 @@ public class MetadataTest extends PluginTest {
 
     @Test
     public void testInteractiveCreateExperiment() {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("Is this information correct", "y");
-        TestConsoleAdapter.initializeTestInstance().setLine(params);
 
         String sAcc = studyAccession;
         if (sAcc == null) {
             sAcc = "120";
         }
 
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("Is this information correct", "y");
+        params.put("study_accession", sAcc);
+        params.put("title", "experimenttitle" + System.currentTimeMillis());
+        params.put("description", "\"Experiment Description\"");
+        params.put("platform_id", "9");
+        TestConsoleAdapter.initializeTestInstance().setLine(params);
+
+
         launchPlugin("--table", "experiment", "--create",
-                "--field", "study_accession::" + sAcc,
-                "--field", "title::experimenttitle" + System.currentTimeMillis(),
-                "--field", "description::\"Experiment Description\"",
-                "--field", "platform_id::9", "--interactive");
+                //                "--field", "study_accession::" + sAcc,
+                //                "--field", "title::experimenttitle" + System.currentTimeMillis(),
+                //                "--field", "description::\"Experiment Description\"",
+                //                "--field", "platform_id::9", 
+                "--interactive");
         String s = getOut();
         experimentAccession = getAndCheckSwid(s);
     }
@@ -554,14 +570,15 @@ public class MetadataTest extends PluginTest {
         params.put("Is this information correct", "y");
         params.put("experiment_accession", eAcc);
         params.put("description", "sampledescription");
-        params.put("organism_id","31");
+        params.put("organism_id", "31");
+        params.put("title", "sampletitle");
         TestConsoleAdapter.initializeTestInstance().setLine(params);
 
         launchPlugin("--table", "sample", "--create",
-//                "--field", "experiment_accession::" + eAcc,
-//                "--field", "title::sampletitle",
-//                "--field", "description::sampledescription",
-//                "--field", "organism_id::31", 
+                //                "--field", "experiment_accession::" + eAcc,
+                //                "--field", "title::sampletitle",
+                //                "--field", "description::sampledescription",
+                //                "--field", "organism_id::31", 
                 "--interactive");
         String s = getOut();
         sampleAccession = getAndCheckSwid(s);
@@ -571,14 +588,20 @@ public class MetadataTest extends PluginTest {
     public void testInteractiveCreateSequencerRun() {
         Map<String, String> params = new HashMap<String, String>();
         params.put("Is this information correct", "y");
+        params.put("name", "SR" + System.currentTimeMillis());
+        params.put("description", "SRD");
+        params.put("platform_accession", "20");
+        params.put("paired_end", "true");
+        params.put("skip", "false");
         TestConsoleAdapter.initializeTestInstance().setLine(params);
 
         launchPlugin("--table", "sequencer_run", "--create",
-                "--field", "name::SR" + System.currentTimeMillis(),
-                "--field", "description::SRD",
-                "--field", "platform_accession::20",
-                "--field", "paired_end::true",
-                "--field", "skip::false", "--interactive");
+                //                "--field", "name::SR" + System.currentTimeMillis(),
+                //                "--field", "description::SRD",
+                //                "--field", "platform_accession::20",
+                //                "--field", "paired_end::true",
+                //                "--field", "skip::false", 
+                "--interactive");
         String s = getOut();
         runAccession = getAndCheckSwid(s);
     }
@@ -594,16 +617,27 @@ public class MetadataTest extends PluginTest {
             rAcc = "4715";
         }
 
+        params.put("name", "lane");
+        params.put("description", "description");
+        params.put("cycle_descriptor", "{F*120}{..}{R*120}");
+        params.put("sequencer_run_accession", rAcc);
+        params.put("library_strategy_accession", "1");
+        params.put("study_type_accession", "1");
+        params.put("library_selection_accession", "1");
+        params.put("library_source_accession", "1");
+        params.put("skip", "false");
+
         launchPlugin("--table", "lane", "--create",
-                "--field", "name::lane",
-                "--field", "description::description",
-                "--field", "cycle_descriptor::{F*120}{..}{R*120}",
-                "--field", "sequencer_run_accession::" + rAcc,
-                "--field", "library_strategy_accession::1",
-                "--field", "study_type_accession::1",
-                "--field", "library_selection_accession::1",
-                "--field", "library_source_accession::1",
-                "--field", "skip::false", "--interactive");
+                //                "--field", "name::lane",
+                //                "--field", "description::description",
+                //                "--field", "cycle_descriptor::{F*120}{..}{R*120}",
+                //                "--field", "sequencer_run_accession::" + rAcc,
+                //                "--field", "library_strategy_accession::1",
+                //                "--field", "study_type_accession::1",
+                //                "--field", "library_selection_accession::1",
+                //                "--field", "library_source_accession::1",
+                //                "--field", "skip::false", 
+                "--interactive");
         String s = getOut();
         laneAccession = getAndCheckSwid(s);
     }
@@ -623,15 +657,65 @@ public class MetadataTest extends PluginTest {
             sAcc = "4760";
         }
 
+        params.put("name", "ius");
+        params.put("description", "des");
+        params.put("lane_accession", lAcc);
+        params.put("sample_accession", sAcc);
+        params.put("skip", "false");
+        params.put("barcode", "NoIndex");
+
         launchPlugin("--table", "ius", "--create",
-                "--field", "name::ius",
-                "--field", "description::des",
-                "--field", "lane_accession::" + lAcc,
-                "--field", "sample_accession::" + sAcc,
-                "--field", "skip::false",
-                "--field", "barcode::NoIndex", "--interactive");
+                //                "--field", "name::ius",
+                //                "--field", "description::des",
+                //                "--field", "lane_accession::" + lAcc,
+                //                "--field", "sample_accession::" + sAcc,
+                //                "--field", "skip::false",
+                //                "--field", "barcode::NoIndex", 
+                "--interactive");
         String s = getOut();
         getAndCheckSwid(s);
+
+    }
+
+    @Test
+    public void testPromptString() {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("test-default", "");
+        params.put("test-value", "value");
+        TestConsoleAdapter.initializeTestInstance().setLine(params);
+        Assert.assertNull(((Metadata) instance).promptString("test-default", null));
+        Assert.assertEquals("Failed while testing for default", "", ((Metadata) instance).promptString("test-default", ""));
+        Assert.assertEquals("Failed while testing for default", "default", ((Metadata) instance).promptString("test-default", "default"));
+        Assert.assertEquals("Failed while testing for a value", "value", ((Metadata) instance).promptString("test-value", "default"));
+        systemOut.println(getOut());
+    }
+
+    @Test
+    public void testPromptBoolean() {
+        //can test the error checking by extending the TestConsoleAdapter to
+        //change on the second query and then checking for the presence of error
+        //in the output. But, I'm slightly too lazy for that right now.
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("test-default", "");
+        params.put("test-value", "false");
+        TestConsoleAdapter.initializeTestInstance().setLine(params);
+        Assert.assertTrue("Failed while testing for default", ((Metadata) instance).promptBoolean("test-default", Boolean.TRUE));
+        Assert.assertFalse("Failed while testing for a value", ((Metadata) instance).promptBoolean("test-value", Boolean.TRUE));
+        systemOut.println(getOut());
+    }
+
+    @Test
+    public void testPromptInteger() {
+        //can test the error checking by extending the TestConsoleAdapter to
+        //change on the second query and then checking for the presence of error
+        //in the output. But, I'm slightly too lazy for that right now.
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("test-default", "");
+        params.put("test-value", "10");
+        TestConsoleAdapter.initializeTestInstance().setLine(params);
+        Assert.assertTrue("Failed while testing for default", 5 == ((Metadata) instance).promptInteger("test-default", 5));
+        Assert.assertTrue("Failed while testing for a value", 10 == ((Metadata) instance).promptInteger("test-value", 5));
+        systemOut.println(getOut());
 
     }
 
