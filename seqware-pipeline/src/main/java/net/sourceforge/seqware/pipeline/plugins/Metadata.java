@@ -47,7 +47,7 @@ public class Metadata extends Plugin {
     ReturnValue ret = new ReturnValue();
     BufferedWriter bw = null;
     HashMap<String, String> fields = new HashMap<String, String>();
-    private boolean interactive = false;
+    protected boolean interactive = false;
 
     /**
      * <p>Constructor for Metadata.</p>
@@ -154,7 +154,7 @@ public class Metadata extends Plugin {
     /**
      * list the fields available to set
      */
-    private ReturnValue listFields(String table) {
+    protected ReturnValue listFields(String table) {
         ReturnValue rv = new ReturnValue(ReturnValue.SUCCESS);
         if ("study".equals(table)) {
             List<StudyType> studyTypes = this.metadata.getStudyTypes();
@@ -186,7 +186,7 @@ public class Metadata extends Plugin {
             }
             print("]\n");
         } else if ("lane".equals(table)) {
-            print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\ncycle_descriptor\tString\t[e.g. {F*120}{..}{R*120}]\nskip\tBoolean\t[true, false]\nsequencer_run_accession\tInteger\nstudy_type_accession\tInteger\t[");
+            print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\ncycle_descriptor\tString\t[e.g. {F*120}{..}{R*120}]\nskip\tBoolean\t[true, false]\nsequencer_run_accession\tInteger\nlane_number\tInteger\nstudy_type_accession\tInteger\t[");
             List<Platform> platforms = this.metadata.getPlatforms();
             for (Platform obj : platforms) {
                 print(obj.getPlatformId() + ": " + obj.getName() + " " + obj.getInstrumentModel() + ", ");
@@ -220,7 +220,7 @@ public class Metadata extends Plugin {
      *
      * @return ReturnValue
      */
-    private ReturnValue addStudy() {
+    protected ReturnValue addStudy() {
         String[] necessaryFields = {"title", "description", "center_name", "center_project_name", "study_type"};
         if (interactive) {
             promptForStudy(necessaryFields);
@@ -244,7 +244,7 @@ public class Metadata extends Plugin {
      *
      * @return ReturnValue
      */
-    private ReturnValue addExperiment() {
+    protected ReturnValue addExperiment() {
         String[] necessaryFields = {"study_accession", "platform_id", "title", "description"};
         // check to make sure we have what we need
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
@@ -267,7 +267,7 @@ public class Metadata extends Plugin {
      *
      * @return ReturnValue
      */
-    private ReturnValue addSample() {
+    protected ReturnValue addSample() {
         String[] necessaryFields = {"experiment_accession", "organism_id", "title", "description"};
         // check to make sure we have what we need
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
@@ -293,7 +293,7 @@ public class Metadata extends Plugin {
      * @return ReturnValue
      *
      */
-    private ReturnValue addSequencerRun() {
+    protected ReturnValue addSequencerRun() {
         String[] necessaryFields = {"platform_accession", "name", "description", "paired_end", "skip"};
         // check to make sure we have what we need
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
@@ -314,10 +314,10 @@ public class Metadata extends Plugin {
         return (ret);
     }
 
-    private ReturnValue addLane() {
+    protected ReturnValue addLane() {
         String[] necessaryFields = {"sequencer_run_accession", "study_type_accession",
             "library_strategy_accession", "library_selection_accession", "library_source_accession",
-            "name", "description", "cycle_descriptor", "skip"};
+            "name", "description", "cycle_descriptor", "lane_number", "skip"};
         // check to make sure we have what we need
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -338,7 +338,7 @@ public class Metadata extends Plugin {
         return (ret);
     }
 
-    private ReturnValue addIUS() {
+    protected ReturnValue addIUS() {
         String[] necessaryFields = {"lane_accession", "sample_accession", "name", "description", "skip"};
         // check to make sure we have what we need
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
@@ -382,7 +382,7 @@ public class Metadata extends Plugin {
      *
      * @return ReturnValue
      */
-    private ReturnValue parseFields() {
+    protected ReturnValue parseFields() {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
         List<?> valuesOf = options.valuesOf("field");
         for (Object value : valuesOf) {
@@ -414,7 +414,7 @@ public class Metadata extends Plugin {
                 + "parents for file uploads and triggered workflows.";
     }
 
-    private void closeBufferWriter() {
+    protected void closeBufferWriter() {
         try {
             if (this.bw != null) {
                 this.bw.close();
@@ -437,7 +437,7 @@ public class Metadata extends Plugin {
     ////////////////////////////////////////////////////////////////////////////
     ///// Interactive code
     ////////////////////////////////////////////////////////////////////////////
-    private void promptForStudy(String[] necessaryFields) {
+    protected void promptForStudy(String[] necessaryFields) {
         Log.stdout("---Create a study---");
         if (!fields.containsKey("study_type")) {
             for (StudyType st : metadata.getStudyTypes()) {
@@ -451,7 +451,7 @@ public class Metadata extends Plugin {
         }
     }
 
-    private void promptForSample(String[] necessaryFields) {
+    protected void promptForSample(String[] necessaryFields) {
         Log.stdout("---Create a sample---");
         if (!fields.containsKey("organism_id")) {
             for (Organism o : metadata.getOrganisms()) {
@@ -465,7 +465,7 @@ public class Metadata extends Plugin {
         }
     }
 
-    private void promptForSequencerRun(String[] necessaryFields) {
+    protected void promptForSequencerRun(String[] necessaryFields) {
         Log.stdout("---Create a sequencer run---");
         if (!fields.containsKey("platform_accession")) {
             for (Platform p : metadata.getPlatforms()) {
@@ -486,7 +486,7 @@ public class Metadata extends Plugin {
 
     }
 
-    private void promptForExperiment(String[] necessaryFields) {
+    protected void promptForExperiment(String[] necessaryFields) {
         Log.stdout("---Create an experiment---");
         if (!fields.containsKey("platform_id")) {
             for (Platform p : metadata.getPlatforms()) {
@@ -501,7 +501,7 @@ public class Metadata extends Plugin {
 
     }
 
-    private void promptForLane(String[] necessaryFields) {
+    protected void promptForLane(String[] necessaryFields) {
         Log.stdout("---Create a lane---");
         if (!fields.containsKey("sequencer_run_accession")) {
             promptInteger("sequencer_run_accession", null);
@@ -530,6 +530,11 @@ public class Metadata extends Plugin {
             }
             promptInteger("library_source_accession", null);
         }
+        
+        if (!fields.containsKey("lane_number")) {
+            promptInteger("lane_number", 1);
+        }
+        
         if (!fields.containsKey("skip")) {
             promptBoolean("skip", false);
         }
@@ -539,7 +544,7 @@ public class Metadata extends Plugin {
         }
     }
 
-    private void promptForIUS(String[] necessaryFields) {
+    protected void promptForIUS(String[] necessaryFields) {
         Log.stdout("---Create a IUS/barcode---");
         if (!fields.containsKey("lane_accession")) {
             promptInteger("lane_accession", null);
@@ -556,7 +561,7 @@ public class Metadata extends Plugin {
         }
     }
 
-    private void promptForFields(String[] fs) {
+    protected void promptForFields(String[] fs) {
         for (String s : fs) {
             if (!fields.containsKey(s)) {
                 promptString(s, null);

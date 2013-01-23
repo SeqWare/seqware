@@ -16,15 +16,24 @@
  */
 package net.sourceforge.seqware.webservice.resources.filters;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
+import net.sourceforge.seqware.common.business.ExperimentService;
 import net.sourceforge.seqware.common.business.SampleService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
+import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.common.model.lists.SampleList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
-import net.sourceforge.seqware.webservice.resources.tables.SampleIDResource;
-import org.restlet.data.MediaType;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
+import org.restlet.data.Status;
 import org.restlet.resource.Get;
+import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 
 /**
@@ -33,42 +42,61 @@ import org.w3c.dom.Document;
  * @author mtaschuk
  * @version $Id: $Id
  */
-public class SampleIDFilter extends SampleIDResource {
-
-    /** {@inheritDoc} */
-    @Override
-    public void doInit() {
-        super.doInit();
-
-    }
+public class SampleIDFilter extends BasicResource {
 
     /**
      * <p>getXml.</p>
      */
     @Get
     public void getXml() {
-        SampleService ss = BeanFactory.getSampleServiceBean();
-        StringBuilder builder = new StringBuilder();
-
-        String path = getRequest().getResourceRef().getPath();
-        Sample sample = null;
-        if (getId() != null) {
-            sample = ss.findByID(Integer.parseInt(getId()));
+        //String path = getRequest().getResourceRef().getPath();getAttribute();
+        Collection<Sample> samples = null;
+        Map<String, Object> requestAttributes = getRequestAttributes();
+        if (requestAttributes.containsKey("experimentId")) {
+            Object val = requestAttributes.get("experimentId");
+            if (val != null) {
+                ExperimentService es = BeanFactory.getExperimentServiceBean();
+                Experiment s = (Experiment)testIfNull(es.findBySWAccession(Integer.parseInt(val.toString())));
+                samples = (SortedSet<Sample>) testIfNull(s.getSamples());
+            }
+        } else if (requestAttributes.containsKey("parentId")) {
+            Object val = requestAttributes.get("parentId");
+            if (val != null) {
+                SampleService es = BeanFactory.getSampleServiceBean();
+                Sample s = (Sample)testIfNull(es.findBySWAccession(Integer.parseInt(val.toString())));
+                samples = (Set<Sample>) testIfNull(s.getChildren());
+            }
+        } else if (requestAttributes.containsKey("childId")) {
+            Object val = requestAttributes.get("childId");
+            if (val != null) {
+                SampleService es = BeanFactory.getSampleServiceBean();
+                Sample s = (Sample)testIfNull(es.findBySWAccession(Integer.parseInt(val.toString())));
+                samples = (Set<Sample>) testIfNull(s.getParents());
+            }
+        } else {
+            StringBuilder sb = new StringBuilder();
+            for (String key : requestAttributes.keySet()) {
+                sb.append(key);
+            }
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "This resource cannot handle these data types: " + sb.toString());
         }
-
-        if (path.contains("lanes")) {
-            System.out.println("add lanes to Sample here");
+        
+        if (samples.isEmpty()) {
+            throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "There are no samples for this resource");
         }
-
-        if (path.contains("ius")) {
-            System.out.println("add iuses to Sample here");
-        }
-
+        
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<Sample> jaxbTool = new JaxbObject<Sample>();
+        JaxbObject<SampleList> jaxbTool = new JaxbObject<SampleList>();
 
-        Sample dto = copier.hibernate2dto(Sample.class, sample);
-        Document line = XmlTools.marshalToDocument(jaxbTool, dto);
+        SampleList eList = new SampleList();
+        eList.setList(new ArrayList());
+
+        for (Sample sample : samples) {
+            Sample dto = copier.hibernate2dto(Sample.class, sample);
+            eList.add(dto);
+        }
+
+        Document line = XmlTools.marshalToDocument(jaxbTool, eList);
 
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }

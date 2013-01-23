@@ -21,11 +21,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.Study;
-import net.sourceforge.seqware.common.model.StudyType;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 
 import org.openide.util.lookup.ServiceProvider;
@@ -37,10 +36,10 @@ import org.openide.util.lookup.ServiceProvider;
  * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
-public class BatchMetadataInjection extends Plugin {
+public class BatchMetadataInjection extends Metadata {
 
     private ReturnValue ret = new ReturnValue();
-    private boolean createStudy = false;
+    //private boolean createStudy = false;
 
     /**
      * <p>Constructor for AttributeAnnotator.</p>
@@ -48,7 +47,6 @@ public class BatchMetadataInjection extends Plugin {
     public BatchMetadataInjection() {
         super();
         parser.accepts("misec-sample-sheet", "the location of the MiSec Sample Sheet").withRequiredArg();
-        parser.accepts("create-study", "Create a new study, if necessary, with the information in the file");
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
@@ -57,7 +55,13 @@ public class BatchMetadataInjection extends Plugin {
      */
     @Override
     public ReturnValue init() {
-        createStudy = options.has("create-study");
+        if (options.has("create") && options.has("table")) {
+        }
+        if (options.has("table") && options.has("list-fields")) {
+            // list the fields for this table
+            ret = (listFields((String) options.valueOf("table")));
+            return ret;
+        }
         return ret;
     }
 
@@ -99,38 +103,89 @@ public class BatchMetadataInjection extends Plugin {
     }
 
     private ReturnValue inject(RunInfo run) {
-        Study study = retrieveStudy(run);
+        int sequencerRunAccession = createRun(run);
+        int studyAccession = retrieveStudy(run);
+        
+        Map<String, List<SampleInfo>> lanes = new HashMap<String, List<SampleInfo>>();
+        for (SampleInfo info : run.getSamples()) {
+            List<SampleInfo> samples = lanes.get(info.getLane());
+            if (samples == null) {
+                samples = new ArrayList<SampleInfo>();
+            }
+            samples.add(info);
+        }
+
+        for (String lane : lanes.keySet()) {
+            int laneAccession = createLane(lane, sequencerRunAccession);
+
+            for (SampleInfo barcodes : lanes.get(lane)) {
+            }
+        }
         return ret;
     }
+    
+//    private int retrieveExperiment(RunInfo run, int studyAccession) {
+//    }
 
-    private Study retrieveStudy(RunInfo run) {
+    private int createLane(String laneName, int sequencerRunAccession) {
+        Log.stdout("--------Creating a new lane---------");
+
+        fields.clear();
+        fields.put("skip", "false");
+        fields.put("lane_number", laneName);
+        fields.put("sequencer_run_accession", String.valueOf(sequencerRunAccession));
+
+        printDefaults();
+        interactive = true;
+        ReturnValue rv = addLane();
+
+        return rv.getReturnValue();
+    }
+
+    private int createRun(RunInfo run) {
+        Log.stdout("--------Creating a new sequencer run---------");
+
+        fields.clear();
+        fields.put("platform_accession", "26");
+        fields.put("skip", "false");
+        fields.put("paired_end", "true");
+
+        printDefaults();
+        interactive = true;
+        ReturnValue rv = addSequencerRun();
+
+        return rv.getReturnValue();
+    }
+
+    private void printDefaults() {
+        Log.stdout("Defaults:");
+        for (String s : fields.keySet()) {
+            Log.stdout(s + " : " + fields.get(s));
+        }
+        Log.stdout("You will have the opportunity to change these values.");
+    }
+
+    private int retrieveStudy(RunInfo run) {
         List<Study> studies = metadata.getAllStudies();
-        Study study = null;
+        Integer studyAccession = null;
         for (Study st : studies) {
             if (st.getTitle().equals(run.getHeader().get("Project Name"))) {
-                study = st;
+                studyAccession = st.getSwAccession();
             }
         }
-        if (study == null) {
-            if (createStudy) {
-                for (StudyType st : metadata.getStudyTypes()) {
-                    Log.stdout(st.toString());
-                }
-                int studyType = 4;
-                Console c = System.console();
-                String studyTypeStr = c.readLine("Type of study [Default 4] :");
-                if (!studyTypeStr.trim().isEmpty()) {
-                    studyType = Integer.parseInt(studyTypeStr);
-                }
+        if (studyAccession == null) {
+            Log.stdout("--------Creating a new study---------");
 
-                ReturnValue r = metadata.addStudy("title", "description", null, null, "center name", "center project name", studyType);
-                int studyId = r.getReturnValue();
-            } else {
-                Log.fatal("Study does not exist. Check the name of the study or add --create-study to your parameters");
-                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-            }
+            fields.clear();
+            fields.put("title", run.getHeader().get("Project Name"));
+            fields.put("center_name", "Ontario Institute for Cancer Research");
+
+            printDefaults();
+            interactive = true;
+            ReturnValue rv = addStudy();
+            studyAccession = rv.getReturnValue();
         }
-        return study;
+        return studyAccession;
     }
 
     protected RunInfo parseMiSecFile(String filepath) {
@@ -243,7 +298,7 @@ public class BatchMetadataInjection extends Plugin {
 
         private String studyTitle;
         private String runName;
-        
+
         /**
          * Get the value of runName
          *
@@ -279,9 +334,8 @@ public class BatchMetadataInjection extends Plugin {
         public void setStudyTitle(String studyTitle) {
             this.studyTitle = studyTitle;
         }
-
     }
-    
+
     protected class SampleInfo {
 
         private String blank = "";
