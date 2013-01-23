@@ -364,7 +364,8 @@ public class MetadataTest extends PluginTest {
                 "--field", "study_type_accession::1",
                 "--field", "library_selection_accession::1",
                 "--field", "library_source_accession::1",
-                "--field", "skip::false");
+                "--field", "skip::false", 
+                "--field", "lane_number::1");
         String s = getOut();
         laneAccession = getAndCheckSwid(s);
     }
@@ -626,6 +627,7 @@ public class MetadataTest extends PluginTest {
         params.put("library_selection_accession", "1");
         params.put("library_source_accession", "1");
         params.put("skip", "false");
+        params.put("lane_number", "2");
 
         launchPlugin("--table", "lane", "--create",
                 //                "--field", "name::lane",
