@@ -168,7 +168,7 @@ public class WorkflowApp {
         if(!wfdm.getFiles().isEmpty()) {
             Collection<OozieJob> newParents = new ArrayList<OozieJob>();
             for(Map.Entry<String,SqwFile> entry: wfdm.getFiles().entrySet()) {
-                AbstractJob job = new BashJob("provisionFile_"+entry.getKey());
+                AbstractJob job = new BashJob("provisionFile_"+entry.getKey().replaceAll("\\.", "_"));
                 job.addFile(entry.getValue());
                 OozieProvisionFileJob ojob = new OozieProvisionFileJob(job,
                         entry.getValue(),job.getAlgo()+this.jobs.size(), this.unqiueWorkingDir);
