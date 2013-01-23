@@ -1447,6 +1447,23 @@ public class MetadataWS extends Metadata {
     return null;
   }
 
+  
+  /**
+   * <p>getAllSequencerRuns.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
+  public List<SequencerRun> getAllSequencerRuns() {
+    try {
+      return ll.findSequencerRuns();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (JAXBException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+  
   /**
    * {@inheritDoc}
    *
@@ -2243,7 +2260,24 @@ public class MetadataWS extends Metadata {
       StudyList list = (StudyList) findObject("/studies", "", jaxb, new StudyList());
       return list.getList();
     }
+    
+    
+    private List<Experiment> findExperiments() throws IOException, JAXBException {
+      return findExperiments("/experiments");
+    }
+    
+    private List<Experiment> findExperiments(String searchString) throws IOException, JAXBException {
+      JaxbObject<ExperimentList> jaxb = new JaxbObject<ExperimentList>();
+      ExperimentList list = (ExperimentList) findObject(searchString, "", jaxb, new ExperimentList());
+      return list.getList();
+    }
 
+    private List<SequencerRun> findSequencerRuns() throws IOException, JAXBException {
+      JaxbObject<SequencerRunList> jaxb = new JaxbObject<SequencerRunList>();
+      SequencerRunList list = (SequencerRunList) findObject("/sequencerruns", "", jaxb, new SequencerRunList());
+      return list.getList();
+    }
+    
     private List<Workflow> findWorkflows() throws IOException, JAXBException {
       JaxbObject<WorkflowList> jaxb = new JaxbObject<WorkflowList>();
       WorkflowList list = (WorkflowList) findObject("/workflows", "", jaxb, new WorkflowList());
