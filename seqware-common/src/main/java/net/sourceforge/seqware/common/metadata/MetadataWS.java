@@ -157,6 +157,7 @@ public class MetadataWS extends Metadata {
     try {
       workflow = ll.addWorkflow(workflow);
       Log.stdout("WORKFLOW_ACCESSION: " + workflow.getSwAccession());
+      ret.setAttribute("sw_accession", workflow.getSwAccession().toString());
       ret.setReturnValue(workflow.getWorkflowId());
     } catch (Exception e) {
       e.printStackTrace();
@@ -175,7 +176,7 @@ public class MetadataWS extends Metadata {
     } else {
       MapTools.ini2RichMap(configFile, hm);
     }
-
+    
     // foreach workflow param add an entry in the workflow_param table
     int count = 0;
     for (String key : hm.keySet()) {
@@ -597,6 +598,8 @@ public class MetadataWS extends Metadata {
         for(WorkflowParam param : workflowParams){
             if (param.getKey().equals(key)){
                 wp = param;
+                // and we need to set back a real workflow, yikes!
+                wp.setWorkflow(workflow);
                 break;
             }
         }
