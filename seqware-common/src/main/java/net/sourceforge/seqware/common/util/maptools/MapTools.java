@@ -75,7 +75,7 @@ public class MapTools {
                             detailsMap.put(kv[0], "");
                     }
                 // this deals with keys
-                } else if (!line.startsWith("#") && line.matches("\\S+\\s*=[^=]*")) {
+                } else if (isLineMatchesKeyValue(line)) {
                     String[] kv = line.split("\\s*=\\s*");
                     if (detailsMap == null || !kv[0].equals(detailsMap.get("key"))) {
                         detailsMap = new HashMap<String, String>();
@@ -248,7 +248,7 @@ public class MapTools {
         Map<String, String> result = new HashMap<String, String>();
         String[] lines = iniString.split("\n");
         for (String line : lines) {
-            if (!line.startsWith("#") && line.matches("\\S+\\s*=\\s*\\S+")) {
+            if (isLineMatchesKeyValue(line)) {
                 String[] kv = line.split("\\s*=\\s*");
                 if (kv.length == 2) {
                 result.put(kv[0], kv[1]);
@@ -258,5 +258,9 @@ public class MapTools {
             }
         }
         return (result);
+    }
+
+    private static boolean isLineMatchesKeyValue(String line) {
+        return !line.startsWith("#") && line.matches("\\S+\\s*=[^=]*");
     }
 }
