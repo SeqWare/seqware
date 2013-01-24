@@ -157,6 +157,7 @@ public class MetadataWS extends Metadata {
     try {
       workflow = ll.addWorkflow(workflow);
       Log.stdout("WORKFLOW_ACCESSION: " + workflow.getSwAccession());
+      ret.setAttribute("sw_accession", workflow.getSwAccession().toString());
       ret.setReturnValue(workflow.getWorkflowId());
     } catch (Exception e) {
       e.printStackTrace();
@@ -175,15 +176,19 @@ public class MetadataWS extends Metadata {
     } else {
       MapTools.ini2RichMap(configFile, hm);
     }
-
+    
     // foreach workflow param add an entry in the workflow_param table
+    int count = 0;
     for (String key : hm.keySet()) {
+        count++;
+        Log.info("Adding WorkflowParam: " + key);
       ReturnValue rv = addWorkflowParam(hm, key, workflow);
       if (rv.getReturnValue() != ReturnValue.SUCCESS) {
         Log.error("Problem adding WorkflowParam");
         return rv;
       }
     }
+    Log.info(count + " WorkflowParams should have been added");
     // add default params in workflow_param table
 
     // Log.info("Setting returned URI to " +
@@ -587,6 +592,19 @@ public class MetadataWS extends Metadata {
       ex.printStackTrace();
       return new ReturnValue(ReturnValue.FAILURE);
     }
+        // looks like we need to get back a workflow param object back from the database with a proper accession,
+        // otherwise we will duplicate values. This is kinda clunky.
+        SortedSet<WorkflowParam> workflowParams = this.getWorkflowParams(workflow.getSwAccession().toString());
+        for(WorkflowParam param : workflowParams){
+            if (param.getKey().equals(key)){
+                wp = param;
+                // and we need to set back a real workflow, yikes!
+                wp.setWorkflow(workflow);
+                break;
+            }
+        }
+    
+    
     Log.info("Done posting workflow param");
     // TODO: need to add support for pulldowns!
     // "pulldown", in which case we need to populate the pulldown table
@@ -1333,7 +1351,11 @@ public class MetadataWS extends Metadata {
           }
         }
         sb.append("\n");
-        sb.append(wp.getKey() + "=" + wp.getDefaultValue() + "\n");
+        if (wp.getDefaultValue() == null){
+            sb.append(wp.getKey() + "=" + "\n");
+        } else{
+            sb.append(wp.getKey() + "=" + wp.getDefaultValue() + "\n");
+        }
       }
 
     } catch (IOException ex) {
