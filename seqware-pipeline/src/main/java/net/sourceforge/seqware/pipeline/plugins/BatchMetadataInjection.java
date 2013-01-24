@@ -35,7 +35,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author mtaschuk
  * @version $Id: $Id
  */
-@ServiceProvider(service = PluginInterface.class)
+//@ServiceProvider(service = PluginInterface.class)
 public class BatchMetadataInjection extends Metadata {
 
     private ReturnValue ret = new ReturnValue();
