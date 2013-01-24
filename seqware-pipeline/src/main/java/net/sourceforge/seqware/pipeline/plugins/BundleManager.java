@@ -9,6 +9,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
+import net.sourceforge.seqware.common.metadata.MetadataDB;
 
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
@@ -149,6 +150,11 @@ public class BundleManager extends Plugin {
                 println("Bundle Has Been Packaged to " + options.valueOf("bundle") + "!");
             }
         } else if (options.has("bundle") && options.has("install")) {
+            
+            if (killIfDirectDB()) {
+                return ret;
+            }
+            
             println("Installing Bundle");
             String bundleFile = (String) options.valueOf("bundle");
             println("Bundle: " + bundleFile);
@@ -157,6 +163,11 @@ public class BundleManager extends Plugin {
                 println("Bundle Has Been Installed to the MetaDB and Provisioned to " + options.valueOf("bundle") + "!");
             }
         } else if (options.has("bundle") && options.has("install-zip-only")) {
+            
+            if (killIfDirectDB()) {
+                return ret;
+            }
+            
             println("Installing Bundle (Zip Bundle Archive Only)");
             String bundleFile = (String) options.valueOf("bundle");
             println("Bundle: " + bundleFile);
@@ -170,6 +181,11 @@ public class BundleManager extends Plugin {
               ret.setExitStatus(ret.FAILURE);
             }
         } else if (options.has("bundle") && options.has("install-dir-only")) {
+            
+            if (killIfDirectDB()) {
+                return ret;
+            }
+            
             println("Installing Bundle (Working Directory Only)");
             String bundleFile = (String) options.valueOf("bundle");
             println("Bundle: " + bundleFile);
@@ -256,5 +272,14 @@ public class BundleManager extends Plugin {
      */
     public String get_description() {
         return ("A plugin that lets you create, test, and install workflow bundles.");
+    }
+
+    private boolean killIfDirectDB() {
+        if (this.metadata instanceof MetadataDB) {
+            Log.stdout("Bundle installation is not supported using a database connection to the MetaDB");
+            ret = new ReturnValue(ReturnValue.RUNTIMEEXCEPTION);
+            return true;
+        }
+        return false;
     }
 }
