@@ -1907,7 +1907,7 @@ public class MetadataDB extends Metadata {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
 
-  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip) {
+  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip, Integer laneNumber) {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
 

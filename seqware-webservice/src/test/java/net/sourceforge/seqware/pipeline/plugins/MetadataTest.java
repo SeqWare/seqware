@@ -249,6 +249,7 @@ public class MetadataTest extends PluginTest {
         expectedFields.put("library_strategy_accession", "Integer");
         expectedFields.put("library_selection_accession", "Integer");
         expectedFields.put("library_source_accession", "Integer");
+        expectedFields.put("lane_number", "Integer");
         launchPlugin("--table", "lane", "--list-fields");
 
         checkFields(expectedFields);
@@ -455,7 +456,8 @@ public class MetadataTest extends PluginTest {
                 "--field", "study_type_accession::1",
                 "--field", "library_selection_accession::1",
                 "--field", "library_source_accession::1",
-                "--field", "skip::false"));
+                "--field", "skip::false", 
+                "--field", "lane_number::1"));
         checkExpectedFailure();
     }
 
