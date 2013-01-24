@@ -351,9 +351,10 @@ public class MetadataWS extends Metadata {
     }
 
     // FIXME: might actually need to turn off libraryStrategy et al.
+    @Override
     public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId,
             Integer librarySelectionId, Integer librarySourceId, String name, String description,
-            String cycleDescriptor, boolean skip) {
+            String cycleDescriptor, boolean skip, Integer laneNumber) {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
         try {
@@ -378,6 +379,7 @@ public class MetadataWS extends Metadata {
             l.setDescription(description);
             l.setCycleDescriptor(cycleDescriptor);
             l.setSkip(skip);
+            l.setLaneIndex(laneNumber-1);
 
             Log.info("Posting new lane");
 

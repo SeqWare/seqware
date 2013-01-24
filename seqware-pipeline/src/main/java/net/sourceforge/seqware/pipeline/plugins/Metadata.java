@@ -327,7 +327,7 @@ public class Metadata extends Plugin {
 
         if (checkFields(necessaryFields)) {
             // create a new experiment
-            ret = metadata.addLane(Integer.parseInt(fields.get("sequencer_run_accession")), Integer.parseInt(fields.get("study_type_accession")), Integer.parseInt(fields.get("library_strategy_accession")), Integer.parseInt(fields.get("library_selection_accession")), Integer.parseInt(fields.get("library_source_accession")), fields.get("name"), fields.get("description"), fields.get("cycle_descriptor"), "true".equalsIgnoreCase(fields.get("skip")));
+            ret = metadata.addLane(Integer.parseInt(fields.get("sequencer_run_accession")), Integer.parseInt(fields.get("study_type_accession")), Integer.parseInt(fields.get("library_strategy_accession")), Integer.parseInt(fields.get("library_selection_accession")), Integer.parseInt(fields.get("library_source_accession")), fields.get("name"), fields.get("description"), fields.get("cycle_descriptor"), "true".equalsIgnoreCase(fields.get("skip")), Integer.parseInt(fields.get("lane_number")));
 
             print("SWID: " + ret.getAttribute("sw_accession"));
 
