@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
@@ -208,6 +209,7 @@ public class MetadataTest extends PluginTest {
         expectedFields.put("title", "String");
         expectedFields.put("description", "String");
         expectedFields.put("experiment_accession", "Integer");
+        expectedFields.put("parent_sample_accession", "Integer");
         expectedFields.put("organism_id", "Integer");
 
         launchPlugin("--table", "sample", "--list-fields");
@@ -320,7 +322,7 @@ public class MetadataTest extends PluginTest {
     private String sampleAccession = null;
 
     @Test
-    public void testCreateSample() {
+    public void testCreateSampleWithExperiment() {
         String eAcc = experimentAccession;
         if (eAcc == null) {
             eAcc = "834";
@@ -333,6 +335,41 @@ public class MetadataTest extends PluginTest {
                 "--field", "organism_id::31");
         String s = getOut();
         sampleAccession = getAndCheckSwid(s);
+
+        boolean foundIt = false;
+        List<Sample> samples = metadata.getSamplesFrom(Integer.parseInt(eAcc));
+        Assert.assertNotNull("There should be a sample!", samples);
+        for (Sample sam : samples) {
+            if (sam.getSwAccession().equals(Integer.parseInt(sampleAccession))) {
+                foundIt = true;
+            }
+        }
+        Assert.assertTrue("Did not find the sample attached to the experiment", foundIt);
+
+    }
+
+    @Test
+    public void testCreateSampleWithParent() {
+        String sAcc = "6193";
+
+        launchPlugin("--table", "sample", "--create",
+                "--field", "parent_sample_accession::" + sAcc,
+                "--field", "title::sampletitle",
+                "--field", "description::sampledescription",
+                "--field", "organism_id::31");
+        String s = getOut();
+        sampleAccession = getAndCheckSwid(s);
+
+        boolean foundIt = false;
+        List<Sample> samples = metadata.getChildSamplesFrom(Integer.parseInt(sAcc));
+        Assert.assertNotNull("There should be a sample!", samples);
+        for (Sample sam : samples) {
+            if (sam.getSwAccession().equals(Integer.parseInt(sampleAccession))) {
+                foundIt = true;
+            }
+        }
+        Assert.assertTrue("Did not find the sample attached to the parent sample", foundIt);
+
     }
     private String runAccession = null;
 
@@ -365,7 +402,7 @@ public class MetadataTest extends PluginTest {
                 "--field", "study_type_accession::1",
                 "--field", "library_selection_accession::1",
                 "--field", "library_source_accession::1",
-                "--field", "skip::false", 
+                "--field", "skip::false",
                 "--field", "lane_number::1");
         String s = getOut();
         laneAccession = getAndCheckSwid(s);
@@ -397,7 +434,7 @@ public class MetadataTest extends PluginTest {
     //////////////////////////////////////////////////Negative tests
     // re-enabled to test SEQWARE-1331
     @Test
-    public void testCreateSampleFail() {
+    public void testCreateSampleNoExperimentFail() {
         String eAcc = "8350";
 
         instance.setParams(Arrays.asList("--table", "sample", "--create",
@@ -406,6 +443,27 @@ public class MetadataTest extends PluginTest {
                 "--field", "description::sampledescription",
                 "--field", "organism_id::31"));
         checkExpectedFailure();
+    }
+
+    @Test
+    public void testCreateSampleNoParentFail() {
+        String eAcc = "8350";
+
+        instance.setParams(Arrays.asList("--table", "sample", "--create",
+                "--field", "parent_sample_accession::" + eAcc,
+                "--field", "title::sampletitle",
+                "--field", "description::sampledescription",
+                "--field", "organism_id::31"));
+        checkExpectedFailure();
+    }
+
+    @Test
+    public void testCreateSampleNoAccessionFail() {
+        instance.setParams(Arrays.asList("--table", "sample", "--create",
+                "--field", "title::sampletitle",
+                "--field", "description::sampledescription",
+                "--field", "organism_id::31"));
+        checkExpectedIncorrectParameters();
     }
 
     // See SEQWARE-1374
@@ -456,7 +514,7 @@ public class MetadataTest extends PluginTest {
                 "--field", "study_type_accession::1",
                 "--field", "library_selection_accession::1",
                 "--field", "library_source_accession::1",
-                "--field", "skip::false", 
+                "--field", "skip::false",
                 "--field", "lane_number::1"));
         checkExpectedFailure();
     }
@@ -572,6 +630,7 @@ public class MetadataTest extends PluginTest {
         Map<String, String> params = new HashMap<String, String>();
         params.put("Is this information correct", "y");
         params.put("experiment_accession", eAcc);
+        params.put("parent_sample_accession", "");
         params.put("description", "sampledescription");
         params.put("organism_id", "31");
         params.put("title", "sampletitle");
@@ -753,5 +812,14 @@ public class MetadataTest extends PluginTest {
         checkReturnValue(ReturnValue.SUCCESS, instance.parse_parameters());
         checkReturnValue(ReturnValue.SUCCESS, instance.init());
         checkReturnValue(ReturnValue.FAILURE, instance.do_run());
+    }
+
+    /**
+     * Run an instance with incorrect parameters expected.
+     */
+    private void checkExpectedIncorrectParameters() {
+        checkReturnValue(ReturnValue.SUCCESS, instance.parse_parameters());
+        checkReturnValue(ReturnValue.SUCCESS, instance.init());
+        checkReturnValue(ReturnValue.INVALIDPARAMETERS, instance.do_run());
     }
 }
