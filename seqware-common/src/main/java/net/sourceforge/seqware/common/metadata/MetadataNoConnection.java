@@ -9,12 +9,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import org.apache.commons.lang.NotImplementedException;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -658,5 +656,10 @@ public class MetadataNoConnection extends Metadata {
     @Override
     public List<Sample> getParentSamplesFrom(int childSampleAccession) {
         return new ArrayList<Sample>();
+    }
+
+    @Override
+    public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
+        return new ArrayList<WorkflowRun>();
     }
 }
