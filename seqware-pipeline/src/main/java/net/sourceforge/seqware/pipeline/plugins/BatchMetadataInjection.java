@@ -17,17 +17,16 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.*;
+import java.io.File;
+import java.lang.String;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.sourceforge.seqware.common.metadata.MetadataWS;
-import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
-
-import org.openide.util.lookup.ServiceProvider;
+import net.sourceforge.seqware.pipeline.plugins.BatchMetadataInjection.SampleInfo;
 
 /**
  * <p>BatchImport class.</p>
@@ -81,7 +80,11 @@ public class BatchMetadataInjection extends Metadata {
         if (options.has("misec-sample-sheet")) {
             String filepath = (String) options.valueOf("misec-sample-sheet");
             RunInfo run = parseMiSecFile(filepath);
-            inject(run);
+            try {
+                inject(run);
+            } catch (Exception ex) {
+                Log.error("The run could not be imported.", ex);
+            }
         }
         return ret;
     }
@@ -102,10 +105,9 @@ public class BatchMetadataInjection extends Metadata {
         return "Import objects into the database using different file formats.";
     }
 
-    private ReturnValue inject(RunInfo run) {
+    private ReturnValue inject(RunInfo run) throws Exception {
         int sequencerRunAccession = createRun(run);
-        int studyAccession = retrieveStudy(run);
-        
+
         Map<String, List<SampleInfo>> lanes = new HashMap<String, List<SampleInfo>>();
         for (SampleInfo info : run.getSamples()) {
             List<SampleInfo> samples = lanes.get(info.getLane());
@@ -115,24 +117,77 @@ public class BatchMetadataInjection extends Metadata {
             samples.add(info);
         }
 
+        List<Lane> existingLanes = metadata.getLanesFrom(sequencerRunAccession);
+        if (!existingLanes.isEmpty()) {
+            Boolean yorn = promptBoolean("This sequencer run already has " + existingLanes.size() + " lanes. Continue?", Boolean.FALSE);
+            if (yorn.equals(Boolean.FALSE)) {
+                throw new Exception("Sequencer run " + sequencerRunAccession + " already has lanes.");
+            }
+        }
+
+
+        int studyAccession = retrieveStudy(run);
+        int experimentAccession = retrieveExperiment(run, studyAccession);
+        List<Sample> parentSamples = metadata.getSamplesFrom(experimentAccession);
+
+
         for (String lane : lanes.keySet()) {
             int laneAccession = createLane(lane, sequencerRunAccession);
 
-            for (SampleInfo barcodes : lanes.get(lane)) {
+            for (SampleInfo barcode : lanes.get(lane)) {
+
+                //get the parent sample if it exists, otherwise create it
+                Integer parentSampleAcc = null;
+                if (parentSamples != null && !parentSamples.isEmpty()) {
+                    for (Sample pSample : parentSamples) {
+                        if (pSample.getName().equals(barcode.getParentSample())) {
+                            parentSampleAcc = pSample.getSwAccession();
+                        }
+                    }
+                }
+                if (parentSampleAcc == null) {
+                    parentSampleAcc = createSample(barcode.getParentSample(),
+                            experimentAccession, barcode.getOrganism());
+                }
+
+                //get the tissue type sample if it exists, otherwise create it
+//                metadata.getChildSamplesFrom(parentSampleAccession);
+                
+                
+                
+
+
             }
         }
         return ret;
     }
-    
+
+    private int createSample(String name, int experimentAccession, String organismId) {
+        Log.stdout("--------Creating a new sample---------");
+
+        fields.clear();
+        fields.put("experiment_accession", String.valueOf(experimentAccession));
+        fields.put("organism_id", organismId);
+        fields.put("title", name);
+        fields.put("description", name);
+
+        printDefaults();
+        interactive = true;
+        ReturnValue rv = addSample();
+
+        return rv.getReturnValue();
+    }
+
 //    private int retrieveExperiment(RunInfo run, int studyAccession) {
 //    }
-
     private int createLane(String laneName, int sequencerRunAccession) {
         Log.stdout("--------Creating a new lane---------");
 
         fields.clear();
         fields.put("skip", "false");
         fields.put("lane_number", laneName);
+        fields.put("name", laneName);
+        fields.put("description", laneName);
         fields.put("sequencer_run_accession", String.valueOf(sequencerRunAccession));
 
         printDefaults();
@@ -142,14 +197,23 @@ public class BatchMetadataInjection extends Metadata {
         return rv.getReturnValue();
     }
 
-    private int createRun(RunInfo run) {
-        Log.stdout("--------Creating a new sequencer run---------");
+    private int createRun(RunInfo run) throws Exception {
 
+
+        String runName = promptString("name", run.getRunName());
+        for (SequencerRun sr : metadata.getAllSequencerRuns()) {
+            if (sr.getName().equals(runName)) {
+                Log.stdout("Using existing sequencer run:" + sr.getName() + " accession " + sr.getSwAccession());
+                return sr.getSwAccession();
+            }
+        }
+        Log.stdout("--------Creating a new sequencer run---------");
         fields.clear();
         fields.put("platform_accession", "26");
         fields.put("skip", "false");
         fields.put("paired_end", "true");
-
+        fields.put("name", runName);
+        fields.put("description", runName);
         printDefaults();
         interactive = true;
         ReturnValue rv = addSequencerRun();
@@ -165,11 +229,51 @@ public class BatchMetadataInjection extends Metadata {
         Log.stdout("You will have the opportunity to change these values.");
     }
 
+    private int retrieveExperiment(RunInfo run, int studyAccession) throws Exception {
+        List<Experiment> experiments = metadata.getExperimentsFrom(studyAccession);
+        Integer experimentAccession = null;
+        if (experiments == null || !experiments.isEmpty()) {
+            Log.stdout("Please use one of the following experiments:");
+            for (Experiment e : experiments) {
+                Log.stdout("\t" + e.getTitle());
+            }
+        }
+        String experimentName = promptString("Experiment name", run.getExperimentName());
+        for (Experiment ex : experiments) {
+            if (ex.getTitle().equals(experimentName)) {
+                experimentAccession = ex.getSwAccession();
+            }
+        }
+        if (experimentAccession == null) {
+            if (experiments == null || experiments.isEmpty()) {
+                Log.stdout("--------Creating a new experiment---------");
+
+                fields.clear();
+                fields.put("study_accession", studyAccession + "");
+                fields.put("platform_id", "26");
+                fields.put("title", experimentName);
+                fields.put("description", experimentName);
+
+                printDefaults();
+                interactive = true;
+                ReturnValue rv = addExperiment();
+                experimentAccession = rv.getReturnValue();
+            } else {
+                Log.stdout("This tool does not support creating new experiments when experiments already exist.");
+                Log.stdout("You can create a new experiment for study " + studyAccession + " using the Metadata plugin.");
+                Log.stdout("e.g. java -jar seqware-distribution-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --create --table experiment");
+                throw new Exception("This tool does not support creating new experiments when experiments already exist.");
+            }
+        }
+        return experimentAccession;
+    }
+
     private int retrieveStudy(RunInfo run) {
         List<Study> studies = metadata.getAllStudies();
         Integer studyAccession = null;
+        String studyName = promptString("Study name", run.getStudyTitle());
         for (Study st : studies) {
-            if (st.getTitle().equals(run.getHeader().get("Project Name"))) {
+            if (st.getTitle().equals(studyName)) {
                 studyAccession = st.getSwAccession();
             }
         }
@@ -177,8 +281,10 @@ public class BatchMetadataInjection extends Metadata {
             Log.stdout("--------Creating a new study---------");
 
             fields.clear();
-            fields.put("title", run.getHeader().get("Project Name"));
+            fields.put("title", studyName);
+            fields.put("description", studyName);
             fields.put("center_name", "Ontario Institute for Cancer Research");
+            fields.put("center_project_name", studyName);
 
             printDefaults();
             interactive = true;
@@ -189,17 +295,15 @@ public class BatchMetadataInjection extends Metadata {
     }
 
     protected RunInfo parseMiSecFile(String filepath) {
-        RunInfo run = new RunInfo();
+        RunInfo run = null;
         File file = new File(filepath);
         try {
             BufferedReader freader = new BufferedReader(new FileReader(file));
-            Map<String, String> header = parseMiSecHeader(freader);
-
+            run = parseMiSecHeader(freader, filepath);
 
             List<SampleInfo> samples = parseMiSecData(freader);
             freader.close();
 
-            run.setHeader(header);
             run.setSamples(samples);
 
         } catch (FileNotFoundException e) {
@@ -245,59 +349,91 @@ public class BatchMetadataInjection extends Metadata {
         return samples;
     }
 
-    protected Map<String, String> parseMiSecHeader(BufferedReader freader) throws IOException {
+    protected RunInfo parseMiSecHeader(BufferedReader freader, String fileName) throws IOException {
         String line = null;
-        Map<String, String> header = new HashMap<String, String>();
+        RunInfo runInfo = new RunInfo();
+
+        Map<String, String> headerInfo = new HashMap<String, String>();
         while (!(line = freader.readLine()).startsWith("[Data]")) {
             if (!line.startsWith("[")) {
                 String[] args = line.split(",");
                 if (args.length >= 2) {
-                    header.put(args[0].trim(), args[1].trim());
+                    headerInfo.put(args[0].trim(), args[1].trim());
                 }
             }
         }
-        return header;
+        String[] bits = fileName.split(File.separator);
+        runInfo.setRunName(bits[bits.length - 2]);
+        runInfo.setStudyTitle(headerInfo.get("Project Name").split("_")[0]);
+        runInfo.setExperimentName(headerInfo.get("Experiment Name").split("_")[0]);
+        runInfo.setWorkflowType(headerInfo.get("Workflow"));
+        runInfo.setAssayType(headerInfo.get("Assay"));
+
+        return runInfo;
     }
 
     protected class RunInfo {
 
-        private Map<String, String> header = null;
-        private List<SampleInfo> samples = null;
-
-        public Map<String, String> getHeader() {
-            return header;
-        }
-
-        public void setHeader(Map<String, String> header) {
-            this.header = header;
-        }
-
-        public List<SampleInfo> getSamples() {
-            return samples;
-        }
-
-        public void setSamples(List<SampleInfo> samples) {
-            this.samples = samples;
-        }
-
-        @Override
-        public String toString() {
-            String string = "RunInfo{\n" + "HEADER\n";
-            for (String key : header.keySet()) {
-                string += key + " : " + header.get(key) + "\n";
-            }
-            for (SampleInfo sample : samples) {
-                string += sample.toString() + "\n";
-            }
-            string += '}';
-            return string;
-        }
-    }
-
-    protected class Header {
-
         private String studyTitle;
         private String runName;
+        private List<SampleInfo> samples = null;
+        private String experimentName;
+        private String workflowType;
+        private String assayType;
+
+        /**
+         * Get the value of assayType
+         *
+         * @return the value of assayType
+         */
+        public String getAssayType() {
+            return assayType;
+        }
+
+        /**
+         * Set the value of assayType
+         *
+         * @param assayType new value of assayType
+         */
+        public void setAssayType(String assayType) {
+            this.assayType = assayType;
+        }
+
+        /**
+         * Get the value of workflowType
+         *
+         * @return the value of workflowType
+         */
+        public String getWorkflowType() {
+            return workflowType;
+        }
+
+        /**
+         * Set the value of workflowType
+         *
+         * @param workflowType new value of workflowType
+         */
+        public void setWorkflowType(String workflowType) {
+            this.workflowType = workflowType;
+        }
+
+        /**
+         * Get the value of experimentName
+         *
+         * @return the value of experimentName
+         */
+        public String getExperimentName() {
+            return experimentName;
+        }
+
+        /**
+         * Set the value of experimentName
+         *
+         * @param experimentName new value of experimentName
+         */
+        public void setExperimentName(String experimentName) {
+            this.experimentName = experimentName;
+        }
 
         /**
          * Get the value of runName
@@ -333,6 +469,24 @@ public class BatchMetadataInjection extends Metadata {
          */
         public void setStudyTitle(String studyTitle) {
             this.studyTitle = studyTitle;
+        }
+
+        public List<SampleInfo> getSamples() {
+            return samples;
+        }
+
+        public void setSamples(List<SampleInfo> samples) {
+            this.samples = samples;
+        }
+
+        @Override
+        public String toString() {
+            String string = "RunInfo{" + "studyTitle=" + studyTitle + ", runName=" + runName;
+            for (SampleInfo sample : samples) {
+                string += sample.toString() + "\n";
+            }
+            string += '}';
+            return string;
         }
     }
 
@@ -384,7 +538,14 @@ public class BatchMetadataInjection extends Metadata {
          * @param organism new value of organism
          */
         public void setOrganism(String organism) {
-            this.organism = organism;
+            for (Organism o : metadata.getOrganisms()) {
+                if (o.getName().equals(organism)) {
+                    this.organism = String.valueOf(o.getOrganismId());
+                }
+            }
+            if (this.organism.isEmpty()) {
+                this.organism = organism;
+            }
         }
 
         /**

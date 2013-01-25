@@ -58,20 +58,11 @@ public class BatchMetadataInjectionTest {
         System.out.println("parseMiSecFile");
         BatchMetadataInjection instance = new BatchMetadataInjection();
         RunInfo run = instance.parseMiSecFile(misecPath);
-        Map<String, String> header = run.getHeader();
-        Assert.assertEquals("Incorrect number of header items", 11, header.size());
-        Assert.assertEquals("Incorrect IEMFileVersion", "3", header.get("IEMFileVersion"));
-        Assert.assertEquals("Incorrect Investigator Name", "Jane_Smith", header.get("Investigator Name"));
-        Assert.assertEquals("Incorrect Project Name", "Testdance_123to456", header.get("Project Name"));
-        Assert.assertEquals("Incorrect Experiment Name", "TDHS_123to456", header.get("Experiment Name"));
-        Assert.assertEquals("Incorrect Date", "10/12/2012", header.get("Date"));
-        Assert.assertEquals("Incorrect Workflow", "Resequencing", header.get("Workflow"));
-        Assert.assertEquals("Incorrect Assay", "TruSeq DNA/RNA", header.get("Assay"));
-        Assert.assertEquals("Incorrect Chemistry", "Default", header.get("Chemistry"));
-        Assert.assertEquals("Incorrect CustomRead1PrimerMix", "C1", header.get("CustomRead1PrimerMix"));
-        Assert.assertEquals("Incorrect CustomRead2PrimerMix", "C3", header.get("CustomRead2PrimerMix"));
-        Assert.assertEquals("Incorrect OnlyGenerateFASTQ", "0", header.get("OnlyGenerateFASTQ"));
-
+        Assert.assertEquals("Incorrect Project Name", "Testdance_123to456", run.getStudyTitle());
+        Assert.assertEquals("Incorrect Experiment Name", "TDHS_123to456", run.getExperimentName());
+        Assert.assertEquals("Incorrect Workflow", "Resequencing", run.getWorkflowType());
+        Assert.assertEquals("Incorrect Assay", "TruSeq DNA/RNA", run.getAssayType());
+        
         List<SampleInfo> samples = run.getSamples();
         Assert.assertEquals("Incorrect number of samples", 6, samples.size());
         SampleInfo sample = samples.get(0);
