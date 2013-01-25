@@ -115,8 +115,10 @@ public class MetadataWS extends Metadata {
      * {@inheritDoc}
      *
      */
-    @Override
-    public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflow_class, String workflow_type, String workflow_engine) {
+    
+    
+  @Override
+  public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflow_class, String workflow_type, String workflow_engine) {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -155,6 +157,7 @@ public class MetadataWS extends Metadata {
         try {
             workflow = ll.addWorkflow(workflow);
             Log.stdout("WORKFLOW_ACCESSION: " + workflow.getSwAccession());
+      ret.setAttribute("sw_accession", workflow.getSwAccession().toString());
             ret.setReturnValue(workflow.getWorkflowId());
         } catch (Exception e) {
             e.printStackTrace();
@@ -173,15 +176,19 @@ public class MetadataWS extends Metadata {
         } else {
             MapTools.ini2RichMap(configFile, hm);
         }
-
+    
         // foreach workflow param add an entry in the workflow_param table
+    int count = 0;
         for (String key : hm.keySet()) {
+        count++;
+        Log.info("Adding WorkflowParam: " + key);
             ReturnValue rv = addWorkflowParam(hm, key, workflow);
             if (rv.getReturnValue() != ReturnValue.SUCCESS) {
                 Log.error("Problem adding WorkflowParam");
                 return rv;
             }
         }
+    Log.info(count + " WorkflowParams should have been added");
         // add default params in workflow_param table
 
         // Log.info("Setting returned URI to " +
@@ -587,6 +594,19 @@ public class MetadataWS extends Metadata {
             ex.printStackTrace();
             return new ReturnValue(ReturnValue.FAILURE);
         }
+        // looks like we need to get back a workflow param object back from the database with a proper accession,
+        // otherwise we will duplicate values. This is kinda clunky.
+        SortedSet<WorkflowParam> workflowParams = this.getWorkflowParams(workflow.getSwAccession().toString());
+        for(WorkflowParam param : workflowParams){
+            if (param.getKey().equals(key)){
+                wp = param;
+                // and we need to set back a real workflow, yikes!
+                wp.setWorkflow(workflow);
+                break;
+            }
+        }
+    
+    
         Log.info("Done posting workflow param");
         // TODO: need to add support for pulldowns!
         // "pulldown", in which case we need to populate the pulldown table
@@ -795,6 +815,7 @@ public class MetadataWS extends Metadata {
         return values;
     }
 
+    
     @Override
     public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, boolean requireFiles) {
         ReturnValueList rv = new ReturnValueList();
@@ -974,27 +995,30 @@ public class MetadataWS extends Metadata {
         try {
             IUS ius = ll.existsIUS("/" + parentAccession);
             Lane lane = ll.existsLane("/" + parentAccession);
-            WorkflowRun wr = ll.findWorkflowRun("?id=" + workflowRunId + "&show=lanes,ius");
-            int accession = wr.getSwAccession();
+      // this one won't be able to get back lanes and ius
+      WorkflowRun wr_withoutLanes = ll.findWorkflowRun("?id=" + workflowRunId /**+ "&show=lanes,ius"*/);
+      // this will, but uses seqware accessions
+      int accession = wr_withoutLanes.getSwAccession();
+      WorkflowRun wr_withLanesAndIUS = ll.findWorkflowRun("/" + accession + "?show=lanes,ius");
             if (ius != null) {
-                SortedSet<IUS> iuses = wr.getIus();
+        SortedSet<IUS> iuses = wr_withLanesAndIUS.getIus();
                 if (iuses == null) {
                     iuses = new TreeSet<IUS>();
                 }
                 iuses.add(ius);
-                wr.setIus(iuses);
+        wr_withLanesAndIUS.setIus(iuses);
 
-                ll.updateWorkflowRun("/" + accession, wr);
+        ll.updateWorkflowRun("/" + accession, wr_withLanesAndIUS);
 
             } else if (lane != null) {
-                SortedSet<Lane> lanes = wr.getLanes();
+        SortedSet<Lane> lanes = wr_withLanesAndIUS.getLanes();
                 if (lanes == null) {
                     lanes = new TreeSet<Lane>();
                 }
                 lanes.add(lane);
-                wr.setLanes(lanes);
+        wr_withLanesAndIUS.setLanes(lanes);
 
-                ll.updateWorkflowRun("/" + accession, wr);
+        ll.updateWorkflowRun("/" + accession, wr_withLanesAndIUS);
 
             } else {
                 Log.error("ERROR: SW Accession is neither a lane nor an IUS: " + parentAccession);
@@ -1328,7 +1352,11 @@ public class MetadataWS extends Metadata {
                     }
                 }
                 sb.append("\n");
-                sb.append(wp.getKey() + "=" + wp.getDefaultValue() + "\n");
+        if (wp.getDefaultValue() == null){
+            sb.append(wp.getKey() + "=" + "\n");
+        } else{
+            sb.append(wp.getKey() + "=" + wp.getDefaultValue() + "\n");
+        }
             }
 
         } catch (IOException ex) {
