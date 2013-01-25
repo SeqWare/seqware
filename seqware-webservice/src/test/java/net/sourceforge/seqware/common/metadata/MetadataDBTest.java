@@ -121,6 +121,14 @@ public class MetadataDBTest extends MetadataWSTest {
     
     
     
+    @Override
+    public void testAddWorkflow() {
+    }
+        
+    @Override
+    public void testAddNovoAlignWorkflow() {
+    }
+    
     
     
 }
