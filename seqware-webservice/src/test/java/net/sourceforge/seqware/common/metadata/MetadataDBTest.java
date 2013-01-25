@@ -87,6 +87,52 @@ public class MetadataDBTest extends MetadataWSTest {
     @Override
     public void testGetFile() {
     }
+
+    @Override
+    public void testGetAllSequencerRuns() {
+        
+    }
+
+    @Override
+    public void testGetChildSamplesFrom() {
+        
+    }
+
+    @Override
+    public void testGetExperimentsFrom() {
+        
+    }
+
+    @Override
+    public void testGetIUSFromLane() {
+    }
+
+    @Override
+    public void testGetIUSFromSample() {
+    }
+
+    @Override
+    public void testGetLanesFrom() {
+    }
+
+    @Override
+    public void testGetParentSamplesFrom() {
+    }
+
+    @Override
+    public void testGetSamplesFromExperiment() {
+        
+    }
+    
+    
+    
+    @Override
+    public void testAddWorkflow() {
+    }
+        
+    @Override
+    public void testAddNovoAlignWorkflow() {
+    }
     
     @Test
     @Override

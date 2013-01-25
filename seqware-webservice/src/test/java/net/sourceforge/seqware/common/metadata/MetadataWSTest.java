@@ -24,13 +24,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.factory.DBAccess;
-import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.webservice.resources.tables.FileChildWorkflowRunsResource;
+import net.sourceforge.seqware.common.util.Log;
 import org.apache.log4j.Logger;
 import org.junit.*;
 
@@ -42,6 +45,7 @@ public class MetadataWSTest {
 
     protected static Metadata instance;
     private Logger logger;
+
     public MetadataWSTest() {
         logger = Logger.getLogger(MetadataWSTest.class);
     }
@@ -67,8 +71,9 @@ public class MetadataWSTest {
 
     /**
      * Test of addWorkflow method, of class MetadataWS.
+     * dyuen asks: Why was this commented out?
      */
-    //@Test
+    @Test
     public void testAddWorkflow() {
         logger.info("addWorkflow");
         String name = "GATKRecalibrationAndVariantCalling";
@@ -95,6 +100,68 @@ public class MetadataWSTest {
         int expResult = ReturnValue.SUCCESS;
         ReturnValue result = instance.addWorkflow(name, version, description, baseCommand, configFile.getAbsolutePath(), templateFile.getAbsolutePath(), provisionDir.getAbsolutePath(), true, "", false, null, null, null);
         Assert.assertEquals(expResult, result.getExitStatus());
+        
+        // test certain properties of the workflow parameters in relation to SEQWARE-1444
+        String workflow_id = result.getAttribute("sw_accession");
+        Workflow workflow = instance.getWorkflow(Integer.valueOf(workflow_id));
+        Assert.assertTrue("workflow retrieved is invalid", workflow.getWorkflowId() == result.getReturnValue());
+        SortedSet<WorkflowParam> workflowParams = instance.getWorkflowParams(workflow_id);
+        Assert.assertTrue("invalid number of workflow params retrieved", workflowParams.size() == 33);
+        // check out the values of some long values
+        for(WorkflowParam param : workflowParams){
+            if (param.getKey().equals("bam_inputs")){
+                Assert.assertTrue("bam_inputs invalid", param.getDefaultValue().equals("${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022P.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022R.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022X.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022C.val.bam"));
+            } else if (param.getKey().equals("chr_sizes")){
+                Assert.assertTrue("chr_sizes invalid", param.getDefaultValue().equals("chr1:249250621,chr2:243199373,chr3:198022430,chr4:191154276,chr5:180915260,chr6:171115067,chr7:159138663,chr8:146364022,chr9:141213431,chr10:135534747,chr11:135006516,chr12:133851895,chr13:115169878,chr14:107349540,chr15:102531392,chr16:90354753,chr17:81195210,chr18:78077248,chr19:59128983,chr20:63025520,chr21:48129895,chr22:51304566,chrX:155270560,chrY:59373566,chrM:16571"));
+            }
+        }
+    }
+    
+    /**
+     * Test of addWorkflow method, of class MetadataWS with a novoalign.ini.
+     */
+    @Test
+    public void testAddNovoAlignWorkflow() {
+        logger.info("addWorkflow");
+        String name = "novoalign";
+        String version = "0.13.6.2";
+        String description = "Novoalign";
+        String baseCommand = "java -jar /u/seqware/provisioned-bundles/sqwprod/"
+                + "Workflow_Bundle_GATKRecalibrationAndVariantCalling_1.2.29_"
+                + "SeqWare_0.10.0/GATKRecalibrationAndVariantCalling/1.x.x/lib/"
+                + "seqware-pipeline-0.10.0.jar --plugin net.sourceforge.seqware."
+                + "pipeline.plugins.WorkflowLauncher -- --bundle /u/seqware/"
+                + "provisioned-bundles/sqwprod/Workflow_Bundle_GATKRecalibration"
+                + "AndVariantCalling_1.2.29_SeqWare_0.10.0 --workflow GATK"
+                + "RecalibrationAndVariantCalling --version 1.3.16";
+        java.io.File configFile = null, templateFile = null;
+        try {
+            configFile = new java.io.File(MetadataWSTest.class.getResource("novoalign.ini").toURI());
+            templateFile = new java.io.File(MetadataWSTest.class.getResource("GATKRecalibrationAndVariantCalling_1.3.16.ftl").toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        java.io.File provisionDir = new java.io.File("/u/seqware/provisioned-bundles"
+                + "/sqwprod/Workflow_Bundle_GATKRecalibrationAndVariantCalling_"
+                + "1.2.29_SeqWare_0.10.0/");
+        int expResult = ReturnValue.SUCCESS;
+        ReturnValue result = instance.addWorkflow(name, version, description, baseCommand, configFile.getAbsolutePath(), templateFile.getAbsolutePath(), provisionDir.getAbsolutePath(), true, "", false, null, null, null);
+        Assert.assertEquals(expResult, result.getExitStatus());
+        
+        // test certain properties of the workflow parameters in relation to SEQWARE-1444
+        String workflow_id = result.getAttribute("sw_accession");
+        Workflow workflow = instance.getWorkflow(Integer.valueOf(workflow_id));
+        Assert.assertTrue("workflow retrieved is invalid", workflow.getWorkflowId() == result.getReturnValue());
+        SortedSet<WorkflowParam> workflowParams = instance.getWorkflowParams(workflow_id);
+        Assert.assertTrue("invalid number of workflow params retrieved", workflowParams.size() == 34);
+        // check out the values of some suspicious values
+        for(WorkflowParam param : workflowParams){
+            if (param.getKey().equals("colorspace")){
+                Assert.assertTrue("colorspace invalid", param.getDefaultValue().equals("0"));
+            } else if (param.getKey().equals("novoalign_r1_adapter_trim")){
+                Assert.assertTrue("novoalign_r1_adapter_trim invalid", param.getDefaultValue().equals("-a AGATCGGAAGAGCGGTTCAGCAGGAATGCCGAGACCG"));
+            }
+        }
 
     }
 
@@ -114,7 +181,6 @@ public class MetadataWSTest {
                 + "where parent_id IN (3,5))", "max", beforeDate);
 
     }
-
 
     protected void testTimestamp(String sql, String colname, Date beforeDate) {
         logger.debug(sql);
@@ -145,7 +211,7 @@ public class MetadataWSTest {
             ResultSet rs = DBAccess.get().executeQuery(sql);
             if (rs.next()) {
                 int count = rs.getInt("count");
-                Assert.assertEquals("Expected count is not the same:"+expectedCount+"!=<"+count, true, (expectedCount<=count));
+                Assert.assertEquals("Expected count is not the same:" + expectedCount + "!=<" + count, true, (expectedCount <= count));
 
             } else {
                 Assert.fail("No rows in ResultSet");
@@ -263,7 +329,7 @@ public class MetadataWSTest {
         String sampleName = "Sample_Tumour";
         List<ReturnValue> result = instance.findFilesAssociatedWithASample(sampleName);
         logger.debug("File size: " + result.size());
-        Assert.assertEquals("No results", true, (result.size()>0));
+        Assert.assertEquals("No results", true, (result.size() > 0));
         for (ReturnValue ret : result) {
             logger.debug(ret.getAlgorithm());
         }
@@ -278,7 +344,7 @@ public class MetadataWSTest {
         String studyName = "AbcCo_Tumour_Sequencing";
         List<ReturnValue> result = instance.findFilesAssociatedWithAStudy(studyName);
         logger.debug("Sample size: " + result.size());
-        Assert.assertEquals("No results", true, (result.size()>0));
+        Assert.assertEquals("No results", true, (result.size() > 0));
         for (ReturnValue ret : result) {
             Assert.assertNotNull(ret.getAlgorithm());
             Assert.assertFalse(ret.getAttributes().isEmpty());
@@ -469,15 +535,13 @@ public class MetadataWSTest {
     }
 
     //@Test
-    public void testListInstalledWorkflow()
-    {
+    public void testListInstalledWorkflow() {
         logger.info("listInstalledWorkflows");
         instance.listInstalledWorkflows();
     }
 
     //@Test
-    public void testUpdateWorkflow()
-    {
+    public void testUpdateWorkflow() {
         Date beforeDate = new Timestamp(System.currentTimeMillis());
         logger.info("updateWorkflow");
         ReturnValue ret = instance.updateWorkflow(15, "http://testtest");
@@ -487,8 +551,7 @@ public class MetadataWSTest {
     }
 
     //@Test
-    public void testGetWorkflowAccession()
-    {
+    public void testGetWorkflowAccession() {
         logger.info("getWorkflowAccession");
         int accession = instance.getWorkflowAccession("FastqQualityReportAndFilter", "0.10.1");
         Assert.assertNotSame("Accession not found", -1, accession);
@@ -496,8 +559,7 @@ public class MetadataWSTest {
     }
 
     @Test
-    public void testGetFile()
-    {
+    public void testGetFile() {
         logger.info("testGetFile");
         File file = instance.getFile(4761);
         Assert.assertEquals("The file cannot be found (or the file path is wrong for some reason).",
@@ -595,4 +657,59 @@ public class MetadataWSTest {
         Assert.assertTrue("testGetWorkflowRunsRelatedToFile_lane failed", result.isEmpty());
     }
 
+    @Test
+    public void testGetAllSequencerRuns() {
+        Log.info("testGetAllSequencerRuns");
+        List<SequencerRun> runs = instance.getAllSequencerRuns();
+        Assert.assertFalse("There are no sequencer runs!", runs.isEmpty());
+    }
+
+    @Test
+    public void testGetLanesFrom() {
+        Log.info("testGetLanesFrom");
+        List<Lane> lanes = instance.getLanesFrom(4715);
+        Assert.assertFalse("There are no lanes for sequencer run!", lanes.isEmpty());
+    }
+
+    @Test
+    public void testGetIUSFromLane() {
+        Log.info("testGetIUSFromLane");
+        List<IUS> iuses = instance.getIUSFrom(4764);
+        Assert.assertFalse(iuses.isEmpty());
+    }
+
+    @Test
+    public void testGetIUSFromSample() {
+        Log.info("testGetIUSFromSample");
+        List<IUS> iuses = instance.getIUSFrom(4783);
+        Assert.assertFalse(iuses.isEmpty());
+    }
+
+    @Test
+    public void testGetExperimentsFrom() {
+        Log.info("testGetExperimentsFrom");
+        List<Experiment> experiments = instance.getExperimentsFrom(120);
+        Assert.assertFalse(experiments.isEmpty());
+    }
+
+    @Test
+    public void testGetSamplesFromExperiment() {
+        Log.info("testGetSamplesFromExperiment");
+        List<Sample> samples = instance.getSamplesFrom(6157);
+        Assert.assertFalse(samples.isEmpty());
+    }
+
+    @Test
+    public void testGetChildSamplesFrom() {
+        Log.info("testGetChildSamplesFrom");
+        List<Sample> samples = instance.getChildSamplesFrom(1940);
+        Assert.assertFalse(samples.isEmpty());
+    }
+
+    @Test
+    public void testGetParentSamplesFrom() {
+        Log.info("testGetParentSamplesFrom");
+        List<Sample> samples = instance.getParentSamplesFrom(1944);
+        Assert.assertFalse(samples.isEmpty());
+    }
 }

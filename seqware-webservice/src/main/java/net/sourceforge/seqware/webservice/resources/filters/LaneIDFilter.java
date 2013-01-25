@@ -18,11 +18,13 @@ package net.sourceforge.seqware.webservice.resources.filters;
 
 import java.util.*;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
-import net.sourceforge.seqware.common.business.StudyService;
+import net.sourceforge.seqware.common.business.IUSService;
+import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
-import net.sourceforge.seqware.common.model.Experiment;
-import net.sourceforge.seqware.common.model.Study;
-import net.sourceforge.seqware.common.model.lists.ExperimentList;
+import net.sourceforge.seqware.common.model.IUS;
+import net.sourceforge.seqware.common.model.Lane;
+import net.sourceforge.seqware.common.model.SequencerRun;
+import net.sourceforge.seqware.common.model.lists.LaneList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import net.sourceforge.seqware.webservice.resources.BasicResource;
@@ -32,12 +34,12 @@ import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 
 /**
- * <p>ExperimentIDFilter class.</p>
+ * <p>LaneIDFilter class.</p>
  *
  * @author mtaschuk
  * @version $Id: $Id
  */
-public class ExperimentIDFilter extends BasicResource {
+public class LaneIDFilter extends BasicResource {
 
     /**
      * <p>getXml.</p>
@@ -45,14 +47,23 @@ public class ExperimentIDFilter extends BasicResource {
     @Get
     public void getXml() {
         //String path = getRequest().getResourceRef().getPath();getAttribute();
-        Collection<Experiment> experiments = null;
+        Collection<Lane> lanes = null;
         Map<String, Object> requestAttributes = getRequestAttributes();
-        if (requestAttributes.containsKey("studyId")) {
-            Object val = requestAttributes.get("studyId");
+        if (requestAttributes.containsKey("sequencerRunId")) {
+            Object val = requestAttributes.get("sequencerRunId");
             if (val != null) {
-                StudyService ss = BeanFactory.getStudyServiceBean();
-                Study s = (Study)testIfNull(ss.findBySWAccession(Integer.parseInt(val.toString())));
-                experiments = (SortedSet<Experiment>) testIfNull(s.getExperiments());
+                SequencerRunService ss = BeanFactory.getSequencerRunServiceBean();
+                SequencerRun s = (SequencerRun)testIfNull(ss.findBySWAccession(Integer.parseInt(val.toString())));
+                lanes = (SortedSet<Lane>) testIfNull(s.getLanes());
+            }
+        } else if (requestAttributes.containsKey("iusId")) {
+            Object val = requestAttributes.get("iusId");
+            if (val != null) {
+                IUSService ss = BeanFactory.getIUSServiceBean();
+                IUS s = (IUS)testIfNull(ss.findBySWAccession(Integer.parseInt(val.toString())));
+                Lane lane = (Lane)testIfNull(s.getLane());
+                lanes = new ArrayList<Lane>();
+                lanes.add(lane);
             }
         } else {
             StringBuilder sb = new StringBuilder();
@@ -62,18 +73,18 @@ public class ExperimentIDFilter extends BasicResource {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "This resource cannot handle these data types: " + sb.toString());
         }
 
-        if (experiments.isEmpty()) {
-            throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "There are no experiments for this resource");
+        if (lanes.isEmpty()) {
+            throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "There are no lanes for this resource");
         }
 
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<ExperimentList> jaxbTool = new JaxbObject<ExperimentList>();
+        JaxbObject<LaneList> jaxbTool = new JaxbObject<LaneList>();
 
-        ExperimentList eList = new ExperimentList();
+        LaneList eList = new LaneList();
         eList.setList(new ArrayList());
 
-        for (Experiment experiment : experiments) {
-            Experiment dto = copier.hibernate2dto(Experiment.class, experiment);
+        for (Lane lane : lanes) {
+            Lane dto = copier.hibernate2dto(Lane.class, lane);
             eList.add(dto);
         }
 

@@ -7,25 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-import net.sourceforge.seqware.common.model.ExperimentAttribute;
-import net.sourceforge.seqware.common.model.IUSAttribute;
-import net.sourceforge.seqware.common.model.LaneAttribute;
-import net.sourceforge.seqware.common.model.LibrarySelection;
-import net.sourceforge.seqware.common.model.LibrarySource;
-import net.sourceforge.seqware.common.model.LibraryStrategy;
-import net.sourceforge.seqware.common.model.Organism;
-import net.sourceforge.seqware.common.model.Platform;
-import net.sourceforge.seqware.common.model.ProcessingAttribute;
-import net.sourceforge.seqware.common.model.SampleAttribute;
-import net.sourceforge.seqware.common.model.SequencerRunAttribute;
-import net.sourceforge.seqware.common.model.Study;
-import net.sourceforge.seqware.common.model.StudyAttribute;
-import net.sourceforge.seqware.common.model.StudyType;
-import net.sourceforge.seqware.common.model.Workflow;
-import net.sourceforge.seqware.common.model.WorkflowAttribute;
-import net.sourceforge.seqware.common.model.WorkflowParam;
-import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
+import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
@@ -123,7 +105,7 @@ public interface MetadataInterface {
    * @param title a {@link java.lang.String} object.
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
-  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip);
+  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip, Integer laneNumber);
   
     /**
    * <p>addSample.</p>
@@ -760,10 +742,67 @@ public interface MetadataInterface {
    */
   public String getProcessingRelations(String swAccession);
   
-  /*
+  /**
    * Get a workflow
    * @param workflowAccession
    * @return 
    */
   public Workflow getWorkflow(int workflowAccession);
+  
+  /**
+   * Get all of the sequencer runs in the DB.
+   * @return a list of Sequencer runs
+   */
+  public List<SequencerRun> getAllSequencerRuns();
+  
+  /**
+   * Get Lanes from a sequencer run.
+   * @param sequencerRunAccession the sw_accession of the sequencer run
+   * @return the lanes from the run
+   */
+  public List<Lane> getLanesFrom(int sequencerRunAccession);
+  
+  /**
+   * Get IUSes (barcodes) from a lane or sample.
+   * @param laneOrSampleAccession the sw_accession of the lane or sample
+   * @return a list of IUSes (barcodes)
+   */
+  public List<IUS> getIUSFrom(int laneOrSampleAccession);
+  
+  /**
+   * Get experiments from a study.
+   * @param studyAccession the sw_accession of the study
+   * @return a list of Experiments
+   */
+  public List<Experiment> getExperimentsFrom(int studyAccession);
+  
+  /**
+   * Get the samples from an experiment.
+   * @param experimentAccession the sw_accession of the experiment
+   * @return a list of samples
+   */
+  public List<Sample> getSamplesFrom(int experimentAccession);
+  
+  /**
+   * Get the child samples of a parent sample. These samples are further down the
+   * sample hierarchy (more specific). For example, if the parent sample or donor is
+   * ABC_001, the child sample would be ABC_001_Ref for the reference (blood)
+   * sample from the donor.
+   * @param parentSampleAccession the sw_accession of the parent sample / donor
+   * @return a list of child samples.
+   */
+  public List<Sample> getChildSamplesFrom(int parentSampleAccession);
+  
+  
+  /**
+   * Get the parent samples of a sample. These samples are further up the sample
+   * hierarchy (less specific). For example, if the parent sample or donor is
+   * ABC_001, the child sample would be ABC_001_Ref for the reference (blood)
+   * sample from the donor.
+   * @param childSampleAccession the sw_accession of the child sample
+   * @return a list of parent samples / donors
+   */
+  public List<Sample> getParentSamplesFrom(int childSampleAccession);
+  
+  
 }
