@@ -41,15 +41,7 @@ public class Organism implements Serializable, Comparable<Organism> {
 			return -1;							// when only the other name is null
 
 		return(that.getName().compareTo(this.getName()));
-	}
-
-    /** {@inheritDoc} */
-    @Override
-	public String toString() {
-		return new ToStringBuilder(this)
-			.append("organismId", getOrganismId())
-			.toString();
-	}
+	}	
 
     /** {@inheritDoc} */
     @Override
@@ -61,6 +53,11 @@ public class Organism implements Serializable, Comparable<Organism> {
 			.append(this.getName(), castOther.getName())
 			.isEquals();
 	}
+
+    @Override
+    public String toString() {
+        return "Organism{" + "organismId=" + organismId + ", name=" + name + ", code=" + code + ", accession=" + accession + ", ncbiTaxId=" + ncbiTaxId + '}';
+    }
 
 	/**
 	 * <p>hashCode.</p>
