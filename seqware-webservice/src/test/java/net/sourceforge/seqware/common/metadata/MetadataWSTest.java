@@ -26,10 +26,11 @@ import java.util.Map;
 import java.util.SortedSet;
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.factory.DBAccess;
-import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
 import org.apache.log4j.Logger;
 import org.junit.*;
 
@@ -41,6 +42,7 @@ public class MetadataWSTest {
 
     protected static Metadata instance;
     private Logger logger;
+
     public MetadataWSTest() {
         logger = Logger.getLogger(MetadataWSTest.class);
     }
@@ -177,7 +179,6 @@ public class MetadataWSTest {
 
     }
 
-
     protected void testTimestamp(String sql, String colname, Date beforeDate) {
         logger.debug(sql);
         try {
@@ -207,7 +208,7 @@ public class MetadataWSTest {
             ResultSet rs = DBAccess.get().executeQuery(sql);
             if (rs.next()) {
                 int count = rs.getInt("count");
-                Assert.assertEquals("Expected count is not the same:"+expectedCount+"!=<"+count, true, (expectedCount<=count));
+                Assert.assertEquals("Expected count is not the same:" + expectedCount + "!=<" + count, true, (expectedCount <= count));
 
             } else {
                 Assert.fail("No rows in ResultSet");
@@ -325,7 +326,7 @@ public class MetadataWSTest {
         String sampleName = "Sample_Tumour";
         List<ReturnValue> result = instance.findFilesAssociatedWithASample(sampleName);
         logger.debug("File size: " + result.size());
-        Assert.assertEquals("No results", true, (result.size()>0));
+        Assert.assertEquals("No results", true, (result.size() > 0));
         for (ReturnValue ret : result) {
             logger.debug(ret.getAlgorithm());
         }
@@ -340,7 +341,7 @@ public class MetadataWSTest {
         String studyName = "AbcCo_Tumour_Sequencing";
         List<ReturnValue> result = instance.findFilesAssociatedWithAStudy(studyName);
         logger.debug("Sample size: " + result.size());
-        Assert.assertEquals("No results", true, (result.size()>0));
+        Assert.assertEquals("No results", true, (result.size() > 0));
         for (ReturnValue ret : result) {
             Assert.assertNotNull(ret.getAlgorithm());
             Assert.assertFalse(ret.getAttributes().isEmpty());
@@ -531,15 +532,13 @@ public class MetadataWSTest {
     }
 
     //@Test
-    public void testListInstalledWorkflow()
-    {
+    public void testListInstalledWorkflow() {
         logger.info("listInstalledWorkflows");
         instance.listInstalledWorkflows();
     }
 
     //@Test
-    public void testUpdateWorkflow()
-    {
+    public void testUpdateWorkflow() {
         Date beforeDate = new Timestamp(System.currentTimeMillis());
         logger.info("updateWorkflow");
         ReturnValue ret = instance.updateWorkflow(15, "http://testtest");
@@ -549,8 +548,7 @@ public class MetadataWSTest {
     }
 
     //@Test
-    public void testGetWorkflowAccession()
-    {
+    public void testGetWorkflowAccession() {
         logger.info("getWorkflowAccession");
         int accession = instance.getWorkflowAccession("FastqQualityReportAndFilter", "0.10.1");
         Assert.assertNotSame("Accession not found", -1, accession);
@@ -558,12 +556,66 @@ public class MetadataWSTest {
     }
 
     @Test
-    public void testGetFile()
-    {
+    public void testGetFile() {
         logger.info("testGetFile");
         File file = instance.getFile(4761);
         Assert.assertEquals("The file cannot be found (or the file path is wrong for some reason).",
                 "s3://abcco.analysis/sample_data/Sample_Tumour/simulated_1.fastq.gz", file.getFilePath());
     }
 
+    @Test
+    public void testGetAllSequencerRuns() {
+        Log.info("testGetAllSequencerRuns");
+        List<SequencerRun> runs = instance.getAllSequencerRuns();
+        Assert.assertFalse("There are no sequencer runs!", runs.isEmpty());
+    }
+
+    @Test
+    public void testGetLanesFrom() {
+        Log.info("testGetLanesFrom");
+        List<Lane> lanes = instance.getLanesFrom(4715);
+        Assert.assertFalse("There are no lanes for sequencer run!", lanes.isEmpty());
+    }
+
+    @Test
+    public void testGetIUSFromLane() {
+        Log.info("testGetIUSFromLane");
+        List<IUS> iuses = instance.getIUSFrom(4764);
+        Assert.assertFalse(iuses.isEmpty());
+    }
+
+    @Test
+    public void testGetIUSFromSample() {
+        Log.info("testGetIUSFromSample");
+        List<IUS> iuses = instance.getIUSFrom(4783);
+        Assert.assertFalse(iuses.isEmpty());
+    }
+
+    @Test
+    public void testGetExperimentsFrom() {
+        Log.info("testGetExperimentsFrom");
+        List<Experiment> experiments = instance.getExperimentsFrom(120);
+        Assert.assertFalse(experiments.isEmpty());
+    }
+
+    @Test
+    public void testGetSamplesFromExperiment() {
+        Log.info("testGetSamplesFromExperiment");
+        List<Sample> samples = instance.getSamplesFrom(6157);
+        Assert.assertFalse(samples.isEmpty());
+    }
+
+    @Test
+    public void testGetChildSamplesFrom() {
+        Log.info("testGetChildSamplesFrom");
+        List<Sample> samples = instance.getChildSamplesFrom(1940);
+        Assert.assertFalse(samples.isEmpty());
+    }
+
+    @Test
+    public void testGetParentSamplesFrom() {
+        Log.info("testGetParentSamplesFrom");
+        List<Sample> samples = instance.getParentSamplesFrom(1944);
+        Assert.assertFalse(samples.isEmpty());
+    }
 }
