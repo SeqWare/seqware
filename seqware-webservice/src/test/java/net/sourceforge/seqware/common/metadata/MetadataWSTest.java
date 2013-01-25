@@ -23,9 +23,12 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.Workflow;
+import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import org.apache.log4j.Logger;
 import org.junit.*;
@@ -63,8 +66,9 @@ public class MetadataWSTest {
 
     /**
      * Test of addWorkflow method, of class MetadataWS.
+     * dyuen asks: Why was this commented out?
      */
-    //@Test
+    @Test
     public void testAddWorkflow() {
         logger.info("addWorkflow");
         String name = "GATKRecalibrationAndVariantCalling";
@@ -91,6 +95,68 @@ public class MetadataWSTest {
         int expResult = ReturnValue.SUCCESS;
         ReturnValue result = instance.addWorkflow(name, version, description, baseCommand, configFile.getAbsolutePath(), templateFile.getAbsolutePath(), provisionDir.getAbsolutePath(), true, "", false, null, null, null);
         Assert.assertEquals(expResult, result.getExitStatus());
+        
+        // test certain properties of the workflow parameters in relation to SEQWARE-1444
+        String workflow_id = result.getAttribute("sw_accession");
+        Workflow workflow = instance.getWorkflow(Integer.valueOf(workflow_id));
+        Assert.assertTrue("workflow retrieved is invalid", workflow.getWorkflowId() == result.getReturnValue());
+        SortedSet<WorkflowParam> workflowParams = instance.getWorkflowParams(workflow_id);
+        Assert.assertTrue("invalid number of workflow params retrieved", workflowParams.size() == 33);
+        // check out the values of some long values
+        for(WorkflowParam param : workflowParams){
+            if (param.getKey().equals("bam_inputs")){
+                Assert.assertTrue("bam_inputs invalid", param.getDefaultValue().equals("${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022P.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022R.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022X.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022C.val.bam"));
+            } else if (param.getKey().equals("chr_sizes")){
+                Assert.assertTrue("chr_sizes invalid", param.getDefaultValue().equals("chr1:249250621,chr2:243199373,chr3:198022430,chr4:191154276,chr5:180915260,chr6:171115067,chr7:159138663,chr8:146364022,chr9:141213431,chr10:135534747,chr11:135006516,chr12:133851895,chr13:115169878,chr14:107349540,chr15:102531392,chr16:90354753,chr17:81195210,chr18:78077248,chr19:59128983,chr20:63025520,chr21:48129895,chr22:51304566,chrX:155270560,chrY:59373566,chrM:16571"));
+            }
+        }
+    }
+    
+    /**
+     * Test of addWorkflow method, of class MetadataWS with a novoalign.ini.
+     */
+    @Test
+    public void testAddNovoAlignWorkflow() {
+        logger.info("addWorkflow");
+        String name = "novoalign";
+        String version = "0.13.6.2";
+        String description = "Novoalign";
+        String baseCommand = "java -jar /u/seqware/provisioned-bundles/sqwprod/"
+                + "Workflow_Bundle_GATKRecalibrationAndVariantCalling_1.2.29_"
+                + "SeqWare_0.10.0/GATKRecalibrationAndVariantCalling/1.x.x/lib/"
+                + "seqware-pipeline-0.10.0.jar --plugin net.sourceforge.seqware."
+                + "pipeline.plugins.WorkflowLauncher -- --bundle /u/seqware/"
+                + "provisioned-bundles/sqwprod/Workflow_Bundle_GATKRecalibration"
+                + "AndVariantCalling_1.2.29_SeqWare_0.10.0 --workflow GATK"
+                + "RecalibrationAndVariantCalling --version 1.3.16";
+        java.io.File configFile = null, templateFile = null;
+        try {
+            configFile = new java.io.File(MetadataWSTest.class.getResource("novoalign.ini").toURI());
+            templateFile = new java.io.File(MetadataWSTest.class.getResource("GATKRecalibrationAndVariantCalling_1.3.16.ftl").toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        java.io.File provisionDir = new java.io.File("/u/seqware/provisioned-bundles"
+                + "/sqwprod/Workflow_Bundle_GATKRecalibrationAndVariantCalling_"
+                + "1.2.29_SeqWare_0.10.0/");
+        int expResult = ReturnValue.SUCCESS;
+        ReturnValue result = instance.addWorkflow(name, version, description, baseCommand, configFile.getAbsolutePath(), templateFile.getAbsolutePath(), provisionDir.getAbsolutePath(), true, "", false, null, null, null);
+        Assert.assertEquals(expResult, result.getExitStatus());
+        
+        // test certain properties of the workflow parameters in relation to SEQWARE-1444
+        String workflow_id = result.getAttribute("sw_accession");
+        Workflow workflow = instance.getWorkflow(Integer.valueOf(workflow_id));
+        Assert.assertTrue("workflow retrieved is invalid", workflow.getWorkflowId() == result.getReturnValue());
+        SortedSet<WorkflowParam> workflowParams = instance.getWorkflowParams(workflow_id);
+        Assert.assertTrue("invalid number of workflow params retrieved", workflowParams.size() == 34);
+        // check out the values of some suspicious values
+        for(WorkflowParam param : workflowParams){
+            if (param.getKey().equals("colorspace")){
+                Assert.assertTrue("colorspace invalid", param.getDefaultValue().equals("0"));
+            } else if (param.getKey().equals("novoalign_r1_adapter_trim")){
+                Assert.assertTrue("novoalign_r1_adapter_trim invalid", param.getDefaultValue().equals("-a AGATCGGAAGAGCGGTTCAGCAGGAATGCCGAGACCG"));
+            }
+        }
 
     }
 
