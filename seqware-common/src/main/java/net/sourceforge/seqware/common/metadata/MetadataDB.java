@@ -72,9 +72,10 @@ public class MetadataDB extends Metadata {
   /**
    * {@inheritDoc}
    */
-  public ReturnValue addSample(Integer experimentAccession, Integer organismId, String description, String title) {
-    return (new ReturnValue(ReturnValue.NOTIMPLEMENTED));
-  }
+    @Override
+    public ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession, Integer organismId, String description, String title) {
+        return (new ReturnValue(ReturnValue.NOTIMPLEMENTED));
+    }
 
   /**
    * {@inheritDoc}
@@ -2012,6 +2013,6 @@ public class MetadataDB extends Metadata {
 
     @Override
     public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
 }

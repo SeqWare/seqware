@@ -172,7 +172,7 @@ public class Metadata extends Plugin {
             }
             print("]\n");
         } else if ("sample".equals(table)) {
-            print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\nexperiment_accession\tInteger\norganism_id\tInteger\t[\n");
+            print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\nexperiment_accession\tInteger\nparent_sample_accession\tInteger\norganism_id\tInteger\t[\n");
             List<Organism> objs = this.metadata.getOrganisms();
             for (Organism obj : objs) {
                 print(obj.getOrganismId() + ": " + obj.getName() + ", ");
@@ -268,7 +268,7 @@ public class Metadata extends Plugin {
      * @return ReturnValue
      */
     protected ReturnValue addSample() {
-        String[] necessaryFields = {"experiment_accession", "organism_id", "title", "description"};
+        String[] necessaryFields = {"organism_id", "title", "description"};
         // check to make sure we have what we need
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -276,9 +276,20 @@ public class Metadata extends Plugin {
             promptForSample(necessaryFields);
         }
 
-        if (checkFields(necessaryFields)) {
+        if (fields.get("experiment_accession") == null) {
+            fields.put("experiment_accession", "0");
+        }
+
+        if (fields.get("parent_sample_accession") == null) {
+            fields.put("parent_sample_accession", "0");
+        }
+
+        if (checkFields(necessaryFields)
+                && (notNullOrLessThanZero("experiment_accession") || notNullOrLessThanZero("parent_sample_accession"))) {
             // create a new sample
-            ret = metadata.addSample(Integer.parseInt(fields.get("experiment_accession")), Integer.parseInt(fields.get("organism_id")), fields.get("description"), fields.get("title"));
+            ret = metadata.addSample(Integer.parseInt(fields.get("experiment_accession")),
+                    Integer.parseInt(fields.get("parent_sample_accession")), Integer.parseInt(fields.get("organism_id")),
+                    fields.get("description"), fields.get("title"));
             print("SWID: " + ret.getAttribute("sw_accession"));
 
         } else {
@@ -286,6 +297,18 @@ public class Metadata extends Plugin {
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
         return (ret);
+    }
+
+    private boolean notNullOrLessThanZero(String fieldName) {
+        boolean usable = true;
+        String field = fields.get(fieldName);
+        Log.stdout(field);
+        if (field == null) {
+            usable = false;
+        } else if (Integer.parseInt(field) <= 0) {
+            usable = false;
+        }
+        return usable;
     }
 
     /**
@@ -453,6 +476,15 @@ public class Metadata extends Plugin {
 
     protected void promptForSample(String[] necessaryFields) {
         Log.stdout("---Create a sample---");
+
+        int checkMe = 0;
+        if (!fields.containsKey("experiment_accession")) {
+            checkMe += promptInteger("experiment_accession", 0);
+        }
+        if (!fields.containsKey("parent_sample_accession")) {
+            checkMe += promptInteger("parent_sample_accession", 0);
+        }
+
         if (!fields.containsKey("organism_id")) {
             for (Organism o : metadata.getOrganisms()) {
                 Log.stdout(o.toString());
@@ -460,7 +492,11 @@ public class Metadata extends Plugin {
             promptInteger("organism_id", 31);
         }
         promptForFields(necessaryFields);
-        if (!fieldsConfirmed(necessaryFields)) {
+
+        if (!fieldsConfirmed(necessaryFields) || checkMe <= 0) {
+            if (checkMe <= 0) {
+                Log.stdout("You must provide experiment_accession and/or parent_sample_accession.");
+            }
             promptForSample(necessaryFields);
         }
     }
@@ -530,11 +566,11 @@ public class Metadata extends Plugin {
             }
             promptInteger("library_source_accession", null);
         }
-        
+
         if (!fields.containsKey("lane_number")) {
             promptInteger("lane_number", 1);
         }
-        
+
         if (!fields.containsKey("skip")) {
             promptBoolean("skip", false);
         }
