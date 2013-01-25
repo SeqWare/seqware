@@ -657,4 +657,9 @@ public class MetadataNoConnection extends Metadata {
     public List<Sample> getParentSamplesFrom(int childSampleAccession) {
         return new ArrayList<Sample>();
     }
+
+    @Override
+    public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
+        return new ArrayList<WorkflowRun>();
+    }
 }
