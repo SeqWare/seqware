@@ -275,7 +275,7 @@ public class WorkflowDataModelFactory {
                     .getWorkflowParams(workflowAccession.toString());
             for (WorkflowParam param : workflowParams) {
                 // automatically replace ${workflow_bundle_dir} in any config file
-                map.put(param.getKey(), replaceWBD(param.getValue(), bundlePath));
+                map.put(param.getKey(), replaceWBD(param.getDefaultValue(), bundlePath));
             }
 
             // FIXME: this needs to be implemented otherwise portal submitted won't
