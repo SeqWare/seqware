@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-
 import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -315,6 +314,14 @@ public interface MetadataInterface {
    * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
    */
   WorkflowRun getWorkflowRun(int workflowRunAccession);
+  
+  /**
+   * Returns the workflow_runs associated with a group of files.
+   * Search types are defined as:
+   * @param fileAccessions
+   * @return 
+   */
+  List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type);
 
   /**
    * <p>get_workflow_info.</p>

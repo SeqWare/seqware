@@ -85,6 +85,7 @@ import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
 
 import freemarker.template.Configuration;
+import net.sourceforge.seqware.webservice.resources.tables.FileChildWorkflowRunsResource;
 import net.sourceforge.seqware.webservice.resources.filters.*;
 import net.sourceforge.seqware.webservice.resources.tables.LibrarySelectionResource;
 import net.sourceforge.seqware.webservice.resources.tables.LibrarySourceResource;
@@ -301,6 +302,10 @@ public class SeqWareWebServiceApplication extends WadlApplication {
 
         // A report giving runtime info for workflows
         router.attach("/reports/workflowruntimes", new WorkflowRuntimeResource(getContext()));
+        
+        // A report giving workflow runs that are relevant for a group of files
+        router.attach("/reports/fileworkflowruns", FileChildWorkflowRunsResource.class);
+        router.attach("/reports/fileworkflowruns/", slashRedirect);
 
         // REPORT RESOURCES
         
