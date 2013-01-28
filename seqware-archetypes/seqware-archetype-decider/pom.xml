@@ -9,7 +9,7 @@
     <description>SeqWare Java Decider archetype</description>
 
     <parent> 
-        <version>0.13.6.2</version> 
+        <version>1.0.0-SNAPSHOT</version> 
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
 	<relativePath>../../pom.xml</relativePath>
