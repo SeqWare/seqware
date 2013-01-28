@@ -38,6 +38,39 @@ import net.sourceforge.seqware.pipeline.plugins.BatchMetadataInjection.SampleInf
 public class BatchMetadataInjection extends Metadata {
 
     private ReturnValue ret = new ReturnValue();
+    private String[] librarySourceTemplateType = new String[]{"CH", "EX", "MR", "SM", "TR","TS", "WG","WT", "Other"};
+    private String[] targetedResequencing = new String[]{"Agilent SureSelect 244k Array", 
+        "Agilent SureSelect All Exon G3362", "Agilent SureSelect ICGC/Sanger Exon", 
+        "AmpliSeq Cancer Panel v1", "AmpliSeq Comprehensive Cancer Panel",
+        "Illumina TruSeq Exome", "Ion AmpliSeq Cancer Panel v1", "Nimblegen 2.1M Human Exome (21191)", 
+    "Nimblegen Human Exome v2.0", "Nimblegen ICGC Beta", "Nimblegen OICR Test (13668)", 
+    "TruSeq Amplicon - Cancer Panel", "Other"};
+    private String[] tissueOrigin = new String[]{"Br", "Cb", "Ep","Ki","Li","Lu",
+        "Lv","Lx","Ly","Nk","nn","Oc", "Ov","Pa","Pr","Sg","Sp", "St","Ta","Tr", "Wm", "Other"};
+    private String[] tissuePreparation = new String[] {"Blood", "FFPE", "Fresh Frozen", "Other"};
+    private String[] tissueRegion = new String[]{"1","2","3","4","5","6","7","8"};
+    private String[] tissueType = new String[]{"C","M","n","P","R","X","Other"};
+    
+            
+    
+    protected String choiceOf(String sampleName, String title, String[] choices) {
+        String choice = "";
+        Log.stdout("For sample "+sampleName+", choose one of the following for "+title+" or press enter to skip:");
+        for (int i=1;i<=choices.length;i++)
+        {
+            Log.stdout(i+" : " +choices[i-1]);
+        }
+        int choiceInt = promptInteger(title, 0);
+        if (choiceInt==0) { //no selection
+        } else if (choiceInt==choices.length) {
+            choice = promptString("Please specify :", null);
+        } else {
+            choice = choices[choiceInt-1];
+        }
+        return choice;       
+    }
+    
+    
     //private boolean createStudy = false;
 
     /**
@@ -135,44 +168,54 @@ public class BatchMetadataInjection extends Metadata {
             int laneAccession = createLane(lane, sequencerRunAccession);
 
             for (SampleInfo barcode : lanes.get(lane)) {
-
-                //get the parent sample if it exists, otherwise create it
-                Integer parentSampleAcc = null;
-                if (parentSamples != null && !parentSamples.isEmpty()) {
-                    for (Sample pSample : parentSamples) {
-                        if (pSample.getName().equals(barcode.getParentSample())) {
-                            parentSampleAcc = pSample.getSwAccession();
-                        }
-                    }
-                }
-                if (parentSampleAcc == null) {
-                    parentSampleAcc = createSampleFromExperiment(barcode.getParentSample(),
-                            experimentAccession, 0, barcode.getOrganism());
-                }
-
-                //get the tissue type sample if it exists, otherwise create it
-		int tissueTypeSampleAcc =0;
-
-                List<Sample> children = metadata.getChildSamplesFrom(parentSampleAccession);
-		for (Sample s: children) {
-			if (s.getTitle().equals(barcode.getTissueType())) {
-				tissueTypeSampleAcc = s.getSwAccession();
-			}
-		}
-		if (tissueTypeSampleAcc == 0) {
-			tissueTypeSampleAcc = createSampleFromExperiment(barcode.getTissueType(), 0,
-						parentSampleAcc, barcode.getOrganism());
-		}
+                Integer parentSampleAcc = retrieveParentSampleAccession(parentSamples, barcode, experimentAccession);
+                
+                int tissueTypeSampleAcc = retrieveTissueTypeSampleAccession(parentSampleAcc, barcode);
 
 		//get the library sample
-		int librarySampleNameAcc = createSampleFromExperiment(barcode.getName(),0,tissueTypeSampleAcc, barcode.getOrganism());
+		int librarySampleNameAcc = createSample(barcode.getName(),0,tissueTypeSampleAcc, barcode.getOrganism());
+                
+                int barcodeAcc = createIUS(laneAccession, librarySampleNameAcc, barcode.getBarcode(), null);
 
             }
         }
         return ret;
     }
 
-    private int createIUS(int laneAccession, int sampleAccession, String name) {
+    private int retrieveTissueTypeSampleAccession(Integer parentSampleAcc, SampleInfo barcode) {
+        //get the tissue type sample if it exists, otherwise create it
+        int tissueTypeSampleAcc =0;
+        List<Sample> children = metadata.getChildSamplesFrom(parentSampleAcc);
+        for (Sample s: children) {
+                if (s.getTitle().equals(barcode.getTissueType())) {
+                        tissueTypeSampleAcc = s.getSwAccession();
+                }
+        }
+        if (tissueTypeSampleAcc == 0) {
+                tissueTypeSampleAcc = createSample(barcode.getTissueType(), 0,
+                                        parentSampleAcc, barcode.getOrganism());
+        }
+        return tissueTypeSampleAcc;
+    }
+
+    private Integer retrieveParentSampleAccession(List<Sample> parentSamples, SampleInfo barcode, int experimentAccession) {
+        //get the parent sample if it exists, otherwise create it
+        Integer parentSampleAcc = null;
+        if (parentSamples != null && !parentSamples.isEmpty()) {
+            for (Sample pSample : parentSamples) {
+                if (pSample.getName().equals(barcode.getParentSample())) {
+                    parentSampleAcc = pSample.getSwAccession();
+                }
+            }
+        }
+        if (parentSampleAcc == null) {
+            parentSampleAcc = createSample(barcode.getParentSample(),
+                    experimentAccession, 0, barcode.getOrganism());
+        }
+        return parentSampleAcc;
+    }
+
+    private int createIUS(int laneAccession, int sampleAccession, String name, String barcode) {
 	Log.stdout("-------Creating a new IUS---------");
 
 	fields.clear();
@@ -181,6 +224,7 @@ public class BatchMetadataInjection extends Metadata {
 	fields.put("name", name);
 	fields.put("description", name);
 	fields.put("skip", "false");
+        fields.put("barcode", barcode);
 
 	printDefaults();
 	interactive=true;
@@ -190,7 +234,7 @@ public class BatchMetadataInjection extends Metadata {
 
     }
 
-    private int createSampleFromExperiment(String name, int experimentAccession, int parentSampleAccession, String organismId) {
+    private int createSample(String name, int experimentAccession, int parentSampleAccession, String organismId) {
         Log.stdout("--------Creating a new sample---------");
 
         fields.clear();
