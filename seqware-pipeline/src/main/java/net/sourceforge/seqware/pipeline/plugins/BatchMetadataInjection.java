@@ -146,27 +146,56 @@ public class BatchMetadataInjection extends Metadata {
                     }
                 }
                 if (parentSampleAcc == null) {
-                    parentSampleAcc = createSample(barcode.getParentSample(),
-                            experimentAccession, barcode.getOrganism());
+                    parentSampleAcc = createSampleFromExperiment(barcode.getParentSample(),
+                            experimentAccession, 0, barcode.getOrganism());
                 }
 
                 //get the tissue type sample if it exists, otherwise create it
-//                metadata.getChildSamplesFrom(parentSampleAccession);
-                
-                
-                
+		int tissueTypeSampleAcc =0;
 
+                List<Sample> children = metadata.getChildSamplesFrom(parentSampleAccession);
+		for (Sample s: children) {
+			if (s.getTitle().equals(barcode.getTissueType())) {
+				tissueTypeSampleAcc = s.getSwAccession();
+			}
+		}
+		if (tissueTypeSampleAcc == 0) {
+			tissueTypeSampleAcc = createSampleFromExperiment(barcode.getTissueType(), 0,
+						parentSampleAcc, barcode.getOrganism());
+		}
+
+		//get the library sample
+		int librarySampleNameAcc = createSampleFromExperiment(barcode.getName(),0,tissueTypeSampleAcc, barcode.getOrganism());
 
             }
         }
         return ret;
     }
 
-    private int createSample(String name, int experimentAccession, String organismId) {
+    private int createIUS(int laneAccession, int sampleAccession, String name) {
+	Log.stdout("-------Creating a new IUS---------");
+
+	fields.clear();
+	fields.put("lane_accession", String.valueOf(laneAccession));
+	fields.put("sample_accession", String.valueOf(sampleAccession));
+	fields.put("name", name);
+	fields.put("description", name);
+	fields.put("skip", "false");
+
+	printDefaults();
+	interactive=true;
+	ReturnValue rv = addIUS();
+	
+	return rv.getReturnValue();
+
+    }
+
+    private int createSampleFromExperiment(String name, int experimentAccession, int parentSampleAccession, String organismId) {
         Log.stdout("--------Creating a new sample---------");
 
         fields.clear();
         fields.put("experiment_accession", String.valueOf(experimentAccession));
+	fields.put("parent_sample_accession", String.valueOf(parentSampleAccession));
         fields.put("organism_id", organismId);
         fields.put("title", name);
         fields.put("description", name);
@@ -177,6 +206,7 @@ public class BatchMetadataInjection extends Metadata {
 
         return rv.getReturnValue();
     }
+
 
 //    private int retrieveExperiment(RunInfo run, int studyAccession) {
 //    }
