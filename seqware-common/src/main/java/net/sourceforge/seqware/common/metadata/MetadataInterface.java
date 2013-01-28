@@ -83,7 +83,7 @@ public interface MetadataInterface {
    * @param title a {@link java.lang.String} object.
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
-  public ReturnValue addSample(Integer experimentAccession, Integer organismId, String description, String title);
+  public ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession, Integer organismId, String description, String title);
   
     /**
    * <p>addSample.</p>

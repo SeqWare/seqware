@@ -279,28 +279,36 @@ public class MetadataWS extends Metadata {
      * TODO: this needs to setup rows in experiment_library_design and
      * experiment_spot_design
      */
-    public ReturnValue addSample(Integer experimentAccession, Integer organismId, String description, String title) {
+    @Override
+    public ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession, 
+            Integer organismId, String description, String title) {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
         try {
 
+            Sample s = new Sample();
+            
             Organism o = new Organism();
             o.setOrganismId(organismId);
 
-            Experiment e = ll.findExperiment("/" + experimentAccession.toString());
-
-            Log.stderr("Experiment: " + e);
-
-            Sample s = new Sample();
-            s.setExperiment(e);
+            if (experimentAccession!=0) {
+                Experiment e = ll.findExperiment("/" + experimentAccession.toString());
+                s.setExperiment(e);
+            }
+            if (parentSampleAccession != 0) {
+                Sample parentSample = ll.findSample("/"+parentSampleAccession);
+                Set<Sample> parents = new HashSet<Sample>();
+                parents.add(parentSample);
+                s.setParents(parents);
+            }
             s.setOrganism(o);
             s.setTitle(title);
             s.setName(title);
             s.setDescription(description);
             s.setCreateTimestamp(new Date());
 
-            Log.info("Posting new sample");
+            Log.info("Adding new sample");
 
             s = ll.addSample(s);
 

@@ -16,10 +16,7 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.util.Date;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.ExperimentService;
 import net.sourceforge.seqware.common.business.SampleService;
@@ -187,7 +184,22 @@ public class SampleIDResource extends DatabaseIDResource {
 					sample.getSampleAttributes().add(sa);
 				}
 			}
-
+            if (null != o.getParents()) {
+                SampleService ss = BeanFactory.getSampleServiceBean();
+                Set<Sample> parents = new HashSet<Sample>();
+                for (Sample s: o.getParents()) {
+                    parents.add(ss.findByID(s.getSampleId()));
+                }
+                sample.setParents(parents);
+            }
+            if (null != o.getChildren()) {
+                SampleService ss = BeanFactory.getSampleServiceBean();
+                Set<Sample> children = new HashSet<Sample>();
+                for (Sample s: o.getChildren()) {
+                    children.add(ss.findByID(s.getSampleId()));
+                }
+                sample.setChildren(children);
+            }
 			service.update(sample);
 
             //persist object
