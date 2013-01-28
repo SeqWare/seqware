@@ -9,6 +9,46 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 0.13.6.2 (2012-01-28)
+
+### Defect
+* [SEQWARE-1434] - Workflow_params and workflow_run_params are not populated when they are empty in the INI
+* [SEQWARE-1444] - Some parameters from .ini cannot make it into MetaDB
+* [SEQWARE-1471] - seqware installation error message confusing
+
+### Task
+* [SEQWARE-1453] - 0.13.6.1 Release
+* [SEQWARE-1454] - Bam-QC Decider (Basic Decider) uses excessive amounts of memory
+* [SEQWARE-1464] - Remove tomcat from sqwprod.hpc
+* [SEQWARE-1465] - Install web-service to sqwweb.hpc
+* [SEQWARE-1470] - Investigate (and fix) issue with BasicDecider on prod
+* [SEQWARE-1473] - Add input (parent) file SWIDs to the StudyIDFilesTSVResource
+* [SEQWARE-1474] - Workflow runs are not properly linked to IUS over the web service
+
+## 0.13.6.1 (2013-01-09) 
+
+### Improvement
+* [SEQWARE-1297] - Make BasicDecider not re-attempt failed or processing workflows
+* [SEQWARE-1409] - Make sure all plugins have descriptions
+
+### Story
+* [SEQWARE-1405] - Fix the newly identified BasicDecider bugs
+
+### Task
+* [SEQWARE-1284] - change setHeader in BasicDecider.java to something meaningful
+* [SEQWARE-1410] - Null pointer when a directory has permission denied read access
+* [SEQWARE-1411] - 0.13.6 Release 
+* [SEQWARE-1425] - Create unit tests for existing decider functionality
+* [SEQWARE-1427] - Create auto-generated doc for plugins
+* [SEQWARE-1439] - mvn clean follows the symlinks
+* [SEQWARE-1450] - Multi-threaded WorkflowStatusChecker
+* [SEQWARE-1451] - New WorkflowLauncher does not launch subsequent workflows if one dies while launching
+
+### Technical task
+* [SEQWARE-1447] - Update docs/spec for multi-threaded WorkflowStatusChecker
+* [SEQWARE-1448] - Create tests for multi-threaded WorkflowStatusChecker
+* [SEQWARE-1449] - Create multi-threaded WorkflowStatusChecker
+
 ## 0.13.6 (2012-12-06)
 
 ### Defect
