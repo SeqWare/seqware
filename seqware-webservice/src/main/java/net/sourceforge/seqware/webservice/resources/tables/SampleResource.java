@@ -19,6 +19,7 @@ package net.sourceforge.seqware.webservice.resources.tables;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -95,7 +96,7 @@ public class SampleResource extends DatabaseResource {
         } else if (queryValues.get("matches") != null) {
             jaxbTool = new JaxbObject<SampleList>();
             String name = queryValues.get("matches");
-            
+
             List<Sample> samples = (List<Sample>) testIfNull(ss.matchName(name));
             SampleList eList = new SampleList();
             eList.setList(new ArrayList());
@@ -155,6 +156,24 @@ public class SampleResource extends DatabaseResource {
                     Log.info("Could not be found " + o.getExperiment());
                 }
             }
+
+            if (null != o.getParents()) {
+                SampleService ss = BeanFactory.getSampleServiceBean();
+                HashSet<Sample> parents = new HashSet<Sample>();
+                for (Sample s : o.getParents()) {
+                    parents.add(ss.findByID(s.getSampleId()));
+                }
+                o.setParents(parents);
+            }
+            if (null != o.getChildren()) {
+                SampleService ss = BeanFactory.getSampleServiceBean();
+                HashSet<Sample> children = new HashSet<Sample>();
+                for (Sample s : o.getChildren()) {
+                    children.add(ss.findByID(s.getSampleId()));
+                }
+                o.setChildren(children);
+            }
+
 
             //persist object
             SampleService service = BeanFactory.getSampleServiceBean();
