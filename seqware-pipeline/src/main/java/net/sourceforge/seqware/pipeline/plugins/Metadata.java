@@ -362,7 +362,7 @@ public class Metadata extends Plugin {
     }
 
     protected ReturnValue addIUS() {
-        String[] necessaryFields = {"lane_accession", "sample_accession", "name", "description", "skip"};
+        String[] necessaryFields = {"lane_accession", "sample_accession", "name", "description", "skip", "barcode"};
         // check to make sure we have what we need
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
