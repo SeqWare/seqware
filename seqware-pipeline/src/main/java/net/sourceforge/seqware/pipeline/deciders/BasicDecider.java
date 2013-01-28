@@ -22,10 +22,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
+import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.WorkflowParam;
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -35,6 +37,7 @@ import net.sourceforge.seqware.pipeline.decider.DeciderInterface;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
+import org.apache.commons.lang.StringUtils;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -98,7 +101,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      */
     @Override
     public String get_description() {
-        return ("The decider from which all other deciders came");
+        return "The decider from which all other deciders came";
     }
 
     @Override
@@ -316,7 +319,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             for (Study study : studies) {
                 String name = study.getTitle();
                 Log.stdout("Retrieving study " + name);
-                rv = metadata.findFilesAssociatedWithAStudy(name, false);
+                rv = metadata.findFilesAssociatedWithAStudy(name, true);
                 mappedFiles = separateFiles(rv, groupBy);
                 ret = launchWorkflows(mappedFiles);
                 if (ret.getExitStatus() != ReturnValue.SUCCESS) {
@@ -326,13 +329,13 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             return ret;
         } else if (options.has("study-name")) {
             String studyName = (String) options.valueOf("study-name");
-            vals = metaws.findFilesAssociatedWithAStudy(studyName, false);
+            vals = metaws.findFilesAssociatedWithAStudy(studyName, true);
         } else if (options.has("sample-name")) {
             String sampleName = (String) options.valueOf("sample-name");
-            vals = metaws.findFilesAssociatedWithASample(sampleName, false);
+            vals = metaws.findFilesAssociatedWithASample(sampleName, true);
         } else if (options.has("sequencer-run-name")) {
             String runName = (String) options.valueOf("sequencer-run-name");
-            vals = metaws.findFilesAssociatedWithASequencerRun(runName, false);
+            vals = metaws.findFilesAssociatedWithASequencerRun(runName, true);
         } else {
             Log.error("Unknown option");
         }
@@ -346,28 +349,35 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         if (mappedFiles != null) {
 
             for (String key : mappedFiles.keySet()) {
+                Log.info("Considering key:" + key);
 
                 parentAccessionsToRun = new HashSet<String>();
                 filesToRun = new HashSet<String>();
                 workflowParentAccessionsToRun = new HashSet<String>();
 
-                List<ReturnValue> previousWorkflowRuns = new ArrayList<ReturnValue>();
+                //List<String> previousWorkflowRuns = new ArrayList<String>();
 
                 //for each grouping (e.g. sample), iterate through the files
                 List<ReturnValue> files = mappedFiles.get(key);
+                Log.info("key:" + key + " consists of " + files.size() + " files");
+                List<Integer> fileSWIDs = new ArrayList<Integer>();
+                
                 for (ReturnValue file : files) {
                     String wfAcc = file.getAttribute(Header.WORKFLOW_SWA.getTitle());
+                    String fileSWID = file.getAttribute(Header.FILE_SWA.getTitle());
+                    fileSWIDs.add(Integer.valueOf(fileSWID));
 //                    Log.debug(Header.WORKFLOW_SWA.getTitle() + ": WF accession is " + wfAcc);
                     //We're allowing everything that produced this type of file 
                     //other than the same workflow
-                    if (wfAcc != null) {
-                        if (workflowAccessionsToCheck.contains(wfAcc) || workflowAccession.equals(wfAcc)) {
-                            Log.debug("Found previous workflow run:" + file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
-                            //previousWorkflowRuns.add(file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
-                            previousWorkflowRuns.add(file);
-                        }
-                    }
-
+                    
+// the previous way of looking for workflow runs via FindAllFiles was not a good idea, we will instead use a new resource to find relevant
+// workflow runs
+//                    if (wfAcc != null) {
+//                        if (workflowAccessionsToCheck.contains(wfAcc) || workflowAccession.equals(wfAcc)) {
+//                            Log.trace("Found previous workflow run:" + file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
+//                            previousWorkflowRuns.add(file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
+//                        }
+//                    }
 
                     //if there is no parent accessions, or if the parent accession is correct
                     //this makes an assumption that if the wfAcc is null then the parentWorkflowAccessions will be empty
@@ -390,13 +400,13 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
                     }
                 }//end iterate through files
+                
 
                 if (!parentAccessionsToRun.isEmpty() && !filesToRun.isEmpty() && !workflowParentAccessionsToRun.isEmpty()) {
                     String parentAccessionString = commaSeparateMy(parentAccessionsToRun);
                     String fileString = commaSeparateMy(filesToRun);
                     Log.debug("FileString: " + fileString);
-                    //check if this workflow has been run before
-                    boolean rerun = rerunWorkflowRun(previousWorkflowRuns, filesToRun);
+                    boolean rerun = rerunWorkflowRun(filesToRun, fileSWIDs);
 
                     iniFiles = new ArrayList<String>();
                     iniFiles.add(createIniFile(fileString, parentAccessionString));
@@ -412,13 +422,16 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                         rerun = true;
                     }
                     //if we're in testing mode or we don't want to rerun and we don't want to force the re-processing
-                    if (test || !rerun) {
-                        //don't run, but report it
-                        Log.debug("NOT RUNNING. test=" + test + " or !rerun=" + !rerun);
-                        if (rerun) {
+                    if (test || !rerun){
+                        // we need to simplify the logic and make it more readable here for testing
+                        if (rerun){
+                            Log.debug("NOT RUNNING. test=" + test + " or !rerun=" + !rerun);
                             reportLaunch();
+                            Log.stdout("Tested key: " + key + " would have launched");
+                        } else{
+                            Log.debug("NOT RUNNING. test=" + test + " or !rerun=" + !rerun);
+                            Log.stdout("Tested key: " + key + " would not have launched");
                         }
-			Log.stdout("Not launching.");
                         ret = do_summary();
                     } else if (launched++ < launchMax) {
                         //construct the INI and run it
@@ -488,56 +501,75 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * Returns true only if there are more files to run than have been run on
      * any workflow so far, or if the filesToRun have different filepaths than
      * those that have been run before.
+     * @param filesToRun
+     * @param fileSWIDs
+     * @return 
      */
-    public boolean rerunWorkflowRun(Collection<ReturnValue> previousWorkflowRuns, Collection<String> filesToRun) {
+    protected boolean rerunWorkflowRun(final Collection<String> filesToRun, List<Integer> fileSWIDs) {
+        
         boolean rerun = true;
-        
-        int numberFailed = 0;
-        
-        for (ReturnValue workflowRun : previousWorkflowRuns) {
-            String previousSWID = workflowRun.getAttribute(Header.WORKFLOW_SWA.getTitle());
-            // only consider previous runs of the same workflow
-            if (workflowAccession.equals(previousSWID)) {
-                String workflowRunAcc = workflowRun.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle());
-                boolean shouldRerun = compareWorkflowRunFiles(workflowRunAcc, filesToRun);
-                boolean failed = isWorkflowRunWithFailureStatus(workflowRunAcc);
-                                
-                // the files override everything, if they say not to re-run, then don't re-run
-                if (!shouldRerun){
-                    rerun = false;
-                    break;
-                } else{
-                    // if we have a previous failure, count it up and proceed
-                    if (failed){
-                        numberFailed++;
-                    } else{
-                    // if we have a previous non-failure, whether submitted, pending, etc. don't rerun it
-                        Log.debug("Workflow run " + workflowRunAcc + " is blocking the re-run of this workflow with a non-failed, non-complete status");
-                        rerun = false;
-                        break;
-                    }
-                }
-            }
+        List<Boolean> failures = new ArrayList<Boolean>();
+        List<WorkflowRun> runs1 = produceAccessionListWithFileList(fileSWIDs, "CHILDREN_VIA_PROCESSING_RELATIONSHIP");
+        rerun = processWorkflowRuns(filesToRun, failures, runs1);
+        if (!rerun){
+            Log.debug("This workflow has failed to launch based on workflow runs via Processing");
+            return rerun;
         }
-
-        if (numberFailed >= this.rerunMax) {
+        List<WorkflowRun> runs2 = produceAccessionListWithFileList(fileSWIDs, "CHILDREN_VIA_IUS_WORKFLOW_RUN");
+        rerun = processWorkflowRuns(filesToRun, failures, runs2);
+        if (!rerun){
+            Log.debug("This workflow has failed to launch based on workflow runs via IUS");
+            return rerun;
+        }
+        List<WorkflowRun> runs3 = produceAccessionListWithFileList(fileSWIDs, "CHILDREN_VIA_LANE_WORKFLOW_RUN");
+        rerun = processWorkflowRuns(filesToRun, failures, runs3);
+        if (!rerun){
+            Log.debug("This workflow has failed to launch based on workflow runs via Lane");
+            return rerun;
+        }
+        if (failures.size() >= this.rerunMax) {
             Log.debug("This workflow has failed " + rerunMax + " times: not running");
             rerun = false;
         }
         return rerun;
     }
     
-    public boolean isWorkflowRunWithFailureStatus(String workflowRunAcc) {
-        boolean failure = false;
-        Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
-        String status = map.get("Workflow Run Status");
-        Log.debug("Status is " + status);
-        if (!"failed".equals(status)) {
-            Log.debug("The status is " + status + " so not running this workflow");
-        }else{
-            failure = true;
+    /**
+     * Determines whether a workflow run completed, failed, or other (submitted, pending, etc.)
+     * @param workflowRunAcc
+     * @return 
+     */
+    protected PREVIOUS_RUN_STATUS determineStatus(int workflowRunAcc){
+        String generateStatus = this.generateStatus(workflowRunAcc);
+        if (generateStatus.equals(Metadata.COMPLETED)){
+            return PREVIOUS_RUN_STATUS.COMPLETED;
+        } else if (generateStatus.equals(Metadata.FAILED)){
+            return PREVIOUS_RUN_STATUS.FAILED;
+        } else{
+            return PREVIOUS_RUN_STATUS.OTHER;
         }
-        return failure;
+    }
+    
+    /**
+     * Returns true if the filesToRun are totally contained by the files associated with the 
+     * files in a given workflowRunAcc
+     * @param workflowRunAcc
+     * @param filesToRun
+     * @return 
+     */
+    protected boolean isToRunContained(int workflowRunAcc, Collection<String> filesToRun) {
+        List<String> ranOnList = getListOfFiles(workflowRunAcc);
+        Log.info("Files to run: " + StringUtils.join(filesToRun,','));
+        if (ranOnList.size() >= filesToRun.size()) {
+            for (String file : ranOnList) {
+                //checks to see if the files in filesToRun are different from those it has ran on previously
+                if (!ranOnList.contains(file)) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
     }
     
     /**
@@ -549,28 +581,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * same file paths. False and prints an error message if there are more
      * files in the workflow run than in the filesToRun.
      */
-    public boolean compareWorkflowRunFiles(String workflowRunAcc, Collection<String> filesToRun) {
-        Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
-
-        String ranOnString = map.get("Input File Meta-Types");
-        List<String> ranOnList = Arrays.asList(ranOnString.split(","));
-        List<Integer> indices = new ArrayList<Integer>();
-        for (int i=0;i<ranOnList.size(); i++)
-        {
-            if (metaTypes.contains(ranOnList.get(i).trim())) {
-                indices.add(i);
-            }
-        }
-        ranOnString = map.get("Input File Paths");
-        String[] ranOnArr = ranOnString.split(",");
-        ranOnList = new ArrayList<String>();
-        for (Integer i:indices) {
-            ranOnList.add(ranOnArr[i].trim());
-            Log.stdout("Adding item: " + ranOnArr[i]);
-        }
-
+    protected FILE_STATUS compareWorkflowRunFiles(int workflowRunAcc, Collection<String> filesToRun) {
+        List<String> ranOnList = getListOfFiles(workflowRunAcc);
+        Log.info("Files to run: " + StringUtils.join(filesToRun,','));
         if (ranOnList.size() < filesToRun.size()) {
-            return true;
+            return FILE_STATUS.MORE_CURRENT_FILES_1;
         } else if (ranOnList.size() == filesToRun.size()) {
             boolean rerun = false;
             for (String file : ranOnList) {
@@ -579,12 +594,15 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     rerun = true;
                 }
             }
-            return rerun;
+            if (rerun){
+                return FILE_STATUS.SAME_FILES_DIFFERENT_PATHS_2;
+            }
+            return FILE_STATUS.SAME_FILES_SAME_PATHS_3;
         } else {
             Log.error("There are fewer files to run on in the database than were previously run on this sample!");
             Log.error("Files found to run in database: " + filesToRun.size());
             Log.error("But yet workflow run " + workflowRunAcc + " ran on " + ranOnList.size());
-            return false;
+            return FILE_STATUS.MORE_PAST_FILES_4;
         }
     }
 
@@ -714,29 +732,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
 //    protected
     public Map<String, List<ReturnValue>> separateFiles(List<ReturnValue> vals, String groupBy) {
-        // separate out the leaf workflow_run records which aren't files
-        List<ReturnValue> files = new ArrayList<ReturnValue>();
-        Map<String, List<ReturnValue>> notFiles = new HashMap<String, List<ReturnValue>>();
-        String fileIndicator = FindAllTheFiles.FILE_SWA;
-        String workflowrunIndicator = FindAllTheFiles.WORKFLOW_SWA;
-        for (ReturnValue r : vals){
-            if (r.getAttributes().containsKey(fileIndicator)){
-                files.add(r);
-            } else if(r.getAttributes().containsKey(workflowrunIndicator)){
-                String iusStr = r.getAttribute(FindAllTheFiles.IUS_SWA);
-                if (!notFiles.containsKey(iusStr)){
-                    notFiles.put(iusStr, new ArrayList<ReturnValue>());
-                }
-                notFiles.get(r.getAttribute(FindAllTheFiles.IUS_SWA)).add(r);
-            }
-        }
-        Log.info("Found " + notFiles.size() + " leaf nodes that were not files");
-        
         //get files from study
         Map<String, List<ReturnValue>> map = new HashMap<String, List<ReturnValue>>();
 
         //group files according to the designated header (e.g. sample SWID)
-        for (ReturnValue r : files) {
+        for (ReturnValue r : vals) {
             String currVal = r.getAttributes().get(groupBy);
             
             if (currVal != null){
@@ -750,24 +750,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             vs.add(r);
             map.put(currVal, vs);
         }
-        
-        // in every group of files, if any group has a IUS that corresponds to a leaf WorkflowRun, add that leaf into that group
-        // so that it can be considered
-         for (String key : map.keySet()) {
-                Set<ReturnValue> applicableLeafs = new HashSet<ReturnValue>();
-                //for each grouping (e.g. sample), iterate through the files
-                List<ReturnValue> filesInGroup = map.get(key);
-                for(ReturnValue f : files){
-                    String ius = f.getAttribute(FindAllTheFiles.IUS_SWA);
-                    List<ReturnValue> get = notFiles.get(ius);
-                    if (get != null){
-                        applicableLeafs.addAll(get);
-                    }
-                }
-                Log.trace("Adding " + applicableLeafs.size() + " applicable leaf nodes that were not files to the group key: " + key);
-                map.get(key).addAll(applicableLeafs);
-         }
-
         return map;
 
     }
@@ -894,8 +876,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         return true;
     }
 
-    private Map<String, String> generateWorkflowRunMap(String workflowRunAcc) throws NumberFormatException {
-        String report = metaws.getWorkflowRunReport(Integer.parseInt(workflowRunAcc));
+    private Map<String, String> generateWorkflowRunMap(int workflowRunAcc) {
+        String report = metaws.getWorkflowRunReport(workflowRunAcc);
         String[] lines = report.split("\n");
         String[] header = lines[0].split("\t");
         String[] data = lines[1].split("\t");
@@ -909,5 +891,169 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     
     public void setMetaws(MetadataWS metaws) {
         this.metaws = metaws;
+    }
+
+    protected String generateStatus(int workflowRunAcc) {
+        Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
+        String status = map.get("Workflow Run Status");
+        Log.debug("Status is " + status);
+        return status;
+    }
+
+    /**
+     * We now use the guideline that we only count failures when they occur on the same number of files
+     * (with the same paths)
+     * @param fileStatus
+     * @param previousStatus
+     * @return 
+     */
+    protected static boolean isCountAsFail(FILE_STATUS fileStatus, PREVIOUS_RUN_STATUS previousStatus) {
+        return (fileStatus == FILE_STATUS.SAME_FILES_SAME_PATHS_3 && previousStatus == PREVIOUS_RUN_STATUS.FAILED);
+    }
+
+    /**
+     * We want to re-run in a variety of conditions. a) when we have more files
+     * now and we failed in the past b) when we have more files now and we
+     * completed in the past c) when we have the same files on different paths
+     * and we failed in the past d) when we have the same files on different
+     * paths and we completed in the past e) when we have the same files on same
+     * paths and we failed in the past f) when we have more files in the past we
+     * failed in the past (but add a warning message)
+     *
+     * @param fileStatus
+     * @param previousStatus
+     * @return
+     */
+    protected static boolean isDoRerun(FILE_STATUS fileStatus, PREVIOUS_RUN_STATUS previousStatus) {
+        boolean strangeCondition = fileStatus == FILE_STATUS.MORE_PAST_FILES_4 && previousStatus == PREVIOUS_RUN_STATUS.FAILED;
+        if (strangeCondition){
+            Log.stderr("****** Workflow run has more files in the past but failed. We will try to re-run, but you should investigate!!!! *******");
+        }
+        return (fileStatus == FILE_STATUS.MORE_CURRENT_FILES_1 && previousStatus == PREVIOUS_RUN_STATUS.FAILED)
+                || (fileStatus == FILE_STATUS.MORE_CURRENT_FILES_1 && previousStatus == PREVIOUS_RUN_STATUS.COMPLETED)
+                || (fileStatus == FILE_STATUS.SAME_FILES_DIFFERENT_PATHS_2 && previousStatus == PREVIOUS_RUN_STATUS.FAILED)
+                || (fileStatus == FILE_STATUS.SAME_FILES_DIFFERENT_PATHS_2 && previousStatus == PREVIOUS_RUN_STATUS.COMPLETED)
+                || (fileStatus == FILE_STATUS.SAME_FILES_SAME_PATHS_3 && previousStatus == PREVIOUS_RUN_STATUS.FAILED)
+                || strangeCondition;
+    }
+
+    private List<WorkflowRun> produceAccessionListWithFileList(List<Integer> fileSWIDs, String searchType) {
+        // find relevant workflow runs for this group of files
+        List<WorkflowRun> wrFiles1 = this.metadata.getWorkflowRunsAssociatedWithFiles(fileSWIDs, searchType);
+        Log.debug("Found " + wrFiles1.size() + " workflow runs via " + searchType);
+        return wrFiles1;
+    }
+
+    /**
+     * For a given set of file SWIDs in filesToRun, we will count up the number of previous workflow runs that 
+     * failed and return whether or not we think the workflow should be rerun
+     * @param filesToRun
+     * @param failures
+     * @param previousWorkflowRuns
+     * @return 
+     */
+    private boolean processWorkflowRuns(Collection<String> filesToRun, List<Boolean> failures, List<WorkflowRun> previousWorkflowRuns) {
+        int outerCount = 0; 
+        int innerCount = 0;
+        boolean rerun = true;
+        for (WorkflowRun previousWorkflowRun : previousWorkflowRuns) {
+            outerCount++;
+            // only consider previous runs of the same workflow
+            if (workflowAccession.equals(previousWorkflowRun.getWorkflowAccession().toString())) {
+                innerCount++;
+                FILE_STATUS fileStatus = compareWorkflowRunFiles(previousWorkflowRun.getSwAccession(), filesToRun);
+                Log.info("Workflow run " + previousWorkflowRun.getSwAccession() + " has a file status of " + fileStatus);
+                PREVIOUS_RUN_STATUS previousStatus = determineStatus(previousWorkflowRun.getSwAccession());
+                Log.info("Workflow run " + previousWorkflowRun.getSwAccession() + " has a status of " + previousStatus);
+                
+                boolean countAsFail = isCountAsFail(fileStatus, previousStatus);
+                boolean doRerun = isDoRerun(fileStatus, previousStatus);
+                
+                if (countAsFail){
+                    Log.info("Workflow run " + previousWorkflowRun.getSwAccession() + " counted as a failure with a file status of " + fileStatus);
+                    Log.info("The failing run was workflow_run " + outerCount + "/" + innerCount + " out of " + previousWorkflowRuns.size());
+                    failures.add(true);
+                }
+                if (!doRerun){
+                    Log.info("Workflow run " + previousWorkflowRun.getSwAccession() + " blocking re-run with a status of: " +previousStatus+"  file status of: " + fileStatus);
+                    Log.info("The blocking run was workflow_run " + outerCount + "/" + innerCount + " out of " + previousWorkflowRuns.size());
+                    rerun = false;
+                    break;
+                }
+            } else if (this.workflowAccessionsToCheck.contains(previousWorkflowRun.getWorkflowAccession().toString())){
+                Log.debug("Workflow run " + previousWorkflowRun.getWorkflowAccession() + " has a workflow "+previousWorkflowRun.getWorkflowAccession()+" on the list of workflow accessions to check");
+                // we will check whether all the files to run are contained within the previous run of the workflow, if so we will not re-run
+                FILE_STATUS fileStatus = compareWorkflowRunFiles(previousWorkflowRun.getSwAccession(), filesToRun);
+                Log.info("Workflow run " + previousWorkflowRun.getSwAccession() + " has a file status of " + fileStatus);
+                if (this.isToRunContained(previousWorkflowRun.getSwAccession(), filesToRun)){
+                    Log.info("Previous workflow run contained the all of the files that we want to run");
+                    rerun = false;
+                }         
+            } else{
+                Log.info("Workflow run "  + previousWorkflowRun.getSwAccession() + " was neither a workflow to check nor a previous run of " +workflowAccession+" , ignored");
+            }
+        }
+        return rerun;
+    }
+
+    /**
+     * Given a workflowRunAcc returns a list of file paths that were used in that 
+     * run
+     * @param workflowRunAcc
+     * @param filesToRun
+     * @return 
+     */
+    private List<String> getListOfFiles(int workflowRunAcc) {
+        Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
+        String ranOnString = map.get("Input File Meta-Types");
+        List<String> ranOnList = Arrays.asList(ranOnString.split(","));
+        List<Integer> indices = new ArrayList<Integer>();
+        for (int i=0;i<ranOnList.size(); i++)
+        {
+            if (metaTypes.contains(ranOnList.get(i).trim())) {
+                indices.add(i);
+            }
+        }
+        ranOnString = map.get("Input File Paths");
+        String[] ranOnArr = ranOnString.split(",");
+        ranOnList = new ArrayList<String>();
+        for (Integer i:indices) {
+            ranOnList.add(ranOnArr[i].trim());
+            Log.stdout("Adding item: " + ranOnArr[i]);
+        }
+        Log.info("Ran on: " + StringUtils.join(ranOnList,','));
+        return ranOnList;
+    }
+    
+    /**
+     * These file statuses reflect the discussion at  
+     * https://wiki.oicr.on.ca/display/SEQWARE/2013/01/15/Jan+15%2C+2013%3A+Problematic+Basic+Decider+Logic
+     */
+    protected enum FILE_STATUS{
+        /**
+         * there are more files to run in the workflow under consideration than in the past workflow_run
+         */
+        MORE_CURRENT_FILES_1,
+        /**
+         * the same (number of) files are found at different paths
+         */
+        SAME_FILES_DIFFERENT_PATHS_2,
+        /**
+         * the same files are found at the same paths
+         */
+        SAME_FILES_SAME_PATHS_3,
+        /**
+         * there are fewer files to run in the workflow under consideration than in the past workflow_run
+         */
+        MORE_PAST_FILES_4
+    }
+    
+    /**
+     * We care about three types of status, an outright fail, other (pending, running, submitted, etc.), and completed
+     */
+    protected enum PREVIOUS_RUN_STATUS{
+        FAILED,
+        OTHER,
+        COMPLETED
     }
 }

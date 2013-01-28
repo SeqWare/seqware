@@ -19,6 +19,7 @@ package net.sourceforge.seqware.common.hibernate;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -61,6 +62,14 @@ import org.apache.log4j.Logger;
  */
 public class FindAllTheFiles {
 
+    public boolean isReportInputFiles() {
+        return reportInputFiles;
+    }
+
+    public void setReportInputFiles(boolean reportInputFiles) {
+        this.reportInputFiles = reportInputFiles;
+    }
+
   public enum Header {
     STUDY_TITLE("Study Title"), STUDY_SWA("Study SWID"), STUDY_TAG_PREFIX("study."), STUDY_ATTRIBUTES(
         "Study Attributes"), EXPERIMENT_NAME("Experiment Name"), EXPERIMENT_SWA("Experiment SWID"), EXPERIMENT_TAG_PREFIX(
@@ -74,7 +83,9 @@ public class FindAllTheFiles {
         "Sequencer Run Attributes"), WORKFLOW_RUN_NAME("Workflow Run Name"), WORKFLOW_RUN_SWA("Workflow Run SWID"), WORKFLOW_RUN_STATUS(
         "Workflow Run Status"), WORKFLOW_NAME("Workflow Name"), WORKFLOW_SWA("Workflow SWID"), WORKFLOW_VERSION(
         "Workflow Version"), FILE_SWA("File SWID"), PROCESSING_DATE("Last Modified"), PROCESSING_SWID("Processing SWID"), PROCESSING_ALGO(
-        "Processing Algorithm"), PROCESSING_TAG_PREFIX("processing."), PROCESSING_ATTRIBUTES("Processing Attributes");
+        "Processing Algorithm"), PROCESSING_TAG_PREFIX("processing."), PROCESSING_ATTRIBUTES("Processing Attributes"),
+        INPUT_FILE_META_TYPES("Input File Meta-Types"), INPUT_FILE_SWIDS("Input File SWIDs"), INPUT_FILE_PATHS("Input File Paths");
+        ;
     private final String title;
 
     Header(String title) {
@@ -169,6 +180,11 @@ public class FindAllTheFiles {
   public static String PROCESSING_TAG_PREFIX = Header.PROCESSING_TAG_PREFIX.getTitle();
   /** Constant <code>PROCESSING_ATTRIBUTES="Header.PROCESSING_ATTRIBUTES.getTitle()"</code> */
   public static String PROCESSING_ATTRIBUTES = Header.PROCESSING_ATTRIBUTES.getTitle();
+  
+  public static String INPUT_FILE_META_TYPES = Header.INPUT_FILE_META_TYPES.getTitle();
+  public static String INPUT_FILE_FILE_PATHS = Header.INPUT_FILE_PATHS.getTitle();
+  public static String INPUT_FILE_SWIDS = Header.INPUT_FILE_SWIDS.getTitle();
+  
   /** Constant <code>FILETYPE_ALL="all"</code> */
   public static final String FILETYPE_ALL = "all";
   private Set<Integer> fileSwas = new HashSet<Integer>();
@@ -180,6 +196,13 @@ public class FindAllTheFiles {
    * When false, we report all leafs regardless of whether they are nodes.
    */
   private boolean requireFiles = true;
+  
+  /**
+   * When true, we also crawl and report input files for input files.
+   * This could be quite resource intensive in this naive first approach.
+   */
+  private boolean reportInputFiles = false;
+  
   private Logger logger = Logger.getLogger(FindAllTheFiles.class);
 
   /**
@@ -650,12 +673,40 @@ public class FindAllTheFiles {
         }
       }
     }
-    // WorkflowRun
-    if (workflowRun != null) {
-      ret.setAttribute(WORKFLOW_RUN_NAME, workflowRun.getName());
-      ret.setAttribute(WORKFLOW_RUN_SWA, workflowRun.getSwAccession().toString());
-      ret.setAttribute(WORKFLOW_RUN_STATUS, workflowRun.getStatus());
-    }
+      // WorkflowRun
+      if (workflowRun != null) {
+          ret.setAttribute(WORKFLOW_RUN_NAME, workflowRun.getName());
+          ret.setAttribute(WORKFLOW_RUN_SWA, workflowRun.getSwAccession().toString());
+          ret.setAttribute(WORKFLOW_RUN_STATUS, workflowRun.getStatus());
+
+          if (this.isReportInputFiles()) {
+              WorkflowRunReport wrr = new WorkflowRunReport();
+              Collection<Processing> processings = wrr.collectProcessings(workflowRun);
+              Collection<Processing> parentProcessings = wrr.findParents(processings, workflowRun.getSwAccession());
+              Collection<File> inputFiles = wrr.findFiles(parentProcessings);
+              StringBuilder fileTypes = new StringBuilder();
+              StringBuilder filePaths = new StringBuilder();
+              StringBuilder fileSWIDs = new StringBuilder();
+              for (File f : inputFiles) {
+                  if (fileTypes.length() != 0) {
+                      fileTypes.append(",");
+                  }
+                  if (filePaths.length() != 0) {
+                      filePaths.append(",");
+                  }
+                  if (fileSWIDs.length() != 0) {
+                      fileSWIDs.append(",");
+                  }
+                  fileTypes.append(f.getMetaType());
+                  filePaths.append(f.getFilePath());
+                  fileSWIDs.append(f.getSwAccession());
+              }
+              ret.setAttribute(INPUT_FILE_META_TYPES, fileTypes.toString());
+              ret.setAttribute(INPUT_FILE_SWIDS, fileSWIDs.toString());
+              ret.setAttribute(INPUT_FILE_FILE_PATHS, filePaths.toString());
+          }
+
+      }
     // Workflow
     if (workflow != null) {
       ret.setAttribute(WORKFLOW_NAME, workflow.getName());
@@ -871,6 +922,10 @@ public class FindAllTheFiles {
     Log.info("There are " + newReturnValues.size() + " files in total after filtering");
     return newReturnValues;
   }
+  
+  public static void printTSVFile(Writer writer, boolean showStatus, List<ReturnValue> returnValues, String studyName) throws IOException {
+      printTSVFile(writer, showStatus, returnValues, studyName, false);
+  }
 
   /**
    * <p>printTSVFile.</p>
@@ -881,14 +936,14 @@ public class FindAllTheFiles {
    * @param studyName a {@link java.lang.String} object.
    * @throws java.io.IOException if any.
    */
-  public static void printTSVFile(Writer writer, boolean showStatus, List<ReturnValue> returnValues, String studyName)
+  public static void printTSVFile(Writer writer, boolean showStatus, List<ReturnValue> returnValues, String studyName, boolean reportInputFiles)
       throws IOException {
     Log.info("Creating TSV file");
     // Write the Excel file
-    printHeader(writer, showStatus);
+    printHeader(writer, showStatus, reportInputFiles);
     for (ReturnValue rv : returnValues) {
       for (FileMetadata fm : rv.getFiles()) {
-        print(writer, rv, studyName, showStatus, fm);
+        print(writer, rv, studyName, showStatus, fm, reportInputFiles);
       }
     }
   }
@@ -901,6 +956,11 @@ public class FindAllTheFiles {
     rv.setAttribute(attribute, att);
   }
 
+  public static void print(Writer writer, ReturnValue ret, String studyName, boolean showStatus, FileMetadata fm)
+      throws IOException {
+      print(writer, ret, studyName, showStatus, fm, false);
+  }
+  
   /**
    * Prints a line to the Excel spreadsheet.
    *
@@ -911,7 +971,7 @@ public class FindAllTheFiles {
    * @param showStatus a boolean.
    * @param fm a {@link net.sourceforge.seqware.common.module.FileMetadata} object.
    */
-  public static void print(Writer writer, ReturnValue ret, String studyName, boolean showStatus, FileMetadata fm)
+  public static void print(Writer writer, ReturnValue ret, String studyName, boolean showStatus, FileMetadata fm, boolean reportInputFiles)
       throws IOException {
     StringBuilder parentSampleTag = new StringBuilder();
     StringBuilder sampleTag = new StringBuilder();
@@ -978,10 +1038,20 @@ public class FindAllTheFiles {
     sb.append(fm.getMetaType()).append("\t");
     sb.append(ret.getAttribute(FILE_SWA)).append("\t");
     sb.append(fm.getFilePath());
+    if (reportInputFiles){
+        sb.append("\t");
+        sb.append(ret.getAttribute(INPUT_FILE_META_TYPES)).append("\t");
+        sb.append(ret.getAttribute(INPUT_FILE_SWIDS)).append("\t");
+        sb.append(ret.getAttribute(INPUT_FILE_FILE_PATHS)).append("\t");
+    } 
     sb.append("\n");
-
+    
     writer.write(sb.toString());
 
+  }
+  
+  public static void printHeader(Writer writer, boolean showStatus) throws IOException {
+     printHeader(writer, showStatus, false); 
   }
 
   /**
@@ -991,7 +1061,7 @@ public class FindAllTheFiles {
    * @param writer a {@link java.io.Writer} object.
    * @param showStatus a boolean.
    */
-  public static void printHeader(Writer writer, boolean showStatus) throws IOException {
+  public static void printHeader(Writer writer, boolean showStatus, boolean reportInputFiles) throws IOException {
     StringBuilder sb = new StringBuilder();
     sb.append(PROCESSING_DATE).append("\t");
     sb.append(STUDY_TITLE).append("\t");
@@ -1030,7 +1100,14 @@ public class FindAllTheFiles {
     sb.append("File Meta-Type").append("\t");
     sb.append(FILE_SWA).append("\t");
     sb.append("File Path");
+    if (reportInputFiles){
+        sb.append("\t");
+        sb.append(INPUT_FILE_META_TYPES).append("\t");
+        sb.append(INPUT_FILE_SWIDS).append("\t");
+        sb.append(INPUT_FILE_FILE_PATHS).append("\t");
+    } 
     sb.append("\n");
+    
 
     writer.write(sb.toString());
   }
