@@ -9,7 +9,7 @@ markdown:              advanced
 ##  BasicDecider
 net.sourceforge.seqware.pipeline.deciders.BasicDecider
 
-
+The decider from which all other deciders came
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -23,6 +23,7 @@ net.sourceforge.seqware.pipeline.deciders.BasicDecider
 |--meta-types|The comma-separated meta-type(s) of the files to run this workflow with. Alternatively, use parent-wf-accessions.|
 |--no-meta-db, --no-metadata|Optional: a flag that prevents metadata writeback (which is done by default) by the Decider and that is subsequently passed to the called workflow which can use it to determine if they should write metadata at runtime on the cluster.|
 |--parent-wf-accessions|The workflow accessions of the parent workflows, comma-separated with no spaces. May also specify the meta-type.|
+|--rerun-max|The maximum number of times to re-launch a workflowrun if failed. Default: 5.|
 |--run|Run this workflow now. This is the default behaviour. See also: --schedule|
 |--sample-name|Full sample name. One of sample-name, study-name, sequencer-run-name or all is required.|
 |--schedule|Schedule this workflow to be run rather than running it immediately. See also: --run|
@@ -151,6 +152,7 @@ This plugin lets you list, read, and write to a collection of tables in the unde
 |--------------------|--------------|
 |--c, --create|Optional: indicates you want to create a new row, must supply --table and all the required --field params.|
 |--f, --field|Optional: the field you are interested in writing. This is encoded as '<field_name>::<value>', you should use single quotes when the value includes spaces. You supply multiple --field arguments for a given table insert.|
+|--interactive|Optional: Interactively prompt for fields during creation|
 |--lf, --list-fields|Optional: if provided along with the --table option this will list out the fields for that table and their type.|
 |--list-tables, --lt|Optional: if provided will list out the tables this tools knows how to read and/or write to.|
 |--of, --output-file|Optional: if provided along with the --list or --list-tables options this will cause the output list of rows/tables to be written to the file specified rather than stdout.|
@@ -162,19 +164,24 @@ net.sourceforge.seqware.pipeline.plugins.ModuleRunner
 Description: A wrapper around Runner which will either list all Modules in the classpath (if no args are passed) or trigger a specific Module. Great for running Modules standalone.
 
 
+##  OozieXML2Dot
+net.sourceforge.seqware.pipeline.plugins.OozieXML2Dot
+
+This take an input file of oozie workflow xml, and translate the relation of all actions into dot format
+
+| Command-line option | Description |
+|--------------------|--------------|
+|--input||
+
 ##  ProcessingDataStructure2Dot
 net.sourceforge.seqware.pipeline.plugins.ProcessingDataStructure2Dot
 
-
+This plugin will take in a sw_accession of a processing, and translate the hierarchy of the processing relationship into dot format
 
 | Command-line option | Description |
 |--------------------|--------------|
 |--output-file|Optional: file name|
-|--parent-accession|Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.|
-|--sw-db|Optional: database name|
-|--sw-db-pass|Optional: password|
-|--sw-db-server|Optional: database server.|
-|--sw-db-user|Optional: database user|
+|--parent-accession|The SWID of the processing|
 
 ##  SequencerRunReporter
 net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter
@@ -259,5 +266,6 @@ This plugin lets you monitor the status of running workflows and updatesthe meta
 |--check-unknown, --cu|Optional: if specified, workflow runs that have previously marked unknown will be re-checked.|
 |--fh, --force-host|Optional: if specified, workflow runs scheduled to this specified host will be checked even if this is not the current host (a dangerous option).|
 |--s, --status-cmd|Optional: the Pegasus status command, if you specify this option the command will be run, potentially displaying the summarized/parsed errors, but the database will not be updated.|
+|--threads-in-thread-pool, --tp|Optional: this will determine the number of threads to run with. Default: 1|
 |--wa, --workflow-accession|Optional: this will cause the program to only check the status of workflow runs that are this type of workflow.|
 |--workflow-run-accession, --wra|Optional: this will cause the program to only check the status of this particular workflow run.|
