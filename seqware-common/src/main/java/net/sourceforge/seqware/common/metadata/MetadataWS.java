@@ -1519,7 +1519,7 @@ public class MetadataWS extends Metadata {
     public void annotateLane(int laneSWID, LaneAttribute laneAtt, Boolean skip) {
         try {
             Log.debug("Annotating Lane " + laneSWID + " with skip=" + skip + ", laneAtt = " + laneAtt);
-            Lane lane = ll.findLane("/" + laneSWID);
+            Lane lane = ll.findLane("/" + laneSWID+"?show=attributes");
             if (skip != null) {
                 lane.setSkip(skip);
             }
@@ -1672,7 +1672,7 @@ public class MetadataWS extends Metadata {
     public void annotateSample(int swid, SampleAttribute att, Boolean skip) {
         try {
             Log.debug("Annotating Sample " + swid + " with skip=" + skip + ", Att = " + att);
-            Sample obj = ll.findSample("/" + swid);
+            Sample obj = ll.findSample("/" + swid+"?show=attributes");
             if (skip != null) {
                 obj.setSkip(skip);
             }
@@ -2097,7 +2097,7 @@ public class MetadataWS extends Metadata {
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving lanes from sequencer run", ex);
         } catch (NotFoundException ex) {
-            Log.error("ResourceException while retrieving lanes from sequencer run", ex);
+            Log.debug("ResourceException while retrieving lanes from sequencer run", ex);
         }
         return null;
     }
@@ -2124,7 +2124,7 @@ public class MetadataWS extends Metadata {
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving IUSes (barcodes) from lane or sample", ex);
         } catch (NotFoundException ex) {
-            Log.error("ResourceException while retrieving IUSes (barcodes) from lane or sample", ex);
+            Log.debug("ResourceException while retrieving IUSes (barcodes) from lane or sample", ex);
         }
         return null;
     }
@@ -2140,7 +2140,7 @@ public class MetadataWS extends Metadata {
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving experiments from study", ex);
         } catch (NotFoundException ex) {
-            Log.error("ResourceException while retrieving experiments from study", ex);
+            Log.debug("ResourceException while retrieving experiments from study", ex);
         }
         return null;
     }
@@ -2156,7 +2156,7 @@ public class MetadataWS extends Metadata {
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving samples from experiment", ex);
         } catch (NotFoundException ex) {
-            Log.error("ResourceException while retrieving samples from experiment", ex);
+            Log.debug("ResourceException while retrieving samples from experiment", ex);
         }
         return null;
     }
@@ -2172,7 +2172,7 @@ public class MetadataWS extends Metadata {
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving child samples from parent sample", ex);
         } catch (NotFoundException ex) {
-            Log.error("ResourceException while retrieving child samples from parent sample", ex);
+            Log.debug("ResourceException while retrieving child samples from parent sample", ex);
         }
         return null;
     }
@@ -2188,7 +2188,7 @@ public class MetadataWS extends Metadata {
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving parent samples from child sample", ex);
         } catch (NotFoundException ex) {
-            Log.error("ResourceException while retrieving parent samples from child sample", ex);
+            Log.debug("ResourceException while retrieving parent samples from child sample", ex);
         }
         return null;
     }
