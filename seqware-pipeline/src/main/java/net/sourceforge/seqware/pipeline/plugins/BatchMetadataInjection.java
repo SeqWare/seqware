@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.openide.util.lookup.ServiceProvider;
+import java.util.HashSet;
+import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -34,7 +37,7 @@ import net.sourceforge.seqware.pipeline.plugins.BatchMetadataInjection.SampleInf
  * @author mtaschuk
  * @version $Id: $Id
  */
-//@ServiceProvider(service = PluginInterface.class)
+@ServiceProvider(service = PluginInterface.class)
 public class BatchMetadataInjection extends Metadata {
 
     private ReturnValue ret = new ReturnValue();
@@ -118,7 +121,12 @@ public class BatchMetadataInjection extends Metadata {
             } catch (Exception ex) {
                 Log.error("The run could not be imported.", ex);
             }
-        }
+        } else {
+	    Log.stdout("Combination of parameters not recognized!");
+            Log.stdout(this.get_syntax());
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+	
+	}
         return ret;
     }
 
@@ -148,10 +156,11 @@ public class BatchMetadataInjection extends Metadata {
                 samples = new ArrayList<SampleInfo>();
             }
             samples.add(info);
+	    lanes.put(info.getLane(), samples);
         }
 
         List<Lane> existingLanes = metadata.getLanesFrom(sequencerRunAccession);
-        if (!existingLanes.isEmpty()) {
+        if (existingLanes !=null && !existingLanes.isEmpty()) {
             Boolean yorn = promptBoolean("This sequencer run already has " + existingLanes.size() + " lanes. Continue?", Boolean.FALSE);
             if (yorn.equals(Boolean.FALSE)) {
                 throw new Exception("Sequencer run " + sequencerRunAccession + " already has lanes.");
@@ -163,19 +172,51 @@ public class BatchMetadataInjection extends Metadata {
         int experimentAccession = retrieveExperiment(run, studyAccession);
         List<Sample> parentSamples = metadata.getSamplesFrom(experimentAccession);
 
-
+	Log.warn("study: " + studyAccession + " exp: " + experimentAccession + " run: " + sequencerRunAccession);
         for (String lane : lanes.keySet()) {
             int laneAccession = createLane(lane, sequencerRunAccession);
 
             for (SampleInfo barcode : lanes.get(lane)) {
                 Integer parentSampleAcc = retrieveParentSampleAccession(parentSamples, barcode, experimentAccession);
-                
+                Log.warn("lane: " + laneAccession + " parent sample: "+parentSampleAcc); 
                 int tissueTypeSampleAcc = retrieveTissueTypeSampleAccession(parentSampleAcc, barcode);
-
+		Log.warn("tissue type sample: " + tissueTypeSampleAcc);
 		//get the library sample
 		int librarySampleNameAcc = createSample(barcode.getName(),0,tissueTypeSampleAcc, barcode.getOrganism());
-                
-                int barcodeAcc = createIUS(laneAccession, librarySampleNameAcc, barcode.getBarcode(), null);
+               Log.warn("library sample: " + librarySampleNameAcc);
+		String tety = barcode.getTemplateType();
+		String tare = barcode.getTargetedResequencing();
+		String tior = barcode.getTissueOrigin();
+		String tipr = barcode.getTissuePreparation();
+		String tire = barcode.getTissueRegion();
+		String tity = barcode.getTissueType();
+		if (tety.isEmpty()){
+			tety = choiceOf(barcode.getName(),"Library Source Template Type", librarySourceTemplateType);
+		}
+		if (tare.isEmpty()) {
+			tare = choiceOf(barcode.getName(),"Targeted Resequencing Type", targetedResequencing);
+		}
+		if (tior.isEmpty()) {
+			tior = choiceOf(barcode.getName(),"Tissue Origin",tissueOrigin);
+		}
+		if (tipr.isEmpty()) {
+			tipr = choiceOf(barcode.getName(), "Tissue Preparation", tissuePreparation);
+		}
+		if (tire.isEmpty()) {
+			tire = choiceOf(barcode.getName(), "Tissue Region", tissueRegion);
+		}
+		if (tity.isEmpty()) {
+			tity = choiceOf(barcode.getName(),"Tissue Type", tissueType);
+		}
+
+		metadata.annotateSample(librarySampleNameAcc, new SampleAttribute(0,null,"geo_library_source_template_type",tety), null);
+		metadata.annotateSample(librarySampleNameAcc, new SampleAttribute(0,null,"geo_targeted_resequencing",tare),null);
+		metadata.annotateSample(librarySampleNameAcc, new SampleAttribute(0,null,"geo_tissue_origin",tior),null);
+                metadata.annotateSample(librarySampleNameAcc, new SampleAttribute(0,null,"geo_tissue_preparation",tipr),null);
+		metadata.annotateSample(librarySampleNameAcc, new SampleAttribute(0,null,"geo_tissue_region", tire),null);
+		metadata.annotateSample(librarySampleNameAcc, new SampleAttribute(0,null,"geo_tissue_type", tity),null);
+
+		 int barcodeAcc = createIUS(laneAccession, librarySampleNameAcc, barcode.getBarcode(), null);
 
             }
         }
@@ -230,7 +271,7 @@ public class BatchMetadataInjection extends Metadata {
 	interactive=true;
 	ReturnValue rv = addIUS();
 	
-	return rv.getReturnValue();
+	return Integer.parseInt(rv.getAttribute("sw_accession"));
 
     }
 
@@ -248,7 +289,7 @@ public class BatchMetadataInjection extends Metadata {
         interactive = true;
         ReturnValue rv = addSample();
 
-        return rv.getReturnValue();
+        return Integer.parseInt(rv.getAttribute("sw_accession"));
     }
 
 
@@ -268,12 +309,17 @@ public class BatchMetadataInjection extends Metadata {
         interactive = true;
         ReturnValue rv = addLane();
 
-        return rv.getReturnValue();
+
+	LaneAttribute la = new LaneAttribute();
+	la.setTag("geo_lane");
+	la.setValue(fields.get("lane_number"));
+	metadata.annotateLane(Integer.parseInt(rv.getAttribute("sw_accession")), la, null); 
+        return Integer.parseInt(rv.getAttribute("sw_accession"));
     }
 
     private int createRun(RunInfo run) throws Exception {
 
-
+	Log.stdout("Creating a new sequencer run.");
         String runName = promptString("name", run.getRunName());
         for (SequencerRun sr : metadata.getAllSequencerRuns()) {
             if (sr.getName().equals(runName)) {
@@ -292,7 +338,7 @@ public class BatchMetadataInjection extends Metadata {
         interactive = true;
         ReturnValue rv = addSequencerRun();
 
-        return rv.getReturnValue();
+        return Integer.parseInt(rv.getAttribute("sw_accession"));
     }
 
     private void printDefaults() {
@@ -306,14 +352,15 @@ public class BatchMetadataInjection extends Metadata {
     private int retrieveExperiment(RunInfo run, int studyAccession) throws Exception {
         List<Experiment> experiments = metadata.getExperimentsFrom(studyAccession);
         Integer experimentAccession = null;
-        if (experiments == null || !experiments.isEmpty()) {
+        if (experiments != null && !experiments.isEmpty()) {
             Log.stdout("Please use one of the following experiments:");
             for (Experiment e : experiments) {
                 Log.stdout("\t" + e.getTitle());
             }
         }
         String experimentName = promptString("Experiment name", run.getExperimentName());
-        for (Experiment ex : experiments) {
+        if (experiments!=null)
+	for (Experiment ex : experiments) {
             if (ex.getTitle().equals(experimentName)) {
                 experimentAccession = ex.getSwAccession();
             }
@@ -331,7 +378,7 @@ public class BatchMetadataInjection extends Metadata {
                 printDefaults();
                 interactive = true;
                 ReturnValue rv = addExperiment();
-                experimentAccession = rv.getReturnValue();
+                experimentAccession = Integer.parseInt(rv.getAttribute("sw_accession"));
             } else {
                 Log.stdout("This tool does not support creating new experiments when experiments already exist.");
                 Log.stdout("You can create a new experiment for study " + studyAccession + " using the Metadata plugin.");
@@ -363,7 +410,7 @@ public class BatchMetadataInjection extends Metadata {
             printDefaults();
             interactive = true;
             ReturnValue rv = addStudy();
-            studyAccession = rv.getReturnValue();
+            studyAccession = Integer.parseInt(rv.getAttribute("sw_accession"));
         }
         return studyAccession;
     }
