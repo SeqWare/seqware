@@ -492,7 +492,7 @@ public class Metadata extends Plugin {
             promptInteger("organism_id", 31);
         }
         promptForFields(necessaryFields);
-
+	Log.error("checkme: " + checkMe);
         if (!fieldsConfirmed(necessaryFields) || checkMe <= 0) {
             if (checkMe <= 0) {
                 Log.stdout("You must provide experiment_accession and/or parent_sample_accession.");
