@@ -399,8 +399,10 @@ public class BatchMetadataInjection extends Metadata {
         Integer swAccession = null;
         Log.stdout("\n-------------Retrieving sequencer run-----------");
         String runName = promptString("name", run.getRunName());
-        for (SequencerRun sr : metadata.getAllSequencerRuns()) {
-            if (sr.getName().equals(runName)) {
+        List<SequencerRun> runs = metadata.getAllSequencerRuns();
+        if (runs!=null)
+        for (SequencerRun sr : runs) {
+            if (runName.equals(sr.getName())) {
                 Log.stdout("Using existing sequencer run:" + sr.getName() + " accession " + sr.getSwAccession());
                 swAccession = sr.getSwAccession();
             }
