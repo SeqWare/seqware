@@ -584,8 +584,8 @@ public class BatchMetadataInjection extends Metadata {
     }
 
     private void recordEdge(String type1, Integer accession1, String type2, Integer accession2) {
-        whatWeDid.append("\n\t\"").append(type1).append(" ").append(names.get(accession1)).append("\n").append(accession1);
-        whatWeDid.append("\" -> \"").append(type2).append(" ").append(names.get(accession2)).append("\n").append(accession2).append("\"");
+        whatWeDid.append("\n\t\"").append(type1).append(" ").append(names.get(accession1)).append("\\n").append(accession1);
+        whatWeDid.append("\" -> \"").append(type2).append(" ").append(names.get(accession2)).append("\\n").append(accession2).append("\"");
     }
 
     protected class RunInfo {
