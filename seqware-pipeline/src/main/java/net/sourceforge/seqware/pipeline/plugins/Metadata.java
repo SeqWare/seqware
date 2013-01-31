@@ -302,7 +302,7 @@ public class Metadata extends Plugin {
     private boolean notNullOrLessThanZero(String fieldName) {
         boolean usable = true;
         String field = fields.get(fieldName);
-        Log.stdout(field);
+        //Log.stdout(field);
         if (field == null) {
             usable = false;
         } else if (Integer.parseInt(field) <= 0) {
@@ -463,6 +463,7 @@ public class Metadata extends Plugin {
     protected void promptForStudy(String[] necessaryFields) {
         Log.stdout("---Create a study---");
         if (!fields.containsKey("study_type")) {
+            System.out.println();
             for (StudyType st : metadata.getStudyTypes()) {
                 Log.stdout(st.toString());
             }
@@ -479,20 +480,24 @@ public class Metadata extends Plugin {
 
         int checkMe = 0;
         if (!fields.containsKey("experiment_accession")) {
-            checkMe += promptInteger("experiment_accession", 0);
+            promptInteger("experiment_accession", 0);
         }
         if (!fields.containsKey("parent_sample_accession")) {
-            checkMe += promptInteger("parent_sample_accession", 0);
+            promptInteger("parent_sample_accession", 0);
         }
 
+        checkMe = Integer.parseInt(fields.get("experiment_accession"))+Integer.parseInt(fields.get("parent_sample_accession"));
+        
         if (!fields.containsKey("organism_id")) {
+            System.out.println();
             for (Organism o : metadata.getOrganisms()) {
                 Log.stdout(o.toString());
             }
             promptInteger("organism_id", 31);
         }
+        
         promptForFields(necessaryFields);
-	Log.error("checkme: " + checkMe);
+	
         if (!fieldsConfirmed(necessaryFields) || checkMe <= 0) {
             if (checkMe <= 0) {
                 Log.stdout("You must provide experiment_accession and/or parent_sample_accession.");
@@ -504,6 +509,7 @@ public class Metadata extends Plugin {
     protected void promptForSequencerRun(String[] necessaryFields) {
         Log.stdout("---Create a sequencer run---");
         if (!fields.containsKey("platform_accession")) {
+            System.out.println();
             for (Platform p : metadata.getPlatforms()) {
                 Log.stdout(p.toString());
             }
@@ -525,6 +531,7 @@ public class Metadata extends Plugin {
     protected void promptForExperiment(String[] necessaryFields) {
         Log.stdout("---Create an experiment---");
         if (!fields.containsKey("platform_id")) {
+            System.out.println();
             for (Platform p : metadata.getPlatforms()) {
                 Log.stdout(p.toString());
             }
@@ -543,24 +550,28 @@ public class Metadata extends Plugin {
             promptInteger("sequencer_run_accession", null);
         }
         if (!fields.containsKey("study_type_accession")) {
+            System.out.println();
             for (StudyType st : metadata.getStudyTypes()) {
                 Log.stdout(st.toString());
             }
             promptInteger("study_type_accession", 4);
         }
         if (!fields.containsKey("library_strategy_accession")) {
+            System.out.println();
             for (LibraryStrategy st : metadata.getLibraryStrategies()) {
                 Log.stdout(st.toString());
             }
             promptInteger("library_strategy_accession", null);
         }
         if (!fields.containsKey("library_selection_accession")) {
+            System.out.println();
             for (LibrarySelection st : metadata.getLibrarySelections()) {
                 Log.stdout(st.toString());
             }
             promptInteger("library_selection_accession", null);
         }
         if (!fields.containsKey("library_source_accession")) {
+            System.out.println();
             for (LibrarySource st : metadata.getLibrarySource()) {
                 Log.stdout(st.toString());
             }
@@ -611,6 +622,7 @@ public class Metadata extends Plugin {
         String prompt = string + (deflt == null ? ":" : "[" + deflt + "] :");
         int counter=0;
         while (title == null && counter++ < 10) {
+            System.out.println();
             title = ConsoleAdapter.getInstance().readLine(prompt);
             if (title.trim().isEmpty()) {
                 title = deflt;
@@ -625,6 +637,7 @@ public class Metadata extends Plugin {
         String prompt = string + (deflt == null ? ":" : "[" + deflt + "] :");
         int counter=0;
         while (title == null && counter++ < 10) {
+            System.out.println();
             String line = ConsoleAdapter.getInstance().readLine(prompt);
             if (line.trim().isEmpty()) {
                 title = deflt;
@@ -645,6 +658,7 @@ public class Metadata extends Plugin {
         String prompt = string + (deflt == null ? ":" : "[" + deflt + "] :");
         int counter=0;
         while (title == null && counter++ < 10) {
+            System.out.println();
             String line = ConsoleAdapter.getInstance().readLine(prompt);
             if (line.trim().isEmpty()) {
                 title = deflt;
@@ -667,8 +681,8 @@ public class Metadata extends Plugin {
         }
 
         String confirm = ConsoleAdapter.getInstance().readLine("Is this information correct? [y/n] :");
-        System.out.println("result: " + confirm);
-        if (confirm.trim().toLowerCase().equals("y") || confirm.trim().toLowerCase().equals("yes")) {
+        //System.out.println("result: " + confirm);
+        if (confirm.trim().toLowerCase().equals("y") || confirm.trim().toLowerCase().equals("yes") || confirm.trim().isEmpty()) {
             return true;
         } else {
             fields.clear();
