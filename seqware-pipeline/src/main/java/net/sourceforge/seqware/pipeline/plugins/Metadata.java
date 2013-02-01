@@ -617,60 +617,19 @@ public class Metadata extends Plugin {
     }
 
     protected String promptString(String string, String deflt) {
-        String title = null;
-
-        String prompt = string + (deflt == null ? ":" : "[" + deflt + "] :");
-        int counter=0;
-        while (title == null && counter++ < 10) {
-            System.out.println();
-            title = ConsoleAdapter.getInstance().readLine(prompt);
-            if (title.trim().isEmpty()) {
-                title = deflt;
-            }
-        }
+        String title = ConsoleAdapter.getInstance().promptString(string, deflt);
         fields.put(string, title);
         return title;
     }
 
     protected Integer promptInteger(String string, Integer deflt) {
-        Integer title = null;
-        String prompt = string + (deflt == null ? ":" : "[" + deflt + "] :");
-        int counter=0;
-        while (title == null && counter++ < 10) {
-            System.out.println();
-            String line = ConsoleAdapter.getInstance().readLine(prompt);
-            if (line.trim().isEmpty()) {
-                title = deflt;
-            } else {
-                try {
-                    title = Integer.parseInt(line);
-                } catch (NumberFormatException e) {
-                    Log.stdout(string + " must be an integer.");
-                }
-            }
-        }
+        Integer title = ConsoleAdapter.getInstance().promptInteger(string, deflt);
         fields.put(string, title.toString());
         return title;
     }
 
     protected Boolean promptBoolean(String string, Boolean deflt) {
-        Boolean title = null;
-        String prompt = string + (deflt == null ? ":" : "[" + deflt + "] :");
-        int counter=0;
-        while (title == null && counter++ < 10) {
-            System.out.println();
-            String line = ConsoleAdapter.getInstance().readLine(prompt);
-            if (line.trim().isEmpty()) {
-                title = deflt;
-            } else {
-                try {
-                    title = Boolean.parseBoolean(line);
-                } catch (NumberFormatException e) {
-                    Log.stdout(string + " must be true or false.");
-                }
-
-            }
-        }
+        Boolean title = ConsoleAdapter.getInstance().promptBoolean(string, deflt);
         fields.put(string, title.toString());
         return title;
     }
