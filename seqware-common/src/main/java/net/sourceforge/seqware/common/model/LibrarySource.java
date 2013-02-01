@@ -43,7 +43,8 @@ public class LibrarySource implements Serializable, Comparable<LibrarySource> {
 
     @Override
     public String toString() {
-        return "LibrarySource{" + "librarySourceId=" + librarySourceId + ", name=" + name + ", description=" + description + '}';
+        return new StringBuilder().append("LibrarySource ").append(librarySourceId)
+                .append(":\t").append(name).append("\t").append(description).toString();
     }
 
 
