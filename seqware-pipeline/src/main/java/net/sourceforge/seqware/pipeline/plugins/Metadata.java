@@ -46,7 +46,19 @@ public class Metadata extends Plugin {
 
     ReturnValue ret = new ReturnValue();
     BufferedWriter bw = null;
-    HashMap<String, String> fields = new HashMap<String, String>();
+    /**
+     * Generic HashMap is extended here to not add keys when they are null.
+     */
+    HashMap<String, String> fields = new HashMap<String, String>(){
+        @Override
+        public String put(String key, String value) {
+            if (value!=null)
+                return super.put(key, value);
+            else
+                return null;
+        }
+        
+    };
     protected boolean interactive = false;
 
     /**
