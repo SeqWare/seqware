@@ -118,8 +118,8 @@ public class MetadataWS extends Metadata {
      */
     
     
-  @Override
-  public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflow_class, String workflow_type, String workflow_engine) {
+    @Override
+    public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflow_class, String workflow_type, String workflow_engine) {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -158,7 +158,7 @@ public class MetadataWS extends Metadata {
         try {
             workflow = ll.addWorkflow(workflow);
             Log.stdout("WORKFLOW_ACCESSION: " + workflow.getSwAccession());
-      ret.setAttribute("sw_accession", workflow.getSwAccession().toString());
+            ret.setAttribute("sw_accession", workflow.getSwAccession().toString());
             ret.setReturnValue(workflow.getWorkflowId());
         } catch (Exception e) {
             e.printStackTrace();
@@ -177,19 +177,19 @@ public class MetadataWS extends Metadata {
         } else {
             MapTools.ini2RichMap(configFile, hm);
         }
-    
+
         // foreach workflow param add an entry in the workflow_param table
-    int count = 0;
+        int count = 0;
         for (String key : hm.keySet()) {
-        count++;
-        Log.info("Adding WorkflowParam: " + key);
+            count++;
+            Log.info("Adding WorkflowParam: " + key);
             ReturnValue rv = addWorkflowParam(hm, key, workflow);
             if (rv.getReturnValue() != ReturnValue.SUCCESS) {
                 Log.error("Problem adding WorkflowParam");
                 return rv;
             }
         }
-    Log.info(count + " WorkflowParams should have been added");
+        Log.info(count + " WorkflowParams should have been added");
         // add default params in workflow_param table
 
         // Log.info("Setting returned URI to " +
@@ -280,7 +280,7 @@ public class MetadataWS extends Metadata {
      * experiment_spot_design
      */
     @Override
-    public ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession, 
+    public ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession,
             Integer organismId, String description, String title) {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
@@ -288,7 +288,7 @@ public class MetadataWS extends Metadata {
         try {
 
             Sample s = new Sample();
-            
+
             Organism o = new Organism();
             o.setOrganismId(organismId);
 
@@ -614,8 +614,8 @@ public class MetadataWS extends Metadata {
                 break;
             }
         }
-    
-    
+
+
         Log.info("Done posting workflow param");
         // TODO: need to add support for pulldowns!
         // "pulldown", in which case we need to populate the pulldown table
@@ -1004,30 +1004,30 @@ public class MetadataWS extends Metadata {
         try {
             IUS ius = ll.existsIUS("/" + parentAccession);
             Lane lane = ll.existsLane("/" + parentAccession);
-      // this one won't be able to get back lanes and ius
+            // this one won't be able to get back lanes and ius
       WorkflowRun wr_withoutLanes = ll.findWorkflowRun("?id=" + workflowRunId /**+ "&show=lanes,ius"*/);
-      // this will, but uses seqware accessions
-      int accession = wr_withoutLanes.getSwAccession();
-      WorkflowRun wr_withLanesAndIUS = ll.findWorkflowRun("/" + accession + "?show=lanes,ius");
+            // this will, but uses seqware accessions
+            int accession = wr_withoutLanes.getSwAccession();
+            WorkflowRun wr_withLanesAndIUS = ll.findWorkflowRun("/" + accession + "?show=lanes,ius");
             if (ius != null) {
-        SortedSet<IUS> iuses = wr_withLanesAndIUS.getIus();
+                SortedSet<IUS> iuses = wr_withLanesAndIUS.getIus();
                 if (iuses == null) {
                     iuses = new TreeSet<IUS>();
                 }
                 iuses.add(ius);
-        wr_withLanesAndIUS.setIus(iuses);
+                wr_withLanesAndIUS.setIus(iuses);
 
-        ll.updateWorkflowRun("/" + accession, wr_withLanesAndIUS);
+                ll.updateWorkflowRun("/" + accession, wr_withLanesAndIUS);
 
             } else if (lane != null) {
-        SortedSet<Lane> lanes = wr_withLanesAndIUS.getLanes();
+                SortedSet<Lane> lanes = wr_withLanesAndIUS.getLanes();
                 if (lanes == null) {
                     lanes = new TreeSet<Lane>();
                 }
                 lanes.add(lane);
-        wr_withLanesAndIUS.setLanes(lanes);
+                wr_withLanesAndIUS.setLanes(lanes);
 
-        ll.updateWorkflowRun("/" + accession, wr_withLanesAndIUS);
+                ll.updateWorkflowRun("/" + accession, wr_withLanesAndIUS);
 
             } else {
                 Log.error("ERROR: SW Accession is neither a lane nor an IUS: " + parentAccession);
@@ -1362,10 +1362,10 @@ public class MetadataWS extends Metadata {
                 }
                 sb.append("\n");
         if (wp.getDefaultValue() == null){
-            sb.append(wp.getKey() + "=" + "\n");
+                    sb.append(wp.getKey() + "=" + "\n");
         } else{
-            sb.append(wp.getKey() + "=" + wp.getDefaultValue() + "\n");
-        }
+                    sb.append(wp.getKey() + "=" + wp.getDefaultValue() + "\n");
+                }
             }
 
         } catch (IOException ex) {
@@ -1519,7 +1519,7 @@ public class MetadataWS extends Metadata {
     public void annotateLane(int laneSWID, LaneAttribute laneAtt, Boolean skip) {
         try {
             Log.debug("Annotating Lane " + laneSWID + " with skip=" + skip + ", laneAtt = " + laneAtt);
-            Lane lane = ll.findLane("/" + laneSWID+"?show=attributes");
+            Lane lane = ll.findLane("/" + laneSWID + "?show=attributes");
             if (skip != null) {
                 lane.setSkip(skip);
             }
@@ -2090,14 +2090,10 @@ public class MetadataWS extends Metadata {
     public List<Lane> getLanesFrom(int sequencerRunAccession) {
         try {
             JaxbObject<LaneList> jaxb = new JaxbObject<LaneList>();
-            LaneList list = (LaneList) ll.findObject("/sequencerruns/" + sequencerRunAccession + "/lanes", "", jaxb, new LaneList());
+            LaneList list = (LaneList) ll.existsObject("/sequencerruns/" + sequencerRunAccession + "/lanes", "", jaxb, new LaneList());
             return list.getList();
-        } catch (IOException ex) {
-            Log.error("IOException while retrieving lanes from sequencer run", ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving lanes from sequencer run", ex);
-        } catch (NotFoundException ex) {
-            Log.debug("ResourceException while retrieving lanes from sequencer run", ex);
         }
         return null;
     }
@@ -2117,14 +2113,10 @@ public class MetadataWS extends Metadata {
         try {
             sb.append(laneOrSampleAccession).append("/ius");
             JaxbObject<IUSList> jaxb = new JaxbObject<IUSList>();
-            IUSList list = (IUSList) ll.findObject(sb.toString(), "", jaxb, new IUSList());
+            IUSList list = (IUSList) ll.existsObject(sb.toString(), "", jaxb, new IUSList());
             return list.getList();
-        } catch (IOException ex) {
-            Log.error("IOException while retrieving IUSes (barcodes) from lane or sample", ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving IUSes (barcodes) from lane or sample", ex);
-        } catch (NotFoundException ex) {
-            Log.debug("ResourceException while retrieving IUSes (barcodes) from lane or sample", ex);
         }
         return null;
     }
@@ -2133,14 +2125,10 @@ public class MetadataWS extends Metadata {
     public List<Experiment> getExperimentsFrom(int studyAccession) {
         try {
             JaxbObject<ExperimentList> jaxb = new JaxbObject<ExperimentList>();
-            ExperimentList list = (ExperimentList) ll.findObject("/studies/" + studyAccession + "/experiments", "", jaxb, new ExperimentList());
+            ExperimentList list = (ExperimentList) ll.existsObject("/studies/" + studyAccession + "/experiments", "", jaxb, new ExperimentList());
             return list.getList();
-        } catch (IOException ex) {
-            Log.error("IOException while retrieving experiments from study", ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving experiments from study", ex);
-        } catch (NotFoundException ex) {
-            Log.debug("ResourceException while retrieving experiments from study", ex);
         }
         return null;
     }
@@ -2149,14 +2137,10 @@ public class MetadataWS extends Metadata {
     public List<Sample> getSamplesFrom(int experimentAccession) {
         try {
             JaxbObject<SampleList> jaxb = new JaxbObject<SampleList>();
-            SampleList list = (SampleList) ll.findObject("/experiments/" + experimentAccession + "/samples", "", jaxb, new SampleList());
+            SampleList list = (SampleList) ll.existsObject("/experiments/" + experimentAccession + "/samples", "", jaxb, new SampleList());
             return list.getList();
-        } catch (IOException ex) {
-            Log.error("IOException while retrieving samples from experiment", ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving samples from experiment", ex);
-        } catch (NotFoundException ex) {
-            Log.debug("ResourceException while retrieving samples from experiment", ex);
         }
         return null;
     }
@@ -2165,14 +2149,10 @@ public class MetadataWS extends Metadata {
     public List<Sample> getChildSamplesFrom(int parentSampleAccession) {
         try {
             JaxbObject<SampleList> jaxb = new JaxbObject<SampleList>();
-            SampleList list = (SampleList) ll.findObject("/samples/" + parentSampleAccession + "/children", "", jaxb, new SampleList());
+            SampleList list = (SampleList) ll.existsObject("/samples/" + parentSampleAccession + "/children", "", jaxb, new SampleList());
             return list.getList();
-        } catch (IOException ex) {
-            Log.error("IOException while retrieving child samples from parent sample", ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving child samples from parent sample", ex);
-        } catch (NotFoundException ex) {
-            Log.debug("ResourceException while retrieving child samples from parent sample", ex);
         }
         return null;
     }
@@ -2181,14 +2161,10 @@ public class MetadataWS extends Metadata {
     public List<Sample> getParentSamplesFrom(int childSampleAccession) {
         try {
             JaxbObject<SampleList> jaxb = new JaxbObject<SampleList>();
-            SampleList list = (SampleList) ll.findObject("/samples/" + childSampleAccession + "/parents", "", jaxb, new SampleList());
+            SampleList list = (SampleList) ll.existsObject("/samples/" + childSampleAccession + "/parents", "", jaxb, new SampleList());
             return list.getList();
-        } catch (IOException ex) {
-            Log.error("IOException while retrieving parent samples from child sample", ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving parent samples from child sample", ex);
-        } catch (NotFoundException ex) {
-            Log.debug("ResourceException while retrieving parent samples from child sample", ex);
         }
         return null;
     }
@@ -2316,7 +2292,7 @@ public class MetadataWS extends Metadata {
             } catch (JAXBException ex) {
                 Log.error(ex);
             } catch (NotFoundException ex) {
-                Log.debug("Sample does not exist. Continuing.");
+                Log.debug("Processing does not exist. Continuing.");
             }
             return processing;
         }
@@ -2403,6 +2379,20 @@ public class MetadataWS extends Metadata {
                 Log.error(ex);
             }
             return sample;
+        }
+
+        public Object existsObject(String uri, String searchString, JaxbObject jaxbObject, Object parent) throws JAXBException {
+            Object object = parent;
+            try {
+                object = getObject(uri, searchString, jaxbObject, parent);
+            } catch (SAXException ex) {
+                Log.error("Error decoding message from server for query: " + uri + searchString, ex);
+            } catch (IOException ex) {
+                Log.debug("Resource at " + uri + searchString + " does not exist. Continuing.", ex);
+            } catch (ResourceException ex) {
+                Log.debug("Resource at " + uri + searchString + " does not exist. Continuing.", ex);
+            }
+            return object;
         }
 
         public void clean_up() {
@@ -2510,14 +2500,14 @@ public class MetadataWS extends Metadata {
             Workflow w = new Workflow();
             JaxbObject<Workflow> jaxb = new JaxbObject<Workflow>();
             return (Workflow) findObject("/workflowruns", "/" + workflowRunAccession + "/workflow", jaxb, w);
-    }
-    
-    private List<WorkflowRun> findWorkflowByFiles(List<Integer> files, String search_type) throws IOException, JAXBException {
-      WorkflowRunList2 w = new WorkflowRunList2();
-      JaxbObject<WorkflowRunList2> jaxb = new JaxbObject<WorkflowRunList2>();
+        }
+
+        private List<WorkflowRun> findWorkflowByFiles(List<Integer> files, String search_type) throws IOException, JAXBException {
+            WorkflowRunList2 w = new WorkflowRunList2();
+            JaxbObject<WorkflowRunList2> jaxb = new JaxbObject<WorkflowRunList2>();
       String fileList = StringUtils.join(files.iterator(),',');
-      WorkflowRunList2 wrl2 = (WorkflowRunList2) findObject("/reports/fileworkflowruns", "?files=" + fileList + "&search=" + search_type, jaxb, w);
-      return wrl2.getList();
+            WorkflowRunList2 wrl2 = (WorkflowRunList2) findObject("/reports/fileworkflowruns", "?files=" + fileList + "&search=" + search_type, jaxb, w);
+            return wrl2.getList();
         }
 
         private List<WorkflowRun> findWorkflowRuns(String searchString) throws IOException, JAXBException {
@@ -2604,6 +2594,20 @@ public class MetadataWS extends Metadata {
 
             } catch (Exception ex) {
                 Log.error("MetadataWS.getString " + ex.getMessage());
+            } finally {
+                if (result != null) {
+                    try {
+                        result.exhaust();
+                    } catch (IOException ex) {
+                        Log.error(ex);
+                    }
+                    result.release();
+                }
+                if (cResource.getResponseEntity() != null) {
+                    cResource.getResponseEntity().release();
+                }
+                cResource.release();
+
             }
             return (text);
         }
@@ -2625,26 +2629,36 @@ public class MetadataWS extends Metadata {
             return list.getList();
         }
 
-        private Object findObject(String uri, String searchString, JaxbObject jaxb, Object parent) throws IOException,
-                JAXBException, NotFoundException {
-            Representation result = null;
-            ClientResource cResource = resource.getChild(version + uri + searchString);
-            Log.info("findObject: " + cResource);
+        private Object findObject(String uri, String searchString, JaxbObject jaxb, Object parent)
+                throws IOException, NotFoundException {
+
             Class clazz = parent.getClass();
             try {
+                parent = getObject(uri, searchString, jaxb, parent);
+            } catch (SAXException e) {
+                Log.error("Error parsing response from server with query:" + uri + searchString, e);
+            } catch (ResourceException e) {
+                if (!e.getStatus().equals(Status.CLIENT_ERROR_NOT_FOUND)) {
+                    Log.error("Server error with query:" + uri + searchString, e);
+                    throw e;
+                } else {
+                    parent=null;
+                }
+            }
+            // SEQWARE-1331, this was commented out for some reason, but that causes the checking of incorrect accessions to fail
+            testNull(parent, clazz, searchString);
+            return parent;
+        }
+
+        private Object getObject(String uri, String searchString, JaxbObject jaxb, Object parent)
+                throws IOException, SAXException {
+            Representation result = null;
+            ClientResource cResource = resource.getChild(version + uri + searchString);
+            try {
+                Log.info("getObject: " + cResource);
                 result = cResource.get();
                 String text = result.getText();
                 parent = XmlTools.unMarshal(jaxb, parent, text);
-
-            } catch (SAXException ex) {
-                Log.error("MetadataWS.findObject with search string " + searchString + " encountered error " + ex.getMessage());
-                ex.printStackTrace();
-                parent = null;
-            } catch (ResourceException e) {
-                Log.error("MetadataWS.findObject with search string " + searchString + " encountered error " + e.getMessage());
-                Log.error(" please check that the object you are looking for exists in the MetaDB");
-
-                parent = null;
             } finally {
                 if (result != null) {
                     result.exhaust();
@@ -2654,9 +2668,8 @@ public class MetadataWS extends Metadata {
                     cResource.getResponseEntity().release();
                 }
                 cResource.release();
+
             }
-            // SEQWARE-1331, this was commented out for some reason, but that causes the checking of incorrect accessions to fail
-            testNull(parent, clazz, searchString);
             return parent;
         }
 
