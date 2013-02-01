@@ -26,6 +26,7 @@ import java.util.Set;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -41,12 +42,19 @@ public class ParseMisecFile extends BatchMetadataParser {
         super(metadata);
     }
 
-    public RunInfo parseMiSecFile(String filepath) throws Exception{
+    public RunInfo parseMiSecFile(String filepath) throws Exception {
         RunInfo run = null;
         File file = new File(filepath);
         try {
             BufferedReader freader = new BufferedReader(new FileReader(file));
             run = parseMiSecHeader(freader, filepath);
+            String runName = ConsoleAdapter.getInstance().promptString("Sequencer run name", run.getRunName());
+            String studyName = ConsoleAdapter.getInstance().promptString("Project name", run.getStudyTitle());
+            String expName = ConsoleAdapter.getInstance().promptString("Experiment name", run.getExperimentName());
+            run.setRunName(runName);
+            run.setStudyTitle(studyName);
+            run.setExperimentName(expName);
+            
             Set<LaneInfo> lanes = parseMiSecData(freader);
             freader.close();
 
@@ -66,7 +74,7 @@ public class ParseMisecFile extends BatchMetadataParser {
         Set<SampleInfo> samples = new HashSet<SampleInfo>();
 
         //there is only one lane in MiSec
-        LaneInfo laneInfo = generateLaneInfo("1",4);
+        LaneInfo laneInfo = generateLaneInfo("1", 4);
         laneInfo.setSamples(samples);
 
         String[] headerStrings = freader.readLine().split(",");
@@ -106,6 +114,10 @@ public class ParseMisecFile extends BatchMetadataParser {
                     librarySizeCode, barcode, organismId, targetedResequencing,
                     tissuePreparation);
 
+            info.setSampleDescription(info.getName());
+            info.setIusName(info.getBarcode());
+            info.setIusDescription(info.getBarcode());
+
 
             String tissueRegion = sampleInfo[2].substring(0, 1);
             if (StringUtils.isNumeric(tissueRegion)) {
@@ -113,7 +125,7 @@ public class ParseMisecFile extends BatchMetadataParser {
             }
             samples.add(info);
         }
-        
+
         Set<LaneInfo> lanes = new HashSet<LaneInfo>();
         lanes.add(laneInfo);
         return lanes;
@@ -137,20 +149,20 @@ public class ParseMisecFile extends BatchMetadataParser {
         runInfo.setRunDescription(runInfo.getRunName());
         runInfo.setPairedEnd(true);
         runInfo.setPlatformId(26);
-        
+
         runInfo.setStudyTitle(headerInfo.get("Project Name").split("_")[0]);
         runInfo.setStudyCenterName("Ontario Institute for Cancer Research");
         runInfo.setStudyCenterProject(runInfo.getStudyTitle().replace(" ", ""));
         runInfo.setStudyDescription(runInfo.getStudyTitle());
         //runInfo.setStudyType(studyType);
-        
+
         runInfo.setExperimentName(headerInfo.get("Experiment Name").split("_")[0]);
         runInfo.setExperimentDescription(runInfo.getExperimentName());
-        
-        
+
+
         runInfo.setWorkflowType(headerInfo.get("Workflow"));
         runInfo.setAssayType(headerInfo.get("Assay"));
-        
+
 
         return runInfo;
     }

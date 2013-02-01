@@ -16,21 +16,22 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import java.lang.String;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.openide.util.lookup.ServiceProvider;
-import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
+import joptsimple.OptionParser;
 import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
+import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.LaneInfo;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.ParseMisecFile;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.RunInfo;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.SampleInfo;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * <p>BatchImport class.</p>
@@ -45,36 +46,18 @@ public class BatchMetadataInjection extends Metadata {
     private StringBuffer whatWeDid = new StringBuffer();
     private Map<Integer, String> names;
 
-    protected String choiceOf(String sampleName, String title, String[] choices, String deflt) {
-        String choice = "";
-        int choiceInt = 0;
-        Log.stdout("\nFor sample " + sampleName + ", choose one of the following for " + title + " or press enter to skip:");
-        for (int i = 1; i <= choices.length; i++) {
-            Log.stdout(i + " : " + choices[i - 1]);
-            if (deflt.equals(choices[i - 1])) {
-                choiceInt = i;
-            }
-        }
-        choiceInt = promptInteger(title, choiceInt);
-        if (choiceInt == 0) { //no selection
-        } else if (choiceInt == choices.length) {
-            choice = promptString("Please specify :", null);
-        } else if (choiceInt <= 0 || choiceInt > choices.length) {
-            Log.stdout("Please choose from the given options.");
-            choice = choiceOf(sampleName, title, choices, deflt);
-        } else {
-            choice = choices[choiceInt - 1];
-        }
-        return choice;
-    }
-
     //private boolean createStudy = false;
     /**
      * <p>Constructor for AttributeAnnotator.</p>
      */
     public BatchMetadataInjection() {
         super();
-        parser.accepts("misec-sample-sheet", "the location of the MiSec Sample Sheet").withRequiredArg();
+        parser = new OptionParser();
+        parser.accepts("misec-sample-sheet", "The location of the MiSec Sample Sheet").withRequiredArg();
+//        parser.acceptsAll(Arrays.asList("f", "field"), "Optional: the field you want to specify so that you are not prompted."
+//                + "This is encoded as '<field_name>::<value>', you should use single quotes when the "
+//                + "value includes spaces. You supply multiple --field arguments.");
+//        parser.acceptsAll(Arrays.asList("lf", "list-fields"), "Optional: lists the fields that are available to specify at run time.");
         ret.setExitStatus(ReturnValue.SUCCESS);
         names = new HashMap<Integer, String>();
     }
@@ -84,15 +67,10 @@ public class BatchMetadataInjection extends Metadata {
      */
     @Override
     public ReturnValue init() {
-        if (options.has("create") && options.has("table")) {
-        }
-        if (options.has("table") && options.has("list-fields")) {
-            // list the fields for this table
-            ret = (listFields((String) options.valueOf("table")));
-            return ret;
-        }
-        whatWeDid.append("digraph dag {");
 
+
+
+        whatWeDid.append("digraph dag {");
         return ret;
     }
 
@@ -109,11 +87,13 @@ public class BatchMetadataInjection extends Metadata {
      */
     @Override
     public ReturnValue do_run() {
-        if (options.has("misec-sample-sheet")) {
+        if (options.has("list-fields")) {
+            
+        } else if (options.has("misec-sample-sheet")) {
             String filepath = (String) options.valueOf("misec-sample-sheet");
-            ParseMisecFile parser = new ParseMisecFile(metadata);
+            ParseMisecFile misecParser = new ParseMisecFile(metadata);
             try {
-                RunInfo run = parser.parseMiSecFile(filepath);
+                RunInfo run = misecParser.parseMiSecFile(filepath);
                 inject(run);
             } catch (Exception ex) {
                 Log.error("The run could not be imported.", ex);
@@ -152,7 +132,7 @@ public class BatchMetadataInjection extends Metadata {
 
         List<Lane> existingLanes = metadata.getLanesFrom(sequencerRunAccession);
         if (existingLanes != null && !existingLanes.isEmpty()) {
-            Boolean yorn = promptBoolean("This sequencer run already has " + existingLanes.size() + " lanes. Continue?", Boolean.TRUE);
+            Boolean yorn = ConsoleAdapter.getInstance().promptBoolean("This sequencer run already has " + existingLanes.size() + " lanes. Continue?", Boolean.TRUE);
             if (yorn.equals(Boolean.FALSE)) {
                 throw new Exception("Sequencer run " + sequencerRunAccession + " already has lanes.");
             }
@@ -243,8 +223,6 @@ public class BatchMetadataInjection extends Metadata {
     }
 
     private int createIUS(SampleInfo barcode, int laneAccession, int sampleAccession) {
-        Log.stdout("\n-------Creating a new IUS---------");
-
         fields.clear();
         fields.put("lane_accession", String.valueOf(laneAccession));
         fields.put("sample_accession", String.valueOf(sampleAccession));
@@ -272,7 +250,6 @@ public class BatchMetadataInjection extends Metadata {
     }
 
     private int createSample(String name, String description, int experimentAccession, int parentSampleAccession, String organismId, boolean interactive) {
-        Log.stdout("\n--------Creating a new sample---------");
 
         fields.clear();
         fields.put("experiment_accession", String.valueOf(experimentAccession));
@@ -294,7 +271,6 @@ public class BatchMetadataInjection extends Metadata {
 //    private int retrieveExperiment(RunInfo run, int studyAccession) {
 //    }
     private int createLane(LaneInfo lane, int sequencerRunAccession) {
-        Log.stdout("\n--------Creating a new lane---------");
 
         fields.clear();
         fields.put("skip", lane.getLaneSkip().toString());
@@ -326,23 +302,22 @@ public class BatchMetadataInjection extends Metadata {
     private int createRun(RunInfo run) throws Exception {
         Integer swAccession = null;
         Log.stdout("\n-------------Retrieving sequencer run-----------");
-        String runName = ConsoleAdapter.getInstance().promptString("name", run.getRunName());
         List<SequencerRun> runs = metadata.getAllSequencerRuns();
         if (runs != null) {
             for (SequencerRun sr : runs) {
-                if (runName.equals(sr.getName())) {
+                if (run.getRunName().equals(sr.getName())) {
                     Log.stdout("Using existing sequencer run:" + sr.getName() + " accession " + sr.getSwAccession());
                     swAccession = sr.getSwAccession();
+                    break;
                 }
             }
         }
         if (swAccession == null) {
-            Log.stdout("\n--------Creating a new sequencer run---------");
             fields.clear();
             fields.put("platform_accession", run.getPlatformId());
             fields.put("skip", String.valueOf(run.getRunSkip()));
             fields.put("paired_end", String.valueOf(run.isPairedEnd()));
-            fields.put("name", runName);
+            fields.put("name", run.getRunName());
             fields.put("description", run.getRunDescription());
 //        printDefaults();
             interactive = true;
@@ -354,7 +329,7 @@ public class BatchMetadataInjection extends Metadata {
             metadata.annotateSequencerRun(swAccession, run.getRunAttributes());
         }
 
-        names.put(swAccession, runName);
+        names.put(swAccession, run.getRunName());
         return swAccession;
     }
 
@@ -368,17 +343,17 @@ public class BatchMetadataInjection extends Metadata {
                 Log.stdout("\t" + e.getTitle());
             }
         }
-        String experimentName = ConsoleAdapter.getInstance().promptString("Experiment name", run.getExperimentName());
         if (experiments != null) {
             for (Experiment ex : experiments) {
-                if (ex.getTitle().equals(experimentName)) {
+                if (ex.getTitle().equals(run.getExperimentName())) {
+                    Log.stdout("Using existing experiment:" + ex.getName() + " accession " + ex.getSwAccession());
                     experimentAccession = ex.getSwAccession();
                 }
             }
         }
         if (experimentAccession == null) {
             if (experiments == null || experiments.isEmpty()) {
-                Log.stdout("\n--------Creating a new experiment---------");
+                Log.stdout("\n--------Adding an experiment---------");
 
                 fields.clear();
                 fields.put("study_accession", String.valueOf(studyAccession));
@@ -402,7 +377,7 @@ public class BatchMetadataInjection extends Metadata {
             metadata.annotateExperiment(experimentAccession, run.getExperimentAttributes());
         }
 
-        names.put(experimentAccession, experimentName);
+        names.put(experimentAccession, run.getExperimentName());
         recordEdge("Study", studyAccession, "Experiment", experimentAccession);
 
         return experimentAccession;
@@ -412,17 +387,15 @@ public class BatchMetadataInjection extends Metadata {
         Log.stdout("\n--------Retrieving studies---------");
         List<Study> studies = metadata.getAllStudies();
         Integer studyAccession = null;
-        String studyName = ConsoleAdapter.getInstance().promptString("Study name", run.getStudyTitle());
         for (Study st : studies) {
-            if (st.getTitle().equals(studyName)) {
+            if (st.getTitle().equals(run.getStudyTitle())) {
+                Log.stdout("Using existing study:" + st.getTitle() + " accession " + st.getSwAccession());
                 studyAccession = st.getSwAccession();
             }
         }
         if (studyAccession == null) {
-            Log.stdout("\n--------Creating a new study---------");
-
             fields.clear();
-            fields.put("title", studyName);
+            fields.put("title", run.getStudyTitle());
             fields.put("description", run.getStudyDescription());
             fields.put("center_name", run.getStudyCenterName());
             fields.put("center_project_name", run.getStudyCenterProject());
@@ -438,7 +411,7 @@ public class BatchMetadataInjection extends Metadata {
             metadata.annotateStudy(studyAccession, run.getStudyAttributes());
         }
 
-        names.put(studyAccession, studyName);
+        names.put(studyAccession, run.getStudyTitle());
         return studyAccession;
     }
 

@@ -61,15 +61,16 @@ public abstract class BatchMetadataParser {
                 choiceInt = i;
             }
         }
-        choiceInt = ConsoleAdapter.getInstance().promptInteger(title, choiceInt);
-        if (choiceInt == 0) { //no selection
-        } else if (choiceInt == choices.length) {
-            choice = ConsoleAdapter.getInstance().promptString("Please specify", null);
-        } else if (choiceInt <= 0 || choiceInt > choices.length) {
-            Log.stdout("Please choose from the given options.");
-            choice = choiceOf(sampleName, title, choices, deflt);
-        } else {
-            choice = choices[choiceInt - 1];
+        while (choice == null || choice.isEmpty()) {
+            choiceInt = ConsoleAdapter.getInstance().promptInteger(title, choiceInt);
+            if (choiceInt == 0) { //no selection
+            } else if (choiceInt == choices.length) {
+                choice = ConsoleAdapter.getInstance().promptString("Please specify", null);
+            } else if (choiceInt <= 0 || choiceInt > choices.length) {
+                Log.stdout("Please choose from the given options.");
+            } else {
+                choice = choices[choiceInt - 1];
+            }
         }
         return choice;
     }
@@ -86,6 +87,19 @@ public abstract class BatchMetadataParser {
             }
         }
         return organismId;
+    }
+
+    protected RunInfo generateRunInfo(String runName, String studyTitle,
+            String experimentName, int platformId, int studyType) {
+        RunInfo runInfo = new RunInfo();
+
+        runInfo.setStudyTitle(studyTitle);
+        runInfo.setRunName(runName);
+        runInfo.setExperimentName(experimentName);
+        runInfo.setPlatformId(platformId);
+        runInfo.setStudyType(studyType);
+
+        return runInfo;
     }
 
     protected LaneInfo generateLaneInfo(String laneNumber, int studyTypeAccession) {
@@ -132,7 +146,7 @@ public abstract class BatchMetadataParser {
                 this.tior = tissueOrigin;
             }
         }
-        if (tissueType == null || tissuePreparation.isEmpty()) {
+        if (tissuePreparation == null || tissuePreparation.isEmpty()) {
             tissuePreparation = choiceOf(prettyName, "Tissue Preparation", tissuePreparationList, this.tipr);
             this.tipr = tissuePreparation;
         }
