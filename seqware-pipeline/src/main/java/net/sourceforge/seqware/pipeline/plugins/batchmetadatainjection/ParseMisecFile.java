@@ -26,7 +26,6 @@ import java.util.Set;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -36,10 +35,9 @@ import org.apache.commons.lang.StringUtils;
 public class ParseMisecFile extends BatchMetadataParser {
 
     private ReturnValue ret = new ReturnValue();
-    private Metadata metadata;
 
-    public ParseMisecFile(Metadata metadata) {
-        super(metadata);
+    public ParseMisecFile(Metadata metadata, Map<String, String> fields) {
+        super(metadata, fields);
     }
 
     public RunInfo parseMiSecFile(String filepath) throws Exception {
@@ -48,13 +46,13 @@ public class ParseMisecFile extends BatchMetadataParser {
         try {
             BufferedReader freader = new BufferedReader(new FileReader(file));
             run = parseMiSecHeader(freader, filepath);
-            String runName = ConsoleAdapter.getInstance().promptString("Sequencer run name", run.getRunName());
-            String studyName = ConsoleAdapter.getInstance().promptString("Project name", run.getStudyTitle());
-            String expName = ConsoleAdapter.getInstance().promptString("Experiment name", run.getExperimentName());
+            String runName = prompt("Sequencer run name", run.getRunName(), Field.sequencer_run_name);
+            String studyName = prompt("Study name", run.getStudyTitle(), Field.study_name);
+            String expName = prompt("Experiment name", run.getExperimentName(), Field.experiment_name);
             run.setRunName(runName);
             run.setStudyTitle(studyName);
             run.setExperimentName(expName);
-            
+
             Set<LaneInfo> lanes = parseMiSecData(freader);
             freader.close();
 

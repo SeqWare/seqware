@@ -27,10 +27,7 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
-import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.LaneInfo;
-import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.ParseMisecFile;
-import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.RunInfo;
-import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.SampleInfo;
+import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.*;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -52,12 +49,13 @@ public class BatchMetadataInjection extends Metadata {
      */
     public BatchMetadataInjection() {
         super();
-        parser = new OptionParser();
+//        parser = new OptionParser();
         parser.accepts("misec-sample-sheet", "The location of the MiSec Sample Sheet").withRequiredArg();
 //        parser.acceptsAll(Arrays.asList("f", "field"), "Optional: the field you want to specify so that you are not prompted."
 //                + "This is encoded as '<field_name>::<value>', you should use single quotes when the "
 //                + "value includes spaces. You supply multiple --field arguments.");
 //        parser.acceptsAll(Arrays.asList("lf", "list-fields"), "Optional: lists the fields that are available to specify at run time.");
+//        parser.accepts("interactive", "Optional: ");
         ret.setExitStatus(ReturnValue.SUCCESS);
         names = new HashMap<Integer, String>();
     }
@@ -88,21 +86,29 @@ public class BatchMetadataInjection extends Metadata {
     @Override
     public ReturnValue do_run() {
         if (options.has("list-fields")) {
-            
-        } else if (options.has("misec-sample-sheet")) {
-            String filepath = (String) options.valueOf("misec-sample-sheet");
-            ParseMisecFile misecParser = new ParseMisecFile(metadata);
-            try {
-                RunInfo run = misecParser.parseMiSecFile(filepath);
-                inject(run);
-            } catch (Exception ex) {
-                Log.error("The run could not be imported.", ex);
+            for (BatchMetadataParser.Field field : BatchMetadataParser.Field.values()) {
+                Log.stdout(field.toString());
             }
         } else {
-            Log.stdout("Combination of parameters not recognized!");
-            Log.stdout(this.get_syntax());
-            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            if (options.has("field")) {
+                parseFields();                
+            }
+            if (options.has("misec-sample-sheet")) {
+                parseFields();          
+                String filepath = (String) options.valueOf("misec-sample-sheet");
+                ParseMisecFile misecParser = new ParseMisecFile(metadata, (Map<String,String>)fields.clone());
+                try {
+                    RunInfo run = misecParser.parseMiSecFile(filepath);
+                    inject(run);
+                } catch (Exception ex) {
+                    Log.error("The run could not be imported.", ex);
+                }
+            } else {
+                Log.stdout("Combination of parameters not recognized!");
+                Log.stdout(this.get_syntax());
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
 
+            }
         }
         return ret;
     }
