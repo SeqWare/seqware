@@ -56,7 +56,8 @@ public class Organism implements Serializable, Comparable<Organism> {
 
     @Override
     public String toString() {
-        return "Organism{" + "organismId=" + organismId + ", name=" + name + ", code=" + code + ", accession=" + accession + ", ncbiTaxId=" + ncbiTaxId + '}';
+        return new StringBuilder().append("Organism ").append(organismId)
+                .append(":\t").append(name).toString();
     }
 
 	/**
