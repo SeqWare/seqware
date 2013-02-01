@@ -305,6 +305,7 @@ public class WorkflowPlugin extends Plugin {
 				+ " this most likely means the application is alredy running and this instance will exit!",
 			e);
 		ret.setExitStatus(ReturnValue.FAILURE);
+                return ret;
 	    }
 
             launchScheduledWorkflows(w, metadataWriteback);
@@ -468,24 +469,33 @@ public class WorkflowPlugin extends Plugin {
                 
                 boolean validWorkflowRunByHost = isWorkflowRunValidByLocalhost(wr);
                 
-                if (validWorkflowRunByHost) {
-                    Log.stdout("Valid run by host check: " + wr.getSwAccession());
-                    WorkflowRun wrWithWorkflow = this.metadata
-                            .getWorkflowRunWithWorkflow(wr.getSwAccession()
-                                    .toString());
-                    boolean requiresNewLauncher = WorkflowV2Utility.requiresNewLauncher(wrWithWorkflow.getWorkflow());
-                    if (!requiresNewLauncher){
-                        Log.stdout("Launching via old launcher: " + wr.getSwAccession());
-                      w.launchScheduledBundle(wrWithWorkflow.getWorkflow()
-                            .getSwAccession().toString(), wr
-                            .getSwAccession().toString(),
-                            metadataWriteback, options.has(WAIT));
-                    } else{
-                        Log.stdout("Launching via new launcher: " + wr.getSwAccession());
-                        this.launchNewWorkflow(options, config, params, metadata, wr.getWorkflowAccession(), wr.getSwAccession());
+                // SEQWARE-1451
+                // Workflow launcher totally dies one workflow freemarker run dies
+                // let's just wrap and report these errors and fail onto the next one
+                try {
+
+                    if (validWorkflowRunByHost) {
+                        Log.stdout("Valid run by host check: " + wr.getSwAccession());
+                        WorkflowRun wrWithWorkflow = this.metadata
+                                .getWorkflowRunWithWorkflow(wr.getSwAccession()
+                                .toString());
+                        boolean requiresNewLauncher = WorkflowV2Utility.requiresNewLauncher(wrWithWorkflow.getWorkflow());
+                        if (!requiresNewLauncher) {
+                            Log.stdout("Launching via old launcher: " + wr.getSwAccession());
+                            w.launchScheduledBundle(wrWithWorkflow.getWorkflow()
+                                    .getSwAccession().toString(), wr
+                                    .getSwAccession().toString(),
+                                    metadataWriteback, options.has(WAIT));
+                        } else {
+                            Log.stdout("Launching via new launcher: " + wr.getSwAccession());
+                            WorkflowPlugin.launchNewWorkflow(options, config, params, metadata, wr.getWorkflowAccession(), wr.getSwAccession());
+                        }
+                    } else {
+                        Log.stdout("Invalid run by host check: " + wr.getSwAccession());
                     }
-                } else{
-                    Log.stdout("Invalid run by host check: " + wr.getSwAccession());
+
+                } catch (Exception e) {
+                    Log.fatal("Workflowrun launch with accession: "+wr.getSwAccession()+" failed", e);
                 }
             }
         }
