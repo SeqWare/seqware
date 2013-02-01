@@ -189,16 +189,21 @@ public class WorkflowDataModelFactory {
         dataModel.getEnv().setOOZIE_APP_PATH(config.get("OOZIE_APP_PATH"));
 
         //get workflow-run-accession
-        if (options.has("status") == false && options.has(("workflow-accession"))) {
-            int workflowAccession_options = Integer.parseInt((String) options.valueOf("workflow-accession"));
-            int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession_options);
-            //configs.put("workflow-run-accession", ""+workflowrunaccession);
-            dataModel.setWorkflow_run_accession(String.valueOf(workflowrunaccession));
-        } else if (options.has("status") == false && workflowAccession != null){
-            int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession);
-            //configs.put("workflow-run-accession", ""+workflowrunaccession);
-            dataModel.setWorkflow_run_accession(String.valueOf(workflowrunaccession));
+        if (options.has("status") == false) {
+            if (workflowAccession != null && workflowRunAccession == null) {
+                int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession);
+                dataModel.setWorkflow_accession(Integer.toString(workflowAccession));
+                dataModel.setWorkflow_run_accession(String.valueOf(workflowrunaccession));
+            } else if (workflowAccession != null && workflowRunAccession != null) {
+                dataModel.setWorkflow_accession(Integer.toString(workflowAccession));
+                dataModel.setWorkflow_run_accession(String.valueOf(workflowRunAccession));
+            } else{
+                assert(false);
+                Log.error("This condition should never be reached");
+                throw new UnsupportedOperationException();
+            }
         }
+        
         dataModel.setConfigs(configs);
 
         //parse XML or Java Object for
