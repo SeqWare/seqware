@@ -191,7 +191,8 @@ public class WorkflowDataModelFactory {
         //get workflow-run-accession
         if (options.has("status") == false) {
             if (workflowAccession != null && workflowRunAccession == null) {
-                int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession);
+                int workflowrunid = this.metadata.add_workflow_run(workflowAccession);
+                int workflowrunaccession = this.metadata.get_workflow_run_accession(workflowrunid);
                 dataModel.setWorkflow_accession(Integer.toString(workflowAccession));
                 dataModel.setWorkflow_run_accession(String.valueOf(workflowrunaccession));
             } else if (workflowAccession != null && workflowRunAccession != null) {
