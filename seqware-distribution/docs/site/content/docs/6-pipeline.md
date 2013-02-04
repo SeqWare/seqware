@@ -21,6 +21,8 @@ markdown:              basic
 * [Generic Pipeline Modules](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Available_Modules) : Generic Modules for your workflows
 * <a href="/docs/14-workflow-mvn/">Creating Workflows Using Maven Archetypes</a>: Creating New Workflow Bundles and Modules Using Maven Archetypes.
 * [Deciders](/docs/18-deciders/): Small programs that link the results of a MetaDB query to a particular workflow template 
+* TODO, Magic Variables: we need to document all the magic variables that are filled in in the various layers (config, metadata.xml, FTL, etc)
+* TODO, Building Workflow Bundles with Large Dependencies: as you write workflows using the Maven Archetype system you will want to include large files (such as genome indexes) within the bundles but the time it takes to include these in the build process ('mvn install') will get really rediculous.  Worse, every time you build the workflow using Maven it will copy these resources again, turning a process that should take a few minutes into something that can take hours! This is a simple workaround using a symlink plugin in Maven to eliminate these time-consuming copy steps.
 
 ##Reporting Manuals
 
