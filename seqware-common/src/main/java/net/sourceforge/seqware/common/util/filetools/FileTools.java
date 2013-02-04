@@ -872,6 +872,12 @@ public class FileTools {
     }
   }
   
+  public static String getFilename(String filePath) {
+    if (filePath == null || "".equals(filePath)) { return null; }
+    String[] tokens = filePath.split("/");
+    return(tokens[tokens.length-1]);
+  }
+  
   /**
    * Get the localhost and a return value describing the failure condition
    * if we are unable to get the localhost
