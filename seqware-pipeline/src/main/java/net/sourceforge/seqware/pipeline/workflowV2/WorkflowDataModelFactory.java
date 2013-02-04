@@ -189,7 +189,7 @@ public class WorkflowDataModelFactory {
         dataModel.getEnv().setOOZIE_APP_PATH(config.get("OOZIE_APP_PATH"));
 
         //get workflow-run-accession
-        if (options.has("status") == false) {
+        if (options.has("status") == false && dataModel.isMetadataWriteBack()) {
             if (workflowAccession != null && workflowRunAccession == null) {
                 int workflowrunid = this.metadata.add_workflow_run(workflowAccession);
                 int workflowrunaccession = this.metadata.get_workflow_run_accession(workflowrunid);
