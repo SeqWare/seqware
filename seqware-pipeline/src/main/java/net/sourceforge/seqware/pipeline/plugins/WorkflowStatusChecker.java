@@ -277,7 +277,7 @@ public class WorkflowStatusChecker extends Plugin {
             if (options.has("force-host") && options.valueOf("force-host") != null
                     && !((String) options.valueOf("force-host")).equals(wr.getHost())) {
                 hostMatch = false;
-            } else if (!options.has("force-host") && WorkflowStatusChecker.this.hostname != null && !WorkflowStatusChecker.this.equals(wr.getHost())) {
+            } else if (!options.has("force-host") && WorkflowStatusChecker.this.hostname != null && !WorkflowStatusChecker.this.hostname.equals(wr.getHost())) {
                 hostMatch = false;
             }
 
