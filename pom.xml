@@ -150,6 +150,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-exec</artifactId>
+                <version>${commons-exec.version}</version>
+            </dependency>
             <!-- while moving to HubFlow, the combination of HubFlow and maven:prepare is causing problems.
           		release:update-versions seems to have an easier time with versions defined here -->
             <dependency>
@@ -685,6 +690,19 @@
                     <artifactId>versions-maven-plugin</artifactId>
                     <version>1.3.1</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <inherited>true</inherited>
+                    <configuration>
+                        <archive>                   
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>      
             </plugins>
         </pluginManagement>
         <plugins>
