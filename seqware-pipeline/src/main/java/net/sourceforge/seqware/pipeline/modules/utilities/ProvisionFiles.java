@@ -109,6 +109,8 @@ public class ProvisionFiles extends Module {
                 + "If this option is specified along with --decrypt-key the key provided by the latter will be used.");
     parser.acceptsAll(Arrays.asList("output-dir", "o"), "Required: output file location").withRequiredArg()
         .describedAs("output directory path");
+    parser.acceptsAll(Arrays.asList("output-file", "of"), "Optional: output file path, if this is provided than the program accepts exactly one --input-file and one --output file. If an --output-dir is also specified an error will be thrown.").withRequiredArg()
+        .describedAs("output file path");
     parser
         .acceptsAll(
             Arrays.asList("recursive", "r"),
@@ -210,7 +212,32 @@ public class ProvisionFiles extends Module {
         && options.valueOf("algorithm").toString().length() > 0) {
       algorithmName = (String) options.valueOf("algorithm");
     }
+    
+    // deal with output-file
+    if (options.has("output-file") && !options.has("input-file")) {
+      ret.setStderr("Must specify a --input-file option along with the --output-file option"
+            + System.getProperty("line.separator") + this.get_syntax());
+        ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+        return ret;
+    }
+    
+    // deal with output-file
+    if (options.has("output-file") && options.has("output-dir")) {
+      ret.setStderr("Must specify a --output-file option or a --output-dir option but not both"
+            + System.getProperty("line.separator") + this.get_syntax());
+        ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+        return ret;
+    }
 
+    // deal with output-file
+    if (options.has("output-file") && options.has("input-file") && (options.valuesOf("output-file").size() > 1 || options.valuesOf("input-file").size() > 1)) {
+      ret.setStderr("Must specify a single --input-file option along with a single --output-file option"
+            + System.getProperty("line.separator") + this.get_syntax());
+        ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+        return ret;
+    }
+    
+    
     return (ret);
   }
 
@@ -255,7 +282,8 @@ public class ProvisionFiles extends Module {
       }
     }
 
-    if (!((String) options.valueOf("output-dir")).startsWith("s3://")
+    if (options.has("output-dir") &&
+      !((String) options.valueOf("output-dir")).startsWith("s3://")
         && !((String) options.valueOf("output-dir")).startsWith("http://")
         && !((String) options.valueOf("output-dir")).startsWith("https://")) {
       File output = new File((String) options.valueOf("output-dir"));
@@ -269,9 +297,29 @@ public class ProvisionFiles extends Module {
         return (ret);
       }
     }
+    
+    if (options.has("output-file") &&
+      !((String) options.valueOf("output-file")).startsWith("s3://")
+        && !((String) options.valueOf("output-file")).startsWith("http://")
+        && !((String) options.valueOf("output-file")).startsWith("https://")) {
+      
+      String directory = FileTools.getFilePath((String) options.valueOf("output-file"));
+      File output = new File(directory);
+      // try to create if it doesn't exist
+      if (!output.exists()) {
+        output.mkdirs();
+      }
+      if (FileTools.dirPathExistsAndWritable(output).getExitStatus() != ReturnValue.SUCCESS) {
+        ret.setExitStatus(ReturnValue.DIRECTORYNOTWRITABLE);
+        ret.setStderr("Can't write to output directory for file " + options.valueOf("output-file"));
+        return (ret);
+      }
+    }    
 
     return (ret);
   }
+  
+  // LEFT OFF HERE, need to finish output-file support
 
   /** {@inheritDoc} */
   @Override
