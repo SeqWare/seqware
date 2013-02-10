@@ -16,20 +16,31 @@
  */
 package com.github.seqware.queryengine.tutorial;
 
+import com.github.seqware.queryengine.backInterfaces.StorageInterface;
+import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
 import com.github.seqware.queryengine.model.FeatureSet;
 import com.github.seqware.queryengine.model.QueryFuture;
 import com.github.seqware.queryengine.model.QueryInterface;
+import com.github.seqware.queryengine.model.Reference;
+import com.github.seqware.queryengine.model.ReferenceSet;
+import com.github.seqware.queryengine.model.TagSet;
 import com.github.seqware.queryengine.system.Utility;
 import com.github.seqware.queryengine.system.importers.workers.ImportConstants;
 import com.github.seqware.queryengine.util.SGID;
+import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.sourceforge.seqware.common.util.Log;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.MasterNotRunningException;
+import org.apache.hadoop.hbase.ZooKeeperConnectionException;
+import org.apache.hadoop.hbase.client.HBaseAdmin;
 
 /**
  * This is a quick and sample application built on top of our API, created during the August 9th Hackathon.
@@ -49,9 +60,68 @@ public class BrianTest {
      *
      * @param args an array of {@link java.lang.String} objects.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+      
+      /* HBaseAdmin admin = null;    
+      String tableName = "batman.hbaseTestTable_v2.Feature.hg19";
+    try {
+      Configuration conf = new Configuration();
+        admin = new HBaseAdmin(conf);
+        admin.disableTable(tableName);
+        admin.deleteTable(tableName);
+    } catch (MasterNotRunningException e) {
+        throw new RuntimeException("Unable to delete the table " + tableName
+        + ". The actual exception is: " + e.getMessage(), e);
+    } catch (ZooKeeperConnectionException e) {
+        throw new RuntimeException("Unable to delete the table " + tableName
+        + ". The actual exception is: " + e.getMessage(), e);
+    } catch (IOException e) {
+        throw new RuntimeException("Unable to delete the table " + tableName
+        + ". The actual exception is: " + e.getMessage(), e);
+    } finally {
+        admin.close();
+    }*/
+      
+      
         BrianTest dumper = new BrianTest(args);
-        dumper.export();
+        dumper.printReferences();
+        dumper.printFeatureSets();
+        dumper.printTagSets();
+        //dumper.export();
+    }
+    
+    public void printReferences() {
+      StorageInterface storage = SWQEFactory.getStorage();
+      CreateUpdateManager manager = SWQEFactory.getModelManager();
+      QueryInterface query = SWQEFactory.getQueryInterface();
+      SeqWareIterable<ReferenceSet> refSets = query.getReferenceSets();
+      Log.stdout("TRYING TO LIST REF SETS");
+      for(ReferenceSet refSet : refSets) {
+        Log.stdout(refSet.getName() + " " +refSet.getOrganism() + " " + refSet.getSGID());
+      }
+      SeqWareIterable<Reference> refs = query.getReferences();
+      Log.stdout("TRYING TO LIST REFS");
+      for(Reference ref : refs) {
+        Log.stdout(ref.getName() + " " + ref.getSGID());
+      }
+    }
+    
+    public void printFeatureSets() {
+      QueryInterface query = SWQEFactory.getQueryInterface();
+      SeqWareIterable<FeatureSet> featureSets = query.getFeatureSets();
+      Log.stdout("TRYING TO LIST FEATURE SETS");
+      for(FeatureSet fs : featureSets) {
+        Log.stdout(fs.getDescription() + " " + fs.getReferenceID() + " " + fs.getSGID());
+      }
+    }
+    
+    public void printTagSets() {
+      QueryInterface query = SWQEFactory.getQueryInterface();
+      SeqWareIterable<TagSet> sets = query.getTagSets();
+      Log.stdout("TRYING TO LIST TAG SETS");
+      for(TagSet set : sets) {
+        Log.stdout(set.getName() + " " + set.getSGID());
+      }
     }
 
     /**
