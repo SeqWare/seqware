@@ -878,6 +878,18 @@ public class FileTools {
     return(tokens[tokens.length-1]);
   }
   
+  public static String getFilePath(String filePath) {
+    if (filePath == null || "".equals(filePath)) { return null; }
+    String[] tokens = filePath.split("/");
+    StringBuilder sb = new StringBuilder();
+    for(int i=0; i<tokens.length-1; i++) {
+      sb.append(tokens[i]);
+      sb.append("/");
+    }
+    // is this reasonable for a default return?
+    return(sb.toString());
+  }
+  
   /**
    * Get the localhost and a return value describing the failure condition
    * if we are unable to get the localhost
@@ -907,7 +919,7 @@ public class FileTools {
         }
         return new LocalhostPair(hostname, returnValue);
     }
-    
+
     public static class LocalhostPair {
         public final String hostname;
         public final ReturnValue returnValue;
