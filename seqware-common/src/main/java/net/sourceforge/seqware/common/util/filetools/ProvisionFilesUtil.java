@@ -386,7 +386,7 @@ public class ProvisionFilesUtil {
         // delete it
       }
       
-      OutputStream out = fs.create(new Path(output));
+      OutputStream out = fs.create(new Path(output + "/foo.txt" ));
       IOUtils.copyBytes(reader, out, 4096, true);
      
       // Close all the file descripters
