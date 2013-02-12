@@ -22,6 +22,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.util.SerializationUtils;
 
 /*
  * Copyright (C) 2013 SeqWare
@@ -48,9 +49,22 @@ public class PluginRunnerIT {
     private static File tempDir = null;
     private static Map<String, Integer> installedWorkflows = new HashMap<String, Integer>();
     private static Map<String, File> bundleLocations = new HashMap<String, File>();
+    private final static boolean DEBUG_SKIP = true;
 
     @BeforeClass
     public static void createAndInstallArchetypes() throws IOException {
+        File bundleFile = new File(System.getProperty("java.io.tmpdir"), "PluginRunnerIT_bundleLocations.bin");
+        File installedWorkflowsFile = new File(System.getProperty("java.io.tmpdir"), "PluginRunnerIT_installedWorkflows.bin");
+        if (DEBUG_SKIP) {
+            if (bundleFile.exists() && installedWorkflowsFile.exists()) {
+                byte[] bundleLocationsBinary = Files.toByteArray(bundleFile);
+                byte[] installedWorkflowsBinary = Files.toByteArray(installedWorkflowsFile);
+                bundleLocations = (Map<String, File>) SerializationUtils.deserialize(bundleLocationsBinary);
+                installedWorkflows = (Map<String, Integer>) SerializationUtils.deserialize(installedWorkflowsBinary);
+                return;
+            }
+        }
+        
         tempDir = Files.createTempDir();
         Log.info("Trying to build and test archetypes at: " + tempDir.getAbsolutePath());
         PluginRunner it = new PluginRunner();
@@ -73,13 +87,13 @@ public class PluginRunnerIT {
             
             bundleLocations.put(workflow, bundleDir);
 
-            String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -i -b " + bundleDir.getAbsolutePath();
+            String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -i -b " + bundleDir.getAbsolutePath();
             String installOutput = PluginRunnerIT.runSeqWareJar(installCommand, ReturnValue.SUCCESS);
             Log.info(installOutput);     
             
             String[] lines = installOutput.split(System.getProperty("line.separator"));
             for (String line : lines) {
-                if (line.startsWith("WORKFLOW ACCESSION:")){
+                if (line.startsWith("WORKFLOW_ACCESSION:")){
                     String[] parts = line.split(" ");
                     int accession = Integer.valueOf(parts[parts.length-1]);
                     installedWorkflows.put(workflow, accession);
@@ -89,11 +103,32 @@ public class PluginRunnerIT {
         }
         Assert.assertTrue("could not locate installed workflows", installedWorkflows.size() == archetypes.length);
         Assert.assertTrue("could not locate installed workflow paths", installedWorkflows.size() == bundleLocations.size());
+        
+        if (DEBUG_SKIP){
+        // dump data to a permanent map just in case we want to re-run tests without waiting
+            byte[] bundleLocationsBinary = SerializationUtils.serialize(bundleLocations);
+            byte[] installedWorkflowsBinary = SerializationUtils.serialize(installedWorkflows);
+            Files.write(bundleLocationsBinary, bundleFile);
+            Files.write(installedWorkflowsBinary, installedWorkflowsFile);
+        }
+        
     }
 
     @AfterClass
     public static void cleanup() throws IOException {
-        tempDir.deleteOnExit();
+        if (!DEBUG_SKIP){
+            tempDir.deleteOnExit();
+        }
+    }
+
+    private static File searchForFullJar(File seqTargetDir) {
+        File targetFullJar = null;
+        for (File files : seqTargetDir.listFiles()) {
+            if (files.getName().contains("full") && !files.getName().contains("-qe-")) {
+                targetFullJar = files;
+            }
+        }
+        return targetFullJar;
     }
     
     @Test
@@ -115,7 +150,7 @@ public class PluginRunnerIT {
     @Test
     public void testScheduleAndLaunch() throws IOException{
         Map<String, File> iniParams = exportWorkflowInis();
-        // left off here
+       
     }
 
     @Test
@@ -128,6 +163,11 @@ public class PluginRunnerIT {
     public void testBasicMetadataRetrieval() throws IOException {
         String output = runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --list-tables", ReturnValue.SUCCESS);
         Assert.assertTrue("output should include table names", output.contains("TableName") && output.contains("study") && output.contains("experiment"));
+    }
+    
+    public static void main(String[] args) throws IOException {
+        PluginRunnerIT it = new PluginRunnerIT();
+        it.testLatestWorkflows();
     }
 
     @Test
@@ -146,6 +186,14 @@ public class PluginRunnerIT {
                     continue;
                 }
                 WorkflowInfo wi = new WorkflowInfo(workflow_accession, path, workflowName, lineParts[1]);
+                
+                //TODO: check that the permanent workflow actually exists, if not warn and skip
+                File fileAtPath = new File(path);
+                if (!fileAtPath.exists()){
+                    Log.warn("Skipping " + workflowName + ":" + workflow_accession + " , bundle path does not exist at " + path);
+                    continue;
+                }
+                
                 if (!latestWorkflows.containsKey(workflowName)) {
                     latestWorkflows.put(workflowName, wi);
                 } else {
@@ -259,19 +307,18 @@ public class PluginRunnerIT {
 //        Log.info("Jarfile was located at " + jarFile.getAbsolutePath());
 
         String workingDir = System.getProperty("user.dir");
-        File workingDirectory;
-        workingDirectory = new File(workingDir);
+        File workingDirectory = new File(workingDir);
+        File targetFullJar = searchForFullJar(workingDirectory);
+        if (targetFullJar != null){
+            return targetFullJar;
+        }
+        
         while (!isRootOfSeqWare(workingDirectory)) {
             workingDirectory = workingDirectory.getParentFile();
         }
         File seqDistDir = new File(workingDirectory, "seqware-distribution");
         File seqTargetDir = new File(seqDistDir, "target");
-        File targetFullJar = null;
-        for (File files : seqTargetDir.listFiles()) {
-            if (files.getName().contains("full") && !files.getName().contains("-qe-")) {
-                targetFullJar = files;
-            }
-        }
+        targetFullJar = searchForFullJar(seqTargetDir);
         return targetFullJar;
     }
 
