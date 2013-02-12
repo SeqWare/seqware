@@ -326,8 +326,7 @@ public class ProvisionFiles extends Module {
     return (ret);
   }
   
-  // LEFT OFF HERE, need to finish output-file support
-
+  
   /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
@@ -539,6 +538,11 @@ public class ProvisionFiles extends Module {
 
       // It's not supported yet
       result = filesUtil.putToHttp();
+
+    } else if (output.startsWith("hdfs://")) {
+
+      // put to S3
+      result = filesUtil.putToHDFS(reader, output, decryptCipher, encryptCipher);
 
     } else {
 
