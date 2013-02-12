@@ -1,7 +1,7 @@
     PROJECT: SeqWare
     FILE: README.md
     PROJECT LEAD: Brian O'Connor <briandoconnor@gmail.com>
-    UPDATED: 20121016
+    UPDATED: 20130212
     HOMEPAGE: http://seqware.github.com/
 
 INTRODUCTION
@@ -21,6 +21,7 @@ documentation:
 * seqware-queryengine
 * seqware-common
 * the http://seqware.github.com website and manual
+* seqware-ext-testing
 
 The seqware-common sub-project provides a location for common code
 and most of the other sub-projects have this as a dependency.
@@ -93,7 +94,8 @@ Maven now separates out unit tests and integration tests as follows.
 
     mvn clean install # (runs unit tests but skips integration tests, HBase for query engine and Jetty for web service by default) 
     mvn clean install -DskipTests # (skips all unit tests and integration tests)
-    mvn clean install -DskipITs=false # (runs all unit tests and all integration tests)
+    mvn clean install -DskipITs=false # (runs all unit tests and ntegration tests that only require postgres as a prerequisite)
+    mvn clean install -DskipITs=false -P extITs # (runs all unit tests and all integration tests including those that require Condor/Globus/Pegasus)
 
 If you wish to build the whole of SeqWare at once, you will need:
 
