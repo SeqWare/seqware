@@ -42,8 +42,17 @@ import com.amazonaws.services.s3.transfer.Transfer.TransferState;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 import java.io.*;
+import java.net.URI;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.crypto.CipherInputStream;
 import net.sourceforge.seqware.common.util.Log;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FSDataOutputStream;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IOUtils;
 
 /**
  * <p>ProvisionFilesUtil class.</p>
@@ -343,6 +352,53 @@ public class ProvisionFilesUtil {
     // TODO: not going to support HTTP PUT initially
       Log.warn("HTTP upload not yet supported");
     return (false);
+  }
+  
+  public boolean putToHDFS(BufferedInputStream reader, String output){
+    return(putToHDFS(reader, output, null, null));
+  }
+  
+  /**
+   * The output path is an HDFS URL that look like
+   * hdfs://<host>/<path>/<filename>
+   * 
+   * TODO:
+   * 
+   * 1) encryption/decryption
+   * 2) support for dir or file writes
+   * 
+   * @param reader
+   * @param output
+   * @param decryptCipher
+   * @param encryptCipher
+   * @return 
+   */
+  public boolean putToHDFS(InputStream reader, String output, Cipher decryptCipher, Cipher encryptCipher) {
+    try {      
+      
+      // Hadoop stuff
+      Configuration conf = new Configuration();
+      FileSystem fs = FileSystem.get(URI.create(output), conf);
+      
+      // delete if it already exists
+      if (fs.exists(new Path(output))) {
+        Log.stdout(" PATH EXISTS ");
+        // delete it
+      }
+      
+      OutputStream out = fs.create(new Path(output + "/foo.txt" ));
+      IOUtils.copyBytes(reader, out, 4096, true);
+     
+      // Close all the file descripters
+      reader.close();
+      out.close();
+      fs.close();
+      return(true);
+      
+    } catch (IOException ex) {
+      Logger.getLogger(ProvisionFilesUtil.class.getName()).log(Level.SEVERE, null, ex);
+      return(false);
+    }
   }
 
   /**
