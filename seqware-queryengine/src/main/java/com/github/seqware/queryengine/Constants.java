@@ -87,7 +87,7 @@ public class Constants {
          * Properly set this task if you want your compiled jar files to
          * automatically load in the cluster when performing map/reduce tasks
          */
-        DEVELOPMENT_DEPENDENCY("QE_DEVELOPMENT_DEPENDENCY", "file:/home/dyuen/seqware_github/seqware-distribution/target/seqware-queryengine-0.12.0-full.jar", String.class),
+        DEVELOPMENT_DEPENDENCY("QE_DEVELOPMENT_DEPENDENCY", "file:/home/seqware/Development/gitroot/seqware-github/seqware-distribution/target/seqware-distribution-1.0.0-SNAPSHOT-qe-full.jar", String.class),
         /**
          * Back-end storage implementations will reference this to decide
          * whether to persist objects permanently and/or wipe out existing ones
