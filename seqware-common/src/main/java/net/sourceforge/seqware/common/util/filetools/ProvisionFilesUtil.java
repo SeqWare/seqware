@@ -42,8 +42,17 @@ import com.amazonaws.services.s3.transfer.Transfer.TransferState;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 import java.io.*;
+import java.net.URI;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.crypto.CipherInputStream;
 import net.sourceforge.seqware.common.util.Log;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FSDataOutputStream;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IOUtils;
 
 /**
  * <p>ProvisionFilesUtil class.</p>
@@ -92,6 +101,10 @@ public class ProvisionFilesUtil {
   public String getFileName() {
     return fileName;
   }
+  
+  public boolean createSymlink(String output, String input) {
+    return createSymlink(output, false, input);
+  }
 
   /**
    * Creates symlink of input to output.
@@ -100,7 +113,7 @@ public class ProvisionFilesUtil {
    * @param input a {@link java.lang.String} object.
    * @return a boolean.
    */
-  public boolean createSymlink(String output, String input) {
+  public boolean createSymlink(String output, boolean fullOutputPath, String input) {
     boolean retry = true;
     int retryCount = 0;
 
@@ -111,6 +124,9 @@ public class ProvisionFilesUtil {
         Process result = null;
         // FIXME: in JDK 7 this will be replaced with an API call
         String exe = new String("ln" + " -s " + input + " " + output + File.separator + fileName);
+        if (fullOutputPath) {
+          exe = new String("ln" + " -s " + input + " " + output);
+        }
         Log.debug(exe);
         result = rt.exec(exe);
         try {
@@ -130,6 +146,9 @@ public class ProvisionFilesUtil {
     }
     // now check to see if the file is actually there!
     File outputFilePath = new File(output + File.separator + fileName);
+    if (fullOutputPath) {
+      outputFilePath = new File(output);
+    }
     
     if (outputFilePath.exists())
     {
@@ -177,6 +196,10 @@ public class ProvisionFilesUtil {
     }
     return cipher;
   }
+  
+  public File copyToFile(BufferedInputStream reader, String output, int bufLen, String input) {
+    return copyToFile(reader, output, false, bufLen, input, null, null);
+  }
 
   /**
    * Copy reader into output.
@@ -187,8 +210,8 @@ public class ProvisionFilesUtil {
    * @param input a {@link java.lang.String} object.
    * @return written File object
    */
-  public File copyToFile(BufferedInputStream reader, String output, int bufLen, String input) {
-    return copyToFile(reader, output, bufLen, input, null, null);
+  public File copyToFile(BufferedInputStream reader, String output, boolean fullOutputPath, int bufLen, String input) {
+    return copyToFile(reader, output, fullOutputPath, bufLen, input, null, null);
   }
 
   /**
@@ -202,7 +225,7 @@ public class ProvisionFilesUtil {
    * @param decryptCipher a {@link javax.crypto.Cipher} object.
    * @param encryptCipher a {@link javax.crypto.Cipher} object.
    */
-  public File copyToFile(BufferedInputStream reader, String output, int bufLen, String input, Cipher decryptCipher, Cipher encryptCipher) {
+  public File copyToFile(BufferedInputStream reader, String output, boolean fullOutputPath, int bufLen, String input, Cipher decryptCipher, Cipher encryptCipher) {
 
     OutputStream writer;
 
@@ -210,6 +233,9 @@ public class ProvisionFilesUtil {
     // directory output
     // figure out the output
     File outputObj = new File(output + File.separator + fileName);
+    if (fullOutputPath) {
+      outputObj = new File(output);
+    }
     outputObj.getParentFile().mkdirs();
     // now write input to output
     try {
@@ -344,6 +370,53 @@ public class ProvisionFilesUtil {
       Log.warn("HTTP upload not yet supported");
     return (false);
   }
+  
+  public boolean putToHDFS(BufferedInputStream reader, String output){
+    return(putToHDFS(reader, output, null, null));
+  }
+  
+  /**
+   * The output path is an HDFS URL that look like
+   * hdfs://<host>/<path>/<filename>
+   * 
+   * TODO:
+   * 
+   * 1) encryption/decryption
+   * 2) support for dir or file writes
+   * 
+   * @param reader
+   * @param output
+   * @param decryptCipher
+   * @param encryptCipher
+   * @return 
+   */
+  public boolean putToHDFS(InputStream reader, String output, Cipher decryptCipher, Cipher encryptCipher) {
+    try {      
+      
+      // Hadoop stuff
+      Configuration conf = new Configuration();
+      FileSystem fs = FileSystem.get(URI.create(output), conf);
+      
+      // delete if it already exists
+      if (fs.exists(new Path(output))) {
+        Log.stdout(" PATH EXISTS ");
+        // delete it
+      }
+      
+      OutputStream out = fs.create(new Path(output + "/foo.txt" ));
+      IOUtils.copyBytes(reader, out, 4096, true);
+     
+      // Close all the file descripters
+      reader.close();
+      out.close();
+      fs.close();
+      return(true);
+      
+    } catch (IOException ex) {
+      Logger.getLogger(ProvisionFilesUtil.class.getName()).log(Level.SEVERE, null, ex);
+      return(false);
+    }
+  }
 
   /**
    * Copy file using reader into output.
@@ -352,8 +425,8 @@ public class ProvisionFilesUtil {
    * @param output a {@link java.lang.String} object.
    * @return true if OK
    */
-  public boolean putToS3(BufferedInputStream reader, String output){
-      return (putToS3(reader, output, ClientConfiguration.DEFAULT_SOCKET_TIMEOUT, ClientConfiguration.DEFAULT_MAX_CONNECTIONS, ClientConfiguration.DEFAULT_MAX_RETRIES, ClientConfiguration.DEFAULT_SOCKET_TIMEOUT));
+  public boolean putToS3(BufferedInputStream reader, String output, boolean fullOutputPath){
+      return (putToS3(reader, output, fullOutputPath, ClientConfiguration.DEFAULT_SOCKET_TIMEOUT, ClientConfiguration.DEFAULT_MAX_CONNECTIONS, ClientConfiguration.DEFAULT_MAX_RETRIES, ClientConfiguration.DEFAULT_SOCKET_TIMEOUT));
   }
   
   /**
@@ -366,8 +439,8 @@ public class ProvisionFilesUtil {
    * @param socketTimeout
    * @return 
    */
-  public boolean putToS3(BufferedInputStream reader, String output, int connectionTimeout, int maxConnections, int maxErrorRetry, int socketTimeout) {
-    return (putToS3(reader, output, connectionTimeout, maxConnections, maxErrorRetry, socketTimeout, null, null));
+  public boolean putToS3(BufferedInputStream reader, String output, boolean fullOutputPath, int connectionTimeout, int maxConnections, int maxErrorRetry, int socketTimeout) {
+    return (putToS3(reader, output, fullOutputPath, connectionTimeout, maxConnections, maxErrorRetry, socketTimeout, null, null));
   }
   
   /**
@@ -379,8 +452,8 @@ public class ProvisionFilesUtil {
    * @param encryptCipher a {@link javax.crypto.Cipher} object.
    * @return true if OK
    */
-  public boolean putToS3(InputStream reader, String output, Cipher decryptCipher, Cipher encryptCipher) {
-      return putToS3(reader, output,  ClientConfiguration.DEFAULT_SOCKET_TIMEOUT, ClientConfiguration.DEFAULT_MAX_CONNECTIONS, ClientConfiguration.DEFAULT_MAX_RETRIES, ClientConfiguration.DEFAULT_SOCKET_TIMEOUT, decryptCipher, encryptCipher);
+  public boolean putToS3(InputStream reader, String output, boolean fullOutputPath, Cipher decryptCipher, Cipher encryptCipher) {
+      return putToS3(reader, output, fullOutputPath, ClientConfiguration.DEFAULT_SOCKET_TIMEOUT, ClientConfiguration.DEFAULT_MAX_CONNECTIONS, ClientConfiguration.DEFAULT_MAX_RETRIES, ClientConfiguration.DEFAULT_SOCKET_TIMEOUT, decryptCipher, encryptCipher);
   }
 
   /**
@@ -395,7 +468,7 @@ public class ProvisionFilesUtil {
    * @param encryptCipher
    * @return 
    */
-  public boolean putToS3(InputStream reader, String output, int connectionTimeout, int maxConnections, int maxErrorRetry, int socketTimeout, Cipher decryptCipher, Cipher encryptCipher) {
+  public boolean putToS3(InputStream reader, String output, boolean fullOutputPath, int connectionTimeout, int maxConnections, int maxErrorRetry, int socketTimeout, Cipher decryptCipher, Cipher encryptCipher) {
 
     // can encode the access key and secret key within the URL
     // see http://www.cs.rutgers.edu/~watrous/user-pass-url.html
@@ -440,7 +513,7 @@ public class ProvisionFilesUtil {
       if (key.endsWith("/")) {
         // then add fileName to the target
         key = key + fileName;
-      } else if (!key.endsWith(fileName)) {
+      } else if (!key.endsWith(fileName) && !fullOutputPath) {
         // then add a / then fileName to the target
         key = key + "/" + fileName;
       }
