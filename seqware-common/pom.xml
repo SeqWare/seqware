@@ -109,6 +109,13 @@
             <name>Public online Restlet repository</name>
             <url>http://maven.restlet.org</url>
         </repository>
+        <repository>
+            <id>cloudera</id>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -314,5 +321,16 @@
             <artifactId>stax-api</artifactId>
             <version>1.0-2</version>
         </dependency>
+        <dependency>
+           <groupId>org.apache.hadoop</groupId>
+           <artifactId>hadoop-client</artifactId>
+           <version>2.0.0-cdh4.1.2</version>
+        </dependency>
+        <dependency>
+           <groupId>org.apache.hadoop</groupId>
+           <artifactId>hadoop-hdfs</artifactId>
+           <version>2.0.0-cdh4.1.2</version>
+        </dependency>
+
     </dependencies>
 </project>
