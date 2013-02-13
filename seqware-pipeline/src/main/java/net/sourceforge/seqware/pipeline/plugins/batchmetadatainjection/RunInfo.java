@@ -43,6 +43,7 @@ public class RunInfo {
     private String platformId;
     //sequencer_run
     private String runName;
+    
     //experiment
     private String experimentName;
     private String workflowType;
@@ -58,8 +59,26 @@ public class RunInfo {
     private boolean runSkip=false;
     private boolean pairedEnd=true;
     private String runDescription;
-
+    private String runFilePath;
     private String experimentDescription;
+    
+    /**
+     * Get the value of runFilePath
+     *
+     * @return the value of runFilePath
+     */
+    public String getRunFilePath() {
+        return runFilePath;
+    }
+
+    /**
+     * Set the value of runFilePath
+     *
+     * @param runFilePath new value of runFilePath
+     */
+    public void setRunFilePath(String runFilePath) {
+        this.runFilePath = runFilePath;
+    }
 
     /**
      * Get the value of experimentDescription

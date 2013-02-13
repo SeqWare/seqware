@@ -36,8 +36,8 @@ public class ParseMisecFile extends BatchMetadataParser {
 
     private ReturnValue ret = new ReturnValue();
 
-    public ParseMisecFile(Metadata metadata, Map<String, String> fields) {
-        super(metadata, fields);
+    public ParseMisecFile(Metadata metadata, Map<String, String> fields, boolean interactive) {
+        super(metadata, fields, interactive);
     }
 
     public RunInfo parseMiSecFile(String filepath) throws Exception {
@@ -45,7 +45,7 @@ public class ParseMisecFile extends BatchMetadataParser {
         File file = new File(filepath);
         try {
             BufferedReader freader = new BufferedReader(new FileReader(file));
-            run = parseMiSecHeader(freader, filepath);
+            run = parseMiSecHeader(freader, file);
             String runName = prompt("Sequencer run name", run.getRunName(), Field.sequencer_run_name);
             String studyName = prompt("Study name", run.getStudyTitle(), Field.study_name);
             String expName = prompt("Experiment name", run.getExperimentName(), Field.experiment_name);
@@ -129,10 +129,9 @@ public class ParseMisecFile extends BatchMetadataParser {
         return lanes;
     }
 
-    public RunInfo parseMiSecHeader(BufferedReader freader, String fileName) throws IOException {
+    public RunInfo parseMiSecHeader(BufferedReader freader, File file) throws IOException {
         String line = null;
-        RunInfo runInfo = new RunInfo();
-
+        
         Map<String, String> headerInfo = new HashMap<String, String>();
         while (!(line = freader.readLine()).startsWith("[Data]")) {
             if (!line.startsWith("[")) {
@@ -142,19 +141,21 @@ public class ParseMisecFile extends BatchMetadataParser {
                 }
             }
         }
-        String[] bits = fileName.split(File.separator);
-        runInfo.setRunName(bits[bits.length - 2]);
+        String[] bits = file.getAbsolutePath().split(File.separator);
+        
+        RunInfo runInfo = super.generateRunInfo(bits[bits.length - 2], 
+                headerInfo.get("Project Name").split("_")[0], 
+                headerInfo.get("Experiment Name").split("_")[0], file.getParent(), 26, null);
+        
         runInfo.setRunDescription(runInfo.getRunName());
         runInfo.setPairedEnd(true);
         runInfo.setPlatformId(26);
 
-        runInfo.setStudyTitle(headerInfo.get("Project Name").split("_")[0]);
         runInfo.setStudyCenterName("Ontario Institute for Cancer Research");
         runInfo.setStudyCenterProject(runInfo.getStudyTitle().replace(" ", ""));
         runInfo.setStudyDescription(runInfo.getStudyTitle());
         //runInfo.setStudyType(studyType);
 
-        runInfo.setExperimentName(headerInfo.get("Experiment Name").split("_")[0]);
         runInfo.setExperimentDescription(runInfo.getExperimentName());
 
 
