@@ -5,20 +5,22 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.exec.ExecuteException;
-import org.apache.commons.exec.PumpStreamHandler;
-import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -49,6 +51,7 @@ public class PluginRunnerIT {
     private static File tempDir = null;
     private static Map<String, Integer> installedWorkflows = new HashMap<String, Integer>();
     private static Map<String, File> bundleLocations = new HashMap<String, File>();
+    private static List<Integer> launchedWorkflowRuns = new ArrayList<Integer>();
     private final static boolean DEBUG_SKIP = true;
 
     @BeforeClass
@@ -78,7 +81,7 @@ public class PluginRunnerIT {
             String workflow = "seqware-archetype-" + archetype;
             // generate and install archetypes to local maven repo
             String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware -DarchetypeArtifactId=" + workflow + " -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=" + workflow + " -DworkflowDirectoryName=" + workflow + " -DworkflowName=" + workflow + " -DworkflowVersion=1.0-SNAPSHOT -B -Dgoals=install";
-            String genOutput = PluginRunnerIT.runArbitraryCommand(command, 0, tempDir);
+            String genOutput = ITUtility.runArbitraryCommand(command, 0, tempDir);
             Log.info(genOutput);
             // install the workflows to the database and record their information 
             File workflowDir = new File(tempDir, workflow);
@@ -88,18 +91,13 @@ public class PluginRunnerIT {
             bundleLocations.put(workflow, bundleDir);
 
             String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -i -b " + bundleDir.getAbsolutePath();
-            String installOutput = PluginRunnerIT.runSeqWareJar(installCommand, ReturnValue.SUCCESS);
+            String installOutput = ITUtility.runSeqWareJar(installCommand, ReturnValue.SUCCESS);
             Log.info(installOutput);     
             
-            String[] lines = installOutput.split(System.getProperty("line.separator"));
-            for (String line : lines) {
-                if (line.startsWith("WORKFLOW_ACCESSION:")){
-                    String[] parts = line.split(" ");
-                    int accession = Integer.valueOf(parts[parts.length-1]);
-                    installedWorkflows.put(workflow, accession);
-                    Log.info("Found workflow " + workflow + " with accession " + accession);
-                }
-            }
+            String extractValueFrom = ITUtility.extractValueFrom(installOutput, "WORKFLOW_ACCESSION:");
+            int accession = Integer.valueOf(extractValueFrom);
+            installedWorkflows.put(workflow, accession);
+            Log.info("Found workflow " + workflow + " with accession " + accession);          
         }
         Assert.assertTrue("could not locate installed workflows", installedWorkflows.size() == archetypes.length);
         Assert.assertTrue("could not locate installed workflow paths", installedWorkflows.size() == bundleLocations.size());
@@ -116,19 +114,17 @@ public class PluginRunnerIT {
 
     @AfterClass
     public static void cleanup() throws IOException {
+        // testing monitoring one more time
+        for (int launchedWorkflowRun : launchedWorkflowRuns) {
+            Log.info("Attempting to monitor " + launchedWorkflowRun);
+            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker -- --workflow-run-accession " + launchedWorkflowRun;
+            String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+            Log.info(listOutput);
+        }
+        
         if (!DEBUG_SKIP){
             tempDir.deleteOnExit();
         }
-    }
-
-    private static File searchForFullJar(File seqTargetDir) {
-        File targetFullJar = null;
-        for (File files : seqTargetDir.listFiles()) {
-            if (files.getName().contains("full") && !files.getName().contains("-qe-")) {
-                targetFullJar = files;
-            }
-        }
-        return targetFullJar;
     }
     
     @Test
@@ -136,7 +132,7 @@ public class PluginRunnerIT {
         for(Entry<String, File> e : bundleLocations.entrySet()){
             Log.info("Attempting to list " + e.getKey());
             String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -l -b " + e.getValue().getAbsolutePath();
-            String listOutput = PluginRunnerIT.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+            String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
             Log.info(listOutput);     
         }
     }
@@ -150,18 +146,111 @@ public class PluginRunnerIT {
     @Test
     public void testScheduleAndLaunch() throws IOException{
         Map<String, File> iniParams = exportWorkflowInis();
-       
+        String localhost = ITUtility.getLocalhost();
+        Log.info("Attempting to schedule on host: " + localhost);
+        Map<String, Integer> wr_accessions = new HashMap<String, Integer>();
+        
+        
+        for (Entry<String, File> e : bundleLocations.entrySet()) {
+            Log.info("Attempting to schedule " + e.getKey());
+            String workflowPath = iniParams.get(e.getKey()).getAbsolutePath();
+            String accession = Integer.toString(installedWorkflows.get(e.getKey()));
+
+            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files " + workflowPath + " --workflow-accession " + accession
+                    + " --schedule --parent-accessions 99 --host " + localhost;
+            String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+            Log.info(listOutput);
+
+            String extractValueFrom = ITUtility.extractValueFrom(listOutput, "WORKFLOW_RUN ACCESSION:");
+            int wr_accession = Integer.valueOf(extractValueFrom);
+            wr_accessions.put(e.getKey(), wr_accession);
+            launchedWorkflowRuns.add(wr_accession);
+            Log.info("Scheduled workflow " + e.getKey() + " with accession " + wr_accession);
+        }
+        
+        // launch-scheduled
+        String schedCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --launch-scheduled";
+        String schedOutput = ITUtility.runSeqWareJar(schedCommand, ReturnValue.SUCCESS);
+        Log.info(schedOutput); 
+        
+        try {
+            Log.info("Wait for launches to settle ");
+            Thread.sleep(5000);
+        } catch (InterruptedException ex) {
+        }
+        
+        // testing monitoring
+        for (Entry<String, Integer> e : wr_accessions.entrySet()) {
+            Log.info("Attempting to monitor " + e.getKey());
+            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker -- --workflow-run-accession " + e.getValue();
+            String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+            Log.info(listOutput);
+        }
     }
 
     @Test
-    public void testBasicPluginRunner() throws IOException {
-        String output = runSeqWareJar("", ReturnValue.INVALIDARGUMENT);
-        Assert.assertTrue("output should include usage and no Exceptions", output.contains("Syntax:") && !output.contains("Exception"));
+    public void testLaunchingWithoutWait() throws IOException {
+        Map<String, File> iniParams = exportWorkflowInis();
+        String localhost = ITUtility.getLocalhost();
+        Log.info("Attempting to launch without wait on host: " + localhost);
+        Map<String, Integer> wr_accessions = new HashMap<String, Integer>();
+        
+        
+        for (Entry<String, File> e : bundleLocations.entrySet()) {
+            Log.info("Attempting to launch " + e.getKey());
+            String workflowPath = iniParams.get(e.getKey()).getAbsolutePath();
+            String accession = Integer.toString(installedWorkflows.get(e.getKey()));
+
+            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files " + workflowPath + " --workflow-accession " + accession
+                    + " --parent-accessions 99 --host " + localhost;
+            String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+            Log.info(listOutput);
+        }
+    }
+    
+    @Test
+    public void testLaunchingWithWait() throws IOException {
+        Map<String, File> iniParams = exportWorkflowInis();
+        String localhost = ITUtility.getLocalhost();
+        Log.info("Attempting to launch with wait on host: " + localhost);
+        Map<String, Integer> wr_accessions = new HashMap<String, Integer>();
+        
+        
+        for (Entry<String, File> e : bundleLocations.entrySet()) {
+            Log.info("Attempting to launch " + e.getKey());
+            String workflowPath = iniParams.get(e.getKey()).getAbsolutePath();
+            String accession = Integer.toString(installedWorkflows.get(e.getKey()));
+
+            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files " + workflowPath + " --workflow-accession " + accession
+                    + " --parent-accessions 99 --wait --host " + localhost;
+            String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+            Log.info(listOutput);
+        }
+    }
+    
+    @Test
+    public void testLaunchingWithWaitAndNoMetadata() throws IOException {
+        Map<String, File> iniParams = exportWorkflowInis();
+        String localhost = ITUtility.getLocalhost();
+        Log.info("Attempting to launch with wait on host: " + localhost);
+        Map<String, Integer> wr_accessions = new HashMap<String, Integer>();
+        
+        
+        for (Entry<String, File> e : bundleLocations.entrySet()) {
+            Log.info("Attempting to launch " + e.getKey());
+            String workflowPath = iniParams.get(e.getKey()).getAbsolutePath();
+            String accession = Integer.toString(installedWorkflows.get(e.getKey()));
+
+            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files " + workflowPath + " --workflow-accession " + accession
+                    + " --no-metadata --parent-accessions 99 --wait --host " + localhost;
+            String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+            Log.info(listOutput);
+        }
     }
 
     @Test
     public void testBasicMetadataRetrieval() throws IOException {
-        String output = runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --list-tables", ReturnValue.SUCCESS);
+        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --list-tables", ReturnValue.SUCCESS);
         Assert.assertTrue("output should include table names", output.contains("TableName") && output.contains("study") && output.contains("experiment"));
     }
     
@@ -172,7 +261,7 @@ public class PluginRunnerIT {
 
     @Test
     public void testLatestWorkflows() throws IOException {
-        String output = runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-installed", ReturnValue.SUCCESS);
+        String output = ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-installed", ReturnValue.SUCCESS);
         Assert.assertTrue("output should include installed workflows", output.contains("INSTALLED WORKFLOWS"));
         Map<String, WorkflowInfo> latestWorkflows = new HashMap<String, WorkflowInfo>();
         String[] lines = output.split(System.getProperty("line.separator"));
@@ -205,21 +294,32 @@ public class PluginRunnerIT {
                 }
             } catch (Exception e) {
                 /**
-                 * do nothing
+                 * do nothing and skip this line of the BundleManager output
                  */
             }
         }
-        // list the newest workflows that we encountered
-        // go ahead and test them 
+        // setup thread pool
+        ExecutorService threadPool = Executors.newFixedThreadPool(latestWorkflows.size());       
+        CompletionService<String> pool = new ExecutorCompletionService<String>(threadPool);
         for (Entry<String, WorkflowInfo> e : latestWorkflows.entrySet()) {
             System.out.println("Testing " + e.getKey() + " " + e.getValue().sw_accession);
             StringBuilder params = new StringBuilder();
             params.append("--bundle ").append(e.getValue().path).append(" ");
             params.append("--version ").append(e.getValue().version).append(" ");
             params.append("--test ");
-            String tOutput = runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- " + params.toString(), ReturnValue.SUCCESS);
-            System.out.println(tOutput);
+            File tempFile = File.createTempFile(e.getValue().name, ".out");
+            pool.submit(new TestingThread(params.toString(), tempFile));
         }
+        for(Entry<String, WorkflowInfo> e : latestWorkflows.entrySet()){
+            try {
+                pool.take().get();
+            } catch (InterruptedException ex) {
+                Log.error(ex);
+            } catch (ExecutionException ex) {
+                Log.error(ex);
+            }
+        }
+        threadPool.shutdown();
     }
 
     private Map<String, File> exportWorkflowInis() throws IOException {
@@ -227,7 +327,7 @@ public class PluginRunnerIT {
         for(Entry<String, Integer> e : installedWorkflows.entrySet()){
             Log.info("Attempting to export parameters for  " + e.getKey());
             String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession " + e.getValue();
-            String listOutput = PluginRunnerIT.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+            String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
             Log.info(listOutput);     
             // go through output and dump out the workflow.ini
             File workflowIni = File.createTempFile("workflow", "ini");
@@ -246,6 +346,8 @@ public class PluginRunnerIT {
         return iniParams;
     }
 
+
+
     private class WorkflowInfo {
 
         public int sw_accession;
@@ -261,138 +363,30 @@ public class PluginRunnerIT {
         }
     }
 
-    private static boolean isRootOfSeqWare(File workingDirectory) {
-        String[] list = workingDirectory.list();
-        for (String file : list) {
-            if (file.contains("seqware-distribution")) {
-                return true;
+
+    private final class TestingThread implements Callable<String>{
+        
+        private final String command;
+        private final File output;
+        
+        protected TestingThread(String command, File output){
+            this.command = command;
+            this.output = output;
+        }
+
+        @Override
+        public String call() {
+            try {   
+                String tOutput = ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- " + command.toString(), ReturnValue.SUCCESS);
+                Log.error(command + " completed, writing output to " + output.getAbsolutePath());
+                FileUtils.write(output, tOutput);
+                return tOutput;
+            } catch (IOException ex) {
+                Log.error("IOException while running " + command, ex);
+                return null;
             }
         }
-        return false;
-    }
-
-    /**
-     * Run the SeqWare jar given a particular set of parameters and check for an
-     * expected return value.
-     *
-     * The beauty of this approach is that we can later move this out into its
-     * own class, create an interface, and then we can reuse the same tests
-     * running against our code directly rather than through a jar, so we can
-     * compute code coverage and the like.
-     *
-     * @param parameters
-     * @param expectedReturnValue
-     * @return
-     * @throws IOException
-     */
-    public static String runSeqWareJar(String parameters, int expectedReturnValue) throws IOException {
-        File jar = retrieveFullAssembledJar();
-        String line = "java -jar " + jar.getAbsolutePath() + " " + parameters;
-        String output = runArbitraryCommand(line, expectedReturnValue, null);
-        return output;
-    }
-
-    /**
-     * This is the hackiest hack in the universe of hacks for getting the final
-     * assembly jar so I can run tests.
-     *
-     * There has got to be a better way of getting the path of the assembled jar
-     * via maven properties or some such. But I really need something to help me
-     * run tests on production bundles
-     */
-    public static File retrieveFullAssembledJar() {
-
-        // this does not work, it gets the pipeline jar instead of the full jar
-//        File jarFile  = PluginRunnerIT.getCodeSource(PluginRunner.class);
-//        Log.info("Jarfile was located at " + jarFile.getAbsolutePath());
-
-        String workingDir = System.getProperty("user.dir");
-        File workingDirectory = new File(workingDir);
-        File targetFullJar = searchForFullJar(workingDirectory);
-        if (targetFullJar != null){
-            return targetFullJar;
-        }
         
-        while (!isRootOfSeqWare(workingDirectory)) {
-            workingDirectory = workingDirectory.getParentFile();
-        }
-        File seqDistDir = new File(workingDirectory, "seqware-distribution");
-        File seqTargetDir = new File(seqDistDir, "target");
-        targetFullJar = searchForFullJar(seqTargetDir);
-        return targetFullJar;
-    }
-
-    /**
-     * Method returns code source of given class. This is URL of classpath
-     * folder, zip or jar file. If code source is unknown, returns null (for
-     * example, for classes java.io.*).
-     *
-     * Edited from
-     * http://asolntsev.blogspot.ca/2008/03/how-to-find-which-jar-file-contains.html
-     * This is extremely close to what we need to identify the full.jar, however
-     * right now it returns the pipeline jar in the maven repo rather than the
-     * full jar, which I suspect is an issue with how I've defined dependencies
-     * in Maven rather than a issueJava.
-     *
-     * @param clazz For example, java.sql.SQLException.class
-     * @return for example, "file:/C:/jdev10/jdev/mywork/classes/" or
-     * "file:/C:/works/projects/classes12.zip"
-     */
-    public static File getCodeSource(Class clazz) {
-        if (clazz == null
-                || clazz.getProtectionDomain() == null
-                || clazz.getProtectionDomain().getCodeSource() == null
-                || clazz.getProtectionDomain().getCodeSource().getLocation() == null) // This typically happens for system classloader
-        // (java.lang.* etc. classes)
-        {
-            Log.error("Could not access protection domainon " + clazz.getName());
-            return null;
-        }
-
-        URI uri = null;
-        try {
-            uri = clazz.getProtectionDomain().getCodeSource().getLocation().toURI();
-        } catch (URISyntaxException ex) {
-            Log.error("Could not determine location of " + clazz.getName());
-            return null;
-        }
-        if (uri != null) {
-            File file = new File(uri);
-            return file;
-        }
-        Log.error("Could not translate URI location of " + clazz.getName());
-        return null;
-    }
-
-    /**
-     * Run an arbitrary command and check it against an expected return value
-     *
-     * @param line
-     * @param expectedReturnValue
-     * @param dir
-     * @return
-     * @throws IOException
-     */
-    public static String runArbitraryCommand(String line, int expectedReturnValue, File dir) throws IOException {
-        Log.info("Running " + line);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        CommandLine commandline = CommandLine.parse(line);
-        DefaultExecutor exec = new DefaultExecutor();
-        if (dir != null) {
-            exec.setWorkingDirectory(dir);
-        }
-        PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
-        exec.setStreamHandler(streamHandler);
-        exec.setExitValue(expectedReturnValue);
-        try {
-            int exitValue = exec.execute(commandline);
-            Assert.assertTrue("exit value for full jar with no params should be " + expectedReturnValue + " was " + exitValue, exitValue == expectedReturnValue);
-            String output = outputStream.toString();
-            return output;
-        } catch (ExecuteException e) {
-            Log.error("Execution failed with:");
-            Log.error(outputStream.toString());
-            throw e;
-        }
+        
     }
 }
