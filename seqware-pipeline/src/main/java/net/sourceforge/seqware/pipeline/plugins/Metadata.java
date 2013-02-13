@@ -191,7 +191,7 @@ public class Metadata extends Plugin {
             }
             print("]\n");
         } else if ("sequencer_run".equals(table)) {
-            print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\npaired_end\tBoolean\t[true, false]\nskip\tBoolean\t[true, false]\nplatform_accession\tInteger\t[");
+            print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\npaired_end\tBoolean\t[true, false]\nskip\tBoolean\t[true, false]\nfile_path\tString\nplatform_accession\tInteger\t[");
             List<Platform> platforms = this.metadata.getPlatforms();
             for (Platform obj : platforms) {
                 print(obj.getPlatformId() + ": " + obj.getName() + " " + obj.getInstrumentModel() + ", ");
@@ -329,7 +329,7 @@ public class Metadata extends Plugin {
      *
      */
     protected ReturnValue addSequencerRun() {
-        String[] necessaryFields = {"platform_accession", "name", "description", "paired_end", "skip"};
+        String[] necessaryFields = {"platform_accession", "name", "description", "paired_end", "skip", "file_path"};
         // check to make sure we have what we need
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
         if (interactive) {
@@ -338,7 +338,7 @@ public class Metadata extends Plugin {
 
         if (checkFields(necessaryFields)) {
             // create a new experiment
-            ret = metadata.addSequencerRun(Integer.parseInt(fields.get("platform_accession")), fields.get("name"), fields.get("description"), "true".equalsIgnoreCase(fields.get("paired_end")), "true".equalsIgnoreCase(fields.get("skip")));
+            ret = metadata.addSequencerRun(Integer.parseInt(fields.get("platform_accession")), fields.get("name"), fields.get("description"), "true".equalsIgnoreCase(fields.get("paired_end")), "true".equalsIgnoreCase(fields.get("skip")), fields.get("file_path"));
 
             print("SWID: " + ret.getAttribute("sw_accession"));
 

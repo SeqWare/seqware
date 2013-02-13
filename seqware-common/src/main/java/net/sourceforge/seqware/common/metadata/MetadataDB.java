@@ -1904,7 +1904,7 @@ public class MetadataDB extends Metadata {
     // TODO Auto-generated method stub
   }
 
-  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip) {
+  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath) {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
 

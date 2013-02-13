@@ -174,8 +174,9 @@ public class SampleInfo {
         return librarySizeCode;
     }
 
-    public void setLibrarySizeCode(int librarySizeCode) {
-        this.librarySizeCode = String.valueOf(librarySizeCode);
+    public void setLibrarySizeCode(String librarySizeCode) {
+        addSampleAttribute("geo_library_size_code", String.valueOf(librarySizeCode));
+        this.librarySizeCode = librarySizeCode;
     }
 
 
@@ -184,6 +185,7 @@ public class SampleInfo {
     }
 
     public void setLibraryType(String libraryType) {
+        addSampleAttribute("geo_library_type", String.valueOf(librarySizeCode));
         this.libraryType = libraryType;
     }
 

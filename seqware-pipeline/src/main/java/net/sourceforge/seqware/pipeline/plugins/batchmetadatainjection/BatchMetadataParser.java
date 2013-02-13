@@ -16,14 +16,13 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import joptsimple.OptionException;
 import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.common.model.LibrarySelection;
-import net.sourceforge.seqware.common.model.LibrarySource;
-import net.sourceforge.seqware.common.model.LibraryStrategy;
-import net.sourceforge.seqware.common.model.Organism;
+import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import org.apache.commons.lang.StringUtils;
@@ -35,10 +34,9 @@ import org.apache.commons.lang.StringUtils;
 public abstract class BatchMetadataParser {
 
     public enum Field {
-
         study_type, platform_id, organism_id, study_name, experiment_name,
         sequencer_run_name, library_strategy_accession, library_source_accession, library_selection_accession,
-        library_source_template_type, tissue_origin, tissue_type, library_type, library_size_code, targeted_resequencing, tissue_preparation
+        library_source_template_type, tissue_origin, tissue_type, library_type, library_size_code, targeted_resequencing, tissue_preparation, run_file_path, barcode
     }
     private static String[] librarySourceTemplateTypeList = new String[]{"CH", "EX", "MR", "SM", "TR", "TS", "WG", "WT", "Other"};
     private static String[] targetedResequencingList = new String[]{"Agilent SureSelect 244k Array",
@@ -61,6 +59,7 @@ public abstract class BatchMetadataParser {
     private Integer lSize = 0;
     private Metadata metadata;
     protected final Map<String, String> fields;
+    protected boolean interactive;
 
     protected String choiceOf(String sampleName, String title, String[] choices, String deflt) {
         String choice = "";
@@ -86,9 +85,10 @@ public abstract class BatchMetadataParser {
         return choice;
     }
 
-    public BatchMetadataParser(Metadata metadata, Map<String, String> fields) {
+    public BatchMetadataParser(Metadata metadata, Map<String, String> fields, boolean interactive) {
         this.metadata = metadata;
         this.fields = fields;
+        this.interactive = interactive;
     }
 
     protected Integer findOrganismId(String organism) {
@@ -102,14 +102,26 @@ public abstract class BatchMetadataParser {
     }
 
     protected RunInfo generateRunInfo(String runName, String studyTitle,
-            String experimentName, int platformId, int studyType) {
+            String experimentName, String filePath, Integer platformId, Integer studyType) {
         RunInfo runInfo = new RunInfo();
 
-        runInfo.setStudyTitle(studyTitle);
-        runInfo.setRunName(runName);
-        runInfo.setExperimentName(experimentName);
-        runInfo.setPlatformId(platformId);
-        runInfo.setStudyType(studyType);
+
+        runInfo.setStudyTitle(prompt("Study Title", studyTitle, Field.study_name));
+        runInfo.setRunName(prompt("Sequencer Run Name", runName, Field.sequencer_run_name));
+        runInfo.setExperimentName(prompt("Experiment Name", experimentName, Field.experiment_name));
+        if (!fields.containsKey(Field.platform_id.toString())) {
+            for (Platform p : metadata.getPlatforms()) {
+                Log.stdout(p.toString());
+            }
+        }
+        runInfo.setPlatformId(prompt("Platform accession", platformId, Field.platform_id));
+        if (!fields.containsKey(Field.study_type.toString())) {
+            for (StudyType p : metadata.getStudyTypes()) {
+                Log.stdout(p.toString());
+            }
+        }
+        runInfo.setStudyType(prompt("Study Type Accession", studyType, Field.study_type));
+        runInfo.setRunFilePath(prompt("Sequencer run directory", filePath, Field.run_file_path));
 
         return runInfo;
     }
@@ -129,18 +141,19 @@ public abstract class BatchMetadataParser {
                 Log.stdout(ls.toString());
             }
         }
-        laneInfo.setLibraryStrategyAcc(prompt("Library Strategy Accession", 6, Field.library_strategy_accession));
+        laneInfo.setLibraryStrategyAcc(prompt("Library Strategy Accession", 0, Field.library_strategy_accession));
         if (!fields.containsKey(Field.library_selection_accession.toString())) {
             for (LibrarySelection ls : metadata.getLibrarySelections()) {
                 Log.stdout(ls.toString());
             }
         }
-        laneInfo.setLibrarySelectionAcc(prompt("Library Selection Accession", 1, Field.library_selection_accession));
-        if (!fields.containsKey(Field.library_source_accession.toString())) 
-        for (LibrarySource ls : metadata.getLibrarySource()) {
-            Log.stdout(ls.toString());
+        laneInfo.setLibrarySelectionAcc(prompt("Library Selection Accession", 0, Field.library_selection_accession));
+        if (!fields.containsKey(Field.library_source_accession.toString())) {
+            for (LibrarySource ls : metadata.getLibrarySource()) {
+                Log.stdout(ls.toString());
+            }
         }
-        laneInfo.setLibrarySourceAcc(prompt("Library Source Accession", 1, Field.library_source_accession));
+        laneInfo.setLibrarySourceAcc(prompt("Library Source Accession", 0, Field.library_source_accession));
 
 
         return laneInfo;
@@ -161,14 +174,20 @@ public abstract class BatchMetadataParser {
             libraryType = prompt(prettyName, "Library Type", libraryTypeList, this.lity, Field.library_type);
             this.lity = libraryType;
         }
+        sa.setLibraryType(libraryType);
+        
         if (librarySourceTemplateType == null || librarySourceTemplateType.isEmpty()) {
             librarySourceTemplateType = prompt(prettyName, "Library Source Template Type", librarySourceTemplateTypeList, this.lstety, Field.library_source_template_type);
             this.lstety = librarySourceTemplateType;
         }
+        sa.setLibrarySourceTemplateType(librarySourceTemplateType);
+        
         if (targetedResequencing == null || targetedResequencing.isEmpty()) {
             targetedResequencing = prompt(prettyName, "Targeted Resequencing Type", targetedResequencingList, this.tare, Field.targeted_resequencing);
             this.tare = targetedResequencing;
         }
+        sa.setTargetedResequencing(targetedResequencing);
+        
         if (tissueOrigin == null || tissueOrigin.isEmpty()) {
             tissueOrigin = prompt(prettyName, "Tissue Origin", tissueOriginList, this.tior, Field.tissue_origin);
             if (tissueOrigin.isEmpty()) {
@@ -177,20 +196,25 @@ public abstract class BatchMetadataParser {
                 this.tior = tissueOrigin;
             }
         }
+        sa.setTissueOrigin(tissueOrigin);
+        
+        
         if (tissuePreparation == null || tissuePreparation.isEmpty()) {
             tissuePreparation = prompt(prettyName, "Tissue Preparation", tissuePreparationList, this.tipr, Field.tissue_preparation);
             this.tipr = tissuePreparation;
         }
+        sa.setTissuePreparation(tissuePreparation);
+        
         if (tissueType == null || tissueType.isEmpty()) {
             tissueType = prompt(prettyName, "Tissue Type", tissueTypeList, this.tity, Field.tissue_type);
-
             if (tissueType.isEmpty()) {
                 tissueType = "n";
             } else {
                 this.tity = tissueType;
-
             }
         }
+        sa.setTissueType(tissueType);
+        
         if (librarySizeCode == null || librarySizeCode.isEmpty() || !StringUtils.isNumeric(librarySizeCode)) {
             Integer lSize = prompt("Library Size Code - a number code indicating the size of the band cut from the gel in base pairs", this.lSize, Field.library_size_code);
             if (lSize <= 0) {
@@ -200,21 +224,18 @@ public abstract class BatchMetadataParser {
                 librarySizeCode = lSize.toString();
             }
         }
+        sa.setLibrarySizeCode(librarySizeCode);
+        
+        if (barcode == null || barcode.isEmpty()) {
+            barcode = prompt("Barcode", "", Field.barcode);
+        }
+        sa.setBarcode(barcode);
+        
         StringBuilder name = new StringBuilder();
         name.append(projectCode).append("_").append(individualNumber);
         name.append("_").append(tissueOrigin).append("_").append(tissueType).append("_").append(libraryType).append("_");
         name.append(librarySizeCode).append("_").append(librarySourceTemplateType);
-
         sa.setName(name.toString());
-        sa.setTissueOrigin(tissueOrigin);
-        sa.setTissuePreparation(tissuePreparation);
-        sa.setTissueType(tissueType);
-
-
-        if (barcode == null || barcode.isEmpty()) {
-            barcode = ConsoleAdapter.getInstance().promptString("Barcode", "");
-        }
-        sa.setBarcode(barcode);
 
         if (organismId == null || organismId <= 0) {
             List<Organism> organisms = new ArrayList<Organism>(metadata.getOrganisms());
@@ -228,21 +249,40 @@ public abstract class BatchMetadataParser {
         return sa;
     }
 
-    protected int prompt(String description, int deflt, Field fieldName) {
+    protected int prompt(String description, int deflt, Field fieldName) throws OptionException {
         Log.debug("checking for field '" + fieldName.toString() + "'");
         if (fields.containsKey(fieldName.toString())) {
             return Integer.parseInt(fields.get(fieldName.toString()));
+        } else if (!interactive) {
+            if (deflt > 0) {
+                return deflt;
+            } else {
+                throw new OptionException(fields.keySet(), new Exception("A value must be provided for " + fieldName.toString())) {
+                };
+            }
         } else {
-            return ConsoleAdapter.getInstance().promptInteger(description, deflt);
+            Integer i = ConsoleAdapter.getInstance().promptInteger(description, deflt);
+            fields.put(fieldName.toString(), i.toString());
+            return i;
         }
     }
 
-    protected String prompt(String description, String deflt, Field fieldName) {
+    protected String prompt(String description, String deflt, Field fieldName) throws OptionException {
         Log.debug("checking for field '" + fieldName.toString() + "'");
         if (fields.containsKey(fieldName.toString())) {
             return fields.get(fieldName.toString());
+        } else if (!interactive) {
+            if (deflt != null && !deflt.trim().isEmpty()) {
+                return deflt;
+            } else {
+                throw new OptionException(fields.keySet(), new Exception("A value must be provided for " + fieldName.toString())) {
+                };
+            }
+
         } else {
-            return ConsoleAdapter.getInstance().promptString(description, deflt);
+            String s = ConsoleAdapter.getInstance().promptString(description, deflt);
+            fields.put(fieldName.toString(), s);
+            return s;
         }
     }
 
@@ -250,8 +290,17 @@ public abstract class BatchMetadataParser {
         Log.debug("checking for field '" + fieldName.toString() + "'");
         if (fields.containsKey(fieldName.toString())) {
             return fields.get(fieldName.toString());
+        } else if (!interactive) {
+            if (deflt != null && !deflt.trim().isEmpty()) {
+                return deflt;
+            } else {
+                throw new OptionException(fields.keySet(), new Exception("A value must be provided for " + fieldName.toString())) {
+                };
+            }
         } else {
-            return choiceOf(sampleName, title, choices, deflt);
+            String s = choiceOf(sampleName, title, choices, deflt);
+            fields.put(fieldName.toString(), s);
+            return s;
         }
     }
 }
