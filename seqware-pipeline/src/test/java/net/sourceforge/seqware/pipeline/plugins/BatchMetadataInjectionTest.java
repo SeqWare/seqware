@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import java.util.HashMap;
 import java.util.Set;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.ParseMisecFile;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.RunInfo;
@@ -56,7 +57,7 @@ public class BatchMetadataInjectionTest {
     @Test
     public void testParseMiSecFile() throws Exception {
         System.out.println("parseMiSecFile");
-        ParseMisecFile instance = new ParseMisecFile(null);
+        ParseMisecFile instance = new ParseMisecFile(null, new HashMap<String, String>(), false);
         RunInfo run = instance.parseMiSecFile(misecPath);
         Assert.assertEquals("Incorrect Project Name", "Testdance_123to456", run.getStudyTitle());
         Assert.assertEquals("Incorrect Experiment Name", "TDHS_123to456", run.getExperimentName());

@@ -42,6 +42,7 @@ public class BatchMetadataInjection extends Metadata {
     private ReturnValue ret = new ReturnValue();
     private StringBuffer whatWeDid = new StringBuffer();
     private Map<Integer, String> names;
+    private boolean interactive=false;
 
     //private boolean createStudy = false;
     /**
@@ -55,7 +56,7 @@ public class BatchMetadataInjection extends Metadata {
 //                + "This is encoded as '<field_name>::<value>', you should use single quotes when the "
 //                + "value includes spaces. You supply multiple --field arguments.");
 //        parser.acceptsAll(Arrays.asList("lf", "list-fields"), "Optional: lists the fields that are available to specify at run time.");
-//        parser.accepts("interactive", "Optional: ");
+        parser.accepts("interactive", "Optional: turn on interactive input ");
         ret.setExitStatus(ReturnValue.SUCCESS);
         names = new HashMap<Integer, String>();
     }
@@ -66,7 +67,7 @@ public class BatchMetadataInjection extends Metadata {
     @Override
     public ReturnValue init() {
 
-
+        interactive = options.has("interactive");
 
         whatWeDid.append("digraph dag {");
         return ret;
@@ -96,7 +97,7 @@ public class BatchMetadataInjection extends Metadata {
             if (options.has("misec-sample-sheet")) {
                 parseFields();          
                 String filepath = (String) options.valueOf("misec-sample-sheet");
-                ParseMisecFile misecParser = new ParseMisecFile(metadata, (Map<String,String>)fields.clone());
+                ParseMisecFile misecParser = new ParseMisecFile(metadata, (Map<String,String>)fields.clone(), interactive);
                 try {
                     RunInfo run = misecParser.parseMiSecFile(filepath);
                     inject(run);
@@ -137,7 +138,7 @@ public class BatchMetadataInjection extends Metadata {
         Set<LaneInfo> lanes = run.getLanes();
 
         List<Lane> existingLanes = metadata.getLanesFrom(sequencerRunAccession);
-        if (existingLanes != null && !existingLanes.isEmpty()) {
+        if (existingLanes != null && !existingLanes.isEmpty() && interactive) {
             Boolean yorn = ConsoleAdapter.getInstance().promptBoolean("This sequencer run already has " + existingLanes.size() + " lanes. Continue?", Boolean.TRUE);
             if (yorn.equals(Boolean.FALSE)) {
                 throw new Exception("Sequencer run " + sequencerRunAccession + " already has lanes.");

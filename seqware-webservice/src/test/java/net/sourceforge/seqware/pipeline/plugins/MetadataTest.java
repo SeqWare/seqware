@@ -228,6 +228,7 @@ public class MetadataTest extends PluginTest {
         expectedFields.put("paired_end", "Boolean");
         expectedFields.put("skip", "Boolean");
         expectedFields.put("platform_accession", "Integer");
+        expectedFields.put("file_path", "String");
 
 
 
@@ -380,7 +381,8 @@ public class MetadataTest extends PluginTest {
                 "--field", "description::SRD",
                 "--field", "platform_accession::20",
                 "--field", "paired_end::true",
-                "--field", "skip::false");
+                "--field", "skip::false",
+                "--field", "file_path::/home/user/mysequencerrun");
         String s = getOut();
         runAccession = getAndCheckSwid(s);
     }
@@ -655,6 +657,7 @@ public class MetadataTest extends PluginTest {
         params.put("platform_accession", "20");
         params.put("paired_end", "true");
         params.put("skip", "false");
+        params.put("file_path","/home/user/mysequencerrun");
         TestConsoleAdapter.initializeTestInstance().setLine(params);
 
         launchPlugin("--table", "sequencer_run", "--create",

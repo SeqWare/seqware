@@ -335,8 +335,7 @@ public class MetadataWS extends Metadata {
      * @param skip
      * @return
      */
-    public ReturnValue addSequencerRun(Integer platformAccession, String name, String description,
-            boolean pairdEnd, boolean skip) {
+    public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath) {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
         try {
@@ -350,6 +349,7 @@ public class MetadataWS extends Metadata {
             sr.setPairedEnd(pairdEnd);
             sr.setSkip(skip);
             sr.setPlatform(p);
+            sr.setFilePath(filePath);
 
             Log.info("Posting new sequencer_run");
 
