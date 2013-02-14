@@ -16,15 +16,19 @@
  */
 package net.sourceforge.seqware.webservice.resources.filters;
 
+import java.util.*;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
-import net.sourceforge.seqware.common.business.ExperimentService;
+import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.Experiment;
+import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.model.lists.ExperimentList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
-import net.sourceforge.seqware.webservice.resources.tables.ExperimentIDResource;
-import org.restlet.data.MediaType;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
+import org.restlet.data.Status;
 import org.restlet.resource.Get;
+import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 
 /**
@@ -33,41 +37,47 @@ import org.w3c.dom.Document;
  * @author mtaschuk
  * @version $Id: $Id
  */
-public class ExperimentIDFilter extends ExperimentIDResource {
-
-    
-
-    /** {@inheritDoc} */
-    @Override
-    public void doInit() {
-        super.doInit();
-        
-    }
+public class ExperimentIDFilter extends BasicResource {
 
     /**
      * <p>getXml.</p>
      */
     @Get
     public void getXml() {
-        ExperimentService ss = BeanFactory.getExperimentServiceBean();
-
-        String path = getRequest().getResourceRef().getPath();
-        Experiment study = null;
-        if (getId() != null) 
-        {
-            study = ss.findByID(Integer.parseInt(getId()));
+        //String path = getRequest().getResourceRef().getPath();getAttribute();
+        Collection<Experiment> experiments = null;
+        Map<String, Object> requestAttributes = getRequestAttributes();
+        if (requestAttributes.containsKey("studyId")) {
+            Object val = requestAttributes.get("studyId");
+            if (val != null) {
+                StudyService ss = BeanFactory.getStudyServiceBean();
+                Study s = (Study)testIfNull(ss.findBySWAccession(Integer.parseInt(val.toString())));
+                experiments = (SortedSet<Experiment>) testIfNull(s.getExperiments());
+            }
+        } else {
+            StringBuilder sb = new StringBuilder();
+            for (String key : requestAttributes.keySet()) {
+                sb.append(key);
+            }
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "This resource cannot handle these data types: " + sb.toString());
         }
-        
-        if (path.contains("samples"))
-        {
-            System.out.println("add samples to Experiment here");
+
+        if (experiments.isEmpty()) {
+            throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "There are no experiments for this resource");
         }
 
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<Experiment> jaxbTool = new JaxbObject<Experiment>();
+        JaxbObject<ExperimentList> jaxbTool = new JaxbObject<ExperimentList>();
 
-        Experiment dto = copier.hibernate2dto(Experiment.class, study);
-        Document line = XmlTools.marshalToDocument(jaxbTool, dto);
+        ExperimentList eList = new ExperimentList();
+        eList.setList(new ArrayList());
+
+        for (Experiment experiment : experiments) {
+            Experiment dto = copier.hibernate2dto(Experiment.class, experiment);
+            eList.add(dto);
+        }
+
+        Document line = XmlTools.marshalToDocument(jaxbTool, eList);
 
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }

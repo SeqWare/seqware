@@ -9,29 +9,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import net.sourceforge.seqware.common.model.ExperimentAttribute;
-import net.sourceforge.seqware.common.model.IUSAttribute;
-import net.sourceforge.seqware.common.model.LaneAttribute;
-import net.sourceforge.seqware.common.model.LibrarySelection;
-import net.sourceforge.seqware.common.model.LibrarySource;
-import net.sourceforge.seqware.common.model.LibraryStrategy;
-import net.sourceforge.seqware.common.model.Organism;
-import net.sourceforge.seqware.common.model.Platform;
-import net.sourceforge.seqware.common.model.ProcessingAttribute;
-import net.sourceforge.seqware.common.model.SampleAttribute;
-import net.sourceforge.seqware.common.model.SequencerRunAttribute;
-import net.sourceforge.seqware.common.model.Study;
-import net.sourceforge.seqware.common.model.StudyAttribute;
-import net.sourceforge.seqware.common.model.StudyType;
-import net.sourceforge.seqware.common.model.Workflow;
-import net.sourceforge.seqware.common.model.WorkflowAttribute;
-import net.sourceforge.seqware.common.model.WorkflowParam;
-import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
+import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
-
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
 /**
@@ -107,16 +88,17 @@ public class MetadataNoConnection extends Metadata {
   }
 
   /** {@inheritDoc} */
-  public ReturnValue addSample(Integer experimentAccession, Integer organismId, String description, String title) {
-    logger.info("No metadata connection");
+    @Override
+    public ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession, Integer organismId, String description, String title) {
+        logger.info("No metadata connection");
     return (new ReturnValue(ReturnValue.SUCCESS));
-  }
+    }
 
     public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip) {
         logger.info("No metadata connection");
         return (new ReturnValue(ReturnValue.SUCCESS));
     }
-  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip) {
+  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip, Integer laneNumber) {
               logger.info("No metadata connection");
         return (new ReturnValue(ReturnValue.SUCCESS));
   }
@@ -604,21 +586,81 @@ public class MetadataNoConnection extends Metadata {
 
   }
 
-  @Override
-  public String getWorkflowRunReportStdErr(int workflowRunSWID) {
-    return("");
-  }
 
-  @Override
-  public String getWorkflowRunReportStdOut(int workflowRunSWID) {
-    return("");
-  }
+    @Override
+    public String getProcessingRelations(String swAccession) {
+        // TODO Auto-generated method stub
+        return "";
+    }
+
+    @Override
+    public String getWorkflowRunReportStdErr(int workflowRunSWID) {
+        return ("");
+    }
+
+    @Override
+    public String getWorkflowRunReportStdOut(int workflowRunSWID) {
+        return ("");
+    }
 
     @Override
     public Workflow getWorkflow(int workflowAccession) {
         logger.info("No metadata connection");
         return null;
     }
-  
-  
+
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithASample(String sampleName, boolean requireFiles) {
+         return new ArrayList<ReturnValue>();
+    }
+
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, boolean requireFiles) {
+         return new ArrayList<ReturnValue>();
+    }
+
+    @Override
+    public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName, boolean requireFiles) {
+         return new ArrayList<ReturnValue>();
+    }
+
+    @Override
+    public List<SequencerRun> getAllSequencerRuns() {
+        return new ArrayList<SequencerRun>();
+    }
+
+    @Override
+    public List<Lane> getLanesFrom(int sequencerRunAccession) {
+        return new ArrayList<Lane>();
+    }
+
+    @Override
+    public List<IUS> getIUSFrom(int laneOrSampleAccession) {
+        return new ArrayList<IUS>();
+    }
+
+    @Override
+    public List<Experiment> getExperimentsFrom(int studyAccession) {
+        return new ArrayList<Experiment>();
+    }
+
+    @Override
+    public List<Sample> getSamplesFrom(int experimentAccession) {
+        return new ArrayList<Sample>();
+    }
+
+    @Override
+    public List<Sample> getChildSamplesFrom(int parentSampleAccession) {
+        return new ArrayList<Sample>();
+    }
+
+    @Override
+    public List<Sample> getParentSamplesFrom(int childSampleAccession) {
+        return new ArrayList<Sample>();
+    }
+
+    @Override
+    public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
+        return new ArrayList<WorkflowRun>();
+    }
 }

@@ -2,7 +2,6 @@ package net.sourceforge.seqware.pipeline.decider;
 
 import java.util.List;
 import java.util.Map;
-
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
