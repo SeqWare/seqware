@@ -29,6 +29,8 @@ import net.sourceforge.seqware.pipeline.module.Module;
 import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 
 import com.amazonaws.ClientConfiguration;
+import java.net.URL;
+import org.apache.hadoop.fs.FsUrlStreamHandlerFactory;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -282,7 +284,7 @@ public class ProvisionFiles extends Module {
 
     for (String input : inputs) {
       if (!input.startsWith("s3://") && !input.startsWith("http://") && !input.startsWith("https://")
-          !input.startsWith("hdfs://") && !options.has("skip-if-missing")
+          && !input.startsWith("hdfs://") && !options.has("skip-if-missing")
           && FileTools.fileExistsAndReadable(new File(input)).getExitStatus() != ReturnValue.SUCCESS
           && FileTools.dirPathExistsAndReadable(new File(input)).getExitStatus() != ReturnValue.SUCCESS) {
         return new ReturnValue(null, "Cannot find input file: " + input, ReturnValue.FILENOTREADABLE);
