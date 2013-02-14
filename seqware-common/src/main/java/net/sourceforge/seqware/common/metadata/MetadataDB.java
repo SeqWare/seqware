@@ -18,25 +18,7 @@ import java.util.SortedSet;
 
 import javax.sql.DataSource;
 
-import net.sourceforge.seqware.common.model.ExperimentAttribute;
-import net.sourceforge.seqware.common.model.IUSAttribute;
-import net.sourceforge.seqware.common.model.LaneAttribute;
-import net.sourceforge.seqware.common.model.LibrarySelection;
-import net.sourceforge.seqware.common.model.LibrarySource;
-import net.sourceforge.seqware.common.model.LibraryStrategy;
-import net.sourceforge.seqware.common.model.Organism;
-import net.sourceforge.seqware.common.model.Platform;
-import net.sourceforge.seqware.common.model.ProcessingAttribute;
-import net.sourceforge.seqware.common.model.SampleAttribute;
-import net.sourceforge.seqware.common.model.SequencerRunAttribute;
-import net.sourceforge.seqware.common.model.Study;
-import net.sourceforge.seqware.common.model.StudyAttribute;
-import net.sourceforge.seqware.common.model.StudyType;
-import net.sourceforge.seqware.common.model.Workflow;
-import net.sourceforge.seqware.common.model.WorkflowAttribute;
-import net.sourceforge.seqware.common.model.WorkflowParam;
-import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
+import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -90,9 +72,10 @@ public class MetadataDB extends Metadata {
   /**
    * {@inheritDoc}
    */
-  public ReturnValue addSample(Integer experimentAccession, Integer organismId, String description, String title) {
-    return (new ReturnValue(ReturnValue.NOTIMPLEMENTED));
-  }
+    @Override
+    public ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession, Integer organismId, String description, String title) {
+        return (new ReturnValue(ReturnValue.NOTIMPLEMENTED));
+    }
 
   /**
    * {@inheritDoc}
@@ -1925,7 +1908,7 @@ public class MetadataDB extends Metadata {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
 
-  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip) {
+  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip, Integer laneNumber) {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
 
@@ -1991,5 +1974,45 @@ public class MetadataDB extends Metadata {
     @Override
     public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName, boolean requireFiles) {
          throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<SequencerRun> getAllSequencerRuns() {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<Lane> getLanesFrom(int sequencerRunAccession) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<IUS> getIUSFrom(int laneOrSampleAccession) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<Experiment> getExperimentsFrom(int studyAccession) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<Sample> getSamplesFrom(int experimentAccession) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<Sample> getChildSamplesFrom(int parentSampleAccession) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<Sample> getParentSamplesFrom(int childSampleAccession) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
 }

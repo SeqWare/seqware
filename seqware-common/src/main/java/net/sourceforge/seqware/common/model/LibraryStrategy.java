@@ -41,13 +41,12 @@ public class LibraryStrategy implements Serializable, Comparable<LibraryStrategy
 		return(that.getName().compareTo(this.getName()));
 	}
 
-    /** {@inheritDoc} */
     @Override
-	public String toString() {
-		return new ToStringBuilder(this)
-			.append("libraryStrategyId", getLibraryStrategyId())
-			.toString();
-	}
+    public String toString() {
+        return "LibraryStrategy{" + "libraryStrategyId=" + libraryStrategyId + ", name=" + name + ", description=" + description + '}';
+    }
+
+
 
     /** {@inheritDoc} */
     @Override
