@@ -542,7 +542,7 @@ public class ProvisionFiles extends Module {
     } else if (output.startsWith("hdfs://")) {
 
       // put to S3
-      result = filesUtil.putToHDFS(reader, output, decryptCipher, encryptCipher);
+      result = filesUtil.putToHDFS(reader, output, fullOutputPath, decryptCipher, encryptCipher);
 
     } else {
 
