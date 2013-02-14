@@ -50,10 +50,6 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = ModuleInterface.class)
 public class ProvisionFiles extends Module {
-  
-  static {
-    URL.setURLStreamHandlerFactory(new FsUrlStreamHandlerFactory());
-  }
 
   protected OptionSet options = null;
   protected final int READ_ATTEMPTS = 1000;
