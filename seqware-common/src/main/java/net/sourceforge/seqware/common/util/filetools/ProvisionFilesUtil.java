@@ -51,6 +51,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.FsUrlStreamHandlerFactory;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
 
@@ -61,6 +62,10 @@ import org.apache.hadoop.io.IOUtils;
  * @version $Id: $Id
  */
 public class ProvisionFilesUtil {
+  
+  static {
+    URL.setURLStreamHandlerFactory(new FsUrlStreamHandlerFactory());
+  }
 
   protected final int READ_ATTEMPTS = 1000;
   protected long inputSize = 0L;
