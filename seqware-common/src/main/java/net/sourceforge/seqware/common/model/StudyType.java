@@ -39,14 +39,13 @@ public class StudyType implements Serializable {
 
 		return(that.getStudyTypeId().compareTo(this.getStudyTypeId()));
 	}
+        
         /** {@inheritDoc} */
         @Override
-	public String toString() {
-		return new ToStringBuilder(this)
-			.append("experimentLibraryDesignId", getStudyTypeId())
-			.append("name", getName())
-			.toString();
-	}
+        public String toString() {
+                return "StudyType{" + "studyTypeId=" + studyTypeId + ", name=" + name + ", description=" + description + '}';
+        }
+        
         /** {@inheritDoc} */
         @Override
 	public boolean equals(Object other) {

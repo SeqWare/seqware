@@ -326,6 +326,8 @@ public class WorkflowApp {
         OozieJob ret = null;
         if(job instanceof JavaJob) {
             //ret = new PegasusJavaJob(job,wfdm.getWorkflowBaseDir(), wfdm.getTags().get("seqware_version"));
+            ret = new OozieJavaJob(job, job.getAlgo() + "_" + this.jobs.size(),
+                    this.unqiueWorkingDir);
         } else if(job instanceof PerlJob) {
             ret = new OozieJob(job, job.getAlgo() + "_" + this.jobs.size(),
                     this.unqiueWorkingDir);
