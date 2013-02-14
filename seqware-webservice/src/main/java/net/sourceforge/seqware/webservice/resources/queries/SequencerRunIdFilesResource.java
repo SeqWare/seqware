@@ -26,14 +26,12 @@ import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.lists.ReturnValueList;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
-import org.restlet.data.Status;
 import org.w3c.dom.Document;
 
 /**
@@ -59,6 +57,7 @@ public class SequencerRunIdFilesResource extends BasicRestlet {
     @Override
     public void handle(Request request, Response response) {
         authenticate(request.getChallengeResponse().getIdentifier());
+        init(request);
         String id = request.getAttributes().get("sequencerRunId").toString();
 
         List<ReturnValue> returnValues = hello(Integer.parseInt(id));
@@ -85,6 +84,10 @@ public class SequencerRunIdFilesResource extends BasicRestlet {
         SequencerRun sr = (SequencerRun) testIfNull(srs.findBySWAccession(srSWA));
 
         FindAllTheFiles fatf = new FindAllTheFiles();
+        if (this.getQueryValue("requireFiles") != null){
+            boolean requireFiles = Boolean.valueOf(this.getQueryValue("requireFiles"));
+            fatf.setRequireFiles(requireFiles);
+        }
         for (Lane l : sr.getLanes()) {
             returnValues.addAll(fatf.filesFromLane(l, null, null));
         }

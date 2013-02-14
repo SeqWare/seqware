@@ -163,7 +163,7 @@ public class WorkflowRunReport {
         return wrrr;
     }
 
-    private Collection<Processing> collectProcessings(WorkflowRun wr) {
+    protected Collection<Processing> collectProcessings(WorkflowRun wr) {
         List<Processing> processings = new ArrayList<Processing>();
 
 	WorkflowRun newwr =  BeanFactory.getWorkflowRunServiceBean().findByID(wr.getWorkflowRunId());
@@ -230,7 +230,7 @@ public class WorkflowRunReport {
         return time.toString();
     }
 
-    private Collection<File> findFiles(Collection<Processing> processings) {
+    protected Collection<File> findFiles(Collection<Processing> processings) {
         List<File> files = new ArrayList<File>();
         for (Processing processing : processings) {
             files.addAll(processing.getFiles());
@@ -239,7 +239,7 @@ public class WorkflowRunReport {
         return files;
     }
 
-    private Collection<Processing> findParents(Collection<Processing> processings, int workflowRunSWID) {
+    protected Collection<Processing> findParents(Collection<Processing> processings, int workflowRunSWID) {
         Set<Integer> seenPs = new TreeSet<Integer>();
 
         List<Processing> allParentProcs = new ArrayList<Processing>();

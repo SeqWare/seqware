@@ -17,7 +17,7 @@
     <parent>
         <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
-        <version>0.13.6.1-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -255,6 +255,7 @@
                     <includes>
                         <include>**/WSResourceTestSuite.java</include>
                         <include>**/plugins/*.java</include>
+                        <include>**/deciders/*.java</include>
                     </includes>
                 </configuration>
             </plugin>
@@ -372,7 +373,10 @@
                     <groupId>javax.servlet</groupId>
                     <artifactId>servlet-api</artifactId>
                 </exclusion>
-                    
+                <exclusion>
+                    <artifactId>junit</artifactId>
+                    <groupId>junit</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>

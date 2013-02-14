@@ -17,9 +17,9 @@ public class OozieJob {
 	protected String wfrAccession;
 	protected boolean wfrAncesstor;
 	protected AbstractJob jobObj;
-	private boolean metadataWriteback;
-	private List<OozieJob> parents;
-	private List<OozieJob> children;
+	protected boolean metadataWriteback;
+	protected List<OozieJob> parents;
+	protected List<OozieJob> children;
 	protected String oozie_working_dir;
 	protected List<String> parentAccessionFiles;
 	
@@ -55,8 +55,12 @@ public class OozieJob {
 	public String getName() {
 		return this.name;
 	}
+
+        public String getOozieWorkingDir() {
+          return oozie_working_dir;
+        }
 	
-	private Element getJavaElement() {
+	protected Element getJavaElement() {
 		Element javaE = new Element("java", WorkflowApp.NAMESPACE);
 		Element jobTracker = new Element("job-tracker", WorkflowApp.NAMESPACE);
 		jobTracker.setText("${jobTracker}");
@@ -75,7 +79,46 @@ public class OozieJob {
 		Element value0 = new Element("value",WorkflowApp.NAMESPACE);
 		value0.setText("${queueName}");
 		p0.addContent(value0);
-		javaE.addContent(config);
+                
+                // map memory
+                p0 = new Element("property", WorkflowApp.NAMESPACE);
+                config.addContent(p0);
+                name0 = new Element("name", WorkflowApp.NAMESPACE);
+                name0.setText("oozie.launcher.mapred.job.map.memory.mb");
+                p0.addContent(name0);
+                value0 = new Element("value", WorkflowApp.NAMESPACE);
+                value0.setText(this.getJobObject().getMaxMemory());
+                p0.addContent(value0);
+
+                p0 = new Element("property", WorkflowApp.NAMESPACE);
+                config.addContent(p0);
+                name0 = new Element("name", WorkflowApp.NAMESPACE);
+                name0.setText("oozie.launcher.mapred.job.reduce.memory.mb");
+                p0.addContent(name0);
+                value0 = new Element("value", WorkflowApp.NAMESPACE);
+                value0.setText(this.getJobObject().getMaxMemory());
+                p0.addContent(value0);
+                
+                p0 = new Element("property", WorkflowApp.NAMESPACE);
+                config.addContent(p0);
+                name0 = new Element("name", WorkflowApp.NAMESPACE);
+                name0.setText("oozie.launcher.mapreduce.map.memory.physical.mb");
+                p0.addContent(name0);
+                value0 = new Element("value", WorkflowApp.NAMESPACE);
+                value0.setText(this.getJobObject().getMaxMemory());
+                p0.addContent(value0);
+
+                p0 = new Element("property", WorkflowApp.NAMESPACE);
+                config.addContent(p0);
+                name0 = new Element("name", WorkflowApp.NAMESPACE);
+                name0.setText("oozie.launcher.mapreduce.reduce.memory.physical.mb");
+                p0.addContent(name0);
+                value0 = new Element("value", WorkflowApp.NAMESPACE);
+                value0.setText(this.getJobObject().getMaxMemory());
+                p0.addContent(value0);
+                
+                // add configuration
+                javaE.addContent(config);
 		
 		Element mainClass = new Element("main-class", WorkflowApp.NAMESPACE);
 		mainClass.setText("net.sourceforge.seqware.pipeline.runner.Runner");

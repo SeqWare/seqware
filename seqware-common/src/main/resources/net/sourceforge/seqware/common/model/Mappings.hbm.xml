@@ -1170,15 +1170,29 @@
             <many-to-many class="Processing" column="processing_id" unique="true"/>
         </set>
 
-        <set name="children" table = "sample_hierarchy" cascade="all" lazy="true">
-            <key column="parent_id"/>
-            <many-to-many class="Sample" column="sample_id" unique="true"/>
+        <set name="children" table = "sample_hierarchy" 
+            inverse="false" cascade="all" lazy="true" fetch="select">
+            <key>
+                <column name="parent_id" not-null="true" />
+            </key>
+            <many-to-many entity-name="net.sourceforge.seqware.common.model.Sample">
+                <column name="sample_id" unique="true"/>
+            </many-to-many> 
         </set>
 
-        <set name="parents" table = "sample_hierarchy" inverse="true">
+        <set name="parents" table = "sample_hierarchy" 
+            inverse="false" cascade="all" lazy="true" fetch="select">
+            <key>
+                <column name="sample_id" not-null="true" />
+            </key>
+            <many-to-many entity-name="net.sourceforge.seqware.common.model.Sample">
+                <column name="parent_id" unique="true"/>
+            </many-to-many> 
+        </set>
+<!--        <set name="parents" table = "sample_hierarchy" inverse="true">
             <key column="sample_id"/>
             <many-to-many class="Sample" column="parent_id" unique="true"/>
-        </set>
+        </set>-->
 
         <set name="sampleAttributes" inverse="true" lazy="true" cascade="all-delete-orphan" table="sample_attribute" fetch="select">
             <key>
