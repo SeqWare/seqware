@@ -48,6 +48,10 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = ModuleInterface.class)
 public class ProvisionFiles extends Module {
+  
+  static {
+    URL.setURLStreamHandlerFactory(new FsUrlStreamHandlerFactory());
+  }
 
   protected OptionSet options = null;
   protected final int READ_ATTEMPTS = 1000;
@@ -278,7 +282,7 @@ public class ProvisionFiles extends Module {
 
     for (String input : inputs) {
       if (!input.startsWith("s3://") && !input.startsWith("http://") && !input.startsWith("https://")
-          && !options.has("skip-if-missing")
+          !input.startsWith("hdfs://") && !options.has("skip-if-missing")
           && FileTools.fileExistsAndReadable(new File(input)).getExitStatus() != ReturnValue.SUCCESS
           && FileTools.dirPathExistsAndReadable(new File(input)).getExitStatus() != ReturnValue.SUCCESS) {
         return new ReturnValue(null, "Cannot find input file: " + input, ReturnValue.FILENOTREADABLE);
