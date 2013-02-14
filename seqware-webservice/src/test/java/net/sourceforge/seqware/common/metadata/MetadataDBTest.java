@@ -17,10 +17,15 @@
 package net.sourceforge.seqware.common.metadata;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import junit.framework.Assert;
+import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.factory.DBAccess;
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.webservice.resources.tables.FileChildWorkflowRunsResource;
 import org.apache.log4j.Logger;
 import org.junit.*;
 
@@ -82,7 +87,76 @@ public class MetadataDBTest extends MetadataWSTest {
     @Override
     public void testGetFile() {
     }
+
+    @Override
+    public void testGetAllSequencerRuns() {
+        
+    }
+
+    @Override
+    public void testGetChildSamplesFrom() {
+        
+    }
+
+    @Override
+    public void testGetExperimentsFrom() {
+        
+    }
+
+    @Override
+    public void testGetIUSFromLane() {
+    }
+
+    @Override
+    public void testGetIUSFromSample() {
+    }
+
+    @Override
+    public void testGetLanesFrom() {
+    }
+
+    @Override
+    public void testGetParentSamplesFrom() {
+    }
+
+    @Override
+    public void testGetSamplesFromExperiment() {
+        
+    }
     
     
+    
+    @Override
+    public void testAddWorkflow() {
+    }
+        
+    @Override
+    public void testAddNovoAlignWorkflow() {
+    }
+    
+    @Test
+    @Override
+    public void testGetWorkflowRunsRelatedToFile_basic() {
+        /** test not supported in direct DB mode */
+    }
+
+    @Test
+    @Override
+    public void testGetWorkflowRunsRelatedToFile_multipleFiles() {
+        /** test not supported in direct DB mode */
+    }
+    
+    
+    @Test
+    @Override
+    public void testGetWorkflowRunsRelatedToFile_viaIUS() {
+        /** test not supported in direct DB mode */
+    }
+    
+    @Test
+    @Override
+    public void testGetWorkflowRunsRelatedToFile_viaLane() {
+        /** test not supported in direct DB mode */
+    }
     
 }

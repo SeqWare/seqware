@@ -62,6 +62,7 @@ public class MapTools {
             BufferedReader br = new BufferedReader(new FileReader(new File(iniFile)));
             String line;
             while ((line = br.readLine()) != null) {
+                // this deals with key value annotations
                 if (line.startsWith("#") && line.matches("^#\\s*key=.*$")) {
                     detailsMap = new HashMap<String, String>();
                     line = line.replaceAll("#\\s*", "");
@@ -73,13 +74,18 @@ public class MapTools {
                         else
                             detailsMap.put(kv[0], "");
                     }
-                } else if (!line.startsWith("#") && line.matches("\\S+\\s*=\\s*\\S+")) {
+                // this deals with keys
+                } else if (isLineMatchesKeyValue(line)) {
                     String[] kv = line.split("\\s*=\\s*");
                     if (detailsMap == null || !kv[0].equals(detailsMap.get("key"))) {
                         detailsMap = new HashMap<String, String>();
                         detailsMap.put("key", kv[0]);
                     }
-                    detailsMap.put("default_value", kv[1]);
+                    if (kv.length == 1){
+                        detailsMap.put("default_value", "");
+                    } else{
+                        detailsMap.put("default_value", kv[1]);
+                    }
                     hm.put(kv[0], detailsMap);
                 }
             }
@@ -242,7 +248,7 @@ public class MapTools {
         Map<String, String> result = new HashMap<String, String>();
         String[] lines = iniString.split("\n");
         for (String line : lines) {
-            if (!line.startsWith("#") && line.matches("\\S+\\s*=\\s*\\S+")) {
+            if (isLineMatchesKeyValue(line)) {
                 String[] kv = line.split("\\s*=\\s*");
                 if (kv.length == 2) {
                 result.put(kv[0], kv[1]);
@@ -252,5 +258,9 @@ public class MapTools {
             }
         }
         return (result);
+    }
+
+    private static boolean isLineMatchesKeyValue(String line) {
+        return !line.startsWith("#") && line.matches("\\S+\\s*=[^=]*");
     }
 }
