@@ -145,7 +145,7 @@ public class ParseMisecFile extends BatchMetadataParser {
         
         RunInfo runInfo = super.generateRunInfo(bits[bits.length - 2], 
                 headerInfo.get("Project Name").split("_")[0], 
-                headerInfo.get("Experiment Name").split("_")[0], file.getParent(), 26, null);
+                headerInfo.get("Experiment Name").split("_")[0], file.getParentFile().getAbsolutePath(), 26, -1);
         
         runInfo.setRunDescription(runInfo.getRunName());
         runInfo.setPairedEnd(true);

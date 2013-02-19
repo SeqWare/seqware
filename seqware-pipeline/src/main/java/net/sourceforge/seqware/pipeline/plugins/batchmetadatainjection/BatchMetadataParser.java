@@ -102,20 +102,20 @@ public abstract class BatchMetadataParser {
     }
 
     protected RunInfo generateRunInfo(String runName, String studyTitle,
-            String experimentName, String filePath, Integer platformId, Integer studyType) {
+            String experimentName, String filePath, int platformId, int studyType) {
         RunInfo runInfo = new RunInfo();
 
 
         runInfo.setStudyTitle(prompt("Study Title", studyTitle, Field.study_name));
         runInfo.setRunName(prompt("Sequencer Run Name", runName, Field.sequencer_run_name));
         runInfo.setExperimentName(prompt("Experiment Name", experimentName, Field.experiment_name));
-        if (!fields.containsKey(Field.platform_id.toString())) {
+        if (interactive && !fields.containsKey(Field.platform_id.toString())) {
             for (Platform p : metadata.getPlatforms()) {
                 Log.stdout(p.toString());
             }
         }
         runInfo.setPlatformId(prompt("Platform accession", platformId, Field.platform_id));
-        if (!fields.containsKey(Field.study_type.toString())) {
+        if (interactive && !fields.containsKey(Field.study_type.toString())) {
             for (StudyType p : metadata.getStudyTypes()) {
                 Log.stdout(p.toString());
             }
@@ -136,19 +136,19 @@ public abstract class BatchMetadataParser {
         laneInfo.setLaneCycleDescriptor("");
         laneInfo.setStudyTypeAcc(studyTypeAccession);
 
-        if (!fields.containsKey(Field.library_strategy_accession.toString())) {
+        if (interactive && !fields.containsKey(Field.library_strategy_accession.toString())) {
             for (LibraryStrategy ls : metadata.getLibraryStrategies()) {
                 Log.stdout(ls.toString());
             }
         }
         laneInfo.setLibraryStrategyAcc(prompt("Library Strategy Accession", 0, Field.library_strategy_accession));
-        if (!fields.containsKey(Field.library_selection_accession.toString())) {
+        if (interactive && !fields.containsKey(Field.library_selection_accession.toString())) {
             for (LibrarySelection ls : metadata.getLibrarySelections()) {
                 Log.stdout(ls.toString());
             }
         }
         laneInfo.setLibrarySelectionAcc(prompt("Library Selection Accession", 0, Field.library_selection_accession));
-        if (!fields.containsKey(Field.library_source_accession.toString())) {
+        if (interactive && !fields.containsKey(Field.library_source_accession.toString())) {
             for (LibrarySource ls : metadata.getLibrarySource()) {
                 Log.stdout(ls.toString());
             }
@@ -161,7 +161,7 @@ public abstract class BatchMetadataParser {
 
     protected SampleInfo generateSampleInfo(String prettyName, String projectCode, String individualNumber,
             String librarySourceTemplateType, String tissueOrigin, String tissueType, String libraryType, String librarySizeCode,
-            String barcode, Integer organismId, String targetedResequencing, String tissuePreparation) throws Exception {
+            String barcode, int organismId, String targetedResequencing, String tissuePreparation) throws Exception {
 
         if (individualNumber == null || individualNumber.isEmpty() || projectCode == null || projectCode.isEmpty()) {
             throw new Exception("Every sample needs a project code and individual number: You gave me " + projectCode + " and " + individualNumber);
@@ -237,7 +237,7 @@ public abstract class BatchMetadataParser {
         name.append(librarySizeCode).append("_").append(librarySourceTemplateType);
         sa.setName(name.toString());
 
-        if (organismId == null || organismId <= 0) {
+        if (organismId <= 0) {
             List<Organism> organisms = new ArrayList<Organism>(metadata.getOrganisms());
             for (int i = 0; i < organisms.size(); i++) {
                 Log.stdout(i + " : " + organisms.get(i).toString());
