@@ -171,7 +171,7 @@ public class BatchMetadataInjection extends Metadata {
         return ret;
     }
 
-    private int createLibrarySample(SampleInfo sample, int tissueTypeSampleAcc) {
+    private int createLibrarySample(SampleInfo sample, int tissueTypeSampleAcc) throws Exception {
 
         //get the library sample
         int librarySampleNameAcc = createSample(sample.getName(), sample.getSampleDescription(),
@@ -187,7 +187,7 @@ public class BatchMetadataInjection extends Metadata {
         return librarySampleNameAcc;
     }
 
-    private int retrieveTissueTypeSampleAccession(Integer parentSampleAcc, SampleInfo barcode) {
+    private int retrieveTissueTypeSampleAccession(Integer parentSampleAcc, SampleInfo barcode) throws Exception {
         //get the tissue type sample if it exists, otherwise create it
         int tissueTypeSampleAcc = 0;
         String name = barcode.getParentSample() + "_" + barcode.getTissueType();
@@ -209,7 +209,7 @@ public class BatchMetadataInjection extends Metadata {
         return tissueTypeSampleAcc;
     }
 
-    private Integer retrieveParentSampleAccession(List<Sample> parentSamples, SampleInfo barcode, int experimentAccession) {
+    private Integer retrieveParentSampleAccession(List<Sample> parentSamples, SampleInfo barcode, int experimentAccession) throws Exception {
         //get the parent sample if it exists, otherwise create it
         Integer parentSampleAcc = null;
         if (parentSamples != null && !parentSamples.isEmpty()) {
@@ -229,7 +229,7 @@ public class BatchMetadataInjection extends Metadata {
         return parentSampleAcc;
     }
 
-    private int createIUS(SampleInfo barcode, int laneAccession, int sampleAccession) {
+    private int createIUS(SampleInfo barcode, int laneAccession, int sampleAccession) throws Exception {
         fields.clear();
         fields.put("lane_accession", String.valueOf(laneAccession));
         fields.put("sample_accession", String.valueOf(sampleAccession));
@@ -239,9 +239,9 @@ public class BatchMetadataInjection extends Metadata {
         fields.put("barcode", barcode.getBarcode());
 
         //printDefaults();
-        interactive = true;
+//        interactive = true;
         ReturnValue rv = addIUS();
-        Integer swAccession = Integer.parseInt(rv.getAttribute("sw_accession"));
+        Integer swAccession = getSwAccession(rv);
 
         if (!barcode.getIusAttributes().isEmpty()) {
             metadata.annotateIUS(swAccession, barcode.getIusAttributes());
@@ -256,7 +256,7 @@ public class BatchMetadataInjection extends Metadata {
 
     }
 
-    private int createSample(String name, String description, int experimentAccession, int parentSampleAccession, String organismId, boolean interactive) {
+    private int createSample(String name, String description, int experimentAccession, int parentSampleAccession, String organismId, boolean interactive) throws Exception {
 
         fields.clear();
         fields.put("experiment_accession", String.valueOf(experimentAccession));
@@ -272,12 +272,12 @@ public class BatchMetadataInjection extends Metadata {
 //        }
         ReturnValue rv = addSample();
 
-        return Integer.parseInt(rv.getAttribute("sw_accession"));
+        return getSwAccession(rv);
     }
 
 //    private int retrieveExperiment(RunInfo run, int studyAccession) {
 //    }
-    private int createLane(LaneInfo lane, int sequencerRunAccession) {
+    private int createLane(LaneInfo lane, int sequencerRunAccession) throws Exception {
 
         fields.clear();
         fields.put("skip", lane.getLaneSkip().toString());
@@ -292,9 +292,9 @@ public class BatchMetadataInjection extends Metadata {
         fields.put("study_type_accession", lane.getStudyTypeAcc());
 
 //        printDefaults();
-        interactive = true;
+//        interactive = true;
         ReturnValue rv = addLane();
-        Integer swAccession = Integer.parseInt(rv.getAttribute("sw_accession"));
+        Integer swAccession = getSwAccession(rv);
 
         if (!lane.getLaneAttributes().isEmpty()) {
             metadata.annotateLane(swAccession, lane.getLaneAttributes());
@@ -326,10 +326,11 @@ public class BatchMetadataInjection extends Metadata {
             fields.put("paired_end", String.valueOf(run.isPairedEnd()));
             fields.put("name", run.getRunName());
             fields.put("description", run.getRunDescription());
+            fields.put("file_path", run.getRunFilePath());
 //        printDefaults();
-            interactive = true;
+//            interactive = true;
             ReturnValue rv = addSequencerRun();
-            swAccession = Integer.parseInt(rv.getAttribute("sw_accession"));
+            swAccession = getSwAccession(rv);
         }
 
         if (!run.getRunAttributes().isEmpty()) {
@@ -369,9 +370,9 @@ public class BatchMetadataInjection extends Metadata {
                 fields.put("description", run.getExperimentDescription());
 
 //                printDefaults();
-                interactive = true;
+//                interactive = true;
                 ReturnValue rv = addExperiment();
-                experimentAccession = Integer.parseInt(rv.getAttribute("sw_accession"));
+                experimentAccession = getSwAccession(rv);
             } else {
                 Log.stdout("This tool does not support creating new experiments when experiments already exist.");
                 Log.stdout("You can create a new experiment for study " + studyAccession + " using the Metadata plugin.");
@@ -390,7 +391,7 @@ public class BatchMetadataInjection extends Metadata {
         return experimentAccession;
     }
 
-    private int retrieveStudy(RunInfo run) {
+    private int retrieveStudy(RunInfo run) throws Exception {
         Log.stdout("\n--------Retrieving studies---------");
         List<Study> studies = metadata.getAllStudies();
         Integer studyAccession = null;
@@ -409,9 +410,9 @@ public class BatchMetadataInjection extends Metadata {
             fields.put("study_type", run.getStudyType());
 
 //            printDefaults();
-            interactive = true;
+//            interactive = true;
             ReturnValue rv = addStudy();
-            studyAccession = Integer.parseInt(rv.getAttribute("sw_accession"));
+            studyAccession = getSwAccession(rv);
         }
 
         if (!run.getStudyAttributes().isEmpty()) {
@@ -426,4 +427,15 @@ public class BatchMetadataInjection extends Metadata {
         whatWeDid.append("\n\t\"").append(type1).append(" ").append(names.get(accession1)).append("\\n").append(accession1);
         whatWeDid.append("\" -> \"").append(type2).append(" ").append(names.get(accession2)).append("\\n").append(accession2).append("\"");
     }
+    
+    private int getSwAccession(ReturnValue rv) throws Exception {
+        String swa = rv.getAttribute("sw_accession");
+        if (swa!=null && !swa.isEmpty()) {
+            return Integer.parseInt(swa);
+        }
+        else {
+            throw new Exception("No accession was returned");
+        }
+    }
+    
 }

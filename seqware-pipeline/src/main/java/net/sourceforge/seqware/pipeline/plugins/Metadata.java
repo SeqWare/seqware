@@ -343,7 +343,7 @@ public class Metadata extends Plugin {
             print("SWID: " + ret.getAttribute("sw_accession"));
 
         } else {
-            Log.error("You need to supply name, description, platform_accession [see platform lookup], and 'true' or 'false' for paired_end and skip. Alternatively, enable --interactive mode.");
+            Log.error("You need to supply name, description, platform_accession [see platform lookup], the complete file path of the run, and 'true' or 'false' for paired_end and skip. Alternatively, enable --interactive mode.");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
         return (ret);
@@ -464,6 +464,9 @@ public class Metadata extends Plugin {
         for (String s : fs) {
             if (!fields.containsKey(s)) {
                 allPresent = false;
+                Log.debug(s+" <null>");
+            } else {
+                Log.debug(s + " " + fields.get(s));
             }
         }
         return allPresent;
