@@ -9,6 +9,91 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 0.13.6.2 (2012-01-28)
+
+### Defect
+* [SEQWARE-1434] - Workflow_params and workflow_run_params are not populated when they are empty in the INI
+* [SEQWARE-1444] - Some parameters from .ini cannot make it into MetaDB
+* [SEQWARE-1471] - seqware installation error message confusing
+
+### Task
+* [SEQWARE-1453] - 0.13.6.1 Release
+* [SEQWARE-1454] - Bam-QC Decider (Basic Decider) uses excessive amounts of memory
+* [SEQWARE-1464] - Remove tomcat from sqwprod.hpc
+* [SEQWARE-1465] - Install web-service to sqwweb.hpc
+* [SEQWARE-1470] - Investigate (and fix) issue with BasicDecider on prod
+* [SEQWARE-1473] - Add input (parent) file SWIDs to the StudyIDFilesTSVResource
+* [SEQWARE-1474] - Workflow runs are not properly linked to IUS over the web service
+
+## 0.13.6.1 (2013-01-09) 
+
+### Improvement
+* [SEQWARE-1297] - Make BasicDecider not re-attempt failed or processing workflows
+* [SEQWARE-1409] - Make sure all plugins have descriptions
+
+### Story
+* [SEQWARE-1405] - Fix the newly identified BasicDecider bugs
+
+### Task
+* [SEQWARE-1284] - change setHeader in BasicDecider.java to something meaningful
+* [SEQWARE-1410] - Null pointer when a directory has permission denied read access
+* [SEQWARE-1411] - 0.13.6 Release 
+* [SEQWARE-1425] - Create unit tests for existing decider functionality
+* [SEQWARE-1427] - Create auto-generated doc for plugins
+* [SEQWARE-1439] - mvn clean follows the symlinks
+* [SEQWARE-1450] - Multi-threaded WorkflowStatusChecker
+* [SEQWARE-1451] - New WorkflowLauncher does not launch subsequent workflows if one dies while launching
+
+### Technical task
+* [SEQWARE-1447] - Update docs/spec for multi-threaded WorkflowStatusChecker
+* [SEQWARE-1448] - Create tests for multi-threaded WorkflowStatusChecker
+* [SEQWARE-1449] - Create multi-threaded WorkflowStatusChecker
+
+## 0.13.6 (2012-12-06)
+
+### Defect
+* [SEQWARE-1293] - Decider test incorrectly prints files that are not included
+* [SEQWARE-1331] - Metadata allows you to add objects with incorrect accessions
+* [SEQWARE-1333] - Metadata plugin does not write out files
+
+### Improvement
+* [SEQWARE-594] - use good separator in ini_file column 
+* [SEQWARE-740] - Enhance the process/tool that generates the seqware meta database dump file such that all relationships (specifically duplicates) are tracked and reported
+* [SEQWARE-1237] - add option to AttributeAnnotator for skip to propagate
+* [SEQWARE-1298] - Request feature to give user last chance to cancel the workflow run (in modifyIniFile)
+* [SEQWARE-1329] - ProcessingDataStructure2Dot improvements
+
+### Story
+* [SEQWARE-1218] - Modify the decider framework to run on everything, and on sequencer runs
+* [SEQWARE-1288] - Make sure that ProvisionFiles has metadata writeback
+* [SEQWARE-1325] - Web Service Access to Sample Hierarchy
+* [SEQWARE-1341] - Fix the workflow archetype so that the metadata is correct
+
+### Task
+* [SEQWARE-1132] - GenericCommandRunner (and other modules) should have an option that allows you to check if a file was created without persisting it to the db
+* [SEQWARE-1205] - Module Conventions needs to be somewhere writeable
+* [SEQWARE-1371] - allow workflow user to set parentAccession in jobs and files
+* [SEQWARE-1381] - seqware workflow java.lang.OutOfMemoryError
+* [SEQWARE-1384] - bug fix for simplified workflow
+* [SEQWARE-1394] - Trailing slash on bundle parameter causes null pointer exception
+* [SEQWARE-1402] - Implementation of Improved WorkflowLauncher and Checker
+* [SEQWARE-1404] - make a plugin to translate oozie workflow.xml to dot
+
+### Technical task
+* [SEQWARE-1219] - Create Decider archetype
+* [SEQWARE-1355] - SequencerRun reports need to be fixed in SymLink Reporter
+* [SEQWARE-1356] - Create WebService Resource for reporting
+* [SEQWARE-1357] - Adding parameter for decider to get back report
+* [SEQWARE-1365] - Java archetype puts incorrect package name (always net.sourceforge.seqware)
+* [SEQWARE-1370] - Add ability to specify parent accessions for specific jobs
+* [SEQWARE-1375] - add help message for workflowlauncherV2
+* [SEQWARE-1378] - Make the BasicDecider run against everything in the DB
+* [SEQWARE-1388] - Test Workflow monitor/launcher plugin with Morgan for SeqProdBio, ensure it works for multiple users
+* [SEQWARE-1392] - fix bundle path for workflow
+* [SEQWARE-1393] - bug fix for workflow directory name
+* [SEQWARE-1399] - Simplify archetype parameter versions
+* [SEQWARE-1403] - hostname and user file ownership utilities
+
 ## 0.13.5 (2012-11-13)
 
 ### Defect
