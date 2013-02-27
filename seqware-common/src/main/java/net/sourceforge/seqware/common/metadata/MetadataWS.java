@@ -2641,8 +2641,9 @@ public class MetadataWS extends Metadata {
                 ex.printStackTrace();
                 parent = null;
             } catch (ResourceException e) {
-                Log.error("MetadataWS.findObject with search string " + searchString + " encountered error " + e.getMessage());
-                Log.error(" please check that the object you are looking for exists in the MetaDB");
+                // note: this happens ona  regular basis with calls that attempt to locate the same sw_accession in either lane or IUS, making this less vocal
+                Log.info("MetadataWS.findObject with search string " + searchString + " encountered error " + e.getMessage());
+                Log.info(" please check that the object you are looking for exists in the MetaDB");
 
                 parent = null;
             } finally {
