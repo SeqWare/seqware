@@ -256,11 +256,20 @@ public class PluginRunnerIT {
     
     public static void main(String[] args) throws IOException {
         PluginRunnerIT it = new PluginRunnerIT();
-        it.testLatestWorkflows();
+        List<Integer> list = new ArrayList<Integer>();
+        for(String acc : args){
+            try{
+            Integer accInt = Integer.valueOf(acc);
+            list.add(accInt);
+            } catch(NumberFormatException e){
+                Log.stdout("NumberFormatException, skipped acc");
+            }
+        }
+        it.testLatestWorkflows(list);
     }
 
     @Test
-    public void testLatestWorkflows() throws IOException {
+    public void testLatestWorkflows(List<Integer> accessions) throws IOException {
         String output = ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-installed", ReturnValue.SUCCESS);
         Assert.assertTrue("output should include installed workflows", output.contains("INSTALLED WORKFLOWS"));
         Map<String, WorkflowInfo> latestWorkflows = new HashMap<String, WorkflowInfo>();
@@ -303,6 +312,16 @@ public class PluginRunnerIT {
         CompletionService<String> pool = new ExecutorCompletionService<String>(threadPool);
         for (Entry<String, WorkflowInfo> e : latestWorkflows.entrySet()) {
             System.out.println("Testing " + e.getKey() + " " + e.getValue().sw_accession);
+            
+            // if we have an accession list, skip accessions that are not in it
+            if (accessions.size() > 0){
+                Integer acc = e.getValue().sw_accession;
+                if (!accessions.contains(acc)){
+                    System.out.println("Skipping " + e.getKey() + " " + e.getValue().sw_accession + " due to accession list");
+                    continue;
+                }
+            }
+            
             StringBuilder params = new StringBuilder();
             params.append("--bundle ").append(e.getValue().path).append(" ");
             params.append("--version ").append(e.getValue().version).append(" ");
