@@ -52,7 +52,8 @@ public class PluginRunnerIT {
     private static Map<String, Integer> installedWorkflows = new HashMap<String, Integer>();
     private static Map<String, File> bundleLocations = new HashMap<String, File>();
     private static List<Integer> launchedWorkflowRuns = new ArrayList<Integer>();
-    private final static boolean DEBUG_SKIP = true;
+    private final static boolean DEBUG_SKIP = false;
+    private final static int PARENT = 4707;
 
     @BeforeClass
     public static void createAndInstallArchetypes() throws IOException {
@@ -157,7 +158,7 @@ public class PluginRunnerIT {
             String accession = Integer.toString(installedWorkflows.get(e.getKey()));
 
             String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files " + workflowPath + " --workflow-accession " + accession
-                    + " --schedule --parent-accessions 99 --host " + localhost;
+                    + " --schedule --parent-accessions "+PARENT+" --host " + localhost;
             String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
             Log.info(listOutput);
 
@@ -202,7 +203,7 @@ public class PluginRunnerIT {
             String accession = Integer.toString(installedWorkflows.get(e.getKey()));
 
             String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files " + workflowPath + " --workflow-accession " + accession
-                    + " --parent-accessions 99 --host " + localhost;
+                    + " --parent-accessions "+PARENT+" --host " + localhost;
             String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
             Log.info(listOutput);
         }
@@ -222,7 +223,7 @@ public class PluginRunnerIT {
             String accession = Integer.toString(installedWorkflows.get(e.getKey()));
 
             String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files " + workflowPath + " --workflow-accession " + accession
-                    + " --parent-accessions 99 --wait --host " + localhost;
+                    + " --parent-accessions "+PARENT+" --wait --host " + localhost;
             String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
             Log.info(listOutput);
         }
@@ -242,7 +243,7 @@ public class PluginRunnerIT {
             String accession = Integer.toString(installedWorkflows.get(e.getKey()));
 
             String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files " + workflowPath + " --workflow-accession " + accession
-                    + " --no-metadata --parent-accessions 99 --wait --host " + localhost;
+                    + " --no-metadata --parent-accessions "+PARENT+" --wait --host " + localhost;
             String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
             Log.info(listOutput);
         }
@@ -265,11 +266,40 @@ public class PluginRunnerIT {
                 Log.stdout("NumberFormatException, skipped acc");
             }
         }
-        it.testLatestWorkflows(list);
+        it.testLatestWorkflowsInternal(list);
     }
 
     @Test
-    public void testLatestWorkflows(List<Integer> accessions) throws IOException {
+    public void testLatestWorkflows() throws IOException {
+        testLatestWorkflowsInternal(new ArrayList<Integer>());
+    }
+    
+
+    private Map<String, File> exportWorkflowInis() throws IOException {
+        Map<String, File> iniParams = new HashMap<String, File>();
+        for(Entry<String, Integer> e : installedWorkflows.entrySet()){
+            Log.info("Attempting to export parameters for  " + e.getKey());
+            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession " + e.getValue();
+            String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+            Log.info(listOutput);     
+            // go through output and dump out the workflow.ini
+            File workflowIni = File.createTempFile("workflow", "ini");
+            String[] lines = listOutput.split(System.getProperty("line.separator"));
+            PrintWriter out = new PrintWriter(new FileWriter(workflowIni)); 
+            
+            for (String line : lines) {
+                if (line.startsWith("-") || line.startsWith("=") || line.startsWith("$") || line.startsWith("Running Plugin") || line.startsWith("Setting Up Plugin")){
+                    continue;
+                } 
+                out.println(line);
+            }
+            out.close();
+            iniParams.put(e.getKey(), workflowIni);
+        }
+        return iniParams;
+    }
+
+    private void testLatestWorkflowsInternal(List<Integer> accessions) throws IOException {
         String output = ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-installed", ReturnValue.SUCCESS);
         Assert.assertTrue("output should include installed workflows", output.contains("INSTALLED WORKFLOWS"));
         Map<String, WorkflowInfo> latestWorkflows = new HashMap<String, WorkflowInfo>();
@@ -339,30 +369,6 @@ public class PluginRunnerIT {
             }
         }
         threadPool.shutdown();
-    }
-
-    private Map<String, File> exportWorkflowInis() throws IOException {
-        Map<String, File> iniParams = new HashMap<String, File>();
-        for(Entry<String, Integer> e : installedWorkflows.entrySet()){
-            Log.info("Attempting to export parameters for  " + e.getKey());
-            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession " + e.getValue();
-            String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
-            Log.info(listOutput);     
-            // go through output and dump out the workflow.ini
-            File workflowIni = File.createTempFile("workflow", "ini");
-            String[] lines = listOutput.split(System.getProperty("line.separator"));
-            PrintWriter out = new PrintWriter(new FileWriter(workflowIni)); 
-            
-            for (String line : lines) {
-                if (line.startsWith("-") || line.startsWith("=") || line.startsWith("$") || line.startsWith("Running Plugin") || line.startsWith("Setting Up Plugin")){
-                    continue;
-                } 
-                out.println(line);
-            }
-            out.close();
-            iniParams.put(e.getKey(), workflowIni);
-        }
-        return iniParams;
     }
 
 

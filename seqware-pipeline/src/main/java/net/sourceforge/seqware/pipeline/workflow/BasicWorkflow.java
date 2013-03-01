@@ -862,10 +862,18 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 		resultsDeDup.put(map.get(key), "null");
 	    }
 	}
-
+        
 	for (String accession : resultsDeDup.keySet()) {
 	    results.add(accession);
 	}
+        
+        // for hotfix 0.13.6.3 
+        // GATK reveals an issue where parent_accession is setup with a correct list of accessions while parent-accessions and parent_accessions are set to 0
+        // when the three are mushed together, the rogue zero is transferred to parent_accession and causes it to crash the workflow
+        // I'm going to allow a single 0 in case (god forbid) some workflow relies upon this, but otherwise a 0 should not occur in a list of valid parent_accessions
+        if (results.contains("0") && results.size() > 1){
+            results.remove("0");
+        }
 
 	return (results);
     }
