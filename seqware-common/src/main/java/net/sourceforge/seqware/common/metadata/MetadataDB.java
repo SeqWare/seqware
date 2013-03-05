@@ -1181,6 +1181,7 @@ public class MetadataDB extends Metadata {
       this.setDb(ds.getConnection());
     } catch (SQLException e) {
       e.printStackTrace();
+      Log.fatal("init()  could not connect to SQL database", e);
       return new ReturnValue(null, "Could not connect to SQL database: " + e.getMessage(),
               ReturnValue.DBCOULDNOTINITIALIZE);
     }
@@ -1199,13 +1200,16 @@ public class MetadataDB extends Metadata {
               + e.getMessage(), ReturnValue.DBCOULDNOTINITIALIZE);
     }
 
+    Log.debug("init() and create statement");
     // Create a SQL statement and preparedStatement
     try {
       this.setSql(this.getDb().createStatement());
     } catch (SQLException e) {
+      Log.debug("init() could not create a Statement", e);
       return new ReturnValue(null, "Could not create a SQL statement" + e.getMessage(), ReturnValue.SQLQUERYFAILED);
     }
 
+    Log.debug("init() of  " + this.toString());
     // If no error so far, return Meta information
     try {
       return new ReturnValue(null, "Connection to " + dbmd.getDatabaseProductName() + " "
@@ -1222,6 +1226,7 @@ public class MetadataDB extends Metadata {
    */
   @Override
   public ReturnValue clean_up() {
+    Log.debug("clean_up() of occured " + this.toString());
     ReturnValue ret = new ReturnValue();
 
     try {
@@ -1305,6 +1310,9 @@ public class MetadataDB extends Metadata {
    * @param sql a {@link java.sql.Statement} object.
    */
   public void setSql(Statement sql) {
+    if (sql == null){
+        Log.fatal("sql is being set to null, this is bad bad ");
+    }
     this.sql = sql;
   }
 
@@ -1602,8 +1610,11 @@ public class MetadataDB extends Metadata {
    * @throws java.sql.SQLException if any.
    */
   public ResultSet executeQuery(String s) throws SQLException {
-    logger.debug("MetadataDB executeQuery: " + s);
-    return getSql().executeQuery(s);
+    Statement sql1 = getSql();
+    logger.debug("MetadataDB executeQuery: \"" + s + "\"");
+    logger.debug("MetadataDB executeQuery: query is " + (s == null ? "null": "not null"));
+    logger.debug("MetadataDB executeQuery: statement is " + (sql1 == null ? "null": "not null"));
+    return sql1.executeQuery(s);
   }
 
   /**

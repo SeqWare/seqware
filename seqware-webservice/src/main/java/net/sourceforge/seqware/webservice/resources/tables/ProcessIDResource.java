@@ -386,25 +386,30 @@ public class ProcessIDResource extends DatabaseIDResource {
     }
 
     private void addNewFiles(Processing p) throws SQLException, ResourceException {
+        Log.debug("Starting addNewFiles() with " + p.toString());
         Set<Integer> newFiles = new HashSet<Integer>();
         for (File file : p.getFiles()) {
             newFiles.add(file.getFileId());
         }
-
-        ResultSet rs = DBAccess.get().executeQuery(
-                "SELECT file_id "
+        Log.debug("Adding " + newFiles.size() + " files");
+        
+        String query = "SELECT file_id "
                 + "FROM processing_files "
-                + "WHERE processing_id = " + p.getProcessingId());
+                + "WHERE processing_id = " + p.getProcessingId();
+        Log.debug("Executing query: " + query);
+        ResultSet rs = DBAccess.get().executeQuery(query);
         while (rs.next()) {
             int fileID = rs.getInt("file_id");
             newFiles.remove(fileID);
         }
         for (int fileID : newFiles) {
+            Log.debug("Linking " + fileID + " to " + p.getSwAccession());
             DBAccess.get().linkProcessingAndFile(p.getProcessingId(), fileID);
         }
     }
 
     private void addNewIUSes(Processing p) throws SQLException, ResourceException {
+        Log.debug("Starting addNewIUS() with " + p.toString());
         Set<Integer> newIUSswa = new HashSet<Integer>();
         for (IUS ius : p.getIUS()) {
             newIUSswa.add(ius.getSwAccession());
@@ -428,6 +433,7 @@ public class ProcessIDResource extends DatabaseIDResource {
     }
 
     private void addNewLanes(Processing p) throws SQLException, ResourceException {
+        Log.debug("Starting addNewLanes() with " + p.toString());
         Set<Integer> newLane = new HashSet<Integer>();
         for (Lane lane : p.getLanes()) {
             newLane.add(lane.getSwAccession());
@@ -451,6 +457,7 @@ public class ProcessIDResource extends DatabaseIDResource {
     }
 
     private void addNewSequencerRuns(Processing p) throws SQLException, ResourceException {
+        Log.debug("Starting addNewSequencerRuns() with " + p.toString());
         Set<Integer> newObj = new HashSet<Integer>();
         for (SequencerRun obj : p.getSequencerRuns()) {
             newObj.add(obj.getSwAccession());
@@ -474,6 +481,7 @@ public class ProcessIDResource extends DatabaseIDResource {
     }
 
     private void addNewStudies(Processing p) throws SQLException, ResourceException {
+        Log.debug("Starting addNewStudies() with " + p.toString());
         Set<Integer> newObj = new HashSet<Integer>();
         for (Study obj : p.getStudies()) {
             newObj.add(obj.getSwAccession());
@@ -488,6 +496,7 @@ public class ProcessIDResource extends DatabaseIDResource {
             int swa = rs.getInt("sw_accession");
             newObj.remove(swa);
         }
+        
         for (int objID : newObj) {
             boolean toReturn = DBAccess.get().linkAccessionAndParent(objID, p.getProcessingId());
             if (!toReturn) {
@@ -497,6 +506,7 @@ public class ProcessIDResource extends DatabaseIDResource {
     }
 
     private void addNewExperiments(Processing p) throws SQLException, ResourceException {
+        Log.debug("Starting addNewExperiments() with " + p.toString());
         Set<Integer> newObj = new HashSet<Integer>();
         for (Experiment obj : p.getExperiments()) {
             newObj.add(obj.getSwAccession());
@@ -520,6 +530,7 @@ public class ProcessIDResource extends DatabaseIDResource {
     }
 
     private void addNewSamples(Processing p) throws SQLException, ResourceException {
+        Log.debug("Starting addNewSamples() with " + p.toString());
         Set<Integer> newObj = new HashSet<Integer>();
         for (Sample obj : p.getSamples()) {
             newObj.add(obj.getSwAccession());
@@ -543,6 +554,7 @@ public class ProcessIDResource extends DatabaseIDResource {
     }
 
     private void addNewRelationships(Processing p) throws SQLException {
+        Log.debug("Starting addNewRelationships() with " + p.toString());
         Set<Processing> children = p.getChildren();
         Set<Processing> parents = p.getParents();
 
