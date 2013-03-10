@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
+package org.apache.oozie.action.hadoop;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -27,22 +27,83 @@ import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.hadoop.util.DiskChecker;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.oozie.action.ActionExecutor;
 import org.apache.oozie.action.ActionExecutorException;
+import org.apache.oozie.action.hadoop.JavaActionExecutor;
+import org.apache.oozie.action.hadoop.LauncherMain;
+import org.apache.oozie.action.hadoop.LauncherMapper;
+import org.apache.oozie.action.hadoop.MapReduceMain;
+import org.apache.oozie.action.hadoop.ShellMain;
 import org.apache.oozie.client.WorkflowAction;
 import org.apache.oozie.util.IOUtils;
 import org.apache.oozie.util.XLog;
+import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Namespace;
 
 /**
  *
  * @author boconnor
  */
-public class OozieSGEActionNode extends ActionExecutor {
+public class OozieSGEActionNode extends ShellActionExecutor {
   
-  static protected ArrayList<SGEJob> sgeJobs = new ArrayList<SGEJob>();
+  //static protected ArrayList<SGEJob> sgeJobs = new ArrayList<SGEJob>();
+  
+  /**
+     * Config property name to set the child environment
+     */
+    public String OOZIE_LAUNCHER_CHILD_ENV = "mapred.child.env";
 
-  public OozieSGEActionNode() {
+    public OozieSGEActionNode() {
+        super("qsub");
+    }
+
+
+    @SuppressWarnings("unchecked")
+    Configuration setupActionConf(Configuration actionConf, Context context, Element actionXml, Path appPath)
+            throws ActionExecutorException {
+        super(actionConf, context, actionXml, appPath);
+        Namespace ns = actionXml.getNamespace();
+
+        String exec = actionXml.getChild("exec", ns).getTextTrim();
+        String execName = new Path(exec).getName();
+        actionConf.set(ShellMain.CONF_OOZIE_SHELL_EXEC, execName);
+
+        // Setting Shell command's arguments
+        setListInConf("argument", actionXml, actionConf, ShellMain.CONF_OOZIE_SHELL_ARGS, false);
+        // Setting Shell command's environment variable key=value
+        setListInConf("env-var", actionXml, actionConf, ShellMain.CONF_OOZIE_SHELL_ENVS, true);
+
+        // Setting capture output flag
+        actionConf.setBoolean(ShellMain.CONF_OOZIE_SHELL_CAPTURE_OUTPUT,
+                actionXml.getChild("capture-output", ns) != null);
+
+        return actionConf;
+    }
+
+    /**
+     * Utility method to append the new value to any property.
+     *
+     * @param conf
+     * @param propertyName
+     * @param appendValue
+     */
+    private void updateProperty(Configuration conf, String propertyName, String appendValue) {
+        if (conf != null) {
+            String val = conf.get(propertyName, "");
+            if (val.length() > 0) {
+                val += ",";
+            }
+            val += appendValue;
+            conf.set(propertyName, val);
+            log.debug("action conf is updated with default value for property " + propertyName + ", old value :"
+                    + conf.get(propertyName, "") + ", new value :" + val);
+        }
+    }
+
+  /* public OozieSGEActionNode() {
     super("sge");
   }
 
@@ -96,5 +157,6 @@ public class OozieSGEActionNode extends ActionExecutor {
   @Override
   public boolean isCompleted(String string) {
     throw new UnsupportedOperationException("Not supported yet.");
-  }
+  } */
+  
 }
