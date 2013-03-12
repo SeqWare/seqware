@@ -151,10 +151,20 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>commons-dbutils</groupId>
+                <artifactId>commons-dbutils</artifactId>
+                <version>1.5</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-exec</artifactId>
                 <version>${commons-exec.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>dbcp</artifactId>
+                <version>6.0.29</version>
+            </dependency>            
             <!-- while moving to HubFlow, the combination of HubFlow and maven:prepare is causing problems.
           		release:update-versions seems to have an easier time with versions defined here -->
             <dependency>
@@ -556,7 +566,7 @@
                         <goals>
                             <goal>stop</goal>
                         </goals>
-                    </execution>
+                    </execution> 
                 </executions>
             </plugin>
 
