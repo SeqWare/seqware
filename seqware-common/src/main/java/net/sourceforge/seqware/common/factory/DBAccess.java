@@ -72,7 +72,7 @@ public class DBAccess {
                 ex.printStackTrace();
             }
             if (ds != null) {
-                Log.debug("init via db.init(ds)");
+                Log.debug("init via db.init(ds), datasource is " + ds.getClass());
                 metadataDBWrapper.get().init(ds);
             } else {
                 Log.debug("init via init(user,pass,connection)");

@@ -57,7 +57,7 @@
                         <version>2.2</version>
                     </dependency>
                 </dependencies>
-            </plugin>
+            </plugin>  
         </plugins>
         <pluginManagement>
             <plugins>
@@ -278,6 +278,14 @@
             <artifactId>commons-dbcp</artifactId>
             <scope>test</scope>
             <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>dbcp</artifactId>
+        </dependency>  
+        <dependency>
+            <groupId>commons-dbutils</groupId>
+            <artifactId>commons-dbutils</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>
