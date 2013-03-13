@@ -346,26 +346,47 @@ public class ProcessIDResource extends DatabaseIDResource {
                 }
 
                 if (p.getWorkflowRun() != null) {
-                    ReturnValue ret = DBAccess.get().update_processing_workflow_run(
+                    MetadataDB mdb = DBAccess.get();
+                    try{
+                    ReturnValue ret = mdb.update_processing_workflow_run(
                             p.getProcessingId(),
                             p.getWorkflowRun().getSwAccession());
                     if (ret.getExitStatus() != ReturnValue.SUCCESS) {
                         throw new ResourceException(Status.SERVER_ERROR_INTERNAL,
                                 "Error in Update Processing Workflow Run with error  " + ret.getExitStatus());
                     }
+                    } finally{
+                        this.closeConnectionStatementResultSet(mdb, null);
+                        // this should be redundant
+                        DBAccess.close();
+                    }
                 }
 
                 if (p.getWorkflowRunByAncestorWorkflowRunId() != null) {
-                    DBAccess.get().add_workflow_run_ancestor(
+                    MetadataDB mdb = DBAccess.get();
+                    try{
+                    mdb.add_workflow_run_ancestor(
                             p.getWorkflowRunByAncestorWorkflowRunId().getSwAccession(),
                             p.getProcessingId());
+                    } finally{
+                        this.closeConnectionStatementResultSet(mdb, null);
+                        // this should be redundant
+                        DBAccess.close();
+                    }
 
                 }
 
 
 
                 ReturnValue newProcessing = Processing.clone(p), ret;
+                MetadataDB mdb = DBAccess.get();
+                try{
                 ret = DBAccess.get().update_processing_event(p.getProcessingId(), newProcessing);
+                } finally{
+                    this.closeConnectionStatementResultSet(mdb, null);
+                    // this should be redundant
+                    DBAccess.close();
+                }
                 if (ret.getExitStatus() != ReturnValue.SUCCESS) {
                     throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Updating the Processing failed with error " + ret.getExitStatus());
                 }

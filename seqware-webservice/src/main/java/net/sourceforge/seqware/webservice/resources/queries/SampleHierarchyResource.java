@@ -20,6 +20,7 @@ import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.queryengine.webservice.model.SampleHierarchies;
 import net.sourceforge.seqware.queryengine.webservice.model.SampleHierarchy;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+import org.apache.commons.dbutils.DbUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,7 +52,8 @@ public class SampleHierarchyResource extends BasicRestlet {
                      e.printStackTrace();
 		} finally {
                     try {
-                        rs.close();
+                        if (rs != null) {rs.close();}
+                        DBAccess.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(SampleHierarchyResource.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -79,6 +81,8 @@ public class SampleHierarchyResource extends BasicRestlet {
             }
             catch (SQLException ex) {
                     Logger.getLogger(SampleHierarchyResource.class.getName()).log(Level.SEVERE, null, ex);
+            } finally{
+                DBAccess.close();
             }
 
         }
