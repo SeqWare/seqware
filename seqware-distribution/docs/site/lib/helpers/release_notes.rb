@@ -15,7 +15,7 @@ module Nanoc3::Helpers
 
       # Parse title
       raw = doc.css('h2').first.inner_html.strip
-      if raw !~ /^(\d+\.\d+(\.\d*)?) \((\d{4}-\d{2}-\d{2})\)$/
+      if raw !~ /^(\d+\.\d+(\.\d*\.*\d*)?) \((\d{4}-\d{2}-\d{2})\)$/
         raise RuntimeError, "title does not match latest release info regex: #{raw.inspect}"
       end
 

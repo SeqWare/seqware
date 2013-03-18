@@ -635,7 +635,7 @@ public class Study implements Serializable, PermissionsAware {
       Logger.getLogger(Study.class).warn("Registration is null!");
       hasPermission = false;
     } else if (registration.isLIMSAdmin()) {
-      Logger.getLogger(Study.class).warn("Study gives permission");
+      Logger.getLogger(Study.class).info("Study gives permission");
       hasPermission = true;
     } else if (owner != null || sharedStudies != null) {
       hasPermission = false;

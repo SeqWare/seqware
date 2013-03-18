@@ -251,8 +251,11 @@ public class MapTools {
             if (isLineMatchesKeyValue(line)) {
                 String[] kv = line.split("\\s*=\\s*");
                 if (kv.length == 2) {
-                result.put(kv[0], kv[1]);
-                } else {
+                    result.put(kv[0], kv[1]);
+                } else if (kv.length == 1){
+                    result.put(kv[0], "");
+                } 
+                else {
                     System.err.println("Found a line I couldn't parse: "+line);
                 }
             }
