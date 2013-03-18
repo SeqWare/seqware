@@ -106,6 +106,33 @@ public class MapToolsTest {
         Assert.assertTrue("blank annotated defaults for ini2RichMap failed", hm.get("funky_annotated").size() == 5 && hm.get("funky_annotated").get("display").equals("F"));
     }
     
+    @Test 
+    public void testIniString2MapWithNovoalign(){
+        String path = getClass().getResource("novoalign.ini").getPath();
+        Map<String, Map<String, String>> hm = new HashMap<String, Map<String, String>>();
+        MapTools.ini2RichMap(path, hm);
+        Assert.assertTrue("ini2RichMap with novoalign failed", hm.size() == 34);
+        StringBuffer mapBuffer = createStringFromMap(hm);
+        
+        Map<String, String> iniString2Map = MapTools.iniString2Map(mapBuffer.toString());
+        // a map re-created from a String "loaded into the DB" should be the same size as before
+        Assert.assertTrue("iniString2Map with novoalign failed", iniString2Map.size() == 34);
+    }
+    
+    @Test 
+    public void testIniString2MapWithBlanks(){
+        String path = getClass().getResource("normal_withBlanks.ini").getPath();
+        Map<String, Map<String, String>> hm = new HashMap<String, Map<String, String>>();
+        MapTools.ini2RichMap(path, hm);
+        Assert.assertTrue("ini2RichMap with blanks failed", hm.size() == 7);
+        testNormalValues(hm);
+        StringBuffer mapBuffer = createStringFromMap(hm);
+        
+        Map<String, String> iniString2Map = MapTools.iniString2Map(mapBuffer.toString());
+        // a map re-created from a String "loaded into the DB" should be the same size as before
+        Assert.assertTrue("iniString2Map with blanks failed", iniString2Map.size() == 7);
+    }
+    
      /**
      * Test is for SEQWARE-1444
      * @throws Exception 
@@ -158,6 +185,17 @@ public class MapToolsTest {
         Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get("input_file").size() == 5 && hm.get("input_file").get("file_meta_type").equals("text/plain"));
         Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get("input_file").size() == 5 && hm.get("input_file").get("type").equals("file"));
         Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get("input_file").size() == 5 && hm.get("input_file").get("display").equals("F"));
+    }
+
+    private StringBuffer createStringFromMap(Map<String, Map<String, String>> hm) {
+        // make a single string from the map
+        StringBuffer mapBuffer = new StringBuffer();
+        for (String key : hm.keySet()) {
+            Log.info("KEY: " + key + " VALUE: " + hm.get(key));
+            // Log.error(key+"="+map.get(key));
+            mapBuffer.append(key + "=" + hm.get(key).get("default_value") + "\n");
+        }
+        return mapBuffer;
     }
 
    

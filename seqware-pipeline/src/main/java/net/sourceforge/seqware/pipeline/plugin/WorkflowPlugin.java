@@ -547,9 +547,9 @@ public class WorkflowPlugin extends Plugin {
             return retPegasus;
         }
 
-        int workflowrunId = Integer.parseInt(wra);
-        int workflowrunaccession = metadata.get_workflow_run_accession(workflowrunId);
-        //int workflowrun = this.metadata.get_workflow_run_id(workflowrunaccession);
+        //int workflowrunId = Integer.parseInt(wra);
+        int workflowrunaccession = Integer.parseInt(wra); //metadata.get_workflow_run_accession(workflowrunId);
+        int workflowrunId = metadata.get_workflow_run_id(workflowrunaccession);
 
         // figure out the status command
         String statusCmd = engine.getStatus();
@@ -595,8 +595,10 @@ public class WorkflowPlugin extends Plugin {
 
             return retPegasus;
         } else {
+            // determine status based on object model 
+            String status = dataModel.isWait() ? "completed" : "pending";
             metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
-                    dataModel.getTags().get("workflow_template"), "completed",
+                    dataModel.getTags().get("workflow_template"), status,
                     statusCmd, dataModel.getWorkflowBundleDir(), "", "", wr
                     .getHost(), 0, 0,
                     retPegasus.getStderr(), retPegasus.getStdout(), engine.getClass().getSimpleName());
