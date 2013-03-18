@@ -9,6 +9,7 @@ import java.util.TreeSet;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
+import org.apache.commons.dbutils.DbUtils;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -349,8 +350,9 @@ public class File implements Serializable, Comparable<File>, PermissionsAware {
    */
   public static File cloneFromDB(int fileId) throws SQLException {
     File file = null;
+    ResultSet rs = null;
     try {
-      ResultSet rs = DBAccess.get().executeQuery("SELECT * FROM file WHERE file_id=" + fileId);
+      rs = DBAccess.get().executeQuery("SELECT * FROM file WHERE file_id=" + fileId);
       if (rs.next()) {
         file = new File();
         file.setFileId(rs.getInt("file_id"));
@@ -364,6 +366,7 @@ public class File implements Serializable, Comparable<File>, PermissionsAware {
         file.setSwAccession(rs.getInt("sw_accession"));
       }
     } finally {
+      DbUtils.closeQuietly(rs);
       DBAccess.close();
     }
 
