@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <parent> 
-        <version>0.13.6.2</version>
+        <version>0.13.6.3</version>
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
         <relativePath>../pom.xml</relativePath> 
@@ -57,7 +57,7 @@
                         <version>2.2</version>
                     </dependency>
                 </dependencies>
-            </plugin>
+            </plugin>  
         </plugins>
         <pluginManagement>
             <plugins>
@@ -141,6 +141,10 @@
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.ext.net</artifactId>
         </dependency> -->
+        <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-exec</artifactId>
+         </dependency>
         <dependency>
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.ext.httpclient</artifactId>
@@ -274,6 +278,14 @@
             <artifactId>commons-dbcp</artifactId>
             <scope>test</scope>
             <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>dbcp</artifactId>
+        </dependency>  
+        <dependency>
+            <groupId>commons-dbutils</groupId>
+            <artifactId>commons-dbutils</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>
