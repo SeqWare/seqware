@@ -8,10 +8,10 @@
     <packaging>war</packaging>
 
     <properties>
-        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
         <netbeans.compile.on.save>all</netbeans.compile.on.save>
         <seqware_meta_db_name>test_seqware_meta_db</seqware_meta_db_name>
         <seqware_meta_db_port>5432</seqware_meta_db_port>
+        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
     </properties>
     
     <parent>
@@ -27,66 +27,21 @@
   <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
-		<!-- <version>7.0.0.pre5</version> -->
-                <version>6.1.26</version>
-                <configuration>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
-		<!-- next three properties added for IT testing --> 
-                    <stopPort>9999</stopPort>
-                    <stopKey>STOP</stopKey>
-                   <!--  <contextPath>/</contextPath> -->
-
-                    <connectors>
-                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector"> 
-                        <!-- <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector"> -->
-                            <port>8889</port>
-                            <maxIdleTime>60000</maxIdleTime>
-                        </connector>
-                    </connectors>
-                </configuration>
+                
                 <executions>
                     <execution>
 			<!-- this execution handles jetty:run SEQWARE-1286 -->
                         <id>default-cli</id>
 		        <phase>test-compile</phase>	
-                        <configuration>
-                            <connectors>
-                               <!-- <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector"> -->
-                               <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-                                    <port>8889</port>
-                                </connector>
-                            </connectors>
-                            <scanIntervalSeconds>0</scanIntervalSeconds>
-                        </configuration>
                     </execution>
                     <execution>
-			<!-- this execution handles when jetty is run through the normal lifecycle process -->
                         <id>start-jetty</id>
-                        <!-- changed for IT testing <phase>test-compile</phase> -->
-                        <phase>test-compile</phase>	
-		        <!-- <phase>pre-integration-test</phase> -->	
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-		            <skip>${skipITs}</skip>
-                            <connectors>
-                               <!-- <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector"> -->
-                                <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-                                    <port>8889</port>
-                                </connector>
-                            </connectors>
-                            <scanIntervalSeconds>0</scanIntervalSeconds>
-                            <daemon>true</daemon>
-                        </configuration>
+                        <phase>test-compile</phase>
                     </execution>
 		   <!-- re-enabled for IT testing -->
                     <execution>
                         <id>stop-jetty</id>
                         <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -95,7 +50,6 @@
           <!-- hacked from, some of their syntax did not compile http://mojo.codehaus.org/sql-maven-plugin/examples/execute.html -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>sql-maven-plugin</artifactId>
-        <version>1.5</version>
 
         <dependencies>
           <!-- specify the dependent jdbc driver here -->
@@ -119,32 +73,11 @@
           <execution>
             <id>drop-db-before-test-if-any</id>
             <phase>process-test-resources</phase>
-            <goals>
-              <goal>execute</goal>
-            </goals>
-            <configuration>
-              <!-- need another database to drop the targeted one -->
-              <url>jdbc:postgresql://localhost:5432/postgres</url>
-              <autocommit>true</autocommit>
-              <!-- it would be nice to use maven property here for the name, but no joy -->
-              <sqlCommand>DROP DATABASE IF EXISTS test_seqware_meta_db</sqlCommand>
-              <!-- ignore error when database is not avaiable -->
-              <onError>continue</onError>
-            </configuration>
           </execution>
           
           <execution>
             <id>create-db</id>
             <phase>process-test-resources</phase>
-            <goals>
-              <goal>execute</goal>
-            </goals>
-            <configuration>
-              <url>jdbc:postgresql://localhost:5432/postgres</url>
-              <autocommit>true</autocommit>
-              <!-- it would be nice to use maven property here for the name, but no joy -->
-              <sqlCommand>CREATE DATABASE test_seqware_meta_db</sqlCommand>
-            </configuration>
           </execution>
 
 	  <!-- this would be good to resolve SEQWARE-1225. Maven binds multiple executions to the same phase in pom.xml order.
@@ -152,14 +85,6 @@
           <execution>
             <id>drop-db-after-test</id>
             <phase>post-integration-test</phase>
-            <goals>
-              <goal>execute</goal>
-            </goals>
-            <configuration>
-              <url>jdbc:postgresql://localhost:5432/postgres</url>
-              <autocommit>true</autocommit>
-              <sqlCommand>DROP DATABASE test_seqware_meta_db</sqlCommand>
-            </configuration>
           </execution>
 	  -->
 
@@ -179,16 +104,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>tomcat-maven-plugin</artifactId>
-<!-- snapshot was here but commented out originally, using the latest released version as checked by mvn help:describe -DgroupId=org.codehaus.mojo  -DartifactId=tomcat-maven-plugin -Dfull=true | less -->
-                <version>1.1</version>
-<!--                <version>1.2-SNAPSHOT</version>-->
-                <configuration>
-                    <mode>war</mode>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.7</version>
@@ -205,8 +120,44 @@
                             </target>
                         </configuration>
                     </execution>
+<!--
+                    <execution>
+                        <id>wait</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <echo message="Sleeping now for 30 seconds:" />
+                                <sleep seconds="1" />
+                                <echo message="1" />
+                                <sleep seconds="2" />
+                                <echo message="2" />
+                                <sleep seconds="3" />
+                                <echo message="3" />
+                                <sleep seconds="4" />
+                                <echo message="4" />
+                                <sleep seconds="120" />
+                                <echo message="120" />
+                            </tasks>
+                        </configuration>
+                    </execution>
+                    -->
+
                 </executions>
             </plugin>
+            
+             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>tomcat-maven-plugin</artifactId>
+<!-- snapshot was here but commented out originally, using the latest released version as checked by mvn help:describe -DgroupId=org.codehaus.mojo  -DartifactId=tomcat-maven-plugin -Dfull=true | less -->
+                <version>1.1</version>
+<!--                <version>1.2-SNAPSHOT</version>-->
+                <configuration>
+                    <mode>war</mode>
+                </configuration>
+             </plugin>
                     
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -259,6 +210,7 @@
                     </includes>
                 </configuration>
             </plugin>
+            
           </plugins>
     </build>
 
@@ -288,6 +240,7 @@
     </repositories>
 
     <dependencies>
+        
         <dependency>
             <groupId>net.sf.beanlib</groupId>
             <artifactId>beanlib</artifactId>
@@ -376,6 +329,10 @@
                 <exclusion>
                     <artifactId>junit</artifactId>
                     <groupId>junit</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jasper-runtime</artifactId>
+                    <groupId>tomcat</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -519,6 +476,10 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-dbutils</groupId>
+            <artifactId>commons-dbutils</artifactId>
         </dependency>
         
         

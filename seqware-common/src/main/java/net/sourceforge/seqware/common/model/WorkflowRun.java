@@ -21,6 +21,7 @@ import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.adapters.XmlizeXML;
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
+import org.apache.commons.dbutils.DbUtils;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -802,8 +803,9 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
    */
   public static WorkflowRun cloneFromDB(int wrId) throws SQLException {
     WorkflowRun wr = null;
+    ResultSet rs = null;
     try {
-      ResultSet rs = DBAccess.get().executeQuery("SELECT * FROM workflow_run WHERE workflow_run_id=" + wrId);
+      rs = DBAccess.get().executeQuery("SELECT * FROM workflow_run WHERE workflow_run_id=" + wrId);
       if (rs.next()) {
         wr = new WorkflowRun();
         wr.setWorkflowRunId(rs.getInt("workflow_run_id"));
@@ -830,6 +832,7 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
 
       }
     } finally {
+      DbUtils.closeQuietly(rs);
       DBAccess.close();
     }
     return wr;
