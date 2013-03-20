@@ -32,20 +32,20 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author mtaschuk
  */
-public class ParseMisecFile extends BatchMetadataParser {
+public class ParseMiseqFile extends BatchMetadataParser {
 
     private ReturnValue ret = new ReturnValue();
 
-    public ParseMisecFile(Metadata metadata, Map<String, String> fields, boolean interactive) {
+    public ParseMiseqFile(Metadata metadata, Map<String, String> fields, boolean interactive) {
         super(metadata, fields, interactive);
     }
 
-    public RunInfo parseMiSecFile(String filepath) throws Exception {
+    public RunInfo parseMiseqFile(String filepath) throws Exception {
         RunInfo run = null;
         File file = new File(filepath);
         try {
             BufferedReader freader = new BufferedReader(new FileReader(file));
-            run = parseMiSecHeader(freader, file);
+            run = parseMiseqHeader(freader, file);
             String runName = prompt("Sequencer run name", run.getRunName(), Field.sequencer_run_name);
             String studyName = prompt("Study name", run.getStudyTitle(), Field.study_name);
             String expName = prompt("Experiment name", run.getExperimentName(), Field.experiment_name);
@@ -53,7 +53,7 @@ public class ParseMisecFile extends BatchMetadataParser {
             run.setStudyTitle(studyName);
             run.setExperimentName(expName);
 
-            Set<LaneInfo> lanes = parseMiSecData(freader);
+            Set<LaneInfo> lanes = parseMiseqData(freader);
             freader.close();
 
             run.setLanes(lanes);
@@ -68,10 +68,10 @@ public class ParseMisecFile extends BatchMetadataParser {
         return run;
     }
 
-    public Set<LaneInfo> parseMiSecData(BufferedReader freader) throws IOException, Exception {
+    public Set<LaneInfo> parseMiseqData(BufferedReader freader) throws IOException, Exception {
         Set<SampleInfo> samples = new HashSet<SampleInfo>();
 
-        //there is only one lane in MiSec
+        //there is only one lane in Miseq
         LaneInfo laneInfo = generateLaneInfo("1", 4);
         laneInfo.setSamples(samples);
 
@@ -129,7 +129,7 @@ public class ParseMisecFile extends BatchMetadataParser {
         return lanes;
     }
 
-    public RunInfo parseMiSecHeader(BufferedReader freader, File file) throws IOException {
+    public RunInfo parseMiseqHeader(BufferedReader freader, File file) throws IOException {
         String line = null;
         
         Map<String, String> headerInfo = new HashMap<String, String>();

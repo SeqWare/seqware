@@ -51,7 +51,7 @@ public class BatchMetadataInjection extends Metadata {
     public BatchMetadataInjection() {
         super();
 //        parser = new OptionParser();
-        parser.accepts("misec-sample-sheet", "The location of the MiSec Sample Sheet").withRequiredArg();
+        parser.accepts("miseq-sample-sheet", "The location of the Miseq Sample Sheet").withRequiredArg();
 //        parser.acceptsAll(Arrays.asList("f", "field"), "Optional: the field you want to specify so that you are not prompted."
 //                + "This is encoded as '<field_name>::<value>', you should use single quotes when the "
 //                + "value includes spaces. You supply multiple --field arguments.");
@@ -94,12 +94,12 @@ public class BatchMetadataInjection extends Metadata {
             if (options.has("field")) {
                 parseFields();                
             }
-            if (options.has("misec-sample-sheet")) {
+            if (options.has("miseq-sample-sheet")) {
                 parseFields();          
-                String filepath = (String) options.valueOf("misec-sample-sheet");
-                ParseMisecFile misecParser = new ParseMisecFile(metadata, (Map<String,String>)fields.clone(), interactive);
+                String filepath = (String) options.valueOf("miseq-sample-sheet");
+                ParseMiseqFile MiseqParser = new ParseMiseqFile(metadata, (Map<String,String>)fields.clone(), interactive);
                 try {
-                    RunInfo run = misecParser.parseMiSecFile(filepath);
+                    RunInfo run = MiseqParser.parseMiseqFile(filepath);
                     inject(run);
                 } catch (Exception ex) {
                     Log.error("The run could not be imported.", ex);
