@@ -35,8 +35,10 @@ public abstract class BatchMetadataParser {
 
     public enum Field {
         study_type, platform_id, organism_id, study_name, experiment_name,
-        sequencer_run_name, library_strategy_accession, library_source_accession, library_selection_accession,
-        library_source_template_type, tissue_origin, tissue_type, library_type, library_size_code, targeted_resequencing, tissue_preparation, run_file_path, barcode
+        sequencer_run_name, library_strategy_accession, library_source_accession, 
+        library_selection_accession, library_source_template_type, tissue_origin, 
+        tissue_type, library_type, library_size_code, targeted_resequencing, 
+        tissue_preparation, run_file_path, barcode, number_of_lanes, number_of_barcodes_per_lane
     }
     private static String[] librarySourceTemplateTypeList = new String[]{"CH", "EX", "MR", "SM", "TR", "TS", "WG", "WT", "Other"};
     private static String[] targetedResequencingList = new String[]{"Agilent SureSelect 244k Array",
@@ -101,6 +103,16 @@ public abstract class BatchMetadataParser {
         return organismId;
     }
 
+    /**
+     * Generates a RunInfo object with the given parameters. All fields are optional.
+     * @param runName
+     * @param studyTitle
+     * @param experimentName
+     * @param filePath
+     * @param platformId
+     * @param studyType
+     * @return 
+     */
     protected RunInfo generateRunInfo(String runName, String studyTitle,
             String experimentName, String filePath, int platformId, int studyType) {
         RunInfo runInfo = new RunInfo();
@@ -126,6 +138,13 @@ public abstract class BatchMetadataParser {
         return runInfo;
     }
 
+    /**
+     * Generates lane info with the given parameters. Lane number needs to be given.
+     * Everything else can be null or less than 0.
+     * @param laneNumber
+     * @param studyTypeAccession
+     * @return 
+     */
     protected LaneInfo generateLaneInfo(String laneNumber, int studyTypeAccession) {
         LaneInfo laneInfo = new LaneInfo();
 
@@ -134,7 +153,13 @@ public abstract class BatchMetadataParser {
         laneInfo.setLaneDescription(laneInfo.getLaneNumber());
         laneInfo.setLaneSkip(Boolean.FALSE);
         laneInfo.setLaneCycleDescriptor("");
-        laneInfo.setStudyTypeAcc(studyTypeAccession);
+        
+        if (interactive && !fields.containsKey(Field.study_type.toString())) {
+            for (StudyType st: metadata.getStudyTypes()) {
+                Log.stdout(st.toString());
+            }
+        }
+        laneInfo.setStudyTypeAcc(prompt("Study Type Accession", studyTypeAccession, Field.study_type));
 
         if (interactive && !fields.containsKey(Field.library_strategy_accession.toString())) {
             for (LibraryStrategy ls : metadata.getLibraryStrategies()) {
@@ -159,6 +184,26 @@ public abstract class BatchMetadataParser {
         return laneInfo;
     }
 
+    /**
+     * Generates a sample info object given the fields, and prompts for null fields
+     * if the interactive flag is on. The individualNumber and projectCode are 
+     * required. Everything else can be null or less than 0.
+     * 
+     * @param prettyName
+     * @param projectCode
+     * @param individualNumber
+     * @param librarySourceTemplateType
+     * @param tissueOrigin
+     * @param tissueType
+     * @param libraryType
+     * @param librarySizeCode
+     * @param barcode
+     * @param organismId
+     * @param targetedResequencing
+     * @param tissuePreparation
+     * @return
+     * @throws Exception 
+     */
     protected SampleInfo generateSampleInfo(String prettyName, String projectCode, String individualNumber,
             String librarySourceTemplateType, String tissueOrigin, String tissueType, String libraryType, String librarySizeCode,
             String barcode, int organismId, String targetedResequencing, String tissuePreparation) throws Exception {
