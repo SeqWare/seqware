@@ -159,6 +159,8 @@ public class RunInfo {
      * @return the value of lanes
      */
     public Set<LaneInfo> getLanes() {
+        if (lanes == null)
+            lanes = new HashSet<LaneInfo>();
         return lanes;
     }
 
