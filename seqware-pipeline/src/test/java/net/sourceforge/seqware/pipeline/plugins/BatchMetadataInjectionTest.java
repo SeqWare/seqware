@@ -18,7 +18,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import java.util.HashMap;
 import java.util.Set;
-import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.ParseMisecFile;
+import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.ParseMiseqFile;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.RunInfo;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.SampleInfo;
 import org.junit.*;
@@ -29,14 +29,14 @@ import org.junit.*;
  */
 public class BatchMetadataInjectionTest {
 
-    private static String misecPath = null;
+    private static String MiseqPath = null;
 
     public BatchMetadataInjectionTest() {
     }
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        misecPath = BatchMetadataInjectionTest.class.getResource("SampleSheet.csv").getPath();
+        MiseqPath = BatchMetadataInjectionTest.class.getResource("SampleSheet.csv").getPath();
     }
 
     @AfterClass
@@ -52,13 +52,13 @@ public class BatchMetadataInjectionTest {
     }
 
     /**
-     * Test of parseMiSecFile method, of class BatchMetadataInjection.
+     * Test of parseMiseqFile method, of class BatchMetadataInjection.
      */
     @Test
-    public void testParseMiSecFile() throws Exception {
-        System.out.println("parseMiSecFile");
-        ParseMisecFile instance = new ParseMisecFile(null, new HashMap<String, String>(), false);
-        RunInfo run = instance.parseMiSecFile(misecPath);
+    public void testParseMiseqFile() throws Exception {
+        System.out.println("parseMiseqFile");
+        ParseMiseqFile instance = new ParseMiseqFile(null, new HashMap<String, String>(), false);
+        RunInfo run = instance.parseMiseqFile(MiseqPath);
         Assert.assertEquals("Incorrect Project Name", "Testdance_123to456", run.getStudyTitle());
         Assert.assertEquals("Incorrect Experiment Name", "TDHS_123to456", run.getExperimentName());
         Assert.assertEquals("Incorrect Workflow", "Resequencing", run.getWorkflowType());
@@ -127,26 +127,26 @@ public class BatchMetadataInjectionTest {
 //        Assert.assertEquals("Incorrect Tissue Type", sample[10], actualSample.getTissueType());
 //    }
 //    /**
-//     * Test of parseMiSecData method, of class BatchMetadataInjection.
+//     * Test of parseMiseqData method, of class BatchMetadataInjection.
 //     */
 //    @Test
-//    public void testParseMiSecData() throws Exception {
-//        System.out.println("parseMiSecData");
+//    public void testParseMiseqData() throws Exception {
+//        System.out.println("parseMiseqData");
 //        BufferedReader freader = null;
 //        BatchMetadataInjection instance = new BatchMetadataInjection();
-//                instance.parseMiSecData(freader);
+//                instance.parseMiseqData(freader);
 //    }
 //
 //    /**
-//     * Test of parseMiSecHeader method, of class BatchMetadataInjection.
+//     * Test of parseMiseqHeader method, of class BatchMetadataInjection.
 //     */
 //    @Test
-//    public void testParseMiSecHeader() throws Exception {
-//        System.out.println("parseMiSecHeader");
+//    public void testParseMiseqHeader() throws Exception {
+//        System.out.println("parseMiseqHeader");
 //        BufferedReader freader = null;
 //        BatchMetadataInjection instance = new BatchMetadataInjection();
 //        Map expResult = null;
-//        Map result = instance.parseMiSecHeader(freader);
+//        Map result = instance.parseMiseqHeader(freader);
 //        assertEquals(expResult, result);
 //        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
