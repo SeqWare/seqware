@@ -19,7 +19,6 @@ markdown:              basic
 * [Command-Line Tools](/manuals/command_line_tools/) : Tools to create samples, experiments and studies on the command line, upload data, launch workflows, and more.
 * [SeqWare Conventions](/docs/16-module-conventions/): File MIME-types, Error codes
 * [Generic Pipeline Modules](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Available_Modules) : Generic Modules for your workflows
-* <a href="/docs/14-workflow-mvn/">Creating Workflows Using Maven Archetypes</a>: Creating New Workflow Bundles and Modules Using Maven Archetypes.
 * [Deciders](/docs/18-deciders/): Small programs that link the results of a MetaDB query to a particular workflow template 
 
 ##Reporting Manuals
