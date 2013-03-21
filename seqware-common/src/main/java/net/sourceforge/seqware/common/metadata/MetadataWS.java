@@ -2659,6 +2659,16 @@ public class MetadataWS extends Metadata {
                 result = cResource.get();
                 String text = result.getText();
                 parent = XmlTools.unMarshal(jaxb, parent, text);
+            } catch (SAXException ex) {
+                Log.error("MetadataWS.findObject with search string " + searchString + " encountered error " + ex.getMessage());
+                ex.printStackTrace();
+                parent = null;
+            } catch (ResourceException e) {
+                // note: this happens ona  regular basis with calls that attempt to locate the same sw_accession in either lane or IUS, making this less vocal
+                Log.info("MetadataWS.findObject with search string " + searchString + " encountered error " + e.getMessage());
+                Log.info(" please check that the object you are looking for exists in the MetaDB");
+
+                parent = null;
             } finally {
                 if (result != null) {
                     result.exhaust();
