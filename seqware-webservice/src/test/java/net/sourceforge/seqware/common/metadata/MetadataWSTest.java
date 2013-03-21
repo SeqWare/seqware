@@ -164,11 +164,13 @@ public class MetadataWSTest {
         }
 
     }
+    
+    
 
     /**
      * Test of add_empty_processing_event method, of class MetadataWS.
      */
-    //@Test
+    @Test
     public void testAdd_empty_processing_event() {
         Date beforeDate = new Timestamp(System.currentTimeMillis());
         logger.info("add_empty_processing_event");
