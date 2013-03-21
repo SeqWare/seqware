@@ -107,21 +107,16 @@ public class ParseMiseqFile extends BatchMetadataParser {
                 Log.stdout("Cannot parse tissue type from " + prettyName);
             }
 
-            SampleInfo info = generateSampleInfo(prettyName, projectName, individualNumber,
+            SampleInfo sample = generateSampleInfo(prettyName, projectName, individualNumber,
                     librarySourceTemplateType, tissueOrigin, tissueType, libraryType,
                     librarySizeCode, barcode, organismId, targetedResequencing,
-                    tissuePreparation);
-
-            info.setSampleDescription(info.getName());
-            info.setIusName(info.getBarcode());
-            info.setIusDescription(info.getBarcode());
-
+                    tissuePreparation, "", barcode, barcode);
 
             String tissueRegion = sampleInfo[2].substring(0, 1);
             if (StringUtils.isNumeric(tissueRegion)) {
-                info.addSampleAttribute("geo_tissue_region", tissueRegion);
+                sample.addSampleAttribute("geo_tissue_region", tissueRegion);
             }
-            samples.add(info);
+            samples.add(sample);
         }
 
         Set<LaneInfo> lanes = new HashSet<LaneInfo>();
@@ -142,27 +137,16 @@ public class ParseMiseqFile extends BatchMetadataParser {
             }
         }
         String[] bits = file.getAbsolutePath().split(File.separator);
+        String runName = bits[bits.length - 2];
+        String studyTitle = headerInfo.get("Project Name").split("_")[0];
+        String experimentName = headerInfo.get("Experiment Name").split("_")[0];
+        RunInfo runInfo = super.generateRunInfo(runName, runName, 
+                studyTitle, studyTitle, "Ontario Institute for Cancer Research", 
+                studyTitle.replace(" ", ""), 
+                experimentName, experimentName, 
+                file.getParentFile().getAbsolutePath(), 26, -1, true, 
+                headerInfo.get("Workflow"), headerInfo.get("Assay"));
         
-        RunInfo runInfo = super.generateRunInfo(bits[bits.length - 2], 
-                headerInfo.get("Project Name").split("_")[0], 
-                headerInfo.get("Experiment Name").split("_")[0], file.getParentFile().getAbsolutePath(), 26, -1);
-        
-        runInfo.setRunDescription(runInfo.getRunName());
-        runInfo.setPairedEnd(true);
-        runInfo.setPlatformId(26);
-
-        runInfo.setStudyCenterName("Ontario Institute for Cancer Research");
-        runInfo.setStudyCenterProject(runInfo.getStudyTitle().replace(" ", ""));
-        runInfo.setStudyDescription(runInfo.getStudyTitle());
-        //runInfo.setStudyType(studyType);
-
-        runInfo.setExperimentDescription(runInfo.getExperimentName());
-
-
-        runInfo.setWorkflowType(headerInfo.get("Workflow"));
-        runInfo.setAssayType(headerInfo.get("Assay"));
-
-
         return runInfo;
     }
 }

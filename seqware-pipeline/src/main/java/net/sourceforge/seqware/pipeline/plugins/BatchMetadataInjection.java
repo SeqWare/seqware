@@ -52,6 +52,7 @@ public class BatchMetadataInjection extends Metadata {
         super();
 //        parser = new OptionParser();
         parser.accepts("miseq-sample-sheet", "The location of the Miseq Sample Sheet").withRequiredArg();
+        parser.accepts("create", "Create a new study from scratch. Used instead of miseq-sample-sheet");
 //        parser.acceptsAll(Arrays.asList("f", "field"), "Optional: the field you want to specify so that you are not prompted."
 //                + "This is encoded as '<field_name>::<value>', you should use single quotes when the "
 //                + "value includes spaces. You supply multiple --field arguments.");
