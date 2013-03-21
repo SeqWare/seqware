@@ -133,6 +133,8 @@ Examples:
 
 ## How to Clean-up
 
+## How to Validate and Maintain the Structure of the MetaDB
+
 
 ## See Also
 
