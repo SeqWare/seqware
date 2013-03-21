@@ -14,11 +14,11 @@ my ($jar, $archetype_name, $workflow_name, $workflow_version) = @ARGV;
 er("CREATING ARCHTYPE", "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware -DarchetypeArtifactId=$archetype_name -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=$workflow_name -DworkflowDirectoryName=$workflow_name -DworkflowName=$workflow_name -DworkflowVersion=1.0-SNAPSHOT -B");
 chdir("$workflow_name");
 er("BUILDING ARCHTYPE", "mvn install");
-chdir("target/Workflow_Bundle_$workflow_name\_$workflow_version\_SeqWare_0.13.6.1");
+chdir("target/Workflow_Bundle_$workflow_name\_$workflow_version\_SeqWare_0.13.6.3");
 #! attempt ends here
 
 er("TESTING BUNDLEMANAGER LISTING", "java -jar $jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -l -b `pwd`");
-#er("TESTING BUNDLEMANAGER TEST", "java -jar $jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -t -b `pwd` --workflow $workflow_name --version $workflow_version");
+er("TESTING BUNDLEMANAGER TEST", "java -jar $jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -t -b `pwd` --workflow $workflow_name --version $workflow_version");
 my $install_str = er("TESTING BUNDLEMANAGER INSTALL", "java -jar $jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -i -b `pwd`");
 $install_str =~ /WORKFLOW_ACCESSION: (\d+)/;
 my $workflow_acc = $1;
