@@ -44,6 +44,7 @@ The SeqWare Web service is the primary mechanism by which users can reach the Se
 
 ### Requirements ###
 SeqWare Web service requires:
+
 * Apache Tomcat 6.0+
 * Access to a Seqware MetaDB PostgreSQL database (See [SeqWare MetaDB](/docs/4-metadb/))
 * A locally running PostgreSQL install that has a 'seqware' user with CREATEDB privileges.
@@ -52,15 +53,19 @@ SeqWare Web service requires:
 
 ### Testing ###
 
-You need a test_seqware_meta_db database for the tests to work. You also need a seqware user (who owns this database) and our sample data loaded. For testing purposes, the Web Service creates its own database using the seqware user, so this user must have CREATEDB privileges in PostgreSQL.  Also, you should setup the plpgsql language in the test_seqware_meta_db, a very easy way to do this is to set it up in the template1 database.  Again, see the MetaDB setup guide for both steps.
+For testing purposes, the Web Service creates its own database using the seqware user, so this user must have CREATEDB privileges in PostgreSQL. This database will be called test_seqware_meta_db and is automatically dropped and re-created during our tests. You should setup the plpgsql language in the template1 database so it automatically transfers to the test database when it is created. Again, see the MetaDB setup guide for both steps.
 
 If you've setup your seqware user with createdb privileges and the plpgsql language you can actually just build and test the web service with Maven, it has a built-in Jetty server that will startup and test the web service.  You can trigger this just by doing:
 
-	mvn clean install
+	mvn clean install -DskipITs=false
 
 If you want to startup the Jetty server for interactive testing you can simply do:
 
 	mvn jetty:run
+
+You will need to make sure that your ~/.seqware/settings file includes the line 
+
+	SW_REST_URL=http://localhost:8889/seqware-webservice
 
 ### Configuring the database connection ###
 
@@ -80,13 +85,13 @@ Three variables need to be changed in each file to reflect your local setup:
 The url, username and password need to be changed to reflect the local database. ''The username and password are the PostgreSQL database username and password.''
 
 ### Building ###
-In order to run all of the tests and create the WAR file for deployment, you can run the following from the root directory of the trunk. The WS has dependencies to seqware-common, seqware-pipeline, and seqware-queryengine, so all of those need to be available to Maven for building.
+In order to build without running all of the tests and create the WAR file for deployment, you can run the following from the root directory of the trunk. The WS has dependencies to seqware-common, seqware-pipeline, and seqware-queryengine, so all of those need to be available to Maven for building.
 
 	mvn clean install -DskipTests
 
 Please see [the latest build notes](https://github.com/SeqWare/seqware/blob/master/README.md) for further details.
 
-Running the above should run all of the tests and create the WAR file and XML file for deployment in seqware-webservice/target. The reason for skipping the tests is because the tests attempt to create and connect to a new database (named "test_seqware_meta_db") and they will fail if the Web service is not configured to connect to this database. Since you changed the database to your 'real' database in the last step, the tests will fail.
+Running the above should skip all of the tests and create the WAR file and XML file for deployment in seqware-webservice/target. The reason for skipping the tests is because the tests attempt to create and connect to a new database (named "test_seqware_meta_db") and they will fail if the Web service is not configured to connect to this database. Since you changed the database to your 'real' database in the last step, the tests will fail.
 
 ### Deploying ###
 In order to deploy the Web service into Tomcat, drop the WAR from seqware-webservice/target into the webapps directory, and the XML into TOMCAT_HOME/conf/Catalina/localhost (maps to /etc/tomcat6/Catalina/localhost/ on many Linux distributions). On the SeqWare VM, these directories are /var/lib/tomcat6/webapps and /etc/tomcat6/Catalina/localhost.
@@ -118,6 +123,8 @@ The jar will deploy at http://localhost:8080/seqware-webservice-0.11.4, or http:
 *This guide is a work in progress.* In the future this will include more information on the following topics.
 
 ### Admin Setup
+
+See the [Admin Guide](/docs/3-getting-started/admin-tutorial/)
 
 ### Features
 
