@@ -10,23 +10,10 @@ Install nanoc (on Ubuntu 12.04):
 For a basic version of nanoc just follow the directions on their site. This is
 what I had to do to get their very nice sample website to compile:
 
-sudo apt-get install ruby1.9.1
-sudo apt-get install ruby-rvm
-sudo apt-get install ruby-rdiscount
-sudo apt-get install ruby-nokogiri
+sudo apt-get install ruby1.9.1 ruby-rvm ruby-rdiscount ruby-nokogiri
 
-sudo gem install nanoc
-sudo gem install kramdown
-sudo gem install adsf
-sudo gem install mime-types
-sudo gem install fast-aleck # had to disable this in the code, didn't seem to work for me
-sudo gem install compass
-sudo gem install compass
-sudo gem install haml
-sudo gem install coderay
-sudo gem install rubypants
-sudo gem install builder
-sudo gem install rainpress
+sudo gem install nanoc kramdown adsf mime-types compass haml coderay rubypants builder rainpress
+
 
 Hack on Linux Mint 13:
 
@@ -39,10 +26,14 @@ I had problems compiling the site until I commented out the following on line 23
 
 Be careful with this, I have no idea if I broke anything by doing this.
 
+Also, I originally installed this but I had to disable this in the code, didn't seem to work for me
+
+sudo gem install fast-aleck 
+
 Source code is here:
 seqware/seqware-distribution/docs/site
 
-Compile the site:
+Go into this directory and compile the site:
 nanoc compile
 
 View the site in http://localhost:3000 :
