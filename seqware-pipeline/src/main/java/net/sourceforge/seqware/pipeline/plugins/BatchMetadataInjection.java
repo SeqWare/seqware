@@ -16,12 +16,11 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import joptsimple.OptionParser;
+import joptsimple.OptionSpec;
 import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -42,7 +41,7 @@ public class BatchMetadataInjection extends Metadata {
     private ReturnValue ret = new ReturnValue();
     private StringBuffer whatWeDid = new StringBuffer();
     private Map<Integer, String> names;
-    private boolean interactive=false;
+    private boolean interactive = false;
 
     //private boolean createStudy = false;
     /**
@@ -50,13 +49,8 @@ public class BatchMetadataInjection extends Metadata {
      */
     public BatchMetadataInjection() {
         super();
-//        parser = new OptionParser();
         parser.accepts("miseq-sample-sheet", "The location of the Miseq Sample Sheet").withRequiredArg();
-        parser.accepts("create", "Create a new study from scratch. Used instead of miseq-sample-sheet");
-//        parser.acceptsAll(Arrays.asList("f", "field"), "Optional: the field you want to specify so that you are not prompted."
-//                + "This is encoded as '<field_name>::<value>', you should use single quotes when the "
-//                + "value includes spaces. You supply multiple --field arguments.");
-//        parser.acceptsAll(Arrays.asList("lf", "list-fields"), "Optional: lists the fields that are available to specify at run time.");
+        parser.accepts("new", "Create a new study from scratch. Used instead of miseq-sample-sheet");
         parser.accepts("interactive", "Optional: turn on interactive input ");
         ret.setExitStatus(ReturnValue.SUCCESS);
         names = new HashMap<Integer, String>();
@@ -93,14 +87,23 @@ public class BatchMetadataInjection extends Metadata {
             }
         } else {
             if (options.has("field")) {
-                parseFields();                
+                parseFields();
             }
             if (options.has("miseq-sample-sheet")) {
-                parseFields();          
+                parseFields();
                 String filepath = (String) options.valueOf("miseq-sample-sheet");
-                ParseMiseqFile MiseqParser = new ParseMiseqFile(metadata, (Map<String,String>)fields.clone(), interactive);
+                ParseMiseqFile MiseqParser = new ParseMiseqFile(metadata, (Map<String, String>) fields.clone(), interactive);
                 try {
                     RunInfo run = MiseqParser.parseMiseqFile(filepath);
+                    inject(run);
+                } catch (Exception ex) {
+                    Log.error("The run could not be imported.", ex);
+                }
+            } else if (options.has("new")) {
+                try {
+                    parseFields();
+                    CreateFromScratch create = new CreateFromScratch(metadata, (Map<String, String>) fields.clone(), interactive);
+                    RunInfo run = create.getRunInfo();
                     inject(run);
                 } catch (Exception ex) {
                     Log.error("The run could not be imported.", ex);
@@ -428,15 +431,13 @@ public class BatchMetadataInjection extends Metadata {
         whatWeDid.append("\n\t\"").append(type1).append(" ").append(names.get(accession1)).append("\\n").append(accession1);
         whatWeDid.append("\" -> \"").append(type2).append(" ").append(names.get(accession2)).append("\\n").append(accession2).append("\"");
     }
-    
+
     private int getSwAccession(ReturnValue rv) throws Exception {
         String swa = rv.getAttribute("sw_accession");
-        if (swa!=null && !swa.isEmpty()) {
+        if (swa != null && !swa.isEmpty()) {
             return Integer.parseInt(swa);
-        }
-        else {
+        } else {
             throw new Exception("No accession was returned");
         }
     }
-    
 }

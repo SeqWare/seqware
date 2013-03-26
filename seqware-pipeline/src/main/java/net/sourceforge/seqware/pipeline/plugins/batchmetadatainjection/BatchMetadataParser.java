@@ -16,8 +16,9 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection;
 
-import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import joptsimple.OptionException;
@@ -39,7 +40,7 @@ public abstract class BatchMetadataParser {
         sequencer_run_name, library_strategy_accession, library_source_accession,
         library_selection_accession, library_source_template_type, tissue_origin,
         tissue_type, library_type, library_size_code, targeted_resequencing,
-        tissue_preparation, run_file_path, barcode, number_of_lanes, number_of_barcodes_per_lane
+        tissue_preparation, run_file_path, barcode, number_of_lanes
     }
     private static String[] librarySourceTemplateTypeList = new String[]{"CH", "EX", "MR", "SM", "TR", "TS", "WG", "WT", "Other"};
     private static String[] targetedResequencingList = new String[]{"Agilent SureSelect 244k Array",
@@ -62,21 +63,33 @@ public abstract class BatchMetadataParser {
     private Integer lSize = 0;
     private Metadata metadata;
     protected final Map<String, String> fields;
+    protected final Map<String, String> defaults;
     protected boolean interactive;
 
+    /**
+     * Handles prompting for a choice out of a list of choices using integers.
+     *
+     * @param sampleName the sample name used for the prompting message
+     * @param title the name of the field that is being set
+     * @param choices the list of choices for the value of 'title'
+     * @param deflt the default choice to fall back on, which can be one of the
+     * list of 'choices'. This is the string value, not the integer.
+     * @return
+     */
     protected String choiceOf(String sampleName, String title, String[] choices, String deflt) {
-        String choice = "";
+        String choice = null;
         int choiceInt = 0;
-        Log.stdout("\nFor sample " + sampleName + ", choose one of the following for " + title + " or press enter to skip:");
+        Log.stdout("\nFor sample " + sampleName + ", choose one of the following for " + title + " or enter 0 to skip:");
         for (int i = 1; i <= choices.length; i++) {
             Log.stdout(i + " : " + choices[i - 1]);
             if (deflt.equals(choices[i - 1])) {
                 choiceInt = i;
             }
         }
-        while (choice == null || choice.isEmpty()) {
+        while (choice == null) {
             choiceInt = ConsoleAdapter.getInstance().promptInteger(title, choiceInt);
             if (choiceInt == 0) { //no selection
+                break;
             } else if (choiceInt == choices.length) {
                 choice = ConsoleAdapter.getInstance().promptString("Please specify", null);
             } else if (choiceInt <= 0 || choiceInt > choices.length) {
@@ -91,6 +104,7 @@ public abstract class BatchMetadataParser {
     public BatchMetadataParser(Metadata metadata, Map<String, String> fields, boolean interactive) {
         this.metadata = metadata;
         this.fields = fields;
+        this.defaults = new HashMap<String, String>(fields);
         this.interactive = interactive;
     }
 
@@ -116,10 +130,10 @@ public abstract class BatchMetadataParser {
      * @param studyType
      * @return
      */
-    protected RunInfo generateRunInfo(String runName, String runDescription, 
-            String studyTitle, String studyDescription, String studyCenterName, 
-            String studyCenterProject, String experimentName, 
-            String experimentDescription, String filePath, int platformId, 
+    protected RunInfo generateRunInfo(String runName, String runDescription,
+            String studyTitle, String studyDescription, String studyCenterName,
+            String studyCenterProject, String experimentName,
+            String experimentDescription, String filePath, int platformId,
             int studyType, boolean isPairedEnd, String workflowType, String assayType) {
         RunInfo runInfo = new RunInfo();
 
@@ -245,7 +259,7 @@ public abstract class BatchMetadataParser {
 
         if (tissueOrigin == null || tissueOrigin.isEmpty()) {
             tissueOrigin = prompt(prettyName, "Tissue Origin", tissueOriginList, this.tior, Field.tissue_origin);
-            if (tissueOrigin.isEmpty()) {
+            if (tissueOrigin == null || tissueOrigin.trim().isEmpty()) {
                 tissueOrigin = "nn";
             } else {
                 this.tior = tissueOrigin;
@@ -262,7 +276,7 @@ public abstract class BatchMetadataParser {
 
         if (tissueType == null || tissueType.isEmpty()) {
             tissueType = prompt(prettyName, "Tissue Type", tissueTypeList, this.tity, Field.tissue_type);
-            if (tissueType.isEmpty()) {
+            if (tissueType == null || tissueType.trim().isEmpty()) {
                 tissueType = "n";
             } else {
                 this.tity = tissueType;
@@ -296,8 +310,7 @@ public abstract class BatchMetadataParser {
         if (iusDescription == null) {
             if (interactive) {
                 iusDescription = prompt("Optional: Barcode description", barcode, null);
-            }
-            else {
+            } else {
                 iusDescription = barcode;
             }
         }
@@ -321,9 +334,12 @@ public abstract class BatchMetadataParser {
         if (organismId <= 0) {
             List<Organism> organisms = new ArrayList<Organism>(metadata.getOrganisms());
             for (int i = 0; i < organisms.size(); i++) {
-                Log.stdout(i + " : " + organisms.get(i).toString());
+                Log.stdout((i + 1) + " : " + organisms.get(i).getName());
             }
             organismId = prompt("Organism id", 31, Field.organism_id);
+            if (organismId > 0 && organismId <= organisms.size()) {
+                organismId = organisms.get(organismId).getOrganismId();
+            }
         }
         sa.setOrganismId(organismId);
 
@@ -332,19 +348,19 @@ public abstract class BatchMetadataParser {
 
     protected int prompt(String description, int deflt, Field fieldName) throws OptionException {
         Log.debug("checking for field '" + description + "'");
-        if (fieldName != null && fields.containsKey(fieldName.toString())) {
-            return Integer.parseInt(fields.get(fieldName.toString()));
-        } else if (!interactive) {
-            if (deflt > 0) {
-                return deflt;
-            } else {
-                throw new OptionException(fields.keySet(), new Exception("A value must be provided for " + fieldName.toString())) {
-                };
-            }
-        } else {
+
+        String d = extractDefault(fieldName, String.valueOf(deflt));
+        if (StringUtils.isNumeric(d)) {
+            deflt = Integer.parseInt(d);
+        }
+        //not using interactive input
+        if (!interactive) {
+            return Integer.parseInt(returnDefault((deflt>0), String.valueOf(deflt), description, fieldName));
+        } //interactively work with the user to determine the choice
+        else {
             Integer i = ConsoleAdapter.getInstance().promptInteger(description, deflt);
             if (fieldName != null) {
-                fields.put(fieldName.toString(), i.toString());
+                defaults.put(fieldName.toString(), i.toString());
             }
             return i;
         }
@@ -352,42 +368,76 @@ public abstract class BatchMetadataParser {
 
     protected String prompt(String description, String deflt, Field fieldName) throws OptionException {
         Log.debug("checking for field '" + description + "'");
-        if (fieldName != null && fields.containsKey(fieldName.toString())) {
-            return fields.get(fieldName.toString());
-        } else if (!interactive) {
-            if (deflt != null && !deflt.trim().isEmpty()) {
-                return deflt;
-            } else {
-                throw new OptionException(fields.keySet(), new Exception("A value must be provided for " + fieldName.toString())) {
-                };
-            }
-
-        } else {
+        deflt = extractDefault(fieldName, deflt);
+        //not using interactive input
+        if (!interactive) {
+            return returnDefault((deflt != null && !deflt.trim().isEmpty()), deflt, description, fieldName);
+        } //interactively work with the user to determine the choice
+        else {
             String s = ConsoleAdapter.getInstance().promptString(description, deflt);
             if (fieldName != null) {
-                fields.put(fieldName.toString(), s);
+                defaults.put(fieldName.toString(), s);
             }
             return s;
         }
     }
 
+    /**
+     * Determine a value for a field 'title' of sample 'sampleName'. This method
+     * has different functionality depending on whether the Field is set (can be
+     * null), or the 'interactive' option is on.
+     *
+     * @param sampleName the sample name used for prompting
+     * @param title the name of the field being set
+     * @param choices the list of choices (Strings) that the user can select
+     * from in interactive mode
+     * @param deflt the default string if everything else fails
+     * @param fieldName the Field that is used for command-line defaults.
+     * @return the choice for the field, or an OptionException if other methods
+     * fail. This method can return null.
+     */
     protected String prompt(String sampleName, String title, String[] choices, String deflt, Field fieldName) {
         Log.debug("checking for field '" + sampleName + "'");
-        if (fieldName != null && fields.containsKey(fieldName.toString())) {
-            return fields.get(fieldName.toString());
-        } else if (!interactive) {
-            if (deflt != null && !deflt.trim().isEmpty()) {
-                return deflt;
-            } else {
-                throw new OptionException(fields.keySet(), new Exception("A value must be provided for " + fieldName.toString())) {
-                };
-            }
-        } else {
+        deflt = extractDefault(fieldName, deflt);
+        //not using interactive input
+        if (!interactive) {
+            return returnDefault(((deflt != null && !deflt.trim().isEmpty())), deflt, title, fieldName);
+        }
+        else {
             String s = choiceOf(sampleName, title, choices, deflt);
             if (fieldName != null) {
-                fields.put(fieldName.toString(), s);
+                defaults.put(fieldName.toString(), s);
             }
             return s;
+        }
+    }
+
+    private String extractDefault(Field fieldName, String deflt) {
+        // choose the default from a previous prompt first
+        // then the command line option if it exists
+        // otherwise fall back on the given default
+        if (fieldName != null) {
+            String d = defaults.get(fieldName.toString());
+            if (d != null && !d.trim().isEmpty()) {
+                deflt = d;
+            } else {
+                String field = fields.get(fieldName.toString());
+                if (field != null && !field.trim().isEmpty()) {
+                    deflt = field;
+                }
+            }
+        }
+        return deflt;
+    }
+    
+        private String returnDefault(boolean useDefault, String deflt, String title, Field fieldName) throws OptionException {
+        if (useDefault) {
+            return deflt;
+        } else {
+            Exception e = new Exception("A value must be provided for " + title
+                    + ", using --field " + (fieldName == null ? "No field known" : fieldName.toString()));
+            throw new OptionException(fields.keySet(), e) {
+            };
         }
     }
 }

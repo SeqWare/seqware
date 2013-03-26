@@ -37,7 +37,6 @@ public class LaneInfo {
     private String librarySourceAcc = null;
     private String librarySelectionAcc = null;
     private String studyTypeAcc = null;
-    
     private Set<SampleInfo> samples;
     private Set<LaneAttribute> laneAttributes;
 
@@ -66,14 +65,33 @@ public class LaneInfo {
         return laneAttributes;
     }
 
-    public void addLaneAttribute(String tag, String value) {
-        LaneAttribute la = new LaneAttribute();
-        la.setTag(tag);
-        la.setValue(value);
-        if (laneAttributes == null) {
-            laneAttributes = new HashSet<LaneAttribute>();
+    /**
+     * Adds a new lane attribute if the tag does not exist for this lane, or
+     * changes the value of an existing lane attribute.
+     *
+     * @param tag the key of the attribute
+     * @param value the value of the attribute
+     */
+    public void setLaneAttribute(String tag, String value) {
+
+        LaneAttribute sa = null;
+        for (LaneAttribute s : getLaneAttributes()) {
+            if (s.getTag().equals(tag.trim())) {
+                sa = s;
+                break;
+            }
         }
-        getLaneAttributes().add(la);
+        //if we are unsetting the lane attribute, remove it from the list.
+        if (value == null && sa !=null ) {
+            getLaneAttributes().remove(sa);
+            return;
+        }
+        if (sa == null) {
+            sa = new LaneAttribute();
+            getLaneAttributes().add(sa);
+        }
+        sa.setTag(tag.trim());
+        sa.setValue(value.trim());
     }
 
     public void setLaneAttributes(Set<LaneAttribute> laneAttributes) {
@@ -237,12 +255,19 @@ public class LaneInfo {
     }
 
     /**
-     * Set the value of laneNumber
+     * Set the value of laneNumber, and sets the 'geo_lane' attribute.
      *
      * @param laneNumber new value of laneNumber
      */
     public void setLaneNumber(String laneNumber) {
-        addLaneAttribute("geo_lane", laneNumber);
+        setLaneAttribute("geo_lane", laneNumber);
         this.laneNumber = laneNumber;
     }
+
+    @Override
+    public String toString() {
+        return "LaneInfo{" + "\n\tlaneNumber=" + laneNumber+ "\n\t laneCycleDescriptor=" + laneCycleDescriptor+ "\n\t libraryStrategyAcc=" + libraryStrategyAcc+ "\n\t librarySourceAcc=" + librarySourceAcc+ "\n\t librarySelectionAcc=" + librarySelectionAcc+ "\n\t studyTypeAcc=" + studyTypeAcc + '}';
+    }
+    
+    
 }

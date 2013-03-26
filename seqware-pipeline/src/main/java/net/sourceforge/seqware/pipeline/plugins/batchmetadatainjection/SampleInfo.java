@@ -47,15 +47,11 @@ public class SampleInfo {
     private String tissuePreparation = blank;
     private String targetedResequencing = blank;
     private String sampleDescription;
-
-    
     //ius    
     private String barcode = blank;
     private String iusName;
     private String iusDescription;
-    private boolean iusSkip=false;
-    
-    
+    private boolean iusSkip = false;
     private Set<SampleAttribute> sampleAttributes;
     private Set<IUSAttribute> iusAttributes;
 
@@ -74,7 +70,7 @@ public class SampleInfo {
     public void setProjectCode(String projectName) {
         this.projectCode = projectName;
     }
-    
+
     /**
      * Get the value of iusSkip
      *
@@ -92,7 +88,6 @@ public class SampleInfo {
     public void setIusSkip(boolean iusSkip) {
         this.iusSkip = iusSkip;
     }
-
 
     /**
      * Get the value of iusDescription
@@ -130,7 +125,6 @@ public class SampleInfo {
         this.iusName = iusName;
     }
 
-
     /**
      * Get the value of sampleDescription
      *
@@ -149,8 +143,6 @@ public class SampleInfo {
         this.sampleDescription = sampleDescription;
     }
 
-    
-
     /**
      * Get the value of librarySourceTemplateType
      *
@@ -161,12 +153,13 @@ public class SampleInfo {
     }
 
     /**
-     * Set the value of librarySourceTemplateType
+     * Set the value of librarySourceTemplateType sets the
+     * 'geo_library_source_template_type' attribute.
      *
      * @param librarySourceTemplateType new value of librarySourceTemplateType
      */
     public void setLibrarySourceTemplateType(String librarySourceTemplateType) {
-        addSampleAttribute("geo_library_source_template_type", librarySourceTemplateType);
+        setSampleAttribute("geo_library_source_template_type", librarySourceTemplateType);
         this.librarySourceTemplateType = librarySourceTemplateType;
     }
 
@@ -174,18 +167,28 @@ public class SampleInfo {
         return librarySizeCode;
     }
 
+    /**
+     * Sets the library size code and sets the 'geo_library_size_code'
+     * attribute.
+     *
+     * @param librarySizeCode
+     */
     public void setLibrarySizeCode(String librarySizeCode) {
-        addSampleAttribute("geo_library_size_code", String.valueOf(librarySizeCode));
+        setSampleAttribute("geo_library_size_code", String.valueOf(librarySizeCode));
         this.librarySizeCode = librarySizeCode;
     }
-
 
     public String getLibraryType() {
         return libraryType;
     }
 
+    /**
+     * Sets the library type and sets the 'geo_library_type' attribute .
+     *
+     * @param libraryType
+     */
     public void setLibraryType(String libraryType) {
-        addSampleAttribute("geo_library_type", String.valueOf(librarySizeCode));
+        setSampleAttribute("geo_library_type", String.valueOf(librarySizeCode));
         this.libraryType = libraryType;
     }
 
@@ -193,8 +196,15 @@ public class SampleInfo {
         return organismId;
     }
 
+    /**
+     * Sets the organismId, as long as the organism id is over 0.
+     *
+     * @param organismId
+     */
     public void setOrganismId(int organismId) {
-        this.organismId = String.valueOf(organismId);
+        if (organismId > 0) {
+            this.organismId = String.valueOf(organismId);
+        }
     }
 
     public Boolean getPairedEnd() {
@@ -217,11 +227,34 @@ public class SampleInfo {
         return iusAttributes;
     }
 
-    public void addIUSAttribute(String tag, String value) {
-        IUSAttribute ia = new IUSAttribute();
-        ia.setTag(tag);
-        ia.setValue(value);
-        getIusAttributes().add(ia);
+    /**
+     * Adds a new ius attribute if the tag does not exist for this ius, or
+     * changes the value of an existing ius attribute.
+     *
+     * @param tag the key of the attribute
+     * @param value the value of the attribute
+     */
+    public void setIusAttribute(String tag, String value) {
+        IUSAttribute sa = null;
+        //look for the existing attribute
+        for (IUSAttribute s : getIusAttributes()) {
+            if (s.getTag().equals(tag.trim())) {
+                sa = s;
+                break;
+            }
+        }
+        //if we are unsetting the sample attribute, remove it from the list.
+        if (value == null && sa != null) {
+            getIusAttributes().remove(sa);
+            return;
+        }
+        //create a new one if it doesn't exist
+        if (sa == null) {
+            sa = new IUSAttribute();
+            getIusAttributes().add(sa);
+        }
+        sa.setTag(tag.trim());
+        sa.setValue(value.trim());
     }
 
     /**
@@ -245,11 +278,35 @@ public class SampleInfo {
         return sampleAttributes;
     }
 
-    public void addSampleAttribute(String tag, String value) {
-        SampleAttribute sa = new SampleAttribute();
-        sa.setTag(tag);
-        sa.setValue(value);
-        getSampleAttributes().add(sa);
+    /**
+     * Adds a new sample attribute if the tag does not exist for this sample, or
+     * changes the value of an existing sample attribute.
+     *
+     * @param tag the key of the attribute
+     * @param value the value of the attribute
+     */
+    public void setSampleAttribute(String tag, String value) {
+        SampleAttribute sa = null;
+        //look for the existing attribute
+        for (SampleAttribute s : getSampleAttributes()) {
+            if (s.getTag().equals(tag.trim())) {
+                sa = s;
+                break;
+            }
+        }
+        //if we are unsetting the sample attribute, remove it from the list.
+        if (value == null) {
+            if (sa != null) {
+                getSampleAttributes().remove(sa);
+            }
+            return;
+        }
+        if (sa == null) {
+            sa = new SampleAttribute();
+            getSampleAttributes().add(sa);
+        }
+        sa.setTag(tag.trim());
+        sa.setValue(value.trim());
     }
 
     /**
@@ -281,7 +338,6 @@ public class SampleInfo {
 //    public void setParentSample(String parentSample) {
 //        this.parentSample = parentSample;
 //    }
-
     /**
      * Get the value of barcode
      *
@@ -310,12 +366,13 @@ public class SampleInfo {
     }
 
     /**
-     * Set the value of targetedResequencing
+     * Set the value of targetedResequencing and sets the
+     * 'geo_targeted_resequencing' attribute.
      *
      * @param targetedResequencing new value of targetedResequencing
      */
     public void setTargetedResequencing(String targetedResequencing) {
-        addSampleAttribute("geo_targeted_resequencing", targetedResequencing);
+        setSampleAttribute("geo_targeted_resequencing", targetedResequencing);
         this.targetedResequencing = targetedResequencing;
     }
 
@@ -329,12 +386,13 @@ public class SampleInfo {
     }
 
     /**
-     * Set the value of tissuePreparation
+     * Set the value of tissuePreparation, and sets the 'geo_tissue_preparation'
+     * attribute.
      *
      * @param tissuePreparation new value of tissuePreparation
      */
     public void setTissuePreparation(String tissuePreparation) {
-        addSampleAttribute("geo_tissue_preparation", tissuePreparation);
+        setSampleAttribute("geo_tissue_preparation", tissuePreparation);
         this.tissuePreparation = tissuePreparation;
     }
 
@@ -348,12 +406,12 @@ public class SampleInfo {
     }
 
     /**
-     * Set the value of tissueOrigin
+     * Set the value of tissueOrigin and sets the 'geo_tissue_origin' attribute.
      *
      * @param tissueOrigin new value of tissueOrigin
      */
     public void setTissueOrigin(String tissueOrigin) {
-        addSampleAttribute("geo_tissue_origin", tissueOrigin);
+        setSampleAttribute("geo_tissue_origin", tissueOrigin);
         this.tissueOrigin = tissueOrigin;
     }
 
@@ -367,12 +425,12 @@ public class SampleInfo {
     }
 
     /**
-     * Set the value of tissueType
+     * Set the value of tissueType and sets the 'geo_tissue_type' attribute.
      *
      * @param tissueType new value of tissueType
      */
     public void setTissueType(String tissueType) {
-        addSampleAttribute("geo_tissue_type", tissueType);
+        setSampleAttribute("geo_tissue_type", tissueType);
         this.tissueType = tissueType;
     }
 
@@ -394,4 +452,8 @@ public class SampleInfo {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "SampleInfo{" + "projectCode=" + projectCode+ "\n\t individualNumber=" + individualNumber+ "\n\t name=" + name+ "\n\t tissueType=" + tissueType+ "\n\t tissueOrigin=" + tissueOrigin+ "\n\t librarySizeCode=" + librarySizeCode+ "\n\t organismId=" + organismId+ "\n\t librarySourceTemplateType=" + librarySourceTemplateType+ "\n\t parentSample=" + parentSample+ "\n\t libraryType=" + libraryType+ "\n\t pairedEnd=" + pairedEnd+ "\n\t tissuePreparation=" + tissuePreparation+ "\n\t targetedResequencing=" + targetedResequencing+ "\n\t sampleDescription=" + sampleDescription+ "\n\t barcode=" + barcode+ "\n\t iusName=" + iusName+ "\n\t iusDescription=" + iusDescription+ "\n\t iusSkip=" + iusSkip+ "\n\t sampleAttributes=" + sampleAttributes+ "\n\t iusAttributes=" + iusAttributes + '}';
+    }
 }

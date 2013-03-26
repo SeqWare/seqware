@@ -114,7 +114,7 @@ public class ParseMiseqFile extends BatchMetadataParser {
 
             String tissueRegion = sampleInfo[2].substring(0, 1);
             if (StringUtils.isNumeric(tissueRegion)) {
-                sample.addSampleAttribute("geo_tissue_region", tissueRegion);
+                sample.setSampleAttribute("geo_tissue_region", tissueRegion);
             }
             samples.add(sample);
         }
