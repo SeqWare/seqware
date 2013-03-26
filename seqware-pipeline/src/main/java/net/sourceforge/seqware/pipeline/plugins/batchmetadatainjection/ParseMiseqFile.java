@@ -46,9 +46,9 @@ public class ParseMiseqFile extends BatchMetadataParser {
         try {
             BufferedReader freader = new BufferedReader(new FileReader(file));
             run = parseMiseqHeader(freader, file);
-            String runName = prompt("Sequencer run name", run.getRunName(), Field.sequencer_run_name);
-            String studyName = prompt("Study name", run.getStudyTitle(), Field.study_name);
-            String expName = prompt("Experiment name", run.getExperimentName(), Field.experiment_name);
+            String runName = promptString("Sequencer run name", run.getRunName(), Field.sequencer_run_name);
+            String studyName = promptString("Study name", run.getStudyTitle(), Field.study_name);
+            String expName = promptString("Experiment name", run.getExperimentName(), Field.experiment_name);
             run.setRunName(runName);
             run.setStudyTitle(studyName);
             run.setExperimentName(expName);
