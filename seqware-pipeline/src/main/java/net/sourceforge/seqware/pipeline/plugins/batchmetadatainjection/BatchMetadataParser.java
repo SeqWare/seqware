@@ -17,7 +17,6 @@
 package net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -138,22 +137,16 @@ public abstract class BatchMetadataParser {
         RunInfo runInfo = new RunInfo();
 
 
-        runInfo.setStudyTitle(prompt("Study Title", studyTitle, Field.study_name));
-        runInfo.setRunName(prompt("Sequencer Run Name", runName, Field.sequencer_run_name));
-        runInfo.setExperimentName(prompt("Experiment Name", experimentName, Field.experiment_name));
-        if (interactive && !fields.containsKey(Field.platform_id.toString())) {
-            for (Platform p : metadata.getPlatforms()) {
-                Log.stdout(p.toString());
-            }
-        }
-        runInfo.setPlatformId(prompt("Platform accession", platformId, Field.platform_id));
-        if (interactive && !fields.containsKey(Field.study_type.toString())) {
-            for (StudyType p : metadata.getStudyTypes()) {
-                Log.stdout(p.toString());
-            }
-        }
-        runInfo.setStudyType(prompt("Study Type Accession", studyType, Field.study_type));
-        runInfo.setRunFilePath(prompt("Sequencer run directory", filePath, Field.run_file_path));
+        runInfo.setStudyTitle(promptString("Study Title", studyTitle, Field.study_name));
+        runInfo.setRunName(promptString("Sequencer Run Name", runName, Field.sequencer_run_name));
+        runInfo.setExperimentName(promptString("Experiment Name", experimentName, Field.experiment_name));
+
+        KeyVal[] list = getKeyVals(metadata.getPlatforms());
+        runInfo.setPlatformId(promptAccession("Platform accession", platformId, list, Field.platform_id));
+
+        list = getKeyVals(metadata.getStudyTypes());
+        runInfo.setStudyType(promptAccession("Study Type Accession", studyType, list,Field.study_type));
+        runInfo.setRunFilePath(promptString("Sequencer run directory", filePath, Field.run_file_path));
 
         return runInfo;
     }
@@ -175,34 +168,66 @@ public abstract class BatchMetadataParser {
         laneInfo.setLaneSkip(Boolean.FALSE);
         laneInfo.setLaneCycleDescriptor("");
 
-        if (interactive && !fields.containsKey(Field.study_type.toString())) {
-            for (StudyType st : metadata.getStudyTypes()) {
-                Log.stdout(st.toString());
-            }
-        }
-        laneInfo.setStudyTypeAcc(prompt("Study Type Accession", studyTypeAccession, Field.study_type));
+        KeyVal[] list = getKeyVals(metadata.getStudyTypes());
+        laneInfo.setStudyTypeAcc(promptAccession("Study Type Accession", studyTypeAccession, list, Field.study_type));
 
-        if (interactive && !fields.containsKey(Field.library_strategy_accession.toString())) {
-            for (LibraryStrategy ls : metadata.getLibraryStrategies()) {
-                Log.stdout(ls.toString());
-            }
-        }
-        laneInfo.setLibraryStrategyAcc(prompt("Library Strategy Accession", 0, Field.library_strategy_accession));
-        if (interactive && !fields.containsKey(Field.library_selection_accession.toString())) {
-            for (LibrarySelection ls : metadata.getLibrarySelections()) {
-                Log.stdout(ls.toString());
-            }
-        }
-        laneInfo.setLibrarySelectionAcc(prompt("Library Selection Accession", 0, Field.library_selection_accession));
-        if (interactive && !fields.containsKey(Field.library_source_accession.toString())) {
-            for (LibrarySource ls : metadata.getLibrarySource()) {
-                Log.stdout(ls.toString());
-            }
-        }
-        laneInfo.setLibrarySourceAcc(prompt("Library Source Accession", 0, Field.library_source_accession));
+        list = getKeyVals(metadata.getLibraryStrategies());
+        laneInfo.setLibraryStrategyAcc(promptAccession("Library Strategy Accession", 0, list, Field.library_strategy_accession));
+
+        list = getKeyVals(metadata.getLibrarySelections());
+        laneInfo.setLibrarySelectionAcc(promptAccession("Library Selection Accession", 0, list, Field.library_selection_accession));
+
+        list = getKeyVals(metadata.getLibrarySource());
+        laneInfo.setLibrarySourceAcc(promptAccession("Library Source Accession", 0, list, Field.library_source_accession));
 
 
         return laneInfo;
+    }
+
+    private KeyVal[] getKeyVals(List list) {
+        KeyVal[] libs = new KeyVal[list.size()];
+        int i = 0;
+        for (Object o : list) {
+            if (o instanceof LibraryStrategy) {
+                LibraryStrategy l = (LibraryStrategy) o;
+                libs[i++] = new KeyVal(l.getLibraryStrategyId(), l.getName(), l.getDescription());
+            } else if (o instanceof LibrarySelection) {
+                LibrarySelection l = (LibrarySelection) o;
+                libs[i++] = new KeyVal(l.getLibrarySelectionId(), l.getName(), l.getDescription());
+            } else if (o instanceof LibrarySource) {
+                LibrarySource l = (LibrarySource) o;
+                libs[i++] = new KeyVal(l.getLibrarySourceId(), l.getName(), l.getDescription());
+            } else if (o instanceof StudyType) {
+                StudyType l = (StudyType) o;
+                libs[i++] = new KeyVal(l.getStudyTypeId(), l.getName(), l.getDescription());
+            } else if (o instanceof Platform) {
+                Platform l = (Platform) o;
+                libs[i++] = new KeyVal(l.getPlatformId(), l.getName(), l.getDescription());
+            } else if (o instanceof Organism) {
+                Organism l = (Organism) o;
+                libs[i++] = new KeyVal(l.getOrganismId(), l.getName(), String.valueOf(l.getNcbiTaxId()));
+            } else {
+                Log.error("The type of list was not recognized. Contact your local SeqWare developer.");
+            }
+        }
+        return libs;
+    }
+
+    private class KeyVal {
+
+        protected String key;
+        protected String value;
+        protected int id;
+
+        public KeyVal(int id, String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return key + "\t" + value;
+        }
     }
 
     /**
@@ -240,25 +265,25 @@ public abstract class BatchMetadataParser {
         sa.setProjectCode(projectCode);
 
         if (libraryType == null || libraryType.isEmpty()) {
-            libraryType = prompt(prettyName, "Library Type", libraryTypeList, this.lity, Field.library_type);
+            libraryType = promptString(prettyName, "Library Type", libraryTypeList, this.lity, Field.library_type);
             this.lity = libraryType;
         }
         sa.setLibraryType(libraryType);
 
         if (librarySourceTemplateType == null || librarySourceTemplateType.isEmpty()) {
-            librarySourceTemplateType = prompt(prettyName, "Library Source Template Type", librarySourceTemplateTypeList, this.lstety, Field.library_source_template_type);
+            librarySourceTemplateType = promptString(prettyName, "Library Source Template Type", librarySourceTemplateTypeList, this.lstety, Field.library_source_template_type);
             this.lstety = librarySourceTemplateType;
         }
         sa.setLibrarySourceTemplateType(librarySourceTemplateType);
 
         if (targetedResequencing == null || targetedResequencing.isEmpty()) {
-            targetedResequencing = prompt(prettyName, "Targeted Resequencing Type", targetedResequencingList, this.tare, Field.targeted_resequencing);
+            targetedResequencing = promptString(prettyName, "Targeted Resequencing Type", targetedResequencingList, this.tare, Field.targeted_resequencing);
             this.tare = targetedResequencing;
         }
         sa.setTargetedResequencing(targetedResequencing);
 
         if (tissueOrigin == null || tissueOrigin.isEmpty()) {
-            tissueOrigin = prompt(prettyName, "Tissue Origin", tissueOriginList, this.tior, Field.tissue_origin);
+            tissueOrigin = promptString(prettyName, "Tissue Origin", tissueOriginList, this.tior, Field.tissue_origin);
             if (tissueOrigin == null || tissueOrigin.trim().isEmpty()) {
                 tissueOrigin = "nn";
             } else {
@@ -269,13 +294,13 @@ public abstract class BatchMetadataParser {
 
 
         if (tissuePreparation == null || tissuePreparation.isEmpty()) {
-            tissuePreparation = prompt(prettyName, "Tissue Preparation", tissuePreparationList, this.tipr, Field.tissue_preparation);
+            tissuePreparation = promptString(prettyName, "Tissue Preparation", tissuePreparationList, this.tipr, Field.tissue_preparation);
             this.tipr = tissuePreparation;
         }
         sa.setTissuePreparation(tissuePreparation);
 
         if (tissueType == null || tissueType.isEmpty()) {
-            tissueType = prompt(prettyName, "Tissue Type", tissueTypeList, this.tity, Field.tissue_type);
+            tissueType = promptString(prettyName, "Tissue Type", tissueTypeList, this.tity, Field.tissue_type);
             if (tissueType == null || tissueType.trim().isEmpty()) {
                 tissueType = "n";
             } else {
@@ -285,7 +310,7 @@ public abstract class BatchMetadataParser {
         sa.setTissueType(tissueType);
 
         if (librarySizeCode == null || librarySizeCode.isEmpty() || !StringUtils.isNumeric(librarySizeCode)) {
-            Integer lSize = prompt("Library Size Code - a number code indicating the size of the band cut from the gel in base pairs", this.lSize, Field.library_size_code);
+            Integer lSize = promptInteger("Library Size Code - a number code indicating the size of the band cut from the gel in base pairs", this.lSize, Field.library_size_code);
             if (lSize <= 0) {
                 librarySizeCode = "nn";
             } else {
@@ -296,12 +321,12 @@ public abstract class BatchMetadataParser {
         sa.setLibrarySizeCode(librarySizeCode);
 
         if (barcode == null || barcode.isEmpty()) {
-            barcode = prompt("Barcode", "NoIndex", Field.barcode);
+            barcode = promptString("Barcode", "NoIndex", Field.barcode);
         }
         sa.setBarcode(barcode);
         if (iusName == null) {
             if (interactive) {
-                iusName = prompt("Optional: Barcode name", barcode, null);
+                iusName = promptString("Optional: Barcode name", barcode, null);
             } else {
                 iusName = barcode;
             }
@@ -309,7 +334,7 @@ public abstract class BatchMetadataParser {
         sa.setIusName(iusName);
         if (iusDescription == null) {
             if (interactive) {
-                iusDescription = prompt("Optional: Barcode description", barcode, null);
+                iusDescription = promptString("Optional: Barcode description", barcode, null);
             } else {
                 iusDescription = barcode;
             }
@@ -324,7 +349,7 @@ public abstract class BatchMetadataParser {
 
         if (sampleDescription == null) {
             if (interactive) {
-                sampleDescription = prompt("Optional: Sample Description", name.toString(), null);
+                sampleDescription = promptString("Optional: Sample Description", name.toString(), null);
             } else {
                 sampleDescription = name.toString();
             }
@@ -336,7 +361,7 @@ public abstract class BatchMetadataParser {
             for (int i = 0; i < organisms.size(); i++) {
                 Log.stdout((i + 1) + " : " + organisms.get(i).getName());
             }
-            organismId = prompt("Organism id", 31, Field.organism_id);
+            organismId = promptInteger("Organism id", 31, Field.organism_id);
             if (organismId > 0 && organismId <= organisms.size()) {
                 organismId = organisms.get(organismId).getOrganismId();
             }
@@ -346,7 +371,7 @@ public abstract class BatchMetadataParser {
         return sa;
     }
 
-    protected int prompt(String description, int deflt, Field fieldName) throws OptionException {
+    protected int promptInteger(String description, int deflt, Field fieldName) throws OptionException {
         Log.debug("checking for field '" + description + "'");
 
         String d = extractDefault(fieldName, String.valueOf(deflt));
@@ -355,7 +380,7 @@ public abstract class BatchMetadataParser {
         }
         //not using interactive input
         if (!interactive) {
-            return Integer.parseInt(returnDefault((deflt>0), String.valueOf(deflt), description, fieldName));
+            return Integer.parseInt(returnDefault((deflt > 0), String.valueOf(deflt), description, fieldName));
         } //interactively work with the user to determine the choice
         else {
             Integer i = ConsoleAdapter.getInstance().promptInteger(description, deflt);
@@ -366,7 +391,30 @@ public abstract class BatchMetadataParser {
         }
     }
 
-    protected String prompt(String description, String deflt, Field fieldName) throws OptionException {
+    protected int promptAccession(String description, int deflt, KeyVal[] values, Field fieldName) throws OptionException {
+        Log.debug("checking for accession '" + description + "'");
+
+        String d = extractDefault(fieldName, String.valueOf(deflt));
+        if (StringUtils.isNumeric(d)) {
+            deflt = Integer.parseInt(d);
+        }
+        //not using interactive input
+        if (!interactive) {
+            return Integer.parseInt(returnDefault((deflt > 0), String.valueOf(deflt), description, fieldName));
+        } //interactively work with the user to determine the choice
+        else {
+            for (int i = 1; i <= values.length; i++) {
+                Log.stdout(i + " : " + values[i - 1].toString());
+            }
+            Integer i = ConsoleAdapter.getInstance().promptInteger(description, deflt);
+            if (fieldName != null) {
+                defaults.put(fieldName.toString(), i.toString());
+            }
+            return i;
+        }
+    }
+
+    protected String promptString(String description, String deflt, Field fieldName) throws OptionException {
         Log.debug("checking for field '" + description + "'");
         deflt = extractDefault(fieldName, deflt);
         //not using interactive input
@@ -396,14 +444,13 @@ public abstract class BatchMetadataParser {
      * @return the choice for the field, or an OptionException if other methods
      * fail. This method can return null.
      */
-    protected String prompt(String sampleName, String title, String[] choices, String deflt, Field fieldName) {
+    protected String promptString(String sampleName, String title, String[] choices, String deflt, Field fieldName) {
         Log.debug("checking for field '" + sampleName + "'");
         deflt = extractDefault(fieldName, deflt);
         //not using interactive input
         if (!interactive) {
             return returnDefault(((deflt != null && !deflt.trim().isEmpty())), deflt, title, fieldName);
-        }
-        else {
+        } else {
             String s = choiceOf(sampleName, title, choices, deflt);
             if (fieldName != null) {
                 defaults.put(fieldName.toString(), s);
@@ -429,8 +476,8 @@ public abstract class BatchMetadataParser {
         }
         return deflt;
     }
-    
-        private String returnDefault(boolean useDefault, String deflt, String title, Field fieldName) throws OptionException {
+
+    private String returnDefault(boolean useDefault, String deflt, String title, Field fieldName) throws OptionException {
         if (useDefault) {
             return deflt;
         } else {
