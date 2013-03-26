@@ -21,10 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.sourceforge.seqware.common.model.ExperimentAttribute;
-import net.sourceforge.seqware.common.model.LaneAttribute;
-import net.sourceforge.seqware.common.model.SequencerRunAttribute;
-import net.sourceforge.seqware.common.model.StudyAttribute;
+import net.sourceforge.seqware.common.model.*;
 
 /**
  *
@@ -43,7 +40,6 @@ public class RunInfo {
     private String platformId;
     //sequencer_run
     private String runName;
-    
     //experiment
     private String experimentName;
     private String workflowType;
@@ -53,15 +49,13 @@ public class RunInfo {
     private Set<ExperimentAttribute> experimentAttributes;
     private Set<StudyAttribute> studyAttributes;
     private Set<SequencerRunAttribute> runAttributes;
-
     private Set<LaneInfo> lanes;
-
-    private boolean runSkip=false;
-    private boolean pairedEnd=true;
+    private boolean runSkip = false;
+    private boolean pairedEnd = true;
     private String runDescription;
     private String runFilePath;
     private String experimentDescription;
-    
+
     /**
      * Get the value of runFilePath
      *
@@ -152,15 +146,15 @@ public class RunInfo {
         this.runSkip = runSkip;
     }
 
-    
     /**
      * Get the value of lanes
      *
      * @return the value of lanes
      */
     public Set<LaneInfo> getLanes() {
-        if (lanes == null)
+        if (lanes == null) {
             lanes = new HashSet<LaneInfo>();
+        }
         return lanes;
     }
 
@@ -201,11 +195,34 @@ public class RunInfo {
         return runAttributes;
     }
 
-    public void addRunAttribute(String tag, String value) {
-        SequencerRunAttribute sra = new SequencerRunAttribute();
-        sra.setTag(tag);
-        sra.setValue(value);
-        getRunAttributes().add(sra);
+    /**
+     * Adds a new run attribute if the tag does not exist for this run, or
+     * changes the value of an existing run attribute.
+     *
+     * @param tag the key of the attribute
+     * @param value the value of the attribute
+     */
+    public void setRunAttribute(String tag, String value) {
+        SequencerRunAttribute sa = null;
+        //look for the existing attribute
+        for (SequencerRunAttribute s : getRunAttributes()) {
+            if (s.getTag().equals(tag.trim())) {
+                sa = s;
+                break;
+            }
+        }
+        //if we are unsetting the run attribute, remove it from the list.
+        if (value == null && sa != null) {
+            getRunAttributes().remove(sa);
+            return;
+        }
+        //create a new attribute
+        if (sa == null) {
+            sa = new SequencerRunAttribute();
+            getRunAttributes().add(sa);
+        }
+        sa.setTag(tag.trim());
+        sa.setValue(value.trim());
     }
 
     /**
@@ -229,11 +246,34 @@ public class RunInfo {
         return studyAttributes;
     }
 
-    public void addStudyAttribute(String tag, String value) {
-        StudyAttribute sa = new StudyAttribute();
-        sa.setTag(tag);
-        sa.setValue(value);
-        getStudyAttributes().add(sa);
+    /**
+     * Adds a new study attribute if the tag does not exist for this study, or
+     * changes the value of an existing study attribute.
+     *
+     * @param tag the key of the attribute
+     * @param value the value of the attribute
+     */
+    public void setStudyAttribute(String tag, String value) {
+        StudyAttribute sa = null;
+        //look for the existing attribute
+        for (StudyAttribute s : getStudyAttributes()) {
+            if (s.getTag().equals(tag.trim())) {
+                sa = s;
+                break;
+            }
+        }
+        //if we are unsetting the study attribute, remove it from the list.
+        if (value == null && sa != null) {
+            getStudyAttributes().remove(sa);
+            return;
+        }
+        //create a new attribute
+        if (sa == null) {
+            sa = new StudyAttribute();
+            getStudyAttributes().add(sa);
+        }
+        sa.setTag(tag.trim());
+        sa.setValue(value.trim());
     }
 
     /**
@@ -410,14 +450,20 @@ public class RunInfo {
         this.studyTitle = studyTitle;
     }
 
+//    @Override
+//    public String toString() {
+//        String string = "RunInfo{" + "studyTitle=" + studyTitle+ "\n\t runName=" + runName;
+//        for (SampleInfo sample : samples) {
+//            string += sample.toString() + "\n";
+//        }
+//        string += '}';
+//        return string;
+//    }
 
     @Override
     public String toString() {
-        String string = "RunInfo{" + "studyTitle=" + studyTitle + ", runName=" + runName;
-        for (SampleInfo sample : samples) {
-            string += sample.toString() + "\n";
-        }
-        string += '}';
-        return string;
+        return "RunInfo{" + "studyTitle=" + studyTitle+ "\n\t studyDescription=" + studyDescription+ "\n\t studyCenterName=" + studyCenterName+ "\n\t studyCenterProject=" + studyCenterProject+ "\n\t studyType=" + studyType+ "\n\t platformId=" + platformId+ "\n\t runName=" + runName+ "\n\t experimentName=" + experimentName+ "\n\t workflowType=" + workflowType+ "\n\t assayType=" + assayType+ "\n\t runSkip=" + runSkip+ "\n\t pairedEnd=" + pairedEnd+ "\n\t runDescription=" + runDescription+ "\n\t runFilePath=" + runFilePath+ "\n\t experimentDescription=" + experimentDescription + '}';
     }
+    
+    
 }
