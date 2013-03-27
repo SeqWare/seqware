@@ -15,7 +15,8 @@ The next step presented in this tutorial is to create a workflow of your own bas
 By the end of these tutorials you will:
 
 * create a new SeqWare Pipeline workflow bundle based on HelloWorld
-* package, install, schedule, and run your new workflow bundle in Pipeline and MetaDB
+* test your workflow bundle locally
+* package your new workflow bundle in Pipeline for hand-off to an administrator
 * generate a report on the outputs of your workflows in Pipeline and Portal
 * be prepared to move on to more detailed documentation for each sub-project
 
@@ -80,6 +81,8 @@ In this example, one would chose 721: if you want to write your workflow using J
 
 ## Listing the Workflow
 
+List the contents of a packaged workflow.
+
 	seqware@seqwarevm Workflow_Bundle_workflow-hello-simple-legacy-ftl-workflow]$ java -jar ~/seqware-github-development/seqware-distribution/target.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -l -b `pwd`
 
 	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
@@ -120,32 +123,17 @@ SeqWare bundles have a test command built into their metadata.xml. In order to t
 	RUNNING: step 2 of 5 (40%)
 	...
 
-## Packaging and Installing the MyHelloWorld Locally
+## Packaging MyHelloWorld Locally
 
-Assuming the workflow above worked fine the next step is to install it locally,
-this means it will be inserted into the MetaDB via the locally running web
-service.  During this process it will zip up the workflow bundle and put it
-into your released-bundles directory. Once you have the zip file you can share it with
-other users and, in the future, upload it to an AppStore to make it even easier to share.
+<!-- make this install from a zip for the admin guide --> 
+Assuming the workflow above worked fine the next step is to package it.
 
-Here is an example showing how this
-process works on the VM and what is happening in the database and your
-released-bundles directory as you do this.  You may want to delete the zip file
-that is in the released-bundles directory before you do this step below (or back
-it up somewhere first).  
 
-	seqware@seqwarevm Workflow_Bundle_hello_1.0-SNAPSHOT_SeqWare_0.13.3]$ java -jar ~/seqware-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b `pwd` -i
-	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
-	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@2b5ac3c9
-	Installing Bundle
-	Bundle: /home/seqware/Temp/workflow-hello-simple-legacy-ftl-workflow/target/Workflow_Bundle_hello_1.0-SNAPSHOT_SeqWare_0.13.3
-	Now packaging /home/seqware/Temp/workflow-hello-simple-legacy-ftl-workflow/target/Workflow_Bundle_hello_1.0-SNAPSHOT_SeqWare_0.13.3 to a zip file and transferring to the directory: /home/seqware/SeqWare/released-bundles Please be aware, this process can take hours if the bundle is many GB in size.
-	Dec 4, 2012 7:34:44 PM org.restlet.ext.httpclient.HttpClientHelper start
-	INFO: Starting the Apache HTTP client
-	WORKFLOW_ACCESSION: 6730
-	Bundle Has Been Installed to the MetaDB and Provisioned to /home/seqware/Temp/workflow-hello-simple-legacy-ftl-workflow/target/Workflow_Bundle_hello_1.0-SNAPSHOT_SeqWare_0.13.3!
+	cd target
+	mkdir output
+	java -jar ~/seqware-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b output -p Workflow_Bundle_helloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5
 
-What happens here is the <code>Workflow_Bundle_hello_1.0-SNAPSHOT_SeqWare_0.13.3</code> directory is zip'd up to your released-bundles directory and the metadata about the workflow is saved to the database.
+What happens here is the <code>Workflow_Bundle_hello_1.0-SNAPSHOT_SeqWare_0.13.3</code> directory is zip'd up to your output directory and that can be provided to an admin for install.
  
 ## Generate an ini file 
 Make sure you clean out the cruft from the ini file here!
