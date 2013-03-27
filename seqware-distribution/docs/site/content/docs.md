@@ -17,7 +17,17 @@ Amazon's cloud. See "Installation" for directions for getting the VM.  While
 this guide is organized by logical sections that flow from one to the next you
 do not need to read the whole thing in order to get started.  Take a look at
 the tutorials in the "Getting Started" section which will walk you through the
-core functionality such as SeqWare Pipeline.
+core functionality such as SeqWare Pipeline. The tutorials are divided into  
+User, Developer, and Admin guides.  These reflect the three types of users that 
+will interact with a SeqWare install.  Generally the User injects input data
+into SeqWare, runs workflows, and collects the results. These users also use 
+our various command line and Portal reporting tools.  The second user is a
+Developer that is actually responsible for the creation and testing of new
+workflows.  Finally, the Admin installs workflows, automates the launching 
+of workflows, and identifies failed workflows.  This user is responsible 
+for the components that allow the User and Developer to do their work and,
+consequently, this role is responsible for setting up and maintaining the
+various SeqWare componenents.
 
 ##Conventions
 

@@ -21,3 +21,7 @@ markdown:              advanced
 
 ## Retrieving Results
 
+## Tomcat Config File
+
+Document the config settings for Tomcat like email addresses, DB, etc
+
