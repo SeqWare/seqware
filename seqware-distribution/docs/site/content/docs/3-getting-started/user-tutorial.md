@@ -19,6 +19,7 @@ This guide will show you how to use command line tools from Pipeline to access t
 * schedule a HelloWorld workflow and monitor its progress using Pipeline
 * generate a report on the outputs of your workflows in Pipeline and Portal
 * download files produced by a workflow using Pipeline tools
+* simple debugging of workflows by downloading stdout and stderr for your workflows
 
 The command line tools are all Java tools from SeqWare Pipeline that wrap our RESTful SeqWare Web Service. If you would like to learn more about the low-level API (perhaps you want to call it directly in a program or script) you can find more information in the [SeqWare Web Service](/docs/7-web-service/) documentation.
 
@@ -309,16 +310,12 @@ A better way of monitoring workflows (and getting a list of the outputs) is to u
 
 In this example all the status information for workflows with workflow accession 7 are printed out to a file in the local file system.  This includes several columns of interest including the status of the workflow, the output file types, and their locations in S3 or the file system. You can use this information to automate the checking of workflows and the retrieval of the results!
 
-In the output from the above command you will see accessions for each workflow run. If the status is “failed” you can use resources directly on the Web Service to see what went wrong by returning the stderr and stdout from the workflow. This is how you might do that for a workflow_run with an accession of 6774:
+In the output from the above command you will see accessions for each workflow run. If the status is “failed” you can download the stderr and stdout from the workflow run. This is how you might do that for a workflow_run with an accession of 6774:
 
 <pre>
-	GET -C admin@admin.com:admin http://localhost:8080/SeqWareWebService/reports/workflowruns/6774/stderr
+ java -jar ~/seqware-distribution-0.13.6.3-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wra 6774 --wr-stderr
+ java -jar ~/seqware-distribution-0.13.6.3-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wra 6774 --wr-stdout
 </pre>
-
-Keep in mind two things: 
-
-1. this is a non-standard URL since this feature is in testing
-1. this direct GET request will be replaced with a command-line tool in the near future.
 
 ## Downloading Workflow Results
 
