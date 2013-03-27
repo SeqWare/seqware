@@ -253,6 +253,7 @@ public class PluginRunnerIT {
     public void testBasicMetadataRetrieval() throws IOException {
         String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --list-tables", ReturnValue.SUCCESS);
         Assert.assertTrue("output should include table names", output.contains("TableName") && output.contains("study") && output.contains("experiment"));
+        Assert.assertTrue("output should include table names", output.contains("sample") && output.contains("sequencer_run") && output.contains("ius") && output.contains("lane"));
     }
     
     public static void main(String[] args) throws IOException {
