@@ -32,11 +32,10 @@ almost every tool in the SeqWare project.
 ## Developer Tutorial
 
 The [Developer Tutorial](/docs/3-getting-started/developer-tutorial/) picks up
-where the [User Tutorial](/docs/3-getting-started/user-tutorial/) left off and
-shows you how to create new workflow bundles and make those available to other
-users of the system. This guide also gives a very basic overview of developing
-on the SeqWare codebase for those interested in extending the system and
-contributing code back to the project.
+where the User Tutorial left off and shows you how to create new workflow
+bundles and make those available to other users of the system. This guide also
+gives a very basic overview of developing on the SeqWare codebase for those
+interested in extending the system and contributing code back to the project.
 
 ## Administrator Tutorial
 
