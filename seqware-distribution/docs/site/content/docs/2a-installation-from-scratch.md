@@ -1020,6 +1020,18 @@ Where "run0001" is replaced with the run mentioned in the ./bin/pegasus-run.pl o
 
 The SeqWare MetaDB is the common database for tracking metadata throughout the project.  So it's the first of the sub-projects that needs to be setup.  We'll also pre-load it with useful examples so VM users can have something to play with upon first boot.
 
+We're using an empty database to start the user tutorial off with.  This uses the two sql files:
+
+* seqware_meta_db.sql
+* seqware_meta_db_data.sql
+
+We then added some sample data including installing the HelloWorld bundle.
+
+<pre>
+-bash-4.1$ psql -U seqware -W seqware_meta_db < /tmp/seqware_meta_db.sql
+-bash-4.1$ psql -U seqware -W seqware_meta_db < /tmp/seqware_meta_db_data.sql
+</pre>
+
 See [Setup SeqWare MetaDB](/docs/4-metadb/#setup) for directions on how to set this up.
 
 ## Setup SeqWare Portal
