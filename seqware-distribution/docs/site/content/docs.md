@@ -5,19 +5,19 @@ markdown: basic
 
 ---
 
-<p class="warning"><strong>Note:</strong> This guide is a work in progress.</p> 
+<p class="warning"><strong>Note:</strong> This guide is a work in progress and was designed for release 0.13.6.x of SeqWare.</p> 
 
 This is the core documentation for the SeqWare project, including all the
 various sub-projects. We wanted to create a single manual that would bring
 together all of our documentation since much of it is currently spread across a
-poorly-organized wiki.  While this guide is organized by logical sections that
-flow from one to the next you do not need to read the whole thing in order to
-get started.  Take a look at the tutorials in the "Getting Started" section
-which will walk you through the core functionality such as SeqWare Pipeline.
-Because SeqWare is a fairly complex software stack (with some
-difficult-to-configure dependencies) we assume most users will start with a VM,
-either a local VirtualBox VM or an Amazon Machine Image (AMI) on Amazon's
-cloud.
+poorly-organized wiki.  Because SeqWare is a fairly complex software stack
+(with some difficult-to-configure dependencies) we assume most users will start
+with a VM, either a local VirtualBox VM or an Amazon Machine Image (AMI) on
+Amazon's cloud. See "Installation" for directions for getting the VM.  While
+this guide is organized by logical sections that flow from one to the next you
+do not need to read the whole thing in order to get started.  Take a look at
+the tutorials in the "Getting Started" section which will walk you through the
+core functionality such as SeqWare Pipeline.
 
 ##Conventions
 

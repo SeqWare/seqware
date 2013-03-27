@@ -39,5 +39,5 @@ Repositories
 There are currently two repositories used by the project (see below). The SourceForge repo has all the sub-projects (and several years of cruft)  while the GitHub repository has this documentation and the latest SeqWare Query Engine. We will transition from subversion to git as soon as we can.  If you want to contribute to SeqWare we encourage you to email the mailing list or Brian O'Connor at briandoconnor at gmail dot com directly.
 
 * the GitHub git [repository](https://github.com/SeqWare/seqware) for SeqWare
-* the SourceForge subversion [repository](http://sourceforge.net/projects/seqware/develop)
+* the SourceForge subversion [repository](http://sourceforge.net/projects/seqware/develop) (Deprecated, please use GitHub)
 
