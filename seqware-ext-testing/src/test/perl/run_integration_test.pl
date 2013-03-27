@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# starting point for integration tests
+# starting point for integration tests, now deprecated
 # example: /home/seqware/Temp/run_integration_test.pl ~/seqware-full.jar simple-legacy-ftl-workflow 1.0-SNAPSHOT
 
 use strict;
