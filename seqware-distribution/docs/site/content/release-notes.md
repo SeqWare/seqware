@@ -94,7 +94,6 @@ Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=4453317
 * [SEQWARE-1399] - Simplify archetype parameter versions
 * [SEQWARE-1403] - hostname and user file ownership utilities
 
-
 ## 0.13.5 (2012-11-13)
 
 ### Defect

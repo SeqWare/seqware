@@ -35,7 +35,7 @@ Required parameters of note:
 
 Optional parameters note:
 
-* check-wf-accessions: Comma-separated accessions of workflows that you may already be satisfied with (for example, satisfactory runs of an older version of a workflow). If all files in a particular group are "contained" within one of the workflows in this list, it will not be re-run.  
+* check-wf-accessions: Comma-separated accessions of workflows that you may already be satisfied with (for example, satisfactory runs of an older version of a workflow). If all files in a particular group are "contained" within one of the workflow runs in this list, it will not be re-run.  
 * rerun-max: The maximum number of times to re-launch a workflowrun if failed. Default: 5.
 * group-by: Group by one of the headings in FindAllTheFiles. Default: FILE_SWA.
 
