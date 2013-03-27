@@ -101,6 +101,10 @@ In the last case, the extended integration tests profile is used to trigger inte
 In order to point your command-line tools at the web service brought up by the integration tests, you will need to modify your SeqWare ~/.seqware/settings to include:
 
     SW_REST_URL=http://localhost:8889/seqware-webservice 
+    QE_NAMESPACE=BATMAN
+    QE_PERSIST=true
+    QE_HBASE_REMOTE_TESTING=false
+    QE_HBASE_PROPERTIES=localhost
 
 If you wish to build the whole of SeqWare at once, you will need:
 
