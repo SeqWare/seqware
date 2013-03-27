@@ -46,10 +46,11 @@ will tweet about it so consider following us on Twitter.
 * [SeqWareVM_0.12.5-r5163_CentOS_6.2_20120904.ova](https://s3.amazonaws.com/nimbusinformatics.exchange/public/SeqWareVM_0.12.5_r5163_CentOS_6.2_20120904b.ova)
 
 Open VirtualBox and use the "Import Appliance" tool to create a new SeqWare VM
-on your system.  You can then launch it and you will be presented with a fairly
-standard Linux desktop with links to the project's documentation to give you an
-idea of where to begin (the "Getting Started" guide here which provides a
-walk-through of using this VM).
+on your system. Make sure you set the memory to the max you can afford, I
+recommend at least 4GB of memory for the VM.  You can then launch it and you
+will be presented with a fairly standard Linux desktop with links to the
+project's documentation to give you an idea of where to begin (the "Getting
+Started" guide here provides a walk-through of using this VM).
 
 <p class="warning"><strong>Note:</strong>
 When you import the VM you need to set your memory and CPU correctly.  Do not
@@ -77,7 +78,7 @@ bundle into a production system.  Or you can even hook up this VM to a real
 local grid environment (such as an SGE cluster) for running workflows.  This is
 exactly what we did at OICR, our SeqWare hosts are all virtual machines that
 can submit workflow jobs to our physical cluster. You can find more information
-on this later in the guide.
+on this in the "SeqWare Pipeline" section of our documentation.
 
 <img src="/assets/images/vm_screen.png" alt="SeqWare VM" width="600px"/>
 
@@ -117,17 +118,9 @@ Unlike the local VM there is no graphical desktop to log into.  Instead you will
 
 ### What Can You Do With It?
 
-You can launch this public AMI which will give you a server with all the SeqWare projects pre-configured and loaded with some small examples.  You can then use the running VM to test workflows and write your own.  Since this VM runs on the fairly powerful HPC node type, you can actually use it to get real work done.  This instance is powerful enough to analyze a whole human exome in 4-8 hours and you can, of course, launch many instances simultaneously to process multiple exomes in parallel.
-
+You can launch this public AMI which will give you a server with all the SeqWare projects pre-configured and loaded with some small examples.  You can then use the running VM to test workflows and write your own.  Since this VM runs on the fairly powerful HPC node type, you can actually use it to get real work done.  This instance is powerful enough to analyze a whole human exome in 4-8 hours and you can, of course, launch many instances simultaneously to process multiple exomes in parallel. Future releases of SeqWare will include scripts to setup clusters of HPC nodes that will allow you to process whole human genomes. In the mean time we recommend investigating the excellent [StarCluster](http://star.mit.edu/cluster/) cluster launching tool. 
 
 <p class="warning"><strong>Note:</strong>Keep in mind Amazon charges approximately $1.30 USD per hour to run these instances, it is your responsibility to monitor your cloud usage and turn your VMs off when not in use!</p>
-
-### More to Come...
-
-TODO: In the near future we will document the process to:
-
-* launch clusters of SeqWare instances
-* pass configuration information to instances (like your AWS keys)
 
 
 ## Installing from Scratch
