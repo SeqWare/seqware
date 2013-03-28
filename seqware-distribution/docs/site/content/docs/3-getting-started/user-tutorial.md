@@ -299,7 +299,13 @@ At this point you know what workflow you are going to run and you have a customi
 
 	java -jar seqware-distribution-0.13.6.5-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession 7 --schedule --parent-accessions 24
 
-<p class="warning"><strong>Tip:</strong> the parent-accessions is the SWID of the ProvisionFiles element that was added under the sample when use used this tool to upload the text files in the example above.  You MUST specify this otherwise the workflow’s results will not be linked to anything (they will be orphaned and will not be visible in the Portal or present in the reports below). Conveniently the ProvisionFiles tool will write these accessions to a file and the portal displays these values.</p>
+<p class="warning"><strong>Tip:</strong> the parent-accessions is the SWID of
+the ProvisionFiles element that was added under the sample when use used this
+tool to upload the text files in the example above.  You MUST specify this
+otherwise the workflow’s results will not be linked to anything (they will be
+orphaned and will not be visible in the Portal or present in the reports
+below). Conveniently the ProvisionFiles tool will write these accessions to a
+file and the portal displays these values.</p>
 
 This schedules the workflow to run on the VM. Notice it also prints the workflow run accession which you can use to help monitor the workflow.
 
