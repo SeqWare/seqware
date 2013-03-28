@@ -6,9 +6,19 @@ toc_includes_sections: true
 
 ---
 
-This guide picks up where the [User Tutorial](/docs/3-getting-started/user-tutorial/) left off. In that previous guide we showed you how to start up your local VM, create studies, experiments, and samples, associate an input file with a sample, and then launch a workflow to process that file.  This process is the same generic process we use at OICR to analyze samples from fastq to, eventually, annotated variants.  In this production system the workflows are fairly complex (they include branching and looping) and we string multiple worklfows together (output of one as input for the next) using <kbd>deciders</kbd>.
+This guide picks up where the [User
+Tutorial](/docs/3-getting-started/user-tutorial/) left off. In that previous
+guide we showed you how to start up your local VM, create studies, experiments,
+and samples, associate an input file with a sample, and then launch a workflow
+to process that file.  These workflows can be complex (they include branching
+and looping) and in future tutorials you will see how to string multiple
+worklfows together (output of one as input for the next) using
+<kbd>deciders</kbd> for automation.
 
-The next step presented in this tutorial is to create a workflow of your own based on the HelloWorld that comes bundled with the VM.  In theory you could use either a local VM or an Amazon instance to follow the tutorial below but in our case we will base it on the local VM.
+In this tutorial the focus is on creating a workflow of your own based on the
+HelloWorld that comes bundled with the VM.  In theory you could use either a
+local VM or an Amazon instance to follow the tutorial below but in our case we
+will base it on the local VM.
 
 ## By the End of This Tutorial
 
@@ -16,14 +26,31 @@ By the end of these tutorials you will:
 
 * create a new SeqWare Pipeline workflow bundle based on HelloWorld
 * test your workflow bundle locally
-* package your new workflow bundle in Pipeline for hand-off to an administrator
-* generate a report on the outputs of your workflows in Pipeline and Portal
-* be prepared to move on to more detailed documentation for each sub-project
+* package your new workflow bundle in Pipeline for hand-off to an administrator for installation into SeqWare
 
+## A Note About Workflow Languages & Engines
+
+Workflows in the SeqWarePipeline system can be written in one of three
+languages and executed in one of two cluster environments.  The most tested
+combination is [FTL](http://freemarker.sourceforge.net/) workflows running on
+the [Pegasus](http://pegasus.isi.edu/) workflow engine. However we have
+recently added support for workflows written in Java along with workflows
+written in a simplified FTL syntax. The latter of which is the least tested of
+the workflow languages.  Given its flexibility and power we recommend most
+users use the Java workflow language.  In addition, we have implemented a
+workflow engine for submission to Oozie (Hadoop) clusters.  This is still in
+testing so we currently recommend the Pegasus engine.
+
+<img width="600" src="/assets/images/seqware_hpc_oozie.png"/>
+
+In this tutorial we will write a Java workflow and run it on the Pegasus engine.
 
 ## First Steps
 
-Please launch your local VM in VirtualBox and login as user <kbd>seqware</kbd>, password <kbd>seqware</kbd> at this time. Click on the "SeqWare Directory" link on the desktop which will open a terminal to the location where we installed the SeqWare tools. 
+Please launch your local VM in VirtualBox and login as user <kbd>seqware</kbd>,
+password <kbd>seqware</kbd> at this time. Click on the "SeqWare Directory" link
+on the desktop which will open a terminal to the location where we installed
+the SeqWare tools. 
 
 ## Overview of Workflow Development Using the VM
 
@@ -32,22 +59,15 @@ the working directory.  Notice there is a jar file here and also two important
 directories: provisioned-bundles which contains unzipped workflow bundles and
 is where you will work on new bundles and released-bundles (SW_BUNDLE_REPO_DIR
 in the config) which contains zip versions of the workflows that you create
-when you package up these bundles and install them locally or on the cloud. You
-will work in provisioned-bundles, copying a template HelloWorld workflow to a
-new bundle that you can modify You will also test your bundles from there as
+when you package up these bundles and install them.
+
+You can work in whatever directory you like but in these examples I worke in the /home/seqware/Temp directory.
+There are two ways to create a new workflow, the first lksdjfsldkfjjlksaaaddkdkkkkkkkkkkkkkkkkksd, copying a template HelloWorld workflow to
+a new bundle that you can modify You will also test your bundles from there as
 well. Once you finish with the new bundle you will package and install it via
-the web service (to either the remote cloud VM or local VM). Once
-installed you can use the workflow scheduling tools you have used before to
-trigger workflows (on the cloud or the local VM), monitor them, and get data
-back.
-
-Please note that the parent of this directory also contains a copy of the SeqWare source code retrieved via the procedure in [source code](/docs/13-code/).
-
-First, build SeqWare and then copy the distribution jar to your home and name it something convenient. 
-
-	cd ~/seqware-github-development/
-	mvn clean install (or mvn clean install -DskipTests to skip tests))
-	cp seqware-distribution/target/seqware-distribution-0.13.6-SNAPSHOT-full.jar ~/seqware-full.jar
+the web service (to either the remote cloud VM or local VM). Once installed you
+can use the workflow scheduling tools you have used before to trigger workflows
+(on the cloud or the local VM), monitor them, and get data back.
 
 ## Generating Workflow Bundles
 
