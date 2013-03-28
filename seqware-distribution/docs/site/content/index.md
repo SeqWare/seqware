@@ -8,13 +8,13 @@
 <table>
 <tr>
 <th><h2><strong>Users</strong></h2></th>
-<th><h2><strong>Administrators</strong></h2></th>
 <th><h2><strong>Developers</strong></h2></th>
+<th><h2><strong>Admins</strong></h2></th>
 </tr>
 <tr>
 <td><a href="/docs/3-getting-started/user-tutorial/"><img src="/assets/images/genome-capable_ico.png"/></a></td>
-<td><a href="/docs/3-getting-started/admin-tutorial/"><img src="/assets/images/cloud-based_ico.png"/></a></td>
 <td><a href="/docs/3-getting-started/developer-tutorial/"><img src="/assets/images/open-source_ico.png"/></a></td>
+<td><a href="/docs/3-getting-started/admin-tutorial/"><img src="/assets/images/cloud-based_ico.png"/></a></td>
 </tr>
 </table>
 

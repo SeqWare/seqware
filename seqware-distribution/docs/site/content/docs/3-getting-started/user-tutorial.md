@@ -9,18 +9,6 @@ toc_includes_sections: false
 
 The majority of this guide is dedicated to walking users (people who use workflows) through the basics of using SeqWare. The core functionality we will explore is how to get data into the system, how to run workflows someone else created and installed for you (a workflow developer), and getting the resulting data back out.  We assume that people are most interested in the Pipeline sub-project and focus most of our time on that but this tutorial touches on other sub-projects like the Portal.  The examples below will all be based on a local VM but the environment on our cloud instance is almost identical, so most of the examples below will be applicable to either VM type. In the future we will probably have a separate user guide that focuses on the differences of running on Amazon's cloud.
 
-## SeqWare Overview
-
-SeqWare currently provides 5 main tools specifically designed to support the analysis necessary for massively parallel sequencing technologies. All tools can be used together or separately. This tutorial will focus mainly on Pipeline:
-
-* **MetaDB**: provides a common database to store metadata used by all components.
-* **Portal**: a LIMS-like web application to manage samples, record computational events, and present results back to end users.
-* **Pipeline**: a workflow engine that is capable of wrapping and combining other tools (BFAST, BWA, SAMtools, etc) into complex pipelines, recording metadata about the analysis, and facilitates automation of pipelines based on metadata.
-* **Web Service**: a programmatic API that lets people build new tools on top of the project
-* **Query Engine**: a NoSQL database designed to store and query variants and other events inferred from sequence data.
-
-<img width="600" src="/assets/images/seqware_arch.png"/>
-
 ## By the End of This Tutorial
 
 This guide will show you how to use command line tools from Pipeline and web app from Portal to access the MetaDB. This will allow you to do the following tasks using tools that can be scripted versus our Portal web-based interface that requires a user to click on an interface (we will show examples of the latter along the way too). By the end of these tutorials you will be able to:
