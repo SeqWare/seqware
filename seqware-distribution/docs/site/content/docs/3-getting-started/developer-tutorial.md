@@ -145,16 +145,16 @@ SeqWare bundles have a test command built into their metadata.xml. In order to t
 
 ## Packaging MyHelloWorld Locally
 
-<!-- make this install from a zip for the admin guide --> 
 Assuming the workflow above worked fine the next step is to package it.
 
+	[seqware@seqwarevm Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3]$ mkdir packaged
+	[seqware@seqwarevm Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3]$  java -jar ~/Development/gitroot/seqware-github/seqware-distribution/target/seqware-distribution-0.13.6.5-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --b packaged -p `pwd`
+	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
+	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@20b9b538
+	Packaging Bundle
+	Bundle: packaged path: /tmp/testing/SampleJavaWorkflow/target/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3
+	Bundle Has Been Packaged to packaged!
 
-	cd target
-	mkdir output
-	java -jar ~/seqware-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b output -p Workflow_Bundle_helloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5
-
-What happens here is the <code>Workflow_Bundle_hello_1.0-SNAPSHOT_SeqWare_0.13.3</code> directory is zip'd up to your output directory and that can be provided to an admin for install.
- 
 ## Generate an ini file 
 Make sure you clean out the cruft from the ini file here!
 Delete the lines before and after (and including) "-----------------------------------------------------"
