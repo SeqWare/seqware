@@ -57,3 +57,8 @@ The SeqWare Pipeline sub-project is really the heart of the overall SeqWare proj
 * <a href="/docs/12-attribute-annotator/">AttributeAnnotator</a>: Annotate items in the MetaDB with 'skip' or key-value pairs.
 
 
+## Other Items
+
+* links directory
+* checking in workflows to source control
+
