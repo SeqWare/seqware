@@ -42,7 +42,7 @@ public class CommandLineToolsIT {
      */
     @Test
     public void testProvisionFileIn_RandomInput() throws IOException {
-        provisionFileWithRandomInput();
+        provisionFileWithRandomInput("10");
     }
 
     /**
@@ -53,19 +53,7 @@ public class CommandLineToolsIT {
      */
     @Test
     public void testGenericMetadataSaver() throws IOException {
-        // create a random new file and check that the file we want to save metadata about exists 
-        File inputFile = File.createTempFile("input", "out");
-        final String content = "This is a funky funky test file";
-        FileUtils.write(inputFile, content);
-
-        Random generator = new Random();
-        String random = String.valueOf(generator.nextInt());
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver "
-                + " --metadata-parent-accession 10 "
-                + " -- --gms-output-file text::text/plain::" + inputFile.getAbsolutePath()
-                + " --gms-algorithm UploadText --gms-suppress-output-file-check";
-        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
-        Log.info(listOutput);
+        saveGenericMetadataFileForSample("10");
     }
 
     /**
@@ -74,7 +62,7 @@ public class CommandLineToolsIT {
      */
     @Test
     public void provisionInAndOut() throws IOException {
-        File provisionedFile = this.provisionFileWithRandomInput();
+        File provisionedFile = this.provisionFileWithRandomInput("10");
         File tempDir = FileUtils.getTempDirectory();
         
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles "
@@ -89,7 +77,7 @@ public class CommandLineToolsIT {
         Assert.assertTrue("file contents not the same", FileUtils.readFileToString(retrievedFile).equals(FileUtils.readFileToString(provisionedFile)));
     }
 
-    private File provisionFileWithRandomInput() throws IOException {
+    public File provisionFileWithRandomInput(String sampleAccession) throws IOException {
         // create a random new file and check that the file we want to provision exists 
         File inputFile = File.createTempFile("input", "out");
         final String content = "This is a funky funky test file";
@@ -101,7 +89,7 @@ public class CommandLineToolsIT {
         String random = String.valueOf(generator.nextInt());
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles "
                 + "--metadata-output-file-prefix /datastore/"
-                + " --metadata-parent-accession 10 --metadata-processing-accession-file  " + metadataFile.getAbsolutePath()
+                + " --metadata-parent-accession "+sampleAccession+" --metadata-processing-accession-file  " + metadataFile.getAbsolutePath()
                 + " -- -im text::text/plain::" + inputFile.getAbsolutePath() + " -o /datastore/ --force-copy";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
         Log.info(listOutput);
@@ -120,5 +108,22 @@ public class CommandLineToolsIT {
             Assert.assertTrue("did not output metadata sw_accession properly", false);
         }
         return provisioned;
+    }
+
+    public String saveGenericMetadataFileForSample(String sampleAccession) throws IOException {
+        // create a random new file and check that the file we want to save metadata about exists 
+        File inputFile = File.createTempFile("input", "out");
+        final String content = "This is a funky funky test file";
+        FileUtils.write(inputFile, content);
+
+        Random generator = new Random();
+        String random = String.valueOf(generator.nextInt());
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver "
+                + " --metadata-parent-accession  "+sampleAccession
+                + " -- --gms-output-file text::text/plain::" + inputFile.getAbsolutePath()
+                + " --gms-algorithm UploadText --gms-suppress-output-file-check";
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+        Log.info(listOutput);
+        return listOutput;
     }
 }
