@@ -48,15 +48,31 @@ import org.springframework.util.SerializationUtils;
  */
 public class PluginRunnerIT {
 
-    private static File tempDir = null;
+    private static File tempDir = Files.createTempDir();
     private static Map<String, Integer> installedWorkflows = new HashMap<String, Integer>();
     private static Map<String, File> bundleLocations = new HashMap<String, File>();
     private static List<Integer> launchedWorkflowRuns = new ArrayList<Integer>();
     private final static boolean DEBUG_SKIP = false;
     private final static int PARENT = 4707;
 
+    public static Map<String, Integer> getInstalledWorkflows() {
+        return installedWorkflows;
+    }
+
+    public static Map<String, File> getBundleLocations() {
+        return bundleLocations;
+    }
+
+    public static List<Integer> getLaunchedWorkflowRuns() {
+        return launchedWorkflowRuns;
+    }
+    
+    
+
     @BeforeClass
     public static void createAndInstallArchetypes() throws IOException {
+        clearStaticVariables();
+        
         File bundleFile = new File(System.getProperty("java.io.tmpdir"), "PluginRunnerIT_bundleLocations.bin");
         File installedWorkflowsFile = new File(System.getProperty("java.io.tmpdir"), "PluginRunnerIT_installedWorkflows.bin");
         if (DEBUG_SKIP) {
@@ -78,28 +94,7 @@ public class PluginRunnerIT {
 
         // for all tests, we're going to need to create and install our basic archetypes
         String[] archetypes = {"java-workflow", "simplified-ftl-workflow", "legacy-ftl-workflow", "simple-legacy-ftl-workflow"};
-        for (String archetype : archetypes) {
-            String workflow = "seqware-archetype-" + archetype;
-            // generate and install archetypes to local maven repo
-            String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware -DarchetypeArtifactId=" + workflow + " -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=" + workflow + " -DworkflowDirectoryName=" + workflow + " -DworkflowName=" + workflow + " -DworkflowVersion=1.0-SNAPSHOT -B -Dgoals=install";
-            String genOutput = ITUtility.runArbitraryCommand(command, 0, tempDir);
-            Log.info(genOutput);
-            // install the workflows to the database and record their information 
-            File workflowDir = new File(tempDir, workflow);
-            File targetDir = new File(workflowDir, "target");
-            File bundleDir = new File(targetDir, "Workflow_Bundle_" + workflow + "_1.0-SNAPSHOT_SeqWare_" + SEQWARE_VERSION);
-            
-            bundleLocations.put(workflow, bundleDir);
-
-            String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -i -b " + bundleDir.getAbsolutePath();
-            String installOutput = ITUtility.runSeqWareJar(installCommand, ReturnValue.SUCCESS);
-            Log.info(installOutput);     
-            
-            String extractValueFrom = ITUtility.extractValueFrom(installOutput, "WORKFLOW_ACCESSION:");
-            int accession = Integer.valueOf(extractValueFrom);
-            installedWorkflows.put(workflow, accession);
-            Log.info("Found workflow " + workflow + " with accession " + accession);          
-        }
+        buildAndInstallArchetypes(archetypes, SEQWARE_VERSION);
         Assert.assertTrue("could not locate installed workflows", installedWorkflows.size() == archetypes.length);
         Assert.assertTrue("could not locate installed workflow paths", installedWorkflows.size() == bundleLocations.size());
         
@@ -126,6 +121,41 @@ public class PluginRunnerIT {
         if (!DEBUG_SKIP){
             tempDir.deleteOnExit();
         }
+        
+        clearStaticVariables();
+    }
+
+    public static void buildAndInstallArchetypes(String[] archetypes, String SEQWARE_VERSION) throws IOException, NumberFormatException {
+        for (String archetype : archetypes) {
+            String workflow = "seqware-archetype-" + archetype;
+            // generate and install archetypes to local maven repo
+            String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware -DarchetypeArtifactId=" + workflow + " -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=" + workflow + " -DworkflowDirectoryName=" + workflow + " -DworkflowName=" + workflow + " -DworkflowVersion=1.0-SNAPSHOT -B -Dgoals=install";
+            String genOutput = ITUtility.runArbitraryCommand(command, 0, tempDir);
+            Log.info(genOutput);
+            // install the workflows to the database and record their information 
+            File workflowDir = new File(tempDir, workflow);
+            File targetDir = new File(workflowDir, "target");
+            File bundleDir = new File(targetDir, "Workflow_Bundle_" + workflow + "_1.0-SNAPSHOT_SeqWare_" + SEQWARE_VERSION);
+            
+            bundleLocations.put(workflow, bundleDir);
+
+            String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -i -b " + bundleDir.getAbsolutePath();
+            String installOutput = ITUtility.runSeqWareJar(installCommand, ReturnValue.SUCCESS);
+            Log.info(installOutput);     
+            
+            String extractValueFrom = ITUtility.extractValueFrom(installOutput, "WORKFLOW_ACCESSION:");
+            int accession = Integer.valueOf(extractValueFrom);
+            installedWorkflows.put(workflow, accession);
+            Log.info("Found workflow " + workflow + " with accession " + accession);          
+        }
+    }
+
+    public static void clearStaticVariables() {
+        //clean-up static variables
+        installedWorkflows.clear();
+        bundleLocations.clear();
+        launchedWorkflowRuns.clear();
+        tempDir = Files.createTempDir();
     }
     
     @Test
@@ -248,13 +278,6 @@ public class PluginRunnerIT {
             Log.info(listOutput);
         }
     }
-
-    @Test
-    public void testBasicMetadataRetrieval() throws IOException {
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --list-tables", ReturnValue.SUCCESS);
-        Assert.assertTrue("output should include table names", output.contains("TableName") && output.contains("study") && output.contains("experiment"));
-        Assert.assertTrue("output should include table names", output.contains("sample") && output.contains("sequencer_run") && output.contains("ius") && output.contains("lane"));
-    }
     
     public static void main(String[] args) throws IOException {
         PluginRunnerIT it = new PluginRunnerIT();
@@ -279,28 +302,13 @@ public class PluginRunnerIT {
     private Map<String, File> exportWorkflowInis() throws IOException {
         Map<String, File> iniParams = new HashMap<String, File>();
         for(Entry<String, Integer> e : installedWorkflows.entrySet()){
-            Log.info("Attempting to export parameters for  " + e.getKey());
-            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession " + e.getValue();
-            String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
-            Log.info(listOutput);     
-            // go through output and dump out the workflow.ini
-            File workflowIni = File.createTempFile("workflow", "ini");
-            String[] lines = listOutput.split(System.getProperty("line.separator"));
-            PrintWriter out = new PrintWriter(new FileWriter(workflowIni)); 
-            
-            for (String line : lines) {
-                if (line.startsWith("-") || line.startsWith("=") || line.startsWith("$") || line.startsWith("Running Plugin") || line.startsWith("Setting Up Plugin")){
-                    continue;
-                } 
-                out.println(line);
-            }
-            out.close();
+            File workflowIni = exportINIFile(e.getKey(), e.getValue());
             iniParams.put(e.getKey(), workflowIni);
         }
         return iniParams;
     }
 
-    private void testLatestWorkflowsInternal(List<Integer> accessions) throws IOException {
+    public void testLatestWorkflowsInternal(List<Integer> accessions) throws IOException {
         String output = ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-installed", ReturnValue.SUCCESS);
         Assert.assertTrue("output should include installed workflows", output.contains("INSTALLED WORKFLOWS"));
         Map<String, WorkflowInfo> latestWorkflows = new HashMap<String, WorkflowInfo>();
@@ -372,9 +380,28 @@ public class PluginRunnerIT {
         threadPool.shutdown();
     }
 
+    public File exportINIFile(String name, Integer accession) throws IOException {
+        Log.info("Attempting to export parameters for  " + name);
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession " + accession;
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+        Log.info(listOutput);
+        // go through output and dump out the workflow.ini
+        File workflowIni = File.createTempFile("workflow", "ini");
+        String[] lines = listOutput.split(System.getProperty("line.separator"));
+        PrintWriter out = new PrintWriter(new FileWriter(workflowIni));
+        for (String line : lines) {
+            if (line.startsWith("-") || line.startsWith("=") || line.startsWith("$") || line.startsWith("Running Plugin") || line.startsWith("Setting Up Plugin")){
+                continue;
+            } 
+            out.println(line);
+        }
+        out.close();
+        return workflowIni;
+    }
 
 
-    private class WorkflowInfo {
+
+    public class WorkflowInfo {
 
         public int sw_accession;
         public String path;
