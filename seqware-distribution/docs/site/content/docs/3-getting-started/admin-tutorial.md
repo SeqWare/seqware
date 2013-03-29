@@ -6,13 +6,12 @@ toc_includes_sections: true
 
 ---
 
-**This guide is a work in progress.**
 This guide is intended for a SeqWare administrator. Currently, it covers the
 tools required to install workflows, monitor workflows globally, and launch
 scheduled jobs. We also cover tools that are required for cancelling workflows
 that have started and restarting workflows.
 
-In the near future, this guide will also include information on how to setup
+<!--In the near future, this guide will also include information on how to setup
 SeqWare at your site or on the cloud.  It focuses on what you need to do to get
 “real” work done e.g. to run workflows you create on datasets that require
 multiple nodes to analyze the data in a reasonable amount of time.  There are
@@ -21,6 +20,7 @@ your local site or to launch a full SeqWare cluster on EC2 using Starcluster.
 Either of these approaches will leave you with a system that can process large
 amounts of data. This guide assumes you are an IT admin at your site or are
 working with an admin since some of the steps will require “root” privileges.
+-->
 
 ## By the End of These Tutorials
 
@@ -47,32 +47,27 @@ happening in the database and your released-bundles directory as you do this.
 You may want to delete the zip file that is in the released-bundles directory
 before you do this step below (or back it up somewhere first).
 
-Assuming the workflow above worked fine the next step is to package it (this is from the developer guide).
+See the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/) for
+how to make the zipped workflow bundle. After the zip bundle is created, the
+bundle can be provided to the admin for install as below.
 
-	[seqware@seqwarevm Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3]$ mkdir packaged
-	[seqware@seqwarevm Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3]$  java -jar ~/Development/gitroot/seqware-github/seqware-distribution/target/seqware-distribution-0.13.6.5-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --b packaged -p `pwd`
-	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
-	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@20b9b538
-	Packaging Bundle
-	Bundle: packaged path: /tmp/testing/SampleJavaWorkflow/target/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3
-	Bundle Has Been Packaged to packaged!
-
-After the zip bundle is created, the bundle can be provided to the admin for install as below.
-
-	[seqware@seqwarevm Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3]$ java -jar ~/Development/gitroot/seqware-github/seqware-distribution/target/seqware-distribution-0.13.6.5-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --b packaged/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3.zip -i
+	java -jar ~/Development/gitroot/seqware-github/seqware-distribution/target/seqware-distribution-0.13.6.5-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --b packaged/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3.zip -i
+	
 	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
 	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@29e97f9f
 	Installing Bundle
 	Bundle: packaged/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3.zip
 	Now packaging /tmp/testing/SampleJavaWorkflow/target/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3/packaged/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3.zip to a zip file and transferring to the directory: /home/seqware/SeqWare/released-bundles Please be aware, this process can take hours if the bundle is many GB in size.
 	  PROCESSING INPUT: /tmp/testing/SampleJavaWorkflow/target/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3/packaged/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3.zip OUTPUT: /home/seqware/SeqWare/released-bundles
-
+	
 	Mar 28, 2013 10:43:03 AM org.restlet.ext.httpclient.HttpClientHelper start
 	INFO: Starting the Apache HTTP client
 	WORKFLOW_ACCESSION: 6804
 	Bundle Has Been Installed to the MetaDB and Provisioned to packaged/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3.zip!
+	
 	[seqware@seqwarevm Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3]$ ls -alhtr ~/SeqWare/released-bundles/ | tail -n1
 	-rw-rw-r-- 1 seqware seqware 151M Mar 28 10:42 Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3.zip
+	
 	[seqware@seqwarevm Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3]$ ls -alhtr ~/SeqWare/provisioned-bundles/ | tail -n1
 	drwxrwxr-x  4 seqware seqware 4.0K Mar 28 10:42 Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3
 
@@ -120,7 +115,9 @@ Take a look at:
 	seqware@seqwarevm SeqWare]$ crontab -l
 	1 0 * * * /home/seqware/crons/update_db.sh >> /home/seqware/logs/update_db.log
 	* * * * * /home/seqware/crons/status.cron >> /home/seqware/logs/status.log
+	
 	[seqware@seqwarevm SeqWare]$ cat /home/seqware/crons/status.cron
+	
 	#!/bin/bash
 
 	source /home/seqware/.bash_profile
@@ -140,7 +137,8 @@ to check the status of launched workflows.
 
 After launching a workflow, you can cancel it in order to stop further execution. This will set the status of the workflow run to 'failed'.
 
-	[seqware@seqwarevm testing]$ java -jar ~/seqware-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession 6730  --parent-accessions 839 --host `hostname --long`                      
+	java -jar ~/seqware-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession 6730  --parent-accessions 839 --host `hostname --long`                      
+	
 	Running Plugin: net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher                                            
 	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher@288051                                  
 	Mar 28, 2013 11:29:56 AM org.restlet.ext.httpclient.HttpClientHelper start                                           
@@ -182,8 +180,8 @@ After launching a workflow, you can cancel it in order to stop further execution
 
 If a workflow has failed due to a transient error (such as cluster downtime or a disk quota being reached), you can restart a workflow at the last failed step. 
 
-	[seqware@seqwarevm testing]$ cd /home/seqware/SeqWare/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126
-	[seqware@seqwarevm run0126]$ pegasus-run -Dpegasus.user.properties=pegasus.*.properties --nodatabase `pwd`
+	cd /home/seqware/SeqWare/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126
+	pegasus-run -Dpegasus.user.properties=pegasus.*.properties --nodatabase `pwd`
 	Rescued /home/seqware/SeqWare/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126/seqware-archetype-java-workflow-0.log as /home/seqware/SeqWare/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126/seqware-archetype-java-workflow-0.log.000
 
 	Running rescue DAG 1
@@ -231,10 +229,13 @@ On our deployment, we have a cron script which calls the SymLinkFileReporter and
 </p>
 
 
-Take a look at the guide for [creating a SeqWare
-VM](/docs/2a-installation-from-scratch/) which provides technical details on
-how to install the components of the SeqWare software stack. 
+As an admin the next steps are to explore the various sub-project guides in
+this documentation.  Also take a look at the guide for [creating a SeqWare
+VM](/docs/2a-installation-from-scratch/) which provides low-level, technical
+details on how to install the components of the SeqWare software stack. 
 
+
+<!--
 ## Coming Soon
 
 We are also preparing guides which will walk administrators through
@@ -242,3 +243,5 @@ We are also preparing guides which will walk administrators through
 * Hooking up to an SGE cluster (Pegasus)
 * Hooking up to an Oozie cluster
 * Hooking up to an LSF cluster
+-->
+

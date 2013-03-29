@@ -354,5 +354,5 @@ You can find more information on this report tool on the public SeqWare wiki: [S
 
 ## Next Steps
 
-See the [Developer's Guide](/docs/3-getting-started/developer-tutorial/) for how to create a new workflow.
+See the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/) for how to create a new workflow.
 
