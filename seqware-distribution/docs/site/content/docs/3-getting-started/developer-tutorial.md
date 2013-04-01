@@ -13,7 +13,7 @@ guide we showed you how to start up your local VM, create studies, experiments,
 and samples, associate an input file with a sample, and then launch a workflow
 to process that file.  These workflows can be complex (they include branching
 and looping) and in future tutorials you will see how to string multiple
-worklfows together (output of one as input for the next) using
+workflows together (output of one as input for the next) using
 <kbd>deciders</kbd> for automation.
 
 In this tutorial the focus is on creating a workflow of your own based on the
@@ -32,7 +32,7 @@ By the end of these tutorials you will:
 
 ## A Note About Workflow Languages & Engines
 
-Workflows in the SeqWarePipeline system can be written in one of three
+Workflows in the SeqWare Pipeline system can be written in one of three
 languages and executed in one of two cluster environments.  The most tested
 combination is [FTL](http://freemarker.sourceforge.net/) workflows running on
 the [Pegasus](http://pegasus.isi.edu/) workflow engine. However we have
@@ -60,21 +60,21 @@ NGS analysis tools with tools designed to run in a Hadoop environment so much of
 our current development focuses on this new engine.</p>
 
 
-## The Theory Beind a SeqWare Workflow Bundle
+## The Theory Behind a SeqWare Workflow Bundle
 
 In many workflow environments the concept of a workflow is encoded as a simple
 XML markup file that defines a series of steps, data inputs, etc. This may be
 interpreted by a user interface of some sort, e.g. a drag-n-drop workflow
 creation tool. These workflow systems tend to treat workflows as very
 light-weigh representations of steps.  One problem with this lightweight
-approach is depdendenices for steps in the workflow, such as genome indexes for
+approach is dependencies for steps in the workflow, such as genome indexes for
 an aligner, are often times treated as parameters and are not managed by the
 workflow system.  SeqWare's concept of a workflow is much more akin to a Linux
 distribution package (like RPM or DEB files) in which all necessary components
 are packaged inside a single binary file. In SeqWare we use Zip64 files to
 group the workflow definition file, workflow itself, sample settings, and data
 dependencies in a single file that can be exchanged between SeqWare users or
-archived. This allows SeqWare bundles to be much more portable that lightweigh
+archived. This allows SeqWare bundles to be much more portable that lightweight
 workflows that reference external tools and data. Being self-contained is at
 the core of the design goals for SeqWare bundles with the expense of often
 times large workflow bundle sizes.
@@ -173,7 +173,7 @@ should be fine.
 ## A Tour of Workflow Bundle Components
 
 In this section we will examine the internals of the Workflow Bundle that was just generated.
-The first thing you should do is take a look at the workflow mainifest showing which workflows
+The first thing you should do is take a look at the workflow manifest showing which workflows
 are present in this bundle (a single Workflow Bundle can contain many workflows).
 Notice in the command below that we use the SeqWare jar from **inside** the workflow bundle. This
 ensures we are using the version of SeqWare this bundle was built with which minimize incompatibility issues.
@@ -203,7 +203,7 @@ This shows one workflow in the generated workflow bundle.
 The directory structure created by the maven archetype includes a
 <tt>pom.xml</tt> file which is our Maven build file, a <tt>src</tt> directory
 which contains the Java workflow, and a workflow directory that contains any
-bundled data, the basic workflow config file which includes all the paramters
+bundled data, the basic workflow config file which includes all the parameters
 this workflow accepts, the metadata.xml which defines the workflows available
 in this bundle, and any scripts, binaries, or libraries your workflow needs (in
 bin and lib respectively).
@@ -332,7 +332,7 @@ cluster, a cloud-based cluster, etc).
 This method sets up files that are inputs and/or outputs for this workflow.  In
 this example the input <tt>data/input.txt</tt> comes from the workflow bundle
 itself. The ultimate location of the output file is determined by two
-parameters passed into the WorkflowLaucher which actually runs the workflow:
+parameters passed into the WorkflowLauncher which actually runs the workflow:
 <tt>--metadata-output-file-prefix</tt> and <tt>--metadata-output-dir</tt>.
 
 #### Directories
@@ -403,8 +403,8 @@ input_file=${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${v
 greeting=Testing
 # this is just a comment, the output directory is a conventions and used in many workflows to specify a relative output path
 output_dir=seqware-results
-# the output_prefix is a convension and used to specify the root of the absolute output path or an S3 bucket name 
-# you should pick a path that is available on all custer nodes and can be written by your user
+# the output_prefix is a convention and used to specify the root of the absolute output path or an S3 bucket name 
+# you should pick a path that is available on all cluster nodes and can be written by your user
 output_prefix=./
 </code>
 </pre>
