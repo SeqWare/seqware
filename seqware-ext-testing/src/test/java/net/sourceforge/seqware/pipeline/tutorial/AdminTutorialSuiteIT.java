@@ -16,9 +16,6 @@
  */
 package net.sourceforge.seqware.pipeline.tutorial;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -29,6 +26,6 @@ import org.junit.runners.Suite;
  * @author dyuen
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses(value = {})
+@Suite.SuiteClasses(value = {AdminPhase1.class})
 public class AdminTutorialSuiteIT extends TutorialSuite {
 }
