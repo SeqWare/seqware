@@ -67,7 +67,6 @@ public class PluginRunnerIT {
         return launchedWorkflowRuns;
     }
     
-    
 
     @BeforeClass
     public static void createAndInstallArchetypes() throws IOException {
@@ -110,19 +109,7 @@ public class PluginRunnerIT {
 
     @AfterClass
     public static void cleanup() throws IOException {
-        // testing monitoring one more time
-        for (int launchedWorkflowRun : launchedWorkflowRuns) {
-            Log.info("Attempting to monitor " + launchedWorkflowRun);
-            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker -- --workflow-run-accession " + launchedWorkflowRun;
-            String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
-            Log.info(listOutput);
-        }
-        
-        if (!DEBUG_SKIP){
-            tempDir.deleteOnExit();
-        }
-        
-        clearStaticVariables();
+        monitorAndClean(true);
     }
 
     public static void buildAndInstallArchetypes(String[] archetypes, String SEQWARE_VERSION) throws IOException, NumberFormatException {
@@ -156,6 +143,22 @@ public class PluginRunnerIT {
         bundleLocations.clear();
         launchedWorkflowRuns.clear();
         tempDir = Files.createTempDir();
+    }
+
+    public static void monitorAndClean(boolean monitor) throws IOException {
+        // testing monitoring one more time
+        for (int launchedWorkflowRun : launchedWorkflowRuns) {
+            Log.info("Attempting to monitor " + launchedWorkflowRun);
+            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker -- --workflow-run-accession " + launchedWorkflowRun;
+            String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+            Log.info(listOutput);
+        }
+        
+        if (!DEBUG_SKIP){
+            FileUtils.deleteDirectory(tempDir);
+        }
+        
+        clearStaticVariables();
     }
     
     @Test
