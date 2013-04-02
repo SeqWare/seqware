@@ -32,7 +32,7 @@ import org.junit.Test;
  * Build and install a bundle, used by both the User tutorial and the Developer tutorial
  * @author dyuen
  */
-public class UserAndDeveloperPhase5 {
+public class UserPhase5 {
     
     public static final String WORKFLOW = "Workflow";
     
