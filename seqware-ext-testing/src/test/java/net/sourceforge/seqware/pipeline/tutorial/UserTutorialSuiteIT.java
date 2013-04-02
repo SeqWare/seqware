@@ -16,9 +16,6 @@
  */
 package net.sourceforge.seqware.pipeline.tutorial;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -29,6 +26,6 @@ import org.junit.runners.Suite;
  * @author dyuen
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses(value = {UserPhase1.class, UserPhase2.class, UserPhase3.class , UserPhase4.class , UserAndDeveloperPhase5.class, UserPhase6.class})
+@Suite.SuiteClasses(value = {UserPhase1.class, UserPhase2.class, UserPhase3.class , UserPhase4.class , UserPhase5.class, UserPhase6.class})
 public class UserTutorialSuiteIT extends TutorialSuite {
 }

@@ -23,25 +23,31 @@ import junit.framework.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
+import net.sourceforge.seqware.pipeline.plugins.PluginRunnerIT;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
+import org.apache.commons.io.FileUtils;
+import org.junit.AfterClass;
 import org.junit.Test;
 
 /**
  * Do all tests that can be concurrently done in the admin tutorial
+ *
  * @author dyuen
  */
 public class AdminPhase1 {
     
+    private static File separateTempDir = Files.createTempDir();
+
     @Test
     public void testPackageBundleAndInstallSeparately() throws IOException {
 
-        File separateTempDir = Files.createTempDir();
+        separateTempDir = Files.createTempDir();
         Log.info("Trying to package archetype at: " + separateTempDir.getAbsolutePath());
         PluginRunner it = new PluginRunner();
         String SEQWARE_VERSION = it.getClass().getPackage().getImplementationVersion();
         Assert.assertTrue("unable to detect seqware version", SEQWARE_VERSION != null);
         Log.info("SeqWare version detected as: " + SEQWARE_VERSION);
-        
+
         File packageDir = Files.createTempDir();
 
         // for this test, we're going to create, install and package just one archetype. Doing more seems redundant for this test
@@ -56,19 +62,42 @@ public class AdminPhase1 {
             File workflowDir = new File(separateTempDir, workflow);
             File targetDir = new File(workflowDir, "target");
             File bundleDir = new File(targetDir, "Workflow_Bundle_" + workflow + "_1.0-SNAPSHOT_SeqWare_" + SEQWARE_VERSION);
-            
-            String packageCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -b "+packageDir+" -p " + bundleDir.getAbsolutePath();
+
+            String packageCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -b " + packageDir + " -p " + bundleDir.getAbsolutePath();
             String packageOutput = ITUtility.runSeqWareJar(packageCommand, ReturnValue.SUCCESS);
-            Log.info(packageOutput);     
-              
+            Log.info(packageOutput);
+
             // locate the zip bundle and then install it
             File zippedBundle = new File(packageDir, bundleDir.getName() + ".zip");
             Assert.assertTrue("zipped bundle " + zippedBundle.getAbsolutePath() + ".zip", zippedBundle.exists());
-            
-            String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -b "+zippedBundle+" -i";
+
+            String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -b " + zippedBundle + " -i";
             String installOutput = ITUtility.runSeqWareJar(installCommand, ReturnValue.SUCCESS);
-            Log.info(installOutput);     
+            Log.info(installOutput);
         }
+        
+        FileUtils.deleteDirectory(packageDir);
+    }
+
+    @Test
+    public void testLaunchScheduled() throws IOException {
+        // launch-scheduled
+        String schedCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --launch-scheduled";
+        String schedOutput = ITUtility.runSeqWareJar(schedCommand, ReturnValue.SUCCESS);
+        Log.info(schedOutput);
+    }
+
+    @Test
+    public void testMonitoring() throws IOException {
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker -- --tp 1000";
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+        Log.info(listOutput);
     }
     
+    // later we will test/add utilities for wrapping cancel and rescue workflows
+    
+    @AfterClass
+    public static void cleanup() throws IOException{
+        FileUtils.deleteDirectory(separateTempDir);
+    }
 }
