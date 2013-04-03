@@ -38,13 +38,15 @@ SeqWare is open source architecture built mostly in Java. In the <kbd>/home/seqw
 
 <p class="warning"><strong>Tip:</strong> The VM will contain a recent version of the jar that we have validated with this tutorial.  You may want to upgrade to the latest version, though, which you can download from our <a href="http://jenkins.res.oicr.on.ca/job/seqware/">continuous build server</a>. Please choose the jar that has the -full suffix, e.g. seqware-distribution-0.13.6-full.jar. Keep in mind we make no promises that the latest version will be bug free!</p>
 
+For more information about the command line tools see the [Plugin](/docs/17-plugins/) and [Modules](/docs/modules/) reference.
+
 ## The SeqWare Settings File
 
 The SeqWare jar file uses a simple configuration file that has been setup for you already on the VM. By default the location is ~/.seqware/settings.
 
 This file contains the web address of the RESTful web service, your username and password, and you Amazon public and private keys that will allow you to push and pull data files to and from the cloud, etc. For this tutorial the config file should be ready to go, you will not need to modify it.
 
-For more information see the (SeqWare Pipeline)[/docs/6-pipeline/user-configuration/] documentation which covers the details on the user config file.
+For more information see the [Settings](/docs/6-pipeline/user-configuration/) documentation which covers the details on the user config file.
 
 ## Creating Studies, Experiments, and Samples
 
