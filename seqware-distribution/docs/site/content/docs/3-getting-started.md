@@ -10,6 +10,10 @@ The majority of this guide is dedicated to walking users and developers through 
 
 ## By the End of These Tutorials
 
+<!--
+Take a look at the "Workflow Development Tutorials" on the internal wiki to make sure we've covered all items in the tutorials below.
+-->
+
 By the end of these tutorials you will:
 
 * create studies, experiments, and samples in the MetaDB

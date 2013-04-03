@@ -10,9 +10,9 @@ Install nanoc (on Ubuntu 12.04):
 For a basic version of nanoc just follow the directions on their site. This is
 what I had to do to get their very nice sample website to compile:
 
-sudo apt-get install ruby1.9.1 ruby-rvm ruby-rdiscount ruby-nokogiri
+sudo apt-get install ruby1.9.1 ruby-rvm ruby-rdiscount ruby-nokogiri ruby1.9.1-dev python-pygments
 
-sudo gem install nanoc kramdown adsf mime-types compass haml coderay rubypants builder rainpress
+sudo gem install nanoc kramdown adsf mime-types compass haml coderay rubypants builder rainpress pygments.rb
 
 
 Hack on Linux Mint 13:
