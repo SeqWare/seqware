@@ -1,1 +1,0 @@
-../../../../../../seqware-queryengine/README.md

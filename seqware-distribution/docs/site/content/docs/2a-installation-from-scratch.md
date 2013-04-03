@@ -7,7 +7,9 @@ is_dynamic:            true
 
 ---
 
-This guide is useful if you want to install SeqWare from scratch on your local infrastructure. They are rather vague in sections and really are written for experienced Linux sysadmins. If you just want to get started with SeqWare quickly please see [Installing the SeqWare VM](/docs/2-installation/#installing-with-a-local-vm) for instructions on downloading a VM that is ready for workflow development and testing. 
+<p class="warning"><strong>Note:</strong> This guide is useful if you want to install SeqWare from scratch on your local infrastructure. Be warned, there are rather vague sections and this guide was really written as notes for setting up our VMs. It is geared towards experienced Linux sysadmins and we cannot guarentee this guide is always up to date. </p>
+
+If you just want to get started with SeqWare quickly please see [Installing the SeqWare VM](/docs/2-installation/#installing-with-a-local-vm) for instructions on downloading a VM that is ready for workflow development and testing. We also recommend this approach for production installs because you can connect easily these VMs to a real cluster.
 
 <!-- For the previous version of these directions please see [[Creating a SeqWare VM v1]] and [[Creating a SeqWare VM v2]] and [[Upgrade SeqWare VM to Globus 5.2]] for information about upgrading to the latest version of Globus (this guide below is up-to-date). -->
 
