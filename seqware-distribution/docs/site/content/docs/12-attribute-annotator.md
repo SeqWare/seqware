@@ -59,7 +59,7 @@ Annotate the IUS with SWID 2345 with a key-value pair of key "dual-barcodes" and
 
 Bulk insert attribute annotation with file
 
-	java -jar seqware-distribution/target/seqware-distribution-0.13.6.3-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator -- --file
+	java -jar seqware-distribution/target/seqware-distribution-0.13.6.3-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator -- --file file.csv
 
 The file is in CSV format
 
@@ -70,7 +70,7 @@ The file is in CSV format
 	s,1000,key1,value1
 	st,321,key1,value1
 
-View the annotated attributes
+##View the annotated attributes
 
 To check the attribute annotation, you can use the similar URI. See <a href="http://seqware.github.com/seqware/">http://seqware.github.com/seqware/</a> for more detail.
 
