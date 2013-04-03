@@ -1,3 +1,12 @@
+---
+
+title:                 "Maven Archetype"
+markdown:              advanced
+is_dynamic:            true
+toc_includes_sections: true
+
+---
+
 ## Working on your own Workflows
 
 Going back to creation of new workflows in the maven-bundles directory, we will explain some of the magic numbers and settings that we skipped over while demoing workflow launching. 
