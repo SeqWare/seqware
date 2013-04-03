@@ -50,21 +50,6 @@
           </arguments>
         </configuration>
           </execution>
-
-          <execution>
-	    <id>fill_install_guides</id>
-	    <phase>compile</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-        <configuration>
-          <executable>sh</executable>
-          <arguments>
-            <argument>src/scripts/fill_install_guides.sh</argument>
-          </arguments>
-        </configuration>
-          </execution>
-
         </executions>
       </plugin>
 
