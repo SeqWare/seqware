@@ -1027,10 +1027,8 @@ We're using an empty database to start the user tutorial off with.  This uses th
 
 We then added some sample data including installing the HelloWorld bundle.
 
-<pre>
--bash-4.1$ psql -U seqware -W seqware_meta_db < /tmp/seqware_meta_db.sql
--bash-4.1$ psql -U seqware -W seqware_meta_db < /tmp/seqware_meta_db_data.sql
-</pre>
+	-bash-4.1$ psql -U seqware -W seqware_meta_db < /tmp/seqware_meta_db.sql
+	-bash-4.1$ psql -U seqware -W seqware_meta_db < /tmp/seqware_meta_db_data.sql
 
 See [Setup SeqWare MetaDB](/docs/4-metadb/#setup) for directions on how to set this up.
 
