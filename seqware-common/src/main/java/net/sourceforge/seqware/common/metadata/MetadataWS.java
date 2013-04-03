@@ -2091,7 +2091,8 @@ public class MetadataWS extends Metadata {
         try {
             JaxbObject<LaneList> jaxb = new JaxbObject<LaneList>();
             LaneList list = (LaneList) ll.existsObject("/sequencerruns/" + sequencerRunAccession + "/lanes", "", jaxb, new LaneList());
-            return list.getList();
+            if (list!=null)
+		return list.getList();
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving lanes from sequencer run", ex);
         }
@@ -2114,7 +2115,8 @@ public class MetadataWS extends Metadata {
             sb.append(laneOrSampleAccession).append("/ius");
             JaxbObject<IUSList> jaxb = new JaxbObject<IUSList>();
             IUSList list = (IUSList) ll.existsObject(sb.toString(), "", jaxb, new IUSList());
-            return list.getList();
+            if (list !=null)
+		return list.getList();
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving IUSes (barcodes) from lane or sample", ex);
         }
@@ -2126,7 +2128,8 @@ public class MetadataWS extends Metadata {
         try {
             JaxbObject<ExperimentList> jaxb = new JaxbObject<ExperimentList>();
             ExperimentList list = (ExperimentList) ll.existsObject("/studies/" + studyAccession + "/experiments", "", jaxb, new ExperimentList());
-            return list.getList();
+            if (list!=null)
+		return list.getList();
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving experiments from study", ex);
         }
@@ -2138,7 +2141,8 @@ public class MetadataWS extends Metadata {
         try {
             JaxbObject<SampleList> jaxb = new JaxbObject<SampleList>();
             SampleList list = (SampleList) ll.existsObject("/experiments/" + experimentAccession + "/samples", "", jaxb, new SampleList());
-            return list.getList();
+            if (list != null)
+		return list.getList();
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving samples from experiment", ex);
         }
@@ -2150,7 +2154,8 @@ public class MetadataWS extends Metadata {
         try {
             JaxbObject<SampleList> jaxb = new JaxbObject<SampleList>();
             SampleList list = (SampleList) ll.existsObject("/samples/" + parentSampleAccession + "/children", "", jaxb, new SampleList());
-            return list.getList();
+            if (list!=null)
+		return list.getList();
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving child samples from parent sample", ex);
         }
@@ -2162,7 +2167,8 @@ public class MetadataWS extends Metadata {
         try {
             JaxbObject<SampleList> jaxb = new JaxbObject<SampleList>();
             SampleList list = (SampleList) ll.existsObject("/samples/" + childSampleAccession + "/parents", "", jaxb, new SampleList());
-            return list.getList();
+            if (list !=null)
+		return list.getList();
         } catch (JAXBException ex) {
             Log.error("JAXBException while retrieving parent samples from child sample", ex);
         }
@@ -2404,7 +2410,9 @@ public class MetadataWS extends Metadata {
         private List<Study> findStudies() throws IOException, JAXBException {
             JaxbObject<StudyList> jaxb = new JaxbObject<StudyList>();
             StudyList list = (StudyList) findObject("/studies", "", jaxb, new StudyList());
-            return list.getList();
+            if (list !=null)
+		return list.getList();
+	    return null;
         }
 
         private List<Experiment> findExperiments() throws IOException, JAXBException {
@@ -2414,20 +2422,26 @@ public class MetadataWS extends Metadata {
         private List<Experiment> findExperiments(String searchString) throws IOException, JAXBException {
             JaxbObject<ExperimentList> jaxb = new JaxbObject<ExperimentList>();
             ExperimentList list = (ExperimentList) findObject(searchString, "", jaxb, new ExperimentList());
-            return list.getList();
+            if (list !=null)
+		return list.getList();
+	    return null;
         }
 
         private List<SequencerRun> findSequencerRuns() throws IOException, JAXBException {
             JaxbObject<SequencerRunList> jaxb = new JaxbObject<SequencerRunList>();
             SequencerRunList list = (SequencerRunList) findObject("/sequencerruns", "", jaxb, new SequencerRunList());
-            return list.getList();
-        }
+            if (list !=null)
+                return list.getList();
+            return null;
+	}
 
         private List<Workflow> findWorkflows() throws IOException, JAXBException {
             JaxbObject<WorkflowList> jaxb = new JaxbObject<WorkflowList>();
             WorkflowList list = (WorkflowList) findObject("/workflows", "", jaxb, new WorkflowList());
-            return list.getList();
-        }
+            if (list !=null)
+                return list.getList();
+            return null;
+	}
 
         private Workflow findWorkflowParams(String workflowAccession) throws IOException, JAXBException {
             JaxbObject<Workflow> jaxb = new JaxbObject<Workflow>();
@@ -2439,38 +2453,50 @@ public class MetadataWS extends Metadata {
         private List<Platform> findPlatforms() throws IOException, JAXBException {
             JaxbObject<PlatformList> jaxb = new JaxbObject<PlatformList>();
             PlatformList list = (PlatformList) findObject("/platforms", "", jaxb, new PlatformList());
-            return list.getList();
+	    if (list !=null)
+                return list.getList();
+            return null;            
         }
 
         private List<Organism> findOrganisms() throws IOException, JAXBException {
             JaxbObject<OrganismList> jaxb = new JaxbObject<OrganismList>();
             OrganismList list = (OrganismList) findObject("/organisms", "", jaxb, new OrganismList());
-            return list.getList();
+            if (list !=null)
+                return list.getList();
+            return null; 
         }
 
         private List<StudyType> findStudyTypes() throws IOException, JAXBException {
             JaxbObject<StudyTypeList> jaxb = new JaxbObject<StudyTypeList>();
             StudyTypeList list = (StudyTypeList) findObject("/studytypes", "", jaxb, new StudyTypeList());
-            return list.getList();
-        }
+            if (list !=null)
+                return list.getList();
+            return null;
+	}
 
         private List<LibraryStrategy> findLibraryStrategies() throws IOException, JAXBException {
             JaxbObject<LibraryStrategyList> jaxb = new JaxbObject<LibraryStrategyList>();
             LibraryStrategyList list = (LibraryStrategyList) findObject("/librarystrategies", "", jaxb, new LibraryStrategyList());
-            return list.getList();
-        }
+            if (list !=null)
+                return list.getList();
+            return null;
+	}
 
         private List<LibrarySelection> findLibrarySelections() throws IOException, JAXBException {
             JaxbObject<LibrarySelectionList> jaxb = new JaxbObject<LibrarySelectionList>();
             LibrarySelectionList list = (LibrarySelectionList) findObject("/libraryselections", "", jaxb, new LibrarySelectionList());
-            return list.getList();
-        }
+            if (list !=null)
+                return list.getList();
+            return null;
+	}
 
         private List<LibrarySource> findLibrarySources() throws IOException, JAXBException {
             JaxbObject<LibrarySourceList> jaxb = new JaxbObject<LibrarySourceList>();
             LibrarySourceList list = (LibrarySourceList) findObject("/librarysources", "", jaxb, new LibrarySourceList());
-            return list.getList();
-        }
+            if (list !=null)
+                return list.getList();
+            return null;
+	}
 
         private Processing findProcessing(String searchString) throws IOException, JAXBException {
             Processing parent = new Processing();
@@ -2626,7 +2652,9 @@ public class MetadataWS extends Metadata {
         private List<Sample> matchSampleName(String name) throws IOException, JAXBException {
             JaxbObject<SampleList> jaxb = new JaxbObject<SampleList>();
             SampleList list = (SampleList) findObject("/samples", "?matches=" + name, jaxb, new SampleList());
-            return list.getList();
+	    if (list !=null)
+                return list.getList();
+            return null;            
         }
 
         private Object findObject(String uri, String searchString, JaxbObject jaxb, Object parent)

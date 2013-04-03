@@ -138,9 +138,11 @@ public abstract class BatchMetadataParser {
 
 
         runInfo.setStudyTitle(promptString("Study Title", studyTitle, Field.study_name));
+	runInfo.setStudyDescription(runInfo.getStudyTitle());
         runInfo.setRunName(promptString("Sequencer Run Name", runName, Field.sequencer_run_name));
+	runInfo.setRunDescription(runInfo.getRunName());
         runInfo.setExperimentName(promptString("Experiment Name", experimentName, Field.experiment_name));
-
+	runInfo.setExperimentDescription(runInfo.getExperimentName());
         KeyVal[] list = getKeyVals(metadata.getPlatforms());
         runInfo.setPlatformId(promptAccession("Platform accession", platformId, list, Field.platform_id));
 

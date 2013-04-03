@@ -34,9 +34,15 @@ public class CreateFromScratch extends BatchMetadataParser {
     }
     
     public RunInfo getRunInfo() {
-        RunInfo runInfo = this.generateRunInfo(null, null, null, null, null, null, null, null, null, -1, -1, true, null, null);
+        boolean runDone =false;
+	RunInfo runInfo = null;
+	while (!runDone) {
+		runInfo = this.generateRunInfo(null, null, null, null, null, null, null, null, null, -1, -1, true, null, null);
+		Log.stdout(runInfo.toString());
+		runDone = ConsoleAdapter.getInstance().promptBoolean("Is this correct?", true);
+	}
+
         String projectCode = "ZZZZ";
-        
         int numLanes = this.promptInteger("Number of lanes?", 8, Field.number_of_lanes);
         
         for (int i = 0; i < numLanes; i++) {
