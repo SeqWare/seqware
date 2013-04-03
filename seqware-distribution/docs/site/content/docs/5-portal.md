@@ -11,6 +11,8 @@ markdown:              advanced
 
 ## Admin Setup
 
+Please see the [Install Guide](/docs/github_readme/5-portal/)
+
 ## Features
 
 ## Uploading Data

@@ -38,18 +38,34 @@
         <version>1.2.1</version>
         <executions>
           <execution>
+	    <id>generate_markdown</id>
 	    <phase>install</phase>
             <goals>
               <goal>exec</goal>
             </goals>
-          </execution>
-        </executions>
         <configuration>
           <executable>sh</executable>
           <arguments>
             <argument>src/scripts/generate_markdown.sh</argument>
           </arguments>
         </configuration>
+          </execution>
+
+          <execution>
+	    <id>fill_install_guides</id>
+	    <phase>compile</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+        <configuration>
+          <executable>sh</executable>
+          <arguments>
+            <argument>src/scripts/fill_install_guides.sh</argument>
+          </arguments>
+        </configuration>
+          </execution>
+
+        </executions>
       </plugin>
 
     <plugin>
