@@ -42,15 +42,6 @@ The .seqware/settings file needs to be configured to use the Web service for the
 
 The SeqWare Web service is the primary mechanism by which users can reach the SeqWare MetaDB. The Web service prevents the user from having to make SQL queries and facilitates building services on top of the MetaDB. Currently, there is a Java client located in the seqware-commons package that can be used to access the WebService, which is configured through the .seqware/settings file.
 
-### Requirements ###
-SeqWare Web service requires:
-
-* Apache Tomcat 6.0+
-* Access to a Seqware MetaDB PostgreSQL database (See [SeqWare MetaDB](/docs/4-metadb/))
-* A locally running PostgreSQL install that has a 'seqware' user with CREATEDB privileges.
-* Maven 2.2.1+
-* The SeqWare WebService source code. (See [Source Code](/docs/13-code/)) 
-
 ### Install Guide ###
 
 Please see the [Install Guide](/docs/github_readme/4-webservice/)
