@@ -4,8 +4,7 @@
     UPDATED: 20130212
     HOMEPAGE: http://seqware.github.com/
 
-INTRODUCTION
-====================
+## Introduction 
 
 This README is just a quick overview of building SeqWare. See our
 [project homepage](http://seqware.github.com) for much more documentation.
@@ -26,8 +25,7 @@ documentation:
 The seqware-common sub-project provides a location for common code
 and most of the other sub-projects have this as a dependency.
 
-PREREQUISITES
-====================
+## Prerequisites 
 
 ###A Recent Linux Distribution
 
@@ -62,10 +60,9 @@ Sometimes we run into problems when building, strange missing dependency issues
 and broken packages. A lot of the time this is an issue with Maven, try
 deleting your ~/.m2 directory and running the build process again.
 
-PREREQUISITES ON Mac OS
---------------------
+###Prerequisites ON Mac OS
 
-###SeqWare Query Engine
+####SeqWare Query Engine
 
 We use [protobuf](http://code.google.com/p/protobuf/) to handle serialization and de-serialization.
 
@@ -78,12 +75,10 @@ On Mac OS, Protobuf requires the following installation steps:
     make
     make install
 
-BUILDING
-========
+## Building 
 
 
-GETTING THE SOURCE CODE
---------------------
+### Getting the Source Code 
 
 Our source code is available from [GitHub](https://github.com/SeqWare/seqware) or the "Fork me on GitHub" banner at the upper right of our website
 
@@ -100,8 +95,7 @@ Resolving deltas: 100% (4308/4308), done.
 </pre>
 
 
-BUILDING THE PROJECT
---------------------
+### Building and Automated Testing 
 
 We're moving to Maven for our builds, this is currently how
 you do it in the trunk directory:
@@ -135,86 +129,10 @@ You can also build individual components such as the new query engine with:
     cd seqware-queryengine
     mvn clean install
 
-CREATING WORKFLOWS USING MAVEN ARCHETYPES
------------------------------------------
 
-The normal incantation to create new workflows would be:
+#### Web Service Integration Testing
 
-	mvn archetype:generate
-	...
-	Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains): 228: 685
-	[INFO] Using property: groupId = net.sf.seqware
-	Define value for property 'artifactId': : helloworld
-	Define value for property 'version':  1.0-SNAPSHOT: : 1.0
-	[INFO] Using property: package = net.sf.seqware
-	Confirm properties configuration:
-	groupId: net.sf.seqware
-	artifactId: helloworld
-	version: 1.0
-	package: net.sf.seqware
-	 Y: : Y
-
-Across our archetypes, this will usually only prompt you for the workflow name and version while auto-populating other properties. If you wish to override these values, the incantation would be of the format:
-
-	mvn archetype:generate -Dpackage=ca.on.oicr.pde -DgroupId=ca.on.oicr.pde
-	...
-	Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains): 228: 685
-	[INFO] Using property: groupId = ca.on.oicr.pde
-	Define value for property 'artifactId': : helloworld2
-	Define value for property 'version':  1.0-SNAPSHOT: : 1.0
-	[INFO] Using property: package = ca.on.oicr.pde
-	Confirm properties configuration:
-	groupId: ca.on.oicr.pde
-	artifactId: helloworld2
-	version: 1.0
-	package: ca.on.oicr.pde
-	 Y: : Y
-
-<!-- With the latest update to the query engine, we use an integrated maven plugin to spin up a mini-hbase cluster courtesy of wibidata, but these 
-     instructions may still be transferred to the website to explain how to setup an HBase cluster
-
-LOCAL UNIT TESTING SETUP
-------------------------
-
-### SeqWare Query Engine
-
-The full test suite requires Hadoop and HBase; a good start is to follow Cloudera's [quick start guide](https://ccp.cloudera.com/display/CDH4DOC/CDH4+Quick+Start+Guide).
-
-Otherwise, it is also possible to manually install HBase as follows: get HBase where either versions 0.92.1, 0.94.0 or newer are fine.
-
-    wget http://apache.raffsoftware.com/hbase/hbase-0.94.0/hbase-0.94.0.tar.gz
-    tar xzf hbase-0.94.0.tar.gz
-    cd hbase-0.94.0
-
-Prepare a local directory for the HBase database by populating the file `conf/hbase-site.xml` with (adjust the file path `/opt/local/var/db/hbase` to your needs):
-
-    <?xml version="1.0"?>
-    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-    <configuration>
-      <property>
-        <name>hbase.rootdir</name>
-        <value>file:///opt/local/var/db/hbase</value>
-      </property>
-    </configuration>
-
-Start the HBase server:
-
-    ./bin/start-hbase.sh
-
-Stopping the HBase server is similarly simple:
-
-    ./bin/stop-hbase.sh
-
-Finally, set the HBase configuration that should be used in `seqware-queryengine/src/main/java/com/github/seqware/queryengine/Constants.java` to:
-
-    public final static Map<String, String> HBASE_PROPERTIES = LOCAL;
-
---> 
-
-WEB SERVICE INTEGRATION TESTING
---------------------------------
-
-The web service integration tests require an external PostgreSQL instance
+the web service integration tests require an external PostgreSQL instance
 running with create DB access for the "seqware" user.  You can set this up by
 first installing PostgreSQL (see above) and then do the following:
 
@@ -226,8 +144,8 @@ sudo -u postgres psql -c "CREATE USER seqware WITH PASSWORD 'seqware' CREATEDB;"
 The test process will use this user to create a temporary test database.
 
 
-QUERY ENGINE INTEGRATION TESTING
---------------------------------
+
+#### Query Engine Integration Testing
 
 By default, our integration test suite runs tests against the [hbase-maven-plugin](https://github.com/wibidata/hbase-maven-plugin). You can, however, run the full test suite against a real Hadoop and HBase cluster; for setup, a good start is to follow Cloudera's [quick start guide](https://ccp.cloudera.com/display/CDH4DOC/CDH4+Quick+Start+Guide). You will then need to set the HBase configuration in `seqware-queryengine/src/main/java/com/github/seqware/queryengine/Constants.java` by turning on HBASE_REMOTE_TESTING and completing a family of terms for HBASE\_PROPERTIES. You can also set these in an external ~/.seqware/settings file.
 
@@ -259,26 +177,57 @@ If you run into the following error when the hbase-plugin starts up, please chec
 
 In particular, the latest (v. 13) version of Linux Mint has on the second line <code>127.0.1.1  \<your hostname\></code> which should be modified to <code>127.0.0.1  \<your hostname\></code>  
 
-INSTALLING
-====================
+
+## Creating Workflows Using Maven Archetypes
+
+the normal incantation to create new workflows would be:
+
+	mvn archetype:generate
+	...
+	Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains): 228: 685
+	[INFO] Using property: groupId = net.sf.seqware
+	Define value for property 'artifactId': : helloworld
+	Define value for property 'version':  1.0-SNAPSHOT: : 1.0
+	[INFO] Using property: package = net.sf.seqware
+	Confirm properties configuration:
+	groupId: net.sf.seqware
+	artifactId: helloworld
+	version: 1.0
+	package: net.sf.seqware
+	 Y: : Y
+
+Across our archetypes, this will usually only prompt you for the workflow name and version while auto-populating other properties. If you wish to override these values, the incantation would be of the format:
+
+	mvn archetype:generate -Dpackage=ca.on.oicr.pde -DgroupId=ca.on.oicr.pde
+	...
+	Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains): 228: 685
+	[INFO] Using property: groupId = ca.on.oicr.pde
+	Define value for property 'artifactId': : helloworld2
+	Define value for property 'version':  1.0-SNAPSHOT: : 1.0
+	[INFO] Using property: package = ca.on.oicr.pde
+	Confirm properties configuration:
+	groupId: ca.on.oicr.pde
+	artifactId: helloworld2
+	version: 1.0
+	package: ca.on.oicr.pde
+	 Y: : Y
+
+## Installing
 
 See http://seqware.github.com/ for detailed installation instructions
 including links to a pre-configured virtual machine that can be used for
 testing, development, and deployment.
 
 
-COPYRIGHT
-====================
+## Copyright
 
 Copyright 2008-2012 Brian D O'Connor, OICR, UNC, and Nimbus Informatics, LLC
 
-CONTRIBUTORS
-============
+## Contributors
 
 Denis Yuen, Joachim Baran, Yong Liang, Morgan Taschuk, Tony DeBat, and Zheng Zha
 
-LICENSE
-====================
+## License
 
 SeqWare is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
