@@ -11,13 +11,17 @@ markdown:              advanced
 
 This web application is used to track the processing of SeqWare sequence data
 through the SeqWare-supplied pipeline, alignment to a reference genome, and
-report generation.  It is part of the larger SeqWare project that looks to
+report generation.
+
+It is part of the larger SeqWare project that looks to
 streamline the manupulation of sequence data produced by next gen sequencers.
 The SeqWare LIMS system is closely tied with the SeqWare Pipeline software that
 controls the actual processing, alignment, and annotation of sequence data.
 SeqWare LIMS collects various bits of metadata related to each flowcell and lane
 used in the sequencer and passes this information via a common database backend
-to the SeqWare Pipeline software.  SeqWare Pipeline then records the status of
+to the SeqWare Pipeline software.  
+
+SeqWare Pipeline then records the status of
 each step in the processing pipeline back to the database.  These "processing"
 messages are then displayed in the LIMS system.  This makes it very easy for
 researchers to both follow the progress of a particular run and also get back
