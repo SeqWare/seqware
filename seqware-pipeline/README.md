@@ -1013,29 +1013,25 @@ Where "run0001" is replaced with the run mentioned in the ./bin/pegasus-run.pl o
 
 The SeqWare MetaDB is the common database for tracking metadata throughout the project.  So it's the first of the sub-projects that needs to be setup.  We'll also pre-load it with useful examples so VM users can have something to play with upon first boot.
 
-We're using an empty database to start the user tutorial off with.  This uses the two sql files:
-
-* seqware_meta_db.sql
-* seqware_meta_db_data.sql
-
-We then added some sample data including installing the HelloWorld bundle.
-
-	-bash-4.1$ psql -U seqware -W seqware_meta_db < /tmp/seqware_meta_db.sql
-	-bash-4.1$ psql -U seqware -W seqware_meta_db < /tmp/seqware_meta_db_data.sql
-
-See [Setup SeqWare MetaDB](/docs/4-metadb/#setup) for directions on how to set this up.
+See [Setup SeqWare MetaDB](/docs/github_readme/3-metadb/) for directions on how to set this up.
 
 ## Setup SeqWare Portal
 
 The SeqWare Portal will be the entry point for many users of the VM to explore the sample data bundled with the VM and, ultimately, upload and launch new analysis.
 
-I followed the directions at [Setup SeqWare LIMS | Setup SeqWare Portal](/docs/5-portal/) and installed the war file into Tomcat following a fairly standard approach.
+The URL to access the Portal is http://localhost:8080/seqware-portal-<version>
 
-The URL to access the Portal is http://localhost:8080/SeqWarePortal
+See [Setup SeqWare Portal](/docs/github_readme/5-portal/) for directions on how to set this up.
+
 
 ## Setup SeqWare Web Service
 
-Much like the Portal this sub-project just needs to be build and deployed in Tomcat using the standard War file approach.  See [Setup SeqWare WebService](/7-web-service/#setup-the-web-service) for more information.  Once installed, you can access the web service using http://localhost:8080/SeqWareWebService.
+The SeqWare WebService provides data to our command-line utilities. It is installed much like the SeqWare Portal as a Tomcat web application.
+
+The URL to access the Portal is http://localhost:8080/seqware-webservice-<version>
+
+See [Setup SeqWare Web Service](/docs/github_readme/4-webservice/) for directions on how to set this up.
+
 
 ## Next Steps
 
