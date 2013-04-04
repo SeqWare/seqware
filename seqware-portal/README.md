@@ -1,31 +1,10 @@
-PACKAGE: SeqWare LIMS
-AUTHOR: boconnor@ucla.edu
-UPDATED: 4/6/2010
-VERSION: 0.7.0
-HOMEPAGE: http://seqware.sourceforge.net
+    PACKAGE: SeqWare LIMS
+    AUTHOR: boconnor@ucla.edu
+    UPDATED: 4/6/2010
+    VERSION: 0.7.0
+    HOMEPAGE: http://seqware.sourceforge.net
 
-INTRODUCTION:
-
-This web application is used to track the processing of SeqWare sequence data
-through the SeqWare-supplied pipeline, alignment to a reference genome, and
-report generation.  It is part of the larger SeqWare project that looks to
-streamline the manupulation of sequence data produced by next gen sequencers.
-The SeqWare LIMS system is closely tied with the SeqWare Pipeline software that
-controls the actual processing, alignment, and annotation of sequence data.
-SeqWare LIMS collects various bits of metadata related to each flowcell and lane
-used in the sequencer and passes this information via a common database backend
-to the SeqWare Pipeline software.  SeqWare Pipeline then records the status of
-each step in the processing pipeline back to the database.  These "processing"
-messages are then displayed in the LIMS system.  This makes it very easy for
-researchers to both follow the progress of a particular run and also get back
-to the reports automatically created based on their initial settings.
-
-As of December 2009, we are working on an overhaul of SeqWareLIMS to better
-support Short Reach Archive (SRA)-style metadata.  And to also support arbitrary
-workflow execution through the SeqWare Pipeline.
-
-
-REQUIREMENTS:
+## REQUIREMENTS
 
 These requirements are based on what I'm using for developement.  You may be able 
 to use older/newer versions but they may or may not work.  You'll find many of the
@@ -43,7 +22,7 @@ This is what you'll need to build/run the web applications:
 * spring-framework >= 2.1
 
 
-INSTALLING:
+## INSTALLING
 
 If you just want to get a copy installed without compiling, perform the following steps:
 
@@ -57,40 +36,39 @@ If you just want to get a copy installed without compiling, perform the followin
 * Setup the postgres database. These examples assume the postgres user on your system
   is named 'postgres'.
 
-** Create a database user for the LIMS with the command:
+    * Create a database user for the LIMS with the command:
    $ sudo -u postgres psql -c "CREATE USER seqware WITH PASSWORD 'password';"
    Where seqware is the user and password is the password for this user.
 
-** Make sure pg_hba.conf has an appropriate authentication line for your LIMS user.
+    * Make sure pg_hba.conf has an appropriate authentication line for your LIMS user.
    If your database is on the same machine as your webserver, you may want:
 
-   #HOST   DATABASE          USER                              AUTH
-   local   seqware_meta_db   seqware                            md5
+        #HOST   DATABASE          USER                              AUTH
+        local   seqware_meta_db   seqware                            md5
+        
+        #Added above the system default of:
+        local   all           all                               ident sameuser
 
-   #Added above the system default of:
-   local   all           all                               ident sameuser
+    * You should restart the database daemon once you make these changes.
 
-** You should restart the database daemon once you make these changes.
+        sudo /etc/init.d/postgresql restart
 
-   sudo /etc/init.d/postgresql restart
+    * Create a database using the command:
 
-** Create a database using the command:
-
-   $ sudo -u postgres psql --command "CREATE DATABASE seqware_meta_db WITH OWNER = seqware;"
+        $ sudo -u postgres psql --command "CREATE DATABASE seqware_meta_db WITH OWNER = seqware;"
 
    Where seqware_meta_db is the name of your new database and seqware is the name of your
    database user.
 
-** Populate the database by loading the provided dump:
+    * Populate the database by loading the provided dump:
 
-   $ sudo -u postgres psql < ../seqware-meta-db/seqware_meta_db.sql seqware_meta_db -U seqware
+        $ sudo -u postgres psql < ../seqware-meta-db/seqware_meta_db.sql seqware_meta_db -U seqware
 
    You will be prompted to enter the password for your database user.
 
-** Check the PostgreSQL documentation if you have any problems with the above steps.
+    * Check the PostgreSQL documentation if you have any problems with the above steps.
 
-* Copy dist/SeqWareLIMS.war to the apache-tomcat-6.0.13/webapps directory of your tomcat
-  installation
+    * Copy dist/SeqWareLIMS.war to the apache-tomcat-6.0.13/webapps directory of your tomcatinstallation
 
 * In tomcat, create the subdirectory apache-tomcat-6.0.13/conf/Catalina/localhost/
 
@@ -102,7 +80,7 @@ If you just want to get a copy installed without compiling, perform the followin
   correct username, password and url for your database.
 
 
-STARTING:
+## STARTING
 
 * You can now start the server using the apache-tomcat-6.0.13/bin/startup.sh script and
   you can stop the server using the shutdown.sh script.
@@ -115,7 +93,7 @@ STARTING:
   the seqware_meta_db before making your SeqWare LIMS publically available.
 
 
-BUILDING (Optional):
+## BUILDING (Optional)
 
 I use the Eclipse IDE for coding and building the application.  There's an Ant file 
 included that manages the build, you can call this from the command line, use the
@@ -182,10 +160,3 @@ using Eclipse, your setup may be different:
 
 * Once the service is running you should be able to load http://localhost:8080/SeqWareLIMS,
   register an account (or use the built-in admin account), and start setting up SeqWare experiments.
-
-
-ADDITIONAL HELP:
-
-Email the user or developer list at the SourceForge homepage 
-http://sourceforge.net/projects/seqwaretools
-
