@@ -135,18 +135,38 @@ public abstract class BatchMetadataParser {
             String experimentDescription, String filePath, int platformId,
             int studyType, boolean isPairedEnd, String workflowType, String assayType) {
         RunInfo runInfo = new RunInfo();
-
+        //Study
+        KeyVal[] list = getKeyVals(metadata.getStudyTypes());
 
         runInfo.setStudyTitle(promptString("Study Title", studyTitle, Field.study_name));
+        runInfo.setStudyDescription(studyDescription);
+        if (studyDescription == null) {
+            runInfo.setStudyDescription(runInfo.getStudyTitle());
+        }
+        runInfo.setStudyCenterName(studyCenterName);
+        runInfo.setStudyCenterProject(studyCenterProject);
+        runInfo.setStudyType(promptAccession("Study Type Accession", studyType, list, Field.study_type));
+
+
+        //Sequencer run
+        list = getKeyVals(metadata.getPlatforms());
+
         runInfo.setRunName(promptString("Sequencer Run Name", runName, Field.sequencer_run_name));
-        runInfo.setExperimentName(promptString("Experiment Name", experimentName, Field.experiment_name));
-
-        KeyVal[] list = getKeyVals(metadata.getPlatforms());
-        runInfo.setPlatformId(promptAccession("Platform accession", platformId, list, Field.platform_id));
-
-        list = getKeyVals(metadata.getStudyTypes());
-        runInfo.setStudyType(promptAccession("Study Type Accession", studyType, list,Field.study_type));
+        runInfo.setRunDescription(runDescription);
+        if (runDescription==null) {
+            runInfo.setRunDescription(runInfo.getRunName());
+        }
         runInfo.setRunFilePath(promptString("Sequencer run directory", filePath, Field.run_file_path));
+        runInfo.setPlatformId(promptAccession("Platform accession", platformId, list, Field.platform_id));
+        runInfo.setPairedEnd(isPairedEnd);
+        runInfo.setRunSkip(false);
+
+
+        //experiment
+        runInfo.setExperimentName(promptString("Experiment Name", experimentName, Field.experiment_name));
+        if (experimentDescription == null) {
+            runInfo.setExperimentDescription(runInfo.getExperimentDescription());
+        }
 
         return runInfo;
     }
@@ -168,10 +188,13 @@ public abstract class BatchMetadataParser {
         laneInfo.setLaneSkip(Boolean.FALSE);
         laneInfo.setLaneCycleDescriptor("");
 
-        KeyVal[] list = getKeyVals(metadata.getStudyTypes());
-        laneInfo.setStudyTypeAcc(promptAccession("Study Type Accession", studyTypeAccession, list, Field.study_type));
-
-        list = getKeyVals(metadata.getLibraryStrategies());
+        if (studyTypeAccession > 0) {
+            laneInfo.setStudyTypeAcc(studyTypeAccession);
+        } else {
+            KeyVal[] list = getKeyVals(metadata.getStudyTypes());
+            laneInfo.setStudyTypeAcc(promptAccession("Study Type Accession", studyTypeAccession, list, Field.study_type));
+        }
+        KeyVal[] list = getKeyVals(metadata.getLibraryStrategies());
         laneInfo.setLibraryStrategyAcc(promptAccession("Library Strategy Accession", 0, list, Field.library_strategy_accession));
 
         list = getKeyVals(metadata.getLibrarySelections());
@@ -257,6 +280,8 @@ public abstract class BatchMetadataParser {
             String targetedResequencing, String tissuePreparation, String sampleDescription,
             String iusName, String iusDescription) throws Exception {
 
+
+        //Sample
         if (individualNumber == null || individualNumber.isEmpty() || projectCode == null || projectCode.isEmpty()) {
             throw new Exception("Every sample needs a project code and individual number: You gave me " + projectCode + " and " + individualNumber);
         }
@@ -319,28 +344,6 @@ public abstract class BatchMetadataParser {
             }
         }
         sa.setLibrarySizeCode(librarySizeCode);
-
-        if (barcode == null || barcode.isEmpty()) {
-            barcode = promptString("Barcode", "NoIndex", Field.barcode);
-        }
-        sa.setBarcode(barcode);
-        if (iusName == null) {
-            if (interactive) {
-                iusName = promptString("Optional: Barcode name", barcode, null);
-            } else {
-                iusName = barcode;
-            }
-        }
-        sa.setIusName(iusName);
-        if (iusDescription == null) {
-            if (interactive) {
-                iusDescription = promptString("Optional: Barcode description", barcode, null);
-            } else {
-                iusDescription = barcode;
-            }
-        }
-        sa.setIusDescription(iusDescription);
-
         StringBuilder name = new StringBuilder();
         name.append(projectCode).append("_").append(individualNumber);
         name.append("_").append(tissueOrigin).append("_").append(tissueType).append("_").append(libraryType).append("_");
@@ -367,6 +370,31 @@ public abstract class BatchMetadataParser {
             }
         }
         sa.setOrganismId(organismId);
+
+
+        //IUS
+        if (barcode == null || barcode.isEmpty()) {
+            barcode = promptString("Barcode", "NoIndex", Field.barcode);
+        }
+        sa.setBarcode(barcode);
+        if (iusName == null) {
+            if (interactive) {
+                iusName = promptString("Optional: Barcode name", barcode, null);
+            } else {
+                iusName = barcode;
+            }
+        }
+        sa.setIusName(iusName);
+        if (iusDescription == null) {
+            if (interactive) {
+                iusDescription = promptString("Optional: Barcode description", barcode, null);
+            } else {
+                iusDescription = barcode;
+            }
+        }
+        sa.setIusDescription(iusDescription);
+        sa.setIusSkip(false);
+
 
         return sa;
     }
