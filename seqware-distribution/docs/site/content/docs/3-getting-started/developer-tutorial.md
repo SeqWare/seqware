@@ -158,7 +158,7 @@ outside of the SeqWare development directories).  Here we are working in the pro
 	# use HelloWorld as the name of your workflow and use the default workflow version
 	cd HelloWorld
 	mvn install
-	cd target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5/
+	cd target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/
 
 The numbers used to identify  the archetypes (720 through 725) will vary
 depending on what you have installed, so you will need to scan through the list
@@ -179,7 +179,7 @@ Notice in the command below that we use the SeqWare jar from **inside** the work
 ensures we are using the version of SeqWare this bundle was built with which minimize incompatibility issues.
 
 <pre>
-java -jar Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-0.13.6.5-full.jar  -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -l -b `pwd`
+java -jar Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-<%= seqware_release_version %>-full.jar  -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -l -b `pwd`
 
 Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
 Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@630045eb
@@ -190,7 +190,7 @@ List Workflows:
   Name : HelloWorld
   Version : 1.0-SNAPSHOT
   Description : Add a description of the workflow here.
-  Test Command: java -jar ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-0.13.6.5-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --no-metadata --provisioned-bundle-dir ${workflow_bundle_dir} --workflow HelloWorld --version 1.0-SNAPSHOT --ini-files ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/config/workflow.ini
+  Test Command: java -jar ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --no-metadata --provisioned-bundle-dir ${workflow_bundle_dir} --workflow HelloWorld --version 1.0-SNAPSHOT --ini-files ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/config/workflow.ini
   Template Path:
   Config Path:${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/config/workflow.ini
   Requirements Compute: single Memory: 20M Network: local
@@ -212,7 +212,7 @@ When you issue the <tt>mvn install</tt> command the target direct is created
 which contains the compiled workflow along with the various necessary files all
 correctly assembled in the proper directory structure.  You can change
 directory to the workflow target directory (in this case
-<tt>target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5</tt> and
+<tt>target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %></tt> and
 run the workflow in test mode or package up the workflow as a zip file for
 exchange with others. Both topics are covered later in this tutorial.
 
@@ -231,7 +231,7 @@ developers.
 |                   `-- seqware
 |                       `-- WorkflowClient.java
 |-- target
-|   `-- Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5
+|   `-- Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>
 |       `-- Workflow_Bundle_HelloWorld
 |           `-- 1.0-SNAPSHOT
 |               |-- bin
@@ -245,7 +245,7 @@ developers.
 |               |-- data
 |               |   `-- input.txt
 |               |-- lib
-|               |   `-- seqware-distribution-0.13.6.5-full.jar
+|               |   `-- seqware-distribution-<%= seqware_release_version %>-full.jar
 |               `-- metadata.xml
 |-- workflow
 |   |-- config
@@ -278,11 +278,11 @@ HelloWorld workflow:
 
 <pre><code>#!xml
 &lt;bundle version=&quot;1.0-SNAPSHOT&quot;&gt;
-  &lt;workflow name=&quot;HelloWorld&quot; version=&quot;1.0-SNAPSHOT&quot; seqware_version=&quot;0.13.6.5&quot;
+  &lt;workflow name=&quot;HelloWorld&quot; version=&quot;1.0-SNAPSHOT&quot; seqware_version=&quot;<%= seqware_release_version %>&quot;
   basedir=&quot;${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT&quot;&gt;
     &lt;description&gt;Add a description of the workflow here.&lt;/description&gt;
-    &lt;test command=&quot;java -jar ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-0.13.6.5-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --no-metadata --provisioned-bundle-dir ${workflow_bundle_dir} --workflow HelloWorld --version 1.0-SNAPSHOT --ini-files ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/config/workflow.ini &quot;/&gt;
-    &lt;workflow_command command=&quot;java -jar ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-0.13.6.5-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --bundle ${workflow_bundle_dir} --workflow HelloWorld --version 1.0-SNAPSHOT &quot;/&gt;
+    &lt;test command=&quot;java -jar ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --no-metadata --provisioned-bundle-dir ${workflow_bundle_dir} --workflow HelloWorld --version 1.0-SNAPSHOT --ini-files ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/config/workflow.ini &quot;/&gt;
+    &lt;workflow_command command=&quot;java -jar ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --bundle ${workflow_bundle_dir} --workflow HelloWorld --version 1.0-SNAPSHOT &quot;/&gt;
     &lt;workflow_template path=&quot;&quot;/&gt;
     &lt;workflow_class path=&quot;${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/classes/com/github/seqware/WorkflowClient.java&quot;/&gt;
     &lt;config path=&quot;${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/config/workflow.ini&quot;/&gt;
@@ -535,7 +535,7 @@ SeqWare bundles have a test command built into their metadata.xml. In order to t
 	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@e80d1ff
 	Testing Bundle
 	  Running Test Command:
-	java -jar /home/seqware/Temp/simple-legacy-ftl-workflow/target/Workflow_Bundle_simple-legacy-ftl-workflow_1.0-SNAPSHOT_SeqWare_0.13.3/Workflow_Bundle_simple-legacy-ftl-workflow/1.0-SNAPSHOT/lib/seqware-distribution-0.13.3-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher --provisioned-bundle-dir /home/seqware/Temp/simple-legacy-ftl-workflow/target/Workflow_Bundle_simple-legacy-ftl-workflow_1.0-SNAPSHOT_SeqWare_0.13.3 --workflow simple-legacy-ftl-workflow --version 1.0 --ini-files /home/seqware/Temp/simple-legacy-ftl-workflow/target/Workflow_Bundle_simple-lSHOT_SeqWare_0.13.3/Workflow_Bundle_simple-legacy-ftl-workflow/1.0-SNAPSHOT/config/workflow.ini
+	java -jar /home/seqware/Temp/simple-legacy-ftl-workflow/target/Workflow_Bundle_simple-legacy-ftl-workflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/Workflow_Bundle_simple-legacy-ftl-workflow/1.0-SNAPSHOT/lib/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher --provisioned-bundle-dir /home/seqware/Temp/simple-legacy-ftl-workflow/target/Workflow_Bundle_simple-legacy-ftl-workflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %> --workflow simple-legacy-ftl-workflow --version 1.0 --ini-files /home/seqware/Temp/simple-legacy-ftl-workflow/target/Workflow_Bundle_simple-lSHOT_SeqWare_<%= seqware_release_version %>/Workflow_Bundle_simple-legacy-ftl-workflow/1.0-SNAPSHOT/config/workflow.ini
 	MONITORING PEGASUS STATUS:
 	RUNNING: step 1 of 5 (20%)
 	RUNNING: step 2 of 5 (40%)
@@ -549,19 +549,19 @@ Note in the testing command above it prints out the underlying command it calls 
 
 Assuming the workflow above worked fine the next step is to package it.
 
-	[seqware@seqwarevm Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3]$ mkdir packaged
-	[seqware@seqwarevm Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3]$  java -jar ~/Development/gitroot/seqware-github/seqware-distribution/target/seqware-distribution-0.13.6.5-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --b packaged -p `pwd`
+	[seqware@seqwarevm Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>]$ mkdir packaged
+	[seqware@seqwarevm Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>]$  java -jar ~/Development/gitroot/seqware-github/seqware-distribution/target/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --b packaged -p `pwd`
 	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
 	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@20b9b538
 	Packaging Bundle
-	Bundle: packaged path: /tmp/testing/SampleJavaWorkflow/target/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_0.13.6.3
+	Bundle: packaged path: /tmp/testing/SampleJavaWorkflow/target/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>
 	Bundle Has Been Packaged to packaged!
 
 	cd target
 	mkdir output
-	java -jar ~/seqware-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b output -p Workflow_Bundle_helloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5
+	java -jar ~/seqware-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b output -p Workflow_Bundle_helloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>
 
-What happens here is the <code>Workflow_Bundle_hello_1.0-SNAPSHOT_SeqWare_0.13.3</code> directory is zip'd up to your output directory and that can be provided to an admin for install.
+What happens here is the <code>Workflow_Bundle_hello_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %></code> directory is zip'd up to your output directory and that can be provided to an admin for install.
 
 
 ## Next Steps
