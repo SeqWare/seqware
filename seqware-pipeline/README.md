@@ -485,52 +485,7 @@ And this means that particular step needs 8 threads on the node.  I used "condor
 
 Now apply the following patch as root to /usr/share/perl5/vendor_perl/Globus/GRAM/JobManager/sge.pm. You may find it easier just to copy the new lines added below rather than use the patch command.
 
-	*** /usr/local/globus/default/setup/globus/sge.pm	2011-01-04 02:26:09.000000000 -0500
-	--- /usr/local/globus/default/setup/globus/sge.pm.dist	2011-01-04 02:21:59.000000000 -0500
-	***************
-	*** 47,55 ****
-	      $mpi_pe      = '';
-	      #
-	      if(($mpirun eq "no") && ($sun_mprun eq "no"))
-	!       { $supported_job_types = "(single|multiple|condor)"; }
-	      else
-	!       { $supported_job_types = "(mpi|single|multiple|condor)"; }
-	      #
-	      $cat         = '/bin/cat';
-	      #
-	--- 47,55 ----
-	      $mpi_pe      = '';
-	      #
-	      if(($mpirun eq "no") && ($sun_mprun eq "no"))
-	!       { $supported_job_types = "(single|multiple)"; }
-	      else
-	!       { $supported_job_types = "(mpi|single|multiple)"; }
-	      #
-	      $cat         = '/bin/cat';
-	      #
-	***************
-	*** 577,588 ****
-					     . $description->stdin() . "\n");
-		  }
-	      }
-	-     elsif($description->jobtype() eq "condor" && $description->count() > 1 ) 
-	-     {
-	-       # NOTE: you may need to change 'serial' to the parallel environment name used on your cluster
-	-       $sge_job_script->print("#\$ -pe serial "
-	-                                    . $description->count() ."\n"
-	-                                    . $executable . " $args < ". $stdin
-	-                                    . "\n");
-	-        if (!$rc)
-	-        {
-	-            return $self->respond_with_failure_extension(
-	-                    "print: $sge_job_script_name: $!",
-	-                    Globus::GRAM::Error::TEMP_SCRIPT_FILE_FAILED());
-	-        }
-	-     }
-	      elsif($description->jobtype() eq "multiple")
-	      {
-		  #####
-	--- 577,582 ----
+<%= render '/includes/setup_gram_1/' %>
 
 If a particular module in one of your workflows needs to use a specific amount of memory you may also need to modify the sge.pm globus object depending on how you've setup memory management on your cluster.  For example, this is the change I made to work on our cluster where memory was setup as a "consumable resource" and accessed by the following in the DAX, note this number is in megabytes:
 
@@ -538,23 +493,7 @@ If a particular module in one of your workflows needs to use a specific amount o
 
 These are the changes to sge.pm:
 
-	*** /usr/local/globus/default/setup/globus/sge.pm	2011-01-04 03:08:17.000000000 -0500
-	--- /usr/local/globus/default/setup/globus/sge.pm.dist	2011-01-04 02:21:59.000000000 -0500
-	*** 331,337 ****
-	      if($max_memory != 0)
-	      {
-		  $self->log("Total max memory flag is set to $max_memory Mb");
-	!         $sge_job_script->print("#\$ -l vf=$max_memory" . "M\n"); 
-	      }
-	  
-	  
-	--- 331,337 ----
-	      if($max_memory != 0)
-	      {
-		  $self->log("Total max memory flag is set to $max_memory Mb");
-	!         $sge_job_script->print("#\$ -l h_data=$max_memory" . "M\n");
-	      }
-	  
+<%= render '/includes/setup_gram_2/' %>
 
 Think very carefully about these changes above before you make them.  Your workflows may not need multi-threading and the version of GRAM you use (if not identical to the one here) may already allow you to specify without modifying the sge.pm file.  Contact the Pegasus developers for help on this.
 
