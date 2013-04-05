@@ -376,6 +376,6 @@ public class SymLinkFileReporter extends Plugin {
                 + "the SymLinkFileReporter plugin. This plugin also creates a CSV "
                 + "file with all of the accompanying information for every file. "
                 + "For more information, see "
-                + "https://sourceforge.net/apps/mediawiki/seqware/index.php?title=SymLink_Reporter";
+                + "see http://seqware.github.com/docs/21-study-reporter/";
     }
 }
