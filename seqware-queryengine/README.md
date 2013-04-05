@@ -43,7 +43,7 @@ For our tutorial, use the following values in your ~/.seqware/settings
 
 	# SEQWARE QUERY ENGINE SETTINGS
 	QE_NAMESPACE=BATMAN
-	QE_DEVELOPMENT_DEPENDENCY=file:/home/seqware/Development/gitroot/seqware-github/seqware-distribution/target/seqware-distribution-0.13.6.5-qe-full.jar
+	QE_DEVELOPMENT_DEPENDENCY=file:/home/seqware/Development/gitroot/seqware-github/seqware-distribution/target/seqware-distribution-<%= seqware_release_version %>-qe-full.jar
 	QE_PERSIST=true
 	QE_HBASE_REMOTE_TESTING=false
 	QE_HBASE_PROPERTIES=LOCAL

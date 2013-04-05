@@ -28,18 +28,18 @@ In this distribution directory, you can run our command line tools for import.
 The first time you run these tools in a new namespace, you may wish to create a common reference and then create an ad hoc tag set that will store all tags that do not match known tags. Most of our command-line tools output a key value file that you can keep in order to record the ID of your created objects.
 
 <pre title="Title of the snippet">
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-0.13.6.5-qe-full.jar com.github.seqware.queryengine.system.ReferenceCreator</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-<%= seqware_release_version %>-qe-full.jar com.github.seqware.queryengine.system.ReferenceCreator</kbd>
 Only 0 arguments found
 ReferenceCreator <reference_name> [output_file]
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-0.13.6.5-qe-full.jar com.github.seqware.queryengine.system.ReferenceCreator hg_19 keyValue_ref.out</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-<%= seqware_release_version %>-qe-full.jar com.github.seqware.queryengine.system.ReferenceCreator hg_19 keyValue_ref.out</kbd>
 Reference written with an ID of:
 hg_19
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>cat keyValue_ref.out</kbd>
 referenceID    hg_19
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-0.13.6.5-qe-full.jar com.github.seqware.queryengine.system.TagSetCreator</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-<%= seqware_release_version %>-qe-full.jar com.github.seqware.queryengine.system.TagSetCreator</kbd>
 Only 0 arguments found
 TagSetCreator <TagSet name> [output_file]
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-0.13.6.5-qe-full.jar com.github.seqware.queryengine.system.TagSetCreator ad_hoc keyValue_adHoc.out</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-<%= seqware_release_version %>-qe-full.jar com.github.seqware.queryengine.system.TagSetCreator ad_hoc keyValue_adHoc.out</kbd>
 TagSet written with an ID of:
 ad_hoc
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>cat keyValue_adHoc.out</kbd>
@@ -50,10 +50,10 @@ namespace	BATMAN
 You may also wish to pre-populate the database with (Sequence Ontology) SO terms in a TagSet:
 
 <pre title="Title of the snippet">
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-0.13.6.5-qe-full.jar com.github.seqware.queryengine.system.importers.OBOImporter</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-<%= seqware_release_version %>-qe-full.jar com.github.seqware.queryengine.system.importers.OBOImporter</kbd>
 Only 0 arguments found
 OBOImporter <input_file> [output_file]
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-0.13.6.5-qe-full.jar com.github.seqware.queryengine.system.importers.OBOImporter ../../seqware-queryengine/src/test/resources/com/github/seqware/queryengine/system/so.obo keyValueOBO.out</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-<%= seqware_release_version %>-qe-full.jar com.github.seqware.queryengine.system.importers.OBOImporter ../../seqware-queryengine/src/test/resources/com/github/seqware/queryengine/system/so.obo keyValueOBO.out</kbd>
 6861 terms written to a TagSet written with an ID of:
 42860461-0620-4990-bf15-32e6d34701b3
 <span class="prompt">dyuen@odl-dyuen:~/seqware_github/seqware-distribution/target$</span> <kbd>cat keyValueOBO.out</kbd>
@@ -64,7 +64,7 @@ namespace	BATMAN
 The previous steps should only really need to be done once when first setting up a namespace. Afterwards, the VCF file importer can be called repeatedly for each of your datasets. Note that you will need to substitue the TagSetID from the previous step into the next step.
 
 <pre title="Title of the snippet">
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-0.13.6.5-qe-full.jar com.github.seqware.queryengine.system.importers.SOFeatureImporter</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-<%= seqware_release_version %>-qe-full.jar com.github.seqware.queryengine.system.importers.SOFeatureImporter</kbd>
 usage: SOFeatureImporter
  -a <adHocTagSet>   (optional) an ID for an ad hoc TagSet, Tags will
                     either be found or added to this set, a new TagSet
@@ -87,7 +87,7 @@ usage: SOFeatureImporter
                     our import
  -w <worker>        (required) the work module and thus the type of file
                     we are working with
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-0.13.6.5-qe-full.jar com.github.seqware.queryengine.system.importers.SOFeatureImporter -i ../../seqware-queryengine/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated.vcf -o keyValueVCF.out -r hg_19 -s 42860461-0620-4990-bf15-32e6d34701b3 -a ad_hoc -w VCFVariantImportWorker </kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-<%= seqware_release_version %>-qe-full.jar com.github.seqware.queryengine.system.importers.SOFeatureImporter -i ../../seqware-queryengine/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated.vcf -o keyValueVCF.out -r hg_19 -s 42860461-0620-4990-bf15-32e6d34701b3 -a ad_hoc -w VCFVariantImportWorker </kbd>
 FeatureSet written with an ID of:
 4bd2ced0-5e37-4930-bffe-207b862a09a6
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd> echo $? </kbd>
@@ -103,10 +103,10 @@ The ID of your feature sets and parameters will obviously change from run to run
 The SOFeatureImporter will output a FeatureSet ID that should be used as part of the input to the VCFDumper command in order to export a FeatureSet.
 
 <pre title="Title of the snippet">
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  java -classpath seqware-distribution-0.13.6.5-qe-full.jar com.github.seqware.queryengine.system.exporters.VCFDumper</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  java -classpath seqware-distribution-<%= seqware_release_version %>-qe-full.jar com.github.seqware.queryengine.system.exporters.VCFDumper</kbd>
 0 arguments found
 VCFDumper <featureSetID> [outputFile]
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  java -classpath seqware-distribution-0.13.6.5-qe-full.jar com.github.seqware.queryengine.system.exporters.VCFDumper 4bd2ced0-5e37-4930-bffe-207b862a09a6 test_out.vcf</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  java -classpath seqware-distribution-<%= seqware_release_version %>-qe-full.jar com.github.seqware.queryengine.system.exporters.VCFDumper 4bd2ced0-5e37-4930-bffe-207b862a09a6 test_out.vcf</kbd>
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  sort test_out.vcf > sorted_test_out.vcf</kbd>
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  sort ../../seqware-queryengine/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/consequences_annotated.vcf  > control.vcf</kbd>
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  diff -b sorted_test_out.vcf control.vcf</kbd>
@@ -115,7 +115,7 @@ VCFDumper <featureSetID> [outputFile]
 Most of these commands use non-zero return codes to indicate that an error occurred. For example:
 
 <pre title="Title of the snippet">
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-0.13.6.5-qe-full.jar com.github.seqware.queryengine.system.importers.SOFeatureImporter -i ../../seqware-queryengine/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/test_invalid.vcf -o keyValueVCF.out -r hg_19 -s 42860461-0620-4990-bf15-32e6d34701b3 -a ad_hoc -w VCFVariantImportWorker</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-<%= seqware_release_version %>-qe-full.jar com.github.seqware.queryengine.system.importers.SOFeatureImporter -i ../../seqware-queryengine/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/test_invalid.vcf -o keyValueVCF.out -r hg_19 -s 42860461-0620-4990-bf15-32e6d34701b3 -a ad_hoc -w VCFVariantImportWorker</kbd>
 [SeqWare Query Engine] 1    [Thread-3] FATAL com.github.seqware.queryengine.system.importers.workers.VCFVariantImportWorker  - Exception thrown with file: ../../seqware-queryengine/src/test/resources/com/github/seqware/queryengine/system/FeatureImporter/test_invalid.vcf
 java.lang.NumberFormatException: For input string: "51xxx"
 	at java.lang.NumberFormatException.forInputString(NumberFormatException.java:48)
@@ -145,7 +145,7 @@ The <code>QueryVCFDumper</code> allows you to test queries written in our query 
 Here is an example of how to interact with the utility, here we run through compiling a few queries and running them.
 
 <pre title="Title of the snippet">
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  java -cp seqware-distribution-0.13.6.5-qe-full.jar  com.github.seqware.queryengine.system.exporters.QueryVCFDumper</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  java -cp seqware-distribution-<%= seqware_release_version %>-qe-full.jar  com.github.seqware.queryengine.system.exporters.QueryVCFDumper</kbd>
 usage: QueryVCFDumper
  -f <feature set ID>     (required) the ID of the featureset that we will
                          be querying and exporting
@@ -163,9 +163,9 @@ org.apache.commons.cli.MissingOptionException: Missing required options: f, [-s 
 	at org.apache.commons.cli.Parser.parse(Parser.java:85)
 	at com.github.seqware.queryengine.system.exporters.QueryVCFDumper.runMain(QueryVCFDumper.java:78)
 	at com.github.seqware.queryengine.system.exporters.QueryVCFDumper.main(QueryVCFDumper.java:42)
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath  seqware-distribution-0.13.6.5-qe-full.jar com.github.seqware.queryengine.system.exporters.QueryVCFDumper -f 0737bf87-28c5-4323-a285-7898137e22ab -k keyValue.out -o output.vcf -s "seqid==\"21\""</kbd>
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath  seqware-distribution-0.13.6.5-qe-full.jar com.github.seqware.queryengine.system.exporters.QueryVCFDumper -f 0737bf87-28c5-4323-a285-7898137e22ab -k keyValue.out -o output.vcf -s "seqid==\"21\" && start >= 20000000 && stop &lt;= 30000000"</kbd>
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath  seqware-distribution-0.13.6.5-qe-full.jar com.github.seqware.queryengine.system.exporters.QueryVCFDumper -f 0737bf87-28c5-4323-a285-7898137e22ab -k keyValue.out -o output.vcf -s "seqid==\"21\" && start >= 20000000 && stop &lt;= 30000000 && tagOccurrence(\"ad_hoc\",\"non_synonymous_codon\")"</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath  seqware-distribution-<%= seqware_release_version %>-qe-full.jar com.github.seqware.queryengine.system.exporters.QueryVCFDumper -f 0737bf87-28c5-4323-a285-7898137e22ab -k keyValue.out -o output.vcf -s "seqid==\"21\""</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath  seqware-distribution-<%= seqware_release_version %>-qe-full.jar com.github.seqware.queryengine.system.exporters.QueryVCFDumper -f 0737bf87-28c5-4323-a285-7898137e22ab -k keyValue.out -o output.vcf -s "seqid==\"21\" && start >= 20000000 && stop &lt;= 30000000"</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath  seqware-distribution-<%= seqware_release_version %>-qe-full.jar com.github.seqware.queryengine.system.exporters.QueryVCFDumper -f 0737bf87-28c5-4323-a285-7898137e22ab -k keyValue.out -o output.vcf -s "seqid==\"21\" && start >= 20000000 && stop &lt;= 30000000 && tagOccurrence(\"ad_hoc\",\"non_synonymous_codon\")"</kbd>
 </pre>
 
 
@@ -178,8 +178,8 @@ Here is an example of how to interact with the utility, here we run through comp
 <pre title="Title of the snippet">
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>  cp ../../seqware-queryengine/src/test/java/com/github/seqware/queryengine/system/test/queryDumper/VCFDumperParameterExample.java QueryTutorial.java</kbd>
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd> gvim QueryTutorial.java</kbd>
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd> javac -cp seqware-distribution-0.13.6.5-qe-full.jar QueryTutorial.java</kbd>
-<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd> java -cp .:seqware-distribution-0.13.6.5-qe-full.jar  com.github.seqware.queryengine.system.exporters.QueryVCFDumper -f 4bd2ced0-5e37-4930-bffe-207b862a09a6 -k keyValue.out -o output.vcf -p QueryTutorial</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd> javac -cp seqware-distribution-<%= seqware_release_version %>-qe-full.jar QueryTutorial.java</kbd>
+<span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd> java -cp .:seqware-distribution-<%= seqware_release_version %>-qe-full.jar  com.github.seqware.queryengine.system.exporters.QueryVCFDumper -f 4bd2ced0-5e37-4930-bffe-207b862a09a6 -k keyValue.out -o output.vcf -p QueryTutorial</kbd>
 </pre>
 
 During the <code>gvim</code> step, it is important to delete the package line, delete the import from the test package, change the classname, and then perform the required changes to the queries. For example, to search for intron_variants rather than non_synonymous_codon, we will need to change the file to the following:

@@ -3,6 +3,7 @@
 title:                 "SeqWare Web Service"
 toc_includes_sections: true
 markdown:              advanced
+is_dynamic: true
 
 ---
 
@@ -24,7 +25,7 @@ If you are working on our CentOS VM from [Installation](/docs/2-installation/) y
 There are four variables that need to be changed: SW_METADATA_METHOD, SW_REST_URL, SW_REST_USER, and SW_REST_PASS. The SW_REST_URL is the location of the deployed WebService from the previous step. ''The SW_REST_USER and SW_REST_PASS are the web service username and password''. Below is an example snippet of a .seqware/settings file.
 
 	SW_METADATA_METHOD=webservice
-	SW_REST_URL=http://localhost:8080/seqware-webservice-0.11.4
+	SW_REST_URL=http://localhost:8080/seqware-webservice-<%= seqware_release_version %>
 	SW_REST_USER=admin@admin.com
 	SW_REST_PASS=admin
 
@@ -38,13 +39,35 @@ Providing the Web service is already installed for you, there are three approach
 
 The .seqware/settings file needs to be configured to use the Web service for the first two options. In the third option, you must provide the URL, username and password yourself.
 
-## Setup the Web Service
+## Install Guide 
 
 The SeqWare Web service is the primary mechanism by which users can reach the SeqWare MetaDB. The Web service prevents the user from having to make SQL queries and facilitates building services on top of the MetaDB. Currently, there is a Java client located in the seqware-commons package that can be used to access the WebService, which is configured through the .seqware/settings file.
 
-### Install Guide ###
-
 Please see the [Install Guide](/docs/github_readme/4-webservice/)
+
+## Web Service API
+
+This API describes the resources that make up the SeqWare RESTful Web service. 
+
+The SeqWare Web service has two primary functions. First, it is the primary mechanism by which users can query the SeqWare MetaDB. The Web service prevents the user from having to make SQL queries and facilitates building services on top of the MetaDB. Secondly, it allows privileged users to launch and monitor next-generation sequencing workflows and pipelines remotely without having any local SeqWare dependencies. These two functions are split into 'Metadata' and 'Pipeline' functions.
+
+For any questions, please contact the [SeqWare discussion forum](mailto:seqware@googlegroups.com).
+
+### Metadata Resources
+
+Operations on the metadata resources are primarily for read-only access of the SeqWare metadata database. Any PUT or POST operations add only one row to one table in the SeqWare Metadata database. There are four classifications of resources:
+
+* [Data](/docs/webservice-api/metadata/db/) - Resources that adds, retrieves or updates one or more rows from a database table.
+* [Reports](/docs/webservice-api/metadata/report/) - Resources that query the state of the Metadata DB and amalgamate information from multiple database tables in order to report on the state of a study, sequencer run, sample, etc. 
+* [Jobs](/docs/webservice-api/metadata/job/) - Resources that cause considerable processing on the server side and include PUT and POST operations.
+* [Experimental](/docs/webservice-api/metadata/x/) - Resources that are in development or in a testing phase.  
+
+### Pipeline Resources
+
+These jobs loosely correspond with tasks performed by SeqWare Pipeline, for example, launching workflows, modules, and plugins. Pipeline tasks are distinguished from Metadata tasks because they trigger more advanced processing of the data by systems other than those associated with the Metadata DB. For example, jobs triggered on the pipeline may cause a job to be run on a server, or a ZIP file to be uploaded and installed as a workflow.
+
+At the moment, a workflow can be launched through a [job](/docs/webservice-api/pipeline/job/) resource.
+
 
 <!-- 
 

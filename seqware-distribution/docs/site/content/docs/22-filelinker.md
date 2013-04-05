@@ -53,7 +53,7 @@ The fields '''size''' and '''md5sum''' are optional, but if include the informat
 
 You can get the workflow accession using the --list-install option in BundleManager. 
 
-	java -jar seqware-pipeline-0.13.3-SNAPSHOT-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.FileLinker -- \
+	java -jar seqware-distribution-<%= seqware_release_version %>-SNAPSHOT-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.FileLinker -- \
 	     --file-list-file /home/mtaschuk/Downloads/link_files_report.txt --workflow-accession 375894 --csv-separator ,
 
 By default error messages will be written to standard out. To see more information, such as successfully linked entries create a '''log4j.properties''' file similar to the one below.
@@ -66,6 +66,6 @@ By default error messages will be written to standard out. To see more informati
 
 Use '''-Dlog4j.configuration=file:./log4j.properties''' to specify the properties file when running the FileLinker command.
 
-	java -Dlog4j.configuration=file:./log4j.properties -jar -jar seqware-pipeline-0.13.3-SNAPSHOT-full.jar \
+	java -Dlog4j.configuration=file:./log4j.properties -jar -jar seqware-distribution-<%= seqware_release_version %>-SNAPSHOT-full.jar \
 	     --plugin net.sourceforge.seqware.pipeline.plugins.FileLinker -- \
 	     --file-list-file /home/mtaschuk/Downloads/link_files_report.txt --workflow-accession 375894 --csv-separator ,

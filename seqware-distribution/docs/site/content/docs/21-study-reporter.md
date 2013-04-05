@@ -3,6 +3,7 @@
 title:                 "Symlink (Study) Reporter"
 toc_includes_sections: true
 markdown:              basic
+is_dynamic:             true
 
 ---
 
@@ -121,12 +122,12 @@ For more information on these entities and how they link together, please see [U
 
 ## Examples
 
-	java -jar seqware-pipeline-0.11.4-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --study PCSI
+	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --study PCSI
 Creates a directory for the study with the title "PCSI" with all filetypes linked inside. Also creates a CSV file in the current directory with all of the file information
 
-	java -jar seqware-pipeline-0.11.4-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --dump-all --no-links --output-filename DumpAllTheStudies
+	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --dump-all --no-links --output-filename DumpAllTheStudies
 Creates only a CSV file named "DumpAllTheStudies.csv" with all of the files from all of the studies in the database.
 
-	java -jar seqware-pipeline-0.11.4-full.jar --plugin  net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --sample PCSI_0119_Sp_R_PE_428_EX --prod-format
+	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar --plugin  net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --sample PCSI_0119_Sp_R_PE_428_EX --prod-format
 Creates a directory and CSV file for the files from the sample named "PCSI_0119_Sp_R_PE_428_EX". The directory will be output in production format (see below).
 

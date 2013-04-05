@@ -1,4 +1,7 @@
---- 
+---
+markdown:	advanced
+toc_includes_sections:	true
+is_dynamic:	true
 title: Metadata - Experimental Resources
 ---
 
@@ -7,12 +10,12 @@ Overview
 
 These resources are for those under development or in a testing phase. They can be turned off at runtime to prohibit risky operations. 
 
-# Validation Report API
+## Validation Report API
 
 A collection of reports useful when verifying that data in the SeqWare meta
 db is correct.
 
-## File reverse hierarchy display
+### File reverse hierarchy display
 
     GET /x/report/reversehierarchy/{file-swa}
 
@@ -25,7 +28,7 @@ processing nodes.
 This report is useful for answering the question: What steps led to the
 creation of this file?
 
-### Response
+#### Response
 
 <%= headers 200 %>
 <pre class="highlight"><code class="language-javascript">
@@ -51,7 +54,7 @@ FILE SWA: 182467 FILE NAME: SWID_9858_PCSI_0106_Ly_R_PE_190_WG_110916_L004_R1_00
       WORKFLOW CASAVA-RTA 1.8.2-1 SWA: 37743
 </code></pre>
 
-## File link report
+### File link report
 
     GET /x/report/filelinkreport/{file-swa}
 
@@ -66,7 +69,7 @@ file is zero (0). Most files will have 1 or 2 links. Files with more than
 2 links are not necessarily incorrectly linked, but are worthy of investigation to
 ensure they are correctness.
 
-### Input
+#### Input
 
 You can provide a list of file-swas to report on.
 
@@ -77,7 +80,7 @@ You can provide a list of file-swas to report on.
 If no file-swa is provided the report will be generated for all the files in the seqware meta db. A report that includes all the files will take a long time to produce.
 
 
-### Response
+#### Response
 
 <%= headers 200 %>
 <pre class="highlight">
