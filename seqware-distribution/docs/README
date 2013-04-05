@@ -33,6 +33,12 @@ sudo gem install fast-aleck
 Source code is here:
 seqware/seqware-distribution/docs/site
 
+In order to add/use variables:
+look at site/content/docs/webservice-api/seqware-webservice/metadata/db/study_get.html which uses site/lib/helpers_.rb
+
+In order to do an include:
+look at the admin guide for an example at site/content/docs/3-getting-started/admin-tutorial.md which uses site/layouts/includes/
+
 Go into this directory and compile the site:
 nanoc compile
 
