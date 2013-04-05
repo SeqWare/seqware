@@ -529,13 +529,13 @@ The next step is to look at examples of workflows at [Workflow Examples](/docs/1
 
 SeqWare bundles have a test command built into their metadata.xml. In order to trigger this, run with the following command. Note that the workflow name and version need to match the name and version given when the workflow is listed above. 
 
-	java -jar ~/seqware-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b `pwd` -t --workflow simple-legacy-ftl-workflow --version 1.0
+	java -jar ~/seqware-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b `pwd` -t --workflow simple-java-workflow --version 1.0
 
 	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
 	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@e80d1ff
 	Testing Bundle
 	  Running Test Command:
-	java -jar /home/seqware/Temp/simple-legacy-ftl-workflow/target/Workflow_Bundle_simple-legacy-ftl-workflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/Workflow_Bundle_simple-legacy-ftl-workflow/1.0-SNAPSHOT/lib/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher --provisioned-bundle-dir /home/seqware/Temp/simple-legacy-ftl-workflow/target/Workflow_Bundle_simple-legacy-ftl-workflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %> --workflow simple-legacy-ftl-workflow --version 1.0 --ini-files /home/seqware/Temp/simple-legacy-ftl-workflow/target/Workflow_Bundle_simple-lSHOT_SeqWare_<%= seqware_release_version %>/Workflow_Bundle_simple-legacy-ftl-workflow/1.0-SNAPSHOT/config/workflow.ini
+	java -jar /home/seqware/Temp/simple-java-workflow/target/Workflow_Bundle_simple-java-workflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/Workflow_Bundle_simple-java-workflow/1.0-SNAPSHOT/lib/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher --provisioned-bundle-dir /home/seqware/Temp/simple-java-workflow/target/Workflow_Bundle_simple-java-workflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %> --workflow simple-java-workflow --version 1.0 --ini-files /home/seqware/Temp/simple-java-workflow/target/Workflow_Bundle_simple-lSHOT_SeqWare_<%= seqware_release_version %>/Workflow_Bundle_simple-java-workflow/1.0-SNAPSHOT/config/workflow.ini
 	MONITORING PEGASUS STATUS:
 	RUNNING: step 1 of 5 (20%)
 	RUNNING: step 2 of 5 (40%)
