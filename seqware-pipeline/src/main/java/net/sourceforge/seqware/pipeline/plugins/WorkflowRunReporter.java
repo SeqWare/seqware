@@ -243,6 +243,6 @@ public class WorkflowRunReporter extends Plugin {
             + "workflow runs, including the identity, library samples and "
             + "input and output files. "
             + "For more information, see "
-            + "https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Workflow_Run_Reporter";
+            + "see http://seqware.github.com/docs/19-workflow-run-reporter/";
   }
 }
