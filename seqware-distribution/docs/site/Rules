@@ -63,6 +63,10 @@ route '/blog/feed_private/' do
   rep.item.identifier + 'index.xml'
 end
 
+route '/docs/webservice-spec/*/' do
+  item.identifier + 'index.html'
+end
+
 route '*' do
   if item.binary?
     item.identifier.chop + '.' + item[:extension]
@@ -105,6 +109,15 @@ compile '/' do
   layout '/default/'
   filter :relativize_paths, :type => :html
   filter TypographicalImprovementFilter, TypographicalImprovementFilterParams
+end
+
+compile '/docs/webservice-spec/*/' do
+  filter :erb
+  filter :kramdown
+  filter :colorize_syntax,
+    :colorizers => {:javascript => :pygmentize}
+  layout 'default'
+  filter :relativize_paths, :type => :html
 end
 
 compile '*' do
