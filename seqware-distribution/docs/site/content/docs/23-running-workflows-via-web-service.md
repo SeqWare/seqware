@@ -1,71 +1,53 @@
 ---
 
-title:                 "File Linker"
+title:                 "Running workflows through the Web Service"
 toc_includes_sections: true
-markdown:              basic
+markdown:              advanced 
+is_dynamic:		true
 
 ---
 
-The FileLinker plugin was designed to import files from the LIMS into the SeqWare MetaDB for processing, but can be used to attach any file paths to any IUS or Lane. **This tool is only available over a direct database connection as of SeqWare version 0.12.2 (June 2012), not over the Web service.** 
- 
-## Add the Workflow 
+Most of the functionality of the Web service allows access to the MetaDB on a very low level
 
-The "FileImport" workflow is already added into the MetadataDB, but this method can be used to create new workflows to link to. 
+## Get a list of all workflows
+URL: GET http://localhost:8080/seqware-webservice-<%= seqware_release_version %>/workflows
 
-	INSERT INTO workflow (name, description, version, seqware_version, create_tstmp) VALUES ('FileImport', 'Imports files into the database, \
-	     links them to IUSs or Lanes and creates intermediate Processings. Initially used to import files from the LIMS and attach them to IUSes.', \
-	     '0.1.1', '0.13.6', '2012-12-07 15:30:00');
+## Get a particular workflow
+URL: GET http://localhost:8080/seqware-webservice-<%= seqware_release_version %>/workflows/11034 (use the sw_accession)
 
+## Get the workflow and its parameters
+URL: GET http://localhost:8080/seqware-webservice-<%= seqware_release_version %>/workflows/11034?show=params
 
-## Command line parameters
+## Launch workflow
 
-See [Plugins](/docs/17-plugins/#filelinker/)
+![Simple DB](/assets/images/metadb/Study_hierarchy.png)
 
+URL: POST to http://localhost:8080/seqware-webservice-<%= seqware_release_version %>/workflows/28522/runs with the INI file in the method body and the following query parameters :
+* parent-accessions - comma-separated list of sw_accessions of parents to link the new Processing events to (e.g. a Lane of data, or a Processing object with a data file from previous analysis)
+* link-workflow-run-to-parents - comma-separated list of parents to link the workflow_run to (e.g. the original Lane or IUS that the workflow_run is operating on)
+* no-metadata - run without linking to any parents. If you leave the previous two fields blank, this option is automatically enabled. If it is not specified and the previous two fields are specified, then the runs with metadata by default. If this option is enabled, no metadata is run, regardless of the previous two fields.
 
-## Get the linking file
+A sample study hierarchy is on the right to explain the distinction between parent-accessions and workflow run parents. A workflow run parent is always an IUS or a Lane and is routed through the ius_workflow_runs table or lane_workflow_runs table, and is the sw_accession of that object. The parent accession can be a lane, ius or a processing event, and indicates the chronological order of the pipeline (assuming a pipeline is multiple workflows chained together). In the case of WorkflowB Run 1 in the diagram, the link-workflow-run-to-parents would be IUSA, but the parent accession would be WorkflowA, Run1, Step3. This node contains the link to the data file being used in WorkflowB. More explanation of this Study hierarchy is available on the [Understanding_the_SeqWare_MetaDB](/docs/4-metadb/) page.
 
-In one of the following formats, whitespace-separated. The first three columns are not parsed by the FileLinker, but this was the format of the file provided for mass import. The only columns that are used are ius_sw_accession, mime_type (if it exists) and file. The header is required, but all other columns can be empty and separated by tabs.
+I'm working on the queries to find the parent objects at the moment, but for now you should be able to call the HelloWorld workflow without any parameters.
 
-Mime-type (preferred):
+For example:
 
-	sequencer_run    sample    lane    ius_sw_accession    file_status    mime_type    file
-	.                .         .       7937                .              txt          /absolute/file/path/myfile.txt
-	...
+* POST to http://localhost:8080/seqware-webservice-<%= seqware_release_version %>/workflows/11034/runs?no-metadata=true&parent-accessions=4765,4707&link-workflow-run-to-parents=4765,4707 would run without metadata
+* POST to http://localhost:8080/seqware-webservice-<%= seqware_release_version %>/workflows/11034/runs?parent-accessions=4765,4707&link-workflow-run-to-parents=4765,4707 would run WITH metadata
+* POST to http://localhost:8080/seqware-webservice-<%= seqware_release_version %>/workflows/11034/runs?parent-accessions=4765,4707 would run without metadata
+* POST to http://localhost:8080/seqware-webservice-<%= seqware_release_version %>/workflows/11034/runs would run without metadata
 
+The request returns a ReturnValue object. The returnValue attribute of this object is the sw_accession for the workflow_run, which you can monitor in the next step.
 
-No mime-type:
+## Monitor workflow run
+URL: GET http://localhost:8080/seqware-webservice-<%= seqware_release_version %>/workflowruns/18500 (use the sw_accession)
 
-	sequencer_run    sample    lane    ius_sw_accession    file_status    file
-	.                .         .       7937                .              /absolute/file/path/myfile.txt
-	...
+By checking the 'status' attribute of the run, you can see whether it has changed. It may be in any of the following states:
 
-## Input File Alternatives 
-
-The files above are tab delimited, but any single character delimiter may be used. Here comma is used as a delimiter.
-
-	sequencer_run,sample,lane,ius_sw_accession,file_status,mime_type,size,md5sum,file,
-	111214_h1068_0067_AD0EJ0ACXX,AOE_0001_nn_P_PE_270_WG,1,24635,OK,chemical/seq-na-fastq-gzip,12383198646,2f33208fef22f392ecddaa1eb89ebd24,/oicr/data/001.fastq.gz,
-	111214_h1068_0067_AD0EJ0ACXX,AOE_0001_nn_P_PE_270_WG,2,24633,OK,chemical/seq-na-fastq-gzip,14493953643,50c25186dfe3fc5bb3a7f60e0696012b,/oicr/data/002.fastq.gz,
-
-The fields '''size''' and '''md5sum''' are optional, but if include the information will be saved into the SeqWare database.
-
-## Run the tool 
-
-You can get the workflow accession using the --list-install option in BundleManager. 
-
-	java -jar seqware-distribution-<%= seqware_release_version %>-SNAPSHOT-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.FileLinker -- \
-	     --file-list-file /home/mtaschuk/Downloads/link_files_report.txt --workflow-accession 375894 --csv-separator ,
-
-By default error messages will be written to standard out. To see more information, such as successfully linked entries create a '''log4j.properties''' file similar to the one below.
-
-	log4j.logger.net.sourceforge.seqware.pipeline.plugins=DEBUG, console
-
-	log4j.appender.console=org.apache.log4j.ConsoleAppender
-	log4j.appender.console.layout=org.apache.log4j.PatternLayout
-	log4j.appender.console.layout.ConversionPattern=%p %t %c - %m%n
-
-Use '''-Dlog4j.configuration=file:./log4j.properties''' to specify the properties file when running the FileLinker command.
-
-	java -Dlog4j.configuration=file:./log4j.properties -jar -jar seqware-distribution-<%= seqware_release_version %>-SNAPSHOT-full.jar \
-	     --plugin net.sourceforge.seqware.pipeline.plugins.FileLinker -- \
-	     --file-list-file /home/mtaschuk/Downloads/link_files_report.txt --workflow-accession 375894 --csv-separator ,
+* submitted - submitting the workflow has worked, but the CRON job has not yet detected its presence
+* pending - the CRON job has found the job and is processing it
+* running - the workflow is running on the cluster
+* completed - the workflow has finished successfully
+* failed - the workflow has failed
+* unknown - the workflow status is temporarily unavailable.
