@@ -14,12 +14,12 @@ Our new site (this one) is hosted on GitHub and we plan on migrating all of our 
 Mailing Lists
 -------------
 
-For the time being our [mailing lists](http://sourceforge.net/mail/?group_id=239239) are still hosted on SourceForge. If you want to contribute to SeqWare we encourage you to email the mailing list or Brian O'Connor at briandoconnor at gmail dot com directly.
+Our [user mailing list](https://groups.google.com/forum/?fromgroups#!forum/seqware) and our [developer mailing list](https://groups.google.com/forum/?fromgroups#!forum/seqware-dev) is available on Google Groups. If you want to contribute to SeqWare we encourage you to email the mailing list or Brian O'Connor at briandoconnor at gmail dot com directly.
 
 Issue Tracker
 -------------
 
-If you encounter bugs or want to make a feature request please email the developer list above (you will need to sign up) and also submit a bug to our [issue tracker](http://sourceforge.net/tracker/?group_id=239239) currently on SourceForge.
+If you encounter bugs or want to make a feature request please email the developer list above (you will need to sign up) and also submit a bug to our [issue tracker](https://github.com/SeqWare/seqware/issues) currently on GitHub.
 
 Wiki
 ----

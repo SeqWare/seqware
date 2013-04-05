@@ -217,7 +217,7 @@ should be able to download the file via the Portal just as you did before
 
 <p class="warning"><strong>Tip:</strong> you can find a list of the meta types
 (like chemical/seq-na-text-gzip or text/plain above) at <a
-href="http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Module_Conventions#Module_MIME_Types">Module
+href="http://seqware.github.io/docs/16-module-conventions/">Module
 Conventions - Module MIME Types</a>. This is the list we add to as needed when
 creating new workflows.  It is extremely important to be consistent with these
 since a workflow will not recognize your input unless the meta type string
@@ -338,7 +338,7 @@ Also note the SymLinkFileReporter gives you SWIDs for processing events and enti
 
 In addition to the command line tools, you can also use the Portal to explore the output of workflows triggered through the command line tools.
 
-You can find more information on this report tool on the public SeqWare wiki: [Study Reporter](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=SymLink_Reporter).
+You can find more information on this report tool on the public SeqWare wiki: [Study Reporter](/docs/21-study-reporter/).
 
 <p class="warning"><strong>Note:</strong> in the example above I use --no-metadata with ProvisionFiles. This is to prevent the tool from writing back an event to the central database. Since you are just downloading a file (versus uploading a file) you do not really want to record that download event in the database.
 </p>
