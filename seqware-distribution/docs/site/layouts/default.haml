@@ -8,6 +8,8 @@
     %link{ :rel => "stylesheet", :href => item_named('/assets/style/screen/').path, :type => "text/css", :media => "screen" }
     %link{ :rel => "alternate", :type => "application/atom+xml", :title => "The SeqWare Blog", :href => "http://feeds.feedburner.com/seqware" }
     = %Q[<script type="text/javascript"> var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-34523087-1']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); })(); </script>]
+    - if @item.identifier =~ %r[^/docs/]
+      = %Q[<script type="text/javascript">         var disqus_shortname = 'seqware';          (function() {             var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;             dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);         })();     </script>]
     - if @item.identifier !~ %r[^/\w+]
       <a href="https://github.com/organizations/SeqWare"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
 
@@ -71,6 +73,9 @@
             .header
               %h1= @item[:short_title] || @item[:title]
             = yield
+        - if @item.identifier =~ %r[^/docs/]
+          = %Q[<p><div id="disqus_thread"></div></p>] 
+	
 
     / ***** footer *****
     #footer
