@@ -9,11 +9,11 @@ WorkflowLauncher  scheduled  via a cronjob.
 Specifically, a user will schedule workflow launches using a command similar to
 that below:
 
-	java -jar seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession $workflow_acc --parent-accessions 99 --host `hostname --long` 
+	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession $workflow_acc --parent-accessions 99 --host `hostname --long` 
 
 Then in a cronjob we use the following command to launch scheduled jobs. 
 
-	java -jar seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --launch-scheduled
+	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --launch-scheduled
 
 Note that in the first command, we allow jobs to be scheduled on a specific
 host. When we launch scheduled workflows, we check this value in order to
@@ -36,18 +36,18 @@ updates the MetaDB with their status.
 The SeqWare VM uses two cron tasks to detect and launch scheduled workflows.
 Take a look at:
 
-        seqware@seqwarevm SeqWare]$ crontab -l
-        1 0 * * * /home/seqware/crons/update_db.sh >> /home/seqware/logs/update_db.log
-        * * * * * /home/seqware/crons/status.cron >> /home/seqware/logs/status.log
-        
-        [seqware@seqwarevm SeqWare]$ cat /home/seqware/crons/status.cron
-        
-        #!/bin/bash
+	seqware@seqwarevm SeqWare]$ crontab -l
+	1 0 * * * /home/seqware/crons/update_db.sh >> /home/seqware/logs/update_db.log
+	* * * * * /home/seqware/crons/status.cron >> /home/seqware/logs/status.log
 
-        source /home/seqware/.bash_profile
+	[seqware@seqwarevm SeqWare]$ cat /home/seqware/crons/status.cron
 
-        java -jar /home/seqware/crons/seqware-distribution-0.13.6.3-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --launch-scheduled
-        java -jar /home/seqware/crons/seqware-distribution-0.13.6.3-full.jar  -p net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker -- --tp 1000
+	#!/bin/bash
+
+	source /home/seqware/.bash_profile
+
+	java -jar /home/seqware/crons/seqware-distribution-0.13.6.3-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --launch-scheduled
+	java -jar /home/seqware/crons/seqware-distribution-0.13.6.3-full.jar  -p net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker -- --tp 1000
         
 The first script runs at one minute past midnight every night. This runs the
 stored procedures which populate the "Study Report" and the "SequenceRunReport"

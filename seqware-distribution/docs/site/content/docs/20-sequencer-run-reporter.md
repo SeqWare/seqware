@@ -3,6 +3,7 @@
 title:                 "Sequencer Run Reporter"
 toc_includes_sections: true
 markdown:              basic
+is_dynamic:             true
 
 ---
 
@@ -21,7 +22,7 @@ If you are working on the SeqWare VM, these will already be setup for you.
 
 This is a very basic tool and just outputs a simple tab-delimited file. There are no options other than the output file name. 
 
-	java -jar seqware-pipeline-0.11.4-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter -- --output-filename foo.txt
+	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter -- --output-filename foo.txt
 
 ## Output 
 

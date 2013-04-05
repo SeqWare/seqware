@@ -3,6 +3,7 @@
 title:                 "Attribute Annotator"
 toc_includes_sections: true
 markdown:              basic
+is_dynamic:		true
 
 ---
 
@@ -47,19 +48,19 @@ There are four ways to use this plugin
 
 Set the 'skip' value of lane with SWID 1234 to 'true'. No key-value annotations are added.
 
-	java -jar seqware-distribution/target/seqware-distribution-0.13.6.3-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator -- --lane-accession 1234 --skip true
+	java -jar seqware-distribution/target/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator -- --lane-accession 1234 --skip true
 
 Set the 'skip' value of sequencer run with SWID 3456 to 'true' and enter a key-value pair with the key "skip" and value "Improperly entered into the LIMS". Notice that the key is not specified but defaults to 'skip'.
 
-	java -jar seqware-distribution/target/seqware-distribution-0.13.6.3-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator -- --sequencer-run-accession 3456 --skip true --value "Improperly entered into the LIMS"
+	java -jar seqware-distribution/target/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator -- --sequencer-run-accession 3456 --skip true --value "Improperly entered into the LIMS"
 
 Annotate the IUS with SWID 2345 with a key-value pair of key "dual-barcodes" and value "barcode 1". The 'skip' field is not affected.
 
-	java -jar seqware-distribution/target/seqware-distribution-0.13.6.3-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator -- --ius-accession 2345 --key "dual-barcodes" --value "barcode 1"
+	java -jar seqware-distribution/target/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator -- --ius-accession 2345 --key "dual-barcodes" --value "barcode 1"
 
 Bulk insert attribute annotation with file
 
-	java -jar seqware-distribution/target/seqware-distribution-0.13.6.3-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator -- --file file.csv
+	java -jar seqware-distribution/target/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator -- --file file.csv
 
 The file is in CSV format
 
