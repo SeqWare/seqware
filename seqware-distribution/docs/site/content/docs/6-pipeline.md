@@ -66,7 +66,7 @@ files read from and written to a shared filesystem. Individual steps ususally
 run on a randomly chosen cluster node.
 
 * [Legacy FTL Workflows](/docs/6-pipeline/legacy-ftl-workflows/)
-: This is our older, more verbose workflow language based on FreeMarker. This provides information on the structure of a typical workflow. See also http://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_Write_a_Bundled_Workflow
+: This is our older, more verbose workflow language based on FreeMarker. This provides information on the structure of a typical workflow descripter written in this language. FTL is semi-deprecated, do not use it for new workflows.
 * [Java Workflows](/docs/6-pipeline/java-workflows/)
 : This is our newer workflow language that is much simplier than the FTL and more expressive. We recommend this for all new workflow development.
 * [Workflow Bundle Conventions](/docs/6-pipeline/workflow_bundles/)
