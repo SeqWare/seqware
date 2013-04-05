@@ -57,7 +57,28 @@ information about obtaining and configuring SGE.
 
 ### Configuring GRAM on the VM
 
-This is the key step in the whole process.  The 
+This is the key step in the whole process.  The GRAM layer from the Globus Toolkit
+actually handles the submission of workflow step to the cluster as a job.  This is
+done via a Perl module that knows how to talk with SGE. We need to modify that
+Perl module so it knows 1) where the SGE tools are located and 2) the settings particular
+to the cluster being connected to.
+
+#### Perl Submission Module
+
+On the VM, this Perl module lives in: <tt>/usr/share/perl5/vendor_perl/Globus/GRAM/JobManager/sge.pm</tt>. 
+
+You may have seen this document mentioned in the [Install from Scratch](/docs/2a-installation-from-scratch/) guide where we patched it.  Now, you need to ensure you setup the parallel evironment (<tt>-pe</tt>) and max memory (<tt>-l vf=</tt>) correctly for your new cluster.  Annoyingly, the parameters used for this are actually configurable in SGE so you will need to discuss with your cluster Sys Admin to see what is right for your environment.  See the code snippet patches below.
+
+<%= render '/includes/setup_gram_1/' %>
+
+<%= render '/includes/setup_gram_2/' %>
+
+You will also need to modify the following settings files:
+
+  /etc/sysconfig/gridengine
+  /etc/globus/globus-sge.conf
+
+These contain file paths and cluster name parameters that you need to update to point to the correct values for the real cluster.
 
 ### Testing
 
