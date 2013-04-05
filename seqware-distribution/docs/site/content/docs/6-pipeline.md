@@ -128,7 +128,7 @@ Other useful tools used for import, export, and annotation of results.
 
 ## Command Line Reference
 
-This documentation is auto-generated and covers out Plugins (which are utility tools used outside of workflows) and our Modules (which model custom steps in workflows and know how to integrate with the SeqWare MetaDB for metadata writeback).
+This documentation is auto-generated and covers our Plugins (which are utility tools used outside of workflows) and our Modules (which model custom steps in workflows and know how to integrate with the SeqWare MetaDB for metadata writeback).
 
 * [Plugins](/docs/17-plugins/)
 : The command line utilities of SeqWare.
