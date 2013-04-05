@@ -535,11 +535,15 @@ SeqWare bundles have a test command built into their metadata.xml. In order to t
 	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@e80d1ff
 	Testing Bundle
 	  Running Test Command:
-	java -jar /home/seqware/Temp/simple-legacy-ftl-workflow/target/Workflow_Bundle_simple-legacy-ftl-workflow_1.0-SNAPSHOT_SeqWare_0.13.3/Workflow_Bundle_simple-legacy-ftl-workflow/1.0-SNAPSHOT/lib/seqware-distribution-0.13.3-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.Workflow-provisioned-bundle-dir /home/seqware/Temp/simple-legacy-ftl-workflow/target/Workflow_Bundle_simple-legacy-ftl-workflow_1.0-SNAPSHOT_SeqWare_0.13.3 --workflow simple-legacy-ftl-workflow --version 1.0 --ini-files /home/seqware/Temp/simple-legacy-ftl-workflow/target/Workflow_Bundle_simple-lSHOT_SeqWare_0.13.3/Workflow_Bundle_simple-legacy-ftl-workflow/1.0-SNAPSHOT/config/workflow.ini
+	java -jar /home/seqware/Temp/simple-legacy-ftl-workflow/target/Workflow_Bundle_simple-legacy-ftl-workflow_1.0-SNAPSHOT_SeqWare_0.13.3/Workflow_Bundle_simple-legacy-ftl-workflow/1.0-SNAPSHOT/lib/seqware-distribution-0.13.3-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher --provisioned-bundle-dir /home/seqware/Temp/simple-legacy-ftl-workflow/target/Workflow_Bundle_simple-legacy-ftl-workflow_1.0-SNAPSHOT_SeqWare_0.13.3 --workflow simple-legacy-ftl-workflow --version 1.0 --ini-files /home/seqware/Temp/simple-legacy-ftl-workflow/target/Workflow_Bundle_simple-lSHOT_SeqWare_0.13.3/Workflow_Bundle_simple-legacy-ftl-workflow/1.0-SNAPSHOT/config/workflow.ini
 	MONITORING PEGASUS STATUS:
 	RUNNING: step 1 of 5 (20%)
 	RUNNING: step 2 of 5 (40%)
 	...
+
+<p class="warning"><strong>Tip:</strong> 
+Note in the testing command above it prints out the underlying command it calls using the <tt>WorkflowLauncher</tt> plugin. If all you want to do is to run a workflow with some settings without metadata writeback you could directly just call WorkflowLauncher as above. This bipasses the whole workflow scheduling and asyncrousnous launching process that you saw in the [User Tutorial](/docs/3-getting-started/user-tutorial/). What you loose is the metadata tracking functionality. The command runs the workflow which produces file outputs but that is all, no record of the run will be recorded in the MetaDB.
+</p>
 
 ## Packaging the Workflow into a Workflow Bundle
 
