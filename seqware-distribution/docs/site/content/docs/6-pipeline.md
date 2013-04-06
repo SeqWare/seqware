@@ -19,11 +19,11 @@ We currently support two workflow languages (FTL markup and Java) and two
 workflow engines (Oozie and Pegasus). Our current recommended combination is
 Java workflows with the Pegasus engine.
 
-We assume you have already gone through the
+We highly recommend you go through the
 [User](/docs/3-getting-started/user-tutorial/),
 [Developer](/docs/3-getting-started/developer-tutorial/), and
-[Admin](/docs/3-getting-started/admin-tutorial/) tutorials since the guides below
-assume you already have.
+[Admin](/docs/3-getting-started/admin-tutorial/) tutorials since the
+documentation below assumes you already have.
 
 ##Features
 
@@ -54,7 +54,7 @@ See [About](/about/) for more information.
 * [User Settings](/docs/6-pipeline/user-configuration/)
 : Information about configuring user settings files.
 * [Monitor Configuration](/docs/6-pipeline/monitor_configuration/)
-: Setting up the SeqWare-associated tools that need to run so workflow triggering and monitoring work.
+: Setting up the SeqWare-associated tools that need to run so workflow triggering and monitoring workflows.
 * [Connecting to a Real Cluster](/docs/6-pipeline/connecting-to-cluster/)
 : Once you are happy with writing, installing, and running workflows on a stand-alone VM you will want to connect to a "real" cluster. This guide walks you through the process of connecting a VM to a cluster (HPC & Hadoop, depending on your workflow engine of choice).
 
