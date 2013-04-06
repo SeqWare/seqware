@@ -11,7 +11,10 @@ toc_includes_sections: true
 ## Overview
 
 The SeqWare jar file uses a simple configuration file that has been setup for
-you already on the VM. By default the location is ~/.seqware/settings.
+you already on the VM. By default the location is ~/.seqware/settings. You can
+control this location using an environment variable:
+
+	SEQWARE_SETTINGS=~/.seqware/settings
 
 This file contains the web address of the RESTful web service, your username
 and password, and you Amazon public and private keys that will allow you to
