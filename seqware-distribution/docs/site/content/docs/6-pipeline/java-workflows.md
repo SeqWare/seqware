@@ -7,6 +7,10 @@ toc_includes_sections: true
 
 ---
 
+<!-- TODO: 
+* add more info on variables defined like random
+-->
+
 ## Overview
 
 <p class="warning"><strong>Tip:</strong> The Java workflow language is 
@@ -24,10 +28,6 @@ That being said, if you use MapReduce or other Hadoop-specific job types in your
 workflows they will not function in the Pegasus Workflow Engine (since
 Hadoop is only present for the Oozie Workflow Engine).
 
-## Note About Working Dir vs. Workflow Bundle Dir
-
-TODO
-
 ## Creating a Java Workflow Bundle
 
 In the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/) you
@@ -35,7 +35,7 @@ saw how to create a HelloWorld Java workflow using archetype.
 
 <%= render '/includes/java_archetype/' %>
 
-Enter the workflow name and version you want to use.  When complete, you can
+Alternatively, enter the workflow name and version you want to use.  When complete, you can
 <tt>cd</tt> into the new workflow directory and use <tt>mvn install</tt> to
 build the workflow. This copies files to the correct location and pulls in
 needed dependencies.
@@ -55,13 +55,23 @@ The full contents of the <tt>WorkflowClient.java</tt> are included below, we wil
 
 ### Variables
 
-Variables are simply defined in <tt>&lt;#assign&gt;</tt> blocks. To access variables from the workflow's ini file simply use the syntax <tt>${variable_name}</tt>.
+Variables are simply defined as any other object variables would be in Java. To
+access variables from the workflow's ini file simply use the
+<tt>getProperty("key")</tt> method.
 
 <%= render '/includes/java_workflows/java_workflow_vars/' %>
 
 ### Files & Directories
 
-Files that are inputs or outputs from workflows need to be manually copied in or out respectively.  This uses the ProvisionFiles module that knows how to move around local files or remote files on Amazon's S3.
+Files that are inputs or outputs from workflows need to be copied in or out
+respectively.  Under the hood, this uses the ProvisionFiles module that knows
+how to move around local files, files over HTTP, or remote files on Amazon's
+S3. The Java syntax simplifies the declaration of these input and output files
+for workflows by providing the method below. Keep in mind, you can also just
+transfer input or output files by using a standard job that calls the necessary
+command line tool and bypass this built in system. But the
+<tt>setupFiles()</tt> method will likely work for most purposes and is the
+easiest way to register workflow files.
 
 <%= render '/includes/java_workflows/java_workflow_files/' %>
 
@@ -71,11 +81,21 @@ You can also specify directories to be created in the working directory of your 
 
 ### Jobs & Dependencies
 
-The jobs need to have distinct IDs and you can generate these using a for loop in FTL if need be. You can put any command in the <tt><argument></tt> section but mostly this is used to call GenericCommandRunner which runs the command provided in a Bash shell. Notice the use of <tt><profile></tt> to specify the job thread and memory count.
+The jobs need to have distinct IDs and you can generate these using a for loop
+in FTL if need be. You can put any command in the <tt><argument></tt> section
+but mostly this is used to call GenericCommandRunner which runs the command
+provided in a Bash shell. Notice the use of <tt><profile></tt> to specify the
+job thread and memory count.
 
 <%= render '/includes/java_workflows/java_workflow_jobs/' %>
 
-The dependencies section links together all the individual jobs in the correct order so they can be executed successfully. Parent/child relationships are used to specify job pre-requisits.
+Currently only the job supported is using the <tt>createBashJob()</tt> method. In the
+future we will provide and expanded list of convience job types for example
+MapReduce, Pig, Java jar, etc.
+
+The dependencies section links together all the individual jobs in the correct
+order so they can be executed successfully. Parent/child relationships are used
+to specify job pre-requisits.
 
 TODO: discuss the JobTypes, namely Bash
 
@@ -98,4 +118,8 @@ RUNNING: step 2 of 5 (40%)
 
 ## For More Information
 
-See the  [Developer Tutorial](/docs/3-getting-started/developer-tutorial/) and the [Java Workflow](/docs/6-pipeline/java-workflows/) documents for more information. For FTL syntax questions consult the [FreeMarker website](http://freemarker.sourceforge.net/).
+See the  [Developer Tutorial](/docs/3-getting-started/developer-tutorial/)
+document for more information. For Java API documentation consult the [SeqWare
+Javadocs](/javadoc/git_0.13.6.2/apidocs/index.html). Specifically look at the
+[AbstractWorkflowDataModel](/javadoc/git_0.13.6.2/apidocs/net/sourceforge/seqware/pipeline/workflowV2/AbstractWorkflowDataModel.html)
+object documentation.
