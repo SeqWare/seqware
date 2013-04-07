@@ -92,7 +92,7 @@ provide core services in SeqWare (such as file provisioning and bash shell
 execution). Again, Modules are mainly targeted at core SeqWare developers not
 general workflow developers.
 
-* [Writing Modules](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Developing_New_SeqWare_Pipeline_Modules)
+* [Writing Modules](/docs/6-pipeline/writing_modules/)
 : How to extend SeqWare with Java tool wrappers. Can be used in workflows or as stand-alone utilities that know how to record provenance data back to SeqWare MetaDB.
 
 ## Deciders

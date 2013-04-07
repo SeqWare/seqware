@@ -6,6 +6,9 @@ is_dynamic:            true
 toc_includes_sections: true
 
 ---
+<!-- TODO: 
+* add more info on variables defined like random
+-->
 
 ## Overview
 

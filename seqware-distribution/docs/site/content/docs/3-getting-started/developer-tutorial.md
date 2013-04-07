@@ -79,6 +79,28 @@ workflows that reference external tools and data. Being self-contained is at
 the core of the design goals for SeqWare bundles with the expense of often
 times large workflow bundle sizes.
 
+## Note About Working Directory vs. Workflow Bundle Directory
+
+Just to be clear, there are two directory locations to consider when working
+with workflows.  The workflow bundle directory (often referred to as
+<tt>${workflow_bundle_dir}</tt> in various components) refers to the location
+of the installed workflow bundle. You use this variable throughout your
+workflow bundle to refer to the install directory since that will only be known
+after the workflow bundle is installed.  For example, in the Java workflow
+language you would refer to a script called <tt>foo.pl</tt> installed in the
+<tt>bin</tt> directory within the workflow bundle as
+<tt>this.getWorkflowBaseDir()+"/bin/foo.pl"</tt>.  Similarly, you can refer to
+a data file in the workflow INI config file as
+<tt>${workflow_bundle_dir}/data/data_file.txt</tt>.
+
+The second directory is the current working directory. Every time a workflow is
+launched, a temporary working directory is created for just that paritcular run
+of the workflow.  Regardless of the workflow engine (Pegasus or Oozie) a shared
+filesystem (NFS, gluster, etc) is required to ensure each job in a workflow is
+able to access this shared workflow working location regardless of what cluster
+node is selected to run a particular job.  Before a job in a workflow executes
+the current working directory is set so workflow authors can assume their
+individual jobs are already in the correct location.
 
 ## First Steps
 
@@ -172,99 +194,11 @@ This shows one workflow in the generated workflow bundle.
 
 ### Directory Organization
 
-The directory structure created by the maven archetype includes a
-<tt>pom.xml</tt> file which is our Maven build file, a <tt>src</tt> directory
-which contains the Java workflow, and a workflow directory that contains any
-bundled data, the basic workflow config file which includes all the parameters
-this workflow accepts, the metadata.xml which defines the workflows available
-in this bundle, and any scripts, binaries, or libraries your workflow needs (in
-bin and lib respectively).
-
-When you issue the <tt>mvn install</tt> command the target direct is created
-which contains the compiled workflow along with the various necessary files all
-correctly assembled in the proper directory structure.  You can change
-directory to the workflow target directory (in this case
-<tt>target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %></tt> and
-run the workflow in test mode or package up the workflow as a zip file for
-exchange with others. Both topics are covered later in this tutorial.
-
-The Maven archetype workflows are quite nice, too, since it is easy to check in
-everything but the target directory into source control like git or subversion.
-This makes it a lot easier to share the development of workflows between
-developers.
-
-<pre>
-|-- pom.xml
-|-- src
-|   `-- main
-|       `-- java
-|           `-- com
-|               `-- github
-|                   `-- seqware
-|                       `-- WorkflowClient.java
-|-- target
-|   `-- Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>
-|       `-- Workflow_Bundle_HelloWorld
-|           `-- 1.0-SNAPSHOT
-|               |-- bin
-|               |-- classes
-|               |   `-- com
-|               |       `-- github
-|               |           `-- seqware
-|               |               `-- WorkflowClient.class
-|               |-- config
-|               |   `-- workflow.ini
-|               |-- data
-|               |   `-- input.txt
-|               |-- lib
-|               |   `-- seqware-distribution-<%= seqware_release_version %>-full.jar
-|               `-- metadata.xml
-|-- workflow
-|   |-- config
-|   |   `-- workflow.ini
-|   |-- data
-|   |   `-- input.txt
-|   |-- lib
-|   |-- metadata.xml
-|   `-- workflows
-`-- workflow.properties
-</pre>
-
-Here are some additional details about these files:
-
-* pom.xml
-: A maven project file. Edit this to change the version of the workflow and to add or modify workflow dependencies such as program, modules and data.
-* workflow
-: This directory contains the workflow skeleton. Look in here to modify the workflow .ini, .java files (Java workflow) or workflow.ftl(FTL workflow). The examples of Java and FTL can be found <a href="/docs/15-workflow-examples/">here</a>.
-* src 
-: This directory contains the Java client. Look in here to modify the .java files (Java workflow). The examples of Java and FTL can be found <a href="/docs/15-workflow-examples/">here</a>.
-* workflow.properties
-: You can edit the description and workflow names in this file.
+<%= render '/includes/workflow_org/' %>
 
 ### Workflow Manifest
 
-The workflow manifest (<tt>metadata.xml</tt>) includes the workflow name,
-version, description, test command, and enough information so that the SeqWare
-tools can test, execute, and install the workflow. Here is an example from the
-HelloWorld workflow:
-
-<pre><code>#!xml
-&lt;bundle version=&quot;1.0-SNAPSHOT&quot;&gt;
-  &lt;workflow name=&quot;HelloWorld&quot; version=&quot;1.0-SNAPSHOT&quot; seqware_version=&quot;<%= seqware_release_version %>&quot;
-  basedir=&quot;${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT&quot;&gt;
-    &lt;description&gt;Add a description of the workflow here.&lt;/description&gt;
-    &lt;test command=&quot;java -jar ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --no-metadata --provisioned-bundle-dir ${workflow_bundle_dir} --workflow HelloWorld --version 1.0-SNAPSHOT --ini-files ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/config/workflow.ini &quot;/&gt;
-    &lt;workflow_command command=&quot;java -jar ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --bundle ${workflow_bundle_dir} --workflow HelloWorld --version 1.0-SNAPSHOT &quot;/&gt;
-    &lt;workflow_template path=&quot;&quot;/&gt;
-    &lt;workflow_class path=&quot;${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/classes/com/github/seqware/WorkflowClient.java&quot;/&gt;
-    &lt;config path=&quot;${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/config/workflow.ini&quot;/&gt;
-    &lt;build command=&quot;ant -f ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/build.xml&quot;/&gt;
-    &lt;requirements compute=&quot;single&quot; memory=&quot;20M&quot; network=&quot;local&quot;  workflow_engine=&quot;Pegasus,Oozie&quot; workflow_type=&quot;java&quot;/&gt;
-  &lt;/workflow&gt;
-&lt;/bundle&gt;
-</code></pre>
-
-As mentioned above, you can edit the description and workflow name in the workflow.properties file.
+<%= render '/includes/workflow_man/' %>
 
 ### Workflow Java Class
 
@@ -358,64 +292,7 @@ You can use this as your temporary directory to process intermediate files.
 
 ### Configuration File
 
-<pre>
-<code>
-# key=input_file:type=file:display=F:file_meta_type=text/plain
-input_file=${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/data/input.txt
-# key=greeting:type=text:display=T:display_name=Greeting
-greeting=Testing
-# this is just a comment, the output directory is a conventions and used in many workflows to specify a relative output path
-output_dir=seqware-results
-# the output_prefix is a convention and used to specify the root of the absolute output path or an S3 bucket name 
-# you should pick a path that is available on all cluster nodes and can be written by your user
-output_prefix=./
-</code>
-</pre>
-
-This is the workflow.ini file and contains 
-
-You access these variables in the Java workflow using the <tt>getProperty()</tt> method. When installing the workflow the ini file is parsed and extra metadata about each parameter is examined. This gives the system information about the type of the variable (integer, string, etc) and any default values.
-
-The ini file(s) follow the general pattern of:
-
-<pre>
-# comment/specification
-key=value
-</pre>
-
-To achieve this overloaded role for ini files you need to include hints to ensure the BundleManager that installs workflow bundles has enough information. Here is what the annotation syntax looks like:
-
-
-	# key=<name>:type=[integer|float|text|pulldown|file]:display=[T|F][:display_name=<name_to_display>][:file_meta_type=<mime_meta_type>][:pulldown_items=<key1>|<value1>;<key2>|<value2>]
-	key=default_value
-
-The file_meta_type is only used for type=file. 
-
-The pulldown type means that the pulldown_items should be defined as well. This looks like:
-
-	pulldown_items=<key1>|<value1>;<key2>|<value2>
-
-The default value for this will refer to either value1 or value2 above.
-If you fail to include a metadata line for a particular key/value then it's assumed to be:
-
-	key=<name>:type=text:display=F
-
-This is convenient since many of the values in an INI file should not be displayed to the end user.
-
-
-### Common Variables
-
-There are several variables that you will see in various files, including the config ini file and <tt>metadata.xml</tt> file.
-
-* ${date}: a string representing the date the DAX was created, this is always defined so consider this a reserved variable name. 
-
-* ${random}: a randomly generated string, this is always defined so consider this a reserved variable name. 
-
-* ${workflow_bundle_dir}: if this workflow is part of a workflow bundle this variable will be defined and points to the path of the root of the directory this workflow bundle has been expanded to.
-
-* ${workflow_base_dir}: ${workflow_bundle_dir}/Workflow_Bundle_{workflow_name}/{workflow_version}. This is really used in a ton of places since we need a variable that points to the install location for the bundle since we cannot hard code this.
-
-
+<%= render '/includes/workflow_conf/' %>
 
 ## Modifying the Workflow
 
