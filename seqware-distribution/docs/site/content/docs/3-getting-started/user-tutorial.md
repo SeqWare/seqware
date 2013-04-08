@@ -38,7 +38,7 @@ SeqWare is open source architecture built mostly in Java. In the <kbd>/home/seqw
 
 <p class="warning"><strong>Tip:</strong> The VM will contain a recent version of the jar that we have validated with this tutorial.  You may want to upgrade to the latest version, though, which you can download from our <a href="http://jenkins.res.oicr.on.ca/job/seqware/">continuous build server</a>. Please choose the jar that has the -full suffix, e.g. seqware-distribution-0.13.6-full.jar. Keep in mind we make no promises that the latest version will be bug free!</p>
 
-For more information about the command line tools see the [Plugin](/docs/17-plugins/) and [Modules](/docs/modules/) reference.
+For more information about the command line tools see the [Plugin](/docs/17-plugins/) and [Modules](/docs/17a-modules/) reference.
 
 ## The SeqWare Settings File
 

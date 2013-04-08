@@ -17,7 +17,7 @@ The installation and configuration of this software is a fairly complex process.
 
 The VM currently has the following SeqWare dependencies installed (from lowest to highest-level):
 
-* [SGE](http://www.oracle.com/us/products/tools/oracle-grid-engine-075549.html Sun Grid Engine) version 6.2.x (note, this is now Oracle Grid Engine but we'll use the existing gridengine RPM packages): this is the cluster scheduler that actually schedules jobs out to real nodes, managing memory and CPUs available. The VM has only one "slot" available.
+* [SGE](http://www.oracle.com/us/products/tools/oracle-grid-engine-075549.html) version 6.2.x (note, this is now Oracle Grid Engine but we'll use the existing gridengine RPM packages): this is the cluster scheduler that actually schedules jobs out to real nodes, managing memory and CPUs available. The VM has only one "slot" available.
 * [The Globus Toolkit](http://www.globus.org/toolkit/) version 5.2.x: provides user authentication, transport protocol for sending jobs to a cluster in a scheduler (GRAM5), and a transfer protocol for sending data around (GridFTP)
 ** GRAM5
 ** GridFTP
@@ -538,7 +538,7 @@ This is what I added/changed in /etc/condor/condor_config.local as root in previ
 	GRIDMANAGER_MAX_SUBMITTED_JOBS_PER_RESOURCE = 100
 	GRIDMANAGER_MAX_PENDING_SUBMITS_PER_RESOURCE = 100
 	GRIDMANAGER_MAX_JOBMANAGERS_PER_RESOURCE = 50
-	# Misc tuning params https://bi.offis.de/wisent/tiki-index.php?page=Condor-GT4-Admin#id625180
+	# Misc tuning params http://wisent.d-grid.de/bi.offis.uni-oldenburg.de/wisent-wiki/tiki-index85b0.html?page=Condor-GT4-Admin#id464444 
 	#UPDATE_INTERVAL = 30
 	#JOB_START_COUNT = 10
 	#JOB_START_DELAY = 2
@@ -555,7 +555,7 @@ Now startup the daemons as root:
 
 And make sure you use chkconfig to ensure condor is started on boot.
 
-See [this](https://bi.offis.de/wisent/tiki-index.php?page=Condor-GT4-Admin#id625180) for more info on tuning Condor.
+See [this](http://wisent.d-grid.de/bi.offis.uni-oldenburg.de/wisent-wiki/tiki-index85b0.html) for more info on tuning Condor.
 
 ## Testing SGE, Globus GRAM, Globus GridFTP, and Condor
 

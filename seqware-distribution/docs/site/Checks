@@ -1,0 +1,5 @@
+#deploy_check :css 
+#deploy_check :html
+deploy_check :external_links
+deploy_check :internal_links
+deploy_check :stale
