@@ -30,7 +30,7 @@ a set of libraries that match a specific list of attributes.
 
 ### Input
 
-You can provide a list of library swas to dislay.
+You can provide a list of library swas to display.
 
 <pre class="highlight"><code class="language-javascript">
 182467,186014,25877
@@ -61,7 +61,7 @@ attributes
             "email":"john.hurt@oicr.on.ca",
             "first_name":"John",
             "last_name":"Hurt",
-            "institution":"Ontario Institue for Cancer Research"
+            "institution":"Ontario Institute for Cancer Research"
         },
         "organism":
         {
@@ -81,7 +81,7 @@ attributes
             "email":"veronica.cartwright@oicr.on.ca",
             "first_name":"Veronica",
             "last_name":"Cartwright",
-            "institution":"Ontario Institue for Cancer Research"
+            "institution":"Ontario Institute for Cancer Research"
         },
         "organism":
         {
