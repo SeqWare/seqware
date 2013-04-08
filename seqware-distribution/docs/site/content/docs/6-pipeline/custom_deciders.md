@@ -16,7 +16,7 @@ You can automatically generate a decoder via our maven archetype.
 
 	mvn archetype:generate (select SeqWare Java Decider archetype)
 
-There a number of methods that can be overriden in order to customize the behaviour of your decider.
+There a number of methods that can be overridden in order to customize the behaviour of your decider.
 
 <!-- the following content is modified from from https://wiki.oicr.on.ca/display/PIPEDEVAL/Decider+Tutorial -->
 

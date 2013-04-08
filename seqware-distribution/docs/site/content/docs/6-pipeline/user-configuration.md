@@ -173,7 +173,7 @@ This file is from Pegasus and the handle="clustername" is how you tell SeqWare w
 # PEGASUS USER PROPERTIES
 ##########################
 
-## SELECT THE REPLICAT CATALOG MODE AND URL
+## SELECT THE REPLICA CATALOG MODE AND URL
 pegasus.catalog.replica = SimpleFile
 pegasus.catalog.replica.file = /home/seqware/.seqware/pegasus/rc.data
 
@@ -195,7 +195,7 @@ pegasus.catalog.transformation.mapper = All
 ## CHECK JOB EXIT CODES FOR FAILURE
 pegasus.exitcode.scope=all
 
-## OPTIMZE DATA & EXECUTABLE TRANSFERS
+## OPTIMIZE DATA & EXECUTABLE TRANSFERS
 pegasus.transfer.refiner=Bundle
 pegasus.transfer.links = true
 

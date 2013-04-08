@@ -28,7 +28,7 @@ The Pegasus Engine uses <tt>pegasus-status</tt> as the primary command for monit
 ## The Oozie Engine
 
 The Oozie Engine has both command line tools and a web interface for interacting with workflow status information.
-The web interface is particularlyly helpful, you can find it typically at:
+The web interface is particularly helpful, you can find it typically at:
 
 	http://<host>:11000/oozie/
 
@@ -39,5 +39,5 @@ workflow for more information including stderr/stdout for the jobs.
 
 ### Restarting Workflows 
 
-While Oozie does support workflow re-submission the recommened approach for failed workflows in SeqWare is simply to 
+While Oozie does support workflow re-submission the recommended approach for failed workflows in SeqWare is simply to 
 resubmit the workflows.
