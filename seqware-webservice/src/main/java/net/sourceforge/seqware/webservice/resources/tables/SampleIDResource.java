@@ -186,7 +186,7 @@ public class SampleIDResource extends DatabaseIDResource {
 			}
             if (null != o.getParents()) {
                 SampleService ss = BeanFactory.getSampleServiceBean();
-                Set<Sample> parents = new HashSet<Sample>();
+                Set<Sample> parents = new HashSet<Sample>(sample.getParents());
                 for (Sample s: o.getParents()) {
                     parents.add(ss.findByID(s.getSampleId()));
                 }
@@ -194,7 +194,7 @@ public class SampleIDResource extends DatabaseIDResource {
             }
             if (null != o.getChildren()) {
                 SampleService ss = BeanFactory.getSampleServiceBean();
-                Set<Sample> children = new HashSet<Sample>();
+                Set<Sample> children = new HashSet<Sample>(sample.getChildren());
                 for (Sample s: o.getChildren()) {
                     children.add(ss.findByID(s.getSampleId()));
                 }

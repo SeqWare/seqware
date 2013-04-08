@@ -16,12 +16,14 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection;
 
-import java.util.HashMap;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.*;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -462,8 +464,61 @@ public class RunInfo {
 
     @Override
     public String toString() {
-        return "RunInfo{" + "studyTitle=" + studyTitle+ "\n\t studyDescription=" + studyDescription+ "\n\t studyCenterName=" + studyCenterName+ "\n\t studyCenterProject=" + studyCenterProject+ "\n\t studyType=" + studyType+ "\n\t platformId=" + platformId+ "\n\t runName=" + runName+ "\n\t experimentName=" + experimentName+ "\n\t workflowType=" + workflowType+ "\n\t assayType=" + assayType+ "\n\t runSkip=" + runSkip+ "\n\t pairedEnd=" + pairedEnd+ "\n\t runDescription=" + runDescription+ "\n\t runFilePath=" + runFilePath+ "\n\t experimentDescription=" + experimentDescription + '}';
+        return "RunInfo{" + "studyTitle=" + studyTitle+ "\n\t studyDescription=" 
+                + studyDescription+ "\n\t studyCenterName=" 
+                + studyCenterName+ "\n\t studyCenterProject=" 
+                + studyCenterProject+ "\n\t studyType=" 
+                + studyType+ "\n\t platformId=" 
+                + platformId+ "\n\t runName=" 
+                + runName+ "\n\t experimentName=" 
+                + experimentName+ "\n\t workflowType=" 
+                + workflowType+ "\n\t assayType=" 
+                + assayType+ "\n\t runSkip=" 
+                + runSkip+ "\n\t pairedEnd=" 
+                + pairedEnd+ "\n\t runDescription=" 
+                + runDescription+ "\n\t runFilePath=" 
+                + runFilePath+ "\n\t experimentDescription=" 
+                + experimentDescription + '}';
     }
+    
+    public void print(Appendable writer, Metadata metadata) throws IOException {
+        String platform="<null>";
+        if (platformId!=null && !platformId.trim().isEmpty() && StringUtils.isNumeric(platformId)) {
+            for (Platform p: metadata.getPlatforms()) {
+                if (p.getPlatformId().equals(Integer.parseInt(platformId))) {
+                    platform = p.getName();
+                }
+            }
+        }
+        String studyTypeStr = "<null>";
+        if (studyType!=null && !studyType.trim().isEmpty() && StringUtils.isNumeric(studyType)) {
+            for (StudyType st: metadata.getStudyTypes()) {
+                if (st.getStudyTypeId().equals(Integer.parseInt(studyType))) {
+                    studyTypeStr = st.getName();
+                }
+            }
+        }
+        
+        writer.append("RunInfo{");
+        writer.append("\n\tstudyTitle=").append(studyTitle);
+        writer.append("\n\tstudyDescription=").append(studyDescription);
+        writer.append("\n\tstudyCenterName=").append(studyCenterName);
+        writer.append("\n\tstudyCenterProject=").append(studyCenterProject);
+        writer.append("\n\trunName=").append(runName);
+        writer.append("\n\trunDescription=").append(runDescription);
+        writer.append("\n\trunFilePath=").append(runFilePath);
+        writer.append("\n\texperimentName=").append(experimentName);
+        writer.append("\n\texperimentDescription=").append(experimentDescription);
+        writer.append("\n\tplatform=").append(platform);
+        writer.append("\n\tstudyType=").append(studyTypeStr);
+        writer.append("\n\tskipRun=").append(String.valueOf(runSkip));
+        if (lanes!=null)
+        for (LaneInfo lane: lanes) {
+            lane.print(writer, metadata);
+        }
+        writer.append("}");
+    }
+    
     
     
 }
