@@ -39,8 +39,10 @@ Providing the Web service is already installed for you, there are three approach
 
 The .seqware/settings file needs to be configured to use the Web service for the first two options. In the third option, you must provide the URL, username and password yourself.
 
-## Install Guide 
+## Building and Installing
 
+Most users will want to use our pre-configured VMs, see the [SeqWare Install
+Guide](/docs/2-installation/) for how to get the VM.
 The SeqWare Web service is the primary mechanism by which users can reach the SeqWare MetaDB. The Web service prevents the user from having to make SQL queries and facilitates building services on top of the MetaDB. Currently, there is a Java client located in the seqware-commons package that can be used to access the WebService, which is configured through the .seqware/settings file.
 
 Please see the [Install Guide](/docs/github_readme/4-webservice/)

@@ -6,6 +6,10 @@ markdown:              advanced
 
 ---
 
+<!--
+TODO:
+* need to show cluster launching through portal
+-->
 
 ## Overview
 
@@ -27,11 +31,18 @@ in the LIMS system.  This makes it very easy for researchers to both follow the
 progress of a particular run and also get back to the reports automatically
 created based on their initial settings.
 
+See the [User Guide](/docs/3-getting-started/user-tutorial/) for examples of
+how to use the Portal for setting up Samples, Experiments, Studies, and
+uploading data for use by workflows.
 
-## Admin Setup
+## Building and Installing
 
-Please see the [Install Guide](/docs/github_readme/5-portal/)
+Most users will want to use our pre-configured VMs, see the [SeqWare Install
+Guide](/docs/2-installation/) for how to get the VM.  Please see the [Install
+Guide](/docs/github_readme/5-portal/) for building and installing the SeqWare
+Portal.
 
+<!--
 ## Features
 
 ## Uploading Data
@@ -45,4 +56,4 @@ Please see the [Install Guide](/docs/github_readme/5-portal/)
 ## Tomcat Config File
 
 Document the config settings for Tomcat like email addresses, DB, etc
-
+-->

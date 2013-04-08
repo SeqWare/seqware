@@ -10,9 +10,12 @@ markdown:              basic
 
 The SeqWare Query Engine is intended to be a universal store for sequence variants. Features include fine-grained control over versioning, a plug-in framework for new MapReduce plug-ins, rich value tags/annotations on most objects, and set organization. The current iteration of the SeqWare Query engine has the ability to store and search data stored in a modern NoSQL database, HBase, while using Google's Protocol Buffers for serialization.
 
-## Setup
+## Building and Installing
 
-Please see the [Install Guide](/docs/github_readme/2-queryengine/)
+Most users will want to use our pre-configured VMs, see the [SeqWare Install
+Guide](/docs/2-installation/) for how to get the VM.
+
+Please see the [Install Guide](/docs/github_readme/2-queryengine/) for installing Query Engine from scratch.
 
 ## Loading Data
 

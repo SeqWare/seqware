@@ -1,9 +1,3 @@
-    PROJECT: SeqWare
-    FILE: README.md
-    PROJECT LEAD: Brian O'Connor <briandoconnor@gmail.com>
-    UPDATED: 2013-04-04
-    HOMEPAGE: http://seqware.github.com/
-
 ## Introduction 
 
 This README is just a quick overview of building SeqWare. See our
@@ -80,7 +74,7 @@ In order to run the integration tests on the entire project, please ensure that 
 When this is complete: 
 
     export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=512m" (ensures enough memory for integration tests)
-    mvn clean install -DskipITs=false # (runs all unit tests and ntegration tests that only require postgres as a prerequisite)
+    mvn clean install -DskipITs=false # (runs all unit tests and integration tests that only require postgres as a prerequisite)
     mvn clean install -DskipITs=false -P extITs # (runs all unit tests and all integration tests including those that require Condor/Globus/Pegasus)
 
 In the last case, the extended integration tests profile is used to trigger integration tests that run our command line utilities. 
