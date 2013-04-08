@@ -248,9 +248,9 @@ I developed a nightly script that will 1) ensure the filters are offline, 2) del
 
 
 ## Upgrading your Database Version ##
-If you have previously installed SeqWare MetaDb and want to upgrade to the latest version, you can easily do so by running the upgrade scripts available from the repository.
+If you have previously installed SeqWare MetaDB and want to upgrade to the latest version, you can easily do so by running the upgrade scripts available from the repository.
 
-In the [SeqWare MetaDb repository in trunk](https://github.com/SeqWare/seqware/tree/master/seqware-meta-db), there are a number of upgrade scripts that allow you to update between versions. Here is a listing of the seqware_meta_db directory (Revision 4091) for an example.
+In the [SeqWare MetaDB repository in trunk](https://github.com/SeqWare/seqware/tree/master/seqware-meta-db), there are a number of upgrade scripts that allow you to update between versions. Here is a listing of the seqware_meta_db directory (Revision 4091) for an example.
 
 	seqware-meta-db:~$ ls
 	0.10.0_to_0.10.1.sql  0.7.5_to_0.8.0.sql  0.9.1_to_0.10.0.sql             dcc-export-tool  seqware_meta_db_data.sql      sra-export-tool

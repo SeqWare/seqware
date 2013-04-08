@@ -73,7 +73,7 @@ This will generate javadoc documentation for both the main code and the testing 
 
 By default, our integration test suite runs tests against the [hbase-maven-plugin](https://github.com/wibidata/hbase-maven-plugin). You can, however, run the full test suite against a real Hadoop and HBase cluster; for setup, a good start is to follow Cloudera's [quick start guide](https://ccp.cloudera.com/display/CDH4DOC/CDH4+Quick+Start+Guide). You will then need to set the HBase configuration in `seqware-queryengine/src/main/java/com/github/seqware/queryengine/Constants.java` by turning on HBASE_REMOTE_TESTING and completing a family of terms for HBASE\_PROPERTIES. You can also set these in an external ~/.seqware/settings file.
 
-Note that when you setup a real Hadoop/HBase cluster and point the query engine toward it using ~/.seqware/settings, this is essentially the installation procedure for BHase.
+Note that when you setup a real Hadoop/HBase cluster and point the query engine toward it using ~/.seqware/settings, this is essentially the installation procedure for HBase.
 
 If you run into the following error when the hbase-plugin starts up, please check for an incorrect entry in your <code>/etc/hosts</code> file.
 

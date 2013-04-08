@@ -175,7 +175,7 @@ Create a nested tree structure of all of the output files from a particular samp
 |--------------------|--------------|
 |--dump-all|Optional: Dumps all of the studies in the database to one file.|
 |--duplicates|Optional: Allow duplications at the file path level|
-|--f, --file-type|Optional: The file type to filter on. Only this type will be linked. Default is all files. Permissible file metatypes can found on the SeqWare Sourceforce Wiki under 'Module Conventions'|
+|--f, --file-type|Optional: The file type to filter on. Only this type will be linked. Default is all files. Permissible file metatypes can found on the SeqWare SourceForge Wiki under 'Module Conventions'|
 |--l, --link|Optional: make hard links (P) or symlinks (s). Default is symlinks.|
 |--no-links|Optional: Create only the CSV file, not the symlinked directories.|
 |--output-filename|Optional: Name of the output CSV file (without the extension)|
@@ -259,7 +259,7 @@ This plugin creates a tab-separated file that describes one or more workflow run
 ##  WorkflowStatusChecker
 net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker
 
-This plugin lets you monitor the status of running workflows and updatesthe metadata object with their status.  Keep in mind a few things: 1) if the status command is specified no data will be saved to the DB, this tool is just useful for gathering error reports, 2) status commands that are malformed or whose status directory is not present on the filesystem will be skipped and an error noted, 3) by default every running or unknown workflow_run in the database will be checked if they are owned by the username in your .seqware/settings file and the hostname is the same as 'hostname --long', and 4) you can force the checking of workflows with a particular host value but be careful with that.
+This plugin lets you monitor the status of running workflows and updates the metadata object with their status.  Keep in mind a few things: 1) if the status command is specified no data will be saved to the DB, this tool is just useful for gathering error reports, 2) status commands that are malformed or whose status directory is not present on the filesystem will be skipped and an error noted, 3) by default every running or unknown workflow_run in the database will be checked if they are owned by the username in your .seqware/settings file and the hostname is the same as 'hostname --long', and 4) you can force the checking of workflows with a particular host value but be careful with that.
 
 | Command-line option | Description |
 |--------------------|--------------|
