@@ -28,23 +28,25 @@ import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
  * @author mtaschuk
  */
 public class CreateFromScratch extends BatchMetadataParser {
-    
+
     public CreateFromScratch(Metadata metadata, Map<String, String> fields, boolean interactive) {
         super(metadata, fields, interactive);
     }
-    
+
     public RunInfo getRunInfo() {
-        boolean runDone =false;
-	RunInfo runInfo = null;
-	while (!runDone) {
-		runInfo = this.generateRunInfo(null, null, null, null, null, null, null, null, null, -1, -1, true, null, null);
-		Log.stdout(runInfo.toString());
-		runDone = ConsoleAdapter.getInstance().promptBoolean("Is this correct?", true);
-	}
+        boolean runDone = false;
+        RunInfo runInfo = null;
+        while (!runDone) {
+            runInfo = this.generateRunInfo(null, null, null, null, null, null, null, null, null, -1, -1, true, null, null);
+            StringBuilder sb = new StringBuilder();
+            printRunInfo(runInfo, sb);
+            Log.stdout(sb.toString());
+            runDone = ConsoleAdapter.getInstance().promptBoolean("Is this correct?", true);
+        }
 
         String projectCode = "ZZZZ";
         int numLanes = this.promptInteger("Number of lanes?", 8, Field.number_of_lanes);
-        
+
         for (int i = 0; i < numLanes; i++) {
             LaneInfo lane = getLane(i);
             int numBarcodes = this.promptInteger("How many barcodes in lane " + lane.getLaneNumber() + "?", 1, null);
@@ -57,18 +59,20 @@ public class CreateFromScratch extends BatchMetadataParser {
                         String individualNumber = ConsoleAdapter.getInstance().promptString("Individual number (should be unique per project)", null);
                         sample = this.generateSampleInfo(projectCode + " " + individualNumber, projectCode, individualNumber,
                                 null, null, null, null, null, null, -1, null, null, null, null, null);
-                        Log.stdout(sample.toString());
+                        StringBuilder sb = new StringBuilder();
+                        printSampleInfo(sample, sb);
+                        Log.stdout(sb.toString());
                         done = ConsoleAdapter.getInstance().promptBoolean("Is this correct?", true);
                     }
                     lane.getSamples().add(sample);
-                    
+
                 } catch (Exception ex) {
                     Logger.getLogger(CreateFromScratch.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             runInfo.getLanes().add(lane);
         }
-        
+
         return runInfo;
     }
 
@@ -76,8 +80,11 @@ public class CreateFromScratch extends BatchMetadataParser {
         boolean doneLane = false;
         LaneInfo lane = null;
         while (!doneLane) {
-            lane = this.generateLaneInfo(String.valueOf(i + 1), -1);
-            Log.stdout(lane.toString());
+            int num = promptPositiveInteger("Lane number", i, null, 1, Integer.MAX_VALUE);
+            lane = this.generateLaneInfo(String.valueOf(num), -1);
+            StringBuilder sb = new StringBuilder();
+            printLaneInfo(lane, sb);
+            Log.stdout(sb.toString());
             doneLane = ConsoleAdapter.getInstance().promptBoolean("Is this correct?", true);
         }
         return lane;

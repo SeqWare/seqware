@@ -16,11 +16,14 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection;
 
-import java.util.HashMap;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
+import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.LaneAttribute;
+import net.sourceforge.seqware.common.model.StudyType;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -82,7 +85,7 @@ public class LaneInfo {
             }
         }
         //if we are unsetting the lane attribute, remove it from the list.
-        if (value == null && sa !=null ) {
+        if (value == null && sa != null) {
             getLaneAttributes().remove(sa);
             return;
         }
@@ -266,8 +269,32 @@ public class LaneInfo {
 
     @Override
     public String toString() {
-        return "LaneInfo{" + "\n\tlaneNumber=" + laneNumber+ "\n\t laneCycleDescriptor=" + laneCycleDescriptor+ "\n\t libraryStrategyAcc=" + libraryStrategyAcc+ "\n\t librarySourceAcc=" + librarySourceAcc+ "\n\t librarySelectionAcc=" + librarySelectionAcc+ "\n\t studyTypeAcc=" + studyTypeAcc + '}';
+        return "LaneInfo{" + "\n\tlaneNumber=" + laneNumber
+                + "\n\t laneCycleDescriptor=" + laneCycleDescriptor
+                + "\n\t libraryStrategyAcc=" + libraryStrategyAcc
+                + "\n\t librarySourceAcc=" + librarySourceAcc
+                + "\n\t librarySelectionAcc=" + librarySelectionAcc
+                + "\n\t studyTypeAcc=" + studyTypeAcc + '}';
     }
-    
-    
+
+    public void print(Appendable writer, Metadata metadata) throws IOException {
+        String studyTypeStr = "<null>";
+        if (studyTypeAcc != null && !studyTypeAcc.trim().isEmpty() && StringUtils.isNumeric(studyTypeAcc)) {
+            for (StudyType st : metadata.getStudyTypes()) {
+                if (st.getStudyTypeId().equals(Integer.parseInt(studyTypeAcc))) {
+                    studyTypeStr = st.getName();
+                }
+            }
+        }
+
+        writer.append("\n\tLaneInfo {");
+        writer.append("\n\t\tlaneNumber=").append(laneNumber);
+        writer.append("\n\t\tstudyType=").append(studyTypeStr);
+        if (samples != null) {
+            for (SampleInfo si : samples) {
+                si.print(writer, metadata);
+            }
+        }
+        writer.append("\n\t}");
+    }
 }

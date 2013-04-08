@@ -16,10 +16,13 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import joptsimple.OptionException;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.*;
@@ -39,7 +42,7 @@ public abstract class BatchMetadataParser {
         sequencer_run_name, library_strategy_accession, library_source_accession,
         library_selection_accession, library_source_template_type, tissue_origin,
         tissue_type, library_type, library_size_code, targeted_resequencing,
-        tissue_preparation, run_file_path, barcode, number_of_lanes
+        tissue_preparation, run_file_path, barcode, number_of_lanes, study_center_project, study_center_name
     }
     private static String[] librarySourceTemplateTypeList = new String[]{"CH", "EX", "MR", "SM", "TR", "TS", "WG", "WT", "Other"};
     private static String[] targetedResequencingList = new String[]{"Agilent SureSelect 244k Array",
@@ -86,13 +89,12 @@ public abstract class BatchMetadataParser {
             }
         }
         while (choice == null) {
-            choiceInt = ConsoleAdapter.getInstance().promptInteger(title, choiceInt);
+            choiceInt = promptPositiveInteger(title, choiceInt, null, 1, choices.length);
             if (choiceInt == 0) { //no selection
                 break;
             } else if (choiceInt == choices.length) {
                 choice = ConsoleAdapter.getInstance().promptString("Please specify", null);
             } else if (choiceInt <= 0 || choiceInt > choices.length) {
-                Log.stdout("Please choose from the given options.");
             } else {
                 choice = choices[choiceInt - 1];
             }
@@ -143,8 +145,8 @@ public abstract class BatchMetadataParser {
         if (studyDescription == null) {
             runInfo.setStudyDescription(runInfo.getStudyTitle());
         }
-        runInfo.setStudyCenterName(studyCenterName);
-        runInfo.setStudyCenterProject(studyCenterProject);
+        runInfo.setStudyCenterName(promptString("Study Center Name", studyCenterName, Field.study_center_name));
+        runInfo.setStudyCenterProject(promptString("Study Center Project", studyCenterProject, Field.study_center_project));
         runInfo.setStudyType(promptAccession("Study Type Accession", studyType, list, Field.study_type));
 
 
@@ -153,7 +155,7 @@ public abstract class BatchMetadataParser {
 
         runInfo.setRunName(promptString("Sequencer Run Name", runName, Field.sequencer_run_name));
         runInfo.setRunDescription(runDescription);
-        if (runDescription==null) {
+        if (runDescription == null) {
             runInfo.setRunDescription(runInfo.getRunName());
         }
         runInfo.setRunFilePath(promptString("Sequencer run directory", filePath, Field.run_file_path));
@@ -164,8 +166,9 @@ public abstract class BatchMetadataParser {
 
         //experiment
         runInfo.setExperimentName(promptString("Experiment Name", experimentName, Field.experiment_name));
+        runInfo.setExperimentDescription(experimentDescription);
         if (experimentDescription == null) {
-            runInfo.setExperimentDescription(runInfo.getExperimentDescription());
+            runInfo.setExperimentDescription(runInfo.getExperimentName());
         }
 
         return runInfo;
@@ -194,15 +197,21 @@ public abstract class BatchMetadataParser {
             KeyVal[] list = getKeyVals(metadata.getStudyTypes());
             laneInfo.setStudyTypeAcc(promptAccession("Study Type Accession", studyTypeAccession, list, Field.study_type));
         }
-        KeyVal[] list = getKeyVals(metadata.getLibraryStrategies());
-        laneInfo.setLibraryStrategyAcc(promptAccession("Library Strategy Accession", 0, list, Field.library_strategy_accession));
+        //See https://jira.oicr.on.ca/browse/SEQWARE-1561. Uncomment when fixed.
 
-        list = getKeyVals(metadata.getLibrarySelections());
-        laneInfo.setLibrarySelectionAcc(promptAccession("Library Selection Accession", 0, list, Field.library_selection_accession));
+//        KeyVal[] list = getKeyVals(metadata.getLibraryStrategies());
+//        laneInfo.setLibraryStrategyAcc(promptAccession("Library Strategy Accession", 0, list, Field.library_strategy_accession));
+//        list = getKeyVals(metadata.getLibrarySelections());
+//        laneInfo.setLibrarySelectionAcc(promptAccession("Library Selection Accession", 0, list, Field.library_selection_accession));
+//
+//        list = getKeyVals(metadata.getLibrarySource());
+//        laneInfo.setLibrarySourceAcc(promptAccession("Library Source Accession", 0, list, Field.library_source_accession));
 
-        list = getKeyVals(metadata.getLibrarySource());
-        laneInfo.setLibrarySourceAcc(promptAccession("Library Source Accession", 0, list, Field.library_source_accession));
 
+        //Remove these when above is fixed
+        laneInfo.setLibraryStrategyAcc(1);
+        laneInfo.setLibrarySourceAcc(1);
+        laneInfo.setLibrarySelectionAcc(1);
 
         return laneInfo;
     }
@@ -335,12 +344,12 @@ public abstract class BatchMetadataParser {
         sa.setTissueType(tissueType);
 
         if (librarySizeCode == null || librarySizeCode.isEmpty() || !StringUtils.isNumeric(librarySizeCode)) {
-            Integer lSize = promptInteger("Library Size Code - a number code indicating the size of the band cut from the gel in base pairs", this.lSize, Field.library_size_code);
-            if (lSize <= 0) {
+            Integer libSize = promptInteger("Library Size Code - a number code indicating the size of the band cut from the gel in base pairs", this.lSize, Field.library_size_code);
+            if (libSize <= 0) {
                 librarySizeCode = "nn";
             } else {
-                this.lSize = lSize;
-                librarySizeCode = lSize.toString();
+                this.lSize = libSize;
+                librarySizeCode = libSize.toString();
             }
         }
         sa.setLibrarySizeCode(librarySizeCode);
@@ -364,9 +373,9 @@ public abstract class BatchMetadataParser {
             for (int i = 0; i < organisms.size(); i++) {
                 Log.stdout((i + 1) + " : " + organisms.get(i).getName());
             }
-            organismId = promptInteger("Organism id", 31, Field.organism_id);
+            organismId = promptPositiveInteger("Organism id", 34, Field.organism_id, 1, organisms.size());
             if (organismId > 0 && organismId <= organisms.size()) {
-                organismId = organisms.get(organismId).getOrganismId();
+                organismId = organisms.get(organismId - 1).getOrganismId();
             }
         }
         sa.setOrganismId(organismId);
@@ -434,7 +443,7 @@ public abstract class BatchMetadataParser {
             for (int i = 1; i <= values.length; i++) {
                 Log.stdout(i + " : " + values[i - 1].toString());
             }
-            Integer i = ConsoleAdapter.getInstance().promptInteger(description, deflt);
+            Integer i = promptPositiveInteger(description, deflt, fieldName, 1, values.length);
             if (fieldName != null) {
                 defaults.put(fieldName.toString(), i.toString());
             }
@@ -513,6 +522,39 @@ public abstract class BatchMetadataParser {
                     + ", using --field " + (fieldName == null ? "No field known" : fieldName.toString()));
             throw new OptionException(fields.keySet(), e) {
             };
+        }
+    }
+
+    protected int promptPositiveInteger(String description, int deflt, Field fieldName, int lowNum, int highNum) {
+        int value = 0;
+        while (value > highNum || value < lowNum) {
+            Log.stdout("Please choose a number from the following list:");
+            value = promptInteger(description, deflt, fieldName);
+        }
+        return value;
+    }
+
+    protected void printSampleInfo(SampleInfo info, Appendable writer) {
+        try {
+            info.print(writer, metadata);
+        } catch (IOException ex) {
+            Log.warn("IO error when printing SampleInfo information! This should not happen!", ex);
+        }
+    }
+
+    protected void printRunInfo(RunInfo info, Appendable writer) {
+        try {
+            info.print(writer, metadata);
+        } catch (IOException ex) {
+            Log.warn("IO error when printing RunInfo information! This should not happen!", ex);
+        }
+    }
+
+    protected void printLaneInfo(LaneInfo info, Appendable writer) {
+        try {
+            info.print(writer, metadata);
+        } catch (IOException ex) {
+            Log.warn("IO error when printing LaneInfo information! This should not happen!", ex);
         }
     }
 }

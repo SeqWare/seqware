@@ -249,7 +249,7 @@ public class MetadataWS extends Metadata {
 
             Study s = ll.findStudy("/" + studySwAccession.toString());
 
-            Log.stderr("Study: " + s);
+            Log.debug("Study: " + s);
 
             Experiment e = new Experiment();
             e.setStudy(s);
