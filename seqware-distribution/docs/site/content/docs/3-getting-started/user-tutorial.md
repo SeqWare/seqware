@@ -50,7 +50,7 @@ For more information see the [Settings](/docs/6-pipeline/user-configuration/) do
 
 ## Creating Studies, Experiments, and Samples
 
-SeqWare MetaDB lets you track studies, experiment, and samples and then link those to files (like FASTQ or something similar). You can then run workflows on those files, track the resulting files, and use those files for the next workflow.  You will want to set up your study, experiments, and samples before uploading your text or other data files.  This ensures you have “parents” to attach these files to.  Otherwise you will not be able to use them as parameters for workflows. 
+SeqWare MetaDB lets you track studies, experiment, and samples and then link those to files (like FASTQ or something similar). You can then run workflows on those files, track the resulting files, and use those files for the next workflow.  You will want to set up your study, experiments, and samples before uploading your text or other data files.  This ensures you have "parents" to attach these files to.  Otherwise you will not be able to use them as parameters for workflows. 
 
 You can do this either with the [Portal](/docs/5-portal/) and/or the command line tools below.
 
@@ -292,14 +292,14 @@ At this point you know what workflow you are going to run and you have a customi
 <p class="warning"><strong>Tip:</strong> the parent-accessions is the SWID of
 the ProvisionFiles element that was added under the sample when use used this
 tool to upload the text files in the example above.  You MUST specify this
-otherwise the workflow��s results will not be linked to anything (they will be
+otherwise the workflow's results will not be linked to anything (they will be
 orphaned and will not be visible in the Portal or present in the reports
 below). Conveniently the ProvisionFiles tool will write these accessions to a
 file and the portal displays these values.</p>
 
 This schedules the workflow to run on the VM. Notice it also prints the workflow run accession which you can use to help monitor the workflow.
 
-Once submitted, you can use the Portal to list the number of submitted, running, and failed workflows.  Log into the Portal and click on the “Show Analysis” link under the Analysis panel.  You can then click on the tab for “Running Analysis” to see what is submitted/running/failed.
+Once submitted, you can use the Portal to list the number of submitted, running, and failed workflows.  Log into the Portal and click on the "Show Analysis" link under the Analysis panel.  You can then click on the tab for "Running Analysis" to see what is submitted/running/failed.
 
 <img src="/assets/images/running.png" width="600px"/>
 
