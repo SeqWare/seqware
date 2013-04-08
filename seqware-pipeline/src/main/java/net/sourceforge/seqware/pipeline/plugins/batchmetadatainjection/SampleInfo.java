@@ -16,11 +16,14 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-import net.sourceforge.seqware.common.model.IUS;
+import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.IUSAttribute;
+import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.SampleAttribute;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -454,6 +457,57 @@ public class SampleInfo {
 
     @Override
     public String toString() {
-        return "SampleInfo{" + "projectCode=" + projectCode+ "\n\t individualNumber=" + individualNumber+ "\n\t name=" + name+ "\n\t tissueType=" + tissueType+ "\n\t tissueOrigin=" + tissueOrigin+ "\n\t librarySizeCode=" + librarySizeCode+ "\n\t organismId=" + organismId+ "\n\t librarySourceTemplateType=" + librarySourceTemplateType+ "\n\t parentSample=" + parentSample+ "\n\t libraryType=" + libraryType+ "\n\t pairedEnd=" + pairedEnd+ "\n\t tissuePreparation=" + tissuePreparation+ "\n\t targetedResequencing=" + targetedResequencing+ "\n\t sampleDescription=" + sampleDescription+ "\n\t barcode=" + barcode+ "\n\t iusName=" + iusName+ "\n\t iusDescription=" + iusDescription+ "\n\t iusSkip=" + iusSkip+ "\n\t sampleAttributes=" + sampleAttributes+ "\n\t iusAttributes=" + iusAttributes + '}';
+        return "SampleInfo{" + "projectCode=" + projectCode
+                + "\n\t individualNumber=" + individualNumber
+                + "\n\t name=" + name
+                + "\n\t tissueType=" + tissueType
+                + "\n\t tissueOrigin=" + tissueOrigin
+                + "\n\t librarySizeCode=" + librarySizeCode
+                + "\n\t organismId=" + organismId
+                + "\n\t librarySourceTemplateType=" + librarySourceTemplateType
+                + "\n\t parentSample=" + parentSample
+                + "\n\t libraryType=" + libraryType
+                + "\n\t pairedEnd=" + pairedEnd
+                + "\n\t tissuePreparation=" + tissuePreparation
+                + "\n\t targetedResequencing=" + targetedResequencing
+                + "\n\t sampleDescription=" + sampleDescription
+                + "\n\t barcode=" + barcode
+                + "\n\t iusName=" + iusName
+                + "\n\t iusDescription=" + iusDescription
+                + "\n\t iusSkip=" + iusSkip
+                + "\n\t sampleAttributes=" + sampleAttributes
+                + "\n\t iusAttributes=" + iusAttributes + '}';
+    }
+
+    public void print(Appendable writer, Metadata metadata) throws IOException {
+        String organism = "<null>";
+        if (organismId != null && !organismId.trim().isEmpty() && StringUtils.isNumeric(organismId)) {
+            for (Organism st : metadata.getOrganisms()) {
+                if (st.getOrganismId().equals(Integer.parseInt(organismId))) {
+                    organism = st.getName();
+                }
+            }
+        }
+
+        writer.append("\n\t\tSampleInfo {");
+        writer.append("\n\t\t\t projectCode=" + projectCode);
+        writer.append("\n\t\t\t individualNumber=" + individualNumber);
+        writer.append("\n\t\t\t sampleName=" + name);
+        writer.append("\n\t\t\t sampleDescription=" + sampleDescription);
+        writer.append("\n\t\t\t barcode=" + barcode);
+        writer.append("\n\t\t\t barcodeName=" + iusName);
+        writer.append("\n\t\t\t barcodeDescription=" + iusDescription);
+        writer.append("\n\t\t\t tissueType=" + tissueType);
+        writer.append("\n\t\t\t tissueOrigin=" + tissueOrigin);
+        writer.append("\n\t\t\t tissuePreparation=" + tissuePreparation);
+        writer.append("\n\t\t\t librarySizeCode=" + librarySizeCode);
+        writer.append("\n\t\t\t organism=" + organism);
+        writer.append("\n\t\t\t librarySourceTemplateType=" + librarySourceTemplateType);
+        writer.append("\n\t\t\t libraryType=" + libraryType);
+        writer.append("\n\t\t\t pairedEnd=" + pairedEnd);
+        writer.append("\n\t\t\t targetedResequencing=" + targetedResequencing);
+        writer.append("\n\t\t\t skipBarcode=" + iusSkip);
+
+        writer.append("\n\t\t}");
     }
 }

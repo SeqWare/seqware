@@ -16,11 +16,14 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import joptsimple.OptionSpec;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -52,6 +55,7 @@ public class BatchMetadataInjection extends Metadata {
         parser.accepts("miseq-sample-sheet", "The location of the Miseq Sample Sheet").withRequiredArg();
         parser.accepts("new", "Create a new study from scratch. Used instead of miseq-sample-sheet");
         parser.accepts("interactive", "Optional: turn on interactive input ");
+        parser.accepts("record", "Optional: saves information about the injection in a text file").withOptionalArg();
         ret.setExitStatus(ReturnValue.SUCCESS);
         names = new HashMap<Integer, String>();
     }
@@ -86,6 +90,7 @@ public class BatchMetadataInjection extends Metadata {
                 Log.stdout(field.toString());
             }
         } else {
+            RunInfo run = null;
             if (options.has("field")) {
                 parseFields();
             }
@@ -94,8 +99,9 @@ public class BatchMetadataInjection extends Metadata {
                 String filepath = (String) options.valueOf("miseq-sample-sheet");
                 ParseMiseqFile MiseqParser = new ParseMiseqFile(metadata, (Map<String, String>) fields.clone(), interactive);
                 try {
-                    RunInfo run = MiseqParser.parseMiseqFile(filepath);
+                    run = MiseqParser.parseMiseqFile(filepath);
                     inject(run);
+
                 } catch (Exception ex) {
                     Log.error("The run could not be imported.", ex);
                 }
@@ -103,7 +109,7 @@ public class BatchMetadataInjection extends Metadata {
                 try {
                     parseFields();
                     CreateFromScratch create = new CreateFromScratch(metadata, (Map<String, String>) fields.clone(), interactive);
-                    RunInfo run = create.getRunInfo();
+                    run = create.getRunInfo();
                     inject(run);
                 } catch (Exception ex) {
                     Log.error("The run could not be imported.", ex);
@@ -112,8 +118,25 @@ public class BatchMetadataInjection extends Metadata {
                 Log.stdout("Combination of parameters not recognized!");
                 Log.stdout(this.get_syntax());
                 ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-
             }
+            if (options.has("record") && run != null) {
+                Object o = options.valueOf("record");
+                String filename;
+                if (o != null) {
+                    filename = (String) o;
+                } else {
+                    filename = run.getRunName() + System.currentTimeMillis();
+                }
+                try {
+                    FileWriter writer = new FileWriter(filename);
+                    run.print(writer, metadata);
+                    writer.flush();
+                    writer.close();
+                } catch (IOException ex) {
+                    Log.warn("Error while writing to the record file " + filename, ex);
+                }
+            }
+
         }
         return ret;
     }
@@ -155,6 +178,7 @@ public class BatchMetadataInjection extends Metadata {
 
         Log.debug("study: " + studyAccession + " exp: " + experimentAccession + " run: " + sequencerRunAccession);
         for (LaneInfo lane : lanes) {
+            Log.stdout("\nCreating lane "+lane.getLaneNumber());
             int laneAccession = createLane(lane, sequencerRunAccession);
 
             for (SampleInfo barcode : lane.getSamples()) {
@@ -181,10 +205,17 @@ public class BatchMetadataInjection extends Metadata {
         int librarySampleNameAcc = createSample(sample.getName(), sample.getSampleDescription(),
                 0, tissueTypeSampleAcc, sample.getOrganismId(), true);
 
+        List<Sample> children = metadata.getChildSamplesFrom(tissueTypeSampleAcc);
+        for (Sample s : children) {
+            Log.debug("Created and" + s.toString());
+        }
         if (!sample.getSampleAttributes().isEmpty()) {
             metadata.annotateSample(librarySampleNameAcc, sample.getSampleAttributes());
         }
-
+        children = metadata.getChildSamplesFrom(tissueTypeSampleAcc);
+        for (Sample s : children) {
+            Log.debug("annotated and" + s.toString());
+        }
         names.put(librarySampleNameAcc, sample.getName());
         recordEdge("Sample", tissueTypeSampleAcc, "Sample", librarySampleNameAcc);
 
@@ -213,27 +244,28 @@ public class BatchMetadataInjection extends Metadata {
         return tissueTypeSampleAcc;
     }
 
-    private Integer retrieveParentSampleAccession(List<Sample> parentSamples, SampleInfo barcode, int experimentAccession) throws Exception {
+    private Integer retrieveParentSampleAccession(List<Sample> parentSamples, SampleInfo sample, int experimentAccession) throws Exception {
         //get the parent sample if it exists, otherwise create it
         Integer parentSampleAcc = null;
         if (parentSamples != null && !parentSamples.isEmpty()) {
             for (Sample pSample : parentSamples) {
-                if (pSample.getName().equals(barcode.getParentSample())) {
+                if (pSample.getName().equals(sample.getParentSample())) {
                     parentSampleAcc = pSample.getSwAccession();
                 }
             }
         }
         if (parentSampleAcc == null) {
-            parentSampleAcc = createSample(barcode.getParentSample(), "",
-                    experimentAccession, 0, barcode.getOrganismId(), false);
+            parentSampleAcc = createSample(sample.getParentSample(), sample.getSampleDescription(),
+                    experimentAccession, 0, sample.getOrganismId(), false);
         }
-        names.put(parentSampleAcc, barcode.getParentSample());
+        names.put(parentSampleAcc, sample.getParentSample());
         recordEdge("Experiment", experimentAccession, "Sample", parentSampleAcc);
 
         return parentSampleAcc;
     }
 
     private int createIUS(SampleInfo barcode, int laneAccession, int sampleAccession) throws Exception {
+        Log.stdout("\nCreating barcode "+barcode.getBarcode());
         fields.clear();
         fields.put("lane_accession", String.valueOf(laneAccession));
         fields.put("sample_accession", String.valueOf(sampleAccession));
@@ -261,7 +293,7 @@ public class BatchMetadataInjection extends Metadata {
     }
 
     private int createSample(String name, String description, int experimentAccession, int parentSampleAccession, String organismId, boolean interactive) throws Exception {
-
+        Log.stdout("\nCreating sample "+name);
         fields.clear();
         fields.put("experiment_accession", String.valueOf(experimentAccession));
         fields.put("parent_sample_accession", String.valueOf(parentSampleAccession));
@@ -312,7 +344,7 @@ public class BatchMetadataInjection extends Metadata {
 
     private int createRun(RunInfo run) throws Exception {
         Integer swAccession = null;
-        Log.stdout("\n-------------Retrieving sequencer run-----------");
+        Log.stdout("\nRetrieving sequencer run "+run.getRunName());
         List<SequencerRun> runs = metadata.getAllSequencerRuns();
         if (runs != null) {
             for (SequencerRun sr : runs) {
@@ -346,7 +378,7 @@ public class BatchMetadataInjection extends Metadata {
     }
 
     private int retrieveExperiment(RunInfo run, int studyAccession) throws Exception {
-        Log.stdout("\n--------Retrieving experiments---------");
+        Log.stdout("\nRetrieving experiments for "+run.getStudyTitle());
         List<Experiment> experiments = metadata.getExperimentsFrom(studyAccession);
         Integer experimentAccession = null;
         if (experiments != null && !experiments.isEmpty()) {
@@ -365,7 +397,7 @@ public class BatchMetadataInjection extends Metadata {
         }
         if (experimentAccession == null) {
             if (experiments == null || experiments.isEmpty()) {
-                Log.stdout("\n--------Adding an experiment---------");
+                Log.stdout("\nAdding experiment "+run.getExperimentName());
 
                 fields.clear();
                 fields.put("study_accession", String.valueOf(studyAccession));
@@ -396,7 +428,7 @@ public class BatchMetadataInjection extends Metadata {
     }
 
     private int retrieveStudy(RunInfo run) throws Exception {
-        Log.stdout("\n--------Retrieving studies---------");
+        Log.stdout("\nRetrieving study "+run.getStudyTitle());
         List<Study> studies = metadata.getAllStudies();
         Integer studyAccession = null;
         for (Study st : studies) {
