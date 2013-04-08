@@ -48,6 +48,11 @@ nanoc view
 Dynamically compile and view the site at localhost:3000:
 nanoc autocompile
 
+To run checks for broken links:
+nanoc check external_links
+nanoc check ilinks (check internal links)
+nanoc check --deploy (all checks)
+
 Get the website pages:
 git clone git@github.com:SeqWare/seqware.github.com.git
 
