@@ -56,7 +56,7 @@ public class SymLinkFileReporter extends Plugin {
         parser.acceptsAll(Arrays.asList("sample"), "Make symlinks for a sample").withRequiredArg();
         //FIXME: SymLinking using SequencerRuns is not working properly yet, so it is disabled for now.
         parser.acceptsAll(Arrays.asList("sequencer-run"), "Make symlinks for a sequencerRun").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("file-type", "f"), "Optional: The file type to filter on. Only this type will be linked. Default is all files. Permissible file metatypes can found on the SeqWare Sourceforce Wiki under 'Module Conventions'").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("file-type", "f"), "Optional: The file type to filter on. Only this type will be linked. Default is all files. Permissible file metatypes can found on our website under 'Module Conventions'").withRequiredArg();
         parser.acceptsAll(Arrays.asList("workflow-accession", "w"), "Optional: List all workflow runs with this workflow accession").withRequiredArg();
         parser.acceptsAll(Arrays.asList("link", "l"), "Optional: make hard links (P) or symlinks (s). Default is symlinks.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("prod-format"), "Optional: print the directories in prod format");
