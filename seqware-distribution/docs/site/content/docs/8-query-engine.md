@@ -64,7 +64,7 @@ TagSetID	42860461-0620-4990-bf15-32e6d34701b3
 namespace	BATMAN	
 </pre>
 
-The previous steps should only really need to be done once when first setting up a namespace. Afterwards, the VCF file importer can be called repeatedly for each of your datasets. Note that you will need to substitue the TagSetID from the previous step into the next step.
+The previous steps should only really need to be done once when first setting up a namespace. Afterwards, the VCF file importer can be called repeatedly for each of your datasets. Note that you will need to substitute the TagSetID from the previous step into the next step.
 
 <pre title="Title of the snippet">
 <span class="prompt">~/seqware_github/seqware-distribution/target$</span> <kbd>java -classpath seqware-distribution-<%= seqware_release_version %>-qe-full.jar com.github.seqware.queryengine.system.importers.SOFeatureImporter</kbd>

@@ -78,7 +78,7 @@ The jobs need to have distinct IDs and you can generate these using a for loop i
 
 ### Dependencies
 
-The dependencies section links together all the individual jobs in the correct order so they can be executed successfully. Parent/child relationships are used to specify job pre-requisite.
+The dependencies section links together all the individual jobs in the correct order so they can be executed successfully. Parent/child relationships are used to specify job pre-requisites.
 
 <%= render '/includes/ftl_workflows/ftl_workflow_deps/' %>
 
