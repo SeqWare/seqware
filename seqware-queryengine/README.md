@@ -61,7 +61,7 @@ For our tutorial, use the following values in your ~/.seqware/settings
 	/etc/init.d/zookeeper-server start
 	jps	
 	</pre>
-3. 	When setup of Hadoop and HBase is complete, you can go into the query-engine directory, compile it, and run the tests. Note that theintegration tests will spin-up a mini-HBase cluster and perform MapReduce tasks (~10 minutes for integration tests). Please note that the web-service and legacy directories in the root have additional dependencies and may not necessarily compile following only these instructions.
+3. 	When setup of Hadoop and HBase is complete, you can go into the query-engine directory, compile it, and run the tests. Note that the integration tests will spin-up a mini-HBase cluster and perform MapReduce tasks (~10 minutes for integration tests). Please note that the web-service and legacy directories in the root have additional dependencies and may not necessarily compile following only these instructions.
 	<pre title="Title of the snippet">
 	mvn clean install -DskipITs=false
 	mvn javadoc:javadoc
