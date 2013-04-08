@@ -63,14 +63,14 @@ See [About](/about/) for more information.
 ## Workflows
 
 Workflows define a series of steps and how they relate to each other.
-Typcially, these encode a series of calls to command line tools that operate on
-files read from and written to a shared filesystem. Individual steps ususally
+Typically, these encode a series of calls to command line tools that operate on
+files read from and written to a shared filesystem. Individual steps usually
 run on a randomly chosen cluster node.
 
 * [Legacy FTL Workflows](/docs/6-pipeline/legacy-ftl-workflows/)
-: This is our older, more verbose workflow language based on FreeMarker. This provides information on the structure of a typical workflow descripter written in this language. FTL is semi-deprecated, do not use it for new workflows.
+: This is our older, more verbose workflow language based on FreeMarker. This provides information on the structure of a typical workflow descriptor written in this language. FTL is semi-deprecated, do not use it for new workflows.
 * [Java Workflows](/docs/6-pipeline/java-workflows/)
-: This is our newer workflow language that is much simplier than the FTL and more expressive. We recommend this for all new workflow development.
+: This is our newer workflow language that is much simpler than the FTL and more expressive. We recommend this for all new workflow development.
 * [Workflow Bundle Conventions](/docs/6-pipeline/workflow_bundles/)
 : We rely on a bundle format for packaging up and exchanging workflows. This document describes the format and directory structure.
 * [Workflow Config Files](/docs/6-pipeline/config_files/)

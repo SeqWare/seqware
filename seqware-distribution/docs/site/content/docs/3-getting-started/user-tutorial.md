@@ -262,7 +262,7 @@ The fourth column includes the SWID for this workflow that you will use in the n
 
 	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession 7 > workflow.ini
 
-In this example the workflow “HelloWorldWorkflow” version 1.0 (SWID 7) parameters are listed.  The output conforms to the input you can use to parametrize and launch workflows.  For example:
+In this example the workflow “HelloWorldWorkflow” version 1.0 (SWID 7) parameters are listed.  The output conforms to the input you can use to parameterize and launch workflows.  For example:
 
 <pre>
 #key=input_file:type=file:display=F:display_name=input_file:file_meta_type=text/plain
@@ -292,7 +292,7 @@ At this point you know what workflow you are going to run and you have a customi
 <p class="warning"><strong>Tip:</strong> the parent-accessions is the SWID of
 the ProvisionFiles element that was added under the sample when use used this
 tool to upload the text files in the example above.  You MUST specify this
-otherwise the workflow’s results will not be linked to anything (they will be
+otherwise the workflow��s results will not be linked to anything (they will be
 orphaned and will not be visible in the Portal or present in the reports
 below). Conveniently the ProvisionFiles tool will write these accessions to a
 file and the portal displays these values.</p>
