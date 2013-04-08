@@ -24,7 +24,7 @@ If you encounter bugs or want to make a feature request please email the develop
 Wiki
 ----
 
-When the transition to GitHub is complete this site will contain all the documentation and we will no longer have a wiki (at least that is the plan).  In the mean time you can still use the [public wiki](http://seqware.sf.net/) on SourceForge which is tailored to developers and is not particularly friendly to new users.  This site should be a much better introduction to our project but we are still adding content.
+When the transition to GitHub is complete this site will contain all the documentation and we will no longer have a wiki (at least that is the plan).  In the mean time you can still use the [public wiki](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Main_Page) on SourceForge which is tailored to developers and is not particularly friendly to new users.  This site should be a much better introduction to our project but we are still adding content.
 
 Jenkins and Artifactory
 -----------------------
