@@ -246,7 +246,7 @@ Follow the instructions [for Oozie](https://ccp.cloudera.com/display/CDH4DOC/Ooz
          oozie                              noarch                              0.9.2+26-1.cdh4.0.1.p0.1.el6                               cloudera-cdh4                               55 M
          oozie-client                              noarch                              0.9.2+26-1.cdh4.0.1.p0.1.el6                               cloudera-cdh4                               55 M
 
-Oozie is the an alternative to the Pegasus/Condor/Globus/SGE software stack and provides a way to run SeqWare Workflows on a Hadoop cluster. We are really excited about this workflow engine and thing it may be the default backend recommended for SeqWare workflows on our VM and Amazon's cloud given it's really fast scheduling performance and ease of integration with Hadoop (so you can mix traditional Bash jobs with MapReduce, Pig, Hive, etc jobs).
+Oozie is the an alternative to the Pegasus/Condor/Globus/SGE software stack and provides a way to run SeqWare Workflows on a Hadoop cluster. We are really excited about this workflow engine and thing it may be the default back-end recommended for SeqWare workflows on our VM and Amazon's cloud given it's really fast scheduling performance and ease of integration with Hadoop (so you can mix traditional Bash jobs with MapReduce, Pig, Hive, etc jobs).
 
 Please follow the directions on Cloudera carefully, you need to make sure you initialize the Oozie database properly. By default we use the built in Derby database but you may want to setup another daemon like PostgreSQL.
 
@@ -686,7 +686,7 @@ The following is all done as user seqware.
 
 	WORKFLOW STATUS : COMPLETED | 14/14 ( 100% ) | (all jobs finished successfully)
 
-	# watch the cluster jobs in a seperate terminal
+	# watch the cluster jobs in a separate terminal
 	watch qstat -f
 
 It should say COMPLETED after a few minutes if everything works OK.
@@ -743,7 +743,7 @@ The most interesting property here is the dagman.retry=1.  In this case jobs wil
 	# PEGASUS USER PROPERTIES
 	##########################
 
-	## SELECT THE REPLICAT CATALOG MODE AND URL
+	## SELECT THE REPLICA CATALOG MODE AND URL
 	pegasus.catalog.replica = SimpleFile
 	pegasus.catalog.replica.file = /home/seqware/.seqware/pegasus/rc.data
 
@@ -765,7 +765,7 @@ The most interesting property here is the dagman.retry=1.  In this case jobs wil
 	## CHECK JOB EXIT CODES FOR FAILURE
 	pegasus.exitcode.scope=all
 
-	## OPTIMZE DATA & EXECUTABLE TRANSFERS
+	## OPTIMIZE DATA & EXECUTABLE TRANSFERS
 	pegasus.transfer.refiner=Bundle
 	pegasus.transfer.links = true
 

@@ -28,7 +28,7 @@ for the creation and testing of new workflows.  Finally, the Admin installs
 workflows, automates the launching of workflows, and identifies failed
 workflows.  This user is responsible for the components that allow the User and
 Developer to do their work and, consequently, this role is responsible for
-setting up and maintaining the various SeqWare componenents.
+setting up and maintaining the various SeqWare components.
 
 ## SeqWare Overview
 
@@ -48,7 +48,7 @@ There are three major roles that SeqWare users can be classified into.
 
 * **User**: a user of workflows, the user injects data into the system, triggers workflows, and gets the results back once finished
 * **Developer**: a developer of workflows, the developer makes new workflows and are typically Bioinformaticians and experts in NGS analysis techniques and tools
-* **Admin**: an admin of the system, this is typically both a sys admin that installs and configures SeqWare componenents and is also responsible for installing new workflows and setting their default configurations
+* **Admin**: an admin of the system, this is typically both a sys admin that installs and configures SeqWare components and is also responsible for installing new workflows and setting their default configurations
 
 Depending on the size of the group these roles may be the same person, distinct people, or even distinct groups within a larger organization.
 

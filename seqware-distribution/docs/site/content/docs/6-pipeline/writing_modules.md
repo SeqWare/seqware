@@ -9,7 +9,7 @@ is_dynamic:             false
 
 <!--
 TODO
-* this really needs to be cleaned up and checked. THere are probably a lot of errors in this doc
+* this really needs to be cleaned up and checked. There are probably a lot of errors in this doc
 -->
 
 
@@ -18,7 +18,7 @@ TODO
 <p class="warning"><strong>Tip:</strong> 
 Modules are really not needed by workflow developers since most will simply want to run a Bash command
 as a step rather than writing a custom Java program as a Module for a given step. These directions are
-intended primarly for core SeqWare developers that wish to extend core SeqWare.
+intended primarily for core SeqWare developers that wish to extend core SeqWare.
 </p>
 
 Modules are small Java objects that wrap one or more tools, typically command
@@ -201,7 +201,7 @@ Repeat steps 2-6 (although you can skip step 4 on subsequent cycles) until your 
 
 7. Now you are ready to check in your code, but it is very important be to absolutely sure that it compiles. If you're not certain, repeat step 5 to be sure that it reports "BUILD SUCCESSFUL".<br>
 8. Go to ~/svnroot/seqware-complete/trunk/seqware-pipeline. Type 'svn ci -m "text here"'.  (Obviously, the 'text here' should be replaced by a brief description of changes or updates you are making).<br>
-9. Details of available module help are documented on SorceForge wiki [[SeqWare modules help overview]]<br>
+9. Details of available module help are documented on SourceForge wiki [[SeqWare modules help overview]]<br>
 
 ## Standards Documentation
 
