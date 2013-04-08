@@ -81,7 +81,7 @@ This directory name describes the complete sample hierarchy in the filename, sta
 The samples in this folder would be the leaf the hierarchy going from PCSI_0006 to PCSI_0006_Pa_X_PE_234_EX.
 
 ### 2. Production format
-The production format mimicks the data structure used by the production team that is expected by some of their tools. It can be toggled on using the --prod-format tag.
+The production format mimics the data structure used by the production team that is expected by some of their tools. It can be toggled on using the --prod-format tag.
 
 
 ## Excel CSV File

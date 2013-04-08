@@ -57,4 +57,4 @@ If you just want to get a copy installed without compiling, perform the followin
 
 * There is a default admin user setup in the seqware_meta_db. The username is
   'admin@admin.com' and the password is 'admin'. Make sure you update this account in
-  the seqware_meta_db before making your SeqWare Portal publically available.
+  the seqware_meta_db before making your SeqWare Portal publicly available.

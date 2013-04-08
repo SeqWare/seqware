@@ -2,25 +2,28 @@
 
 The SeqWare MetaDB is built and unit tested as with any other SeqWare component, using:
 
-	mvn clean install (builds and runs unit tests)
+	mvn clean install
 
 ## Installation
 
 ### Version
 
-These directions have been validated on the SeqWare VM for 0.12.5.1 (see [Installation](/docs/2-installation) and the [developer guide](/docs/3-getting-started/developer-tutorial/) for more information). Portions of this tutorial have been validated on a pre-production VM for the 0.13.x series. Note that the VM is already setup with SeqWare MetaDB, so these instructions should only be of use if you intend on installing SeqWare yourself or if you require the upgrading instructions to upgrade an existing installation of SeqWare.
+Note that the VM, [Installation](/docs/2-installation), is already setup with
+SeqWare MetaDB, so these instructions should only be of use if you intend on
+installing SeqWare yourself or if you require the upgrading instructions to
+upgrade an existing installation of SeqWare.
 
 ### Requirements
 
-You will need PostgreSQL (version >= 8.4.5) to use this database.  Version 8.4.x can be installed following directions from http://openscg.org or http://fedoraproject.org/wiki/EPEL.   A version for MySQL or Oracle is not available but if anyone wants to submit that we would happily add it to the repository.
+You will need PostgreSQL (version >= 8.4.5) to use this database.  Version
+8.4.x can be installed following directions from http://openscg.org or
+http://fedoraproject.org/wiki/EPEL.   A version for MySQL or Oracle is not
+available but if anyone wants to submit that we would happily add it to the
+repository.
 
 For example, on a recent Debian-based system you would do:
 
     sudo apt-get install postgresql-8.4
-
-We are currently investigating issues with postgres version 9.1.
-
-These directions assume you can "sudo" as your user on the Linux computer you are installing the SeqWare MetaDB on. Talk to your admin if you cannot.
 
 ### Deployment
 

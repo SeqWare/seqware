@@ -1,4 +1,4 @@
-<p class="warning"><strong>Note:</strong> This guide is useful if you want to install SeqWare from scratch on your local infrastructure. Be warned, there are rather vague sections and this guide was really written as notes for setting up our VMs. It is geared towards experienced Linux sysadmins and we cannot guarentee this guide is always up to date. </p>
+<p class="warning"><strong>Note:</strong> This guide is useful if you want to install SeqWare from scratch on your local infrastructure. Be warned, there are rather vague sections and this guide was really written as notes for setting up our VMs. It is geared towards experienced Linux sysadmins and we cannot guarantee this guide is always up to date. </p>
 
 If you just want to get started with SeqWare quickly please see [Installing the SeqWare VM](/docs/2-installation/#installing-with-a-local-vm) for instructions on downloading a VM that is ready for workflow development and testing. We also recommend this approach for production installs because you can connect easily these VMs to a real cluster.
 
@@ -6,7 +6,7 @@ If you just want to get started with SeqWare quickly please see [Installing the 
 
 ## Introduction
 
-The directions below are focused on creating a virtual machine using VirtualBox that uses the latest version of the various SeqWare subprojects and dependencies including Pegasus 3.0. The major goal here is to make sure I have very clear directions on how to:
+The directions below are focused on creating a virtual machine using VirtualBox that uses the latest version of the various SeqWare sub-projects and dependencies including Pegasus 3.0. The major goal here is to make sure I have very clear directions on how to:
 
 * setup a VM using VirtualBox with Pegasus 3.0, Condor 7.6.x, and Globus 5.2.x
 * take that setup and configure it to either
@@ -18,13 +18,13 @@ The installation and configuration of this software is a fairly complex process.
 The VM currently has the following SeqWare dependencies installed (from lowest to highest-level):
 
 * [SGE](http://www.oracle.com/us/products/tools/oracle-grid-engine-075549.html Sun Grid Engine) version 6.2.x (note, this is now Oracle Grid Engine but we'll use the existing gridengine RPM packages): this is the cluster scheduler that actually schedules jobs out to real nodes, managing memory and CPUs available. The VM has only one "slot" available.
-* [The Globus Toolkit](http://www.globus.org/toolkit/) version 5.2.x: provides user authentication, transport protocol for sending jobs to a cluster in a scehduler (GRAM5), and a transfer protocol for sending data around (GridFTP)
+* [The Globus Toolkit](http://www.globus.org/toolkit/) version 5.2.x: provides user authentication, transport protocol for sending jobs to a cluster in a scheduler (GRAM5), and a transfer protocol for sending data around (GridFTP)
 ** GRAM5
 ** GridFTP
 * [Condor](http://www.cs.wisc.edu/condor/) version 7.6.x: this provides a virtual cluster that jobs can be submitted to and parsed out to one or more real clusters. It is the component that interprets the job dependencies and submits jobs in the correct order to the real cluster.
 * [Pegasus WMS](http://pegasus.isi.edu/wms/) version 3.0.x: this project provides a workflow language and various convenience configuration files that simplifies the use of the other tools in the stack. It is the only software project in the stack that SeqWare is "aware" of and directly depends on.
 
-The VM currently has the following SeqWare subprojects installed:
+The VM currently has the following SeqWare sub-projects installed:
 
 * [SeqWare Portal](/docs/5-portal/)
 * [SeqWare Pipeline](/docs/6-pipeline/)

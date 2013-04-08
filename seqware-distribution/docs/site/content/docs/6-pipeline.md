@@ -42,12 +42,14 @@ SeqWare Pipeline has several key features that distinguish it from other open so
 
 See [About](/about/) for more information.
 
-## Installation
+## Building and Installing
 
 * [Installation](/docs/2-installation/)
 : This is our installation guide based on VMs that we recommend for most users. You will be left with a functioning SeqWare install including SeqWare Pipeline.
 * [Installation From Scratch](/docs/2a-installation-from-scratch/)
 : This guide walks you through how we built the VMs and will be of interest to anyone that needs to see the details of SeqWare setup starting with an empty Linux server. It is complicated so we highly recommend using a VM (which can be connected to a real cluster).
+* [Building from Source](/docs/13-code/)
+: These directions show you how to build the whole project, including SeqWare Pipeline, using Maven.
 
 ## Setup 
 
