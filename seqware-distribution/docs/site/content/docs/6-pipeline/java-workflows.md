@@ -16,7 +16,7 @@ toc_includes_sections: true
 <p class="warning"><strong>Tip:</strong> The Java workflow language is 
 our recommended workflow language for new development.</p>
 
-This document really focuses on the format of the Java workflow langauge. For
+This document really focuses on the format of the Java workflow language. For
 more information about the entire workflow bundle please see the [Developer
 Tutorial](/docs/3-getting-started/developer-tutorial/).  You should read this
 guide before this page.
@@ -90,12 +90,12 @@ job thread and memory count.
 <%= render '/includes/java_workflows/java_workflow_jobs/' %>
 
 Currently only the job supported is using the <tt>createBashJob()</tt> method. In the
-future we will provide and expanded list of convience job types for example
+future we will provide and expanded list of convenience job types for example
 MapReduce, Pig, Java jar, etc.
 
 The dependencies section links together all the individual jobs in the correct
 order so they can be executed successfully. Parent/child relationships are used
-to specify job pre-requisits.
+to specify job pre-requisites.
 
 TODO: discuss the JobTypes, namely Bash
 

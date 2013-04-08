@@ -16,7 +16,7 @@ You can automatically generate a decoder via our maven archetype.
 
 	mvn archetype:generate (select SeqWare Java Decider archetype)
 
-There a number of methods that can be overriden in order to customize the behaviour of your decider.
+There a number of methods that can be overridden in order to customize the behavior of your decider.
 
 <!-- the following content is modified from from https://wiki.oicr.on.ca/display/PIPEDEVAL/Decider+Tutorial -->
 
@@ -88,7 +88,7 @@ The init method sets up any variables needed for the rest of the setup, includin
 
 ### checkFileDetails method
 
-Performs any additional checks on the file before adding it to the list of files to incorporate. This method should be extended for future deciders for custom behaviour. You can also pull any details out of the file metadata here. The boolean specifies whether or not the file is added to the list.
+Performs any additional checks on the file before adding it to the list of files to incorporate. This method should be extended for future deciders for custom behavior. You can also pull any details out of the file metadata here. The boolean specifies whether or not the file is added to the list.
 
 	protected boolean checkFileDetails(ReturnValue returnValue, FileMetadata fm) {
 	return super.checkFileDetails(returnValue, fm);

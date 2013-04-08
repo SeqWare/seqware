@@ -14,14 +14,14 @@ toc_includes_sections: true
 
 <p class="warning"><strong>Tip:</strong> The Legacy FTL Workflow format is our
 older, more verbose workflow language based on the DAX format from the Pegasus
-project with embeded FreeMarker template code (for loops, if statements, etc).
+project with embedded FreeMarker template code (for loops, if statements, etc).
 Just to be completely clear, we highly recommend new workflow development use
 the Java Workflow syntax instead. It is far more succinct and powerful. The
-only disadvantage of the Java workflow langauge is the fact that it must be
+only disadvantage of the Java workflow language is the fact that it must be
 compiled after editing. The FTL workflow language is interpreted at runtime so
 no compilation is needed.</p>
 
-This document really focuses on the format of the FLT workflow langauge. For
+This document really focuses on the format of the FLT workflow language. For
 more information about the entire workflow bundle please see the [Developer
 Tutorial](/docs/3-getting-started/developer-tutorial/).  You should read this
 guide before this page.
@@ -78,7 +78,7 @@ The jobs need to have distinct IDs and you can generate these using a for loop i
 
 ### Dependencies
 
-The dependencies section links together all the individual jobs in the correct order so they can be executed successfully. Parent/child relationships are used to specify job pre-requisits.
+The dependencies section links together all the individual jobs in the correct order so they can be executed successfully. Parent/child relationships are used to specify job pre-requisite.
 
 <%= render '/includes/ftl_workflows/ftl_workflow_deps/' %>
 
