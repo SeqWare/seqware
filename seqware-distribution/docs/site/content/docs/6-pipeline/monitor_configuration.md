@@ -21,8 +21,8 @@ a web service. Another process can monitor the web service and launch the
 workflows that have been scheduled.  On the SeqWare VM/AMI this all happens on
 the same box.  But it is possible to have the user scheduling a workflow, the
 SeqWare Web Service, and the workflow launcher for SeqWare Pipeline all can
-(and likely should) be on seperate servers. This latter method for launching
-workflows is the preferred mechansim, especially in a production environment,
+(and likely should) be on separate servers. This latter method for launching
+workflows is the preferred mechanism, especially in a production environment,
 since it allows the scheduling of workflows and the running to be decoupled
 (different machines, different users, different user roles, etc).
 
@@ -36,7 +36,7 @@ monitor their progress.
 ## Limitations
 
 One core limitation of SeqWare Pipeline is the lack of a single daemon for
-controlling workflow launching and monitoring.  Instead the cooridination of
+controlling workflow launching and monitoring.  Instead the coordination of
 workflows happens via the SeqWare Web Service.  Each workflow that gets
 scheduled by a user is associated with that users Web Service credentials. In
 order to launch that scheduled workflow the WorkflowLauncher needs to connect

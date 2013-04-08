@@ -18,7 +18,7 @@ through the SeqWare-supplied pipeline, alignment to a reference genome, and
 report generation.
 
 It is part of the larger SeqWare project that looks to streamline the
-manupulation of sequence data produced by next gen sequencers.  The SeqWare
+manipulation of sequence data produced by next gen sequencers.  The SeqWare
 LIMS system is closely tied with the SeqWare Pipeline software that controls
 the actual processing, alignment, and annotation of sequence data.  SeqWare
 LIMS collects various bits of metadata related to each flowcell and lane used

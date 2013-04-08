@@ -67,7 +67,7 @@ to the cluster being connected to.
 
 On the VM, this Perl module lives in: <tt>/usr/share/perl5/vendor_perl/Globus/GRAM/JobManager/sge.pm</tt>. 
 
-You may have seen this document mentioned in the [Install from Scratch](/docs/2a-installation-from-scratch/) guide where we patched it.  Now, you need to ensure you setup the parallel evironment (<tt>-pe</tt>) and max memory (<tt>-l vf=</tt>) correctly for your new cluster.  Annoyingly, the parameters used for this are actually configurable in SGE so you will need to discuss with your cluster Sys Admin to see what is right for your environment.  See the code snippet patches below.
+You may have seen this document mentioned in the [Install from Scratch](/docs/2a-installation-from-scratch/) guide where we patched it.  Now, you need to ensure you setup the parallel environment (<tt>-pe</tt>) and max memory (<tt>-l vf=</tt>) correctly for your new cluster.  Annoyingly, the parameters used for this are actually configurable in SGE so you will need to discuss with your cluster Sys Admin to see what is right for your environment.  See the code snippet patches below.
 
 <%= render '/includes/setup_gram_1/' %>
 
@@ -99,7 +99,7 @@ Website](http://www.cloudera.com/) that will walk you through the process of
 building a Hadoop cluster. You will want to match the Cloudera version on the
 SeqWare VM with that of your Hadoop cluster and you may want to turn off the
 namenode, datanode, tasktracker, jobtracker, etc on the SeqWare VM since these
-functions will use your real Hadoop clsuter. Essentially you will just use the
+functions will use your real Hadoop cluster. Essentially you will just use the
 SeqWare VM as the Oozie host (so you will want to leave that installed on the
 VM).  See the Cloudera documentation for information on configuring Oozie on
 the VM to talk to your Hadoop cluster.

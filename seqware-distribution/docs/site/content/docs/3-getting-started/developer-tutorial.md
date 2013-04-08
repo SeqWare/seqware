@@ -94,7 +94,7 @@ a data file in the workflow INI config file as
 <tt>${workflow_bundle_dir}/data/data_file.txt</tt>.
 
 The second directory is the current working directory. Every time a workflow is
-launched, a temporary working directory is created for just that paritcular run
+launched, a temporary working directory is created for just that particular run
 of the workflow.  Regardless of the workflow engine (Pegasus or Oozie) a shared
 filesystem (NFS, gluster, etc) is required to ensure each job in a workflow is
 able to access this shared workflow working location regardless of what cluster
@@ -351,7 +351,7 @@ SeqWare bundles have a test command built into their metadata.xml. In order to t
 	...
 
 <p class="warning"><strong>Tip:</strong> 
-Note in the testing command above it prints out the underlying command it calls using the <tt>WorkflowLauncher</tt> plugin. If all you want to do is to run a workflow with some settings without metadata writeback you could directly just call WorkflowLauncher as above. This bipasses the whole workflow scheduling and asyncrousnous launching process that you saw in the [User Tutorial](/docs/3-getting-started/user-tutorial/). What you loose is the metadata tracking functionality. The command runs the workflow which produces file outputs but that is all, no record of the run will be recorded in the MetaDB.
+Note in the testing command above it prints out the underlying command it calls using the <tt>WorkflowLauncher</tt> plugin. If all you want to do is to run a workflow with some settings without metadata writeback you could directly just call WorkflowLauncher as above. This bypasses the whole workflow scheduling and asynchronous launching process that you saw in the [User Tutorial](/docs/3-getting-started/user-tutorial/). What you loose is the metadata tracking functionality. The command runs the workflow which produces file outputs but that is all, no record of the run will be recorded in the MetaDB.
 </p>
 
 ## Packaging the Workflow into a Workflow Bundle

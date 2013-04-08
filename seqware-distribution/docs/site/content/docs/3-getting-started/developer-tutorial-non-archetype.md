@@ -6,7 +6,7 @@ toc_includes_sections: true
 
 ---
 
-This guide picks up where the [User Tutorial](/docs/3-getting-started/user-tutorial/) left off. In that previous guide we showed you how to start up your local VM, create studies, experiments, and samples, associate an input file with a sample, and then launch a workflow to process that file.  This process is the same generic process we use at OICR to analyze samples from fastq to, eventually, annotated variants.  In this production system the workflows are fairly complex (they include branching and looping) and we string multiple worklfows together (output of one as input for the next) using <kbd>deciders</kbd>.
+This guide picks up where the [User Tutorial](/docs/3-getting-started/user-tutorial/) left off. In that previous guide we showed you how to start up your local VM, create studies, experiments, and samples, associate an input file with a sample, and then launch a workflow to process that file.  This process is the same generic process we use at OICR to analyze samples from fastq to, eventually, annotated variants.  In this production system the workflows are fairly complex (they include branching and looping) and we string multiple workflows together (output of one as input for the next) using <kbd>deciders</kbd>.
 
 The next step presented in this tutorial is to create a workflow of your own based on the HelloWorld that comes bundled with the VM.  In theory you could use either a local VM or an Amazon instance to follow the tutorial below but in our case we will base it on the local VM.
 
@@ -227,8 +227,8 @@ The contents should be:
 	input_file=${workflow_bundle_dir}/Workflow_Bundle_helloworld/1.0/data/input.txt
 	# this is just a comment, the output directory is a conventions and used in many workflows to specify a relative output path
 	output_dir=seqware-results
-	# the output_prefix is a convension and used to specify the root of the absolute output path or an S3 bucket name 
-	# you should pick a path that is available on all custer nodes and can be written by your user
+	# the output_prefix is a convention and used to specify the root of the absolute output path or an S3 bucket name 
+	# you should pick a path that is available on all cluster nodes and can be written by your user
 	# ends in a "/"
 	output_prefix=./provisioned/
 
