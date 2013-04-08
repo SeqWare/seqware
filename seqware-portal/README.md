@@ -8,7 +8,7 @@ The Portal is built and unit tested as with any other SeqWare component, using:
 
 ### Requirements
 
-These requirements are based on what I'm using for developement.  You may be able 
+These requirements are based on what I'm using for development.  You may be able 
 to use older/newer versions but they may or may not work.  You'll find many of the
 required jars in the lib directory in svn.
 
