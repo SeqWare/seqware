@@ -326,7 +326,7 @@ In the example below I just added an extra job that does a simple shell operatio
 ## Building the Workflow
 
 If you made changes to the workflow files now would be a good time to to use
-"mvn install" to refresh the workflow bundle in the target directory. For
+"mvn clean install" to refresh the workflow bundle in the target directory. For
 example:
 
 
@@ -338,17 +338,22 @@ The next step is to look at examples of workflows at [Workflow Examples](/docs/1
 
 SeqWare bundles have a test command built into their metadata.xml. In order to trigger this, run with the following command. Note that the workflow name and version need to match the name and version given when the workflow is listed above. 
 
-	java -jar ~/seqware-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b `pwd` -t --workflow simple-java-workflow --version 1.0
-
+	java -jar ~/seqware-distribution-0.13.6.5-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b `pwd` -t --workflow HelloWorld 1.0-SNAPSHOT
 	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
-	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@e80d1ff
+	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@2fb3f8f6
 	Testing Bundle
 	  Running Test Command:
-	java -jar /home/seqware/Temp/simple-java-workflow/target/Workflow_Bundle_simple-java-workflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/Workflow_Bundle_simple-java-workflow/1.0-SNAPSHOT/lib/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher --provisioned-bundle-dir /home/seqware/Temp/simple-java-workflow/target/Workflow_Bundle_simple-java-workflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %> --workflow simple-java-workflow --version 1.0 --ini-files /home/seqware/Temp/simple-java-workflow/target/Workflow_Bundle_simple-lSHOT_SeqWare_<%= seqware_release_version %>/Workflow_Bundle_simple-java-workflow/1.0-SNAPSHOT/config/workflow.ini
+	java -jar /home/seqware/provisioned-bundles/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-0.13.6.5-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --no-metadata --provisioned-bundle-dir /home/seqware/provisioned-bundles/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5 --workflow HelloWorld --version 1.0-SNAPSHOT --ini-files /home/seqware/provisioned-bundles/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/config/workflow.ini 
 	MONITORING PEGASUS STATUS:
-	RUNNING: step 1 of 5 (20%)
-	RUNNING: step 2 of 5 (40%)
-	...
+	RUNNING: step 1 of 8 (12%)
+	RUNNING: step 2 of 8 (25%)
+	RUNNING: step 3 of 8 (37%)
+	RUNNING: step 4 of 8 (50%)
+	RUNNING: step 5 of 8 (62%)
+	RUNNING: step 6 of 8 (75%)
+	RUNNING: step 7 of 8 (87%)
+	WORKFLOW COMPLETED SUCCESSFULLY!
+	Bundle Passed Test!
 
 <p class="warning"><strong>Tip:</strong> 
 Note in the testing command above it prints out the underlying command it calls using the <tt>WorkflowLauncher</tt> plugin. If all you want to do is to run a workflow with some settings without metadata writeback you could directly just call WorkflowLauncher as above. This bypasses the whole workflow scheduling and asynchronous launching process that you saw in the [User Tutorial](/docs/3-getting-started/user-tutorial/). What you loose is the metadata tracking functionality. The command runs the workflow which produces file outputs but that is all, no record of the run will be recorded in the MetaDB.
@@ -358,17 +363,14 @@ Note in the testing command above it prints out the underlying command it calls 
 
 Assuming the workflow above worked fine the next step is to package it.
 
-	[seqware@seqwarevm Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>]$ mkdir packaged
-	[seqware@seqwarevm Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>]$  java -jar ~/Development/gitroot/seqware-github/seqware-distribution/target/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --b packaged -p `pwd`
+	[seqware@seqwarevm Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>]$ mkdir packaged
+	[seqware@seqwarevm Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>]$ java -jar seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --b packaged -p `pwd`
 	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
 	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@20b9b538
 	Packaging Bundle
-	Bundle: packaged path: /tmp/testing/SampleJavaWorkflow/target/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>
+	Bundle: packaged path: /tmp/testing/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>
 	Bundle Has Been Packaged to packaged!
 
-	cd target
-	mkdir output
-	java -jar ~/seqware-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b output -p Workflow_Bundle_helloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>
 
 What happens here is the <code>Workflow_Bundle_hello_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %></code> directory is zip'd up to your output directory and that can be provided to an admin for install.
 
