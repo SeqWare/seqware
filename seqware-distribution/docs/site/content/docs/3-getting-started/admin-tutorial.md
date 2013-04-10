@@ -52,25 +52,25 @@ See the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/) for
 how to make the zipped workflow bundle. After the zip bundle is created, the
 bundle can be provided to the admin for install as below.
 
-	java -jar ~/Development/gitroot/seqware-github/seqware-distribution/target/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --b packaged/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip -i
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --b packaged/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip -i
 	
 	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
 	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@29e97f9f
 	Installing Bundle
-	Bundle: packaged/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
-	Now packaging /tmp/testing/SampleJavaWorkflow/target/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/packaged/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip to a zip file and transferring to the directory: /home/seqware/SeqWare/released-bundles Please be aware, this process can take hours if the bundle is many GB in size.
-	  PROCESSING INPUT: /tmp/testing/SampleJavaWorkflow/target/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/packaged/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip OUTPUT: /home/seqware/SeqWare/released-bundles
+	Bundle: packaged/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
+	Now packaging /tmp/testing/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/packaged/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip to a zip file and transferring to the directory: /home/seqware/SeqWare/released-bundles Please be aware, this process can take hours if the bundle is many GB in size.
+	  PROCESSING INPUT: /tmp/testing/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/packaged/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip OUTPUT: /home/seqware/SeqWare/released-bundles
 	
 	Mar 28, 2013 10:43:03 AM org.restlet.ext.httpclient.HttpClientHelper start
 	INFO: Starting the Apache HTTP client
 	WORKFLOW_ACCESSION: 6804
-	Bundle Has Been Installed to the MetaDB and Provisioned to packaged/Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip!
+	Bundle Has Been Installed to the MetaDB and Provisioned to packaged/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip!
 	
-	[seqware@seqwarevm Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>]$ ls -alhtr ~/SeqWare/released-bundles/ | tail -n1
-	-rw-rw-r-- 1 seqware seqware 151M Mar 28 10:42 Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
+	[seqware@seqwarevm Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>]$ ls -alhtr ~/SeqWare/released-bundles/ | tail -n1
+	-rw-rw-r-- 1 seqware seqware 151M Mar 28 10:42 Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
 	
-	[seqware@seqwarevm Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>]$ ls -alhtr ~/SeqWare/provisioned-bundles/ | tail -n1
-	drwxrwxr-x  4 seqware seqware 4.0K Mar 28 10:42 Workflow_Bundle_SampleJavaWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>
+	[seqware@seqwarevm Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>]$ ls -alhtr ~/SeqWare/provisioned-bundles/ | tail -n1
+	drwxrwxr-x  4 seqware seqware 4.0K Mar 28 10:42 Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>
 
 
 What happens here is the <code>Workflow_Bundle_hello_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %></code> directory is zip'd up to your released-bundles directory and the metadata about the workflow is saved to the database.
