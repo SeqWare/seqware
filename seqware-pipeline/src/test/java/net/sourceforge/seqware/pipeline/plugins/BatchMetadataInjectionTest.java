@@ -18,6 +18,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import java.util.HashMap;
 import java.util.Set;
+import net.sourceforge.seqware.common.metadata.MetadataNoConnection;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.ParseMiseqFile;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.RunInfo;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.SampleInfo;
@@ -29,14 +30,14 @@ import org.junit.*;
  */
 public class BatchMetadataInjectionTest {
 
-    private static String MiseqPath = null;
+    private static String miseqPath = null;
 
     public BatchMetadataInjectionTest() {
     }
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        MiseqPath = BatchMetadataInjectionTest.class.getResource("SampleSheet.csv").getPath();
+        miseqPath = BatchMetadataInjectionTest.class.getResource("SampleSheet.csv").getPath();
     }
 
     @AfterClass
@@ -57,10 +58,19 @@ public class BatchMetadataInjectionTest {
     @Test
     public void testParseMiseqFile() throws Exception {
         System.out.println("parseMiseqFile");
-        ParseMiseqFile instance = new ParseMiseqFile(null, new HashMap<String, String>(), false);
-        RunInfo run = instance.parseMiseqFile(MiseqPath);
-        Assert.assertEquals("Incorrect Project Name", "Testdance_123to456", run.getStudyTitle());
-        Assert.assertEquals("Incorrect Experiment Name", "TDHS_123to456", run.getExperimentName());
+        HashMap<String,String> map =  new HashMap<String, String>();
+        map.put("study_type","4");
+        map.put("library_type","Type");
+        map.put("library_source_template_type", "LSTT");
+        map.put("targeted_resequencing", "TRS");
+        map.put("tissue_origin", "TO");
+        map.put("tissue_preparation", "TP");
+        map.put("library_size_code","12");
+        
+        ParseMiseqFile instance = new ParseMiseqFile(new MetadataNoConnection(),map, false);
+        RunInfo run = instance.parseMiseqFile(miseqPath);
+        Assert.assertEquals("Incorrect Project Name", "Testdance", run.getStudyTitle());
+        Assert.assertEquals("Incorrect Experiment Name", "TDHS", run.getExperimentName());
         Assert.assertEquals("Incorrect Workflow", "Resequencing", run.getWorkflowType());
         Assert.assertEquals("Incorrect Assay", "TruSeq DNA/RNA", run.getAssayType());
         

@@ -170,6 +170,15 @@ public abstract class BatchMetadataParser {
         if (experimentDescription == null) {
             runInfo.setExperimentDescription(runInfo.getExperimentName());
         }
+        
+        if (workflowType!=null) {
+            runInfo.setWorkflowType(workflowType);
+        }
+        
+        if (assayType!=null) {
+            runInfo.setAssayType(assayType);
+        }
+        
 
         return runInfo;
     }
@@ -217,6 +226,8 @@ public abstract class BatchMetadataParser {
     }
 
     private KeyVal[] getKeyVals(List list) {
+        if (list==null || list.size()<=0)
+            return null;
         KeyVal[] libs = new KeyVal[list.size()];
         int i = 0;
         for (Object o : list) {
