@@ -90,7 +90,7 @@ Checks for cycles in the sample hierarchy and processing hierarchy of a particul
 ##  FileLinker
 net.sourceforge.seqware.pipeline.plugins.FileLinker
 
-Takes a list of files and enters them into the database, linking them with the appropriate IUSes and creating workflow runs for the 'FileImport' workflow. For more information, see https://sourceforge.net/apps/mediawiki/seqware/index.php?title=FileLinker
+Takes a list of files and enters them into the database, linking them with the appropriate IUSes and creating workflow runs for the 'FileImport' workflow. For more information, see http://seqware.github.com/docs/22-filelinker/
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -160,7 +160,7 @@ This plugin will take in a sw_accession of a processing, and translate the hiera
 ##  SequencerRunReporter
 net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter
 
-Prints a tab-delimited file describing the sequencer run, lane, sample, and algorithms run on every IUS in the database. For more information, see https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Sequencer_Run_Reporter
+Prints a tab-delimited file describing the sequencer run, lane, sample, and algorithms run on every IUS in the database. For more information, see see http://seqware.github.com/docs/20-sequencer-run-reporter/
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -169,13 +169,13 @@ Prints a tab-delimited file describing the sequencer run, lane, sample, and algo
 ##  SymLinkFileReporter
 net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter
 
-Create a nested tree structure of all of the output files from a particular sample, or all of the samples in a study by using the SymLinkFileReporter plugin. This plugin also creates a CSV file with all of the accompanying information for every file. For more information, see https://sourceforge.net/apps/mediawiki/seqware/index.php?title=SymLink_Reporter
+Create a nested tree structure of all of the output files from a particular sample, or all of the samples in a study by using the SymLinkFileReporter plugin. This plugin also creates a CSV file with all of the accompanying information for every file. For more information, see see http://seqware.github.com/docs/21-study-reporter/
 
 | Command-line option | Description |
 |--------------------|--------------|
 |--dump-all|Optional: Dumps all of the studies in the database to one file.|
 |--duplicates|Optional: Allow duplications at the file path level|
-|--f, --file-type|Optional: The file type to filter on. Only this type will be linked. Default is all files. Permissible file metatypes can found on the SeqWare SourceForge Wiki under 'Module Conventions'|
+|--f, --file-type|Optional: The file type to filter on. Only this type will be linked. Default is all files. Permissible file metatypes can found on our website under 'Module Conventions'|
 |--l, --link|Optional: make hard links (P) or symlinks (s). Default is symlinks.|
 |--no-links|Optional: Create only the CSV file, not the symlinked directories.|
 |--output-filename|Optional: Name of the output CSV file (without the extension)|
@@ -244,7 +244,7 @@ A plugin that lets you launch workflow bundles once you have installed them via 
 ##  WorkflowRunReporter
 net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter
 
-This plugin creates a tab-separated file that describes one or more workflow runs, including the identity, library samples and input and output files. For more information, see https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Workflow_Run_Reporter
+This plugin creates a tab-separated file that describes one or more workflow runs, including the identity, library samples and input and output files. For more information, see see http://seqware.github.com/docs/19-workflow-run-reporter/
 
 | Command-line option | Description |
 |--------------------|--------------|
