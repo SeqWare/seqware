@@ -80,6 +80,8 @@ When this is complete:
 In the last case, the extended integration tests profile is used to trigger integration tests that run our command line utilities. 
 In order to point your command-line tools at the web service brought up by the integration tests, you will need to modify your SeqWare ~/.seqware/settings to include:
 
+    SW_REST_URL=http://localhost:8889/seqware-webservice
+
 You can also build individual components such as the new query engine with: 
 
     cd seqware-queryengine
