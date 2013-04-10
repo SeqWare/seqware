@@ -93,7 +93,7 @@ public class ParseMiseqFile extends BatchMetadataParser {
             String librarySizeCode = null;
             String targetedResequencing = null;
             String tissuePreparation = null;
-            Integer organismId = findOrganismId(args[header.indexOf("GenomeFolder")].split("\\\\")[0].replace('_', ' '));
+            int organismId = 1;
             String barcode = args[header.indexOf("index")];
 
             if (sampleInfo[2].contains("BLD")) {
