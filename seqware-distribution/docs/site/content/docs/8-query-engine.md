@@ -3,6 +3,7 @@
 title:                 "SeqWare Query Engine"
 toc_includes_sections: true
 markdown:              basic 
+is_dynamic:		true
 
 ---
 

@@ -122,6 +122,11 @@ Changes to /etc/security/limits.conf
 	seqware soft nofile 32768
 	seqware hard nofile 32768
 
+Also for Hadoop setup later, we will need
+
+hdfs  -       nofile  32768
+hbase -       nofile  32768
+
 Services in /etc/services
 
 Make sure the following are defined in /etc/services: 
@@ -147,7 +152,7 @@ While we have a version of Java installed that satisfies [the requirements](http
 	export PATH=$JAVA_HOME/bin:$PATH
 to both their .bashrc files.
 
-We then add the "Red Hat/CentOS 6 (64-bit)" RPM and add the optional GPG key.
+We then add the "Red Hat/CentOS 6 (64-bit)" RPM and add the optional GPG key. (RedHat/CentOS/Oracle 5 for CentOS 5.5)
 
 For the record, pulling down hadoop-0.20-conf-pseudo grabs
 
@@ -162,6 +167,17 @@ For the record, pulling down hadoop-0.20-conf-pseudo grabs
 	 hadoop-hdfs-namenode                                   x86_64                      2.0.0+91-1.cdh4.0.1.p0.1.el6                         cloudera-cdh4                      4.8 k
 	 hadoop-hdfs-secondarynamenode                          x86_64                      2.0.0+91-1.cdh4.0.1.p0.1.el6                         cloudera-cdh4                      4.8 k
 	 zookeeper                                              noarch                      3.4.3+15-1.cdh4.0.1.p0.1.el6                         cloudera-cdh4                      3.6 M
+
+When configuring file paths we use in the hdfs-site.xml (for the Amazon ami):
+
+	  <property>
+	     <name>dfs.namenode.name.dir</name>
+	     <value>/mnt/xvdc1/nn,/mnt/xvdb1/nn</value>
+	  </property>
+	  <property>
+	     <name>dfs.datanode.data.dir</name>
+	     <value>/mnt/xvdc1/dn,/mnt/xvdb1/dn</value>
+	  </property>
 
 There are no changes until Step 4 where I think they forgot a step, so you need to run (while logged-in as hdfs)
 
