@@ -309,7 +309,8 @@ public class ProcessIDResource extends DatabaseIDResource {
                 }
 
 				if (p.getProcessingAttributes() !=null && !p.getProcessingAttributes().isEmpty()) {
-					processing.getProcessingAttributes().clear();
+//SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+//					processing.getProcessingAttributes().clear();
 					for(ProcessingAttribute pa: p.getProcessingAttributes()) {
 						pa.setProcessing(processing);
 						processing.getProcessingAttributes().add(pa);
