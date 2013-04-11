@@ -14,6 +14,8 @@ The SymLinker has several functions. First of all, it creates an ordered hierarc
 Secondly, the SymLinker produces a CSV file with the same data as in the directory structure, but in a more easily parseable format. This CSV file can be used for the same purposes as the directory structure since it contains similar information, but in a more human-readable way with column headers. The file also has more information about attributes applied to lanes and samples, the processing algorithm, and the date of processing.
 
 The SymLinker can be used in scripts or on its own. 
+
+<p class="warning"><strong>Note:</strong> The SymLinkFileReporter was originally intended to produce symbolic filesystem links for file paths in the MetaDB. This clearly will not work if your file paths in the MetaDB are actual URLs to HTTP or S3-based files. Over time the SymLinkFileReporter was expanded to include CSV summary reports, too, and this is useful regardless of the location of the output files.</p>
  
 ## Requirements
 In order to run the SymLink plugin, you must have the following available to you:
@@ -90,37 +92,43 @@ The plugin also produces a CSV file with file information. If any field is unava
 
 For more information on these entities and how they link together, please see [Understanding the SeqWare MetaDB](/docs/4-metadb/).
 
-* Last Modified: The date that the file was processed
-* Study Title
-* Study SWID
-* Experiment Name
-* Experiment SWID
-* Parent Sample Name: Parent samples are the root sample in the sample hierarchy
-* Parent Sample SWID
-* Parent Sample Attributes
-* Sample Name: Samples are the leaf sample in the sample hierarchy
-* Sample SWID
-* Sample Attributes
-* Sequencer Run Name
-* Sequencer Run SWID
-* Lane Name
-* Lane Number
-* Lane SWID
-* Lane Attributes: Lane attributes are other key-value attributes that have been transferred from the LIMS to the MetadataDB
-* IUS Tag
-* IUS SWID
-* Workflow Name
-* Workflow Version
-* Workflow SWID
-* Workflow Run Name
-* Workflow Run SWID
-* Processing Algorithm
-* Processing SWID
-* File Meta-Type: One of the types listed on the [[Module Conventions]] page
-* File SWID
-* File Path
+0. Last Modified: The date that the file was processed
+0. Study Title
+0. Study SWID
+0. Experiment Name
+0. Experiment SWID
+0. Parent Sample Name: Parent samples are the root sample in the sample hierarchy
+0. Parent Sample SWID
+0. Parent Sample Attributes
+0. Sample Name: Samples are the leaf sample in the sample hierarchy
+0. Sample SWID
+0. Sample Attributes
+0. Sequencer Run Name
+0. Sequencer Run SWID
+0. Lane Name
+0. Lane Number
+0. Lane SWID
+0. Lane Attributes: Lane attributes are other key-value attributes that have been transferred from the LIMS to the MetadataDB
+0. IUS Tag
+0. IUS SWID
+0. Workflow Name
+0. Workflow Version
+0. Workflow SWID
+0. Workflow Run Name
+0. Workflow Run SWID
+0. Processing Algorithm
+0. Processing SWID
+0. File Meta-Type: One of the types listed on the [[Module Conventions]] page
+0. File SWID
+0. File Path
 
 ## Examples
+
+Here are several examples of how to use the program:
+
+	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --study PCSI --no-links --output-filename PCSI
+
+In this example the tool creates only a CSV file named "PCSI.csv" that includes all the associated files for that study.  No symlinks are created on the filesystem.
 
 	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --study PCSI
 Creates a directory for the study with the title "PCSI" with all filetypes linked inside. Also creates a CSV file in the current directory with all of the file information
@@ -130,4 +138,6 @@ Creates only a CSV file named "DumpAllTheStudies.csv" with all of the files from
 
 	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar --plugin  net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --sample PCSI_0119_Sp_R_PE_428_EX --prod-format
 Creates a directory and CSV file for the files from the sample named "PCSI_0119_Sp_R_PE_428_EX". The directory will be output in production format (see below).
+
+<p class="warning"><strong>Tip:</strong>There are many more possible options for the SymLinkFileReporter that let you filter on, for example, sample name, file type, workflow runs, etc.</p>
 
