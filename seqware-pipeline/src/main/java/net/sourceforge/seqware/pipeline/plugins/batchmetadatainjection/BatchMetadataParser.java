@@ -61,7 +61,7 @@ public abstract class BatchMetadataParser {
     private String tior = "";
     private String tipr = "";
     private String tity = "";
-    private String lity = "";
+    private String lity = "PE";
     private Integer lSize = 0;
     private Metadata metadata;
     protected final Map<String, String> fields;
@@ -84,7 +84,7 @@ public abstract class BatchMetadataParser {
         Log.stdout("\nFor sample " + sampleName + ", choose one of the following for " + title + " or enter 0 to skip:");
         for (int i = 1; i <= choices.length; i++) {
             Log.stdout(i + " : " + choices[i - 1]);
-            if (deflt.equals(choices[i - 1])) {
+            if (choices[i - 1].equals(deflt)) {
                 choiceInt = i;
             }
         }
@@ -537,9 +537,8 @@ public abstract class BatchMetadataParser {
     }
 
     protected int promptPositiveInteger(String description, int deflt, Field fieldName, int lowNum, int highNum) {
-        int value = 0;
-        while (value > highNum || value < lowNum) {
-            Log.stdout("Please choose a number from the following list:");
+        int value = -1;
+        while ((value > highNum || value < lowNum) && value !=0) {
             value = promptInteger(description, deflt, fieldName);
         }
         return value;

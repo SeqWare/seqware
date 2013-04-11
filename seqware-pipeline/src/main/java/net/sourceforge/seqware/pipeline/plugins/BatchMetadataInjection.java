@@ -174,7 +174,7 @@ public class BatchMetadataInjection extends Metadata {
 
         int studyAccession = retrieveStudy(run);
         int experimentAccession = retrieveExperiment(run, studyAccession);
-        List<Sample> parentSamples = metadata.getSamplesFrom(experimentAccession);
+        
 
         Log.debug("study: " + studyAccession + " exp: " + experimentAccession + " run: " + sequencerRunAccession);
         for (LaneInfo lane : lanes) {
@@ -182,6 +182,7 @@ public class BatchMetadataInjection extends Metadata {
             int laneAccession = createLane(lane, sequencerRunAccession);
 
             for (SampleInfo barcode : lane.getSamples()) {
+                List<Sample> parentSamples = metadata.getSamplesFrom(experimentAccession);
                 Integer parentSampleAcc = retrieveParentSampleAccession(parentSamples, barcode, experimentAccession);
 
                 Log.debug("lane: " + laneAccession + " parent sample: " + parentSampleAcc);
