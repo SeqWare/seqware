@@ -148,7 +148,8 @@ public class IusIDResource extends DatabaseIDResource {
                 ius.setOwner(registration);
             }
             if (newAttributes != null) {
-				ius.getIusAttributes().clear();
+//SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+//				ius.getIusAttributes().clear();
 				for(IUSAttribute ia: newAttributes) {
 					ia.setIus(ius);
 					ius.getIusAttributes().add(ia);
