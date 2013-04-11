@@ -50,11 +50,12 @@ public class CreateFromScratch extends BatchMetadataParser {
         for (int i = 0; i < numLanes; i++) {
             LaneInfo lane = getLane(i);
             int numBarcodes = this.promptInteger("How many barcodes in lane " + lane.getLaneNumber() + "?", 1, null);
-            for (int j = 0; j < numBarcodes; j++) {
+            for (int j = 0; j < numBarcodes; j++) {                
                 try {
                     boolean done = false;
                     SampleInfo sample = null;
                     while (!done) {
+                        Log.stdout("-----For lane "+lane.getLaneNumber()+", barcode #"+(j+1)+"-----");
                         projectCode = ConsoleAdapter.getInstance().promptString("Project code (three or four letters)", projectCode);
                         String individualNumber = ConsoleAdapter.getInstance().promptString("Individual number (should be unique per project)", null);
                         sample = this.generateSampleInfo(projectCode + " " + individualNumber, projectCode, individualNumber,
@@ -80,7 +81,8 @@ public class CreateFromScratch extends BatchMetadataParser {
         boolean doneLane = false;
         LaneInfo lane = null;
         while (!doneLane) {
-            int num = promptPositiveInteger("Lane number", (i+1), null, 1, Integer.MAX_VALUE);
+            Log.stdout("-----For lane #"+(i+1)+"-----");
+            int num = promptPositiveInteger("What is the lane number? ", (i+1), null, 1, Integer.MAX_VALUE);
             lane = this.generateLaneInfo(String.valueOf(num), -1);
             StringBuilder sb = new StringBuilder();
             printLaneInfo(lane, sb);
