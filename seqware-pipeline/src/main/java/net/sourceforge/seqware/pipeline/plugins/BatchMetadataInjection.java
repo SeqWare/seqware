@@ -226,7 +226,7 @@ public class BatchMetadataInjection extends Metadata {
     private int retrieveTissueTypeSampleAccession(Integer parentSampleAcc, SampleInfo barcode) throws Exception {
         //get the tissue type sample if it exists, otherwise create it
         int tissueTypeSampleAcc = 0;
-        String name = barcode.getParentSample() + "_" + barcode.getTissueType();
+        String name = barcode.getParentSample() + "_" +barcode.getTissueOrigin()+"_"+ barcode.getTissueType();
         List<Sample> children = metadata.getChildSamplesFrom(parentSampleAcc);
         if (children != null) {
             for (Sample s : children) {
@@ -256,7 +256,7 @@ public class BatchMetadataInjection extends Metadata {
             }
         }
         if (parentSampleAcc == null) {
-            parentSampleAcc = createSample(sample.getParentSample(), sample.getSampleDescription(),
+            parentSampleAcc = createSample(sample.getParentSample(), "",
                     experimentAccession, 0, sample.getOrganismId(), false);
         }
         names.put(parentSampleAcc, sample.getParentSample());
