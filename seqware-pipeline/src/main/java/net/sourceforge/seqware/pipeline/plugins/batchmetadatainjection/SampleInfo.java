@@ -191,7 +191,7 @@ public class SampleInfo {
      * @param libraryType
      */
     public void setLibraryType(String libraryType) {
-        setSampleAttribute("geo_library_type", String.valueOf(librarySizeCode));
+        setSampleAttribute("geo_library_type", String.valueOf(libraryType));
         this.libraryType = libraryType;
     }
 

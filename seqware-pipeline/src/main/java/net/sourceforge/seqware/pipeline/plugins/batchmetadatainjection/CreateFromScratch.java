@@ -80,7 +80,7 @@ public class CreateFromScratch extends BatchMetadataParser {
         boolean doneLane = false;
         LaneInfo lane = null;
         while (!doneLane) {
-            int num = promptPositiveInteger("Lane number", i, null, 1, Integer.MAX_VALUE);
+            int num = promptPositiveInteger("Lane number", (i+1), null, 1, Integer.MAX_VALUE);
             lane = this.generateLaneInfo(String.valueOf(num), -1);
             StringBuilder sb = new StringBuilder();
             printLaneInfo(lane, sb);
