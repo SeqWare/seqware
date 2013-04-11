@@ -102,7 +102,8 @@ public class StudyIDResource extends DatabaseIDResource {
             Study study = (Study) testIfNull(service.findByID(p.getStudyId()));
 
 			if(null != p.getStudyAttributes()) {
-				study.getStudyAttributes().clear();
+//SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+//				study.getStudyAttributes().clear();
 				for(StudyAttribute sa: p.getStudyAttributes()) {
 					sa.setStudy(study);
 					study.getStudyAttributes().add(sa);
