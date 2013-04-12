@@ -105,6 +105,7 @@ public class DBAccess {
             metadataDBWrapper.set(null);
             //db = null;
         }
+        metadataDBWrapper.remove();
     }
 
     private DBAccess() {
