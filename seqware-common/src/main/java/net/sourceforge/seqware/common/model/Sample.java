@@ -81,7 +81,6 @@ public class Sample implements Serializable, Comparable<Sample>, PermissionsAwar
     private Set<SampleLink> sampleLinks = new TreeSet<SampleLink>();
     // non-persisted field to store organism_id
     private Integer organismId;
-    private boolean isRoot;
 
     /**
      * <p>Constructor for Sample.</p>
@@ -928,13 +927,6 @@ public class Sample implements Serializable, Comparable<Sample>, PermissionsAwar
         this.sampleLinks = sampleLinks;
     }
 
-    public boolean isIsRoot() {
-        return isRoot;
-    }
-
-    public void setIsRoot(boolean isRoot) {
-        this.isRoot = isRoot;
-    }
 
     /**
      * {@inheritDoc}
