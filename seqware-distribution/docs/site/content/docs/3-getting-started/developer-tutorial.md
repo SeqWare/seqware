@@ -338,12 +338,13 @@ The next step is to look at examples of workflows at [Workflow Examples](/docs/1
 
 SeqWare bundles have a test command built into their metadata.xml. In order to trigger this, run with the following command. Note that the workflow name and version need to match the name and version given when the workflow is listed above. 
 
-	java -jar ~/seqware-distribution-0.13.6.5-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b `pwd` -t --workflow HelloWorld 1.0-SNAPSHOT
+   	cd /home/seqware/SeqWare/provisioned-bundles/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>
+	java -jar ~/SeqWare/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b `pwd` -t --workflow HelloWorld 1.0-SNAPSHOT
 	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
 	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@2fb3f8f6
 	Testing Bundle
 	  Running Test Command:
-	java -jar /home/seqware/provisioned-bundles/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-0.13.6.5-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --no-metadata --provisioned-bundle-dir /home/seqware/provisioned-bundles/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5 --workflow HelloWorld --version 1.0-SNAPSHOT --ini-files /home/seqware/provisioned-bundles/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/config/workflow.ini 
+	java -jar /home/seqware/provisioned-bundles/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --no-metadata --provisioned-bundle-dir /home/seqware/provisioned-bundles/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %> --workflow HelloWorld --version 1.0-SNAPSHOT --ini-files /home/seqware/provisioned-bundles/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/config/workflow.ini 
 	MONITORING PEGASUS STATUS:
 	RUNNING: step 1 of 8 (12%)
 	RUNNING: step 2 of 8 (25%)
@@ -364,7 +365,7 @@ Note in the testing command above it prints out the underlying command it calls 
 Assuming the workflow above worked fine the next step is to package it.
 
 	[seqware@seqwarevm Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>]$ mkdir packaged
-	[seqware@seqwarevm Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>]$ java -jar seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --b packaged -p `pwd`
+	[seqware@seqwarevm Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>]$ java -jar ~/SeqWare/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --b packaged -p `pwd`
 	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
 	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@20b9b538
 	Packaging Bundle
