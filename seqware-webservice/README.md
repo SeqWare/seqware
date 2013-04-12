@@ -44,7 +44,7 @@ Three variables need to be changed in each file to reflect your local setup:
 
 * url="jdbc:postgresql://localhost:5432/seqware_meta_db"
 * username="seqware"
-* password="password"
+* password="seqware"
 
 The url, username and password need to be changed to reflect the local database. ''The username and password are the PostgreSQL database username and password.''
 

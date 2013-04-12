@@ -78,7 +78,7 @@ When this is complete:
     mvn clean install -DskipITs=false -P extITs # (runs all unit tests and all integration tests including those that require Condor/Globus/Pegasus)
 
 In the last case, the extended integration tests profile is used to trigger integration tests that run our command line utilities. 
-In order to point your command-line tools at the web service brought up by the integration tests, you will need to modify your SeqWare ~/.seqware/settings to include:
+In order to point your command-line tools at the web service brought up by the integration tests, you will need to comment out your crontab and modify your SeqWare ~/.seqware/settings to include:
 
     SW_REST_URL=http://localhost:8889/seqware-webservice
 
