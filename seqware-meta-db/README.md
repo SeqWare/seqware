@@ -59,7 +59,7 @@ One tip, by default PostgreSQL uses "ident" to ensure that the user logging in v
 * Create a database user for the SeqWare MetaDB with the following command.  ''seqware'' is the username and ''password'' is the password for this user. Please change as appropriate for your site:
 
 <pre>
-$ sudo -u postgres psql -c "CREATE USER seqware WITH PASSWORD 'password' CREATEDB;"
+$ sudo -u postgres psql -c "CREATE USER seqware WITH PASSWORD 'seqware' CREATEDB;"
 </pre>
 
 * Create a database using the following command where seqware_meta_db is the name of your new database and seqware is the name of your database user:
