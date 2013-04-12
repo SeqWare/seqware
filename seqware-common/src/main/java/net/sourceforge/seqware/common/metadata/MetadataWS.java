@@ -296,12 +296,14 @@ public class MetadataWS extends Metadata {
                 Experiment e = ll.findExperiment("/" + experimentAccession.toString());
                 s.setExperiment(e);
             }
+            Set<Sample> parents = new HashSet<Sample>();
             if (parentSampleAccession != 0) {
                 Sample parentSample = ll.findSample("/"+parentSampleAccession);
-                Set<Sample> parents = new HashSet<Sample>();
                 parents.add(parentSample);
-                s.setParents(parents);
+            } else{
+                parents.add(null);
             }
+            s.setParents(parents);
             s.setOrganism(o);
             s.setTitle(title);
             s.setName(title);
