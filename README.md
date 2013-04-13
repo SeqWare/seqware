@@ -96,7 +96,7 @@ deleting your ~/.m2 directory and running the build process again.
 
 ## Installing
 
-See http://seqware.github.com/ for detailed installation instructions
+See our [Installation Guide](http://seqware.github.com/docs/2-installation/) for detailed installation instructions
 including links to a pre-configured virtual machine that can be used for
 testing, development, and deployment.
 

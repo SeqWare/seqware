@@ -31,7 +31,7 @@ in the LIMS system.  This makes it very easy for researchers to both follow the
 progress of a particular run and also get back to the reports automatically
 created based on their initial settings.
 
-See the [User Guide](/docs/3-getting-started/user-tutorial/) for examples of
+See the [User Guide](/docs/5-portal/user-guide.md) for examples of
 how to use the Portal for setting up Samples, Experiments, Studies, and
 uploading data for use by workflows.
 

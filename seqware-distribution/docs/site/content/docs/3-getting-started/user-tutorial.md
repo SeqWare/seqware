@@ -7,30 +7,63 @@ toc_includes_sections: false
 
 ---
 
-The majority of this guide is dedicated to walking users (people who use workflows) through the basics of using SeqWare. The core functionality we will explore is how to get data into the system, how to run workflows someone else created and installed for you (a workflow developer), and getting the resulting data back out.  We assume that people are most interested in the Pipeline sub-project and focus most of our time on that but this tutorial touches on other sub-projects like the Portal.  The examples below will all be based on a local VM but the environment on our cloud instance is almost identical, so most of the examples below will be applicable to either VM type. In the future we will probably have a separate user guide that focuses on the differences of running on Amazon's cloud.
+<p class="warning"><strong>Note:</strong>This guide assumes you have installed
+SeqWare already. If you have not, please install SeqWare by either downloading
+the VirtualBox VM or launching the AMI on Amazon's cloud.  See <a
+href="/docs/2-installation/">Installation</a> for directions.</p>
+
+The majority of this guide is dedicated to walking users (people who use
+workflows) through the basics of using SeqWare. The core functionality we will
+explore is how to get data into the system, how to run workflows someone else
+created and installed for you, and getting the resulting data back out.  We
+assume that people are most interested in the Pipeline sub-project and focus
+most of our time on that.  The examples below will all be based on a local
+VirtualBox VM but the environment on our cloud instance is almost identical, so
+most of the examples below will be applicable to either VM type. Any difference
+will be pointed out in a tip box.
 
 ## By the End of This Tutorial
 
-This guide will show you how to use command line tools from Pipeline and web app from Portal to access the MetaDB. This will allow you to do the following tasks using tools that can be scripted versus our Portal web-based interface that requires a user to click on an interface (we will show examples of the latter along the way too). By the end of these tutorials you will be able to:
+This guide will show you how to use command line tools from Pipeline to access
+the MetaDB, setup workflows to run, watch over them, and get results back. This
+will allow you to do the following tasks using tools that can be scripted
+versus our Portal web-based interface that requires a user to click on an
+interface. By the end of these tutorials you will be able to:
 
-* use both command line and web-based tools from Pipeline and Portal respectively
+* use command line tools from Pipeline as a workflow user
 * create studies, experiments, and samples in the MetaDB
 * upload data such as fastq files to the VM and associate that data with particular samples in the MetaDB
 * find the list of available workflows and the parameters they accept using Pipeline
 * schedule a HelloWorld workflow and monitor its progress using Pipeline
-* generate a report on the outputs of your workflows in Pipeline and Portal
+* generate a report on the outputs of your workflows in Pipeline
 * download files produced by a workflow using Pipeline tools
 * simple debugging of workflows by downloading stdout and stderr for your workflows
 
-The command line tools are all Java tools from SeqWare Pipeline that wrap our RESTful SeqWare Web Service. If you would like to learn more about the low-level API (perhaps you want to call it directly in a program or script) you can find more information in the [SeqWare Web Service](/docs/7-web-service/) documentation.
+The command line tools are all Java tools from SeqWare Pipeline that wrap our
+RESTful SeqWare Web Service. If you would like to learn more about the
+low-level API (perhaps you want to call it directly in a program or script) you
+can find more information in the [SeqWare Web Service](/docs/7-web-service/)
+documentation.
+
+<p class="warning"><strong>Tip:</strong>If you want to see how to do the same
+steps below via the Portal web GUI instead of command line tools see <a
+href="/docs/5-portal/user-guide.md"></a>.</p>
 
 ## The Example
 
-In this tutorial we will use a simple HelloWorld workflow that takes a text file as input and creates another file as output. The same examples could be applied to any workflows and input data types.  How to build your own workflows (**which is really the central purpose of SeqWare**) is covered in the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/). How to install these workflows and present them to users is covered in the [Admin Tutorial](/docs/3-getting-started/admin-tutorial/).
+In this tutorial we will use a simple HelloWorld workflow that takes a text
+file as input and creates another file as output. The same examples could be
+applied to any workflow and input data types.  How to build your own workflows
+(**which is really the central purpose of SeqWare**) is covered in the
+[Developer Tutorial](/docs/3-getting-started/developer-tutorial/). How to
+install these workflows and present them to users is covered in the [Admin
+Tutorial](/docs/3-getting-started/admin-tutorial/).
 
 ## First Steps
 
-Please launch your local VM in VirtualBox and login as user <kbd>seqware</kbd>, password <kbd>seqware</kbd> at this time. Click on the "SeqWare Directory" link on the desktop which will open a terminal to the location where we installed the SeqWare tools.
+<%= render '/includes/launch_vm/' %>
+
+<!-- LEFT OFF HERE -->
 
 ## The SeqWare Command Line Tool
 
