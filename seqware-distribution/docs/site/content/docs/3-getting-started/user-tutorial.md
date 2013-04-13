@@ -46,8 +46,8 @@ can find more information in the [SeqWare Web Service](/docs/7-web-service/)
 documentation.
 
 <p class="warning"><strong>Tip:</strong>If you want to see how to do the same
-steps below via the Portal web GUI instead of command line tools see <a
-href="/docs/5-portal/user-guide.md"></a>.</p>
+steps below via the Portal web GUI instead of command line tools see the <a
+href="/docs/5-portal/user-guide.md">Portal User Guide</a>.</p>
 
 ## The Example
 
