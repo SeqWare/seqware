@@ -7,9 +7,11 @@ toc_includes_sections: false
 
 ---
 
+## Overview
+
 <p class="warning"><strong>Note:</strong>This guide assumes you have installed
 SeqWare already. If you have not, please install SeqWare by either downloading
-the VirtualBox VM or launching the AMI on Amazon's cloud.  See <a
+the VirtualBox VM or launching the AMI on the Amazon cloud.  See <a
 href="/docs/2-installation/">Installation</a> for directions.</p>
 
 The majority of this guide is dedicated to walking users (people who use
@@ -25,10 +27,11 @@ will be pointed out in a tip box.
 ## By the End of This Tutorial
 
 This guide will show you how to use command line tools from Pipeline to access
-the MetaDB, setup workflows to run, watch over them, and get results back. This
-will allow you to do the following tasks using tools that can be scripted
-versus our Portal web-based interface that requires a user to click on an
-interface. By the end of these tutorials you will be able to:
+the MetaDB via the Web Service in order to setup workflows to run in Pipeline,
+watch over them, and get results back. This will allow you to do the following
+tasks using tools that can be scripted versus our Portal web-based interface
+that requires a user to click on an interface. By the end of these tutorials
+you will be able to:
 
 * use command line tools from Pipeline as a workflow user
 * create studies, experiments, and samples in the MetaDB
@@ -37,7 +40,7 @@ interface. By the end of these tutorials you will be able to:
 * schedule a HelloWorld workflow and monitor its progress using Pipeline
 * generate a report on the outputs of your workflows in Pipeline
 * download files produced by a workflow using Pipeline tools
-* simple debugging of workflows by downloading stdout and stderr for your workflows
+* debug workflows by downloading stdout and stderr for your workflows
 
 The command line tools are all Java tools from SeqWare Pipeline that wrap our
 RESTful SeqWare Web Service. If you would like to learn more about the
@@ -46,8 +49,14 @@ can find more information in the [SeqWare Web Service](/docs/7-web-service/)
 documentation.
 
 <p class="warning"><strong>Tip:</strong>If you want to see how to do the same
-steps below via the Portal web GUI instead of command line tools see the <a
-href="/docs/5-portal/user-guide.md">Portal User Guide</a>.</p>
+steps covered in this tutorial via the Portal web GUI instead of command line
+tools see the <a href="/docs/5-portal/user-guide.md">Portal User Guide</a>.</p>
+
+<!-- LEFT OFF WITH: add overview diagram -->
+
+## First Steps
+
+<%= render '/includes/launch_vm/' %>
 
 ## The Example
 
@@ -59,27 +68,40 @@ applied to any workflow and input data types.  How to build your own workflows
 install these workflows and present them to users is covered in the [Admin
 Tutorial](/docs/3-getting-started/admin-tutorial/).
 
-## First Steps
-
-<%= render '/includes/launch_vm/' %>
-
-<!-- LEFT OFF HERE -->
-
 ## The SeqWare Command Line Tool
 
-SeqWare is open source architecture built mostly in Java. In the <kbd>/home/seqware/SeqWare</kbd> directory you will see a jar file. This contains SeqWare Pipeline code that will allow you to interact with the SeqWare Web service (actually either on a VM, installed on another local machine/cluster, or in the cloud) that controls, among other things, workflow execution. This jar is, essentially, the command line interface for the whole SeqWare project.
+SeqWare is an open source software project built mostly in Java. In the
+seqware user's home directory (<kbd>/home/seqware/</kbd>) you will see a jar file. This
+contains SeqWare Pipeline code that will allow you to interact with the SeqWare
+Web service (actually either on a VM, installed on another local
+machine/cluster, or in the cloud) that controls, among other things, workflow
+execution. This jar is, essentially, the command line interface for the whole
+SeqWare project.
 
-<p class="warning"><strong>Tip:</strong> The VM will contain a recent version of the jar that we have validated with this tutorial.  You may want to upgrade to the latest version, though, which you can download from our <a href="http://jenkins.res.oicr.on.ca/job/seqware/">continuous build server</a>. Please choose the jar that has the -full suffix, e.g. seqware-distribution-0.13.6-full.jar. Keep in mind we make no promises that the latest version will be bug free!</p>
+<p class="warning"><strong>Tip:</strong> The VM will contain a recent version
+of the jar that we have validated with this tutorial.  You may want to upgrade
+to the latest version, though, which you can download from our <a
+href="http://jenkins.res.oicr.on.ca/job/seqware/">continuous build server</a>.
+Please choose the jar that has the -full suffix, e.g.
+seqware-distribution-0.13.6-full.jar. Keep in mind we make no promises that the
+latest version will be bug free!</p>
 
-For more information about the command line tools see the [Plugin](/docs/17-plugins/) and [Modules](/docs/17a-modules/) reference.
+For more information about the command line tools see the
+[Plugin](/docs/17-plugins/) and [Modules](/docs/17a-modules/) reference which
+gives the usage for all our command line utilities.
 
 ## The SeqWare Settings File
 
-The SeqWare jar file uses a simple configuration file that has been setup for you already on the VM. By default the location is ~/.seqware/settings.
+The SeqWare jar file uses a simple configuration file that has been setup for
+you already on the VM. By default the location is ~/.seqware/settings.
 
-This file contains the web address of the RESTful web service, your username and password, and you Amazon public and private keys that will allow you to push and pull data files to and from the cloud, etc. For this tutorial the config file should be ready to go, you will not need to modify it.
+This file contains the web address of the SeqWare Web Service, your username
+and password, and you Amazon public and private keys that will allow you to
+push and pull data files to and from the cloud, etc. For this tutorial the
+config file should be ready to go, you will not need to modify it.
 
-For more information see the [Settings](/docs/6-pipeline/user-configuration/) documentation which covers the details on the user config file.
+For more information see the [Settings](/docs/6-pipeline/user-configuration/)
+documentation which covers the details on the user config file.
 
 ## Creating Studies, Experiments, and Samples
 
