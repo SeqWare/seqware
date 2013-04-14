@@ -1,4 +1,4 @@
----
+t ---
 
 title:                 "SeqWare Portal User Guide"
 toc_includes_sections: true
