@@ -872,6 +872,24 @@ public class FileTools {
     }
   }
   
+  public static String getFilename(String filePath) {
+    if (filePath == null || "".equals(filePath)) { return null; }
+    String[] tokens = filePath.split("/");
+    return(tokens[tokens.length-1]);
+  }
+  
+  public static String getFilePath(String filePath) {
+    if (filePath == null || "".equals(filePath)) { return null; }
+    String[] tokens = filePath.split("/");
+    StringBuilder sb = new StringBuilder();
+    for(int i=0; i<tokens.length-1; i++) {
+      sb.append(tokens[i]);
+      sb.append("/");
+    }
+    // is this reasonable for a default return?
+    return(sb.toString());
+  }
+  
   /**
    * Get the localhost and a return value describing the failure condition
    * if we are unable to get the localhost

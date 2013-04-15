@@ -109,6 +109,8 @@ public class ProvisionFiles extends Module {
                 + "If this option is specified along with --decrypt-key the key provided by the latter will be used.");
     parser.acceptsAll(Arrays.asList("output-dir", "o"), "Required: output file location").withRequiredArg()
         .describedAs("output directory path");
+    parser.acceptsAll(Arrays.asList("output-file", "of"), "Optional: output file path, if this is provided than the program accepts exactly one --input-file and one --output file. If an --output-dir is also specified an error will be thrown.").withRequiredArg()
+        .describedAs("output file path");
     parser
         .acceptsAll(
             Arrays.asList("recursive", "r"),
@@ -196,13 +198,20 @@ public class ProvisionFiles extends Module {
     }
 
     // Must specify input, output and binary file
-    for (String requiredOption : new String[] { "output-dir" }) {
+    /* for (String requiredOption : new String[] { "output-dir" }) {
       if (!options.has(requiredOption)) {
         ret.setStderr("Must specify a --" + requiredOption + " or -" + requiredOption.charAt(0) + " option"
             + System.getProperty("line.separator") + this.get_syntax());
         ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         return ret;
       }
+    }*/
+    
+    if (!options.has("output-file") && !options.has("output-dir")) {
+      ret.setStderr("Must specify a single --output-file option or --output-dir option"
+            + System.getProperty("line.separator") + this.get_syntax());
+        ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+        return ret;
     }
 
     // deal with algorithm param
@@ -210,7 +219,32 @@ public class ProvisionFiles extends Module {
         && options.valueOf("algorithm").toString().length() > 0) {
       algorithmName = (String) options.valueOf("algorithm");
     }
+    
+    // deal with output-file
+    if (options.has("output-file") && !options.has("input-file")) {
+      ret.setStderr("Must specify a --input-file option along with the --output-file option"
+            + System.getProperty("line.separator") + this.get_syntax());
+        ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+        return ret;
+    }
+    
+    // deal with output-file
+    if (options.has("output-file") && options.has("output-dir")) {
+      ret.setStderr("Must specify a --output-file option or a --output-dir option but not both"
+            + System.getProperty("line.separator") + this.get_syntax());
+        ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+        return ret;
+    }
 
+    // deal with output-file
+    if (options.has("output-file") && options.has("input-file") && (options.valuesOf("output-file").size() > 1 || options.valuesOf("input-file").size() > 1)) {
+      ret.setStderr("Must specify a single --input-file option along with a single --output-file option"
+            + System.getProperty("line.separator") + this.get_syntax());
+        ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+        return ret;
+    }
+    
+    
     return (ret);
   }
 
@@ -255,7 +289,8 @@ public class ProvisionFiles extends Module {
       }
     }
 
-    if (!((String) options.valueOf("output-dir")).startsWith("s3://")
+    if (options.has("output-dir") &&
+      !((String) options.valueOf("output-dir")).startsWith("s3://")
         && !((String) options.valueOf("output-dir")).startsWith("http://")
         && !((String) options.valueOf("output-dir")).startsWith("https://")) {
       File output = new File((String) options.valueOf("output-dir"));
@@ -269,6 +304,24 @@ public class ProvisionFiles extends Module {
         return (ret);
       }
     }
+    
+    if (options.has("output-file") &&
+      !((String) options.valueOf("output-file")).startsWith("s3://")
+        && !((String) options.valueOf("output-file")).startsWith("http://")
+        && !((String) options.valueOf("output-file")).startsWith("https://")) {
+      
+      String directory = FileTools.getFilePath((String) options.valueOf("output-file"));
+      File output = new File(directory);
+      // try to create if it doesn't exist
+      if (!output.exists()) {
+        output.mkdirs();
+      }
+      if (FileTools.dirPathExistsAndWritable(output).getExitStatus() != ReturnValue.SUCCESS) {
+        ret.setExitStatus(ReturnValue.DIRECTORYNOTWRITABLE);
+        ret.setStderr("Can't write to output directory for file " + options.valueOf("output-file"));
+        return (ret);
+      }
+    }    
 
     return (ret);
   }
@@ -327,7 +380,7 @@ public class ProvisionFiles extends Module {
     }
 
     for (String input : inputs) {
-      Log.stdout("  PROCESSING INPUT: " + input + " OUTPUT: " + options.valueOf("output-dir"));
+      Log.stdout("  PROCESSING INPUT: " + input + " OUTPUT: " + options.valueOf("output-dir") + " OUTPUT FILE: " + options.valueOf("output-file"));
       this.size = 0;
       this.position = 0;
       this.fileName = "";
@@ -339,10 +392,18 @@ public class ProvisionFiles extends Module {
             return (currRet);
           }
         }
-      } else if (!provisionFile(input, (String) options.valueOf("output-dir"), skipIfMissing, fileArray)) {
-        Log.error("");
-        ret.setExitStatus(ReturnValue.FAILURE);
-        return (ret);
+      } else if (options.valuesOf("input-file").size() == 1 && options.has("output-file") && options.valuesOf("output-file").size() == 1) { // then this is a single file to single file copy
+        if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true)) {
+          Log.error("Failed to copy file");
+          ret.setExitStatus(ReturnValue.FAILURE);
+          return (ret);
+        }
+      } else if (options.has("output-dir")) { // then this is just a normal file copy
+        if (!provisionFile(input, (String) options.valueOf("output-dir"), skipIfMissing, fileArray, false)) {
+          Log.error("Failed to copy file to dir");
+          ret.setExitStatus(ReturnValue.FAILURE);
+          return (ret);
+        }
       }
     }
 
@@ -381,7 +442,7 @@ public class ProvisionFiles extends Module {
         Log.info("\n  COPYING FILE: " + currFile.getAbsolutePath() + "\n    to " + outputDir + "/" + additionalPath);
         if (!provisionFile(currFile.getAbsolutePath(),
             outputDir + "/" + additionalPath.substring(0, additionalPath.length() - file.length()), skipIfMissing,
-            fileArray)) {
+            fileArray, false)) {
           ret.setExitStatus(ReturnValue.FAILURE);
           return (ret);
         }
@@ -399,7 +460,7 @@ public class ProvisionFiles extends Module {
    * @param fileArray a {@link java.util.ArrayList} object.
    * @return a boolean.
    */
-  protected boolean provisionFile(String input, String output, boolean skipIfMissing, ArrayList<FileMetadata> fileArray) {
+  protected boolean provisionFile(String input, String output, boolean skipIfMissing, ArrayList<FileMetadata> fileArray, boolean fullOutputPath) {
 
     BufferedInputStream reader = null;
     int bufLen = 5000 * 1024; // 5M buffer
@@ -428,7 +489,7 @@ public class ProvisionFiles extends Module {
       Log.error("To proceed, run ProvisionFile again with --skip-if-missing");
       return false;
     }
-    return (putDestination(reader, output, bufLen, input, fileArray));
+    return (putDestination(reader, output, bufLen, input, fileArray, fullOutputPath));
 
   }
 
@@ -446,7 +507,7 @@ public class ProvisionFiles extends Module {
    * @return a boolean.
    */
   protected boolean putDestination(BufferedInputStream reader, String output, int bufLen, String input,
-      ArrayList<FileMetadata> fileArray) {
+      ArrayList<FileMetadata> fileArray, boolean fullOutputPath) {
 
     // finally record the metadata about the file, update the output path to
     // prepare this file for adding output-prefix as a prefix
@@ -470,8 +531,7 @@ public class ProvisionFiles extends Module {
     if (output.startsWith("s3://")) {
 
       // put to S3
-      // LEFT OFF HERE!!
-      result = filesUtil.putToS3(reader, output, decryptCipher, encryptCipher);
+      result = filesUtil.putToS3(reader, output, fullOutputPath, decryptCipher, encryptCipher);
 
     } else if (output.startsWith("http://") || output.startsWith("https://")) {
 
@@ -484,7 +544,7 @@ public class ProvisionFiles extends Module {
       if (input.startsWith("http://") || input.startsWith("https://") || input.startsWith("s3://")
           || options.has("force-copy") || options.has("recursive")) {
 
-        result = (filesUtil.copyToFile(reader, output, bufLen, input, decryptCipher, encryptCipher) != null);
+        result = (filesUtil.copyToFile(reader, output, fullOutputPath, bufLen, input, decryptCipher, encryptCipher) != null);
 
       } else {
         // If no "force-copy" and "recursive"
@@ -492,7 +552,8 @@ public class ProvisionFiles extends Module {
         // if the following option is set and it's local source and destination
         // do nothing, useful if using Pegasus for local files and this for
         // S3/HTTP
-        result = filesUtil.createSymlink(output, input);
+        File inputFile = new File(input);
+        result = filesUtil.createSymlink(output, fullOutputPath, inputFile.getAbsolutePath());
       }
 
     }
