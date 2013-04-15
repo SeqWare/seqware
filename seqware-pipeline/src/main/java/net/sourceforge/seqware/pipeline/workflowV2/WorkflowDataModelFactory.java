@@ -340,7 +340,7 @@ public class WorkflowDataModelFactory {
         MapTools.mapExpandVariables(map);
         
         // make absolutely sure the variables are defined and ${workflow_bundle_path} is filled in
-        Map<String, String> ret = this.resolveMap(map, bundlePath);
+        Map<String, String> ret = this.resolveMap(map, bundlePath); 
         return ret;
     }
 
@@ -415,10 +415,18 @@ public class WorkflowDataModelFactory {
         //metadata-output-file-prefix
         if (options.has("metadata-output-file-prefix")) {
             model.setMetadata_output_file_prefix((String) options.valueOf("metadata-output-file-prefix"));
+        } else if (this.config.containsKey("output_prefix")) {
+            model.setMetadata_output_file_prefix(this.config.get("output_prefix"));
+        } else {
+            Log.error("You need to specify the output prefix for your workflow using either --metadata-output-file-prefix as a WorkflowLauncher param or in your workflow INI file as output_prefix!");
         }
         //metadata-output-dir
         if (options.has("metadata-output-dir")) {
             model.setMetadata_output_dir((String) options.valueOf("metadata-output-dir"));
+        } else if (this.config.containsKey("output_dir")) {
+            model.setMetadata_output_file_prefix(this.config.get("output_dir"));
+        } else {
+            Log.error("You need to specify the output dir for your workflow using either --metadata-output-dir as a WorkflowLauncher param or in your workflow INI file as output_dir!");
         }
         //workflow_engine
         if (options.has("workflow-engine")) {

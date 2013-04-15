@@ -16,6 +16,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 public class SqwFile {
 	private String type;
 	private String location;
+        private String outputLocation;
 	private boolean input;
 	private boolean forceCopy;
 	private String uniqueDir;
@@ -39,6 +40,13 @@ public class SqwFile {
 	public void setSourcePath(String location) {
 		this.location = location;
 	}
+        public String getOutputPath() {
+          return outputLocation;
+        }
+
+        public void setOutputPath(String location) {
+          this.outputLocation = location;
+        }
 	
 	/**
 	 * is an output file?

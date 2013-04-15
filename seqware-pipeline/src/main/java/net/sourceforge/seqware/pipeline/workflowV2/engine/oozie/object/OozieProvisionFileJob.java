@@ -136,6 +136,10 @@ public class OozieProvisionFileJob extends OozieJob {
 			inputArg = "--input-file-metadata";
 			inputValue =  this.jobObj.getAlgo() + "::" + this.file.getType() + "::" + this.getOozieWorkingDir() + "/" + this.file.getSourcePath();
 			output = this.metadataOutputPrefix + "/" + this.outputDir;
+                        // if this is true then we have the full output path, not just prefix and output dir!
+                        if (this.file.getOutputPath() != null) {
+                          output = this.file.getOutputPath();
+                        }
 		}
 		Element inputTE = new Element("arg", WorkflowApp.NAMESPACE);
 		inputTE.setText(inputArg);
@@ -146,7 +150,12 @@ public class OozieProvisionFileJob extends OozieJob {
 		javaE.addContent(inputVE);
 		
 		Element outputArg = new Element("arg", WorkflowApp.NAMESPACE);
-		outputArg.setText("--output-dir");
+		// now just check to see if it's a full path or just output dir
+                if (this.file.getOutputPath() != null) { 
+                  outputArg.setText("--output-file");
+                } else {
+                  outputArg.setText("--output-dir");
+                }
 		javaE.addContent(outputArg);
 		
 		Element outputValue = new Element("arg", WorkflowApp.NAMESPACE);

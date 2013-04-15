@@ -34,17 +34,21 @@ public class ProvisionFilesJob extends PegasusJob {
 		}
 		// set input, output
 		String inputType = "--input-file ";
-		String output = this.outputDir;
+		String output = "--output-dir " + this.outputDir;
 		if(this.file.isOutput()) {
 			inputType = "--input-file-metadata "+ this.jobObj.getAlgo() + "::" + this.file.getType() + "::";
-			output = this.metadataOutputPrefix + "/" + this.outputDir;
+			output = "--output-dir " + this.metadataOutputPrefix + "/" + this.outputDir;
+                        // however, if the output was manually specified use it instead of the generic output_prefix & output_dir
+                        if (this.file.getOutputPath() != null) {
+                          output = "--output-file " + this.file.getOutputPath();
+                        }
 		}
 		sb.append(inputType).append(this.file.getSourcePath()).append("\n");
-		sb.append("--output-dir " + output).append("\n");
+		sb.append(output).append("\n");
 		if(this.file.isForceCopy()) {
 			sb.append("--force-copy");
 		}
-		
+                	
 		return sb.toString();
 	}
 
