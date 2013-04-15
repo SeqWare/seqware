@@ -138,9 +138,22 @@ application is set pretty low. If you have problems uploading files, for
 example, ensure your login has not expired. We recommend using command
 line tools for uploading large files.</p>
 
+
 ## Launching Workflows
+
+<p class="warning"><strong>ToDo:</strong>Need to fill in this section...</p>
 
 ## Monitoring Workflows
 
+Once submitted, you can use the Portal to list the number of submitted, 
+running, and failed workflows.  Log into the Portal and click on the "Show
+Analysis" link under the Analysis panel.  You can then click on the tab for
+"Running Analysis" to see what is submitted/running/failed.
+
+<img src="/assets/images/running.png" width="600px"/>
+
+<p class="warning"><strong>ToDo:</strong>Need to fill in this section...</p>
+
 ## Retrieving Results
 
+<p class="warning"><strong>ToDo:</strong>Need to fill in this section...</p>
