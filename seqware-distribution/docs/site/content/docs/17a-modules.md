@@ -68,6 +68,7 @@ net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles
 |--i, --input-file|Required: use this or --input-file-metadata, this is the input file, multiple should be specified seperately|
 |--im, --input-file-metadata|Required: use this or --input-file, this is the input file, multiple should be specified seperately|
 |--o, --output-dir|Required: output file location|
+|--of, --output-file|Optional: output file path, if this is provided than the program accepts exactly one --input-file and one --output file. If an --output-dir is also specified an error will be thrown.|
 |--r, --recursive|Optional: if the input-file points to a local directory then this option will cause the program to recursively copy the directory and its contents to the destination. An actual copy will be done for local to local copies rather than symlinks.|
 |--s3-connection-timeout|Optional: Sets the amount of time to wait (in milliseconds) when initially establishing a connection before giving up and timing out. Default is 50000|
 |--s3-max-connections|Optional: Sets the maximum number of allowed open HTTPS connections. Default is 50|

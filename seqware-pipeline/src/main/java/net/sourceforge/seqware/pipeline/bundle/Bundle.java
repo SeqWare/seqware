@@ -265,7 +265,7 @@ public class Bundle {
     int bufLen = 5000 * 1024;
     Log.stdout("Copying local file " + zipFile + " to output " + bundleOutputPrefix + " this may take a long time!");
     BufferedInputStream reader = fileUtil.getSourceReader(zipFile, bufLen, 0L);
-    boolean result = fileUtil.putToS3(reader, bundleOutputPrefix);
+    boolean result = fileUtil.putToS3(reader, bundleOutputPrefix, false);
 
     if (!result) {
       Log.error("Failed to copy file to S3!");
@@ -306,7 +306,7 @@ public class Bundle {
     int bufLen = 5000 * 1024;
     Log.stdout("Copying local file " + bundle.getAbsolutePath() + " to output " + bundleOutputPrefix + " this may take a long time!");
     BufferedInputStream reader = fileUtil.getSourceReader(bundle.getAbsolutePath(), bufLen, 0L);
-    boolean result = fileUtil.putToS3(reader, bundleOutputPrefix);
+    boolean result = fileUtil.putToS3(reader, bundleOutputPrefix, false);
 
     if (!result) {
       Log.error("Failed to copy file to S3!");
