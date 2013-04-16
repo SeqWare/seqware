@@ -380,6 +380,14 @@ public abstract class AbstractWorkflowDataModel  {
 			throw new Exception("Key not found");
 		return configs.get(key);
 	}
+        
+        public boolean hasProperty(String key) {
+          return(this.configs.containsKey(key));
+        } 
+        
+        public boolean hasPropertyAndNotNull(String key) {
+          return(this.configs.containsKey(key) && configs.get(key) != null);
+        } 
 
 	public String getWorkflow_directory_name() {
 		return workflow_directory_name;
