@@ -159,6 +159,7 @@ public class WorkflowDataModelFactory {
         Log.info("loading ini files");
         //load ini config
         Map<String, String> configs = this.loadIniConfigs(workflowAccession, workflowRunAccession, bundlePath);
+        dataModel.setConfigs(configs);
 
         //merge command line option with configs
         this.mergeCmdOptions(dataModel);
@@ -208,8 +209,6 @@ public class WorkflowDataModelFactory {
                 throw new UnsupportedOperationException();
             }
         }
-        
-        dataModel.setConfigs(configs);
 
         //parse XML or Java Object for
         if (workflow_java) {
