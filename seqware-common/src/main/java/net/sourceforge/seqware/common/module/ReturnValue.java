@@ -18,7 +18,7 @@ import net.sourceforge.seqware.common.util.Log;
  * @author boconnor
  * @version $Id: $Id
  */
-public class ReturnValue implements Serializable{
+public class ReturnValue implements Serializable {
 
     public enum ExitStatus {
         // generally it's a good idea to offset by 10 so if new ones need to be added
