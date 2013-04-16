@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.SortedSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.WorkflowParam;
@@ -42,6 +44,8 @@ public class WorkflowDataModelFactory {
         this.config = config;
         this.params = params;
         this.metadata = metadata;
+        
+        // need to do options ret
     }
 
 
@@ -415,16 +419,24 @@ public class WorkflowDataModelFactory {
         //metadata-output-file-prefix
         if (options.has("metadata-output-file-prefix")) {
             model.setMetadata_output_file_prefix((String) options.valueOf("metadata-output-file-prefix"));
-        } else if (this.config.containsKey("output_prefix")) {
-            model.setMetadata_output_file_prefix(this.config.get("output_prefix"));
+        } else if (model.hasPropertyAndNotNull("output_prefix")) {
+          try {
+            model.setMetadata_output_file_prefix(model.getProperty("output_prefix"));
+          } catch (Exception ex) {
+            Logger.getLogger(WorkflowDataModelFactory.class.getName()).log(Level.SEVERE, null, ex);
+          }
         } else {
             Log.error("You need to specify the output prefix for your workflow using either --metadata-output-file-prefix as a WorkflowLauncher param or in your workflow INI file as output_prefix!");
         }
         //metadata-output-dir
         if (options.has("metadata-output-dir")) {
             model.setMetadata_output_dir((String) options.valueOf("metadata-output-dir"));
-        } else if (this.config.containsKey("output_dir")) {
-            model.setMetadata_output_file_prefix(this.config.get("output_dir"));
+        } else if (model.hasPropertyAndNotNull("output_dir")) {
+          try {
+            model.setMetadata_output_file_prefix(model.getProperty("output_dir"));
+          } catch (Exception ex) {
+            Logger.getLogger(WorkflowDataModelFactory.class.getName()).log(Level.SEVERE, null, ex);
+          }
         } else {
             Log.error("You need to specify the output dir for your workflow using either --metadata-output-dir as a WorkflowLauncher param or in your workflow INI file as output_dir!");
         }
