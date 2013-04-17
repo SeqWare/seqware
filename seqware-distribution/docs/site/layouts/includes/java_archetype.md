@@ -2,8 +2,7 @@ The first step to get started is to generate your workflow skeleton using Maven
 archetypes. You will want to do this in a directory without pom.xml files (i.e. 
 outside of the SeqWare development directories).  Here we are working in the provisioned-bundles directory: 
          
-        cd /home/seqware/SeqWare 
-        cd provisioned-bundles  
+        cd /home/seqware/provisioned-bundles
         mvn archetype:generate 
         ... 
         720: local -> com.github.seqware:seqware-archetype-decider (SeqWare Java Decider archetype) 

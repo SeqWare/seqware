@@ -177,7 +177,7 @@ So using the information above you can create a new study:
 
 	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --create --field 'title::New Test Study' --field 'description::This is a test description' --field 'accession::InternalID123' --field 'center_name::SeqWare' --field 'center_project_name::SeqWare Test Project' --field study_type::4
 	
-	SWID: 29830
+	SWID: 2
 
 The output of this command above includes the line “SWID: 29830” (or whatever
 number is appropriate for your database).  This is very important since this
@@ -190,17 +190,17 @@ be created.
 The next step is to create an experiment and link it to the study you created
 above. You can find the platform ID using the <tt>--list-fields</tt> option shown above:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table experiment --create --field 'title::New Test Experiment' --field 'description::This is a test description' --field platform_id::26 --field study_accession::29830
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table experiment --create --field 'title::New Test Experiment' --field 'description::This is a test description' --field platform_id::26 --field study_accession::2
 	
-	SWID: 29831
+	SWID: 3 
 
 Again, you use the SWID from the above output in the next step to create an
 associated sample. You can find the platform ID using the <tt>--list-fields</tt> option
 shown above:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table sample --create --field 'title::New Test Sample' --field 'description::This is a test description' --field organism_id::26 --field experiment_accession::29831
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table sample --create --field 'title::New Test Sample' --field 'description::This is a test description' --field organism_id::26 --field experiment_accession::3
 	
-	SWID: 29832
+	SWID: 4
 
 At this point you should have a nice study/experiment/sample hierarchy.  You
 can, of course, add multiple samples per experiment and multiple experiments
@@ -244,14 +244,14 @@ HelloWorld workflow.  For example, do the following in your home directory:
 
 Here is an example of calling the ProvisionFiles command line utility which
 will copy a file (<tt>~/input.txt</tt>) to a destination (<tt>/datastore/</tt>)
-and also update the database to link the parent sample (SWID:29832 above) to
+and also update the database to link the parent sample (SWID:4 above) to
 the newly copied file that has the final path <tt>/datastore/input.txt</tt>:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles --metadata-output-file-prefix /datastore/ --metadata-processing-accession-file accession.txt --metadata-parent-accession 29832 -- -im text::text/plain::/home/seqware/input.txt -o /datastore/ --force-copy 
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles --metadata-output-file-prefix /datastore/ --metadata-processing-accession-file accession.txt --metadata-parent-accession 4 -- -im text::text/plain::/home/seqware/input.txt -o /datastore/ --force-copy 
 
 In this example it will copy the /home/seqware/input.txt text file to
 /datastore/ directory (which we are using for this tutorial) and will link it 
-to the sample identified by 29832 (the sample’s SWID).  So the final output
+to the sample identified by 4 (the sample’s SWID).  So the final output
 file is "/datastore/input.txt" in the database. If you left off --force-copy
 you would get a symlink in this case since it is a local file operation.  If
 you left off "--metadata-output-file-prefix /datastore/" then the file path in
@@ -262,9 +262,9 @@ at the accession for the ProvisionFiles event now, you will use this value as
 the parent for the actual run of the HelloWorld workflow:
 
 	cat /home/seqware/accession.txt
-	29854
+	5	
 
-In this case the SWID for the ProvisionFiles is 29854.
+In this case the SWID for the ProvisionFiles is 5.
 
 <p class="warning"><strong>Tip:</strong> you can find a list of the meta types
 (like chemical/seq-na-text-gzip or text/plain above) at <a
@@ -286,9 +286,9 @@ GenericMetadataSaver is the tool you can use to accomplish this, for example,
 if you already had input2.txt in /datastore you could insert this into the
 MetaDB using:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver --metadata-parent-accession 25192 --metadata-processing-accession-file accession.txt -- --gms-output-file text::text/plain::/datastore/input2.txt --gms-algorithm UploadText --gms-suppress-output-file-check
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver --metadata-parent-accession 4 --metadata-processing-accession-file accession.txt -- --gms-output-file text::text/plain::/datastore/input2.txt --gms-algorithm UploadText --gms-suppress-output-file-check
 
-Here files are associated with the parent (SWID: 25192 which is a sample). One
+Here files are associated with the parent (SWID: 4 which is a sample). One
 word of caution, if you expect people to download your files through the Portal
 then the paths you inject into the database must be in a place where the Portal
 can "see" it. See the [Portal documentation](/docs/5-portal/) for information
@@ -310,30 +310,28 @@ You will get a tab-delimited list of workflows showing their name, version, and
 output by cutting and pasting into a spreadsheet, it is tab-delimited.</p>
 
 In this example we are going to use the latest (at the time of this writing)
-HelloWorld workflow bundle (SWID 7 below).  The output of the above command
+HelloWorld workflow bundle (SWID 1 below).  The output of the above command
 includes the line:
 
-	HelloWorldWorkflow      1.0     Wed Aug 15 19:00:11 EDT 2012    7       /home/seqware/released-bundles/Workflow_Bundle_HelloWorldWorkflow_1.0_SeqWare_<%= seqware_release_version %>.zip
+	HelloWorldWorkflow      1.0-SNAPSHOT     Wed Aug 15 19:00:11 EDT 2012    7       /home/seqware/released-bundles/Workflow_Bundle_HelloWorldWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
 
 The fourth column includes the SWID for this workflow that you will use in the
 next command to find all the parameters (and their defaults) that this workflow
 takes.  Here is the command, notice we redirect the output to create a basic ini
 file that can later be customized and used to submit a run of this workflow:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession 7 > /home/seqware/workflow.ini
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession 1 > /home/seqware/workflow.ini
 
-In this example the workflow “HelloWorldWorkflow” version 1.0 (SWID 7)
+In this example the workflow “HelloWorldWorkflow” version 1.0 (SWID 1)
 parameters are listed.  The output conforms to the input you can use to
 parameterize and launch workflows.  For example:
 
-<pre>
-#key=input_file:type=file:display=F:display_name=input_file:file_meta_type=text/plain
-input_file=${workflow_bundle_dir}/Workflow_Bundle_helloworld/1.0/data/input.txt
-#key=output_dir:type=text:display=F:display_name=output_dir
-output_dir=seqware-results
-#key=output_prefix:type=text:display=F:display_name=output_prefix
-output_prefix=/datastore/
-</pre>
+	#key=input_file:type=file:display=F:display_name=input_file:file_meta_type=text/plain
+	input_file=${workflow_bundle_dir}/Workflow_Bundle_helloworld/1.0/data/input.txt
+	#key=output_dir:type=text:display=F:display_name=output_dir
+	output_dir=seqware-results
+	#key=output_prefix:type=text:display=F:display_name=output_prefix
+	output_prefix=./
 
 <p class="warning"><strong>Important!:</strong> the lines above have been
 wrapped but you should not include line breaks in your file.  Instead, make
@@ -367,6 +365,36 @@ of your ini files making it much easier to see the key-values you are
 interested in. In the example above the minimal ini file is simply the two
 lines for <tt>input_file</tt> and <tt>output_prefix</tt>.</p>
 
+In summary, your workflow.ini should be changed from:
+
+	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
+	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@16ba8602
+	=====================================================
+	=================WORKFLOW PARAMS=====================
+	=====================================================
+	-----------------------------------------------------
+	#key=input_file:type=file:display=F:display_name=input_file:file_meta_type=text/plain
+	input_file=${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/data/input.txt
+	#key=greeting:type=text:display=T:display_name=Greeting
+	greeting=Testing
+	#key=output_dir:type=text:display=F:display_name=output_dir
+	output_dir=seqware-results
+	#key=output_prefix:type=text:display=F:display_name=output_prefix
+	output_prefix=./
+
+	-----------------------------------------------------
+
+
+to the following:
+
+	#key=input_file:type=file:display=F:display_name=input_file:file_meta_type=text/plain
+	input_file=/datastore/input.txt
+	#key=greeting:type=text:display=T:display_name=Greeting
+	greeting=Testing
+	#key=output_dir:type=text:display=F:display_name=output_dir
+	output_dir=seqware-results
+	#key=output_prefix:type=text:display=F:display_name=output_prefix
+	output_prefix=/datastore/
 
 ## Triggering a Workflow and Monitoring Progress 
 
@@ -374,11 +402,13 @@ At this point you know what workflow you are going to run and you have a
 customized ini file that contains the <tt>input_file</tt> and
 <tt>output_prefix</tt>. The next step is to trigger the workflow using the ini
 file you prepared. Make sure you use the correct workflow accession and parent
-accession. The former was listed when you listed all workflows (SWID:7 in this
+accession. The former was listed when you listed all workflows (SWID:1 in this
 example) and the latter was printed to the <tt>accession.txt</tt> file when you
-copied the file using ProvisionFile (SWID:29854 in this example).
+copied the file using ProvisionFile (SWID:5 in this example).
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files /home/seqware/workflow.ini --workflow-accession 7 --schedule --parent-accessions 29854 --host `hostname --long` 
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files /home/seqware/workflow.ini --workflow-accession 1 --schedule --parent-accessions 5 --host `hostname --long` 
+	WORKFLOW_RUN ACCESSION: 11
+
 
 <p class="warning"><strong>Tip:</strong> the parent-accessions is the SWID of
 the ProvisionFiles element that was added under the sample when use used this
@@ -395,33 +425,34 @@ You can then monitor workflow progress (and getting a list of the outputs)
 using the WorkflowRunReporter plugin. This will let you script the monitoring
 of workflow runs.
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --workflow-accession 7
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --workflow-accession 1 
 
 In this example all the status information for workflows with workflow
-accession 7 are printed out to a file in the local directory, for example
-<tt>20130414_201452__workflow_7.csv</tt>.  This includes several columns of
+accession 1 are printed out to a file in the local directory, for example
+<tt>20130414_201452__workflow_1.csv</tt>.  This includes several columns of
 interest including the status of the workflow, the output file types, and their
 locations in S3 or the file system. You can use this information to automate
 the checking of workflows and the retrieval of the results!
 
 Alternatively, you can just get the status of a particular workflow run, for
 example, the workflow run accession printed when you launched the workflow with
-the WorkflowLauncher(for example SWID: 30182).  You can also skip the output
+the WorkflowLauncher(for example SWID: 11).  You can also skip the output
 file by just using the <tt>--stdout</tt> option which is helpful if you are scripting
 on top of this command.
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --workflow-run-accession 30182 --stdout
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --workflow-run-accession 11 --stdout
 
 In the output from the above command you will see accessions for each workflow
 run. If the status is “failed” you can download the stderr and stdout from the
-workflow run. This is how you might do that for a workflow_run with an
-accession of SWID: 30182:
+workflow run. This is how you might do that for our workflow_run with an
+accession of SWID: 11 (Note that there is no useful output in our tutorial after the 
+workflow completes successfully):
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wra 30182 --wr-stderr
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wra 30182 --wr-stdout
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wra 11 --wr-stderr
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wra 11 --wr-stdout
 
 Again, this command automatically creates output files for stderr and stdout,
-for example <tt>20130414_202120__workflowrun_30182_STDERR.csv</tt>.  You can
+for example <tt>20130414_202120__workflowrun_11_STDERR.csv</tt>.  You can
 use the <tt>--stdout</tt> option if you wish to skip the output file and just
 write to the terminal.
 
@@ -461,17 +492,17 @@ utility above to pull files back.  Since the report produces a simple
 tab-delimited file you can easily automate the downloading of results by
 looping over the output files and calling ProvisionFiles using a script.
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 7 --study 'New Test Study'
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 1 --study 'New Test Study'
 
 The output here is a <tt>study_report.csv</tt> file that contains a line for
 each file output for this workflow.  You can also filter by file types, for
 example if you want to see just plain text files:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 7 --study 'New Test Study' --file-type 'text/plain'
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 1 --study 'New Test Study' --file-type 'text/plain'
 
 Or an example filtering by a particular sample:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 7  --sample 'New Test Sample'
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 1  --sample 'New Test Sample'
 
 You can use these output file URLs (such as
 s3://bucket/samplename/test_R1.text.gz) with ProvisionFiles to download results
