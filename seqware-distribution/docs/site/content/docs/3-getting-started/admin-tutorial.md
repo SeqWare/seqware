@@ -84,7 +84,7 @@ For more information see the [Monitor Configuration](/docs/6-pipeline/monitor_co
 
 After launching a workflow, you can cancel it in order to stop further execution. This will set the status of the workflow run to 'failed'.
 
-	java -jar ~/seqware-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession 6730  --parent-accessions 839 --host `hostname --long`                      
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession 6730  --parent-accessions 839 --host `hostname --long`                      
 	
 	Running Plugin: net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher                                            
 	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher@288051                                  
@@ -94,8 +94,8 @@ After launching a workflow, you can cancel it in order to stop further execution
 	Attempting to instantiate /tmp/1364426207469-0/seqware-archetype-java-workflow/target/Workflow_Bundle_seqware-archetype-java-workflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/Workflow_Bundle_seqware-archetype-java-workflow/1.0-SNAPSHOT/classes/com/seqware/github/WorkflowClient.java                                                                                                              
 	  INI FILE: workflow.ini                                                                                                       
 	CREATING DAX IN: /tmp/dax71095297362814544976755889839517                                                                      
-	SUBMITTING TO PEGASUS: pegasus-plan -Dpegasus.user.properties=/home/seqware/.seqware/pegasus/properties --dax /tmp/dax71095297362814544976755889839517 --dir /home/seqware/SeqWare/pegasus-dax -o seqwarevm --force --submit -s seqwarevm                     
-	PEGASUS STATUS COMMAND: pegasus-status -l /home/seqware/SeqWare/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126                                                                                                                           
+	SUBMITTING TO PEGASUS: pegasus-plan -Dpegasus.user.properties=/home/seqware/.seqware/pegasus/properties --dax /tmp/dax71095297362814544976755889839517 --dir /home/seqware/pegasus-dax -o seqwarevm --force --submit -s seqwarevm                     
+	PEGASUS STATUS COMMAND: pegasus-status -l /home/seqware/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126                                                                                                                           
 	[seqware@seqwarevm testing]$ condor_q                                                                                          
 
 
