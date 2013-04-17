@@ -21,6 +21,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import net.sourceforge.seqware.common.util.*;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
+import static net.sourceforge.seqware.common.util.configtools.ConfigTools.SEQWARE_SETTINGS_PROPERTY;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -128,5 +130,24 @@ public class FileToolsTest {
 
     assertEquals(username, FileTools.whoAmI());
 
+  }
+  
+  @Test
+  public void testOwnership() throws Exception{
+      File tempFile = File.createTempFile("test", "test");
+      String determineFilePermissions = FileTools.determineFilePermissions(tempFile.getAbsolutePath());
+      Assert.assertTrue("incorrect file permissions", determineFilePermissions.equals("-rw-rw-r--"));
+      
+      // create a "settings file" and then check to see if its permissions are correct
+      tempFile.setExecutable(false, false);
+      tempFile.setWritable(false, false);
+      tempFile.setWritable(true, true);
+      tempFile.setReadable(false, false);
+      tempFile.setReadable(true, true);
+      System.setProperty(SEQWARE_SETTINGS_PROPERTY, tempFile.getPath());
+      
+      String settingPerms = FileTools.determineFilePermissions(ConfigTools.getSettingsFilePath());
+      Assert.assertTrue("incorrect file permissions", settingPerms.equals("-rw-------"));
+      tempFile.deleteOnExit();
   }
 }
