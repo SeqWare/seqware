@@ -24,7 +24,12 @@ public class ProvisionFilesJob extends PegasusJob {
 		sb.append("-classpath ").append(basedir).append("/lib/").append(this.getPipelinePath()).append("\n");
 		sb.append("net.sourceforge.seqware.pipeline.runner.Runner").append("\n");
 		sb.append(this.buildMetadataString());
-
+                // ok, if this is being provisioned by using output_prefix and output_dir along with the name of the
+                // file then we need to tell the metadb about the output_prefix and output_dir!
+                // not applicable if the full path was provided
+                if (this.file.getOutputPath() == null) {
+                    sb.append("--metadata-output-file-prefix "+this.metadataOutputPrefix + "/" + this.outputDir + "\n");
+                }
 		sb.append("--module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles").append("\n");
 		sb.append("--").append("\n");
 		
