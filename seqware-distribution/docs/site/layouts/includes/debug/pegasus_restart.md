@@ -1,8 +1,8 @@
 If a workflow has failed due to a transient error (such as cluster downtime or a disk quota being reached), you can restart a workflow at the last failed step.
 
-        cd /home/seqware/SeqWare/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126
+        cd /home/seqware/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126
         pegasus-run -Dpegasus.user.properties=pegasus.*.properties --nodatabase `pwd`
-        Rescued /home/seqware/SeqWare/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126/seqware-archetype-java-workflow-0.log as /home/seqware/SeqWare/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126/seqware-archetype-java-workflow-0.log.000
+        Rescued /home/seqware/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126/seqware-archetype-java-workflow-0.log as /home/seqware/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126/seqware-archetype-java-workflow-0.log.000
 
         Running rescue DAG 1
         -----------------------------------------------------------------------
@@ -20,16 +20,16 @@ If a workflow has failed due to a transient error (such as cluster downtime or a
 
         Your Workflow has been started and runs in base directory given below
 
-        cd /home/seqware/SeqWare/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126
+        cd /home/seqware/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126
 
         *** To monitor the workflow you can run ***
 
-        pegasus-status -l /home/seqware/SeqWare/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126
+        pegasus-status -l /home/seqware/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126
 
         *** To remove your workflow run ***
         pegasus-remove -d 2848.0
         or
-        pegasus-remove /home/seqware/SeqWare/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126
+        pegasus-remove /home/seqware/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126
 
         [seqware@seqwarevm run0126]$ condor_q
 

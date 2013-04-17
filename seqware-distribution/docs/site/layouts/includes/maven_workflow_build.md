@@ -1,18 +1,12 @@
-        [seqware@seqwarevm maven-bundles]$ cd helloworld/
-        [seqware@seqwarevm helloworld]$ mvn install
+	[seqware@master provisioned-bundles]$ cd HelloWorld/
+	[seqware@master HelloWorld]$ mvn clean install
         [INFO] Scanning for projects...                                                                                       
         [INFO] ------------------------------------------------------------------------                                       
         [INFO] Building seqware-workflow                                                                                      
-        [INFO]    task-segment: [install]                                                                                     
-        [INFO] ------------------------------------------------------------------------                                       
-        [INFO] [properties:read-project-properties {execution: properties-maven-plugin-execution}]                            
-        [debug] execute contextualize                                                                                         
-        [INFO] [resources:copy-resources {execution: copy-resources}]                                                         
-        [INFO] Using 'UTF-8' encoding to copy filtered resources.                                                             
-        [INFO] Copying 3 resources                                                                                            
-        [debug] execute contextualize                                                                                         
-        [INFO] [resources:resources {execution: default-resources}]                                                           
-        [INFO] Using 'UTF-8' encoding to copy filtered resources.    
+	[INFO]    task-segment: [clean, install]
+	[INFO] ------------------------------------------------------------------------
+	[INFO] [clean:clean {execution: default-clean}]
+	[INFO] Deleting /mnt/databases/provisioned-bundles/HelloWorld/target
         ...
         main:
         [INFO] Executed tasks
