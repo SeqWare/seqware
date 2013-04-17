@@ -716,6 +716,52 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <!-- SEQWARE-1595 Making sure that permissions on the .seqware/settings are correct.
+                    It would be even nicer if our unit tests worked out of the box. However, some tests in the web service require a 
+                    settings file with METADATA defined, so we'll need to create that rather than a blank file.
+                    
+                    <execution>
+                        <id>mkdir_settings</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>mkdir</executable>
+                            <commandlineArgs>-p ${user.home}/.seqware</commandlineArgs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>touch_settings</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>touch</executable>
+                            <commandlineArgs>${user.home}/.seqware/settings</commandlineArgs>
+                        </configuration>
+                    </execution> --> 
+                    <execution>
+                        <id>set_permissions</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>chmod</executable>
+                            <commandlineArgs>600 ${user.home}/.seqware/settings</commandlineArgs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
