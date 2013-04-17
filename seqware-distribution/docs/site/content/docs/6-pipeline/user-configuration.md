@@ -31,7 +31,9 @@ ready to go, you will not need to modify it.
 
 Note that the sections for the Oozie Workflow Engine, General Hadoop, Query
 Engine, and Amazon Cloud Settings are all optional, so they do not need to be
-filled in for every deployment of SeqWare, just those using these tools.
+filled in for every deployment of SeqWare, just those using these tools. Also note that the
+settings file needs to have read and write permissions for only the owner for security reasons. 
+Our tools will abort and refuse to run if this is not set. 
 
 <pre><code>#!ini
 #

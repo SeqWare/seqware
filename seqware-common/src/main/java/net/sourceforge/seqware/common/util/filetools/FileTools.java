@@ -872,6 +872,30 @@ public class FileTools {
     }
   }
   
+    /**
+   * This tool uses the 'ls -al' command to find the current file permissions.
+   *
+   * @param path
+   * @return
+   */
+  public static String determineFilePermissions(String path) {
+
+    ArrayList<String> theCommand = new ArrayList<String>();
+    theCommand.add("bash");
+    theCommand.add("-lc");
+    theCommand.add("ls -al " + path);
+
+    ReturnValue ret = RunTools.runCommand(theCommand.toArray(new String[0]));
+    if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+      String stdout = ret.getStdout();
+      stdout = stdout.substring(0, 10);
+      return (stdout);
+    } else {
+      Log.error("Can't figure out file permissions using 'ls -al' " + ret.getStderr());
+      return (null);
+    }
+  }
+  
   public static String getFilename(String filePath) {
     if (filePath == null || "".equals(filePath)) { return null; }
     String[] tokens = filePath.split("/");
