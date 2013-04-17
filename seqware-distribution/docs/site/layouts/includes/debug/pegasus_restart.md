@@ -39,3 +39,6 @@ If a workflow has failed due to a transient error (such as cluster downtime or a
         2851.0   seqware         3/28 11:31   0+00:00:05 R  0   0.3  condor_dagman -f -
 	1 jobs; 0 completed, 0 removed, 0 idle, 1 running, 0 held, 0 suspended
 
+You will also need to have the workflow status checker reset the status of the workflow_run via a command like:
+
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker -- --wra 525814 --check-failed
