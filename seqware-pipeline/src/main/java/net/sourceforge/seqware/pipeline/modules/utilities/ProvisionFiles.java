@@ -221,8 +221,8 @@ public class ProvisionFiles extends Module {
     }
     
     // deal with output-file
-    if (options.has("output-file") && !options.has("input-file")) {
-      ret.setStderr("Must specify a --input-file option along with the --output-file option"
+    if (options.has("output-file") && !(options.has("input-file") || options.has("input-file-metadata"))) {
+      ret.setStderr("Must specify a --input-file or --input-file-metadata option along with the --output-file option"
             + System.getProperty("line.separator") + this.get_syntax());
         ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         return ret;
@@ -237,8 +237,8 @@ public class ProvisionFiles extends Module {
     }
 
     // deal with output-file
-    if (options.has("output-file") && options.has("input-file") && (options.valuesOf("output-file").size() > 1 || options.valuesOf("input-file").size() > 1)) {
-      ret.setStderr("Must specify a single --input-file option along with a single --output-file option"
+    if (options.has("output-file") && (options.has("input-file") || options.has("input-file-metadata")) && (options.valuesOf("output-file").size() > 1 || options.valuesOf("input-file").size() > 1 || options.valuesOf("input-file-metadata").size() > 1)) {
+      ret.setStderr("Must specify a single --input-file option (or --input-file-metadata) along with a single --output-file option"
             + System.getProperty("line.separator") + this.get_syntax());
         ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         return ret;
@@ -392,7 +392,15 @@ public class ProvisionFiles extends Module {
             return (currRet);
           }
         }
-      } else if (options.valuesOf("input-file").size() == 1 && options.has("output-file") && options.valuesOf("output-file").size() == 1) { // then this is a single file to single file copy
+      } else if ((options.valuesOf("input-file").size() == 1 && options.valuesOf("input-file-metadata").size() == 0) &&
+              options.has("output-file") && options.valuesOf("output-file").size() == 1) { // then this is a single file to single file copy
+        if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true)) {
+          Log.error("Failed to copy file");
+          ret.setExitStatus(ReturnValue.FAILURE);
+          return (ret);
+        }
+      } else if ((options.valuesOf("input-file").size() == 0 && options.valuesOf("input-file-metadata").size() == 1) &&
+              options.has("input-file-metadata") && options.valuesOf("output-file").size() == 1) { // then this is a single file to single file copy
         if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true)) {
           Log.error("Failed to copy file");
           ret.setExitStatus(ReturnValue.FAILURE);
