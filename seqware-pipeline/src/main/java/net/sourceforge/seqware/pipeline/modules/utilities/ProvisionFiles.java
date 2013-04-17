@@ -342,6 +342,8 @@ public class ProvisionFiles extends Module {
     ArrayList<String> newArray = new ArrayList<String>();
     List<String> inputs = (List<String>) options.valuesOf("input-file");
     List<String> metaInputs = (List<String>) options.valuesOf("input-file-metadata");
+    List<String> outputFiles = (List<String>) options.valuesOf("output-file");
+    
     if (metaInputs != null) {
       if (inputs != null && inputs.size() > 0) {
         newArray.addAll(inputs);
@@ -353,7 +355,9 @@ public class ProvisionFiles extends Module {
           FileMetadata fmd = new FileMetadata();
           fmd.setDescription(tokens[0]);
           fmd.setMetaType(tokens[1]);
-          fmd.setFilePath(tokens[2]);
+          if (outputFiles != null && outputFiles.size() > 0) {
+              fmd.setFilePath(outputFiles.get(0));
+          } else { fmd.setFilePath(tokens[2]); }
           fmd.setType(tokens[0]);
           fileArray.add(fmd);
         }
