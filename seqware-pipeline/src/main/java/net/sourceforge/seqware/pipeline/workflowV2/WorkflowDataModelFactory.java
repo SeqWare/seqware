@@ -432,7 +432,7 @@ public class WorkflowDataModelFactory {
             model.setMetadata_output_dir((String) options.valueOf("metadata-output-dir"));
         } else if (model.hasPropertyAndNotNull("output_dir")) {
           try {
-            model.setMetadata_output_file_prefix(model.getProperty("output_dir"));
+            model.setMetadata_output_dir(model.getProperty("output_dir"));
           } catch (Exception ex) {
             Logger.getLogger(WorkflowDataModelFactory.class.getName()).log(Level.SEVERE, null, ex);
           }
