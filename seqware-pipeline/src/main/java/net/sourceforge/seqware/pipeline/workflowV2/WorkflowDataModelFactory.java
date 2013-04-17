@@ -160,8 +160,13 @@ public class WorkflowDataModelFactory {
         //load ini config
         Map<String, String> configs = this.loadIniConfigs(workflowAccession, workflowRunAccession, bundlePath);
         dataModel.setConfigs(configs);
+        
+        // 0.13.6.5 : The Java workflow launcher was not originally designed to schedule, hence it is not properly getting 
+        // parent accessions from saved ini files (as opposed to on the command line) 
+        ArrayList<String> parseParentAccessions = BasicWorkflow.parseParentAccessions(configs);
+        dataModel.setParentAccessions(parseParentAccessions);
 
-        //merge command line option with configs
+        //merge command line option with configs, command-line options should override parent accession set above if present
         this.mergeCmdOptions(dataModel);
         //merge version, and name ??? TODO 
 
