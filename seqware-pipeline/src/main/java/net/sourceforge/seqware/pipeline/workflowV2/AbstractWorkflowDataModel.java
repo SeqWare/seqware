@@ -293,7 +293,10 @@ public abstract class AbstractWorkflowDataModel  {
 	 * @param parent_accessions parent_accessions separated by ","
 	 */
 	void setParentAccessions(Collection<String> parentAccessions) {
-		this.parentAccessions.addAll(parentAccessions);
+            // 0.13.6.5 We actually want overridden behaviour, rather than combining workflow.ini and command-line opts,
+            // we want just the command-line opts if present
+            this.parentAccessions.clear();
+            this.parentAccessions.addAll(parentAccessions);
 	}
 
 	/**

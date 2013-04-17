@@ -851,7 +851,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * @param map
      * @return
      */
-    private ArrayList<String> parseParentAccessions(Map<String, String> map) {
+    public static ArrayList<String> parseParentAccessions(Map<String, String> map) {
 	ArrayList<String> results = new ArrayList<String>();
 	HashMap<String, String> resultsDeDup = new HashMap<String, String>();
 
