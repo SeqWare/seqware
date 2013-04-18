@@ -70,7 +70,6 @@ bundle can be provided to the admin for install as below.
 	-rw-rw-r-- 1 seqware seqware 151M Mar 28 10:42 Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
 	
 	[seqware@master Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5]$ ls -alhtr ~/provisioned-bundles/ | grep HelloWorld
-	drwxrwxr-x 5 seqware seqware 4.0K Apr 17 12:18 HelloWorld
 	drwxrwxr-x 3 seqware seqware 4.0K Apr 17 12:27 Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>
 
 
