@@ -21,7 +21,7 @@ To learn about Linux, the Bash shell, and Java we recommend the O'Reilly series 
 * [Learning the bash Shell](http://amzn.com/B0043GXMSY)
 * [Learning Java](http://amzn.com/B0043EWVDI)
 
-## Installing with a Local VM
+## Option 1 - Installing with a Local VM
 
 We have created a VirtualBox VM with all SeqWare projects pre-installed along
 with some sample data.  This is the easiest way to get started with SeqWare
@@ -82,7 +82,7 @@ on this in the "SeqWare Pipeline" section of our documentation.
 
 <img src="/assets/images/vm_screen.png" alt="SeqWare VM" width="600px"/>
 
-## Installing with a Cloud VM
+## Option 2 -Installing with a Cloud VM
 
 We currently support running SeqWare on the Amazon cloud on HPC nodes. These
 are high-performance, cluster-compute nodes well suited for research, for specs
@@ -104,7 +104,7 @@ What makes Amazon's cloud so amazingly awesome is its excellent support for both
 
 Our current public AMI(s):
 
-* **SWStandaloneCentOS_v2_GenericDevBox_v13, SeqWare Version 0.13.6.5: ami-0888e961**
+* SWStandaloneCentOS_v2_GenericDevBox_v13, SeqWare Version 0.13.6.5: **ami-0888e961**
 
 An example of the launching wizard in the Amazon AWS console can be seen below:
 
@@ -135,7 +135,7 @@ human genomes. In the mean time we recommend investigating the excellent
 <p class="warning"><strong>Note:</strong>Keep in mind Amazon charges approximately $1.30 USD per hour to run these instances, it is your responsibility to monitor your cloud usage and turn your VMs off when not in use!  You will be billed for each hour (rounded up).</p>
 
 
-## Installing from Scratch
+## Option 3 - Installing from Scratch
 
 <p class="warning"><strong>Note:</strong> This is not for the faint of heart.  We do not recommend you attempt to do this
 unless you a very familiar with Linux and comfortable with complex software
