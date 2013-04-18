@@ -104,15 +104,11 @@ individual jobs are already in the correct location.
 
 ## First Steps
 
-Please launch your local VM in VirtualBox and login as user <kbd>seqware</kbd>,
-password <kbd>seqware</kbd> at this time. Click on the "SeqWare Directory" link
-on the desktop which will open a terminal to the location where we installed
-the SeqWare tools. 
-
+<%= render '/includes/launch_vm/' %>
 
 ## Overview of Workflow Development Using the VM
 
-You should be in the /home/seqware/SeqWare directory now, this is the working
+You should be in the /home/seqware/ directory now, this is the working
 directory.  Notice there is a jar file here and also two important directories:
 provisioned-bundles (SW_BUNDLE_DIR in the config) which contains unzipped
 workflow bundles and released-bundles
