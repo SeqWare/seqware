@@ -1,7 +1,8 @@
 ---
 
 title:    "Documentation"
-markdown: basic
+markdown: advanced
+is_dynamic: true
 
 ---
 
