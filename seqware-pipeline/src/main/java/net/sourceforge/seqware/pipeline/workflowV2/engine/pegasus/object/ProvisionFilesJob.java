@@ -47,10 +47,15 @@ public class ProvisionFilesJob extends PegasusJob {
                         if (this.file.getOutputPath() != null) {
                           output = "--output-file " + this.file.getOutputPath();
                         }
-		}
+		}else{
+                    //SEQWARE-1608
+                    sb.append("--skip-record-file\n");
+                } 
+                
 		sb.append(inputType).append(this.file.getSourcePath()).append("\n");
 		sb.append(output).append("\n");
-		if(this.file.isForceCopy()) {
+                
+                if(this.file.isForceCopy()) {
 			sb.append("--force-copy");
 		}
                 	
