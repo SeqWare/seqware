@@ -51,7 +51,7 @@ public class ConfigTools {
     // will use Linux command until Java 7 NIO (hopefully)
     String settingPerms = FileTools.determineFilePermissions(settings);
     if (!ignorePermissions && !settingPerms.equals("-rw-------")){
-        throw new IOException("SeqWare settings file has incorrect file permissions. It should only be readable and writeable by the owner.");
+        throw new IOException("SeqWare settings file has incorrect file permissions. It should only be readable and writeable by the owner. In other words, run \"chmod 600 ~/.seqware/settings\"");
     }
     
     // else it should be OK
