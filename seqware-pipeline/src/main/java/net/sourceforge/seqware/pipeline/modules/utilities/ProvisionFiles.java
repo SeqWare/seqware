@@ -144,6 +144,12 @@ public class ProvisionFiles extends Module {
         .accepts(
             "s3-no-server-side-encryption",
             "Optional: If specified, do not use S3 server-side encryption. Default is to use S3 server-side encryption for S3 destinations.");
+    //SEQWARE-1608 
+    parser
+        .accepts(
+            "skip-record-file",
+            "Optional: If specified, do not record new entries in the file table.");
+    
     return (parser);
   }
 
@@ -417,6 +423,10 @@ public class ProvisionFiles extends Module {
           return (ret);
         }
       }
+    }
+    
+    if (!options.has("skip-record-file")){
+            fileArray.clear();
     }
 
     return (ret);
