@@ -130,7 +130,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}</outputDirectory>
+                            <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>workflow</directory>
@@ -151,7 +151,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/classes</outputDirectory>
+                            <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/classes</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.build.directory}/classes</directory>
@@ -185,7 +185,7 @@
                                     <version>${seqware-version}</version>
                                     <classifier>full</classifier>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/lib</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/lib</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -197,7 +197,7 @@
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/bin</outputDirectory>
+                            <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/bin</outputDirectory>
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>true</overWriteSnapshots>
                         </configuration>
@@ -217,7 +217,7 @@
                         </goals>
                         <configuration>
                             <executable>chmod</executable>
-                            <commandlineArgs>555 -R ${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/bin</commandlineArgs>
+                            <commandlineArgs>755 -R ${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/bin</commandlineArgs>
                         </configuration>
                     </execution>
                 </executions>
@@ -233,7 +233,7 @@
                         <configuration>
                             <target>
                                 <chmod perm="555">
-                                    <fileset dir="${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin/jre1.6.0_29/bin">
+                                    <fileset dir="${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin/jre1.6.0_29/bin">
                                         <filename name="**/*"/>
                                     </fileset>                  
                                 </chmod>
@@ -249,7 +249,7 @@
                         <configuration>
                             <target>
                                 <chmod perm="555">
-                                    <fileset dir="${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin/perl-5.14.1">
+                                    <fileset dir="${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin/perl-5.14.1">
                                         <filename name="**/perl"/>
                                     </fileset>                  
                                 </chmod>
