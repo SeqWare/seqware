@@ -140,7 +140,12 @@ public class OozieProvisionFileJob extends OozieJob {
                         if (this.file.getOutputPath() != null) {
                           output = this.file.getOutputPath();
                         }
-		}
+		} else{
+                    //SEQWARE-1608             
+                    Element skipArg = new Element("arg", WorkflowApp.NAMESPACE);
+                    skipArg.setText("--skip-record-file");
+                    javaE.addContent(skipArg);
+                }
 		Element inputTE = new Element("arg", WorkflowApp.NAMESPACE);
 		inputTE.setText(inputArg);
 		javaE.addContent(inputTE);
