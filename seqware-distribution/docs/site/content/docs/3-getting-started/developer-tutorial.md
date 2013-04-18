@@ -7,6 +7,11 @@ toc_includes_sections: true
 
 ---
 
+<!-- TODO 
+* really, should be a tutorial for MyHelloWorld so it doesn't conflict with the workflow already installed
+* the adding new job step below should show how to call a user-created script! A one-step workflow!
+-->
+
 This guide picks up where the [User
 Tutorial](/docs/3-getting-started/user-tutorial/) left off. In that previous
 guide we showed you how to start up your local VM, create studies, experiments,
@@ -169,6 +174,8 @@ Notice in the command below that we use the SeqWare jar from **inside** the work
 ensures we are using the version of SeqWare this bundle was built with which minimize incompatibility issues.
 
 <pre>
+cd /home/seqware/workflow-dev/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/
+
 java -jar Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-<%= seqware_release_version %>-full.jar  -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -l -b `pwd`
 
 Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
@@ -202,31 +209,19 @@ This shows one workflow in the generated workflow bundle.
 
 #### Files
 
-<pre>
-<code>#!java
-    @Override
-    public Map<String, SqwFile> setupFiles() {
-        SqwFile file0 = this.createFile("file_in_0");
-        file0.setSourcePath(this.getWorkflowBaseDir()+"/data/input.txt");
-        file0.setType("text/plain");
-        file0.setIsInput(true);
-
-        SqwFile file1 = this.createFile("file_out");
-        file1.setSourcePath("dir1/output");
-        file1.setType("text/plain");
-        file1.setIsOutput(true);
-        file1.setForceCopy(true);
-
-        return this.getFiles();
-    }
-</code>
-</pre>
+<%= render '/includes/java_workflows/java_workflow_files/' %>
 
 This method sets up files that are inputs and/or outputs for this workflow.  In
 this example the input <tt>data/input.txt</tt> comes from the workflow bundle
 itself. The ultimate location of the output file is determined by two
 parameters passed into the WorkflowLauncher which actually runs the workflow:
-<tt>--metadata-output-file-prefix</tt> and <tt>--metadata-output-dir</tt>.
+<tt>--metadata-output-file-prefix</tt> (our <tt>output_prefix</tt> in the ini
+file) and <tt>--metadata-output-dir</tt> (or <tt>output_dir</tt> in the ini
+file). Alternatively, you can actually override the output location for a file
+as is the case with the above "output_file".  When this parameter is available
+in the ini file the automatic location of the output file
+("output_prefix"+/+"output_dir"+/+"output") is overridden for the value of
+"output_file".
 
 #### Directories
 
@@ -335,7 +330,7 @@ The next step is to look at examples of workflows at [Workflow Examples](/docs/1
 SeqWare bundles have a test command built into their metadata.xml. In order to trigger this, run with the following command. Note that the workflow name and version need to match the name and version given when the workflow is listed above. 
 
 	cd /home/seqware/workflow-dev/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b `pwd` -t --workflow HelloWorld 1.0-SNAPSHOT
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b `pwd` -t --workflow HelloWorld --version 1.0-SNAPSHOT
 	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
 	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@2fb3f8f6
 	Testing Bundle
@@ -369,7 +364,7 @@ Assuming the workflow above worked fine the next step is to package it.
 	Bundle Has Been Packaged to packaged!
 
 
-What happens here is the <code>Workflow_Bundle_hello_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %></code> directory is zip'd up to your output directory and that can be provided to an admin for install.
+What happens here is the <code>Workflow_Bundle_hello_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %></code> directory is zip'd up to your output directory and that can be provided to an admin for install. In this VM you will find the bundled workflow written to the file /home/seqware/released-bundles/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
 
 
 ## Next Steps
