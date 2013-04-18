@@ -22,7 +22,7 @@ Please see the [Install Guide](/docs/github_readme/2-queryengine/) for installin
 
 We currently load data via our command-line programs. In order to do this, you will want to go to the root directory and compile a full version of our jar with dependencies included. You will probably wish to skip the tests for our other components. This should look something like:
 <pre title="Title of the snippet">
-  <kbd>cd ...</kbd>
+  <kbd>cd ~/gitroot/seqware/</kbd>
   <kbd>mvn clean install</kbd>
   <kbd>cd seqware-distribution/target</kbd>
 </pre>
