@@ -1,4 +1,4 @@
-	[seqware@master provisioned-bundles]$ cd HelloWorld/
+	[seqware@master workflow-dev]$ cd HelloWorld/
 	[seqware@master HelloWorld]$ mvn clean install
         [INFO] Scanning for projects...                                                                                       
         [INFO] ------------------------------------------------------------------------                                       
@@ -6,7 +6,7 @@
 	[INFO]    task-segment: [clean, install]
 	[INFO] ------------------------------------------------------------------------
 	[INFO] [clean:clean {execution: default-clean}]
-	[INFO] Deleting /mnt/databases/provisioned-bundles/HelloWorld/target
+	[INFO] Deleting /mnt/databases/workflow-dev/HelloWorld/target
         ...
         main:
         [INFO] Executed tasks
