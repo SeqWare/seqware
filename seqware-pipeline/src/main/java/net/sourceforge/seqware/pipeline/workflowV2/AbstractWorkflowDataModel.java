@@ -380,7 +380,7 @@ public abstract class AbstractWorkflowDataModel  {
 	 */
 	public String getProperty(String key) throws Exception {
 		if(!this.configs.containsKey(key))
-			throw new Exception("Key not found");
+			throw new Exception("Key "+key+" not found");
 		return configs.get(key);
 	}
         
