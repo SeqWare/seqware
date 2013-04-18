@@ -50,7 +50,7 @@ documentation.
 
 <p class="warning"><strong>Tip:</strong>If you want to see how to do the same
 steps covered in this tutorial via the Portal web GUI instead of command line
-tools see the <a href="/docs/5-portal/user-guide.md">Portal User Guide</a>.</p>
+tools see the <a href="/docs/5-portal/user-guide/">Portal User Guide</a>.</p>
 
 ## First Steps
 
@@ -179,7 +179,7 @@ So using the information above you can create a new study:
 	
 	SWID: 2
 
-The output of this command above includes the line “SWID: 29830” (or whatever
+The output of this command above includes the line “SWID: 2” (or whatever
 number is appropriate for your database).  This is very important since this
 number is a unique identifier across the database and used to link together
 entities.  For example, you will use the number produced by the study add
@@ -215,11 +215,7 @@ the Portal).  Here is a screenshot of what the above commands produce in the
 ## Uploading Files and Associating with a Sample
 
 The first step in uploading a file and associating with a sample is to identify
-the sample’s SWID. The easiest way to do this is to use the Portal web
-application to navigate through the Study/Experiment/Sample tree to the sample
-you want to upload text for and to note its associated SWID.  Of course you
-could programmatically use the WebService as well but that is a topic for a
-different tutorial, see [SeqWare Web Service](/docs/7-web-service/).  Once you
+the sample’s SWID. Once you
 decide on the "parent" sample to attach the file to you then need to know the
 destination location to put your file in.  For the local VM this is either a
 directory (which defaults to <kbd>/datastore</kbd>) or a shared filesystem over
@@ -228,7 +224,7 @@ The default <kbd>/datastore</kbd> will work fine here on this single,
 self-contained VM instance (either the VirtualBox VM or Amazon AMI).
 
 Once you have these two pieces of information (destination path "/datastore/"
-and the sample SWID) you can then use either the Portal or the command line utilities
+and the sample SWID) you can then use the command line utilities
 (ProvisionFiles or GenericMetadataSaver) to put your files into the right place
 and associate them with the correct sample.
 
@@ -286,14 +282,18 @@ GenericMetadataSaver is the tool you can use to accomplish this, for example,
 if you already had input2.txt in /datastore you could insert this into the
 MetaDB using:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver --metadata-parent-accession 4 --metadata-processing-accession-file accession.txt -- --gms-output-file text::text/plain::/datastore/input2.txt --gms-algorithm UploadText --gms-suppress-output-file-check
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver --metadata-parent-accession 4 --metadata-processing-accession-file accession2.txt -- --gms-output-file text::text/plain::/datastore/input2.txt --gms-algorithm UploadText --gms-suppress-output-file-check
 
-Here files are associated with the parent (SWID: 4 which is a sample). One
-word of caution, if you expect people to download your files through the Portal
-then the paths you inject into the database must be in a place where the Portal
-can "see" it. See the [Portal documentation](/docs/5-portal/) for information
-on setting the shared directory it expects to find uploaded files in.  For the
-VM, this is /datastore/.
+Here files are associated with the parent (SWID: 4 which is a sample). 
+Also, the file accession2.txt contains the SWID for this /datastore/input2.txt file.
+
+	cat /home/seqware/accession2.txt
+
+One word of caution, if you expect people to download your files through the
+Portal then the paths you inject into the database must be in a place where the
+Portal can "see" it. See the [Portal documentation](/docs/5-portal/) for
+information on setting the shared directory it expects to find uploaded files
+in.  For the VM, this is /datastore/.
 
 ## Listing Available Workflows and Their Parameters
 
@@ -365,7 +365,7 @@ of your ini files making it much easier to see the key-values you are
 interested in. In the example above the minimal ini file is simply the two
 lines for <tt>input_file</tt> and <tt>output_prefix</tt>.</p>
 
-In summary, your workflow.ini should be changed from:
+In summary, your should edit the workflow.ini changing it from:
 
 	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
 	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@16ba8602
@@ -425,20 +425,18 @@ You can then monitor workflow progress (and getting a list of the outputs)
 using the WorkflowRunReporter plugin. This will let you script the monitoring
 of workflow runs.
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --workflow-accession 1 
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --workflow-accession 1 --stdout
 
-In this example all the status information for workflows with workflow
-accession 1 are printed out to a file in the local directory, for example
-<tt>20130414_201452__workflow_1.csv</tt>.  This includes several columns of
-interest including the status of the workflow, the output file types, and their
-locations in S3 or the file system. You can use this information to automate
-the checking of workflows and the retrieval of the results!
+This output includes several columns of interest including the status of the
+workflow, the output file types, and their locations in S3 or the file system.
+You can use this information to automate the checking of workflows and the
+retrieval of the results! You can skip writing to an output
+file by just using the <tt>--stdout</tt> option which is helpful if you are scripting
+on top of this command.
 
 Alternatively, you can just get the status of a particular workflow run, for
 example, the workflow run accession printed when you launched the workflow with
-the WorkflowLauncher(for example SWID: 11).  You can also skip the output
-file by just using the <tt>--stdout</tt> option which is helpful if you are scripting
-on top of this command.
+the WorkflowLauncher(for example SWID: 11).  
 
 	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --workflow-run-accession 11 --stdout
 
