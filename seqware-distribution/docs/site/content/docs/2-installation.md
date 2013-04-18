@@ -104,7 +104,7 @@ What makes Amazon's cloud so amazingly awesome is its excellent support for both
 
 Our current public AMI(s):
 
-* SWStandaloneCentOS_v2_GenericDevBox_v13, SeqWare Version 0.13.6.5: **ami-0888e961**
+* SWStandaloneCentOS_v2_GenericDevBox_v14, SeqWare Version 0.13.6.5: **ami-d097f6b9**
 
 An example of the launching wizard in the Amazon AWS console can be seen below:
 
