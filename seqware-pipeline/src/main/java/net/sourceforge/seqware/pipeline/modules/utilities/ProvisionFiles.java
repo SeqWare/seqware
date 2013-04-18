@@ -425,7 +425,7 @@ public class ProvisionFiles extends Module {
       }
     }
     
-    if (!options.has("skip-record-file")){
+    if (options.has("skip-record-file")){
             fileArray.clear();
     }
 
