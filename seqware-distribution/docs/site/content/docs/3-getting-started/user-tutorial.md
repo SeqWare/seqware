@@ -425,20 +425,18 @@ You can then monitor workflow progress (and getting a list of the outputs)
 using the WorkflowRunReporter plugin. This will let you script the monitoring
 of workflow runs.
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --workflow-accession 1 
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --workflow-accession 1 --stdout
 
-In this example all the status information for workflows with workflow
-accession 1 are printed out to a file in the local directory, for example
-<tt>20130414_201452__workflow_1.csv</tt>.  This includes several columns of
-interest including the status of the workflow, the output file types, and their
-locations in S3 or the file system. You can use this information to automate
-the checking of workflows and the retrieval of the results!
+This output includes several columns of interest including the status of the
+workflow, the output file types, and their locations in S3 or the file system.
+You can use this information to automate the checking of workflows and the
+retrieval of the results! You can skip writing to an output
+file by just using the <tt>--stdout</tt> option which is helpful if you are scripting
+on top of this command.
 
 Alternatively, you can just get the status of a particular workflow run, for
 example, the workflow run accession printed when you launched the workflow with
-the WorkflowLauncher(for example SWID: 11).  You can also skip the output
-file by just using the <tt>--stdout</tt> option which is helpful if you are scripting
-on top of this command.
+the WorkflowLauncher(for example SWID: 11).  
 
 	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --workflow-run-accession 11 --stdout
 
