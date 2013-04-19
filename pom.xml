@@ -755,6 +755,7 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
+			    <skip>${skipITs}</skip>
                             <executable>chmod</executable>
                             <commandlineArgs>600 ${user.home}/.seqware/settings</commandlineArgs>
                         </configuration>
