@@ -165,90 +165,34 @@
         </executions>
       </plugin>
       <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.7</version>
-        <executions>
-          <execution>
-            <id>chmod-java</id>
-            <phase> install </phase>
-            <configuration>
-              <target>
-                <chmod perm="555">
-                  <fileset dir="${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin/jre1.6.0_29/bin">
-                 	<filename name="**/*"/>
-                  </fileset>                  
-                </chmod>
-              </target>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>chmod-perl</id>
-            <phase> install </phase>
-            <configuration>
-              <target>
-                <chmod perm="555">
-                  <fileset dir="${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin/perl-5.14.1">
-                  	<filename name="**/perl"/>
-                  </fileset>                  
-                </chmod>
-              </target>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.2.1</version>
+          <executions>
               <execution>
-                  <id>chmod-globus</id>
-                  <phase> install </phase>
-                  <configuration>
-                      <target>
-                          <chmod perm="555">
-                              <fileset dir="${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin/globus">
-                                  <filename name="**/*"/>
-                              </fileset>                  
-                          </chmod>
-                      </target>
-                  </configuration>
+                  <id>recursive_executable</id>
+                  <phase>package</phase>
                   <goals>
-                      <goal>run</goal>
+                      <goal>exec</goal>
                   </goals>
+                  <configuration>
+                      <executable>chmod</executable>
+                      <commandlineArgs>755 -R ${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/bin</commandlineArgs>
+                  </configuration>
               </execution>
               <execution>
-                  <id>chmod-gnu</id>
-                  <phase> install </phase>
-                  <configuration>
-                      <target>
-                          <chmod perm="555">
-                              <fileset dir="${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin/gnu-coreutils-5.67">
-                                  <filename name="**/*"/>
-                              </fileset>
-                          </chmod>
-                      </target>
-                  </configuration>
+                  <id>test_bundle</id>
+                  <phase>integration-test</phase>
                   <goals>
-                      <goal>run</goal>
+                      <goal>exec</goal>
                   </goals>
-              </execution>
-              <execution>
-                  <id>chmod-script</id>
-                  <phase> install </phase>
                   <configuration>
-                      <target>
-                          <chmod perm="555">
-                              <fileset dir="${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin">
-                                  <filename name="**/hello.sh"/>
-                              </fileset>
-                          </chmod>
-                      </target>
+                      <skip>${skipTests}</skip>
+                      <executable>${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin/jre1.6.0_29/bin/java</executable>
+                      <commandlineArgs>-jar ${project.build.directory}/Workflow_Bundle_${project.artifactId}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/lib/seqware-distribution-${seqware-version}-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.BundleManager -- -t -b ${project.build.directory}/Workflow_Bundle_${project.artifactId}_${project.version}_SeqWare_${seqware-version}/ </commandlineArgs>
                   </configuration>
-                  <goals>
-                      <goal>run</goal>
-                  </goals>
               </execution>
-        </executions>
+          </executions>
       </plugin>
       <plugin>
           <groupId>org.apache.maven.plugins</groupId>
