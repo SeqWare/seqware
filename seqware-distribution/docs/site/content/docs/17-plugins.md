@@ -176,6 +176,7 @@ Create a nested tree structure of all of the output files from a particular samp
 |--dump-all|Optional: Dumps all of the studies in the database to one file.|
 |--duplicates|Optional: Allow duplications at the file path level|
 |--f, --file-type|Optional: The file type to filter on. Only this type will be linked. Default is all files. Permissible file metatypes can found on our website under 'Module Conventions'|
+|--human|Optional: will print output in expanded human friendly format|
 |--l, --link|Optional: make hard links (P) or symlinks (s). Default is symlinks.|
 |--no-links|Optional: Create only the CSV file, not the symlinked directories.|
 |--output-filename|Optional: Name of the output CSV file (without the extension)|
@@ -184,6 +185,7 @@ Create a nested tree structure of all of the output files from a particular samp
 |--sequencer-run|Make symlinks for a sequencerRun|
 |--show-failed-and-running|Show all of the files regardless of the workflow run status. Default shows only successful runs.|
 |--show-status|Show the workflow run status in the output CSV.|
+|--stdout|Prints to standard out instead of to a file|
 |--study|Make symlinks for a study|
 |--w, --workflow-accession|Optional: List all workflow runs with this workflow accession|
 
@@ -248,6 +250,7 @@ This plugin creates a tab-separated file that describes one or more workflow run
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--human|Optional: will print output in expanded human friendly format|
 |--o, --output-filename|Optional: The output filename|
 |--stdout|Prints to standard out instead of to a file|
 |--t, --time-period|Dates to check for workflow runs. Dates are in format YYYY-MM-DD. If one date is provided, from that point to the present is checked. If two, separated by hyphen YYYY-MM-DDL:YYYY-MM-DD then it checks that range|
