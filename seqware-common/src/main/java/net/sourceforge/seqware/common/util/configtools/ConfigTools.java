@@ -50,7 +50,7 @@ public class ConfigTools {
     //SEQWARE-1595 : it seems that the Java 6 File API cannot retrieve permissions separated by owner and group
     // will use Linux command until Java 7 NIO (hopefully)
     String settingPerms = FileTools.determineFilePermissions(settings);
-    if (!ignorePermissions && !settingPerms.equals("-rw-------")){
+    if (!ignorePermissions && !settingPerms.equals("-rw-------") && !settingPerms.equals("-rwx------")){
         throw new IOException("SeqWare settings file has incorrect file permissions. It should only be readable and writeable by the owner. In other words, run \"chmod 600 ~/.seqware/settings\"");
     }
     
