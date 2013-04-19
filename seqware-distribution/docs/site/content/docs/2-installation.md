@@ -105,7 +105,7 @@ What makes Amazon's cloud so amazingly awesome is its excellent support for both
 Our current public AMI(s):
 
 * **ami-d097f6b9**
-: 20130419, SWStandaloneCentOS_v2_GenericDevBox_v14, SeqWare Version 0.13.6.5. Make sure you select the instance type "CC1 Cluster Compute (cc1.4xlarge, 23GiB)" since the AMI is designed specifically to work with this type (we use local the local disks provided by this instance).
+: 20130419, SWStandaloneCentOS_v2_GenericDevBox_v14, SeqWare Version 0.13.6.5. Make sure you select the instance type "CC1 Cluster Compute (cc1.4xlarge, 23GiB)" since the AMI is designed specifically to work with this type (we use the local disks provided by this instance).
 
 An example of the launching wizard in the Amazon AWS console can be seen below:
 
