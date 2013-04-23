@@ -39,7 +39,7 @@
         <executions>
           <execution>
 	    <id>generate_markdown</id>
-	    <phase>install</phase>
+	    <phase>pre-site</phase>
             <goals>
               <goal>exec</goal>
             </goals>
@@ -50,6 +50,22 @@
           </arguments>
         </configuration>
           </execution>
+
+	  <execution>
+                        <id>compile_website</id>
+                        <phase>pre-site</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipITs}</skip>
+                            <executable>nanoc</executable>
+                            <commandlineArgs>compile</commandlineArgs>
+			    <workingDirectory>docs/site/output/</workingDirectory>
+                        </configuration>
+                    </execution>
+
+
         </executions>
       </plugin>
      <plugin>
@@ -117,6 +133,25 @@
         </execution>
       </executions>
     </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-publish-plugin</artifactId>
+        <version>1.0-beta-2</version>
+
+          <configuration>
+	        <pubScmUrl>scm:git:https://github.com/SeqWare/seqware.github.com.git</pubScmUrl>	
+		<content>docs/site/output/</content>
+		<ignorePathsToDelete>
+              		<ignorePathToDelete>javadoc</ignorePathToDelete>
+              		<ignorePathToDelete>manuals</ignorePathToDelete>
+              		<ignorePathToDelete>queryengine-api</ignorePathToDelete>
+              		<ignorePathToDelete>webservice-api</ignorePathToDelete>
+              		<ignorePathToDelete>pictures</ignorePathToDelete>
+            	</ignorePathsToDelete>
+                <tryUpdate>true</tryUpdate>
+          </configuration>
+      </plugin>
+
     </plugins>
   </build>
 </project>
