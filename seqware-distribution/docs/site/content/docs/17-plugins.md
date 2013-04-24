@@ -64,6 +64,8 @@ A plugin that lets you create, test, and install workflow bundles.
 |--b, --bundle|The path to a bundle zip file, can specify this or the workflow-run-accession of an already-installed bundle.|
 |--download|Downloads a workflow bundle zip. This must be used in conjunction with a workflow name and version.|
 |--download-url|Downloads a workflow bundle zip from a URL to the local directory.|
+|--ha, --human-aligned|Optional: will print output in aligned human friendly format|
+|--he, --human-expanded|Optional: will print output in expanded human friendly format|
 |--i, --install|Optional: if the --bundle param points to a .zip file then the install process will first unzip into the directory specified by the directory defined by SW_BUNDLE_DIR in the .seqware/settings file (skipping files that already exit).  It will then copy the whole zip file to the SW_BUNDLE_ARCHIVE_DIR which can be a directory or S3 prefix (the copy will be skipped if the file is already at this location). It will finish this process by installing this bundle in the database with the permanent_bundle_location pointed to the zip file location and current_working_dir pointed to the unzipped location.  If the --bundle param point to a directory then this will first create a zip of the bundle and place it in SW_BUNDLE_ARCHIVE_DIR. It will then install this bundle in the database with the permanent_bundle_location pointed to the zip file location and current_working_dir pointed to the unzipped location. The method (direct database or web service) and server location of the SeqWare  MetaDB is controlled via the .seqware/settings file.|
 |--ido, --install-dir-only|Optional: This will suppress the creation of a zip file from a workflow bundle directory. It will simply install the workflow into the database and set the current_working_dir but leave permanent_bundle_location null.|
 |--install-zip-only, --izo|Optional: This will suppress the unzipping of a zip file, it is only valid if the --bundle points to a zip file and not a directory. It will take a workflow bundle zip file, copy it to the SW_BUNDLE_ARCHIVE_DIR location, and then installs that workflow into the database.  Only the permanent_bundle_location location will be defined, the current_working_dir will be null. (PROBLEM: can't read the metadata.xml if the workflow zip isn't unzipped!)|
@@ -176,6 +178,7 @@ Create a nested tree structure of all of the output files from a particular samp
 |--dump-all|Optional: Dumps all of the studies in the database to one file.|
 |--duplicates|Optional: Allow duplications at the file path level|
 |--f, --file-type|Optional: The file type to filter on. Only this type will be linked. Default is all files. Permissible file metatypes can found on our website under 'Module Conventions'|
+|--human|Optional: will print output in expanded human friendly format|
 |--l, --link|Optional: make hard links (P) or symlinks (s). Default is symlinks.|
 |--no-links|Optional: Create only the CSV file, not the symlinked directories.|
 |--output-filename|Optional: Name of the output CSV file (without the extension)|
@@ -184,6 +187,7 @@ Create a nested tree structure of all of the output files from a particular samp
 |--sequencer-run|Make symlinks for a sequencerRun|
 |--show-failed-and-running|Show all of the files regardless of the workflow run status. Default shows only successful runs.|
 |--show-status|Show the workflow run status in the output CSV.|
+|--stdout|Prints to standard out instead of to a file|
 |--study|Make symlinks for a study|
 |--w, --workflow-accession|Optional: List all workflow runs with this workflow accession|
 
@@ -248,6 +252,7 @@ This plugin creates a tab-separated file that describes one or more workflow run
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--human|Optional: will print output in expanded human friendly format|
 |--o, --output-filename|Optional: The output filename|
 |--stdout|Prints to standard out instead of to a file|
 |--t, --time-period|Dates to check for workflow runs. Dates are in format YYYY-MM-DD. If one date is provided, from that point to the present is checked. If two, separated by hyphen YYYY-MM-DDL:YYYY-MM-DD then it checks that range|

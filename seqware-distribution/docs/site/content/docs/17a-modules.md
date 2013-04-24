@@ -76,6 +76,7 @@ net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles
 |--s3-max-socket-timeout|Optional: Sets the amount of time to wait (in milliseconds) for data to be transfered over an established, open connection before the connection times out and is closed. A value of 0 means infinity, and isn't recommended. Default is 50000|
 |--s3-no-server-side-encryption|Optional: If specified, do not use S3 server-side encryption. Default is to use S3 server-side encryption for S3 destinations.|
 |--skip-if-missing|Optional: useful for workflows with variable output files, this will silently skip any missing inputs (this is a little dangerous).|
+|--skip-record-file|Optional: If specified, do not record new entries in the file table.|
 |--v, --verbose|Optional: verbose causes the S3 transfer status to display.|
 
 ##  S3CreateFileURLs

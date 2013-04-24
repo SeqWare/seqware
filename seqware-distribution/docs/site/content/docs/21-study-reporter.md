@@ -39,7 +39,7 @@ The SeqWare format concentrates upon as much information as possible being in th
 
 	studyTitle-studySWA/parentSampleName-parentSampleSWA/sampleName-sampleSWA/workflowName-workflowSWA__workflowRunName-workflowRunSWA__sequencerRunName-sequencerRunSWA__laneNum__iusTag-iusSWA__sampleName-sampleSwa__filename.
 
-Where laneNum is lane_index + 1, iusTag is "NoIndex" if tag in ius table is null, and where all spaces in any of the fields above are replaced with "_".
+Where laneNum is lane_index plus 1, iusTag is "NoIndex" if tag in ius table is null, and where all spaces in any of the fields above are replaced with "_".
 
 Here is an example:
 
