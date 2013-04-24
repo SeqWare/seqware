@@ -82,7 +82,7 @@ public class ConfigToolsTest {
   public void testGetSettings() throws Exception {
     System.setProperty(SEQWARE_SETTINGS_PROPERTY, getClass().getResource("ConfigToolsTest_settings").getPath());
 
-    Map<String, String> settings = ConfigTools.getSettings();
+    Map<String, String> settings = ConfigTools.getSettings(true);
 
     assertEquals(settings.get("SETTING1"), "one");
     assertEquals(settings.get("SETTING2"), "TWO");

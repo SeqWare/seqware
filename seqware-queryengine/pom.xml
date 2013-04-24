@@ -185,6 +185,7 @@ never
                     </execution>
                 </executions>
                 <configuration>
+		    <runOrder>alphabetical</runOrder>
                     <includes>
                         <include>**/*Suite.java</include>
                     </includes>

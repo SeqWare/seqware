@@ -158,7 +158,8 @@ public class SequencerRunIDResource extends DatabaseIDResource {
             }
 
             if (newAttributes != null) {
-                sequencerRun.getSequencerRunAttributes().clear();
+//SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+//                sequencerRun.getSequencerRunAttributes().clear();
 				for(SequencerRunAttribute sra: newAttributes) {
 					sra.setSequencerRunWizardDTO(sequencerRun);
 					sequencerRun.getSequencerRunAttributes().add(sra);

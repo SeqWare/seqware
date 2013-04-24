@@ -293,7 +293,10 @@ public abstract class AbstractWorkflowDataModel  {
 	 * @param parent_accessions parent_accessions separated by ","
 	 */
 	void setParentAccessions(Collection<String> parentAccessions) {
-		this.parentAccessions.addAll(parentAccessions);
+            // 0.13.6.5 We actually want overridden behaviour, rather than combining workflow.ini and command-line opts,
+            // we want just the command-line opts if present
+            this.parentAccessions.clear();
+            this.parentAccessions.addAll(parentAccessions);
 	}
 
 	/**
@@ -377,9 +380,17 @@ public abstract class AbstractWorkflowDataModel  {
 	 */
 	public String getProperty(String key) throws Exception {
 		if(!this.configs.containsKey(key))
-			throw new Exception("Key not found");
+			throw new Exception("Key "+key+" not found");
 		return configs.get(key);
 	}
+        
+        public boolean hasProperty(String key) {
+          return(this.configs.containsKey(key));
+        } 
+        
+        public boolean hasPropertyAndNotNull(String key) {
+          return(this.configs.containsKey(key) && configs.get(key) != null);
+        } 
 
 	public String getWorkflow_directory_name() {
 		return workflow_directory_name;

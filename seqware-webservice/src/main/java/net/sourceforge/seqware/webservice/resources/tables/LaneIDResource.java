@@ -178,7 +178,8 @@ public class LaneIDResource extends DatabaseIDResource {
             }
             logger.debug("newAttributes: " + newAttributes);
             if (newAttributes != null) {
-				lane.getLaneAttributes().clear();
+//SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+//				lane.getLaneAttributes().clear();
 				for(LaneAttribute la: newAttributes) {
 					la.setLane(lane);
 					lane.getLaneAttributes().add(la);

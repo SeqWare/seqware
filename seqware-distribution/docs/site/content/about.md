@@ -4,7 +4,7 @@ The SeqWare project (originally SolexaTools) was started in 2007 by Brian O'Conn
 
 ##Purpose
 
-The open source SeqWare project is a portable software infrastructure designed to analyze massive genomics datasets produced by contemporary and emerging technologies, in particular Next Generation Sequencing (NGS) platforms. It consists of a comprehensive suite of tools focused on enabling the end-to-end analysis of sequence data – from from raw base calling to analyzed variants ready for interpretation by users. **SeqWare is tool agnostic, it is a framework for building analysis workflows and does not provide specific implementations out-of-the-box. You use SeqWare to create high-throughput infrastructure for NGS analysis using whatever analysis tools you like.**
+The open source SeqWare project is a portable software infrastructure designed to analyze massive genomics datasets produced by contemporary and emerging technologies, in particular Next Generation Sequencing (NGS) platforms. It consists of a comprehensive infrastructure focused on enabling the automated, end-to-end analysis of sequence data – from from raw base calling to analyzed variants ready for interpretation by users. **SeqWare is tool agnostic, it is a framework for building analysis workflows and does not provide specific implementations out-of-the-box. You use SeqWare to create high-throughput infrastructure for NGS analysis using whatever analysis tools you like.**
 
 ##Components
 

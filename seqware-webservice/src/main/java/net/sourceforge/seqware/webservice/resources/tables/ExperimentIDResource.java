@@ -191,7 +191,8 @@ public class ExperimentIDResource extends DatabaseIDResource {
             }
 
 			if (null != expAttributes) {
-				exp.getExperimentAttributes().clear();
+//SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+//				exp.getExperimentAttributes().clear();
 				for(ExperimentAttribute ea: expAttributes) {
 					ea.setExperiment(exp);
 					exp.getExperimentAttributes().add(ea);

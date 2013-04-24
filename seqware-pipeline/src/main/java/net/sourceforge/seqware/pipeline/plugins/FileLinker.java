@@ -182,7 +182,7 @@ public class FileLinker extends Plugin {
    public String get_description() {
       return "Takes a list of files and enters them into the database, linking "
             + "them with the appropriate IUSes and creating workflow runs for "
-            + "the 'FileImport' workflow. For more information, see https://sourceforge.net/apps/mediawiki/seqware/index.php?title=FileLinker";
+            + "the 'FileImport' workflow. For more information, see http://seqware.github.com/docs/22-filelinker/";
    }
 
 }

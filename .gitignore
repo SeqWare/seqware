@@ -38,5 +38,8 @@ seqware-distribution/docs/site-prototype/tmp
 seqware-distribution/docs/site/output
 seqware-distribution/docs/site/tmp
 
+seqware-distribution/docs/site/content/docs/17-plugins.md
+seqware-distribution/docs/site/content/docs/17a-modules.md
+
 # Log files
 dao-test.log

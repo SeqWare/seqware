@@ -20,6 +20,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +29,8 @@ import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.TabExpansionUtil;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import org.openide.util.lookup.ServiceProvider;
@@ -45,7 +49,7 @@ public class SymLinkFileReporter extends Plugin {
     private String fileType = FindAllTheFiles.FILETYPE_ALL;
     private String linkType = LINKTYPE_SYM;
     private String csvFileName = null;
-    private BufferedWriter writer;
+    private Writer writer;
     
     /**
      * <p>Constructor for SymLinkFileReporter.</p>
@@ -56,7 +60,7 @@ public class SymLinkFileReporter extends Plugin {
         parser.acceptsAll(Arrays.asList("sample"), "Make symlinks for a sample").withRequiredArg();
         //FIXME: SymLinking using SequencerRuns is not working properly yet, so it is disabled for now.
         parser.acceptsAll(Arrays.asList("sequencer-run"), "Make symlinks for a sequencerRun").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("file-type", "f"), "Optional: The file type to filter on. Only this type will be linked. Default is all files. Permissible file metatypes can found on the SeqWare Sourceforce Wiki under 'Module Conventions'").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("file-type", "f"), "Optional: The file type to filter on. Only this type will be linked. Default is all files. Permissible file metatypes can found on our website under 'Module Conventions'").withRequiredArg();
         parser.acceptsAll(Arrays.asList("workflow-accession", "w"), "Optional: List all workflow runs with this workflow accession").withRequiredArg();
         parser.acceptsAll(Arrays.asList("link", "l"), "Optional: make hard links (P) or symlinks (s). Default is symlinks.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("prod-format"), "Optional: print the directories in prod format");
@@ -66,6 +70,8 @@ public class SymLinkFileReporter extends Plugin {
         parser.acceptsAll(Arrays.asList("output-filename"), "Optional: Name of the output CSV file (without the extension)").withRequiredArg();
         parser.acceptsAll(Arrays.asList("show-failed-and-running"), "Show all of the files regardless of the workflow run status. Default shows only successful runs.");
         parser.acceptsAll(Arrays.asList("show-status"), "Show the workflow run status in the output CSV.");
+        parser.acceptsAll(Arrays.asList("human"), "Optional: will print output in expanded human friendly format");
+        parser.acceptsAll(Arrays.asList("stdout"), "Prints to standard out instead of to a file");
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
     
@@ -135,7 +141,12 @@ public class SymLinkFileReporter extends Plugin {
             filename = (String) options.valueOf("output-filename");
         }
         csvFileName = currentDir + File.separator + filename + ".csv";
-        writer = new BufferedWriter(new FileWriter(csvFileName, true));
+        
+        if (options.has("stdout")) {
+            writer = new StringWriter();
+        } else {
+            writer = new BufferedWriter(new FileWriter(csvFileName, true));
+        }       
     }
     
     private ReturnValue reportOnStudy(String studyName, String rootDirectory) throws IOException {
@@ -179,9 +190,16 @@ public class SymLinkFileReporter extends Plugin {
                 fileType, options.has("duplicates"), options.has("show-failed-and-running"),
                 options.has("show-status"));
         
-        
-        FindAllTheFiles.printTSVFile(writer, options.has("show-status"),
-                returnValues, studyName);
+        if (options.has("human")){
+            StringWriter sWriter = new StringWriter();
+            FindAllTheFiles.printTSVFile(sWriter, options.has("show-status"),
+                    returnValues, studyName);
+            writer.write(TabExpansionUtil.expansion(sWriter.toString()));
+            return;
+        } else{
+            FindAllTheFiles.printTSVFile(writer, options.has("show-status"),
+                    returnValues, studyName);
+        }
         
         for (ReturnValue rv : returnValues) {
             StringBuilder directory = new StringBuilder();
@@ -365,6 +383,9 @@ public class SymLinkFileReporter extends Plugin {
     /** {@inheritDoc} */
     @Override
     public ReturnValue clean_up() {
+        if (options.has("stdout")) {
+            Log.stdout(writer.toString());
+        }
         return ret;
     }
     
@@ -376,6 +397,6 @@ public class SymLinkFileReporter extends Plugin {
                 + "the SymLinkFileReporter plugin. This plugin also creates a CSV "
                 + "file with all of the accompanying information for every file. "
                 + "For more information, see "
-                + "https://sourceforge.net/apps/mediawiki/seqware/index.php?title=SymLink_Reporter";
+                + "see http://seqware.github.com/docs/21-study-reporter/";
     }
 }
