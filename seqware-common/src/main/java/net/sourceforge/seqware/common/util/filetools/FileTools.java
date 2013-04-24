@@ -872,6 +872,48 @@ public class FileTools {
     }
   }
   
+    /**
+   * This tool uses the 'ls -al' command to find the current file permissions.
+   *
+   * @param path
+   * @return
+   */
+  public static String determineFilePermissions(String path) {
+
+    ArrayList<String> theCommand = new ArrayList<String>();
+    theCommand.add("bash");
+    theCommand.add("-lc");
+    theCommand.add("ls -al " + path);
+
+    ReturnValue ret = RunTools.runCommand(theCommand.toArray(new String[0]));
+    if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+      String stdout = ret.getStdout();
+      stdout = stdout.substring(0, 10);
+      return (stdout);
+    } else {
+      Log.error("Can't figure out file permissions using 'ls -al' " + ret.getStderr());
+      return (null);
+    }
+  }
+  
+  public static String getFilename(String filePath) {
+    if (filePath == null || "".equals(filePath)) { return null; }
+    String[] tokens = filePath.split("/");
+    return(tokens[tokens.length-1]);
+  }
+  
+  public static String getFilePath(String filePath) {
+    if (filePath == null || "".equals(filePath)) { return null; }
+    String[] tokens = filePath.split("/");
+    StringBuilder sb = new StringBuilder();
+    for(int i=0; i<tokens.length-1; i++) {
+      sb.append(tokens[i]);
+      sb.append("/");
+    }
+    // is this reasonable for a default return?
+    return(sb.toString());
+  }
+  
   /**
    * Get the localhost and a return value describing the failure condition
    * if we are unable to get the localhost

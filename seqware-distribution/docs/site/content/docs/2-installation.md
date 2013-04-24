@@ -21,7 +21,7 @@ To learn about Linux, the Bash shell, and Java we recommend the O'Reilly series 
 * [Learning the bash Shell](http://amzn.com/B0043GXMSY)
 * [Learning Java](http://amzn.com/B0043EWVDI)
 
-## Installing with a Local VM
+## Option 1 - Installing with a Local VM
 
 We have created a VirtualBox VM with all SeqWare projects pre-installed along
 with some sample data.  This is the easiest way to get started with SeqWare
@@ -46,10 +46,11 @@ will tweet about it so consider following us on Twitter.
 * [SeqWareVM_0.12.5-r5163_CentOS_6.2_20120904.ova](https://s3.amazonaws.com/nimbusinformatics.exchange/public/SeqWareVM_0.12.5_r5163_CentOS_6.2_20120904b.ova)
 
 Open VirtualBox and use the "Import Appliance" tool to create a new SeqWare VM
-on your system.  You can then launch it and you will be presented with a fairly
-standard Linux desktop with links to the project's documentation to give you an
-idea of where to begin (the "Getting Started" guide here which provides a
-walk-through of using this VM).
+on your system. Make sure you set the memory to the max you can afford, I
+recommend at least 4GB of memory for the VM.  You can then launch it and you
+will be presented with a fairly standard Linux desktop with links to the
+project's documentation to give you an idea of where to begin (the "Getting
+Started" guide here provides a walk-through of using this VM).
 
 <p class="warning"><strong>Note:</strong>
 When you import the VM you need to set your memory and CPU correctly.  Do not
@@ -77,11 +78,11 @@ bundle into a production system.  Or you can even hook up this VM to a real
 local grid environment (such as an SGE cluster) for running workflows.  This is
 exactly what we did at OICR, our SeqWare hosts are all virtual machines that
 can submit workflow jobs to our physical cluster. You can find more information
-on this later in the guide.
+on this in the "SeqWare Pipeline" section of our documentation.
 
 <img src="/assets/images/vm_screen.png" alt="SeqWare VM" width="600px"/>
 
-## Installing with a Cloud VM
+## Option 2 -Installing with a Cloud VM
 
 We currently support running SeqWare on the Amazon cloud on HPC nodes. These
 are high-performance, cluster-compute nodes well suited for research, for specs
@@ -99,38 +100,43 @@ Signup for the Amazon cloud [here](http://aws.amazon.com/)
 
 ### Running the VM
 
-What makes Amazon's cloud so amazingly awesome is its excellent support for both graphical UIs and programmatic APIs for controlling the cloud.  It is your choice on how you want to launch the VM, either through the console or via one of the many command line and programmatic tools available. The details are subject to change so we refer to Amazon's thorough [documentation](https://aws.amazon.com/documentation/).
+What makes Amazon's cloud so amazingly awesome is its excellent support for both graphical UIs and programmatic APIs for controlling the cloud.  It is your choice on how you want to launch the VM, either through the console or via one of the many command line and programmatic tools available. The details are subject to change so we refer to Amazon's thorough [documentation](https://aws.amazon.com/documentation/). Specifically [this](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html) guide should be very helpful in learning how to use Linux VMs on Amazon's cloud.
 
 Our current public AMI(s):
 
-* SWStandaloneCentOS_v2_GenericDevBox_v5: ami-cb0fb9a2
+* **ami-d097f6b9**
+: 20130419, SWStandaloneCentOS_v2_GenericDevBox_v14, SeqWare Version 0.13.6.5. Make sure you select the instance type "CC1 Cluster Compute (cc1.4xlarge, 23GiB)" since the AMI is designed specifically to work with this type (we use the local disks provided by this instance).
 
 An example of the launching wizard in the Amazon AWS console can be seen below:
 
 <img src="/assets/images/amazon_launcher.png" alt="SeqWare AWS Console" width="600px"/>
 
-<p class="warning"><strong>Tip:</strong>Make sure you open port 22 for SSH and port 8080 for the SeqWare Portal and Web Service.</p>
+<p class="warning"><strong>Tip:</strong>Make sure you open port 22 for SSH, port 8080 for the SeqWare Portal and Web Service, and port 80 for our landing page that you can access at http://ec2hostname/, you fill in ec2hostname with the name of the server Amazon provisions for you.</p>
 
 ### Logging In
 
-Unlike the local VM there is no graphical desktop to log into.  Instead you will need to follow the directions on the Amazon site for using <kbd>ssh</kbd> to log into your running VM.  There you will have a command line interface to interact with the SeqWare tools. You can also view the SeqWare Portal and SeqWare Web Service remotely in your browser if you have previously opened the ports 22 and 8080.
+Unlike the local VM there is no graphical desktop to log into.  Instead you will need to follow the directions on the Amazon site for using <kbd>ssh</kbd> to log into your running VM.  There you will have a command line interface to interact with the SeqWare tools. You can also view the SeqWare Portal and SeqWare Web Service remotely in your browser if you have previously opened the ports 22, 8080, and 80.
+
+Specifically, follow [this](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html) Amazon guide for logging into your SeqWare instance using ssh.
+
 
 ### What Can You Do With It?
 
-You can launch this public AMI which will give you a server with all the SeqWare projects pre-configured and loaded with some small examples.  You can then use the running VM to test workflows and write your own.  Since this VM runs on the fairly powerful HPC node type, you can actually use it to get real work done.  This instance is powerful enough to analyze a whole human exome in 4-8 hours and you can, of course, launch many instances simultaneously to process multiple exomes in parallel.
+You can launch this public AMI which will give you a server with all the
+SeqWare projects pre-configured and loaded with some small examples.  You can
+then use the running VM to test workflows and write your own.  Since this VM
+runs on the fairly powerful HPC node type, you can actually use it to get real
+work done.  This instance is powerful enough to analyze a whole human exome in
+4-8 hours and you can, of course, launch many instances simultaneously to
+process multiple exomes in parallel. Future releases of SeqWare will include
+scripts to setup clusters of HPC nodes that will allow you to process whole
+human genomes. In the mean time we recommend investigating the excellent
+[StarCluster](http://star.mit.edu/cluster/) cluster launching tool. 
+
+<p class="warning"><strong>Note:</strong>Keep in mind Amazon charges approximately $1.30 USD per hour to run these instances, it is your responsibility to monitor your cloud usage and turn your VMs off when not in use!  You will be billed for each hour (rounded up).</p>
 
 
-<p class="warning"><strong>Note:</strong>Keep in mind Amazon charges approximately $1.30 USD per hour to run these instances, it is your responsibility to monitor your cloud usage and turn your VMs off when not in use!</p>
-
-### More to Come...
-
-TODO: In the near future we will document the process to:
-
-* launch clusters of SeqWare instances
-* pass configuration information to instances (like your AWS keys)
-
-
-## Installing from Scratch
+## Option 3 - Installing from Scratch
 
 <p class="warning"><strong>Note:</strong> This is not for the faint of heart.  We do not recommend you attempt to do this
 unless you a very familiar with Linux and comfortable with complex software

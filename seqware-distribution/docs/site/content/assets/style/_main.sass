@@ -450,6 +450,42 @@ body
     .prompt
       color: #999
 
+  pre.headers
+    margin-bottom: 0
+    border-bottom-width: 0
+    -webkit-border-radius: 3px 3px 0 0
+    -moz-border-radius: 3px 3px 0 0
+    border-radius: 3px 3px 0 0
+    color: #666
+    background-color: #f1f1f1
+    background-image: -moz-linear-gradient(top, #f1f1f1, #e1e1e1)
+    background-image: -ms-linear-gradient(top, #f1f1f1, #e1e1e1)
+    background-image: -o-linear-gradient(top, #f1f1f1, #e1e1e1)
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#f1f1f1), to(#e1e1e1))
+    background-image: -webkit-linear-gradient(top, #f1f1f1, #e1e1e1)
+    background-image: linear-gradient(top, #f1f1f1, #e1e1e1)
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#f1f1f1', EndColorStr='#e1e1e1')
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7)
+
+  pre.no-response 
+    -webkit-border-radius: 3px 3px
+    -moz-border-radius: 3px 3px
+    border-radius: 3px 3px
+    border-bottom: 1px solid #CACACA
+
+  pre.headers + pre.highlight 
+    -webkit-border-radius: 0 0 3px 3px
+    -moz-border-radius: 0 0 3px 3px
+    border-radius: 0 0 3px 3px
+
+  pre.highlight 
+    -webkit-border-radius: 3px
+    -moz-border-radius: 3px
+    border-radius: 3px
+    background-color: #FAFAFB
+
+	   
+
 .caps
   font-size: 90%
 

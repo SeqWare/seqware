@@ -153,7 +153,7 @@ public class ITUtility {
      *
      * @param line
      * @param expectedReturnValue
-     * @param dir
+     * @param dir working directory, can be null if you don't want to change directories
      * @return
      * @throws IOException
      */

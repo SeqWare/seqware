@@ -8,3 +8,4 @@ include Nanoc3::Helpers::Filtering
 # Custom
 include Nanoc3::Helpers::ReleaseNotes
 include Nanoc3::Helpers::TOC
+include Variables

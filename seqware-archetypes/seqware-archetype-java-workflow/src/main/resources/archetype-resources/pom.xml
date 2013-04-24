@@ -4,6 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <prerequisites>
+        <maven>2.2.1</maven>
+    </prerequisites>
+
     <groupId>${groupId}</groupId>
     <artifactId>${artifactId}</artifactId>
     <version>${version}</version>
@@ -16,6 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <seqware-version>1.0.0-SNAPSHOT</seqware-version>
+        <skipITs>true</skipITs>
     </properties>
 
     <dependencies>
@@ -86,6 +91,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
@@ -125,7 +131,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}</outputDirectory>
+                            <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>workflow</directory>
@@ -146,7 +152,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/classes</outputDirectory>
+                            <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/classes</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.build.directory}/classes</directory>
@@ -180,7 +186,7 @@
                                     <version>${seqware-version}</version>
                                     <classifier>full</classifier>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/lib</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/lib</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -192,7 +198,7 @@
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/bin</outputDirectory>
+                            <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/bin</outputDirectory>
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>true</overWriteSnapshots>
                         </configuration>
@@ -200,42 +206,33 @@
                 </executions>
             </plugin>
             <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
                 <executions>
                     <execution>
-                        <id>chmod-java</id>
-                        <phase> install </phase>
-                        <configuration>
-                            <target>
-                                <chmod perm="555">
-                                    <fileset dir="${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin/jre1.6.0_29/bin">
-                                        <filename name="**/*"/>
-                                    </fileset>                  
-                                </chmod>
-                            </target>
-                        </configuration>
+                        <id>recursive_executable</id>
+                        <phase>package</phase>
                         <goals>
-                            <goal>run</goal>
+                            <goal>exec</goal>
                         </goals>
+                        <configuration>
+                            <executable>chmod</executable>
+                            <commandlineArgs>755 -R ${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/bin</commandlineArgs>
+                        </configuration>
                     </execution>
                     <execution>
-                        <id>chmod-perl</id>
-                        <phase> install </phase>
-                        <configuration>
-                            <target>
-                                <chmod perm="555">
-                                    <fileset dir="${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin/perl-5.14.1">
-                                        <filename name="**/perl"/>
-                                    </fileset>                  
-                                </chmod>
-                            </target>
-                        </configuration>
+                        <id>test_bundle</id>
+                        <phase>integration-test</phase>
                         <goals>
-                            <goal>run</goal>
+                            <goal>exec</goal>
                         </goals>
+                        <configuration>
+                            <skip>${skipITs}</skip>
+                            <executable>${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin/jre1.6.0_29/bin/java</executable>
+                            <commandlineArgs>-jar ${project.build.directory}/Workflow_Bundle_${project.artifactId}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/lib/seqware-distribution-${seqware-version}-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.BundleManager -- -t -b ${project.build.directory}/Workflow_Bundle_${project.artifactId}_${project.version}_SeqWare_${seqware-version}/ </commandlineArgs>
+                        </configuration>
                     </execution>
-          
                 </executions>
             </plugin>
             <plugin>

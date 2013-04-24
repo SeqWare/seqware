@@ -121,10 +121,10 @@ Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=4453317
 * [SEQWARE-1149] - Finish specification for RESTful web service
 * [SEQWARE-1150] - Investigate web service options presented
 * [SEQWARE-1261] - Resurrect BI for OHS
-* [SEQWARE-1270] - thow exception if ini key is referenced but never setup
+* [SEQWARE-1270] - throw exception if ini key is referenced but never setup
 * [SEQWARE-1286] - Jetty should run when you call it explicitly
 * [SEQWARE-1289] - add getStatus() getStdErr() getStdOut() in workflowEngine interface
-* [SEQWARE-1308] - release simplifed workflow for Morgan to try
+* [SEQWARE-1308] - release simplified workflow for Morgan to try
 * [SEQWARE-1311] - install oozie in VM
 * [SEQWARE-1312] - write a HelloWorld oozie sample
 * [SEQWARE-1313] - implements oozie workflow engine by extending the abstractworkflowengine
@@ -166,10 +166,10 @@ Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=4453317
 * [SEQWARE-1271] - check text/key-value for metadata saver and make sure that it works
 * [SEQWARE-1273] - put workflow java doc in nanoc
 * [SEQWARE-1274] - add classpath parameter to javaSeqwareModuleJob
-* [SEQWARE-1276] - create a workflow client sample in VM that includes all features in the new simplifiled workflow
+* [SEQWARE-1276] - create a workflow client sample in VM that includes all features in the new simplified workflow
 * [SEQWARE-1277] - discuss with Brian about the new workflow when it is ready
-* [SEQWARE-1278] - change the workflow engine, allow it to take in parent workflowrun id for metadata wirteback
-* [SEQWARE-1281] - merge comand line options with configs<string,string> in datamodel
+* [SEQWARE-1278] - change the workflow engine, allow it to take in parent workflowrun id for metadata writeback
+* [SEQWARE-1281] - merge command line options with configs<string,string> in datamodel
 * [SEQWARE-1295] - We need command line tools to populate sequencer_run, lane, and IUS
 * [SEQWARE-1299] - update dax after discuss with Brian
 * [SEQWARE-1306] - write a plugin to generate dot file from processing table
@@ -194,20 +194,20 @@ Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=4453317
 * [SEQWARE-1179] - Upload the Javadocs for the released 0.12.5 version to the github website
 * [SEQWARE-1180] - Merge the sf.net pom.xml with the github pom.xml and ensure building works
 * [SEQWARE-1181] - Redirect Jenkins to github, Jenkins now does findbugs and pmd
-* [SEQWARE-1182] - Configure Query Engine tests for jenkins compatibility
+* [SEQWARE-1182] - Configure Query Engine tests for Jenkins compatibility
 * [SEQWARE-1187] - Test out JavaCC versus ANTLR
 * [SEQWARE-1188] - Implement parse trees and RPNStack builder via chosen lexer/parser
 * [SEQWARE-1189] - Adapt QueryVCFDumper  for query language
 * [SEQWARE-1190] - Create plugin of FeatureFilters
 * [SEQWARE-1194] - create a workflow template for the workflow author
-* [SEQWARE-1195] - modify workflowlauncher to create seqwareWorkflowObjectModel
+* [SEQWARE-1195] - modify WorkflowLauncher to create seqwareWorkflowObjectModel
 * [SEQWARE-1197] - implement vep sample using the latest java workflow
 * [SEQWARE-1198] - finalize the spec for java workflow
 * [SEQWARE-1199] - modify xml workflow based on the new java workflow
 * [SEQWARE-1200] - move archetype-workflow-v2 to git feature branch
-* [SEQWARE-1201] - add uncommited code from svn to git
+* [SEQWARE-1201] - add uncommitted code from svn to git
 * [SEQWARE-1206] - Our workflow development docs on internal wiki need to be updated for 0.12.5.1
-* [SEQWARE-1208] - Fix metaDB creation
+* [SEQWARE-1208] - Fix MetaDB creation
 * [SEQWARE-1209] - Ensure that the overall combination of unit tests and integration tests work properly
 * [SEQWARE-1211] - Investigate relationship between HubFlow release process and maven release script
 * [SEQWARE-1215] - Revise simplified workflow bundle spec and code review with Yong
@@ -264,7 +264,7 @@ We still have to manually delete the parent task IDs for technical tasks though.
 
 ###Task
 * SEQWARE-1127 - install nanoc in seqware dev
-* SEQWARE-1142 - move sqwprod postgres data to nfs
+* SEQWARE-1142 - move sqwprod postgres data to NFS
 
 ###Technical Task
 * SEQWARE-1088 - Create implementation of Friendly prefixes for TagSets (and other classes)
