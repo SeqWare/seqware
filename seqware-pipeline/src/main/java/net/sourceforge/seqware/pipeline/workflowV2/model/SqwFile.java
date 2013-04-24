@@ -17,7 +17,7 @@ public class SqwFile {
 	private String type;
 	private String location;
         private String outputLocation;
-	private boolean input;
+	private boolean input = true;
 	private boolean forceCopy;
 	private String uniqueDir;
 	private List<String> parentAccessions;
