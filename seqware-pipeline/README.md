@@ -515,6 +515,11 @@ Think very carefully about these changes above before you make them.  Your workf
 
 After making your changes to the sge.pm make sure you use "perl -c" to check the syntax. It needs to be a valid Perl file to work!
 
+Make sure your install points to the correct SGE commands, edit the following file to change the path to tools like qstat and qsub:
+
+	/etc/globus/globus-sge.conf
+	/etc/sysconfig/gridengine
+
 ### Starting Daemons
 
 At this point Globus should be setup correctly, all you have to do is start three services: GRAM, GridFTP, and the SGE log monitor for GRAM.  You should use chkconfig to ensure these start on boot too.
