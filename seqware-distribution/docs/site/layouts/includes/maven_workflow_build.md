@@ -1,4 +1,4 @@
-	[seqware@master workflow-dev]$ cd HelloWorld/
+	[seqware@master workflow-dev]$ cd /home/seqware/workflow-dev/HelloWorld 
 	[seqware@master HelloWorld]$ mvn clean install
         [INFO] Scanning for projects...                                                                                       
         [INFO] ------------------------------------------------------------------------                                       
@@ -7,14 +7,7 @@
 	[INFO] ------------------------------------------------------------------------
 	[INFO] [clean:clean {execution: default-clean}]
 	[INFO] Deleting /mnt/databases/workflow-dev/HelloWorld/target
-        ...
-        main:
-        [INFO] Executed tasks
-        [INFO] [antrun:run {execution: chmod-perl}]
-        [INFO] Executing tasks
-
-        main:
-        [INFO] Executed tasks
+        <snip> 
         [INFO] ------------------------------------------------------------------------
         [INFO] BUILD SUCCESSFUL
         [INFO] ------------------------------------------------------------------------

@@ -329,6 +329,39 @@ The next step is to look at examples of workflows at [Workflow Examples](/docs/1
 
 SeqWare bundles have a test command built into their metadata.xml. In order to trigger this, run with the following command. Note that the workflow name and version need to match the name and version given when the workflow is listed above. 
 
+	cd /home/seqware/workflow-dev/HelloWorld
+	[seqware@master HelloWorld]$ mvn clean install -DskipITs=false
+	<snipped>
+	[INFO] [exec:exec {execution: recursive_executable}]
+	[INFO] [exec:exec {execution: test_bundle}]
+	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
+	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@4229ab3e
+	Testing Bundle
+	  Running Test Command:
+	java -jar /mnt/databases/workflow-dev/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-0.13.6.5-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --no-metadata --provisioned-bundle-dir /mnt/databases/workflow-dev/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5 --workflow HelloWorld --version 1.0-SNAPSHOT --ini-files /mnt/databases/workflow-dev/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/config/workflow.ini 
+	MONITORING PEGASUS STATUS:
+	RUNNING: step 1 of 7 (14%)
+	RUNNING: step 2 of 7 (28%)
+	RUNNING: step 3 of 7 (42%)
+	RUNNING: step 4 of 7 (57%)
+	RUNNING: step 5 of 7 (71%)
+	RUNNING: step 6 of 7 (85%)
+	WORKFLOW COMPLETED SUCCESSFULLY!
+	Bundle Passed Test!
+	[INFO] [install:install {execution: default-install}]
+	[INFO] Installing /mnt/databases/workflow-dev/HelloWorld/target/HelloWorld-1.0-SNAPSHOT.jar to /home/seqware/.m2/repository/com/github/seqware/HelloWorld/1.0-SNAPSHOT/HelloWorld-1.0-SNAPSHOT.jar
+	[INFO] ------------------------------------------------------------------------
+	[INFO] BUILD SUCCESSFUL
+	[INFO] ------------------------------------------------------------------------
+	[INFO] Total time: 5 minutes 39 seconds
+	[INFO] Finished at: Wed Apr 24 08:58:38 PDT 2013
+	[INFO] Final Memory: 72M/489M
+	[INFO] ------------------------------------------------------------------------
+
+		
+
+Under the hood, this is just calling the BundleManager --test option. In other words, you can do the same thing by:
+
 	cd /home/seqware/workflow-dev/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>
 	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b `pwd` -t --workflow HelloWorld --version 1.0-SNAPSHOT
 	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
