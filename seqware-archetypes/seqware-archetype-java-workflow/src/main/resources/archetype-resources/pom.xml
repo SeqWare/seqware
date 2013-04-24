@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <prerequisites>
-       <maven>2.2.1</maven>
+        <maven>2.2.1</maven>
     </prerequisites>
 
     <groupId>${groupId}</groupId>
@@ -20,6 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <seqware-version>0.13.6.5</seqware-version>
+        <skipITs>true</skipITs>
     </properties>
 
     <dependencies>
@@ -90,7 +91,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-		<version>3.1</version>
+                <version>3.1</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
@@ -227,7 +228,7 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <skip>${skipTests}</skip>
+                            <skip>${skipITs}</skip>
                             <executable>${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/bin/jre1.6.0_29/bin/java</executable>
                             <commandlineArgs>-jar ${project.build.directory}/Workflow_Bundle_${project.artifactId}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/lib/seqware-distribution-${seqware-version}-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.BundleManager -- -t -b ${project.build.directory}/Workflow_Bundle_${project.artifactId}_${project.version}_SeqWare_${seqware-version}/ </commandlineArgs>
                         </configuration>
