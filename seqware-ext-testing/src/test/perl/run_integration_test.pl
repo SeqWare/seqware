@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# starting point for integration tests
+# starting point for integration tests, now deprecated
 # example: /home/seqware/Temp/run_integration_test.pl ~/seqware-full.jar simple-legacy-ftl-workflow 1.0-SNAPSHOT
 
 use strict;
@@ -14,7 +14,7 @@ my ($jar, $archetype_name, $workflow_name, $workflow_version) = @ARGV;
 er("CREATING ARCHTYPE", "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware -DarchetypeArtifactId=$archetype_name -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=$workflow_name -DworkflowDirectoryName=$workflow_name -DworkflowName=$workflow_name -DworkflowVersion=1.0-SNAPSHOT -B");
 chdir("$workflow_name");
 er("BUILDING ARCHTYPE", "mvn install");
-chdir("target/Workflow_Bundle_$workflow_name\_$workflow_version\_SeqWare_0.13.6.3");
+chdir("target/Workflow_Bundle_$workflow_name\_$workflow_version\_SeqWare_0.13.6.5");
 #! attempt ends here
 
 er("TESTING BUNDLEMANAGER LISTING", "java -jar $jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -l -b `pwd`");

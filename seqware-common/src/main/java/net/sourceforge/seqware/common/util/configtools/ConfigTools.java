@@ -1,12 +1,15 @@
 package net.sourceforge.seqware.common.util.configtools;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.filetools.FileTools;
 
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 
@@ -21,26 +24,23 @@ public class ConfigTools {
   /** Constant <code>SEQWARE_SETTINGS_PROPERTY="SEQWARE_SETTINGS"</code> */
   public static final String SEQWARE_SETTINGS_PROPERTY = "SEQWARE_SETTINGS";
 
+  public static Map<String, String> getSettings() throws Exception{
+      return getSettings(false);
+  }
+  
   /**
    * The output keys are always uppercase!
    *
    * @throws java.lang.Exception if any.
    * @return a {@link java.util.Map} object.
    */
-  public static Map<String, String> getSettings() throws Exception {
+  public static Map<String, String> getSettings(boolean ignorePermissions) throws Exception {
 
     // first, try to figure out the location of the settings file
-    File settingsFile = null;
-    String settings = ConfigTools.getProperty(SEQWARE_SETTINGS_PROPERTY);
-    if (settings == null || "".equals(settings)) {
-      settings = ConfigTools.getProperty("HOME") + File.separator + ".seqware/settings";
-    }
-    if (ConfigTools.getProperty("HOME") == null || "".equals(ConfigTools.getProperty("HOME"))) {
-      settings = ConfigTools.getProperty("user.home") + File.separator + ".seqware/settings";
-    }
+    String settings = getSettingsFilePath();
 
     // Log.info(settings);
-    settingsFile = new File(settings);
+    File settingsFile = new File(settings);
 
     if (!settingsFile.exists()) {
       throw new Exception("The settings file " + settings + " does not exist!");
@@ -48,13 +48,22 @@ public class ConfigTools {
       throw new Exception("The settings file " + settings + " is not a file!");
     }
 
+    //SEQWARE-1595 : it seems that the Java 6 File API cannot retrieve permissions separated by owner and group
+    // will use Linux command until Java 7 NIO (hopefully)
+    String settingPerms = FileTools.determineFilePermissions(settings);
+    if (!ignorePermissions && !settingPerms.equals("-rw-------") && !settingPerms.equals("-rwx------")){  
+        String bigWarning = "*** SECURITY WARNING ***\nSeqWare settings file has incorrect file permissions. It should only be readable and writeable by the owner.\n In other words, run \"chmod 600 ~/.seqware/settings\"";
+        Log.fatal(bigWarning);
+        Log.stderr(bigWarning);
+    }
+    
     // else it should be OK
     // make sure the permissions are OK
-    settingsFile.setExecutable(false, false);
-    settingsFile.setWritable(false, false);
-    settingsFile.setWritable(true, true);
-    settingsFile.setReadable(false, false);
-    settingsFile.setReadable(true, true);
+    //settingsFile.setExecutable(false, false);
+    //settingsFile.setWritable(false, false);
+    //settingsFile.setWritable(true, true);
+    //settingsFile.setReadable(false, false);
+    //settingsFile.setReadable(true, true);
 
     HashMap<String, String> hm = new HashMap<String, String>();
 
@@ -104,4 +113,15 @@ public class ConfigTools {
     return value;
 
   }
+
+    public static String getSettingsFilePath() {
+        String settings = ConfigTools.getProperty(SEQWARE_SETTINGS_PROPERTY);
+        if (settings == null || "".equals(settings)) {
+          settings = ConfigTools.getProperty("HOME") + File.separator + ".seqware/settings";
+        }
+        if (ConfigTools.getProperty("HOME") == null || "".equals(ConfigTools.getProperty("HOME"))) {
+          settings = ConfigTools.getProperty("user.home") + File.separator + ".seqware/settings";
+        }
+        return settings;
+    }
 }

@@ -178,7 +178,8 @@ public class SampleIDResource extends DatabaseIDResource {
 				sample.setCountFile(countFile);
 
 			if(null!=o.getSampleAttributes()) {
-				sample.getSampleAttributes().clear();
+//SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+//				sample.getSampleAttributes().clear();
 				for(SampleAttribute sa: o.getSampleAttributes()) {
 					sa.setSample(sample);
 					sample.getSampleAttributes().add(sa);
@@ -186,7 +187,7 @@ public class SampleIDResource extends DatabaseIDResource {
 			}
             if (null != o.getParents()) {
                 SampleService ss = BeanFactory.getSampleServiceBean();
-                Set<Sample> parents = new HashSet<Sample>();
+                Set<Sample> parents = new HashSet<Sample>(sample.getParents());
                 for (Sample s: o.getParents()) {
                     parents.add(ss.findByID(s.getSampleId()));
                 }
@@ -194,7 +195,7 @@ public class SampleIDResource extends DatabaseIDResource {
             }
             if (null != o.getChildren()) {
                 SampleService ss = BeanFactory.getSampleServiceBean();
-                Set<Sample> children = new HashSet<Sample>();
+                Set<Sample> children = new HashSet<Sample>(sample.getChildren());
                 for (Sample s: o.getChildren()) {
                     children.add(ss.findByID(s.getSampleId()));
                 }

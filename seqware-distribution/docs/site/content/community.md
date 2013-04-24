@@ -14,17 +14,17 @@ Our new site (this one) is hosted on GitHub and we plan on migrating all of our 
 Mailing Lists
 -------------
 
-For the time being our [mailing lists](http://sourceforge.net/mail/?group_id=239239) are still hosted on SourceForge. If you want to contribute to SeqWare we encourage you to email the mailing list or Brian O'Connor at briandoconnor at gmail dot com directly.
+Our [user mailing list](https://groups.google.com/forum/?fromgroups#!forum/seqware) and our [developer mailing list](https://groups.google.com/forum/?fromgroups#!forum/seqware-dev) is available on Google Groups. If you want to contribute to SeqWare we encourage you to email the mailing list or Brian O'Connor at briandoconnor at gmail dot com directly.
 
 Issue Tracker
 -------------
 
-If you encounter bugs or want to make a feature request please email the developer list above (you will need to sign up) and also submit a bug to our [issue tracker](http://sourceforge.net/tracker/?group_id=239239) currently on SourceForge.
+If you encounter bugs or want to make a feature request please email the developer list above (you will need to sign up) and also submit a bug to our [issue tracker](https://github.com/SeqWare/seqware/issues) currently on GitHub.
 
 Wiki
 ----
 
-When the transition to GitHub is complete this site will contain all the documentation and we will no longer have a wiki (at least that is the plan).  In the mean time you can still use the [public wiki](http://seqware.sf.net/) on SourceForge which is tailored to developers and is not particularly friendly to new users.  This site should be a much better introduction to our project but we are still adding content.
+When the transition to GitHub is complete this site will contain all the documentation and we will no longer have a wiki (at least that is the plan).  In the mean time you can still use the [public wiki](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Main_Page) on SourceForge which is tailored to developers and is not particularly friendly to new users.  This site should be a much better introduction to our project but we are still adding content.
 
 Jenkins and Artifactory
 -----------------------
@@ -39,5 +39,5 @@ Repositories
 There are currently two repositories used by the project (see below). The SourceForge repo has all the sub-projects (and several years of cruft)  while the GitHub repository has this documentation and the latest SeqWare Query Engine. We will transition from subversion to git as soon as we can.  If you want to contribute to SeqWare we encourage you to email the mailing list or Brian O'Connor at briandoconnor at gmail dot com directly.
 
 * the GitHub git [repository](https://github.com/SeqWare/seqware) for SeqWare
-* the SourceForge subversion [repository](http://sourceforge.net/projects/seqware/develop)
+* the SourceForge subversion [repository](http://sourceforge.net/projects/seqware/develop) (Deprecated, please use GitHub)
 

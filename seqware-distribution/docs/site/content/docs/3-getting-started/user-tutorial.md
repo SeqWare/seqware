@@ -2,169 +2,168 @@
 
 title:                 "User Tutorial"
 markdown:              advanced
+is_dynamic:            true
 toc_includes_sections: false
 
 ---
 
-The majority of this guide is dedicated to walking users and developers through the basics of using SeqWare. We assume that people are most interested in the Pipeline sub-project and focus most of our time on that.  The examples below will all be based on a local VM but the environment on our cloud instance is almost identical, so most of the examples below will be applicable to either VM type. In the future we will probably have a separate user guide that focuses on the differences of running on Amazon's cloud.
+## Overview
+
+<p class="warning"><strong>Note:</strong>This guide assumes you have installed
+SeqWare already. If you have not, please install SeqWare by either downloading
+the VirtualBox VM or launching the AMI on the Amazon cloud.  See <a
+href="/docs/2-installation/">Installation</a> for directions.</p>
+
+The majority of this guide is dedicated to walking users (people who use
+workflows) through the basics of using SeqWare. The core functionality we will
+explore is how to get data into the system, how to run workflows someone else
+created and installed for you, and getting the resulting data back out.  We
+assume that people are most interested in the Pipeline sub-project and focus
+most of our time on that.  The examples below will all be based on a local
+VirtualBox VM but the environment on our cloud instance is almost identical, so
+most of the examples below will be applicable to either VM type. Any difference
+will be pointed out in a tip box.
 
 ## By the End of This Tutorial
 
-This guide will show you how to use command line tools from Pipeline to access the MetaDB. This will allow you to do the following tasks using tools that can be scripted versus our Portal web-based interface that requires a user to click on an interface (we will show examples of the latter along the way too). By the end of these tutorials you will be able to:
+This guide will show you how to use command line tools from Pipeline to access
+the MetaDB via the Web Service in order to setup workflows to run in Pipeline,
+watch over them, and get results back. This will allow you to do the following
+tasks using tools that can be scripted versus our Portal web-based interface
+that requires a user to click on an interface. By the end of these tutorials
+you will be able to:
 
-* use both command line and web-based tools from Pipeline and Portal respectively
+* use command line tools from Pipeline as a workflow user
 * create studies, experiments, and samples in the MetaDB
 * upload data such as fastq files to the VM and associate that data with particular samples in the MetaDB
 * find the list of available workflows and the parameters they accept using Pipeline
 * schedule a HelloWorld workflow and monitor its progress using Pipeline
-* generate a report on the outputs of your workflows in Pipeline and Portal
+* generate a report on the outputs of your workflows in Pipeline
 * download files produced by a workflow using Pipeline tools
-* simple debugging of workflows by downloading stdout and stderr for your workflows
+* debug workflows by downloading stdout and stderr for your workflows
 
-The command line tools are all Java tools from SeqWare Pipeline that wrap our RESTful SeqWare Web Service. If you would like to learn more about the low-level API (perhaps you want to call it directly in a program or script) you can find more information in the [SeqWare Web Service](/docs/7-web-service/) documentation.
+The command line tools are all Java tools from SeqWare Pipeline that wrap our
+RESTful SeqWare Web Service. If you would like to learn more about the
+low-level API (perhaps you want to call it directly in a program or script) you
+can find more information in the [SeqWare Web Service](/docs/7-web-service/)
+documentation.
 
-## The Example
-
-In this tutorial we will use a simple HelloWorld workflow that takes a text file as input and creates another file as output. The same examples could be applied to any workflows and input data types.  How to build your own workflows (**the central purpose of SeqWare**) is covered in the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/).
+<p class="warning"><strong>Tip:</strong>If you want to see how to do the same
+steps covered in this tutorial via the Portal web GUI instead of command line
+tools see the <a href="/docs/5-portal/user-guide/">Portal User Guide</a>.</p>
 
 ## First Steps
 
-Please launch your local VM in VirtualBox and login as user <kbd>seqware</kbd>, password <kbd>seqware</kbd> at this time. Click on the "SeqWare Directory" link on the desktop which will open a terminal to the location where we installed the SeqWare tools.
+<%= render '/includes/launch_vm/' %>
+
+## The Example
+
+In this tutorial we will use a simple HelloWorld workflow that takes a text
+file as input and creates another file as output. The same examples could be
+applied to any workflow and input data types.  How to build your own workflows
+(**which is really the central purpose of SeqWare**) is covered in the
+[Developer Tutorial](/docs/3-getting-started/developer-tutorial/). How to
+install these workflows and present them to users is covered in the [Admin
+Tutorial](/docs/3-getting-started/admin-tutorial/).
+
+<p class="warning"><strong>Cloud Tip:</strong>Any differences between the local
+VirtualBox VM and Amazon cloud AMI will be described in a "Cloud Tip" box like
+this one.</p>
 
 ## The SeqWare Command Line Tool
 
-SeqWare is open source architecture built mostly in Java. In the <kbd>/home/seqware/SeqWare</kbd> directory you will see a jar file. This contains SeqWare Pipeline code that will allow you to interact with the SeqWare Web service (actually either on a VM, installed on another local machine/cluster, or in the cloud) that controls, among other things, workflow execution. This jar is, essentially, the command line interface for the whole SeqWare project.
+SeqWare is an open source software project built mostly in Java. In the seqware
+user's home directory (<kbd>/home/seqware/</kbd>) you will see a SeqWare jar
+file (<kbd>seqware-distribution-<%= seqware_release_version %>-full.jar</kbd>).
+This jar is, essentially, the command line interface for the whole SeqWare
+project. It contains the SeqWare Pipeline code that will allow you to interact
+with the SeqWare Web service (whether it is on a VM, installed on another local
+machine/cluster, or in the cloud) that controls, among other things, workflow
+execution. 
 
-<p class="warning"><strong>Tip:</strong> The VM will contain a recent version of the jar that we have validated with this tutorial.  You may want to upgrade to the latest version, though, which you can download from our continuous build server. Please choose the jar that has the -full suffix, e.g. <a href="http://jenkins.res.oicr.on.ca/job/seqware_github/lastStableBuild/com.github.seqware$seqware-distribution/">seqware-distribution-0.13.6-SNAPSHOT-full.jar</a>. Keep in mind we make no promises that the latest version will be bug free!</p>
+In the image below you get a glimpse of how these SeqWare tools fit together.
+For users of the SeqWare system the command line tools, Web Service, or web
+Portal application all provide access to the lifecycle of workflow usage. This
+includes finding the workflows that are available, seeing what parameters they
+take, launching a workflow on specified inputs/parameters, monitoring the
+status, debugging the output if something goes wrong, and getting results back.
+This process is pretty much identical whether SeqWare is installed locally on a
+VirtualBox VM, running on a self-contained cloud instances, or a production
+installation running on a real HPC cluster.
+
+<img src="/assets/images/seqware_tool_interaction.png" width="600px"/>
+
+For more information about the command line tools see the
+[Plugin](/docs/17-plugins/) and [Modules](/docs/17a-modules/) references which
+gives the usage for all our command line utilities.
+
+<p class="warning"><strong>Tip:</strong> The VM will contain a recent version
+of the jar that we have validated with this tutorial.  You may want to upgrade
+to the latest version, though, which you can download from our <a
+href="http://jenkins.res.oicr.on.ca/job/seqware/">continuous build server</a>.
+Please choose the jar that has the -full suffix, e.g.
+seqware-distribution-0.13.6-full.jar. Keep in mind we make no promises that the
+latest version will be bug free!</p>
 
 ## The SeqWare Settings File
 
-The SeqWare jar file uses a simple configuration file that has been setup for you already on the VM. By default the location is ~/.seqware/settings.
+The SeqWare jar file uses a simple configuration file that has been setup for
+you already on the VM. By default the location is ~/.seqware/settings.
 
-This file contains the web address of the RESTful web service, your username and password, and you Amazon public and private keys that will allow you to push and pull data files to and from the cloud, etc.  Here is the example settings file from the VM, this will be ready to work on the VM but keep in mind, this is where you would change settings if you, for example, setup the Web Service and MetaDB on another server or you launched a VM on the cloud and wanted to use the local VM command line jar to control the remote server.  Another common thing you may want to do is use the ProvisionFiles module (described later) to push and pull data into/out of the cloud. This is the file where you would supply your access and secret keys that you got when signing up for Amazon (keep those safe!):
+This file contains the web address of the SeqWare Web Service, your username
+and password, and you Amazon public and private keys that will allow you to
+push and pull data files to and from the cloud, etc. For this tutorial the
+config file should be ready to go, you will not need to modify it.
 
-<pre>
-#
-# SEQWARE PIPELINE SETTINGS
-#
-# the name of the cluster as defined in the Pegasus sites.xml config file
-SW_CLUSTER=seqwarevm
-# the directory used to store the generated DAX workflow documents before submission to the cluster
-SW_DAX_DIR=/home/seqware/SeqWare/pegasus-dax
-# the directory containing all the Pegasus config files this instance of SeqWare should use
-SW_PEGASUS_CONFIG_DIR=/home/seqware/.seqware/pegasus
-# SeqWare MetaDB communication method, can be "database" or "webservice" or "none"
-SW_METADATA_METHOD=webservice
-# a directory to copy bundles to for archiving/installing
-SW_BUNDLE_DIR=/home/seqware/SeqWare/provisioned-bundles
-# the central repository for installed bundles
-SW_BUNDLE_REPO_DIR=/home/seqware/SeqWare/released-bundles
-#
-# SEQWARE WEBSERVICE SETTINGS
-#
-# the base URL for the RESTful SeqWare API
-SW_REST_URL=http://localhost:8080/SeqWareWebService
-# the username and password to connect to the REST API, this is used by SeqWare Pipeline to write back processing info to the DB
-SW_REST_USER=admin@admin.com
-SW_REST_PASS=admin
-
-# SEQWARE TESTING SETTINGS
-#
-SW_DB_USER=seqware
-SW_DB_PASS=seqware
-SW_DB_SERVER=localhost
-SW_DB=test_seqware_meta_db
-
-#
-# AMAZON CLOUD SETTINGS
-#
-# used by tools reading and writing to S3 buckets (dependency data/software bundles, inputs, outputs, etc)
-# most likely not used here at OICR
-AWS_ACCESS_KEY=lksjdflksjdklf
-AWS_SECRET_KEY=slkdjfeoiksdlkjflksjejlfkjeloijxelkj
-
-#
-# Settings for Oozie Workflow Engine
-#
-OOZIE_URL=http://localhost:11000/oozie 
-OOZIE_APP_ROOT=seqware_workflow 
-OOZIE_APP_PATH=hdfs://localhost:8020/user/seqware/ 
-OOZIE_JOBTRACKER=localhost:8021
-OOZIE_NAMENODE=hdfs://localhost:8020 
-OOZIE_QUEUENAME=default
-    
-HBASE.ZOOKEEPER.QUORUM=localhost 
-HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT=2181
-HBASE.MASTER=localhost:60000
-MAPRED.JOB.TRACKER=localhost:8021
-FS.DEFAULT.NAME=hdfs://localhost:8020 
-FS.DEFAULTFS=hdfs://localhost:8020 
-FS.HDFS.IMPL=org.apache.hadoop.hdfs.DistributedFileSystem 
-OOZIE_WORK_DIR=/home/seqware/oozie
-</pre>
-
-Note that the sections for the Oozie Workflow Engine and Amazon Cloud Settings are currently in development and optional respectively, so they do not need to be filled in for every deployment of SeqWare. 
+For more information see the [Settings](/docs/6-pipeline/user-configuration/)
+documentation which covers the details on the user config file.
 
 ## Creating Studies, Experiments, and Samples
 
-SeqWare MetaDB lets you track studies, experiment, and samples and then link those to files (like FASTQ or something similar). You can then run workflows on those files, track the resulting files, and use those files for the next workflow.  You will want to set up your study, experiments, and samples before uploading your text or other data files.  This ensures you have “parents” to attach these files to.  Otherwise you will not be able to use them as parameters for workflows. 
+This tutorial starts with setting up study, experiment, and sample metadata in
+the SeqWare MetaDB.  SeqWare MetaDB lets you track studies, experiment, and
+samples and then link those to files (like FASTQ or something similar). You can
+then run workflows on those files, track the resulting files, and use those
+files for the next workflow.
 
-You can do this either with the [Portal](/docs/5-portal/) or via the command line tools below.
+You can run workflows without metadata writeback to the MetaDB but most users
+will want to associate a run of a workflow with a particular sample so that is
+why we start with setting up this information.  You will want to set up your
+study, experiments, and samples before uploading your text or other data files.
+This ensures you have "parents" to attach these files to.  Otherwise you will
+not be able to use them as parameters for workflows. 
 
-### Via the Portal
+The functionality for each of these metadata tools described below is fairly
+limited.  For example, the rich descriptive "Spot Decoding String" language for
+describing how a read is structured is not yet fully supported and updates to
+existing entities are not yet possible. That is functionality we hope to add in
+future releases.  However the basic functionality to create studies,
+experiments, and samples now exists in a scriptable form and that is really the
+point.  By providing command line tools you can automate the setup of this
+information using simple Bash shell scripts or the language of your choice.
 
-First, login to the portal, the URL is http://localhost:8080/SeqWarePortal and you will need to use the browser inside the VM to access this. The default username is <kbd>admin@admin.com</kbd> and the default password is <kbd>admin</kbd>.  Feel free to change your password in the web app.
-
-<p class="warning"><strong>Tip:</strong>You could setup the VM so it gets a "real" IP address on your network, in which case you could access both the Portal and Web Service via any computer on your network.</p>
-
-In the following screenshots you see the process that allows you to create these entities through the web application.
-When you first login you will see your studies (of which you have none).  First, create a study which can be though of as a project that can have many distinct experimental designs:
-
-<img src="/assets/images/create_study.png" width="600px"/>
-
-You will then see your new study which includes a link to add an experiment. An experiment encapsulates a particular experimental design, for example 2x50 sequencing on the Illumina platform.  If you then did another experiment with a 2x250 read structure on the same platform that would be considered a novel experimental design.
-
-<img src="/assets/images/create_experiment.png" width="600px"/>
-
-Once you click on the "add experiment" link you will then be able to define the NGS platform used and the nature of the experimental design. Of note is the "Spot Decoding String" which allows you to document the structure of the reads.
-
-The next step is to create one or more samples and associate them with this new experiment.  Under the experiment you just added you will see a link for "add sample", click it and populate the sample information.
-
-At this point you will see your complete study/experiment/sample hierarchy in the "My Studies" section.
-
-<img src="/assets/images/my_studies.png" width="600px"/>
-
-<p class="warning"><strong>Tip:</strong> Notice the "SWID: 14" next to "My Test Study". The other items in the hierarchy have an SWID as well.  This is common for every item in the MetaDB, everything has a SWID aka accession.  When you use command line tools they will often take a "parent accession" to attach output to and this is referring to what you see as SWID in the Portal.</p>
-
-<p class="warning"><strong>Tip:</strong> You can also track sequencer runs and associate samples with the particular "lanes" on the flowcell (or equivalent on the particular sequencing platform).  This is not covered here but will be in the SeqWare Portal guide.  Suffice it to say, this lets you use Portal as a light-weight LIMS system for tracking both studies/experiments/sample and sequencer runs/lanes and how they relate to each other.</p>
-
-
-### Via Command Line Tools
-
-There are also command line tools for creating study, experiment, and samples.  The functionality for each of these is fairly limited.  For example, the rich descriptive "Spot Decoding String" language for describing how a read is structured is not yet fully supported and updates to existing entities are not yet possible.  However the basic functionality to create studies, experiments, and samples now exists in a scriptable form and that is really the point.  By providing command line tools you can automate the setup of this information using simple Bash shell scripts or the language of your choice.
+<p class="warning"><strong>Tip:</strong>You can use SeqWare Portal to edit the
+entries you make with the command line tools (or create more studies,
+experiments, and samples). See the <a href="/docs/5-portal/user-guide/">Portal
+User Guide</a> for more information.</p>
 
 First, you can find out what tables this tool is capable of writing to:
 
-	java -jar seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --list-tables
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --list-tables
 	
 	TableName
 
 	study
-
 	experiment
-
 	sample
-
 	sequencer_run
-
 	ius	
-
 	lane
 
 
 Now, for a given table, you can find out what fields you can write back to and their type:
 
-	java -jar seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --list-fields
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --list-fields
 	
 	Field    Type    Possible_Values
 	title    String
@@ -176,198 +175,396 @@ Now, for a given table, you can find out what fields you can write back to and t
 
 So using the information above you can create a new study:
 
-	java -jar seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --create --field 'title::New Test Study' --field 'description::This is a test description' --field 'accession::InternalID123' --field 'center_name::SeqWare' --field 'center_project_name::SeqWare Test Project' --field study_type::4
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --create --field 'title::New Test Study' --field 'description::This is a test description' --field 'accession::InternalID123' --field 'center_name::SeqWare' --field 'center_project_name::SeqWare Test Project' --field study_type::4
 	
-	SWID: 29830
+	SWID: 2
 
-The output of this command above includes the line “SWID: 29830” (or whatever number is appropriate for your database).  This is very important since this number is a unique identifier across the database and used to link together entities.  For example, you will use the number produced by the study add command as the parent for the experiment you create below.  If you do not track and supply these numbers then the hierarchy of study/experiment/sample cannot be created.
+The output of this command above includes the line “SWID: 2” (or whatever
+number is appropriate for your database).  This is very important since this
+number is a unique identifier across the database and used to link together
+entities.  For example, you will use the number produced by the study add
+command as the parent for the experiment you create below.  If you do not track
+and supply these numbers then the hierarchy of study/experiment/sample cannot
+be created.
 
-The next step is to create an experiment and link it to the study you created above. You can find the platform ID using the --list-fields option shown above:
+The next step is to create an experiment and link it to the study you created
+above. You can find the platform ID using the <tt>--list-fields</tt> option shown above:
 
-	java -jar seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table experiment --create --field 'title::New Test Experiment' --field 'description::This is a test description' --field study_accession::29830 --field platform_id::26
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table experiment --create --field 'title::New Test Experiment' --field 'description::This is a test description' --field platform_id::26 --field study_accession::2
 	
-	SWID: 29831
+	SWID: 3 
 
-Again, you use the SWID from the above output in the next step to create an associated sample. You can find the platform ID using the --list-fields option shown above:
+Again, you use the SWID from the above output in the next step to create an
+associated sample. You can find the platform ID using the <tt>--list-fields</tt> option
+shown above:
 
-	java -jar seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table sample --create --field 'title::New Test Sample' --field 'description::This is a test description' --field experiment_accession::29831 --field organism_id::26
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table sample --create --field 'title::New Test Sample' --field 'description::This is a test description' --field organism_id::26 --field experiment_accession::3
 	
-	SWID: 29832
+	SWID: 4
 
-At this point you should have a nice study/experiment/sample hierarchy.  You can, of course, add multiple samples per experiment and multiple experiments per study.  For each of the samples you can now upload one or more files.  You will need the SWID from the sample creation above for this step (or visible in the Portal).  Here is a screenshot of what the above commands produce in the Portal (note, the SWIDs do not match but these are just examples):
+At this point you should have a nice study/experiment/sample hierarchy.  You
+can, of course, add multiple samples per experiment and multiple experiments
+per study.  For each of the samples you can now upload one or more files.  You
+will need the SWID from the sample creation above for this step (or visible in
+the Portal).  Here is a screenshot of what the above commands produce in the
+[Portal](/docs/5-portal/) (note, the SWIDs do not match but these are just examples):
 
 <img src="/assets/images/final_exp.png" width="600px"/>
 
 
 ## Uploading Files and Associating with a Sample
 
-The first step in uploading a file and associating with a sample is to
-identify the sample’s SWID. The easiest way to do this is to use the Portal web
-application to navigate through the Study/Experiment/Sample tree to the sample
-you want to upload text for and to note its associated SWID.  You then need to
-know the destination location to put your file in.  For the local VM this is either a directory (which defaults to <kbd>/datastore</kbd>) or a shared filesystem over NFS if you have connected your VM instance to shared storage and a cluster. The important thing is this directory is shared across your VM and any other cluster nodes it connects to if any.  The default <kbd>/datastore</kbd> will work fine here.  For Amazon's cloud this shared location is their S3 service which allows you to store arbitrary files in "buckets".  You will see in the SeqWare Pipeline section of this manual how to work with files on S3.
+The first step in uploading a file and associating with a sample is to identify
+the sample’s SWID. Once you
+decide on the "parent" sample to attach the file to you then need to know the
+destination location to put your file in.  For the local VM this is either a
+directory (which defaults to <kbd>/datastore</kbd>) or a shared filesystem over
+NFS if you have connected your VM instance to shared storage and a cluster.
+The default <kbd>/datastore</kbd> will work fine here on this single,
+self-contained VM instance (either the VirtualBox VM or Amazon AMI).
 
-Once you have these two
-pieces of information (destination path "/datastore/" and the SWID) you can then use either the Portal or the ProvisionFiles command line utility to put your
-files into the right place and associate them with the correct sample.
+Once you have these two pieces of information (destination path "/datastore/"
+and the sample SWID) you can then use the command line utilities
+(ProvisionFiles or GenericMetadataSaver) to put your files into the right place
+and associate them with the correct sample.
 
-###Via the Portal
+### Creating a HelloWorld Text File
 
-First, create your text document that you want to associate with a sample (we are using a text document here since the sample HelloWorld workflow takes this as an input but typically you would upload Fastq files for a sample).  I created a document called <kbd>simple.txt</kbd> that just has some random text in it.
+Moving on with the HelloWorld example workflow, you will now need to create an input text
+file to associate with the sample created previously. This will be the input file for the
+HelloWorld workflow.  For example, do the following in your home directory:
 
-Now, navigate to "My Studies", pick a sample, and then click "upload file".  You can then either give the complete path to the text file ("enter the file URL into the database" or you can use the "File to upload" browser to upload the simple.txt file. The third option (using a dedicated transfer tool) requires admin configuration and only works on the cloud so we will skip it here. Click upload when you are done.
+	echo 'testing HelloWorld' > ~/input.txt
 
-If possible you should enter a path or URL (http://server/file/path or s3://<bucket>/file/path) since this will not result in duplicate data or long uploads. If you do this then the file path should be accessible to whatever computer the workflow jobs run on (either a shared filesystem or S3). If you choose to upload it might fail for large files and it will also cause a duplicate file to live in <kbd>/datastore/uploads</kbd>.  In these examples we will just provide a URL.
+### Associating Uploaded Files with a Sample 
 
-<img src="/assets/images/upload.png" width="600px"/>
+Here is an example of calling the ProvisionFiles command line utility which
+will copy a file (<tt>~/input.txt</tt>) to a destination (<tt>/datastore/</tt>)
+and also update the database to link the parent sample (SWID:4 above) to
+the newly copied file that has the final path <tt>/datastore/input.txt</tt>:
 
-You can verify the upload has been successful by browsing "My Studies" section. You should be able to re-download the file, if so it was put in a location visible to the web server.
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles --metadata-output-file-prefix /datastore/ --metadata-processing-accession-file accession.txt --metadata-parent-accession 4 -- -im text::text/plain::/home/seqware/input.txt -o /datastore/ --force-copy 
 
-### Via Command Line Tools
+In this example it will copy the /home/seqware/input.txt text file to
+/datastore/ directory (which we are using for this tutorial) and will link it 
+to the sample identified by 4 (the sample’s SWID).  So the final output
+file is "/datastore/input.txt" in the database. If you left off --force-copy
+you would get a symlink in this case since it is a local file operation.  If
+you left off "--metadata-output-file-prefix /datastore/" then the file path in
+the DB would just be "input.txt". The parameter
+"--metadata-processing-accession-file accession.txt" will cause the SWID for
+the ProvisionFiles event to be written to the accession.txt file. Take a look
+at the accession for the ProvisionFiles event now, you will use this value as
+the parent for the actual run of the HelloWorld workflow:
 
-The same process of uploading data described above can also be used on the command line. Here is an example of calling the ProvisionFiles command line utility:
+	cat /home/seqware/accession.txt
+	5	
 
-	java -jar seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles --metadata-output-file-prefix /datastore/ --metadata-parent-accession 29832 --metadata-processing-accession-file simple.txt -- -im text::text/plain::simple.txt -o /datastore/ --force-copy
+In this case the SWID for the ProvisionFiles is 5.
 
-In this example it will copy the simple.txt text files to /datastore/ directory and
-will link them to the sample identified by 29832 (the sample’s SWID).  So the
-final output file is "/datastore/simple.txt" in the database. If you left off
---force-copy you would get a symlink in this case since it is a local file
-operation. Use the portal to find out the SWID for an existing sample or get
-the SWID using the command line tool when you create a new study. Providing
-that here will cause the text to be associated with that parent sample.
+<p class="warning"><strong>Tip:</strong> you can find a list of the meta types
+(like chemical/seq-na-text-gzip or text/plain above) at <a
+href="http://seqware.github.io/docs/16-module-conventions/">Module
+Conventions - Module MIME Types</a>. This is the list we add to as needed when
+creating new workflows.  It is extremely important to be consistent with these
+since a workflow will not recognize your input unless the meta type string
+matches what it expects exactly.</p>
 
-<p class="warning"><strong>Tip:</strong> you can find a list of the meta types (like chemical/seq-na-text-gzip or text/plain above) at <a href="http://sourceforge.net/apps/mediawiki/seqware/index.php?title=Module_Conventions#Module_MIME_Types">Module Conventions - Module MIME Types</a>. This is the list we add to as needed when creating new workflows.  It is extremely important to be consistent with these since a workflow will not recognize your input unless the meta type string matches what it expects exactly.</p>
+### Associating Existing Files with a Sample 
 
+The ProvisionFiles utility above both uploads/copies the input file and also
+saves the metadata back to the database.  However, sometimes you have already
+uploaded data or, as is the case for the local VM, it is a single filesystem so
+there is no reason to make copies of the data (the same would be true if
+/home/seqware/ was on an NFS share on a cluster for example).  In this case you
+just want to link the files to particular samples in the database.
+GenericMetadataSaver is the tool you can use to accomplish this, for example,
+if you already had input2.txt in /datastore you could insert this into the
+MetaDB using:
 
-#### Associating Existing Files with a Sample 
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver --metadata-parent-accession 4 --metadata-processing-accession-file accession2.txt -- --gms-output-file text::text/plain::/datastore/input2.txt --gms-algorithm UploadText --gms-suppress-output-file-check
 
-The best way to get data into the cloud is to use the ProvisionFiles utility above since it both uploads the data (using multiple threads to maximize performance) and also saves the metadata back to the database.  However, sometimes you have already uploaded data or, as is the case for the local VM, it is a single filesystem so there is no reason to make copies of the data (same would be true if /home/seqware/ was on an NFS share).  In this case you just want to link the files to particular samples in the database.  GenericMetadataSaver is the tool you can use to accomplish this, for example:
+Here files are associated with the parent (SWID: 4 which is a sample). 
+Also, the file accession2.txt contains the SWID for this /datastore/input2.txt file.
 
-	java -jar seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver --metadata-parent-accession 25192 -- --gms-output-file text::text/plain::/home/seqware/SeqWare/simple.txt --gms-algorithm UploadText --gms-suppress-output-file-check
+	cat /home/seqware/accession2.txt
 
-Here files are associated with the parent (SWID: 25192 which is a sample). One word of caution, if you expect people to download your files through the Portal then the paths you inject into the database must start with /datastore/ or wherever Tomcat (the web server) expects to find uploaded files.  For the VM, this is /datastore/. See the section on SeqWare Portal for more information on configuring Tomcat.
+One word of caution, if you expect people to download your files through the
+Portal then the paths you inject into the database must be in a place where the
+Portal can "see" it. See the [Portal documentation](/docs/5-portal/) for
+information on setting the shared directory it expects to find uploaded files
+in.  For the VM, this is /datastore/.
 
 ## Listing Available Workflows and Their Parameters
 
-Once you have uploaded data the next step is to find the available workflows and their parameters.  To see the list of available workflows you can execute the following command:
+Once you have uploaded data the next step is to find the available workflows
+and their parameters.  To see the list of available workflows you can execute
+the following command:
 
-	java -jar seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-install
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-install
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-install --human-aligned
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-install --human-expanded
 
-You will get a tab-delimited list of workflows showing their name, version, and (most importantly) their SWID.  
+First, you will get a tab-delimited list of workflows showing their name, version, and 
+(most importantly) their SWID that you can use in scripts. In the second and third examples
+, you will get a more user-friendly versions of the output. 
 
-<p class="warning"><strong>Tip:</strong> it may be easier for you to read the output by cutting and pasting into a spreadsheet.</p>
+In this example we are going to use the latest (at the time of this writing)
+HelloWorld workflow bundle (SWID 1 below).  The output of the above command
+includes:
 
-In this example we are going to use the latest (at the time of this writing) HelloWorld workflow bundle (SWID 7 below).  The output of the above command includes the line:
+	-[ RECORD 0 ]----+--------------------------------------------------------------------------------------------
+	Name             | HelloWorld                                                                                  
+	Version          | 1.0-SNAPSHOT                                                                                
+	Creation Date    | Thu Apr 18 11:30:52 PDT 2013                                                                
+	SeqWare Accession| 1                                                                                           
+	Bundle Location  | /home/seqware/released-bundles/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip 
 
-  HelloWorldWorkflow      1.0     Wed Aug 15 19:00:11 EDT 2012    7       /home/seqware/SeqWare/released-bundles/Workflow_Bundle_HelloWorldWorkflow_1.0_SeqWare_0.12.5.zip
 
-The fourth column includes the SWID for this workflow that you will use in the next command to find all the parameters (and their defaults) that this workflow takes.  Here is the command, notice I redirect the output to create a basic ini file that can later be customized and used to submit a run of this workflow:
+The fourth column includes the SWID for this workflow that you will use in the
+next command to find all the parameters (and their defaults) that this workflow
+takes.  Here is the command, notice we redirect the output to create a basic ini
+file that can later be customized and used to submit a run of this workflow:
 
-	java -jar seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession 7 > workflow.ini
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession 1 > /home/seqware/workflow.ini
 
-In this example the workflow “HelloWorldWorkflow” version 1.0 (SWID 7) parameters are listed.  The output conforms to the input you can use to parametrize and launch workflows.  For example:
+In this example the workflow “HelloWorld” version 1.0 (SWID 1)
+parameters are listed.  The output conforms to the input you can use to
+parameterize and launch workflows.  For example:
 
-<pre>
-#key=input_file:type=file:display=F:display_name=input_file:file_meta_type=text/plain
-input_file=${workflow_bundle_dir}/Workflow_Bundle_helloworld/1.0/data/input.txt
-#key=output_dir:type=text:display=F:display_name=output_dir
-output_dir=seqware-results
-#key=output_prefix:type=text:display=F:display_name=output_prefix
-output_prefix=/datastore/
-</pre>
+	#key=input_file:type=file:display=F:display_name=input_file:file_meta_type=text/plain
+	input_file=${workflow_bundle_dir}/Workflow_Bundle_helloworld/1.0/data/input.txt
+	#key=output_dir:type=text:display=F:display_name=output_dir
+	output_dir=seqware-results
+	#key=output_prefix:type=text:display=F:display_name=output_prefix
+	output_prefix=./
 
-<p class="warning"><strong>Note:</strong> the lines above have been wrapped but you should not include line breaks in your file.  Instead, make sure the file that you create using this tool (and customize for later launching a workflow) includes comment lines starting with “#” and the key=value lines only.  In the command above the redirect to the file workflow.ini will include some extra lines of status output.  Make sure you remove these before continuing to launch the workflow with this ini file.  You can customize any values from the key/value pairs that you need to.  For example, the most frequent parameters you will customize are input files.  In the workflow example above you will want to customize input_file.  For example, if you wanted to process the file you uploaded you would customize the line as:
+<p class="warning"><strong>Important!:</strong> the lines above have been
+wrapped but you should not include line breaks in your file.  Instead, make
+sure the file that you create using this tool (and customize for later
+launching a workflow) includes comment lines starting with “#” and the
+key=value lines only.  In the command above the redirect to the file
+workflow.ini will include some extra lines of status output.  Make sure you
+remove these before continuing to launch the workflow with this ini file.</p>
 
-	input_file=/datastore/simple.txt
+You can customize any values from the key/value pairs that you need to.  For
+example, the most frequent parameters you will customize are input files.  In
+the workflow example above you will want to customize <tt>input_file</tt> (set
+it to the location of the file you uploaded) and the <tt>output_prefix</tt>
+(set it to the common shared directory we use on this VM/AMI
+<tt>/datastore/</tt>). For example:
 
-Since this is a low-level tool you may see many more parameters exposed with this tool than you would using the web Portal application.  Please use caution when customizing these values since some refer to items that affect the underlying infrastructure.
-</p>
+	input_file=/datastore/input.txt
+	output_prefix=/datastore/
 
-<p class="warning"><strong>Tip:</strong> when you customize key-values in the ini file prepared above you do not need to include key-values that you leave unchanged.  If you do not include these the workflow will run with those values by default anyway.  Removing unchanged key-values will greatly reduce the size of your ini files making it much easier to see the key-values you are interested in.</p>
+Since this is a low-level tool you may see many more parameters exposed with
+this tool than you would using the web Portal application.  Please use caution
+when customizing these values since some refer to items that affect the
+underlying infrastructure. Generally, when you see <tt>display=F</tt> that is
+an indication that the parameter should usually be left as the default value.
 
+<p class="warning"><strong>Tip:</strong> when you customize key-values in the
+ini file prepared above you do not need to include key-values that you leave
+unchanged.  If you do not include these the workflow will run with those values
+by default anyway.  Removing unchanged key-values will greatly reduce the size
+of your ini files making it much easier to see the key-values you are
+interested in. In the example above the minimal ini file is simply the two
+lines for <tt>input_file</tt> and <tt>output_prefix</tt>.</p>
+
+In summary, your should edit the workflow.ini changing it from:
+
+	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
+	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@16ba8602
+	=====================================================
+	=================WORKFLOW PARAMS=====================
+	=====================================================
+	-----------------------------------------------------
+	#key=input_file:type=file:display=F:display_name=input_file:file_meta_type=text/plain
+	input_file=${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/data/input.txt
+	#key=greeting:type=text:display=T:display_name=Greeting
+	greeting=Testing
+	#key=output_dir:type=text:display=F:display_name=output_dir
+	output_dir=seqware-results
+	#key=output_prefix:type=text:display=F:display_name=output_prefix
+	output_prefix=./
+
+	-----------------------------------------------------
+
+
+to the following:
+
+	#key=input_file:type=file:display=F:display_name=input_file:file_meta_type=text/plain
+	input_file=/datastore/input.txt
+	#key=greeting:type=text:display=T:display_name=Greeting
+	greeting=Testing
+	#key=output_dir:type=text:display=F:display_name=output_dir
+	output_dir=seqware-results
+	#key=output_prefix:type=text:display=F:display_name=output_prefix
+	output_prefix=/datastore/
 
 ## Triggering a Workflow and Monitoring Progress 
 
-At this point you know what workflow you are going to run and you have a customized ini file that contains, for example, the input files. The next step is to trigger the workflow using the ini file you prepared. Make sure you use the correct workflow accession and parent accession. Use the parent accession of the "Analysis Event" that the file is attached to not the file itself.
+At this point you know what workflow you are going to run and you have a
+customized ini file that contains the <tt>input_file</tt> and
+<tt>output_prefix</tt>. The next step is to trigger the workflow using the ini
+file you prepared. Make sure you use the correct workflow accession and parent
+accession. The former was listed when you listed all workflows (SWID:1 in this
+example) and the latter was printed to the <tt>accession.txt</tt> file when you
+copied the file using ProvisionFile (SWID:5 in this example).
 
-	java -jar seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession 7 --schedule --parent-accessions 24
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files /home/seqware/workflow.ini --workflow-accession 1 --schedule --parent-accessions 5 --host `hostname --long` 
+	WORKFLOW_RUN ACCESSION: 11
 
-<p class="warning"><strong>Tip:</strong> the parent-accessions is the SWID of the ProvisionFiles element that was added under the sample when use used this tool to upload the text files in the example above.  You MUST specify this otherwise the workflow’s results will not be linked to anything (they will be orphaned and will not be visible in the Portal or present in the reports below). Conveniently the ProvisionFiles tool will write these accessions to a file and the portal displays these values.</p>
 
-This schedules the workflow to run on the VM. Notice it also prints the workflow run accession which you can use to help monitor the workflow.
+<p class="warning"><strong>Tip:</strong> the parent-accessions is the SWID of
+the ProvisionFiles element that was added under the sample when use used this
+tool to upload the text files in the example above.  You MUST specify this
+otherwise the workflow's results will not be linked to anything (they will be
+orphaned and will not be visible in the Portal or present in the reports
+below). Conveniently the ProvisionFiles tool will write these accessions to a
+file and the portal displays these values.</p>
 
-Once submitted, you can use the Portal to list the number of submitted, running, and failed workflows.  Log into the Portal and click on the “Show Analysis” link under the Analysis panel.  You can then click on the tab for “Running Analysis” to see what is submitted/running/failed.
+This schedules the workflow to run on the VM. Notice it also prints the
+workflow run accession which you can use to help monitor the workflow.
 
-<img src="/assets/images/running.png" width="600px"/>
+You can then monitor workflow progress (and getting a list of the outputs)
+using the WorkflowRunReporter plugin. This will let you script the monitoring
+of workflow runs.
 
-A better way of monitoring workflows (and getting a list of the outputs) is to use the WorkflowRunReporter plugin. This will let you script the monitoring of workflow runs.
+	[seqware@master ~]$ java -jar ~/seqware-distribution-0.13.6.5-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --workflow-accession 1 --stdout --human
+	Running Plugin: net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter
+	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter@744a6cbf
+	Apr 24, 2013 9:12:40 AM org.restlet.ext.httpclient.HttpClientHelper start
+	INFO: Starting the Apache HTTP client
+	-[ RECORD 0 ]----------------+-------------------------------------------------------------------------------
+	Workflow                     | HelloWorld 1.0-SNAPSHOT                                                        
+	Workflow Run SWID            | 11                                                                             
+	Workflow Run Status          | running                                                                        
+	Workflow Run Create Timestamp| 2013-04-24 09:09:59.77                                                         
+	Workflow Run Host            | master                                                                         
+	Workflow Run Status Command  | pegasus-status -l /home/seqware/pegasus-dax/seqware/pegasus/HelloWorld/run0002 
+	Library Sample Names         |                                                                                
+	Library Sample SWIDs         |                                                                                
+	Identity Sample Names        | New Test Sample                                                                
+	Identity Sample SWIDs        | 4                                                                              
+	Input File Meta-Types        | text/plain                                                                     
+	Input File SWIDs             | 7                                                                              
+	Input File Paths             | /datastore/input.txt                                                           
+	Output File Meta-Types       |                                                                                
+	Output File SWIDs            |                                                                                
+	Output File Paths            |                                                                                
+	Workflow Run Time            | 0 ms   
 
-<pre>java -jar ~/seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- -wa 7</pre>
+This output includes several columns of interest including the status of the
+workflow, the output file types, and their locations in S3 or the file system.
+If you omit the <tt>--human</tt> option, you can get tabbed output to automate 
+the checking of workflows and the
+retrieval of the results! You can skip writing to an output
+file by just using the <tt>--stdout</tt> option which is helpful if you are scripting
+on top of this command. 
 
-In this example all the status information for workflows with workflow accession 7 are printed out to a file in the local file system.  This includes several columns of interest including the status of the workflow, the output file types, and their locations in S3 or the file system. You can use this information to automate the checking of workflows and the retrieval of the results!
+After about ten minutes, the workflow should complete. 
 
-In the output from the above command you will see accessions for each workflow run. If the status is “failed” you can download the stderr and stdout from the workflow run. This is how you might do that for a workflow_run with an accession of 6774:
+Alternatively, you can just get the status of a particular workflow run, for
+example, the workflow run accession printed when you launched the workflow with
+the WorkflowLauncher(for example SWID: 11).  
 
-<pre>
- java -jar ~/seqware-distribution-0.13.6.3-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wra 6774 --wr-stderr
- java -jar ~/seqware-distribution-0.13.6.3-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wra 6774 --wr-stdout
-</pre>
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --workflow-run-accession 11 --stdout
+
+In the output from the above command you will see accessions for each workflow
+run. If the status is “failed” you can download the stderr and stdout from the
+workflow run. This is how you might do that for our workflow_run with an
+accession of SWID: 11 (Note that there is no useful output in our tutorial after the 
+workflow completes successfully):
+
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wra 11 --wr-stderr
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wra 11 --wr-stdout
+
+Again, this command automatically creates output files for stderr and stdout,
+for example <tt>20130414_202120__workflowrun_11_STDERR.csv</tt>.  You can
+use the <tt>--stdout</tt> option if you wish to skip the output file and just
+write to the terminal.
+
+## The Resulting Structure in MetaDB
+
+After a few minutes the HelloWorld workflow you just launched should be
+complete with a status of "completed".  If you have followed the directions
+carefully for creating a study, experiment, and sample in the MetaDB, uploading
+an input file with ProvisionFile, and running a workflow you should have a
+structure very similar to the following present in the MetaDB:
+
+<img src="/assets/images/20130414_sample_workflow_run.png" width="600px"/>
+
+You can see the study, experiment, and sample linked together along with
+a processing event (ProvisionFiles) attached directly to the sample. This
+event is associated with the <tt>input.txt</tt> file and it is the parent
+of the first step in the HelloWorld workflow run. This workflow run
+has three steps in this example and the final step is associated to the 
+output file <tt>output.txt</tt>.  The processing event for Step3 could
+then go on to become the parent for a subsequent workflow.
+
+For a more detailed explination of the SeqWare MetaDB and the relationships it
+encodes please see the [MetaDB Documentation](/docs/4-metadb/). You can use
+either the [Portal](/docs/5-portal/) or various reporting tools available in
+the [Pipeline](/docs/6-pipeline/) and/or [Web Service](/docs/7-web-service/) to
+explore the data structures and files created when running workflows.
+
 
 ## Downloading Workflow Results
 
-Once a workflow has finished running you will want to list out the associated files and download the results.  While you can use the Portal for downloading files the best way to get files in bulk is to use our reporting tool. This produces a tab-delimited file that lists all the files produced for the workflows you are interested in.  You can then use the same ProvisionFiles utility above to pull files back.  Since the report produces a simple tab-delimited file you can easily automate the downloading of results by looping over the output files and calling ProvisionFiles using a script.
+Once a workflow has finished running you will want to list out the associated
+output files and download the results.  While you can use the Portal for
+downloading files the best way to get files in bulk is to use our reporting
+tool. This produces a tab-delimited file that lists all the files produced for
+the workflows you are interested in.  You can then use the same ProvisionFiles
+utility above to pull files back.  Since the report produces a simple
+tab-delimited file you can easily automate the downloading of results by
+looping over the output files and calling ProvisionFiles using a script.
 
-<pre>
-	java -jar seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 7 --study 'New Test Study'
-</pre>
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 1 --study 'New Test Study'
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 1 --study 'New Test Study' --human --stdout
 
-The output here is a study_report.csv file that contains a line for each file (both those uploaded and those produced by workflows).  You can also filter by file types, for example if you want to see report bundles (not applicable to the HelloWorld workflow but you get the idea):
+In the first case, the output is a <tt>study_report.csv</tt> file that contains a line for
+each file output for this workflow.
+In the second case, the output is a more user-friendly output intended for viewing on the command-line.
+  You can also filter by file types, for
+example if you want to see just plain text files:
 
-<pre>
-	java -jar seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 13224 --study 20120403_SEQ1 --file-type application/zip-report-bundle
-</pre>
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 1 --study 'New Test Study' --file-type 'text/plain'
 
-Or an example filtering by sample (again, not directly applicable to the HelloWorld output):
+Or an example filtering by a particular sample:
 
-<pre>
-	java -jar seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 13224  --sample 20120403_SEQ1_GAG
-</pre>
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 1  --sample 'New Test Sample'
 
-You can use these URLs (such as s3://bucket/samplename/test_R1.text.gz) with ProvisionFiles to download results (if they were remote, in the local VM they are just local files).  Here’s an example downloading a report bundle:
+You can use these output file URLs (such as
+s3://bucket/samplename/test_R1.text.gz) with ProvisionFiles to download results
+if they are remote. In the local VM they are just local files so they do not
+need to be copied.  Here is an example, though, of how to download a report
+bundle that is hosted on Amazon's S3:
 
-<pre>
-	java -jar seqware-distribution-0.13.6.2-full.jar -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles --no-metadata -- -i s3://bucket/results/seqware-0.10.0_ComprehensiveExomeGenomeAnalysis-0.10.5/59491657/GAG.fa.variant_quality.gatk.hg19.report.zip -o ./
-</pre>
+	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles --no-metadata -- -i s3://bucket/results/seqware-0.10.0_ComprehensiveExomeGenomeAnalysis-0.10.5/59491657/GAG.fa.variant_quality.gatk.hg19.report.zip -o /home/seqware/
 
-Here the zip report bundle is downloaded to the current working directory on the computer you are working on.  In this way you can pull back the results of workflows entirely through scripts that wrap the SymLinkFileReporter and ProvisionFiles.
+Here the zip report bundle is downloaded to the seqware home directory.  In
+this way you can pull back the results of workflows entirely through scripts
+that wrap the SymLinkFileReporter and ProvisionFiles.
 
-Also note the SymLinkFileReporter gives you SWIDs for processing events and entities such as studies, samples, and experiments.  You can use this tool to find these SWIDs that are used as “parents” for workflow runs.
+Also note the SymLinkFileReporter gives you SWIDs for processing events and
+entities such as studies, samples, and experiments.  You can use this tool to
+find these SWIDs that are used as “parents” for subsequent workflow runs.
 
-In addition to the command line tools, you can also use the Portal to explore the output of workflows triggered through the command line tools.
+You can find more information on this report tool on the [Study
+Reporter](/docs/21-study-reporter/) page.
 
-You can find more information on this report tool on the public SeqWare wiki: [Study Reporter](http://sourceforge.net/apps/mediawiki/seqware/index.php?title=SymLink_Reporter).
-
-<p class="warning"><strong>Note:</strong> in the example above I use --no-metadata with ProvisionFiles. This is to prevent the tool from writing back an event to the central database. Since you are just downloading a file (versus uploading a file) you do not really want to record that download event in the database.
-</p>
+<p class="warning"><strong>Note:</strong> in the example above I use
+--no-metadata with ProvisionFiles. This is to prevent the tool from writing
+back an event to the central database. Since you are just downloading a file
+(versus uploading a file) you do not really want to record that download event
+in the database.</p>
 
 
 ## Next Steps
 
-See the [Developer's Guide](/docs/3-getting-started/developer-tutorial/) for how to create a new workflow.
-
-
-## To Do
-
-Here are the items we are currently working on to improve the command line tools. The goal is to make the command line tools a fully functional replacement for the Portal. This will allow users to increase the throughput of file upload and workflow triggering through the system since the tools can be easily scripted.
-
-* command line tools to list, search, and update Study, Sample, and Experiments without having to use the Portal
-* displaying SWID on every entity in the Portal (making it easier to “attach” items such as Fastq files to items you see in the Portal) -- done
-* command line tool for listing and monitoring active workflows -- partially done
-* command line tool  for listing the parameters (ini_file field) that were used for a given workflow run (and maybe the full DAX too)
-
-We also want to make sure the Portal is fully usable.  Future versions of this document will show:
-
-* workflow launching via Portal too
-
-We also will probably create a second version of this document that is tailored for running a VM on Amazon's cloud versus the local VM. This process is almost identical but the cloud has another option for storing files.
+See the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/) for
+how to create a new workflow.  How to install workflows and present them to
+users is covered in the [Admin
+Tutorial](/docs/3-getting-started/admin-tutorial/).

@@ -12,6 +12,7 @@ what I had to do to get their very nice sample website to compile:
 
 sudo apt-get install ruby1.9.1 ruby-rvm ruby-rdiscount ruby-nokogiri
 
+
 sudo gem install nanoc kramdown adsf mime-types compass haml coderay rubypants builder rainpress
 
 
@@ -33,6 +34,12 @@ sudo gem install fast-aleck
 Source code is here:
 seqware/seqware-distribution/docs/site
 
+In order to add/use variables:
+look at site/content/docs/webservice-api/seqware-webservice/metadata/db/study_get.html which uses site/lib/helpers_.rb
+
+In order to do an include:
+look at the admin guide for an example at site/content/docs/3-getting-started/admin-tutorial.md which uses site/layouts/includes/
+
 Go into this directory and compile the site:
 nanoc compile
 
@@ -42,11 +49,16 @@ nanoc view
 Dynamically compile and view the site at localhost:3000:
 nanoc autocompile
 
+To run checks for broken links:
+nanoc check external_links
+nanoc check ilinks (check internal links)
+nanoc check --deploy (all checks)
+
 Get the website pages:
-git clone -b gh-pages git@github.com:SeqWare/seqware.git gh-page
+git clone git@github.com:SeqWare/seqware.github.com.git
 
 Update the branch with the new pages:
-cp -R seqware/seqware-distribution/docs/site/output/* gh-pages/
+cp -R seqware/seqware-distribution/docs/site/output/* ./
 
 Modify the index.html so the logo points to /seqware/ and the css points to /seqware/style.css
 

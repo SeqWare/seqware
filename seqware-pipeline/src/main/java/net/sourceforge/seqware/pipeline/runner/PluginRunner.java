@@ -120,7 +120,9 @@ public class PluginRunner {
       Log.stdout("ERROR: " + errorMessage);
       Log.stdout("");
     }
-    Log.stdout("Syntax: java seqware-pipeline.jar [[--help]] [--list] [--verbose] [--plugin] PluginName -- [PluginParameters]");
+    PluginRunner it = new PluginRunner();
+    String SEQWARE_VERSION = it.getClass().getPackage().getImplementationVersion();	
+    Log.stdout("Syntax: java seqware-distribution-"+SEQWARE_VERSION+"-full.jar [[--help]] [--list] [--verbose] [--plugin] PluginName -- [PluginParameters]");
     Log.stdout("");
     Log.stdout("--> PluginParameters are passed directly to the Plugin and ignored by the PluginRunner. ");
     Log.stdout("--> You must pass '--' right after the PluginName in order to prevent the parameters from being parsed by the PluginRunner!");
@@ -237,7 +239,9 @@ public class PluginRunner {
       }
       
     } else if (options.has("list")) {
-      Log.stdout("For more information use \"java -jar seqware-pipeline.jar --plugin <plugin_name> --help\" to see options for each.\n");
+    PluginRunner it = new PluginRunner();
+    String SEQWARE_VERSION = it.getClass().getPackage().getImplementationVersion();	
+      Log.stdout("For more information use \"java -jar seqware-distribution-"+SEQWARE_VERSION+"-full.jar --plugin <plugin_name> --help\" to see options for each.\n");
     } else {
       getSyntax(parser, "You must specifiy a plugin with option --plugin");
       System.exit(ReturnValue.INVALIDARGUMENT);

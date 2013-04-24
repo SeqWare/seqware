@@ -1,0 +1,30 @@
+---
+markdown:	advanced
+toc_includes_sections:	true
+is_dynamic:	true
+title: GET workflowparams
+uri: /workflowparams
+method: GET
+summary: Retrieves a list of workflow parameters.
+---
+<%= @item[:summary] %>
+
+Resource URL
+--------------
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
+
+Parameters
+--------------
+id
+: Returns the WorkflowParam with the given id (primary key, not SWID, since workflow parameters do not have SWIDs).
+
+Example Requests
+--------------
+<%= server_name %>
+
+~~~~~
+
+Code Block
+
+~~~~~

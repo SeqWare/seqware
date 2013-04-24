@@ -18,6 +18,7 @@ import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.TabExpansionUtil;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -59,7 +60,8 @@ public class BundleManager extends Plugin {
         parser.acceptsAll(Arrays.asList("download"), "Downloads a workflow bundle zip. This must be used in conjunction with a workflow name and version.");
         parser.acceptsAll(Arrays.asList("download-url"), "Downloads a workflow bundle zip from a URL to the local directory.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("metadata", "m"), "Specify the path to the metadata.xml file.").withRequiredArg();
-
+        parser.acceptsAll(Arrays.asList("human-expanded", "he"), "Optional: will print output in expanded human friendly format");
+        parser.acceptsAll(Arrays.asList("human-aligned", "ha"), "Optional: will print output in aligned human friendly format");
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
@@ -200,14 +202,24 @@ public class BundleManager extends Plugin {
               ret.setExitStatus(ret.FAILURE);
             }
         } else if (options.has("list-installed")) {            
-            println("=====================================================");
-            println("===============INSTALLED WORKFLOWS===================");
-            println("=====================================================");
-            println("Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location");
-            println("-----------------------------------------------------");
             String params = metadata.listInstalledWorkflows();
-            println(params);
-            println("-----------------------------------------------------");
+            if (options.has("human-expanded")) {
+                params = "Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location\n" + params;
+                params = TabExpansionUtil.expansion(params);
+                println(params);
+            } else if (options.has("human-aligned")){
+                params = "Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location\n" + params;
+                params = TabExpansionUtil.aligned(params);
+                println(params);
+            } else {
+                println("=====================================================");
+                println("===============INSTALLED WORKFLOWS===================");
+                println("=====================================================");
+                println("Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location");
+                println("-----------------------------------------------------");
+                println(params);
+                println("-----------------------------------------------------");
+            }
         // ((options.has("workflow") && options.has("version") && options.has("bundle")) || options.has("workflow-accession"))
         } else if (options.has("list-workflow-params") && options.has("workflow-accession")) {
             println("=====================================================");
