@@ -14,7 +14,7 @@ import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 
 import org.junit.Test;
 
-public class MetadataPluginTest {
+public class MetadataPluginIT {
 	@Test
 	public void testMetadataOut() {
 		File file = null;

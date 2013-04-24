@@ -49,6 +49,17 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     protected int percentage = 0;
     protected WorkflowTools workflowTools = null;
 
+    public static ReturnValue gridProxyInit() {
+        // initialize globus authentication proxy
+        ArrayList<String> theCommand = new ArrayList<String>();
+        theCommand.add("bash");
+        theCommand.add("-lc");
+        theCommand.add("grid-proxy-init -valid 480:00");
+        ReturnValue retProxy = RunTools.runCommand(theCommand
+                .toArray(new String[0]));
+        return retProxy;
+    }
+
     protected enum Job {
 
 	setup, prejob, mainjob, postjob, cleanup, statcall, data;
@@ -71,13 +82,8 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
 	workflowTools = new WorkflowTools();
 	ReturnValue retVal = new ReturnValue(ReturnValue.SUCCESS);
-	// initialize globus authentication proxy
-	ArrayList<String> theCommand = new ArrayList<String>();
-	theCommand.add("bash");
-	theCommand.add("-lc");
-	theCommand.add("grid-proxy-init -valid 480:00");
-	ReturnValue retProxy = RunTools.runCommand(theCommand
-		.toArray(new String[0]));
+        
+	ReturnValue retProxy = gridProxyInit();
 	if (retProxy.getExitStatus() != ReturnValue.SUCCESS) {
 	    Log.error("ERROR: can't init the globus proxy so terminating here, continuing but your workflow submissions will fail!");
 	    return (retProxy);
