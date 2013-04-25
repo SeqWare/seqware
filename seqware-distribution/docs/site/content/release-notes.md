@@ -9,6 +9,46 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 0.13.6.5 (2013-04-25)
+<!-- includes a few tasks from 0.13.6.3 which was not released publically -->
+
+### Defect
+* [SEQWARE-1577] - AttributeAnnotator cascades deletes when annotating
+* [SEQWARE-1595] - Race condition with .seqware/settings permissions "fix"
+
+### Improvement
+* [SEQWARE-1452] - Add 'workflows' column to mime types page
+
+
+### Task
+* [SEQWARE-1426] - Remove references to old seqware-pipeline.jar in our code
+* [SEQWARE-1575] - Rebuild VM landing page
+* [SEQWARE-1597] - Add table of overridden variables 
+* [SEQWARE-1603] - Fix bugs that came up during tutorial with Morgan, Tim, and Vincent
+* [SEQWARE-1608] - Java Workflows need the option to suppress creation of files for inputs to workflows
+* [SEQWARE-1610] - Can't build on machines without .seqware/settings file
+* [SEQWARE-1486] - ini-file value cannot be blank during template parsing 
+* [SEQWARE-1491] - Workflow Launcher relaunches Java and Simplified FTL
+* [SEQWARE-1500] - Setup dedicated SeqWare reference server
+
+### Technical task
+* [SEQWARE-1221] - Nonexistent Shared folder in VM
+* [SEQWARE-1485] - Can't git pull the seqware directory on the VM
+* [SEQWARE-1528] - User Tutorial Tasks
+* [SEQWARE-1530] - Amazon-based User Tutorial
+* [SEQWARE-1532] - SeqWare Portal docs (either paragraph or readme)
+* [SEQWARE-1534] - Verify or clean Seqware Query Engine docs
+* [SEQWARE-1535] - Simplify APIs page with only one link to most current Javadoc
+* [SEQWARE-1536] - Spend one hour trying to merge web service docs into main site(Re-generate at least)
+* [SEQWARE-1540] - The attribute annotator is unable to skip an IUS
+* [SEQWARE-1553] - Pipeline - Generate Markdown for Modules (like it's done for plugins)
+* [SEQWARE-1556] - Modules - Remove unused, workflow-specific modules to prevent user confusion
+* [SEQWARE-1566] - Add MAVEN_OPTS to the .bash_profile
+* [SEQWARE-1590] - Fix file provisioning for user tutorial
+* [SEQWARE-1607] - Update install guide to indicate Amazon AMI settings
+* [SEQWARE-1461] - Convert Perl integration test script into JUnit maven framework
+* [SEQWARE-1496] - Create a test database for deciders and workflows
+
 ## 0.13.6.2 (2012-01-28)
 
 ### Defect
