@@ -58,10 +58,9 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <skip>${skipITs}</skip>
                             <executable>nanoc</executable>
                             <commandlineArgs>compile</commandlineArgs>
-			    <workingDirectory>docs/site/output/</workingDirectory>
+			    <workingDirectory>docs/site/</workingDirectory>
                         </configuration>
                     </execution>
 
@@ -137,6 +136,12 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-scm-publish-plugin</artifactId>
         <version>1.0-beta-2</version>
+	<executions>
+	<execution>
+          <phase>site-deploy</phase>
+          <goals>
+            <goal>publish-scm</goal>
+          </goals>
 
           <configuration>
 	        <pubScmUrl>scm:git:https://github.com/SeqWare/seqware.github.com.git</pubScmUrl>	
@@ -149,6 +154,28 @@
               		<ignorePathToDelete>pictures</ignorePathToDelete>
             	</ignorePathsToDelete>
                 <tryUpdate>true</tryUpdate>
+          </configuration>
+	</execution>
+	</executions>
+      </plugin>
+
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-project-info-reports-plugin</artifactId>
+
+<version>2.6</version>
+<configuration>
+<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+</configuration>
+</plugin>
+   <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.2</version>
+          <configuration>
+		<skip>true</skip>
+		<skipDeploy>true</skipDeploy>
           </configuration>
       </plugin>
 
