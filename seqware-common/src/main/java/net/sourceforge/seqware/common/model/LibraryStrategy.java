@@ -43,7 +43,8 @@ public class LibraryStrategy implements Serializable, Comparable<LibraryStrategy
 
     @Override
     public String toString() {
-        return "LibraryStrategy{" + "libraryStrategyId=" + libraryStrategyId + ", name=" + name + ", description=" + description + '}';
+        return new StringBuffer().append("LibraryStrategy ").append(libraryStrategyId)
+                .append(":\t").append(name).append("\t").append(description).toString();
     }
 
 
