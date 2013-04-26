@@ -1087,6 +1087,16 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
 
     return query.list();
   }
+  
+    /** {@inheritDoc} */
+    @Override
+    public List<Study> findByCriteria(String criteria) {
+
+        String queryStringCase = "from Study as s where ";
+        Query query = this.getSession().createQuery(queryStringCase+" "+criteria);
+        
+        return query.list();
+    }
 
   // @Override
   // public List search() {
