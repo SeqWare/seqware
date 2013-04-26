@@ -30,6 +30,7 @@
 			{display: 'Host', name : 'host', width : 150, sortable : true, align: 'left'},
 			{display: 'Logs', name : 'logs', width : 80, sortable : true, align: 'left'},
 			{display: 'Parameters', name : 'iniFile', width : 80, sortable : true, align: 'left'},
+                        {display: 'Controls', name : 'controls', width : 80, sortable : true, align: 'left'},
                 ],
                 searchitems : [
 		        {display: 'Name', name : 'workflow.name', isdefault: true},
@@ -71,6 +72,7 @@
 			{display: 'Host', name : 'host', width : 150, sortable : true, align: 'left'},
 			{display: 'Logs', name : 'logs', width : 80, sortable : true, align: 'left'},
 			{display: 'Parameters', name : 'iniFile', width : 80, sortable : true, align: 'left'},
+                        {display: 'Controls', name : 'controls', width : 80, sortable : true, align: 'left'},
                 ],
                 searchitems : [
 		        {display: 'Name', name : 'workflow.name', isdefault: true},
@@ -114,6 +116,7 @@
 			{display: 'Host', name : 'host', width : 150, sortable : true, align: 'left'},
 			{display: 'Logs', name : 'logs', width : 80, sortable : true, align: 'left'},
 			{display: 'Parameters', name : 'iniFile', width : 80, sortable : true, align: 'left'},
+                        {display: 'Controls', name : 'controls', width : 80, sortable : true, align: 'left'},
                 ],
                 searchitems : [
 		        {display: 'Name', name : 'workflow.name', isdefault: true},
@@ -155,6 +158,7 @@
 			{display: 'Host', name : 'host', width : 150, sortable : true, align: 'left'},
 			{display: 'Logs', name : 'logs', width : 80, sortable : true, align: 'left'},
 			{display: 'Parameters', name : 'iniFile', width : 80, sortable : true, align: 'left'},
+                        {display: 'Controls', name : 'controls', width : 80, sortable : true, align: 'left'},
                 ],
                 searchitems : [
 		        {display: 'Name', name : 'workflow.name', isdefault: true},
