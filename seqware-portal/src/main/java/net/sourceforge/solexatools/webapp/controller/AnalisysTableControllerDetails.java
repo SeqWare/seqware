@@ -101,7 +101,7 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
 			+ " and (wr.status = 'failed' or wr.status = 'failed-testing')" + search_query);
 	    } else if ("running".equals(filter)) {
 		workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
-			+ " and ( wr.status = 'runnning' or wr.status = 'pending')" + search_query);
+			+ " and ( wr.status = 'running' or wr.status = 'pending')" + search_query);
 	    } else {
 		workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId() + search_query);
 	    }
@@ -167,7 +167,16 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
 		cellsModel.add("");
 	    }
 	    cellsModel.add("<a href='#' popup-stdout='true' tt='wfr' stdout='" + workflowRun.getIniFile() + "'>parameters</a>");
-
+            if ("running".equals(workflowRun.getStatus())) {
+              cellsModel.add("<a href='#' popup-workflow-cancel='true' tt='wfrr' object-id='"+workflowRun.getWorkflowRunId()+"'>cancel</a>");
+            } else if ("cancelled".equals(workflowRun.getStatus())) {
+              cellsModel.add("<a href='#' popup-workflow-retry='true' tt='wfrr' object-id='"+workflowRun.getWorkflowRunId()+"'>retry</a>");
+            } else if ("failed".equals(workflowRun.getStatus())) {
+              cellsModel.add("<a href='#' popup-workflow-retry='true' tt='wfrr' object-id='"+workflowRun.getWorkflowRunId()+"'>retry</a>");
+            } else {
+              cellsModel.add("");
+            }
+            
 	    Flexigrid.Cells cells = flexigrid.new Cells(cellsModel);
 	    flexigrid.addRow(cells);
 	}

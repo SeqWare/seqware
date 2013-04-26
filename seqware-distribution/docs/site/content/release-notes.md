@@ -9,6 +9,86 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 0.13.6.5 (2013-04-25)
+<!-- includes a few tasks from 0.13.6.3 which was not released publically -->
+
+### Defect
+* [SEQWARE-1577] - AttributeAnnotator cascades deletes when annotating
+* [SEQWARE-1595] - Race condition with .seqware/settings permissions "fix"
+
+### Improvement
+* [SEQWARE-1452] - Add 'workflows' column to mime types page
+
+
+### Task
+* [SEQWARE-1426] - Remove references to old seqware-pipeline.jar in our code
+* [SEQWARE-1575] - Rebuild VM landing page
+* [SEQWARE-1597] - Add table of overridden variables 
+* [SEQWARE-1603] - Fix bugs that came up during tutorial with Morgan, Tim, and Vincent
+* [SEQWARE-1608] - Java Workflows need the option to suppress creation of files for inputs to workflows
+* [SEQWARE-1610] - Can't build on machines without .seqware/settings file
+* [SEQWARE-1486] - ini-file value cannot be blank during template parsing 
+* [SEQWARE-1491] - Workflow Launcher relaunches Java and Simplified FTL
+* [SEQWARE-1500] - Setup dedicated SeqWare reference server
+
+### Technical task
+* [SEQWARE-1221] - Nonexistent Shared folder in VM
+* [SEQWARE-1485] - Can't git pull the seqware directory on the VM
+* [SEQWARE-1528] - User Tutorial Tasks
+* [SEQWARE-1530] - Amazon-based User Tutorial
+* [SEQWARE-1532] - SeqWare Portal docs (either paragraph or readme)
+* [SEQWARE-1534] - Verify or clean Seqware Query Engine docs
+* [SEQWARE-1535] - Simplify APIs page with only one link to most current Javadoc
+* [SEQWARE-1536] - Spend one hour trying to merge web service docs into main site(Re-generate at least)
+* [SEQWARE-1540] - The attribute annotator is unable to skip an IUS
+* [SEQWARE-1553] - Pipeline - Generate Markdown for Modules (like it's done for plugins)
+* [SEQWARE-1556] - Modules - Remove unused, workflow-specific modules to prevent user confusion
+* [SEQWARE-1566] - Add MAVEN_OPTS to the .bash_profile
+* [SEQWARE-1590] - Fix file provisioning for user tutorial
+* [SEQWARE-1607] - Update install guide to indicate Amazon AMI settings
+* [SEQWARE-1461] - Convert Perl integration test script into JUnit maven framework
+* [SEQWARE-1496] - Create a test database for deciders and workflows
+
+## 0.13.6.2 (2012-01-28)
+
+### Defect
+* [SEQWARE-1434] - Workflow_params and workflow_run_params are not populated when they are empty in the INI
+* [SEQWARE-1444] - Some parameters from .ini cannot make it into MetaDB
+* [SEQWARE-1471] - seqware installation error message confusing
+
+### Task
+* [SEQWARE-1453] - 0.13.6.1 Release
+* [SEQWARE-1454] - Bam-QC Decider (Basic Decider) uses excessive amounts of memory
+* [SEQWARE-1464] - Remove tomcat from sqwprod.hpc
+* [SEQWARE-1465] - Install web-service to sqwweb.hpc
+* [SEQWARE-1470] - Investigate (and fix) issue with BasicDecider on prod
+* [SEQWARE-1473] - Add input (parent) file SWIDs to the StudyIDFilesTSVResource
+* [SEQWARE-1474] - Workflow runs are not properly linked to IUS over the web service
+
+## 0.13.6.1 (2013-01-09) 
+
+### Improvement
+* [SEQWARE-1297] - Make BasicDecider not re-attempt failed or processing workflows
+* [SEQWARE-1409] - Make sure all plugins have descriptions
+
+### Story
+* [SEQWARE-1405] - Fix the newly identified BasicDecider bugs
+
+### Task
+* [SEQWARE-1284] - change setHeader in BasicDecider.java to something meaningful
+* [SEQWARE-1410] - Null pointer when a directory has permission denied read access
+* [SEQWARE-1411] - 0.13.6 Release 
+* [SEQWARE-1425] - Create unit tests for existing decider functionality
+* [SEQWARE-1427] - Create auto-generated doc for plugins
+* [SEQWARE-1439] - mvn clean follows the symlinks
+* [SEQWARE-1450] - Multi-threaded WorkflowStatusChecker
+* [SEQWARE-1451] - New WorkflowLauncher does not launch subsequent workflows if one dies while launching
+
+### Technical task
+* [SEQWARE-1447] - Update docs/spec for multi-threaded WorkflowStatusChecker
+* [SEQWARE-1448] - Create tests for multi-threaded WorkflowStatusChecker
+* [SEQWARE-1449] - Create multi-threaded WorkflowStatusChecker
+
 ## 0.13.6 (2012-12-06)
 
 ### Defect
@@ -54,7 +134,6 @@ Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=4453317
 * [SEQWARE-1399] - Simplify archetype parameter versions
 * [SEQWARE-1403] - hostname and user file ownership utilities
 
-
 ## 0.13.5 (2012-11-13)
 
 ### Defect
@@ -82,10 +161,10 @@ Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=4453317
 * [SEQWARE-1149] - Finish specification for RESTful web service
 * [SEQWARE-1150] - Investigate web service options presented
 * [SEQWARE-1261] - Resurrect BI for OHS
-* [SEQWARE-1270] - thow exception if ini key is referenced but never setup
+* [SEQWARE-1270] - throw exception if ini key is referenced but never setup
 * [SEQWARE-1286] - Jetty should run when you call it explicitly
 * [SEQWARE-1289] - add getStatus() getStdErr() getStdOut() in workflowEngine interface
-* [SEQWARE-1308] - release simplifed workflow for Morgan to try
+* [SEQWARE-1308] - release simplified workflow for Morgan to try
 * [SEQWARE-1311] - install oozie in VM
 * [SEQWARE-1312] - write a HelloWorld oozie sample
 * [SEQWARE-1313] - implements oozie workflow engine by extending the abstractworkflowengine
@@ -127,10 +206,10 @@ Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=4453317
 * [SEQWARE-1271] - check text/key-value for metadata saver and make sure that it works
 * [SEQWARE-1273] - put workflow java doc in nanoc
 * [SEQWARE-1274] - add classpath parameter to javaSeqwareModuleJob
-* [SEQWARE-1276] - create a workflow client sample in VM that includes all features in the new simplifiled workflow
+* [SEQWARE-1276] - create a workflow client sample in VM that includes all features in the new simplified workflow
 * [SEQWARE-1277] - discuss with Brian about the new workflow when it is ready
-* [SEQWARE-1278] - change the workflow engine, allow it to take in parent workflowrun id for metadata wirteback
-* [SEQWARE-1281] - merge comand line options with configs<string,string> in datamodel
+* [SEQWARE-1278] - change the workflow engine, allow it to take in parent workflowrun id for metadata writeback
+* [SEQWARE-1281] - merge command line options with configs<string,string> in datamodel
 * [SEQWARE-1295] - We need command line tools to populate sequencer_run, lane, and IUS
 * [SEQWARE-1299] - update dax after discuss with Brian
 * [SEQWARE-1306] - write a plugin to generate dot file from processing table
@@ -155,20 +234,20 @@ Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=4453317
 * [SEQWARE-1179] - Upload the Javadocs for the released 0.12.5 version to the github website
 * [SEQWARE-1180] - Merge the sf.net pom.xml with the github pom.xml and ensure building works
 * [SEQWARE-1181] - Redirect Jenkins to github, Jenkins now does findbugs and pmd
-* [SEQWARE-1182] - Configure Query Engine tests for jenkins compatibility
+* [SEQWARE-1182] - Configure Query Engine tests for Jenkins compatibility
 * [SEQWARE-1187] - Test out JavaCC versus ANTLR
 * [SEQWARE-1188] - Implement parse trees and RPNStack builder via chosen lexer/parser
 * [SEQWARE-1189] - Adapt QueryVCFDumper  for query language
 * [SEQWARE-1190] - Create plugin of FeatureFilters
 * [SEQWARE-1194] - create a workflow template for the workflow author
-* [SEQWARE-1195] - modify workflowlauncher to create seqwareWorkflowObjectModel
+* [SEQWARE-1195] - modify WorkflowLauncher to create seqwareWorkflowObjectModel
 * [SEQWARE-1197] - implement vep sample using the latest java workflow
 * [SEQWARE-1198] - finalize the spec for java workflow
 * [SEQWARE-1199] - modify xml workflow based on the new java workflow
 * [SEQWARE-1200] - move archetype-workflow-v2 to git feature branch
-* [SEQWARE-1201] - add uncommited code from svn to git
+* [SEQWARE-1201] - add uncommitted code from svn to git
 * [SEQWARE-1206] - Our workflow development docs on internal wiki need to be updated for 0.12.5.1
-* [SEQWARE-1208] - Fix metaDB creation
+* [SEQWARE-1208] - Fix MetaDB creation
 * [SEQWARE-1209] - Ensure that the overall combination of unit tests and integration tests work properly
 * [SEQWARE-1211] - Investigate relationship between HubFlow release process and maven release script
 * [SEQWARE-1215] - Revise simplified workflow bundle spec and code review with Yong
@@ -225,7 +304,7 @@ We still have to manually delete the parent task IDs for technical tasks though.
 
 ###Task
 * SEQWARE-1127 - install nanoc in seqware dev
-* SEQWARE-1142 - move sqwprod postgres data to nfs
+* SEQWARE-1142 - move sqwprod postgres data to NFS
 
 ###Technical Task
 * SEQWARE-1088 - Create implementation of Friendly prefixes for TagSets (and other classes)

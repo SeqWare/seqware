@@ -169,7 +169,8 @@ public class WorkflowIDResource extends DatabaseIDResource {
             }
 
             if(newWorkflow.getWorkflowAttributes()!=null) {
-              workflow.getWorkflowAttributes().clear();
+//SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+//              workflow.getWorkflowAttributes().clear();
               for(WorkflowAttribute wfa: newWorkflow.getWorkflowAttributes()) {
                 wfa.setWorkflow(workflow);
                 workflow.getWorkflowAttributes().add(wfa);

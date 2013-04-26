@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
  */
 public class FeatureSetIO implements ProtobufTransferInterface<FeatureSetPB, FeatureSet> {
     
-    SimpleModelManager manager = null;
+//    SimpleModelManager manager = null;
     
     /** {@inheritDoc} */
     @Override
@@ -50,9 +50,9 @@ public class FeatureSetIO implements ProtobufTransferInterface<FeatureSetPB, Fea
         /**
          * build here since serialization needs to init before the ModelManagers
          */
-        if (manager == null) {
-            manager = (SimpleModelManager) SWQEFactory.getModelManager();
-        }
+        //if (manager == null) {
+            SimpleModelManager manager = (SimpleModelManager) SWQEFactory.getModelManager();
+        //}
         
         FeatureSet.Builder builder = manager.buildFeatureSetInternal();
         builder = userpb.hasDescription() ? builder.setDescription(userpb.getDescription()) : builder;

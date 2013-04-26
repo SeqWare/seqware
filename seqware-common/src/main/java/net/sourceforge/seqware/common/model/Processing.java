@@ -37,6 +37,7 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
+import org.apache.commons.dbutils.DbUtils;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -904,8 +905,9 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
    */
   public static Processing cloneFromDB(int processingId) throws ResourceException, SQLException {
     Processing updatedProcessing = null;
+    ResultSet rs = null;
     try {
-      ResultSet rs = DBAccess.get().executeQuery("SELECT * FROM processing WHERE processing_id=" + processingId);
+      rs = DBAccess.get().executeQuery("SELECT * FROM processing WHERE processing_id=" + processingId);
       int ownerId;
       int ancestorWorkflowRunId;
       int workflowRunId;
@@ -951,6 +953,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
         updatedProcessing.setWorkflowRun(wr);
       }
     } finally {
+      DbUtils.closeQuietly(rs);
       DBAccess.close();
     }
     return updatedProcessing;

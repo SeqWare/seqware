@@ -146,6 +146,12 @@ public class ProvisionFiles extends Module {
         .accepts(
             "s3-no-server-side-encryption",
             "Optional: If specified, do not use S3 server-side encryption. Default is to use S3 server-side encryption for S3 destinations.");
+    //SEQWARE-1608 
+    parser
+        .accepts(
+            "skip-record-file",
+            "Optional: If specified, do not record new entries in the file table.");
+    
     return (parser);
   }
 
@@ -239,8 +245,8 @@ public class ProvisionFiles extends Module {
     }
 
     // deal with output-file
-    if (options.has("output-file") && options.has("input-file") && (options.valuesOf("output-file").size() > 1 || options.valuesOf("input-file").size() > 1)) {
-      ret.setStderr("Must specify a single --input-file option along with a single --output-file option"
+    if (options.has("output-file") && (options.has("input-file") || options.has("input-file-metadata")) && (options.valuesOf("output-file").size() > 1 || options.valuesOf("input-file").size() > 1 || options.valuesOf("input-file-metadata").size() > 1)) {
+      ret.setStderr("Must specify a single --input-file option (or --input-file-metadata) along with a single --output-file option"
             + System.getProperty("line.separator") + this.get_syntax());
         ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         return ret;
@@ -327,8 +333,7 @@ public class ProvisionFiles extends Module {
 
     return (ret);
   }
-  
-  
+
   /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
@@ -345,6 +350,8 @@ public class ProvisionFiles extends Module {
     ArrayList<String> newArray = new ArrayList<String>();
     List<String> inputs = (List<String>) options.valuesOf("input-file");
     List<String> metaInputs = (List<String>) options.valuesOf("input-file-metadata");
+    List<String> outputFiles = (List<String>) options.valuesOf("output-file");
+    
     if (metaInputs != null) {
       if (inputs != null && inputs.size() > 0) {
         newArray.addAll(inputs);
@@ -356,7 +363,9 @@ public class ProvisionFiles extends Module {
           FileMetadata fmd = new FileMetadata();
           fmd.setDescription(tokens[0]);
           fmd.setMetaType(tokens[1]);
-          fmd.setFilePath(tokens[2]);
+          if (outputFiles != null && outputFiles.size() > 0) {
+              fmd.setFilePath(outputFiles.get(0));
+          } else { fmd.setFilePath(tokens[2]); }
           fmd.setType(tokens[0]);
           fileArray.add(fmd);
         }
@@ -395,19 +404,31 @@ public class ProvisionFiles extends Module {
             return (currRet);
           }
         }
-      } else if (options.valuesOf("input-file").size() == 1 && options.has("output-file") && options.valuesOf("output-file").size() == 1) { // then this is a single file to single file copy
+      } else if ((options.valuesOf("input-file").size() == 1 && options.valuesOf("input-file-metadata").size() == 0) &&
+              options.has("output-file") && options.valuesOf("output-file").size() == 1) { // then this is a single file to single file copy
         if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true)) {
-          Log.error("HERE!!!!!!!!!!!");
+          Log.error("Failed to copy file");
+          ret.setExitStatus(ReturnValue.FAILURE);
+          return (ret);
+        }
+      } else if ((options.valuesOf("input-file").size() == 0 && options.valuesOf("input-file-metadata").size() == 1) &&
+              options.has("input-file-metadata") && options.valuesOf("output-file").size() == 1) { // then this is a single file to single file copy
+        if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true)) {
+          Log.error("Failed to copy file");
           ret.setExitStatus(ReturnValue.FAILURE);
           return (ret);
         }
       } else if (options.has("output-dir")) { // then this is just a normal file copy
         if (!provisionFile(input, (String) options.valueOf("output-dir"), skipIfMissing, fileArray, false)) {
-          Log.error("HERE2222222222222");
+          Log.error("Failed to copy file to dir");
           ret.setExitStatus(ReturnValue.FAILURE);
           return (ret);
         }
       }
+    }
+    
+    if (options.has("skip-record-file")){
+            fileArray.clear();
     }
 
     return (ret);
