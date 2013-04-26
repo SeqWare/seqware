@@ -63,6 +63,10 @@ route '/blog/feed_private/' do
   rep.item.identifier + 'index.xml'
 end
 
+route '/docs/webservice-spec/*/' do
+  item.identifier + 'index.html'
+end
+
 route '*' do
   if item.binary?
     item.identifier.chop + '.' + item[:extension]
@@ -107,6 +111,15 @@ compile '/' do
   filter TypographicalImprovementFilter, TypographicalImprovementFilterParams
 end
 
+compile '/docs/webservice-spec/*/' do
+  filter :erb
+  filter :kramdown
+  filter :colorize_syntax,
+    :colorizers => {:javascript => :pygmentize}
+  layout 'default'
+  filter :relativize_paths, :type => :html
+end
+
 compile '*' do
   filter :erb if item[:is_dynamic]
 
@@ -121,7 +134,8 @@ compile '*' do
   snapshot :before_sections
   filter :add_sections
   layout '/default/'
-  filter :colorize_syntax, :is_fullpage => true
+#  filter :colorize_syntax, :is_fullpage => true, :colorizers => { :ruby => :coderay, :java => :coderay, :xml => :coderay }
+  filter :colorize_syntax, :default_colorizer => :pygmentsrb, :is_fullpage => true
   filter :relativize_paths, :type => :html unless item[:is_partial] || item[:kind] == 'article'
   filter TypographicalImprovementFilter, TypographicalImprovementFilterParams
 end

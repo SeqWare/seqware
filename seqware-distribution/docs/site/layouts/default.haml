@@ -8,6 +8,8 @@
     %link{ :rel => "stylesheet", :href => item_named('/assets/style/screen/').path, :type => "text/css", :media => "screen" }
     %link{ :rel => "alternate", :type => "application/atom+xml", :title => "The SeqWare Blog", :href => "http://feeds.feedburner.com/seqware" }
     = %Q[<script type="text/javascript"> var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-34523087-1']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); })(); </script>]
+    - if @item.identifier =~ %r[^/docs/]
+      = %Q[<script type="text/javascript">         var disqus_shortname = 'seqware';          (function() {             var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;             dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);         })();     </script>]
     - if @item.identifier !~ %r[^/\w+]
       <a href="https://github.com/organizations/SeqWare"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
 
@@ -33,15 +35,17 @@
             = nav_item_for('/docs/1-introduction/'     )
             = nav_item_for('/docs/2-installation/'     )
             = nav_item_for('/docs/3-getting-started/'  )
+            = nav_item_for('/docs/6-pipeline/'           )
             = nav_item_for('/docs/4-metadb/'   )
             = nav_item_for('/docs/5-portal/')
-            = nav_item_for('/docs/6-pipeline/'           )
             = nav_item_for('/docs/7-web-service/'           )
             = nav_item_for('/docs/8-query-engine/'           )
             = nav_item_for('/docs/9-glossary/'         )
             = nav_item_for('/docs/10-faq/'              )
             = nav_item_for('/docs/11-api/'              )
             = nav_item_for('/docs/13-code/'              )
+            = nav_item_for('/docs/17-plugins/'              )
+            = nav_item_for('/docs/17a-modules/'              )
 
         - elsif @item.identifier =~ %r[^/blog/]
 
@@ -69,7 +73,10 @@
             .header
               %h1= @item[:short_title] || @item[:title]
             = yield
+        - if @item.identifier =~ %r[^/docs/]
+          = %Q[<p>&nbsp;</p><p>&nbsp;</p><div id="disqus_thread"></div>] 
+	
 
     / ***** footer *****
     #footer
-      %p SeqWare &copy; 2007–2012 Brian O'Connor. SeqWare is released under the a <a rel="license" href="http://www.gnu.org/licenses/licenses.html">GNU GPL v3</a>. This site is built using the excellent <a href="http://nanoc.stoneship.org/">nanoc</a> tool and example site along with the <a href="http://www.fonts.info/info/press/free-fonts-for-font-face-embedding.htm">Graublau</a> and <a href="http://scripts.sil.org/Gentium">Gentium</a> fonts.
+      %p SeqWare &copy; 2007–2013 Brian O'Connor. SeqWare is released under the a <a rel="license" href="http://www.gnu.org/licenses/licenses.html">GNU GPL v3</a>. This site is built using the excellent <a href="http://nanoc.ws/">nanoc</a> tool and example site along with the <a href="http://www.fonts.info/info/press/free-fonts-for-font-face-embedding.htm">Graublau</a> and <a href="https://en.wikipedia.org/wiki/Gentium">Gentium</a> fonts.

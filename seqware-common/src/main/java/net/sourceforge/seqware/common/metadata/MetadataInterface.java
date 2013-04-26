@@ -7,28 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-
-import net.sourceforge.seqware.common.model.ExperimentAttribute;
-import net.sourceforge.seqware.common.model.IUS;
-import net.sourceforge.seqware.common.model.IUSAttribute;
-import net.sourceforge.seqware.common.model.Lane;
-import net.sourceforge.seqware.common.model.LaneAttribute;
-import net.sourceforge.seqware.common.model.LibrarySelection;
-import net.sourceforge.seqware.common.model.LibrarySource;
-import net.sourceforge.seqware.common.model.LibraryStrategy;
-import net.sourceforge.seqware.common.model.Organism;
-import net.sourceforge.seqware.common.model.Platform;
-import net.sourceforge.seqware.common.model.ProcessingAttribute;
-import net.sourceforge.seqware.common.model.Sample;
-import net.sourceforge.seqware.common.model.SampleAttribute;
-import net.sourceforge.seqware.common.model.SequencerRunAttribute;
-import net.sourceforge.seqware.common.model.Study;
-import net.sourceforge.seqware.common.model.StudyAttribute;
-import net.sourceforge.seqware.common.model.StudyType;
-import net.sourceforge.seqware.common.model.WorkflowAttribute;
-import net.sourceforge.seqware.common.model.WorkflowParam;
-import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
+import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
@@ -104,7 +83,7 @@ public interface MetadataInterface {
    * @param title a {@link java.lang.String} object.
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
-  public ReturnValue addSample(Integer experimentAccession, Integer organismId, String description, String title);
+  public ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession, Integer organismId, String description, String title);
   
     /**
    * <p>addSample.</p>
@@ -126,7 +105,7 @@ public interface MetadataInterface {
    * @param title a {@link java.lang.String} object.
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
-  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip);
+  public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip, Integer laneNumber);
   
     /**
    * <p>addSample.</p>
@@ -335,6 +314,14 @@ public interface MetadataInterface {
    * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
    */
   WorkflowRun getWorkflowRun(int workflowRunAccession);
+  
+  /**
+   * Returns the workflow_runs associated with a group of files.
+   * Search types are defined as:
+   * @param fileAccessions
+   * @return 
+   */
+  List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type);
 
   /**
    * <p>get_workflow_info.</p>
@@ -354,27 +341,27 @@ public interface MetadataInterface {
    */
   boolean linkWorkflowRunAndParent(int workflowRunId, int parentAccession) throws SQLException;
 
-  /**
-   * <p>update_workflow_run.</p>
-   *
-   * @param workflowRunId a int.
-   * @param pegasusCmd a {@link java.lang.String} object.
-   * @param workflowTemplate a {@link java.lang.String} object.
-   * @param status a {@link java.lang.String} object.
-   * @param statusCmd a {@link java.lang.String} object.
-   * @param workingDirectory a {@link java.lang.String} object.
-   * @param dax a {@link java.lang.String} object.
-   * @param ini a {@link java.lang.String} object.
-   * @param host a {@link java.lang.String} object.
-   * @param currStep a int.
-   * @param totalSteps a int.
-   * @param stdErr a {@link java.lang.String} object.
-   * @param stdOut a {@link java.lang.String} object.
-   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-   */
-  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
-      String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
-      String stdErr, String stdOut);
+    /**
+     * <p>update_workflow_run.</p>
+     *
+     * @param workflowRunId a int.
+     * @param pegasusCmd a {@link java.lang.String} object.
+     * @param workflowTemplate a {@link java.lang.String} object.
+     * @param status a {@link java.lang.String} object.
+     * @param statusCmd a {@link java.lang.String} object.
+     * @param workingDirectory a {@link java.lang.String} object.
+     * @param dax a {@link java.lang.String} object.
+     * @param ini a {@link java.lang.String} object.
+     * @param host a {@link java.lang.String} object.
+     * @param currStep a int.
+     * @param totalSteps a int.
+     * @param stdErr a {@link java.lang.String} object.
+     * @param stdOut a {@link java.lang.String} object.
+     * @param workflowEngine the value of workflowEngine
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
+    
+  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps, String stdErr, String stdOut, String workflowEngine);
 
   /**
    * <p>findFilesAssociatedWithASample.</p>
@@ -383,24 +370,32 @@ public interface MetadataInterface {
    * @return a {@link java.util.List} object.
    */
   List<ReturnValue> findFilesAssociatedWithASample(String sampleName);
-
+  
   /**
-   * <p>addWorkflow.</p>
+   * <p>findFilesAssociatedWithASample.</p>
    *
-   * @param name a {@link java.lang.String} object.
-   * @param version a {@link java.lang.String} object.
-   * @param description a {@link java.lang.String} object.
-   * @param baseCommand a {@link java.lang.String} object.
-   * @param configFile a {@link java.lang.String} object.
-   * @param templateFile a {@link java.lang.String} object.
-   * @param provisionDir a {@link java.lang.String} object.
-   * @param storeProvisionDir a boolean.
-   * @param archiveZip a {@link java.lang.String} object.
-   * @param storeArchiveZip a boolean.
-   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+   * @param sampleName a {@link java.lang.String} object.
+   * @param requireFiles
+   * @return a {@link java.util.List} object.
    */
-  ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile,
-      String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip);
+  List<ReturnValue> findFilesAssociatedWithASample(String sampleName, boolean requireFiles);
+
+    /**
+     * <p>addWorkflow.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param version a {@link java.lang.String} object.
+     * @param description a {@link java.lang.String} object.
+     * @param baseCommand a {@link java.lang.String} object.
+     * @param configFile a {@link java.lang.String} object.
+     * @param templateFile a {@link java.lang.String} object.
+     * @param provisionDir a {@link java.lang.String} object.
+     * @param storeProvisionDir a boolean.
+     * @param archiveZip a {@link java.lang.String} object.
+     * @param storeArchiveZip a boolean.
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
+  ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflowClass, String workflowType, String workflowEngine);
 
   /**
    * <p>updateWorkflow.</p>
@@ -442,6 +437,16 @@ public interface MetadataInterface {
    * @return a {@link java.util.List} object.
    */
   public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName);
+  
+  /**
+   * Somewhat misnamed for now, this can return a mix of files and bare-nodes in the 
+   * database hierarchy resulting from FileAllTheFiles.requireFiles=false
+   *
+   * @param studyName a {@link java.lang.String} object.
+   * @param requireFiles 
+   * @return a {@link java.util.List} object.
+   */
+  public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, boolean requireFiles);
 
   /**
    * <p>saveFileForIus.</p>
@@ -449,9 +454,10 @@ public interface MetadataInterface {
    * @param workflowRunId a int.
    * @param iusAccession a int.
    * @param file a {@link net.sourceforge.seqware.common.module.FileMetadata} object.
+   * @param processingId Id of processing node File nodes will be attached to.
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
-  public ReturnValue saveFileForIus(int workflowRunId, int iusAccession, FileMetadata file);
+  public ReturnValue saveFileForIus(int workflowRunId, int iusAccession, FileMetadata file, int processingId);
 
   /**
    * <p>isDuplicateFile.</p>
@@ -468,6 +474,14 @@ public interface MetadataInterface {
    * @return a {@link java.util.List} object.
    */
   public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName);
+  
+    /**
+   * <p>findFilesAssociatedWithASequencerRun.</p>
+   *
+   * @param sequencerRunName a {@link java.lang.String} object.
+   * @return a {@link java.util.List} object.
+   */
+  public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName, boolean requireFiles);
 
   /**
    * <p>getWorkflowRunsByStatus.</p>
@@ -669,6 +683,22 @@ public interface MetadataInterface {
    * @return a {@link java.lang.String} object.
    */
   public String getWorkflowRunReport(int workflowRunSWID);
+  
+  /**
+   * <p>getWorkflowRunReportStdErr.</p>
+   *
+   * @param workflowRunSWID a int.
+   * @return a {@link java.lang.String} object.
+   */
+  public String getWorkflowRunReportStdErr(int workflowRunSWID);  
+  
+  /**
+   * <p>getWorkflowRunReportStdOut.</p>
+   *
+   * @param workflowRunSWID a int.
+   * @return a {@link java.lang.String} object.
+   */
+  public String getWorkflowRunReportStdOut(int workflowRunSWID);
 
   /**
    * <p>getWorkflowRunReport.</p>
@@ -704,4 +734,75 @@ public interface MetadataInterface {
    * @return a {@link java.util.SortedSet} object.
    */
   public SortedSet<WorkflowParam> getWorkflowParams(String swAccession);
+  
+  /**
+   * <p>getProcessingRelations.</p>
+   * @param swAccession
+   * @return a Dot format string
+   */
+  public String getProcessingRelations(String swAccession);
+  
+  /**
+   * Get a workflow
+   * @param workflowAccession
+   * @return 
+   */
+  public Workflow getWorkflow(int workflowAccession);
+  
+  /**
+   * Get all of the sequencer runs in the DB.
+   * @return a list of Sequencer runs
+   */
+  public List<SequencerRun> getAllSequencerRuns();
+  
+  /**
+   * Get Lanes from a sequencer run.
+   * @param sequencerRunAccession the sw_accession of the sequencer run
+   * @return the lanes from the run
+   */
+  public List<Lane> getLanesFrom(int sequencerRunAccession);
+  
+  /**
+   * Get IUSes (barcodes) from a lane or sample.
+   * @param laneOrSampleAccession the sw_accession of the lane or sample
+   * @return a list of IUSes (barcodes)
+   */
+  public List<IUS> getIUSFrom(int laneOrSampleAccession);
+  
+  /**
+   * Get experiments from a study.
+   * @param studyAccession the sw_accession of the study
+   * @return a list of Experiments
+   */
+  public List<Experiment> getExperimentsFrom(int studyAccession);
+  
+  /**
+   * Get the samples from an experiment.
+   * @param experimentAccession the sw_accession of the experiment
+   * @return a list of samples
+   */
+  public List<Sample> getSamplesFrom(int experimentAccession);
+  
+  /**
+   * Get the child samples of a parent sample. These samples are further down the
+   * sample hierarchy (more specific). For example, if the parent sample or donor is
+   * ABC_001, the child sample would be ABC_001_Ref for the reference (blood)
+   * sample from the donor.
+   * @param parentSampleAccession the sw_accession of the parent sample / donor
+   * @return a list of child samples.
+   */
+  public List<Sample> getChildSamplesFrom(int parentSampleAccession);
+  
+  
+  /**
+   * Get the parent samples of a sample. These samples are further up the sample
+   * hierarchy (less specific). For example, if the parent sample or donor is
+   * ABC_001, the child sample would be ABC_001_Ref for the reference (blood)
+   * sample from the donor.
+   * @param childSampleAccession the sw_accession of the child sample
+   * @return a list of parent samples / donors
+   */
+  public List<Sample> getParentSamplesFrom(int childSampleAccession);
+  
+  
 }

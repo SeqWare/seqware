@@ -32,6 +32,11 @@ public abstract class AbstractWorkflowDataModel  {
     private String metadata_output_dir;
     //default is pegasus
     private String workflow_engine;
+    private String seqware_version;
+    private String workflow_directory_name;
+    private String bundle_version;
+    //usually it is ${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}
+    private String basedir;
 
     public AbstractWorkflowDataModel() {
     	this.env = new Environment();
@@ -222,7 +227,7 @@ public abstract class AbstractWorkflowDataModel  {
 	 * @return ${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}
 	 */
 	public String getWorkflowBaseDir() {
-		return this.getWorkflowBundleDir() + File.separator + "Workflow_Bundle_"+this.getName()+ File.separator + this.getVersion();
+		return this.basedir;
 	}
 
 	/**
@@ -288,7 +293,10 @@ public abstract class AbstractWorkflowDataModel  {
 	 * @param parent_accessions parent_accessions separated by ","
 	 */
 	void setParentAccessions(Collection<String> parentAccessions) {
-		this.parentAccessions.addAll(parentAccessions);
+            // 0.13.6.5 We actually want overridden behaviour, rather than combining workflow.ini and command-line opts,
+            // we want just the command-line opts if present
+            this.parentAccessions.clear();
+            this.parentAccessions.addAll(parentAccessions);
 	}
 
 	/**
@@ -372,8 +380,45 @@ public abstract class AbstractWorkflowDataModel  {
 	 */
 	public String getProperty(String key) throws Exception {
 		if(!this.configs.containsKey(key))
-			throw new Exception("Key not found");
+			throw new Exception("Key "+key+" not found");
 		return configs.get(key);
+	}
+        
+        public boolean hasProperty(String key) {
+          return(this.configs.containsKey(key));
+        } 
+        
+        public boolean hasPropertyAndNotNull(String key) {
+          return(this.configs.containsKey(key) && configs.get(key) != null);
+        } 
+
+	public String getWorkflow_directory_name() {
+		return workflow_directory_name;
+	}
+
+	void setWorkflow_directory_name(String workflow_directory_name) {
+		this.workflow_directory_name = workflow_directory_name;
+	}
+
+	public String getSeqware_version() {
+		return seqware_version;
+	}
+
+	void setSeqware_version(String seqware_version) {
+		this.seqware_version = seqware_version;
+	}
+
+	public String getBundle_version() {
+		return bundle_version;
+	}
+
+	void setBundle_version(String bundle_version) {
+		this.bundle_version = bundle_version;
+	}
+
+
+	void setWorkflowBasedir(String basedir) {
+		this.basedir = basedir;
 	}
 	
 }

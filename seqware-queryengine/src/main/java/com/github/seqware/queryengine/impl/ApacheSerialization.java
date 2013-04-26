@@ -16,6 +16,7 @@
  */
 package com.github.seqware.queryengine.impl;
 
+import com.github.seqware.queryengine.backInterfaces.SerializationInterface;
 import com.github.seqware.queryengine.model.Atom;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
 import org.apache.commons.lang.SerializationException;

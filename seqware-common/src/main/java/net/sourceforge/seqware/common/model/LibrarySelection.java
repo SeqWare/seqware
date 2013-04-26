@@ -41,13 +41,11 @@ public class LibrarySelection implements Serializable, Comparable<LibrarySelecti
 		return(that.getName().compareTo(this.getName()));
 	}
 
-    /** {@inheritDoc} */
     @Override
-	public String toString() {
-		return new ToStringBuilder(this)
-			.append("librarySelectionId", getLibrarySelectionId())
-			.toString();
-	}
+    public String toString() {
+        return "LibrarySelection{" + "librarySelectionId=" + librarySelectionId + ", name=" + name + ", description=" + description + '}';
+    }
+
 
     /** {@inheritDoc} */
     @Override

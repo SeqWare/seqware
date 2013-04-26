@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -24,24 +25,27 @@ import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 public class FileLinkerParser {
 
+   private static final String UTF8 = "UTF8";
+
    private static final Logger log = LoggerFactory.getLogger(FileLinkerParser.class);
 
-   private final static String UTF8 = "UTF8";
-
-   public static Map<Integer, FileMetadata> parse(String filename) throws FileNotFoundException {
+   public static Map<Integer, List<FileMetadata>> parse(String filename) throws FileNotFoundException,
+         UnsupportedEncodingException {
       return parse(filename, '\t');
    }
 
-   public static Map<Integer, FileMetadata> parse(String filename, char separator) throws FileNotFoundException {
+   public static Map<Integer, List<FileMetadata>> parse(String filename, char separator) throws FileNotFoundException,
+         UnsupportedEncodingException {
       checkNotNull(filename);
       checkElementIndex(0, filename.length());
       checkNotNull(separator);
-      BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
+      BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filename), UTF8));
       List<FileLinkerLine> lines = getFileInfo(br, separator);
       requiredValuesPresent(lines);
       return fileMetadataFromFileInfo(lines);
@@ -75,8 +79,8 @@ public class FileLinkerParser {
       return defaultUsers;
    }
 
-   private static Map<Integer, FileMetadata> fileMetadataFromFileInfo(List<FileLinkerLine> lines) {
-      Map<Integer, FileMetadata> result = Maps.newHashMap();
+   private static Map<Integer, List<FileMetadata>> fileMetadataFromFileInfo(List<FileLinkerLine> lines) {
+      Map<Integer, List<FileMetadata>> result = Maps.newHashMap();
       for (FileLinkerLine line : lines) {
          FileMetadata fileMetadata = new FileMetadata();
          fileMetadata.setMetaType(line.getMimeType());
@@ -87,7 +91,13 @@ public class FileLinkerParser {
          if (line.getSize() != null) {
             fileMetadata.setSize(line.getSize());
          }
-         result.put(line.getSeqwareAccession(), fileMetadata);
+         if (result.containsKey(line.getSeqwareAccession())) {
+            result.get(line.getSeqwareAccession()).add(fileMetadata);
+         } else {
+            List<FileMetadata> fileMetadataList = Lists.newArrayList();
+            fileMetadataList.add(fileMetadata);
+            result.put(line.getSeqwareAccession(), fileMetadataList);
+         }
       }
       return result;
    }
@@ -105,10 +115,8 @@ public class FileLinkerParser {
                   i + 2, line);
          }
       }
-      if (!hasRequiredValues) {
-         throw new FileLinkerLineException("Csv file missing required values on the following lines: "
-               + Arrays.toString(badLines.toArray()));
-      }
+      if (!hasRequiredValues) { throw new FileLinkerLineException("Csv file missing required values on the following lines: "
+            + Arrays.toString(badLines.toArray())); }
    }
 
 }

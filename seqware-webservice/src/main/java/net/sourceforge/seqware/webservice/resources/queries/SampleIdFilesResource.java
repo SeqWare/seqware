@@ -52,12 +52,18 @@ public class SampleIdFilesResource extends BasicRestlet {
     @Override
     public void handle(Request request, Response response) {
         authenticate(request.getChallengeResponse().getIdentifier());
+        init(request);
         String id = request.getAttributes().get("sampleId").toString();
         ReturnValueList returnValues = new ReturnValueList();
 
         SampleService ss = BeanFactory.getSampleServiceBean();
         Sample sample = (Sample) testIfNull(ss.findBySWAccession(Integer.parseInt(id)));
         FindAllTheFiles fatf = new FindAllTheFiles();
+        
+        if (this.getQueryValue("requireFiles") != null){
+            boolean requireFiles = Boolean.valueOf(this.getQueryValue("requireFiles"));
+            fatf.setRequireFiles(requireFiles);
+        }
         List<ReturnValue> list = fatf.filesFromSample(sample, null, null);
         returnValues.setList(list);
 
