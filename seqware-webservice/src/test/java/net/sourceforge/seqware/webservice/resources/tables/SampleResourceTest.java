@@ -16,6 +16,16 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
+import java.util.Date;
+import java.util.Set;
+import junit.framework.Assert;
+import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
+import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import org.restlet.representation.Representation;
+import org.w3c.dom.Document;
+
 /**
  *
  * @author mtaschuk
@@ -28,7 +38,31 @@ public class SampleResourceTest extends DatabaseResourceTest {
 
   @Override
   public void testPost() {
-    //TODO
+              System.out.println(getRelativeURI() + " POST");
+        Representation rep = null;
+        JaxbObject<Sample> jbo = new JaxbObject<Sample>();
+        try {
+            Sample sample = new Sample();
+            sample.setCreateTimestamp(new Date());
+            sample.setUpdateTimestamp(new Date());
+            Set<Sample> samples = sample.getParents();
+            samples.add(null);
+            Sample n = new Sample();
+            n.setSampleId(1792);
+            samples.add(n);
+            Assert.assertEquals(2, samples.size());
+            sample.setParents(samples);
+            
+            Document doc = XmlTools.marshalToDocument(jbo, sample);
+            rep = resource.post(XmlTools.getRepresentation(doc));
+            Sample s2 = (Sample)XmlTools.unMarshal(jbo,new Sample(), rep.getText());
+            Assert.assertEquals("Should have two parents!", 2, s2.getParents().size());
+            rep.exhaust();
+            rep.release();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(e.getMessage());
+        }
   }
     
     
