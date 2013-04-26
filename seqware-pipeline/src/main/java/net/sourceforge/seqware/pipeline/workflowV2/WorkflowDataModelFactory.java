@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.SortedSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.WorkflowParam;
@@ -42,6 +44,8 @@ public class WorkflowDataModelFactory {
         this.config = config;
         this.params = params;
         this.metadata = metadata;
+        
+        // need to do options ret
     }
 
 
@@ -155,8 +159,14 @@ public class WorkflowDataModelFactory {
         Log.info("loading ini files");
         //load ini config
         Map<String, String> configs = this.loadIniConfigs(workflowAccession, workflowRunAccession, bundlePath);
+        dataModel.setConfigs(configs);
+        
+        // 0.13.6.5 : The Java workflow launcher was not originally designed to schedule, hence it is not properly getting 
+        // parent accessions from saved ini files (as opposed to on the command line) 
+        ArrayList<String> parseParentAccessions = BasicWorkflow.parseParentAccessions(configs);
+        dataModel.setParentAccessions(parseParentAccessions);
 
-        //merge command line option with configs
+        //merge command line option with configs, command-line options should override parent accession set above if present
         this.mergeCmdOptions(dataModel);
         //merge version, and name ??? TODO 
 
@@ -189,17 +199,21 @@ public class WorkflowDataModelFactory {
         dataModel.getEnv().setOOZIE_APP_PATH(config.get("OOZIE_APP_PATH"));
 
         //get workflow-run-accession
-        if (options.has("status") == false && options.has(("workflow-accession"))) {
-            int workflowAccession_options = Integer.parseInt((String) options.valueOf("workflow-accession"));
-            int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession_options);
-            //configs.put("workflow-run-accession", ""+workflowrunaccession);
-            dataModel.setWorkflow_run_accession(String.valueOf(workflowrunaccession));
-        } else if (options.has("status") == false && workflowAccession != null){
-            int workflowrunaccession = this.metadata.add_workflow_run(workflowAccession);
-            //configs.put("workflow-run-accession", ""+workflowrunaccession);
-            dataModel.setWorkflow_run_accession(String.valueOf(workflowrunaccession));
+        if (options.has("status") == false && dataModel.isMetadataWriteBack()) {
+            if (workflowAccession != null && workflowRunAccession == null) {
+                int workflowrunid = this.metadata.add_workflow_run(workflowAccession);
+                int workflowrunaccession = this.metadata.get_workflow_run_accession(workflowrunid);
+                dataModel.setWorkflow_accession(Integer.toString(workflowAccession));
+                dataModel.setWorkflow_run_accession(String.valueOf(workflowrunaccession));
+            } else if (workflowAccession != null && workflowRunAccession != null) {
+                dataModel.setWorkflow_accession(Integer.toString(workflowAccession));
+                dataModel.setWorkflow_run_accession(String.valueOf(workflowRunAccession));
+            } else{
+                assert(false);
+                Log.error("This condition should never be reached");
+                throw new UnsupportedOperationException();
+            }
         }
-        dataModel.setConfigs(configs);
 
         //parse XML or Java Object for
         if (workflow_java) {
@@ -334,7 +348,7 @@ public class WorkflowDataModelFactory {
         MapTools.mapExpandVariables(map);
         
         // make absolutely sure the variables are defined and ${workflow_bundle_path} is filled in
-        Map<String, String> ret = this.resolveMap(map, bundlePath);
+        Map<String, String> ret = this.resolveMap(map, bundlePath); 
         return ret;
     }
 
@@ -409,10 +423,26 @@ public class WorkflowDataModelFactory {
         //metadata-output-file-prefix
         if (options.has("metadata-output-file-prefix")) {
             model.setMetadata_output_file_prefix((String) options.valueOf("metadata-output-file-prefix"));
+        } else if (model.hasPropertyAndNotNull("output_prefix")) {
+          try {
+            model.setMetadata_output_file_prefix(model.getProperty("output_prefix"));
+          } catch (Exception ex) {
+            Logger.getLogger(WorkflowDataModelFactory.class.getName()).log(Level.SEVERE, null, ex);
+          }
+        } else {
+            Log.error("You need to specify the output prefix for your workflow using either --metadata-output-file-prefix as a WorkflowLauncher param or in your workflow INI file as output_prefix!");
         }
         //metadata-output-dir
         if (options.has("metadata-output-dir")) {
             model.setMetadata_output_dir((String) options.valueOf("metadata-output-dir"));
+        } else if (model.hasPropertyAndNotNull("output_dir")) {
+          try {
+            model.setMetadata_output_dir(model.getProperty("output_dir"));
+          } catch (Exception ex) {
+            Logger.getLogger(WorkflowDataModelFactory.class.getName()).log(Level.SEVERE, null, ex);
+          }
+        } else {
+            Log.error("You need to specify the output dir for your workflow using either --metadata-output-dir as a WorkflowLauncher param or in your workflow INI file as output_dir!");
         }
         //workflow_engine
         if (options.has("workflow-engine")) {

@@ -35,27 +35,33 @@ import net.sourceforge.seqware.common.util.configtools.ConfigTools;
  */
 public class DBAccess {
 
-    private static MetadataDB db;
+    private static ThreadLocal<MetadataDB> metadataDBWrapper = new ThreadLocal<MetadataDB>(){
+        @Override
+        protected synchronized MetadataDB initialValue() {
+             return null;
+         }
+    };
 
     /**
      * <p>get.</p>
      *
      * @return a {@link net.sourceforge.seqware.common.metadata.MetadataDB} object.
      */
-    public static MetadataDB get() {
+    public synchronized static MetadataDB get() {
         try {
-            if (db!=null &&
-                    ((db.getDb()!=null && db.getDb().isClosed()))) 
+            if (metadataDBWrapper.get()!=null &&
+                    ((metadataDBWrapper.get().getDb()!=null && metadataDBWrapper.get().getDb().isClosed()))) 
                     //|| db.getSql()!=null && db.getSql().isClosed()))
             {
-                db.clean_up();
-                db = null;
+                metadataDBWrapper.get().clean_up();
+                metadataDBWrapper.set(null);
+                //db = null;
             }
         } catch (SQLException ex) {
             Log.error("Closing DB connection and creating a new one failed", ex);
         }
-        if (db == null) {
-            db = new MetadataDB();
+        if (metadataDBWrapper.get() == null) {
+            metadataDBWrapper.set(new MetadataDB());
             //Log.debug("DBAccess is using " + user + " " + pass + " on " + connection);
             DataSource ds = null;
             try {
@@ -66,8 +72,10 @@ public class DBAccess {
                 ex.printStackTrace();
             }
             if (ds != null) {
-                db.init(ds);
+                Log.debug("init via db.init(ds), datasource is " + ds.getClass());
+                metadataDBWrapper.get().init(ds);
             } else {
+                Log.debug("init via init(user,pass,connection)");
                 Map<String, String> settings = null;
                 try {
                     settings = ConfigTools.getSettings();
@@ -75,24 +83,29 @@ public class DBAccess {
                     String user = settings.get("SW_DB_USER");
                     String pass = settings.get("SW_DB_PASS");
                     Log.debug("DBAccess is using " + user + " " + pass + " on " + connection);
-                    db.init(connection, user, pass);
+                    metadataDBWrapper.get().init(connection, user, pass);
                 } catch (Exception ex) {
+                    Log.fatal("get()  could not init ", ex);
                     Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             }
         }
-        return db;
+        Log.debug(metadataDBWrapper.get().toString() + " was returned ");
+        return metadataDBWrapper.get();
     }
 
     /**
      * <p>close.</p>
      */
-    public static void close() {
-        if (db != null) {
-            db.clean_up();
-            db = null;
+    public synchronized static void close() {
+        if (metadataDBWrapper.get() != null) {
+            Log.debug(metadataDBWrapper.get().toString() + " was closed ");
+            metadataDBWrapper.get().clean_up();
+            metadataDBWrapper.set(null);
+            //db = null;
         }
+        metadataDBWrapper.remove();
     }
 
     private DBAccess() {

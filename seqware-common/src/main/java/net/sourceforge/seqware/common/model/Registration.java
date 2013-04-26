@@ -7,6 +7,7 @@ import java.util.Date;
 
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.security.PermissionsAware;
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -379,8 +380,9 @@ public class Registration implements Serializable, PermissionsAware, Comparable<
      */
     public static Registration cloneFromDB(int ownerId) throws SQLException {
         Registration registration = null;
+        ResultSet rs = null;
         try {
-            ResultSet rs = DBAccess.get().executeQuery("SELECT * FROM registration WHERE registration_id=" + ownerId);
+            rs = DBAccess.get().executeQuery("SELECT * FROM registration WHERE registration_id=" + ownerId);
 
             if (rs.next()) {
                 registration = new Registration();
@@ -398,6 +400,7 @@ public class Registration implements Serializable, PermissionsAware, Comparable<
 
             }
         } finally {
+            DbUtils.closeQuietly(rs);
             DBAccess.close();
         }
         return registration;

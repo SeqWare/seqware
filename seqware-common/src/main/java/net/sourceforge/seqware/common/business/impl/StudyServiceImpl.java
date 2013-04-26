@@ -217,6 +217,12 @@ public class StudyServiceImpl implements StudyService {
   public List<Study> findByCriteria(String criteria, boolean isCaseSens) {
     return studyDAO.findByCriteria(criteria, isCaseSens);
   }
+  
+  /** {@inheritDoc} */
+  @Override
+  public List<Study> findByCriteria(String criteria) {
+    return studyDAO.findByCriteria(criteria);
+  }
 
   /**
    * {@inheritDoc}
