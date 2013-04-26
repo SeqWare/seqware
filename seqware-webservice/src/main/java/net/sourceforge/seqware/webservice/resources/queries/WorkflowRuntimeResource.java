@@ -22,6 +22,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+import org.apache.commons.dbutils.DbUtils;
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -170,7 +171,8 @@ public class WorkflowRuntimeResource
         }
         seen.put(processingId, true);
 
-        ResultSet rs;
+        ResultSet rs = null;
+        ResultSet childRs = null;
         try {
             rs = DBAccess.get().executeQuery("select p.processing_id, p.algorithm, p.status, p.create_tstmp, EXTRACT(EPOCH from p.run_stop_tstmp - p.run_start_tstmp) as length from processing as p where p.processing_id = " + processingId + " and p.status = 'success' order by p.create_tstmp");
 
@@ -224,7 +226,7 @@ public class WorkflowRuntimeResource
                 }
                 runtimeHash.put("counts", counts);
 
-                ResultSet childRs = DBAccess.get().executeQuery("select p.processing_id, p.algorithm, p.status, p.create_tstmp from processing as p, processing_relationship as pr where pr.parent_id = " + processingId + " and pr.child_id = p.processing_id and p.ancestor_workflow_run_id = " + workflowRunId);
+                childRs = DBAccess.get().executeQuery("select p.processing_id, p.algorithm, p.status, p.create_tstmp from processing as p, processing_relationship as pr where pr.parent_id = " + processingId + " and pr.child_id = p.processing_id and p.ancestor_workflow_run_id = " + workflowRunId);
 
                 while (childRs.next()) {
 
@@ -242,6 +244,10 @@ public class WorkflowRuntimeResource
             // TODO Auto-generated catch block
             System.err.println(e.getMessage());
             e.printStackTrace();
+        } finally{
+            DBAccess.close();
+            DbUtils.closeQuietly(rs);
+            DbUtils.closeQuietly(childRs);
         }
     }
 }

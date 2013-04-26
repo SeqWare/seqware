@@ -9,6 +9,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
+import net.sourceforge.seqware.common.metadata.MetadataDB;
 
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
@@ -17,6 +18,7 @@ import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.TabExpansionUtil;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -58,7 +60,8 @@ public class BundleManager extends Plugin {
         parser.acceptsAll(Arrays.asList("download"), "Downloads a workflow bundle zip. This must be used in conjunction with a workflow name and version.");
         parser.acceptsAll(Arrays.asList("download-url"), "Downloads a workflow bundle zip from a URL to the local directory.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("metadata", "m"), "Specify the path to the metadata.xml file.").withRequiredArg();
-
+        parser.acceptsAll(Arrays.asList("human-expanded", "he"), "Optional: will print output in expanded human friendly format");
+        parser.acceptsAll(Arrays.asList("human-aligned", "ha"), "Optional: will print output in aligned human friendly format");
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
@@ -149,6 +152,11 @@ public class BundleManager extends Plugin {
                 println("Bundle Has Been Packaged to " + options.valueOf("bundle") + "!");
             }
         } else if (options.has("bundle") && options.has("install")) {
+            
+            if (killIfDirectDB()) {
+                return ret;
+            }
+            
             println("Installing Bundle");
             String bundleFile = (String) options.valueOf("bundle");
             println("Bundle: " + bundleFile);
@@ -157,6 +165,11 @@ public class BundleManager extends Plugin {
                 println("Bundle Has Been Installed to the MetaDB and Provisioned to " + options.valueOf("bundle") + "!");
             }
         } else if (options.has("bundle") && options.has("install-zip-only")) {
+            
+            if (killIfDirectDB()) {
+                return ret;
+            }
+            
             println("Installing Bundle (Zip Bundle Archive Only)");
             String bundleFile = (String) options.valueOf("bundle");
             println("Bundle: " + bundleFile);
@@ -170,6 +183,11 @@ public class BundleManager extends Plugin {
               ret.setExitStatus(ret.FAILURE);
             }
         } else if (options.has("bundle") && options.has("install-dir-only")) {
+            
+            if (killIfDirectDB()) {
+                return ret;
+            }
+            
             println("Installing Bundle (Working Directory Only)");
             String bundleFile = (String) options.valueOf("bundle");
             println("Bundle: " + bundleFile);
@@ -184,14 +202,24 @@ public class BundleManager extends Plugin {
               ret.setExitStatus(ret.FAILURE);
             }
         } else if (options.has("list-installed")) {            
-            println("=====================================================");
-            println("===============INSTALLED WORKFLOWS===================");
-            println("=====================================================");
-            println("Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location");
-            println("-----------------------------------------------------");
             String params = metadata.listInstalledWorkflows();
-            println(params);
-            println("-----------------------------------------------------");
+            if (options.has("human-expanded")) {
+                params = "Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location\n" + params;
+                params = TabExpansionUtil.expansion(params);
+                println(params);
+            } else if (options.has("human-aligned")){
+                params = "Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location\n" + params;
+                params = TabExpansionUtil.aligned(params);
+                println(params);
+            } else {
+                println("=====================================================");
+                println("===============INSTALLED WORKFLOWS===================");
+                println("=====================================================");
+                println("Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location");
+                println("-----------------------------------------------------");
+                println(params);
+                println("-----------------------------------------------------");
+            }
         // ((options.has("workflow") && options.has("version") && options.has("bundle")) || options.has("workflow-accession"))
         } else if (options.has("list-workflow-params") && options.has("workflow-accession")) {
             println("=====================================================");
@@ -256,5 +284,14 @@ public class BundleManager extends Plugin {
      */
     public String get_description() {
         return ("A plugin that lets you create, test, and install workflow bundles.");
+    }
+
+    private boolean killIfDirectDB() {
+        if (this.metadata instanceof MetadataDB) {
+            Log.stdout("Bundle installation is not supported using a database connection to the MetaDB");
+            ret = new ReturnValue(ReturnValue.RUNTIMEEXCEPTION);
+            return true;
+        }
+        return false;
     }
 }

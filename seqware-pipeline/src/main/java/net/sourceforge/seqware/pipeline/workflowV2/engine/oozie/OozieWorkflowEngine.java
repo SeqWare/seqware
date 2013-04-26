@@ -93,9 +93,16 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 	 */
 	private void setupHDFS(AbstractWorkflowDataModel objectModel) {
 		Configuration conf = new Configuration();
-		conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_CORE_XML()));
-		conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_HDFS_SITE_XML()));
-		conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_MAPRED_SITE_XML()));
+		conf.set("hbase.zookeeper.quorum", this.dataModel.getEnv().getHbase_zookeeper_quorum());
+		conf.set("hbase.zookeeper.property.clientPort", this.dataModel.getEnv().getHbase_zookeeper_property_clientPort());
+		conf.set("hbase.master", this.dataModel.getEnv().getHbase_master());
+		conf.set("mapred.job.tracker", this.dataModel.getEnv().getMapred_job_tracker());
+		conf.set("fs.default.name", this.dataModel.getEnv().getFs_default_name());
+		conf.set("fs.defaultFS", this.dataModel.getEnv().getFs_defaultFS());
+		conf.set("fs.hdfs.impl", this.dataModel.getEnv().getFs_hdfs_impl());
+		//conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_CORE_XML()));
+		//conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_HDFS_SITE_XML()));
+		//conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_MAPRED_SITE_XML()));
 
 		FileSystem fileSystem = null;
 		try {
@@ -160,7 +167,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 		File file = new File(this.dir,"workflow.xml");
 		//generate dax
 		OozieWorkflowXmlGenerator daxv2 = new OozieWorkflowXmlGenerator();
-		daxv2.generateWorkflowXml(objectModel, file.getAbsolutePath());
+		daxv2.generateWorkflowXml(objectModel, file.getAbsolutePath(), this.dir.getAbsolutePath());
 		return file;
 	}
 	
@@ -171,7 +178,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 			fw.write("nameNode="+this.dataModel.getEnv().getOOZIE_NAMENODE()+"\n");
 			fw.write("jobTracker="+this.dataModel.getEnv().getOOZIE_JOBTRACKER()+"\n");
 			fw.write("queueName="+this.dataModel.getEnv().getOOZIE_QUEUENAME()+"\n");
-			fw.write("oozie.wf.application.path=${nameNode}/user/${user.name}/oozie/" + this.dir.getName());
+			fw.write("oozie.wf.application.path=${nameNode}/user/${user.name}/seqware_workflow/" + this.dir.getName());
 			fw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -271,5 +278,10 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 	private OozieClient getOozieClient() {
 	    OozieClient oc = new OozieClient(this.dataModel.getEnv().getOOZIE_URL());
 	    return oc;
+	}
+
+	@Override
+	public String getStatus() {
+		return this.getStatus(this.getId());
 	}
 }

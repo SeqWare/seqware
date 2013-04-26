@@ -18,7 +18,7 @@ import net.sourceforge.seqware.common.util.Log;
  * @author boconnor
  * @version $Id: $Id
  */
-public class ReturnValue implements Serializable{
+public class ReturnValue implements Serializable {
 
     public enum ExitStatus {
         // generally it's a good idea to offset by 10 so if new ones need to be added
@@ -56,7 +56,8 @@ public class ReturnValue implements Serializable{
         PROCESSING(100, "Processing"),
         QUEUED(101, "Queued"),
         RETURNEDHELPMSG(110, "A help message has been returned"),
-        INVALIDPLUGIN(120, "The plugin is invalid");
+        INVALIDPLUGIN(120, "The plugin is invalid"),
+        UNKNOWN(130, "Typically used for workflow status when the state cannot be determined");
         private final int status;
         private final String meaning;
 
@@ -137,6 +138,8 @@ public class ReturnValue implements Serializable{
     public static final int RETURNEDHELPMSG = 110;
     /** Constant <code>INVALIDPLUGIN=120</code> */
     public static final int INVALIDPLUGIN = 120;
+    /** Constant <code>UNKNOWN=130</code> */
+    public static final int UNKNOWN = 130;
     // Data Members for Return Type
     protected String stdout = "";
     protected String stderr = "";

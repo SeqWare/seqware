@@ -14,9 +14,8 @@ import com.github.seqware.queryengine.kernel.RPNStack.TagHierarchicalOccurrence;
 import com.github.seqware.queryengine.kernel.RPNStack.TagOccurrence;
 import com.github.seqware.queryengine.kernel.RPNStack.TagValuePresence;
 import com.github.seqware.queryengine.model.*;
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
-import com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesByAttributesPlugin;
-import com.github.seqware.queryengine.plugins.inmemory.InMemoryFeaturesByAttributesPlugin;
+import com.github.seqware.queryengine.plugins.PluginInterface;
+import com.github.seqware.queryengine.plugins.plugins.FeaturesByAttributesPlugin;
 import com.github.seqware.queryengine.system.importers.OBOImporter;
 import com.github.seqware.queryengine.util.SGID;
 import java.io.File;
@@ -206,14 +205,14 @@ public class QueryInterfaceTest implements Benchmarking {
      */
     @Test
     public void testInstallAndRunArbitraryPlugin() {
-        Class<? extends AnalysisPluginInterface> arbitraryPlugin;
+        Class<? extends PluginInterface> arbitraryPlugin;
         // only use the M/R plugin for this test if using MR
         if (SWQEFactory.getModelManager() instanceof MRHBaseModelManager) {
             // pretend that the included com.github.seqware.queryengine.plugins.hbasemr.MRFeaturesByAttributesPlugin is an external plug-in
-            arbitraryPlugin = MRFeaturesByAttributesPlugin.class;
+            arbitraryPlugin = FeaturesByAttributesPlugin.class;
         } else {
             // pretend the equivalent for a non-HBase back-end
-            arbitraryPlugin = InMemoryFeaturesByAttributesPlugin.class;
+            arbitraryPlugin = FeaturesByAttributesPlugin.class;
         }
         // get a FeatureSet from the back-end
         QueryFuture<FeatureSet> future = SWQEFactory.getQueryInterface().getFeaturesByPlugin(0, arbitraryPlugin, aSet, new RPNStack(
@@ -290,7 +289,7 @@ public class QueryInterfaceTest implements Benchmarking {
         count = (int) resultSet.getCount();
         Assert.assertTrue("Setting a query constraints over one feature attribute and testing the value of a specific tag failed, expected 2 and found " + count, count == 2);
 
-        if (!(SWQEFactory.getBackEnd() instanceof HBasePersistentBackEnd)) {
+        if (!(SWQEFactory.getQueryInterface() instanceof HBasePersistentBackEnd)) {
             // in-memory models are too slow for the following test
             return;
         }

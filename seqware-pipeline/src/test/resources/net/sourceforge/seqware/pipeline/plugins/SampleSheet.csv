@@ -1,0 +1,27 @@
+[Header],,,,,,,,
+IEMFileVersion,3,,,,,,,
+Investigator Name,Jane_Smith,,,,,,,
+Project Name,Testdance_123to456,,,,,,,
+Experiment Name,TDHS_123to456,,,,,,,
+Date,10/12/2012,,,,,,,
+Workflow,Resequencing,,,,,,,
+Assay,TruSeq DNA/RNA,,,,,,,
+Description,,,,,,,,
+Chemistry,Default,,,,,,,
+[Reads],,,,,,,,
+151,,,,,,,,
+151,,,,,,,,
+,,,,,,,,
+[Settings],,,,,,,,
+CustomRead1PrimerMix,C1,,,,,,,
+CustomRead2PrimerMix,C3,,,,,,,
+,,,,,,,,
+OnlyGenerateFASTQ,0,,,,,,,
+[Data],,,,,,,,
+Sample_ID,Sample_Name,Sample_Plate,Sample_Well,Sample_Project,index,I7_Index_ID,Description,GenomeFolder
+TST1-002-1ARC,TDHS_0008_nn_n_PE_250_TS,,,,TCACAG,,,Homo_sapiens\UCSC\hg19\Sequence\WholeGenomeFASTA
+TST1-010-1BIO,TDHS_0009_nn_n_PE_250_TS,,,,CGTAGT,,,Homo_sapiens\UCSC\hg19\Sequence\WholeGenomeFASTA
+TST1-012-3BLD,TDHS_0000_nn_n_PE_300_TS,,,,TTAGCG,,,Homo_sapiens\UCSC\hg19\Sequence\WholeGenomeFASTA
+TST1-012-3ARC,TDHS_0001_nn_n_PE_300_TS,,,,TCGACA,,,Homo_sapiens\UCSC\hg19\Sequence\WholeGenomeFASTA
+TST1-022-2BLD,TDHS_0002_nn_n_PE_300_TS,,,,CAAGTG,,,Homo_sapiens\UCSC\hg19\Sequence\WholeGenomeFASTA
+TST1-022-2BIO,TDHS_0003_nn_n_PE_300_TS,,,,CGCATA,,,Homo_sapiens\UCSC\hg19\Sequence\WholeGenomeFASTA

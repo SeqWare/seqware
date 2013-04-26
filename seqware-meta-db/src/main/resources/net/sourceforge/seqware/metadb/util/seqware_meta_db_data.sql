@@ -738,7 +738,7 @@ INSERT INTO organism VALUES (8, 'Caenorhabditis_elegans', 'Caenorhabditis elegan
 -- Data for Name: workflow; Type: TABLE DATA; Schema: public; Owner: seqware
 --
 
-INSERT INTO workflow VALUES (28, 'FileImport', 'Imports files into the database, links them to IUSs or Lanes and creates intermediate Processings. Initially used to import files from the LIMS and attach them to IUSes.', NULL, '0.1.0', '0.10.0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-01-04 13:51:00', NULL, 4, NULL);
+INSERT INTO workflow VALUES (28, 'FileImport', 'Imports files into the database, links them to IUSs or Lanes and creates intermediate Processings. Initially used to import files from the LIMS and attach them to IUSes.', NULL, '0.1.0', '0.10.0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-01-04 13:51:00', NULL, 4, NULL, NULL, NULL, NULL);
 
 
 --

@@ -34,5 +34,6 @@ public abstract class AbstractWorkflowEngine {
 	public abstract String getStdErr(String id);
 	public abstract String getStdOut(String id);
 	
+	public abstract String getStatus();
 	
 }

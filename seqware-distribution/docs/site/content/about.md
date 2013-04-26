@@ -4,7 +4,7 @@ The SeqWare project (originally SolexaTools) was started in 2007 by Brian O'Conn
 
 ##Purpose
 
-The open source SeqWare project is a portable software infrastructure designed to analyze massive genomics datasets produced by contemporary and emerging technologies, in particular Next Generation Sequencing (NGS) platforms. It consists of a comprehensive suite of tools focused on enabling the end-to-end analysis of sequence data – from from raw base calling to analyzed variants ready for interpretation by users. **SeqWare is tool agnostic, it is a framework for building analysis workflows and does not provide specific implementations out-of-the-box. You use SeqWare to create high-throughput infrastructure for NGS analysis using whatever analysis tools you like.**
+The open source SeqWare project is a portable software infrastructure designed to analyze massive genomics datasets produced by contemporary and emerging technologies, in particular Next Generation Sequencing (NGS) platforms. It consists of a comprehensive infrastructure focused on enabling the automated, end-to-end analysis of sequence data – from from raw base calling to analyzed variants ready for interpretation by users. **SeqWare is tool agnostic, it is a framework for building analysis workflows and does not provide specific implementations out-of-the-box. You use SeqWare to create high-throughput infrastructure for NGS analysis using whatever analysis tools you like.**
 
 ##Components
 
@@ -14,7 +14,7 @@ SeqWare currently provides 5 main tools specifically designed to support massive
 * **Portal**: a LIMS-like web application to manage samples, record computational events, and present results back to end users.
 * **Pipeline**: a workflow engine that is capable of wrapping and combining other tools (BFAST, BWA, SAMtools, etc) into complex pipelines, recording metadata about the analysis, and facilitates automation of pipelines based on metadata.
 * **Web Service**: a programmatic API that lets people build new tools on top of the project
-* **Query Engine**: a NOSQL database designed to store and query variants and other events inferred from sequence data.
+* **Query Engine**: a NoSQL database designed to store and query variants and other events inferred from sequence data.
 
 <img width="600" src="/assets/images/seqware_arch.png"/>
 

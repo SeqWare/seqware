@@ -41,6 +41,7 @@ import org.junit.runners.Suite;
         net.sourceforge.seqware.webservice.resources.tables.ProcessResourceTest.class,
         net.sourceforge.seqware.webservice.resources.tables.SampleResourceTest.class,
         net.sourceforge.seqware.webservice.resources.tables.RootSampleResourceTest.class,
+        net.sourceforge.seqware.webservice.resources.tables.FileChildWorkflowRunsResourceTest.class,
         net.sourceforge.seqware.webservice.resources.tables.ProcessIDTest.class,
         net.sourceforge.seqware.webservice.resources.tables.WorkflowIDResourceTest.class,
         net.sourceforge.seqware.webservice.resources.tables.FileIDResourceTest.class,
