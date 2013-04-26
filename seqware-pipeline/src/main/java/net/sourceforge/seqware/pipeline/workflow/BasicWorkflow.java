@@ -49,6 +49,17 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     protected int percentage = 0;
     protected WorkflowTools workflowTools = null;
 
+    public static ReturnValue gridProxyInit() {
+        // initialize globus authentication proxy
+        ArrayList<String> theCommand = new ArrayList<String>();
+        theCommand.add("bash");
+        theCommand.add("-lc");
+        theCommand.add("grid-proxy-init -valid 480:00");
+        ReturnValue retProxy = RunTools.runCommand(theCommand
+                .toArray(new String[0]));
+        return retProxy;
+    }
+
     protected enum Job {
 
 	setup, prejob, mainjob, postjob, cleanup, statcall, data;
@@ -71,13 +82,8 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
 	workflowTools = new WorkflowTools();
 	ReturnValue retVal = new ReturnValue(ReturnValue.SUCCESS);
-	// initialize globus authentication proxy
-	ArrayList<String> theCommand = new ArrayList<String>();
-	theCommand.add("bash");
-	theCommand.add("-lc");
-	theCommand.add("grid-proxy-init -valid 480:00");
-	ReturnValue retProxy = RunTools.runCommand(theCommand
-		.toArray(new String[0]));
+        
+	ReturnValue retProxy = gridProxyInit();
 	if (retProxy.getExitStatus() != ReturnValue.SUCCESS) {
 	    Log.error("ERROR: can't init the globus proxy so terminating here, continuing but your workflow submissions will fail!");
 	    return (retProxy);
@@ -127,22 +133,41 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * lets you run workflows on a different host from where this command line
      * tool is run but requires an external process to launch workflows that
      * have been scheduled.
+     *
+     * @param scheduledHost the value of scheduledHost
      */
+    
     public ReturnValue scheduleInstalledBundle(String workflowAccession,
 	    String workflowRunAccession, ArrayList<String> iniFiles,
 	    boolean metadataWriteback, ArrayList<String> parentAccessions,
 	    ArrayList<String> parentsLinkedToWR, boolean wait,
 	    List<String> cmdLineOptions) {
 
-	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+	return scheduleInstalledBundle(workflowAccession, workflowRunAccession, iniFiles, metadataWriteback, parentAccessions, parentsLinkedToWR, wait, cmdLineOptions, null);
+    }
 
-	Map<String, String> workflowMetadata = this.metadata
-		.get_workflow_info(Integer.parseInt(workflowAccession));
-	WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
-	scheduleWorkflow(wi, workflowRunAccession, iniFiles, metadataWriteback,
-		parentAccessions, parentsLinkedToWR, wait, cmdLineOptions);
+    /**
+     * {@inheritDoc}
+     *
+     * This method just needs a sw_accession value from the workflow table and
+     * an ini file(s) in order to schedule a workflow. All needed info is pulled
+     * from the workflow table which was populated when the workflow was
+     * installed. Keep in mind this does not actually trigger anything, it just
+     * schedules the workflow to run by adding to the workflow_run table. This
+     * lets you run workflows on a different host from where this command line
+     * tool is run but requires an external process to launch workflows that
+     * have been scheduled.
+     */
+    public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession, ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, String scheduledHost) {
+        ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
-	return (ret);
+        Map<String, String> workflowMetadata = this.metadata
+                .get_workflow_info(Integer.parseInt(workflowAccession));
+        WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
+        scheduleWorkflow(wi, workflowRunAccession, iniFiles, metadataWriteback,
+                parentAccessions, parentsLinkedToWR, wait, cmdLineOptions, scheduledHost);
+
+        return (ret);
     }
 
     /**
@@ -267,7 +292,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	// get the workflow run
 	WorkflowRun wr = this.metadata
 		.getWorkflowRunWithWorkflow(workflowRunAccession);
-
+        
 	// the map
 	HashMap<String, String> map = new HashMap<String, String>();
 
@@ -517,7 +542,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 			wi.getTemplatePath(), "failed", statusCmd,
 			wi.getWorkflowDir(), daxBuffer.toString(),
 			mapBuffer.toString(), wr.getHost(), 0, 0,
-			retPegasus.getStderr(), retPegasus.getStdout());
+			retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine());
 	    }
 	    return (retPegasus);
 	}
@@ -528,7 +553,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 		    wi.getTemplatePath(), "pending", statusCmd,
 		    wi.getWorkflowDir(), daxBuffer.toString(),
 		    mapBuffer.toString(), wr.getHost(), 0, 0,
-		    retPegasus.getStderr(), retPegasus.getStdout());
+		    retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine());
 	}
   
   Log.stdout("PEGASUS STATUS COMMAND: " + statusCmd);
@@ -558,7 +583,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 				    .getAttribute("currStep")), Integer
 				    .parseInt(watchedResult
 					    .getAttribute("totalSteps")),
-			    retPegasus.getStderr(), retPegasus.getStdout());
+			    retPegasus.getStderr(), retPegasus.getStdout(), null);
 		}
 
 	    } else if (watchedResult.getExitStatus() == ReturnValue.FAILURE) {
@@ -574,7 +599,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 				    .parseInt(watchedResult
 					    .getAttribute("totalSteps")),
 			    watchedResult.getStderr(), watchedResult
-				    .getStdout());
+				    .getStdout(), null);
 		}
 		ret.setExitStatus(ReturnValue.FAILURE);
 		return (ret);
@@ -592,11 +617,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	return (ret);
     }
 
-    private ReturnValue scheduleWorkflow(WorkflowInfo wi,
-	    String workflowRunAccession, ArrayList<String> iniFiles,
-	    boolean metadataWriteback, ArrayList<String> parentAccessions,
-	    ArrayList<String> parentsLinkedToWR, boolean wait,
-	    List<String> cmdLineOptions) {
+    private ReturnValue scheduleWorkflow(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, String scheduledHost) {
 
 	// keep this id handy
 	int workflowRunId = 0;
@@ -712,8 +733,8 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
 	    this.metadata.update_workflow_run(workflowRunId, wi.getCommand(),
 		    wi.getTemplatePath(), "submitted", null,
-		    wi.getWorkflowDir(), null, mapBuffer.toString(), null, 0,
-		    0, null, null);
+		    wi.getWorkflowDir(), null, mapBuffer.toString(), scheduledHost, 0,
+		    0, null, null, null);
 
 	} else {
 	    Log.error("you can't schedule a workflow run unless you have metadata writeback turned on.");
@@ -740,8 +761,11 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 	wi.setConfigPath(m.get("base_ini_file"));
 	wi.setWorkflowDir(m.get("current_working_dir"));
 	wi.setTemplatePath(m.get("workflow_template"));
-	wi.setWorkflowAccession(Integer.parseInt(m.get("workflow_accession")));
+        wi.setWorkflowAccession(Integer.parseInt(m.get("workflow_accession")));
 	wi.setPermBundleLocation(m.get("permanent_bundle_location"));
+        wi.setWorkflowClass(m.get("workflow_class"));
+        wi.setWorkflowEngine(m.get("workflow_engine"));
+        wi.setWorkflowType(m.get("workflow_type"));
 	return (wi);
     }
 
@@ -800,7 +824,6 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 		    newWorkflowBundleDir));
 	    wi.setTemplatePath(replaceWBD(wi.getTemplatePath(),
 		    newWorkflowBundleDir));
-
 	}
 
 	return (ret);
@@ -834,7 +857,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * @param map
      * @return
      */
-    private ArrayList<String> parseParentAccessions(Map<String, String> map) {
+    public static ArrayList<String> parseParentAccessions(Map<String, String> map) {
 	ArrayList<String> results = new ArrayList<String>();
 	HashMap<String, String> resultsDeDup = new HashMap<String, String>();
 
@@ -845,10 +868,18 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 		resultsDeDup.put(map.get(key), "null");
 	    }
 	}
-
+        
 	for (String accession : resultsDeDup.keySet()) {
 	    results.add(accession);
 	}
+        
+        // for hotfix 0.13.6.3 
+        // GATK reveals an issue where parent_accession is setup with a correct list of accessions while parent-accessions and parent_accessions are set to 0
+        // when the three are mushed together, the rogue zero is transferred to parent_accession and causes it to crash the workflow
+        // I'm going to allow a single 0 in case (god forbid) some workflow relies upon this, but otherwise a 0 should not occur in a list of valid parent_accessions
+        if (results.contains("0") && results.size() > 1){
+            results.remove("0");
+        }
 
 	return (results);
     }

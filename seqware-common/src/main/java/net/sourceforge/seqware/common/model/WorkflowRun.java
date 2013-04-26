@@ -21,6 +21,7 @@ import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.adapters.XmlizeXML;
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
+import org.apache.commons.dbutils.DbUtils;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -62,7 +63,7 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
   private SortedSet<WorkflowRunParam> workflowRunParams;
   private String html;
   private Boolean isHasFile = false;
-  // addition fileds
+  // additional fields
   private String status;
   private String statusCmd;
   private String seqwareRevision;
@@ -76,6 +77,13 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
   private String stdErr;
   private String stdOut;
   private Set<WorkflowRunAttribute> workflowRunAttributes = new TreeSet<WorkflowRunAttribute>();
+  private String workflowEngine;
+  
+  // artificial fields for SEQWARE-1134, we will need to populate these artificially
+  // this is an ugly hack, need to get a better solution 
+  private Integer workflowAccession;
+  private String ownerUserName;
+  
   /**
    * <p>Constructor for WorkflowRun.</p>
    */
@@ -201,6 +209,9 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
    */
   public void setWorkflow(Workflow workflow) {
     this.workflow = workflow;
+    if (workflow != null && workflow.getSwAccession() != null){
+        this.setWorkflowAccession(workflow.getSwAccession());
+    }
   }
 
   /**
@@ -300,6 +311,9 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
    */
   public void setOwner(Registration owner) {
     this.owner = owner;
+    if (owner != null && owner.getEmailAddress() != null){
+        this.setOwnerUserName(owner.getEmailAddress());
+    }
   }
 
   /**
@@ -789,8 +803,9 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
    */
   public static WorkflowRun cloneFromDB(int wrId) throws SQLException {
     WorkflowRun wr = null;
+    ResultSet rs = null;
     try {
-      ResultSet rs = DBAccess.get().executeQuery("SELECT * FROM workflow_run WHERE workflow_run_id=" + wrId);
+      rs = DBAccess.get().executeQuery("SELECT * FROM workflow_run WHERE workflow_run_id=" + wrId);
       if (rs.next()) {
         wr = new WorkflowRun();
         wr.setWorkflowRunId(rs.getInt("workflow_run_id"));
@@ -812,10 +827,12 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
         wr.setStdOut(rs.getString("stdout"));
 
         // owner
+        
         // workflowid
 
       }
     } finally {
+      DbUtils.closeQuietly(rs);
       DBAccess.close();
     }
     return wr;
@@ -871,5 +888,31 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
   public void setWorkflowRunAttributes(Set<WorkflowRunAttribute> workflowRunAttributes) {
     this.workflowRunAttributes = workflowRunAttributes;
   }
+
+    public String getWorkflowEngine() {
+        return workflowEngine;
+    }
+
+    public void setWorkflowEngine(String workflowEngine) {
+        this.workflowEngine = workflowEngine;
+    }
+
+    public Integer getWorkflowAccession() {
+        return workflowAccession;
+    }
+
+    public void setWorkflowAccession(Integer workflowAccession) {
+        this.workflowAccession = workflowAccession;
+    }
+
+    public String getOwnerUserName() {
+        return ownerUserName;
+    }
+
+    public void setOwnerUserName(String ownerUserName) {
+        this.ownerUserName = ownerUserName;
+    }
+  
+    
 
 }

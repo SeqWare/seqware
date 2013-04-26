@@ -16,6 +16,7 @@
  */
 package com.github.seqware.queryengine.impl;
 
+import com.github.seqware.queryengine.backInterfaces.SerializationInterface;
 import com.github.seqware.queryengine.impl.protobufIO.*;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.model.impl.AtomImpl;
@@ -33,8 +34,8 @@ import org.apache.hadoop.hbase.util.Bytes;
  */
 public class ProtobufSerialization implements SerializationInterface {
 
-    protected BiMap<Class, ProtobufTransferInterface> biMap = new ImmutableBiMap.Builder<Class, ProtobufTransferInterface>().put(FeatureList.class, new FeatureListIO())
-            .put(FeatureSet.class, new FeatureSetIO()).put(Analysis.class, new AnalysisIO()).put(AnalysisSet.class, new AnalysisSetIO())
+    public final static BiMap<Class, ProtobufTransferInterface> biMap = new ImmutableBiMap.Builder<Class, ProtobufTransferInterface>().put(FeatureList.class, new FeatureListIO())
+            .put(FeatureSet.class, new FeatureSetIO()).put(PluginRun.class, new PluginRunIO()).put(Plugin.class, new PluginIO())
             .put(Reference.class, new ReferenceIO()).put(ReferenceSet.class, new ReferenceSetIO()).put(Tag.class, new TagIO())
             .put(TagSet.class, new TagSetIO()).put(User.class, new UserIO()).put(Group.class, new GroupIO())
             .build();

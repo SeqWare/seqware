@@ -14,12 +14,12 @@ import net.sourceforge.seqware.queryengine.webservice.view.WorkflowRunStatusReso
 import net.sourceforge.seqware.webservice.resources.SeqwareAccessionIDResource;
 import net.sourceforge.seqware.webservice.resources.SeqwareAccessionResource;
 import net.sourceforge.seqware.webservice.resources.filters.ExperimentIDFilter;
-import net.sourceforge.seqware.webservice.resources.filters.StudyIDFilter;
 import net.sourceforge.seqware.webservice.resources.filters.WorkflowRunIDsFilter;
 import net.sourceforge.seqware.webservice.resources.filters.WorkflowRunsFilter;
 import net.sourceforge.seqware.webservice.resources.queries.CycleCheckResource;
 import net.sourceforge.seqware.webservice.resources.queries.ProcessIdProcessResource;
 import net.sourceforge.seqware.webservice.resources.queries.RunWorkflowResource;
+import net.sourceforge.seqware.webservice.resources.queries.SampleHierarchyResource;
 import net.sourceforge.seqware.webservice.resources.queries.SampleIdFilesResource;
 import net.sourceforge.seqware.webservice.resources.queries.SequencerRunIdFilesResource;
 import net.sourceforge.seqware.webservice.resources.queries.SequencerRunReportResource;
@@ -85,6 +85,8 @@ import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
 
 import freemarker.template.Configuration;
+import net.sourceforge.seqware.webservice.resources.tables.FileChildWorkflowRunsResource;
+import net.sourceforge.seqware.webservice.resources.filters.*;
 import net.sourceforge.seqware.webservice.resources.tables.LibrarySelectionResource;
 import net.sourceforge.seqware.webservice.resources.tables.LibrarySourceResource;
 import net.sourceforge.seqware.webservice.resources.tables.LibraryStrategyResource;
@@ -161,7 +163,7 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/experiments", ExperimentResource.class);
         router.attach("/experiments/", slashRedirect);
         router.attach("/experiments/{experimentId}", ExperimentIDResource.class);
-        router.attach("/experiments/{experimentId}/samples", ExperimentIDFilter.class);
+        router.attach("/experiments/{experimentId}/samples", SampleIDFilter.class);
 //        router.attach("/experiments/{ID}/processes", Resource.class);
 //        router.attach("/experiments/{ID}/processes/{ID}", Resource.class);
 //
@@ -194,6 +196,7 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/ius", IusResource.class);
         router.attach("/ius/", slashRedirect);
         router.attach("/ius/{iusId}", IusIDResource.class);
+        router.attach("/ius/{iusId}/lane", LaneIDFilter.class);
         
         router.attach("/iussearch", IusSearchServerResource.class);
         router.attach("/ius/{id}/files", IusFilesServerResource.class);
@@ -201,6 +204,7 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/lanes", LaneResource.class);
         router.attach("/lanes/", slashRedirect);
         router.attach("/lanes/{laneId}", LaneIDResource.class);
+        router.attach("/lanes/{laneId}/ius", IUSIDFilter.class);
 //        router.attach("/lanes/{ID}/processes", Resource.class);
 //        router.attach("/lanes/{ID}/processes/{ID}", Resource.class);
 //
@@ -216,6 +220,9 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/samples", SampleResource.class);
         router.attach("/samples/", slashRedirect);
         router.attach("/samples/{sampleId}", SampleIDResource.class);
+        router.attach("/samples/{parentId}/children", SampleIDFilter.class);
+        router.attach("/samples/{childId}/parents", SampleIDFilter.class);
+        router.attach("/samples/{sampleId}/ius", IUSIDFilter.class);
         router.attach("/samples/root", RootSampleResource.class);
         router.attach("/samples/root/", slashRedirect);
 //        router.attach("/samples/{ID}/processes", Resource.class);
@@ -224,6 +231,7 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/sequencerruns", SequencerRunResource.class);
         router.attach("/sequencerruns/", slashRedirect);
         router.attach("/sequencerruns/{sequencerRunId}", SequencerRunIDResource.class);
+        router.attach("/sequencerruns/{sequencerRunId}/lanes", LaneIDFilter.class);
 //        router.attach("/sequencer_runs/{ID}/lanes", Resource.class);
 //        router.attach("/sequencer_runs/{ID}/lanes/{ID}", Resource.class);
 //        router.attach("/sequencer_runs/{ID}/processes/", Resource.class);
@@ -232,7 +240,7 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/studies", StudyResource.class);
         router.attach("/studies/", slashRedirect);
         router.attach("/studies/{studyId}", StudyIDResource.class);
-        router.attach("/studies/{studyId}/experiments", StudyIDFilter.class);
+        router.attach("/studies/{studyId}/experiments", ExperimentIDFilter.class);
 
         router.attach("/x/library", LibraryResource.class);
         router.attach("/x/library/{swa}", LibraryResource.class);
@@ -294,6 +302,10 @@ public class SeqWareWebServiceApplication extends WadlApplication {
 
         // A report giving runtime info for workflows
         router.attach("/reports/workflowruntimes", new WorkflowRuntimeResource(getContext()));
+        
+        // A report giving workflow runs that are relevant for a group of files
+        router.attach("/reports/fileworkflowruns", FileChildWorkflowRunsResource.class);
+        router.attach("/reports/fileworkflowruns/", slashRedirect);
 
         // REPORT RESOURCES
         
@@ -334,6 +346,7 @@ public class SeqWareWebServiceApplication extends WadlApplication {
 
 
         router.attach("/processingstructure",new ProcessingStructureResource(getContext()));
+        router.attach("/sample/parents",new SampleHierarchyResource(getContext()));
         guard.setNext(router);
         return guard;
 

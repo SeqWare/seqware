@@ -41,13 +41,12 @@ public class LibrarySource implements Serializable, Comparable<LibrarySource> {
 		return(that.getName().compareTo(this.getName()));
 	}
 
-    /** {@inheritDoc} */
     @Override
-	public String toString() {
-		return new ToStringBuilder(this)
-			.append("librarySourceId", getLibrarySourceId())
-			.toString();
-	}
+    public String toString() {
+        return "LibrarySource{" + "librarySourceId=" + librarySourceId + ", name=" + name + ", description=" + description + '}';
+    }
+
+
 
     /** {@inheritDoc} */
     @Override

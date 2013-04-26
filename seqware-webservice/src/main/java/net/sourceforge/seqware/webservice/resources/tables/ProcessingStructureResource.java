@@ -2,10 +2,13 @@ package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,12 +17,12 @@ import java.util.Set;
 import net.sourceforge.seqware.common.business.ProcessingRelationshipService;
 import net.sourceforge.seqware.common.business.ProcessingService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
+import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingRelationship;
-import net.sourceforge.seqware.queryengine.webservice.model.MetadataDB;
-import net.sourceforge.seqware.queryengine.webservice.util.EnvUtil;
 
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -29,11 +32,8 @@ import org.restlet.Response;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
-import org.restlet.representation.FileRepresentation;
 import org.restlet.representation.OutputRepresentation;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
+
 
 public class ProcessingStructureResource extends BasicRestlet {
 	
@@ -64,13 +64,16 @@ public class ProcessingStructureResource extends BasicRestlet {
                 return;               
             }
         }
-        ProcessingService ps = BeanFactory.getProcessingServiceBean();
-        ProcessingRelationshipService prs = BeanFactory.getProcessingRelationshipServiceBean();
         
         final StringBuffer sb = new StringBuffer();
         sb.append("digraph dag {\n");
         for(int i: accessionList) {
-            DotNode root = this.buildDotTree(prs, ps, i);
+            DotNode root = null;
+			try {
+				root = this.buildDotTree(i);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
             if(root == null) {
                 response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST, "Invalid swAccession");
                 return;                   
@@ -97,6 +100,74 @@ public class ProcessingStructureResource extends BasicRestlet {
     }
     
     
+	private DotNode buildDotTree( int parentAccession) throws SQLException {
+		
+		String sql0 = "select processing_id, algorithm, sw_accession from processing where sw_accession = " + parentAccession;
+                ResultSet rs0 = null;
+                DotNode root = null;
+                try{
+		rs0 = DBAccess.get().executeQuery(sql0);
+		if(!rs0.next())
+			return null;
+		
+		root = new DotNode(rs0.getInt("processing_id"));
+		root.setAlgo(rs0.getString("algorithm"));
+		root.setSWAccessionId(rs0.getInt("sw_accession"));
+                } finally{
+                    DBAccess.close();
+                    DbUtils.closeQuietly(rs0);
+                }
+		
+		String sql = "select a.child_id, b.algorithm, b.sw_accession from processing_relationship a, processing b " +
+				"where a.child_id = b.processing_id and a.parent_id = " + root.getProcessingId();   
+                ResultSet rs = null;
+                List<DotNode> children = new ArrayList<DotNode>();
+		try{
+                rs = DBAccess.get().executeQuery(sql);
+		//to avoid recursively open resultset, store them in array first, then close rs
+		while(rs.next()) {
+			DotNode c = new DotNode(rs.getInt("child_id"));
+			c.setAlgo(rs.getString("algorithm"));
+			c.setSWAccessionId(rs.getInt("sw_accession"));
+			children.add(c);
+		}
+                } finally{
+                    DbUtils.closeQuietly(rs);
+                    DBAccess.close();
+                }	
+		for(DotNode c: children) {
+			root.addChild(c);
+			this.addSubNodes(c);
+		}
+		return root;
+	}
+	
+	private void addSubNodes(DotNode parent) throws SQLException {
+		String sql = "select a.child_id, b.algorithm, b.sw_accession from processing_relationship a, processing b " +
+				"where a.child_id = b.processing_id and a.parent_id = " + parent.getProcessingId();  
+                ResultSet rs = null;
+                List<DotNode> children = new ArrayList<DotNode>();
+                try{
+		rs = DBAccess.get().executeQuery(sql);
+		//to avoid recursively open resultset, store them in array first, then close rs		
+		while(rs.next()) {
+			DotNode c = new DotNode(rs.getInt("child_id"));
+			c.setAlgo(rs.getString("algorithm"));
+			c.setSWAccessionId(rs.getInt("sw_accession"));
+			children.add(c);
+		}
+                } finally{
+                    DbUtils.closeQuietly(rs);
+                    DBAccess.close();
+                }	
+		for(DotNode c: children) {
+			parent.addChild(c);
+			this.addSubNodes(c);
+		}		
+	}
+	
+
+    
     	private void visitNode(DotNode node, StringBuffer fw, Collection<String> all)  {
 		for(DotNode child: node.getChildren()) {
 			String w = node.toString() + "  ->  " + child.toString();
@@ -108,38 +179,6 @@ public class ProcessingStructureResource extends BasicRestlet {
 		}
 	}
     
-        private DotNode buildDotTree(ProcessingRelationshipService prs, ProcessingService ps, int swAccession) {
-            Processing p = ps.findBySWAccession(swAccession);
-            if(p == null) {
-                return null;
-            }
-            DotNode node0 = new DotNode(p.getProcessingId());
-            node0.setAlgo(p.getAlgorithm());
-            node0.setSWAccessionId(p.getSwAccession());
-            //build sub node
-            List<ProcessingRelationship> subrelations = prs.listByParentProcessingId(p.getProcessingId());
-            for(ProcessingRelationship subprs: subrelations) {
-                Processing subp = subprs.getProcessingByChildId();
-                DotNode subNode = new DotNode(subp.getProcessingId());
-                subNode.setAlgo(subp.getAlgorithm());
-                subNode.setSWAccessionId(subp.getSwAccession());
-                this.addSubNode(prs, subNode);
-                node0.addChild(subNode);
-            }
-            return node0;
-        }
-        
-        private void addSubNode(ProcessingRelationshipService prs, DotNode parent) {
-            List<ProcessingRelationship> res = prs.listByParentProcessingId(parent.getProcessingId());
-            for(ProcessingRelationship pr: res) {
-                Processing p = pr.getProcessingByChildId();
-                DotNode subNode = new DotNode(p.getProcessingId());
-                subNode.setAlgo(p.getAlgorithm());
-                subNode.setSWAccessionId(p.getSwAccession());
-                parent.addChild(subNode);
-                this.addSubNode(prs, subNode);
-            }
-        }
 
     	class DotNode {
 		private List<DotNode> children;
@@ -159,7 +198,7 @@ public class ProcessingStructureResource extends BasicRestlet {
 		
 		@Override
 		public String toString() {
-			return this.algo + "-" + this.swAccessionId;
+			return this.algo + "__" + this.swAccessionId;
 		}
 		
 		public List<DotNode> getChildren() {

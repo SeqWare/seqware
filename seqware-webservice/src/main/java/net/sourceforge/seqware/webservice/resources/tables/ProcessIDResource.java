@@ -17,8 +17,10 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -34,6 +36,8 @@ import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.factory.DBAccess;
+import net.sourceforge.seqware.common.metadata.Metadata;
+import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.IUS;
@@ -48,6 +52,7 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import org.apache.commons.dbutils.DbUtils;
 
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
@@ -304,7 +309,8 @@ public class ProcessIDResource extends DatabaseIDResource {
                 }
 
 				if (p.getProcessingAttributes() !=null && !p.getProcessingAttributes().isEmpty()) {
-					processing.getProcessingAttributes().clear();
+//SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+//					processing.getProcessingAttributes().clear();
 					for(ProcessingAttribute pa: p.getProcessingAttributes()) {
 						pa.setProcessing(processing);
 						processing.getProcessingAttributes().add(pa);
@@ -341,26 +347,47 @@ public class ProcessIDResource extends DatabaseIDResource {
                 }
 
                 if (p.getWorkflowRun() != null) {
-                    ReturnValue ret = DBAccess.get().update_processing_workflow_run(
+                    MetadataDB mdb = DBAccess.get();
+                    try{
+                    ReturnValue ret = mdb.update_processing_workflow_run(
                             p.getProcessingId(),
                             p.getWorkflowRun().getSwAccession());
                     if (ret.getExitStatus() != ReturnValue.SUCCESS) {
                         throw new ResourceException(Status.SERVER_ERROR_INTERNAL,
                                 "Error in Update Processing Workflow Run with error  " + ret.getExitStatus());
                     }
+                    } finally{
+                        this.closeConnectionStatementResultSet(mdb, null);
+                        // this should be redundant
+                        DBAccess.close();
+                    }
                 }
 
                 if (p.getWorkflowRunByAncestorWorkflowRunId() != null) {
-                    DBAccess.get().add_workflow_run_ancestor(
+                    MetadataDB mdb = DBAccess.get();
+                    try{
+                    mdb.add_workflow_run_ancestor(
                             p.getWorkflowRunByAncestorWorkflowRunId().getSwAccession(),
                             p.getProcessingId());
+                    } finally{
+                        this.closeConnectionStatementResultSet(mdb, null);
+                        // this should be redundant
+                        DBAccess.close();
+                    }
 
                 }
 
 
 
                 ReturnValue newProcessing = Processing.clone(p), ret;
+                MetadataDB mdb = DBAccess.get();
+                try{
                 ret = DBAccess.get().update_processing_event(p.getProcessingId(), newProcessing);
+                } finally{
+                    this.closeConnectionStatementResultSet(mdb, null);
+                    // this should be redundant
+                    DBAccess.close();
+                }
                 if (ret.getExitStatus() != ReturnValue.SUCCESS) {
                     throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Updating the Processing failed with error " + ret.getExitStatus());
                 }
@@ -386,31 +413,50 @@ public class ProcessIDResource extends DatabaseIDResource {
     }
 
     private void addNewFiles(Processing p) throws SQLException, ResourceException {
+        Log.debug("Starting addNewFiles() with " + p.toString());
         Set<Integer> newFiles = new HashSet<Integer>();
         for (File file : p.getFiles()) {
             newFiles.add(file.getFileId());
         }
-
-        ResultSet rs = DBAccess.get().executeQuery(
-                "SELECT file_id "
+        Log.debug("Adding " + newFiles.size() + " files");
+        
+        ResultSet rs = null; 
+        MetadataDB mdb = null;
+        try{
+        
+        String query = "SELECT file_id "
                 + "FROM processing_files "
-                + "WHERE processing_id = " + p.getProcessingId());
+                + "WHERE processing_id = " + p.getProcessingId();
+        Log.debug("Executing query: " + query);
+        mdb = DBAccess.get();
+        rs = mdb.executeQuery(query);
         while (rs.next()) {
             int fileID = rs.getInt("file_id");
             newFiles.remove(fileID);
+        } 
+        } finally{
+            closeConnectionStatementResultSet(mdb, rs);
+            // should be redundant now
+            DBAccess.close();
         }
         for (int fileID : newFiles) {
+            Log.debug("Linking " + fileID + " to " + p.getSwAccession());
             DBAccess.get().linkProcessingAndFile(p.getProcessingId(), fileID);
         }
     }
 
     private void addNewIUSes(Processing p) throws SQLException, ResourceException {
+        Log.debug("Starting addNewIUS() with " + p.toString());
         Set<Integer> newIUSswa = new HashSet<Integer>();
         for (IUS ius : p.getIUS()) {
             newIUSswa.add(ius.getSwAccession());
         }
+        
+        ResultSet rs = null; 
+        MetadataDB mdb = DBAccess.get();
+        try{
 
-        ResultSet rs = DBAccess.get().executeQuery(
+        rs = mdb.executeQuery(
                 "SELECT i.sw_accession "
                 + "FROM processing_ius pi, ius i "
                 + "WHERE pi.ius_id = i.ius_id "
@@ -419,6 +465,14 @@ public class ProcessIDResource extends DatabaseIDResource {
             int swa = rs.getInt("sw_accession");
             newIUSswa.remove(swa);
         }
+        
+        } finally{
+            closeConnectionStatementResultSet(mdb, rs);
+            // should be redundant now
+            DBAccess.close();
+        }
+        
+        
         for (int swa : newIUSswa) {
             boolean toReturn = DBAccess.get().linkAccessionAndParent(swa, p.getProcessingId());
             if (!toReturn) {
@@ -428,12 +482,16 @@ public class ProcessIDResource extends DatabaseIDResource {
     }
 
     private void addNewLanes(Processing p) throws SQLException, ResourceException {
+        Log.debug("Starting addNewLanes() with " + p.toString());
         Set<Integer> newLane = new HashSet<Integer>();
         for (Lane lane : p.getLanes()) {
             newLane.add(lane.getSwAccession());
         }
 
-        ResultSet rs = DBAccess.get().executeQuery(
+        ResultSet rs = null; 
+        MetadataDB mdb = DBAccess.get();
+        try{
+        rs = mdb.executeQuery(
                 "SELECT l.sw_accession "
                 + "FROM processing_lanes pl, lane l "
                 + "WHERE pl.lane_id = l.lane_id "
@@ -442,6 +500,12 @@ public class ProcessIDResource extends DatabaseIDResource {
             int swa = rs.getInt("sw_accession");
             newLane.remove(swa);
         }
+        } finally{
+            closeConnectionStatementResultSet(mdb, rs);
+            // should be redundant now
+            DBAccess.close();
+        }
+        
         for (int laneID : newLane) {
             boolean toReturn = DBAccess.get().linkAccessionAndParent(laneID, p.getProcessingId());
             if (!toReturn) {
@@ -451,12 +515,16 @@ public class ProcessIDResource extends DatabaseIDResource {
     }
 
     private void addNewSequencerRuns(Processing p) throws SQLException, ResourceException {
+        Log.debug("Starting addNewSequencerRuns() with " + p.toString());
         Set<Integer> newObj = new HashSet<Integer>();
         for (SequencerRun obj : p.getSequencerRuns()) {
             newObj.add(obj.getSwAccession());
         }
 
-        ResultSet rs = DBAccess.get().executeQuery(
+        ResultSet rs = null; 
+        MetadataDB mdb = DBAccess.get();
+        try{
+        rs = mdb.executeQuery(
                 "SELECT o.sw_accession "
                 + "FROM processing_sequencer_runs po, sequencer_run o "
                 + "WHERE po.sequencer_run_id = o.sequencer_run_id "
@@ -464,7 +532,14 @@ public class ProcessIDResource extends DatabaseIDResource {
         while (rs.next()) {
             int swa = rs.getInt("sw_accession");
             newObj.remove(swa);
+        }      
+        } finally{
+            closeConnectionStatementResultSet(mdb, rs);
+            // should be redundant now
+            DBAccess.close();
         }
+        
+        
         for (int objID : newObj) {
             boolean toReturn = DBAccess.get().linkAccessionAndParent(objID, p.getProcessingId());
             if (!toReturn) {
@@ -474,12 +549,16 @@ public class ProcessIDResource extends DatabaseIDResource {
     }
 
     private void addNewStudies(Processing p) throws SQLException, ResourceException {
+        Log.debug("Starting addNewStudies() with " + p.toString());
         Set<Integer> newObj = new HashSet<Integer>();
         for (Study obj : p.getStudies()) {
             newObj.add(obj.getSwAccession());
         }
 
-        ResultSet rs = DBAccess.get().executeQuery(
+        ResultSet rs = null;
+        MetadataDB mdb = DBAccess.get();
+        try{
+        rs = mdb.executeQuery(
                 "SELECT o.sw_accession "
                 + "FROM processing_studies po, study o "
                 + "WHERE po.study_id = o.study_id "
@@ -487,7 +566,13 @@ public class ProcessIDResource extends DatabaseIDResource {
         while (rs.next()) {
             int swa = rs.getInt("sw_accession");
             newObj.remove(swa);
+        }  
+        } finally{
+            closeConnectionStatementResultSet(mdb, rs);
+            // should be redundant now
+            DBAccess.close();
         }
+        
         for (int objID : newObj) {
             boolean toReturn = DBAccess.get().linkAccessionAndParent(objID, p.getProcessingId());
             if (!toReturn) {
@@ -497,12 +582,16 @@ public class ProcessIDResource extends DatabaseIDResource {
     }
 
     private void addNewExperiments(Processing p) throws SQLException, ResourceException {
+        Log.debug("Starting addNewExperiments() with " + p.toString());
         Set<Integer> newObj = new HashSet<Integer>();
         for (Experiment obj : p.getExperiments()) {
             newObj.add(obj.getSwAccession());
         }
 
-        ResultSet rs = DBAccess.get().executeQuery(
+        ResultSet rs = null; 
+        MetadataDB mdb = DBAccess.get();
+        try{
+        rs = mdb.executeQuery(
                 "SELECT o.sw_accession "
                 + "FROM processing_experiments po, experiment o "
                 + "WHERE po.experiment_id = o.experiment_id "
@@ -510,7 +599,13 @@ public class ProcessIDResource extends DatabaseIDResource {
         while (rs.next()) {
             int swa = rs.getInt("sw_accession");
             newObj.remove(swa);
+        }               
+        } finally{
+            closeConnectionStatementResultSet(mdb, rs);
+            // should be redundant now
+            DBAccess.close();
         }
+        
         for (int objID : newObj) {
             boolean toReturn = DBAccess.get().linkAccessionAndParent(objID, p.getProcessingId());
             if (!toReturn) {
@@ -520,12 +615,16 @@ public class ProcessIDResource extends DatabaseIDResource {
     }
 
     private void addNewSamples(Processing p) throws SQLException, ResourceException {
+        Log.debug("Starting addNewSamples() with " + p.toString());
         Set<Integer> newObj = new HashSet<Integer>();
         for (Sample obj : p.getSamples()) {
             newObj.add(obj.getSwAccession());
         }
 
-        ResultSet rs = DBAccess.get().executeQuery(
+        ResultSet rs = null; 
+        MetadataDB mdb = DBAccess.get();
+        try{
+        rs = DBAccess.get().executeQuery(
                 "SELECT o.sw_accession "
                 + "FROM processing_samples po, sample o "
                 + "WHERE po.sample_id = o.sample_id "
@@ -533,7 +632,13 @@ public class ProcessIDResource extends DatabaseIDResource {
         while (rs.next()) {
             int swa = rs.getInt("sw_accession");
             newObj.remove(swa);
+        }              
+        } finally{
+            closeConnectionStatementResultSet(mdb, rs);
+            // should be redundant now
+            DBAccess.close();
         }
+        
         for (int objID : newObj) {
             boolean toReturn = DBAccess.get().linkAccessionAndParent(objID, p.getProcessingId());
             if (!toReturn) {
@@ -543,6 +648,7 @@ public class ProcessIDResource extends DatabaseIDResource {
     }
 
     private void addNewRelationships(Processing p) throws SQLException {
+        Log.debug("Starting addNewRelationships() with " + p.toString());
         Set<Processing> children = p.getChildren();
         Set<Processing> parents = p.getParents();
 
@@ -552,7 +658,10 @@ public class ProcessIDResource extends DatabaseIDResource {
             newParents.add(pr.getProcessingId());
         }
 
-        ResultSet rs = DBAccess.get().executeQuery(
+        ResultSet rs = null; 
+        MetadataDB mdb = DBAccess.get();
+        try{
+        rs = mdb.executeQuery(
                 "SELECT parent_id "
                 + "FROM processing_relationship "
                 + "WHERE child_id = " + p.getProcessingId());
@@ -561,6 +670,12 @@ public class ProcessIDResource extends DatabaseIDResource {
             int parent = rs.getInt("parent_id");
             newParents.remove(parent);
         }
+              
+        } finally{
+            closeConnectionStatementResultSet(mdb, rs);
+            // should be redundant now
+            DBAccess.close();
+        }
 
 //children
         Set<Integer> newChildren = new HashSet<Integer>();
@@ -568,7 +683,9 @@ public class ProcessIDResource extends DatabaseIDResource {
             newChildren.add(pr.getProcessingId());
         }
 
-        rs = DBAccess.get().executeQuery(
+        mdb = DBAccess.get();
+        try{
+        rs = mdb.executeQuery(
                 "SELECT child_id "
                 + "FROM processing_relationship "
                 + "WHERE parent_id = " + p.getProcessingId());
@@ -576,6 +693,11 @@ public class ProcessIDResource extends DatabaseIDResource {
         while (rs.next()) {
             int child = rs.getInt("child_id");
             newParents.remove(child);
+        }          
+        } finally{
+            closeConnectionStatementResultSet(mdb, rs);
+            // should be redundant now
+            DBAccess.close();
         }
 
         //make simple arrays
@@ -594,11 +716,25 @@ public class ProcessIDResource extends DatabaseIDResource {
         }
 
         //finally do something about it
-        ReturnValue ret = DBAccess.get().associate_processing_event_with_parents_and_child(p.getProcessingId(), parentArr, childArr);
-        if (ret.getExitStatus() != ReturnValue.SUCCESS) {
-            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Failed while adding parents and children with error " + ret.getExitStatus());
-        }
+        mdb = DBAccess.get();
+        try{
+            ReturnValue ret = mdb.associate_processing_event_with_parents_and_child(p.getProcessingId(), parentArr, childArr);
+            if (ret.getExitStatus() != ReturnValue.SUCCESS) {
+                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Failed while adding parents and children with error " + ret.getExitStatus());
+            }
+        } finally{
+            closeConnectionStatementResultSet(mdb, rs);
+            // should be redundant now
+            DBAccess.close();
+        }  
 
+    }
 
+    private void closeConnectionStatementResultSet(MetadataDB mdb, ResultSet rs) {
+        Log.debug("Closing connection  " + Integer.toHexString(mdb.getDb().hashCode()));
+        Log.debug("Closing statement  " + Integer.toHexString(mdb.getSql().hashCode()));
+        DbUtils.closeQuietly(mdb.getDb(), mdb.getSql(), rs);
+        mdb.setDb(null);
+        mdb.setSql(null);
     }
 }

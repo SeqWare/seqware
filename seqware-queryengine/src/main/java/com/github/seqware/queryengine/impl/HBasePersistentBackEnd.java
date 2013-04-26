@@ -16,6 +16,7 @@
  */
 package com.github.seqware.queryengine.impl;
 
+import com.github.seqware.queryengine.backInterfaces.StorageInterface;
 import com.github.seqware.queryengine.model.*;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SGIDIterable;
@@ -112,10 +113,10 @@ public class HBasePersistentBackEnd extends SimplePersistentBackEnd {
 
     /** {@inheritDoc} */
     @Override
-    public SeqWareIterable<AnalysisSet> getAnalysisSets() {
+    public SeqWareIterable<Plugin> getPlugins() {
         if (storage instanceof HBaseStorage) {
-            return handleTableScan(AnalysisSet.class, AnalysisSet.prefix);
+            return handleTableScan(Plugin.class, Plugin.prefix);
         }
-        return super.getAnalysisSets();
+        return super.getPlugins();
     }
 }

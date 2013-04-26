@@ -31,6 +31,10 @@ import ch.enterag.utils.zip.EntryInputStream;
 import ch.enterag.utils.zip.EntryOutputStream;
 import ch.enterag.utils.zip.FileEntry;
 import ch.enterag.utils.zip.Zip64File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import joptsimple.OptionSet;
+import net.sourceforge.seqware.common.util.runtools.RunTools;
 
 /**
  * <p>FileTools class.</p>
@@ -132,8 +136,9 @@ public class FileTools {
     }
 
     // Start with file zero, or return error if no files available
-    if (numFiles <= 0)
+    if (numFiles <= 0) {
       return -4;
+    }
 
     // Read lines
     try {
@@ -367,7 +372,7 @@ public class FileTools {
    * @return a boolean.
    */
   public static boolean zipDirectoryRecursive(File path, File zipFileName, String excludeRegEx, boolean relative,
-      boolean compress) {
+          boolean compress) {
     ArrayList<File> filesToZip = new ArrayList<File>();
     if (path.exists()) {
       File[] files = path.listFiles();
@@ -449,7 +454,7 @@ public class FileTools {
    * @return a boolean.
    */
   public static boolean zipDirectoryRecursiveOld(File path, File zipFileName, String excludeRegEx, boolean relative,
-      boolean compress) {
+          boolean compress) {
     ArrayList<File> filesToZip = new ArrayList<File>();
     if (path.exists()) {
       File[] files = path.listFiles();
@@ -527,7 +532,7 @@ public class FileTools {
    * @return a boolean.
    */
   public static boolean zipListFileRecursiveOld(List<File> filesToZip, File zipFileName, String cutPrefix,
-      String excludeRegEx,/* boolean relative, */boolean compress) {
+          String excludeRegEx,/* boolean relative, */ boolean compress) {
 
     try {
       byte[] buffer = new byte[18024];
@@ -675,7 +680,6 @@ public class FileTools {
     int BUFFER = 2048;
 
     try {
-
       BufferedOutputStream dest = null;
       FileInputStream fis = new FileInputStream(path);
       ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
@@ -724,26 +728,28 @@ public class FileTools {
         }
       }
       zis.close();
-
     } catch (IOException ioe) {
       Log.stderr("Unhandled exception:");
       ioe.printStackTrace();
       return (false);
     }
-
     return (true);
   }
 
   /**
    * <p>listFilesRecursive.</p>
-   *
+
    * @param path a {@link java.io.File} object.
    * @param filesArray a {@link java.util.ArrayList} object.
    */
   public static void listFilesRecursive(File path, ArrayList<File> filesArray) {
     if (path.exists()) {
       File[] files = path.listFiles();
-      for (int i = 0; i < files.length; i++) {
+      if (files == null){
+          Log.fatal("Could not list file " + path.toString() + " you may not have read permissions, skipping it");
+          Log.stderr("Could not list file " + path.toString() + " you may not have read permissions, skipping it");
+      }
+      for (int i = 0; files!= null && i < files.length; i++) {
         if (files[i].isDirectory()) {
           FileTools.listFilesRecursive(files[i], filesArray);
         } else {
@@ -764,8 +770,9 @@ public class FileTools {
     byte[] buffer = new byte[1024];
     int len;
 
-    while ((len = in.read(buffer)) >= 0)
+    while ((len = in.read(buffer)) >= 0) {
       out.write(buffer, 0, len);
+    }
 
     in.close();
     out.close();
@@ -786,8 +793,9 @@ public class FileTools {
       String line = null;
       while ((line = freader.readLine()) != null) {
         String[] args = line.split("\t");
-        if (args.length < 2)
+        if (args.length < 2) {
           continue;
+        }
         ret.put(args[0], args[1]);
       }
       freader.close();
@@ -799,4 +807,150 @@ public class FileTools {
     return ret;
   }
 
+  /**
+   * This tool uses the 'whoami' and 'stat' commands to verify if the current
+   * users running this program is the owner for the specified file or
+   * directory.
+   *
+   * @param path
+   * @return
+   */
+  public static boolean isFileOwner(String path) {
+
+    String programRunner = null;
+
+    programRunner = FileTools.whoAmI();
+
+    ArrayList<String> theCommand = new ArrayList<String>();
+    theCommand = new ArrayList<String>();
+    theCommand.add("bash");
+    theCommand.add("-lc");
+    theCommand.add("stat " + path);
+
+    ReturnValue ret = RunTools.runCommand(theCommand.toArray(new String[0]));
+
+    if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+
+      String stdout = ret.getStdout();
+      stdout = stdout.trim();
+      boolean result = false;
+      Pattern p = Pattern.compile(".*Uid:\\s*\\(\\s*\\d*\\s*/\\s*" + programRunner + "\\s*\\).*", Pattern.DOTALL);
+      Matcher m = p.matcher(stdout);
+      if (m.find()) {
+        result = true;
+      }
+      return (result);
+    } else {
+      Log.error("Can't figure out the file ownership " + ret.getStderr());
+      return (false);
+    }
+
+  }
+
+  /**
+   * This tool uses the 'whoami' command to find the current user versus the
+   * user.name method.
+   *
+   * @param path
+   * @return
+   */
+  public static String whoAmI() {
+
+    ArrayList<String> theCommand = new ArrayList<String>();
+    theCommand.add("bash");
+    theCommand.add("-lc");
+    theCommand.add("whoami");
+
+    ReturnValue ret = RunTools.runCommand(theCommand.toArray(new String[0]));
+    if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+      String stdout = ret.getStdout();
+      stdout = stdout.trim();
+      return (stdout);
+    } else {
+      Log.error("Can't figure out the username using 'whoami' " + ret.getStderr());
+      return (null);
+    }
+  }
+  
+    /**
+   * This tool uses the 'ls -al' command to find the current file permissions.
+   *
+   * @param path
+   * @return
+   */
+  public static String determineFilePermissions(String path) {
+
+    ArrayList<String> theCommand = new ArrayList<String>();
+    theCommand.add("bash");
+    theCommand.add("-lc");
+    theCommand.add("ls -al " + path);
+
+    ReturnValue ret = RunTools.runCommand(theCommand.toArray(new String[0]));
+    if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+      String stdout = ret.getStdout();
+      stdout = stdout.substring(0, 10);
+      return (stdout);
+    } else {
+      Log.error("Can't figure out file permissions using 'ls -al' " + ret.getStderr());
+      return (null);
+    }
+  }
+  
+  public static String getFilename(String filePath) {
+    if (filePath == null || "".equals(filePath)) { return null; }
+    String[] tokens = filePath.split("/");
+    return(tokens[tokens.length-1]);
+  }
+  
+  public static String getFilePath(String filePath) {
+    if (filePath == null || "".equals(filePath)) { return null; }
+    String[] tokens = filePath.split("/");
+    StringBuilder sb = new StringBuilder();
+    for(int i=0; i<tokens.length-1; i++) {
+      sb.append(tokens[i]);
+      sb.append("/");
+    }
+    // is this reasonable for a default return?
+    return(sb.toString());
+  }
+  
+  /**
+   * Get the localhost and a return value describing the failure condition
+   * if we are unable to get the localhost
+   * @param options
+   * @return 
+   */
+  public static LocalhostPair getLocalhost(OptionSet options) {
+        String hostname = null;
+        ReturnValue returnValue = null;
+        // find the hostname or use --force-host
+        if (options.has("force-host") && options.valueOf("force-host") != null) {
+            hostname = (String) options.valueOf("force-host");
+        } else {
+            ArrayList<String> theCommand = new ArrayList<String>();
+            theCommand.add("bash");
+            theCommand.add("-lc");
+            theCommand.add("hostname --long");
+            returnValue = RunTools.runCommand(theCommand.toArray(new String[0]));
+            if (returnValue.getExitStatus() == ReturnValue.SUCCESS) {
+                String stdout = returnValue.getStdout();
+                stdout = stdout.trim();
+                hostname = stdout;
+            } else {
+                Log.error("Can't figure out the hostname using 'hostname --long' " + returnValue.getStdout());
+                return new LocalhostPair(hostname, returnValue);
+            }
+        }
+        return new LocalhostPair(hostname, returnValue);
+    }
+    
+    public static class LocalhostPair {
+        public final String hostname;
+        public final ReturnValue returnValue;
+        
+        public LocalhostPair(String hostname, ReturnValue returnValue){
+            this.hostname = hostname;
+            this.returnValue = returnValue;
+        }
+    }
 }

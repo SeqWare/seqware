@@ -36,9 +36,15 @@ public class Workflow implements Serializable, Comparable<Workflow>, Permissions
   private String cwd;
   private String command;
   private String template;
+  /**
+   * @deprecated this does not seem to be in use and probably should not be
+   */
   private String host;
   private String username;
   private String permanentBundleLocation;
+  private String workflowClass;
+  private String workflowType;
+  private String workflowEngine;
 
   private Date createTimestamp;
   private Date updateTimestamp;
@@ -318,7 +324,7 @@ public class Workflow implements Serializable, Comparable<Workflow>, Permissions
 
   /**
    * <p>Getter for the field <code>host</code>.</p>
-   *
+   * @deprecated 
    * @return a {@link java.lang.String} object.
    */
   public String getHost() {
@@ -327,7 +333,7 @@ public class Workflow implements Serializable, Comparable<Workflow>, Permissions
 
   /**
    * <p>Setter for the field <code>host</code>.</p>
-   *
+   * @deprecated 
    * @param host a {@link java.lang.String} object.
    */
   public void setHost(String host) {
@@ -636,6 +642,30 @@ public class Workflow implements Serializable, Comparable<Workflow>, Permissions
   public String getPermanentBundleLocation() {
     return permanentBundleLocation;
   }
+
+    public String getWorkflowClass() {
+        return workflowClass;
+    }
+
+    public void setWorkflowClass(String workflowClass) {
+        this.workflowClass = workflowClass;
+    }
+
+    public String getWorkflowType() {
+        return workflowType;
+    }
+
+    public void setWorkflowType(String workflowType) {
+        this.workflowType = workflowType;
+    }
+
+    public String getWorkflowEngine() {
+        return workflowEngine;
+    }
+
+    public void setWorkflowEngine(String workflowEngine) {
+        this.workflowEngine = workflowEngine;
+    }
 
   /**
    * <p>Setter for the field <code>permanentBundleLocation</code>.</p>

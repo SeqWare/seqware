@@ -1,7 +1,7 @@
 package com.github.seqware.queryengine.model;
 
 import com.github.seqware.queryengine.kernel.RPNStack;
-import com.github.seqware.queryengine.plugins.AnalysisPluginInterface;
+import com.github.seqware.queryengine.plugins.PluginInterface;
 import com.github.seqware.queryengine.util.SGID;
 import com.github.seqware.queryengine.util.SeqWareIterable;
 import java.util.List;
@@ -152,26 +152,34 @@ public interface QueryInterface {
      * @return something iterable that that iterates through all Tags
      */
     public SeqWareIterable<Tag> getTags();
+    
+    //  ANALYSIS
+    /**
+     * <p>getPluginRuns.</p>
+     *
+     * @return something iterable that iterates through all PluginRuns
+     */
+    public SeqWareIterable<PluginRun> getPluginRuns();
 
 //    // ANALYSIS SET
     /**
-     * <p>getAnalysisSets.</p>
+     * <p>getPlugins.</p>
      *
-     * @return something iterable that iterates through all AnalysisSets
+     * @return something iterable that iterates through all Plugins
      */
-    public SeqWareIterable<AnalysisSet> getAnalysisSets();
-//    public void addAnalysisSet(AnalysisSet newAnalysisSet);
-//    public void updateAnalysisSet(AnalysisSet AnalysisSet);
-//    public void setAnalysisSetACL(ACL acl, AnalysisSet analysisSet);
+    public SeqWareIterable<Plugin> getPlugins();
+//    public void addAnalysisSet(Plugin newAnalysisSet);
+//    public void updateAnalysisSet(Plugin Plugin);
+//    public void setAnalysisSetACL(ACL acl, Plugin analysisSet);
 //
 //    // ANALYSIS PLUGIN METHODS
 
     /**
-     * <p>getAnalysisPlugins.</p>
+     * <p>getPluginInterfaces.</p>
      *
      * @return something iterable through all AnalysisPlugins
      */
-    public SeqWareIterable<AnalysisPluginInterface> getAnalysisPlugins();
+    public SeqWareIterable<PluginInterface> getPluginInterfaces();
 //    public void addAnalysisPlugin(AnalysisPlugin plugin);
 //    public void updateAnalysisPlugin(AnalysisPlugin plugin);
 //    public void setAnalysisPluginACL(ACL acl, AnalysisPlugin analysisPlugin);
@@ -205,9 +213,9 @@ public interface QueryInterface {
     /**
      * Install a plug-in so that it can be listed
      *
-     * @param plugin a {@link com.github.seqware.queryengine.plugins.AnalysisPluginInterface} object.
+     * @param plugin a {@link com.github.seqware.queryengine.plugins.PluginInterface} object.
      */
-    public void installAnalysisPlugin(AnalysisPluginInterface plugin);
+    public void installPlugin(PluginInterface plugin);
     
     /**
      * Call an arbitrary installed plug-in by class and initiate it
@@ -219,7 +227,7 @@ public interface QueryInterface {
      * @param set a {@link com.github.seqware.queryengine.model.FeatureSet} object.
      * @param <ReturnValue> a ReturnValue object.
      */
-    public <ReturnValue> QueryFuture<ReturnValue> getFeaturesByPlugin(int hours, Class<? extends AnalysisPluginInterface> pluginClass,  FeatureSet set, Object ... parameters);
+    public <ReturnValue> QueryFuture<ReturnValue> getFeaturesByPlugin(int hours, Class<? extends PluginInterface> pluginClass,  FeatureSet set, Object ... parameters);
 
     /**
      * Filter features by a range of attributes.
