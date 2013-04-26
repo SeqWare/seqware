@@ -46,7 +46,20 @@ public class Metadata extends Plugin {
 
     ReturnValue ret = new ReturnValue();
     BufferedWriter bw = null;
-    HashMap<String, String> fields = new HashMap<String, String>();
+    /**
+     * Generic HashMap is extended here to not add keys when they are null.
+     */
+    HashMap<String, String> fields = new HashMap<String, String>() {
+
+        @Override
+        public String put(String key, String value) {
+            if (value != null) {
+                return super.put(key, value);
+            } else {
+                return null;
+            }
+        }
+    };
     protected boolean interactive = false;
 
     /**
@@ -179,7 +192,7 @@ public class Metadata extends Plugin {
             }
             print("]\n");
         } else if ("sequencer_run".equals(table)) {
-            print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\npaired_end\tBoolean\t[true, false]\nskip\tBoolean\t[true, false]\nplatform_accession\tInteger\t[");
+            print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\npaired_end\tBoolean\t[true, false]\nskip\tBoolean\t[true, false]\nfile_path\tString\nplatform_accession\tInteger\t[");
             List<Platform> platforms = this.metadata.getPlatforms();
             for (Platform obj : platforms) {
                 print(obj.getPlatformId() + ": " + obj.getName() + " " + obj.getInstrumentModel() + ", ");
@@ -234,7 +247,8 @@ public class Metadata extends Plugin {
                     Integer.parseInt(fields.get("study_type")));
             print("SWID: " + ret.getAttribute("sw_accession"));
         } else {
-            Log.error("You need to supply title, description, accession, center_name, and center_project_name for the study table along with an integer for study_type [1: Whole Genome Sequencing, 2: Metagenomics, 3: Transcriptome Analysis, 4: Resequencing, 5: Epigenetics, 6: Synthetic Genomics, 7: Forensic or Paleo-genomics, 8: Gene Regulation Study, 9: Cancer Genomics, 10: Population Genomics, 11: Other]. Alternatively, enable --interactive mode.");
+            printErrorMessage(necessaryFields, null);
+            //Log.error("You need to supply title, description, accession, center_name, and center_project_name for the study table along with an integer for study_type [1: Whole Genome Sequencing, 2: Metagenomics, 3: Transcriptome Analysis, 4: Resequencing, 5: Epigenetics, 6: Synthetic Genomics, 7: Forensic or Paleo-genomics, 8: Gene Regulation Study, 9: Cancer Genomics, 10: Population Genomics, 11: Other]. Alternatively, enable --interactive mode.");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
         return (ret);
@@ -257,7 +271,8 @@ public class Metadata extends Plugin {
             print("SWID: " + ret.getAttribute("sw_accession"));
 
         } else {
-            Log.error("You need to supply study_accession (reported if you create a study using this tool), title, and description for the experiment table along with an integer for platform_id [9: Illumina Genome Analyzer II, 20: Illumina HiSeq 2000, 26: Illumina MiSeq]. Alternatively, enable --interactive mode.");
+            printErrorMessage(necessaryFields, null);
+            //Log.error("You need to supply study_accession (reported if you create a study using this tool), title, and description for the experiment table along with an integer for platform_id [9: Illumina Genome Analyzer II, 20: Illumina HiSeq 2000, 26: Illumina MiSeq]. Alternatively, enable --interactive mode.");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
         return (ret);
@@ -269,6 +284,7 @@ public class Metadata extends Plugin {
      */
     protected ReturnValue addSample() {
         String[] necessaryFields = {"organism_id", "title", "description"};
+        String[] optionalFields = {"experiment_accession", "parent_sample_accession"};
         // check to make sure we have what we need
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -276,14 +292,10 @@ public class Metadata extends Plugin {
             promptForSample(necessaryFields);
         }
 
-        if (fields.get("experiment_accession") == null) {
-            fields.put("experiment_accession", "0");
-        }
-
-        if (fields.get("parent_sample_accession") == null) {
-            fields.put("parent_sample_accession", "0");
-        }
-
+        for (String s: optionalFields)
+            if (fields.get(s) == null)
+                fields.put(s, "0");
+        
         if (checkFields(necessaryFields)
                 && (notNullOrLessThanZero("experiment_accession") || notNullOrLessThanZero("parent_sample_accession"))) {
             // create a new sample
@@ -293,7 +305,8 @@ public class Metadata extends Plugin {
             print("SWID: " + ret.getAttribute("sw_accession"));
 
         } else {
-            Log.error("You need to supply experiment_accession (reported if you create an experiment using this tool), title, and description for the sample table along with an integer for organism_id [31: Homo sapiens]. Alternatively, enable --interactive mode.");
+            printErrorMessage(necessaryFields, optionalFields);
+            //Log.error("You need to supply experiment_accession (reported if you create an experiment using this tool), title, and description for the sample table along with an integer for organism_id [31: Homo sapiens]. Alternatively, enable --interactive mode.");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
         return (ret);
@@ -302,7 +315,7 @@ public class Metadata extends Plugin {
     private boolean notNullOrLessThanZero(String fieldName) {
         boolean usable = true;
         String field = fields.get(fieldName);
-        Log.stdout(field);
+        //Log.stdout(field);
         if (field == null) {
             usable = false;
         } else if (Integer.parseInt(field) <= 0) {
@@ -317,7 +330,7 @@ public class Metadata extends Plugin {
      *
      */
     protected ReturnValue addSequencerRun() {
-        String[] necessaryFields = {"platform_accession", "name", "description", "paired_end", "skip"};
+        String[] necessaryFields = {"platform_accession", "name", "description", "paired_end", "skip", "file_path"};
         // check to make sure we have what we need
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
         if (interactive) {
@@ -326,12 +339,13 @@ public class Metadata extends Plugin {
 
         if (checkFields(necessaryFields)) {
             // create a new experiment
-            ret = metadata.addSequencerRun(Integer.parseInt(fields.get("platform_accession")), fields.get("name"), fields.get("description"), "true".equalsIgnoreCase(fields.get("paired_end")), "true".equalsIgnoreCase(fields.get("skip")));
+            ret = metadata.addSequencerRun(Integer.parseInt(fields.get("platform_accession")), fields.get("name"), fields.get("description"), "true".equalsIgnoreCase(fields.get("paired_end")), "true".equalsIgnoreCase(fields.get("skip")), fields.get("file_path"));
 
             print("SWID: " + ret.getAttribute("sw_accession"));
 
         } else {
-            Log.error("You need to supply name, description, platform_accession [see platform lookup], and 'true' or 'false' for paired_end and skip. Alternatively, enable --interactive mode.");
+            printErrorMessage(necessaryFields, null);
+            //Log.error("You need to supply name, description, platform_accession [see platform lookup], the complete file path of the run, and 'true' or 'false' for paired_end and skip. Alternatively, enable --interactive mode.");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
         return (ret);
@@ -355,14 +369,15 @@ public class Metadata extends Plugin {
             print("SWID: " + ret.getAttribute("sw_accession"));
 
         } else {
-            Log.error("You need to supply name, description, cycle_descriptor [e.g. {F*120}{..}{R*120}], sequencer_run_accession, study_type_accession, library_strategy_accession, library_selection_accession, library_source_accession and 'true' or 'false' for skip. Alternatively, enable --interactive mode.");
+            printErrorMessage(necessaryFields, null);
+            //Log.error("You need to supply name, description, cycle_descriptor [e.g. {F*120}{..}{R*120}], sequencer_run_accession, study_type_accession, library_strategy_accession, library_selection_accession, library_source_accession and 'true' or 'false' for skip. Alternatively, enable --interactive mode.");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
         return (ret);
     }
 
     protected ReturnValue addIUS() {
-        String[] necessaryFields = {"lane_accession", "sample_accession", "name", "description", "skip"};
+        String[] necessaryFields = {"lane_accession", "sample_accession", "name", "description", "skip", "barcode"};
         // check to make sure we have what we need
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -380,11 +395,33 @@ public class Metadata extends Plugin {
             print("SWID: " + ret.getAttribute("sw_accession"));
 
         } else {
-            Log.error("You need to supply name, description, lane_accession, sample_accession, barcode and 'true' or 'false' for skip. Alternatively, enable --interactive mode.");
+            printErrorMessage(necessaryFields, null);
+            //Log.error("You need to supply name, description, lane_accession, sample_accession, barcode and 'true' or 'false' for skip. Alternatively, enable --interactive mode.");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
         return (ret);
     }
+
+    private void printErrorMessage(String[] requiredFields, String[] optionalFields) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Insufficient fields supplied.");
+        sb.append("\nRequired fields:");
+        for (String s : requiredFields) {
+            sb.append("\n\t").append(s);
+        }
+        if (optionalFields!=null) {
+            sb.append("\nOptional fields:");
+            for (String s: optionalFields) {
+                sb.append("\n\t").append(s);
+            }
+        }
+        sb.append("\nFor more information about these options, run with the --list-fields switch.");
+        sb.append("\nAlternatively, enable --interactive mode.");
+        Log.error(sb.toString());
+        Log.stdout("You supplied:");
+        printFields();
+    }
+   
 
     /**
      * {@inheritDoc}
@@ -452,9 +489,18 @@ public class Metadata extends Plugin {
         for (String s : fs) {
             if (!fields.containsKey(s)) {
                 allPresent = false;
+                Log.debug(s + " <null>");
+            } else {
+                Log.debug(s + " " + fields.get(s));
             }
         }
         return allPresent;
+    }
+
+    private void printFields() {
+        for (String s : fields.keySet()) {
+            Log.stdout(s + "=" + fields.get(s));
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -463,6 +509,7 @@ public class Metadata extends Plugin {
     protected void promptForStudy(String[] necessaryFields) {
         Log.stdout("---Create a study---");
         if (!fields.containsKey("study_type")) {
+            System.out.println();
             for (StudyType st : metadata.getStudyTypes()) {
                 Log.stdout(st.toString());
             }
@@ -479,18 +526,22 @@ public class Metadata extends Plugin {
 
         int checkMe = 0;
         if (!fields.containsKey("experiment_accession")) {
-            checkMe += promptInteger("experiment_accession", 0);
+            promptInteger("experiment_accession", 0);
         }
         if (!fields.containsKey("parent_sample_accession")) {
-            checkMe += promptInteger("parent_sample_accession", 0);
+            promptInteger("parent_sample_accession", 0);
         }
 
+        checkMe = Integer.parseInt(fields.get("experiment_accession")) + Integer.parseInt(fields.get("parent_sample_accession"));
+
         if (!fields.containsKey("organism_id")) {
+            System.out.println();
             for (Organism o : metadata.getOrganisms()) {
                 Log.stdout(o.toString());
             }
             promptInteger("organism_id", 31);
         }
+
         promptForFields(necessaryFields);
 
         if (!fieldsConfirmed(necessaryFields) || checkMe <= 0) {
@@ -504,6 +555,7 @@ public class Metadata extends Plugin {
     protected void promptForSequencerRun(String[] necessaryFields) {
         Log.stdout("---Create a sequencer run---");
         if (!fields.containsKey("platform_accession")) {
+            System.out.println();
             for (Platform p : metadata.getPlatforms()) {
                 Log.stdout(p.toString());
             }
@@ -525,6 +577,7 @@ public class Metadata extends Plugin {
     protected void promptForExperiment(String[] necessaryFields) {
         Log.stdout("---Create an experiment---");
         if (!fields.containsKey("platform_id")) {
+            System.out.println();
             for (Platform p : metadata.getPlatforms()) {
                 Log.stdout(p.toString());
             }
@@ -543,24 +596,28 @@ public class Metadata extends Plugin {
             promptInteger("sequencer_run_accession", null);
         }
         if (!fields.containsKey("study_type_accession")) {
+            System.out.println();
             for (StudyType st : metadata.getStudyTypes()) {
                 Log.stdout(st.toString());
             }
             promptInteger("study_type_accession", 4);
         }
         if (!fields.containsKey("library_strategy_accession")) {
+            System.out.println();
             for (LibraryStrategy st : metadata.getLibraryStrategies()) {
                 Log.stdout(st.toString());
             }
             promptInteger("library_strategy_accession", null);
         }
         if (!fields.containsKey("library_selection_accession")) {
+            System.out.println();
             for (LibrarySelection st : metadata.getLibrarySelections()) {
                 Log.stdout(st.toString());
             }
             promptInteger("library_selection_accession", null);
         }
         if (!fields.containsKey("library_source_accession")) {
+            System.out.println();
             for (LibrarySource st : metadata.getLibrarySource()) {
                 Log.stdout(st.toString());
             }
@@ -606,57 +663,19 @@ public class Metadata extends Plugin {
     }
 
     protected String promptString(String string, String deflt) {
-        String title = null;
-
-        String prompt = string + (deflt == null ? ":" : "[" + deflt + "] :");
-        int counter=0;
-        while (title == null && counter++ < 10) {
-            title = ConsoleAdapter.getInstance().readLine(prompt);
-            if (title.trim().isEmpty()) {
-                title = deflt;
-            }
-        }
+        String title = ConsoleAdapter.getInstance().promptString(string, deflt);
         fields.put(string, title);
         return title;
     }
 
     protected Integer promptInteger(String string, Integer deflt) {
-        Integer title = null;
-        String prompt = string + (deflt == null ? ":" : "[" + deflt + "] :");
-        int counter=0;
-        while (title == null && counter++ < 10) {
-            String line = ConsoleAdapter.getInstance().readLine(prompt);
-            if (line.trim().isEmpty()) {
-                title = deflt;
-            } else {
-                try {
-                    title = Integer.parseInt(line);
-                } catch (NumberFormatException e) {
-                    Log.stdout(string + " must be an integer.");
-                }
-            }
-        }
+        Integer title = ConsoleAdapter.getInstance().promptInteger(string, deflt);
         fields.put(string, title.toString());
         return title;
     }
 
     protected Boolean promptBoolean(String string, Boolean deflt) {
-        Boolean title = null;
-        String prompt = string + (deflt == null ? ":" : "[" + deflt + "] :");
-        int counter=0;
-        while (title == null && counter++ < 10) {
-            String line = ConsoleAdapter.getInstance().readLine(prompt);
-            if (line.trim().isEmpty()) {
-                title = deflt;
-            } else {
-                try {
-                    title = Boolean.parseBoolean(line);
-                } catch (NumberFormatException e) {
-                    Log.stdout(string + " must be true or false.");
-                }
-
-            }
-        }
+        Boolean title = ConsoleAdapter.getInstance().promptBoolean(string, deflt);
         fields.put(string, title.toString());
         return title;
     }
@@ -667,8 +686,8 @@ public class Metadata extends Plugin {
         }
 
         String confirm = ConsoleAdapter.getInstance().readLine("Is this information correct? [y/n] :");
-        System.out.println("result: " + confirm);
-        if (confirm.trim().toLowerCase().equals("y") || confirm.trim().toLowerCase().equals("yes")) {
+        //System.out.println("result: " + confirm);
+        if (confirm.trim().toLowerCase().equals("y") || confirm.trim().toLowerCase().equals("yes") || confirm.trim().isEmpty()) {
             return true;
         } else {
             fields.clear();

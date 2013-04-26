@@ -43,7 +43,8 @@ public class StudyType implements Serializable {
         /** {@inheritDoc} */
         @Override
         public String toString() {
-                return "StudyType{" + "studyTypeId=" + studyTypeId + ", name=" + name + ", description=" + description + '}';
+          return new StringBuilder().append("StudyType ").append(studyTypeId)
+                  .append(":\t").append(name).append("\t").append(description).toString();
         }
         
         /** {@inheritDoc} */
