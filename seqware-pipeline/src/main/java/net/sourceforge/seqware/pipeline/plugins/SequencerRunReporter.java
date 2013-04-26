@@ -104,7 +104,7 @@ public class SequencerRunReporter extends Plugin {
     public String get_description() {
         return "Prints a tab-delimited file describing the sequencer run, lane, "
                 + "sample, and algorithms run on every IUS in the database. For more "
-                + "information, see https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Sequencer_Run_Reporter";
+                + "information, see see http://seqware.github.com/docs/20-sequencer-run-reporter/";
     }
     
     

@@ -49,6 +49,17 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     protected int percentage = 0;
     protected WorkflowTools workflowTools = null;
 
+    public static ReturnValue gridProxyInit() {
+        // initialize globus authentication proxy
+        ArrayList<String> theCommand = new ArrayList<String>();
+        theCommand.add("bash");
+        theCommand.add("-lc");
+        theCommand.add("grid-proxy-init -valid 480:00");
+        ReturnValue retProxy = RunTools.runCommand(theCommand
+                .toArray(new String[0]));
+        return retProxy;
+    }
+
     protected enum Job {
 
 	setup, prejob, mainjob, postjob, cleanup, statcall, data;
@@ -71,13 +82,8 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
 	workflowTools = new WorkflowTools();
 	ReturnValue retVal = new ReturnValue(ReturnValue.SUCCESS);
-	// initialize globus authentication proxy
-	ArrayList<String> theCommand = new ArrayList<String>();
-	theCommand.add("bash");
-	theCommand.add("-lc");
-	theCommand.add("grid-proxy-init -valid 480:00");
-	ReturnValue retProxy = RunTools.runCommand(theCommand
-		.toArray(new String[0]));
+        
+	ReturnValue retProxy = gridProxyInit();
 	if (retProxy.getExitStatus() != ReturnValue.SUCCESS) {
 	    Log.error("ERROR: can't init the globus proxy so terminating here, continuing but your workflow submissions will fail!");
 	    return (retProxy);
@@ -851,7 +857,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * @param map
      * @return
      */
-    private ArrayList<String> parseParentAccessions(Map<String, String> map) {
+    public static ArrayList<String> parseParentAccessions(Map<String, String> map) {
 	ArrayList<String> results = new ArrayList<String>();
 	HashMap<String, String> resultsDeDup = new HashMap<String, String>();
 
@@ -862,10 +868,18 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 		resultsDeDup.put(map.get(key), "null");
 	    }
 	}
-
+        
 	for (String accession : resultsDeDup.keySet()) {
 	    results.add(accession);
 	}
+        
+        // for hotfix 0.13.6.3 
+        // GATK reveals an issue where parent_accession is setup with a correct list of accessions while parent-accessions and parent_accessions are set to 0
+        // when the three are mushed together, the rogue zero is transferred to parent_accession and causes it to crash the workflow
+        // I'm going to allow a single 0 in case (god forbid) some workflow relies upon this, but otherwise a 0 should not occur in a list of valid parent_accessions
+        if (results.contains("0") && results.size() > 1){
+            results.remove("0");
+        }
 
 	return (results);
     }

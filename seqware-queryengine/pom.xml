@@ -185,6 +185,7 @@ never
                     </execution>
                 </executions>
                 <configuration>
+		    <runOrder>alphabetical</runOrder>
                     <includes>
                         <include>**/*Suite.java</include>
                     </includes>
@@ -400,12 +401,6 @@ never
             <artifactId>commons-cli</artifactId>
             <version>${commons-cli.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-exec</artifactId>
-            <version>${commons-exec.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

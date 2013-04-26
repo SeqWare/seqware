@@ -10,6 +10,7 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.runtools.RunTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
+import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 
@@ -21,6 +22,13 @@ public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
 	 * launch the workflow defined in the object model
 	 */
 	public ReturnValue launchWorkflow(AbstractWorkflowDataModel objectModel) {
+            
+            ReturnValue retProxy = BasicWorkflow.gridProxyInit();
+            if (retProxy.getExitStatus() != ReturnValue.SUCCESS) {
+                Log.error("ERROR: can't init the globus proxy so terminating here, continuing but your workflow submissions will fail!");
+                return (retProxy);
+            }
+            
 		//parse objectmodel 
 		ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 		File dax = this.parseDataModel(objectModel);

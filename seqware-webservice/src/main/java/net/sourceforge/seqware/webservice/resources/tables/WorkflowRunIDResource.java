@@ -215,7 +215,8 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
             wr.setOwner(registration);
         }
 		if(newWR.getWorkflowRunAttributes() != null) {
-			wr.getWorkflowRunAttributes().clear();
+//SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+//			wr.getWorkflowRunAttributes().clear();
 			for(WorkflowRunAttribute wra: newWR.getWorkflowRunAttributes()) {
 				wra.setWorkflowRun(wr);
 				wr.getWorkflowRunAttributes().add(wra);

@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.TabExpansionUtil;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import org.openide.util.lookup.ServiceProvider;
@@ -66,6 +67,7 @@ public class WorkflowRunReporter extends Plugin {
     parser.acceptsAll(Arrays.asList("stdout"), "Prints to standard out instead of to a file");
     parser.acceptsAll(Arrays.asList("wr-stdout"), "Optional: will print the stdout of the workflow run, must specify the --workflow-run-accession");
     parser.acceptsAll(Arrays.asList("wr-stderr"), "Optional: will print the stderr of the workflow run, must specify the --workflow-run-accession");
+    parser.acceptsAll(Arrays.asList("human"), "Optional: will print output in expanded human friendly format");
     ret.setExitStatus(ReturnValue.SUCCESS);
   }
 
@@ -155,6 +157,10 @@ public class WorkflowRunReporter extends Plugin {
     String title = "workflowrun_" + workflowRunAccession;
     initWriter(title);
     String report = metadata.getWorkflowRunReport(Integer.parseInt(workflowRunAccession));
+    if (options.has("human")){
+        writer.write(TabExpansionUtil.expansion(report));
+        return;
+    }
     writer.write(report);
 
   }
@@ -186,6 +192,10 @@ public class WorkflowRunReporter extends Plugin {
     }
     initWriter(title);
     String report = metadata.getWorkflowRunReport(Integer.parseInt(workflowAccession), earlyDate, lateDate);
+    if (options.has("human")){
+        writer.write(TabExpansionUtil.expansion(report));
+        return;
+    }
     writer.write(report);
   }
 
@@ -199,6 +209,10 @@ public class WorkflowRunReporter extends Plugin {
     }
     initWriter(title);
     String report = metadata.getWorkflowRunReport(earlyDate, lateDate);
+    if (options.has("human")){
+        writer.write(TabExpansionUtil.expansion(report));
+        return;
+    }
     writer.write(report);
   }
 
@@ -243,6 +257,6 @@ public class WorkflowRunReporter extends Plugin {
             + "workflow runs, including the identity, library samples and "
             + "input and output files. "
             + "For more information, see "
-            + "https://sourceforge.net/apps/mediawiki/seqware/index.php?title=Workflow_Run_Reporter";
+            + "see http://seqware.github.com/docs/19-workflow-run-reporter/";
   }
 }
