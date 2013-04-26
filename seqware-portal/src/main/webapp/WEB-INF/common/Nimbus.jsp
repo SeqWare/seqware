@@ -809,6 +809,50 @@
 		return false;
 	});
 
+	 // set action for workflow cancel from table view (not tree view)
+	$("a[popup-workflow-cancel='true']").live('click', function(){ 
+		var objectId = $(this).attr('object-id');
+                 
+		$.ajax({
+                    url: "<c:url value="cancelAnalysisWorkflow.htm"/>?key=" + getRandomInt(),
+                                    data: {objectId: objectId},
+                                    success: function () {
+                                          //$("#stderr-popup textarea#stdTA").text("cancelled");
+                                          //$("#stderr-popup").togglePopup();
+                                          $("#flex1").flexReload();
+                                          $("#flex2").flexReload();
+                                          $("#flex3").flexReload();
+                                          $("#flex4").flexReload();
+                                    },
+                                    error:function (){
+                                          $("#stderr-popup textarea#stdTA").text("There was an error cancelling this workflow");
+                                          $("#stderr-popup").togglePopup();
+                                    }
+                });
+		return false;
+	});
+
+	 // set action for workflow retry from table view (not tree view)
+	$("a[popup-workflow-retry='true']").live('click', function(){ 
+		var objectId = $(this).attr('object-id');
+                 
+		$.ajax({
+                    url: "<c:url value="retryAnalysisWorkflow.htm"/>?key=" + getRandomInt(),
+                                    data: {objectId: objectId},
+                                    success: function () {
+                                          $("#flex1").flexReload();
+                                          $("#flex2").flexReload();
+                                          $("#flex3").flexReload();
+                                          $("#flex4").flexReload();
+                                    },
+                                    error:function (){
+                                          $("#stderr-popup textarea#stdTA").text("There was an error retrying this workflow");
+                                          $("#stderr-popup").togglePopup();
+                                    }
+                });
+		return false;
+	});
+
 	 // set action in the stderr popup window
 	$("a[popup-stderr='true']").live('click', function(){ 
 		var stdErr = $(this).attr('stderr');
