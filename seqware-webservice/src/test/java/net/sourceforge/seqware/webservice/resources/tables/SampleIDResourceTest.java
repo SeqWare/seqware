@@ -31,7 +31,7 @@ public class SampleIDResourceTest extends DatabaseResourceIDTest {
         jo = new JaxbObject<Sample>();
         o = new Sample();
     }
-     @Override
+    @Override
     protected int testObject(Object o) {
         if (o instanceof Sample) {
             Sample e = (Sample) o;
@@ -47,8 +47,8 @@ public class SampleIDResourceTest extends DatabaseResourceIDTest {
         return ReturnValue.SUCCESS;
     }
 
-	 @Override
-	 public void testPut() {
+    @Override
+    public void testPut() {
 		 
-	 }
+    }
 }

@@ -16,8 +16,7 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -161,8 +160,8 @@ public class SampleResource extends DatabaseResource {
                 SampleService ss = BeanFactory.getSampleServiceBean();
                 HashSet<Sample> parents = new HashSet<Sample>();
                 for (Sample s : o.getParents()) {
-                    parents.add(ss.findByID(s.getSampleId()));
-                }
+                        parents.add(ss.findByID(s.getSampleId()));
+                    }
                 o.setParents(parents);
             }
             if (null != o.getChildren()) {
@@ -182,6 +181,11 @@ public class SampleResource extends DatabaseResource {
             Sample sample = (Sample) testIfNull(service.findBySWAccession(swAccession));
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
             Sample detachedSample = copier.hibernate2dto(Sample.class, sample);
+            if (null!=o.getParents()) {
+                for (Sample s: sample.getParents()) {
+                    detachedSample.getParents().add(copier.hibernate2dto(Sample.class, s));
+                }
+            }
 
             Document line = XmlTools.marshalToDocument(jo, detachedSample);
             getResponse().setEntity(XmlTools.getRepresentation(line));
@@ -195,4 +199,4 @@ public class SampleResource extends DatabaseResource {
         }
 
     }
-}
+    }
