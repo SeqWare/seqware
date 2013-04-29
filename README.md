@@ -56,6 +56,13 @@ Receiving objects: 100% (8984/8984), 33.57 MiB | 392 KiB/s, done.
 Resolving deltas: 100% (4308/4308), done.
 </pre>
 
+By default, this will land you on the default branch. You will want to check-out the latest release. 
+
+For example:
+
+	~$ cd seqware_github/
+	~/seqware_github$ git checkout 0.13.6.5
+	HEAD is now at f8698e9... Merge branch 'hotfix/0.13.6.5'
 
 ### Building and Automated Testing 
 
