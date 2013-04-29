@@ -94,7 +94,7 @@ public interface MetadataInterface {
    * @param title a {@link java.lang.String} object.
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
-  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip);
+  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath);
   
     /**
    * <p>addSample.</p>
