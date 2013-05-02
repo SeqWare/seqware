@@ -29,6 +29,8 @@ import net.sourceforge.seqware.pipeline.module.Module;
 import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 
 import com.amazonaws.ClientConfiguration;
+import java.net.URL;
+import org.apache.hadoop.fs.FsUrlStreamHandlerFactory;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -227,8 +229,8 @@ public class ProvisionFiles extends Module {
     }
     
     // deal with output-file
-    if (options.has("output-file") && !(options.has("input-file") || options.has("input-file-metadata"))) {
-      ret.setStderr("Must specify a --input-file or --input-file-metadata option along with the --output-file option"
+    if (options.has("output-file") && !options.has("input-file")) {
+      ret.setStderr("Must specify a --input-file option along with the --output-file option"
             + System.getProperty("line.separator") + this.get_syntax());
         ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         return ret;
@@ -284,7 +286,7 @@ public class ProvisionFiles extends Module {
 
     for (String input : inputs) {
       if (!input.startsWith("s3://") && !input.startsWith("http://") && !input.startsWith("https://")
-          && !options.has("skip-if-missing")
+          && !input.startsWith("hdfs://") && !options.has("skip-if-missing")
           && FileTools.fileExistsAndReadable(new File(input)).getExitStatus() != ReturnValue.SUCCESS
           && FileTools.dirPathExistsAndReadable(new File(input)).getExitStatus() != ReturnValue.SUCCESS) {
         return new ReturnValue(null, "Cannot find input file: " + input, ReturnValue.FILENOTREADABLE);
@@ -560,7 +562,12 @@ public class ProvisionFiles extends Module {
       // It's not supported yet
       result = filesUtil.putToHttp();
 
-    } else {
+    } /**else if (output.startsWith("hdfs://")) {
+
+      // put to S3
+      result = filesUtil.putToHDFS(reader, output, fullOutputPath, decryptCipher, encryptCipher);
+
+    } */ else {
 
       // local copy
       if (input.startsWith("http://") || input.startsWith("https://") || input.startsWith("s3://")
