@@ -562,12 +562,12 @@ public class ProvisionFiles extends Module {
       // It's not supported yet
       result = filesUtil.putToHttp();
 
-    } else if (output.startsWith("hdfs://")) {
+    } /**else if (output.startsWith("hdfs://")) {
 
       // put to S3
       result = filesUtil.putToHDFS(reader, output, fullOutputPath, decryptCipher, encryptCipher);
 
-    } else {
+    } */ else {
 
       // local copy
       if (input.startsWith("http://") || input.startsWith("https://") || input.startsWith("s3://")
