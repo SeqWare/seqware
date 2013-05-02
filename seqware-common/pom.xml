@@ -333,26 +333,6 @@
             <artifactId>stax-api</artifactId>
             <version>1.0-2</version>
         </dependency>
-        <dependency>
-           <groupId>org.apache.hadoop</groupId>
-           <artifactId>hadoop-client</artifactId>
-           <version>2.0.0-cdh4.1.2</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>junit</artifactId>
-                    <groupId>junit</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>mockito-all</artifactId>
-                    <groupId>org.mockito</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-           <groupId>org.apache.hadoop</groupId>
-           <artifactId>hadoop-hdfs</artifactId>
-           <version>2.0.0-cdh4.1.2</version>
-        </dependency>
 
     </dependencies>
 </project>
