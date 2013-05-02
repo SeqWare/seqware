@@ -47,13 +47,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.CipherInputStream;
 import net.sourceforge.seqware.common.util.Log;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.FsUrlStreamHandlerFactory;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IOUtils;
+//import org.apache.hadoop.conf.Configuration;
+//import org.apache.hadoop.fs.FSDataInputStream;
+//import org.apache.hadoop.fs.FSDataOutputStream;
+//import org.apache.hadoop.fs.FileSystem;
+//import org.apache.hadoop.fs.FsUrlStreamHandlerFactory;
+//import org.apache.hadoop.fs.Path;
+//import org.apache.hadoop.io.IOUtils;
 
 /**
  * <p>ProvisionFilesUtil class.</p>
@@ -63,9 +63,9 @@ import org.apache.hadoop.io.IOUtils;
  */
 public class ProvisionFilesUtil {
   
-  static {
-    URL.setURLStreamHandlerFactory(new FsUrlStreamHandlerFactory());
-  }
+//  static {
+//    URL.setURLStreamHandlerFactory(new FsUrlStreamHandlerFactory());
+//  }
 
   protected final int READ_ATTEMPTS = 1000;
   protected long inputSize = 0L;
@@ -376,69 +376,69 @@ public class ProvisionFilesUtil {
     return (false);
   }
   
-  public boolean putToHDFS(InputStream reader, String output, boolean fullOutputPath){
-    return(putToHDFS(reader, output, fullOutputPath, null, null));
-  }
-  
-  /**
-   * The output path is an HDFS URL that look like
-   * hdfs://<host>/<path>/<filename>
-   * 
-   * TODO:
-   * 
-   * 1) encryption/decryption
-   * 
-   * @param reader
-   * @param output
-   * @param decryptCipher
-   * @param encryptCipher
-   * @return 
-   */
-  public boolean putToHDFS(InputStream reader, String output, boolean fullOutputPath, Cipher decryptCipher, Cipher encryptCipher) {
-    try {
-      
-      // the final URL
-      String outputStr = null;
-      
-      // first, try and figure out if the output is a dir or an actual file
-      if (fullOutputPath) {
-        outputStr = output;
-      } else {
-        if (output.endsWith("/")) {
-          outputStr = output + this.getFileName();
-        } else {
-          outputStr = output + "/" + this.getFileName();
-        }
-      }
-        
-      // Hadoop stuff
-      Configuration conf = new Configuration();
-      // FIXME: is this OK to pass in the complete URL?
-      FileSystem fs = FileSystem.get(URI.create(outputStr), conf);
-      Path outputPath = new Path(outputStr);
-      
-      // delete if it already exists
-      if (fs.exists(outputPath) && !fs.isDirectory(outputPath)) {
-        // delete it and re-upload
-        fs.delete(outputPath, false);
-      }
-      
-      OutputStream out = fs.create(outputPath);
-      IOUtils.copyBytes(reader, out, 4096, true);
-     
-      // Close all the file descripters
-      reader.close();
-      out.close();
-      fs.close();
-      return(true);
-      
-    } catch (IOException ex) {
-      Logger.getLogger(ProvisionFilesUtil.class.getName()).log(Level.SEVERE, "There was a problem in putToHDFS", ex);
-    }
-    
-    return(false);
-    
-  }
+//  public boolean putToHDFS(InputStream reader, String output, boolean fullOutputPath){
+//    return(putToHDFS(reader, output, fullOutputPath, null, null));
+//  }
+//  
+//  /**
+//   * The output path is an HDFS URL that look like
+//   * hdfs://<host>/<path>/<filename>
+//   * 
+//   * TODO:
+//   * 
+//   * 1) encryption/decryption
+//   * 
+//   * @param reader
+//   * @param output
+//   * @param decryptCipher
+//   * @param encryptCipher
+//   * @return 
+//   */
+//  public boolean putToHDFS(InputStream reader, String output, boolean fullOutputPath, Cipher decryptCipher, Cipher encryptCipher) {
+//    try {
+//      
+//      // the final URL
+//      String outputStr = null;
+//      
+//      // first, try and figure out if the output is a dir or an actual file
+//      if (fullOutputPath) {
+//        outputStr = output;
+//      } else {
+//        if (output.endsWith("/")) {
+//          outputStr = output + this.getFileName();
+//        } else {
+//          outputStr = output + "/" + this.getFileName();
+//        }
+//      }
+//        
+//      // Hadoop stuff
+//      Configuration conf = new Configuration();
+//      // FIXME: is this OK to pass in the complete URL?
+//      FileSystem fs = FileSystem.get(URI.create(outputStr), conf);
+//      Path outputPath = new Path(outputStr);
+//      
+//      // delete if it already exists
+//      if (fs.exists(outputPath) && !fs.isDirectory(outputPath)) {
+//        // delete it and re-upload
+//        fs.delete(outputPath, false);
+//      }
+//      
+//      OutputStream out = fs.create(outputPath);
+//      IOUtils.copyBytes(reader, out, 4096, true);
+//     
+//      // Close all the file descripters
+//      reader.close();
+//      out.close();
+//      fs.close();
+//      return(true);
+//      
+//    } catch (IOException ex) {
+//      Logger.getLogger(ProvisionFilesUtil.class.getName()).log(Level.SEVERE, "There was a problem in putToHDFS", ex);
+//    }
+//    
+//    return(false);
+//    
+//  }
 
   /**
    * Copy file using reader into output.
@@ -762,9 +762,9 @@ public class ProvisionFilesUtil {
       reader = getS3InputStream(input, bufLen, startPosition);
     } else if (input.startsWith("http://") || input.startsWith("https://")) {
       reader = getHttpInputStream(input, bufLen, startPosition);
-    } else if (input.startsWith("hdfs://")) {
+    } /**else if (input.startsWith("hdfs://")) {
       reader = getHDFSInputStream(input, bufLen, startPosition);
-    } else {
+    } */ else {
       reader = getFileInputStream(input, startPosition);
     }
 
@@ -855,47 +855,47 @@ public class ProvisionFilesUtil {
     return reader;
   }
   
-  public BufferedInputStream getHDFSInputStream(String input, int bufLen, long startPosition) {
-    
-    try {
-    
-      BufferedInputStream reader = null;
-      
-      // figure out the filename
-      String[] path = input.split("/");
-      this.fileName = path[path.length - 1];
-      
-      // Hadoop stuff
-      Configuration conf = new Configuration();
-      // FIXME: is this OK to pass in the complete URL?
-      FileSystem fs = FileSystem.get(URI.create(input), conf);
-      Path inputPath = new Path(input);
-
-      // should exist and not be a directory
-      if (!fs.exists(inputPath) || fs.isDirectory(inputPath)) {
-        Log.error("Can't read the input file "+input+", it is either missing or a directory!");
-        return(null);
-      }
-      
-      // open the HDFS input stream
-      reader = new BufferedInputStream(fs.open(inputPath, bufLen));
-      this.inputSize = fs.getFileStatus(inputPath).getBlockSize();
-      
-      // move forward if given an offset
-      if (startPosition > 0) {
-        reader.skip(startPosition);
-      }
-      
-      // and just return this
-      return(reader);
-      
-    } catch (IOException ex) {
-      Logger.getLogger(ProvisionFilesUtil.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    
-    // default null
-    return(null);
-  }
+//  public BufferedInputStream getHDFSInputStream(String input, int bufLen, long startPosition) {
+//    
+//    try {
+//    
+//      BufferedInputStream reader = null;
+//      
+//      // figure out the filename
+//      String[] path = input.split("/");
+//      this.fileName = path[path.length - 1];
+//      
+//      // Hadoop stuff
+//      Configuration conf = new Configuration();
+//      // FIXME: is this OK to pass in the complete URL?
+//      FileSystem fs = FileSystem.get(URI.create(input), conf);
+//      Path inputPath = new Path(input);
+//
+//      // should exist and not be a directory
+//      if (!fs.exists(inputPath) || fs.isDirectory(inputPath)) {
+//        Log.error("Can't read the input file "+input+", it is either missing or a directory!");
+//        return(null);
+//      }
+//      
+//      // open the HDFS input stream
+//      reader = new BufferedInputStream(fs.open(inputPath, bufLen));
+//      this.inputSize = fs.getFileStatus(inputPath).getBlockSize();
+//      
+//      // move forward if given an offset
+//      if (startPosition > 0) {
+//        reader.skip(startPosition);
+//      }
+//      
+//      // and just return this
+//      return(reader);
+//      
+//    } catch (IOException ex) {
+//      Logger.getLogger(ProvisionFilesUtil.class.getName()).log(Level.SEVERE, null, ex);
+//    }
+//    
+//    // default null
+//    return(null);
+//  }
 
   /**
    * <p>getS3InputStream.</p>
@@ -1190,7 +1190,7 @@ public class ProvisionFilesUtil {
       } else {
         return 0;
       }
-    } else if (path.startsWith("hdfs://")) { 
+    } /**else if (path.startsWith("hdfs://")) { 
       
       Configuration conf = new Configuration();
       // FIXME: is this OK to pass in the complete URL?
@@ -1198,7 +1198,7 @@ public class ProvisionFilesUtil {
       Path hdfsPath = new Path(path);
       return(fs.getFileStatus(hdfsPath).getBlockSize());
       
-    } else {
+    } */ else {
       File file = new File(path);
       if (!file.exists()) {
         throw new IllegalStateException("File not exist " + path);
