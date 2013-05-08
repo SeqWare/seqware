@@ -178,7 +178,7 @@
                         </goals>
                         <configuration>
                             <executable>chmod</executable>
-                            <commandlineArgs>755 -R ${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/bin</commandlineArgs>
+                            <commandlineArgs>-R 755 ${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/bin</commandlineArgs>
                         </configuration>
                     </execution>
                     <execution>
