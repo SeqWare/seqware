@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,12 +29,17 @@ public class WorkflowApp {
   private String lastJoin;
   private Map<SqwFile, OozieJob> fileJobMap;
   private String unqiueWorkingDir;
+  private boolean useSge;
+  private File seqwareJar;
 
-  public WorkflowApp(AbstractWorkflowDataModel wfdm, String dir) {
+  public WorkflowApp(AbstractWorkflowDataModel wfdm, String dir,
+                     boolean useSge, File seqwareJar) {
     this.wfdm = wfdm;
     this.unqiueWorkingDir = dir;
     this.jobs = new ArrayList<OozieJob>();
     this.fileJobMap = new HashMap<SqwFile, OozieJob>();
+    this.useSge = useSge;
+    this.seqwareJar = seqwareJar;
     this.parseDataModel(wfdm);
   }
 
@@ -150,7 +156,8 @@ public class WorkflowApp {
     }
 
     OozieJob oJob0 = new OozieJob(job0, "start_" + this.jobs.size(),
-                                  this.unqiueWorkingDir);
+                                  this.unqiueWorkingDir, this.useSge,
+                                  this.seqwareJar);
     oJob0.setMetadataWriteback(metadatawriteback);
     // if has parent-accessions, assign it to first job
     Collection<String> parentAccession = wfdm.getParentAccessions();
@@ -177,7 +184,9 @@ public class WorkflowApp {
                                                                entry.getValue(),
                                                                job.getAlgo()
                                                                    + this.jobs.size(),
-                                                               this.unqiueWorkingDir);
+                                                               this.unqiueWorkingDir,
+                                                               this.useSge,
+                                                               this.seqwareJar);
         ojob.setMetadataWriteback(metadatawriteback);
         if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
           ojob.setWorkflowRunAccession(workflowRunAccession);
@@ -237,7 +246,9 @@ public class WorkflowApp {
                                                                           pfjob.getAlgo()
                                                                               + "_"
                                                                               + jobs.size(),
-                                                                          this.unqiueWorkingDir);
+                                                                          this.unqiueWorkingDir,
+                                                                          this.useSge,
+                                                                          this.seqwareJar);
             parentPfjob.addParent(oJob0);
             parentPfjob.setMetadataWriteback(metadatawriteback);
             if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
@@ -259,7 +270,9 @@ public class WorkflowApp {
                                                                           pfjob.getAlgo()
                                                                               + "_"
                                                                               + jobs.size(),
-                                                                          this.unqiueWorkingDir);
+                                                                          this.unqiueWorkingDir,
+                                                                          this.useSge,
+                                                                          this.seqwareJar);
             parentPfjob.addParent(pjob);
             parentPfjob.setMetadataWriteback(metadatawriteback);
             parentPfjob.setMetadataOutputPrefix(wfdm.getMetadata_output_file_prefix());
@@ -351,13 +364,13 @@ public class WorkflowApp {
                              this.unqiueWorkingDir);
     } else if (job instanceof PerlJob) {
       ret = new OozieJob(job, job.getAlgo() + "_" + this.jobs.size(),
-                         this.unqiueWorkingDir);
+                         this.unqiueWorkingDir, this.useSge, this.seqwareJar);
     } else if (job instanceof JavaSeqwareModuleJob) {
       // ret = new PegasusJavaSeqwareModuleJob(job, wfdm.getWorkflowBaseDir(),
       // wfdm.getTags().get("seqware_version"));
     } else {
       ret = new OozieJob(job, job.getAlgo() + "_" + this.jobs.size(),
-                         this.unqiueWorkingDir);
+                         this.unqiueWorkingDir, this.useSge, this.seqwareJar);
     }
     return ret;
   }

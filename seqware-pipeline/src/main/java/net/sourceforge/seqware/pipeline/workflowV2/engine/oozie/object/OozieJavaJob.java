@@ -12,7 +12,7 @@ import org.jdom.Element;
 public class OozieJavaJob extends OozieJob {
 
   public OozieJavaJob(AbstractJob job, String name, String oozie_working_dir) {
-    super(job, name, oozie_working_dir);
+    super(job, name, oozie_working_dir, false, null);
   }
 
   /** 
