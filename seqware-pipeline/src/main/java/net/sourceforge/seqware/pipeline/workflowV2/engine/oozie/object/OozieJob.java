@@ -362,4 +362,29 @@ public class OozieJob {
 
     return args;
   }
+
+  public static ArrayList<String> createRunnerArgs(String jobName,
+                                                   String workingDirectory,
+                                                   List<String> commands) {
+    ArrayList<String> args = new ArrayList<String>();
+
+    args.add("--gcr-algorithm");
+    args.add(jobName);
+
+    args.add("--gcr-command");
+
+    StringBuilder sb = new StringBuilder();
+    sb.append("cd ");
+    sb.append(workingDirectory);
+    sb.append("; ");
+    for (String cmd : commands) {
+      sb.append(cmd);
+    }
+
+    // TODO: Worry about quoting?
+    args.add(sb.toString());
+
+    return args;
+  }
+
 }
