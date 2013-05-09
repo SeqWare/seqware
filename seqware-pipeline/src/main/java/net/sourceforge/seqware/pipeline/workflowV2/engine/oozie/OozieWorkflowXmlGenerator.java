@@ -23,12 +23,6 @@ public class OozieWorkflowXmlGenerator {
 	 */
     public ReturnValue generateWorkflowXml(AbstractWorkflowDataModel wfdm, String output, String dir) {
     	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-    	ret = this.createWorkflowXml(wfdm, output, dir);
-    	return ret;
-    }
-    
-    private ReturnValue createWorkflowXml(AbstractWorkflowDataModel wfdm, String output, String dir) {
-    	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
     	File dax = new File(output);
     	// write to dax
     	Document doc = new Document();
