@@ -43,6 +43,7 @@ public class WorkflowApp {
     this.parseDataModel(wfdm);
   }
 
+  // TODO: Emit an end node that cleans up the generated script files.
   public Element serializeXML() {
     Element element = new Element("workflow-app", NAMESPACE);
     element.setAttribute("name", wfdm.getName());
