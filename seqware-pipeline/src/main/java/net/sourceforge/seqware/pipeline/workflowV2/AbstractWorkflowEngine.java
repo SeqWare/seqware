@@ -8,12 +8,17 @@ public abstract class AbstractWorkflowEngine {
 	
 	
 	/**
-	 * launch the workflow according to the info filled in the input objectModel
+	 * Prepare the workflow according to the info filled in the input objectModel.
 	 * @param objectModel
-	 * @return
 	 */
-	public abstract ReturnValue launchWorkflow(AbstractWorkflowDataModel objectModel);
+	public abstract void prepareWorkflow(AbstractWorkflowDataModel objectModel);
 	
+  /**
+   * Run the prepared workflow.
+   * @return
+   */
+  public abstract ReturnValue runWorkflow();
+
 	/**
 	 * 
 	 * @return the id assigned by the workflow engine

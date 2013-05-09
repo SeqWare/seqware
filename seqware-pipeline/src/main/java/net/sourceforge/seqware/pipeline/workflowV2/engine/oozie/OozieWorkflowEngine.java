@@ -39,19 +39,16 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
   public static boolean USE_SGE = true;
 
   @Override
-  public ReturnValue launchWorkflow(AbstractWorkflowDataModel objectModel) {
+  public void prepareWorkflow(AbstractWorkflowDataModel objectModel) {
     // parse objectmodel
     this.dataModel = objectModel;
-    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
     this.setupEnvironment();
     this.parseDataModel(objectModel, USE_SGE,
                         new File(seqwareJarPath(objectModel)));
     this.setupHDFS(objectModel);
-    ret = this.runWorkflow();
-    return ret;
   }
 
-  private ReturnValue runWorkflow() {
+  public ReturnValue runWorkflow() {
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
     OozieClient wc = this.getOozieClient();
 
