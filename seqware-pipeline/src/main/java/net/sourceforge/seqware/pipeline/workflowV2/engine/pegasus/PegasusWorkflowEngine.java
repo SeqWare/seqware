@@ -13,32 +13,32 @@ import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Environment;
 
 public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
 
-  private ReturnValue statusRet;
+  private File dax = null;
+  private boolean wait = false;
+  private Environment env = null;
+  private ReturnValue statusRet = null;
 
   @Override
   /**
    * launch the workflow defined in the object model
    */
-  public ReturnValue launchWorkflow(AbstractWorkflowDataModel objectModel) {
+  public void prepareWorkflow(AbstractWorkflowDataModel objectModel) {
 
     ReturnValue retProxy = BasicWorkflow.gridProxyInit();
     if (retProxy.getExitStatus() != ReturnValue.SUCCESS) {
-      Log.error("ERROR: can't init the globus proxy so terminating here, continuing but your workflow submissions will fail!");
-      return (retProxy);
+      throw new RuntimeException("ERROR: can't init the globus proxy so terminating here.");
     }
 
-    // parse objectmodel
-    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-    File dax = this.parseDataModel(objectModel);
-    ret = this.runWorkflow(objectModel, dax);
-    this.statusRet = ret;
-    return ret;
+    dax = parseDataModel(objectModel);
+    wait = objectModel.isWait();
+    env = objectModel.getEnv();
   }
 
-  private File parseDataModel(AbstractWorkflowDataModel objectModel) {
+  private static File parseDataModel(AbstractWorkflowDataModel objectModel) {
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
     File dax;
@@ -59,20 +59,18 @@ public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
     return dax;
   }
 
-  private ReturnValue runWorkflow(AbstractWorkflowDataModel objectModel,
-                                  File dax) {
+  public ReturnValue runWorkflow() {
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
     // create the submission of the DAX to Pegasus
     String pegasusCmd = "grid-proxy-init -valid 480:00; pegasus-plan -Dpegasus.user.properties="
-        + objectModel.getEnv().getPegasusConfigDir()
+        + env.getPegasusConfigDir()
         + "/properties --dax "
         + dax.getAbsolutePath()
         + " --dir "
-        + objectModel.getEnv().getDaxDir()
+        + env.getDaxDir()
         + " -o "
-        + objectModel.getEnv().getSwCluster()
-        + " --force --submit -s " + objectModel.getEnv().getSwCluster();
+        + env.getSwCluster() + " --force --submit -s " + env.getSwCluster();
 
     // run the pegasus submission
     Log.stdout("SUBMITTING TO PEGASUS: " + pegasusCmd);
@@ -109,7 +107,7 @@ public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
     // finishes or fails
     // periodically checking the status in a robust way
     boolean success = true;
-    if (objectModel.isWait()) {
+    if (wait) {
       success = false;
 
       // now parse out the return status from the pegasus tool
@@ -140,6 +138,7 @@ public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
       }
     }
 
+    statusRet = retPegasus;
     return retPegasus;
 
   }

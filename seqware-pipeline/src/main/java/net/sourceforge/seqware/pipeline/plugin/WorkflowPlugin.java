@@ -133,6 +133,7 @@ public class WorkflowPlugin extends Plugin {
                 "Optional: Specifies a workflow engine, we support Oozie (--workflow-engine oozie) and Pegasus (--workflow-engine pegasus) as our workflow engines with the default being Pegasus.")
                 .withRequiredArg().ofType(String.class).describedAs("Workflow Engine");
         parser.accepts("status", "Optional: Get the workflow status by ID").withRequiredArg().ofType(String.class).describedAs("Job ID");
+        parser.accepts("no-run", "Optional: Terminates the launch process immediately prior to running. Useful for debugging.");
         
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
@@ -533,7 +534,11 @@ public class WorkflowPlugin extends Plugin {
             return new ReturnValue(ReturnValue.SUCCESS);
         }
 
-        ReturnValue retPegasus = engine.launchWorkflow(dataModel);
+        if (options.has("no-run")){
+          return new ReturnValue(ReturnValue.SUCCESS);
+        }
+
+        ReturnValue retPegasus = engine.runWorkflow();
         if (!dataModel.isMetadataWriteBack()) {
             return retPegasus;
         }
