@@ -1,8 +1,14 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 
@@ -361,8 +367,7 @@ public class OozieJob {
   }
 
   public static ArrayList<String> genericRunnerArgs(OozieJob job) {
-    return genericRunnerArgs(job.getJobObject().getAlgo(),
-                             job.oozie_working_dir,
+    return genericRunnerArgs(job.name, job.oozie_working_dir,
                              job.getJobObject().getCommand().getArguments());
   }
 
@@ -416,6 +421,36 @@ public class OozieJob {
     }
 
     return sb.toString();
+  }
+
+  public static final String SGE_SCRIPTS_SUBDIR = "generated-sge-job-scripts";
+  private static final ConcurrentMap<String, AtomicInteger> nameCounter = new ConcurrentHashMap<String, AtomicInteger>();
+
+  private static String scriptFileName(String jobName) {
+    AtomicInteger counter = nameCounter.putIfAbsent(jobName,
+                                                    new AtomicInteger());
+    if (counter == null) {
+      return jobName + ".sh";
+    } else {
+      int count = counter.getAndIncrement();
+      return jobName + "_" + count + ".sh";
+    }
+  }
+
+  private void writeSgeScript(String script) throws IOException {
+    File scriptDir = new File(oozie_working_dir, SGE_SCRIPTS_SUBDIR);
+    File scriptFile = new File(scriptDir, scriptFileName(name));
+    FileWriter writer = null;
+    try {
+      writer = new FileWriter(scriptFile);
+      writer.write(script);
+    } finally {
+      try {
+        writer.close();
+      } catch (Exception e) {
+        // gulp
+      }
+    }
   }
 
   public static final Namespace SGE_XMLNS = Namespace.getNamespace("uri:oozie:sge-action:1.0");
