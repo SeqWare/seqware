@@ -320,4 +320,46 @@ public class OozieJob {
     return cmd;
   }
 
+  public static ArrayList<String> createMetaDataArgs(boolean metadataWriteback,
+                                                     String accessionFile,
+                                                     Collection<String> parentAccessions,
+                                                     Collection<String> parentAccessionFiles,
+                                                     String workflowRunAccession,
+                                                     boolean workflowRunAncestor) {
+    ArrayList<String> args = new ArrayList<String>();
+
+    if (metadataWriteback) {
+      args.add("--metadata");
+    } else {
+      args.add("--no-metadata");
+    }
+
+    if (parentAccessions != null) {
+      for (String pa : parentAccessions) {
+        args.add("--metadata-parent-accession");
+        args.add(pa);
+      }
+    }
+
+    if (parentAccessionFiles != null) {
+      for (String paf : parentAccessionFiles) {
+        args.add("--metadata-parent-accession-file");
+        args.add(paf);
+      }
+    }
+
+    if (workflowRunAccession != null) {
+      if (workflowRunAncestor) {
+        args.add("--metadata-workflow-run-accession");
+      } else {
+        args.add("--metadata-workflow-run-ancestor-accession");
+      }
+      args.add(workflowRunAccession);
+    }
+
+    args.add("--metadata-processing-accession-file");
+    args.add(accessionFile);
+
+    return args;
+  }
 }
