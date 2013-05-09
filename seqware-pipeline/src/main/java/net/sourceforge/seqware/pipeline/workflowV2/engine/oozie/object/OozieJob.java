@@ -309,4 +309,15 @@ public class OozieJob {
   public String getAccessionFile() {
     return this.oozie_working_dir + "/" + this.getName() + "_accession";
   }
+
+  public static ArrayList<String> createRunnerCommand(String jar) {
+    ArrayList<String> cmd = new ArrayList<String>();
+    cmd.add("java");
+    cmd.add("-jar");
+    cmd.add(jar);
+    cmd.add("--module");
+    cmd.add("net.sourceforge.seqware.pipeline.modules.GenericCommandRunner");
+    return cmd;
+  }
+
 }
