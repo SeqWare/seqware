@@ -30,13 +30,22 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
     this.dataModel = objectModel;
   }
 
+  public static String seqwareJarPath(AbstractWorkflowDataModel objectModel) {
+    return objectModel.getWorkflowBaseDir() + "/lib/seqware-distribution-"
+        + objectModel.getTags().get("seqware_version") + "-full.jar";
+  }
+
+  // TODO: figure out how/where this switch should be made.
+  public static boolean USE_SGE = true;
+
   @Override
   public ReturnValue launchWorkflow(AbstractWorkflowDataModel objectModel) {
     // parse objectmodel
     this.dataModel = objectModel;
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
     this.setupEnvironment();
-    this.parseDataModel(objectModel);
+    this.parseDataModel(objectModel, USE_SGE,
+                        new File(seqwareJarPath(objectModel)));
     this.setupHDFS(objectModel);
     ret = this.runWorkflow();
     return ret;
@@ -136,11 +145,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
                          this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"
                              + this.dir.getName());
       // copy lib
-      this.copyFromLocal(fileSystem,
-                         objectModel.getWorkflowBaseDir()
-                             + "/lib/seqware-distribution-"
-                             + objectModel.getTags().get("seqware_version")
-                             + "-full.jar",
+      this.copyFromLocal(fileSystem, seqwareJarPath(objectModel),
                          this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"
                              + this.dir.getName() + "/lib");
     } catch (IOException e1) {
@@ -185,12 +190,13 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
    * @param objectModel
    * @return
    */
-  private File parseDataModel(AbstractWorkflowDataModel objectModel) {
+  private File parseDataModel(AbstractWorkflowDataModel objectModel,
+                              boolean useSge, File seqwareJar) {
     File file = new File(this.dir, "workflow.xml");
     // generate dax
     OozieWorkflowXmlGenerator daxv2 = new OozieWorkflowXmlGenerator();
     daxv2.generateWorkflowXml(objectModel, file.getAbsolutePath(),
-                              this.dir.getAbsolutePath());
+                              this.dir.getAbsolutePath(), useSge, seqwareJar);
     return file;
   }
 

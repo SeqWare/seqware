@@ -1,5 +1,8 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 
@@ -12,8 +15,9 @@ public class OozieProvisionFileJob extends OozieJob {
   private SqwFile file;
 
   public OozieProvisionFileJob(AbstractJob job, SqwFile file, String name,
-                               String oozie_working_dir) {
-    super(job, name, oozie_working_dir);
+                               String oozie_working_dir, boolean useSge,
+                               File seqwareJar) {
+    super(job, name, oozie_working_dir, useSge, seqwareJar);
     this.file = file;
   }
 
@@ -31,24 +35,6 @@ public class OozieProvisionFileJob extends OozieJob {
 
   public void setMetadataOutputPrefix(String metadataOutputPrefix) {
     this.metadataOutputPrefix = metadataOutputPrefix;
-  }
-
-  public Element serializeXML() {
-    Element element = new Element("action", WorkflowApp.NAMESPACE);
-    element.setAttribute("name", this.name);
-    Element javaE = this.getJavaElement();
-    element.addContent(javaE);
-
-    // okTo
-    Element ok = new Element("ok", WorkflowApp.NAMESPACE);
-    ok.setAttribute("to", this.okTo);
-    element.addContent(ok);
-
-    Element error = new Element("error", WorkflowApp.NAMESPACE);
-    error.setAttribute("to", "fail");
-    element.addContent(error);
-
-    return element;
   }
 
   protected Element getJavaElement() {
@@ -177,6 +163,60 @@ public class OozieProvisionFileJob extends OozieJob {
     }
 
     return javaE;
+  }
+
+  public static ArrayList<String> provisionFileArgs(OozieProvisionFileJob job) {
+    return provisionFileArgs(job.getJobObject().getAlgo(),
+                             job.oozie_working_dir, job.file,
+                             job.metadataOutputPrefix, job.outputDir);
+  }
+
+  public static ArrayList<String> provisionFileArgs(String jobName,
+                                                    String workingDirectory,
+                                                    SqwFile file,
+                                                    String metadataOutputPrefix,
+                                                    String outputDirectory) {
+    ArrayList<String> args = new ArrayList<String>();
+
+    args.add("--module");
+    args.add("net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles");
+
+    args.add("--");
+
+    if (file.isInput()) {
+      args.add("--skip-record-file");
+      args.add("--input-file");
+      args.add(file.getSourcePath());
+    } else {
+      args.add("--input-file-metadata");
+      args.add(String.format("%s::%s::%s/%s", jobName, file.getType(),
+                             workingDirectory, file.getSourcePath()));
+    }
+
+    if (file.getOutputPath() != null) {
+      args.add("--output-file");
+    } else {
+      args.add("--output-dir");
+    }
+
+    if (file.isInput()) {
+      args.add(outputDirectory);
+    } else {
+      args.add(metadataOutputPrefix + "/" + outputDirectory);
+    }
+
+    if (file.isForceCopy()) {
+      args.add("--force-copy");
+    }
+
+    return args;
+  }
+
+  @Override
+  public ArrayList<String> runnerArgs() {
+    ArrayList<String> args = metaDataArgs(this);
+    args.addAll(provisionFileArgs(this));
+    return args;
   }
 
 }

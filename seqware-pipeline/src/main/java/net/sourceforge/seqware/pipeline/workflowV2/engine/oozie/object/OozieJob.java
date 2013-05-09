@@ -30,8 +30,11 @@ public class OozieJob {
   protected List<OozieJob> children;
   protected String oozie_working_dir;
   protected List<String> parentAccessionFiles;
+  protected boolean useSge;
+  protected String seqwareJarPath;
 
-  public OozieJob(AbstractJob job, String name, String oozie_working_dir) {
+  public OozieJob(AbstractJob job, String name, String oozie_working_dir,
+                  boolean useSge, File seqwareJar) {
     this.name = name;
     this.jobObj = job;
     this.oozie_working_dir = oozie_working_dir;
@@ -39,13 +42,22 @@ public class OozieJob {
     this.children = new ArrayList<OozieJob>();
     this.parentAccessionFiles = new ArrayList<String>();
     this.parentAccessions = new ArrayList<String>();
+    this.useSge = useSge;
+    if (useSge && seqwareJar == null) {
+      throw new IllegalArgumentException("seqwareJar must be specified when useSge is true.");
+    }
+    this.seqwareJarPath = seqwareJar.getAbsolutePath();
   }
 
-  public Element serializeXML() {
+  public final Element serializeXML() {
     Element element = new Element("action", WorkflowApp.NAMESPACE);
     element.setAttribute("name", this.name);
-    Element javaE = this.getJavaElement();
-    element.addContent(javaE);
+
+    if (useSge) {
+      element.addContent(getSgeElement());
+    } else {
+      element.addContent(getJavaElement());
+    }
 
     // okTo
     Element ok = new Element("ok", WorkflowApp.NAMESPACE);
@@ -67,7 +79,29 @@ public class OozieJob {
     return oozie_working_dir;
   }
 
+  private final Element getSgeElement() {
+    File scriptFile = scriptFile(name, oozie_working_dir);
+    String scriptContents = createSgeScript();
+
+    FileWriter writer = null;
+    try {
+      writer = new FileWriter(scriptFile);
+      writer.write(scriptContents);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } finally {
+      try {
+        writer.close();
+      } catch (Exception e) {
+        // gulp
+      }
+    }
+
+    return createSgeAction(scriptFile.getAbsolutePath(), oozie_working_dir);
+  }
+
   protected Element getJavaElement() {
+
     Element javaE = new Element("java", WorkflowApp.NAMESPACE);
     Element jobTracker = new Element("job-tracker", WorkflowApp.NAMESPACE);
     jobTracker.setText("${jobTracker}");
@@ -317,12 +351,24 @@ public class OozieJob {
     return this.oozie_working_dir + "/" + this.getName() + "_accession";
   }
 
+  /**
+   * Returns the metadata arg list for Runner.
+   * 
+   * @param job
+   *          the job to run
+   * @return Runner args
+   */
   public static ArrayList<String> metaDataArgs(OozieJob job) {
     return metaDataArgs(job.metadataWriteback, job.getAccessionFile(),
                         job.parentAccessions, job.parentAccessionFiles,
                         job.wfrAccession, job.wfrAncesstor);
   }
 
+  /**
+   * Returns the metadata arg list for Runner.
+   * 
+   * @return Runner args
+   */
   public static ArrayList<String> metaDataArgs(boolean metadataWriteback,
                                                String accessionFile,
                                                Collection<String> parentAccessions,
@@ -366,11 +412,29 @@ public class OozieJob {
     return args;
   }
 
+  /**
+   * Returns the arg list of the GenericCommandRunner module.
+   * 
+   * @param job
+   *          the job to run
+   * @return Runner args
+   */
   public static ArrayList<String> genericRunnerArgs(OozieJob job) {
     return genericRunnerArgs(job.name, job.oozie_working_dir,
                              job.getJobObject().getCommand().getArguments());
   }
 
+  /**
+   * Returns the arg list of the GenericCommandRunner module.
+   * 
+   * @param jobName
+   *          name of the job
+   * @param workingDirectory
+   *          working directory of the job
+   * @param commands
+   *          the list of bash commands
+   * @return Runner args
+   */
   public static ArrayList<String> genericRunnerArgs(String jobName,
                                                     String workingDirectory,
                                                     List<String> commands) {
@@ -398,18 +462,29 @@ public class OozieJob {
     return args;
   }
 
+  /**
+   * Creates the list of arguments to the Runner. Override to provide an
+   * alternative list of values.
+   * 
+   * @return Runner args
+   */
   public ArrayList<String> runnerArgs() {
     ArrayList<String> args = metaDataArgs(this);
     args.addAll(genericRunnerArgs(this));
     return args;
   }
 
-  public String createSgeScript(String jar) {
+  /**
+   * Creates the script that will invoke the Runner.
+   * 
+   * @return the script
+   */
+  public final String createSgeScript() {
 
     ArrayList<String> list = new ArrayList<String>();
     list.add("java");
     list.add("-jar");
-    list.add(jar);
+    list.add(seqwareJarPath);
     list.add("net.sourceforge.seqware.pipeline.runner.Runner");
 
     list.addAll(runnerArgs());
@@ -423,9 +498,20 @@ public class OozieJob {
     return sb.toString();
   }
 
+  /**
+   * The sub-directory (of the working directory) in which generated script
+   * files will be placed.
+   */
   public static final String SGE_SCRIPTS_SUBDIR = "generated-sge-job-scripts";
   private static final ConcurrentMap<String, AtomicInteger> nameCounter = new ConcurrentHashMap<String, AtomicInteger>();
 
+  /**
+   * Generates a unique (within the scope of the running JVM) script file name.
+   * 
+   * @param jobName
+   *          name of the job run by the script
+   * @return a script file name
+   */
   private static String scriptFileName(String jobName) {
     AtomicInteger counter = nameCounter.putIfAbsent(jobName,
                                                     new AtomicInteger());
@@ -437,25 +523,33 @@ public class OozieJob {
     }
   }
 
-  private void writeSgeScript(String script) throws IOException {
-    File scriptDir = new File(oozie_working_dir, SGE_SCRIPTS_SUBDIR);
-    File scriptFile = new File(scriptDir, scriptFileName(name));
-    FileWriter writer = null;
-    try {
-      writer = new FileWriter(scriptFile);
-      writer.write(script);
-    } finally {
-      try {
-        writer.close();
-      } catch (Exception e) {
-        // gulp
-      }
-    }
+  /**
+   * Creates the fully qualified File for a generated script.
+   * 
+   * @param jobName
+   *          name of the job run by the script
+   * @param workingDirectory
+   *          working directory of the job
+   * @return the script file
+   */
+  public static File scriptFile(String jobName, String workingDirectory) {
+    File scriptDir = new File(workingDirectory, SGE_SCRIPTS_SUBDIR);
+    return new File(scriptDir, scriptFileName(jobName));
   }
 
   public static final Namespace SGE_XMLNS = Namespace.getNamespace("uri:oozie:sge-action:1.0");
 
-  public Element createSgeAction(String scriptFileName, String workingDirectory) {
+  /**
+   * Creates the sge XML action node.
+   * 
+   * @param scriptFileName
+   *          the name of the file passed to qsub
+   * @param workingDirectory
+   *          the working directory passed to qsub
+   * @return the sge node
+   */
+  public final Element createSgeAction(String scriptFileName,
+                                       String workingDirectory) {
     Element sge = new Element("sge", SGE_XMLNS);
 
     Element script = new Element("script");
