@@ -44,7 +44,8 @@ public class OozieJob {
     this.parentAccessions = new ArrayList<String>();
     this.useSge = useSge;
     if (useSge && seqwareJar == null) {
-      throw new IllegalArgumentException("seqwareJar must be specified when useSge is true.");
+      throw new IllegalArgumentException(
+                                         "seqwareJar must be specified when useSge is true.");
     }
     this.seqwareJarPath = seqwareJar.getAbsolutePath();
   }
@@ -530,6 +531,17 @@ public class OozieJob {
   }
 
   /**
+   * Returns the file pointing at the sub-directory of the working directory
+   * into which generated Runner scripts will be placed.
+   * 
+   * @param workingDirectory
+   * @return the scripts sub-directory
+   */
+  public static File scriptsDir(String workingDirectory) {
+    return new File(workingDirectory, SGE_SCRIPTS_SUBDIR);
+  }
+
+  /**
    * Creates the fully qualified File for a generated script.
    * 
    * @param jobName
@@ -539,7 +551,7 @@ public class OozieJob {
    * @return the script file
    */
   public static File scriptFile(String jobName, String workingDirectory) {
-    File scriptDir = new File(workingDirectory, SGE_SCRIPTS_SUBDIR);
+    File scriptDir = scriptsDir(workingDirectory);
     return new File(scriptDir, scriptFileName(jobName));
   }
 
