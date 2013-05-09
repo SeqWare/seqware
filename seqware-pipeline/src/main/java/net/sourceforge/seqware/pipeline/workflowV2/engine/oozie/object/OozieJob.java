@@ -3,11 +3,13 @@ package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 public class OozieJob {
   protected String okTo = "end";
@@ -371,8 +373,6 @@ public class OozieJob {
     args.add("--gcr-algorithm");
     args.add(jobName);
 
-    args.add("--gcr-command");
-
     StringBuilder sb = new StringBuilder();
     sb.append("cd ");
     sb.append(workingDirectory);
@@ -381,10 +381,54 @@ public class OozieJob {
       sb.append(cmd);
     }
 
-    // TODO: Worry about quoting?
+    args.add("--gcr-command");
     args.add(sb.toString());
 
     return args;
+  }
+
+  public String createSgeScript(String jar) {
+
+    StringBuilder sb = new StringBuilder();
+
+    for (String s : createRunnerCommand(jar)) {
+      sb.append(s);
+      sb.append(" ");
+    }
+
+    for (String s : createMetaDataArgs(metadataWriteback, getAccessionFile(),
+                                       parentAccessions, parentAccessionFiles,
+                                       wfrAccession, wfrAncesstor)) {
+      sb.append(s);
+      sb.append(" ");
+    }
+
+    sb.append("--");
+
+    for (String s : createRunnerArgs(jobObj.getAlgo(), oozie_working_dir,
+                                     jobObj.getCommand().getArguments())) {
+      sb.append(" ");
+      sb.append(s);
+    }
+
+    return sb.toString();
+  }
+
+  public static final Namespace SGE_XMLNS = Namespace.getNamespace("uri:oozie:sge-action:1.0");
+
+  public Element createSgeAction(String scriptFileName,
+                                 String workingDirectory) {
+    Element sge = new Element("sge", SGE_XMLNS);
+
+    Element script = new Element("script");
+    script.setText(scriptFileName);
+    sge.addContent(script);
+
+    Element workDir = new Element("working-directory");
+    workDir.setText(workingDirectory);
+    sge.addContent(workDir);
+
+    return sge;
   }
 
 }
