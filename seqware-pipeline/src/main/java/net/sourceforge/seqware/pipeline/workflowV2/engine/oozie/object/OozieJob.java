@@ -132,8 +132,7 @@ public class OozieJob {
     javaE.addContent(arg1);
 
     Element argModule = new Element("arg", WorkflowApp.NAMESPACE);
-    argModule
-        .setText("net.sourceforge.seqware.pipeline.modules.GenericCommandRunner");
+    argModule.setText("net.sourceforge.seqware.pipeline.modules.GenericCommandRunner");
     javaE.addContent(argModule);
 
     Element dash = new Element("arg", WorkflowApp.NAMESPACE);
@@ -236,8 +235,8 @@ public class OozieJob {
     if (obj == this)
       return true;
     OozieJob rhs = (OozieJob) obj;
-    return new EqualsBuilder().appendSuper(super.equals(obj))
-        .append(name, rhs.name).isEquals();
+    return new EqualsBuilder().appendSuper(super.equals(obj)).append(name,
+                                                                     rhs.name).isEquals();
   }
 
   @Override
@@ -312,22 +311,18 @@ public class OozieJob {
     return this.oozie_working_dir + "/" + this.getName() + "_accession";
   }
 
-  public static ArrayList<String> createRunnerCommand(String jar) {
-    ArrayList<String> cmd = new ArrayList<String>();
-    cmd.add("java");
-    cmd.add("-jar");
-    cmd.add(jar);
-    cmd.add("--module");
-    cmd.add("net.sourceforge.seqware.pipeline.modules.GenericCommandRunner");
-    return cmd;
+  public static ArrayList<String> metaDataArgs(OozieJob job) {
+    return metaDataArgs(job.metadataWriteback, job.getAccessionFile(),
+                        job.parentAccessions, job.parentAccessionFiles,
+                        job.wfrAccession, job.wfrAncesstor);
   }
 
-  public static ArrayList<String> createMetaDataArgs(boolean metadataWriteback,
-                                                     String accessionFile,
-                                                     Collection<String> parentAccessions,
-                                                     Collection<String> parentAccessionFiles,
-                                                     String workflowRunAccession,
-                                                     boolean workflowRunAncestor) {
+  public static ArrayList<String> metaDataArgs(boolean metadataWriteback,
+                                               String accessionFile,
+                                               Collection<String> parentAccessions,
+                                               Collection<String> parentAccessionFiles,
+                                               String workflowRunAccession,
+                                               boolean workflowRunAncestor) {
     ArrayList<String> args = new ArrayList<String>();
 
     if (metadataWriteback) {
@@ -365,10 +360,21 @@ public class OozieJob {
     return args;
   }
 
-  public static ArrayList<String> createRunnerArgs(String jobName,
-                                                   String workingDirectory,
-                                                   List<String> commands) {
+  public static ArrayList<String> genericRunnerArgs(OozieJob job) {
+    return genericRunnerArgs(job.getJobObject().getAlgo(),
+                             job.oozie_working_dir,
+                             job.getJobObject().getCommand().getArguments());
+  }
+
+  public static ArrayList<String> genericRunnerArgs(String jobName,
+                                                    String workingDirectory,
+                                                    List<String> commands) {
     ArrayList<String> args = new ArrayList<String>();
+
+    args.add("--module");
+    args.add("net.sourceforge.seqware.pipeline.modules.GenericCommandRunner");
+
+    args.add("--");
 
     args.add("--gcr-algorithm");
     args.add(jobName);
@@ -387,28 +393,26 @@ public class OozieJob {
     return args;
   }
 
+  public ArrayList<String> runnerArgs() {
+    ArrayList<String> args = metaDataArgs(this);
+    args.addAll(genericRunnerArgs(this));
+    return args;
+  }
+
   public String createSgeScript(String jar) {
 
+    ArrayList<String> list = new ArrayList<String>();
+    list.add("java");
+    list.add("-jar");
+    list.add(jar);
+    list.add("net.sourceforge.seqware.pipeline.runner.Runner");
+
+    list.addAll(runnerArgs());
+
     StringBuilder sb = new StringBuilder();
-
-    for (String s : createRunnerCommand(jar)) {
+    for (String s : list) {
       sb.append(s);
       sb.append(" ");
-    }
-
-    for (String s : createMetaDataArgs(metadataWriteback, getAccessionFile(),
-                                       parentAccessions, parentAccessionFiles,
-                                       wfrAccession, wfrAncesstor)) {
-      sb.append(s);
-      sb.append(" ");
-    }
-
-    sb.append("--");
-
-    for (String s : createRunnerArgs(jobObj.getAlgo(), oozie_working_dir,
-                                     jobObj.getCommand().getArguments())) {
-      sb.append(" ");
-      sb.append(s);
     }
 
     return sb.toString();
@@ -416,8 +420,7 @@ public class OozieJob {
 
   public static final Namespace SGE_XMLNS = Namespace.getNamespace("uri:oozie:sge-action:1.0");
 
-  public Element createSgeAction(String scriptFileName,
-                                 String workingDirectory) {
+  public Element createSgeAction(String scriptFileName, String workingDirectory) {
     Element sge = new Element("sge", SGE_XMLNS);
 
     Element script = new Element("script");
