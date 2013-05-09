@@ -79,9 +79,15 @@ public class OozieJob {
     return oozie_working_dir;
   }
 
-  private final Element getSgeElement() {
+  /**
+   * Creates and writes a Runner script to the working directory, then returns
+   * the XML for an SGE action node that will invoke that script via qsub.
+   * 
+   * @return the SGE XML node
+   */
+  private Element getSgeElement() {
     File scriptFile = scriptFile(name, oozie_working_dir);
-    String scriptContents = createSgeScript();
+    String scriptContents = createRunnerScript();
 
     FileWriter writer = null;
     try {
@@ -352,7 +358,7 @@ public class OozieJob {
   }
 
   /**
-   * Returns the metadata arg list for Runner.
+   * Returns the metadata arg list for the Runner.
    * 
    * @param job
    *          the job to run
@@ -365,7 +371,7 @@ public class OozieJob {
   }
 
   /**
-   * Returns the metadata arg list for Runner.
+   * Returns the metadata arg list for the Runner.
    * 
    * @return Runner args
    */
@@ -413,7 +419,7 @@ public class OozieJob {
   }
 
   /**
-   * Returns the arg list of the GenericCommandRunner module.
+   * Returns the GenericCommandRunner module arg list for the Runner.
    * 
    * @param job
    *          the job to run
@@ -425,7 +431,7 @@ public class OozieJob {
   }
 
   /**
-   * Returns the arg list of the GenericCommandRunner module.
+   * Returns the GenericCommandRunner module arg list for the Runner.
    * 
    * @param jobName
    *          name of the job
@@ -475,11 +481,11 @@ public class OozieJob {
   }
 
   /**
-   * Creates the script that will invoke the Runner.
+   * Creates the script that will invoke the Runner for this job.
    * 
    * @return the script
    */
-  public final String createSgeScript() {
+  public final String createRunnerScript() {
 
     ArrayList<String> list = new ArrayList<String>();
     list.add("java");
