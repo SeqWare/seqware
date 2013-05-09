@@ -16,169 +16,171 @@ import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 
 public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
 
-	private ReturnValue statusRet;
-	@Override
-	/**
-	 * launch the workflow defined in the object model
-	 */
-	public ReturnValue launchWorkflow(AbstractWorkflowDataModel objectModel) {
-            
-            ReturnValue retProxy = BasicWorkflow.gridProxyInit();
-            if (retProxy.getExitStatus() != ReturnValue.SUCCESS) {
-                Log.error("ERROR: can't init the globus proxy so terminating here, continuing but your workflow submissions will fail!");
-                return (retProxy);
-            }
-            
-		//parse objectmodel 
-		ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-		File dax = this.parseDataModel(objectModel);
-		ret = this.runWorkflow(objectModel, dax);
-		this.statusRet = ret;
-		return ret;
-	}
+  private ReturnValue statusRet;
 
-	private File parseDataModel(AbstractWorkflowDataModel objectModel) {
-		ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+  @Override
+  /**
+   * launch the workflow defined in the object model
+   */
+  public ReturnValue launchWorkflow(AbstractWorkflowDataModel objectModel) {
 
-		File dax;
-		try {
-		    dax = FileTools.createFileWithUniqueName(new File("/tmp"), "dax");
-		} catch (IOException e) {
-		    e.printStackTrace();
-		    ret.setExitStatus(ReturnValue.FAILURE);
-		    ret.setStderr("Can't write DAX file! " + e.getMessage());
-		    return (null);
-		}
+    ReturnValue retProxy = BasicWorkflow.gridProxyInit();
+    if (retProxy.getExitStatus() != ReturnValue.SUCCESS) {
+      Log.error("ERROR: can't init the globus proxy so terminating here, continuing but your workflow submissions will fail!");
+      return (retProxy);
+    }
 
-		Log.stdout("CREATING DAX IN: " + dax.getAbsolutePath());
-		
-		//generate dax
-		DaxgeneratorV2 daxv2 = new DaxgeneratorV2();
-		daxv2.generateDax(objectModel, dax.getAbsolutePath());
-		return dax;
-	}
-	
+    // parse objectmodel
+    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+    File dax = this.parseDataModel(objectModel);
+    ret = this.runWorkflow(objectModel, dax);
+    this.statusRet = ret;
+    return ret;
+  }
 
-	
-	private ReturnValue runWorkflow(AbstractWorkflowDataModel objectModel, File dax) {
-		ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-		
-		// create the submission of the DAX to Pegasus
-		String pegasusCmd = "grid-proxy-init -valid 480:00; pegasus-plan -Dpegasus.user.properties="
-				+ objectModel.getEnv().getPegasusConfigDir() + "/properties --dax "
-			+ dax.getAbsolutePath() + " --dir " + objectModel.getEnv().getDaxDir()
-			+ " -o " + objectModel.getEnv().getSwCluster() + " --force --submit -s "
-			+ objectModel.getEnv().getSwCluster();
+  private File parseDataModel(AbstractWorkflowDataModel objectModel) {
+    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
-		// run the pegasus submission
-		Log.stdout("SUBMITTING TO PEGASUS: " + pegasusCmd);
-		ArrayList<String> theCommand = new ArrayList<String>();
-		theCommand.add("bash");
-		theCommand.add("-lc");
-		theCommand.add(pegasusCmd);
-		ReturnValue retPegasus = RunTools.runCommand(theCommand
-			.toArray(new String[0]));
+    File dax;
+    try {
+      dax = FileTools.createFileWithUniqueName(new File("/tmp"), "dax");
+    } catch (IOException e) {
+      e.printStackTrace();
+      ret.setExitStatus(ReturnValue.FAILURE);
+      ret.setStderr("Can't write DAX file! " + e.getMessage());
+      return (null);
+    }
 
-		// figure out the status command
-		String stdOut = retPegasus.getStdout();
-		Pattern p = Pattern.compile("(pegasus-status -l \\S+)");
-		Matcher m = p.matcher(stdOut);
-		String statusCmd = null;
-		if (m.find()) {
-		    statusCmd = m.group(1);
-		}
+    Log.stdout("CREATING DAX IN: " + dax.getAbsolutePath());
 
-		// look for the status directory
-		p = Pattern.compile("pegasus-status -l (\\S+)");
-		m = p.matcher(stdOut);
-		String statusDir = null;
-		if (m.find()) {
-		    statusDir = m.group(1);
-		}
-		
-		Log.stdout("PEGASUS STATUS COMMAND: " + statusCmd);
-		if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS
-				|| statusCmd == null) {
-			return retPegasus;
-		}
+    // generate dax
+    DaxgeneratorV2 daxv2 = new DaxgeneratorV2();
+    daxv2.generateDax(objectModel, dax.getAbsolutePath());
+    return dax;
+  }
 
-			// if the user passes in --wait then hang around until the workflow
-			// finishes or fails
-			// periodically checking the status in a robust way
-		boolean success = true;
-		if (objectModel.isWait()) {
-			success = false;
+  private ReturnValue runWorkflow(AbstractWorkflowDataModel objectModel,
+                                  File dax) {
+    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
-			// now parse out the return status from the pegasus tool
-			ReturnValue watchedResult = null;
-			if (statusCmd != null && statusDir != null) {
-				WorkflowTools workflowTools = new WorkflowTools();			
-				watchedResult = workflowTools.watchWorkflow(statusCmd,
-					statusDir);
-			    }
+    // create the submission of the DAX to Pegasus
+    String pegasusCmd = "grid-proxy-init -valid 480:00; pegasus-plan -Dpegasus.user.properties="
+        + objectModel.getEnv().getPegasusConfigDir()
+        + "/properties --dax "
+        + dax.getAbsolutePath()
+        + " --dir "
+        + objectModel.getEnv().getDaxDir()
+        + " -o "
+        + objectModel.getEnv().getSwCluster()
+        + " --force --submit -s " + objectModel.getEnv().getSwCluster();
 
-			    if (watchedResult.getExitStatus() == ReturnValue.SUCCESS) {
-				success = true;
-				
-			    if (watchedResult.getExitStatus() == ReturnValue.FAILURE) {
-					Log.error("ERROR: problems watching workflow");
-					// need to save back to the DB if watching
-					
-					ret.setExitStatus(ReturnValue.FAILURE);
-					return (ret);
-			    }
-			}
+    // run the pegasus submission
+    Log.stdout("SUBMITTING TO PEGASUS: " + pegasusCmd);
+    ArrayList<String> theCommand = new ArrayList<String>();
+    theCommand.add("bash");
+    theCommand.add("-lc");
+    theCommand.add(pegasusCmd);
+    ReturnValue retPegasus = RunTools.runCommand(theCommand.toArray(new String[0]));
 
-			if (retPegasus.getExitStatus() != ReturnValue.SUCCESS || !success) {
-			    Log.error("ERROR: failure with running the pegasus command");
-			    // I previously saved this state to the DB so no need to do that
-			    // here
-			    ret.setExitStatus(ReturnValue.FAILURE);
-			    return (ret);
-			}
-		}
+    // figure out the status command
+    String stdOut = retPegasus.getStdout();
+    Pattern p = Pattern.compile("(pegasus-status -l \\S+)");
+    Matcher m = p.matcher(stdOut);
+    String statusCmd = null;
+    if (m.find()) {
+      statusCmd = m.group(1);
+    }
 
-		return retPegasus;
+    // look for the status directory
+    p = Pattern.compile("pegasus-status -l (\\S+)");
+    m = p.matcher(stdOut);
+    String statusDir = null;
+    if (m.find()) {
+      statusDir = m.group(1);
+    }
 
-	}
+    Log.stdout("PEGASUS STATUS COMMAND: " + statusCmd);
+    if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS
+        || statusCmd == null) {
+      return retPegasus;
+    }
 
-	@Override
-	public String getId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    // if the user passes in --wait then hang around until the workflow
+    // finishes or fails
+    // periodically checking the status in a robust way
+    boolean success = true;
+    if (objectModel.isWait()) {
+      success = false;
 
-	@Override
-	public String getStatus(String id) {
-		if(this.statusRet == null)
-			return null;
-		String stdOut = this.getStdOut("");
-	    Pattern p = Pattern.compile("(pegasus-status -l \\S+)");
-	    Matcher m = p.matcher(stdOut);
-	    String statusCmd = null;
-	    if (m.find()) {
-	    	statusCmd = m.group(1);
-	    }
-	    return statusCmd;
-	}
+      // now parse out the return status from the pegasus tool
+      ReturnValue watchedResult = null;
+      if (statusCmd != null && statusDir != null) {
+        WorkflowTools workflowTools = new WorkflowTools();
+        watchedResult = workflowTools.watchWorkflow(statusCmd, statusDir);
+      }
 
-	@Override
-	public String getStdErr(String id) {
-		if(this.statusRet == null)
-			return null;
-		return this.statusRet.getStderr();
-	}
+      if (watchedResult.getExitStatus() == ReturnValue.SUCCESS) {
+        success = true;
 
-	@Override
-	public String getStdOut(String id) {
-		if(this.statusRet == null)
-			return null;
-		return this.statusRet.getStdout();
-	}
+        if (watchedResult.getExitStatus() == ReturnValue.FAILURE) {
+          Log.error("ERROR: problems watching workflow");
+          // need to save back to the DB if watching
 
-	@Override
-	public String getStatus() {
-		return this.getStatus("");
-	}
-	
+          ret.setExitStatus(ReturnValue.FAILURE);
+          return (ret);
+        }
+      }
+
+      if (retPegasus.getExitStatus() != ReturnValue.SUCCESS || !success) {
+        Log.error("ERROR: failure with running the pegasus command");
+        // I previously saved this state to the DB so no need to do that
+        // here
+        ret.setExitStatus(ReturnValue.FAILURE);
+        return (ret);
+      }
+    }
+
+    return retPegasus;
+
+  }
+
+  @Override
+  public String getId() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public String getStatus(String id) {
+    if (this.statusRet == null)
+      return null;
+    String stdOut = this.getStdOut("");
+    Pattern p = Pattern.compile("(pegasus-status -l \\S+)");
+    Matcher m = p.matcher(stdOut);
+    String statusCmd = null;
+    if (m.find()) {
+      statusCmd = m.group(1);
+    }
+    return statusCmd;
+  }
+
+  @Override
+  public String getStdErr(String id) {
+    if (this.statusRet == null)
+      return null;
+    return this.statusRet.getStderr();
+  }
+
+  @Override
+  public String getStdOut(String id) {
+    if (this.statusRet == null)
+      return null;
+    return this.statusRet.getStdout();
+  }
+
+  @Override
+  public String getStatus() {
+    return this.getStatus("");
+  }
+
 }
