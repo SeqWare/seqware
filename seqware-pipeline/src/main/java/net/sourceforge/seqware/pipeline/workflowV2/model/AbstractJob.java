@@ -193,11 +193,22 @@ public class AbstractJob implements Job {
 
 	@Override
 	public Job setQueue(String queue) {
-		return null;
+	  Requirement req = this.getRequirementByType(Type.QUEUE);
+	  if (req == null){
+	    req = new Requirement();
+	    req.setType(Type.QUEUE);
+	    this.requirements.add(req);
+	  }
+	  req.setValue(queue);
+    return this;
 	}
 	
 	public String getQueue() {
-		return null;
+	  Requirement req = this.getRequirementByType(Type.QUEUE);
+	  if (req != null){
+	    return req.getValue();
+	  }
+	  return null;
 	}
 
 	@Override
