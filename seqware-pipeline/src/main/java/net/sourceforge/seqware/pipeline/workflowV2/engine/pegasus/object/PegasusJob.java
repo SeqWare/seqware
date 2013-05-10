@@ -46,7 +46,7 @@ public class PegasusJob {
   }
 
   public Element serializeXML() {
-    String name = "java";
+    String name = jobObj.isLocal() ? "java_local" : "java";
     // FIXME should not hardcode here
     String version = "1.6.0";
 
@@ -64,6 +64,15 @@ public class PegasusJob {
       profileE.setText(r.getValue());
       element.addContent(profileE);
     }
+
+    if (jobObj.isLocal()){
+      Element profileE = new Element("profile", Adag.NAMESPACE);
+      profileE.setAttribute("namespace", "hints");
+      profileE.setAttribute("key", "executionPool");
+      profileE.setText("local");
+      element.addContent(profileE);
+    }
+
     return element;
   }
 
