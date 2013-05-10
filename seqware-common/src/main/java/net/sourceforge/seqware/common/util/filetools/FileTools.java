@@ -927,6 +927,7 @@ public class FileTools {
         // find the hostname or use --force-host
         if (options.has("force-host") && options.valueOf("force-host") != null) {
             hostname = (String) options.valueOf("force-host");
+            returnValue = new ReturnValue(ReturnValue.SUCCESS);
         } else {
             ArrayList<String> theCommand = new ArrayList<String>();
             theCommand.add("bash");
