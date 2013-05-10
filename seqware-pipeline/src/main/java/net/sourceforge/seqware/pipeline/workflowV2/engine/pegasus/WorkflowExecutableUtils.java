@@ -32,6 +32,25 @@ public class WorkflowExecutableUtils {
     return ex_java;
   }
 
+  public static WorkflowExecutable getDefaultJavaLocalExcutable(AbstractWorkflowDataModel datamodel) {
+    WorkflowExecutable ex_java = new WorkflowExecutable();
+    ex_java.setNamespace("seqware");
+    ex_java.setName("java_local");
+    ex_java.setInstalled(true);
+    ex_java.setArch("x86_64");
+    ex_java.setOs("linux");
+    ex_java.setVersion("1.6.0");
+
+    String BASE_DIR = datamodel.getWorkflowBaseDir();
+    Pfn pfn_java = new Pfn();
+    pfn_java.setSite("local");
+    String url = "file:///" + BASE_DIR + "/bin/jre1.6.0_29/bin/java";
+    pfn_java.setUrl(url);
+    ex_java.setPfn(pfn_java);
+
+    return ex_java;
+  }
+
   public static WorkflowExecutable getDefaultPerlExcutable(AbstractWorkflowDataModel datamodel) {
     WorkflowExecutable ex_perl = new WorkflowExecutable();
     ex_perl.setNamespace("seqware");
