@@ -68,6 +68,7 @@ public class Adag  {
     private void setDefaultExcutables() {
 		executables = new ArrayList<WorkflowExecutable>();
 		executables.add(WorkflowExecutableUtils.getDefaultJavaExcutable(this.wfdm));
+    executables.add(WorkflowExecutableUtils.getDefaultJavaLocalExcutable(this.wfdm));
 		executables.add(WorkflowExecutableUtils.getDefaultPerlExcutable(this.wfdm));
 		executables.add(WorkflowExecutableUtils.getDefaultDirManagerExcutable(this.wfdm));
     }

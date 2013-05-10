@@ -22,6 +22,7 @@ public class AbstractJob implements Job {
 	private String mainclass;
 	protected boolean hasMetadataWriteback;
 	private List<String> parentAccessions;
+	private boolean runLocal;
 	
 	/**
 	 * for bash Job
@@ -236,4 +237,13 @@ public class AbstractJob implements Job {
 		return this.parentAccessions;
 	}
 
+	public boolean isLocal(){
+	  return runLocal;
+	}
+	public void setLocal(){
+	  setLocal(true);
+	}
+	public void setLocal(boolean runLocal){
+	  this.runLocal = runLocal;
+	}
 }
