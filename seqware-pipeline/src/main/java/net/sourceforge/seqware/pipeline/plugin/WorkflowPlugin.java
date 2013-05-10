@@ -534,6 +534,7 @@ public class WorkflowPlugin extends Plugin {
             return new ReturnValue(ReturnValue.SUCCESS);
         }
 
+        engine.prepareWorkflow(dataModel);
         if (options.has("no-run")){
           return new ReturnValue(ReturnValue.SUCCESS);
         }
