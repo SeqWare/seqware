@@ -1,0 +1,226 @@
+%% BioMed_Central_Bib_Style_v1.01
+
+\begin{thebibliography}{10}
+\providecommand{\url}[1]{[#1]}
+\providecommand{\urlprefix}{}
+
+\bibitem{koon}
+Koonin EV, Altschul SF, Bork P: \textbf{BRCA1 protein products: functional
+  motifs}. \emph{Nat Genet} 1996, \textbf{13}:266--267.
+
+\bibitem{oreg}
+Orengo CA, Bray JE, Hubbard T, LoConte L, Sillitoe I: \textbf{Analysis and
+  assessment of ab initio three-dimensional prediction, secondary structure,
+  and contacts prediction}. \emph{Proteins} 1999, \textbf{Suppl 3}:149--170.
+
+\bibitem{khar}
+Kharitonov SA, Barnes PJ: \textbf{Clinical aspects of exhaled nitric oxide}.
+  \emph{Eur Respir J}, in press.
+
+\bibitem{zvai}
+Zvaifler NJ, Burger JA, Marinova-Mutafchieva L, Taylor P, Maini RN:
+  \textbf{Mesenchymal cells, stromal derived factor-1 and rheumatoid arthritis
+  [abstract]}. \emph{Arthritis Rheum} 1999, \textbf{42}:s250.
+
+\bibitem{xjon}
+Jones X: \textbf{Zeolites and synthetic mechanisms}. In \emph{Proceedings of
+  the First National Conference on Porous Sieves: 27-30 June 1996; Baltimore}.
+  Edited by Smith Y, Stoneham: Butterworth-Heinemann 1996:16--27.
+
+\bibitem{schn}
+Schnepf E: \textbf{From prey via endosymbiont to plastids: comparative studies
+  in dinoflagellates}. In \emph{Origins of Plastids}, \emph{Volume~2}, 2nd
+  edition. Edited by Lewin RA, New York: Chapman and Hall 1993:53--76.
+
+\bibitem{pond}
+Ponder B, Johnston S, Chodosh L (Eds): \textbf{Innovative oncology}. In
+  \emph{Breast Cancer Res} 1998, \textbf{10}:1--72.
+
+\bibitem{smith}
+Smith Y (Ed): \emph{Proceedings of the First National Conference on Porous
+  Sieves: 27-30 June 1996; Baltimore}, Stoneham: Butterworth-Heinemann 1996.
+
+\bibitem{marg}
+Margulis L: \emph{Origin of Eukaryotic Cells}. New Haven: Yale University Press
+  1970.
+
+\bibitem{hunn}
+Hunninghake GW, Gadek JE: \textbf{The alveloar macrophage}. In \emph{Cultured
+  Human Cells and Tissues}. Edited by Harris TJR, New York: Academic Press
+  1995:54--56. [Stoner G (Series Editor): Methods and Perspectives in Cell
+  Biology, vol 1].
+
+\bibitem{advi}
+Advisory Committee on Genetic Modification: \emph{Annual Report}. London 1999.
+
+\bibitem{koha}
+Kohavi R: \textbf{Wrappers for performance enhancement and obvious decision
+  graphs}. \emph{PhD thesis}, Stanford University, Computer Science Department
+  1995.
+
+\bibitem{mouse}
+\textbf{The Mouse Tumor Biology Database}
+  \urlprefix\url{[http://tumor.informatics.jax.org/cancer_links.html]}.
+
+\end{thebibliography}
+
+\newcommand{\BMCxmlcomment}[1]{}
+
+\BMCxmlcomment{
+
+<refgrp>
+
+<bibl id="B1">
+  <title><p>BRCA1 protein products: functional motifs</p></title>
+  <aug>
+    <au><snm>Koonin</snm><fnm>E V</fnm></au>
+    <au><snm>Altschul</snm><fnm>S F</fnm></au>
+    <au><snm>Bork</snm><fnm>P</fnm></au>
+  </aug>
+  <source>Nat Genet</source>
+  <pubdate>1996</pubdate>
+  <volume>13</volume>
+  <fpage>266</fpage>
+  <lpage>267</lpage>
+</bibl>
+
+<bibl id="B2">
+  <title><p>Analysis and assessment of ab initio three-dimensional prediction,
+  secondary structure, and contacts prediction</p></title>
+  <aug>
+    <au><snm>Orengo</snm><fnm>C A</fnm></au>
+    <au><snm>Bray</snm><fnm>J E</fnm></au>
+    <au><snm>Hubbard</snm><fnm>T</fnm></au>
+    <au><snm>LoConte</snm><fnm>L</fnm></au>
+    <au><snm>Sillitoe</snm><fnm>I</fnm></au>
+  </aug>
+  <source>Proteins</source>
+  <pubdate>1999</pubdate>
+  <volume>Suppl 3</volume>
+  <fpage>149</fpage>
+  <lpage>170</lpage>
+</bibl>
+
+<bibl id="B3">
+  <title><p>Clinical aspects of exhaled nitric oxide</p></title>
+  <aug>
+    <au><snm>Kharitonov</snm><fnm>S A</fnm></au>
+    <au><snm>Barnes</snm><fnm>P J</fnm></au>
+  </aug>
+  <source>Eur Respir J</source>
+  <inpress />
+</bibl>
+
+<bibl id="B4">
+  <title><p>Mesenchymal cells, stromal derived factor-1 and rheumatoid
+  arthritis [abstract]</p></title>
+  <aug>
+    <au><snm>Zvaifler</snm><fnm>N J</fnm></au>
+    <au><snm>Burger</snm><fnm>J A</fnm></au>
+    <au><snm>Marinova Mutafchieva</snm><fnm>L</fnm></au>
+    <au><snm>Taylor</snm><fnm>P</fnm></au>
+    <au><snm>Maini</snm><fnm>R N</fnm></au>
+  </aug>
+  <source>Arthritis Rheum</source>
+  <pubdate>1999</pubdate>
+  <volume>42</volume>
+  <fpage>s250</fpage>
+</bibl>
+
+<bibl id="B5">
+  <title><p>Zeolites and synthetic mechanisms</p></title>
+  <aug>
+    <au><snm>Jones</snm><fnm>X</fnm></au>
+  </aug>
+  <source>Proceedings of the First National Conference on Porous Sieves: 27-30
+  June 1996; Baltimore</source>
+  <editor>Y Smith</editor>
+  <pubdate>1996</pubdate>
+  <fpage>16</fpage>
+  <lpage>27</lpage>
+</bibl>
+
+<bibl id="B6">
+  <title><p>From prey via endosymbiont to plastids: comparative studies in
+  dinoflagellates</p></title>
+  <aug>
+    <au><snm>Schnepf</snm><fnm>E</fnm></au>
+  </aug>
+  <source>Origins of Plastids</source>
+  <publisher>New York: Chapman and Hall</publisher>
+  <editor>R A Lewin</editor>
+  <edition>2</edition>
+  <pubdate>1993</pubdate>
+  <volume>2</volume>
+  <fpage>53</fpage>
+  <lpage>76</lpage>
+</bibl>
+
+<bibl id="B7">
+  <title><p>Innovative oncology</p></title>
+  <source>Breast Cancer Res</source>
+  <editor>B Ponder and S Johnston and L Chodosh</editor>
+  <pubdate>1998</pubdate>
+  <volume>10</volume>
+  <fpage>1</fpage>
+  <lpage>72</lpage>
+</bibl>
+
+<bibl id="B8">
+  <title><p>Proceedings of the First National Conference on Porous Sieves:
+  27-30 June 1996; Baltimore</p></title>
+  <publisher>Stoneham: Butterworth-Heinemann</publisher>
+  <editor>Y Smith</editor>
+  <pubdate>1996</pubdate>
+</bibl>
+
+<bibl id="B9">
+  <title><p>Origin of Eukaryotic Cells</p></title>
+  <aug>
+    <au><snm>Margulis</snm><fnm>L</fnm></au>
+  </aug>
+  <publisher>New Haven: Yale University Press</publisher>
+  <pubdate>1970</pubdate>
+</bibl>
+
+<bibl id="B10">
+  <title><p>The alveloar macrophage</p></title>
+  <aug>
+    <au><snm>Hunninghake</snm><fnm>G W</fnm></au>
+    <au><snm>Gadek</snm><fnm>J E</fnm></au>
+  </aug>
+  <source>Cultured Human Cells and Tissues</source>
+  <publisher>New York: Academic Press</publisher>
+  <editor>T J R Harris</editor>
+  <pubdate>1995</pubdate>
+  <fpage>54</fpage>
+  <lpage>56</lpage>
+  <note>Stoner G (Series Editor): Methods and Perspectives in Cell Biology, vol
+  1</note>
+</bibl>
+
+<bibl id="B11">
+  <title><p>Annual Report</p></title>
+  <aug><au><cnm>Advisory Committee on Genetic Modification</cnm></au></aug>
+  <publisher>London</publisher>
+  <pubdate>1999</pubdate>
+</bibl>
+
+<bibl id="B12">
+  <title><p>Wrappers for performance enhancement and obvious decision
+  graphs</p></title>
+  <aug>
+    <au><snm>Kohavi</snm><fnm>R</fnm></au>
+  </aug>
+  <source>PhD thesis</source>
+  <publisher>Stanford University, Computer Science Department</publisher>
+  <pubdate>1995</pubdate>
+</bibl>
+
+<bibl id="B13">
+  <title><p>The Mouse Tumor Biology Database</p></title>
+  <url>http://tumor.informatics.jax.org/cancer_links.html</url>
+</bibl>
+
+</refgrp>
+} % end of \BMCxmlcomment
