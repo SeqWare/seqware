@@ -87,12 +87,15 @@ public class OozieJob {
    * @return the SGE XML node
    */
   private Element getSgeElement() {
-    File scriptFile;
+    File subdir = new File(oozie_working_dir, SGE_SCRIPTS_SUBDIR);
+    if (!subdir.exists())
+      subdir.mkdirs();
+
+    File scriptFile = new File(subdir, name + ".sh");
     try {
-      File subdir = new File(oozie_working_dir, SGE_SCRIPTS_SUBDIR);
-      if (!subdir.exists())
-        subdir.mkdirs();
-      scriptFile = File.createTempFile(name + "_", ".sh", subdir);
+      if (!scriptFile.createNewFile()) {
+        throw new RuntimeException("Duplicate job name : " + name);
+      }
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
