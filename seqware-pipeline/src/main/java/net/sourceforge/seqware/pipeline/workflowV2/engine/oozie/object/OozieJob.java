@@ -99,6 +99,9 @@ public class OozieJob {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+    scriptFile.setReadable(true, false);
+    scriptFile.setWritable(true, true);
+    scriptFile.setExecutable(true, false);
 
     String scriptContents = createRunnerScript();
 
@@ -508,7 +511,7 @@ public class OozieJob {
 
     list.addAll(runnerArgs());
 
-    StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder("#!/usr/bin/env bash\n\n");
     for (String s : list) {
       sb.append(s);
       sb.append(" ");
