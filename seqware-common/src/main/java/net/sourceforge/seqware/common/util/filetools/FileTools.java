@@ -310,7 +310,7 @@ public class FileTools {
       parentDir.mkdirs();
     }
 
-    File tempDir = File.createTempFile(prefix, Long.toString(System.nanoTime()), parentDir);
+    File tempDir = File.createTempFile(prefix, "", parentDir);
 
     if (!(tempDir.delete())) {
       throw new IOException("Could not delete temp file: " + tempDir.getAbsolutePath());
