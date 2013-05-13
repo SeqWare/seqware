@@ -65,15 +65,17 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
                        this.dataModel.getEnv().getOOZIE_QUEUENAME());
 
       jobId = wc.run(conf);
-      Log.stdout("Workflow job submitted");
+      Log.stdout("Submitted Oozie job: " + jobId);
 
-      while (wc.getJobInfo(jobId).getStatus() == WorkflowJob.Status.RUNNING) {
-        Log.stdout("Workflow job running ...");
+      if (dataModel.isWait()) {
+        while (wc.getJobInfo(jobId).getStatus() == WorkflowJob.Status.RUNNING) {
+          Log.stdout("Workflow job running ...");
+          printWorkflowInfo(wc.getJobInfo(jobId));
+          Thread.sleep(10 * 1000);
+        }
+        Log.stdout("Workflow job completed ...");
         printWorkflowInfo(wc.getJobInfo(jobId));
-        Thread.sleep(10 * 1000);
       }
-      Log.stdout("Workflow job completed ...");
-      printWorkflowInfo(wc.getJobInfo(jobId));
 
     } catch (OozieClientException oozieClientException) {
       oozieClientException.printStackTrace();
