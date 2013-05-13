@@ -87,7 +87,16 @@ public class OozieJob {
    * @return the SGE XML node
    */
   private Element getSgeElement() {
-    File scriptFile = scriptFile(name, oozie_working_dir);
+    File scriptFile;
+    try {
+      File subdir = new File(oozie_working_dir, SGE_SCRIPTS_SUBDIR);
+      if (!subdir.exists())
+        subdir.mkdirs();
+      scriptFile = File.createTempFile(name + "_", ".sh", subdir);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
     String scriptContents = createRunnerScript();
 
     FileWriter writer = null;
@@ -510,50 +519,6 @@ public class OozieJob {
    * files will be placed.
    */
   public static final String SGE_SCRIPTS_SUBDIR = "generated-sge-job-scripts";
-  private static final ConcurrentMap<String, AtomicInteger> nameCounter = new ConcurrentHashMap<String, AtomicInteger>();
-
-  /**
-   * Generates a unique (within the scope of the running JVM) script file name.
-   * 
-   * @param jobName
-   *          name of the job run by the script
-   * @return a script file name
-   */
-  private static String scriptFileName(String jobName) {
-    AtomicInteger counter = nameCounter.putIfAbsent(jobName,
-                                                    new AtomicInteger());
-    if (counter == null) {
-      return jobName + ".sh";
-    } else {
-      int count = counter.getAndIncrement();
-      return jobName + "_" + count + ".sh";
-    }
-  }
-
-  /**
-   * Returns the file pointing at the sub-directory of the working directory
-   * into which generated Runner scripts will be placed.
-   * 
-   * @param workingDirectory
-   * @return the scripts sub-directory
-   */
-  public static File scriptsDir(String workingDirectory) {
-    return new File(workingDirectory, SGE_SCRIPTS_SUBDIR);
-  }
-
-  /**
-   * Creates the fully qualified File for a generated script.
-   * 
-   * @param jobName
-   *          name of the job run by the script
-   * @param workingDirectory
-   *          working directory of the job
-   * @return the script file
-   */
-  public static File scriptFile(String jobName, String workingDirectory) {
-    File scriptDir = scriptsDir(workingDirectory);
-    return new File(scriptDir, scriptFileName(jobName));
-  }
 
   public static final Namespace SGE_XMLNS = Namespace.getNamespace("uri:oozie:sge-action:1.0");
 
@@ -570,11 +535,11 @@ public class OozieJob {
                                        String workingDirectory) {
     Element sge = new Element("sge", SGE_XMLNS);
 
-    Element script = new Element("script");
+    Element script = new Element("script", SGE_XMLNS);
     script.setText(scriptFileName);
     sge.addContent(script);
 
-    Element workDir = new Element("working-directory");
+    Element workDir = new Element("working-directory", SGE_XMLNS);
     workDir.setText(workingDirectory);
     sge.addContent(workDir);
 
