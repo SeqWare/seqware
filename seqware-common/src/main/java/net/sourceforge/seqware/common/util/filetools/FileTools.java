@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -310,7 +311,7 @@ public class FileTools {
       parentDir.mkdirs();
     }
 
-    File tempDir = File.createTempFile(prefix, "", parentDir);
+    File tempDir = createFileWithUniqueName(parentDir, prefix);
 
     if (!(tempDir.delete())) {
       throw new IOException("Could not delete temp file: " + tempDir.getAbsolutePath());
@@ -336,7 +337,8 @@ public class FileTools {
     if (!parentDir.exists()) {
       parentDir.mkdirs();
     }
-    File tempFile = File.createTempFile(prefix, Long.toString(System.nanoTime()), parentDir);
+    File tempFile = new File(parentDir, prefix+UUID.randomUUID());
+    tempFile.createNewFile();
 
     return (tempFile);
   }
