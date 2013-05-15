@@ -338,7 +338,10 @@ public class FileTools {
       parentDir.mkdirs();
     }
     File tempFile = new File(parentDir, prefix+UUID.randomUUID());
-    tempFile.createNewFile();
+
+    if (!tempFile.createNewFile()) {
+      throw new IOException("Could not create unique file: " + tempFile.getAbsolutePath());
+    }
 
     return (tempFile);
   }
