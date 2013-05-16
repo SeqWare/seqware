@@ -505,7 +505,7 @@ public class OozieJob {
 
     ArrayList<String> list = new ArrayList<String>();
     list.add("java");
-    list.add("-jar");
+    list.add("-classpath");
     list.add(seqwareJarPath);
     list.add("net.sourceforge.seqware.pipeline.runner.Runner");
 
