@@ -371,10 +371,14 @@ public class WorkflowPlugin extends Plugin {
     public static AbstractWorkflowEngine getWorkflowEngine(AbstractWorkflowDataModel dataModel) {
         AbstractWorkflowEngine wfEngine = null;
         String engine = dataModel.getWorkflow_engine();
-        if (engine == null || !engine.equals("oozie")) {
+        if (engine == null || engine.equalsIgnoreCase("pegasus")) {
             wfEngine = new PegasusWorkflowEngine();
+        } else if (engine.equalsIgnoreCase("oozie")){
+            wfEngine = new OozieWorkflowEngine(dataModel, false);
+        } else if (engine.equalsIgnoreCase("oozie-sge")){
+          wfEngine = new OozieWorkflowEngine(dataModel, true);
         } else {
-            wfEngine = new OozieWorkflowEngine(dataModel);
+          throw new IllegalArgumentException("Unknown workflow engine: "+engine);
         }
         return wfEngine;
     }

@@ -25,9 +25,11 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
   private File dir;
   private String jobId;
   private AbstractWorkflowDataModel dataModel;
+  private boolean useSge;
 
-  public OozieWorkflowEngine(AbstractWorkflowDataModel objectModel) {
+  public OozieWorkflowEngine(AbstractWorkflowDataModel objectModel, boolean useSge) {
     this.dataModel = objectModel;
+    this.useSge = useSge;
   }
 
   public static String seqwareJarPath(AbstractWorkflowDataModel objectModel) {
@@ -35,15 +37,12 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
         + objectModel.getTags().get("seqware_version") + "-full.jar";
   }
 
-  // TODO: figure out how/where this switch should be made.
-  public static boolean USE_SGE = true;
-
   @Override
   public void prepareWorkflow(AbstractWorkflowDataModel objectModel) {
     // parse objectmodel
     this.dataModel = objectModel;
     this.setupEnvironment();
-    this.parseDataModel(objectModel, USE_SGE,
+    this.parseDataModel(objectModel, useSge,
                         new File(seqwareJarPath(objectModel)));
     this.setupHDFS(objectModel);
   }
