@@ -50,7 +50,7 @@ testing so we currently recommend the Pegasus engine for the tutorials here.
 
 <img width="600" src="/assets/images/seqware_hpc_oozie.png"/>
 
-**In this tutorial we will write a workflow using the Java Workflow Language and run it on the Pegasus Workflow Engine.**
+**In this tutorial we will write a workflow using the Java Workflow Language and run it on the Pegasus Workflow Engine.  We will also show you a preview of the Oozie engine for those of you using a SeqWare 1.0.x virtual machine.**
 
 | Workflow Language | Language Production Ready | Oozie Engine | Pegasus Engine |
 | ------ | ------ | ------ | ------ | 
@@ -327,6 +327,12 @@ The next step is to look at examples of workflows at [Workflow Examples](/docs/1
 
 ## Testing the Workflow 
 
+The next step after authoring your workflows in the Java workflow language is to run them in a test mode.
+
+### Running with the Pegasus Workflow Engine
+
+This is the default backend and the only workflow engine we recommend for SeqWare 0.13.6.x.
+
 SeqWare bundles have a test command built into their metadata.xml. In order to trigger this, run with the following command. Note that the workflow name and version need to match the name and version given when the workflow is listed above. 
 
 	cd /home/seqware/workflow-dev/HelloWorld
@@ -358,7 +364,6 @@ SeqWare bundles have a test command built into their metadata.xml. In order to t
 	[INFO] Final Memory: 72M/489M
 	[INFO] ------------------------------------------------------------------------
 
-		
 
 Under the hood, this is just calling the BundleManager --test option. In other words, you can do the same thing by:
 
@@ -383,6 +388,32 @@ Under the hood, this is just calling the BundleManager --test option. In other w
 <p class="warning"><strong>Tip:</strong> 
 Note in the testing command above it prints out the underlying command it calls using the <tt>WorkflowLauncher</tt> plugin. If all you want to do is to run a workflow with some settings without metadata writeback you could directly just call WorkflowLauncher as above. This bypasses the whole workflow scheduling and asynchronous launching process that you saw in the User Tutorial. What you lose is the metadata tracking functionality. The command runs the workflow which produces file outputs but that is all, no record of the run will be recorded in the MetaDB.
 </p>
+
+### Running with the Oozie Workflow Engine
+
+For those of you using the 1.0.x (or newer) SeqWare release you can use [Oozie](http://oozie.apache.org/) as your workflow engine instead of Pegasus. Oozie provides a very robust and performant workflow execution environment and, in the future, using this workflow engine will allow for mixed workflows that include traditional scripts along with steps using MapReduce, Pig, Hive, and other Hadoop-associated technologies. We are also working on job submitter plugin for Oozie that will allow jobs to be managed and scheduled by Oozie but run on a traditional Sun Grid Engine (SGE) cluster.  Even without these more advanced features the Oozie workflow engine provides terrific performance, stability, and monitoring tools.  Since SeqWare workflows are engine agnostic you can submit Java-based workflows unmodified to either the Oozie or Pegasus engines, no workflow modifications are required.
+
+There are a few caveats for the Oozie workflow engine in SeqWare.  For example, to run the workflow above you will need to do the following:
+
+* Ensure your .seqware/settings file includes the correct parameters. If you are using our VM this will be true.
+* Jobs are run by the 'mapred' user not the seqware user. So when you author and run workflows make sure the output destination can be written to by mapred. In the future we will eliminate this constraint.
+* Workflows include bash jobs but in the future we will add other Hadoop-specific types (e.g. MapReduce). For now these are not implemented.
+* The monitoring tools for Oozie are far better than for Pegasus, check out Hue, for example, running on port 8888 on the VM. You can monitor and debug workflows through this very nice web interface.
+* This engine will only work on the 1.0.0 release (or preview release) of SeqWare or newer. The 0.13.6.x and earlier releases will only work with the Pegasus workflow engine.
+
+In this example the same workflow as above is executed using the <tt>--workflow-engine oozie</tt> parameter which will execute the workflow using Oozie to Hadoop rather than Pegasus to Condor to Globus GRAM to SGE.
+
+<pre>
+<code>#!bash
+cd /home/seqware/workflow-dev/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.0.0-SNAPSHOT
+java -jar Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-1.0.0-SNAPSHOT-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --no-metadata --provisioned-bundle-dir `pwd` --workflow HelloWorld --version 1.0-SNAPSHOT --ini-files Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/config/workflow.ini --workflow-engine oozie --wait
+</code>
+</pre>
+
+This will cause the workflow to run and not exit until it finishes (the <tt>--wait</tt> option).  You can also monitor the workflow using the Hue web application installed at http://hostname:8888/oozie/. For our VMs the username and password are "seqware".
+
+The Oozie engine will continue to evolve over time and will become our default workflow engine in the 1.x series.
+
 
 ## Packaging the Workflow into a Workflow Bundle
 
