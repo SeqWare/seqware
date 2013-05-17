@@ -53,12 +53,12 @@ public class Adag  {
     
     private AbstractWorkflowDataModel wfdm;
     
-    private Map<SqwFile, PegasusJob> fileJobMap;
+    private Map<SqwFile, ProvisionFilesJob> fileJobMap;
 
     public Adag(AbstractWorkflowDataModel wfdm) {
     	this.wfdm = wfdm;
 		this.jobs = new ArrayList<PegasusJob>();
-		this.fileJobMap = new HashMap<SqwFile, PegasusJob>();
+		this.fileJobMap = new HashMap<SqwFile, ProvisionFilesJob>();
 		this.parseWorkflow(wfdm);
 		this.setDefaultExcutables();
     }
@@ -269,16 +269,18 @@ public class Adag  {
 		//get all the leaf job
 		List<PegasusJob> leaves = new ArrayList<PegasusJob>();
 		for(PegasusJob _job: this.jobs) {
-			if(_job.getChildren().isEmpty()) {
+		  // Note: the leaves accumulated are to be parents of output provisions,
+		  //       thus the leaves themselves should not be file provisions
+			if((_job instanceof ProvisionFilesJob == false)
+			    && _job.getChildren().isEmpty()) {
 				leaves.add(_job);
 			}
 		}
-		for(Map.Entry<SqwFile, PegasusJob> entry: fileJobMap.entrySet()) {
+		for(Map.Entry<SqwFile, ProvisionFilesJob> entry: fileJobMap.entrySet()) {
 			if(entry.getKey().isOutput()) {
 				//set parents to all leaf jobs
 				for(PegasusJob leaf: leaves) {
-					if(leaf!=entry.getValue())
-						entry.getValue().addParent(leaf);
+				  entry.getValue().addParent(leaf);
 				}
 			}
 		}
