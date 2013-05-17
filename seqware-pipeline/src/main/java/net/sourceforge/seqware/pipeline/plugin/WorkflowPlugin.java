@@ -130,7 +130,7 @@ public class WorkflowPlugin extends Plugin {
         parser
                 .accepts(
                 "workflow-engine",
-                "Optional: Specifies a workflow engine, we support Oozie and Pegasus. Default is Pegasus.")
+                "Optional: Specifies a workflow engine, we support Oozie (--workflow-engine oozie) and Pegasus (--workflow-engine pegasus) as our workflow engines with the default being Pegasus.")
                 .withRequiredArg().ofType(String.class).describedAs("Workflow Engine");
         parser.accepts("status", "Optional: Get the workflow status by ID").withRequiredArg().ofType(String.class).describedAs("Job ID");
         
