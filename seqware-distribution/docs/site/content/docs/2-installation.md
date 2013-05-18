@@ -115,7 +115,7 @@ What makes Amazon's cloud so amazingly awesome is its excellent support for both
 
 #### Development Public AMI(s):
 
-* **ami-TBD**
+* **ami-01660f68**
 : 20130517, SeqWare_v1.0.0rc_CentOS_GenericStandaloneDevBox_v18, SeqWare Version 1.0.0-SNAPSHOT from today (a pre-release) that includes support for running Java workflows on the Oozie workflow engine. Make sure you launch in Virginia select the instance type "CC1 Cluster Compute (cc1.4xlarge, 23GiB)" since the AMI is designed specifically to work with this type (we use the local disks provided by this instance).
 
 
