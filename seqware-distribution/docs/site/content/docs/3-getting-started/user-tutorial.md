@@ -81,6 +81,12 @@ with the SeqWare Web service (whether it is on a VM, installed on another local
 machine/cluster, or in the cloud) that controls, among other things, workflow
 execution. 
 
+<p class="warning"><strong>Tip:</strong>If you are using a development release
+of the AMI/VM or have downloaded SeqWare source from git and compiled the
+version number in the jar and sample commands throughout these guides will be
+different. Please substitute the current release string in the commands you see
+throughout this guide.</p>
+
 In the image below you get a glimpse of how these SeqWare tools fit together.
 For users of the SeqWare system the command line tools, Web Service, or web
 Portal application all provide access to the lifecycle of workflow usage. This
@@ -89,7 +95,11 @@ take, launching a workflow on specified inputs/parameters, monitoring the
 status, debugging the output if something goes wrong, and getting results back.
 This process is pretty much identical whether SeqWare is installed locally on a
 VirtualBox VM, running on a self-contained cloud instances, or a production
-installation running on a real HPC cluster.
+installation running on a real HPC cluster. In the image below the "Amazon S3"
+and "Amazon EC2" components can be substituted with a shared NFS fileserver and
+HPC cluster like a Sun Grid Engine cluster if SeqWare is used on a local,
+non-cloud infrastructure. Likewise, the whole setup would be installed on a
+single box if using a VirtualBox VM.
 
 <img src="/assets/images/seqware_tool_interaction.png" width="600px"/>
 
@@ -406,7 +416,7 @@ to the following:
 
 At this point you know what workflow you are going to run and you have a
 customized ini file that contains the <tt>input_file</tt> and
-<tt>output_prefix</tt>. The next step is to trigger the workflow using the ini
+<tt>output_prefix</tt>. The next step is to launch the workflow using the ini
 file you prepared. Make sure you use the correct workflow accession and parent
 accession. The former was listed when you listed all workflows (SWID:1 in this
 example) and the latter was printed to the <tt>accession.txt</tt> file when you

@@ -14,17 +14,17 @@ outside of the SeqWare development directories).  Here we are working in the wor
  
         # select 755 above, the "SeqWare Java workflow archetype" 
 	
-        # use HelloWorld as the name of your workflow and use the default workflow version 
+        # use MyHelloWorld as the name of your workflow and use the default workflow version 
 	
-        cd HelloWorld 
+        cd MyHelloWorld 
         mvn install 
-        cd target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/ 
+        cd target/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/ 
  
 The numbers used to identify  the archetypes (754 through 759) will vary 
 depending on what you have installed, so you will need to scan through the list 
 to find the SeqWare archetype you are looking for, in this case "SeqWare Java workflow archetype". 
  
 In this example, one would chose 755, the template for workflow using Java 
-objects.  Then use "HelloWorld" as the artifactId and "1.0-SNAPSHOT" as the version. 
+objects.  Then use "MyHelloWorld" as the artifactId and "1.0-SNAPSHOT" as the version. 
 For your own workflows outside of the tutorial you would use whatever name and version 
 you like. 

@@ -37,7 +37,6 @@ The SeqWare VM uses two cron tasks to detect and launch scheduled workflows.
 Take a look at:
 
 	seqware@seqwarevm SeqWare]$ crontab -l
-	1 0 * * * /home/seqware/crons/update_db.sh >> /home/seqware/logs/update_db.log
 	* * * * * /home/seqware/crons/status.cron >> /home/seqware/logs/status.log
 
 	[seqware@seqwarevm SeqWare]$ cat /home/seqware/crons/status.cron
@@ -46,12 +45,9 @@ Take a look at:
 
 	source /home/seqware/.bash_profile
 
-	java -jar /home/seqware/crons/seqware-distribution-0.13.6.3-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --launch-scheduled
-	java -jar /home/seqware/crons/seqware-distribution-0.13.6.3-full.jar  -p net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker -- --tp 1000
+	java -jar /home/seqware/crons/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --launch-scheduled
+	java -jar /home/seqware/crons/seqware-distribution-<%= seqware_release_version %>-full.jar  -p net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker -- --tp 1000
         
-The first script runs at one minute past midnight every night. This runs the
-stored procedures which populate the "Study Report" and the "SequenceRunReport"
-in the SeqWare Portal.  The second script runs every minute. This script uses
-two plugins, the WorkflowLauncher plugin which is used to launch workflows that
-have been previously scheduled while the WorkflowStatusChecker plugin is used
-to check the status of launched workflows.
+This script runs every minute and uses two plugins, the WorkflowLauncher plugin
+which is used to launch workflows that have been previously scheduled while the
+WorkflowStatusChecker plugin is used to check the status of launched workflows.
