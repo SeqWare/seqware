@@ -99,11 +99,11 @@
             <name>Plexus</name>
             <url>http://repo1.maven.org/maven2/org/codehaus/plexus/</url>
         </repository>
-        <repository>
+<!-- Breaks install because of missing files        <repository>
             <id>ibiblio.org</id>
             <name>Maven Mirror</name>
             <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
-        </repository>
+        </repository> -->
         <repository>
             <id>maven-restlet</id>
             <name>Public online Restlet repository</name>
