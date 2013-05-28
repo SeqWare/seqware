@@ -6,9 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 
@@ -119,7 +116,34 @@ public class OozieJob {
       }
     }
 
-    return createSgeAction(scriptFile.getAbsolutePath(), oozie_working_dir);
+    File optionsFile = new File(subdir, name + ".opts");
+    try {
+      if (!optionsFile.createNewFile()) {
+        throw new RuntimeException("Duplicate job name : " + name);
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    optionsFile.setReadable(true, false);
+    optionsFile.setWritable(true, true);
+    optionsFile.setExecutable(false);
+
+    String optionsContents = createSgeOptionsArgs(subdir.getAbsolutePath());
+
+    try {
+      writer = new FileWriter(optionsFile);
+      writer.write(optionsContents);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } finally {
+      try {
+        writer.close();
+      } catch (Exception e) {
+        // gulp
+      }
+    }
+    
+    return createSgeAction(scriptFile.getAbsolutePath(), optionsFile.getAbsolutePath());
   }
 
   protected Element getJavaElement() {
@@ -519,6 +543,11 @@ public class OozieJob {
 
     return sb.toString();
   }
+  
+  public final String createSgeOptionsArgs(String genScriptsDir){
+    // TODO: fill this out with the requirements specified in the job
+    return "-b y -e "+genScriptsDir+"-o "+genScriptsDir;
+  }
 
   /**
    * The sub-directory (of the working directory) in which generated script
@@ -538,16 +567,16 @@ public class OozieJob {
    * @return the sge node
    */
   public final Element createSgeAction(String scriptFileName,
-                                       String workingDirectory) {
+                                       String optionsFileName) {
     Element sge = new Element("sge", SGE_XMLNS);
 
     Element script = new Element("script", SGE_XMLNS);
     script.setText(scriptFileName);
     sge.addContent(script);
 
-    Element workDir = new Element("working-directory", SGE_XMLNS);
-    workDir.setText(workingDirectory);
-    sge.addContent(workDir);
+    Element opts = new Element("options-file", SGE_XMLNS);
+    opts.setText(optionsFileName);
+    sge.addContent(opts);
 
     return sge;
   }
