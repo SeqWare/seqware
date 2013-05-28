@@ -81,4 +81,22 @@ public interface Job {
 	 * @param parentAccessions
 	 */
 	public void setParentAccessions(Collection<String> parentAccessions);
+
+	/**
+	 * Whether this job should run locally instead of out on a cluster.
+	 * @return true if it will run locally
+	 */
+	public boolean isLocal();
+
+	/**
+	 * Sets this job to run locally.
+	 */
+	public void setLocal();
+
+	/**
+	 * Sets whether this job should run locally.
+	 * @param runLocal true to run locally, false otherwise
+	 */
+	public void setLocal(boolean runLocal);
+
 }

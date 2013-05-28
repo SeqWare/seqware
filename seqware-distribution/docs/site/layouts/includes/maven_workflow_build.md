@@ -1,12 +1,12 @@
-	[seqware@master workflow-dev]$ cd /home/seqware/workflow-dev/HelloWorld 
-	[seqware@master HelloWorld]$ mvn clean install
+	[seqware@master workflow-dev]$ cd /home/seqware/workflow-dev/MyHelloWorld 
+	[seqware@master MyHelloWorld]$ mvn clean install
         [INFO] Scanning for projects...                                                                                       
         [INFO] ------------------------------------------------------------------------                                       
         [INFO] Building seqware-workflow                                                                                      
 	[INFO]    task-segment: [clean, install]
 	[INFO] ------------------------------------------------------------------------
 	[INFO] [clean:clean {execution: default-clean}]
-	[INFO] Deleting /mnt/databases/workflow-dev/HelloWorld/target
+	[INFO] Deleting /mnt/databases/workflow-dev/MyHelloWorld/target
         <snip> 
         [INFO] ------------------------------------------------------------------------
         [INFO] BUILD SUCCESSFUL
