@@ -43,7 +43,8 @@ public class LibrarySelection implements Serializable, Comparable<LibrarySelecti
 
     @Override
     public String toString() {
-        return "LibrarySelection{" + "librarySelectionId=" + librarySelectionId + ", name=" + name + ", description=" + description + '}';
+        return new StringBuilder().append("LibrarySelection ").append(librarySelectionId)
+                .append(":\t").append(name).append("\t").append(description).toString();
     }
 
 

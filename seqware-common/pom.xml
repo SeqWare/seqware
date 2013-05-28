@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <parent> 
-        <version>0.13.6.6</version>
+        <version>1.0.0</version>
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
         <relativePath>../pom.xml</relativePath> 
@@ -108,6 +108,13 @@
             <id>maven-restlet</id>
             <name>Public online Restlet repository</name>
             <url>http://maven.restlet.org</url>
+        </repository>
+        <repository>
+            <id>cloudera</id>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
@@ -326,5 +333,6 @@
             <artifactId>stax-api</artifactId>
             <version>1.0-2</version>
         </dependency>
+
     </dependencies>
 </project>

@@ -172,6 +172,14 @@ public interface StudyDAO {
    * @return a {@link java.util.List} object.
    */
   public List<Study> findByCriteria(String criteria, boolean isCaseSens);
+  
+  /**
+   * <p>findByCriteria.</p>
+   *
+   * @param criteria a {@link java.lang.String} object.
+   * @return a {@link java.util.List} object.
+   */
+  public List<Study> findByCriteria(String criteria);
 
   /**
    * <p>updateDetached.</p>

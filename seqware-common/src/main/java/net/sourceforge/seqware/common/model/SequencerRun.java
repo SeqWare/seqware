@@ -991,7 +991,7 @@ public class SequencerRun implements Serializable, Comparable<SequencerRun>, Per
      */
     public void setSkip(Boolean skip) {
         if (skip != null && this.skip!=skip) {
-            Log.debug("Skipping sequencer run " + getSwAccession());
+            Log.debug("Setting skip="+skip+" in sequencer run " + getName() + " " + getSwAccession());
             this.skip = skip;
             for (Lane lane : lanes) {
                 lane.setSkip(skip);
