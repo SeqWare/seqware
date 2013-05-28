@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <parent> 
-        <version>1.0.0</version>
+        <version>1.0.1-SNAPSHOT</version>
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
         <relativePath>../pom.xml</relativePath> 
@@ -65,7 +65,7 @@
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
+                    <version>1.0.1-SNAPSHOT</version>
                     <configuration>
                         <lifecycleMappingMetadata>
                             <pluginExecutions>
