@@ -1254,13 +1254,13 @@
 
     <!-- Top Navigation Bar, start -->
     <ul class="b-header-nav">
-        <li id="h_li_index"><a href="http://localhost:8080/SeqWarePortal/Welcome.htm">Portal Home</a></li>
-        <li id="h_li_documentation"><a href="http://nimbusinformatics.elasticbeanstalk.com/">Nimbus Website</a></li>
-        <li id="h_li_services"><a href="http://nimbusinformatics.elasticbeanstalk.com/services.jsp">Services</a></li>
-        <li id="h_li_source"><a href="http://seqware.github.com/">Open Source Science</a></li>
+        <li id="h_li_source"><a href="http://seqware.github.io/">SeqWare GitHub Site</a></li>
+        <li id="h_li_index"><a href="/SeqWarePortal/Welcome.htm" onclick="javascript:event.target.port=8080">Portal Home</a></li>
+        <li id="h_li_documentation"><a href="http://nimbusinformatics.com/">Nimbus Website</a></li>
+        <li id="h_li_services"><a href="http://nimbusinformatics.com/services.jsp">Services</a></li>
         <!-- li id="h_li_about"><a href="about.html">About</a></li-->
         <!-- li id="h_li_blog"><a href="./blog/">Blog</a></li-->
-        <li id="h_li_contact"><a href="http://nimbusinformatics.elasticbeanstalk.com/contact.jsp">Contact</a></li>
+        <li id="h_li_contact"><a href="http://nimbusinformatics.com/contact.jsp">Contact</a></li>
     </ul>
     <!-- End of Top Navigation Bar -->
 </div>
@@ -1284,19 +1284,45 @@
 
 
 <div class="b-news">
-    <div class="b-news-hdr m-black m-size15 m-bold">My Account
+    <div class="b-news-hdr m-black m-size15 m-bold">SeqWare Portal
         <div class="b-expander">&nbsp;</div>
     </div>
     <div class="b-news-content">
         <ul>
         	
-        		<li><a href="http://localhost:8080/SeqWarePortal/login.htm">Log in</a></li>
-        		<li><a href="http://localhost:8080/SeqWarePortal/signUp.htm">Sign Up</a></li>
+        		<li><a href="/SeqWarePortal/login.htm" onclick="javascript:event.target.port=8080">Log in</a></li>
         	
         	            
         </ul>
     </div>
     <div class="b-news-footer"> &nbsp; </div>
+    <div class="b-news-hdr m-black m-size15 m-bold">SeqWare Project
+        <div class="b-expander">&nbsp;</div>
+    </div>
+    <div class="b-news-content">
+        <ul>
+        	
+        		<li><a href="http://seqware.github.io/">Open Source Github Site</a></li>
+        		<li><a href="https://twitter.com/seqware">Twitter Feed</a></li>
+        	
+        	            
+        </ul>
+    </div>
+    <div class="b-news-footer"> &nbsp; </div>
+    <div class="b-news-hdr m-black m-size15 m-bold">Commercial Partner
+        <div class="b-expander">&nbsp;</div>
+    </div>
+    <div class="b-news-content">
+        <ul>
+        	
+        		<li><a href="http://nimbusinformatics.com/">Nimbus Informatics, LLC</a></li>
+        	
+        	            
+        </ul>
+    </div>
+    <div class="b-news-footer"> &nbsp; </div>
+
+
 </div>
 
   
@@ -1318,34 +1344,24 @@
 
 <!-- Main Content -->
 
-<h1>The SeqWare VM</h1>
-            	
-
-
-
-
-
-
+<h1>The SeqWare Virtual Machine</h1>
 
 <h3>Overview</h3>
-<p>This is the landing page for the SeqWare VM prepared by <a href="http://nimbusinformatics.com/">Nimbus Informatics</a> for the <a href="http://seqware.github.com">SeqWare</a> project.</p>
+<p>This is the landing page for the SeqWare VM prepared by <a href="http://nimbusinformatics.com/">Nimbus Informatics</a> for the <a href="http://seqware.github.io">SeqWare</a> project.</p>
 
- <p>
-The goal of this VM is two-fold.  First, we want you to be able to see what a completely configured SeqWare environment looks like and to get to try out the various sub-projects without having to go through a lengthy install process (I'm looking at you Globus Toolkit!).  Second, we wanted you to have a fully-functioning single-node cluster environment that you can use, along with our HelloWorld workflow template, to create and test new Workflow Bundles for SeqWare Pipeline. If you're a Nimbus Informatics customer you can even inject your finished workflow bundles into our system for transparently running on EC2! See "Contact Us" below if you are interested.
-</p>
-
-<h3>Code</h3>
-
-<p>
-You can find our source code checked out in:
-</p>
-
-<pre>/home/seqware/Development/gitroot/seqware-github</pre>
-
-<p>
-You can find more information on the SeqWare <a href="http://seqware.github.com">developer website</a>.
-</p>
-
+ <p> The goal of this VM is two-fold.  First, we want you to be able to see
+what a completely configured SeqWare environment looks like and to get to try
+out the various sub-projects without having to go through a lengthy install
+process (I'm looking at you Globus Toolkit!).  Second, we wanted you to have a
+fully-functioning single-node cluster environment that you can use, along with
+our HelloWorld workflow template, to create and test new Workflow Bundles for
+SeqWare Pipeline. If you are a Nimbus Informatics customer you can even inject
+your finished workflow bundles into our system for transparently running on
+EC2! For commercial services for SeqWare you can <a
+href="http://nimbusinformatics.com/contact.jsp">Contact</a> us at Nimbus
+Informatics and for the Open Source SeqWare project you can <a
+href="http://seqware.github.io/community/">Contact</a> the project via our
+community page on GitHub. </p>
 
 <h3>Installed Tools</h3>
 
@@ -1358,10 +1374,30 @@ This VM includes the following tools pre-installed:
   <li>&bull;SeqWare Pipeline (and all of it's many dependencies)</li>
   <li>&bull;SeqWare Portal</li>
   <li>&bull;SeqWare Web Service</li>
-  <li>&bull;SeqWare Query Engine (not stable)</li>
+  <li>&bull;SeqWare Query Engine</li>
 </ul>
 
 <p/>
+
+<h3>Documentation</h3>
+
+<p>
+Please start by reading our <a href="http://seqware.github.io/docs/">documentation</a> on our public GitHub site, at least the follow the three tutorials in this order: the <a href="http://seqware.github.io/docs/3-getting-started/user-tutorial/">User Tutorial</a>, the <a href="http://seqware.github.io/docs/3-getting-started/developer-tutorial/">Developer Tutorial</a>, and the <a href="http://seqware.github.io/docs/3-getting-started/admin-tutorial/">Admin Tutorial</a>. 
+</p>
+
+
+
+<h3>Code</h3>
+
+<p>
+You can find our source code checked out in:
+</p>
+
+<pre>/home/seqware/gitroot/seqware</pre>
+
+<p>
+You can find more information on the SeqWare <a href="http://seqware.github.io">developer website</a>.
+</p>
 
 <h3>SeqWare MetaDB</h3>
 
@@ -1377,45 +1413,54 @@ psql -U seqware -W seqware_meta_db
 The Pipeline is a developer tool and is, therefore, focused on the command line. The goal is to give you a toolset that you can use to make workflow bundles that process NGS data in a cluster and environment agnostic way. You will find a sample workflow bundle in the following directory:
 </p>
 
-<pre>~/SeqWare</pre>
+<pre>/home/seqware/provisioned-bundles</pre>
 
 <p>
-You can find a ton of information about workflow development on our public wiki on the SeqWare site, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_Write_a_Bundled_Workflow">How to Write a Bundled Workflow</a> for more information.
+You can find a ton of information about workflow development on the SeqWare site, see our <a href="http://seqware.github.io/docs/">Documentation</a> page for more information. In particular we suggest all Pipeline users follow the three tutorials in this order: the <a href="http://seqware.github.io/docs/3-getting-started/user-tutorial/">User Tutorial</a>, the <a href="http://seqware.github.io/docs/3-getting-started/developer-tutorial/">Developer Tutorial</a>, and the <a href="http://seqware.github.io/docs/3-getting-started/admin-tutorial/">Admin Tutorial</a>.
 </p>
 
 <h3>SeqWare Pipeline - Oozie</h3>
 
 <p>
-There is an alternative workflow engine for SeqWare Pipeline also installed on this VM.  Unlike the default Pegasus backend, which uses Condor, the Globus Toolkit, and SGE, this new backend is based on Hadoop with Oozie as the scheduling engine. It's still in development but will provide a faster and simplier workflow execution environment that should be transparent for workflow authors to use.  This backend has a web interface that makes it very easy to monitor workflows. See:
+There is an alternative workflow engine for SeqWare Pipeline also installed on this VM.  Unlike the default Pegasus backend, which uses Condor, the Globus Toolkit, and SGE, this new backend is based on Hadoop with Oozie as the scheduling engine. It's still in development but will provide a faster and simpler workflow execution environment that should be transparent for workflow authors to use.  This backend has a web interface that makes it very easy to monitor workflows. See the oozie console at:
 </p>
 
 <p>
-<a href="http://localhost:11000/oozie/">http://localhost:11000/oozie/</a>
+<a href="/oozie/" onclick="javascript:event.target.port=11000">http://hostname:11000/oozie/</a>
+</p>
+
+<p>Hue provides a nice, alternative view on Oozie workflows, you can reach it here:</p>
+
+<p>
+<a href="/oozie/" onclick="javascript:event.target.port=8888">http://hostname:8888/oozie/</a>
+</p>
+
+<p>
+The username and password are both "seqware". Once you log in click on the Oozie icon at the top to the screen to see the queue and to mon
+itor your running SeqWare workflows.
 </p>
 
 
 <p>
-You can find a ton of information about workflow development on our public wiki on the SeqWare site, see <a href="https://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_Write_a_Bundled_Workflow">How to Write a Bundled Workflow</a> for more information.
+You can find a ton of information about workflow development on the SeqWare site, see our <a href="http://seqware.github.io/docs/">Documentation</a> page for more information.
 </p>
-
-
 
 <h3>SeqWare Portal</h3>
 
-<p>The Portal is a light LIMS system that is focused on showing you the status of workflows and the data they produce. It is located at <a href="http://localhost:8080/SeqWarePortal">http://localhost:8080/SeqWarePortal</a>. Please login with username "admin@admin.com" and password "admin".  If you run workflows using SeqWare Pipeline you will see results through the Portal.</p>
+<p>The Portal is a lightweight LIMS system that is focused on showing you the status of workflows and the data they produce. It is located at <a href="/SeqWarePortal/" onclick="javascript:event.target.port=8080">http://hostname:8080/SeqWarePortal</a>. Please login with username "admin@admin.com" and password "admin".  If you run workflows using SeqWare Pipeline you will see results through the Portal.</p>
 
 <h3>SeqWare Web Service</h3>
 
-<p>The Web Service is located at <a href="http://localhost:8080/SeqWareWebService/experiments">http://localhost:8080/SeqWareWebService</a>. Please login with username "admin@admin.com" and password "admin".  This is a RESTful web service so functionality through the web browser is generally limited. It is designed for programmatic access and is used by our command line tools in the SeqWare Pipeline project.  For details about the API please see our GitHub-hosted <a href="http://seqware.github.com/seqware/">documentation</a>.</p>
+<p>The Web Service is located at <a href="/SeqWareWebService/experiments" onclick="javascript:event.target.port=8080">http://hostname:8080/SeqWareWebService</a>. Please login with username "admin@admin.com" and password "admin".  This is a RESTful web service so functionality through the web browser is generally limited. It is designed for programmatic access and is used by our command line tools in the SeqWare Pipeline project.  For details about the API please see our API <a href="http://seqware.github.io/docs/11-api/">documentation</a>.</p>
 
 <h3>SeqWare Query Engine</h3>
 
 <p>The Query Engine is an HBase database and associated tools that let you store and query genomic variants (SNVs and small indels) along with their annotations (non-synonymous, etc). It is very, very much a work in progress.  If you want to take a look at the code see:</p>
 
-<pre>~/SeqWare/trunk/seqware-queryengine/</pre>
+<pre>/home/seqware/gitroot/seqware/seqware-queryengine</pre>
 
 <p>
-This VM includes Cloudera's CDH4 pre-installed so Hadoop and HBase should be ready to go.
+This VM includes Cloudera's CDH4 pre-installed so Hadoop and HBase should be ready to go. Take a look at the SeqWare Query Engine <a href="http://seqware.github.io/docs/8-query-engine/">documentation</a> page for examples of loading variants into this database.
 </p>
 
 
@@ -1429,7 +1474,7 @@ The core service we provide is custom workflow creation and managed cloud-based 
 <h3>Contact Us</h3>
 <p>Please feel free to contact us at <a href="mailto:help@nimbusinformatics.com">help@nimbusinformatics.com</a> if you have any questions about our cloud computing services or commercial support for SeqWare.</p>
 
-<p>For questions about the open source SeqWare project contact us at the developer mailing list linked to from <a href="http://seqware.github.com">http://seqware.github.com</a>.</p>
+<p>For questions about the open source SeqWare project contact us via our <a href="http://seqware.github.io/community/">community page</a> on GitHub. For questions on the documentation, please leave comments in the pages and for issues with the tools log bugs in our public tracker. You can contact the developers using our mailing lists.</p>
 
 
 <!-- End Main Content -->

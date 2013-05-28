@@ -38,7 +38,7 @@
         <maven-war-plugin.version>2.1.1</maven-war-plugin.version>
         <skipITs>true</skipITs>
         <findbugs.version>2.5.2</findbugs.version>
-        <maven-pmd-plugin.version>2.7.1</maven-pmd-plugin.version>
+        <maven-pmd-plugin.version>3.0.1</maven-pmd-plugin.version>
     </properties>
 
     <scm>
@@ -58,7 +58,7 @@
     <artifactId>seqware</artifactId>
     <packaging>pom</packaging>
     <groupId>com.github.seqware</groupId>
-    <version>0.13.6.5</version>
+    <version>0.13.6.6</version>
 
     <repositories>
         <repository>
@@ -677,6 +677,7 @@
                     <artifactId>findbugs-maven-plugin</artifactId>
                     <version>${findbugs.version}</version>
                     <configuration>
+			<timeout>600000</timeout>
                         <findbugsXmlOutput>true</findbugsXmlOutput>
                         <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
                         <xmlOutput>true</xmlOutput>
