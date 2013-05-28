@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -402,5 +402,5 @@
             <artifactId>guava</artifactId>
         </dependency>            
     </dependencies>
-    <properties></properties>
+    <properties />
 </project>
