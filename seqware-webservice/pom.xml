@@ -11,13 +11,12 @@
         <netbeans.compile.on.save>all</netbeans.compile.on.save>
         <seqware_meta_db_name>test_seqware_meta_db</seqware_meta_db_name>
         <seqware_meta_db_port>5432</seqware_meta_db_port>
-        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
     </properties>
     
     <parent>
         <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
-        <version>0.13.6.6</version>
+        <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

@@ -1,5 +1,6 @@
 package com.github.seqware.queryengine.system.importers.workers;
 
+import com.esotericsoftware.minlog.Log;
 import com.github.seqware.queryengine.factory.CreateUpdateManager;
 import com.github.seqware.queryengine.factory.SWQEFactory;
 import com.github.seqware.queryengine.model.Feature;
@@ -48,6 +49,7 @@ public class VCFVariantImportWorker extends ImportWorker {
     private Map<String, Tag> localCache = new HashMap<String, Tag>();
     private PrintWriter out = null;
     private TagSet vcfTagSet;
+    private boolean warnedAboutIDs = false;
 
     /**
      * <p>Constructor for VCFVariantImportWorker.</p>
@@ -361,10 +363,19 @@ public class VCFVariantImportWorker extends ImportWorker {
                                 }
                             }
                         } else {
-                            // this is dangerous because it could add an arbitrary number of additional Tags,
-                            // but we need it for testing dbSNP
-                            tagSet.add(getTagSpec(tag).toBuilder().build());
-                            //m.addTag(tag, null);
+                            // in a file provided, the ID is added as a tag, blowing up our ad hoc tag sets and crashing the region server
+                            // if it is not allocated much memory
+                            if (tag.equals(t[2])) {
+                                if (!this.warnedAboutIDs){
+                                    Log.warn("Detected that the ID column is duplicated in the INFO column, skipping: " + tag);
+                                    this.warnedAboutIDs = true;
+                                }
+                            } else {
+                                // this is dangerous because it could add an arbitrary number of additional Tags,
+                                // but we need it for testing dbSNP
+                                tagSet.add(getTagSpec(tag).toBuilder().build());
+                                //m.addTag(tag, null);
+                            }
                         }
                     }
 
