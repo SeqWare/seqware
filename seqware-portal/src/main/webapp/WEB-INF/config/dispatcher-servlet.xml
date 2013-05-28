@@ -588,6 +588,20 @@
 			<ref bean="studyService"/>
 		</property>
 	</bean>
+        
+        <bean id="studyTableController"
+		class="net.sourceforge.solexatools.webapp.controller.StudyTableController">
+		<property name="studyService">
+		<ref bean="studyService"/>
+		</property>
+	</bean>
+
+	<bean id="studyTableControllerDetails"
+		class="net.sourceforge.solexatools.webapp.controller.StudyTableControllerDetails">
+		<property name="studyService">
+		<ref bean="studyService"/>
+		</property>
+	</bean>
 
 	<bean id="studyReportController"
 		class="net.sourceforge.solexatools.webapp.controller.StudyReportController"
@@ -1186,6 +1200,13 @@
     	</property>
  	</bean>
 
+	<bean id="retryAnalysisWorkflow"
+    	class="net.sourceforge.solexatools.webapp.controller.RetryAnalysisWorkflowController">
+		<property name="workflowRunService">
+      		<ref bean="workflowRunService"/>
+    	</property>
+ 	</bean>
+
 	<bean id="analisysRunningListDetailsController"
       class="net.sourceforge.solexatools.webapp.controller.AnalisysRunningListDetailsController">
 	  <property name="workflowRunService">
@@ -1359,6 +1380,7 @@
 		<property name="host" value="smtp.gmail.com" />
 		<property name="port" value="465" />
 		<property name="username" value="mail.nimbus.portal@gmail.com" />
+                <!-- this isn't really the password, nobody panic! -->
 		<property name="password" value="p@$$nimbusm@il"/>
 
 		 <property name="javaMailProperties">
@@ -1506,6 +1528,8 @@
 				<prop key="**/studyUpdateSetup.htm">studySetupController</prop>
 				<prop key="**/studyUpdate.htm">studyController</prop>
 				<prop key="**/myStudyList.htm">studyListController</prop>
+                                <prop key="**/myStudyTable.htm">studyTableController</prop>
+				<prop key="**/myStudyTableDetails.htm">studyTableControllerDetails</prop>
 				<prop key="**/allStudyList.htm">studyListController</prop>
         		<prop key="**/studyListDetails.htm">studyListDetailsController</prop>
 				<!--prop key="**/mySharedStudyListDetails.htm">mySharedStudyListDetailsController</prop-->
@@ -1544,6 +1568,7 @@
 				<prop key="**/analisysShare.htm">analisysEventController</prop>
 				<prop key="**/analisysCancel.htm">analisysEventController</prop>
 				<prop key="**/cancelAnalysisWorkflow.htm">cancelAnalysisWorkflow</prop><!--ajax request-->
+				<prop key="**/retryAnalysisWorkflow.htm">retryAnalysisWorkflow</prop><!--ajax request-->
 				
 				<!-- Experiment -->
         		<prop key="**/experimentSetup.htm">experimentSetupController</prop>

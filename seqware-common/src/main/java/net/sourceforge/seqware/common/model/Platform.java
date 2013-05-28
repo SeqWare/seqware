@@ -43,7 +43,8 @@ public class Platform implements Serializable, Comparable<Platform> {
 
     @Override
     public String toString() {
-        return "Platform{" + "platformId=" + platformId + ", name=" + name + ", description=" + description + ", instrumentModel=" + instrumentModel + '}';
+        return new StringBuilder().append("Platform ").append(platformId)
+                .append(":\t").append(name).append("\t").append(instrumentModel).append("\t").append(description).toString();
     }
 
     /** {@inheritDoc} */

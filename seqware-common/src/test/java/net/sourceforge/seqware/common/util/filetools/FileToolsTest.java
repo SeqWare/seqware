@@ -21,8 +21,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import net.sourceforge.seqware.common.util.*;
-import net.sourceforge.seqware.common.util.configtools.ConfigTools;
-import static net.sourceforge.seqware.common.util.configtools.ConfigTools.SEQWARE_SETTINGS_PROPERTY;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -131,8 +129,22 @@ public class FileToolsTest {
     assertEquals(username, FileTools.whoAmI());
 
   }
+
   
-  /** Test conks out on Jenkins. Possibly, file permissions are handled differently there. 
+  /**
+   * <p>testGetFilename.</p>
+   *
+   * @throws java.lang.Exception if any.
+   */
+  @Test
+  public void testGetFilename() throws Exception {
+
+    String filename = "/foo/bar/jar.txt";
+    assertEquals("jar.txt", FileTools.getFilename(filename));
+
+  }
+
+/** Test conks out on Jenkins. Possibly, file permissions are handled differently there. 
    * However, since we no longer die on incorrect file permissions, this is a bit less important. 
   @Test
   public void testOwnership() throws Exception{
