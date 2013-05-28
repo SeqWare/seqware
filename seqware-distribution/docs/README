@@ -54,13 +54,7 @@ nanoc check external_links
 nanoc check ilinks (check internal links)
 nanoc check --deploy (all checks)
 
-Update the branch with the new pages:
-mvn site:deploy 
-
 Modify the index.html so the logo points to /seqware/ and the css points to /seqware/style.css
 
-Push to github (both on the source and gh-pages):
-git pull
-git add *
-git commit -m "Changed things"
-git push
+Push to github (gh-pages):
+mvn scm-publish:publish-scm

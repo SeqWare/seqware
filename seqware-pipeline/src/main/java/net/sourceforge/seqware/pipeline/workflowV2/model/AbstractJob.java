@@ -22,6 +22,7 @@ public class AbstractJob implements Job {
 	private String mainclass;
 	protected boolean hasMetadataWriteback;
 	private List<String> parentAccessions;
+	private boolean runLocal;
 	
 	/**
 	 * for bash Job
@@ -193,11 +194,22 @@ public class AbstractJob implements Job {
 
 	@Override
 	public Job setQueue(String queue) {
-		return null;
+	  Requirement req = this.getRequirementByType(Type.QUEUE);
+	  if (req == null){
+	    req = new Requirement();
+	    req.setType(Type.QUEUE);
+	    this.requirements.add(req);
+	  }
+	  req.setValue(queue);
+    return this;
 	}
 	
 	public String getQueue() {
-		return null;
+	  Requirement req = this.getRequirementByType(Type.QUEUE);
+	  if (req != null){
+	    return req.getValue();
+	  }
+	  return null;
 	}
 
 	@Override
@@ -225,4 +237,13 @@ public class AbstractJob implements Job {
 		return this.parentAccessions;
 	}
 
+	public boolean isLocal(){
+	  return runLocal;
+	}
+	public void setLocal(){
+	  setLocal(true);
+	}
+	public void setLocal(boolean runLocal){
+	  this.runLocal = runLocal;
+	}
 }
