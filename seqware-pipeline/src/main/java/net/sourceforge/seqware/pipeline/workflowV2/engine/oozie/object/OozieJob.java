@@ -546,7 +546,7 @@ public class OozieJob {
   
   public final String createSgeOptionsArgs(String genScriptsDir){
     // TODO: fill this out with the requirements specified in the job
-    return "-b y -e "+genScriptsDir+"-o "+genScriptsDir;
+    return "-b y -e "+genScriptsDir+" -o "+genScriptsDir;
   }
 
   /**
