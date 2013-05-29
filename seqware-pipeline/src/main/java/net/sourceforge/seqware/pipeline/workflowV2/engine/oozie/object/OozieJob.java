@@ -547,21 +547,31 @@ public class OozieJob {
   
   public final String createSgeOptionsArgs(String genScriptsDir){
     StringBuilder sb = new StringBuilder();
-    sb.append("-b y -e ");
+    sb.append("-b y ");
+    sb.append(" -e ");
     sb.append(genScriptsDir);
     sb.append(" -o ");
     sb.append(genScriptsDir);
-    sb.append(" -l h_vmem ");
-    sb.append(jobObj.getMaxMemory());
-    sb.append(" -l slots ");
-    sb.append(jobObj.getThreads());
+    sb.append(" -N ");
+    sb.append(jobObj.getAlgo());
+    
     if (StringUtils.isNotBlank(jobObj.getQueue())){
       sb.append(" -q ");
       sb.append(jobObj.getQueue());
     }
-    sb.append(" -N ");
-    sb.append(jobObj.getAlgo());
 
+    // TODO: The following options are system-specific, thus we need a way to configure them
+
+    if (StringUtils.isNotBlank(jobObj.getMaxMemory())){
+      sb.append(" -l h_vmem ");
+      sb.append(jobObj.getMaxMemory());
+    }
+    
+    if (jobObj.getThreads() > 0){
+      sb.append(" -l slots ");
+      sb.append(jobObj.getThreads());
+    }
+    
     return sb.toString();
   }
 
