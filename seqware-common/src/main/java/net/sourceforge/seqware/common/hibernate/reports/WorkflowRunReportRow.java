@@ -32,7 +32,8 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
  */
 public class WorkflowRunReportRow {
     private WorkflowRun workflowRun;
-    private Collection<File> inputFiles;
+    private Collection<File> allInputFiles;
+    private Collection<File> immediateInputFiles;
     private Collection<File> outputFiles;
     private Collection<Processing> workflowRunProcessings;
     private Collection<Processing> parentProcessings;
@@ -59,21 +60,39 @@ public class WorkflowRunReportRow {
     }
 
     /**
-     * <p>Getter for the field <code>inputFiles</code>.</p>
+     * <p>Getter for the field <code>allInputFiles</code>.</p>
      *
      * @return a {@link java.util.Collection} object.
      */
-    public Collection<File> getInputFiles() {
-        return inputFiles;
+    public Collection<File> getAllInputFiles() {
+        return allInputFiles;
     }
 
     /**
-     * <p>Setter for the field <code>inputFiles</code>.</p>
+     * <p>Setter for the field <code>allInputFiles</code>.</p>
      *
-     * @param inputFiles a {@link java.util.Collection} object.
+     * @param allInputFiles a {@link java.util.Collection} object.
      */
-    public void setInputFiles(Collection<File> inputFiles) {
-        this.inputFiles = inputFiles;
+    public void setAllInputFiles(Collection<File> allInputFiles) {
+        this.allInputFiles = allInputFiles;
+    }
+
+    /**
+     * <p>Getter for the field <code>immediateInputFiles</code>.</p>
+     *
+     * @return a {@link java.util.Collection} object.
+     */
+    public Collection<File> getImmediateInputFiles() {
+        return immediateInputFiles;
+    }
+
+    /**
+     * <p>Setter for the field <code>immediateInputFiles</code>.</p>
+     *
+     * @param immediateInputFiles a {@link java.util.Collection} object.
+     */
+    public void setImmediateInputFiles(Collection<File> immediateInputFiles) {
+        this.immediateInputFiles = immediateInputFiles;
     }
 
     /**
