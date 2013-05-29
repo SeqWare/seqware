@@ -9,6 +9,7 @@ import java.util.List;
 
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jdom.Element;
@@ -545,8 +546,23 @@ public class OozieJob {
   }
   
   public final String createSgeOptionsArgs(String genScriptsDir){
-    // TODO: fill this out with the requirements specified in the job
-    return "-b y -e "+genScriptsDir+" -o "+genScriptsDir;
+    StringBuilder sb = new StringBuilder();
+    sb.append("-b y -e ");
+    sb.append(genScriptsDir);
+    sb.append(" -o ");
+    sb.append(genScriptsDir);
+    sb.append(" -l h_vmem ");
+    sb.append(jobObj.getMaxMemory());
+    sb.append(" -l slots ");
+    sb.append(jobObj.getThreads());
+    if (StringUtils.isNotBlank(jobObj.getQueue())){
+      sb.append(" -q ");
+      sb.append(jobObj.getQueue());
+    }
+    sb.append(" -N ");
+    sb.append(jobObj.getAlgo());
+
+    return sb.toString();
   }
 
   /**
