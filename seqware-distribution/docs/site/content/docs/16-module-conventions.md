@@ -3,6 +3,7 @@
 title:                 "Module Conventions"
 toc_includes_sections: true
 markdown:              basic
+is_dynamic:		true
 
 ---
 
