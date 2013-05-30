@@ -155,9 +155,10 @@ public class WorkflowRunReportResource
         builder.append("Library Sample SWIDs").append("\t");
         builder.append("Identity Sample Names").append("\t");
         builder.append("Identity Sample SWIDs").append("\t");
-        builder.append("All Input File Meta-Types").append("\t");
-        builder.append("All Input File SWIDs").append("\t");
-        builder.append("All Input File Paths").append("\t");
+        // following three fields are for "all"
+        builder.append("Input File Meta-Types").append("\t");
+        builder.append("Input File SWIDs").append("\t");
+        builder.append("Input File Paths").append("\t");
         builder.append("Immediate Input File Meta-Types").append("\t");
         builder.append("Immediate Input File SWIDs").append("\t");
         builder.append("Immediate Input File Paths").append("\t");
