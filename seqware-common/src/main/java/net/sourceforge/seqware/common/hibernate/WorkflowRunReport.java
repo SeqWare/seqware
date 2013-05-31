@@ -126,17 +126,19 @@ public class WorkflowRunReport {
     }
 
     private WorkflowRunReportRow fromWorkflowRun(WorkflowRun workflowRun) {
+        // Immediate parent processings are the processings that occur one level above the workflow run's processings.
+        // Immediate input files are files that have been generated from immediate parent processings.
         Collection<Processing> processings = collectProcessings(workflowRun);
+        Collection<Processing> allParentProcessings = findParents(processings, workflowRun.getSwAccession(), false);
+        Collection<Processing> immediateParentProcessings = findParents(processings, workflowRun.getSwAccession(), true);
 
-        Collection<Processing> parentProcessings = findParents(processings, workflowRun.getSwAccession());
-
-        Collection<File> inputFiles = findFiles(parentProcessings);
+        Collection<File> allInputFiles = findFiles(allParentProcessings);
+        Collection<File> immediateInputFiles = findFiles(immediateParentProcessings);
         Collection<File> outputFiles = findFiles(processings);
 
-
         Collection<Processing> useThese;
-        if (!parentProcessings.isEmpty()) {
-            useThese = parentProcessings;
+        if (!allParentProcessings.isEmpty()) {
+            useThese = allParentProcessings;
         } else {
             useThese = processings;
         }
@@ -152,13 +154,13 @@ public class WorkflowRunReport {
         WorkflowRunReportRow wrrr = new WorkflowRunReportRow();
         wrrr.setWorkflowRun(workflowRun);
         wrrr.setIdentitySamples(identitySamples);
-        wrrr.setInputFiles(inputFiles);
+        wrrr.setAllInputFiles(allInputFiles);
+        wrrr.setImmediateInputFiles(immediateInputFiles);
         wrrr.setOutputFiles(outputFiles);
         wrrr.setLibrarySamples(librarySamples);
-        wrrr.setParentProcessings(parentProcessings);
-        wrrr.setWorkflowRunProcessings(parentProcessings);
+        wrrr.setParentProcessings(allParentProcessings);
+        wrrr.setWorkflowRunProcessings(allParentProcessings);
         wrrr.setTimeTaken(timeSpent);
-
 
         return wrrr;
     }
@@ -166,9 +168,8 @@ public class WorkflowRunReport {
     protected Collection<Processing> collectProcessings(WorkflowRun wr) {
         List<Processing> processings = new ArrayList<Processing>();
 
-	WorkflowRun newwr =  BeanFactory.getWorkflowRunServiceBean().findByID(wr.getWorkflowRunId());
-	
-		
+        WorkflowRun newwr =  BeanFactory.getWorkflowRunServiceBean().findByID(wr.getWorkflowRunId());
+
         logger.debug(newwr.getProcessings().size() + " Processings in direct links");
         logger.debug(newwr.getOffspringProcessings().size() + " Processings in ancestor links");
         processings.addAll(newwr.getProcessings());
@@ -239,7 +240,8 @@ public class WorkflowRunReport {
         return files;
     }
 
-    protected Collection<Processing> findParents(Collection<Processing> processings, int workflowRunSWID) {
+    protected Collection<Processing> findParents(Collection<Processing> processings, int workflowRunSWID,
+                                                 boolean findImmediateOnly) {
         Set<Integer> seenPs = new TreeSet<Integer>();
 
         List<Processing> allParentProcs = new ArrayList<Processing>();
@@ -254,9 +256,9 @@ public class WorkflowRunReport {
                 if (wr == null) {
                     wr = p.getWorkflowRunByAncestorWorkflowRunId();
                 }
-                //add to the queue if we haven't seen it before
                 if (!seenPs.contains(p.getSwAccession())) {
-                    queue.offer(p);
+                    // Add parent processing to queue only if we are traversing the entire tree.
+                    if (!findImmediateOnly) queue.offer(p);
                     seenPs.add(p.getSwAccession());
                     //only add to the parent procs if it's not from the current workflow run
                     if (wr != null && wr.getSwAccession() != workflowRunSWID) {
