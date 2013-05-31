@@ -9,6 +9,28 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 0.13.6.6 (2013-05-29)
+
+### Defect
+* [SEQWARE-1644] - Multiple workflow output files and Pegasus
+* [SEQWARE-1638] - Seems like setQueue not implemented
+
+### Task
+
+* [SEQWARE-1609] - Key command line tools should have terminal mode similar to \x in postgres
+
+### Technical task
+* [SEQWARE-1419] - Identify missing nanoc documentation
+* [SEQWARE-1455] - Investigate the use of profiles so that we can do tests that require Pegasus on the VM
+* [SEQWARE-1523] - The sample database has a ton of cruft in it, some of which doesn't render in portal. We should start with an empty DB on the VMs not the integration test DB.
+* [SEQWARE-1529] - Missing functionality from the "User Tutorial"
+* [SEQWARE-1533] - Control document creation via maven goal
+* [SEQWARE-1581] - Produce Virtual Box VM (new) Don't worry about shrinking it
+* [SEQWARE-1583] - Unify the directory structures on the AMI/VM
+* [SEQWARE-1602] - On the way out of the AMI
+* [SEQWARE-1611] - Assorted user-friendly features
+* [SEQWARE-1620] - Create clean-up script
+
 ## 0.13.6.5 (2013-04-25)
 <!-- includes a few tasks from 0.13.6.3 which was not released publically -->
 

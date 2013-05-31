@@ -9,13 +9,13 @@
     <version>${version}</version>
     <packaging>jar</packaging>
 
-    <name>seqware-workflow</name>
+    <name>${artifactId}</name>
     <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <seqware-version>0.13.6.6</seqware-version>
+        <seqware-version>0.13.6.7</seqware-version>
         <skipITs>true</skipITs>
     </properties>
 
@@ -112,14 +112,25 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}</outputDirectory>
+                             <!-- see the explanation for this mutually exclusive syntax at http://maven.apache.org/plugins/maven-resources-plugin/examples/filter.html -->
                             <resources>
                                 <resource>
                                     <directory>workflow</directory>
-                                    <excludes>
-                                        <exclude>workflow.ftl</exclude>
-                                        <exclude>workflow.ini</exclude>
-                                    </excludes>
+                                    <includes>
+                                        <include>metadata.xml</include>
+                                        <include>config/workflow.ini</include>
+                                        <include>workflows/workflow.ftl</include>
+                                    </includes>
                                     <filtering>true</filtering>
+                                </resource>
+                                <resource>
+                                    <directory>workflow</directory>
+                                    <excludes>
+                                        <exclude>metadata.xml</exclude>
+                                        <exclude>config/workflow.ini</exclude>
+                                        <exclude>workflows/workflow.ftl</exclude>
+                                    </excludes>
+                                    <filtering>false</filtering>
                                 </resource>
                             </resources>
                         </configuration>

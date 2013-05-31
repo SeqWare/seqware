@@ -682,7 +682,7 @@ public class FindAllTheFiles {
           if (this.isReportInputFiles()) {
               WorkflowRunReport wrr = new WorkflowRunReport();
               Collection<Processing> processings = wrr.collectProcessings(workflowRun);
-              Collection<Processing> parentProcessings = wrr.findParents(processings, workflowRun.getSwAccession());
+              Collection<Processing> parentProcessings = wrr.findParents(processings, workflowRun.getSwAccession(), false);
               Collection<File> inputFiles = wrr.findFiles(parentProcessings);
               StringBuilder fileTypes = new StringBuilder();
               StringBuilder filePaths = new StringBuilder();
