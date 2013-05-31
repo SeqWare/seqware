@@ -2,7 +2,8 @@
 
 title:                 "Module Conventions"
 toc_includes_sections: true
-markdown:              basic
+markdown:              advanced
+is_dynamic:            true
 
 ---
 
