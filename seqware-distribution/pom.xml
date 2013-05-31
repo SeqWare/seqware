@@ -147,6 +147,7 @@
 		<!-- redirecting output for 1.0.0 content into a holding area  -->
 	        <pubScmUrl>scm:git:https://github.com/SeqWare/unstable.seqware.github.com.git</pubScmUrl>	
 		<content>docs/site/output/</content>
+		<scmBranch>gh-pages</scmBranch>
 		<ignorePathsToDelete>
               		<ignorePathToDelete>javadoc</ignorePathToDelete>
               		<ignorePathToDelete>manuals</ignorePathToDelete>
