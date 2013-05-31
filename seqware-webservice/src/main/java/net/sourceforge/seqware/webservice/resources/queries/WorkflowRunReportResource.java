@@ -155,9 +155,13 @@ public class WorkflowRunReportResource
         builder.append("Library Sample SWIDs").append("\t");
         builder.append("Identity Sample Names").append("\t");
         builder.append("Identity Sample SWIDs").append("\t");
+        // following three fields are for "all"
         builder.append("Input File Meta-Types").append("\t");
         builder.append("Input File SWIDs").append("\t");
         builder.append("Input File Paths").append("\t");
+        builder.append("Immediate Input File Meta-Types").append("\t");
+        builder.append("Immediate Input File SWIDs").append("\t");
+        builder.append("Immediate Input File Paths").append("\t");
         builder.append("Output File Meta-Types").append("\t");
         builder.append("Output File SWIDs").append("\t");
         builder.append("Output File Paths").append("\t");
@@ -204,7 +208,8 @@ public class WorkflowRunReportResource
         parseSamples(builder, wrrr.getLibrarySamples());
         parseSamples(builder, wrrr.getIdentitySamples());
 
-        parseFiles(builder, wrrr.getInputFiles());
+        parseFiles(builder, wrrr.getAllInputFiles());
+        parseFiles(builder, wrrr.getImmediateInputFiles());
         parseFiles(builder, wrrr.getOutputFiles());
 
         builder.append(wrrr.getTimeTaken());
