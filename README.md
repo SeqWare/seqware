@@ -94,6 +94,20 @@ You can also build individual components such as the new query engine with:
     cd seqware-queryengine
     mvn clean install
 
+### Building Our Site
+
+In order to publish to seqware.github.com, checkout our current hotfix and publish our site:
+
+    git checkout hotfix/0.13.6.7
+    cd seqware-distribution 
+    mvn site-deploy
+
+In order to publish to our unstable docs supporting the development of 1.0.0, checkout from develop and publish:
+
+    git checkout develop 
+    cd seqware-distribution 
+    mvn site-deploy
+
 ###Problems with Maven
 
 Sometimes we run into problems when building, strange missing dependency issues
