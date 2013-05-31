@@ -15,6 +15,8 @@ The "<a href="/docs/">Documentation</a>" pages show how to install and use
 SeqWare. In particular, we recommend new users beging with the three getting
 started guide found in the documentation section and linked to below.</p>
 
+        <h2>This is our site for working on the 1.0 release </h2>
+
 <table>
 <tr>
 <th><h2><strong>Users</strong></h2></th>
