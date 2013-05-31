@@ -9,10 +9,10 @@
     <description>SeqWare Java workflow archetype</description>
 
     <parent> 
-        <version>0.13.6.6</version> 
+        <version>0.13.6.7</version> 
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
-	<relativePath>../../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <properties>
