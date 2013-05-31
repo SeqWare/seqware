@@ -53,6 +53,24 @@ The decider from which all other deciders came
 |--test|Testing mode. Prints the INI files to standard out and does not submit the workflow.|
 |--wf-accession|The workflow accession of the workflow|
 
+##  BatchMetadataInjection
+net.sourceforge.seqware.pipeline.plugins.BatchMetadataInjection
+
+Import objects into the database using different file formats.
+
+| Command-line option | Description |
+|--------------------|--------------|
+|--c, --create|Optional: indicates you want to create a new row, must supply --table and all the required --field params.|
+|--f, --field|Optional: the field you are interested in writing. This is encoded as '<field_name>::<value>', you should use single quotes when the value includes spaces. You supply multiple --field arguments for a given table insert.|
+|--interactive|Optional: turn on interactive input |
+|--lf, --list-fields|Optional: if provided along with the --table option this will list out the fields for that table and their type.|
+|--list-tables, --lt|Optional: if provided will list out the tables this tools knows how to read and/or write to.|
+|--miseq-sample-sheet|The location of the Miseq Sample Sheet|
+|--new|Create a new study from scratch. Used instead of miseq-sample-sheet|
+|--of, --output-file|Optional: if provided along with the --list or --list-tables options this will cause the output list of rows/tables to be written to the file specified rather than stdout.|
+|--record|Optional: saves information about the injection in a text file|
+|--t, --table|Required: the table you are interested in reading or writing.|
+
 ##  BundleManager
 net.sourceforge.seqware.pipeline.plugins.BundleManager
 

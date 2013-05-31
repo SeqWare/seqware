@@ -57,4 +57,4 @@ nanoc check --deploy (all checks)
 Modify the index.html so the logo points to /seqware/ and the css points to /seqware/style.css
 
 Push to github (gh-pages):
-mvn scm-publish:publish-scm
+mvn site-deploy
