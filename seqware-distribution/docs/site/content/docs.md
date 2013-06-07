@@ -6,7 +6,7 @@ is_dynamic: true
 
 ---
 
-<p class="warning"><strong>Note:</strong> This guide is a work in progress and was designed for release 0.13.6.x of SeqWare.</p> 
+<p class="warning"><strong>Note:</strong> This guide is a work in progress and was designed for release 0.13.6.x of SeqWare. In addition, we also included information on the 1.0.x developers release which supports workflow execution on the Oozie engine. See the "Developers Tutorial" under "Getting Started" for more information.</p>
 
 This is the core documentation for the SeqWare project, including all the
 various sub-projects. We wanted to create a single manual that would bring
