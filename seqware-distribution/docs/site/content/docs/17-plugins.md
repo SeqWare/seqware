@@ -136,6 +136,7 @@ A plugin that generates markdown documentation for all plugins.
 |--------------------|--------------|
 |--?, --h, --help|Provides this help message.|
 |--m, --modules|Optional: if provided will list out modules instead of plugins.|
+|--s, --skip|Optional: comma separated list of module/plugin names to skip|
 
 ##  Metadata
 net.sourceforge.seqware.pipeline.plugins.Metadata
