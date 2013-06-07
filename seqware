@@ -1,0 +1,236 @@
+#!/usr/bin/env bash
+
+# Ensure this file is executable via `chmod a+x seqware`, then place it
+# somewhere on your $PATH, like ~/bin. The rest of Seqware will be
+# installed upon first run into the ~/.seqware/self-installs directory.
+
+export SEQWARE_VERSION="1.0.1-SNAPSHOT"
+
+case $SEQWARE_VERSION in
+    *SNAPSHOT) SNAPSHOT="YES" ;;
+    *) SNAPSHOT="NO" ;;
+esac
+
+if [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]]; then
+    delimiter=";"
+else
+    delimiter=":"
+fi
+
+if [[ "$OSTYPE" == "cygwin" ]]; then
+    cygwin=true
+else
+    cygwin=false
+fi
+
+if [ `id -u` -eq 0 ] && [ "$SEQWARE_ROOT" = "" ]; then
+    echo "WARNING: You're currently running as root; probably by accident."
+    echo "Press control-C to abort or Enter to continue as root."
+    echo "Set SEQWARE_ROOT to disable this warning."
+    read _
+fi
+
+export SEQWARE_HOME="${SEQWARE_HOME:-"$HOME/.seqware"}"
+
+if $cygwin; then
+    export SEQWARE_HOME=`cygpath -w "$SEQWARE_HOME"`
+fi
+
+SEQWARE_JAR="$SEQWARE_HOME/self-installs/seqware-$SEQWARE_VERSION-standalone.jar"
+SEQWARE_SETTINGS="$SEQWARE_HOME/settings"
+
+# normalize $0 on certain BSDs
+if [ "$(dirname "$0")" = "." ]; then
+    SCRIPT="$(which $(basename "$0"))"
+else
+    SCRIPT="$0"
+fi
+
+# resolve symlinks to the script itself portably
+while [ -h "$SCRIPT" ] ; do
+    ls=`ls -ld "$SCRIPT"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '/.*' > /dev/null; then
+        SCRIPT="$link"
+    else
+        SCRIPT="$(dirname "$SCRIPT"$)/$link"
+    fi
+done
+
+export SEQWARE_JVM_OPTS="${SEQWARE_JVM_OPTS-"-XX:+TieredCompilation -XX:TieredStopAtLevel=1"}"
+
+function make_native_path {
+    # ensure we have native paths
+    if $cygwin && [[ "$1"  == /* ]]; then
+    echo -n "$(cygpath -wp "$1")"
+    elif [[ "$OSTYPE" == "msys" && "$1"  == /* ]]; then
+    echo -n "$(sh -c "(cd $1 2</dev/null && pwd -W) || echo $1 | sed 's/^\\/\([a-z]\)/\\1:/g'")"
+    else
+    echo -n "$1"
+    fi
+}
+
+#  usage : add_path PATH_VAR [PATH]...
+function add_path {
+    local path_var="$1"
+    shift
+    while [ -n "$1" ];do
+        # http://bashify.com/?Useful_Techniques:Indirect_Variables:Indirect_Assignment
+    export ${path_var}="${!path_var}${delimiter}$(make_native_path "$1")"
+    shift
+    done
+}
+
+add_path CLASSPATH "$SEQWARE_JAR"
+
+BOOTCLASSPATH="-Xbootclasspath/a:$SEQWARE_JAR"
+
+if [ ! -r "$SEQWARE_JAR" -a "$1" != "self-install" ]; then
+    "$0" self-install
+fi
+
+if [ "$HTTP_CLIENT" = "" ]; then
+    if type -p curl >/dev/null 2>&1; then
+        if [ "$https_proxy" != "" ]; then
+            CURL_PROXY="-x $https_proxy"
+        fi
+        HTTP_CLIENT="curl $CURL_PROXY -f -L -o"
+    else
+        HTTP_CLIENT="wget -O"
+    fi
+fi
+
+# TODO: explain what to do when Java is missing
+export JAVA_CMD="${JAVA_CMD:-"java"}"
+
+# Support $JAVA_OPTS for backwards-compatibility.
+export JVM_OPTS="${JVM_OPTS:-"$JAVA_OPTS"}"
+
+# Handle jline issue with cygwin not propagating OSTYPE through java subprocesses: https://github.com/jline/jline2/issues/62
+cygterm=false
+if $cygwin; then
+    case "$TERM" in
+        rxvt* | xterm* | vt*) cygterm=true ;;
+    esac
+fi
+
+if $cygterm; then
+    JVM_OPTS="$JVM_OPTS -Djline.terminal=jline.UnixTerminal"
+    stty -icanon min 1 -echo > /dev/null 2>&1
+fi
+
+function download_failed_message {
+    echo "Failed to download $1"
+    echo "It's possible your HTTP client's certificate store does not have the"
+    echo "correct certificate authority needed. This is often caused by an"
+    echo "out-of-date version of libssl. Either upgrade it or set HTTP_CLIENT"
+    echo "to turn off certificate checks:"
+    echo "  export HTTP_CLIENT=\"wget --no-check-certificate -O\" # or"
+    echo "  export HTTP_CLIENT=\"curl --insecure -f -L -o\""
+    echo "It's also possible that you're behind a firewall haven't yet"
+    echo "set HTTP_PROXY and HTTPS_PROXY."
+}
+
+
+if [ "$1" = "self-install" ]; then
+    if [ -r "$SEQWARE_JAR" ]; then
+        echo "The self-install jar already exists at $SEQWARE_JAR."
+        echo "If you wish to re-download, delete it and rerun \"$0 self-install\"."
+        exit 1
+    fi
+
+    echo "Downloading Seqware to $SEQWARE_JAR now..."
+    mkdir -p "$(dirname "$SEQWARE_JAR")"
+    
+    # TODO: change this to a URL that can use SEQWARE_VERSION  
+    SEQWARE_URL="http://wrench.res.oicr.on.ca/artifactory/simple/seqware-snapshot/com/github/seqware/seqware-distribution/1.0.1-SNAPSHOT/seqware-distribution-1.0.1-20130604.200936-6-full.jar"
+    $HTTP_CLIENT "$SEQWARE_JAR.pending" "$SEQWARE_URL"
+    if [ $? == 0 ]; then
+        # TODO: checksum
+        mv -f "$SEQWARE_JAR.pending" "$SEQWARE_JAR"
+    else
+        rm "$SEQWARE_JAR.pending" 2> /dev/null
+        download_failed_message "$SEQWARE_URL"
+        exit 1
+    fi
+elif [ "$1" = "init" ]; then
+    if [ -r "$SEQWARE_SETTINGS" ]; then
+        echo "The Seqware settings file already exists at $SEQWARE_SETTINGS."
+        echo "If you wish to re-initialize, delete it and rerun \"$0 init\"."
+        exit 1
+    fi
+    
+    echo "Initializing Seqware settings:"
+    echo -n "  Seqware WebService URL: "
+    read WEBSERVICE_URL
+    echo "# the base URL for the RESTful SeqWare API" > $SEQWARE_SETTINGS
+    echo "SW_REST_URL=$WEBSERVICE_URL" >> $SEQWARE_SETTINGS
+    
+    echo "Created Seqware settings file at $SEQWARE_SETTINGS."
+    
+elif [ "$1" = "upgrade" ]; then
+    if [ $SNAPSHOT = "YES" ]; then
+        echo "The upgrade task is only meant for stable releases."
+        exit 1
+    fi
+    if [ ! -w "$SCRIPT" ]; then
+        echo "You do not have permission to upgrade the installation in $SCRIPT"
+        exit 1
+    else
+        TARGET_VERSION="${2:-stable}"
+        echo "The script at $SCRIPT will be upgraded to the latest $TARGET_VERSION version."
+        echo -n "Do you want to continue [Y/n]? "
+        read RESP
+        case "$RESP" in
+            y|Y|"")
+                echo
+                echo "Upgrading..."
+                TARGET="/tmp/seqware-$$-upgrade"
+                if $cygwin; then
+                    TARGET=`cygpath -w $TARGET`
+                fi
+                SEQWARE_SCRIPT_URL="https://TODO/$TARGET_VERSION/bin/seqware"
+                $HTTP_CLIENT "$TARGET" "$SEQWARE_SCRIPT_URL"
+                if [ $? == 0 ]; then
+                    mv "$TARGET" "$SCRIPT" \
+                        && chmod +x "$SCRIPT" \
+                        && echo && "$SCRIPT" self-install \
+                        && echo && echo "Now running" `$SCRIPT version`
+                    exit $?
+                else
+                    download_failed_message "$SEQWARE_SCRIPT_URL"
+                fi;;
+            *)
+                echo "Aborted."
+                exit 1;;
+        esac
+    fi
+elif [ "$1" = "version" -o "$1" = "-v" -o "$1" = "--version" ]; then
+    echo "Seqware version $SEQWARE_VERSION"
+else
+    $JAVA_CMD $SEQWARE_JVM_OPTS io.seqware.cli.Main
+    
+    EXIT_CODE=$?
+
+    if $cygterm ; then
+        stty icanon echo > /dev/null 2>&1
+    fi
+    
+    exit $EXIT_CODE
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
