@@ -20,6 +20,7 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
+import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.StringUtils;
 import net.sourceforge.seqware.pipeline.workflowV2.model.XmlWorkflowDataModel;
@@ -44,27 +45,28 @@ public class WorkflowDataModelFactory {
         this.config = config;
         this.params = params;
         this.metadata = metadata;
-        
+
         // need to do options ret
     }
 
-
     /**
-     * a simple method to replace the ${workflow_bundle_dir} variable
-     * (copied from BasicWorkflow)
+     * a simple method to replace the ${workflow_bundle_dir} variable (copied
+     * from BasicWorkflow)
+     *
      * @param input
      * @param wbd
      * @return
      */
     private String replaceWBD(String input, String wbd) {
-	return (input.replaceAll("\\$\\{workflow_bundle_dir\\}", wbd));
+        return (input.replaceAll("\\$\\{workflow_bundle_dir\\}", wbd));
     }
 
     /**
      * load metadata.xml, if FTL, parse the FTL to XML, and translate it to Java
      * based Object if Java, load the class.
-     * @param workflowAccession if this is present, we grab metadata information from 
-     * the database, not the options
+     *
+     * @param workflowAccession if this is present, we grab metadata information
+     * from the database, not the options
      * @return
      */
     public AbstractWorkflowDataModel getWorkflowDataModel(Integer workflowAccession, Integer workflowRunAccession) {
@@ -89,8 +91,16 @@ public class WorkflowDataModelFactory {
         bundlePath = bundle.getAbsolutePath();
         Log.info("Bundle Path: " + bundlePath);
         if (bundle == null || !bundle.exists()) {
-            Log.error("ERROR: Bundle is null or doesn't exist! The bundle must be either a zip file or a directory structure.");
-            return null;
+
+            // then first try to see if we can get it from it's permenant location instead
+            if (metaInfo.get("permanent_bundle_location") != null) {
+                bundle = new File(getAndProvisionBundle(metaInfo.get("permanent_bundle_location")));
+            }
+            // if we still can't get the bundle then error out
+            if (bundle == null || !bundle.exists()) {
+                Log.error("ERROR: Bundle is null or doesn't exist! The bundle must be either a zip file or a directory structure.");
+                return null;
+            }
         }
 
         metaInfo = WorkflowV2Utility.parseMetaInfo(bundle);
@@ -119,7 +129,7 @@ public class WorkflowDataModelFactory {
             Log.stdout("Attempting to instantiate " + classpath);
             WorkflowClassFinder finder = new WorkflowClassFinder();
             clazz = finder.findFirstWorkflowClass(classpath);
-            
+
             if (null != clazz) {
                 Log.debug("using java object");
                 try {
@@ -134,7 +144,7 @@ public class WorkflowDataModelFactory {
                 } catch (IllegalArgumentException ex) {
                     Log.error(ex, ex);
                 }
-            }else{
+            } else {
                 Log.stdout("failed looking for classes at " + classpath);
             }
         } else {
@@ -160,7 +170,7 @@ public class WorkflowDataModelFactory {
         //load ini config
         Map<String, String> configs = this.loadIniConfigs(workflowAccession, workflowRunAccession, bundlePath);
         dataModel.setConfigs(configs);
-        
+
         // 0.13.6.5 : The Java workflow launcher was not originally designed to schedule, hence it is not properly getting 
         // parent accessions from saved ini files (as opposed to on the command line) 
         ArrayList<String> parseParentAccessions = BasicWorkflow.parseParentAccessions(configs);
@@ -208,8 +218,8 @@ public class WorkflowDataModelFactory {
             } else if (workflowAccession != null && workflowRunAccession != null) {
                 dataModel.setWorkflow_accession(Integer.toString(workflowAccession));
                 dataModel.setWorkflow_run_accession(String.valueOf(workflowRunAccession));
-            } else{
-                assert(false);
+            } else {
+                assert (false);
                 Log.error("This condition should never be reached");
                 throw new UnsupportedOperationException();
             }
@@ -253,11 +263,42 @@ public class WorkflowDataModelFactory {
     }
 
     /**
+     * I'm copying this from BasicWorkflow since I don't know if the package
+     * net.sourceforge.seqware.pipeline.workflow will be removed or if all the
+     * workflowV2 will be merged.
+     *
+     * This code will either copy or download from S3, unzip, and return unzip
+     * location.
+     *
+     * It's used when the local workflow bundle dir is null or doesn't exist
+     * which is a sign that the workflow bundle should be retrieved from the
+     * permanent location
+     *
+     * @param permLoc
+     * @return
+     */
+    private String getAndProvisionBundle(String permLoc) {
+        String result = null;
+        Bundle bundle = new Bundle(this.metadata, this.config);
+        ReturnValue ret = null;
+        if (permLoc.startsWith("s3://")) {
+            ret = bundle.unpackageBundleFromS3(permLoc);
+        } else {
+            ret = bundle.unpackageBundle(new File(permLoc));
+        }
+        if (ret != null) {
+            return (ret.getAttribute("outputDir"));
+        }
+        return (result);
+    }
+
+    /**
      * FIXME: this really doesn't do a very through job of variable replacing
      * and we have multiple copies of similar code floating around, see MapTools
+     *
      * @param input
      * @param bundlePath
-     * @return 
+     * @return
      */
     private Map<String, String> resolveMap(Map<String, String> input, String bundlePath) {
         Map<String, String> result = new HashMap<String, String>();
@@ -276,7 +317,7 @@ public class WorkflowDataModelFactory {
 
     private Map<String, String> loadIniConfigs(Integer workflowAccession, Integer workflowRunAccession, String bundlePath) {
         // the map
-	HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<String, String>();
         if (workflowRunAccession != null) {
             Log.info("loading ini files from DB");
             // TODO: this code is from BasicWorkflow, make a notice of that when refactoring
@@ -346,9 +387,9 @@ public class WorkflowDataModelFactory {
         MapTools.cli2Map(this.params, map);
         // this doesn't really work as expected
         MapTools.mapExpandVariables(map);
-        
+
         // make absolutely sure the variables are defined and ${workflow_bundle_path} is filled in
-        Map<String, String> ret = this.resolveMap(map, bundlePath); 
+        Map<String, String> ret = this.resolveMap(map, bundlePath);
         return ret;
     }
 
@@ -424,11 +465,11 @@ public class WorkflowDataModelFactory {
         if (options.has("metadata-output-file-prefix")) {
             model.setMetadata_output_file_prefix((String) options.valueOf("metadata-output-file-prefix"));
         } else if (model.hasPropertyAndNotNull("output_prefix")) {
-          try {
-            model.setMetadata_output_file_prefix(model.getProperty("output_prefix"));
-          } catch (Exception ex) {
-            Logger.getLogger(WorkflowDataModelFactory.class.getName()).log(Level.SEVERE, null, ex);
-          }
+            try {
+                model.setMetadata_output_file_prefix(model.getProperty("output_prefix"));
+            } catch (Exception ex) {
+                Logger.getLogger(WorkflowDataModelFactory.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             Log.error("You need to specify the output prefix for your workflow using either --metadata-output-file-prefix as a WorkflowLauncher param or in your workflow INI file as output_prefix!");
         }
@@ -436,11 +477,11 @@ public class WorkflowDataModelFactory {
         if (options.has("metadata-output-dir")) {
             model.setMetadata_output_dir((String) options.valueOf("metadata-output-dir"));
         } else if (model.hasPropertyAndNotNull("output_dir")) {
-          try {
-            model.setMetadata_output_dir(model.getProperty("output_dir"));
-          } catch (Exception ex) {
-            Logger.getLogger(WorkflowDataModelFactory.class.getName()).log(Level.SEVERE, null, ex);
-          }
+            try {
+                model.setMetadata_output_dir(model.getProperty("output_dir"));
+            } catch (Exception ex) {
+                Logger.getLogger(WorkflowDataModelFactory.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             Log.error("You need to specify the output dir for your workflow using either --metadata-output-dir as a WorkflowLauncher param or in your workflow INI file as output_dir!");
         }
@@ -449,5 +490,4 @@ public class WorkflowDataModelFactory {
             model.setWorkflow_engine((String) options.valueOf("workflow-engine"));
         }
     }
-
 }
