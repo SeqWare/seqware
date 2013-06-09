@@ -922,7 +922,8 @@ public class FileTools {
    */
   public static LocalhostPair getLocalhost(OptionSet options) {
         String hostname = null;
-        ReturnValue returnValue = null;
+        // need to initialize regardless
+        ReturnValue returnValue = new ReturnValue(ReturnValue.SUCCESS);
         // find the hostname or use --force-host
         if (options.has("force-host") && options.valueOf("force-host") != null) {
             hostname = (String) options.valueOf("force-host");
