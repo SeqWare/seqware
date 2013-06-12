@@ -43,12 +43,14 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = PluginInterface.class)
 public class SymLinkFileReporter extends Plugin {
+    private static final String SHOW_STATUS = "show-status";
+    //Filenames have a max size of 144 chars on Ubuntu, believe it or not.
+    public static final int MAX_FILE_NAME_SIZE = 143;
     
-    ReturnValue ret = new ReturnValue();
-    private final String LINKTYPE_SYM = "s";
+    private ReturnValue ret = new ReturnValue();
+    private static final String LINKTYPE_SYM = "s";
     private String fileType = FindAllTheFiles.FILETYPE_ALL;
     private String linkType = LINKTYPE_SYM;
-    private String csvFileName = null;
     private Writer writer;
     
     /**
@@ -69,7 +71,7 @@ public class SymLinkFileReporter extends Plugin {
         parser.acceptsAll(Arrays.asList("no-links"), "Optional: Create only the CSV file, not the symlinked directories.");
         parser.acceptsAll(Arrays.asList("output-filename"), "Optional: Name of the output CSV file (without the extension)").withRequiredArg();
         parser.acceptsAll(Arrays.asList("show-failed-and-running"), "Show all of the files regardless of the workflow run status. Default shows only successful runs.");
-        parser.acceptsAll(Arrays.asList("show-status"), "Show the workflow run status in the output CSV.");
+        parser.acceptsAll(Arrays.asList(SHOW_STATUS), "Show the workflow run status in the output CSV.");
         parser.acceptsAll(Arrays.asList("human"), "Optional: will print output in expanded human friendly format");
         parser.acceptsAll(Arrays.asList("stdout"), "Prints to standard out instead of to a file");
         ret.setExitStatus(ReturnValue.SUCCESS);
@@ -98,21 +100,17 @@ public class SymLinkFileReporter extends Plugin {
             if (options.has("study")) {
                 String study = (String) options.valueOf("study");
                 initWriter(currentDir, study);
-//                printHeader();
                 reportOnStudy(study, currentDir);
             } else if (options.has("sample")) {
                 String sample = (String) options.valueOf("sample");
                 initWriter(currentDir, sample);
-//                printHeader();
                 ret = reportOnSample(sample, currentDir);
             } else if (options.has("sequencer-run")) {
                 String sequencerRun = (String) options.valueOf("sequencer-run");
                 initWriter(currentDir, sequencerRun);
-//                printHeader();
                 ret = reportOnSequencerRun(sequencerRun, currentDir);
             } else if (options.has("dump-all")) {
                 initWriter(currentDir, "all");
-//                printHeader();
                 ret = reportAll(currentDir);
             } else {
                 println("Combination of parameters not recognized!");
@@ -120,7 +118,7 @@ public class SymLinkFileReporter extends Plugin {
                 ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.fatal("SymLinkFileReporter failed to write output",e);
             ret.setExitStatus(ReturnValue.FILENOTREADABLE);
             ret.setDescription(e.getMessage());
         } finally {
@@ -140,7 +138,7 @@ public class SymLinkFileReporter extends Plugin {
         if (options.has("output-filename")) {
             filename = (String) options.valueOf("output-filename");
         }
-        csvFileName = currentDir + File.separator + filename + ".csv";
+        String csvFileName = currentDir + File.separator + filename + ".csv";
         
         if (options.has("stdout")) {
             writer = new StringWriter();
@@ -188,16 +186,16 @@ public class SymLinkFileReporter extends Plugin {
         
         returnValues = FindAllTheFiles.filterReturnValues(returnValues, studyName,
                 fileType, options.has("duplicates"), options.has("show-failed-and-running"),
-                options.has("show-status"));
+                options.has(SHOW_STATUS));
         
         if (options.has("human")){
             StringWriter sWriter = new StringWriter();
-            FindAllTheFiles.printTSVFile(sWriter, options.has("show-status"),
+            FindAllTheFiles.printTSVFile(sWriter, options.has(SHOW_STATUS),
                     returnValues, studyName);
             writer.write(TabExpansionUtil.expansion(sWriter.toString()));
             return;
         } else{
-            FindAllTheFiles.printTSVFile(writer, options.has("show-status"),
+            FindAllTheFiles.printTSVFile(writer, options.has(SHOW_STATUS),
                     returnValues, studyName);
         }
         
@@ -337,14 +335,14 @@ public class SymLinkFileReporter extends Plugin {
         for (FileMetadata fm : files) {
             if (fm.getMetaType().equals(fileType) || fileType.equals(FindAllTheFiles.FILETYPE_ALL)) {
                 String[] pathArr = fm.getFilePath().split(File.separator);
-                String filename = fileNamePrefix.toString() + pathArr[pathArr.length - 1];
+                String filename = fileNamePrefix + pathArr[pathArr.length - 1];
 
                 //Filenames have a max size of 144 chars on Ubuntu, believe it or not.
-                if (filename.length() >= 143) {
+                if (filename.length() >= MAX_FILE_NAME_SIZE) {
                     String pieces = fm.getDescription() + pathArr[pathArr.length - 1];
                     String ext = "." + fm.getMetaType().replace("/", ".");
-                    if (pieces.length() > 143 - ext.length()) {
-                        filename = pieces.substring(0, 143 - ext.length()) + ext;
+                    if (pieces.length() > MAX_FILE_NAME_SIZE - ext.length()) {
+                        filename = pieces.substring(0, MAX_FILE_NAME_SIZE - ext.length()) + ext;
                     }
                 }
                 

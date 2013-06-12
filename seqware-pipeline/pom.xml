@@ -41,7 +41,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <aspectj.version>1.6.11</aspectj.version>
-        <exclude.tests>**/CommandLineToolTest.java</exclude.tests>
         <powermock.version>1.5</powermock.version>
     </properties>
     <repositories>
@@ -129,7 +128,7 @@
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-testng</artifactId>
+            <artifactId>powermock-module-junit4</artifactId>
             <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
@@ -139,13 +138,6 @@
             <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>  
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>6.8.1</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
@@ -226,33 +218,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.12</version>
-                <executions>
-                    <execution>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>	
-                            <testNGArtifactName>none:none</testNGArtifactName>
-                            <excludes>
-                                <exclude>**/RunnerTest.java</exclude>
-                                <exclude>${exclude.tests}</exclude>
-                                <exclude>**/BasicDeciderTest.java</exclude>
-                            </excludes>
-			    
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>test-testng</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>	
-                            <junitArtifactName>none:none</junitArtifactName>
-                        </configuration>
-                    </execution>
-                </executions>
+
+                <configuration>	
+                    <excludes>
+                        <exclude>**/CommandLineToolTest.java</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
