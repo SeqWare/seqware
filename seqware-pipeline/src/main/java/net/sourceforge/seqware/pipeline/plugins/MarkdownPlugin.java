@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import joptsimple.HelpFormatter;
 import joptsimple.OptionDescriptor;
 
@@ -47,7 +45,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = PluginInterface.class)
 public class MarkdownPlugin extends Plugin {
 
-    ReturnValue ret = new ReturnValue();
+    private ReturnValue ret = new ReturnValue();
 
     /**
      * <p>Constructor for HelloWorld.</p>
@@ -67,11 +65,7 @@ public class MarkdownPlugin extends Plugin {
      */
     @Override
     public void setConfig(Map<String, String> config) {
-//        println("Setting Config");
-//        println("Config File Contents:");
-//        for (String key : config.keySet()) {
-//            println("  " + key + " " + config.get(key));
-//        }
+        /** explicitly no nothing */
     }
 
     /* (non-Javadoc)
@@ -82,7 +76,6 @@ public class MarkdownPlugin extends Plugin {
      */
     @Override
     public void setParams(List<String> params) {
-        //println("Setting Params: " + params);
         this.params = params.toArray(new String[0]);
     }
 
@@ -221,7 +214,35 @@ public class MarkdownPlugin extends Plugin {
         return ("A plugin that generates markdown documentation for all plugins.");
     }
 
-    private void handlePlugins(BufferedWriter bufferedWriter, List<? extends Object> plugs) throws IllegalArgumentException, SecurityException {
+    private void handlePlugins(BufferedWriter bufferedWriter, List<? extends Object> plugs) {
+        writePageHeader(bufferedWriter, plugs);
+
+        for (Object plug : plugs) {
+            try {
+                bufferedWriter.newLine();
+                bufferedWriter.append("##  " + plug.getClass().getSimpleName());
+                bufferedWriter.newLine();
+                bufferedWriter.append(plug.getClass().getPackage().getName() + "." + plug.getClass().getSimpleName());
+                bufferedWriter.newLine();
+                bufferedWriter.newLine();
+                if (plug instanceof PluginInterface) {
+                    writePluginDescription(bufferedWriter, plug);
+                } else if (plug instanceof Module) {
+                    writeModuleDescription(plug, bufferedWriter);   
+                }
+                
+            } catch (NoSuchFieldException ex) {
+                Log.fatal(ex, ex);
+            } catch (IllegalAccessException ex) {
+                Log.fatal(ex, ex);
+            } catch (IOException ex) {
+                Log.fatal(ex, ex);
+            }
+
+        }
+    }
+
+    private void writePageHeader(BufferedWriter bufferedWriter, List<? extends Object> plugs) {
         try {
             bufferedWriter.append("---");
             bufferedWriter.newLine();
@@ -246,71 +267,47 @@ public class MarkdownPlugin extends Plugin {
         } catch (IOException ex) {
             Log.fatal(ex, ex);
         }
+    }
 
-        for (Object plug : plugs) {
-            try {
-                bufferedWriter.newLine();
-                bufferedWriter.append("##  " + plug.getClass().getSimpleName());
-                bufferedWriter.newLine();
-                bufferedWriter.append(plug.getClass().getPackage().getName() + "." + plug.getClass().getSimpleName());
-                bufferedWriter.newLine();
-                bufferedWriter.newLine();
-                if (plug instanceof PluginInterface) {
-                    bufferedWriter.append(((PluginInterface) plug).get_description());
-                    bufferedWriter.newLine();
-                    bufferedWriter.newLine();
-                    Class myClass = plug.getClass();
-                    Field myField = getField(myClass, "parser");
-                    myField.setAccessible(true); // required if field is not normally accessible
-                    OptionParser get = (OptionParser) myField.get(plug);
-                    get.formatHelpWith(new MarkDownFormatter());
-                    get.printHelpOn(bufferedWriter);
-                } else if (plug instanceof Module) {
-                    Module mod = (Module) plug;
-                    String description = "";
-                    try {
-                        ReturnValue init = mod.init();
-                        description = init.getDescription() == null ? "" : init.getDescription();
-                    } catch (Exception e) {
-                        Log.info("Could not print description for " + mod.getClass());
-                    }              
-                    bufferedWriter.append(description);
-                    
-                    bufferedWriter.newLine();
-                    bufferedWriter.newLine();
-                    
-                    Class myClass = plug.getClass();
-                    try {
-                        Method getOptionParserMethod = myClass.getDeclaredMethod("getOptionParser");
-                        getOptionParserMethod.setAccessible(true);
-                        Object invoke = getOptionParserMethod.invoke(plug, new Object[]{});
-                        OptionParser get = (OptionParser) invoke;
-                        get.formatHelpWith(new MarkDownFormatter());
-                        get.printHelpOn(bufferedWriter);
-                    } catch (InvocationTargetException ex) {
-                        Log.info("Could not retrieve OptionParser for " + mod.getClass());
-                    } catch (NoSuchMethodException ex){
-                        Log.info(ex,ex);
-                    }   
-                    
-                    
-//                    String syntax = "";
-//                    try {
-//                        syntax = mod.get_syntax();
-//                    } catch (Exception e) {
-//                        Log.info("Could not print syntax for " + mod.getClass());
-//                    }
-//                    bufferedWriter.append(syntax);
-                }
-                
-            } catch (NoSuchFieldException ex) {
-                Log.fatal(ex, ex);
-            } catch (IllegalAccessException ex) {
-                Log.fatal(ex, ex);
-            } catch (IOException ex) {
-                Log.fatal(ex, ex);
-            }
+    private void writePluginDescription(BufferedWriter bufferedWriter, Object plug) throws IllegalAccessException, SecurityException, IOException, IllegalArgumentException, NoSuchFieldException {
+        bufferedWriter.append(((PluginInterface) plug).get_description());
+        bufferedWriter.newLine();
+        bufferedWriter.newLine();
+        Class myClass = plug.getClass();
+        Field myField = getField(myClass, "parser");
+        // required if field is not normally accessible
+        myField.setAccessible(true); 
+        OptionParser get = (OptionParser) myField.get(plug);
+        get.formatHelpWith(new MarkDownFormatter());
+        get.printHelpOn(bufferedWriter);
+    }
 
+    private void writeModuleDescription(Object plug, BufferedWriter bufferedWriter) throws SecurityException, IllegalAccessException, IOException, IllegalArgumentException {
+        Module mod = (Module) plug;
+        String description = "";
+        try {
+            ReturnValue init = mod.init();
+            description = init.getDescription() == null ? "" : init.getDescription();
+        } catch (Exception e) {
+            Log.info("Could not print description for " + mod.getClass());
+        }              
+        bufferedWriter.append(description);
+        
+        bufferedWriter.newLine();
+        bufferedWriter.newLine();
+        
+        Class myClass = plug.getClass();
+        try {
+            Method getOptionParserMethod = myClass.getDeclaredMethod("getOptionParser");
+            getOptionParserMethod.setAccessible(true);
+            Object invoke = getOptionParserMethod.invoke(plug, new Object[]{});
+            OptionParser get = (OptionParser) invoke;
+            get.formatHelpWith(new MarkDownFormatter());
+            get.printHelpOn(bufferedWriter);
+        } catch (InvocationTargetException ex) {
+            Log.info("Could not retrieve OptionParser for " + mod.getClass());
+        } catch (NoSuchMethodException ex){
+            Log.info(ex,ex);
         }
     }
 
@@ -319,9 +316,9 @@ public class MarkdownPlugin extends Plugin {
         @Override
         public String format(Map<String, ? extends OptionDescriptor> options) {
             if (options.isEmpty()) {
-                return new String();
+                return "";
             }
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             buffer.append("| Command-line option | Description |\n");
             buffer.append("|--------------------|--------------|\n");
             // not sure why options are reported once per
@@ -334,7 +331,7 @@ public class MarkdownPlugin extends Plugin {
 
                 buffer.append("|");
                 for (String o : e.getValue().options()) {
-                    buffer.append("--" + o + ", ");
+                    buffer.append("--").append(o).append(", ");
                 }
                 buffer.deleteCharAt(buffer.length() - 1);
                 buffer.deleteCharAt(buffer.length() - 1);
@@ -356,7 +353,6 @@ public class MarkdownPlugin extends Plugin {
     }
     
     public class ModuleComparator implements Comparator<ModuleInterface>{
-
         @Override
         public int compare(ModuleInterface t, ModuleInterface t1) {
             return (t.getClass().getSimpleName().compareTo(t1.getClass().getSimpleName()));
