@@ -43,16 +43,16 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = PluginInterface.class)
 public class SymLinkFileReporter extends Plugin {
+
     private static final String SHOW_STATUS = "show-status";
     //Filenames have a max size of 144 chars on Ubuntu, believe it or not.
     public static final int MAX_FILE_NAME_SIZE = 143;
-    
     private ReturnValue ret = new ReturnValue();
     private static final String LINKTYPE_SYM = "s";
     private String fileType = FindAllTheFiles.FILETYPE_ALL;
     private String linkType = LINKTYPE_SYM;
     private Writer writer;
-    
+
     /**
      * <p>Constructor for SymLinkFileReporter.</p>
      */
@@ -76,21 +76,27 @@ public class SymLinkFileReporter extends Plugin {
         parser.acceptsAll(Arrays.asList("stdout"), "Prints to standard out instead of to a file");
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ReturnValue init() {
-        
+
         return ret;
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ReturnValue do_test() {
         return ret;
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ReturnValue do_run() {
         String currentDir = new File(".").getAbsolutePath();
@@ -118,7 +124,7 @@ public class SymLinkFileReporter extends Plugin {
                 ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
             }
         } catch (IOException e) {
-            Log.fatal("SymLinkFileReporter failed to write output",e);
+            Log.fatal("SymLinkFileReporter failed to write output", e);
             ret.setExitStatus(ReturnValue.FILENOTREADABLE);
             ret.setDescription(e.getMessage());
         } finally {
@@ -132,42 +138,42 @@ public class SymLinkFileReporter extends Plugin {
         }
         return ret;
     }
-    
+
     private void initWriter(String currentDir, String string) throws IOException {
         String filename = new Date().toString().replace(" ", "_") + "__" + string;
         if (options.has("output-filename")) {
             filename = (String) options.valueOf("output-filename");
         }
         String csvFileName = currentDir + File.separator + filename + ".csv";
-        
+
         if (options.has("stdout")) {
             writer = new StringWriter();
         } else {
             writer = new BufferedWriter(new FileWriter(csvFileName, true));
-        }       
+        }
     }
-    
+
     private ReturnValue reportOnStudy(String studyName, String rootDirectory) throws IOException {
         println("Searching for study with title: " + studyName);
         List<ReturnValue> returnValues = metadata.findFilesAssociatedWithAStudy(studyName);
         okGo(returnValues, rootDirectory, studyName);
         return ret;
     }
-    
+
     private ReturnValue reportOnSample(String sampleName, String rootDirectory) throws IOException {
         println("Searching for sample with title: " + sampleName);
         List<ReturnValue> returnValues = metadata.findFilesAssociatedWithASample(sampleName);
         okGo(returnValues, rootDirectory, null);
         return ret;
     }
-    
+
     private ReturnValue reportOnSequencerRun(String sequencerRun, String rootDirectory) throws IOException {
         println("Searching for sequencer run with name: " + sequencerRun);
         List<ReturnValue> returnValues = metadata.findFilesAssociatedWithASequencerRun(sequencerRun);
         okGo(returnValues, rootDirectory, null);
         return ret;
     }
-    
+
     private ReturnValue reportAll(String rootDirectory) throws IOException {
         println("Dumping all studies to file");
         List<Study> studies = metadata.getAllStudies();
@@ -179,26 +185,26 @@ public class SymLinkFileReporter extends Plugin {
         }
         return ret;
     }
-    
+
     private void okGo(List<ReturnValue> returnValues, String rootDirectory, String studyName) throws IOException {
         println("There are " + returnValues.size() + " returnValues in total before filtering");
         println("Saving symlinks and creating CSV file");
-        
+
         returnValues = FindAllTheFiles.filterReturnValues(returnValues, studyName,
                 fileType, options.has("duplicates"), options.has("show-failed-and-running"),
                 options.has(SHOW_STATUS));
-        
-        if (options.has("human")){
+
+        if (options.has("human")) {
             StringWriter sWriter = new StringWriter();
             FindAllTheFiles.printTSVFile(sWriter, options.has(SHOW_STATUS),
                     returnValues, studyName);
             writer.write(TabExpansionUtil.expansion(sWriter.toString()));
             return;
-        } else{
+        } else {
             FindAllTheFiles.printTSVFile(writer, options.has(SHOW_STATUS),
                     returnValues, studyName);
         }
-        
+
         for (ReturnValue rv : returnValues) {
             StringBuilder directory = new StringBuilder();
             directory.append(rootDirectory).append(File.separator);
@@ -219,7 +225,7 @@ public class SymLinkFileReporter extends Plugin {
             String workflowName = rv.getAttribute(FindAllTheFiles.WORKFLOW_NAME);
             String workflowSwa = rv.getAttribute(FindAllTheFiles.WORKFLOW_SWA);
             String workflowVersion = rv.getAttribute(FindAllTheFiles.WORKFLOW_VERSION);
-            
+
             if (!options.has("no-links")) {
                 ///Save in the format requested
                 if (options.has("prod-format")) {
@@ -234,16 +240,16 @@ public class SymLinkFileReporter extends Plugin {
                     directory.append(parentSampleName).append("-").append(parentSampleSwa);
                     directory.append(File.separator);
                     directory.append(sampleName).append("-").append(sampleSwa);
-                    
+
                     saveSeqwareFileName(directory.toString(), workflowName, workflowSwa,
                             workflowRunName, workflowRunSwa, sequencerRunName,
                             sequencerRunSwa, laneNum, iusTag, iusSwa, sampleName,
                             sampleSwa, rv);
                 }
             }
-            
+
         }
-        
+
     }
 
     /**
@@ -279,7 +285,7 @@ public class SymLinkFileReporter extends Plugin {
         directory.append(workflowName).append("-").append(workflowVersion);
         directory.append(File.separator);
         directory.append(sampleName).append("-").append(sampleSwa);
-        
+
         saveFiles(rv.getFiles(), "", directory.toString());
     }
 
@@ -305,8 +311,8 @@ public class SymLinkFileReporter extends Plugin {
             String sequencerRunName, String sequencerRunSwa, String laneNum,
             String iusTag, String iusSwa, String sampleName, String sampleSwa,
             ReturnValue rv) {
-        
-        
+
+
         StringBuilder fileNamePrefix = new StringBuilder();
         fileNamePrefix.append(workflowName).append("-");
         fileNamePrefix.append(workflowSwa).append("__");
@@ -345,13 +351,13 @@ public class SymLinkFileReporter extends Plugin {
                         filename = pieces.substring(0, MAX_FILE_NAME_SIZE - ext.length()) + ext;
                     }
                 }
-                
-                
+
+
                 try {
                     (new File(directory)).mkdirs();
                     Process process = Runtime.getRuntime().exec(
                             new String[]{"ln", "-" + linkType, fm.getFilePath(),
-                                directory + File.separator + filename});
+                        directory + File.separator + filename});
                     process.waitFor();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(SymLinkFileReporter.class.getName()).log(Level.SEVERE, null, ex);
@@ -369,7 +375,7 @@ public class SymLinkFileReporter extends Plugin {
             return FindAllTheFiles.FILETYPE_ALL;
         }
     }
-    
+
     private String getLinkType() {
         if (options.has("link")) {
             return (String) options.valueOf("link");
@@ -377,8 +383,10 @@ public class SymLinkFileReporter extends Plugin {
             return LINKTYPE_SYM;
         }
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ReturnValue clean_up() {
         if (options.has("stdout")) {
@@ -386,8 +394,10 @@ public class SymLinkFileReporter extends Plugin {
         }
         return ret;
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String get_description() {
         return "Create a nested tree structure of all of the output files from a "
@@ -396,5 +406,9 @@ public class SymLinkFileReporter extends Plugin {
                 + "file with all of the accompanying information for every file. "
                 + "For more information, see "
                 + "see http://seqware.github.com/docs/21-study-reporter/";
+    }
+
+    protected net.sourceforge.seqware.common.metadata.Metadata getMetadata() {
+        return metadata;
     }
 }
