@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context antiJARLocking="true" path="">
-  <Resource auth="Container" description="Seqware Hibernate" driverClassName="org.postgresql.Driver" jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.StatementDecoratorInterceptor" name="jdbc/SeqWareMetaDB" password="seqware" testOnBorrow="true" testOnReturn="true" testWhileIdle="true" type="javax.sql.DataSource" url="jdbc:postgresql://localhost:5432/test_seqware_meta_db" username="seqware" validationQuery="SELECT sw_accession FROM workflow limit 1"/>
+  <Resource auth="Container" description="Seqware Hibernate" driverClassName="org.postgresql.Driver" jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.StatementDecoratorInterceptor" name="jdbc/SeqWareMetaDB" password="seqware" testOnBorrow="true" testOnReturn="true" testWhileIdle="true" type="javax.sql.DataSource" url="jdbc:postgresql://localhost:5432/test_seqware_meta_db" username="seqware" validationQuery="SELECT 1"/>
 </Context>

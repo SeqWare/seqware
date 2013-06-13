@@ -26,24 +26,26 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.*;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  *
  * @author dyuen
  */
 @PrepareForTest({WorkflowTools.class, FileTools.class, WorkflowStatusChecker.class})
-public class WorkflowStatusCheckerTest extends PowerMockTestCase{
+@RunWith(PowerMockRunner.class)
+public class WorkflowStatusCheckerTest{
    
     
     @Mock 
@@ -58,7 +60,7 @@ public class WorkflowStatusCheckerTest extends PowerMockTestCase{
     @InjectMocks
     private WorkflowStatusChecker workflowStatusChecker;
     
-    @BeforeMethod
+    @Before
     public void initMocks() throws Exception{
         reset(config, options, metadata);
         workflowStatusChecker = new WorkflowStatusChecker(); // this is kind of hacky
@@ -69,7 +71,7 @@ public class WorkflowStatusCheckerTest extends PowerMockTestCase{
         when(config.get("SW_REST_USER")).thenReturn("user");
     }
     
-    @AfterMethod
+    @After
     public void cleanMocks(){
         JUnique.releaseLock(WorkflowStatusChecker.appID);
     }
@@ -84,17 +86,17 @@ public class WorkflowStatusCheckerTest extends PowerMockTestCase{
     @Test
     public void testInitLocking(){
         final ReturnValue ret1 = workflowStatusChecker.init();
-        Assert.assertTrue(ret1.getExitStatus() == ReturnValue.SUCCESS, "workflowStatusChecker could not init");
+        Assert.assertTrue("workflowStatusChecker could not init", ret1.getExitStatus() == ReturnValue.SUCCESS);
         final ReturnValue ret2 = workflowStatusChecker.init();
-        Assert.assertTrue(ret2.getExitStatus() == ReturnValue.FAILURE, "workflowStatusChecker not properly locked in init");
+        Assert.assertTrue("workflowStatusChecker not properly locked in init", ret2.getExitStatus() == ReturnValue.FAILURE);
     }
     
     @Test 
     public void testEmptyRun(){
         final ReturnValue ret1 = workflowStatusChecker.init();
-        Assert.assertTrue(ret1.getExitStatus() == ReturnValue.SUCCESS, "workflowStatusChecker could not init");
+        Assert.assertTrue("workflowStatusChecker could not init", ret1.getExitStatus() == ReturnValue.SUCCESS);
         final ReturnValue ret2 = workflowStatusChecker.do_run();
-        Assert.assertTrue(ret2.getExitStatus() == ReturnValue.SUCCESS, "workflowStatusChecker ran properly");
+        Assert.assertTrue("workflowStatusChecker ran properly", ret2.getExitStatus() == ReturnValue.SUCCESS);
         verify(metadata).getWorkflowRunsByStatus(metadata.RUNNING);
         verify(metadata).getWorkflowRunsByStatus(metadata.PENDING);
         verifyNoMoreInteractions(metadata);
@@ -103,7 +105,7 @@ public class WorkflowStatusCheckerTest extends PowerMockTestCase{
     @Test 
     public void testNormalRun() throws Exception{       
         final ReturnValue ret1 = workflowStatusChecker.init();
-        Assert.assertTrue(ret1.getExitStatus() == ReturnValue.SUCCESS, "workflowStatusChecker could not init");
+        Assert.assertTrue("workflowStatusChecker could not init", ret1.getExitStatus() == ReturnValue.SUCCESS);
         mockupFakeRuns();
         final ReturnValue ret2 = workflowStatusChecker.do_run();
         verifyNormalRun(ret2);
@@ -112,7 +114,7 @@ public class WorkflowStatusCheckerTest extends PowerMockTestCase{
     @Test 
     public void testDoubleThreadedRun() throws Exception{       
         final ReturnValue ret1 = workflowStatusChecker.init();
-        Assert.assertTrue(ret1.getExitStatus() == ReturnValue.SUCCESS, "workflowStatusChecker could not init");
+        Assert.assertTrue("workflowStatusChecker could not init", ret1.getExitStatus() == ReturnValue.SUCCESS);
         mockupFakeRuns();
         
         when(options.has("threads-in-thread-pool")).thenReturn(true);
@@ -125,7 +127,7 @@ public class WorkflowStatusCheckerTest extends PowerMockTestCase{
     @Test 
     public void testManyThreadedRun() throws Exception{       
         final ReturnValue ret1 = workflowStatusChecker.init();
-        Assert.assertTrue(ret1.getExitStatus() == ReturnValue.SUCCESS, "workflowStatusChecker could not init");
+        Assert.assertTrue("workflowStatusChecker could not init", ret1.getExitStatus() == ReturnValue.SUCCESS);
         mockupFakeRuns();
         
         when(options.has("threads-in-thread-pool")).thenReturn(true);
@@ -176,7 +178,7 @@ public class WorkflowStatusCheckerTest extends PowerMockTestCase{
      * @param ret2 
      */
     private void verifyNormalRun(final ReturnValue ret2) {
-        Assert.assertTrue(ret2.getExitStatus() == ReturnValue.SUCCESS, "workflowStatusChecker ran properly");
+        Assert.assertTrue("workflowStatusChecker ran properly", ret2.getExitStatus() == ReturnValue.SUCCESS);
         verify(metadata).getWorkflowRunsByStatus(metadata.RUNNING);
         verify(metadata).getWorkflowRunsByStatus(metadata.PENDING);
         verify(metadata, times(100)).update_workflow_run(anyInt(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyInt(), anyInt(), anyString(), anyString(), anyString());

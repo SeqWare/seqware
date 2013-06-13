@@ -1,4 +1,3 @@
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -22,30 +21,11 @@
 
     <build>
         <plugins>
-
-  <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
-                
-                <executions>
-                    <execution>
-			<!-- this execution handles jetty:run SEQWARE-1286 -->
-                        <id>default-cli</id>
-		        <phase>test-compile</phase>	
-                    </execution>
-                    <execution>
-                        <id>start-jetty</id>
-                        <phase>test-compile</phase>
-                    </execution>
-		   <!-- re-enabled for IT testing -->
-                    <execution>
-                        <id>stop-jetty</id>
-                        <phase>post-integration-test</phase>
-                    </execution>
-                </executions>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat6-maven-plugin</artifactId>
             </plugin>
-
-      <plugin>
+            <plugin>
           <!-- hacked from, some of their syntax did not compile http://mojo.codehaus.org/sql-maven-plugin/examples/execute.html -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>sql-maven-plugin</artifactId>
@@ -143,6 +123,7 @@
                         </configuration>
                     </execution>
                     -->
+                    
 
                 </executions>
             </plugin>
@@ -198,7 +179,7 @@
                 </executions>
 
                 <configuration>
-                    <argLine>-Xms512m -Xmx512m</argLine>
+                    <argLine>${itCoverageAgent} -Xms512m -Xmx512m</argLine>
                     <forkMode>pertest</forkMode>
                     <!-- enforce that our WSResourceTests run before the plugin tests, this sucks and our tests shouldn't have state --> 
 		    <runOrder>reversealphabetical</runOrder>
@@ -281,11 +262,6 @@
                     <artifactId>seqware-common</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>com.github.seqware</groupId>
-                    <artifactId>seqware-common</artifactId>
-                </exclusion>
-                    
-                <exclusion>
                     <groupId>org.springframework</groupId>
                     <artifactId>spring</artifactId>
                 </exclusion>
@@ -324,6 +300,10 @@
                 <exclusion>
                     <groupId>javax.servlet</groupId>
                     <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish</groupId>
+                    <artifactId>javax.servlet</artifactId>
                 </exclusion>
                 <exclusion>
                     <artifactId>junit</artifactId>
@@ -380,14 +360,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
+ <!--       <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>3.0-alpha-1</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
-
+-->
 		<!-- slf4j-log4j -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -527,6 +507,10 @@
                     <groupId>junit</groupId>
                     <artifactId>junit</artifactId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -534,12 +518,13 @@
             <artifactId>freemarker</artifactId>
             <version>2.3.18</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-servlet-api</artifactId>
             <version>7.0.14</version>
             <scope>provided</scope>
         </dependency>
+        -->
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
