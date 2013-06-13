@@ -58,10 +58,23 @@
                     </dependency>
                 </dependencies>
             </plugin>  
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <!-- Removing classes with deprecated InSessionExecutions class
+                        <include>**/HibernateTestSuite.java</include>-->
+                        <include>**/util/*.java</include>
+                        <include>**/util/**/*.java</include>
+                        <include>**/dao/**/*.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
@@ -84,19 +97,6 @@
                                 </pluginExecution>
                             </pluginExecutions>
                         </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                        <includes>
-                            <!-- Removing classes with deprecated InSessionExecutions class
-                            <include>**/HibernateTestSuite.java</include>-->
-                            <include>**/util/*.java</include>
-                            <include>**/util/**/*.java</include>
-                            <include>**/dao/**/*.java</include>
-                        </includes>
                     </configuration>
                 </plugin>
             </plugins>
@@ -123,35 +123,35 @@
             <groupId>com.github.seqware</groupId> 
             <artifactId>seqware-meta-db</artifactId>
         </dependency>
-            <dependency>
-                <groupId>org.restlet.jee</groupId>
-                <artifactId>org.restlet.ext.jackson</artifactId>
-            </dependency>
-             <dependency>
-                <groupId>org.restlet.jee</groupId>
-                <artifactId>org.restlet.ext.xstream</artifactId>
-            </dependency>
+        <dependency>
+            <groupId>org.restlet.jee</groupId>
+            <artifactId>org.restlet.ext.jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.jee</groupId>
+            <artifactId>org.restlet.ext.xstream</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet</artifactId>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.ext.xml</artifactId>
         </dependency>
-	<dependency>
-	<groupId>org.apache.httpcomponents</groupId>
-	<artifactId>httpclient</artifactId>
-	<version>4.2</version>
-</dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.2</version>
+        </dependency>
         <!-- <dependency>
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.ext.net</artifactId>
         </dependency> -->
         <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-exec</artifactId>
-         </dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-exec</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.ext.httpclient</artifactId>
@@ -249,7 +249,7 @@
             <artifactId>commons-codec</artifactId>
             <version>1.6</version>
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>net.sf.beanlib</groupId>
             <artifactId>beanlib-hibernate</artifactId>
         </dependency>
@@ -273,10 +273,10 @@
             <artifactId>guava</artifactId>
         </dependency>        
         <dependency>
-        	<groupId>org.hibernate</groupId>
-        	<artifactId>hibernate-entitymanager</artifactId>
-        	<type>jar</type>
-        	<scope>provided</scope>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <type>jar</type>
+            <scope>provided</scope>
         </dependency>
         
         
@@ -306,12 +306,12 @@
             <version>1.6.2</version>
             <scope>test</scope>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
             <version>2.2</version>
             <scope>test</scope>
-         </dependency>
+        </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
