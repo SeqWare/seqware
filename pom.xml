@@ -547,8 +547,7 @@
                                 <goal>shutdown</goal>
                             </goals>
                             <configuration>
-                                <skip>${skipITs}</skip>
-          
+                                <skip>${skipITs}</skip> 
                             </configuration>
                             <phase>post-integration-test</phase>
                         </execution>
