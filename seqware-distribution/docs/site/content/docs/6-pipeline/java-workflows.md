@@ -82,10 +82,9 @@ You can also specify directories to be created in the working directory of your 
 ### Jobs & Dependencies
 
 The jobs need to have distinct IDs and you can generate these using a for loop
-in FTL if need be. You can put any command in the <tt><argument></tt> section
+in FTL if need be. You can put any command in the <tt>argument</tt> section
 but mostly this is used to call GenericCommandRunner which runs the command
-provided in a Bash shell. Notice the use of <tt><profile></tt> to specify the
-job thread and memory count.
+provided in a Bash shell. 
 
 <%= render '/includes/java_workflows/java_workflow_jobs/' %>
 
@@ -98,6 +97,70 @@ order so they can be executed successfully. Parent/child relationships are used
 to specify job pre-requisites.
 
 TODO: discuss the JobTypes, namely Bash
+
+### Symbolic Links to Local Dependencies
+
+This type of dependency is not generally recommended. In most cases you will want to check a dependency into a maven repository or add it into the binary or data directories of a workflow. 
+
+However, in the following cases, you will need to rely on symbolic links:
+
+*   The dependency is too large to go into a maven repository 
+*   The dependency is proprietary or cannot be redistributed 
+
+By convention, the symlinks go into a directory in the root of the workflow called links. They should link to a directory, not to a single file (for the purposes of copying the dependencies to the final bundle. Maven doesn't accept single files for copying upon install.
+
+
+First, create the link:
+
+    [seqware@seqwarevm HelloWorld]$ cd links
+    [seqware@seqwarevm links]$ rm -Rf *
+    [seqware@seqwarevm links]$ ln -s ../workflow/data/
+    [seqware@seqwarevm links]$ ls -alhtr
+    total 8.0K
+    drwxrwxr-x 5 seqware seqware 4.0K May 31 17:39 ..
+    lrwxrwxrwx 1 seqware seqware   17 May 31 17:41 data -> ../workflow/data/
+    drwxrwxr-x 2 seqware seqware 4.0K May 31 17:41 .
+
+
+Second, modify your bundle's pom.xml to create a link when compiling your bundle:
+	
+    <build>
+       ...
+        <plugins>
+	   ...
+            <plugin>
+                <groupId>com.pyx4j</groupId>
+                <artifactId>maven-junction-plugin</artifactId>
+                <executions>
+                        <execution>
+                        <phase>package</phase>
+                        <goals>
+                                <goal>link</goal>
+                        </goals>
+                </execution>
+                <execution>
+                        <id>unlink</id>
+                        <phase>clean</phase>
+                        <goals>
+                                <goal>unlink</goal>
+                        </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <links>
+               <link>
+                  <dst>${project.build.directory}/Workflow_Bundle_${workflow-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${project.version}/data/data</dst>
+                  <src>${basedir}/links/data</src>
+                </link>
+              </links>
+            </configuration>
+         </plugin>
+        </plugins>
+    </build>
+    </project>
+
+Your bundles will now contain a symbolic link to your dependency after "mvn clean install" in the data directory and this will only be included in the bundle when the bundle is packaged (and/or installed). 
+
 
 ## Running the Workflow
 
@@ -120,6 +183,4 @@ RUNNING: step 2 of 5 (40%)
 
 See the  [Developer Tutorial](/docs/3-getting-started/developer-tutorial/)
 document for more information. For Java API documentation consult the [SeqWare
-Javadocs](/javadoc/git_0.13.6.2/apidocs/index.html). Specifically look at the
-[AbstractWorkflowDataModel](/javadoc/git_0.13.6.2/apidocs/net/sourceforge/seqware/pipeline/workflowV2/AbstractWorkflowDataModel.html)
-object documentation.
+Javadocs](/docs/11-api/).

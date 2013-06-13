@@ -28,7 +28,7 @@
         <guava.version>11.0.2</guava.version>
         <restlet.version>2.1-RC5</restlet.version>
         <opencsv.version>2.3</opencsv.version>
-        <maven-assembly-plugin.version>2.3</maven-assembly-plugin.version>
+        <maven-assembly-plugin.version>2.4</maven-assembly-plugin.version>
         <jetty-maven-plugin.version>6.1.26</jetty-maven-plugin.version>
         <github.url>scm:git:git@github.com:SeqWare/seqware.git</github.url>
         <maven-jar-plugin.version>2.2</maven-jar-plugin.version>
@@ -39,6 +39,12 @@
         <skipITs>true</skipITs>
         <findbugs.version>2.5.2</findbugs.version>
         <maven-pmd-plugin.version>3.0.1</maven-pmd-plugin.version>
+        
+        <!-- <sonar.jacoco.reportPath>${basedir}/target/jacoco-unit.exec</sonar.jacoco.reportPath> -->
+	<sonar.jacoco.itReportPath>${basedir}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
+	<sonar.dynamicAnalysis>true</sonar.dynamicAnalysis>
+        <!-- Tells Sonar to use JaCoCo as the code coverage tool -->
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
     </properties>
 
     <scm>
@@ -99,7 +105,7 @@
             <name>Plexus</name>
             <url>http://repo1.maven.org/maven2/org/codehaus/plexus/</url>
         </repository>
-<!-- Breaks install because of missing files        <repository>
+        <!-- Breaks install because of missing files        <repository>
             <id>ibiblio.org</id>
             <name>Maven Mirror</name>
             <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
@@ -211,6 +217,12 @@
                 <groupId>com.github.seqware</groupId>
                 <artifactId>seqware-distribution</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.sonar-plugins.java</groupId>
+                <artifactId>sonar-jacoco-listeners</artifactId>
+                <version>1.2</version>
+                <scope>test</scope>
             </dependency>
 
             <!-- Amazon Web Services SDK dependencies -->
@@ -494,83 +506,57 @@
     </dependencyManagement>
 
     <build>
-        <pluginManagement>
+        <pluginManagement>    
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven-failsafe-plugin.version}</version>
+                     <configuration>
+                    <!-- property set by jacoco-maven-plugin -->
+                    <argLine>${itCoverageAgent}</argLine>
+                     </configuration>
+                </plugin>         
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>${maven-assembly-plugin.version}</version>
                 </plugin>
-                <plugin>
-                    <groupId>org.mortbay.jetty</groupId>
-                    <artifactId>jetty-maven-plugin</artifactId>
-                    <version>${jetty-maven-plugin.version}</version>
-                </plugin>
                 
                 <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
-		<!-- <version>7.0.0.pre5</version> -->
-                <version>6.1.26</version>
-                <configuration>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
-		<!-- next three properties added for IT testing --> 
-                    <stopPort>9999</stopPort>
-                    <stopKey>STOP</stopKey>
-                   <!--  <contextPath>/</contextPath> -->
+                    <groupId>org.apache.tomcat.maven</groupId>
+                    <artifactId>tomcat6-maven-plugin</artifactId>
+                    <version>2.1</version>
+                    <configuration>
+                        <port>8889</port>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>tomcat-run</id>
+                            <goals>
+                                <goal>run-war-only</goal>
+                            </goals>
+                            <phase>pre-integration-test</phase>
+                            <configuration>
+                                <fork>true</fork>
+                                <skip>${skipITs}</skip>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>tomcat-shutdown</id>
+                            <goals>
+                                <goal>shutdown</goal>
+                            </goals>
+                            <configuration>
+                                <skip>${skipITs}</skip>
+          
+                            </configuration>
+                            <phase>post-integration-test</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+            
 
-                    <connectors>
-                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector"> 
-                        <!-- <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector"> -->
-                            <port>8889</port>
-                            <maxIdleTime>60000</maxIdleTime>
-                        </connector>
-                    </connectors>
-                </configuration>
-                <executions>
-                    <execution>
-			<!-- this execution handles jetty:run SEQWARE-1286 -->
-                        <id>default-cli</id>
-                        <configuration>
-                            <connectors>
-                               <!-- <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector"> -->
-                               <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-                                    <port>8889</port>
-                                </connector>
-                            </connectors>
-                            <scanIntervalSeconds>0</scanIntervalSeconds>
-                        </configuration>
-                    </execution>
-                    <execution>
-			<!-- this execution handles when jetty is run through the normal lifecycle process -->
-                        <id>start-jetty</id>
-                        <!-- changed for IT testing <phase>test-compile</phase> -->	
-		        <!-- <phase>pre-integration-test</phase> -->	
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-		            <skip>${skipITs}</skip>
-                            <connectors>
-                               <!-- <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector"> -->
-                                <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-                                    <port>8889</port>
-                                </connector>
-                            </connectors>
-                            <scanIntervalSeconds>0</scanIntervalSeconds>
-                            <daemon>true</daemon>
-                        </configuration>
-                    </execution>
-		   <!-- re-enabled for IT testing -->
-                    <execution>
-                        <id>stop-jetty</id>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution> 
-                </executions>
-            </plugin>
-
-      <plugin>
+                <plugin>
           <!-- hacked from, some of their syntax did not compile http://mojo.codehaus.org/sql-maven-plugin/examples/execute.html -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>sql-maven-plugin</artifactId>
@@ -626,6 +612,7 @@
 
 	  <!-- this would be good to resolve SEQWARE-1225. Maven binds multiple executions to the same phase in pom.xml order.
 		This should have worked, but it doesn't seem to for some reason. Maybe Jetty takes too long to shutdown   
+                
           <execution>
             <id>drop-db-after-test</id>
             <phase>post-integration-test</phase>
@@ -643,82 +630,144 @@
         </executions>
       </plugin>
                 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jxr-plugin</artifactId>
-                    <version>2.3</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.3.2</version>
-                    <configuration>
-                        <source>1.6</source>
-                        <target>1.6</target>
-                        <showDeprecation>true</showDeprecation>
-                        <!-- added forkMode, the full GitHub mvn compile seems to blow up with an OutOfMemoryError -->
-                        <fork>true</fork>
-                    </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.codehaus.plexus</groupId>
-                            <artifactId>plexus-compiler-javac</artifactId>
-                            <version>1.8.2</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.plexus</groupId>
-                            <artifactId>plexus-compiler-api</artifactId>
-                            <version>1.8.2</version>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>findbugs-maven-plugin</artifactId>
-                    <version>${findbugs.version}</version>
-                    <configuration>
-			<!-- let's try to get rid of the timeout issue on Jenkins -->
-			<timeout>3600000</timeout>
-                        <findbugsXmlOutput>true</findbugsXmlOutput>
-                        <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
-                        <xmlOutput>true</xmlOutput>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>2.3.2</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-pmd-plugin</artifactId>
-                    <version>${maven-pmd-plugin.version}</version>
-                    <configuration>
-                        <targetJdk>1.6</targetJdk>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>versions-maven-plugin</artifactId>
-                    <version>1.3.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <inherited>true</inherited>
-                    <configuration>
-                        <archive>                   
-                            <manifest>
-                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                            </manifest>
-                        </archive>
-                    </configuration>
-                </plugin>      
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jxr-plugin</artifactId>
+          <version>2.3</version>
+      </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>2.3.2</version>
+          <configuration>
+              <source>1.6</source>
+              <target>1.6</target>
+              <showDeprecation>true</showDeprecation>
+              <!-- added forkMode, the full GitHub mvn compile seems to blow up with an OutOfMemoryError -->
+              <fork>true</fork>
+          </configuration>
+          <dependencies>
+              <dependency>
+                  <groupId>org.codehaus.plexus</groupId>
+                  <artifactId>plexus-compiler-javac</artifactId>
+                  <version>1.8.2</version>
+              </dependency>
+              <dependency>
+                  <groupId>org.codehaus.plexus</groupId>
+                  <artifactId>plexus-compiler-api</artifactId>
+                  <version>1.8.2</version>
+              </dependency>
+          </dependencies>
+      </plugin>
+      <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>findbugs-maven-plugin</artifactId>
+          <version>${findbugs.version}</version>
+          <configuration>
+              <!-- let's try to get rid of the timeout issue on Jenkins -->
+              <timeout>3600000</timeout>
+              <findbugsXmlOutput>true</findbugsXmlOutput>
+              <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
+              <xmlOutput>true</xmlOutput>
+          </configuration>
+      </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.3.2</version>
+      </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>${maven-pmd-plugin.version}</version>
+          <configuration>
+              <targetJdk>1.6</targetJdk>
+          </configuration>
+      </plugin>
+      <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>1.3.1</version>
+      </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <inherited>true</inherited>
+          <configuration>
+              <archive>                   
+                  <manifest>
+                      <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                      <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                  </manifest>
+              </archive>
+          </configuration>
+      </plugin>
+      <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>cobertura-maven-plugin</artifactId>
+          <version>2.5.2</version>
+      </plugin>      
+      <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.6.3.201306030806</version>
+      </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
-            
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize-unit</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${basedir}/target/jacoco-it.exec</destFile>
+                            <dataFile>${basedir}/target/jacoco-it.exec</dataFile>
+                            <dumpOnExit>true</dumpOnExit>
+                            <propertyName>itCoverageAgent</propertyName>
+                        </configuration>
+                    </execution>
+                    <!-- activate and change dynamicReports to generate both unit tests and integration test data properly
+                    <execution>
+                        <id>jacoco-site-unit</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${basedir}/target/jacoco-unit.exec</destFile>
+                            <dataFile>${basedir}/target/jacoco-unit.exec</dataFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>jacoco-initialize-it</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${basedir}/target/jacoco-it.exec</destFile>
+                            <dataFile>${basedir}/target/jacoco-it.exec</dataFile>
+                        </configuration>
+                    </execution>
+                    -->
+                    <execution>
+                        <id>jacoco-site-it</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${basedir}/target/jacoco-it.exec</destFile>
+                            <dataFile>${basedir}/target/jacoco-it.exec</dataFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -758,7 +807,7 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-			    <skip>${skipITs}</skip>
+                            <skip>${skipITs}</skip>
                             <executable>chmod</executable>
                             <commandlineArgs>600 ${user.home}/.seqware/settings</commandlineArgs>
                         </configuration>
@@ -785,6 +834,52 @@
                 <artifactId>maven-jxr-plugin</artifactId>
                 <version>2.3</version>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.5.2</version>
+                <configuration>
+                    <formats>
+                        <format>html</format>
+                        <format>xml</format>
+                    </formats>
+                </configuration>
+            </plugin>
         </plugins>
     </reporting>
+    
+    <!-- BEGIN: Specific to mapping unit tests and covered code -->
+    <profiles>
+        <profile>
+            <id>coverage-per-test</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <!-- Minimal supported version is 2.4 -->
+                        <version>2.13</version>
+                        <configuration>
+                            <properties>
+                                <property>
+                                    <name>listener</name>
+                                    <value>org.sonar.java.jacoco.JUnitListener</value>
+                                </property>
+                            </properties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.codehaus.sonar-plugins.java</groupId>
+                    <artifactId>sonar-jacoco-listeners</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+    <!-- END: Specific to mapping unit tests and covered code -->
+    
 </project>

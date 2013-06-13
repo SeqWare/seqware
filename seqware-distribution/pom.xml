@@ -1,57 +1,64 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent> 
+    <parent> 
         <version>1.0.1-SNAPSHOT</version> 
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
         <relativePath>../pom.xml</relativePath> 
-  </parent>
+    </parent>
 
-  <artifactId>seqware-distribution</artifactId>
+    <artifactId>seqware-distribution</artifactId>
 
-  <name>seqware-distribution</name>
-  <url>https://github.com/SeqWare/seqware</url>
+    <name>seqware-distribution</name>
+    <url>https://github.com/SeqWare/seqware</url>
 
-  <dependencies>
-    <dependency>
-      <groupId>com.github.seqware</groupId>
-      <artifactId>seqware-queryengine</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.github.seqware</groupId>
-      <artifactId>seqware-pipeline</artifactId>
-    </dependency>
-  </dependencies>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.github.seqware</groupId>
+            <artifactId>seqware-queryengine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.seqware</groupId>
+            <artifactId>seqware-pipeline</artifactId>
+        </dependency>
+    </dependencies>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
 
-  <build>
-    <plugins>
+    <build>
+        <plugins>
 
-   <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.2.1</version>
-        <executions>
-          <execution>
-	    <id>generate_markdown</id>
-	    <phase>pre-site</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-        <configuration>
-          <executable>sh</executable>
-          <arguments>
-            <argument>src/scripts/generate_markdown.sh</argument>
-          </arguments>
-        </configuration>
-          </execution>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <id>generate_markdown</id>
+                        <phase>pre-site</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>sh</executable>
+                            <arguments>
+                                <argument>src/scripts/generate_markdown.sh</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
 
-	  <execution>
+                    <execution>
                         <id>compile_website</id>
                         <phase>pre-site</phase>
                         <goals>
@@ -60,15 +67,15 @@
                         <configuration>
                             <executable>nanoc</executable>
                             <commandlineArgs>compile</commandlineArgs>
-			    <workingDirectory>docs/site/</workingDirectory>
+                            <workingDirectory>docs/site/</workingDirectory>
                         </configuration>
                     </execution>
 
 
-        </executions>
-      </plugin>
-     <plugin>
-	<!-- should be temporary, until we figure out what is generating temp directories -->
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- should be temporary, until we figure out what is generating temp directories -->
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>${maven-clean-plugin.version}</version>
                 <configuration>
@@ -80,107 +87,107 @@
                             </includes>
                         </fileset>
                     </filesets>
-               </configuration>
-    </plugin>
-    <plugin>
-      <artifactId>maven-assembly-plugin</artifactId>
-      <version>2.3</version>
-	<executions>
-	<execution>
-          <id>executable-jar-assembly</id>
-          <phase>package</phase>
-          <goals>
-            <goal>single</goal>
-          </goals>
-          <configuration>
-            <archive>
-              <manifest>
-                <mainClass>net.sourceforge.seqware.pipeline.runner.PluginRunner</mainClass>
-		<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              </manifest>
-	      <manifestEntries>
-                <Implementation-Build>${buildNumber}</Implementation-Build>
-              </manifestEntries>
-            </archive>
-            <descriptors>
-              <descriptor>src/assemble/seqware-pipeline-full.xml</descriptor>
-            </descriptors>
-            <!-- <finalName>seqware</finalName> -->
-          </configuration>
-        </execution>
-	<execution>
-          <id>executable-queryengine-jar-assembly</id>
-          <phase>package</phase>
-          <goals>
-            <goal>single</goal>
-          </goals>
-          <configuration>
-            <archive>
-              <manifest>
-                <mainClass>net.sourceforge.seqware.pipeline.runner.PluginRunner</mainClass>
-		<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              </manifest>
-	      <manifestEntries>
-                <Implementation-Build>${buildNumber}</Implementation-Build>
-              </manifestEntries>
-            </archive>
-            <descriptors>
-              <descriptor>src/assemble/seqware-queryengine.xml</descriptor>
-            </descriptors>
-            <!-- <finalName>seqware</finalName> -->
-          </configuration>
-        </execution>
-      </executions>
-    </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-scm-publish-plugin</artifactId>
-        <version>1.0-beta-2</version>
-	<executions>
-	<execution>
-          <phase>site-deploy</phase>
-          <goals>
-            <goal>publish-scm</goal>
-          </goals>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven-assembly-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>executable-jar-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>net.sourceforge.seqware.pipeline.runner.PluginRunner</mainClass>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                </manifest>
+                                <manifestEntries>
+                                    <Implementation-Build>${buildNumber}</Implementation-Build>
+                                </manifestEntries>
+                            </archive>
+                            <descriptors>
+                                <descriptor>src/assemble/seqware-pipeline-full.xml</descriptor>
+                            </descriptors>
+                            <!-- <finalName>seqware</finalName> -->
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>executable-queryengine-jar-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>net.sourceforge.seqware.pipeline.runner.PluginRunner</mainClass>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                </manifest>
+                                <manifestEntries>
+                                    <Implementation-Build>${buildNumber}</Implementation-Build>
+                                </manifestEntries>
+                            </archive>
+                            <descriptors>
+                                <descriptor>src/assemble/seqware-queryengine.xml</descriptor>
+                            </descriptors>
+                            <!-- <finalName>seqware</finalName> -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-publish-plugin</artifactId>
+                <version>1.0-beta-2</version>
+                <executions>
+                    <execution>
+                        <phase>site-deploy</phase>
+                        <goals>
+                            <goal>publish-scm</goal>
+                        </goals>
 
-          <configuration>
-		<!-- redirecting output for 1.0.0 content into a holding area  -->
-	        <pubScmUrl>scm:git:https://github.com/SeqWare/unstable.seqware.github.com.git</pubScmUrl>	
-		<content>docs/site/output/</content>
-		<scmBranch>gh-pages</scmBranch>
-		<ignorePathsToDelete>
-              		<ignorePathToDelete>javadoc</ignorePathToDelete>
-              		<ignorePathToDelete>manuals</ignorePathToDelete>
-              		<ignorePathToDelete>queryengine-api</ignorePathToDelete>
-              		<ignorePathToDelete>webservice-api</ignorePathToDelete>
-              		<ignorePathToDelete>pictures</ignorePathToDelete>
-            	</ignorePathsToDelete>
-                <tryUpdate>true</tryUpdate>
-          </configuration>
-	</execution>
-	</executions>
-      </plugin>
+                        <configuration>
+                            <!-- redirecting output for 1.0.0 content into a holding area  -->
+                            <pubScmUrl>scm:git:https://github.com/SeqWare/unstable.seqware.github.com.git</pubScmUrl>	
+                            <content>docs/site/output/</content>
+                            <scmBranch>gh-pages</scmBranch>
+                            <ignorePathsToDelete>
+                                <ignorePathToDelete>javadoc</ignorePathToDelete>
+                                <ignorePathToDelete>manuals</ignorePathToDelete>
+                                <ignorePathToDelete>queryengine-api</ignorePathToDelete>
+                                <ignorePathToDelete>webservice-api</ignorePathToDelete>
+                                <ignorePathToDelete>pictures</ignorePathToDelete>
+                            </ignorePathsToDelete>
+                            <tryUpdate>true</tryUpdate>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
-<plugin>
-<groupId>org.apache.maven.plugins</groupId>
-<artifactId>maven-project-info-reports-plugin</artifactId>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
 
-<version>2.6</version>
-<configuration>
-<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
-<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-</configuration>
-</plugin>
-   <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <version>3.2</version>
-          <configuration>
-		<skip>true</skip>
-		<skipDeploy>true</skipDeploy>
-          </configuration>
-      </plugin>
+                <version>2.6</version>
+                <configuration>
+                    <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <skip>true</skip>
+                    <skipDeploy>true</skipDeploy>
+                </configuration>
+            </plugin>
 
-    </plugins>
-  </build>
+        </plugins>
+    </build>
 </project>

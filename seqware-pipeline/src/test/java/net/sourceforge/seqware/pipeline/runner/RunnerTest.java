@@ -1,32 +1,39 @@
 package net.sourceforge.seqware.pipeline.runner;
 
 //import org.aspectj.weaver.ast.Test;
-import org.testng.annotations.*;
-
 import java.io.File;
 import java.security.Permission;
+import java.util.Arrays;
+import java.util.Collection;
 import net.sourceforge.seqware.common.util.Log;
-
-import static org.testng.Assert.assertEquals;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
  * Testing the runner class.
  * <p/>
- * Created by IntelliJ IDEA.
- * User: xiao
- * Date: 7/21/11
- * Time: 3:22 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: xiao Date: 7/21/11 Time: 3:22 PM To change
+ * this template use File | Settings | File Templates.
  *
  * @author boconnor
  * @version $Id: $Id
  * @since 0.13.3
  */
+@RunWith(Parameterized.class)
 public class RunnerTest {
 
+    private String testArgs;
+    private int expected;
     private static File rscDir;
 
     class NoExitSecurityManager extends SecurityManager {
+
         @Override
         public void checkPermission(Permission permission) {
             //allow anything
@@ -45,6 +52,7 @@ public class RunnerTest {
     }
 
     class ExitException extends SecurityException {
+
         public final int status;
 
         public ExitException(int st) {
@@ -57,14 +65,14 @@ public class RunnerTest {
      * <p>setUpClassProperty.</p>
      */
     @BeforeClass
-    public void setUpClassProperty() {
+    public static void setUpClassProperty() {
         rscDir = new File(RunnerTest.class.getResource(".").getPath());
     }
 
     /**
      * <p>setup.</p>
      */
-    @BeforeMethod
+    @Before
     public void setup() {
         System.setSecurityManager(new NoExitSecurityManager());
     }
@@ -72,7 +80,7 @@ public class RunnerTest {
     /**
      * <p>teardown.</p>
      */
-    @AfterMethod
+    @After
     public void teardown() {
         System.setSecurityManager(null);
     }
@@ -82,20 +90,18 @@ public class RunnerTest {
      *
      * @return an array of {@link java.lang.Object} objects.
      */
-    @DataProvider(name = "args")
-    public Object[][] arguments() {
+    @Parameters
+    public static Collection<Object[]> arguments() {
         Log.info("rscDir = " + rscDir);
         String stdoutFile = new File(rscDir, "runnertest.out").getAbsolutePath();
         String stderrFile = new File(rscDir, "runnertest.err").getAbsolutePath();
         String basic = "--no-metadata --module net.sourceforge.seqware.pipeline.module.TestModule";
         Log.info("stdoutFile = " + stdoutFile);
         Log.info("stderrFile = " + stderrFile);
-        return new Object[][]{
-//                {"--no-metadata", -1},
-                {basic, 0},
-                {basic + " --output " + stdoutFile, 0},
-                {basic + " --output " + stdoutFile + " --stderr " + stderrFile, 0}
-        };
+        Object[][] data = new Object[][] {{basic, 0},
+            {basic + " --output " + stdoutFile, 0},
+            {basic + " --output " + stdoutFile + " --stderr " + stderrFile, 0}};
+        return Arrays.asList(data);
     }
 
     /**
@@ -104,16 +110,18 @@ public class RunnerTest {
      * @param args a {@link java.lang.String} object.
      * @param expected a int.
      */
-    @Test(dataProvider = "args")
-    public void testRunner(String args, int expected) {
-        try {
-
-            Runner.main(args.split("\\s"));
-        } catch (ExitException e) {
-            assertEquals(e.status, expected);
-        }
+    public RunnerTest(String args, int expected) {
+        this.expected = expected;
+        this.testArgs = args;
     }
 
+    @Test
+    public void executeParameterizedTest() {
+        try {
+            Runner.main(testArgs.split("\\s"));
+        } catch (ExitException e) {
+            Assert.assertEquals(e.status, expected);
+        }
+
+    }
 }
-
-
