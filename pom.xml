@@ -41,7 +41,7 @@
         <maven-pmd-plugin.version>3.0.1</maven-pmd-plugin.version>
         
         <!-- <sonar.jacoco.reportPath>${basedir}/target/jacoco-unit.exec</sonar.jacoco.reportPath> -->
-	<sonar.jacoco.itReportPath>${basedir}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
+	<sonar.jacoco.itReportPath>${project.basedir}/../target/jacoco-it.exec</sonar.jacoco.itReportPath>
 	<sonar.dynamicAnalysis>true</sonar.dynamicAnalysis>
         <!-- Tells Sonar to use JaCoCo as the code coverage tool -->
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -724,8 +724,8 @@
                             <goal>prepare-agent</goal>
                         </goals>
                         <configuration>
-                            <destFile>${basedir}/target/jacoco-it.exec</destFile>
-                            <dataFile>${basedir}/target/jacoco-it.exec</dataFile>
+                            <destFile>${project.basedir}/../target/jacoco-it.exec</destFile>
+                            <dataFile>${project.basedir}/../target/jacoco-it.exec</dataFile>
                             <dumpOnExit>true</dumpOnExit>
                             <propertyName>itCoverageAgent</propertyName>
                         </configuration>
