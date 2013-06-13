@@ -28,7 +28,7 @@
         <guava.version>11.0.2</guava.version>
         <restlet.version>2.1-RC5</restlet.version>
         <opencsv.version>2.3</opencsv.version>
-        <maven-assembly-plugin.version>2.3</maven-assembly-plugin.version>
+        <maven-assembly-plugin.version>2.4</maven-assembly-plugin.version>
         <jetty-maven-plugin.version>6.1.26</jetty-maven-plugin.version>
         <github.url>scm:git:git@github.com:SeqWare/seqware.git</github.url>
         <maven-jar-plugin.version>2.2</maven-jar-plugin.version>
@@ -105,7 +105,7 @@
             <name>Plexus</name>
             <url>http://repo1.maven.org/maven2/org/codehaus/plexus/</url>
         </repository>
-<!-- Breaks install because of missing files        <repository>
+        <!-- Breaks install because of missing files        <repository>
             <id>ibiblio.org</id>
             <name>Maven Mirror</name>
             <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
