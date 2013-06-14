@@ -19,13 +19,13 @@ The SeqWare Web service requires:
 
 The Web Service creates its own database using the seqware user, so this user must have CREATEDB privileges in PostgreSQL. This database will be called test_seqware_meta_db and is automatically dropped and re-created during our tests. You should setup the plpgsql language in the template1 database so it automatically transfers to the test database when it is created. Again, see the MetaDB setup guide for both steps.
 
-If you've setup your seqware user with createdb privileges and the plpgsql language you can actually just build and test the web service with Maven, it has a built-in Jetty server that will startup and test the web service.  You can trigger this just by doing:
+If you've setup your seqware user with createdb privileges and the plpgsql language you can actually just build and test the web service with Maven, it has a built-in Tomcat server that will startup and test the web service.  You can trigger this just by doing:
 
 	mvn clean install -DskipITs=false
 
-If you want to startup the Jetty server for interactive testing you can simply do:
+If you want to startup the Tomcat server for interactive testing you can simply do:
 
-	mvn jetty:run
+	mvn tomcat6:run
 
 You will need to make sure that your ~/.seqware/settings file includes the line 
 
