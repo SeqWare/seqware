@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Properties;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import junit.framework.Assert;
@@ -53,7 +54,13 @@ public class ITUtility {
      */
     public static String runSeqWareJar(String parameters, int expectedReturnValue) throws IOException {
         File jar = retrieveFullAssembledJar();
-        String line = "java -jar " + jar.getAbsolutePath() + " " + parameters;
+        
+        Properties props = new Properties();
+        props.load(ITUtility.class.getClassLoader().getResourceAsStream("project.properties"));
+        String itCoverageAgent = (String) props.get("itCoverageAgent");
+        
+        System.out.println("Try to get property" + itCoverageAgent);
+        String line = "java "+itCoverageAgent+" -jar " + jar.getAbsolutePath() + " " + parameters;
         String output = runArbitraryCommand(line, expectedReturnValue, null);
         return output;
     }
