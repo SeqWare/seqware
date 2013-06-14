@@ -40,7 +40,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
  *
  * @author dyuen
  */
-@PrepareForTest({WorkflowTools.class, FileTools.class, WorkflowStatusChecker.class})
+@PrepareForTest({WorkflowTools.class, FileTools.class, SymLinkFileReporter.class})
 @RunWith(PowerMockRunner.class)
 public class SymLinkFileReporterTest {
 

@@ -14,25 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.seqware.pipeline.tutorial;
+package net.sourceforge.seqware.pipeline.modules.utilities;
 
-import net.sourceforge.seqware.pipeline.modules.utilities.ExternalTestingUtility;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import net.sourceforge.seqware.metadb.util.TestDatabaseCreator;
+import org.junit.Assert;
 
 /**
- * This runs all the tests needed to test the Developer Tutorials. The test suite
- * actually enforces order for us. We actually started with built and installed bundles from step 5 of 
- * the user tutorials.
  *
  * @author dyuen
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses(value = {DeveloperPhase1.class, DeveloperPhase2.class})
-public class DeveloperTutorialSuiteIT extends TutorialSuite {
-    @BeforeClass
-    public static void resetDatabase() {
-        ExternalTestingUtility.resetDatabaseWithUsers();
+public class ExternalTestingUtility {
+    /**
+     * Unfortunately, postgres does not allow the straight dropdb and createdb 
+     * when tomcat is used (perhaps we leave open a connection)
+     */
+    public static void resetDatabaseWithUsers(){
+         try {
+            TestDatabaseCreator.dropDatabaseWithUsers();
+            TestDatabaseCreator.markDatabaseChanged();
+            TestDatabaseCreator.createDatabase();
+        } catch (Exception e) {
+            Assert.assertTrue("Unable to reset database", false);
+        }
     }
 }
