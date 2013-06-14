@@ -229,8 +229,8 @@ public class ProvisionFiles extends Module {
     }
     
     // deal with output-file
-    if (options.has("output-file") && !options.has("input-file")) {
-      ret.setStderr("Must specify a --input-file option along with the --output-file option"
+    if (options.has("output-file") && !(options.has("input-file") || options.has("input-file-metadata"))) {
+      ret.setStderr("Must specify a --input-file option (or --input-file-metadata) along with the --output-file option"
             + System.getProperty("line.separator") + this.get_syntax());
         ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         return ret;
