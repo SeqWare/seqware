@@ -1,0 +1,37 @@
+# GENERAL
+SW_METADATA_METHOD=webservice
+SW_BUNDLE_DIR=/home/seqware/provisioned-bundles
+SW_BUNDLE_REPO_DIR=/home/seqware/released-bundles
+# API
+# the base URL for the RESTful SeqWare API
+SW_REST_URL=http://localhost:8080/SeqWareWebService
+# the username and password to connect to the REST API used by SeqWare Pipeline to write back processing info to the DB 
+SW_REST_USER=admin@admin.com
+SW_REST_PASS=admin
+# AMAZON CLOUD SETTINGS
+# used by tools reading and writing to S3 buckets (dependency data/software bundles, inputs, outputs, etc)
+AWS_ACCESS_KEY=FILLMEIN
+AWS_SECRET_KEY=FILLMEIN
+#
+# SEQWARE PIPELINE
+# OOZIE WORKFLOW ENGINE SETTINGS
+# only used if you specify "-–workflow-engine Oozie" to WorkflowLauncher
+#
+OOZIE_URL=http://localhost:11000/oozie
+OOZIE_APP_ROOT=seqware_workflow
+OOZIE_APP_PATH=hdfs://localhost:8020/user/seqware/
+OOZIE_JOBTRACKER=localhost:8021
+OOZIE_NAMENODE=hdfs://localhost:8020
+OOZIE_QUEUENAME=default
+OOZIE_WORK_DIR=/usr/tmp/seqware-oozie
+#
+# SEQWARE QUERY ENGINE (OPTIONAL)
+#    
+HBASE.ZOOKEEPER.QUORUM=localhost
+HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT=2181
+HBASE.MASTER=localhost:60000
+MAPRED.JOB.TRACKER=localhost:8021
+FS.DEFAULT.NAME=hdfs://localhost:8020
+FS.DEFAULTFS=hdfs://localhost:8020
+FS.HDFS.IMPL=org.apache.hadoop.hdfs.DistributedFileSystem
+

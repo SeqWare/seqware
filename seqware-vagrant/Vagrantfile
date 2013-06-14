@@ -32,7 +32,7 @@ fi
 apt-get update
 export DEBIAN_FRONTEND=noninteractive
 #apt-get -q -y --force-yes install oracle-j2sdk1.6 cloudera-manager-server-db cloudera-manager-server cloudera-manager-daemons
-apt-get -q -y --force-yes install oracle-j2sdk1.6 hadoop-0.20-conf-pseudo hue hue-server hue-plugins oozie oozie-client
+apt-get -q -y --force-yes install oracle-j2sdk1.6 hadoop-0.20-conf-pseudo hue hue-server hue-plugins oozie oozie-client postgresql-9.1 postgresql-client-9.1 tomcat7
 
 # start cloudera manager
 #service cloudera-scm-server-db initdb
@@ -69,14 +69,52 @@ mv ext-2.2 /var/lib/oozie/
 service oozie start
 
 # add seqware user
-useradd seqware
+useradd -d /home/seqware -m seqware
 
 # configure dirs for seqware
 mkdir -p /usr/tmp/seqware-oozie 
+chmod -R a+rwx /usr/tmp/
+chown -R seqware:seqware /usr/tmp/seqware-oozie
 
-# LEFT OFF HERE
+# various seqware dirs
+mkdir /home/seqware/jars
+mkdir /home/seqware/crons
+mkdir /home/seqware/logs
+mkdir /home/seqware/released-bundles
+mkdir /home/seqware/provisioned-bundles
+mkdir /home/seqware/workflow-dev
+mkdir /home/seqware/.seqware
+sudo -u hdfs hadoop fs -mkdir -p /user/seqware
+sudo -u hdfs hadoop fs -chmod seqware /user/seqware
+
 
 # configure seqware settings
+cp /vagrant/settings /home/seqware/.seqware
+
+# setup jar
+cp /vagrant/seqware-distribution-1.0.1-SNAPSHOT-full.jar /home/seqware/jars/
+
+# setup cronjobs
+cp /vagrant/status.cron /home/seqware/crons/
+(crontab -l ; echo "/home/seqware/crons/status.cron >> /home/seqware/logs/status.log") | crontab -
+
+# make everything owned by seqware
+chown -R seqware:seqware /home/seqware
+
+
+# seqware database
+/etc/init.d/postgresql start
+sudo -u postgres psql -c "CREATE USER seqware WITH PASSWORD 'seqware' CREATEDB;"
+sudo -u postgres psql --command "CREATE DATABASE seqware_meta_db WITH OWNER = seqware;"
+sudo -u postgres psql seqware_meta_db < /vagrant/seqware_meta_db.sql
+sudo -u postgres psql seqware_meta_db < /vagrant/seqware_meta_db_data.sql
+
+# seqware web service
+# LEFT OFF HERE
+
+# seqware portal
+
+
 
 
 SCRIPT
