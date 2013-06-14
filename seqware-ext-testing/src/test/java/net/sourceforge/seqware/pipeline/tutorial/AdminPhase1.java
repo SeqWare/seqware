@@ -23,7 +23,6 @@ import junit.framework.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
-import net.sourceforge.seqware.pipeline.plugins.PluginRunnerIT;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
