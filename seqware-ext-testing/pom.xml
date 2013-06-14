@@ -51,37 +51,18 @@
                         <groupId>org.apache.tomcat.maven</groupId>
                         <artifactId>tomcat6-maven-plugin</artifactId>
                         <configuration>   
-                            <addContextWarDependencies>true</addContextWarDependencies>
-                            <warDirectory>../seqware-webservice/target/classes</warDirectory>
                             <contextFile>../seqware-webservice/src/main/webapp/META-INF/context.xml</contextFile>
+                            <webapps>
+                                <webapp>
+                                    <groupId>com.github.seqware</groupId> 
+                                    <artifactId>seqware-webservice</artifactId> 
+                                    <version>${project.version}</version> 
+                                    <type>war</type>                                     
+                                    <asWebapp>true</asWebapp>  
+                                </webapp>                           
+                            </webapps>
                         </configuration>
                     </plugin>
-                    <!-- 
-                    <plugin>
-                        <groupId>org.mortbay.jetty</groupId>
-                        <artifactId>maven-jetty-plugin</artifactId>
-                
-                        <executions>
-                            <execution>
-                                <id>default-cli</id>
-                                <phase>test-compile</phase>	
-                            </execution>
-                            <execution>
-                                <id>start-jetty</id>
-                                <phase>test-compile</phase>
-                            </execution>
-                            <execution>
-                                <id>stop-jetty</id>
-                                <phase>post-integration-test</phase>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <contextPath>/seqware-webservice</contextPath>
-                            <classesDirectory>../seqware-webservice/target/classes</classesDirectory>
-                            <webAppSourceDirectory>../seqware-webservice/src/main/webapp</webAppSourceDirectory>
-                        </configuration>
-                    </plugin>
-                    -->
                     
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
