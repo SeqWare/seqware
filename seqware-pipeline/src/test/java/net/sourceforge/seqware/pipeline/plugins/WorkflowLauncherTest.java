@@ -16,12 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import joptsimple.OptionSet;
-import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;

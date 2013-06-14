@@ -14,26 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.seqware.pipeline.modules.utilities;
+package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.pipeline.plugins.ITUtility;
+import net.sourceforge.seqware.pipeline.modules.utilities.ExternalTestingUtility;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * These tests support command-line tools found in the SeqWare User Tutorial
- * that do not look like they are tested elsewhere
+ * These tests support command-line tools found in the SeqWare User Tutorial,
+ * in this case, ProvisionFiles
  *
  * @author dyuen
  */
-public class CommandLineToolsIT {
+public class ProvisionFilesIT {
     
     @BeforeClass
     public static void resetDatabase() {
@@ -49,17 +49,6 @@ public class CommandLineToolsIT {
     @Test
     public void testProvisionFileIn_RandomInput() throws IOException {
         provisionFileWithRandomInput("10");
-    }
-
-    /**
-     * This tests saves generic metadata for a file on the local VM instead of
-     * provisioning it.
-     *
-     * @throws IOException
-     */
-    @Test
-    public void testGenericMetadataSaver() throws IOException {
-        saveGenericMetadataFileForSample("10");
     }
 
     /**
@@ -116,20 +105,6 @@ public class CommandLineToolsIT {
         return provisioned;
     }
 
-    public String saveGenericMetadataFileForSample(String sampleAccession) throws IOException {
-        // create a random new file and check that the file we want to save metadata about exists 
-        File inputFile = File.createTempFile("input", "out");
-        final String content = "This is a funky funky test file";
-        FileUtils.write(inputFile, content);
-
-        Random generator = new Random();
-        String random = String.valueOf(generator.nextInt());
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver "
-                + " --metadata-parent-accession  "+sampleAccession
-                + " -- --gms-output-file text::text/plain::" + inputFile.getAbsolutePath()
-                + " --gms-algorithm UploadText --gms-suppress-output-file-check";
-        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
-        Log.info(listOutput);
-        return listOutput;
-    }
+    
+    
 }
