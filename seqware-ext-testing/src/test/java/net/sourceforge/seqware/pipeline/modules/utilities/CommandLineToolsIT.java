@@ -24,6 +24,7 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -33,6 +34,11 @@ import org.junit.Test;
  * @author dyuen
  */
 public class CommandLineToolsIT {
+    
+    @BeforeClass
+    public static void resetDatabase() {
+        ExternalTestingUtility.resetDatabaseWithUsers();
+    }
 
     /**
      * This test provisions a file in with random input and checks on the

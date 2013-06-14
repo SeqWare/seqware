@@ -84,6 +84,27 @@ public class TestDatabaseCreator {
             }
         }
     }
+    
+    /**
+     * Drop a database schema even when users are connected to it
+     *
+     * @throws java.sql.SQLException if any.
+     */
+    public static void dropDatabaseWithUsers() throws SQLException {
+        Connection connectionToPostgres = null;
+        try {
+            connectionToPostgres = createConnection(SEQWARE_DB, POSTGRE_USER, POSTGRE_PASSWORD);
+            connectionToPostgres.createStatement().execute("drop schema if exists public cascade;");
+            connectionToPostgres.createStatement().execute("create schema public;");
+        } catch (Exception e) {
+//            e.printStackTrace();
+            logger.info("TestDatabaseCreator.dropDatabaseWithUsers" + e.getMessage());
+        } finally {
+            if (connectionToPostgres != null) {
+                connectionToPostgres.close();
+            }
+        }
+    }
 
     /**
      * <p>markDatabaseChanged.</p>
