@@ -17,7 +17,8 @@
 package net.sourceforge.seqware.pipeline.tutorial;
 
 import java.io.IOException;
-import net.sourceforge.seqware.pipeline.modules.utilities.CommandLineToolsIT;
+import net.sourceforge.seqware.pipeline.plugins.GenericMetadataSaverIT;
+import net.sourceforge.seqware.pipeline.plugins.ProvisionFilesIT;
 import org.junit.Test;
 
 /**
@@ -30,13 +31,13 @@ public class UserPhase4 {
     
     @Test
     public void testProvisionFileInAndAssociateWithSample() throws IOException {
-        CommandLineToolsIT it = new CommandLineToolsIT();
+        ProvisionFilesIT it = new ProvisionFilesIT();
         it.provisionFileWithRandomInput(AccessionMap.accessionMap.get(UserPhase3.SAMPLE));
     }
     
     @Test
     public void testExistingFileInAndAssociateWithSample() throws IOException {
-        CommandLineToolsIT it = new CommandLineToolsIT();
+        GenericMetadataSaverIT it = new GenericMetadataSaverIT();
         String output = it.saveGenericMetadataFileForSample(AccessionMap.accessionMap.get(UserPhase3.SAMPLE));
         String sw_accession = UserTutorialSuiteIT.getAndCheckProcessingAccession(output);
         AccessionMap.accessionMap.put(FILE, sw_accession);
