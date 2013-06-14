@@ -42,19 +42,19 @@ public class WorkflowRunReporterIT {
     }
 
     @Test
-    public void runSequencerRunReporter() throws IOException {
+    public void runWorkflowRunReporter() throws IOException {
         String randomString = UUID.randomUUID().toString();
         File testOutFile = new File(randomString + ".txt");
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter "
-                + "-- --output-filename " + testOutFile.getName(); 
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
+                + "-- --output-filename " + testOutFile.getName() + " --workflow-run-accession 6698"; 
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
         Log.info(listOutput);
         File retrievedFile = new File(testOutFile.getName());
         Assert.assertTrue("output file does not exist", retrievedFile.exists());
         List<String> readLines = FileUtils.readLines(testOutFile);
-        Assert.assertTrue("incorrect number of lines", readLines.size() == 25);
+        Assert.assertTrue("incorrect number of lines", readLines.size() == 2);
         long checksumCRC32 = FileUtils.checksumCRC32(testOutFile);
-        Assert.assertTrue("incorrect output checksum", checksumCRC32 == 1696717973L);
+        Assert.assertTrue("incorrect output checksum", checksumCRC32 == 3905672450L);
     }
 
     
