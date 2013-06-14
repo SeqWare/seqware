@@ -44,7 +44,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = PluginInterface.class)
 public class SymLinkFileReporter extends Plugin {
 
-    private static final String SHOW_STATUS = "show-status";
+    public static final String SHOW_STATUS = "show-status";
     //Filenames have a max size of 144 chars on Ubuntu, believe it or not.
     public static final int MAX_FILE_NAME_SIZE = 143;
     private ReturnValue ret = new ReturnValue();
@@ -406,9 +406,5 @@ public class SymLinkFileReporter extends Plugin {
                 + "file with all of the accompanying information for every file. "
                 + "For more information, see "
                 + "see http://seqware.github.com/docs/21-study-reporter/";
-    }
-
-    protected net.sourceforge.seqware.common.metadata.Metadata getMetadata() {
-        return metadata;
     }
 }
