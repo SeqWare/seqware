@@ -35,14 +35,14 @@ public class DeveloperPhase2 {
     @Test
     public void testTestingTheWorkflow() throws IOException{
        String tOutput = ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + DeveloperPhase1.BundleDir.getAbsolutePath() + 
-               " -t --workflow seqware-archetype-java-workflow --version 1.0-SNAPSHOT", ReturnValue.SUCCESS);
+               " -t --workflow seqware-archetype-java-workflow --version 1.0-SNAPSHOT", ReturnValue.SUCCESS, null);
     }
     
     @Test 
     public void testPackagingWorkflow()throws IOException{
         File tempPackageDir = Files.createTempDir();
         String tOutput = ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + tempPackageDir.getAbsolutePath() + 
-               " -p " + DeveloperPhase1.BundleDir.getAbsolutePath() , ReturnValue.SUCCESS);
+               " -p " + DeveloperPhase1.BundleDir.getAbsolutePath() , ReturnValue.SUCCESS, null);
         FileUtils.deleteDirectory(tempPackageDir);
     }
     
