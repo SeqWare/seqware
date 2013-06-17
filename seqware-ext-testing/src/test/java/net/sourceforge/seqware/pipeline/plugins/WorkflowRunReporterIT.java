@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -40,16 +41,17 @@ public class WorkflowRunReporterIT {
     public static void resetDatabase() {
         ExternalTestingUtility.resetDatabaseWithUsers();
     }
-
+    
     @Test
     public void runWorkflowRunReporter() throws IOException {
+        File createTempDir = Files.createTempDir();
         String randomString = UUID.randomUUID().toString();
-        File testOutFile = new File(randomString + ".txt");
+        File testOutFile = new File(createTempDir, randomString + ".txt");
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
                 + "-- --output-filename " + testOutFile.getName() + " --workflow-run-accession 6698"; 
-        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
         Log.info(listOutput);
-        File retrievedFile = new File(testOutFile.getName());
+        File retrievedFile = new File(createTempDir, testOutFile.getName());
         Assert.assertTrue("output file does not exist", retrievedFile.exists());
         List<String> readLines = FileUtils.readLines(testOutFile);
         Assert.assertTrue("incorrect number of lines", readLines.size() == 2);
@@ -57,6 +59,54 @@ public class WorkflowRunReporterIT {
         Assert.assertTrue("incorrect output checksum", checksumCRC32 == 3905672450L);
     }
 
+    @Test
+    public void runInvalidParameters() throws IOException {
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
+                + "-- --boogly parameters --workflow-run-accession 6698";
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDARGUMENT, null);
+        
+    }
     
+    @Test
+    public void runInvalidIO() throws IOException {
+        File createTempDir = Files.createTempDir();
+        String randomString = UUID.randomUUID().toString();
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
+                + "-- --output-filename " + createTempDir.getAbsolutePath() + " --workflow-run-accession 6698";  
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.FILENOTREADABLE, null);
+    }
     
+    @Test
+    public void runFirstDate() throws IOException {
+        File createTempDir = Files.createTempDir();
+        String randomString = UUID.randomUUID().toString();
+        File testOutFile = new File(createTempDir, randomString + ".txt");
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
+                + "-- --output-filename " + testOutFile.getName() + " --workflow-accession 2861 --time-period 2012-01-01 "; 
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
+        Log.info(listOutput);
+        File retrievedFile = new File(createTempDir, testOutFile.getName());
+        Assert.assertTrue("output file does not exist", retrievedFile.exists());
+        List<String> readLines = FileUtils.readLines(testOutFile);
+        Assert.assertTrue("incorrect number of lines ", readLines.size() == 7);
+        long checksumCRC32 = FileUtils.checksumCRC32(testOutFile);
+        Assert.assertTrue("incorrect output checksum " + checksumCRC32, checksumCRC32 == 2453262749L);
+    }
+    
+    @Test
+    public void runBothDates() throws IOException {
+        File createTempDir = Files.createTempDir();
+        String randomString = UUID.randomUUID().toString();
+        File testOutFile = new File(createTempDir, randomString + ".txt");
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
+                + "-- --output-filename " + testOutFile.getName() + " --workflow-accession 2861 --time-period 2012-01-01:2012-01-15 "; 
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
+        Log.info(listOutput);
+        File retrievedFile = new File(createTempDir, testOutFile.getName());
+        Assert.assertTrue("output file does not exist", retrievedFile.exists());
+        List<String> readLines = FileUtils.readLines(testOutFile);
+        Assert.assertTrue("incorrect number of lines ", readLines.size() == 4);
+        long checksumCRC32 = FileUtils.checksumCRC32(testOutFile);
+        Assert.assertTrue("incorrect output checksum " + checksumCRC32, checksumCRC32 == 1339214791L);
+    }
 }

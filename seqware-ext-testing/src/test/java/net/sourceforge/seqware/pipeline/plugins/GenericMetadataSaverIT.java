@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
@@ -53,6 +54,7 @@ public class GenericMetadataSaverIT {
     }
 
     public String saveGenericMetadataFileForSample(String sampleAccession) throws IOException {
+        File createTempDir = Files.createTempDir();
         // create a random new file and check that the file we want to save metadata about exists 
         File inputFile = File.createTempFile("input", "out");
         final String content = "This is a funky funky test file";
@@ -64,7 +66,7 @@ public class GenericMetadataSaverIT {
                 + " --metadata-parent-accession  "+sampleAccession
                 + " -- --gms-output-file text::text/plain::" + inputFile.getAbsolutePath()
                 + " --gms-algorithm UploadText --gms-suppress-output-file-check";
-        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
         Log.info(listOutput);
         return listOutput;
     }

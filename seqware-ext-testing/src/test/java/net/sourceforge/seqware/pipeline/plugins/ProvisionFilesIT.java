@@ -64,7 +64,7 @@ public class ProvisionFilesIT {
                 + " --no-metadata "
                 + " -- -i" + provisionedFile.getAbsolutePath()
                 + " -o " + tempDir.getAbsolutePath(); 
-        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Log.info(listOutput);
         File retrievedFile = new File(tempDir.getAbsoluteFile() , provisionedFile.getName());
         
@@ -86,7 +86,7 @@ public class ProvisionFilesIT {
                 + "--metadata-output-file-prefix /datastore/"
                 + " --metadata-parent-accession "+sampleAccession+" --metadata-processing-accession-file  " + metadataFile.getAbsolutePath()
                 + " -- -im text::text/plain::" + inputFile.getAbsolutePath() + " -o /datastore/ --force-copy";
-        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Log.info(listOutput);
         // check that file was ended up being provisioned correctly
         File provisioned = new File("/datastore/" + inputFile.getName());

@@ -32,14 +32,14 @@ public class UserPhase1 {
     
     @Test
     public void testMetadataListTables() throws IOException {
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --list-tables", ReturnValue.SUCCESS);
+        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --list-tables", ReturnValue.SUCCESS, null);
         Assert.assertTrue("output should include table names", output.contains("TableName") && output.contains("study") && output.contains("experiment"));
         Assert.assertTrue("output should include table names", output.contains("sample") && output.contains("sequencer_run") && output.contains("ius") && output.contains("lane"));
     }
     
     @Test
     public void testMetadataListFields() throws IOException {
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --list-fields", ReturnValue.SUCCESS);
+        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --list-fields", ReturnValue.SUCCESS, null);
         Assert.assertTrue("output should include column names", output.contains("Field\tType\tPossible_Values"));
         Assert.assertTrue("output should include field names", output.contains("title\tString"));
         Assert.assertTrue("output should include field names", output.contains("study_type\tInteger"));
@@ -47,7 +47,7 @@ public class UserPhase1 {
     
     @Test
     public void testStudyCreation() throws IOException {
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --create --field title::New Test Study --field description::This is a test description --field accession::InternalID123 --field center_name::SeqWare --field center_project_name::SeqWare Test Project --field study_type::4", ReturnValue.SUCCESS);
+        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --create --field title::New Test Study --field description::This is a test description --field accession::InternalID123 --field center_name::SeqWare --field center_project_name::SeqWare Test Project --field study_type::4", ReturnValue.SUCCESS, null);
         String sw_accession  = UserTutorialSuiteIT.getAndCheckSwid(output);
         AccessionMap.accessionMap.put(STUDY, sw_accession);
     }

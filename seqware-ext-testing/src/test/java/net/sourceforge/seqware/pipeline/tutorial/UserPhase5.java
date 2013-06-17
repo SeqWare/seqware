@@ -63,7 +63,7 @@ public class UserPhase5 {
         // launch, slightly unlike the tutorial, I'm going to wait to ensure that we have results to export in the next phase
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files " + exportINIFile.getAbsolutePath() + " --workflow-accession " + accessions.get(0)
                 + " --parent-accessions " + AccessionMap.accessionMap.get(UserPhase4.FILE) + " --wait --host " + localhost;
-        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Log.info(listOutput);
     }
 }

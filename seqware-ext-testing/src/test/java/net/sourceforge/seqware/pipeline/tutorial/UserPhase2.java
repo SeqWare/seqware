@@ -16,6 +16,8 @@
  */
 package net.sourceforge.seqware.pipeline.tutorial;
 
+import com.google.common.io.Files;
+import java.io.File;
 import java.io.IOException;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
@@ -32,7 +34,8 @@ public class UserPhase2 {
     @Test
     public void createExperimentAndLinkToStudy() throws IOException{
         String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table experiment "
-                + "--create --field title::New Test Experiment --field description::This is a test description --field study_accession::"+AccessionMap.accessionMap.get(UserPhase1.STUDY) +" --field platform_id::26", ReturnValue.SUCCESS);
+                + "--create --field title::New Test Experiment --field description::This is a test description --field study_accession::"+AccessionMap.accessionMap.get(UserPhase1.STUDY) +" --field platform_id::26", 
+                ReturnValue.SUCCESS, null);
         String sw_accession  = UserTutorialSuiteIT.getAndCheckSwid(output);
         AccessionMap.accessionMap.put(EXPERIMENT, sw_accession);
     }

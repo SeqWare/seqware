@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -43,13 +44,14 @@ public class SequencerRunReporterIT {
 
     @Test
     public void runSequencerRunReporter() throws IOException {
+        File createTempDir = Files.createTempDir();
         String randomString = UUID.randomUUID().toString();
-        File testOutFile = new File(randomString + ".txt");
+        File testOutFile = new File(createTempDir, randomString + ".txt");
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter "
                 + "-- --output-filename " + testOutFile.getName(); 
-        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
         Log.info(listOutput);
-        File retrievedFile = new File(testOutFile.getName());
+        File retrievedFile = new File(createTempDir, testOutFile.getName());
         Assert.assertTrue("output file does not exist", retrievedFile.exists());
         List<String> readLines = FileUtils.readLines(testOutFile);
         Assert.assertTrue("incorrect number of lines", readLines.size() == 25);
@@ -57,6 +59,20 @@ public class SequencerRunReporterIT {
         Assert.assertTrue("incorrect output checksum", checksumCRC32 == 1696717973L);
     }
 
+    @Test
+    public void runInvalidParameters() throws IOException {
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter "
+                + "-- --workflow-run-accession 6698";
+        ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDARGUMENT, null);
+
+    }
     
+    @Test
+    public void runInvalidIO() throws IOException {
+        File createTempDir = Files.createTempDir();
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter "
+                + "-- --output-filename " + createTempDir.getAbsolutePath(); 
+        ITUtility.runSeqWareJar(listCommand, ReturnValue.FILENOTWRITABLE, null);
+    }
     
 }
