@@ -63,7 +63,7 @@ public class AdminPhase1 {
             File bundleDir = new File(targetDir, "Workflow_Bundle_" + workflow + "_1.0-SNAPSHOT_SeqWare_" + SEQWARE_VERSION);
 
             String packageCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -b " + packageDir + " -p " + bundleDir.getAbsolutePath();
-            String packageOutput = ITUtility.runSeqWareJar(packageCommand, ReturnValue.SUCCESS);
+            String packageOutput = ITUtility.runSeqWareJar(packageCommand, ReturnValue.SUCCESS, null);
             Log.info(packageOutput);
 
             // locate the zip bundle and then install it
@@ -71,7 +71,7 @@ public class AdminPhase1 {
             Assert.assertTrue("zipped bundle " + zippedBundle.getAbsolutePath() + ".zip", zippedBundle.exists());
 
             String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -b " + zippedBundle + " -i";
-            String installOutput = ITUtility.runSeqWareJar(installCommand, ReturnValue.SUCCESS);
+            String installOutput = ITUtility.runSeqWareJar(installCommand, ReturnValue.SUCCESS, null);
             Log.info(installOutput);
         }
         
@@ -82,14 +82,14 @@ public class AdminPhase1 {
     public void testLaunchScheduled() throws IOException {
         // launch-scheduled
         String schedCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --launch-scheduled";
-        String schedOutput = ITUtility.runSeqWareJar(schedCommand, ReturnValue.SUCCESS);
+        String schedOutput = ITUtility.runSeqWareJar(schedCommand, ReturnValue.SUCCESS, null);
         Log.info(schedOutput);
     }
 
     @Test
     public void testMonitoring() throws IOException {
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker -- --tp 1000";
-        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Log.info(listOutput);
     }
     

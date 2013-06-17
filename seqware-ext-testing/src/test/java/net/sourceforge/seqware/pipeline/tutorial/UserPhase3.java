@@ -32,7 +32,9 @@ public class UserPhase3 {
     @Test
     public void createExperimentAndLinkToStudy() throws IOException{
         String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table sample "
-                + "--create --field title::New Test Sample --field description::This is a test description --field experiment_accession::"+AccessionMap.accessionMap.get(UserPhase2.EXPERIMENT) +" --field organism_id::26", ReturnValue.SUCCESS);
+                + "--create --field title::New Test Sample --field description::This is a test description --field experiment_accession::"+AccessionMap.accessionMap.get(UserPhase2.EXPERIMENT) +" --field organism_id::26"
+                , ReturnValue.SUCCESS
+                , null);
         String sw_accession  = UserTutorialSuiteIT.getAndCheckSwid(output);
         AccessionMap.accessionMap.put(SAMPLE, sw_accession);
     }

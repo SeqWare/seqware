@@ -82,8 +82,8 @@ public class SequencerRunReporter extends Plugin {
                 }
                 writer.close();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Log.error(e.getMessage(), e);
+                ret.setExitStatus(ReturnValue.FILENOTWRITABLE);
             }
         } else {
             println("Combination of parameters not recognized!");

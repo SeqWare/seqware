@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.tutorial;
 
+import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -56,7 +57,9 @@ public class UserPhase6 {
             f.delete();
         }
         
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stdout -wra " + swid, ReturnValue.SUCCESS);
+        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stdout -wra " + swid
+                , ReturnValue.SUCCESS
+                , null);
         
         listFiles = FileUtils.listFiles(workingDir, filter, filter);
         Assert.assertTrue("wrong number of csv files found, found " + listFiles.size(), listFiles.size() == 1);
@@ -79,7 +82,9 @@ public class UserPhase6 {
             f.delete();
         }
         
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stderr -wra " + swid, ReturnValue.SUCCESS);
+        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stderr -wra " + swid
+                , ReturnValue.SUCCESS
+                , null);
         listFiles = FileUtils.listFiles(workingDir, filter, filter);
         Assert.assertTrue("wrong number of csv files found, found " + listFiles.size(), listFiles.size() == 1);
         File foundFile = listFiles.iterator().next();
@@ -92,7 +97,7 @@ public class UserPhase6 {
                 + " --no-links --output-filename study_report "
                 + "--workflow-accession "
                 + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW) + " "
-                + "--study 'New Test Study'", ReturnValue.SUCCESS);
+                + "--study 'New Test Study'", ReturnValue.SUCCESS, null);
     }
     
     @AfterClass
@@ -101,18 +106,14 @@ public class UserPhase6 {
     }
 
     private String monitorAndReturnWorkflowRun() throws IOException {
-        // check on existence and contents of output
-        String workingDirStr = System.getProperty("user.dir");
-        File workingDir = new File(workingDirStr);
+        File workingDir = Files.createTempDir();
         // delete files that would interfere
         WorkFlowRunReporterFilter filter = new WorkFlowRunReporterFilter();
-        Collection<File> listFiles = FileUtils.listFiles(workingDir, filter, filter);
-        for(File f : listFiles){
-            f.delete();
-        }
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- -wa " + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW), ReturnValue.SUCCESS);
+        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- -wa " + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW)
+                , ReturnValue.SUCCESS
+                , workingDir);
 
-        listFiles = FileUtils.listFiles(workingDir, filter, filter);
+        Collection<File> listFiles = FileUtils.listFiles(workingDir, filter, filter);
         // ensure that we only have one csv file
         Assert.assertTrue("too many csv files found", listFiles.size() == 1);
         File foundFile = listFiles.iterator().next();

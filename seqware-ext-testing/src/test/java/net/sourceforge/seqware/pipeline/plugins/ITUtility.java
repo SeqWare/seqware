@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -37,7 +38,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
  * @author dyuen
  */
 public class ITUtility {
-
+    
     /**
      * Run the SeqWare jar given a particular set of parameters and check for an
      * expected return value.
@@ -49,19 +50,25 @@ public class ITUtility {
      *
      * @param parameters
      * @param expectedReturnValue
+     * @param workingDir null, if caller does not care about the working directory
      * @return
      * @throws IOException
      */
-    public static String runSeqWareJar(String parameters, int expectedReturnValue) throws IOException {
+    public static String runSeqWareJar(String parameters, int expectedReturnValue, File workingDir) throws IOException {
         File jar = retrieveFullAssembledJar();
         
         Properties props = new Properties();
         props.load(ITUtility.class.getClassLoader().getResourceAsStream("project.properties"));
         String itCoverageAgent = (String) props.get("itCoverageAgent");
         
+        if (workingDir == null){
+            workingDir = Files.createTempDir();
+            workingDir.deleteOnExit();
+        }
+        
         System.out.println("Try to get property" + itCoverageAgent);
         String line = "java "+itCoverageAgent+" -jar " + jar.getAbsolutePath() + " " + parameters;
-        String output = runArbitraryCommand(line, expectedReturnValue, null);
+        String output = runArbitraryCommand(line, expectedReturnValue, workingDir);
         return output;
     }
 
