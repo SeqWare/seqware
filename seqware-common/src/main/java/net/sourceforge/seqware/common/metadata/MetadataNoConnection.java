@@ -55,6 +55,15 @@ public class MetadataNoConnection extends Metadata {
 
   }
 
+  @Override
+  public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName,
+                                                         String fileType,
+                                                         boolean duplicates,
+                                                         boolean showFailedAndRunning,
+                                                         boolean showStatus) {
+    return findFilesAssociatedWithASample(studyName);
+  }
+
   // FIXME: Need to tune these statements in case of null values. Need to figure
   // what we exactly need
   // FIXME: to require in a ReturnValue and gracefully exit on missing required

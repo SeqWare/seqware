@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.common.metadata;
 
 import java.io.IOException;
+import java.net.URI;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -842,6 +843,53 @@ public class MetadataWS extends Metadata {
         }
         return rv.getList();
     }
+
+  @Override
+  public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName,
+                                                         String fileType,
+                                                         boolean duplicates,
+                                                         boolean showFailedAndRunning,
+                                                         boolean showStatus) {
+    ReturnValueList rv = new ReturnValueList();
+
+    try {
+      Study study = ll.findStudy("?title=" + studyName);
+      String path = "/" + study.getSwAccession() + "/files";
+
+      StringBuilder sb = new StringBuilder();
+      if (StringUtils.isNotEmpty(fileType)) {
+        sb.append("&file-type=");
+        sb.append(fileType);
+      }
+      if (duplicates) {
+        sb.append("&duplicates=");
+      }
+      if (showFailedAndRunning) {
+        sb.append("&show-failed-and-running=");
+      }
+      if (showStatus) {
+        sb.append("&show-status=");
+      }
+
+      String params = null;
+      if (sb.length() > 0) {
+        sb.deleteCharAt(0);
+        params = sb.toString();
+      }
+
+      URI uri = new URI(null, null, null, 0, path, params, null);
+
+      rv = (ReturnValueList) ll.findObject("/studies", uri.toString(),
+                                           new JaxbObject<ReturnValueList>(),
+                                           new ReturnValueList());
+
+    } catch (Exception e) {
+      // this is terrible, but consistent
+      e.printStackTrace();
+    }
+
+    return rv.getList();
+  }
 
     /**
      * {@inheritDoc}
