@@ -52,7 +52,7 @@ launch_instances();
 # SUBS
 
 sub launch_instances {
-
+  run("cd $work_dir; $launch_cmd");
 }
 
 sub find_version {
