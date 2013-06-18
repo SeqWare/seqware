@@ -378,17 +378,6 @@ public class WorkflowPlugin extends Plugin {
         return wfEngine;
     }
 
-    @Override
-    public ReturnValue parse_parameters() {
-        ReturnValue ret = super.parse_parameters();
-        if (options.has("help") || options.has("h") || options.has("?")) {
-            this.get_syntax();
-            ret.setExitStatus(ReturnValue.STDOUTERR);
-        }
-
-        return ret;
-    }
-
     /**
      * Processes a single workflow
      * @param readFromDB read bundle from the database
