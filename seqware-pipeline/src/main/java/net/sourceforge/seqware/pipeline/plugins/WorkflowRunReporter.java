@@ -35,6 +35,8 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = PluginInterface.class)
 public class WorkflowRunReporter extends Plugin {
+    public static final String WRSTDERR = "wr-stderr";
+    public static final String WRSTDOUT = "wr-stdout";
 
   ReturnValue ret = new ReturnValue();
   private final String FILETYPE_ALL = "all";
@@ -65,8 +67,8 @@ public class WorkflowRunReporter extends Plugin {
             + "that range").withRequiredArg();
     parser.acceptsAll(Arrays.asList("output-filename", "o"), "Optional: The output filename").withRequiredArg();
     parser.acceptsAll(Arrays.asList("stdout"), "Prints to standard out instead of to a file");
-    parser.acceptsAll(Arrays.asList("wr-stdout"), "Optional: will print the stdout of the workflow run, must specify the --workflow-run-accession");
-    parser.acceptsAll(Arrays.asList("wr-stderr"), "Optional: will print the stderr of the workflow run, must specify the --workflow-run-accession");
+    parser.acceptsAll(Arrays.asList(WRSTDOUT), "Optional: will print the stdout of the workflow run, must specify the --workflow-run-accession");
+    parser.acceptsAll(Arrays.asList(WRSTDERR), "Optional: will print the stderr of the workflow run, must specify the --workflow-run-accession");
     parser.acceptsAll(Arrays.asList("human"), "Optional: will print output in expanded human friendly format");
     ret.setExitStatus(ReturnValue.SUCCESS);
   }
@@ -117,18 +119,26 @@ public class WorkflowRunReporter extends Plugin {
           }
         } catch (ParseException ex) {
           Log.warn("Date not found. Date must be in format YYYY-MM-DD or YYYY-MM-DD:YYYY-MM-DD.", ex);
+           println("Workflow not found"); 
+           ret = new ReturnValue(ReturnValue.INVALIDPARAMETERS);
+	   return ret;
         }
         if (lastDate == null) {
           lastDate = new Date();
         }
       }
 
+      if (options.has(WRSTDERR) && options.has(WRSTDOUT)){
+	println("Combination of both stdout and stderr not recognized");
+	ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+	return ret;
+      }
 
       if (options.has("workflow-run-accession")) {
         String wra = (String) options.valueOf("workflow-run-accession");
-        if (options.has("wr-stderr")) {
+        if (options.has(WRSTDERR)) {
           reportWorkflowRunStdErrOut(wra, STDERR);
-        } else if (options.has("wr-stdout")) {
+        } else if (options.has(WRSTDOUT)) {
           reportWorkflowRunStdErrOut(wra, STDOUT);
         } else {
           reportOnWorkflowRun(wra);
@@ -136,16 +146,19 @@ public class WorkflowRunReporter extends Plugin {
       } else if (options.has("workflow-accession")) {
         String tp = (String) options.valueOf("workflow-accession");
         reportOnWorkflow(tp, firstDate, lastDate);
-      } else if (firstDate != null || lastDate != null) {
+      } 
+      /**
+       * SEQWARE-863 ability to query without specifying a specific workflow-accession was removed
+       * else if (firstDate != null || lastDate != null) {
         reportOnWorkflowRuns(firstDate, lastDate);
-      } else {
+      */
+      else {
         println("Combination of parameters not recognized!");
         println(this.get_syntax());
         ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         return ret;
       }
     } catch (IOException e) {
-      e.printStackTrace();
       Log.error(e.getMessage(), e);
       ret.setExitStatus(ReturnValue.FILENOTREADABLE);
       ret.setDescription(e.getMessage());
@@ -157,6 +170,11 @@ public class WorkflowRunReporter extends Plugin {
     String title = "workflowrun_" + workflowRunAccession;
     initWriter(title);
     String report = metadata.getWorkflowRunReport(Integer.parseInt(workflowRunAccession));
+    if (report == null){
+        println("Workflow run not found"); 
+	ret = new ReturnValue(ReturnValue.INVALIDPARAMETERS);
+	return;
+    }
     if (options.has("human")){
         writer.write(TabExpansionUtil.expansion(report));
         return;
@@ -192,6 +210,11 @@ public class WorkflowRunReporter extends Plugin {
     }
     initWriter(title);
     String report = metadata.getWorkflowRunReport(Integer.parseInt(workflowAccession), earlyDate, lateDate);
+    if (report == null){
+        println("Workflow not found"); 
+	ret = new ReturnValue(ReturnValue.INVALIDPARAMETERS);
+	return;
+    }
     if (options.has("human")){
         writer.write(TabExpansionUtil.expansion(report));
         return;
@@ -209,6 +232,11 @@ public class WorkflowRunReporter extends Plugin {
     }
     initWriter(title);
     String report = metadata.getWorkflowRunReport(earlyDate, lateDate);
+    if (report == null){
+        println("No runs found in date range"); 
+	ret = new ReturnValue(ReturnValue.SUCCESS);
+	return;
+    }
     if (options.has("human")){
         writer.write(TabExpansionUtil.expansion(report));
         return;
