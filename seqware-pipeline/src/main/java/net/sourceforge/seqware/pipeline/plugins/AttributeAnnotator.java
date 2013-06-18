@@ -38,6 +38,7 @@ import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 
@@ -291,10 +292,10 @@ public class AttributeAnnotator extends Plugin {
       }
       freader.close();
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
+      Log.error("Input file was not found", e);
       return false;
     } catch (IOException ex) {
-      ex.printStackTrace();
+      Log.error("IOException", ex);
       return false;
     }
     return true;
