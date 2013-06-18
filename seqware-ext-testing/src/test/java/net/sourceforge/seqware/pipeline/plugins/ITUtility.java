@@ -66,7 +66,6 @@ public class ITUtility {
             workingDir.deleteOnExit();
         }
         
-        System.out.println("Try to get property" + itCoverageAgent);
         String line = "java "+itCoverageAgent+" -jar " + jar.getAbsolutePath() + " " + parameters;
         String output = runArbitraryCommand(line, expectedReturnValue, workingDir);
         return output;

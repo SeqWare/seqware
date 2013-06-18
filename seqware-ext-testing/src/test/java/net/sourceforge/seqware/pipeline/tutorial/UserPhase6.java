@@ -45,23 +45,17 @@ public class UserPhase6 {
     //TODO: test wra instead of wa, but the previous step we needed to use --wait to ensure we have results to report and --wait does not output a SWID to the command-line
     @Test
     public void testMonitorWorkflowRunStdOut() throws IOException {
+        File workingDir = Files.createTempDir();
         String swid = monitorAndReturnWorkflowRun();      
          // check on existence and contents of output
-        String workingDirStr = System.getProperty("user.dir");
-        Log.info("Working directory is " + workingDirStr);
-        File workingDir = new File(workingDirStr);
         // delete files that would interfere
         WorkFlowRunReporterFilterStdOut filter = new WorkFlowRunReporterFilterStdOut(swid);
-        Collection<File> listFiles = FileUtils.listFiles(workingDir, filter, filter);
-        for(File f : listFiles){
-            f.delete();
-        }
         
         String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stdout -wra " + swid
                 , ReturnValue.SUCCESS
-                , null);
+                , workingDir);
         
-        listFiles = FileUtils.listFiles(workingDir, filter, filter);
+        Collection<File> listFiles = FileUtils.listFiles(workingDir, filter, filter);
         Assert.assertTrue("wrong number of csv files found, found " + listFiles.size(), listFiles.size() == 1);
         File foundFile = listFiles.iterator().next();
         foundFile.delete();
@@ -69,23 +63,14 @@ public class UserPhase6 {
 
     @Test
     public void testMonitorWorkflowRunStdErr() throws IOException {
+        File workingDir = Files.createTempDir();
         String swid = monitorAndReturnWorkflowRun();
          // check on existence and contents of output
-        String workingDirStr = System.getProperty("user.dir");
-        Log.info("Working directory is " + workingDirStr);
-        File workingDir = new File(workingDirStr);
-        // delete files that would interfere
-        WorkFlowRunReporterFilterStdErr filter = new WorkFlowRunReporterFilterStdErr(swid);
-        // delete files that would interfere
-        Collection<File> listFiles = FileUtils.listFiles(workingDir, filter, filter);
-        for(File f : listFiles){
-            f.delete();
-        }
-        
+        WorkFlowRunReporterFilterStdErr filter = new WorkFlowRunReporterFilterStdErr(swid);     
         String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stderr -wra " + swid
                 , ReturnValue.SUCCESS
-                , null);
-        listFiles = FileUtils.listFiles(workingDir, filter, filter);
+                , workingDir);
+        Collection<File> listFiles = FileUtils.listFiles(workingDir, filter, filter);
         Assert.assertTrue("wrong number of csv files found, found " + listFiles.size(), listFiles.size() == 1);
         File foundFile = listFiles.iterator().next();
         foundFile.delete();
