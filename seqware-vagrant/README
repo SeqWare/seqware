@@ -54,4 +54,4 @@ In case you need to re-run the provisioning script e.g. your testing changes:
 * need to setup HBase for the QueryEngine
 * need to edit the landing page to remove mention of Pegasus
 * need to add code that will add all local drives to HDFS to maximize available storage (e.g. ephemerial drives)
-
+* add teardown for cluster to this script
