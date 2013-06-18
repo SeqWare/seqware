@@ -25,11 +25,11 @@ import org.junit.Test;
 
 /**
  * These tests support command-line tools
- * in this case, WorkflowLauncher
+ * in this case, BundleManager
  *
  * @author dyuen
  */
-public class WorkflowLauncherIT {
+public class BundleManagerIT {
     
     @BeforeClass
     public static void resetDatabase() {
@@ -39,16 +39,10 @@ public class WorkflowLauncherIT {
 
     @Test
     public void runInvalidParameters() throws IOException {
-        // this should not NullPointerException SEQWARE-1646
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher "
-                + "-- --no-metadata --provisioned-bundle-dir /.mounts/labs/PDE/private/mtaschuk/tmp/Test/target/Workflow_Bundle_Test_1.0-SNAPSHOT_SeqWare_0.13.6.6 --workflow Test --version 1.0-SNAPSHOT --ini-files /.mounts/labs/PDE/private/mtaschuk/tmp/Test/target/Workflow_Bundle_Test_1.0-SNAPSHOT_SeqWare_0.13.6.6/Workflow_Bundle_Test/1.0-SNAPSHOT/config/workflow.ini --metadata-output-dir /u/mtaschuk --metadata-file-output-prefix TestTest";
-        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDARGUMENT, null);
-        Assert.assertTrue("output contains exception", !listOutput.contains("Exception"));
-        
-        // this should not NullPointerException SEQWARE-1516
-        listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher "
-                + "-- --wa 1 --test ";
-        listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDARGUMENT, null);
+        // cannot use install and install-dir-only at the same time SEQWARE-1632
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager "
+                + "-- --install --install-dir-only --bundle does_not_matter";
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDPARAMETERS, null);
         Assert.assertTrue("output contains exception", !listOutput.contains("Exception"));
         
     }
