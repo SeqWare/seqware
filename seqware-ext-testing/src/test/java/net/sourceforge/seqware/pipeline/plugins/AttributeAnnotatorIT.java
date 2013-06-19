@@ -16,18 +16,8 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import com.google.common.io.Files;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
-import junit.framework.Assert;
-import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.modules.utilities.ExternalTestingUtility;
-import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
  * These tests support command-line tools found in the SeqWare User Tutorial,
