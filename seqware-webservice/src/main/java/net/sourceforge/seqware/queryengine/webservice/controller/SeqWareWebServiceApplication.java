@@ -25,6 +25,7 @@ import net.sourceforge.seqware.webservice.resources.queries.SequencerRunIdFilesR
 import net.sourceforge.seqware.webservice.resources.queries.SequencerRunReportResource;
 import net.sourceforge.seqware.webservice.resources.queries.StudyIdFilesResource;
 import net.sourceforge.seqware.webservice.resources.queries.StudyIdFilesTSVResource;
+import net.sourceforge.seqware.webservice.resources.queries.StudyIdFilesTSVResource2;
 import net.sourceforge.seqware.webservice.resources.queries.WorkflowReportResource;
 import net.sourceforge.seqware.webservice.resources.queries.WorkflowRunIDProcessingsResource;
 import net.sourceforge.seqware.webservice.resources.queries.WorkflowRunIDWorkflowResource;
@@ -285,6 +286,7 @@ public class SeqWareWebServiceApplication extends WadlApplication {
 
         router.attach("/reports/studies/{studyId}", new CycleCheckResource(getContext()));
         router.attach("/reports/studies/{studyId}/files", new StudyIdFilesTSVResource(getContext()));
+        router.attach("/reports/studies/{studyId}/files.tsv", new StudyIdFilesTSVResource2(getContext()));
         router.attach("/reports/studies/files", new StudyIdFilesTSVResource(getContext()));
 		router.attach("/reports/workflows/{workflowId}", new WorkflowReportResource(getContext()));
         router.attach("/reports/sequencerruns", new SequencerRunReportResource(getContext()));

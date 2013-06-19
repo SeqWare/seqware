@@ -1,13 +1,26 @@
 (ns io.seqware.report
   (:require [clojure.java.io :as io]
-            [clojure.java.jdbc :as db]))
+            [clojure.java.jdbc :as db]
+            [clojure.string :as str]))
 
 (defn print-row [row]
-  (doseq [x (interpose \tab row)]
-    (if (nil? x)
-      (print "null")
-      (print x)))
+  (->> row
+    (map #(or % ""))
+    (map #(str/replace % \tab \space))
+    (interpose \tab)
+    (map print)
+    (dorun))
   (newline))
+
+(defn print-results [result-set]
+  (let [cols (-> result-set .getMetaData .getColumnCount)
+        idxs (range 1 (inc cols))]
+    (loop []
+      (when (.next result-set)
+        (->> idxs
+          (map #(.getString result-set %))
+          (print-row))
+        (recur)))))
 
 (def headers ["Last Modified" 
               "Study Title" 
@@ -36,7 +49,7 @@
               "Workflow Version" 
               "Workflow SWID" 
               "Workflow Run Name"
-              #_"Workflow Run Status"
+              "Workflow Run Status"
               "Workflow Run SWID" 
               "Processing Algorithm" 
               "Processing SWID" 
@@ -45,36 +58,25 @@
               "File SWID" 
               "File Path"])
 
-(defn print-tsv [result-set]
-  (let [cols (-> result-set .getMetaData .getColumnCount)
-        idxs (range 1 (inc cols))]
-    (print-row (take cols headers))
-    (loop []
-      (when (.next result-set)
-        (->> idxs
-          (map #(.getString result-set %))
-          (print-row))
-        (recur)))))
-
-(def ^:dynamic *study-report-sql-resource* "study-report.sql")
+(def ^:dynamic *study-report-sql-resource*
+  #_"test.sql"
+  "study-report.sql")
 
 (def ^:dynamic *db-spec*
-  "postgres://seqware:seqware@10.0.11.20:5432/seqware_meta_db"
-  #_{:name "jdbc/SeqWareMetaDB"})
+  #_"postgres://seqware:seqware@10.0.11.20:5432/seqware_meta_db_2013_06_10"
+  {:name "jdbc/SeqWareMetaDB"})
 
-
-
-(defn study-report [study-id]
-  (let [sql (slurp (io/resource *study-report-sql-resource*))
-        sql (str sql " where st.study_id = ?")]
+(defn study-report [study-id header?]
+  (let [sql (slurp (io/resource *study-report-sql-resource*))]
     (with-open [conn (db/get-connection *db-spec*)
                 ps (.prepareStatement conn sql)]
       (.setObject ps 1 study-id)
       (with-open [rs (.executeQuery ps)]
-        (print-tsv rs)))))
+        (when header?
+          (print-row headers))
+        (print-results rs)))))
 
-(defn write-study-report! [study-id out-file]
-  (with-open [out (io/writer out-file)]
-    (binding [*out* out]
-      (study-report study-id))))
+(defn write-study-report! [study-id out]
+  (binding [*out* out]
+    (study-report study-id true)))
 
