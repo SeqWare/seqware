@@ -10,7 +10,7 @@ my $aws_secret_key = '';
 my $launch_aws = 1;
 my $launch_vb = 0;
 my $launch_os = 0;
-my $launch_cmd = "vagrant up --provider=aws";
+my $launch_cmd = "vagrant up --provider=aws > launch_instance.log";
 my $work_dir = "target";
 
 GetOptions (
