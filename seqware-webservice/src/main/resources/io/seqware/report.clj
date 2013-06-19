@@ -64,7 +64,7 @@
 
 (def ^:dynamic *db-spec*
   #_"postgres://seqware:seqware@10.0.11.20:5432/seqware_meta_db_2013_06_10"
-  {:name "jdbc/SeqWareMetaDB"})
+  {:name "java:comp/env/jdbc/SeqWareMetaDB"})
 
 (defn study-report [study-id header?]
   (let [sql (slurp (io/resource *study-report-sql-resource*))]
