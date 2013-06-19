@@ -46,7 +46,7 @@ import org.springframework.util.SerializationUtils;
  *
  * @author dyuen
  */
-public class PluginRunnerIT {
+public class PluginRunnerET {
 
     private static File tempDir = Files.createTempDir();
     private static Map<String, Integer> installedWorkflows = new HashMap<String, Integer>();
@@ -283,7 +283,7 @@ public class PluginRunnerIT {
     }
     
     public static void main(String[] args) throws IOException {
-        PluginRunnerIT it = new PluginRunnerIT();
+        PluginRunnerET it = new PluginRunnerET();
         List<Integer> list = new ArrayList<Integer>();
         for(String acc : args){
             try{

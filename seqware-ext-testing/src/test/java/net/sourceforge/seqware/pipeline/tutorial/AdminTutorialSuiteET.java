@@ -22,14 +22,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * This runs all the tests needed to test the User Tutorials. The test suite
- * actually enforces order for us.
+ * This runs all the tests needed to test the Admin Tutorials. The test suite
+ * actually enforces order for us. 
  *
  * @author dyuen
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses(value = {UserPhase1.class, UserPhase2.class, UserPhase3.class , UserPhase4.class , UserPhase5.class, UserPhase6.class})
-public class UserTutorialSuiteIT extends TutorialSuite {
+@Suite.SuiteClasses(value = {AdminPhase1.class})
+public class AdminTutorialSuiteET extends TutorialSuite {
     @BeforeClass
     public static void resetDatabase() {
         ExternalTestingUtility.resetDatabaseWithUsers();

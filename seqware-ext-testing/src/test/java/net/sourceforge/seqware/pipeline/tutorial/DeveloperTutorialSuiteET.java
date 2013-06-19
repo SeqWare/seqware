@@ -22,14 +22,15 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * This runs all the tests needed to test the Admin Tutorials. The test suite
- * actually enforces order for us. 
+ * This runs all the tests needed to test the Developer Tutorials. The test suite
+ * actually enforces order for us. We actually started with built and installed bundles from step 5 of 
+ * the user tutorials.
  *
  * @author dyuen
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses(value = {AdminPhase1.class})
-public class AdminTutorialSuiteIT extends TutorialSuite {
+@Suite.SuiteClasses(value = {DeveloperPhase1.class, DeveloperPhase2.class})
+public class DeveloperTutorialSuiteET extends TutorialSuite {
     @BeforeClass
     public static void resetDatabase() {
         ExternalTestingUtility.resetDatabaseWithUsers();
