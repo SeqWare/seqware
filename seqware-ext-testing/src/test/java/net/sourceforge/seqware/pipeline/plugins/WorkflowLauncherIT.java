@@ -19,7 +19,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 import java.io.IOException;
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.pipeline.modules.utilities.ExternalTestingUtility;
+import net.sourceforge.seqware.metadb.util.TestDatabaseCreator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -33,7 +33,7 @@ public class WorkflowLauncherIT {
     
     @BeforeClass
     public static void resetDatabase() {
-        ExternalTestingUtility.resetDatabaseWithUsers();
+        TestDatabaseCreator.resetDatabaseWithUsers();
     }
     
 

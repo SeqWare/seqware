@@ -89,7 +89,7 @@ public class AttributeAnnotatorTest {
 
         ret = attributeAnnotator.do_run();
         Assert.assertTrue("attributeAnnotator completed successfully", ret.getExitStatus() == ReturnValue.SUCCESS);
-        verify(metadata).annotateSequencerRun(eq(1), (SequencerRunAttribute) anyObject(), eq(false));
+        verify(metadata).annotateSequencerRun(eq(1), (SequencerRunAttribute) anyObject(), anyBoolean());
         verifyNoMoreInteractions(metadata);
     }
 
@@ -107,15 +107,15 @@ public class AttributeAnnotatorTest {
             Assert.assertTrue("attributeAnnotator did not complete successfully", ret.getExitStatus() == ReturnValue.SUCCESS);
             when(options.has(type + "-accession")).thenReturn(false);
         }
-        verify(metadata).annotateSequencerRun(eq(1), isA(SequencerRunAttribute.class), eq(false));
-        verify(metadata).annotateLane(eq(1), isA(LaneAttribute.class), eq(false));
-        verify(metadata).annotateIUS(eq(1), isA(IUSAttribute.class), eq(false));
-        verify(metadata).annotateExperiment(eq(1), isA(ExperimentAttribute.class), eq(false));
-        verify(metadata).annotateProcessing(eq(1), isA(ProcessingAttribute.class), eq(false));
-        verify(metadata).annotateSample(eq(1), isA(SampleAttribute.class), eq(false));
-        verify(metadata).annotateStudy(eq(1), isA(StudyAttribute.class), eq(false));
-        verify(metadata).annotateWorkflow(eq(1), isA(WorkflowAttribute.class), eq(false));
-        verify(metadata).annotateWorkflowRun(eq(1), isA(WorkflowRunAttribute.class), eq(false));
+        verify(metadata).annotateSequencerRun(eq(1), isA(SequencerRunAttribute.class), anyBoolean());
+        verify(metadata).annotateLane(eq(1), isA(LaneAttribute.class), anyBoolean());
+        verify(metadata).annotateIUS(eq(1), isA(IUSAttribute.class), anyBoolean());
+        verify(metadata).annotateExperiment(eq(1), isA(ExperimentAttribute.class), anyBoolean());
+        verify(metadata).annotateProcessing(eq(1), isA(ProcessingAttribute.class), anyBoolean());
+        verify(metadata).annotateSample(eq(1), isA(SampleAttribute.class), anyBoolean());
+        verify(metadata).annotateStudy(eq(1), isA(StudyAttribute.class), anyBoolean());
+        verify(metadata).annotateWorkflow(eq(1), isA(WorkflowAttribute.class), anyBoolean());
+        verify(metadata).annotateWorkflowRun(eq(1), isA(WorkflowRunAttribute.class), anyBoolean());
         verifyNoMoreInteractions(metadata);
     }
     
@@ -145,7 +145,7 @@ public class AttributeAnnotatorTest {
     private void createSimpleAnnotation() {
         when(options.has("value")).thenReturn(true);
         when(options.valueOf("value")).thenReturn("Marvin");
-        when(options.has("skip")).thenReturn(true);
-        when(options.valueOf("skip")).thenReturn("false");
+        when(options.has("skip")).thenReturn(false);
+        //when(options.valueOf("skip")).thenReturn("false");
     }
 }
