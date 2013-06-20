@@ -25,20 +25,36 @@ public class StudyIdFilesTSVResource2 extends BasicRestlet {
   public void handle(Request request, Response response) {
     authenticate(request.getChallengeResponse().getIdentifier());
     init(request);
-    final int studyAccession = Integer.parseInt((String) request.getAttributes().get("studyId"));
-    response.setEntity(new WriterRepresentation(MediaType.TEXT_TSV) {
-      @Override
-      public void write(Writer writer) throws IOException {
-        writeReport(studyAccession, writer);
-      }
-    });
+    if (request.getAttributes().containsKey("studyId")) {
+      final int studyAccession = Integer.parseInt((String) request.getAttributes().get("studyId"));
+      response.setEntity(new WriterRepresentation(MediaType.TEXT_TSV) {
+        @Override
+        public void write(Writer writer) throws IOException {
+          writeStudyReport(studyAccession, writer);
+        }
+      });
+    } else {
+      response.setEntity(new WriterRepresentation(MediaType.TEXT_TSV) {
+        @Override
+        public void write(Writer writer) throws IOException {
+          writeAllStudiesReport(writer);
+        }
+      });
+    }
   }
 
-  public static void writeReport(int studyAccession, Writer writer) {
+  public static void writeStudyReport(int studyAccession, Writer writer) {
     Var require = RT.var("clojure.core", "require");
     require.invoke(Symbol.intern("io.seqware.report"));
     Var v = RT.var("io.seqware.report", "write-study-report!");
     v.invoke(studyAccession, writer);
+  }
+
+  public static void writeAllStudiesReport(Writer writer) {
+    Var require = RT.var("clojure.core", "require");
+    require.invoke(Symbol.intern("io.seqware.report"));
+    Var v = RT.var("io.seqware.report", "write-all-studies-report!");
+    v.invoke(writer);
   }
 
 }

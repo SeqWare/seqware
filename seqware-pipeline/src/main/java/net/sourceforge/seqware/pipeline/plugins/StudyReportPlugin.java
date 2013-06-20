@@ -16,7 +16,8 @@ import org.openide.util.lookup.ServiceProvider;
 public class StudyReportPlugin extends Plugin {
 
   public StudyReportPlugin() {
-    parser.accepts("title", "The title of the study whose report will be generated.").withRequiredArg();
+    parser.accepts("all", "Generate a report of all studies. Or use '--title'.");
+    parser.accepts("title", "The title of the study whose report will be generated. Or use '--all'.").withRequiredArg();
     parser.accepts("out", "The file into which the report will be written.").withRequiredArg();
   }
 
@@ -34,23 +35,31 @@ public class StudyReportPlugin extends Plugin {
   public ReturnValue do_run() {
     if (options.has("title")) {
       String title = (String) options.valueOf("title");
-      Writer out;
-      if (options.has("out")) {
-        try {
-          out = new BufferedWriter(new FileWriter((String) options.valueOf("out")));
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
-      } else {
-        out = new OutputStreamWriter(System.out);
-      }
-      metadata.studyReport(title, out);
+      metadata.studyReport(title, writer());
       return new ReturnValue();
-    } else {
+    } else if (options.has("all")) {
+      metadata.allStudiesReport(writer());
+      return new ReturnValue();
+    }
+    else {
       println("Missing 'title' parameter");
       println(this.get_syntax());
       return new ReturnValue(ReturnValue.INVALIDPARAMETERS);
     }
+  }
+  
+  private Writer writer(){
+    Writer out;
+    if (options.has("out")) {
+      try {
+        out = new BufferedWriter(new FileWriter((String) options.valueOf("out")));
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    } else {
+      out = new OutputStreamWriter(System.out);
+    }
+    return out;
   }
 
   @Override

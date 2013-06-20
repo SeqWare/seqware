@@ -858,6 +858,11 @@ public class MetadataWS extends Metadata {
 
     
     @Override
+    public void allStudiesReport(Writer out) {
+      ll.writeTo("/reports/studies/files.tsv", out);
+    }
+
+    @Override
     public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, boolean requireFiles) {
         ReturnValueList rv = new ReturnValueList();
         try {

@@ -284,9 +284,11 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/sequencerruns/{sequencerRunId}/files", new SequencerRunIdFilesResource(getContext()));
         router.attach("/samples/{sampleId}/files", new SampleIdFilesResource(getContext()));
 
-        router.attach("/reports/studies/{studyId}", new CycleCheckResource(getContext()));
+        // the following collides with the non-variable paths.
+        //router.attach("/reports/studies/{studyId}", new CycleCheckResource(getContext()));
         router.attach("/reports/studies/{studyId}/files", new StudyIdFilesTSVResource(getContext()));
         router.attach("/reports/studies/{studyId}/files.tsv", new StudyIdFilesTSVResource2(getContext()));
+        router.attach("/reports/studies/files.tsv", new StudyIdFilesTSVResource2(getContext()));
         router.attach("/reports/studies/files", new StudyIdFilesTSVResource(getContext()));
 		router.attach("/reports/workflows/{workflowId}", new WorkflowReportResource(getContext()));
         router.attach("/reports/sequencerruns", new SequencerRunReportResource(getContext()));

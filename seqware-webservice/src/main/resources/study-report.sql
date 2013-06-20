@@ -5,7 +5,7 @@ with recursive study_samples (study_id, experiment_id, sample_id) as (
     from study st
     join experiment e on e.study_id = st.study_id
     join sample s on s.experiment_id = e.experiment_id
-    where st.sw_accession = ?
+    --studyWhereClause
 )
 
 , study_processings (study_id, experiment_id, sample_id, sequencer_run_id, lane_id, ius_id, processing_id) as (

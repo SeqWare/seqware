@@ -458,9 +458,15 @@ public interface MetadataInterface {
   /**
    * Retrieves the study report, writing it to the specified output stream.
    * @param studyTitle
-   * @param out TODO
+   * @param out where the content will be written
    */
   public void studyReport(String studyTitle, Writer out);
+  
+  /**
+   * Retrieves the all-studies report, writing it to the specified output stream.
+   * @param out where the content will be written
+   */
+  public void allStudiesReport(Writer out);
   
   /**
    * <p>findFilesAssociatedWithAStudy.</p>
