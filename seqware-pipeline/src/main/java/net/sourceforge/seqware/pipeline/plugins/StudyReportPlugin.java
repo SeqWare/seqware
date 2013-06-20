@@ -44,7 +44,7 @@ public class StudyReportPlugin extends Plugin {
       metadata.allStudiesReport(writer("all"));
       return new ReturnValue();
     } else {
-      println("Missing 'title' parameter");
+      println("One of '--title <study-title>' or '--all' must be specified.");
       println(this.get_syntax());
       return new ReturnValue(ReturnValue.INVALIDPARAMETERS);
     }
