@@ -17,6 +17,9 @@
 package net.sourceforge.seqware.common.metadata;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -32,8 +35,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -68,15 +69,30 @@ import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowParamValue;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
-import net.sourceforge.seqware.common.model.lists.*;
+import net.sourceforge.seqware.common.model.lists.ExperimentList;
+import net.sourceforge.seqware.common.model.lists.IUSList;
+import net.sourceforge.seqware.common.model.lists.LaneList;
+import net.sourceforge.seqware.common.model.lists.LibrarySelectionList;
+import net.sourceforge.seqware.common.model.lists.LibrarySourceList;
+import net.sourceforge.seqware.common.model.lists.LibraryStrategyList;
+import net.sourceforge.seqware.common.model.lists.OrganismList;
+import net.sourceforge.seqware.common.model.lists.PlatformList;
+import net.sourceforge.seqware.common.model.lists.ReturnValueList;
+import net.sourceforge.seqware.common.model.lists.SampleList;
+import net.sourceforge.seqware.common.model.lists.SequencerRunList;
+import net.sourceforge.seqware.common.model.lists.StudyList;
+import net.sourceforge.seqware.common.model.lists.StudyTypeList;
+import net.sourceforge.seqware.common.model.lists.WorkflowList;
+import net.sourceforge.seqware.common.model.lists.WorkflowRunList2;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
-import org.apache.commons.lang.StringUtils;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeScheme;
@@ -827,6 +843,20 @@ public class MetadataWS extends Metadata {
     }
 
     
+    
+    @Override
+    public void studyReport(String studyTitle, Writer out) {
+      Study study;
+      try {
+        study = ll.findStudy("?title=" + studyTitle);
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+      ll.writeTo("/reports/studies/" + study.getSwAccession() + "/files.tsv", out);
+    }
+
+
+    
     @Override
     public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, boolean requireFiles) {
         ReturnValueList rv = new ReturnValueList();
@@ -844,6 +874,8 @@ public class MetadataWS extends Metadata {
         }
         return rv.getList();
     }
+    
+    
 
     /**
      * {@inheritDoc}
@@ -2609,6 +2641,29 @@ public class MetadataWS extends Metadata {
             LibrarySource ls = new LibrarySource();
             JaxbObject<LibrarySource> jaxb = new JaxbObject<LibrarySource>();
             return (LibrarySource) findObject("/librarysource", searchString, jaxb, ls);
+        }
+        
+        private void writeTo(String url, Writer out){
+          ClientResource cResource = resource.getChild(version + url);
+          Representation result = cResource.get();
+          try {
+            Reader in = result.getReader();
+            try {
+              IOUtils.copy(in, out);
+            } catch (IOException e) {
+              throw new RuntimeException(e);
+            }
+
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          } finally {
+            try {
+              result.exhaust();
+            } catch (IOException e) {
+            }
+            result.release();
+            resource.release();
+          }
         }
 
         private String getString(String uri) {
