@@ -10,7 +10,7 @@ my $aws_secret_key = '';
 my $launch_aws = 1;
 my $launch_vb = 0;
 my $launch_os = 0;
-my $launch_cmd = "vagrant up --provider=aws > launch_instance.log";
+my $launch_cmd = "vagrant up --provider=aws &> vagrant_launch.log";
 my $work_dir = "target";
 
 GetOptions (
@@ -32,9 +32,9 @@ $seqware_version = find_version();
 
 # make this explicit, one or the other, aws is given priority
 if ($launch_vb) {
-  $launch_cmd = "vagrant up";
+  $launch_cmd = "vagrant up &> vagrant_launch.log";
 } elsif ($launch_os) {
-  $launch_cmd = "vagrant up --provider=openstack";
+  $launch_cmd = "vagrant up --provider=openstack &> vagrant_launch.log";
 }
 
 my $configs = {
