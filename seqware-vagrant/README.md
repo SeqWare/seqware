@@ -15,7 +15,7 @@ AWS for now.
 
 ## Configuration
 
-Use the perl script "launch_instance.pl", this will prevent you from having to
+Use the perl script "vagrant_launch.pl", this will prevent you from having to
 manually collect files for provisioning to the new host.
 
 You should edit the templates/Vagrantfile to reflect settings that are not
@@ -29,11 +29,11 @@ will be checked in and also collects various files from other parts of the
 SeqWare build.
 
   # for AWS
-  perl launch_instance.pl --aws-key 'FILLMEIN' --aws-secret-key 'FILLMEIN' --use-aws
+  perl vagrant_launch.pl --aws-key 'FILLMEIN' --aws-secret-key 'FILLMEIN' --use-aws
   # for OpenStack (not implemented yet)
-  perl launch_instance.pl --use-openstack
+  perl vagrant_launch.pl --use-openstack
   # for VirtualBox (not implemented yet)
-  perl launch_instance.pl --use-virtualbox
+  perl vagrant_launch.pl --use-virtualbox
 
 ## Manual Running
 
