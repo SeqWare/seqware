@@ -439,19 +439,6 @@ public interface MetadataInterface {
   public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName);
   
   /**
-   * <p>findFilesAssociatedWithAStudy.</p>
-   *
-   * @param studyName the name of the study
-   * @param fileType constrain entries to a file type
-   * @param duplicates whether multiple entries for the same file are permitted
-   * @param showFailedAndRunning whether to include files from workflow runs that have a status other than completed or success
-   * @param showStatus whether the workflow run status column should be included
-   * @
-   * @return a {@link java.util.List} object.
-   */
-  public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, String fileType, boolean duplicates, boolean showFailedAndRunning, boolean showStatus);
-
-  /**
    * Somewhat misnamed for now, this can return a mix of files and bare-nodes in the 
    * database hierarchy resulting from FileAllTheFiles.requireFiles=false
    *

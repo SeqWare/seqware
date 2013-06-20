@@ -149,16 +149,12 @@ public class SymLinkFileReporter extends Plugin {
         }       
     }
     
-  private ReturnValue reportOnStudy(String studyName, String rootDirectory) throws IOException {
-    println("Searching for study with title: " + studyName);
-    List<ReturnValue> returnValues = metadata.findFilesAssociatedWithAStudy(studyName,
-                                                                            fileType,
-                                                                            options.has("duplicates"),
-                                                                            options.has("show-failed-and-running"),
-                                                                            options.has("show-status"));
-    okGo(returnValues, rootDirectory, studyName);
-    return ret;
-  }
+    private ReturnValue reportOnStudy(String studyName, String rootDirectory) throws IOException {
+        println("Searching for study with title: " + studyName);
+        List<ReturnValue> returnValues = metadata.findFilesAssociatedWithAStudy(studyName);
+        okGo(returnValues, rootDirectory, studyName);
+        return ret;
+    }
     
     private ReturnValue reportOnSample(String sampleName, String rootDirectory) throws IOException {
         println("Searching for sample with title: " + sampleName);
@@ -180,7 +176,8 @@ public class SymLinkFileReporter extends Plugin {
         for (Study study : studies) {
             String name = study.getTitle();
             println("Dumping study: " + name);
-            reportOnStudy(name, rootDirectory);
+            List<ReturnValue> returnValues = metadata.findFilesAssociatedWithAStudy(name);
+            okGo(returnValues, rootDirectory, name);
         }
         return ret;
     }

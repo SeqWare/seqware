@@ -144,15 +144,6 @@ public class MetadataDB extends Metadata {
     throw new NotImplementedException("Please use the SymLinker through the Web service.");
   }
 
-  @Override
-  public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName,
-                                                         String fileType,
-                                                         boolean duplicates,
-                                                         boolean showFailedAndRunning,
-                                                         boolean showStatus) {
-    throw new NotImplementedException("Please use the SymLinker through the Web service.");
-  }
-
   /**
    * {@inheritDoc}
    */
