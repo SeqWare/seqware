@@ -133,7 +133,7 @@ public class AttributeAnnotator extends Plugin {
     if (hasSkip) {
       skip = Boolean.parseBoolean((String) options.valueOf("skip"));
     }
-
+    
     boolean hasSequencerRun = options.has("sequencer-run-accession");
     boolean hasLane = options.has("lane-accession");
     boolean hasIus = options.has("ius-accession");
@@ -145,6 +145,12 @@ public class AttributeAnnotator extends Plugin {
     boolean hasWorkflowRunAccession = options.has("workflow-run-accession");
     boolean hasFileAccession = options.has("file-accession");
 
+      if (hasSkip && (hasExperimentAccession || hasProcessingAccession || hasStudyAccession || hasWorkflowAccession || hasWorkflowRunAccession)) {
+          println("Combination of parameters not recognized!");
+          println(this.get_syntax());
+          ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+      }
+    
     if (hasSequencerRun) {
       Integer sequencerRunSWID = Integer.parseInt((String) options.valueOf("sequencer-run-accession"));
       SequencerRunAttribute sra = null;

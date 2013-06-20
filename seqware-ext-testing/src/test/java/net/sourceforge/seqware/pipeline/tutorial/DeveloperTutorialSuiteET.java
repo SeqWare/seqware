@@ -16,7 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.tutorial;
 
-import net.sourceforge.seqware.pipeline.modules.utilities.ExternalTestingUtility;
+import net.sourceforge.seqware.metadb.util.TestDatabaseCreator;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -33,6 +33,6 @@ import org.junit.runners.Suite;
 public class DeveloperTutorialSuiteET extends TutorialSuite {
     @BeforeClass
     public static void resetDatabase() {
-        ExternalTestingUtility.resetDatabaseWithUsers();
+        TestDatabaseCreator.resetDatabaseWithUsers();
     }
 }
