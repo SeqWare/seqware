@@ -101,6 +101,9 @@ cp /vagrant/status.cron /home/seqware/crons/
 # make everything owned by seqware
 chown -R seqware:seqware /home/seqware
 
+# setup bashrc for seqware
+echo "export MAVEN_OPTS=\"-Xmx1024m -XX:MaxPermSize=512m\"" >> /home/seqware/.bashrc
+
 
 # seqware database
 /etc/init.d/postgresql start
