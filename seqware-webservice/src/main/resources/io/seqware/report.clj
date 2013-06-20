@@ -59,24 +59,34 @@
               "File Path"])
 
 (def ^:dynamic *study-report-sql-resource*
-  #_"test.sql"
   "study-report.sql")
 
 (def ^:dynamic *db-spec*
   #_"postgres://seqware:seqware@10.0.11.20:5432/seqware_meta_db_2013_06_10"
   {:name "java:comp/env/jdbc/SeqWareMetaDB"})
 
-(defn study-report [study-id header?]
-  (let [sql (slurp (io/resource *study-report-sql-resource*))]
+(defn study-report [study-id]
+  (let [sql (slurp (io/resource *study-report-sql-resource*))
+        sql (str/replace sql "--studyWhereClause", "where study.sw_accession = ?")]
     (with-open [conn (db/get-connection *db-spec*)
                 ps (.prepareStatement conn sql)]
       (.setObject ps 1 study-id)
       (with-open [rs (.executeQuery ps)]
-        (when header?
-          (print-row headers))
+        (print-row headers)
         (print-results rs)))))
 
 (defn write-study-report! [study-id out]
   (binding [*out* out]
-    (study-report study-id true)))
+    (study-report study-id)))
 
+(defn all-studies-report []
+  (let [sql (slurp (io/resource *study-report-sql-resource*))]
+    (with-open [conn (db/get-connection *db-spec*)
+                ps (.prepareStatement conn sql)]
+      (with-open [rs (.executeQuery ps)]
+        (print-row headers)
+        (print-results rs)))))
+
+(defn write-all-studies-report! [out]
+  (binding [*out* out]
+    (all-studies-report)))

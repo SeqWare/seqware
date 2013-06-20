@@ -86,6 +86,10 @@ public class MetadataDB extends Metadata {
     throw new NotImplementedException("Please use the SymLinker through the Web service.");
   }
 
+  @Override
+  public void allStudiesReport(Writer out) {
+    throw new NotImplementedException("Please use the SymLinker through the Web service.");
+  }
 
 
   /**

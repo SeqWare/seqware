@@ -68,6 +68,19 @@ public class MetadataNoConnection extends Metadata {
     }
   }
 
+  
+  
+  @Override
+  public void allStudiesReport(Writer out) {
+    try {
+      out.write("Last Modified\tStudy Title\tStudy SWID\tStudy Attributes\tExperiment Name\tExperiment SWID\tExperiment Attributes\tParent Sample Name\tParent Sample SWID\tParent Sample Attributes\tSample Name\tSample SWID\tSample Attributes\tSequencer Run Name\tSequencer Run SWID\tSequencer Run Attributes\tLane Name\tLane Number\tLane SWID\tLane Attributes\tIUS Tag\tIUS SWID\tIUS Attributes\tWorkflow Name\tWorkflow Version\tWorkflow SWID\tWorkflow Run Name\tWorkflow Run Status\tWorkflow Run SWID\tProcessing Algorithm\tProcessing SWID\tProcessing Attributes\tFile Meta-Type\tFile SWID\tFile Path");
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+
   /** {@inheritDoc} */
   @Override
   public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName) {
