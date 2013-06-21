@@ -51,7 +51,11 @@ In case you need to re-run the provisioning script e.g. your testing changes:
 
 ## TODO
 
-* need to setup HBase for the QueryEngine
+* need to setup HBase for the QueryEngine -- done
 * need to edit the landing page to remove mention of Pegasus
 * need to add code that will add all local drives to HDFS to maximize available storage (e.g. ephemerial drives)
+* need to have a cluster provisioning template that works properly and coordinates network settings somehow
 * add teardown for cluster to this script
+* setup services with chkconfig to ensure a rebooted machine works properly
+* better integration with our Maven build process, perhaps automatically calling this to setup integration test environment
+* message of the day on login over ssh
