@@ -3,8 +3,15 @@ use Getopt::Long;
 
 # VARS
 
-my $seqware_build_cmd = 'mvn clean install -DskipTests';
-my $seqware_version = '1.0.1-SNAPSHOT';
+# skips all unit and integration tests
+my $seqware_build_cmd = 'mvn clean install -DskipTests &> build.log';
+# runs unit tests
+# my $seqware_build_cmd = 'mvn clean install &> build.log';
+# all unit and integration tests that only require postgres
+#my $seqware_build_cmd = 'mvn clean install -DskipITs=false &> build.log';
+# the full unit and integration tests including those needing globus/oozie
+#my $seqware_build_cmd = 'mvn clean install -DskipITs=false -P extITs &> build.log';
+my $seqware_version = 'UNKNOWN';
 my $aws_key = '';
 my $aws_secret_key = '';
 my $launch_aws = 1;
@@ -76,7 +83,7 @@ sub prepare_files {
   copy("../seqware-portal/target/seqware-portal-$seqware_version.war", "$work_dir/seqware-portal-$seqware_version.war");
   replace("../seqware-portal/target/seqware-portal-$seqware_version.xml", "$work_dir/seqware-portal-$seqware_version.xml", "jdbc:postgresql://localhost:5432/test_seqware_meta_db", "jdbc:postgresql://localhost:5432/seqware_meta_db");
   # Vagrantfile
-  autoreplace("templates/Vagrantfile", "$work_dir/Vagrantfile"); 
+  autoreplace("templates/Vagrantfile.single", "$work_dir/Vagrantfile"); 
   # database
   copy("../seqware-meta-db/seqware_meta_db.sql", "$work_dir/seqware_meta_db.sql");
   copy("../seqware-meta-db/seqware_meta_db_data.sql", "$work_dir/seqware_meta_db_data.sql");
@@ -139,6 +146,6 @@ sub rec_copy {
 sub run {
   my ($cmd) = @_;
   print "RUNNING: $cmd\n";
-  my $result = system("$cmd");
+  my $result = system("bash -c '$cmd'");
   if ($result != 0) { "\nERROR!!! CMD RESULTED IN RETURN VALUE OF $result\n\n"; }
 }
