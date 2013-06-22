@@ -75,12 +75,12 @@ sub find_version {
 sub prepare_files {
   run("mkdir $work_dir");
   # the jar file
-  copy("../seqware-distribution/target/seqware-distribution-$seqware_version-full.jar", "$work_dir/seqware-distribution-$seqware_version-full.jar");
+  #copy("../seqware-distribution/target/seqware-distribution-$seqware_version-full.jar", "$work_dir/seqware-distribution-$seqware_version-full.jar");
   # the web service
-  copy("../seqware-webservice/target/seqware-webservice-$seqware_version.war", "$work_dir/seqware-webservice-$seqware_version.war");
+  #copy("../seqware-webservice/target/seqware-webservice-$seqware_version.war", "$work_dir/seqware-webservice-$seqware_version.war");
   replace("../seqware-webservice/target/seqware-webservice-$seqware_version.xml", "$work_dir/seqware-webservice-$seqware_version.xml", "jdbc:postgresql://localhost:5432/test_seqware_meta_db", "jdbc:postgresql://localhost:5432/seqware_meta_db");
   # the portal
-  copy("../seqware-portal/target/seqware-portal-$seqware_version.war", "$work_dir/seqware-portal-$seqware_version.war");
+  #copy("../seqware-portal/target/seqware-portal-$seqware_version.war", "$work_dir/seqware-portal-$seqware_version.war");
   replace("../seqware-portal/target/seqware-portal-$seqware_version.xml", "$work_dir/seqware-portal-$seqware_version.xml", "jdbc:postgresql://localhost:5432/test_seqware_meta_db", "jdbc:postgresql://localhost:5432/seqware_meta_db");
   # Vagrantfile
   autoreplace("templates/Vagrantfile.single", "$work_dir/Vagrantfile"); 
@@ -94,6 +94,8 @@ sub prepare_files {
   copy("templates/user_data.txt", "$work_dir/user_data.txt");
   # landing page
   rec_copy("../seqware-distribution/docs/vm_landing", "$work_dir/");
+  # script for setting up hadoop hdfs
+  copy("templates/setup_hdfs_volumes.pl", "$work_dir/setup_hdfs_volumes.pl");
 }
 
 sub autoreplace {
