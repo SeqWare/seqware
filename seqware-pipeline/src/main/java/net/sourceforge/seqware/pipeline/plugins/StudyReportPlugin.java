@@ -1,10 +1,8 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Date;
 
@@ -22,6 +20,12 @@ public class StudyReportPlugin extends Plugin {
     parser.accepts("title",
                    "The title of the study whose report will be generated. Or use '--all'.").withRequiredArg();
     parser.accepts("out", "The file into which the report will be written.").withRequiredArg();
+  }
+
+  @Override
+  public String get_description() {
+    return "Generates a tab-delimited report of all output files "
+        + "(and their relationships and metadata) from a specified study or from all studies.";
   }
 
   @Override
@@ -53,9 +57,11 @@ public class StudyReportPlugin extends Plugin {
   private Writer writer(String label) {
     try {
       if (options.has("out")) {
-        return new BufferedWriter(new FileWriter((String) options.valueOf("out")));
+        return new BufferedWriter(
+                                  new FileWriter(
+                                                 (String) options.valueOf("out")));
       } else {
-        String filename = (new Date() + "__" + label+".tsv").replace(" ", "_");
+        String filename = (new Date() + "__" + label + ".tsv").replace(" ", "_");
         return new BufferedWriter(new FileWriter(filename));
       }
     } catch (IOException e) {
