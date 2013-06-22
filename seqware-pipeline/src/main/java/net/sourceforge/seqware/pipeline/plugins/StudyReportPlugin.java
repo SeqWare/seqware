@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 
+import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
@@ -42,8 +43,13 @@ public class StudyReportPlugin extends Plugin {
   public ReturnValue do_run() {
     if (options.has("title")) {
       String title = (String) options.valueOf("title");
-      metadata.studyReport(title, writer(title));
-      return new ReturnValue();
+      try{
+        metadata.studyReport(title, writer(title));
+        return new ReturnValue();
+      } catch(NotFoundException e){
+        println("No study found with title: "+title);
+        return new ReturnValue();
+      }
     } else if (options.has("all")) {
       metadata.allStudiesReport(writer("all"));
       return new ReturnValue();
