@@ -14,9 +14,9 @@ import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = PluginInterface.class)
-public class StudyReportPlugin extends Plugin {
+public class StudyReporter extends Plugin {
 
-  public StudyReportPlugin() {
+  public StudyReporter() {
     parser.accepts("all", "Generate a report of all studies. Or use '--title'.");
     parser.accepts("title",
                    "The title of the study whose report will be generated. Or use '--all'.").withRequiredArg();
