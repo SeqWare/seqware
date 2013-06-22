@@ -56,6 +56,7 @@
               "Processing Attributes" 
               "File Meta-Type" 
               "File SWID" 
+              "File Attributes"
               "File Path"])
 
 (def ^:dynamic *study-report-sql-resource*
