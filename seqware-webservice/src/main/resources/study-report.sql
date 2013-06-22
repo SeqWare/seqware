@@ -1,10 +1,10 @@
 with recursive study_samples (study_id, experiment_id, sample_id) as (
-    select st.study_id
-         , e.experiment_id
-         , s.sample_id
-    from study st
-    join experiment e on e.study_id = st.study_id
-    join sample s on s.experiment_id = e.experiment_id
+    select study.study_id
+         , experiment.experiment_id
+         , sample.sample_id
+    from study
+    join experiment on experiment.study_id = study.study_id
+    join sample on sample.experiment_id = experiment.experiment_id
     --studyWhereClause
 )
 
@@ -88,7 +88,7 @@ union all
 
 , study_attrs as (
     select study_id, tag, array_to_string(array_agg(value), ';') as vals
-    from study_attribute sta
+    from study_attribute
     where study_id is not null and tag is not null
     group by study_id, tag
 )
@@ -103,7 +103,7 @@ union all
 
 , experiment_attrs as (
     select experiment_id, tag, array_to_string(array_agg(value), ';') as vals
-    from experiment_attribute sta
+    from experiment_attribute
     where experiment_id is not null and tag is not null
     group by experiment_id, tag
 )
@@ -117,7 +117,7 @@ union all
 
 , sample_attrs as (
     select sample_id, tag, array_to_string(array_agg(value), ';') as vals
-    from sample_attribute sta
+    from sample_attribute
     where sample_id is not null and tag is not null
     group by sample_id, tag
 )
@@ -132,7 +132,7 @@ union all
 , sequencer_run_attrs as (
     -- bug: table has sample_id instead of sequencer_run_id
     select sample_id as sequencer_run_id, tag, array_to_string(array_agg(value), ';') as vals
-    from sequencer_run_attribute sta
+    from sequencer_run_attribute
     where sample_id is not null and tag is not null
     group by sample_id, tag
 )
@@ -146,7 +146,7 @@ union all
 
 , lane_attrs as (
     select lane_id, tag, array_to_string(array_agg(value), ';') as vals
-    from lane_attribute sta
+    from lane_attribute
     where lane_id is not null and tag is not null
     group by lane_id, tag
 )
@@ -160,7 +160,7 @@ union all
 
 , ius_attrs as (
     select ius_id, tag, array_to_string(array_agg(value), ';') as vals
-    from ius_attribute sta
+    from ius_attribute
     where ius_id is not null and tag is not null
     group by ius_id, tag
 )
@@ -174,7 +174,7 @@ union all
 
 , processing_attrs as (
     select processing_id, tag, array_to_string(array_agg(value), ';') as vals
-    from processing_attribute sta
+    from processing_attribute
     where processing_id is not null and tag is not null
     group by processing_id, tag
 )
@@ -184,6 +184,20 @@ union all
          , array_to_string(array_agg('processing.'||tag||'='||vals), ';') as attrs
     from processing_attrs attr
     group by processing_id
+)
+
+, file_attrs as (
+    select file_id, tag, array_to_string(array_agg(value), ';') as vals
+    from file_attribute
+    where file_id is not null and tag is not null
+    group by file_id, tag
+)
+
+, file_attrs_str as (
+    select file_id
+         , array_to_string(array_agg('file.'||tag||'='||vals), ';') as attrs
+    from file_attrs attr
+    group by file_id
 )
 
 -- concatenated values from sample parents
@@ -232,9 +246,11 @@ select p.update_tstmp as last_modified
      , pa.attrs as processing_attrs
      , f.meta_type as file_meta_type
      , f.sw_accession as file_swa
+     , fa.attrs as file_attrs
      , f.file_path as file_path
 from study_report_ids ids
 join file f on f.file_id = ids.file_id
+left join file_attrs_str fa on fa.file_id = ids.file_id
 join study st on st.study_id = ids.study_id
 left join study_attrs_str sta on sta.study_id = ids.study_id
 join experiment e on e.experiment_id = ids.experiment_id
