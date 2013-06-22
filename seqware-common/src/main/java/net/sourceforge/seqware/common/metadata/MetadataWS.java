@@ -849,6 +849,8 @@ public class MetadataWS extends Metadata {
       Study study;
       try {
         study = ll.findStudy("?title=" + studyTitle);
+      } catch(RuntimeException e){
+        throw e;
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
