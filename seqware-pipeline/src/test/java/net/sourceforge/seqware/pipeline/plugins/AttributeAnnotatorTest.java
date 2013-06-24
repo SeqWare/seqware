@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.LaneAttribute;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
@@ -98,7 +99,7 @@ public class AttributeAnnotatorTest {
         ReturnValue ret = attributeAnnotator.init();
         Assert.assertTrue("attributeAnnotator could not init", ret.getExitStatus() == ReturnValue.SUCCESS);
 
-        String[] types = {"sequencer-run", "lane", "ius", "experiment", "processing", "sample", "study", "workflow", "workflow-run"};
+        String[] types = {"sequencer-run", "lane", "ius", "experiment", "processing", "sample", "study", "workflow", "workflow-run", "file"};
         for (String type : types) {
             createSimpleAnnotation();
             when(options.has(type + "-accession")).thenReturn(true);
@@ -116,6 +117,7 @@ public class AttributeAnnotatorTest {
         verify(metadata).annotateStudy(eq(1), isA(StudyAttribute.class), anyBoolean());
         verify(metadata).annotateWorkflow(eq(1), isA(WorkflowAttribute.class), anyBoolean());
         verify(metadata).annotateWorkflowRun(eq(1), isA(WorkflowRunAttribute.class), anyBoolean());
+        verify(metadata).annotateFile(eq(1), isA(FileAttribute.class), anyBoolean());
         verifyNoMoreInteractions(metadata);
     }
     
