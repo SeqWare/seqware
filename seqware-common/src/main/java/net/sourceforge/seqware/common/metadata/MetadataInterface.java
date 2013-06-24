@@ -522,6 +522,23 @@ public interface MetadataInterface {
   public String getSequencerRunReport();
 
   /**
+   * <p>annotateFile.</p>
+   *
+   * @param fileSWID a int.
+   * @param fileAtt a {@link net.sourceforge.seqware.common.model.FileAttribute} object.
+   * @param skip a {@link java.lang.Boolean} object.
+   */
+  void annotateFile(int laneSWID, FileAttribute iusAtt, Boolean skip);
+
+  /**
+   * <p>annotateFile.</p>
+   *
+   * @param fileSWID a int.
+   * @param fileAtts a {@link java.util.Set} object.
+   */
+  void annotateFile(int fileSWID, Set<FileAttribute> iusAtts);
+  
+  /**
    * <p>annotateIUS.</p>
    *
    * @param laneSWID a int.

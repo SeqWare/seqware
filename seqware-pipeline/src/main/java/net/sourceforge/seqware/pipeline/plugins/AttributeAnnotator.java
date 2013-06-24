@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.LaneAttribute;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
@@ -79,8 +80,8 @@ public class AttributeAnnotator extends Plugin {
         "The SWID of the workflow to annotate. One of the -accession options is required.").withRequiredArg();
     parser.acceptsAll(Arrays.asList("workflow-run-accession", "wr"),
         "The SWID of the workflow run to annotate. One of the -accession options is required.").withRequiredArg();
-    // parser.acceptsAll(Arrays.asList("file-accession", "f"),
-    // "The SWID of the file run to annotate. One of the -accession options is required.").withRequiredArg();
+    parser.acceptsAll(Arrays.asList("file-accession", "f"),
+        "The SWID of the file to annotate. One of the -accession options is required.").withRequiredArg();
 
     parser.accepts("file", "The CSV file for bulk insert").withRequiredArg();
     parser.acceptsAll(Arrays.asList("skip"),
@@ -247,12 +248,17 @@ public class AttributeAnnotator extends Plugin {
         a.setValue(value);
       }
       metadata.annotateWorkflowRun(swid, a, skip);
-    } /*
-       * else if(hasFileAccession) { Integer swid = Integer.parseInt((String)
-       * options.valueOf("file-accession")); FileAttribute a = null; if
-       * (hasValue) { a = new FileAttribute(); a.setTag(key); a.setValue(value);
-       * } metadata.annotateFile(swid, a, skip); }
-       */
+    } 
+    else if (hasFileAccession) {
+        Integer swid = Integer.parseInt((String) options.valueOf("file-accession"));
+        FileAttribute a = null;
+        if (hasValue) {
+            a = new FileAttribute();
+            a.setTag(key);
+            a.setValue(value);
+        }
+        metadata.annotateFile(swid, a, skip);
+    }
     else {
       println("Combination of parameters not recognized!");
       println(this.get_syntax());
