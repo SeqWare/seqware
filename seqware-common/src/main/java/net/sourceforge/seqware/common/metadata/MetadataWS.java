@@ -1521,7 +1521,7 @@ public class MetadataWS extends Metadata {
     public void annotateLane(int laneSWID, LaneAttribute laneAtt, Boolean skip) {
         try {
             Log.debug("Annotating Lane " + laneSWID + " with skip=" + skip + ", laneAtt = " + laneAtt);
-            Lane lane = ll.findLane("/" + laneSWID + "?show=attributes");
+            Lane lane = ll.findLane("/" + laneSWID /**+ "?show=attributes"*/);
             if (skip != null) {
                 lane.setSkip(skip);
             }
@@ -1622,7 +1622,6 @@ public class MetadataWS extends Metadata {
                 if (atts == null) {
                     atts = new HashSet<ExperimentAttribute>();
                 }
-
                 atts.add(att);
                 obj.setExperimentAttributes(atts);
             }
@@ -1674,7 +1673,7 @@ public class MetadataWS extends Metadata {
     public void annotateSample(int swid, SampleAttribute att, Boolean skip) {
         try {
             Log.debug("Annotating Sample " + swid + " with skip=" + skip + ", Att = " + att);
-            Sample obj = ll.findSample("/" + swid+"?show=attributes");
+            Sample obj = ll.findSample("/" + swid/**+"?show=attributes"*/);
             if (skip != null) {
                 obj.setSkip(skip);
             }
@@ -2047,7 +2046,7 @@ public class MetadataWS extends Metadata {
     @Override
     public void annotateWorkflow(int workflowSWID, Set<WorkflowAttribute> atts) {
         try {
-            Log.debug("Annotating WorkflowRun " + workflowSWID);
+            Log.debug("Annotating Workflow " + workflowSWID);
             Workflow obj = ll.findWorkflow("/" + workflowSWID);
             obj.getWorkflowAttributes().clear();
             for (WorkflowAttribute wa : atts) {

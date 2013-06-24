@@ -1,6 +1,5 @@
 package net.sourceforge.seqware.common.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +10,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.CascadeType;
+import org.hibernate.annotations.Cascade;
+
 
 @Entity
 /**
@@ -20,7 +22,7 @@ import javax.persistence.UniqueConstraint;
  * @version $Id: $Id
  */
 @Table(name = "file_attribute", uniqueConstraints = { @UniqueConstraint(columnNames = { "file_id", "tag", "value" }) })
-public class FileAttribute implements Attribute {
+public class FileAttribute implements Attribute<File> {
 
   @Id
   @SequenceGenerator(name = "file_attribute_id_seq_gen", sequenceName = "file_attribute_id_seq")
@@ -28,7 +30,10 @@ public class FileAttribute implements Attribute {
   @Column(name = "file_attribute_id")
   private Integer fileAttributeId;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  // SEQWARE-1578
+  @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH} )
+  // a special Hibernate workaround since http://tai-dev.blog.co.uk/2011/11/18/fun-with-hibernates-cascadetype-persist-and-cascadetype-all-the-case-of-the-unsaved-transient-instance-12187037/
+  @Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
   @JoinColumn(name = "file_id", nullable = false)
   private File file;
 
@@ -127,5 +132,10 @@ public class FileAttribute implements Attribute {
   public void setFileAttributeId(Integer fileAttributeId) {
     this.fileAttributeId = fileAttributeId;
   }
+
+    @Override
+    public void setAttributeParent(File parent) {
+        this.setFile(parent);
+    }
 
 }
