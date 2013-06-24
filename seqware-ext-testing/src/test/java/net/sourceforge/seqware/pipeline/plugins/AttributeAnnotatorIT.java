@@ -17,14 +17,12 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.metadb.util.TestDatabaseCreator;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
-import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -41,7 +39,7 @@ public class AttributeAnnotatorIT {
     public static final String COUNT_DB_SIZE = "SELECT (SELECT COUNT(*) FROM workflow), (SELECT COUNT(*) FROM workflow_run), (SELECT COUNT(*) FROM sequencer_run), (SELECT COUNT(*) FROM experiment), (SELECT COUNT(*) FROM ius), (SELECT COUNT(*) FROM lane), (SELECT COUNT(*) FROM processing), (SELECT COUNT(*) FROM sample), (SELECT COUNT(*) FROM sample_hierarchy), (SELECT COUNT(*) FROM processing_ius), (SELECT COUNT(*) FROM processing_files), (SELECT COUNT(*) FROM processing_relationship), (SELECT COUNT(*) FROM file), (SELECT COUNT(*) FROM study)";
 
     public enum AttributeType {
-
+        FILE("file", "file", "file", true),
         SEQUENCER_RUN("sequencer-run", "sequencer_run", "sample", true),
         LANE("lane", "lane", "lane", true),
         IUS("ius", "ius", "ius", true),
@@ -78,6 +76,11 @@ public class AttributeAnnotatorIT {
         DBAccess.close();
     }
 
+    @Test
+    public void testFileSkipOnly() throws IOException {
+        toggleSkipOnly(AttributeType.FILE, 835);
+    }
+    
     @Test
     public void testSequencerRunSkipOnly() throws IOException {
         toggleSkipOnly(AttributeType.SEQUENCER_RUN, 47150);
@@ -146,6 +149,11 @@ public class AttributeAnnotatorIT {
     @Test
     public void testWorkflowRunSkipOnly() throws IOException {
         toggleSkipOnly(AttributeType.WORKFLOW_RUN, 863);
+    }
+    
+    @Test
+    public void testFileAnnotateArbitrary() throws IOException {
+        annotateAndReannotate(AttributeType.FILE, 835);
     }
 
     @Test
