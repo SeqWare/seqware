@@ -38,7 +38,7 @@ import org.mortbay.log.Log;
  * @author dyuen
  */
 public class AttributeAnnotatorIT {
-    public static final String COUNT_DB_SIZE = "SELECT sum(n_live_tup) FROM pg_stat_user_tables";
+    public static final String COUNT_DB_SIZE = "SELECT (SELECT COUNT(*) FROM workflow), (SELECT COUNT(*) FROM workflow_run), (SELECT COUNT(*) FROM sequencer_run), (SELECT COUNT(*) FROM experiment), (SELECT COUNT(*) FROM ius), (SELECT COUNT(*) FROM lane), (SELECT COUNT(*) FROM processing), (SELECT COUNT(*) FROM sample), (SELECT COUNT(*) FROM sample_hierarchy), (SELECT COUNT(*) FROM processing_ius), (SELECT COUNT(*) FROM processing_files), (SELECT COUNT(*) FROM processing_relationship), (SELECT COUNT(*) FROM file), (SELECT COUNT(*) FROM study)";
 
     public enum AttributeType {
 
@@ -149,7 +149,7 @@ public class AttributeAnnotatorIT {
     }
 
     @Test
-    public void testSequencerAnnotateArbitrary() throws IOException {
+    public void testSequencerRunAnnotateArbitrary() throws IOException {
         annotateAndReannotate(AttributeType.SEQUENCER_RUN, 47150);
     }
 
@@ -170,7 +170,7 @@ public class AttributeAnnotatorIT {
 
     @Test
     public void testProcessingAnnotateArbitrary() throws IOException {
-        annotateAndReannotate(AttributeType.PROCESSING, 16);
+        annotateAndReannotate(AttributeType.PROCESSING, 6676);
     }
 
     @Test
@@ -242,31 +242,43 @@ public class AttributeAnnotatorIT {
         Log.info(query);
         List<Object[]> runQuery = TestDatabaseCreator.runQuery(new ArrayListHandler(), query , accession);
         Assert.assertTrue("first annotation incorrect", runQuery.size() == 1);
-        Assert.assertTrue("tag incorrect", runQuery.get(0)[1].equals(funky_key));
-        Assert.assertTrue("value incorrect", runQuery.get(0)[2].equals(funky_initial_value));
+        Assert.assertTrue("first tag incorrect", runQuery.get(0)[1].equals(funky_key));
+        Assert.assertTrue("first value incorrect", runQuery.get(0)[2].equals(funky_initial_value));
         // count records in the database to check for cascading deletes
-        BigDecimal count1 = TestDatabaseCreator.runQuery(new ScalarHandler<BigDecimal>(), COUNT_DB_SIZE);        
+        List<Object[]> count1 = TestDatabaseCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);        
         // reannotate with same key, different value
         listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
                 + "-- --" + type.parameter_prefix + "-accession " + accession + " --key "+funky_key+" --value " + funky_second_value;
         ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         // ensure that duplicates are not formed in the database
         runQuery = TestDatabaseCreator.runQuery(new ArrayListHandler(), query , accession);
-        Assert.assertTrue("incorrect resulting number of annotations, found " + runQuery.size(), runQuery.size() == 1);
-        Assert.assertTrue("tag incorrect", runQuery.get(0)[1].equals(funky_key));
-        Assert.assertTrue("value incorrect", runQuery.get(0)[2].equals(funky_second_value));
+        Assert.assertTrue("incorrect resulting number of duplicate annotations, found " + runQuery.size(), runQuery.size() == 1);
+        Assert.assertTrue("second tag incorrect", runQuery.get(0)[1].equals(funky_key));
+        Assert.assertTrue("second value incorrect", runQuery.get(0)[2].equals(funky_second_value));
         // check against cascading deletes
-        BigDecimal count2 = TestDatabaseCreator.runQuery(new ScalarHandler<BigDecimal>(), COUNT_DB_SIZE);   
-        Assert.assertTrue("incorrect database size after re-annotation, should be the same: " + count1 + ":" + count2, count1 == count2);
+        List<Object[]> count2 = TestDatabaseCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);
+        compareTwoCounts(count1.get(0), count2.get(0));
         // try unrelated annotation
         listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
                 + "-- --" + type.parameter_prefix + "-accession " + accession + " --key "+groovy_key+" --value " + groovy_value;
         ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         // check results of unrelated annotation
         runQuery = TestDatabaseCreator.runQuery(new ArrayListHandler(), query , accession);
-        Assert.assertTrue("incorrect resulting number of annotations, found: " + runQuery.size(), runQuery.size() == 2);
-        // check against cascading deletes
-        BigDecimal count3 = TestDatabaseCreator.runQuery(new ScalarHandler<BigDecimal>(), COUNT_DB_SIZE);   
-        Assert.assertTrue("incorrect database size after second annotation, should be one more " + count2.add(BigDecimal.ONE) +":"+count3, count2.add(BigDecimal.ONE) == count3);
+        Assert.assertTrue("incorrect resulting number of unrelated annotations, found: " + runQuery.size(), runQuery.size() == 2);
+        List<Object[]> count3 = TestDatabaseCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);
+        compareTwoCounts(count2.get(0), count3.get(0));
+    }
+    
+    /**
+     * Compare two object arrays element by element and 
+     * output which element fails
+     * @param count1
+     * @param count2 
+     */
+    private void compareTwoCounts(Object[] count1, Object[] count2){
+        Assert.assertTrue("size of arrays is different", count1.length == count2.length);
+        for(int i = 0; i < count1.length; i++){
+            Assert.assertTrue("element " + i + " did not match", count1[i].equals(count2[i]));
+        }
     }
 }
