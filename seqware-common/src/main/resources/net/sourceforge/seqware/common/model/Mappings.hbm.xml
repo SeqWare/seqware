@@ -2601,6 +2601,8 @@
         <property name="md5sum" type="string" column="md5sum" />
         <property name="url" type="string" column="url" />
         <property name="urlLabel" type="string" column="url_label" />
+        <property name="skip" column="skip" type="boolean"/>
+
         <set name="fileAttributes" inverse="true" lazy="true" table="file_attribute" fetch="select" cascade="all-delete-orphan">
            <key column="file_id" not-null="true" /> 
             <one-to-many class="FileAttribute" />

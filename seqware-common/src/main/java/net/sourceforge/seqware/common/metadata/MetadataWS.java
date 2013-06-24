@@ -44,6 +44,7 @@ import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
 import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Lane;
@@ -1800,6 +1801,7 @@ public class MetadataWS extends Metadata {
     /**
      * {@inheritDoc}
      */
+    @Override
     public File getFile(int swAccession) {
         try {
             return ll.findFile("/" + swAccession);
@@ -1966,6 +1968,58 @@ public class MetadataWS extends Metadata {
             Log.error("JAXBException while updating experiment " + experimentSWID + " " + ex.getMessage());
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating experiment " + experimentSWID + " " + ex.getMessage());
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void annotateFile(int fileSWID, Set<FileAttribute> atts) {
+        try {
+            Log.debug("Annotating File " + fileSWID);
+            File obj = ll.findFile("/" + fileSWID);
+            obj.getFileAttributes().clear();
+            for (FileAttribute ea : atts) {
+                // ea.setFile(obj);
+                obj.getFileAttributes().add(ea);
+            }
+            ll.updateFile("/" + fileSWID, obj);
+        } catch (IOException ex) {
+            Log.error("IOException while updating file " + fileSWID + " " + ex.getMessage());
+        } catch (JAXBException ex) {
+            Log.error("JAXBException while updating file " + fileSWID + " " + ex.getMessage());
+        } catch (ResourceException ex) {
+            Log.error("ResourceException while updating file " + fileSWID + " " + ex.getMessage());
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void annotateFile(int fileSWID, FileAttribute att, Boolean skip) {
+        try {
+            Log.debug("Annotating File " + fileSWID + " with skip=" + skip + ", Att = " + att);
+            File obj = ll.findFile("/" + fileSWID);
+            if (skip != null) {
+                obj.setSkip(skip);
+            }
+            if (att != null) {
+                Set<FileAttribute> atts = obj.getFileAttributes();
+                if (atts == null) {
+                    atts = new HashSet<FileAttribute>();
+                }
+                atts.add(att);
+                obj.setFileAttributes(atts);
+            }
+            ll.updateFile("/" + fileSWID, obj);
+        } catch (IOException ex) {
+            Log.error("IOException while updating file " + fileSWID + " " + ex.getMessage());
+        } catch (JAXBException ex) {
+            Log.error("JAXBException while updating file " + fileSWID + " " + ex.getMessage());
+        } catch (ResourceException ex) {
+            Log.error("ResourceException while updating file " + fileSWID + " " + ex.getMessage());
         }
     }
 
@@ -2756,12 +2810,12 @@ public class MetadataWS extends Metadata {
             updateObject("/studies", searchString, jaxb, parent);
         }
 
-        /*
-         * private void updateFile(String searchString, Study parent) throws
-         * IOException, JAXBException, ResourceException { JaxbObject<Study>
-         * jaxb = new JaxbObject<Study>(); updateObject("/studies",
-         * searchString, jaxb, parent); }
-         */
+        
+        private void updateFile(String searchString, File parent) throws IOException, JAXBException, ResourceException { 
+            JaxbObject<File> jaxb = new JaxbObject<File>(); 
+            updateObject("/files", searchString, jaxb, parent); 
+        }
+        
         private void updateExperiment(String searchString, Experiment parent) throws IOException, JAXBException,
                 ResourceException {
             JaxbObject<Experiment> jaxb = new JaxbObject<Experiment>();

@@ -2066,4 +2066,14 @@ public class MetadataDB extends Metadata {
     public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
+
+    @Override
+    public void annotateFile(int laneSWID, FileAttribute iusAtt, Boolean skip) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public void annotateFile(int fileSWID, Set<FileAttribute> iusAtts) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
 }
