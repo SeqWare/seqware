@@ -327,6 +327,39 @@ public class MetadataDB extends Metadata {
     this.getSql().getResultSet().next();
     return this.getSql().getResultSet().getInt(1);
   }
+  
+    /**
+     * {@inheritDoc}
+     */
+    public ReturnValue set_processing_update_tstmp_if_null(int processingID) {
+        // Create a SQL statement
+        StringBuilder sql = new StringBuilder();
+        try {
+            // FIXME: Update a processing entry from ReturnValue
+            sql.append("UPDATE processing SET ");
+            // create_tstmp timestamp and update_tstmp
+            sql.append("update_tstmp = now()");
+            sql.append(" WHERE processing_id = ").append(processingID).append(" AND update_tstmp IS NULL");
+
+            // Execute above
+            PreparedStatement ps = null;
+            try {
+                Log.info(sql);
+                ps = this.getDb().prepareStatement(sql.toString());
+                ps.executeUpdate();
+            } finally {
+                DbUtils.closeQuietly(ps);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ReturnValue(null, "Could not execute one of the SQL commands: " + sql.toString() + "\nException: "
+                    + e.getMessage(), ReturnValue.SQLQUERYFAILED);
+        }
+        /*
+         * If no error, return success
+         */
+        return new ReturnValue();
+    }
 
   // FIXME: This should all be a transaction. For now, we end up with cruft in
   // the DB if something failed.
