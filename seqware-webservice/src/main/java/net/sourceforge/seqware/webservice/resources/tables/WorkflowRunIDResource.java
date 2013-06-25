@@ -194,6 +194,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         wr.setUpdateTimestamp(new Date());
         wr.setStdErr(newWR.getStdErr());
         wr.setStdOut(newWR.getStdOut());
+        wr.setWorkflowEngine(newWR.getWorkflowEngine());
 
         if (newWR.getWorkflow() != null) {
             WorkflowService ws = BeanFactory.getWorkflowServiceBean();
