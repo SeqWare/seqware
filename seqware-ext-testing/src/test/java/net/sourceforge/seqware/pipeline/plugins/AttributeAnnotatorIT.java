@@ -18,6 +18,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.metadb.util.TestDatabaseCreator;
@@ -27,6 +28,11 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import org.mortbay.log.Log;
 
 /**
@@ -96,21 +102,11 @@ public class AttributeAnnotatorIT {
         toggleSkipOnly(AttributeType.IUS, 4789);
     }
 
-    /**
-     * experiment has no skip column, but this doesn't fail?
-     *
-     * @throws IOException
-     */
     @Test
     public void testExperimentSkipOnly() throws IOException {
         toggleSkipOnly(AttributeType.EXPERIMENT, 2587);
     }
 
-    /**
-     * processing has no skip column, but this doesn't fail?
-     *
-     * @throws IOException
-     */
     @Test
     public void testProcessingSkipOnly() throws IOException {
         toggleSkipOnly(AttributeType.PROCESSING, 16);
@@ -121,34 +117,70 @@ public class AttributeAnnotatorIT {
         toggleSkipOnly(AttributeType.SAMPLE, 6200);
     }
 
-    /**
-     * study has no skip column, but this doesn't fail?
-     *
-     * @throws IOException
-     */
     @Test
     public void testStudySkipOnly() throws IOException {
         toggleSkipOnly(AttributeType.STUDY, 4758);
     }
 
-    /**
-     * workflow has no skip column, but this doesn't fail?
-     *
-     * @throws IOException
-     */
     @Test
     public void testWorkflowSkipOnly() throws IOException {
         toggleSkipOnly(AttributeType.WORKFLOW, 2861);
     }
-
-    /**
-     * workflow_run has no skip column, but this doesn't fail?
-     *
-     * @throws IOException
-     */
-    @Test
+    
+     @Test
     public void testWorkflowRunSkipOnly() throws IOException {
         toggleSkipOnly(AttributeType.WORKFLOW_RUN, 863);
+    }
+    
+    @Test
+    public void testFileSkipValue() throws IOException {
+        annotateSkipImplicitly(AttributeType.FILE, 838);
+    }
+    
+    @Test
+    public void testSequencerRunSkipValue() throws IOException {
+        annotateSkipImplicitly(AttributeType.SEQUENCER_RUN, 4715);
+    }
+
+    @Test
+    public void testLaneSkipValue() throws IOException {
+        annotateSkipImplicitly(AttributeType.LANE, 4709);
+    }
+
+    @Test
+    public void testIUSSkipValue() throws IOException {
+        annotateSkipImplicitly(AttributeType.IUS, 6077);
+    }
+
+    @Test
+    public void testExperimentSkipValue() throws IOException {
+        annotateSkipImplicitly(AttributeType.EXPERIMENT, 4759);
+    }
+
+
+    @Test
+    public void testProcessingSkipValue() throws IOException {
+        annotateSkipImplicitly(AttributeType.PROCESSING, 2524);
+    }
+
+    @Test
+    public void testSampleSkipValue() throws IOException {
+        annotateSkipImplicitly(AttributeType.SAMPLE, 6207);
+    }
+
+    @Test
+    public void testStudySkipValue() throws IOException {
+        annotateSkipImplicitly(AttributeType.STUDY, 6144);
+    }
+
+    @Test
+    public void testWorkflowSkipValue() throws IOException {
+        annotateSkipImplicitly(AttributeType.WORKFLOW, 4767);
+    }
+
+    @Test
+    public void testWorkflowRunSkipValue() throws IOException {
+        annotateSkipImplicitly(AttributeType.WORKFLOW_RUN, 6654);
     }
     
     @Test
@@ -227,6 +259,36 @@ public class AttributeAnnotatorIT {
     }
 
     /**
+     * Annotate skip with an implicit key of "skip"
+     *
+     * @param type
+     * @param accession
+     * @throws IOException
+     */
+    public void annotateSkipImplicitly(AttributeType type, int accession) throws IOException {
+        String query = "SELECT t2." + type.table_name + "_attribute_id, t2.tag, t2.value FROM " + type.table_name
+                + "_attribute t2, " + type.table_name + " t1 WHERE "
+                + "t1." + type.table_name + "_id=t2." + type.attribute_id_prefix
+                + "_id AND t1.sw_accession=? ORDER BY " + type.table_name + "_attribute_id";
+        Log.info(query);
+        String value = "\"Improperly entered into the LIMS\"";
+        
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
+                + "-- --" + type.parameter_prefix + "-accession " + accession + " --skip true --value "+value;
+        int expectedReturnValue = type.skippable ? ReturnValue.SUCCESS : ReturnValue.INVALIDPARAMETERS;
+        ITUtility.runSeqWareJar(listCommand, expectedReturnValue, null);
+        if (type.skippable) {
+            Object[] runQuery = TestDatabaseCreator.runQuery(new ArrayHandler(), "SELECT skip FROM " + type.table_name + " WHERE sw_accession=?", accession);
+            Assert.assertTrue("skip value incorrect", runQuery.length == 1 && runQuery[0].equals(true));
+            List<Object[]> runQuery1 = TestDatabaseCreator.runQuery(new ArrayListHandler(), query, accession);
+            Assert.assertTrue("first annotation incorrect", runQuery1.size() == 1);
+            Assert.assertTrue("first tag incorrect", runQuery1.get(0)[1].equals("skip"));
+            Assert.assertTrue("first value incorrect", runQuery1.get(0)[2].equals(value));
+        }
+    }
+    
+    
+    /**
      * Annotate an attribute with both a key and value. Re-annotate and ensure
      * that no duplicates are formed.
      *
@@ -242,13 +304,14 @@ public class AttributeAnnotatorIT {
         final String groovy_value = "groovy_value";
         
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
-                + "-- --" + type.parameter_prefix + "-accession " + accession + " --key "+funky_key+" --value " + funky_initial_value;
+                + "-- --" + type.parameter_prefix + "-accession " + accession + " --key " + funky_key + " --value " + funky_initial_value;
         ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
-        String query = "SELECT t2."+type.table_name+"_attribute_id, t2.tag, t2.value FROM " + type.table_name 
-                + "_attribute t2, "+type.table_name+" t1 WHERE "
-                + "t1."+type.table_name+"_id=t2."+type.attribute_id_prefix+"_id AND t1.sw_accession=?";
+        String query = "SELECT t2." + type.table_name + "_attribute_id, t2.tag, t2.value FROM " + type.table_name
+                + "_attribute t2, " + type.table_name + " t1 WHERE "
+                + "t1." + type.table_name + "_id=t2." + type.attribute_id_prefix
+                + "_id AND t1.sw_accession=? ORDER BY " + type.table_name + "_attribute_id";
         Log.info(query);
-        List<Object[]> runQuery = TestDatabaseCreator.runQuery(new ArrayListHandler(), query , accession);
+        List<Object[]> runQuery = TestDatabaseCreator.runQuery(new ArrayListHandler(), query, accession);
         Assert.assertTrue("first annotation incorrect", runQuery.size() == 1);
         Assert.assertTrue("first tag incorrect", runQuery.get(0)[1].equals(funky_key));
         Assert.assertTrue("first value incorrect", runQuery.get(0)[2].equals(funky_initial_value));
@@ -273,6 +336,10 @@ public class AttributeAnnotatorIT {
         // check results of unrelated annotation
         runQuery = TestDatabaseCreator.runQuery(new ArrayListHandler(), query , accession);
         Assert.assertTrue("incorrect resulting number of unrelated annotations, found: " + runQuery.size(), runQuery.size() == 2);
+        Assert.assertTrue("second tag incorrect", runQuery.get(0)[1].equals(funky_key));
+        Assert.assertTrue("second value incorrect", runQuery.get(0)[2].equals(funky_second_value));
+        Assert.assertTrue("third tag incorrect", runQuery.get(1)[1].equals(groovy_key));
+        Assert.assertTrue("third value incorrect", runQuery.get(1)[2].equals(groovy_value));
         List<Object[]> count3 = TestDatabaseCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);
         compareTwoCounts(count2.get(0), count3.get(0));
     }
@@ -288,5 +355,39 @@ public class AttributeAnnotatorIT {
         for(int i = 0; i < count1.length; i++){
             Assert.assertTrue("element " + i + " did not match", count1[i].equals(count2[i]));
         }
+    }
+    
+    /**
+     * Test various forms of invalid parameters
+     * SEQWARE-1678
+     */
+    @Test
+    public void testInvalidParameters() throws IOException{
+        // invalid value
+                String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
+                + "-- --ius 4789 --key funky_key --funky_change_value" ;
+        ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDARGUMENT, null);
+        // key with no valid value
+                listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
+                + "-- --ius 4789 --key funky_key" ;
+        ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDPARAMETERS, null);
+    }
+    
+    @Test
+    public void testRejectDoubleAnnotation()throws IOException{
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
+                + "-- --file-accession 6650 --key funky_key --value funky_value" ;
+        ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
+                listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
+                + "-- --file-accession 6650 --key funky_key --value funky_value" ;
+        ITUtility.runSeqWareJar(listCommand, ReturnValue.FAILURE, null);
+    }
+    
+    @Test
+    public void testBulkInsert() throws IOException{
+        String path = AttributeAnnotatorIT.class.getResource("attributeAnnotator.csv").getPath();
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
+                + "-- --file " + path  ;
+        ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);    
     }
 }
