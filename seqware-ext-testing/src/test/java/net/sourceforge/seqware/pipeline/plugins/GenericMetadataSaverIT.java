@@ -22,10 +22,8 @@ import java.io.IOException;
 import java.util.Random;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.pipeline.modules.utilities.ExternalTestingUtility;
-import net.sourceforge.seqware.pipeline.plugins.ITUtility;
+import net.sourceforge.seqware.metadb.util.TestDatabaseCreator;
 import org.apache.commons.io.FileUtils;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -39,7 +37,7 @@ public class GenericMetadataSaverIT {
     
     @BeforeClass
     public static void resetDatabase() {
-        ExternalTestingUtility.resetDatabaseWithUsers();
+        TestDatabaseCreator.resetDatabaseWithUsers();
     }
 
     /**

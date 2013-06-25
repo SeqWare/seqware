@@ -48,7 +48,7 @@ public class UserPhase1 {
     @Test
     public void testStudyCreation() throws IOException {
         String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --create --field title::New Test Study --field description::This is a test description --field accession::InternalID123 --field center_name::SeqWare --field center_project_name::SeqWare Test Project --field study_type::4", ReturnValue.SUCCESS, null);
-        String sw_accession  = UserTutorialSuiteIT.getAndCheckSwid(output);
+        String sw_accession  = UserTutorialSuiteET.getAndCheckSwid(output);
         AccessionMap.accessionMap.put(STUDY, sw_accession);
     }
     

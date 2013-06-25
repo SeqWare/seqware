@@ -177,14 +177,10 @@ public class SampleIDResource extends DatabaseIDResource {
 			if(null!=countFile)
 				sample.setCountFile(countFile);
 
-			if(null!=o.getSampleAttributes()) {
-//SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
-//				sample.getSampleAttributes().clear();
-				for(SampleAttribute sa: o.getSampleAttributes()) {
-					sa.setSample(sample);
-					sample.getSampleAttributes().add(sa);
-				}
-			}
+			if (null != o.getSampleAttributes()) {
+                        //SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+                        this.mergeAttributes(sample.getSampleAttributes(), o.getSampleAttributes(), sample);
+                    }
             if (null != o.getParents()) {
                 SampleService ss = BeanFactory.getSampleServiceBean();
                 Set<Sample> parents = new HashSet<Sample>(sample.getParents());

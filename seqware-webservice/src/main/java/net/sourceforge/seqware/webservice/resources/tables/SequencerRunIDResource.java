@@ -158,14 +158,8 @@ public class SequencerRunIDResource extends DatabaseIDResource {
             }
 
             if (newAttributes != null) {
-//SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
-//                sequencerRun.getSequencerRunAttributes().clear();
-				for(SequencerRunAttribute sra: newAttributes) {
-					sra.setSequencerRunWizardDTO(sequencerRun);
-					sequencerRun.getSequencerRunAttributes().add(sra);
-                }
-
-
+                //SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+                this.mergeAttributes(sequencerRun.getSequencerRunAttributes(), newAttributes, sequencerRun);
             }
             srs.update(registration, sequencerRun);
 

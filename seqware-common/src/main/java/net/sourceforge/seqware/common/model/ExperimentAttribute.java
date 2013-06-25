@@ -13,7 +13,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @author boconnor
  * @version $Id: $Id
  */
-public class ExperimentAttribute implements java.io.Serializable, Comparable<ExperimentAttribute> {
+public class ExperimentAttribute implements java.io.Serializable, Comparable<ExperimentAttribute>, Attribute<Experiment> {
 
   private static final long serialVersionUID = 1L;
   private int experimentAttributeId;
@@ -97,6 +97,7 @@ public class ExperimentAttribute implements java.io.Serializable, Comparable<Exp
    *
    * @return a {@link java.lang.String} object.
    */
+  @Override
   public String getTag() {
     return this.tag;
   }
@@ -106,6 +107,7 @@ public class ExperimentAttribute implements java.io.Serializable, Comparable<Exp
    *
    * @param tag a {@link java.lang.String} object.
    */
+  @Override
   public void setTag(String tag) {
     this.tag = tag;
   }
@@ -115,6 +117,7 @@ public class ExperimentAttribute implements java.io.Serializable, Comparable<Exp
    *
    * @return a {@link java.lang.String} object.
    */
+  @Override
   public String getValue() {
     return this.value;
   }
@@ -124,6 +127,7 @@ public class ExperimentAttribute implements java.io.Serializable, Comparable<Exp
    *
    * @param value a {@link java.lang.String} object.
    */
+  @Override
   public void setValue(String value) {
     this.value = value;
   }
@@ -170,4 +174,22 @@ public class ExperimentAttribute implements java.io.Serializable, Comparable<Exp
 	public int hashCode() {
 		return new HashCodeBuilder().append(tag).toHashCode();
 	}
+
+
+
+    @Override
+    public void setAttributeParent(Experiment parent) {
+        this.setExperiment(parent);
+    }
+
+    @Override
+    public String getUnit() {
+        // this sucks, but plural non-interface version was already exposed and looks in use
+        return this.getUnits();
+    }
+
+    @Override
+    public void setUnit(String unit) {
+        this.setUnits(unit);
+    }
 }
