@@ -15,8 +15,12 @@ import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -98,7 +102,7 @@ public class WorkflowPlugin extends Plugin {
     parser.accepts("metadata-output-dir",
                    "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.").withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location.");
     parser.accepts("workflow-engine",
-                   "Optional: Specifies a workflow engine, we support Oozie (--workflow-engine oozie) and Pegasus (--workflow-engine pegasus) as our workflow engines with the default being Pegasus.").withRequiredArg().ofType(String.class).describedAs("Workflow Engine");
+                   "Optional: Specifies a workflow engine, one of: "+ENGINES_LIST+". Defaults to "+DEFAULT_ENGINE+".").withRequiredArg().ofType(String.class).describedAs("Workflow Engine");
     parser.accepts("status", "Optional: Get the workflow status by ID").withRequiredArg().ofType(String.class).describedAs("Job ID");
     parser.accepts("no-run",
                    "Optional: Terminates the launch process immediately prior to running. Useful for debugging.");
@@ -106,6 +110,18 @@ public class WorkflowPlugin extends Plugin {
     ret.setExitStatus(ReturnValue.SUCCESS);
   }
 
+  public static final String ENGINES_LIST = "pegasus, oozie, oozie-sge";
+  public static final String DEFAULT_ENGINE = "pegasus";
+  public static final Set<String> ENGINES = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(ENGINES_LIST.split(", "))));
+  
+  private String getEngineParam(){
+    if (options.has("workflow-engine")){
+      return (String)options.valueOf("workflow-engine");
+    } else {
+      return DEFAULT_ENGINE;
+    }
+  }
+  
   /*
    * (non-Javadoc) @see
    * net.sourceforge.seqware.pipeline.plugin.PluginInterface#init()
@@ -117,6 +133,14 @@ public class WorkflowPlugin extends Plugin {
       return (localhost.returnValue);
     } else {
       this.hostname = localhost.hostname;
+    }
+    
+    if (options.has("workflow-engine")){
+      if (!ENGINES.contains(options.valueOf("workflow-engine"))){
+        Log.error("Invalid workflow-engine value. Must be one of: "+ENGINES_LIST);
+        ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
+        return ret;
+      }
     }
 
     // wrong assumption here I think, --host is possible even when not
@@ -222,10 +246,11 @@ public class WorkflowPlugin extends Plugin {
           return ret;
         }
         String host = (String) options.valueOf(HOST);
+        String engine = getEngineParam();
         Log.info("You are scheduling a workflow to run on " + host + " by adding it to the metadb.");
         ret = w.scheduleInstalledBundle((String) options.valueOf("workflow-accession"),
                                         (String) options.valueOf("workflow-run-accession"), iniFiles,
-                                        metadataWriteback, parentAccessions, parentsLinkedToWR, false, nonOptions, host);
+                                        metadataWriteback, parentAccessions, parentsLinkedToWR, false, nonOptions, host, engine);
       } else {
         // then your running locally but taking info saved in the
         // workflow table from the DB
