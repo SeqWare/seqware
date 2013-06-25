@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -137,6 +138,20 @@ public class ProcessIDResource extends DatabaseIDResource {
             try {
 
                 Log.info("Updating Processing " + p.getSwAccession());
+                // SEQWARE-1679 see HHH-3030 Hibernate assumes that version columns are not null and fails if they are
+                // let's try setting it if it is not set first, should fix this systematically in the database
+                MetadataDB mdb0 = DBAccess.get();
+                try {
+                    ReturnValue ret = mdb0.set_processing_update_tstmp_if_null(p.getProcessingId());
+                    if (ret.getExitStatus() != ReturnValue.SUCCESS) {
+                        throw new ResourceException(Status.SERVER_ERROR_INTERNAL,
+                                "Error in Update Processing update timestamp with error  " + ret.getExitStatus());
+                    }
+                } finally {
+                    this.closeConnectionStatementResultSet(mdb0, null);
+                    // this should be redundant
+                    DBAccess.close();
+                }
 
                 // Move the Hibernate calls before the direct DB access so that
                 // the authentication of this user is checked by the Hibernate layer
