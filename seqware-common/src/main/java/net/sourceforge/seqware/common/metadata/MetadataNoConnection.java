@@ -713,4 +713,14 @@ public class MetadataNoConnection extends Metadata {
     public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
         return new ArrayList<WorkflowRun>();
     }
+
+    @Override
+    public void annotateFile(int laneSWID, FileAttribute iusAtt, Boolean skip) {
+        logger.info("No metadata connection");
+    }
+
+    @Override
+    public void annotateFile(int fileSWID, Set<FileAttribute> iusAtts) {
+       logger.info("No metadata connection");
+    }
 }

@@ -8,7 +8,7 @@ package net.sourceforge.seqware.common.model;
  * @author boconnor
  * @version $Id: $Id
  */
-public class LaneAttribute implements java.io.Serializable, Comparable<LaneAttribute> {
+public class LaneAttribute implements java.io.Serializable, Comparable<LaneAttribute>, Attribute<Lane> {
 
     private static final long serialVersionUID = 1L;
     private Integer laneAttributeId;
@@ -92,6 +92,7 @@ public class LaneAttribute implements java.io.Serializable, Comparable<LaneAttri
      *
      * @return a {@link java.lang.String} object.
      */
+    @Override
     public String getTag() {
         return this.tag;
     }
@@ -101,6 +102,7 @@ public class LaneAttribute implements java.io.Serializable, Comparable<LaneAttri
      *
      * @param tag a {@link java.lang.String} object.
      */
+    @Override
     public void setTag(String tag) {
         this.tag = tag;
     }
@@ -110,6 +112,7 @@ public class LaneAttribute implements java.io.Serializable, Comparable<LaneAttri
      *
      * @return a {@link java.lang.String} object.
      */
+    @Override
     public String getValue() {
         return this.value;
     }
@@ -119,6 +122,7 @@ public class LaneAttribute implements java.io.Serializable, Comparable<LaneAttri
      *
      * @param value a {@link java.lang.String} object.
      */
+    @Override
     public void setValue(String value) {
         this.value = value;
     }
@@ -151,6 +155,23 @@ public class LaneAttribute implements java.io.Serializable, Comparable<LaneAttri
     @Override
     public String toString() {
         return "LaneAttribute{" + "laneAttributeId=" + laneAttributeId + ", tag=" + tag + ", value=" + value + ", units=" + units + '}';
+    }
+
+
+    @Override
+    public void setAttributeParent(Lane parent) {
+        this.setLane(parent);
+    }
+
+    @Override
+    public String getUnit() {
+       // this sucks, but plural non-interface version was already exposed and looks in use
+        return this.getUnits();
+    }
+
+    @Override
+    public void setUnit(String unit) {
+        this.setUnits(units);
     }
     
 }
