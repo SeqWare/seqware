@@ -135,14 +135,14 @@ public abstract class BasicWorkflow implements WorkflowEngine {
    * @param scheduledHost
    *          the value of scheduledHost
    */
-
+  @Override
   public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession,
                                              ArrayList<String> iniFiles, boolean metadataWriteback,
                                              ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR,
                                              boolean wait, List<String> cmdLineOptions) {
 
     return scheduleInstalledBundle(workflowAccession, workflowRunAccession, iniFiles, metadataWriteback,
-                                   parentAccessions, parentsLinkedToWR, wait, cmdLineOptions, null);
+                                   parentAccessions, parentsLinkedToWR, wait, cmdLineOptions, null, null);
   }
 
   /**
@@ -156,16 +156,22 @@ public abstract class BasicWorkflow implements WorkflowEngine {
    * workflows on a different host from where this command line tool is run but
    * requires an external process to launch workflows that have been scheduled.
    */
+  // Yes, adding workflowEngine as a param makes no sense given that this class *is* a
+  // WorkflowEngine, but since this method is being called directly from WorkflowPlugin.doOldRun(), and
+  // *isn't* in the WorkflowEngine interface, I'm disinclined to begin fixing
+  // things to conform to what I can only guess is the design of these
+  // interfaces/classes.
   public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession,
                                              ArrayList<String> iniFiles, boolean metadataWriteback,
                                              ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR,
-                                             boolean wait, List<String> cmdLineOptions, String scheduledHost) {
+                                             boolean wait, List<String> cmdLineOptions, String scheduledHost,
+                                             String workflowEngine) {
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
     Map<String, String> workflowMetadata = this.metadata.get_workflow_info(Integer.parseInt(workflowAccession));
     WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
     scheduleWorkflow(wi, workflowRunAccession, iniFiles, metadataWriteback, parentAccessions, parentsLinkedToWR, wait,
-                     cmdLineOptions, scheduledHost);
+                     cmdLineOptions, scheduledHost, workflowEngine);
 
     return (ret);
   }
@@ -578,7 +584,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
   private ReturnValue scheduleWorkflow(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles,
                                        boolean metadataWriteback, ArrayList<String> parentAccessions,
                                        ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions,
-                                       String scheduledHost) {
+                                       String scheduledHost, String workflowEngine) {
 
     // keep this id handy
     int workflowRunId = 0;
@@ -688,7 +694,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
       this.metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "submitted", null,
                                         wi.getWorkflowDir(), null, mapBuffer.toString(), scheduledHost, 0, 0, null,
-                                        null, null);
+                                        null, workflowEngine);
 
     } else {
       Log.error("you can't schedule a workflow run unless you have metadata writeback turned on.");
