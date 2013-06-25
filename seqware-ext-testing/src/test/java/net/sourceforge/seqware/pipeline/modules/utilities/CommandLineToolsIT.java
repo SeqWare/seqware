@@ -88,13 +88,13 @@ public class CommandLineToolsIT {
         Random generator = new Random();
         String random = String.valueOf(generator.nextInt());
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles "
-                + "--metadata-output-file-prefix /datastore/"
+                + "--metadata-output-file-prefix /.mounts/labs/seqprodbio/private/sqwci/testing/datastore/"
                 + " --metadata-parent-accession "+sampleAccession+" --metadata-processing-accession-file  " + metadataFile.getAbsolutePath()
-                + " -- -im text::text/plain::" + inputFile.getAbsolutePath() + " -o /datastore/ --force-copy";
+                + " -- -im text::text/plain::" + inputFile.getAbsolutePath() + " -o /.mounts/labs/seqprodbio/private/sqwci/testing/datastore/ --force-copy";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS);
         Log.info(listOutput);
         // check that file was ended up being provisioned correctly
-        File provisioned = new File("/datastore/" + inputFile.getName());
+        File provisioned = new File("/.mounts/labs/seqprodbio/private/sqwci/testing/datastore/" + inputFile.getName());
         Assert.assertTrue("file did not end up in final location", provisioned.exists());
         String contents = FileUtils.readFileToString(provisioned).trim();
         Assert.assertTrue("file contents not as expected", contents.equals(content));

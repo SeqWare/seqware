@@ -6,9 +6,9 @@
 		<Arg>
 			<New class="org.apache.commons.dbcp.BasicDataSource">
 				<Set name="driverClassName">org.postgresql.Driver</Set>
-				<Set name="url">jdbc:postgresql://localhost:5432/test_seqware_meta_db</Set>
-				<Set name="username">seqware</Set>
-				<Set name="password">seqware</Set>
+				<Set name="url">jdbc:postgresql://seqbiopgsql.res:5432/sqwcidb</Set>
+				<Set name="username">sqwci</Set>
+				<Set name="password">Nie4Neon</Set>
 			</New>
 		</Arg>
 	</New>
