@@ -13,7 +13,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @author boconnor
  * @version $Id: $Id
  */
-public class ProcessingAttribute implements java.io.Serializable, Comparable<ProcessingAttribute>, Attribute {
+public class ProcessingAttribute implements java.io.Serializable, Comparable<ProcessingAttribute>, Attribute<Processing> {
 
   private static final long serialVersionUID = 1L;
   private int processingAttributeId;
@@ -168,5 +168,10 @@ public class ProcessingAttribute implements java.io.Serializable, Comparable<Pro
 	public void setUnit(String unit) {
 		this.units = unit;
 	}
+
+    @Override
+    public void setAttributeParent(Processing parent) {
+        this.setProcessing(parent);
+    }
 
 }

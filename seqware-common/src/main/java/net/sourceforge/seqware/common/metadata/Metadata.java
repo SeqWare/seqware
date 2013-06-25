@@ -1,12 +1,6 @@
 package net.sourceforge.seqware.common.metadata;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.bind.JAXBException;
-import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.util.Log;
 
 import net.sourceforge.seqware.common.util.MD5Generator;

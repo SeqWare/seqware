@@ -21,7 +21,7 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "sample_search_attribute", uniqueConstraints = { @UniqueConstraint(columnNames = { "sample_search_id",
     "tag", "value" }) })
-public class SampleSearchAttribute implements Attribute {
+public class SampleSearchAttribute implements Attribute<SampleSearch> {
 
   @Id
   @SequenceGenerator(name = "sample_search_attribute_id_seq_gen", sequenceName = "sample_search_attribute_id_seq")
@@ -29,7 +29,7 @@ public class SampleSearchAttribute implements Attribute {
   @Column(name = "sample_search_attribute_id")
   private Integer sampleSearchAttributeId;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne ( cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH} )
   @JoinColumn(name = "sample_search_id")
   private SampleSearch sampleSearch;
 
@@ -112,5 +112,10 @@ public class SampleSearchAttribute implements Attribute {
     throw new UnsupportedOperationException("SampleSearchAttributes have no units.");
 
   }
+
+    @Override
+    public void setAttributeParent(SampleSearch parent) {
+        this.setSampleSearch(parent);
+    }
 
 }

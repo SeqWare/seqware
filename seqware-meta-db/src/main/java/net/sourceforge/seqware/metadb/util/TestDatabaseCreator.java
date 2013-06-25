@@ -8,6 +8,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import java.io.InputStreamReader;
+import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
 
 /**
  * <p>TestDatabaseCreator class.</p>
@@ -63,6 +66,31 @@ public class TestDatabaseCreator {
             }
         }
         database_changed = false;
+    }
+    
+    /**
+     * Convenient method to run a query against the test database, avoids unclosed connections.
+     * @param <T>
+     * @param h
+     * @param query
+     * @param params
+     * @return
+     */
+    public static <T extends Object> T runQuery(ResultSetHandler<T> h, String query, Object... params) {
+        QueryRunner run = new QueryRunner();
+        T result = null;
+        Connection connectionToSeqware = null;
+        try {
+            connectionToSeqware = createConnection(SEQWARE_DB, POSTGRE_USER, POSTGRE_PASSWORD);
+            result = run.query(connectionToSeqware, query, h, params);
+        } catch(Exception e){
+            return null;
+        } finally {
+            // Use this helper method so we don't have to check for null
+            DbUtils.closeQuietly(connectionToSeqware);
+        }
+
+        return result;
     }
 
     /**
@@ -175,6 +203,20 @@ public class TestDatabaseCreator {
         }
         reader.close();
         return fileData.toString();
+    }
+
+    /**
+     * Unfortunately, postgres does not allow the straight dropdb and createdb
+     * when tomcat is used (perhaps we leave open a connection)
+     */
+    public static void resetDatabaseWithUsers() {
+        try {
+            TestDatabaseCreator.dropDatabaseWithUsers();
+            TestDatabaseCreator.markDatabaseChanged();
+            TestDatabaseCreator.createDatabase();
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
     }
 }
 
