@@ -43,3 +43,7 @@ seqware-distribution/docs/site/content/docs/17a-modules.md
 
 # Log files
 dao-test.log
+
+# vagrant
+seqware-vagrant/credentials.settings
+seqware-vagrant/.vagrant
