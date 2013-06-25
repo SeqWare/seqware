@@ -32,7 +32,7 @@ fi
 apt-get update
 export DEBIAN_FRONTEND=noninteractive
 #apt-get -q -y --force-yes install oracle-j2sdk1.6 cloudera-manager-server-db cloudera-manager-server cloudera-manager-daemons
-apt-get -q -y --force-yes install oracle-j2sdk1.6 hadoop-0.20-conf-pseudo hue hue-server hue-plugins oozie oozie-client postgresql-9.1 postgresql-client-9.1 tomcat7
+apt-get -q -y --force-yes install oracle-j2sdk1.6 hadoop-0.20-conf-pseudo hue hue-server hue-plugins oozie oozie-client postgresql-9.1 postgresql-client-9.1 tomcat6-common tomcat6 apache2 git
 
 # start cloudera manager
 #service cloudera-scm-server-db initdb
@@ -40,7 +40,7 @@ apt-get -q -y --force-yes install oracle-j2sdk1.6 hadoop-0.20-conf-pseudo hue hu
 #service cloudera-scm-server start
 
 # format the name node
-sudo -u hdfs hdfs namenode -format
+sudo -u hdfs hdfs namenode -format -force
 
 # start all the hadoop daemons
 for x in `cd /etc/init.d ; ls hadoop-hdfs-*` ; do sudo service $x start ; done
@@ -77,13 +77,14 @@ chmod -R a+rwx /usr/tmp/
 chown -R seqware:seqware /usr/tmp/seqware-oozie
 
 # various seqware dirs
-mkdir /home/seqware/jars
-mkdir /home/seqware/crons
-mkdir /home/seqware/logs
-mkdir /home/seqware/released-bundles
-mkdir /home/seqware/provisioned-bundles
-mkdir /home/seqware/workflow-dev
-mkdir /home/seqware/.seqware
+mkdir -p /home/seqware/jars
+mkdir -p /home/seqware/crons
+mkdir -p /home/seqware/logs
+mkdir -p /home/seqware/released-bundles
+mkdir -p /home/seqware/provisioned-bundles
+mkdir -p /home/seqware/workflow-dev
+mkdir -p /home/seqware/.seqware
+mkdir -p /home/seqware/gitroot/seqware
 sudo -u hdfs hadoop fs -mkdir -p /user/seqware
 sudo -u hdfs hadoop fs -chmod seqware /user/seqware
 
@@ -98,8 +99,28 @@ cp /vagrant/seqware-distribution-1.0.1-SNAPSHOT-full.jar /home/seqware/jars/
 cp /vagrant/status.cron /home/seqware/crons/
 (crontab -l ; echo "/home/seqware/crons/status.cron >> /home/seqware/logs/status.log") | crontab -
 
+# install hubflow
+cd /home/seqware/gitroot
+git clone https://github.com/datasift/gitflow
+cd gitflow
+./install.sh
+
+# checkout seqware
+cd /home/seqware/gitroot
+git clone https://github.com/SeqWare/seqware.git
+
+# configure hubflow
+cd /home/seqware/gitroot/seqware
+git hf init
+
+# build with develop
+%{SEQWARE_BUILD_CMD}
+
 # make everything owned by seqware
 chown -R seqware:seqware /home/seqware
+
+# setup bashrc for seqware
+echo "export MAVEN_OPTS=\"-Xmx1024m -XX:MaxPermSize=512m\"" >> /home/seqware/.bashrc
 
 
 # seqware database
@@ -109,11 +130,22 @@ sudo -u postgres psql --command "CREATE DATABASE seqware_meta_db WITH OWNER = se
 sudo -u postgres psql seqware_meta_db < /vagrant/seqware_meta_db.sql
 sudo -u postgres psql seqware_meta_db < /vagrant/seqware_meta_db_data.sql
 
+# remove landing page for tomcat
+rm -rf /var/lib/tomcat6/webapps/ROOT
+
 # seqware web service
-# LEFT OFF HERE
+mv /vagrant/seqware-webservice-1.0.1-SNAPSHOT.war /var/lib/tomcat6/webapps/SeqWareWebService.war
+mv /vagrant/seqware-webservice-1.0.1-SNAPSHOT.xml /etc/tomcat6/Catalina/localhost/SeqWareWebService.xml
 
 # seqware portal
+mv /vagrant/seqware-portal-1.0.1-SNAPSHOT.war /var/lib/tomcat6/webapps/SeqWarePortal.war
+mv /vagrant/seqware-portal-1.0.1-SNAPSHOT.xml /etc/tomcat6/Catalina/localhost/SeqWarePortal.xml
 
+# restart tomcat6
+/etc/init.d/tomcat6 restart
+
+# seqware landing page
+mv /vagrant/vm_landing/* /var/www/
 
 
 
@@ -245,8 +277,8 @@ Vagrant.configure("2") do |config|
       'Name' => 'BrianTesting'
     }
 
-    aws.access_key_id = ""
-    aws.secret_access_key = ""
+    aws.access_key_id = "%{AWS_KEY}"
+    aws.secret_access_key = "%{AWS_SECRET_KEY}"
     aws.keypair_name = "brian-oicr-1"
     aws.user_data = File.read("user_data.txt")
 

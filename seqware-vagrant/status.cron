@@ -1,7 +1,0 @@
-#!/bin/bash
-
-source /home/seqware/.bash_profile
-
-java -jar /home/seqware/seqware-distribution-*-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --launch-scheduled
-java -jar /home/seqware/seqware-distribution-*-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker -- --tp 10
-
