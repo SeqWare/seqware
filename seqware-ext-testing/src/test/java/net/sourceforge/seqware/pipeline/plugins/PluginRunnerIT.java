@@ -24,6 +24,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.springframework.util.SerializationUtils;
 
 /*
@@ -160,7 +161,6 @@ public class PluginRunnerIT {
         
         clearStaticVariables();
     }
-    
     @Test
     public void testListingBundles() throws IOException {
         for(Entry<String, File> e : bundleLocations.entrySet()){
@@ -170,13 +170,11 @@ public class PluginRunnerIT {
             Log.info(listOutput);     
         }
     }
-    
     @Test 
     public void testExportParameters() throws IOException{
         Map<String, File> iniParams = exportWorkflowInis();
         Assert.assertTrue("Loaded correct number of ini files", iniParams.size() == installedWorkflows.size());
     }
-    
     @Test
     public void testScheduleAndLaunch() throws IOException{
         Map<String, File> iniParams = exportWorkflowInis();
@@ -221,7 +219,6 @@ public class PluginRunnerIT {
             Log.info(listOutput);
         }
     }
-
     @Test
     public void testLaunchingWithoutWait() throws IOException {
         Map<String, File> iniParams = exportWorkflowInis();
@@ -241,7 +238,6 @@ public class PluginRunnerIT {
             Log.info(listOutput);
         }
     }
-    
     @Test
     public void testLaunchingWithWait() throws IOException {
         Map<String, File> iniParams = exportWorkflowInis();
@@ -261,7 +257,6 @@ public class PluginRunnerIT {
             Log.info(listOutput);
         }
     }
-    
     @Test
     public void testLaunchingWithWaitAndNoMetadata() throws IOException {
         Map<String, File> iniParams = exportWorkflowInis();
@@ -295,7 +290,6 @@ public class PluginRunnerIT {
         }
         it.testLatestWorkflowsInternal(list);
     }
-
     @Test
     public void testLatestWorkflows() throws IOException {
         testLatestWorkflowsInternal(new ArrayList<Integer>());

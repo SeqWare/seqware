@@ -16,17 +16,23 @@ import java.io.InputStreamReader;
  * @version $Id: $Id
  */
 public class TestDatabaseCreator {
-
-    private final static String POSTGRE_DB = "postgres";
-    private final static String SEQWARE_DB = "test_seqware_meta_db";
+	
+    //	private final static String POSTGRE_DB = "postgres";
+    //	private final static String SEQWARE_DB = "test_seqware_meta_db";
+    private final static String POSTGRE_DB = "sqwcidb";
+    private final static String SEQWARE_DB = "sqwcidb";
     //We should not have a postgres user with an easily guessable password. It 
     //is a security risk. The seqware user needs CREATEDB for this to work but
     //it is more secure. Since we are using local database for testing it is 
     //not really security breach here.
-    private final static String POSTGRE_USER = "seqware";
-    private final static String POSTGRE_PASSWORD = "seqware";
-    private final static String SEQWARE_USER = "seqware";
-    private final static String SEQWARE_PASSWORD = "seqware";
+    //	private final static String POSTGRE_USER = "seqware";
+    //	private final static String POSTGRE_PASSWORD = "seqware";
+    //	private final static String SEQWARE_USER = "seqware";
+    //	private final static String SEQWARE_PASSWORD = "seqware";
+    private final static String POSTGRE_USER = "sqwci";
+    private final static String POSTGRE_PASSWORD = "Nie4Neon";
+    private final static String SEQWARE_USER = "sqwci";
+    private final static String SEQWARE_PASSWORD = "Nie4Neon";
     private static boolean database_changed;
     private static boolean first_time_created = true;
     private static Logger logger = Logger.getLogger(TestDatabaseCreator.class);
@@ -109,7 +115,7 @@ public class TestDatabaseCreator {
 
         try {
 
-            return DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/" + databaseName, userName, password);
+            return DriverManager.getConnection("jdbc:postgresql://seqbiopgsql.res.oicr.on.ca:5432/" + databaseName, userName, password);
 
         } catch (SQLException e) {
 
