@@ -290,7 +290,7 @@ Vagrant.configure("2") do |config|
   config.vm.provider :aws do |aws, override|
 
     aws.tags = {
-      'Name' => 'BrianTesting'
+      'Name' => `whoami`.chomp + "Testing" 
     }
 
     aws.access_key_id = "%{AWS_KEY}"
@@ -319,6 +319,6 @@ Vagrant.configure("2") do |config|
     #override.ssh.username = "root"
     #override.ssh.username = "ec2-user"
     override.ssh.username = "ubuntu"
-    override.ssh.private_key_path = "/home/boconnor/.ssh/brian-oicr-1.pem"
+    override.ssh.private_key_path = "~/.ssh/brian-oicr-1.pem"
   end
 end
