@@ -8,8 +8,6 @@
 
     <properties>
         <netbeans.compile.on.save>all</netbeans.compile.on.save>
-        <seqware_meta_db_name>test_seqware_meta_db</seqware_meta_db_name>
-        <seqware_meta_db_port>5432</seqware_meta_db_port>
     </properties>
     
     <parent>
