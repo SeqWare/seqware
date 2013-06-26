@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.common.metadata;
 
+import java.io.Writer;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -17,15 +18,38 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import javax.sql.DataSource;
-import net.sourceforge.seqware.common.factory.DBAccess;
 
-import net.sourceforge.seqware.common.model.*;
+import net.sourceforge.seqware.common.factory.DBAccess;
+import net.sourceforge.seqware.common.model.Experiment;
+import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.IUS;
+import net.sourceforge.seqware.common.model.IUSAttribute;
+import net.sourceforge.seqware.common.model.Lane;
+import net.sourceforge.seqware.common.model.LaneAttribute;
+import net.sourceforge.seqware.common.model.LibrarySelection;
+import net.sourceforge.seqware.common.model.LibrarySource;
+import net.sourceforge.seqware.common.model.LibraryStrategy;
+import net.sourceforge.seqware.common.model.Organism;
+import net.sourceforge.seqware.common.model.Platform;
+import net.sourceforge.seqware.common.model.ProcessingAttribute;
+import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.common.model.SampleAttribute;
+import net.sourceforge.seqware.common.model.SequencerRun;
+import net.sourceforge.seqware.common.model.SequencerRunAttribute;
+import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.model.StudyAttribute;
+import net.sourceforge.seqware.common.model.StudyType;
+import net.sourceforge.seqware.common.model.Workflow;
+import net.sourceforge.seqware.common.model.WorkflowAttribute;
+import net.sourceforge.seqware.common.model.WorkflowParam;
+import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
-import org.apache.commons.dbutils.DbUtils;
 
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
@@ -55,6 +79,18 @@ public class MetadataDB extends Metadata {
     super();
     logger = Logger.getLogger(MetadataDB.class);
   }
+
+
+  @Override
+  public void studyReport(String studyTitle, Writer out) {
+    throw new NotImplementedException("Please use the SymLinker through the Web service.");
+  }
+
+  @Override
+  public void allStudiesReport(Writer out) {
+    throw new NotImplementedException("Please use the SymLinker through the Web service.");
+  }
+
 
   /**
    * {@inheritDoc}
