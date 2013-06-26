@@ -513,6 +513,9 @@ public class WorkflowPlugin extends Plugin {
       dataModel = factory.getWorkflowDataModel(workflowAccession, workflowRunAccession);
       if (workflowEngine != null){
         dataModel.setWorkflow_engine(workflowEngine);
+      } else {
+        // maintain consistency between the two ways of accessing the engine value
+        workflowEngine = dataModel.getWorkflow_engine();
       }
     } catch (Exception e) {
       Log.fatal(e, e);
@@ -588,7 +591,7 @@ public class WorkflowPlugin extends Plugin {
       metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                                    dataModel.getTags().get("workflow_template"), "failed", statusCmd,
                                    dataModel.getWorkflowBundleDir(), "", "", wr.getHost(), 0, 0,
-                                   retPegasus.getStderr(), retPegasus.getStdout(), engine.getClass().getSimpleName());
+                                   retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine());
 
       return retPegasus;
     } else {
@@ -597,7 +600,7 @@ public class WorkflowPlugin extends Plugin {
       metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                                    dataModel.getTags().get("workflow_template"), status, statusCmd,
                                    dataModel.getWorkflowBundleDir(), "", "", wr.getHost(), 0, 0,
-                                   retPegasus.getStderr(), retPegasus.getStdout(), engine.getClass().getSimpleName());
+                                   retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine());
       return ret;
     }
   }

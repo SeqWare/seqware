@@ -552,7 +552,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
                                        wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
                                        Integer.parseInt(watchedResult.getAttribute("currStep")),
                                        Integer.parseInt(watchedResult.getAttribute("totalSteps")),
-                                       retPegasus.getStderr(), retPegasus.getStdout(), null);
+                                       retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine());
         }
 
       } else if (watchedResult.getExitStatus() == ReturnValue.FAILURE) {
@@ -563,7 +563,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
                                        wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
                                        Integer.parseInt(watchedResult.getAttribute("currStep")),
                                        Integer.parseInt(watchedResult.getAttribute("totalSteps")),
-                                       watchedResult.getStderr(), watchedResult.getStdout(), null);
+                                       watchedResult.getStderr(), watchedResult.getStdout(), wr.getWorkflowEngine());
         }
         ret.setExitStatus(ReturnValue.FAILURE);
         return (ret);
