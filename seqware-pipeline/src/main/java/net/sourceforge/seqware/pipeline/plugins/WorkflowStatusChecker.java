@@ -312,7 +312,7 @@ public class WorkflowStatusChecker extends Plugin {
                                 wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
                                 wr.getHost(), Integer.parseInt(currRet.getAttribute("currStep")),
                                 Integer.parseInt(currRet.getAttribute("totalSteps")),
-                                currRet.getStderr(), currRet.getStdout(), null);
+                                currRet.getStderr(), currRet.getStdout(), wr.getWorkflowEngine());
                     }
 
                 } else if (currRet.getExitStatus() == ReturnValue.FAILURE) {
@@ -322,7 +322,7 @@ public class WorkflowStatusChecker extends Plugin {
                                 wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
                                 wr.getHost(), Integer.parseInt(currRet.getAttribute("currStep")),
                                 Integer.parseInt(currRet.getAttribute("totalSteps")),
-                                currRet.getStderr(), currRet.getStdout(), null);
+                                currRet.getStderr(), currRet.getStdout(), wr.getWorkflowEngine());
                     }
                 } else if (currRet.getExitStatus() == ReturnValue.UNKNOWN) {
                     Log.error("ERROR: the workflow status has returned UNKNOWN, this is typically if the workflow status command points"
