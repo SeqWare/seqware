@@ -409,7 +409,7 @@ public class WorkflowPlugin extends Plugin {
     if (!newLauncherRequired) {
       return doOldRun();
     }
-    return launchNewWorkflow(options, config, params, metadata, workflowAccession, null);
+    return launchNewWorkflow(options, config, params, metadata, workflowAccession, null, null);
   }
 
   /**
@@ -479,7 +479,7 @@ public class WorkflowPlugin extends Plugin {
             } else {
               Log.stdout("Launching via new launcher: " + wr.getSwAccession());
               WorkflowPlugin.launchNewWorkflow(options, config, params, metadata, wr.getWorkflowAccession(),
-                                               wr.getSwAccession());
+                                               wr.getSwAccession(), wr.getWorkflowEngine());
             }
           } else {
             Log.stdout("Invalid run by host check: " + wr.getSwAccession());
@@ -504,13 +504,16 @@ public class WorkflowPlugin extends Plugin {
    * @return
    */
   public static ReturnValue launchNewWorkflow(OptionSet options, Map<String, String> config, String[] params,
-                                              Metadata metadata, Integer workflowAccession, Integer workflowRunAccession) {
+                                              Metadata metadata, Integer workflowAccession, Integer workflowRunAccession, String workflowEngine) {
     Log.info("launching new workflow");
     ReturnValue ret = new ReturnValue();
     AbstractWorkflowDataModel dataModel;
     try {
       final WorkflowDataModelFactory factory = new WorkflowDataModelFactory(options, config, params, metadata);
       dataModel = factory.getWorkflowDataModel(workflowAccession, workflowRunAccession);
+      if (workflowEngine != null){
+        dataModel.setWorkflow_engine(workflowEngine);
+      }
     } catch (Exception e) {
       Log.fatal(e, e);
       ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
