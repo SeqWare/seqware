@@ -181,6 +181,6 @@ public class WorkflowStatusCheckerTest{
         Assert.assertTrue("workflowStatusChecker ran properly", ret2.getExitStatus() == ReturnValue.SUCCESS);
         verify(metadata).getWorkflowRunsByStatus(metadata.RUNNING);
         verify(metadata).getWorkflowRunsByStatus(metadata.PENDING);
-        verify(metadata, times(100)).update_workflow_run(anyInt(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyInt(), anyInt(), anyString(), anyString(), anyString());
+        verify(metadata, times(100)).update_workflow_run(anyInt(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
     }
 }
