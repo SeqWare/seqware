@@ -275,7 +275,7 @@ public class MetadataNoConnection extends Metadata {
   /** {@inheritDoc} */
   @Override
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
-      String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
+      String statusCmd, String workingDirectory, String dax, String ini, String host,
       String stdErr, String stdOut, String workflowEngine) {
     logger.info("No metadata connection");
     ReturnValue finished = new ReturnValue(ReturnValue.PROCESSING);

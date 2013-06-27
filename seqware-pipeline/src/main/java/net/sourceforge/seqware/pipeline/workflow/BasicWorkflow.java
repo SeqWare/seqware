@@ -517,8 +517,8 @@ public abstract class BasicWorkflow implements WorkflowEngine {
       // then something went wrong trying to call pegasus
       if (metadataWriteback) {
         metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "failed", statusCmd,
-                                     wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(), 0,
-                                     0, retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine());
+                                     wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
+                                     retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine());
       }
       return (retPegasus);
     }
@@ -526,7 +526,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     // now save to the DB
     if (metadataWriteback) {
       metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "pending", statusCmd,
-                                   wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(), 0, 0,
+                                   wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
                                    retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine());
     }
 
@@ -550,8 +550,6 @@ public abstract class BasicWorkflow implements WorkflowEngine {
         if (metadataWriteback) {
           metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "completed", statusCmd,
                                        wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
-                                       Integer.parseInt(watchedResult.getAttribute("currStep")),
-                                       Integer.parseInt(watchedResult.getAttribute("totalSteps")),
                                        retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine());
         }
 
@@ -561,8 +559,6 @@ public abstract class BasicWorkflow implements WorkflowEngine {
         if (metadataWriteback) {
           metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "failed", statusCmd,
                                        wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
-                                       Integer.parseInt(watchedResult.getAttribute("currStep")),
-                                       Integer.parseInt(watchedResult.getAttribute("totalSteps")),
                                        watchedResult.getStderr(), watchedResult.getStdout(), wr.getWorkflowEngine());
         }
         ret.setExitStatus(ReturnValue.FAILURE);
@@ -693,7 +689,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
       }
 
       this.metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "submitted", null,
-                                        wi.getWorkflowDir(), null, mapBuffer.toString(), scheduledHost, 0, 0, null,
+                                        wi.getWorkflowDir(), null, mapBuffer.toString(), scheduledHost, null,
                                         null, workflowEngine);
 
     } else {
