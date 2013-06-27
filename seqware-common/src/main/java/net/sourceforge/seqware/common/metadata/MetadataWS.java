@@ -1216,7 +1216,7 @@ public class MetadataWS extends Metadata {
      * @param workflowEngine the value of workflowEngine
      */
     @Override
-    public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps, String stdErr, String stdOut, String workflowEngine) {
+    public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine) {
         int accession = 0;
         try {
             WorkflowRun wr = ll.findWorkflowRun("?id=" + workflowRunId);
