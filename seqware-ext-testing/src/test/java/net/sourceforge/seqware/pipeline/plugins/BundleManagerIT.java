@@ -33,7 +33,7 @@ public class BundleManagerIT {
     
     @BeforeClass
     public static void resetDatabase() {
-        TestDatabaseCreator.resetDatabaseWithUsers();
+         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
     
 
