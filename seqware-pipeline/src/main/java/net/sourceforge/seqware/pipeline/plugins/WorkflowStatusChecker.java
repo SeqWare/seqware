@@ -19,6 +19,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +40,10 @@ import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 
+import org.apache.oozie.client.OozieClient;
+import org.apache.oozie.client.WorkflowAction;
+import org.apache.oozie.client.WorkflowJob;
+import org.apache.oozie.client.WorkflowJob.Status;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -303,68 +308,114 @@ public class WorkflowStatusChecker extends Plugin {
         userMatch = false;
       }
 
+      if (hostMatch && userMatch && workflowRunAccessionMatch && workflowAccessionMatch) {
+        if (wr.getWorkflowEngine() != null && wr.getWorkflowEngine().startsWith("oozie")) {
+          checkOozie();
+        } else {
+          checkPegasus();
+        }
+      }
+    }
+
+    private void checkOozie() {
+      try {
+        OozieClient oc = new OozieClient((String) config.get("OOZIE_URL"));
+        String jobId = wr.getStatusCmd();
+        WorkflowJob wfJob = oc.getJobInfo(jobId);
+        if (wfJob == null)
+          return;
+
+        Status status = wfJob.getStatus();
+
+        /*
+         * Not sure about these, but since I can find no documentation regarding
+         * the canonical set of seqware workflow run statuses (and since the DB
+         * has both "completed" and "success"), I'm going to limit these to what
+         * checkPegasus() uses.
+         * 
+         * Also, there's no analog to SUSPENDED or KILLED on the pegasus side,
+         * thus no specific seqware equivalent.
+         */
+        String sqwStatus;
+        switch (status) {
+        case PREP:
+        case RUNNING:
+        case SUSPENDED:
+          sqwStatus = "running";
+          break;
+        case FAILED:
+        case KILLED:
+          sqwStatus = "failed";
+          break;
+        case SUCCEEDED:
+          sqwStatus = "completed";
+          break;
+        default:
+          throw new RuntimeException("Unexpected status value (" + status + ") from oozie workflow job (" + jobId + ")");
+        }
+
+        StringBuilder err = new StringBuilder();
+        for (WorkflowAction action : wfJob.getActions()) {
+          if (action.getErrorMessage() != null) {
+            err.append(MessageFormat.format("   Name: {0} Type: {1} ErrorMessage: {2}\n", action.getName(),
+                                            action.getType(), action.getErrorMessage()));
+          }
+        }
+
+        synchronized (metadata_sync) {
+          WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(),
+                                                                  wr.getTemplate(), sqwStatus, wr.getStatusCmd(),
+                                                                  wr.getCurrentWorkingDir(), wr.getDax(),
+                                                                  wr.getIniFile(), wr.getHost(), err.toString(), "",
+                                                                  wr.getWorkflowEngine());
+        }
+      } catch (RuntimeException e) {
+        throw e;
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    private void checkPegasus() {
       // check the owner of the status dir
+      boolean dirOwner = true;
       String statusDir = findStatusDir(wr.getStatusCmd());
       if (statusDir != null && !FileTools.isFileOwner(statusDir)) {
-        userMatch = false;
+        dirOwner = false;
         Log.info("You don't own the status directory: " + wr.getStatusCmd());
       } else if (statusDir == null) {
-        userMatch = false;
+        dirOwner = false;
         Log.info("The status directory can't be parsed!: " + wr.getStatusCmd());
       }
 
-      if (hostMatch && userMatch && workflowRunAccessionMatch && workflowAccessionMatch) {
+      if (dirOwner) {
         ReturnValue currRet = checkWorkflow(wr.getStatusCmd());
         if (currRet.getExitStatus() == ReturnValue.SUCCESS) {
           synchronized (metadata_sync) {
-            WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(),
-                                                                    wr.getCommand(),
-                                                                    wr.getTemplate(),
-                                                                    "completed",
-                                                                    wr.getStatusCmd(),
-                                                                    wr.getCurrentWorkingDir(),
-                                                                    wr.getDax(),
-                                                                    wr.getIniFile(),
-                                                                    wr.getHost(),
-                                                                    Integer.parseInt(currRet.getAttribute("currStep")),
-                                                                    Integer.parseInt(currRet.getAttribute("totalSteps")),
-                                                                    currRet.getStderr(), currRet.getStdout(),
-                                                                    wr.getWorkflowEngine());
+            WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(),
+                                                                    wr.getTemplate(), "completed", wr.getStatusCmd(),
+                                                                    wr.getCurrentWorkingDir(), wr.getDax(),
+                                                                    wr.getIniFile(), wr.getHost(), currRet.getStderr(),
+                                                                    currRet.getStdout(), wr.getWorkflowEngine());
           }
 
         } else if (currRet.getExitStatus() == ReturnValue.PROCESSING) {
           synchronized (metadata_sync) {
-            WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(),
-                                                                    wr.getCommand(),
-                                                                    wr.getTemplate(),
-                                                                    "running",
-                                                                    wr.getStatusCmd(),
-                                                                    wr.getCurrentWorkingDir(),
-                                                                    wr.getDax(),
-                                                                    wr.getIniFile(),
-                                                                    wr.getHost(),
-                                                                    Integer.parseInt(currRet.getAttribute("currStep")),
-                                                                    Integer.parseInt(currRet.getAttribute("totalSteps")),
-                                                                    currRet.getStderr(), currRet.getStdout(),
-                                                                    wr.getWorkflowEngine());
+            WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(),
+                                                                    wr.getTemplate(), "running", wr.getStatusCmd(),
+                                                                    wr.getCurrentWorkingDir(), wr.getDax(),
+                                                                    wr.getIniFile(), wr.getHost(), currRet.getStderr(),
+                                                                    currRet.getStdout(), wr.getWorkflowEngine());
           }
 
         } else if (currRet.getExitStatus() == ReturnValue.FAILURE) {
           Log.error("WORKFLOW FAILURE: this workflow has failed and this status will be saved to the DB.");
           synchronized (metadata_sync) {
-            WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(),
-                                                                    wr.getCommand(),
-                                                                    wr.getTemplate(),
-                                                                    "failed",
-                                                                    wr.getStatusCmd(),
-                                                                    wr.getCurrentWorkingDir(),
-                                                                    wr.getDax(),
-                                                                    wr.getIniFile(),
-                                                                    wr.getHost(),
-                                                                    Integer.parseInt(currRet.getAttribute("currStep")),
-                                                                    Integer.parseInt(currRet.getAttribute("totalSteps")),
-                                                                    currRet.getStderr(), currRet.getStdout(),
-                                                                    wr.getWorkflowEngine());
+            WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(),
+                                                                    wr.getTemplate(), "failed", wr.getStatusCmd(),
+                                                                    wr.getCurrentWorkingDir(), wr.getDax(),
+                                                                    wr.getIniFile(), wr.getHost(), currRet.getStderr(),
+                                                                    currRet.getStdout(), wr.getWorkflowEngine());
           }
         } else if (currRet.getExitStatus() == ReturnValue.UNKNOWN) {
           Log.error("ERROR: the workflow status has returned UNKNOWN, this is typically if the workflow status command points"
@@ -374,5 +425,6 @@ public class WorkflowStatusChecker extends Plugin {
         }
       }
     }
+
   }
 }
