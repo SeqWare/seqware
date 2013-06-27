@@ -353,15 +353,13 @@ public interface MetadataInterface {
      * @param dax a {@link java.lang.String} object.
      * @param ini a {@link java.lang.String} object.
      * @param host a {@link java.lang.String} object.
-     * @param currStep a int.
-     * @param totalSteps a int.
      * @param stdErr a {@link java.lang.String} object.
      * @param stdOut a {@link java.lang.String} object.
      * @param workflowEngine the value of workflowEngine
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     
-  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps, String stdErr, String stdOut, String workflowEngine);
+  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine);
 
   /**
    * <p>findFilesAssociatedWithASample.</p>

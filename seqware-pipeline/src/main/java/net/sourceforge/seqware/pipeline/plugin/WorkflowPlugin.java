@@ -584,8 +584,8 @@ public class WorkflowPlugin extends Plugin {
     if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS || statusCmd == null) {
       // then something went wrong trying to call pegasus
       metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
-                                   dataModel.getTags().get("workflow_template"), "failed", statusCmd,
-                                   dataModel.getWorkflowBundleDir(), "", "", wr.getHost(), 0, 0,
+                                   dataModel.getTags().get("workflow_template"), "failed", workflowRunToken,
+                                   dataModel.getWorkflowBundleDir(), "", "", wr.getHost(),
                                    retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine());
 
       return retPegasus;
@@ -593,8 +593,8 @@ public class WorkflowPlugin extends Plugin {
       // determine status based on object model
       String status = dataModel.isWait() ? "completed" : "pending";
       metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
-                                   dataModel.getTags().get("workflow_template"), status, statusCmd,
-                                   dataModel.getWorkflowBundleDir(), "", "", wr.getHost(), 0, 0,
+                                   dataModel.getTags().get("workflow_template"), status, workflowRunToken,
+                                   dataModel.getWorkflowBundleDir(), "", "", wr.getHost(),
                                    retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine());
       return ret;
     }
