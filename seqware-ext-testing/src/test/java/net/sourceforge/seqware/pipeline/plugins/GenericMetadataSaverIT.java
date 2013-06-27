@@ -37,7 +37,7 @@ public class GenericMetadataSaverIT {
     
     @BeforeClass
     public static void resetDatabase() {
-        TestDatabaseCreator.resetDatabaseWithUsers();
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
 
     /**

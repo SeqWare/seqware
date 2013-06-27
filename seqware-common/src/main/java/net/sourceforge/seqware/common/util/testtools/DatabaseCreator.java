@@ -10,6 +10,8 @@ import net.sourceforge.seqware.metadb.util.TestDatabaseCreator;
  * @version $Id: $Id
  */
 public class DatabaseCreator {
+    
+    private static TestDatabaseCreator testDBCreator = new TestDatabaseCreator();
 
     /**
      * <p>createDatabase.</p>
@@ -17,7 +19,7 @@ public class DatabaseCreator {
      * @throws java.sql.SQLException if any.
      */
     public static void createDatabase() throws SQLException {
-        TestDatabaseCreator.createDatabase();
+        testDBCreator.createDatabase();
     }
 
     /**
@@ -26,13 +28,13 @@ public class DatabaseCreator {
      * @throws java.sql.SQLException if any.
      */
     public static void dropDatabase() throws SQLException {
-        TestDatabaseCreator.dropDatabase();
+        testDBCreator.dropDatabase();
     }
 
     /**
      * <p>markDatabaseChanged.</p>
      */
     public static void markDatabaseChanged() {
-        TestDatabaseCreator.markDatabaseChanged();
+        testDBCreator.markDatabaseChanged();
     }
 }
