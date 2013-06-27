@@ -142,6 +142,7 @@ sudo -u postgres psql -c "CREATE USER seqware WITH PASSWORD 'seqware' CREATEDB;"
 sudo -u postgres psql --command "CREATE DATABASE seqware_meta_db WITH OWNER = seqware;"
 sudo -u postgres psql seqware_meta_db < /vagrant/seqware_meta_db.sql
 sudo -u postgres psql seqware_meta_db < /vagrant/seqware_meta_db_data.sql
+sudo -u postgres psql --command "ALTER USER seqware WITH superuser;"
 
 # stop tomcat6
 /etc/init.d/tomcat6 stop
@@ -313,8 +314,8 @@ Vagrant.configure("2") do |config|
     aws.ami = "ami-d0f89fb9"
     #aws.instance_type = "cc1.4xlarge"
     #aws.instance_type = "c1.xlarge"
-    #aws.instance_type = "m3.xlarge"
-    aws.instance_type = "m1.xlarge"
+    aws.instance_type = "m3.xlarge"
+    # aws.instance_type = "m1.xlarge"
 
     #override.ssh.username = "root"
     #override.ssh.username = "ec2-user"
