@@ -103,7 +103,6 @@ public class WorkflowPlugin extends Plugin {
                    "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.").withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location.");
     parser.accepts("workflow-engine",
                    "Optional: Specifies a workflow engine, one of: "+ENGINES_LIST+". Defaults to "+DEFAULT_ENGINE+".").withRequiredArg().ofType(String.class).describedAs("Workflow Engine");
-    parser.accepts("status", "Optional: Get the workflow status by ID").withRequiredArg().ofType(String.class).describedAs("Job ID");
     parser.accepts("no-run",
                    "Optional: Terminates the launch process immediately prior to running. Useful for debugging.");
 
@@ -527,10 +526,6 @@ public class WorkflowPlugin extends Plugin {
 
     // set up workflow engine
     AbstractWorkflowEngine engine = WorkflowPlugin.getWorkflowEngine(dataModel);
-    if (options.has("status")) {
-      Log.stdout("status: " + engine.getStatus((String) options.valueOf("status")));
-      return new ReturnValue(ReturnValue.SUCCESS);
-    }
 
     engine.prepareWorkflow(dataModel);
     if (options.has("no-run")) {
