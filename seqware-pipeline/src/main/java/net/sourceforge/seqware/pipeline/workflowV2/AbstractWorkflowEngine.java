@@ -4,41 +4,52 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 
 public abstract class AbstractWorkflowEngine {
 
-	
-	
-	
-	/**
-	 * Prepare the workflow according to the info filled in the input objectModel.
-	 * @param objectModel
-	 */
-	public abstract void prepareWorkflow(AbstractWorkflowDataModel objectModel);
-	
+  /**
+   * Prepare the workflow according to the info filled in the input objectModel.
+   * 
+   * @param objectModel
+   *          model of the workflow to prepare to run
+   */
+  public abstract void prepareWorkflow(AbstractWorkflowDataModel objectModel);
+
   /**
    * Run the prepared workflow.
-   * @return
    */
   public abstract ReturnValue runWorkflow();
 
-	/**
-	 * 
-	 * @return the id assigned by the workflow engine
-	 */
-	public abstract String getId();
-	/**
-	 * find the workflow by input id, and return the status of the workflow
-	 * @param id
-	 * @return the workflow status
-	 */
-	public abstract String getStatus(String id);
-	/**
-	 * find the workflow by input id, return the first failed job's error message 
-	 * if no failed job, return empty string
-	 * @param id
-	 * @return
-	 */
-	public abstract String getStdErr(String id);
-	public abstract String getStdOut(String id);
-	
-	public abstract String getStatus();
-	
+  /**
+   * An engine-specific token for this workflow run that can be used to lookup
+   * relevant runtime data.
+   * 
+   * @return the token
+   */
+  public abstract String getLookupToken();
+
+//  /**
+//   * Obtain the status of the workflow run.
+//   * 
+//   * @param token
+//   *          the token created during launch of the workflow
+//   * @return the workflow run status
+//   */
+//  public abstract String lookupStatus(String token);
+//
+//  /**
+//   * Obtain the stdout of the workflow run.
+//   * 
+//   * @param token
+//   *          the token created during launch of the workflow
+//   * @return the stdout contents
+//   */
+//  public abstract String lookupStdErr(String token);
+//
+//  /**
+//   * Obtain the stdout of the workflow run.
+//   * 
+//   * @param token
+//   *          the token created during launch of the workflow
+//   * @return the stdout contents
+//   */
+//  public abstract String lookupStdOut(String token);
+//
 }

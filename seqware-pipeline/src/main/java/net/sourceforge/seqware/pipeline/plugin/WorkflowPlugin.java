@@ -550,9 +550,6 @@ public class WorkflowPlugin extends Plugin {
     int workflowrunaccession = Integer.parseInt(wra); // metadata.get_workflow_run_accession(workflowrunId);
     int workflowrunId = metadata.get_workflow_run_id(workflowrunaccession);
 
-    // figure out the status command
-    String statusCmd = engine.getStatus();
-
     List<String> parentsLinkedToWR = new ArrayList<String>();
     if (options.has("link-workflow-run-to-parents")) {
       List opts = options.valuesOf("link-workflow-run-to-parents");
@@ -581,7 +578,9 @@ public class WorkflowPlugin extends Plugin {
     // and we need to use their values before writing back to the DB!
     wr = metadata.getWorkflowRun(workflowrunaccession);
 
-    if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS || statusCmd == null) {
+    String workflowRunToken = engine.getLookupToken();
+
+    if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS || workflowRunToken == null) {
       // then something went wrong trying to call pegasus
       metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                                    dataModel.getTags().get("workflow_template"), "failed", workflowRunToken,
