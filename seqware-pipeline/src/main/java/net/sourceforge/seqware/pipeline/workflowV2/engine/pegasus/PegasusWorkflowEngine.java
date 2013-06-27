@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
@@ -144,16 +145,10 @@ public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
   }
 
   @Override
-  public String getId() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public String getStatus(String id) {
+  public String getLookupToken() {
     if (this.statusRet == null)
       return null;
-    String stdOut = this.getStdOut("");
+    String stdOut = this.statusRet.getStdout();
     Pattern p = Pattern.compile("(pegasus-status -l \\S+)");
     Matcher m = p.matcher(stdOut);
     String statusCmd = null;
@@ -162,24 +157,46 @@ public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
     }
     return statusCmd;
   }
+  
+  
 
-  @Override
-  public String getStdErr(String id) {
-    if (this.statusRet == null)
-      return null;
-    return this.statusRet.getStderr();
-  }
-
-  @Override
-  public String getStdOut(String id) {
-    if (this.statusRet == null)
-      return null;
-    return this.statusRet.getStdout();
-  }
-
-  @Override
-  public String getStatus() {
-    return this.getStatus("");
-  }
+//  @Override
+//  public String getId() {
+//    // TODO Auto-generated method stub
+//    return null;
+//  }
+//
+//  @Override
+//  public String getStatus(String id) {
+//    if (this.statusRet == null)
+//      return null;
+//    String stdOut = this.getStdOut("");
+//    Pattern p = Pattern.compile("(pegasus-status -l \\S+)");
+//    Matcher m = p.matcher(stdOut);
+//    String statusCmd = null;
+//    if (m.find()) {
+//      statusCmd = m.group(1);
+//    }
+//    return statusCmd;
+//  }
+//
+//  @Override
+//  public String getStdErr(String id) {
+//    if (this.statusRet == null)
+//      return null;
+//    return this.statusRet.getStderr();
+//  }
+//
+//  @Override
+//  public String getStdOut(String id) {
+//    if (this.statusRet == null)
+//      return null;
+//    return this.statusRet.getStdout();
+//  }
+//
+//  @Override
+//  public String getStatus() {
+//    return this.getStatus("");
+//  }
 
 }

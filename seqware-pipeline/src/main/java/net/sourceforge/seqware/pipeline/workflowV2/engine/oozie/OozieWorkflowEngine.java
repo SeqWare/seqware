@@ -6,6 +6,12 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Properties;
 
+import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.filetools.FileTools;
+import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
+import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -13,12 +19,6 @@ import org.apache.oozie.client.OozieClient;
 import org.apache.oozie.client.OozieClientException;
 import org.apache.oozie.client.WorkflowAction;
 import org.apache.oozie.client.WorkflowJob;
-
-import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.filetools.FileTools;
-import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
-import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 
 public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 
@@ -42,8 +42,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
     // parse objectmodel
     this.dataModel = objectModel;
     this.setupEnvironment();
-    this.parseDataModel(objectModel, useSge,
-                        new File(seqwareJarPath(objectModel)));
+    this.parseDataModel(objectModel, useSge, new File(seqwareJarPath(objectModel)));
     this.setupHDFS(objectModel);
   }
 
@@ -53,15 +52,12 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 
     try {
       Properties conf = wc.createConfiguration();
-      String app_path = this.dataModel.getEnv().getOOZIE_APP_PATH()
-          + this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"
+      String app_path = this.dataModel.getEnv().getOOZIE_APP_PATH() + this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"
           + this.dir.getName();
       conf.setProperty(OozieClient.APP_PATH, app_path);
-      conf.setProperty("jobTracker",
-                       this.dataModel.getEnv().getOOZIE_JOBTRACKER());
+      conf.setProperty("jobTracker", this.dataModel.getEnv().getOOZIE_JOBTRACKER());
       conf.setProperty("nameNode", this.dataModel.getEnv().getOOZIE_NAMENODE());
-      conf.setProperty("queueName",
-                       this.dataModel.getEnv().getOOZIE_QUEUENAME());
+      conf.setProperty("queueName", this.dataModel.getEnv().getOOZIE_QUEUENAME());
 
       jobId = wc.run(conf);
       Log.stdout("Submitted Oozie job: " + jobId);
@@ -91,8 +87,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
     Log.stdout("Application Status : " + wf.getStatus());
     Log.stdout("Application Actions:");
     for (WorkflowAction action : wf.getActions()) {
-      Log.stdout(MessageFormat.format("   Name: {0} Type: {1} Status: {2}",
-                                      action.getName(), action.getType(),
+      Log.stdout(MessageFormat.format("   Name: {0} Type: {1} Status: {2}", action.getName(), action.getType(),
                                       action.getStatus()));
     }
   }
@@ -102,13 +97,10 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
    */
   private void setupHDFS(AbstractWorkflowDataModel objectModel) {
     Configuration conf = new Configuration();
-    conf.set("hbase.zookeeper.quorum",
-             this.dataModel.getEnv().getHbase_zookeeper_quorum());
-    conf.set("hbase.zookeeper.property.clientPort",
-             this.dataModel.getEnv().getHbase_zookeeper_property_clientPort());
+    conf.set("hbase.zookeeper.quorum", this.dataModel.getEnv().getHbase_zookeeper_quorum());
+    conf.set("hbase.zookeeper.property.clientPort", this.dataModel.getEnv().getHbase_zookeeper_property_clientPort());
     conf.set("hbase.master", this.dataModel.getEnv().getHbase_master());
-    conf.set("mapred.job.tracker",
-             this.dataModel.getEnv().getMapred_job_tracker());
+    conf.set("mapred.job.tracker", this.dataModel.getEnv().getMapred_job_tracker());
     conf.set("fs.default.name", this.dataModel.getEnv().getFs_default_name());
     conf.set("fs.defaultFS", this.dataModel.getEnv().getFs_defaultFS());
     conf.set("fs.hdfs.impl", this.dataModel.getEnv().getFs_hdfs_impl());
@@ -121,31 +113,22 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
     FileSystem fileSystem = null;
     try {
       fileSystem = FileSystem.get(conf);
-      Path path = new Path(this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"
-          + this.dir.getName());
+      Path path = new Path(this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/" + this.dir.getName());
       fileSystem.mkdirs(path);
-      Path pathlib = new Path(this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"
-          + this.dir.getName() + "/lib");
+      Path pathlib = new Path(this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/" + this.dir.getName() + "/lib");
       fileSystem.mkdirs(pathlib);
     } catch (IOException e) {
       e.printStackTrace();
     }
 
     try {
-      this.copyFromLocal(fileSystem,
-                         this.dataModel.getEnv().getOOZIE_WORK_DIR() + "/"
-                             + this.dir.getName() + "/job.properties",
-                         this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"
-                             + this.dir.getName());
-      this.copyFromLocal(fileSystem,
-                         this.dataModel.getEnv().getOOZIE_WORK_DIR() + "/"
-                             + this.dir.getName() + "/workflow.xml",
-                         this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"
-                             + this.dir.getName());
+      this.copyFromLocal(fileSystem, this.dataModel.getEnv().getOOZIE_WORK_DIR() + "/" + this.dir.getName()
+          + "/job.properties", this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/" + this.dir.getName());
+      this.copyFromLocal(fileSystem, this.dataModel.getEnv().getOOZIE_WORK_DIR() + "/" + this.dir.getName()
+          + "/workflow.xml", this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/" + this.dir.getName());
       // copy lib
-      this.copyFromLocal(fileSystem, seqwareJarPath(objectModel),
-                         this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"
-                             + this.dir.getName() + "/lib");
+      this.copyFromLocal(fileSystem, seqwareJarPath(objectModel), this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"
+          + this.dir.getName() + "/lib");
     } catch (IOException e1) {
       e1.printStackTrace();
     }
@@ -167,9 +150,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
     // hardcode for now
 
     try {
-      this.dir = FileTools.createDirectoryWithUniqueName(new File(
-                                                                  this.dataModel.getEnv().getOOZIE_WORK_DIR()),
-                                                         "oozie");
+      this.dir = FileTools.createDirectoryWithUniqueName(new File(this.dataModel.getEnv().getOOZIE_WORK_DIR()), "oozie");
       this.dir.setWritable(true, false);
     } catch (IOException e) {
       e.printStackTrace();
@@ -188,13 +169,11 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
    * @param objectModel
    * @return
    */
-  private File parseDataModel(AbstractWorkflowDataModel objectModel,
-                              boolean useSge, File seqwareJar) {
+  private File parseDataModel(AbstractWorkflowDataModel objectModel, boolean useSge, File seqwareJar) {
     File file = new File(this.dir, "workflow.xml");
     // generate dax
     OozieWorkflowXmlGenerator daxv2 = new OozieWorkflowXmlGenerator();
-    daxv2.generateWorkflowXml(objectModel, file.getAbsolutePath(),
-                              this.dir.getAbsolutePath(), useSge, seqwareJar);
+    daxv2.generateWorkflowXml(objectModel, file.getAbsolutePath(), this.dir.getAbsolutePath(), useSge, seqwareJar);
     return file;
   }
 
@@ -203,20 +182,16 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
     try {
       FileWriter fw = new FileWriter(file);
       fw.write("nameNode=" + this.dataModel.getEnv().getOOZIE_NAMENODE() + "\n");
-      fw.write("jobTracker=" + this.dataModel.getEnv().getOOZIE_JOBTRACKER()
-          + "\n");
-      fw.write("queueName=" + this.dataModel.getEnv().getOOZIE_QUEUENAME()
-          + "\n");
-      fw.write("oozie.wf.application.path=${nameNode}/user/${user.name}/seqware_workflow/"
-          + this.dir.getName());
+      fw.write("jobTracker=" + this.dataModel.getEnv().getOOZIE_JOBTRACKER() + "\n");
+      fw.write("queueName=" + this.dataModel.getEnv().getOOZIE_QUEUENAME() + "\n");
+      fw.write("oozie.wf.application.path=${nameNode}/user/${user.name}/seqware_workflow/" + this.dir.getName());
       fw.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  public void copyFromLocal(FileSystem fileSystem, String source, String dest)
-      throws IOException {
+  public void copyFromLocal(FileSystem fileSystem, String source, String dest) throws IOException {
     Path srcPath = new Path(source);
 
     Path dstPath = new Path(dest);
@@ -227,8 +202,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
     }
 
     // Get the filename out of the file path
-    String filename = source.substring(source.lastIndexOf('/') + 1,
-                                       source.length());
+    String filename = source.substring(source.lastIndexOf('/') + 1, source.length());
 
     try {
       fileSystem.copyFromLocalFile(srcPath, dstPath);
@@ -238,84 +212,90 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
       System.exit(1);
     }
   }
+  
+  
 
   @Override
-  public String getId() {
+  public String getLookupToken() {
     return this.jobId;
   }
-
-  @Override
-  public String getStatus(String id) {
-    OozieClient oc = this.getOozieClient();
-    try {
-      WorkflowJob wfJob = oc.getJobInfo(id);
-      if (wfJob == null)
-        return null;
-      return wfJob.getStatus().toString();
-    } catch (OozieClientException e) {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  @Override
-  /**
-   * get the first failed job's error message
-   */
-  public String getStdErr(String id) {
-    OozieClient oc = this.getOozieClient();
-    StringBuilder sb = new StringBuilder();
-    try {
-      WorkflowJob wfJob = oc.getJobInfo(id);
-
-      if (wfJob == null)
-        return null;
-      for (WorkflowAction action : wfJob.getActions()) {
-        if (action.getErrorMessage() != null) {
-          sb.append(MessageFormat.format("   Name: {0} Type: {1} ErrorMessage: {2}",
-                                         action.getName(), action.getType(),
-                                         action.getErrorMessage()));
-          sb.append("\n");
-        }
-      }
-      return sb.toString();
-    } catch (OozieClientException e) {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  @Override
-  public String getStdOut(String id) {
-    OozieClient oc = this.getOozieClient();
-    StringBuilder sb = new StringBuilder();
-    try {
-      WorkflowJob wfJob = oc.getJobInfo(id);
-
-      if (wfJob == null)
-        return null;
-      for (WorkflowAction action : wfJob.getActions()) {
-        if (action.getErrorMessage() != null) {
-          sb.append(MessageFormat.format("   Name: {0} Type: {1} ErrorMessage: {2}",
-                                         action.getName(), action.getType(),
-                                         action.getStatus()));
-          sb.append("\n");
-        }
-      }
-      return sb.toString();
-    } catch (OozieClientException e) {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
+  
   private OozieClient getOozieClient() {
     OozieClient oc = new OozieClient(this.dataModel.getEnv().getOOZIE_URL());
     return oc;
   }
 
-  @Override
-  public String getStatus() {
-    return this.getStatus(this.getId());
-  }
+
+//  @Override
+//  public String getId() {
+//    return this.jobId;
+//  }
+//
+//  @Override
+//  public String getStatus(String id) {
+//    OozieClient oc = this.getOozieClient();
+//    try {
+//      WorkflowJob wfJob = oc.getJobInfo(id);
+//      if (wfJob == null)
+//        return null;
+//      return wfJob.getStatus().toString();
+//    } catch (OozieClientException e) {
+//      e.printStackTrace();
+//      return null;
+//    }
+//  }
+//
+//  @Override
+//  /**
+//   * get the first failed job's error message
+//   */
+//  public String getStdErr(String id) {
+//    OozieClient oc = this.getOozieClient();
+//    StringBuilder sb = new StringBuilder();
+//    try {
+//      WorkflowJob wfJob = oc.getJobInfo(id);
+//
+//      if (wfJob == null)
+//        return null;
+//      for (WorkflowAction action : wfJob.getActions()) {
+//        if (action.getErrorMessage() != null) {
+//          sb.append(MessageFormat.format("   Name: {0} Type: {1} ErrorMessage: {2}", action.getName(),
+//                                         action.getType(), action.getErrorMessage()));
+//          sb.append("\n");
+//        }
+//      }
+//      return sb.toString();
+//    } catch (OozieClientException e) {
+//      e.printStackTrace();
+//      return null;
+//    }
+//  }
+//
+//  @Override
+//  public String getStdOut(String id) {
+//    OozieClient oc = this.getOozieClient();
+//    StringBuilder sb = new StringBuilder();
+//    try {
+//      WorkflowJob wfJob = oc.getJobInfo(id);
+//
+//      if (wfJob == null)
+//        return null;
+//      for (WorkflowAction action : wfJob.getActions()) {
+//        if (action.getErrorMessage() != null) {
+//          sb.append(MessageFormat.format("   Name: {0} Type: {1} ErrorMessage: {2}", action.getName(),
+//                                         action.getType(), action.getStatus()));
+//          sb.append("\n");
+//        }
+//      }
+//      return sb.toString();
+//    } catch (OozieClientException e) {
+//      e.printStackTrace();
+//      return null;
+//    }
+//  }
+//
+//  @Override
+//  public String getStatus() {
+//    return this.getStatus(this.getId());
+//  }
 }
