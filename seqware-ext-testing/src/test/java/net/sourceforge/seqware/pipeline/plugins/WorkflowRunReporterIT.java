@@ -39,7 +39,7 @@ public class WorkflowRunReporterIT {
     
     @BeforeClass
     public static void resetDatabase() {
-        TestDatabaseCreator.resetDatabaseWithUsers();
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
     
     @Test
