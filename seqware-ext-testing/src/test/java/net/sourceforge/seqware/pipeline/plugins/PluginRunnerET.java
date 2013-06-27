@@ -93,7 +93,7 @@ public class PluginRunnerET {
 
         // for all tests, we're going to need to create and install our basic archetypes
         String[] archetypes = {"java-workflow", "simplified-ftl-workflow", "legacy-ftl-workflow", "simple-legacy-ftl-workflow"};
-        buildAndInstallArchetypes(archetypes, SEQWARE_VERSION);
+        buildAndInstallArchetypes(archetypes, SEQWARE_VERSION, true, true);
         Assert.assertTrue("could not locate installed workflows", installedWorkflows.size() == archetypes.length);
         Assert.assertTrue("could not locate installed workflow paths", installedWorkflows.size() == bundleLocations.size());
         
@@ -104,7 +104,8 @@ public class PluginRunnerET {
             Files.write(bundleLocationsBinary, bundleFile);
             Files.write(installedWorkflowsBinary, installedWorkflowsFile);
         }
-        
+        // SEQWARE-1684 - Try to keep workflow bundle size under 8G limit
+        Log.stderr(PluginRunnerET.class.getName() + " Cleaning up " + tempDir.getAbsolutePath());
     }
 
     @AfterClass
@@ -112,7 +113,7 @@ public class PluginRunnerET {
         monitorAndClean(true);
     }
 
-    public static void buildAndInstallArchetypes(String[] archetypes, String SEQWARE_VERSION) throws IOException, NumberFormatException {
+    public static void buildAndInstallArchetypes(String[] archetypes, String SEQWARE_VERSION, boolean testListing, boolean deleteBundles) throws IOException, NumberFormatException {
         for (String archetype : archetypes) {
             String workflow = "seqware-archetype-" + archetype;
             // generate and install archetypes to local maven repo
@@ -134,6 +135,17 @@ public class PluginRunnerET {
             int accession = Integer.valueOf(extractValueFrom);
             installedWorkflows.put(workflow, accession);
             Log.info("Found workflow " + workflow + " with accession " + accession);          
+            
+            if (testListing){
+                Log.info("Attempting to list " + workflow);
+                String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -l -b " + bundleDir.getAbsolutePath();
+                String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
+                Log.info(listOutput);
+            }
+            if (deleteBundles){
+                 Log.info("Attempting to delete bundle after install " + workflow);
+                 FileUtils.deleteDirectory(bundleDir);
+            }
         }
     }
 
@@ -161,16 +173,6 @@ public class PluginRunnerET {
         clearStaticVariables();
     }
     
-    @Test
-    public void testListingBundles() throws IOException {
-        for(Entry<String, File> e : bundleLocations.entrySet()){
-            Log.info("Attempting to list " + e.getKey());
-            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -l -b " + e.getValue().getAbsolutePath();
-            String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
-            Log.info(listOutput);     
-        }
-    }
-    
     @Test 
     public void testExportParameters() throws IOException{
         Map<String, File> iniParams = exportWorkflowInis();
@@ -185,7 +187,7 @@ public class PluginRunnerET {
         Map<String, Integer> wr_accessions = new HashMap<String, Integer>();
         
         
-        for (Entry<String, File> e : bundleLocations.entrySet()) {
+        for (Entry<String, Integer> e : installedWorkflows.entrySet()) {
             Log.info("Attempting to schedule " + e.getKey());
             String workflowPath = iniParams.get(e.getKey()).getAbsolutePath();
             String accession = Integer.toString(installedWorkflows.get(e.getKey()));
@@ -230,7 +232,7 @@ public class PluginRunnerET {
         Map<String, Integer> wr_accessions = new HashMap<String, Integer>();
         
         
-        for (Entry<String, File> e : bundleLocations.entrySet()) {
+        for (Entry<String, Integer> e : installedWorkflows.entrySet()) {
             Log.info("Attempting to launch " + e.getKey());
             String workflowPath = iniParams.get(e.getKey()).getAbsolutePath();
             String accession = Integer.toString(installedWorkflows.get(e.getKey()));
@@ -250,7 +252,7 @@ public class PluginRunnerET {
         Map<String, Integer> wr_accessions = new HashMap<String, Integer>();
         
         
-        for (Entry<String, File> e : bundleLocations.entrySet()) {
+        for (Entry<String, Integer> e : installedWorkflows.entrySet()) {
             Log.info("Attempting to launch " + e.getKey());
             String workflowPath = iniParams.get(e.getKey()).getAbsolutePath();
             String accession = Integer.toString(installedWorkflows.get(e.getKey()));
@@ -270,10 +272,10 @@ public class PluginRunnerET {
         Map<String, Integer> wr_accessions = new HashMap<String, Integer>();
         
         
-        for (Entry<String, File> e : bundleLocations.entrySet()) {
+        for (Entry<String, Integer> e : installedWorkflows.entrySet()) {
             Log.info("Attempting to launch " + e.getKey());
             String workflowPath = iniParams.get(e.getKey()).getAbsolutePath();
-            String accession = Integer.toString(installedWorkflows.get(e.getKey()));
+            String accession = Integer.toString(e.getValue());
 
             String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files " + workflowPath + " --workflow-accession " + accession
                     + " --no-metadata --parent-accessions "+PARENT+" --wait --host " + localhost;
