@@ -12,7 +12,7 @@
         <seqware_meta_db_port>5432</seqware_meta_db_port>
         <seqware_meta_db_password>seqware</seqware_meta_db_password>
         <seqware_meta_db_user>seqware</seqware_meta_db_user>
-	<seqware_meta_db_host>sqwdev.res.oicr.on.ca</seqware_meta_db_host>
+	<seqware_meta_db_host>localhost</seqware_meta_db_host>
     </properties>
     
     <parent>
