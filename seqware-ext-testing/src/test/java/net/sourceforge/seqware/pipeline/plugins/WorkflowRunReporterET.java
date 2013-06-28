@@ -35,7 +35,7 @@ import org.junit.Test;
  *
  * @author dyuen
  */
-public class WorkflowRunReporterIT {
+public class WorkflowRunReporterET {
     
     @BeforeClass
     public static void resetDatabase() {

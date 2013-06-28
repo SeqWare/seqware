@@ -13,7 +13,7 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 
 /**
- * <p>TestDatabaseCreator class.</p>
+ * This class handles basic database creation.
  *
  * @author boconnor
  * @version $Id: $Id
@@ -253,6 +253,20 @@ public class TestDatabaseCreator {
      */
     protected String getSEQWARE_PASSWORD() {
         return SEQWARE_PASSWORD;
+    }
+    
+      /**
+     * Unfortunately, postgres does not allow the straight dropdb and createdb
+     * when tomcat is used (perhaps we leave open a connection)
+     */
+    protected void basicResetDatabaseWithUsers() {
+        try {
+            this.dropDatabaseWithUsers();
+            this.markDatabaseChanged();
+            this.createDatabase();
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
     }
 }
 

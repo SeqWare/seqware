@@ -35,7 +35,7 @@ import org.junit.Test;
  *
  * @author dyuen
  */
-public class SequencerRunReporterIT {
+public class SequencerRunReporterET {
     
     @BeforeClass
     public static void resetDatabase() {

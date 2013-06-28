@@ -29,7 +29,7 @@ import org.junit.Test;
  *
  * @author dyuen
  */
-public class BundleManagerIT {
+public class BundleManagerET {
     
     @BeforeClass
     public static void resetDatabase() {

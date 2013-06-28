@@ -35,7 +35,7 @@ import org.junit.Test;
  *
  * @author dyuen
  */
-public class ProvisionFilesIT {
+public class ProvisionFilesET {
     
     public static final String SETTINGS_PREFIX_KEY = "IT_DATASTORE_PREFIX";
     public static final String DEFAULT_DATASTORE_PREFIX = "/datastore/";
