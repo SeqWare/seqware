@@ -20,54 +20,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat6-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-          <!-- hacked from, some of their syntax did not compile http://mojo.codehaus.org/sql-maven-plugin/examples/execute.html -->
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>sql-maven-plugin</artifactId>
-
-        <dependencies>
-          <!-- specify the dependent jdbc driver here -->
-          <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
-          </dependency>
-        </dependencies>
-
-        <!-- common configuration shared by all executions -->
-        <configuration>
-          <driver>org.postgresql.Driver</driver>
-          <username>seqware</username>
-          <password>seqware</password>
-          <!--all executions are ignored if -Dmaven.test.skip=true-->
-          <skip>${skipITs}</skip>
-        </configuration>
-
-        <executions>
-          <execution>
-            <id>drop-db-before-test-if-any</id>
-            <phase>process-test-resources</phase>
-          </execution>
-          
-          <execution>
-            <id>create-db</id>
-            <phase>process-test-resources</phase>
-          </execution>
-
-	  <!-- this would be good to resolve SEQWARE-1225. Maven binds multiple executions to the same phase in pom.xml order.
-		This should have worked, but it doesn't seem to for some reason. Maybe Jetty takes too long to shutdown   
-          <execution>
-            <id>drop-db-after-test</id>
-            <phase>post-integration-test</phase>
-          </execution>
-	  -->
-
-        </executions>
-      </plugin>
-            <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${maven-war-plugin.version}</version>
                 <configuration>
@@ -97,45 +49,8 @@
                             </target>
                         </configuration>
                     </execution>
-<!--
-                    <execution>
-                        <id>wait</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <echo message="Sleeping now for 30 seconds:" />
-                                <sleep seconds="1" />
-                                <echo message="1" />
-                                <sleep seconds="2" />
-                                <echo message="2" />
-                                <sleep seconds="3" />
-                                <echo message="3" />
-                                <sleep seconds="4" />
-                                <echo message="4" />
-                                <sleep seconds="120" />
-                                <echo message="120" />
-                            </tasks>
-                        </configuration>
-                    </execution>
-                    -->
-                    
-
                 </executions>
             </plugin>
-            
-             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>tomcat-maven-plugin</artifactId>
-<!-- snapshot was here but commented out originally, using the latest released version as checked by mvn help:describe -DgroupId=org.codehaus.mojo  -DartifactId=tomcat-maven-plugin -Dfull=true | less -->
-                <version>1.1</version>
-<!--                <version>1.2-SNAPSHOT</version>-->
-                <configuration>
-                    <mode>war</mode>
-                </configuration>
-             </plugin>
                     
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -573,4 +488,21 @@
             <version>0.3.0-alpha4</version>
         </dependency>
     </dependencies>
+    
+    <profiles>
+        <profile>
+            <id>embeddedTomcat</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <artifactId>tomcat6-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

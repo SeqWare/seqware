@@ -29,7 +29,7 @@ import org.junit.Test;
  *
  * @author dyuen
  */
-public class WorkflowLauncherIT {
+public class WorkflowLauncherET {
     
     @BeforeClass
     public static void resetDatabase() {
