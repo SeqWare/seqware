@@ -96,7 +96,7 @@
             </build>
         </profile>
         <profile>
-            <id>extEmbeddedTomcat</id>
+            <id>embeddedTomcat</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -116,6 +116,7 @@
                                     <asWebapp>true</asWebapp>  
                                 </webapp>                           
                             </webapps>
+                            <skip>${skipITs}</skip>
                         </configuration>
                     </plugin>
                 </plugins>

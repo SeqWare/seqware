@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.List;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreatorWrapper;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.junit.AfterClass;
@@ -34,7 +35,7 @@ import org.mortbay.log.Log;
  *
  * @author dyuen
  */
-public class AttributeAnnotatorIT {
+public class AttributeAnnotatorET {
     public static final String COUNT_DB_SIZE = "SELECT (SELECT COUNT(*) FROM workflow), (SELECT COUNT(*) FROM workflow_run), (SELECT COUNT(*) FROM sequencer_run), (SELECT COUNT(*) FROM experiment), (SELECT COUNT(*) FROM ius), (SELECT COUNT(*) FROM lane), (SELECT COUNT(*) FROM processing), (SELECT COUNT(*) FROM sample), (SELECT COUNT(*) FROM sample_hierarchy), (SELECT COUNT(*) FROM processing_ius), (SELECT COUNT(*) FROM processing_files), (SELECT COUNT(*) FROM processing_relationship), (SELECT COUNT(*) FROM file), (SELECT COUNT(*) FROM study)";
     private ExtendedTestDatabaseCreator dbCreator = new ExtendedTestDatabaseCreator();
         
@@ -379,7 +380,7 @@ public class AttributeAnnotatorIT {
     
     @Test
     public void testBulkInsert() throws IOException{
-        String path = AttributeAnnotatorIT.class.getResource("attributeAnnotator.csv").getPath();
+        String path = AttributeAnnotatorET.class.getResource("attributeAnnotator.csv").getPath();
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
                 + "-- --file " + path  ;
         ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);    
