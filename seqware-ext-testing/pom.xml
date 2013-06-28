@@ -97,9 +97,6 @@
         </profile>
         <profile>
             <id>embeddedTomcat</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <build>
                 <plugins>
                     <plugin>
