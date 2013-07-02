@@ -43,18 +43,22 @@ public class OozieJob {
     this.parentAccessionFiles = new ArrayList<String>();
     this.parentAccessions = new ArrayList<String>();
     this.useSge = useSge;
-    if (useSge && seqwareJar == null) {
-      throw new IllegalArgumentException("slotsSgeParamFormat must be specified when useSge is true.");
+    if (useSge){
+      if (seqwareJar == null) {
+        throw new IllegalArgumentException("seqwareJarPath must be specified when useSge is true.");
+      }
+      this.seqwareJarPath = seqwareJar.getAbsolutePath();
+      
+      if (slotsSgeParamFormat == null) {
+        throw new IllegalArgumentException("slotsSgeParamFormat must be specified when useSge is true.");
+      }
+      this.slotsSgeParamFormat = slotsSgeParamFormat;
+      
+      if (maxMemorySgeParamFormat == null) {
+        throw new IllegalArgumentException("maxMemorySgeParamFormat must be specified when useSge is true.");
+      }
+      this.maxMemorySgeParamFormat = maxMemorySgeParamFormat;
     }
-    this.seqwareJarPath = seqwareJar.getAbsolutePath();
-    if (useSge && slotsSgeParamFormat == null) {
-      throw new IllegalArgumentException("seqwareJar must be specified when useSge is true.");
-    }
-    this.slotsSgeParamFormat = slotsSgeParamFormat;
-    if (useSge && maxMemorySgeParamFormat == null) {
-      throw new IllegalArgumentException("maxMemorySgeParamFormat must be specified when useSge is true.");
-    }
-    this.maxMemorySgeParamFormat = maxMemorySgeParamFormat;
   }
 
   public final Element serializeXML() {
