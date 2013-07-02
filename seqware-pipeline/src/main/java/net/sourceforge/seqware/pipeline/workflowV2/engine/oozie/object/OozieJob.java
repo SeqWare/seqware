@@ -16,6 +16,9 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 public class OozieJob {
+  public static final String SGE_THREADS_PARAM_VARIABLE = "${threads}";
+  public static final String SGE_MAX_MEMORY_PARAM_VARIABLE = "${maxMemory}";
+
   protected String okTo = "end";
   // private String errorTo; always to fail now
   protected String name;
@@ -43,17 +46,17 @@ public class OozieJob {
     this.parentAccessionFiles = new ArrayList<String>();
     this.parentAccessions = new ArrayList<String>();
     this.useSge = useSge;
-    if (useSge){
+    if (useSge) {
       if (seqwareJar == null) {
         throw new IllegalArgumentException("seqwareJarPath must be specified when useSge is true.");
       }
       this.seqwareJarPath = seqwareJar.getAbsolutePath();
-      
+
       if (slotsSgeParamFormat == null) {
         throw new IllegalArgumentException("slotsSgeParamFormat must be specified when useSge is true.");
       }
       this.slotsSgeParamFormat = slotsSgeParamFormat;
-      
+
       if (maxMemorySgeParamFormat == null) {
         throw new IllegalArgumentException("maxMemorySgeParamFormat must be specified when useSge is true.");
       }
@@ -567,13 +570,23 @@ public class OozieJob {
     }
 
     if (StringUtils.isNotBlank(jobObj.getMaxMemory())) {
-      sb.append(" ");
-      sb.append(maxMemorySgeParamFormat.replace("${maxMemory}", jobObj.getMaxMemory()));
+      if (maxMemorySgeParamFormat.contains(SGE_MAX_MEMORY_PARAM_VARIABLE)) {
+        sb.append(" ");
+        sb.append(maxMemorySgeParamFormat.replace(SGE_MAX_MEMORY_PARAM_VARIABLE, jobObj.getMaxMemory()));
+      } else {
+        throw new IllegalArgumentException("Format for max memory parameter must contain the replacement variable "
+            + SGE_MAX_MEMORY_PARAM_VARIABLE);
+      }
     }
 
     if (jobObj.getThreads() > 0) {
-      sb.append(" ");
-      sb.append(slotsSgeParamFormat.replace("${threads}", ""+jobObj.getThreads()));
+      if (slotsSgeParamFormat.contains(SGE_THREADS_PARAM_VARIABLE)) {
+        sb.append(" ");
+        sb.append(slotsSgeParamFormat.replace(SGE_THREADS_PARAM_VARIABLE, "" + jobObj.getThreads()));
+      } else {
+        throw new IllegalArgumentException("Format for threads parameter must contain the replacement variable "
+            + SGE_THREADS_PARAM_VARIABLE);
+      }
     }
 
     return sb.toString();
