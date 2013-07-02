@@ -103,7 +103,7 @@
                         <groupId>org.apache.tomcat.maven</groupId>
                         <artifactId>tomcat6-maven-plugin</artifactId>
                         <configuration>   
-                            <contextFile>../seqware-webservice/src/main/webapp/META-INF/context.xml</contextFile>
+                            <contextFile>../seqware-webservice/target/seqware-webservice-1.0.1-SNAPSHOT/META-INF/context.xml</contextFile>
                             <webapps>
                                 <webapp>
                                     <groupId>com.github.seqware</groupId> 
