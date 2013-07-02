@@ -30,9 +30,11 @@ public class OozieJob {
   protected List<String> parentAccessionFiles;
   protected boolean useSge;
   protected String seqwareJarPath;
+  private String slotsSgeParamFormat;
+  private String maxMemorySgeParamFormat;
 
-  public OozieJob(AbstractJob job, String name, String oozie_working_dir,
-                  boolean useSge, File seqwareJar) {
+  public OozieJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
+                  String slotsSgeParamFormat, String maxMemorySgeParamFormat) {
     this.name = name;
     this.jobObj = job;
     this.oozie_working_dir = oozie_working_dir;
@@ -42,10 +44,17 @@ public class OozieJob {
     this.parentAccessions = new ArrayList<String>();
     this.useSge = useSge;
     if (useSge && seqwareJar == null) {
-      throw new IllegalArgumentException(
-                                         "seqwareJar must be specified when useSge is true.");
+      throw new IllegalArgumentException("slotsSgeParamFormat must be specified when useSge is true.");
     }
     this.seqwareJarPath = seqwareJar.getAbsolutePath();
+    if (useSge && slotsSgeParamFormat == null) {
+      throw new IllegalArgumentException("seqwareJar must be specified when useSge is true.");
+    }
+    this.slotsSgeParamFormat = slotsSgeParamFormat;
+    if (useSge && maxMemorySgeParamFormat == null) {
+      throw new IllegalArgumentException("maxMemorySgeParamFormat must be specified when useSge is true.");
+    }
+    this.maxMemorySgeParamFormat = maxMemorySgeParamFormat;
   }
 
   public final Element serializeXML() {
@@ -143,7 +152,7 @@ public class OozieJob {
         // gulp
       }
     }
-    
+
     return createSgeAction(scriptFile.getAbsolutePath(), optionsFile.getAbsolutePath());
   }
 
@@ -322,8 +331,7 @@ public class OozieJob {
     if (obj == this)
       return true;
     OozieJob rhs = (OozieJob) obj;
-    return new EqualsBuilder().appendSuper(super.equals(obj)).append(name,
-                                                                     rhs.name).isEquals();
+    return new EqualsBuilder().appendSuper(super.equals(obj)).append(name, rhs.name).isEquals();
   }
 
   @Override
@@ -406,8 +414,7 @@ public class OozieJob {
    * @return Runner args
    */
   public static ArrayList<String> metaDataArgs(OozieJob job) {
-    return metaDataArgs(job.metadataWriteback, job.getAccessionFile(),
-                        job.parentAccessions, job.parentAccessionFiles,
+    return metaDataArgs(job.metadataWriteback, job.getAccessionFile(), job.parentAccessions, job.parentAccessionFiles,
                         job.wfrAccession, job.wfrAncesstor);
   }
 
@@ -416,11 +423,9 @@ public class OozieJob {
    * 
    * @return Runner args
    */
-  public static ArrayList<String> metaDataArgs(boolean metadataWriteback,
-                                               String accessionFile,
+  public static ArrayList<String> metaDataArgs(boolean metadataWriteback, String accessionFile,
                                                Collection<String> parentAccessions,
-                                               Collection<String> parentAccessionFiles,
-                                               String workflowRunAccession,
+                                               Collection<String> parentAccessionFiles, String workflowRunAccession,
                                                boolean workflowRunAncestor) {
     ArrayList<String> args = new ArrayList<String>();
 
@@ -467,8 +472,7 @@ public class OozieJob {
    * @return Runner args
    */
   public static ArrayList<String> genericRunnerArgs(OozieJob job) {
-    return genericRunnerArgs(job.name, job.oozie_working_dir,
-                             job.getJobObject().getCommand().getArguments());
+    return genericRunnerArgs(job.name, job.oozie_working_dir, job.getJobObject().getCommand().getArguments());
   }
 
   /**
@@ -482,9 +486,7 @@ public class OozieJob {
    *          the list of bash commands
    * @return Runner args
    */
-  public static ArrayList<String> genericRunnerArgs(String jobName,
-                                                    String workingDirectory,
-                                                    List<String> commands) {
+  public static ArrayList<String> genericRunnerArgs(String jobName, String workingDirectory, List<String> commands) {
     ArrayList<String> args = new ArrayList<String>();
 
     args.add("--module");
@@ -544,8 +546,8 @@ public class OozieJob {
 
     return sb.toString();
   }
-  
-  public final String createSgeOptionsArgs(String genScriptsDir){
+
+  public final String createSgeOptionsArgs(String genScriptsDir) {
     StringBuilder sb = new StringBuilder();
     sb.append("-b y ");
     sb.append(" -e ");
@@ -554,24 +556,24 @@ public class OozieJob {
     sb.append(genScriptsDir);
     sb.append(" -N ");
     sb.append(jobObj.getAlgo());
-    
-    if (StringUtils.isNotBlank(jobObj.getQueue())){
+
+    if (StringUtils.isNotBlank(jobObj.getQueue())) {
       sb.append(" -q ");
       sb.append(jobObj.getQueue());
     }
 
-    // TODO: The following options are system-specific, thus we need a way to configure them
-
-    if (StringUtils.isNotBlank(jobObj.getMaxMemory())){
-      sb.append(" -l h_vmem=");
+    if (StringUtils.isNotBlank(jobObj.getMaxMemory())) {
+      sb.append(" ");
+      sb.append(maxMemorySgeParamFormat);
       sb.append(jobObj.getMaxMemory());
     }
-    
-    if (jobObj.getThreads() > 0){
-      sb.append(" -l slots=");
+
+    if (jobObj.getThreads() > 0) {
+      sb.append(" ");
+      sb.append(slotsSgeParamFormat);
       sb.append(jobObj.getThreads());
     }
-    
+
     return sb.toString();
   }
 
@@ -592,8 +594,7 @@ public class OozieJob {
    *          the working directory passed to qsub
    * @return the sge node
    */
-  public final Element createSgeAction(String scriptFileName,
-                                       String optionsFileName) {
+  public final Element createSgeAction(String scriptFileName, String optionsFileName) {
     Element sge = new Element("sge", SGE_XMLNS);
 
     Element script = new Element("script", SGE_XMLNS);

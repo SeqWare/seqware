@@ -22,9 +22,9 @@ public class OozieWorkflowXmlGenerator {
    * @param output
    * @return
    */
-  public ReturnValue generateWorkflowXml(AbstractWorkflowDataModel wfdm,
-                                         String output, String dir,
-                                         boolean useSge, File seqwareJar) {
+  public ReturnValue generateWorkflowXml(AbstractWorkflowDataModel wfdm, String output, String dir, boolean useSge,
+                                         File seqwareJar, String slotsSgeParamFormat,
+                                         String maxMemorySgeParamFormat) {
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
     File dax = new File(output);
     // write to dax
@@ -32,7 +32,8 @@ public class OozieWorkflowXmlGenerator {
     try {
       OutputStream out = new FileOutputStream(dax);
       XMLOutputter serializer = new XMLOutputter(Format.getPrettyFormat());
-      WorkflowApp adag = new WorkflowApp(wfdm, dir, useSge, seqwareJar);
+      WorkflowApp adag = new WorkflowApp(wfdm, dir, useSge, seqwareJar, slotsSgeParamFormat,
+                                         maxMemorySgeParamFormat);
       doc.setRootElement(adag.serializeXML());
       serializer.output(doc, out);
 

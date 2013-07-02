@@ -352,15 +352,22 @@ public class WorkflowPlugin extends Plugin {
 
   }
 
-  public static AbstractWorkflowEngine getWorkflowEngine(AbstractWorkflowDataModel dataModel) {
+  public static AbstractWorkflowEngine getWorkflowEngine(AbstractWorkflowDataModel dataModel, Map<String, String> config) {
     AbstractWorkflowEngine wfEngine = null;
     String engine = dataModel.getWorkflow_engine();
     if (engine == null || engine.equalsIgnoreCase("pegasus")) {
       wfEngine = new PegasusWorkflowEngine();
     } else if (engine.equalsIgnoreCase("oozie")) {
-      wfEngine = new OozieWorkflowEngine(dataModel, false);
+      wfEngine = new OozieWorkflowEngine(dataModel, false, null, null);
     } else if (engine.equalsIgnoreCase("oozie-sge")) {
-      wfEngine = new OozieWorkflowEngine(dataModel, true);
+      if (!config.containsKey("SW_SGE_SLOTS_PARAM_FORMAT")){
+        throw new RuntimeException("Missing configuration entry for SW_SGE_SLOTS_PARAM_FORMAT");
+      }
+      if (!config.containsKey("SW_SGE_MAX_MEMORY_PARAM_FORMAT")){
+        throw new RuntimeException("Missing configuration entry for SW_SGE_MAX_MEMORY_PARAM_FORMAT");
+      }
+      
+      wfEngine = new OozieWorkflowEngine(dataModel, true, config.get("SW_SGE_SLOTS_PARAM_FORMAT"), config.get("SW_SGE_MAX_MEMORY_PARAM_FORMAT"));
     } else {
       throw new IllegalArgumentException("Unknown workflow engine: " + engine);
     }
@@ -525,7 +532,7 @@ public class WorkflowPlugin extends Plugin {
     Log.info("constructed dataModel");
 
     // set up workflow engine
-    AbstractWorkflowEngine engine = WorkflowPlugin.getWorkflowEngine(dataModel);
+    AbstractWorkflowEngine engine = WorkflowPlugin.getWorkflowEngine(dataModel, config);
 
     engine.prepareWorkflow(dataModel);
     if (options.has("no-run")) {
