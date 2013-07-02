@@ -568,14 +568,12 @@ public class OozieJob {
 
     if (StringUtils.isNotBlank(jobObj.getMaxMemory())) {
       sb.append(" ");
-      sb.append(maxMemorySgeParamFormat);
-      sb.append(jobObj.getMaxMemory());
+      sb.append(maxMemorySgeParamFormat.replace("${maxMemory}", jobObj.getMaxMemory()));
     }
 
     if (jobObj.getThreads() > 0) {
       sb.append(" ");
-      sb.append(slotsSgeParamFormat);
-      sb.append(jobObj.getThreads());
+      sb.append(slotsSgeParamFormat.replace("${threads}", ""+jobObj.getThreads()));
     }
 
     return sb.toString();
