@@ -42,9 +42,9 @@ public class WorkflowApp {
     this.fileJobMap = new HashMap<SqwFile, OozieJob>();
     this.useSge = useSge;
     this.seqwareJar = seqwareJar;
-    this.parseDataModel(wfdm);
     this.slotsSgeParamFormat = slotsSgeParamFormat;
     this.maxMemorySgeParamFormat = maxMemorySgeParamFormat;
+    this.parseDataModel(wfdm);
   }
 
   // TODO: Emit an end node that cleans up the generated script files.
