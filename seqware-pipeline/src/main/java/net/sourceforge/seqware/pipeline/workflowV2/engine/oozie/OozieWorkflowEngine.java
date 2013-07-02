@@ -202,7 +202,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
       String filename = source.substring(source.lastIndexOf('/') + 1, source.length());
 
       fileSystem.copyFromLocalFile(srcPath, dstPath);
-      System.out.println("File " + filename + "copied to " + dest);
+      System.out.println("File " + filename + " copied to " + dest);
     } catch (RuntimeException e) {
       throw e;
     } catch (Exception e) {
