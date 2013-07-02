@@ -14,10 +14,9 @@ public class OozieProvisionFileJob extends OozieJob {
   private String outputDir;
   private SqwFile file;
 
-  public OozieProvisionFileJob(AbstractJob job, SqwFile file, String name,
-                               String oozie_working_dir, boolean useSge,
-                               File seqwareJar) {
-    super(job, name, oozie_working_dir, useSge, seqwareJar);
+  public OozieProvisionFileJob(AbstractJob job, SqwFile file, String name, String oozie_working_dir, boolean useSge,
+                               File seqwareJar, String slotsSgeParamFormat, String maxMemorySgeParamFormat) {
+    super(job, name, oozie_working_dir, useSge, seqwareJar, slotsSgeParamFormat, maxMemorySgeParamFormat);
     this.file = file;
   }
 
@@ -121,8 +120,8 @@ public class OozieProvisionFileJob extends OozieJob {
     String output = this.outputDir;
     if (this.file.isOutput()) {
       inputArg = "--input-file-metadata";
-      inputValue = this.jobObj.getAlgo() + "::" + this.file.getType() + "::"
-          + this.getOozieWorkingDir() + "/" + this.file.getSourcePath();
+      inputValue = this.jobObj.getAlgo() + "::" + this.file.getType() + "::" + this.getOozieWorkingDir() + "/"
+          + this.file.getSourcePath();
       output = this.metadataOutputPrefix + "/" + this.outputDir;
       // if this is true then we have the full output path, not just prefix and
       // output dir!
@@ -166,16 +165,12 @@ public class OozieProvisionFileJob extends OozieJob {
   }
 
   public static ArrayList<String> provisionFileArgs(OozieProvisionFileJob job) {
-    return provisionFileArgs(job.getJobObject().getAlgo(),
-                             job.oozie_working_dir, job.file,
-                             job.metadataOutputPrefix, job.outputDir);
+    return provisionFileArgs(job.getJobObject().getAlgo(), job.oozie_working_dir, job.file, job.metadataOutputPrefix,
+                             job.outputDir);
   }
 
-  public static ArrayList<String> provisionFileArgs(String jobName,
-                                                    String workingDirectory,
-                                                    SqwFile file,
-                                                    String metadataOutputPrefix,
-                                                    String outputDirectory) {
+  public static ArrayList<String> provisionFileArgs(String jobName, String workingDirectory, SqwFile file,
+                                                    String metadataOutputPrefix, String outputDirectory) {
     ArrayList<String> args = new ArrayList<String>();
 
     args.add("--module");
@@ -189,8 +184,7 @@ public class OozieProvisionFileJob extends OozieJob {
       args.add(file.getSourcePath());
     } else {
       args.add("--input-file-metadata");
-      args.add(String.format("%s::%s::%s/%s", jobName, file.getType(),
-                             workingDirectory, file.getSourcePath()));
+      args.add(String.format("%s::%s::%s/%s", jobName, file.getType(), workingDirectory, file.getSourcePath()));
     }
 
     if (file.getOutputPath() != null) {

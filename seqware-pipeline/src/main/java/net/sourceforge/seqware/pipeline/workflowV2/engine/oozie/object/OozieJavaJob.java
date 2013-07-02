@@ -1,22 +1,18 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jdom.Element;
 
 public class OozieJavaJob extends OozieJob {
 
-  public OozieJavaJob(AbstractJob job, String name, String oozie_working_dir) {
-    super(job, name, oozie_working_dir, false, null);
+  public OozieJavaJob(AbstractJob job, String name, String oozie_working_dir,
+                      String slotsSgeParamFormat, String maxMemorySgeParamFormat) {
+    super(job, name, oozie_working_dir, false, null, slotsSgeParamFormat, maxMemorySgeParamFormat);
   }
 
-  /** 
-   * FIXME: this is untested, not sure if it will work! 
+  /**
+   * FIXME: this is untested, not sure if it will work!
    */
   protected Element getJavaElement() {
     Element javaE = new Element("java", WorkflowApp.NAMESPACE);
