@@ -563,12 +563,12 @@ public class OozieJob {
     // TODO: The following options are system-specific, thus we need a way to configure them
 
     if (StringUtils.isNotBlank(jobObj.getMaxMemory())){
-      sb.append(" -l h_vmem ");
+      sb.append(" -l h_vmem=");
       sb.append(jobObj.getMaxMemory());
     }
     
     if (jobObj.getThreads() > 0){
-      sb.append(" -l slots ");
+      sb.append(" -l slots=");
       sb.append(jobObj.getThreads());
     }
     
