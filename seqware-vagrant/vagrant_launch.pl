@@ -1,4 +1,3 @@
-
 use strict;
 use Getopt::Long;
 
@@ -84,7 +83,10 @@ sub prepare_files {
   #copy("../seqware-portal/target/seqware-portal-$seqware_version.war", "$work_dir/seqware-portal-$seqware_version.war");
   replace("../seqware-portal/target/seqware-portal-$seqware_version.xml", "$work_dir/seqware-portal-$seqware_version.xml", "jdbc:postgresql://localhost:5432/test_seqware_meta_db", "jdbc:postgresql://localhost:5432/seqware_meta_db");
   # Vagrantfile
-  autoreplace("templates/Vagrantfile.single", "$work_dir/Vagrantfile"); 
+  if ($launch_aws) { autoreplace("templates/Vagrantfile.single", "$work_dir/Vagrantfile"); }
+  elsif ($launch_vb) { autoreplace("templates/Vagrantfile.virtualbox", "$work_dir/Vagrantfile"); } # FIXME
+  elsif ($launch_os) { autoreplace("templates/Vagrantfile.single", "$work_dir/Vagrantfile"); } # FIXME
+  else { die "Don't know which template to use for the Vagrantfile!  You need to specify one of the --use-* params!"; }
   # database
   copy("../seqware-meta-db/seqware_meta_db.sql", "$work_dir/seqware_meta_db.sql");
   copy("../seqware-meta-db/seqware_meta_db_data.sql", "$work_dir/seqware_meta_db_data.sql");
