@@ -175,11 +175,11 @@ Vagrant.configure("2") do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "dummy"
+  config.vm.box = "Ubuntu_12.04"
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  config.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+  config.vm.box_url = "http://cloud-images.ubuntu.com/precise/current/precise-server-cloudimg-vagrant-amd64-disk1.box"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
@@ -311,15 +311,11 @@ Vagrant.configure("2") do |config|
     # Amazon_Virginia_BioNimbus_v2
     #aws.ami = "ami-d76a02be"
     # Amazon Ubuntu 12.04.2 LTS
-    #aws.ami = "ami-d0f89fb9"
-    # based on Amazon Ubuntu 12.04.2 LTS, ami-d0f89fb9 with 4 ephemeral drives set
-    aws.ami = "ami-84671aed"
+    aws.ami = "ami-d0f89fb9"
     #aws.instance_type = "cc1.4xlarge"
     #aws.instance_type = "c1.xlarge"
-    # no instance drives
-    #aws.instance_type = "m3.xlarge"
-    # has instance drives
-    aws.instance_type = "m1.xlarge"
+    aws.instance_type = "m3.xlarge"
+    # aws.instance_type = "m1.xlarge"
 
     #override.ssh.username = "root"
     #override.ssh.username = "ec2-user"
