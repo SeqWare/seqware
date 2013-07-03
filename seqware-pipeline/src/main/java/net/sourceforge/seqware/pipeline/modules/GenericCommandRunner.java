@@ -63,7 +63,7 @@ public class GenericCommandRunner extends Module {
     /**
      * getOptionParser is an internal method to parse command line args.
      *
-     * @return OptionParser this is used to param command line options
+     * @return OptionParser this is used to get command line options
      */
     protected OptionParser getOptionParser() {
         OptionParser parser = new OptionParser();
@@ -142,7 +142,7 @@ public class GenericCommandRunner extends Module {
             // an array for this module
             ArrayList<String> myParameters = new ArrayList<String>();
 
-            // an array for everything else that will param passed to the command
+            // an array for everything else that will get passed to the command
             cmdParameters = new ArrayList<String>();
 
             // should be able to do this since all the --gcr-* params take an argument
