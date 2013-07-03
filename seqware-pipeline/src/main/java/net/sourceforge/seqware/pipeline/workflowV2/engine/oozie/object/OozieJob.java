@@ -562,7 +562,7 @@ public class OozieJob {
     sb.append(" -o ");
     sb.append(genScriptsDir);
     sb.append(" -N ");
-    sb.append(jobObj.getAlgo());
+    sb.append(name);
 
     if (StringUtils.isNotBlank(jobObj.getQueue())) {
       sb.append(" -q ");
