@@ -31,18 +31,18 @@ public class WorkflowApp {
   private String unqiueWorkingDir;
   private boolean useSge;
   private File seqwareJar;
-  private String slotsSgeParamFormat;
+  private String threadsSgeParamFormat;
   private String maxMemorySgeParamFormat;
 
   public WorkflowApp(AbstractWorkflowDataModel wfdm, String dir, boolean useSge, File seqwareJar,
-                     String slotsSgeParamFormat, String maxMemorySgeParamFormat) {
+                     String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
     this.wfdm = wfdm;
     this.unqiueWorkingDir = dir;
     this.jobs = new ArrayList<OozieJob>();
     this.fileJobMap = new HashMap<SqwFile, OozieJob>();
     this.useSge = useSge;
     this.seqwareJar = seqwareJar;
-    this.slotsSgeParamFormat = slotsSgeParamFormat;
+    this.threadsSgeParamFormat = threadsSgeParamFormat;
     this.maxMemorySgeParamFormat = maxMemorySgeParamFormat;
     this.parseDataModel(wfdm);
   }
@@ -157,7 +157,7 @@ public class WorkflowApp {
     }
 
     OozieJob oJob0 = new OozieJob(job0, "start_" + this.jobs.size(), this.unqiueWorkingDir, this.useSge,
-                                  this.seqwareJar, this.slotsSgeParamFormat, this.maxMemorySgeParamFormat);
+                                  this.seqwareJar, this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
     oJob0.setMetadataWriteback(metadatawriteback);
     // if has parent-accessions, assign it to first job
     Collection<String> parentAccession = wfdm.getParentAccessions();
@@ -180,7 +180,7 @@ public class WorkflowApp {
         job.addFile(entry.getValue());
         OozieProvisionFileJob ojob = new OozieProvisionFileJob(job, entry.getValue(), job.getAlgo() + this.jobs.size(),
                                                                this.unqiueWorkingDir, this.useSge, this.seqwareJar,
-                                                               this.slotsSgeParamFormat, this.maxMemorySgeParamFormat);
+                                                               this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
         ojob.setMetadataWriteback(metadatawriteback);
         if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
           ojob.setWorkflowRunAccession(workflowRunAccession);
@@ -234,7 +234,7 @@ public class WorkflowApp {
             AbstractJob pfjob = new BashJob("provisionFile_in");
             pfjob.addFile(file);
             OozieProvisionFileJob parentPfjob = new OozieProvisionFileJob(pfjob, file, pfjob.getAlgo() + "_"
-                + jobs.size(), this.unqiueWorkingDir, this.useSge, this.seqwareJar, this.slotsSgeParamFormat,
+                + jobs.size(), this.unqiueWorkingDir, this.useSge, this.seqwareJar, this.threadsSgeParamFormat,
                                                                           this.maxMemorySgeParamFormat);
             parentPfjob.addParent(oJob0);
             parentPfjob.setMetadataWriteback(metadatawriteback);
@@ -251,7 +251,7 @@ public class WorkflowApp {
             AbstractJob pfjob = new BashJob("provisionFile_out");
             pfjob.addFile(file);
             OozieProvisionFileJob parentPfjob = new OozieProvisionFileJob(pfjob, file, pfjob.getAlgo() + "_"
-                + jobs.size(), this.unqiueWorkingDir, this.useSge, this.seqwareJar, this.slotsSgeParamFormat,
+                + jobs.size(), this.unqiueWorkingDir, this.useSge, this.seqwareJar, this.threadsSgeParamFormat,
                                                                           this.maxMemorySgeParamFormat);
             parentPfjob.addParent(pjob);
             parentPfjob.setMetadataWriteback(metadatawriteback);
@@ -340,16 +340,16 @@ public class WorkflowApp {
       // ret = new PegasusJavaJob(job,wfdm.getWorkflowBaseDir(),
       // wfdm.getTags().get("seqware_version"));
       ret = new OozieJavaJob(job, job.getAlgo() + "_" + this.jobs.size(), this.unqiueWorkingDir,
-                             this.slotsSgeParamFormat, this.maxMemorySgeParamFormat);
+                             this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
     } else if (job instanceof PerlJob) {
       ret = new OozieJob(job, job.getAlgo() + "_" + this.jobs.size(), this.unqiueWorkingDir, this.useSge,
-                         this.seqwareJar, this.slotsSgeParamFormat, this.maxMemorySgeParamFormat);
+                         this.seqwareJar, this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
     } else if (job instanceof JavaSeqwareModuleJob) {
       // ret = new PegasusJavaSeqwareModuleJob(job, wfdm.getWorkflowBaseDir(),
       // wfdm.getTags().get("seqware_version"));
     } else {
       ret = new OozieJob(job, job.getAlgo() + "_" + this.jobs.size(), this.unqiueWorkingDir, this.useSge,
-                         this.seqwareJar, this.slotsSgeParamFormat, this.maxMemorySgeParamFormat);
+                         this.seqwareJar, this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
     }
     return ret;
   }

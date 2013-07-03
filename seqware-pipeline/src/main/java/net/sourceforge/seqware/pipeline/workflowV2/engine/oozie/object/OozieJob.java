@@ -33,11 +33,11 @@ public class OozieJob {
   protected List<String> parentAccessionFiles;
   protected boolean useSge;
   protected String seqwareJarPath;
-  private String slotsSgeParamFormat;
+  private String threadsSgeParamFormat;
   private String maxMemorySgeParamFormat;
 
   public OozieJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
-                  String slotsSgeParamFormat, String maxMemorySgeParamFormat) {
+                  String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
     this.name = name;
     this.jobObj = job;
     this.oozie_working_dir = oozie_working_dir;
@@ -52,10 +52,10 @@ public class OozieJob {
       }
       this.seqwareJarPath = seqwareJar.getAbsolutePath();
 
-      if (slotsSgeParamFormat == null) {
-        throw new IllegalArgumentException("slotsSgeParamFormat must be specified when useSge is true.");
+      if (threadsSgeParamFormat == null) {
+        throw new IllegalArgumentException("threadsSgeParamFormat must be specified when useSge is true.");
       }
-      this.slotsSgeParamFormat = slotsSgeParamFormat;
+      this.threadsSgeParamFormat = threadsSgeParamFormat;
 
       if (maxMemorySgeParamFormat == null) {
         throw new IllegalArgumentException("maxMemorySgeParamFormat must be specified when useSge is true.");
@@ -580,9 +580,9 @@ public class OozieJob {
     }
 
     if (jobObj.getThreads() > 0) {
-      if (slotsSgeParamFormat.contains(SGE_THREADS_PARAM_VARIABLE)) {
+      if (threadsSgeParamFormat.contains(SGE_THREADS_PARAM_VARIABLE)) {
         sb.append(" ");
-        sb.append(slotsSgeParamFormat.replace(SGE_THREADS_PARAM_VARIABLE, "" + jobObj.getThreads()));
+        sb.append(threadsSgeParamFormat.replace(SGE_THREADS_PARAM_VARIABLE, "" + jobObj.getThreads()));
       } else {
         throw new IllegalArgumentException("Format for threads parameter must contain the replacement variable "
             + SGE_THREADS_PARAM_VARIABLE);

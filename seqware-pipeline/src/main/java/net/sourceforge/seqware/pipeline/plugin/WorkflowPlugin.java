@@ -362,16 +362,16 @@ public class WorkflowPlugin extends Plugin {
     } else if (engine.equalsIgnoreCase("oozie")) {
       wfEngine = new OozieWorkflowEngine(dataModel, false, null, null);
     } else if (engine.equalsIgnoreCase("oozie-sge")) {
-      String slotsSgeParamFormat = config.get("SW_SGE_SLOTS_PARAM_FORMAT");
-      String maxMemorySgeParamFormat = config.get("SW_SGE_MAX_MEMORY_PARAM_FORMAT");
-      if (slotsSgeParamFormat == null){
-        throw new RuntimeException("Missing configuration entry for SW_SGE_SLOTS_PARAM_FORMAT");
+      String threadsSgeParamFormat = config.get("OOZIE_SGE_THREADS_PARAM_FORMAT");
+      String maxMemorySgeParamFormat = config.get("OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT");
+      if (threadsSgeParamFormat == null){
+        throw new RuntimeException("Missing configuration entry for OOZIE_SGE_THREADS_PARAM_FORMAT");
       }
       if (maxMemorySgeParamFormat == null){
-        throw new RuntimeException("Missing configuration entry for SW_SGE_MAX_MEMORY_PARAM_FORMAT");
+        throw new RuntimeException("Missing configuration entry for OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT");
       }
       
-      wfEngine = new OozieWorkflowEngine(dataModel, true, slotsSgeParamFormat, maxMemorySgeParamFormat);
+      wfEngine = new OozieWorkflowEngine(dataModel, true, threadsSgeParamFormat, maxMemorySgeParamFormat);
     } else {
       throw new IllegalArgumentException("Unknown workflow engine: " + engine);
     }
