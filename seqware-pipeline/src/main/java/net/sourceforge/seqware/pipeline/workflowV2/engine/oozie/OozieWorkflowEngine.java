@@ -26,14 +26,14 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
   private String jobId;
   private AbstractWorkflowDataModel dataModel;
   private boolean useSge;
-  private String slotsSgeParamFormat;
+  private String threadsSgeParamFormat;
   private String maxMemorySgeParamFormat;
 
   public OozieWorkflowEngine(AbstractWorkflowDataModel objectModel, boolean useSge,
-                             String slotsSgeParamFormat, String maxMemorySgeParamFormat) {
+                             String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
     this.dataModel = objectModel;
     this.useSge = useSge;
-    this.slotsSgeParamFormat = slotsSgeParamFormat;
+    this.threadsSgeParamFormat = threadsSgeParamFormat;
     this.maxMemorySgeParamFormat = maxMemorySgeParamFormat;
   }
 
@@ -173,7 +173,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
     // generate dax
     OozieWorkflowXmlGenerator daxv2 = new OozieWorkflowXmlGenerator();
     daxv2.generateWorkflowXml(objectModel, file.getAbsolutePath(), this.dir.getAbsolutePath(), useSge, seqwareJar,
-                              this.slotsSgeParamFormat, this.maxMemorySgeParamFormat);
+                              this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
     return file;
   }
 
