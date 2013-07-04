@@ -8,11 +8,11 @@ Vagrant.configure("2") do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "${BOX}"
+  config.vm.box = "%{BOX}"
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  config.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+  config.vm.box_url = "%{BOX_URL}"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
@@ -103,71 +103,61 @@ Vagrant.configure("2") do |config|
       v.box = "precise64"
       v.vmx["memsize"]  = "4096"
     end
+    # Provider-specific configuration so you can fine-tune various
+    # backing providers for Vagrant. These expose provider-specific options.
+    # Example for VirtualBox:
+    #
+    master.vm.provider :virtualbox do |vb|
+   
+      # Don't boot with headless mode
+      vb.gui = true
+   
+      # Use VBoxManage to customize the VM. For example to change memory:
+      vb.customize ["modifyvm", :id, "--memory", "4096"]
+  
+    end
+ 
+    # from https://github.com/mitchellh/vagrant-aws
+    config.vm.provider :aws do |aws, override|
+  
+      aws.tags = {
+        'Name' => `whoami`.chomp + "Testing" 
+      }
+  
+      aws.access_key_id = "%{AWS_KEY}"
+      aws.secret_access_key = "%{AWS_SECRET_KEY}"
+      aws.keypair_name = "brian-oicr-1"
+      aws.user_data = File.read("user_data.txt")
+  
+      # seqware AMI
+      # v17, BN v1
+      #aws.ami = "ami-4382ec2a"
+      # v17
+      #aws.ami = "ami-c386e8aa"
+      # v16
+      #aws.ami = "ami-1b5d3e72"
+      # amazon AMI
+      #aws.ami = "ami-05355a6c"
+      # Amazon_Virginia_BioNimbus_v2
+      #aws.ami = "ami-d76a02be"
+      # Amazon Ubuntu 12.04.2 LTS
+      aws.ami = "ami-d0f89fb9"
+      #aws.instance_type = "cc1.4xlarge"
+      #aws.instance_type = "c1.xlarge"
+      aws.instance_type = "m3.xlarge"
+      # aws.instance_type = "m1.xlarge"
+  
+      #override.ssh.username = "root"
+      #override.ssh.username = "ec2-user"
+      override.ssh.username = "ubuntu"
+      override.ssh.private_key_path = "~/.ssh/brian-oicr-1.pem"
+    end
+
     #master.vm.network :private_network, ip: "10.211.55.100"
     master.vm.hostname = "vm-cluster-node1"
     master.vm.provision :shell, :path => "ubuntu_12.04_master_script.sh"
   end
 
-  # Provider-specific configuration so you can fine-tune various
-  # backing providers for Vagrant. These expose provider-specific options.
-  # Example for VirtualBox:
-  #
-  config.vm.provider :virtualbox do |vb, config|
 
-    # Every Vagrant virtual environment requires a box to build off of.
-    config.vm.box = "Ubuntu_12.04"
-  
-    # The url from where the 'config.vm.box' box will be fetched if it
-    # doesn't already exist on the user's system.
-    config.vm.box_url = "http://cloud-images.ubuntu.com/precise/current/precise-server-cloudimg-vagrant-amd64-disk1.box"
-  
-    # Don't boot with headless mode
-    vb.gui = true
- 
-    # Use VBoxManage to customize the VM. For example to change memory:
-    vb.customize ["modifyvm", :id, "--memory", "4096"]
-  end
- 
-  # from https://github.com/mitchellh/vagrant-aws
-  config.vm.provider :aws do |aws, override, config|
 
-    # Every Vagrant virtual environment requires a box to build off of.
-    config.vm.box = "dummy"
-
-    # The url from where the 'config.vm.box' box will be fetched if it
-    # doesn't already exist on the user's system.
-    config.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
-
-    aws.tags = {
-      'Name' => `whoami`.chomp + "Testing" 
-    }
-
-    aws.access_key_id = "%{AWS_KEY}"
-    aws.secret_access_key = "%{AWS_SECRET_KEY}"
-    aws.keypair_name = "brian-oicr-1"
-    aws.user_data = File.read("user_data.txt")
-
-    # seqware AMI
-    # v17, BN v1
-    #aws.ami = "ami-4382ec2a"
-    # v17
-    #aws.ami = "ami-c386e8aa"
-    # v16
-    #aws.ami = "ami-1b5d3e72"
-    # amazon AMI
-    #aws.ami = "ami-05355a6c"
-    # Amazon_Virginia_BioNimbus_v2
-    #aws.ami = "ami-d76a02be"
-    # Amazon Ubuntu 12.04.2 LTS
-    aws.ami = "ami-d0f89fb9"
-    #aws.instance_type = "cc1.4xlarge"
-    #aws.instance_type = "c1.xlarge"
-    aws.instance_type = "m3.xlarge"
-    # aws.instance_type = "m1.xlarge"
-
-    #override.ssh.username = "root"
-    #override.ssh.username = "ec2-user"
-    override.ssh.username = "ubuntu"
-    override.ssh.private_key_path = "~/.ssh/brian-oicr-1.pem"
-  end
 end
