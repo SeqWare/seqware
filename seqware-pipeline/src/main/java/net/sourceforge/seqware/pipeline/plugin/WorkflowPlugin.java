@@ -116,11 +116,13 @@ public class WorkflowPlugin extends Plugin {
   public static final Set<String> ENGINES = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(ENGINES_LIST.split(", "))));
   
   private String getEngineParam(){
-    if (options.has("workflow-engine")){
-      return (String)options.valueOf("workflow-engine");
-    } else {
-      return DEFAULT_ENGINE;
-    }
+    String engine = (String) options.valueOf("workflow-engine");
+    if (engine == null)
+      engine = config.get("SW_DEFAULT_WORKFLOW_ENGINE");
+    if (engine == null)
+      engine = DEFAULT_ENGINE;
+
+    return engine;
   }
   
   /*
@@ -419,7 +421,7 @@ public class WorkflowPlugin extends Plugin {
     if (!newLauncherRequired) {
       return doOldRun();
     }
-    return launchNewWorkflow(options, config, params, metadata, workflowAccession, null, null);
+    return launchNewWorkflow(options, config, params, metadata, workflowAccession, null, getEngineParam());
   }
 
   /**
