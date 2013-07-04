@@ -8,7 +8,7 @@ import org.jdom.Element;
 
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 
-public class OozieBashJob extends OozieJob{
+public class OozieBashJob extends OozieJob {
 
   public OozieBashJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
                       String threadsSgeParamFormat, String maxMemorySgeParamFormat) {

@@ -94,7 +94,7 @@ public class OozieProvisionFileJob extends OozieJob {
     if (file.getOutputPath() != null) {
       args.add("--output-file");
       args.add(file.getOutputPath());
-    } else if (file.isInput()){
+    } else if (file.isInput()) {
       args.add("--output-dir");
       args.add(outputDir);
     } else {
@@ -124,6 +124,5 @@ public class OozieProvisionFileJob extends OozieJob {
   public void setMetadataOutputPrefix(String metadataOutputPrefix) {
     this.metadataOutputPrefix = metadataOutputPrefix;
   }
-
 
 }
