@@ -15,9 +15,34 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-public class OozieJob {
+public abstract class OozieJob {
+  /**
+   * Variable identifier to be used within the qsub threads parameter to specify
+   * the value.
+   */
   public static final String SGE_THREADS_PARAM_VARIABLE = "${threads}";
+
+  /**
+   * Variable identifier to be used within the qsub max-memory parameter to
+   * specify the value.
+   */
   public static final String SGE_MAX_MEMORY_PARAM_VARIABLE = "${maxMemory}";
+
+  /**
+   * The sub-directory (of the working directory) in which generated script
+   * files will be placed.
+   */
+  public static final String SCRIPTS_SUBDIR = "generated-scripts";
+
+  /**
+   * Namespace of the Oozie workflow xml nodes.
+   */
+  public static final Namespace WF_XMLNS = Namespace.getNamespace("uri:oozie:workflow:0.2");
+
+  /**
+   * Namespace of the Oozie SGE action xml node.
+   */
+  public static final Namespace SGE_XMLNS = Namespace.getNamespace("uri:oozie:sge-action:1.0");
 
   protected String okTo = "end";
   // private String errorTo; always to fail now
@@ -33,8 +58,9 @@ public class OozieJob {
   protected List<String> parentAccessionFiles;
   protected boolean useSge;
   protected String seqwareJarPath;
-  private String threadsSgeParamFormat;
-  private String maxMemorySgeParamFormat;
+  protected final String threadsSgeParamFormat;
+  protected final String maxMemorySgeParamFormat;
+  protected final File scriptsDir;
 
   public OozieJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
                   String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
@@ -46,21 +72,27 @@ public class OozieJob {
     this.parentAccessionFiles = new ArrayList<String>();
     this.parentAccessions = new ArrayList<String>();
     this.useSge = useSge;
+    this.seqwareJarPath = seqwareJar.getAbsolutePath();
+    this.threadsSgeParamFormat = threadsSgeParamFormat;
+    this.maxMemorySgeParamFormat = maxMemorySgeParamFormat;
+    this.scriptsDir = new File(oozie_working_dir, SCRIPTS_SUBDIR);
+
     if (useSge) {
-      if (seqwareJar == null) {
+      if (this.seqwareJarPath == null) {
         throw new IllegalArgumentException("seqwareJarPath must be specified when useSge is true.");
       }
-      this.seqwareJarPath = seqwareJar.getAbsolutePath();
 
-      if (threadsSgeParamFormat == null) {
+      if (this.threadsSgeParamFormat == null) {
         throw new IllegalArgumentException("threadsSgeParamFormat must be specified when useSge is true.");
       }
-      this.threadsSgeParamFormat = threadsSgeParamFormat;
 
-      if (maxMemorySgeParamFormat == null) {
+      if (this.maxMemorySgeParamFormat == null) {
         throw new IllegalArgumentException("maxMemorySgeParamFormat must be specified when useSge is true.");
       }
-      this.maxMemorySgeParamFormat = maxMemorySgeParamFormat;
+    }
+
+    if (!scriptsDir.exists()) {
+      scriptsDir.mkdirs();
     }
   }
 
@@ -69,9 +101,9 @@ public class OozieJob {
     element.setAttribute("name", this.name);
 
     if (useSge) {
-      element.addContent(getSgeElement());
+      element.addContent(createSgeElement());
     } else {
-      element.addContent(getJavaElement());
+      element.addContent(createJavaElement());
     }
 
     // okTo
@@ -86,186 +118,161 @@ public class OozieJob {
     return element;
   }
 
+  protected abstract Element createSgeElement();
+
+  protected abstract Element createJavaElement();
+
+  /**
+   * Returns the metadata arg list for the Runner.
+   * 
+   * @return Runner args
+   */
+  protected ArrayList<String> runnerMetaDataArgs() {
+    ArrayList<String> args = new ArrayList<String>();
+
+    if (metadataWriteback) {
+      args.add("--metadata");
+    } else {
+      args.add("--no-metadata");
+    }
+
+    if (parentAccessions != null) {
+      for (String pa : parentAccessions) {
+        args.add("--metadata-parent-accession");
+        args.add(pa);
+      }
+    }
+
+    if (parentAccessionFiles != null) {
+      for (String paf : parentAccessionFiles) {
+        args.add("--metadata-parent-accession-file");
+        args.add(paf);
+      }
+    }
+
+    if (wfrAccession != null) {
+      if (wfrAncesstor) {
+        args.add("--metadata-workflow-run-accession");
+      } else {
+        args.add("--metadata-workflow-run-ancestor-accession");
+      }
+      args.add(wfrAccession);
+    }
+
+    args.add("--metadata-processing-accession-file");
+    args.add(getAccessionFile());
+
+    return args;
+  }
+
+  protected File emitOptionsFile() {
+    File file = file(scriptsDir, name + "-qsub.opts", false);
+
+    ArrayList<String> args = new ArrayList<String>();
+    args.add("-b");
+    args.add("y");
+    args.add("-e");
+    args.add(scriptsDir.getAbsolutePath());
+    args.add("-o");
+    args.add(scriptsDir.getAbsolutePath());
+    args.add("-N");
+    args.add(name);
+
+    if (StringUtils.isNotBlank(jobObj.getQueue())) {
+      args.add("-q");
+      args.add(jobObj.getQueue());
+    }
+
+    if (StringUtils.isNotBlank(jobObj.getMaxMemory())) {
+      if (maxMemorySgeParamFormat.contains(SGE_MAX_MEMORY_PARAM_VARIABLE)) {
+        args.add(maxMemorySgeParamFormat.replace(SGE_MAX_MEMORY_PARAM_VARIABLE, jobObj.getMaxMemory()));
+      } else {
+        throw new IllegalArgumentException("Format for max memory parameter must contain the replacement variable "
+            + SGE_MAX_MEMORY_PARAM_VARIABLE);
+      }
+    }
+
+    if (jobObj.getThreads() > 0) {
+      if (threadsSgeParamFormat.contains(SGE_THREADS_PARAM_VARIABLE)) {
+        args.add(threadsSgeParamFormat.replace(SGE_THREADS_PARAM_VARIABLE, "" + jobObj.getThreads()));
+      } else {
+        throw new IllegalArgumentException("Format for threads parameter must contain the replacement variable "
+            + SGE_THREADS_PARAM_VARIABLE);
+      }
+    }
+
+    StringBuilder contents = new StringBuilder();
+    for (String arg : args) {
+      contents.append(arg);
+      contents.append(" ");
+    }
+
+    write(contents.toString(), file);
+    return file;
+
+  }
+
+  protected static Element add(Element parent, String tag) {
+    Element child = new Element(tag, parent.getNamespace());
+    parent.addContent(child);
+    return child;
+  }
+
+  protected static Element add(Element parent, String tag, String text) {
+    Element child = add(parent, tag);
+    child.setText(text);
+    return child;
+  }
+
+  protected static Element addProp(Element config, String name, String value) {
+    Element prop = add(config, "property");
+    add(prop, "name", name);
+    add(prop, "value", value);
+    config.addContent(prop);
+    return prop;
+  }
+
+  protected static File file(File dir, String filename, boolean exec) {
+    File file = new File(dir, filename);
+    try {
+      if (!file.createNewFile()) {
+        throw new RuntimeException("File already exists: " + filename);
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    file.setReadable(true, false);
+    file.setWritable(true, true);
+    if (exec) {
+      file.setExecutable(true, false);
+    } else {
+      file.setExecutable(false);
+    }
+    return file;
+  }
+
+  protected static void write(String contents, File file) {
+    FileWriter writer = null;
+    try {
+      writer = new FileWriter(file);
+      writer.write(contents);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } finally {
+      try {
+        writer.close();
+      } catch (Exception e) {
+        // gulp
+      }
+    }
+  }
+
   public String getName() {
     return this.name;
   }
 
   public String getOozieWorkingDir() {
     return oozie_working_dir;
-  }
-
-  /**
-   * Creates and writes a Runner script to the working directory, then returns
-   * the XML for an SGE action node that will invoke that script via qsub.
-   * 
-   * @return the SGE XML node
-   */
-  private Element getSgeElement() {
-    File subdir = new File(oozie_working_dir, SGE_SCRIPTS_SUBDIR);
-    if (!subdir.exists())
-      subdir.mkdirs();
-
-    File scriptFile = new File(subdir, name + ".sh");
-    try {
-      if (!scriptFile.createNewFile()) {
-        throw new RuntimeException("Duplicate job name : " + name);
-      }
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    scriptFile.setReadable(true, false);
-    scriptFile.setWritable(true, true);
-    scriptFile.setExecutable(true, false);
-
-    String scriptContents = createRunnerScript();
-
-    FileWriter writer = null;
-    try {
-      writer = new FileWriter(scriptFile);
-      writer.write(scriptContents);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } finally {
-      try {
-        writer.close();
-      } catch (Exception e) {
-        // gulp
-      }
-    }
-
-    File optionsFile = new File(subdir, name + ".opts");
-    try {
-      if (!optionsFile.createNewFile()) {
-        throw new RuntimeException("Duplicate job name : " + name);
-      }
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    optionsFile.setReadable(true, false);
-    optionsFile.setWritable(true, true);
-    optionsFile.setExecutable(false);
-
-    String optionsContents = createSgeOptionsArgs(subdir.getAbsolutePath());
-
-    try {
-      writer = new FileWriter(optionsFile);
-      writer.write(optionsContents);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } finally {
-      try {
-        writer.close();
-      } catch (Exception e) {
-        // gulp
-      }
-    }
-
-    return createSgeAction(scriptFile.getAbsolutePath(), optionsFile.getAbsolutePath());
-  }
-
-  protected Element getJavaElement() {
-
-    Element javaE = new Element("java", WorkflowApp.NAMESPACE);
-    Element jobTracker = new Element("job-tracker", WorkflowApp.NAMESPACE);
-    jobTracker.setText("${jobTracker}");
-    javaE.addContent(jobTracker);
-
-    Element nameNode = new Element("name-node", WorkflowApp.NAMESPACE);
-    nameNode.setText("${nameNode}");
-    javaE.addContent(nameNode);
-
-    Element config = new Element("configuration", WorkflowApp.NAMESPACE);
-    Element p0 = new Element("property", WorkflowApp.NAMESPACE);
-    config.addContent(p0);
-    Element name0 = new Element("name", WorkflowApp.NAMESPACE);
-    name0.setText("mapred.job.queue.name");
-    p0.addContent(name0);
-    Element value0 = new Element("value", WorkflowApp.NAMESPACE);
-    value0.setText("${queueName}");
-    p0.addContent(value0);
-
-    // map memory
-    p0 = new Element("property", WorkflowApp.NAMESPACE);
-    config.addContent(p0);
-    name0 = new Element("name", WorkflowApp.NAMESPACE);
-    name0.setText("oozie.launcher.mapred.job.map.memory.mb");
-    p0.addContent(name0);
-    value0 = new Element("value", WorkflowApp.NAMESPACE);
-    value0.setText(this.getJobObject().getMaxMemory());
-    p0.addContent(value0);
-
-    p0 = new Element("property", WorkflowApp.NAMESPACE);
-    config.addContent(p0);
-    name0 = new Element("name", WorkflowApp.NAMESPACE);
-    name0.setText("oozie.launcher.mapred.job.reduce.memory.mb");
-    p0.addContent(name0);
-    value0 = new Element("value", WorkflowApp.NAMESPACE);
-    value0.setText(this.getJobObject().getMaxMemory());
-    p0.addContent(value0);
-
-    p0 = new Element("property", WorkflowApp.NAMESPACE);
-    config.addContent(p0);
-    name0 = new Element("name", WorkflowApp.NAMESPACE);
-    name0.setText("oozie.launcher.mapreduce.map.memory.physical.mb");
-    p0.addContent(name0);
-    value0 = new Element("value", WorkflowApp.NAMESPACE);
-    value0.setText(this.getJobObject().getMaxMemory());
-    p0.addContent(value0);
-
-    p0 = new Element("property", WorkflowApp.NAMESPACE);
-    config.addContent(p0);
-    name0 = new Element("name", WorkflowApp.NAMESPACE);
-    name0.setText("oozie.launcher.mapreduce.reduce.memory.physical.mb");
-    p0.addContent(name0);
-    value0 = new Element("value", WorkflowApp.NAMESPACE);
-    value0.setText(this.getJobObject().getMaxMemory());
-    p0.addContent(value0);
-
-    // add configuration
-    javaE.addContent(config);
-
-    Element mainClass = new Element("main-class", WorkflowApp.NAMESPACE);
-    mainClass.setText("net.sourceforge.seqware.pipeline.runner.Runner");
-    javaE.addContent(mainClass);
-
-    this.buildMetadataString(javaE);
-
-    Element arg1 = new Element("arg", WorkflowApp.NAMESPACE);
-    arg1.setText("--module");
-    javaE.addContent(arg1);
-
-    Element argModule = new Element("arg", WorkflowApp.NAMESPACE);
-    argModule.setText("net.sourceforge.seqware.pipeline.modules.GenericCommandRunner");
-    javaE.addContent(argModule);
-
-    Element dash = new Element("arg", WorkflowApp.NAMESPACE);
-    dash.setText("--");
-    javaE.addContent(dash);
-
-    Element algo = new Element("arg", WorkflowApp.NAMESPACE);
-    algo.setText("--gcr-algorithm");
-    javaE.addContent(algo);
-
-    Element algoValue = new Element("arg", WorkflowApp.NAMESPACE);
-    algoValue.setText(this.jobObj.getAlgo());
-    javaE.addContent(algoValue);
-
-    Element command = new Element("arg", WorkflowApp.NAMESPACE);
-    command.setText("--gcr-command");
-    javaE.addContent(command);
-
-    // add cd command for every gcr job
-    Element cdE = new Element("arg", WorkflowApp.NAMESPACE);
-    cdE.setText("cd " + this.oozie_working_dir + "; ");
-    javaE.addContent(cdE);
-
-    for (String arg : this.jobObj.getCommand().getArguments()) {
-      Element cmdArg = new Element("arg", WorkflowApp.NAMESPACE);
-      cmdArg.setText(arg);
-      javaE.addContent(cmdArg);
-    }
-
-    return javaE;
   }
 
   public void setParentAccessions(Collection<String> parentAccessions) {
@@ -351,59 +358,6 @@ public class OozieJob {
     return this.name;
   }
 
-  protected void buildMetadataString(Element javaElement) {
-    Element metaArg = new Element("arg", WorkflowApp.NAMESPACE);
-    if (this.hasMetadataWriteback()) {
-      metaArg.setText("--metadata");
-    } else {
-      metaArg.setText("--no-metadata");
-    }
-    javaElement.addContent(metaArg);
-
-    if (this.parentAccessions != null && !this.parentAccessions.isEmpty()) {
-      for (String pa : this.parentAccessions) {
-        Element paArg = new Element("arg", WorkflowApp.NAMESPACE);
-        paArg.setText("--metadata-parent-accession");
-        javaElement.addContent(paArg);
-
-        Element paVal = new Element("arg", WorkflowApp.NAMESPACE);
-        paVal.setText(pa);
-        javaElement.addContent(paVal);
-      }
-    }
-
-    if (this.wfrAccession != null) {
-      Element wfraArg = new Element("arg", WorkflowApp.NAMESPACE);
-      Element wfraVal = new Element("arg", WorkflowApp.NAMESPACE);
-      if (!this.wfrAncesstor) {
-        wfraArg.setText("--metadata-workflow-run-ancestor-accession");
-      } else {
-        wfraArg.setText("--metadata-workflow-run-accession");
-      }
-      wfraVal.setText(this.wfrAccession);
-      javaElement.addContent(wfraArg);
-      javaElement.addContent(wfraVal);
-    }
-
-    if (!this.parentAccessionFiles.isEmpty()) {
-      for (String paf : this.parentAccessionFiles) {
-        Element pafArg = new Element("arg", WorkflowApp.NAMESPACE);
-        pafArg.setText("--metadata-parent-accession-file");
-        Element pafVal = new Element("arg", WorkflowApp.NAMESPACE);
-        pafVal.setText(paf);
-        javaElement.addContent(pafArg);
-        javaElement.addContent(pafVal);
-      }
-    }
-    Element pafArg = new Element("arg", WorkflowApp.NAMESPACE);
-    pafArg.setText("--metadata-processing-accession-file");
-
-    Element pafVal = new Element("arg", WorkflowApp.NAMESPACE);
-    pafVal.setText(this.getAccessionFile());
-    javaElement.addContent(pafArg);
-    javaElement.addContent(pafVal);
-  }
-
   public void addParentAccessionFile(String paf) {
     if (!this.parentAccessionFiles.contains(paf))
       this.parentAccessionFiles.add(paf);
@@ -411,216 +365,6 @@ public class OozieJob {
 
   public String getAccessionFile() {
     return this.oozie_working_dir + "/" + this.getName() + "_accession";
-  }
-
-  /**
-   * Returns the metadata arg list for the Runner.
-   * 
-   * @param job
-   *          the job to run
-   * @return Runner args
-   */
-  public static ArrayList<String> metaDataArgs(OozieJob job) {
-    return metaDataArgs(job.metadataWriteback, job.getAccessionFile(), job.parentAccessions, job.parentAccessionFiles,
-                        job.wfrAccession, job.wfrAncesstor);
-  }
-
-  /**
-   * Returns the metadata arg list for the Runner.
-   * 
-   * @return Runner args
-   */
-  public static ArrayList<String> metaDataArgs(boolean metadataWriteback, String accessionFile,
-                                               Collection<String> parentAccessions,
-                                               Collection<String> parentAccessionFiles, String workflowRunAccession,
-                                               boolean workflowRunAncestor) {
-    ArrayList<String> args = new ArrayList<String>();
-
-    if (metadataWriteback) {
-      args.add("--metadata");
-    } else {
-      args.add("--no-metadata");
-    }
-
-    if (parentAccessions != null) {
-      for (String pa : parentAccessions) {
-        args.add("--metadata-parent-accession");
-        args.add(pa);
-      }
-    }
-
-    if (parentAccessionFiles != null) {
-      for (String paf : parentAccessionFiles) {
-        args.add("--metadata-parent-accession-file");
-        args.add(paf);
-      }
-    }
-
-    if (workflowRunAccession != null) {
-      if (workflowRunAncestor) {
-        args.add("--metadata-workflow-run-accession");
-      } else {
-        args.add("--metadata-workflow-run-ancestor-accession");
-      }
-      args.add(workflowRunAccession);
-    }
-
-    args.add("--metadata-processing-accession-file");
-    args.add(accessionFile);
-
-    return args;
-  }
-
-  /**
-   * Returns the GenericCommandRunner module arg list for the Runner.
-   * 
-   * @param job
-   *          the job to run
-   * @return Runner args
-   */
-  public static ArrayList<String> genericRunnerArgs(OozieJob job) {
-    return genericRunnerArgs(job.name, job.oozie_working_dir, job.getJobObject().getCommand().getArguments());
-  }
-
-  /**
-   * Returns the GenericCommandRunner module arg list for the Runner.
-   * 
-   * @param jobName
-   *          name of the job
-   * @param workingDirectory
-   *          working directory of the job
-   * @param commands
-   *          the list of bash commands
-   * @return Runner args
-   */
-  public static ArrayList<String> genericRunnerArgs(String jobName, String workingDirectory, List<String> commands) {
-    ArrayList<String> args = new ArrayList<String>();
-
-    args.add("--module");
-    args.add("net.sourceforge.seqware.pipeline.modules.GenericCommandRunner");
-
-    args.add("--");
-
-    args.add("--gcr-algorithm");
-    args.add(jobName);
-
-    StringBuilder sb = new StringBuilder();
-    sb.append("cd ");
-    sb.append(workingDirectory);
-    sb.append("; ");
-    for (String cmd : commands) {
-      sb.append(cmd);
-    }
-
-    args.add("--gcr-command");
-    args.add(sb.toString());
-
-    return args;
-  }
-
-  /**
-   * Creates the list of arguments to the Runner. Override to provide an
-   * alternative list of values.
-   * 
-   * @return Runner args
-   */
-  public ArrayList<String> runnerArgs() {
-    ArrayList<String> args = metaDataArgs(this);
-    args.addAll(genericRunnerArgs(this));
-    return args;
-  }
-
-  /**
-   * Creates the script that will invoke the Runner for this job.
-   * 
-   * @return the script
-   */
-  public final String createRunnerScript() {
-
-    ArrayList<String> list = new ArrayList<String>();
-    list.add("java");
-    list.add("-classpath");
-    list.add(seqwareJarPath);
-    list.add("net.sourceforge.seqware.pipeline.runner.Runner");
-
-    list.addAll(runnerArgs());
-
-    StringBuilder sb = new StringBuilder("#!/usr/bin/env bash\n\n");
-    for (String s : list) {
-      sb.append(s);
-      sb.append(" ");
-    }
-
-    return sb.toString();
-  }
-
-  public final String createSgeOptionsArgs(String genScriptsDir) {
-    StringBuilder sb = new StringBuilder();
-    sb.append("-b y ");
-    sb.append(" -e ");
-    sb.append(genScriptsDir);
-    sb.append(" -o ");
-    sb.append(genScriptsDir);
-    sb.append(" -N ");
-    sb.append(name);
-
-    if (StringUtils.isNotBlank(jobObj.getQueue())) {
-      sb.append(" -q ");
-      sb.append(jobObj.getQueue());
-    }
-
-    if (StringUtils.isNotBlank(jobObj.getMaxMemory())) {
-      if (maxMemorySgeParamFormat.contains(SGE_MAX_MEMORY_PARAM_VARIABLE)) {
-        sb.append(" ");
-        sb.append(maxMemorySgeParamFormat.replace(SGE_MAX_MEMORY_PARAM_VARIABLE, jobObj.getMaxMemory()));
-      } else {
-        throw new IllegalArgumentException("Format for max memory parameter must contain the replacement variable "
-            + SGE_MAX_MEMORY_PARAM_VARIABLE);
-      }
-    }
-
-    if (jobObj.getThreads() > 0) {
-      if (threadsSgeParamFormat.contains(SGE_THREADS_PARAM_VARIABLE)) {
-        sb.append(" ");
-        sb.append(threadsSgeParamFormat.replace(SGE_THREADS_PARAM_VARIABLE, "" + jobObj.getThreads()));
-      } else {
-        throw new IllegalArgumentException("Format for threads parameter must contain the replacement variable "
-            + SGE_THREADS_PARAM_VARIABLE);
-      }
-    }
-
-    return sb.toString();
-  }
-
-  /**
-   * The sub-directory (of the working directory) in which generated script
-   * files will be placed.
-   */
-  public static final String SGE_SCRIPTS_SUBDIR = "generated-sge-job-scripts";
-
-  public static final Namespace SGE_XMLNS = Namespace.getNamespace("uri:oozie:sge-action:1.0");
-
-  /**
-   * Creates the sge XML action node.
-   * 
-   * @param scriptFileName
-   *          the name of the file passed to qsub
-   * @param workingDirectory
-   *          the working directory passed to qsub
-   * @return the sge node
-   */
-  public final Element createSgeAction(String scriptFileName, String optionsFileName) {
-    Element sge = new Element("sge", SGE_XMLNS);
-
-    Element script = new Element("script", SGE_XMLNS);
-    script.setText(scriptFileName);
-    sge.addContent(script);
-
-    Element opts = new Element("options-file", SGE_XMLNS);
-    opts.setText(optionsFileName);
-    sge.addContent(opts);
-
-    return sge;
   }
 
 }

@@ -156,7 +156,7 @@ public class WorkflowApp {
       }
     }
 
-    OozieJob oJob0 = new OozieJob(job0, "start_" + this.jobs.size(), this.unqiueWorkingDir, this.useSge,
+    OozieJob oJob0 = new OozieBashJob(job0, "start_" + this.jobs.size(), this.unqiueWorkingDir, this.useSge,
                                   this.seqwareJar, this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
     oJob0.setMetadataWriteback(metadatawriteback);
     // if has parent-accessions, assign it to first job
@@ -335,23 +335,12 @@ public class WorkflowApp {
   }
 
   private OozieJob createOozieJobObject(AbstractJob job, AbstractWorkflowDataModel wfdm) {
-    OozieJob ret = null;
-    if (job instanceof JavaJob) {
-      // ret = new PegasusJavaJob(job,wfdm.getWorkflowBaseDir(),
-      // wfdm.getTags().get("seqware_version"));
-      ret = new OozieJavaJob(job, job.getAlgo() + "_" + this.jobs.size(), this.unqiueWorkingDir,
-                             this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
-    } else if (job instanceof PerlJob) {
-      ret = new OozieJob(job, job.getAlgo() + "_" + this.jobs.size(), this.unqiueWorkingDir, this.useSge,
+    if (job instanceof BashJob) {
+      return new OozieBashJob(job, job.getAlgo() + "_" + this.jobs.size(), this.unqiueWorkingDir, this.useSge,
                          this.seqwareJar, this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
-    } else if (job instanceof JavaSeqwareModuleJob) {
-      // ret = new PegasusJavaSeqwareModuleJob(job, wfdm.getWorkflowBaseDir(),
-      // wfdm.getTags().get("seqware_version"));
     } else {
-      ret = new OozieJob(job, job.getAlgo() + "_" + this.jobs.size(), this.unqiueWorkingDir, this.useSge,
-                         this.seqwareJar, this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
+      throw new UnsupportedOperationException("No oozie support for job type "+job.getClass());
     }
-    return ret;
   }
 
   private OozieJob getOozieJobObject(AbstractJob job) {
