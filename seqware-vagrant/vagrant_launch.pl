@@ -14,7 +14,7 @@ my $seqware_build_cmd = 'mvn clean install -DskipTests &> build.log';
 my $seqware_version = 'UNKNOWN';
 my $aws_key = '';
 my $aws_secret_key = '';
-my $launch_aws = 1;
+my $launch_aws = 0;
 my $launch_vb = 0;
 my $launch_os = 0;
 my $launch_cmd = "vagrant up --provider=aws &> vagrant_launch.log";
@@ -37,19 +37,30 @@ GetOptions (
 # figure out the current seqware version based on the most-recently built jar
 $seqware_version = find_version();
 
-# make this explicit, one or the other, aws is given priority
-if ($launch_vb) {
-  $launch_cmd = "vagrant up &> vagrant_launch.log";
-} elsif ($launch_os) {
-  $launch_cmd = "vagrant up --provider=openstack &> vagrant_launch.log";
-}
-
+# config object used for find and replace
 my $configs = {
   '%{SEQWARE_BUILD_CMD}' => $seqware_build_cmd,
   '%{SEQWARE_VERSION}' => $seqware_version,
   '%{AWS_KEY}' => $aws_key,
   '%{AWS_SECRET_KEY}' => $aws_secret_key,
 };
+
+# make this explicit, one or the other, aws is given priority
+if ($launch_vb) {
+  $launch_cmd = "vagrant up &> vagrant_launch.log";
+  $configs->{'%{BOX}'} = "Ubuntu_12.04";
+  $configs->{'%{BOX_URL}'} = "http://cloud-images.ubuntu.com/precise/current/precise-server-cloudimg-vagrant-amd64-disk1.box";
+} elsif ($launch_os) {
+  $launch_cmd = "vagrant up --provider=openstack &> vagrant_launch.log";
+  $configs->{'%{BOX}'} = "dummy";
+  $configs->{'%{BOX_URL}'} = "https://github.com/cloudbau/vagrant-openstack-plugin/raw/master/dummy.box";
+} elsif ($launch_aws) {
+  $launch_cmd = "vagrant up --provider=aws &> vagrant_launch.log";
+  $configs->{'%{BOX}'} = "dummy";
+  $configs->{'%{BOX_URL}'} = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box";
+} else {
+  die "Don't understand the launcher type to use: AWS, OpenStack, or VirtualBox. Please specify with a --use-* param\n";
+}
 
 prepare_files();
 launch_instances();
@@ -83,10 +94,9 @@ sub prepare_files {
   #copy("../seqware-portal/target/seqware-portal-$seqware_version.war", "$work_dir/seqware-portal-$seqware_version.war");
   replace("../seqware-portal/target/seqware-portal-$seqware_version.xml", "$work_dir/seqware-portal-$seqware_version.xml", "jdbc:postgresql://localhost:5432/test_seqware_meta_db", "jdbc:postgresql://localhost:5432/seqware_meta_db");
   # Vagrantfile
-  if ($launch_aws) { autoreplace("templates/Vagrantfile.single", "$work_dir/Vagrantfile"); }
-  elsif ($launch_vb) { autoreplace("templates/Vagrantfile.virtualbox", "$work_dir/Vagrantfile"); } # FIXME
-  elsif ($launch_os) { autoreplace("templates/Vagrantfile.single", "$work_dir/Vagrantfile"); } # FIXME
-  else { die "Don't know which template to use for the Vagrantfile!  You need to specify one of the --use-* params!"; }
+  autoreplace("templates/Vagrantfile.template", "$work_dir/Vagrantfile");
+  # the master configuration script
+  autoreplace("templates/ubuntu_12.04_master_script.sh", "$work_dir/ubuntu_12.04_master_script.sh");
   # database
   copy("../seqware-meta-db/seqware_meta_db.sql", "$work_dir/seqware_meta_db.sql");
   copy("../seqware-meta-db/seqware_meta_db_data.sql", "$work_dir/seqware_meta_db_data.sql");
