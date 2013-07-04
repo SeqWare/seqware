@@ -17,7 +17,11 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.io.ByteArrayInputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import javax.xml.parsers.DocumentBuilderFactory;
+import net.sourceforge.seqware.common.model.Attribute;
 import net.sourceforge.seqware.webservice.resources.BasicResource;
 import org.restlet.data.MediaType;
 import org.restlet.ext.xml.DomRepresentation;
@@ -101,6 +105,33 @@ public class DatabaseIDResource extends BasicResource {
         repOutput.setMediaType(MediaType.TEXT_PLAIN);
 
         return repOutput;
+    }
+
+    /**
+     * Merge attributes from a new set into an existing one while removing duplicates.
+     * Unfortunately, due to how duplicates work,
+     * @param newAttributeSet
+     * @return
+     */
+    protected <S, T extends Attribute> void mergeAttributes(Set<T> existingAttributeSet, Set<T> newAttributeSet, S parent) {
+        // extract keys
+        Map<String, T> keyMap = new HashMap<String, T>();
+        for (T exist : existingAttributeSet) {
+            keyMap.put(exist.getTag(), exist);
+        }
+        // add new attributes, but remove existing ones if there is a duplicate
+        for (T newAttr : newAttributeSet) {
+            if (keyMap.containsKey(newAttr.getTag())) {
+                T oldDuplicate = keyMap.get(newAttr.getTag());
+                keyMap.remove(newAttr.getTag());
+                existingAttributeSet.remove(oldDuplicate);
+            }
+            keyMap.put(newAttr.getTag(), newAttr);
+            // populate the parent end of the relationship
+            existingAttributeSet.add(newAttr);
+            // populate the child end of the relationship
+            newAttr.setAttributeParent(parent);
+        }
     }
     
     

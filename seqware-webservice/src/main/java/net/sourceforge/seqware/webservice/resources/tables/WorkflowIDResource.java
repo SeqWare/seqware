@@ -169,12 +169,8 @@ public class WorkflowIDResource extends DatabaseIDResource {
             }
 
             if(newWorkflow.getWorkflowAttributes()!=null) {
-//SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
-//              workflow.getWorkflowAttributes().clear();
-              for(WorkflowAttribute wfa: newWorkflow.getWorkflowAttributes()) {
-                wfa.setWorkflow(workflow);
-                workflow.getWorkflowAttributes().add(wfa);
-              }
+              //SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+              this.mergeAttributes(workflow.getWorkflowAttributes(), newWorkflow.getWorkflowAttributes(), workflow);
             }
             fs.update(registration, workflow);
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();

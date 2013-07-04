@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.LaneAttribute;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
@@ -38,6 +39,7 @@ import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 
@@ -78,8 +80,8 @@ public class AttributeAnnotator extends Plugin {
         "The SWID of the workflow to annotate. One of the -accession options is required.").withRequiredArg();
     parser.acceptsAll(Arrays.asList("workflow-run-accession", "wr"),
         "The SWID of the workflow run to annotate. One of the -accession options is required.").withRequiredArg();
-    // parser.acceptsAll(Arrays.asList("file-accession", "f"),
-    // "The SWID of the file run to annotate. One of the -accession options is required.").withRequiredArg();
+    parser.acceptsAll(Arrays.asList("file-accession", "f"),
+        "The SWID of the file to annotate. One of the -accession options is required.").withRequiredArg();
 
     parser.accepts("file", "The CSV file for bulk insert").withRequiredArg();
     parser.acceptsAll(Arrays.asList("skip"),
@@ -115,6 +117,12 @@ public class AttributeAnnotator extends Plugin {
     boolean hasValue = options.has("value");
     if (hasKey) {
       key = (String) options.valueOf("key");
+      // SEQWARE-1678 a key cannot be inserted without a value
+      if (!hasValue){
+          println("Combination of parameters not recognized!");
+          println(this.get_syntax());
+          ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+      }
     }
     if (hasValue) {
       value = (String) options.valueOf("value");
@@ -132,7 +140,7 @@ public class AttributeAnnotator extends Plugin {
     if (hasSkip) {
       skip = Boolean.parseBoolean((String) options.valueOf("skip"));
     }
-
+    
     boolean hasSequencerRun = options.has("sequencer-run-accession");
     boolean hasLane = options.has("lane-accession");
     boolean hasIus = options.has("ius-accession");
@@ -144,116 +152,132 @@ public class AttributeAnnotator extends Plugin {
     boolean hasWorkflowRunAccession = options.has("workflow-run-accession");
     boolean hasFileAccession = options.has("file-accession");
 
-    if (hasSequencerRun) {
-      Integer sequencerRunSWID = Integer.parseInt((String) options.valueOf("sequencer-run-accession"));
-      SequencerRunAttribute sra = null;
-      if (hasValue) {
-        sra = new SequencerRunAttribute();
-        sra.setTag(key);
-        sra.setValue(value);
-        // sra.setSequencerRunAttributeId(new
-        // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
+      if (hasSkip && (hasExperimentAccession || hasProcessingAccession || hasStudyAccession || hasWorkflowAccession || hasWorkflowRunAccession)) {
+          println("Combination of parameters not recognized!");
+          println(this.get_syntax());
+          ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+          return ret;
       }
-      metadata.annotateSequencerRun(sequencerRunSWID, sra, skip);
-    } else if (hasLane) {
-      Integer laneSWID = Integer.parseInt((String) options.valueOf("lane-accession"));
-      LaneAttribute la = null;
-      if (hasValue) {
-        la = new LaneAttribute();
-        la.setTag(key);
-        la.setValue(value);
-        // la.setLaneAttributeId(new
-        // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
-      }
-      metadata.annotateLane(laneSWID, la, skip);
+    
+        try {
+            if (hasSequencerRun) {
+                Integer sequencerRunSWID = Integer.parseInt((String) options.valueOf("sequencer-run-accession"));
+                SequencerRunAttribute sra = null;
+                if (hasValue) {
+                    sra = new SequencerRunAttribute();
+                    sra.setTag(key);
+                    sra.setValue(value);
+                    // sra.setSequencerRunAttributeId(new
+                    // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
+                }
+                metadata.annotateSequencerRun(sequencerRunSWID, sra, skip);
+            } else if (hasLane) {
+                Integer laneSWID = Integer.parseInt((String) options.valueOf("lane-accession"));
+                LaneAttribute la = null;
+                if (hasValue) {
+                    la = new LaneAttribute();
+                    la.setTag(key);
+                    la.setValue(value);
+                    // la.setLaneAttributeId(new
+                    // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
+                }
+                metadata.annotateLane(laneSWID, la, skip);
 
-    } else if (hasIus) {
-      Integer iusSWID = Integer.parseInt((String) options.valueOf("ius-accession"));
-      IUSAttribute ia = null;
-      if (hasValue) {
-        ia = new IUSAttribute();
-        ia.setTag(key);
-        ia.setValue(value);
-        // ia.setIusAttributeId(new
-        // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
-      }
-      metadata.annotateIUS(iusSWID, ia, skip);
-    } else if (hasExperimentAccession) {
-      Integer swid = Integer.parseInt((String) options.valueOf("experiment-accession"));
-      ExperimentAttribute a = null;
-      if (hasValue) {
-        a = new ExperimentAttribute();
-        a.setTag(key);
-        a.setValue(value);
-        // a.setExperimentAttributeId(new
-        // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
-      }
-      metadata.annotateExperiment(swid, a, skip);
-    } else if (hasProcessingAccession) {
-      Integer swid = Integer.parseInt((String) options.valueOf("processing-accession"));
-      ProcessingAttribute a = null;
-      if (hasValue) {
-        a = new ProcessingAttribute();
-        a.setTag(key);
-        a.setValue(value);
-        // a.setProcessingAttributeId(new
-        // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
-      }
-      metadata.annotateProcessing(swid, a, skip);
-    } else if (hasSampleAccession) {
-      Integer swid = Integer.parseInt((String) options.valueOf("sample-accession"));
-      SampleAttribute a = null;
-      if (hasValue) {
-        a = new SampleAttribute();
-        a.setTag(key);
-        a.setValue(value);
-        // a.setSampleAttributeId(new
-        // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
-      }
-      metadata.annotateSample(swid, a, skip);
-    } else if (hasStudyAccession) {
-      Integer swid = Integer.parseInt((String) options.valueOf("study-accession"));
-      StudyAttribute a = null;
-      if (hasValue) {
-        a = new StudyAttribute();
-        a.setTag(key);
-        a.setValue(value);
-        // a.setStudyAttributeId(new
-        // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
-      }
-      metadata.annotateStudy(swid, a, skip);
-    } else if (hasWorkflowAccession) {
-      Integer swid = Integer.parseInt((String) options.valueOf("workflow-accession"));
-      WorkflowAttribute a = null;
-      if (hasValue) {
-        a = new WorkflowAttribute();
-        a.setTag(key);
-        a.setValue(value);
-      }
-      metadata.annotateWorkflow(swid, a, skip);
-    } else if (hasWorkflowRunAccession) {
-      Integer swid = Integer.parseInt((String) options.valueOf("workflow-run-accession"));
-      WorkflowRunAttribute a = null;
-      if (hasValue) {
-        a = new WorkflowRunAttribute();
-        a.setTag(key);
-        a.setValue(value);
-      }
-      metadata.annotateWorkflowRun(swid, a, skip);
-    } /*
-       * else if(hasFileAccession) { Integer swid = Integer.parseInt((String)
-       * options.valueOf("file-accession")); FileAttribute a = null; if
-       * (hasValue) { a = new FileAttribute(); a.setTag(key); a.setValue(value);
-       * } metadata.annotateFile(swid, a, skip); }
-       */
-    else {
-      println("Combination of parameters not recognized!");
-      println(this.get_syntax());
-      ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            } else if (hasIus) {
+                Integer iusSWID = Integer.parseInt((String) options.valueOf("ius-accession"));
+                IUSAttribute ia = null;
+                if (hasValue) {
+                    ia = new IUSAttribute();
+                    ia.setTag(key);
+                    ia.setValue(value);
+                    // ia.setIusAttributeId(new
+                    // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
+                }
+                metadata.annotateIUS(iusSWID, ia, skip);
+            } else if (hasExperimentAccession) {
+                Integer swid = Integer.parseInt((String) options.valueOf("experiment-accession"));
+                ExperimentAttribute a = null;
+                if (hasValue) {
+                    a = new ExperimentAttribute();
+                    a.setTag(key);
+                    a.setValue(value);
+                    // a.setExperimentAttributeId(new
+                    // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
+                }
+                metadata.annotateExperiment(swid, a, skip);
+            } else if (hasProcessingAccession) {
+                Integer swid = Integer.parseInt((String) options.valueOf("processing-accession"));
+                ProcessingAttribute a = null;
+                if (hasValue) {
+                    a = new ProcessingAttribute();
+                    a.setTag(key);
+                    a.setValue(value);
+                    // a.setProcessingAttributeId(new
+                    // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
+                }
+                metadata.annotateProcessing(swid, a, skip);
+            } else if (hasSampleAccession) {
+                Integer swid = Integer.parseInt((String) options.valueOf("sample-accession"));
+                SampleAttribute a = null;
+                if (hasValue) {
+                    a = new SampleAttribute();
+                    a.setTag(key);
+                    a.setValue(value);
+                    // a.setSampleAttributeId(new
+                    // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
+                }
+                metadata.annotateSample(swid, a, skip);
+            } else if (hasStudyAccession) {
+                Integer swid = Integer.parseInt((String) options.valueOf("study-accession"));
+                StudyAttribute a = null;
+                if (hasValue) {
+                    a = new StudyAttribute();
+                    a.setTag(key);
+                    a.setValue(value);
+                    // a.setStudyAttributeId(new
+                    // Random(System.currentTimeMillis()).nextInt(Integer.MAX_VALUE));
+                }
+                metadata.annotateStudy(swid, a, skip);
+            } else if (hasWorkflowAccession) {
+                Integer swid = Integer.parseInt((String) options.valueOf("workflow-accession"));
+                WorkflowAttribute a = null;
+                if (hasValue) {
+                    a = new WorkflowAttribute();
+                    a.setTag(key);
+                    a.setValue(value);
+                }
+                metadata.annotateWorkflow(swid, a, skip);
+            } else if (hasWorkflowRunAccession) {
+                Integer swid = Integer.parseInt((String) options.valueOf("workflow-run-accession"));
+                WorkflowRunAttribute a = null;
+                if (hasValue) {
+                    a = new WorkflowRunAttribute();
+                    a.setTag(key);
+                    a.setValue(value);
+                }
+                metadata.annotateWorkflowRun(swid, a, skip);
+            } else if (hasFileAccession) {
+                Integer swid = Integer.parseInt((String) options.valueOf("file-accession"));
+                FileAttribute a = null;
+                if (hasValue) {
+                    a = new FileAttribute();
+                    a.setTag(key);
+                    a.setValue(value);
+                }
+                metadata.annotateFile(swid, a, skip);
+            } else {
+                println("Combination of parameters not recognized!");
+                println(this.get_syntax());
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            }
+        } catch (RuntimeException e) {
+            println(this.get_syntax());
+            ret.setExitStatus(ReturnValue.FAILURE);
+            return ret;
+        }
+
+        return ret;
     }
-
-    return ret;
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -291,10 +315,10 @@ public class AttributeAnnotator extends Plugin {
       }
       freader.close();
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
+      Log.error("Input file was not found", e);
       return false;
     } catch (IOException ex) {
-      ex.printStackTrace();
+      Log.error("IOException", ex);
       return false;
     }
     return true;

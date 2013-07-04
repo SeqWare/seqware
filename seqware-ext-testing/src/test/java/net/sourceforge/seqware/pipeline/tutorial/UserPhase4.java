@@ -39,7 +39,7 @@ public class UserPhase4 {
     public void testExistingFileInAndAssociateWithSample() throws IOException {
         GenericMetadataSaverIT it = new GenericMetadataSaverIT();
         String output = it.saveGenericMetadataFileForSample(AccessionMap.accessionMap.get(UserPhase3.SAMPLE));
-        String sw_accession = UserTutorialSuiteIT.getAndCheckProcessingAccession(output);
+        String sw_accession = UserTutorialSuiteET.getAndCheckProcessingAccession(output);
         AccessionMap.accessionMap.put(FILE, sw_accession);
     }
 }

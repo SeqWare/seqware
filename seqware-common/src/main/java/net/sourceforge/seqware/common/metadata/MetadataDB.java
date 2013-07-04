@@ -22,6 +22,7 @@ import javax.sql.DataSource;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Lane;
@@ -363,6 +364,39 @@ public class MetadataDB extends Metadata {
     this.getSql().getResultSet().next();
     return this.getSql().getResultSet().getInt(1);
   }
+  
+    /**
+     * {@inheritDoc}
+     */
+    public ReturnValue set_processing_update_tstmp_if_null(int processingID) {
+        // Create a SQL statement
+        StringBuilder sql = new StringBuilder();
+        try {
+            // FIXME: Update a processing entry from ReturnValue
+            sql.append("UPDATE processing SET ");
+            // create_tstmp timestamp and update_tstmp
+            sql.append("update_tstmp = now()");
+            sql.append(" WHERE processing_id = ").append(processingID).append(" AND update_tstmp IS NULL");
+
+            // Execute above
+            PreparedStatement ps = null;
+            try {
+                Log.info(sql);
+                ps = this.getDb().prepareStatement(sql.toString());
+                ps.executeUpdate();
+            } finally {
+                DbUtils.closeQuietly(ps);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ReturnValue(null, "Could not execute one of the SQL commands: " + sql.toString() + "\nException: "
+                    + e.getMessage(), ReturnValue.SQLQUERYFAILED);
+        }
+        /*
+         * If no error, return success
+         */
+        return new ReturnValue();
+    }
 
   // FIXME: This should all be a transaction. For now, we end up with cruft in
   // the DB if something failed.
@@ -2100,6 +2134,16 @@ public class MetadataDB extends Metadata {
 
     @Override
     public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public void annotateFile(int laneSWID, FileAttribute iusAtt, Boolean skip) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public void annotateFile(int fileSWID, Set<FileAttribute> iusAtts) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
 }
