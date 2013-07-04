@@ -1330,13 +1330,13 @@ public class MetadataDB extends Metadata {
 
     try {
       if (this.getSql() != null) {
-          Log.fatal("clean_up() of statement " + Integer.toHexString(this.getSql().hashCode()));
+          Log.debug("clean_up() of statement " + Integer.toHexString(this.getSql().hashCode()));
           this.getSql().close();
           // we need to explicitly set the statement to null to avoid the risk of closing it twice
           this.setSql(null);
       }
       if (this.getDb() != null) {
-          Log.fatal("clean_up() of connection " + Integer.toHexString(this.getDb().hashCode()));
+          Log.debug("clean_up() of connection " + Integer.toHexString(this.getDb().hashCode()));
         this.getDb().close();
         // we need to explicitly set the connection to null to avoid the risk of closing it tiwce
         // see https://tomcat.apache.org/tomcat-6.0-doc/jndi-datasource-examples-howto.html
