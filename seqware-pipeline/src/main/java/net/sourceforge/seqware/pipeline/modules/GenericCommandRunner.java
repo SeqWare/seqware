@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +64,7 @@ public class GenericCommandRunner extends Module {
      *
      * @return OptionParser this is used to get command line options
      */
+    @Override
     protected OptionParser getOptionParser() {
         OptionParser parser = new OptionParser();
 
@@ -85,8 +85,8 @@ public class GenericCommandRunner extends Module {
                 "If the registered output files don't exist don't worry about it. Useful for workflows that can produce variable file outputs but also potentially dangerous.");
         parser.accepts("gcr-check-output-file", "Specify the path to the file.").withRequiredArg();
         // SEQWARE-1668 GCR needs the ability to output to stdout and stderr for debugging
-        parser.accepts(GCRSTDOUT, "Optional: Returns stdout");
-        parser.accepts(GCRSTDERR, "Optional: Returns stderr");
+        parser.accepts(GCRSTDOUT, "Optional: Reports stdout (stdout of the command called is normally suppressed, except in case of failure)");
+        parser.accepts(GCRSTDERR, "Optional: Returns stderr (stderr of the command called is normally suppressed, except in case of failure)");
         return (parser);
     }
 
@@ -103,7 +103,6 @@ public class GenericCommandRunner extends Module {
             parser.printHelpOn(output);
             return (output.toString());
         } catch (IOException e) {
-            e.printStackTrace();
             return (e.getMessage());
         }
     }
@@ -180,11 +179,9 @@ public class GenericCommandRunner extends Module {
             // ret.setStdout(ret.getStdout() + "Output: " + (String) options.valueOf("output-file") + "\n");
 
         } catch (OptionException e) {
-            e.printStackTrace();
             ret.setStderr(e.getMessage());
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         } catch (IOException e) {
-            e.printStackTrace();
             ret.setStderr(e.getMessage());
             ret.setExitStatus(ReturnValue.DIRECTORYNOTWRITABLE);
         }
@@ -337,20 +334,20 @@ public class GenericCommandRunner extends Module {
         ret.setRunStartTstmp(new Date());
 
         // save StdErr and StdOut
-        StringBuffer stderr = new StringBuffer();
-        StringBuffer stdout = new StringBuffer();
+        StringBuilder stderr = new StringBuilder();
+        StringBuilder stdout = new StringBuilder();
 
         ArrayList<String> theCommand = new ArrayList<String>();
         theCommand.add("bash");
         theCommand.add("-lc");
-        StringBuffer cmdBuff = new StringBuffer();
-        cmdBuff.append((String) options.valueOf("gcr-command") + " ");
+        StringBuilder cmdBuff = new StringBuilder();
+        cmdBuff.append((String) options.valueOf("gcr-command")).append(" ");
         for (String token : cmdParameters) {
-            cmdBuff.append(token + " ");
+            cmdBuff.append(token).append(" ");
         }
         theCommand.add(cmdBuff.toString());
         Log.stdout("Command run: \nbash -lc " + cmdBuff.toString());
-        stderr.append("TESTING: the command\nbash -lc " + cmdBuff.toString());
+        stderr.append("TESTING: the command\nbash -lc ").append(cmdBuff.toString());
         ReturnValue result = RunTools.runCommand(theCommand.toArray(new String[0]));
         // ReturnValue result = RunTools.runCommand(new String[] { "bash", "-c",
         // (String)options.valueOf("gcr-command"), cmdParameters.toArray(new
