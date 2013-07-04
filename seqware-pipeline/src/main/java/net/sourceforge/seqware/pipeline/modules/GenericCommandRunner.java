@@ -349,6 +349,7 @@ public class GenericCommandRunner extends Module {
         Log.stdout("Command run: \nbash -lc " + cmdBuff.toString());
         stderr.append("TESTING: the command\nbash -lc ").append(cmdBuff.toString());
         ReturnValue result = RunTools.runCommand(theCommand.toArray(new String[0]));
+        Log.stdout("Command exit code: " + result.getExitStatus());
         // ReturnValue result = RunTools.runCommand(new String[] { "bash", "-c",
         // (String)options.valueOf("gcr-command"), cmdParameters.toArray(new
         // String[0])} );
