@@ -24,7 +24,7 @@ import junit.framework.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
-import net.sourceforge.seqware.pipeline.plugins.PluginRunnerIT;
+import net.sourceforge.seqware.pipeline.plugins.PluginRunnerET;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import org.junit.Test;
 
@@ -38,8 +38,8 @@ public class UserPhase5 {
     
     @Test
     public void testListAvailableWorkflowsAndTheirParameters() throws IOException {
-        PluginRunnerIT pit = new PluginRunnerIT();
-        PluginRunnerIT.clearStaticVariables();
+        PluginRunnerET pit = new PluginRunnerET();
+        PluginRunnerET.clearStaticVariables();
         PluginRunner it = new PluginRunner();
         String SEQWARE_VERSION = it.getClass().getPackage().getImplementationVersion();
         Assert.assertTrue("unable to detect seqware version", SEQWARE_VERSION != null);
@@ -47,11 +47,11 @@ public class UserPhase5 {
 
         // for all tests, we're going to need to create and install our basic archetypes
         String[] archetypes = {"java-workflow"};
-        PluginRunnerIT.buildAndInstallArchetypes(archetypes, SEQWARE_VERSION);
+        PluginRunnerET.buildAndInstallArchetypes(archetypes, SEQWARE_VERSION);
 
         //list workflows and ensure that the workflow is installed
         List<Integer> accessions = new ArrayList<Integer>();
-        accessions.addAll(PluginRunnerIT.getInstalledWorkflows().values());
+        accessions.addAll(PluginRunnerET.getInstalledWorkflows().values());
         Assert.assertTrue("one accession expected", accessions.size() == 1);
         AccessionMap.accessionMap.put(WORKFLOW, accessions.get(0).toString());
 

@@ -36,7 +36,7 @@ public class UserPhase2 {
         String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table experiment "
                 + "--create --field title::New Test Experiment --field description::This is a test description --field study_accession::"+AccessionMap.accessionMap.get(UserPhase1.STUDY) +" --field platform_id::26", 
                 ReturnValue.SUCCESS, null);
-        String sw_accession  = UserTutorialSuiteIT.getAndCheckSwid(output);
+        String sw_accession  = UserTutorialSuiteET.getAndCheckSwid(output);
         AccessionMap.accessionMap.put(EXPERIMENT, sw_accession);
     }
 }

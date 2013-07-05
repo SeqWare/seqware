@@ -14,6 +14,7 @@ import java.util.TreeSet;
 
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Lane;
@@ -712,5 +713,15 @@ public class MetadataNoConnection extends Metadata {
     @Override
     public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
         return new ArrayList<WorkflowRun>();
+    }
+
+    @Override
+    public void annotateFile(int laneSWID, FileAttribute iusAtt, Boolean skip) {
+        logger.info("No metadata connection");
+    }
+
+    @Override
+    public void annotateFile(int fileSWID, Set<FileAttribute> iusAtts) {
+       logger.info("No metadata connection");
     }
 }

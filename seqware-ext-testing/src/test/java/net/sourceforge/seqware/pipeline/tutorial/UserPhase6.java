@@ -23,7 +23,7 @@ import java.util.Collection;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
-import net.sourceforge.seqware.pipeline.plugins.PluginRunnerIT;
+import net.sourceforge.seqware.pipeline.plugins.PluginRunnerET;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.junit.AfterClass;
@@ -87,7 +87,7 @@ public class UserPhase6 {
     
     @AfterClass
     public static void cleanup() throws IOException{
-        PluginRunnerIT.monitorAndClean(false);
+        PluginRunnerET.monitorAndClean(false);
     }
 
     private String monitorAndReturnWorkflowRun() throws IOException {

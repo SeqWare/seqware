@@ -49,6 +49,44 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat6-maven-plugin</artifactId>
+                <configuration>   
+                    <contextFile>../seqware-webservice/src/main/webapp/META-INF/context.xml</contextFile>
+                    <webapps>
+                        <webapp>
+                            <groupId>com.github.seqware</groupId> 
+                            <artifactId>seqware-webservice</artifactId> 
+                            <version>${project.version}</version> 
+                            <type>war</type>                                     
+                            <asWebapp>true</asWebapp>  
+                        </webapp>                           
+                    </webapps>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+			
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>verify</id>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
     <profiles>
@@ -57,43 +95,19 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.tomcat.maven</groupId>
-                        <artifactId>tomcat6-maven-plugin</artifactId>
-                        <configuration>   
-                            <contextFile>../seqware-webservice/src/main/webapp/META-INF/context.xml</contextFile>
-                            <webapps>
-                                <webapp>
-                                    <groupId>com.github.seqware</groupId> 
-                                    <artifactId>seqware-webservice</artifactId> 
-                                    <version>${project.version}</version> 
-                                    <type>war</type>                                     
-                                    <asWebapp>true</asWebapp>  
-                                </webapp>                           
-                            </webapps>
-                        </configuration>
-                    </plugin>
-                    
-                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <version>${maven-failsafe-plugin.version}</version>
 			
-                        <executions>
-                            <execution>
-                                <id>integration-test</id>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>verify</id>
-                                <goals>
-                                    <goal>verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
+                        <configuration>
+                            <includes>
+                                <include>**/IT*.java</include>
+                                <include>**/*IT.java</include>
+                                <include>**/ET*.java</include>
+                                <include>**/*ET.java</include>
+                            </includes>
+                        </configuration>
                     </plugin>
-        
                 </plugins>
             </build>
         </profile>

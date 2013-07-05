@@ -39,6 +39,7 @@ public class File implements Serializable, Comparable<File>, PermissionsAware {
   private Set<Processing> processings = new TreeSet<Processing>();
   private Set<FileAttribute> fileAttributes = new TreeSet<FileAttribute>();
   private Long size;
+  private Boolean skip;
 
   /**
    * <p>Getter for the field <code>processings</code>.</p>
@@ -76,7 +77,8 @@ public class File implements Serializable, Comparable<File>, PermissionsAware {
   public String toString() {
     return "File{" + "fileId=" + fileId + ", filePath=" + filePath + ", type=" + type + ", metaType=" + metaType
         + ", description=" + description + ", swAccession=" + swAccession + ", isSelected=" + isSelected + ", owner="
-        + owner + ", url=" + url + ", urlLabel=" + urlLabel + ", md5sum=" + md5sum + ", fileType=" + fileType + '}';
+        + owner + ", url=" + url + ", urlLabel=" + urlLabel + ", md5sum=" + md5sum + ", fileType=" + fileType 
+        + ", skip=" + getSkip() + '}';
   }
 
   /** {@inheritDoc} */
@@ -364,6 +366,7 @@ public class File implements Serializable, Comparable<File>, PermissionsAware {
         file.setMetaType(rs.getString("meta_type"));
         file.setDescription(rs.getString("description"));
         file.setSwAccession(rs.getInt("sw_accession"));
+        file.setSkip(rs.getBoolean("skip"));
       }
     } finally {
       DbUtils.closeQuietly(rs);
@@ -440,5 +443,19 @@ public class File implements Serializable, Comparable<File>, PermissionsAware {
   public void setSize(Long size) {
     this.size = size;
   }
+
+    /**
+     * @return the skip
+     */
+    public Boolean getSkip() {
+        return skip;
+    }
+
+    /**
+     * @param skip the skip to set
+     */
+    public void setSkip(Boolean skip) {
+        this.skip = skip;
+    }
 
 }
