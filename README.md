@@ -67,27 +67,49 @@ For example:
 ### Building and Automated Testing 
 
 We're moving to Maven for our builds, this is currently how
-you do it in the trunk directory:
+you build without running any tests in the trunk directory:
 
-    mvn clean install
+    mvn clean install -DskipTests
 
-Maven now runs unit tests as follows.
+Maven now runs unit tests as follows (unit tests in the SeqWare context are quick tests that do not require the embedded HBase or Tomcat instance):
 
-    mvn clean install # (runs unit tests but skips integration tests, HBase for query engine and Jetty for web service by default) 
-    mvn clean install -DskipTests # (skips all unit tests and integration tests)
+    mvn clean install  
 
 In order to run the integration tests on the entire project, please ensure that you have followed the steps in each of the integration testing guides for our sub-projects. This includes [MetaDB](http://seqware.github.com/docs/github_readme/3-metadb/) , [Web Service](http://seqware.github.com/docs/github_readme/4-webservice/) , and [Query Engine](http://seqware.github.com/docs/github_readme/2-queryengine/). 
 
 When this is complete: 
 
-    export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=512m" (ensures enough memory for integration tests)
-    mvn clean install -DskipITs=false # (runs all unit tests and integration tests that only require postgres as a prerequisite)
-    mvn clean install -DskipITs=false -P extITs # (runs all unit tests and all integration tests including those that require Condor/Globus/Pegasus)
+    export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=512m" 
+(This ensures that enough memory is allocated for integration tests)
+    mvn clean install -DskipITs=false
+(This runs all unit tests and integration tests that only require postgres as a prerequisite)
+    mvn clean install -DskipITs=false -P extITs,embeddedTomcat
+(runs all unit tests and all integration tests including those that require Condor/Globus/Pegasus)
 
 In the last case, the extended integration tests profile is used to trigger integration tests that run our command line utilities. 
 In order to point your command-line tools at the web service brought up by the integration tests, you will need to comment out your crontab and modify your SeqWare ~/.seqware/settings to include:
 
     SW_REST_URL=http://localhost:8889/seqware-webservice
+
+It is possible to disable our embedded tomcat instance and run against both a remote postgres and Tomcat instance. Set the following variables in your .seqware/settings to override these settings for basic integration tests and extended integration tests respectively:
+
+    BASIC_TEST_DB_HOST=otherserver.ca
+    BASIC_TEST_DB_NAME=test_seqware_meta_db
+    BASIC_TEST_DB_USER=seqware
+    BASIC_TEST_DB_PASSWORD=seqware
+
+    EXTENDED_TEST_DB_HOST=otherserver.ca
+    EXTENDED_TEST_DB_NAME=test_seqware_meta_db
+    EXTENDED_TEST_DB_USER=seqware
+    EXTENDED_TEST_DB_PASSWORD=seqware
+
+Then set your SW_REST_URL to the web service that uses the above database and invoke the following command. Note that you will need to deploy the seqware-webservice war yourself. 
+
+    mvn clean install -DskipITs=false -P 'extITs,!embeddedTomcat'
+
+Alternatively, if you wish to still use an embedded tomcat instance for testing, modify the properties at the beginning of your seqware-webservice/pom.xml to match the above databases and invoke the integration tests with your SW_REST_URL set to http://localhost:8889/seqware-webservice
+
+    mvn clean install -DskipITs=false -P extITs,embeddedTomcat
 
 You can also build individual components such as the new query engine with: 
 
