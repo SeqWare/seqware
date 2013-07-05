@@ -13,7 +13,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @author boconnor
  * @version $Id: $Id
  */
-public class SampleAttribute implements java.io.Serializable, Attribute, Comparable<SampleAttribute> {
+public class SampleAttribute implements java.io.Serializable, Attribute<Sample>, Comparable<SampleAttribute> {
 
   private static final long serialVersionUID = 1L;
   private int sampleAttributeId;
@@ -172,5 +172,10 @@ public class SampleAttribute implements java.io.Serializable, Attribute, Compara
 	public int hashCode() {
 		return new HashCodeBuilder(17,37).append(tag).toHashCode();
 	}
+
+    @Override
+    public void setAttributeParent(Sample parent) {
+        this.setSample(parent);
+    }
 
 }

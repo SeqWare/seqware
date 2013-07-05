@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
-import net.sourceforge.seqware.pipeline.plugins.PluginRunnerIT;
+import net.sourceforge.seqware.pipeline.plugins.PluginRunnerET;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -49,6 +49,6 @@ public class DeveloperPhase2 {
     @AfterClass
     public static void cleanup() throws IOException{
         FileUtils.deleteDirectory(DeveloperPhase1.BundleDir);
-        PluginRunnerIT.monitorAndClean(false);
+        PluginRunnerET.monitorAndClean(false);
     }
 }
