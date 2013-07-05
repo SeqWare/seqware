@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +52,8 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = ModuleInterface.class)
 public class GenericCommandRunner extends Module {
+    public static final String GCRSTDOUT = "gcr-stdout";
+    public static final String GCRSTDERR = "gcr-stderr";
 
     private OptionSet options = null;
     private File tempDir = null;
@@ -63,6 +64,7 @@ public class GenericCommandRunner extends Module {
      *
      * @return OptionParser this is used to get command line options
      */
+    @Override
     protected OptionParser getOptionParser() {
         OptionParser parser = new OptionParser();
 
@@ -82,6 +84,9 @@ public class GenericCommandRunner extends Module {
                 "gcr-skip-if-missing",
                 "If the registered output files don't exist don't worry about it. Useful for workflows that can produce variable file outputs but also potentially dangerous.");
         parser.accepts("gcr-check-output-file", "Specify the path to the file.").withRequiredArg();
+        // SEQWARE-1668 GCR needs the ability to output to stdout and stderr for debugging
+        parser.accepts(GCRSTDOUT, "Optional: Reports stdout (stdout of the command called is normally suppressed, except in case of failure)");
+        parser.accepts(GCRSTDERR, "Optional: Returns stderr (stderr of the command called is normally suppressed, except in case of failure)");
         return (parser);
     }
 
@@ -98,7 +103,6 @@ public class GenericCommandRunner extends Module {
             parser.printHelpOn(output);
             return (output.toString());
         } catch (IOException e) {
-            e.printStackTrace();
             return (e.getMessage());
         }
     }
@@ -142,16 +146,18 @@ public class GenericCommandRunner extends Module {
 
             // should be able to do this since all the --gcr-* params take an argument
             for (int i = 0; i < this.getParameters().size(); i++) {
-                if (this.getParameters().get(i).startsWith("--gcr-")) {
-                    if (this.getParameters().get(i).startsWith("--gcr-skip-if")) {
-                        myParameters.add(this.getParameters().get(i));
+                final String param = this.getParameters().get(i);
+                if (param.startsWith("--gcr-")) {
+                    // except these ones!
+                    if (param.startsWith("--gcr-skip-if") || param.equals("--" + GenericCommandRunner.GCRSTDERR) || param.equals("--" + GenericCommandRunner.GCRSTDOUT)) {
+                        myParameters.add(param);
                     } else {
-                        myParameters.add(this.getParameters().get(i));
+                        myParameters.add(param);
                         myParameters.add(this.getParameters().get(i + 1));
                         i++;
                     }
                 } else {
-                    cmdParameters.add(this.getParameters().get(i));
+                    cmdParameters.add(param);
                 }
             }
 
@@ -167,14 +173,15 @@ public class GenericCommandRunner extends Module {
 
             // you can write to "stdout" or "stderr" which will be persisted back to
             // the DB
-            ret.setStdout(ret.getStdout() + "Output: " + (String) options.valueOf("output-file") + "\n");
+            // SEQWARE-1669
+            // since nothing has been run yet ret.getStdout() is always null, "output-file" doesn't exist 
+            // this this always output "nullOutput: null"
+            // ret.setStdout(ret.getStdout() + "Output: " + (String) options.valueOf("output-file") + "\n");
 
         } catch (OptionException e) {
-            e.printStackTrace();
             ret.setStderr(e.getMessage());
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         } catch (IOException e) {
-            e.printStackTrace();
             ret.setStderr(e.getMessage());
             ret.setExitStatus(ReturnValue.DIRECTORYNOTWRITABLE);
         }
@@ -327,26 +334,37 @@ public class GenericCommandRunner extends Module {
         ret.setRunStartTstmp(new Date());
 
         // save StdErr and StdOut
-        StringBuffer stderr = new StringBuffer();
-        StringBuffer stdout = new StringBuffer();
+        StringBuilder stderr = new StringBuilder();
+        StringBuilder stdout = new StringBuilder();
 
         ArrayList<String> theCommand = new ArrayList<String>();
         theCommand.add("bash");
         theCommand.add("-lc");
-        StringBuffer cmdBuff = new StringBuffer();
-        cmdBuff.append((String) options.valueOf("gcr-command") + " ");
+        StringBuilder cmdBuff = new StringBuilder();
+        cmdBuff.append((String) options.valueOf("gcr-command")).append(" ");
         for (String token : cmdParameters) {
-            cmdBuff.append(token + " ");
+            cmdBuff.append(token).append(" ");
         }
         theCommand.add(cmdBuff.toString());
-        stderr.append("TESTING: the command\nbash -lc " + cmdBuff.toString());
+        Log.stdout("Command run: \nbash -lc " + cmdBuff.toString());
+        stderr.append("TESTING: the command\nbash -lc ").append(cmdBuff.toString());
         ReturnValue result = RunTools.runCommand(theCommand.toArray(new String[0]));
+        Log.stdout("Command exit code: " + result.getExitStatus());
         // ReturnValue result = RunTools.runCommand(new String[] { "bash", "-c",
         // (String)options.valueOf("gcr-command"), cmdParameters.toArray(new
         // String[0])} );
         stderr.append(result.getStderr());
         stdout.append(result.getStdout());
 
+        // SEQWARE-1668, report stderr and stdout to the runner so that it can decider whether to display stdout and stderr
+        if (options.has(GCRSTDOUT)){
+            ret.setStdout(stdout.toString());
+        } 
+        if (options.has(GCRSTDERR)){
+            ret.setStderr(stderr.toString());
+        }
+            
+        
         if (result.getProcessExitStatus() != ReturnValue.SUCCESS || result.getExitStatus() != ReturnValue.SUCCESS) {
             ret.setExitStatus(result.getExitStatus());
             ret.setProcessExitStatus(result.getProcessExitStatus());
