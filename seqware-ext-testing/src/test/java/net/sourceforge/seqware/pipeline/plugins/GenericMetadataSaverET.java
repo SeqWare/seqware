@@ -33,11 +33,11 @@ import org.junit.Test;
  *
  * @author dyuen
  */
-public class GenericMetadataSaverIT {
+public class GenericMetadataSaverET {
     
     @BeforeClass
     public static void resetDatabase() {
-        TestDatabaseCreator.resetDatabaseWithUsers();
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
 
     /**

@@ -17,7 +17,7 @@
 package net.sourceforge.seqware.common.business.impl;
 
 import junit.framework.TestCase;
-import net.sourceforge.seqware.common.util.testtools.DatabaseCreator;
+import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreatorWrapper;
 import net.sourceforge.seqware.common.util.testtools.JndiDatasourceCreator;
 
 import org.junit.After;
@@ -54,7 +54,7 @@ public class HibernateTestSuite extends TestCase {
    */
   @BeforeClass
   public static void setUpClass() throws Exception {
-    DatabaseCreator.createDatabase();
+    BasicTestDatabaseCreatorWrapper.createDatabase();
     JndiDatasourceCreator.create();
   }
 
@@ -65,7 +65,7 @@ public class HibernateTestSuite extends TestCase {
    */
   @AfterClass
   public static void tearDownClass() throws Exception {
-    DatabaseCreator.dropDatabase();
+    BasicTestDatabaseCreatorWrapper.dropDatabase();
   }
 
   /**

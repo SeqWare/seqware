@@ -13,13 +13,14 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 
 /**
- * <p>TestDatabaseCreator class.</p>
+ * This class handles basic database creation.
  *
  * @author boconnor
  * @version $Id: $Id
  */
 public class TestDatabaseCreator {
 
+    private final static String DEFAULT_DB_HOST = "127.0.0.1";
     private final static String POSTGRE_DB = "postgres";
     private final static String SEQWARE_DB = "test_seqware_meta_db";
     //We should not have a postgres user with an easily guessable password. It 
@@ -33,13 +34,20 @@ public class TestDatabaseCreator {
     private static boolean database_changed;
     private static boolean first_time_created = true;
     private static Logger logger = Logger.getLogger(TestDatabaseCreator.class);
+
+    /**
+     * @return the DEFAULT_DB_HOST
+     */
+    protected String getDEFAULT_DB_HOST() {
+        return DEFAULT_DB_HOST;
+    }
     
     /**
      * <p>createDatabase.</p>
      *
      * @throws java.sql.SQLException if any.
      */
-    public static void createDatabase() throws SQLException {
+    public void createDatabase() throws SQLException {
 
         if (!first_time_created && !database_changed) {
             logger.info("TestDatabaseCreator.createDatabase: database not changed or not first time so not creating DB");
@@ -52,7 +60,7 @@ public class TestDatabaseCreator {
         try {
             // connectionToPostgres = createConnection(POSTGRE_DB, POSTGRE_USER, POSTGRE_PASSWORD);
             // loadDatabase(connectionToPostgres);
-            connectionToSeqware = createConnection(SEQWARE_DB, POSTGRE_USER, POSTGRE_PASSWORD);
+            connectionToSeqware = createConnection(getSEQWARE_DB(), getPOSTGRE_USER(), getPOSTGRE_PASSWORD());
             loadDBStructure(connectionToSeqware);
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,12 +84,12 @@ public class TestDatabaseCreator {
      * @param params
      * @return
      */
-    public static <T extends Object> T runQuery(ResultSetHandler<T> h, String query, Object... params) {
+    public <T extends Object> T runQuery(ResultSetHandler<T> h, String query, Object... params) {
         QueryRunner run = new QueryRunner();
         T result = null;
         Connection connectionToSeqware = null;
         try {
-            connectionToSeqware = createConnection(SEQWARE_DB, POSTGRE_USER, POSTGRE_PASSWORD);
+            connectionToSeqware = createConnection(getSEQWARE_DB(), getPOSTGRE_USER(), getPOSTGRE_PASSWORD());
             result = run.query(connectionToSeqware, query, h, params);
         } catch(Exception e){
             return null;
@@ -98,10 +106,10 @@ public class TestDatabaseCreator {
      *
      * @throws java.sql.SQLException if any.
      */
-    public static void dropDatabase() throws SQLException {
+    public void dropDatabase() throws SQLException {
         Connection connectionToPostgres = null;
         try {
-            connectionToPostgres = createConnection(POSTGRE_DB, POSTGRE_USER, POSTGRE_PASSWORD);
+            connectionToPostgres = createConnection(getPOSTGRE_DB(), getPOSTGRE_USER(), getPOSTGRE_PASSWORD());
             unLoadDatabase(connectionToPostgres);
         } catch (Exception e) {
 //            e.printStackTrace();
@@ -118,10 +126,10 @@ public class TestDatabaseCreator {
      *
      * @throws java.sql.SQLException if any.
      */
-    public static void dropDatabaseWithUsers() throws SQLException {
+    public void dropDatabaseWithUsers() throws SQLException {
         Connection connectionToPostgres = null;
         try {
-            connectionToPostgres = createConnection(SEQWARE_DB, POSTGRE_USER, POSTGRE_PASSWORD);
+            connectionToPostgres = createConnection(getSEQWARE_DB(), getPOSTGRE_USER(), getPOSTGRE_PASSWORD());
             connectionToPostgres.createStatement().execute("drop schema if exists public cascade;");
             connectionToPostgres.createStatement().execute("create schema public;");
         } catch (Exception e) {
@@ -141,11 +149,11 @@ public class TestDatabaseCreator {
         database_changed = true;
     }
 
-    private static void unLoadDatabase(Connection connection) throws SQLException {
-        connection.createStatement().execute("DROP DATABASE IF EXISTS "+SEQWARE_DB+";");
+    private void unLoadDatabase(Connection connection) throws SQLException {
+        connection.createStatement().execute("DROP DATABASE IF EXISTS "+getSEQWARE_DB()+";");
     }
 
-    private static Connection createConnection(String databaseName, String userName, String password) throws Exception {
+    private Connection createConnection(String databaseName, String userName, String password) throws Exception {
         try {
 
             Class.forName("org.postgresql.Driver");
@@ -158,7 +166,7 @@ public class TestDatabaseCreator {
 
         try {
 
-            return DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/" + databaseName, userName, password);
+            return DriverManager.getConnection("jdbc:postgresql://"+getDEFAULT_DB_HOST()+":5432/" + databaseName, userName, password);
 
         } catch (SQLException e) {
 
@@ -167,10 +175,10 @@ public class TestDatabaseCreator {
         }
     }
 
-    private static void loadDatabase(Connection connection) throws SQLException {
-        System.out.println("----------------Creating Database "+SEQWARE_DB+"--------------------");
-        connection.createStatement().execute("DROP DATABASE IF EXISTS "+SEQWARE_DB+";");
-        connection.createStatement().execute("CREATE DATABASE "+SEQWARE_DB+" WITH OWNER = "+SEQWARE_USER+";");
+    private void loadDatabase(Connection connection) throws SQLException {
+        System.out.println("----------------Creating Database "+getSEQWARE_DB()+"--------------------");
+        connection.createStatement().execute("DROP DATABASE IF EXISTS "+getSEQWARE_DB()+";");
+        connection.createStatement().execute("CREATE DATABASE "+getSEQWARE_DB()+" WITH OWNER = "+getSEQWARE_USER()+";");
     }
 
     private static void loadDBStructure(Connection connection) throws SQLException {
@@ -206,14 +214,56 @@ public class TestDatabaseCreator {
     }
 
     /**
+     * @return the POSTGRE_DB
+     */
+    protected static String getPOSTGRE_DB() {
+        return POSTGRE_DB;
+    }
+
+    /**
+     * @return the SEQWARE_DB
+     */
+    protected String getSEQWARE_DB() {
+        return SEQWARE_DB;
+    }
+
+    /**
+     * @return the POSTGRE_USER
+     */
+    protected String getPOSTGRE_USER() {
+        return POSTGRE_USER;
+    }
+
+    /**
+     * @return the POSTGRE_PASSWORD
+     */
+    protected String getPOSTGRE_PASSWORD() {
+        return POSTGRE_PASSWORD;
+    }
+
+    /**
+     * @return the SEQWARE_USER
+     */
+    protected String getSEQWARE_USER() {
+        return SEQWARE_USER;
+    }
+
+    /**
+     * @return the SEQWARE_PASSWORD
+     */
+    protected String getSEQWARE_PASSWORD() {
+        return SEQWARE_PASSWORD;
+    }
+    
+      /**
      * Unfortunately, postgres does not allow the straight dropdb and createdb
      * when tomcat is used (perhaps we leave open a connection)
      */
-    public static void resetDatabaseWithUsers() {
+    protected void basicResetDatabaseWithUsers() {
         try {
-            TestDatabaseCreator.dropDatabaseWithUsers();
-            TestDatabaseCreator.markDatabaseChanged();
-            TestDatabaseCreator.createDatabase();
+            this.dropDatabaseWithUsers();
+            this.markDatabaseChanged();
+            this.createDatabase();
         } catch (Exception e) {
             throw new RuntimeException();
         }

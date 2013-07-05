@@ -16,7 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.tutorial;
 
-import net.sourceforge.seqware.metadb.util.TestDatabaseCreator;
+import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -32,6 +32,6 @@ import org.junit.runners.Suite;
 public class AdminTutorialSuiteET extends TutorialSuite {
     @BeforeClass
     public static void resetDatabase() {
-        TestDatabaseCreator.resetDatabaseWithUsers();
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
 }

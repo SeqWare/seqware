@@ -16,6 +16,13 @@
  */
 package net.sourceforge.seqware.webservice.resources;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
+import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeScheme;
@@ -29,19 +36,37 @@ import org.restlet.resource.ClientResource;
 public class ClientResourceInstance {
 
     private static ClientResource clientResource = null;
+    private static String webservicePrefix = "/seqware-webservice";
 
     private ClientResourceInstance() {
     }
 
     public static ClientResource getChild(String relativeURL) {
+        Map<String, String> settings = new HashMap<String, String>();
         if (clientResource == null) {
-            clientResource = new ClientResource("http://localhost:8889");
+            String hostURL = "http://localhost:8889"; 
+            try {
+                settings = ConfigTools.getSettings();
+            } catch (Exception e) {
+                Log.stderr("Error reading settings file: " + e.getMessage());
+            }
+            if (settings.containsKey(BasicTestDatabaseCreator.BASIC_TEST_DB_HOST_KEY)) {
+                String restURL = settings.get("SW_REST_URL");
+                Pattern pattern = Pattern.compile("(https?://.*)(/.*)");
+                Matcher matcher = pattern.matcher(restURL);
+                matcher.find();
+                hostURL = matcher.group(1);
+                webservicePrefix = matcher.group(2);
+                Log.fatal("Detected overriden hostURL as: " + hostURL);
+                Log.fatal("Detected overriden webservicePrefix as: " + webservicePrefix);
+            } 
+            clientResource = new ClientResource(hostURL);
             Client client = new Client(new Context(), Protocol.HTTP);
             client.getContext().getParameters().add("useForwardedForHeader", "false");
             clientResource.setNext(client);
             clientResource.setFollowingRedirects(false);
             clientResource.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "jane.smith@abc.com", "test");
         }
-        return clientResource.getChild("/seqware-webservice" + relativeURL);
+        return clientResource.getChild(webservicePrefix + relativeURL);
     }
 }

@@ -16,7 +16,7 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import net.sourceforge.seqware.common.util.testtools.DatabaseCreator;
+import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreatorWrapper;
 import net.sourceforge.seqware.common.util.testtools.JndiDatasourceCreator;
 
 import org.hibernate.SessionFactory;
@@ -66,7 +66,7 @@ public class WSResourceTestSuite {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        DatabaseCreator.createDatabase();
+        BasicTestDatabaseCreatorWrapper.resetDatabaseWithUsers();
         JndiDatasourceCreator.create();
 //        SeqWareWebServiceMain.main(null);
     }
@@ -74,7 +74,7 @@ public class WSResourceTestSuite {
     @AfterClass
     public static void tearDownClass() throws Exception {
 //        SeqWareWebServiceMain.stop();
-        DatabaseCreator.dropDatabase();
+        BasicTestDatabaseCreatorWrapper.dropDatabase();
     }
 //    @Before
 //    public void setUp() {

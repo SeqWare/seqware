@@ -15,7 +15,7 @@ import net.sourceforge.seqware.common.hibernate.InSessionExecutions;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.testtools.DatabaseCreator;
+import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreatorWrapper;
 
 import org.hibernate.Session;
 import org.junit.AfterClass;
@@ -124,7 +124,7 @@ public class ExperimentServiceImplTest extends BaseUnit {
     assertEquals("New Title", updatedExperiment.getTitle());
     removeSession(session);
 
-    DatabaseCreator.markDatabaseChanged();
+    BasicTestDatabaseCreatorWrapper.markDatabaseChanged();
   }
 
   /**
