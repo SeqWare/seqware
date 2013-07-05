@@ -1,15 +1,16 @@
 package net.sourceforge.seqware.common.util.testtools;
 
 import java.sql.SQLException;
-import net.sourceforge.seqware.metadb.util.TestDatabaseCreator;
 
 /**
- * <p>DatabaseCreator class.</p>
+ * <p>BasicTestDatabaseCreatorWrapper class.</p>
  *
  * @author boconnor
  * @version $Id: $Id
  */
-public class DatabaseCreator {
+public class BasicTestDatabaseCreatorWrapper {
+    
+    private static BasicTestDatabaseCreator testDBCreator = new BasicTestDatabaseCreator();
 
     /**
      * <p>createDatabase.</p>
@@ -17,7 +18,7 @@ public class DatabaseCreator {
      * @throws java.sql.SQLException if any.
      */
     public static void createDatabase() throws SQLException {
-        TestDatabaseCreator.createDatabase();
+        testDBCreator.createDatabase();
     }
 
     /**
@@ -26,13 +27,17 @@ public class DatabaseCreator {
      * @throws java.sql.SQLException if any.
      */
     public static void dropDatabase() throws SQLException {
-        TestDatabaseCreator.dropDatabase();
+        testDBCreator.dropDatabase();
     }
 
     /**
      * <p>markDatabaseChanged.</p>
      */
     public static void markDatabaseChanged() {
-        TestDatabaseCreator.markDatabaseChanged();
+        testDBCreator.markDatabaseChanged();
+    }
+    
+    public static void resetDatabaseWithUsers(){
+        testDBCreator.resetDatabaseWithUsers();
     }
 }

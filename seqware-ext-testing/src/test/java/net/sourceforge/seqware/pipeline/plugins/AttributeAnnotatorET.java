@@ -18,21 +18,15 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.metadb.util.TestDatabaseCreator;
+import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreatorWrapper;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 import org.mortbay.log.Log;
 
 /**
@@ -41,9 +35,10 @@ import org.mortbay.log.Log;
  *
  * @author dyuen
  */
-public class AttributeAnnotatorIT {
+public class AttributeAnnotatorET {
     public static final String COUNT_DB_SIZE = "SELECT (SELECT COUNT(*) FROM workflow), (SELECT COUNT(*) FROM workflow_run), (SELECT COUNT(*) FROM sequencer_run), (SELECT COUNT(*) FROM experiment), (SELECT COUNT(*) FROM ius), (SELECT COUNT(*) FROM lane), (SELECT COUNT(*) FROM processing), (SELECT COUNT(*) FROM sample), (SELECT COUNT(*) FROM sample_hierarchy), (SELECT COUNT(*) FROM processing_ius), (SELECT COUNT(*) FROM processing_files), (SELECT COUNT(*) FROM processing_relationship), (SELECT COUNT(*) FROM file), (SELECT COUNT(*) FROM study)";
-
+    private ExtendedTestDatabaseCreator dbCreator = new ExtendedTestDatabaseCreator();
+        
     public enum AttributeType {
         FILE("file", "file", "file", true),
         SEQUENCER_RUN("sequencer-run", "sequencer_run", "sample", true),
@@ -74,7 +69,7 @@ public class AttributeAnnotatorIT {
 
     @BeforeClass
     public static void resetDatabase() {
-        TestDatabaseCreator.resetDatabaseWithUsers();
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
 
     @AfterClass
@@ -246,14 +241,14 @@ public class AttributeAnnotatorIT {
         int expectedReturnValue = type.skippable ? ReturnValue.SUCCESS : ReturnValue.INVALIDPARAMETERS;
         ITUtility.runSeqWareJar(listCommand, expectedReturnValue, null);
         if (type.skippable) {
-            Object[] runQuery = TestDatabaseCreator.runQuery(new ArrayHandler(), "SELECT skip FROM " + type.table_name + " WHERE sw_accession=?", accession);
+            Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "SELECT skip FROM " + type.table_name + " WHERE sw_accession=?", accession);
             Assert.assertTrue("skip value incorrect", runQuery.length == 1 && runQuery[0].equals(true));
         }
         listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
                 + "-- --" + type.parameter_prefix + "-accession " + accession + " --skip false";
         ITUtility.runSeqWareJar(listCommand, expectedReturnValue, null);
         if (type.skippable) {
-            Object[] runQuery = TestDatabaseCreator.runQuery(new ArrayHandler(), "SELECT skip FROM " + type.table_name + " WHERE sw_accession=?", accession);
+            Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "SELECT skip FROM " + type.table_name + " WHERE sw_accession=?", accession);
             Assert.assertTrue("skip value incorrect", runQuery.length == 1 && runQuery[0].equals(false));
         }
     }
@@ -278,9 +273,9 @@ public class AttributeAnnotatorIT {
         int expectedReturnValue = type.skippable ? ReturnValue.SUCCESS : ReturnValue.INVALIDPARAMETERS;
         ITUtility.runSeqWareJar(listCommand, expectedReturnValue, null);
         if (type.skippable) {
-            Object[] runQuery = TestDatabaseCreator.runQuery(new ArrayHandler(), "SELECT skip FROM " + type.table_name + " WHERE sw_accession=?", accession);
+            Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "SELECT skip FROM " + type.table_name + " WHERE sw_accession=?", accession);
             Assert.assertTrue("skip value incorrect", runQuery.length == 1 && runQuery[0].equals(true));
-            List<Object[]> runQuery1 = TestDatabaseCreator.runQuery(new ArrayListHandler(), query, accession);
+            List<Object[]> runQuery1 = dbCreator.runQuery(new ArrayListHandler(), query, accession);
             Assert.assertTrue("first annotation incorrect", runQuery1.size() == 1);
             Assert.assertTrue("first tag incorrect", runQuery1.get(0)[1].equals("skip"));
             Assert.assertTrue("first value incorrect", runQuery1.get(0)[2].equals(value));
@@ -311,36 +306,36 @@ public class AttributeAnnotatorIT {
                 + "t1." + type.table_name + "_id=t2." + type.attribute_id_prefix
                 + "_id AND t1.sw_accession=? ORDER BY " + type.table_name + "_attribute_id";
         Log.info(query);
-        List<Object[]> runQuery = TestDatabaseCreator.runQuery(new ArrayListHandler(), query, accession);
+        List<Object[]> runQuery = dbCreator.runQuery(new ArrayListHandler(), query, accession);
         Assert.assertTrue("first annotation incorrect", runQuery.size() == 1);
         Assert.assertTrue("first tag incorrect", runQuery.get(0)[1].equals(funky_key));
         Assert.assertTrue("first value incorrect", runQuery.get(0)[2].equals(funky_initial_value));
         // count records in the database to check for cascading deletes
-        List<Object[]> count1 = TestDatabaseCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);        
+        List<Object[]> count1 = dbCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);        
         // reannotate with same key, different value
         listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
                 + "-- --" + type.parameter_prefix + "-accession " + accession + " --key "+funky_key+" --value " + funky_second_value;
         ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         // ensure that duplicates are not formed in the database
-        runQuery = TestDatabaseCreator.runQuery(new ArrayListHandler(), query , accession);
+        runQuery = dbCreator.runQuery(new ArrayListHandler(), query , accession);
         Assert.assertTrue("incorrect resulting number of duplicate annotations, found " + runQuery.size(), runQuery.size() == 1);
         Assert.assertTrue("second tag incorrect", runQuery.get(0)[1].equals(funky_key));
         Assert.assertTrue("second value incorrect", runQuery.get(0)[2].equals(funky_second_value));
         // check against cascading deletes
-        List<Object[]> count2 = TestDatabaseCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);
+        List<Object[]> count2 = dbCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);
         compareTwoCounts(count1.get(0), count2.get(0));
         // try unrelated annotation
         listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
                 + "-- --" + type.parameter_prefix + "-accession " + accession + " --key "+groovy_key+" --value " + groovy_value;
         ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         // check results of unrelated annotation
-        runQuery = TestDatabaseCreator.runQuery(new ArrayListHandler(), query , accession);
+        runQuery = dbCreator.runQuery(new ArrayListHandler(), query , accession);
         Assert.assertTrue("incorrect resulting number of unrelated annotations, found: " + runQuery.size(), runQuery.size() == 2);
         Assert.assertTrue("second tag incorrect", runQuery.get(0)[1].equals(funky_key));
         Assert.assertTrue("second value incorrect", runQuery.get(0)[2].equals(funky_second_value));
         Assert.assertTrue("third tag incorrect", runQuery.get(1)[1].equals(groovy_key));
         Assert.assertTrue("third value incorrect", runQuery.get(1)[2].equals(groovy_value));
-        List<Object[]> count3 = TestDatabaseCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);
+        List<Object[]> count3 = dbCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);
         compareTwoCounts(count2.get(0), count3.get(0));
     }
     
@@ -385,7 +380,7 @@ public class AttributeAnnotatorIT {
     
     @Test
     public void testBulkInsert() throws IOException{
-        String path = AttributeAnnotatorIT.class.getResource("attributeAnnotator.csv").getPath();
+        String path = AttributeAnnotatorET.class.getResource("attributeAnnotator.csv").getPath();
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
                 + "-- --file " + path  ;
         ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);    
