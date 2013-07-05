@@ -108,3 +108,5 @@ CREATE INDEX workflow_run_id_ius_workflow_runs ON ius_workflow_runs USING btree 
 
 CREATE INDEX workflow_run_processing ON processing USING btree (workflow_run_id);
 
+-- Create skip column
+ALTER TABLE file ADD skip boolean;
