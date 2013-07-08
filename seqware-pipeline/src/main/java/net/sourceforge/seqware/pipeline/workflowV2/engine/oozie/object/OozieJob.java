@@ -175,24 +175,24 @@ public abstract class OozieJob {
       args.add(jobObj.getQueue());
     }
 
-    if (StringUtils.isNotBlank(jobObj.getMaxMemory())
-        && StringUtils.isNotBlank(maxMemorySgeParamFormat)) {
-      if (maxMemorySgeParamFormat.contains(SGE_MAX_MEMORY_PARAM_VARIABLE)) {
-        args.add(maxMemorySgeParamFormat.replace(SGE_MAX_MEMORY_PARAM_VARIABLE, jobObj.getMaxMemory()));
-      } else {
-        throw new IllegalArgumentException("Format for max memory parameter must contain the replacement variable "
-            + SGE_MAX_MEMORY_PARAM_VARIABLE);
+    if (StringUtils.isNotBlank(maxMemorySgeParamFormat)) {
+      if (maxMemorySgeParamFormat.contains(SGE_MAX_MEMORY_PARAM_VARIABLE) && StringUtils.isBlank(jobObj.getMaxMemory())) {
+        throw new IllegalArgumentException(
+                                           String.format("Format flag '%s' contains replacement value '%s' but job '%s' has invalid associated value '%s'.",
+                                                         maxMemorySgeParamFormat, SGE_MAX_MEMORY_PARAM_VARIABLE,
+                                                         jobObj.getAlgo(), jobObj.getMaxMemory()));
       }
+      args.add(maxMemorySgeParamFormat.replace(SGE_MAX_MEMORY_PARAM_VARIABLE, jobObj.getMaxMemory()));
     }
 
-    if (jobObj.getThreads() > 0
-        && StringUtils.isNotBlank(threadsSgeParamFormat)) {
-      if (threadsSgeParamFormat.contains(SGE_THREADS_PARAM_VARIABLE)) {
-        args.add(threadsSgeParamFormat.replace(SGE_THREADS_PARAM_VARIABLE, "" + jobObj.getThreads()));
-      } else {
-        throw new IllegalArgumentException("Format for threads parameter must contain the replacement variable "
-            + SGE_THREADS_PARAM_VARIABLE);
+    if (StringUtils.isNotBlank(threadsSgeParamFormat)) {
+      if (threadsSgeParamFormat.contains(SGE_THREADS_PARAM_VARIABLE) && jobObj.getThreads() <= 0) {
+        throw new IllegalArgumentException(
+                                           String.format("Format flag '%s' contains replacement value '%s' but job '%s' has invalid associated value '%s'.",
+                                                         threadsSgeParamFormat, SGE_THREADS_PARAM_VARIABLE,
+                                                         jobObj.getAlgo(), jobObj.getThreads()));
       }
+      args.add(threadsSgeParamFormat.replace(SGE_THREADS_PARAM_VARIABLE, Integer.toString(jobObj.getThreads())));
     }
 
     StringBuilder contents = new StringBuilder();
