@@ -17,6 +17,9 @@
 package net.sourceforge.seqware.common.metadata;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -32,8 +35,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -44,6 +45,7 @@ import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
 import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Lane;
@@ -68,15 +70,30 @@ import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowParamValue;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
-import net.sourceforge.seqware.common.model.lists.*;
+import net.sourceforge.seqware.common.model.lists.ExperimentList;
+import net.sourceforge.seqware.common.model.lists.IUSList;
+import net.sourceforge.seqware.common.model.lists.LaneList;
+import net.sourceforge.seqware.common.model.lists.LibrarySelectionList;
+import net.sourceforge.seqware.common.model.lists.LibrarySourceList;
+import net.sourceforge.seqware.common.model.lists.LibraryStrategyList;
+import net.sourceforge.seqware.common.model.lists.OrganismList;
+import net.sourceforge.seqware.common.model.lists.PlatformList;
+import net.sourceforge.seqware.common.model.lists.ReturnValueList;
+import net.sourceforge.seqware.common.model.lists.SampleList;
+import net.sourceforge.seqware.common.model.lists.SequencerRunList;
+import net.sourceforge.seqware.common.model.lists.StudyList;
+import net.sourceforge.seqware.common.model.lists.StudyTypeList;
+import net.sourceforge.seqware.common.model.lists.WorkflowList;
+import net.sourceforge.seqware.common.model.lists.WorkflowRunList2;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
-import org.apache.commons.lang.StringUtils;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeScheme;
@@ -827,6 +844,27 @@ public class MetadataWS extends Metadata {
     }
 
     
+    
+    @Override
+    public void studyReport(String studyTitle, Writer out) {
+      Study study;
+      try {
+        study = ll.findStudy("?title=" + studyTitle);
+      } catch(RuntimeException e){
+        throw e;
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+      ll.writeTo("/reports/studies/" + study.getSwAccession() + "/files.tsv", out);
+    }
+
+
+    
+    @Override
+    public void allStudiesReport(Writer out) {
+      ll.writeTo("/reports/studies/files.tsv", out);
+    }
+
     @Override
     public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, boolean requireFiles) {
         ReturnValueList rv = new ReturnValueList();
@@ -844,6 +882,8 @@ public class MetadataWS extends Metadata {
         }
         return rv.getList();
     }
+    
+    
 
     /**
      * {@inheritDoc}
@@ -1521,7 +1561,7 @@ public class MetadataWS extends Metadata {
     public void annotateLane(int laneSWID, LaneAttribute laneAtt, Boolean skip) {
         try {
             Log.debug("Annotating Lane " + laneSWID + " with skip=" + skip + ", laneAtt = " + laneAtt);
-            Lane lane = ll.findLane("/" + laneSWID + "?show=attributes");
+            Lane lane = ll.findLane("/" + laneSWID /**+ "?show=attributes"*/);
             if (skip != null) {
                 lane.setSkip(skip);
             }
@@ -1537,10 +1577,13 @@ public class MetadataWS extends Metadata {
             ll.updateLane("/" + laneSWID, lane);
         } catch (IOException ex) {
             Log.error("IOException while updating lane " + laneSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating lane " + laneSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating lane " + laneSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
     }
 
@@ -1567,10 +1610,13 @@ public class MetadataWS extends Metadata {
             ll.updateIUS("/" + iusSWID, lane);
         } catch (IOException ex) {
             Log.error("IOException while updating ius " + iusSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating ius " + iusSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating ius " + iusSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
     }
 
@@ -1598,10 +1644,13 @@ public class MetadataWS extends Metadata {
             ll.updateSequencerRun("/" + sequencerRunSWID, sequencerRun);
         } catch (IOException ex) {
             Log.error("IOException while updating sequencerRun " + sequencerRunSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating sequencerRun " + sequencerRunSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating sequencerRun " + sequencerRunSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
     }
 
@@ -1622,17 +1671,19 @@ public class MetadataWS extends Metadata {
                 if (atts == null) {
                     atts = new HashSet<ExperimentAttribute>();
                 }
-
                 atts.add(att);
                 obj.setExperimentAttributes(atts);
             }
             ll.updateExperiment("/" + experimentSWID, obj);
         } catch (IOException ex) {
             Log.error("IOException while updating experiment " + experimentSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating experiment " + experimentSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating experiment " + experimentSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
     }
 
@@ -1660,10 +1711,13 @@ public class MetadataWS extends Metadata {
             ll.updateProcessing("/" + swid, obj);
         } catch (IOException ex) {
             Log.error("IOException while updating processing " + swid + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating processing " + swid + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating processing " + swid + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
     }
 
@@ -1674,7 +1728,7 @@ public class MetadataWS extends Metadata {
     public void annotateSample(int swid, SampleAttribute att, Boolean skip) {
         try {
             Log.debug("Annotating Sample " + swid + " with skip=" + skip + ", Att = " + att);
-            Sample obj = ll.findSample("/" + swid+"?show=attributes");
+            Sample obj = ll.findSample("/" + swid/**+"?show=attributes"*/);
             if (skip != null) {
                 obj.setSkip(skip);
             }
@@ -1690,10 +1744,13 @@ public class MetadataWS extends Metadata {
             ll.updateSample("/" + swid, obj);
         } catch (IOException ex) {
             Log.error("IOException while updating sample " + swid + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating sample " + swid + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating sample " + swid + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
     }
 
@@ -1721,10 +1778,13 @@ public class MetadataWS extends Metadata {
             ll.updateStudy("/" + swid, obj);
         } catch (IOException ex) {
             Log.error("IOException while updating study " + swid + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating study " + swid + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating study " + swid + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
     }
 
@@ -1801,6 +1861,7 @@ public class MetadataWS extends Metadata {
     /**
      * {@inheritDoc}
      */
+    @Override
     public File getFile(int swAccession) {
         try {
             return ll.findFile("/" + swAccession);
@@ -1810,6 +1871,14 @@ public class MetadataWS extends Metadata {
             Log.error(ex);
         }
         return null;
+    }
+    
+    private void wrapAsRuntimeException(Exception e){
+        if (!(e instanceof RuntimeException)){
+            throw new RuntimeException(e);
+        } else{
+            throw (RuntimeException)e;
+        }
     }
 
     /**
@@ -1836,10 +1905,13 @@ public class MetadataWS extends Metadata {
             ll.updateWorkflow("/" + workflowSWID, obj);
         } catch (IOException ex) {
             Log.error("IOException while updating study " + workflowSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating study " + workflowSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating study " + workflowSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
 
     }
@@ -1868,10 +1940,13 @@ public class MetadataWS extends Metadata {
             ll.updateWorkflowRun("/" + workflowrunSWID, obj);
         } catch (IOException ex) {
             Log.error("IOException while updating study " + workflowrunSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating study " + workflowrunSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating study " + workflowrunSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
     }
 
@@ -1892,10 +1967,13 @@ public class MetadataWS extends Metadata {
             ll.updateIUS("/" + iusSWID, ius);
         } catch (IOException ex) {
             Log.error("IOException while updating ius " + iusSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating ius " + iusSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating ius " + iusSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
     }
 
@@ -1915,10 +1993,13 @@ public class MetadataWS extends Metadata {
             ll.updateLane("/" + laneSWID, lane);
         } catch (IOException ex) {
             Log.error("IOException while updating lane " + laneSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating lane " + laneSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating lane " + laneSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
 
     }
@@ -1939,10 +2020,13 @@ public class MetadataWS extends Metadata {
             ll.updateSequencerRun("/" + sequencerRunSWID, sequencerRun);
         } catch (IOException ex) {
             Log.error("IOException while updating sequencerRun " + sequencerRunSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating sequencerRun " + sequencerRunSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating sequencerRun " + sequencerRunSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
 
     }
@@ -1963,10 +2047,71 @@ public class MetadataWS extends Metadata {
             ll.updateExperiment("/" + experimentSWID, obj);
         } catch (IOException ex) {
             Log.error("IOException while updating experiment " + experimentSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating experiment " + experimentSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating experiment " + experimentSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void annotateFile(int fileSWID, Set<FileAttribute> atts) {
+        try {
+            Log.debug("Annotating File " + fileSWID);
+            File obj = ll.findFile("/" + fileSWID);
+            obj.getFileAttributes().clear();
+            for (FileAttribute ea : atts) {
+                // ea.setFile(obj);
+                obj.getFileAttributes().add(ea);
+            }
+            ll.updateFile("/" + fileSWID, obj);
+        } catch (IOException ex) {
+            Log.error("IOException while updating file " + fileSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
+        } catch (JAXBException ex) {
+            Log.error("JAXBException while updating file " + fileSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
+        } catch (ResourceException ex) {
+            Log.error("ResourceException while updating file " + fileSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void annotateFile(int fileSWID, FileAttribute att, Boolean skip) {
+        try {
+            Log.debug("Annotating File " + fileSWID + " with skip=" + skip + ", Att = " + att);
+            File obj = ll.findFile("/" + fileSWID);
+            if (skip != null) {
+                obj.setSkip(skip);
+            }
+            if (att != null) {
+                Set<FileAttribute> atts = obj.getFileAttributes();
+                if (atts == null) {
+                    atts = new HashSet<FileAttribute>();
+                }
+                atts.add(att);
+                obj.setFileAttributes(atts);
+            }
+            ll.updateFile("/" + fileSWID, obj);
+        } catch (IOException ex) {
+            Log.error("IOException while updating file " + fileSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
+        } catch (JAXBException ex) {
+            Log.error("JAXBException while updating file " + fileSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
+        } catch (ResourceException ex) {
+            Log.error("ResourceException while updating file " + fileSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
     }
 
@@ -1986,10 +2131,13 @@ public class MetadataWS extends Metadata {
             ll.updateProcessing("/" + processingSWID, obj);
         } catch (IOException ex) {
             Log.error("IOException while updating processing " + processingSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating processing " + processingSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating processing " + processingSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
 
     }
@@ -2010,10 +2158,13 @@ public class MetadataWS extends Metadata {
             ll.updateSample("/" + sampleSWID, obj);
         } catch (IOException ex) {
             Log.error("IOException while updating sample " + sampleSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating sample " + sampleSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating sample " + sampleSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
 
     }
@@ -2034,10 +2185,13 @@ public class MetadataWS extends Metadata {
             ll.updateStudy("/" + studySWID, obj);
         } catch (IOException ex) {
             Log.error("IOException while updating study " + studySWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating study " + studySWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating study " + studySWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
     }
 
@@ -2047,7 +2201,7 @@ public class MetadataWS extends Metadata {
     @Override
     public void annotateWorkflow(int workflowSWID, Set<WorkflowAttribute> atts) {
         try {
-            Log.debug("Annotating WorkflowRun " + workflowSWID);
+            Log.debug("Annotating Workflow " + workflowSWID);
             Workflow obj = ll.findWorkflow("/" + workflowSWID);
             obj.getWorkflowAttributes().clear();
             for (WorkflowAttribute wa : atts) {
@@ -2057,10 +2211,13 @@ public class MetadataWS extends Metadata {
             ll.updateWorkflow("/" + workflowSWID, obj);
         } catch (IOException ex) {
             Log.error("IOException while updating workflow " + workflowSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating workflow " + workflowSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating workflow " + workflowSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
     }
 
@@ -2080,10 +2237,13 @@ public class MetadataWS extends Metadata {
             ll.updateWorkflowRun("/" + workflowrunSWID, obj);
         } catch (IOException ex) {
             Log.error("IOException while updating workflow run " + workflowrunSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (JAXBException ex) {
             Log.error("JAXBException while updating workflow run " + workflowrunSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         } catch (ResourceException ex) {
             Log.error("ResourceException while updating workflow run " + workflowrunSWID + " " + ex.getMessage());
+            wrapAsRuntimeException(ex);
         }
 
     }
@@ -2610,6 +2770,29 @@ public class MetadataWS extends Metadata {
             JaxbObject<LibrarySource> jaxb = new JaxbObject<LibrarySource>();
             return (LibrarySource) findObject("/librarysource", searchString, jaxb, ls);
         }
+        
+        private void writeTo(String url, Writer out){
+          ClientResource cResource = resource.getChild(version + url);
+          Representation result = cResource.get();
+          try {
+            Reader in = result.getReader();
+            try {
+              IOUtils.copy(in, out);
+            } catch (IOException e) {
+              throw new RuntimeException(e);
+            }
+
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          } finally {
+            try {
+              result.exhaust();
+            } catch (IOException e) {
+            }
+            result.release();
+            resource.release();
+          }
+        }
 
         private String getString(String uri) {
             String text = null;
@@ -2757,12 +2940,12 @@ public class MetadataWS extends Metadata {
             updateObject("/studies", searchString, jaxb, parent);
         }
 
-        /*
-         * private void updateFile(String searchString, Study parent) throws
-         * IOException, JAXBException, ResourceException { JaxbObject<Study>
-         * jaxb = new JaxbObject<Study>(); updateObject("/studies",
-         * searchString, jaxb, parent); }
-         */
+        
+        private void updateFile(String searchString, File parent) throws IOException, JAXBException, ResourceException { 
+            JaxbObject<File> jaxb = new JaxbObject<File>(); 
+            updateObject("/files", searchString, jaxb, parent); 
+        }
+        
         private void updateExperiment(String searchString, Experiment parent) throws IOException, JAXBException,
                 ResourceException {
             JaxbObject<Experiment> jaxb = new JaxbObject<Experiment>();

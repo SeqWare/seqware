@@ -17,8 +17,8 @@
 package net.sourceforge.seqware.pipeline.tutorial;
 
 import java.io.IOException;
-import net.sourceforge.seqware.pipeline.plugins.GenericMetadataSaverIT;
-import net.sourceforge.seqware.pipeline.plugins.ProvisionFilesIT;
+import net.sourceforge.seqware.pipeline.plugins.GenericMetadataSaverET;
+import net.sourceforge.seqware.pipeline.plugins.ProvisionFilesET;
 import org.junit.Test;
 
 /**
@@ -31,15 +31,15 @@ public class UserPhase4 {
     
     @Test
     public void testProvisionFileInAndAssociateWithSample() throws IOException {
-        ProvisionFilesIT it = new ProvisionFilesIT();
+        ProvisionFilesET it = new ProvisionFilesET();
         it.provisionFileWithRandomInput(AccessionMap.accessionMap.get(UserPhase3.SAMPLE));
     }
     
     @Test
     public void testExistingFileInAndAssociateWithSample() throws IOException {
-        GenericMetadataSaverIT it = new GenericMetadataSaverIT();
+        GenericMetadataSaverET it = new GenericMetadataSaverET();
         String output = it.saveGenericMetadataFileForSample(AccessionMap.accessionMap.get(UserPhase3.SAMPLE));
-        String sw_accession = UserTutorialSuiteIT.getAndCheckProcessingAccession(output);
+        String sw_accession = UserTutorialSuiteET.getAndCheckProcessingAccession(output);
         AccessionMap.accessionMap.put(FILE, sw_accession);
     }
 }

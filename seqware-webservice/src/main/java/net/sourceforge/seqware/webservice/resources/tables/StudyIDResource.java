@@ -101,14 +101,10 @@ public class StudyIDResource extends DatabaseIDResource {
             StudyService service = BeanFactory.getStudyServiceBean();
             Study study = (Study) testIfNull(service.findByID(p.getStudyId()));
 
-			if(null != p.getStudyAttributes()) {
-//SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
-//				study.getStudyAttributes().clear();
-				for(StudyAttribute sa: p.getStudyAttributes()) {
-					sa.setStudy(study);
-					study.getStudyAttributes().add(sa);
-				}
-			}
+	            if (null != p.getStudyAttributes()) {
+                    //SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+                        this.mergeAttributes(study.getStudyAttributes(), p.getStudyAttributes(), study);
+                    }
 
 			String title = p.getTitle();
 			String description = p.getDescription();
