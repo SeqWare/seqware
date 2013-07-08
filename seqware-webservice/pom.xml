@@ -8,8 +8,11 @@
 
     <properties>
         <netbeans.compile.on.save>all</netbeans.compile.on.save>
-        <seqware_meta_db_name>test_seqware_meta_db</seqware_meta_db_name>
+	<seqware_meta_db_name>test_seqware_meta_db</seqware_meta_db_name>
         <seqware_meta_db_port>5432</seqware_meta_db_port>
+        <seqware_meta_db_password>seqware</seqware_meta_db_password>
+        <seqware_meta_db_user>seqware</seqware_meta_db_user>
+	<seqware_meta_db_host>localhost</seqware_meta_db_host>
     </properties>
     
     <parent>
@@ -22,57 +25,18 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat6-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-          <!-- hacked from, some of their syntax did not compile http://mojo.codehaus.org/sql-maven-plugin/examples/execute.html -->
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>sql-maven-plugin</artifactId>
-
-        <dependencies>
-          <!-- specify the dependent jdbc driver here -->
-          <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
-          </dependency>
-        </dependencies>
-
-        <!-- common configuration shared by all executions -->
-        <configuration>
-          <driver>org.postgresql.Driver</driver>
-          <username>seqware</username>
-          <password>seqware</password>
-          <!--all executions are ignored if -Dmaven.test.skip=true-->
-          <skip>${skipITs}</skip>
-        </configuration>
-
-        <executions>
-          <execution>
-            <id>drop-db-before-test-if-any</id>
-            <phase>process-test-resources</phase>
-          </execution>
-          
-          <execution>
-            <id>create-db</id>
-            <phase>process-test-resources</phase>
-          </execution>
-
-	  <!-- this would be good to resolve SEQWARE-1225. Maven binds multiple executions to the same phase in pom.xml order.
-		This should have worked, but it doesn't seem to for some reason. Maybe Jetty takes too long to shutdown   
-          <execution>
-            <id>drop-db-after-test</id>
-            <phase>post-integration-test</phase>
-          </execution>
-	  -->
-
-        </executions>
-      </plugin>
-            <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${maven-war-plugin.version}</version>
                 <configuration>
+                    <!-- supports configuration of tomcat on a different server for SPB's integration tests -->
+                    <webResources>
+                        <resource>
+                            <directory>src/main/webapp/META-INF</directory>
+                            <filtering>true</filtering>
+                            <targetPath>META-INF</targetPath>
+                        </resource>
+                    </webResources>
+                        
                     <packagingExcludes>**/servlet*.jar,META-INF/context.xml</packagingExcludes>
                     <archive>
                         <manifest>
@@ -82,6 +46,30 @@
                     </archive>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/webapp/META-INF</directory>  
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                        
+                    </execution>
+                </executions>
+            </plugin>	
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -95,50 +83,13 @@
                         </goals>
                         <configuration>
                             <target>
-                                <move file="target/${project.artifactId}-${project.version}/META-INF/context.xml" tofile="target/${project.artifactId}-${project.version}.xml" />
+                                <move file="target/context.xml" tofile="target/${project.artifactId}-${project.version}.xml" />
                             </target>
                         </configuration>
                     </execution>
-<!--
-                    <execution>
-                        <id>wait</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <echo message="Sleeping now for 30 seconds:" />
-                                <sleep seconds="1" />
-                                <echo message="1" />
-                                <sleep seconds="2" />
-                                <echo message="2" />
-                                <sleep seconds="3" />
-                                <echo message="3" />
-                                <sleep seconds="4" />
-                                <echo message="4" />
-                                <sleep seconds="120" />
-                                <echo message="120" />
-                            </tasks>
-                        </configuration>
-                    </execution>
-                    -->
-                    
-
                 </executions>
             </plugin>
             
-             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>tomcat-maven-plugin</artifactId>
-<!-- snapshot was here but commented out originally, using the latest released version as checked by mvn help:describe -DgroupId=org.codehaus.mojo  -DartifactId=tomcat-maven-plugin -Dfull=true | less -->
-                <version>1.1</version>
-<!--                <version>1.2-SNAPSHOT</version>-->
-                <configuration>
-                    <mode>war</mode>
-                </configuration>
-             </plugin>
-                    
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -192,6 +143,7 @@
             </plugin>
             
           </plugins>
+
     </build>
 
 
@@ -564,5 +516,36 @@
             <version>1.9.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.clojure</groupId>
+            <artifactId>clojure</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.clojure</groupId>
+            <artifactId>java.jdbc</artifactId>
+            <version>0.3.0-alpha4</version>
+        </dependency>
     </dependencies>
+    
+    <profiles>
+        <profile>
+            <id>embeddedTomcat</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <artifactId>tomcat6-maven-plugin</artifactId>
+			 <configuration>   
+                            <contextFile>target/seqware-webservice-1.0.1-SNAPSHOT/META-INF/context.xml</contextFile>
+                        </configuration>
+
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

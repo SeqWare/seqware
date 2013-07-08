@@ -182,10 +182,7 @@
             <one-to-many class="WorkflowParam" />
         </set>
         <set name="workflowAttributes" inverse="true" lazy="true" table="workflow_attribute" cascade="all-delete-orphan" fetch="select">
-            <key>
-                <column name="workflow_id" not-null="true" />
-            </key>
-
+            <key column="workflow_id" />
             <one-to-many class="WorkflowAttribute" />
         </set>
     </class>
@@ -519,11 +516,8 @@
             <key column="workflow_run_id"/>
             <many-to-many class="Lane" column="lane_id" unique="true"/>
         </set>
-        <set name="workflowRunAttributes" inverse="true" lazy="true" table="workflow_run_attribute" fetch="select" cascade="all">
-            <key>
-                <column name="workflow_run_id" not-null="true" />
-            </key>
-
+        <set name="workflowRunAttributes" inverse="true" lazy="true" table="workflow_run_attribute" fetch="select" cascade="all-delete-orphan">
+            <key column="workflow_run_id" />
             <one-to-many class="WorkflowRunAttribute" />
         </set>
     </class>
@@ -663,10 +657,7 @@
         </set>
 
         <set name="studyAttributes" inverse="true" lazy="true" table="study_attribute" fetch="select" cascade="all-delete-orphan">
-            <key>
-                <column name="study_id" not-null="true" />
-            </key>
-
+            <key column="study_id" />
             <one-to-many class="StudyAttribute" />
         </set>
 
@@ -866,9 +857,7 @@
         </set>
 
         <set name="experimentAttributes" inverse="true" lazy="true" table="experiment_attribute" fetch="select" cascade="all-delete-orphan">
-            <key>
-                <column name="experiment_id" />
-            </key>
+            <key column="experiment_id" />
             <one-to-many class="ExperimentAttribute" />
         </set>
 
@@ -1195,10 +1184,7 @@
         </set>-->
 
         <set name="sampleAttributes" inverse="true" lazy="true" cascade="all-delete-orphan" table="sample_attribute" fetch="select">
-            <key>
-                <column name="sample_id" not-null="true" />
-            </key>
-
+            <key column="sample_id" />
             <one-to-many class="SampleAttribute" />
         </set>
 
@@ -1409,10 +1395,7 @@
         </set>
 
         <set name="sequencerRunAttributes" inverse="true" lazy="true" table="sequencer_run_attribute" fetch="select" cascade="all-delete-orphan">
-            <key>
-                <column name="sample_id" not-null="true" />
-            </key>
-
+            <key column="sample_id" />
             <one-to-many class="SequencerRunAttribute" />
         </set>
 
@@ -1497,11 +1480,8 @@
             <one-to-many class="Lane" />
         </set>
 
-        <set name="sequencerRunAttributes" inverse="true" lazy="true" table="sequencer_run_attribute" fetch="select" cascade="all">
-            <key>
-                <column name="sample_id" not-null="true" />
-            </key>
-
+        <set name="sequencerRunAttributes" inverse="true" lazy="true" table="sequencer_run_attribute" fetch="select" cascade="all-delete-orphan">
+            <key column="sample_id" />
             <one-to-many class="SequencerRunAttribute" />
         </set>
 
@@ -1710,10 +1690,7 @@
         </set>
 
         <set name="laneAttributes" inverse="true" lazy="true" table="lane_attribute" fetch="select" cascade="all-delete-orphan">
-            <key>
-                <column name="lane_id" not-null="true" />
-            </key>
-
+            <key column="lane_id" />
             <one-to-many class="LaneAttribute" />
         </set>
 
@@ -1730,7 +1707,7 @@
             </generator>
         </id>
 
-        <many-to-one name="lane" class="Lane" cascade="all" fetch="select">
+        <many-to-one name="lane" class="Lane" fetch="select">
             <column name="lane_id" not-null="true" />
         </many-to-one>
 
@@ -1757,7 +1734,7 @@
             </generator>
         </id>
 
-        <many-to-one name="sequencerRunWizardDTO" class="SequencerRunWizardDTO" cascade="all" fetch="select">
+        <many-to-one name="sequencerRunWizardDTO" class="SequencerRunWizardDTO" fetch="select">
             <column name="sample_id" not-null="true" />
         </many-to-one>
 
@@ -1874,9 +1851,7 @@
         </set>
 
         <set name="iusAttributes" inverse="true" lazy="true" table="ius_attribute" fetch="select" cascade="all-delete-orphan">
-            <key>
-                <column name="ius_id" not-null="true" />
-            </key>
+            <key column="ius_id" />
             <one-to-many class="IUSAttribute" />
         </set>
 
@@ -1902,7 +1877,7 @@
             </generator>
         </id>
 
-        <many-to-one name="ius" class="IUS" cascade="all" fetch="select">
+        <many-to-one name="ius" class="IUS" fetch="select">
             <column name="ius_id" not-null="true" />
         </many-to-one>
 
@@ -2089,10 +2064,7 @@
         </set>
 
         <set name="processingAttributes" inverse="true" lazy="true" table="processing_attribute" fetch="select" cascade="all-delete-orphan">
-            <key>
-                <column name="processing_id" not-null="true" />
-            </key>
-
+            <key column="processing_id" />
             <one-to-many class="ProcessingAttribute" />
         </set>
 
@@ -2629,11 +2601,10 @@
         <property name="md5sum" type="string" column="md5sum" />
         <property name="url" type="string" column="url" />
         <property name="urlLabel" type="string" column="url_label" />
-        <set name="fileAttributes" inverse="true" lazy="true" table="file_attribute" fetch="select">
-            <key>
-                <column name="file_id" not-null="true" />
-            </key>
+        <property name="skip" column="skip" type="boolean"/>
 
+        <set name="fileAttributes" inverse="true" lazy="true" table="file_attribute" fetch="select" cascade="all-delete-orphan">
+           <key column="file_id" not-null="true" /> 
             <one-to-many class="FileAttribute" />
         </set>
         <property name="size" column="size" type="long"/>

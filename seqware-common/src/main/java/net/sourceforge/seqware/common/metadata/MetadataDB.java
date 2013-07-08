@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.common.metadata;
 
+import java.io.Writer;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -17,15 +18,39 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import javax.sql.DataSource;
-import net.sourceforge.seqware.common.factory.DBAccess;
 
-import net.sourceforge.seqware.common.model.*;
+import net.sourceforge.seqware.common.factory.DBAccess;
+import net.sourceforge.seqware.common.model.Experiment;
+import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.FileAttribute;
+import net.sourceforge.seqware.common.model.IUS;
+import net.sourceforge.seqware.common.model.IUSAttribute;
+import net.sourceforge.seqware.common.model.Lane;
+import net.sourceforge.seqware.common.model.LaneAttribute;
+import net.sourceforge.seqware.common.model.LibrarySelection;
+import net.sourceforge.seqware.common.model.LibrarySource;
+import net.sourceforge.seqware.common.model.LibraryStrategy;
+import net.sourceforge.seqware.common.model.Organism;
+import net.sourceforge.seqware.common.model.Platform;
+import net.sourceforge.seqware.common.model.ProcessingAttribute;
+import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.common.model.SampleAttribute;
+import net.sourceforge.seqware.common.model.SequencerRun;
+import net.sourceforge.seqware.common.model.SequencerRunAttribute;
+import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.model.StudyAttribute;
+import net.sourceforge.seqware.common.model.StudyType;
+import net.sourceforge.seqware.common.model.Workflow;
+import net.sourceforge.seqware.common.model.WorkflowAttribute;
+import net.sourceforge.seqware.common.model.WorkflowParam;
+import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
-import org.apache.commons.dbutils.DbUtils;
 
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
@@ -55,6 +80,18 @@ public class MetadataDB extends Metadata {
     super();
     logger = Logger.getLogger(MetadataDB.class);
   }
+
+
+  @Override
+  public void studyReport(String studyTitle, Writer out) {
+    throw new NotImplementedException("Please use the SymLinker through the Web service.");
+  }
+
+  @Override
+  public void allStudiesReport(Writer out) {
+    throw new NotImplementedException("Please use the SymLinker through the Web service.");
+  }
+
 
   /**
    * {@inheritDoc}
@@ -327,6 +364,39 @@ public class MetadataDB extends Metadata {
     this.getSql().getResultSet().next();
     return this.getSql().getResultSet().getInt(1);
   }
+  
+    /**
+     * {@inheritDoc}
+     */
+    public ReturnValue set_processing_update_tstmp_if_null(int processingID) {
+        // Create a SQL statement
+        StringBuilder sql = new StringBuilder();
+        try {
+            // FIXME: Update a processing entry from ReturnValue
+            sql.append("UPDATE processing SET ");
+            // create_tstmp timestamp and update_tstmp
+            sql.append("update_tstmp = now()");
+            sql.append(" WHERE processing_id = ").append(processingID).append(" AND update_tstmp IS NULL");
+
+            // Execute above
+            PreparedStatement ps = null;
+            try {
+                Log.info(sql);
+                ps = this.getDb().prepareStatement(sql.toString());
+                ps.executeUpdate();
+            } finally {
+                DbUtils.closeQuietly(ps);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ReturnValue(null, "Could not execute one of the SQL commands: " + sql.toString() + "\nException: "
+                    + e.getMessage(), ReturnValue.SQLQUERYFAILED);
+        }
+        /*
+         * If no error, return success
+         */
+        return new ReturnValue();
+    }
 
   // FIXME: This should all be a transaction. For now, we end up with cruft in
   // the DB if something failed.
@@ -1260,13 +1330,13 @@ public class MetadataDB extends Metadata {
 
     try {
       if (this.getSql() != null) {
-          Log.fatal("clean_up() of statement " + Integer.toHexString(this.getSql().hashCode()));
+          Log.debug("clean_up() of statement " + Integer.toHexString(this.getSql().hashCode()));
           this.getSql().close();
           // we need to explicitly set the statement to null to avoid the risk of closing it twice
           this.setSql(null);
       }
       if (this.getDb() != null) {
-          Log.fatal("clean_up() of connection " + Integer.toHexString(this.getDb().hashCode()));
+          Log.debug("clean_up() of connection " + Integer.toHexString(this.getDb().hashCode()));
         this.getDb().close();
         // we need to explicitly set the connection to null to avoid the risk of closing it tiwce
         // see https://tomcat.apache.org/tomcat-6.0-doc/jndi-datasource-examples-howto.html
@@ -2064,6 +2134,16 @@ public class MetadataDB extends Metadata {
 
     @Override
     public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public void annotateFile(int laneSWID, FileAttribute iusAtt, Boolean skip) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public void annotateFile(int fileSWID, Set<FileAttribute> iusAtts) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
 }

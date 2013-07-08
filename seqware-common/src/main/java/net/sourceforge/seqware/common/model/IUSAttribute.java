@@ -9,7 +9,7 @@ package net.sourceforge.seqware.common.model;
  * @author boconnor
  * @version $Id: $Id
  */
-public class IUSAttribute implements java.io.Serializable, Attribute, Comparable<IUSAttribute> {
+public class IUSAttribute implements java.io.Serializable, Attribute<IUS>, Comparable<IUSAttribute> {
 
   private static final long serialVersionUID = 1L;
   private Integer iusAttributeId;
@@ -153,6 +153,11 @@ public class IUSAttribute implements java.io.Serializable, Attribute, Comparable
 	public int compareTo(IUSAttribute t) {
 		return this.tag.compareTo(t.tag);
 	}
+
+    @Override
+    public void setAttributeParent(IUS parent) {
+        this.setIus(parent);
+    }
 
 
 }

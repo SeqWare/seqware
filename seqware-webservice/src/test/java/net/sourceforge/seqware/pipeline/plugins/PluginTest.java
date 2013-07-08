@@ -18,6 +18,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import java.util.Arrays;
 import net.sourceforge.seqware.common.metadata.MetadataWS;
+import net.sourceforge.seqware.common.metadata.MetadataWSTest;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import org.junit.*;
@@ -49,7 +50,7 @@ public class PluginTest {
     @Before
     public void setUp() {
         metadata = new MetadataWS();
-        metadata.init("http://localhost:8889/seqware-webservice", "admin@admin.com", "admin");
+        MetadataWSTest.configureTestMetadataInstance(metadata);
     }
 
     @After
