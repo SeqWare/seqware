@@ -16,7 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.tutorial;
 
-import net.sourceforge.seqware.pipeline.modules.utilities.ExternalTestingUtility;
+import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -29,9 +29,9 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses(value = {AdminPhase1.class})
-public class AdminTutorialSuiteIT extends TutorialSuite {
+public class AdminTutorialSuiteET extends TutorialSuite {
     @BeforeClass
     public static void resetDatabase() {
-        ExternalTestingUtility.resetDatabaseWithUsers();
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
 }

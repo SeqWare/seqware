@@ -19,6 +19,8 @@ import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.TabExpansionUtil;
+import static net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter.WRSTDERR;
+import static net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter.WRSTDOUT;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -91,6 +93,12 @@ public class BundleManager extends Plugin {
     /** {@inheritDoc} */
     @Override
     public ReturnValue do_run() {
+        
+        if (options.has("install") && options.has("install-dir-only")) {
+            println("Combination of both install and install-dir-only not recognized");
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            return ret;
+        }
 
         // setup bundle object
         Bundle b = new Bundle(metadata, config);

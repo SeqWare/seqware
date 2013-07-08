@@ -17,10 +17,13 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.io.IOException;
+import java.util.Set;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.FileService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.FileAttribute;
+import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
@@ -107,6 +110,13 @@ public class FileIDResource extends DatabaseIDResource {
             file.setType(newFile.getType());
             file.setUrl(newFile.getUrl());
             file.setUrlLabel(newFile.getUrlLabel());
+            file.setSkip(newFile.getSkip());
+            
+            Set<FileAttribute> newAttributes = newFile.getFileAttributes();
+            if (newAttributes != null) {
+                //SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+                this.mergeAttributes(file.getFileAttributes(), newAttributes, file);
+            }
 			
             fs.update(registration, file);
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();

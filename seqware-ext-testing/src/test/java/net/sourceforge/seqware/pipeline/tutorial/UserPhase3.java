@@ -35,7 +35,7 @@ public class UserPhase3 {
                 + "--create --field title::New Test Sample --field description::This is a test description --field experiment_accession::"+AccessionMap.accessionMap.get(UserPhase2.EXPERIMENT) +" --field organism_id::26"
                 , ReturnValue.SUCCESS
                 , null);
-        String sw_accession  = UserTutorialSuiteIT.getAndCheckSwid(output);
+        String sw_accession  = UserTutorialSuiteET.getAndCheckSwid(output);
         AccessionMap.accessionMap.put(SAMPLE, sw_accession);
     }
 }

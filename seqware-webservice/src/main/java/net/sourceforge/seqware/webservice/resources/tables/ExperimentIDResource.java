@@ -190,16 +190,12 @@ public class ExperimentIDResource extends DatabaseIDResource {
                 exp.setOwner(registration);
             }
 
-			if (null != expAttributes) {
-//SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
-//				exp.getExperimentAttributes().clear();
-				for(ExperimentAttribute ea: expAttributes) {
-					ea.setExperiment(exp);
-					exp.getExperimentAttributes().add(ea);
-				}
-			}
+            if (null != expAttributes) {
+                //SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+                this.mergeAttributes(exp.getExperimentAttributes(), expAttributes, exp);
+            }
 
-			service.update(registration,exp);
+	    service.update(registration,exp);
 
 
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();

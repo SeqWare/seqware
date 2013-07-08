@@ -32,7 +32,7 @@ fi
 apt-get update
 export DEBIAN_FRONTEND=noninteractive
 #apt-get -q -y --force-yes install oracle-j2sdk1.6 cloudera-manager-server-db cloudera-manager-server cloudera-manager-daemons
-apt-get -q -y --force-yes install oracle-j2sdk1.6 hadoop-0.20-conf-pseudo hue hue-server hue-plugins oozie oozie-client postgresql-9.1 postgresql-client-9.1 tomcat6-common tomcat6 apache2 git
+apt-get -q -y --force-yes install oracle-j2sdk1.6 hadoop-0.20-conf-pseudo hue hue-server hue-plugins oozie oozie-client postgresql-9.1 postgresql-client-9.1 tomcat6-common tomcat6 apache2 git hbase-master maven
 
 # start cloudera manager
 #service cloudera-scm-server-db initdb
@@ -67,6 +67,9 @@ wget -q http://extjs.com/deploy/ext-2.2.zip
 unzip ext-2.2.zip
 mv ext-2.2 /var/lib/oozie/
 service oozie start
+
+# setup HBase
+service hbase-master start
 
 # add seqware user
 useradd -d /home/seqware -m seqware

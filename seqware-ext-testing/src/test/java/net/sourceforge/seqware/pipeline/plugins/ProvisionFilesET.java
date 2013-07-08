@@ -18,10 +18,12 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Random;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.pipeline.modules.utilities.ExternalTestingUtility;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
+import net.sourceforge.seqware.metadb.util.TestDatabaseCreator;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -33,11 +35,26 @@ import org.junit.Test;
  *
  * @author dyuen
  */
-public class ProvisionFilesIT {
+public class ProvisionFilesET {
+    
+    public static final String SETTINGS_PREFIX_KEY = "IT_DATASTORE_PREFIX";
+    public static final String DEFAULT_DATASTORE_PREFIX = "/datastore/";
+    
+    private static String getDatastorePrefix() {
+        try {
+            Map<String, String> settings = ConfigTools.getSettings();
+            if (settings.containsKey(SETTINGS_PREFIX_KEY)){
+                return settings.get(SETTINGS_PREFIX_KEY);
+            }
+        } catch (Exception e) {
+            Log.fatal("Could not read .seqware/settings, this will likely crash extended integration tests", e);
+        }
+        return DEFAULT_DATASTORE_PREFIX;
+    }
     
     @BeforeClass
     public static void resetDatabase() {
-        ExternalTestingUtility.resetDatabaseWithUsers();
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
 
     /**
@@ -83,13 +100,13 @@ public class ProvisionFilesIT {
         Random generator = new Random();
         String random = String.valueOf(generator.nextInt());
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles "
-                + "--metadata-output-file-prefix /datastore/"
+                + "--metadata-output-file-prefix " + getDatastorePrefix()
                 + " --metadata-parent-accession "+sampleAccession+" --metadata-processing-accession-file  " + metadataFile.getAbsolutePath()
-                + " -- -im text::text/plain::" + inputFile.getAbsolutePath() + " -o /datastore/ --force-copy";
+                + " -- -im text::text/plain::" + inputFile.getAbsolutePath() + " -o "+getDatastorePrefix()+" --force-copy";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Log.info(listOutput);
         // check that file was ended up being provisioned correctly
-        File provisioned = new File("/datastore/" + inputFile.getName());
+        File provisioned = new File(getDatastorePrefix() + inputFile.getName());
         Assert.assertTrue("file did not end up in final location", provisioned.exists());
         String contents = FileUtils.readFileToString(provisioned).trim();
         Assert.assertTrue("file contents not as expected", contents.equals(content));
