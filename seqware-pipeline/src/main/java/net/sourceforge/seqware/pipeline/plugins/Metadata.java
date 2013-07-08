@@ -292,6 +292,15 @@ public class Metadata extends Plugin {
             
             // LEFT OFF WITH: need to link process with workflow_run
             metadata.update_processing_workflow_run(processingId, workflowRunAccession);
+            //SEQWARE-1692 - need to update workflow with the status
+            WorkflowRun wr = metadata.getWorkflowRun(workflowRunAccession);
+            wr.setStatus(fields.get("status"));
+            wr.setStdOut(fields.get("stdout"));
+            wr.setStdErr(fields.get("stderr"));
+            metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
+                                wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
+                                wr.getHost(), 0, 0, wr.getStdErr(), wr.getStdOut(), wr.getWorkflowEngine());
+            
         } else {
             Log.error("You need to supply workflow_accession and status for the workflow_run table.");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
