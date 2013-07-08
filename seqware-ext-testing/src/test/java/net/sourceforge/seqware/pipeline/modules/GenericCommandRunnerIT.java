@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.Random;
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.pipeline.modules.utilities.ExternalTestingUtility;
+import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class GenericCommandRunnerIT {
     
     @BeforeClass
     public static void resetDatabase() {
-        ExternalTestingUtility.resetDatabaseWithUsers();
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
 
     @Test
