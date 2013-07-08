@@ -34,6 +34,8 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.XmlWorkflowDataModel;
  *
  */
 public class WorkflowDataModelFactory {
+    public static final String WORKFLOWENGINE = "workflow-engine";
+    public static final String SW_DEFAULT_WORKFLOW_ENGINE = "SW_DEFAULT_WORKFLOW_ENGINE";
 
     private Map<String, String> config;
     private OptionSet options;
@@ -486,8 +488,13 @@ public class WorkflowDataModelFactory {
             Log.error("You need to specify the output dir for your workflow using either --metadata-output-dir as a WorkflowLauncher param or in your workflow INI file as output_dir!");
         }
         //workflow_engine
-        if (options.has("workflow-engine")) {
-            model.setWorkflow_engine((String) options.valueOf("workflow-engine"));
+        // if workflow-engine is set on command-line use that first
+        if (options.has(WORKFLOWENGINE)) {
+            model.setWorkflow_engine((String) options.valueOf(WORKFLOWENGINE));
+        } else if (config.containsKey(SW_DEFAULT_WORKFLOW_ENGINE)){
+            String defaultEngine = config.get(SW_DEFAULT_WORKFLOW_ENGINE);
+            Log.info("Found default workflow engine in .seqware/settings :" + defaultEngine);
+            model.setWorkflow_engine(defaultEngine);
         }
     }
 }
