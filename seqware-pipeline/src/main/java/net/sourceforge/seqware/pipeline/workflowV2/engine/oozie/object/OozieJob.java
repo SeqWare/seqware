@@ -81,14 +81,6 @@ public abstract class OozieJob {
       if (this.seqwareJarPath == null) {
         throw new IllegalArgumentException("seqwareJarPath must be specified when useSge is true.");
       }
-
-      if (this.threadsSgeParamFormat == null) {
-        throw new IllegalArgumentException("threadsSgeParamFormat must be specified when useSge is true.");
-      }
-
-      if (this.maxMemorySgeParamFormat == null) {
-        throw new IllegalArgumentException("maxMemorySgeParamFormat must be specified when useSge is true.");
-      }
     }
 
     if (!scriptsDir.exists()) {
@@ -183,7 +175,8 @@ public abstract class OozieJob {
       args.add(jobObj.getQueue());
     }
 
-    if (StringUtils.isNotBlank(jobObj.getMaxMemory())) {
+    if (StringUtils.isNotBlank(jobObj.getMaxMemory())
+        && StringUtils.isNotBlank(maxMemorySgeParamFormat)) {
       if (maxMemorySgeParamFormat.contains(SGE_MAX_MEMORY_PARAM_VARIABLE)) {
         args.add(maxMemorySgeParamFormat.replace(SGE_MAX_MEMORY_PARAM_VARIABLE, jobObj.getMaxMemory()));
       } else {
@@ -192,7 +185,8 @@ public abstract class OozieJob {
       }
     }
 
-    if (jobObj.getThreads() > 0) {
+    if (jobObj.getThreads() > 0
+        && StringUtils.isNotBlank(threadsSgeParamFormat)) {
       if (threadsSgeParamFormat.contains(SGE_THREADS_PARAM_VARIABLE)) {
         args.add(threadsSgeParamFormat.replace(SGE_THREADS_PARAM_VARIABLE, "" + jobObj.getThreads()));
       } else {
