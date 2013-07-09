@@ -279,12 +279,6 @@ public class MarkdownPlugin extends Plugin {
         if (skip.contains(simpleName)) {
             return;
         }
-
-            // check for skipping 
-           final String simpleName = plug.getClass().getSimpleName();
-           if (skip.contains(simpleName)){
-               continue;
-           }
             
         bufferedWriter.newLine();
         bufferedWriter.append("##  " + simpleName);
