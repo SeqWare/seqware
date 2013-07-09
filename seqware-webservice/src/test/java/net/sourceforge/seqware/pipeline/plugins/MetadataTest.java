@@ -152,7 +152,8 @@ public class MetadataTest extends PluginTest {
         systemErr.println("Test List all Tables\n");
         launchPlugin("--list-tables");
         String output = getOut();
-        String[] tables = new String[]{"TableName", "study", "experiment", "sample", "ius", "lane", "sequencer_run"};
+        // fix up test to support basic workflow/run creation tools, see git commit 4862eaba7f3d7c7495155dc913ead745b544f358
+        String[] tables = new String[]{"TableName", "study", "experiment", "sample", "ius", "lane", "sequencer_run", "workflow", "workflow_run"};
         LinkedList<String> stuff = new LinkedList(Arrays.asList(output.split("\n")));
         for (String table : tables) {
             int index = stuff.indexOf(table);
