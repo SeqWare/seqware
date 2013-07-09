@@ -34,7 +34,7 @@ import org.junit.Test;
  *
  * @author dyuen
  */
-public class GenericCommandRunnerIT {
+public class GenericCommandRunnerET {
     
     @BeforeClass
     public static void resetDatabase() {
