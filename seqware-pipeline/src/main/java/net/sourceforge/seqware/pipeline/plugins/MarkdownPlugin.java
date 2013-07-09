@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import joptsimple.HelpFormatter;
 import joptsimple.OptionDescriptor;
 
@@ -54,6 +52,7 @@ public class MarkdownPlugin extends Plugin {
      */
     public MarkdownPlugin() {
         super();
+        parser.acceptsAll(Arrays.asList("skip", "s"), "Optional: comma separated list of module/plugin names to skip").requiresArgument();
         parser.acceptsAll(Arrays.asList("modules", "m"), "Optional: if provided will list out modules instead of plugins.");
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
         ret.setExitStatus(ReturnValue.SUCCESS);
@@ -166,21 +165,27 @@ public class MarkdownPlugin extends Plugin {
     @Override
     public ReturnValue do_run() {
         BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
-
+        Set<String> toSkip = new HashSet<String>();
+        if (options.has("skip")){
+            Object valueOf = options.valuesOf("skip");
+            String[] vals = valueOf.toString().split(",");
+            toSkip.addAll(Arrays.asList(vals));
+        }
+        
         if (options.has("modules")) {
             Collection<ModuleInterface> mods;
             mods = (Collection<ModuleInterface>)Lookup.getDefault().lookupAll(ModuleInterface.class);
             List<ModuleInterface> modsList = new ArrayList<ModuleInterface>();
             modsList.addAll(mods);
             Collections.sort(modsList , new ModuleComparator());
-            handlePlugins(bufferedWriter, modsList);
+            handlePlugins(bufferedWriter, modsList, toSkip);
         } else {
             Collection<PluginInterface> mods;
             mods = (Collection<PluginInterface>)Lookup.getDefault().lookupAll(PluginInterface.class);
             List<PluginInterface> modsList = new ArrayList<PluginInterface>();
             modsList.addAll(mods);
             Collections.sort(modsList , new PluginComparator());
-            handlePlugins(bufferedWriter, modsList);
+            handlePlugins(bufferedWriter, modsList, toSkip);
         }
 
         return ret;
@@ -221,7 +226,7 @@ public class MarkdownPlugin extends Plugin {
         return ("A plugin that generates markdown documentation for all plugins.");
     }
 
-    private void handlePlugins(BufferedWriter bufferedWriter, List<? extends Object> plugs) throws IllegalArgumentException, SecurityException {
+    private void handlePlugins(BufferedWriter bufferedWriter, List<? extends Object> plugs, Set<String> skip) throws IllegalArgumentException, SecurityException {
         try {
             bufferedWriter.append("---");
             bufferedWriter.newLine();
@@ -248,11 +253,17 @@ public class MarkdownPlugin extends Plugin {
         }
 
         for (Object plug : plugs) {
+            // check for skipping 
+           final String simpleName = plug.getClass().getSimpleName();
+           if (skip.contains(simpleName)){
+               continue;
+           }
+            
             try {
                 bufferedWriter.newLine();
-                bufferedWriter.append("##  " + plug.getClass().getSimpleName());
+                bufferedWriter.append("##  " + simpleName);
                 bufferedWriter.newLine();
-                bufferedWriter.append(plug.getClass().getPackage().getName() + "." + plug.getClass().getSimpleName());
+                bufferedWriter.append(plug.getClass().getPackage().getName() + "." + simpleName);
                 bufferedWriter.newLine();
                 bufferedWriter.newLine();
                 if (plug instanceof PluginInterface) {
@@ -292,15 +303,6 @@ public class MarkdownPlugin extends Plugin {
                     } catch (NoSuchMethodException ex){
                         Log.info(ex,ex);
                     }   
-                    
-                    
-//                    String syntax = "";
-//                    try {
-//                        syntax = mod.get_syntax();
-//                    } catch (Exception e) {
-//                        Log.info("Could not print syntax for " + mod.getClass());
-//                    }
-//                    bufferedWriter.append(syntax);
                 }
                 
             } catch (NoSuchFieldException ex) {
@@ -321,7 +323,7 @@ public class MarkdownPlugin extends Plugin {
             if (options.isEmpty()) {
                 return new String();
             }
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             buffer.append("| Command-line option | Description |\n");
             buffer.append("|--------------------|--------------|\n");
             // not sure why options are reported once per
@@ -334,7 +336,7 @@ public class MarkdownPlugin extends Plugin {
 
                 buffer.append("|");
                 for (String o : e.getValue().options()) {
-                    buffer.append("--" + o + ", ");
+                    buffer.append("--").append(o).append(", ");
                 }
                 buffer.deleteCharAt(buffer.length() - 1);
                 buffer.deleteCharAt(buffer.length() - 1);
@@ -350,7 +352,8 @@ public class MarkdownPlugin extends Plugin {
     public static void main(String[] args) {
         MarkdownPlugin mp = new MarkdownPlugin();
         mp.init();
-        mp.setParams(new ArrayList<String>());
+        List<String> arr = new ArrayList<String>();
+        mp.setParams(arr);
         mp.parse_parameters();
         mp.do_run();
     }
