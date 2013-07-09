@@ -141,7 +141,12 @@ public class MetadataWS extends Metadata {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
         // figure out the correct command
-        String command = baseCommand + " ";
+        String command;
+        if (baseCommand == null){ // SEQWARE-1692 a null baseCommand leads to a String "null" in the database
+            command = null;
+        } else{
+            command = baseCommand + " ";
+        }
         // FIXME: need to let the client determine this!
         // command = command.replaceAll("\\$\\{workflow_bundle_dir\\}",
         // provisionDir.getAbsolutePath());
@@ -187,13 +192,15 @@ public class MetadataWS extends Metadata {
         // bundled workflows but we could make this more flexible
         HashMap<String, Map<String, String>> hm = new HashMap<String, Map<String, String>>();
         // need to be careful, may contain un-expanded value
-        if (configFile.contains("${workflow_bundle_dir}")) {
-            String newPath = configFile;
-            newPath = newPath.replaceAll("\\$\\{workflow_bundle_dir\\}", provisionDir);
-            MapTools.ini2RichMap(newPath, hm);
-        } else {
-            MapTools.ini2RichMap(configFile, hm);
-        }
+      if (configFile != null) { // SEQWARE-1692 : there is no config file for a "workflow" saved via metadata
+          if (configFile.contains("${workflow_bundle_dir}")) {
+              String newPath = configFile;
+              newPath = newPath.replaceAll("\\$\\{workflow_bundle_dir\\}", provisionDir);
+              MapTools.ini2RichMap(newPath, hm);
+          } else {
+              MapTools.ini2RichMap(configFile, hm);
+          }
+      }
 
         // foreach workflow param add an entry in the workflow_param table
         int count = 0;
