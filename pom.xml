@@ -58,7 +58,7 @@
     <artifactId>seqware</artifactId>
     <packaging>pom</packaging>
     <groupId>com.github.seqware</groupId>
-    <version>0.13.6.8</version>
+    <version>0.13.6.9-SNAPSHOT</version>
 
     <repositories>
         <repository>
