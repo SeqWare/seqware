@@ -222,7 +222,6 @@ public abstract class OozieJob {
     Element prop = add(config, "property");
     add(prop, "name", name);
     add(prop, "value", value);
-    config.addContent(prop);
     return prop;
   }
 
