@@ -149,6 +149,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
     try {
       this.dir = FileTools.createDirectoryWithUniqueName(new File(this.dataModel.getEnv().getOOZIE_WORK_DIR()), "oozie");
       this.dir.setWritable(true, false);
+      System.out.println("Using working directory: "+dir.getAbsolutePath());
       // generate job.properties
       this.generateJobProperties();
       // create lib dir
