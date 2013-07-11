@@ -415,13 +415,15 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                         if (rerun){
                             Log.debug("NOT RUNNING. test=" + test + " or !rerun=" + !rerun);
                             reportLaunch();
-                            Log.stdout("Tested key: " + key + " would have launched");
+                            // SEQWARE-1642 - output to stdout only whether a decider would launch
+                            ret = do_summary();
+                            launched++;
                         } else{
                             Log.debug("NOT RUNNING. test=" + test + " or !rerun=" + !rerun);
-                            Log.stdout("Tested key: " + key + " would not have launched");
                         }
-                        ret = do_summary();
-                    } else if (launched++ < launchMax) {
+                        Log.debug("Generated command:" + do_summary_command());
+                    } else if (launched < launchMax) {
+                        launched++;
                         //construct the INI and run it
                         Log.debug("RUNNING");
 //                        // setup workflow object
@@ -441,9 +443,13 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                         Log.stdout("Launching.");
                         do_summary();
                         
-                    } else {
+                    } 
+                    // separate this out so that it is reachable when in --test
+                    if (launched >= launchMax) {
                         Log.info("The maximum number of jobs has been launched. The next jobs will be launched when the decider runs again.");
                         ret.setExitStatus(ReturnValue.QUEUED);
+                        // SEQWARE-1666 - short-circuit and exit when the maximum number of jobs have been launched
+                        return ret;
                     }
                 } else {
                     Log.debug("Cannot run: parentAccessions: "+parentAccessionsToRun.size() + " filesToRun: "+ filesToRun.size()+ " workflowParentAccessions: "+ workflowParentAccessionsToRun.size());
@@ -751,13 +757,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     @Override
     public ReturnValue do_summary() {
-        StringBuilder command = new StringBuilder();
-        command.append("\njava -jar seqware-full.jar ");
-        command.append(spaceSeparateMy(constructCommand()));
-        command.append("\n");
-
-        Log.stdout(command.toString());
-
+        String command = do_summary_command();
+        Log.stdout(command);
         return ret;
     }
 
@@ -1013,6 +1014,16 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         }
         Log.info("Ran on: " + StringUtils.join(ranOnList,','));
         return ranOnList;
+    }
+
+    private String do_summary_command() {
+        StringBuilder command = new StringBuilder();
+        // SEQWARE-1612 Change test command to actual jar name
+        String SEQWARE_VERSION = this.metadata.getClass().getPackage().getImplementationVersion();
+        command.append("\njava -jar seqware-distribution-").append(SEQWARE_VERSION).append("-full.jar ");
+        command.append(spaceSeparateMy(constructCommand()));
+        command.append("\n");
+        return command.toString();
     }
     
     /**
