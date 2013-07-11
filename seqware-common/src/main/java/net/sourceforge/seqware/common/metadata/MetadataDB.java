@@ -1006,7 +1006,7 @@ public class MetadataDB extends Metadata {
    * {@inheritDoc}
    */
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
-          String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
+          String statusCmd, String workingDirectory, String dax, String ini, String host,
           String stdErr, String stdOut, String workflowengine) {
 
     // metadata.update_workflow_run(workflowRunId, pegasusCmd, template,

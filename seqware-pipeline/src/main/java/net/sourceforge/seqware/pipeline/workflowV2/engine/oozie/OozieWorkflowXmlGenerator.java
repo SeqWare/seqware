@@ -15,36 +15,34 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 public class OozieWorkflowXmlGenerator {
-	/**
-	 * generate a dax file from the object model
-	 * @param wfdm
-	 * @param output
-	 * @return
-	 */
-    public ReturnValue generateWorkflowXml(AbstractWorkflowDataModel wfdm, String output, String dir) {
-    	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-    	ret = this.createWorkflowXml(wfdm, output, dir);
-    	return ret;
-    }
-    
-    private ReturnValue createWorkflowXml(AbstractWorkflowDataModel wfdm, String output, String dir) {
-    	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-    	File dax = new File(output);
-    	// write to dax
-    	Document doc = new Document();
-    	try {
-    	    OutputStream out = new FileOutputStream(dax);
-    	    XMLOutputter serializer = new XMLOutputter(Format.getPrettyFormat());
-    	    WorkflowApp adag = new WorkflowApp(wfdm, dir);
-    	    doc.setRootElement(adag.serializeXML());
-    	    serializer.output(doc, out);
+  /**
+   * generate a dax file from the object model
+   * 
+   * @param wfdm
+   * @param output
+   * @return
+   */
+  public ReturnValue generateWorkflowXml(AbstractWorkflowDataModel wfdm, String output, String dir, boolean useSge,
+                                         File seqwareJar, String threadsSgeParamFormat,
+                                         String maxMemorySgeParamFormat) {
+    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+    File dax = new File(output);
+    // write to dax
+    Document doc = new Document();
+    try {
+      OutputStream out = new FileOutputStream(dax);
+      XMLOutputter serializer = new XMLOutputter(Format.getPrettyFormat());
+      WorkflowApp adag = new WorkflowApp(wfdm, dir, useSge, seqwareJar, threadsSgeParamFormat,
+                                         maxMemorySgeParamFormat);
+      doc.setRootElement(adag.serializeXML());
+      serializer.output(doc, out);
 
-    	    out.flush();
-    	    out.close();
-    	} catch (IOException e) {
-    	    Log.error(e);
-    	    ret.setExitStatus(ReturnValue.FAILURE);
-    	}
-    	return ret;
+      out.flush();
+      out.close();
+    } catch (IOException e) {
+      Log.error(e);
+      ret.setExitStatus(ReturnValue.FAILURE);
     }
+    return ret;
+  }
 }
