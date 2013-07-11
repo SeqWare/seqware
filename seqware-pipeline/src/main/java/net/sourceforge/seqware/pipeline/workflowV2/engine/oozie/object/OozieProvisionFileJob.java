@@ -82,24 +82,28 @@ public class OozieProvisionFileJob extends OozieJob {
 
     if (file.isInput()) {
       args.add("--skip-record-file");
+      
       args.add("--input-file");
       args.add(file.getSourcePath());
-      args.add("--output-dir");
-      args.add(outputDir);
-    } else {
+      
+      if (file.getOutputPath() != null) {
+        args.add("--output-file");
+        args.add(file.getOutputPath());
+      } else {
+        args.add("--output-dir");
+        args.add(outputDir);
+      }
+    } else { // output file
       args.add("--input-file-metadata");
       args.add(String.format("%s::%s::%s/%s", jobObj.getAlgo(), file.getType(), oozie_working_dir, file.getSourcePath()));
-    }
-
-    if (file.getOutputPath() != null) {
-      args.add("--output-file");
-      args.add(file.getOutputPath());
-    } else if (file.isInput()) {
-      args.add("--output-dir");
-      args.add(outputDir);
-    } else {
-      args.add("--output-dir");
-      args.add(metadataOutputPrefix + "/" + outputDir);
+      
+      if (file.getOutputPath() != null) {
+        args.add("--output-file");
+        args.add(file.getOutputPath());
+      } else {
+        args.add("--output-dir");
+        args.add(metadataOutputPrefix + "/" + outputDir);
+      }
     }
 
     if (file.isForceCopy()) {
