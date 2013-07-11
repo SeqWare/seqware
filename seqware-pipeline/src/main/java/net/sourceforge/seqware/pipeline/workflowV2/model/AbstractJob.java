@@ -61,7 +61,7 @@ public class AbstractJob implements Job {
 		
 		Requirement memR = new Requirement();
 		memR.setType(Type.MAXMEMORY);
-		memR.setValue("2048");
+		memR.setValue("8192");
 		this.requirements.add(memR);
 		
 	}

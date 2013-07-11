@@ -46,9 +46,8 @@ SW_METADATA_METHOD=webservice
 SW_BUNDLE_DIR=/home/seqware/SeqWare/provisioned-bundles
 # the central repository for installed bundles
 SW_BUNDLE_REPO_DIR=/home/seqware/SeqWare/released-bundles
-# the default workflow engine if no engine is specified, can be "pegasus" or "oozie"
-SW_DEFAULT_WORKFLOW_ENGINE=oozie
-
+# the default engine to use if otherwise unspecified (one of: pegasus, oozie, oozie-sge)
+SW_DEFAULT_WORKFLOW_ENGINE=oozie-sge
 #
 # SEQWARE PIPELINE SETTINGS
 # PEGASUS WORKFLOW ENGINE SETTINGS
@@ -71,6 +70,18 @@ OOZIE_JOBTRACKER=localhost:8021
 OOZIE_NAMENODE=hdfs://localhost:8020
 OOZIE_QUEUENAME=default
 OOZIE_WORK_DIR=/usr/tmp/seqware-oozie
+
+#
+# OOZIE-SGE SETTINGS:
+
+# Format of qsub flag for specifying number of threads.
+# If present, ${threads} will be replaced with the job-specific value.
+OOZIE_SGE_THREADS_PARAM_FORMAT=-pe serial ${threads}
+
+# Format of qsub flag for specifying the max memory.
+# If present, ${maxMemory} will be replaced with the job-specific value.
+OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT=-l h_vmem=${maxMemory}M
+
 #
 # SEQWARE WEBSERVICE SETTINGS
 # these settings are only used if the SW_METADATA_METHOD=webservice
