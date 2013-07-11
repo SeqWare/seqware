@@ -312,7 +312,7 @@ public class Metadata extends Plugin {
             wr.setStdErr(fields.get("stderr"));
             metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
                                 wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
-                                wr.getHost(), 0, 0, wr.getStdErr(), wr.getStdOut(), wr.getWorkflowEngine());
+                                wr.getHost(), wr.getStdErr(), wr.getStdOut(), wr.getWorkflowEngine());
             
         } else {
             Log.error("You need to supply workflow_accession and status for the workflow_run table.");
