@@ -30,7 +30,7 @@ export DEBIAN_FRONTEND=noninteractive
 #apt-get -q -y --force-yes install oracle-j2sdk1.6 cloudera-manager-server-db cloudera-manager-server cloudera-manager-daemons
 #apt-get -q -y --force-yes install oracle-j2sdk1.6 hadoop-0.20-conf-pseudo hue hue-server hue-plugins oozie oozie-client postgresql-9.1 postgresql-client-9.1 tomcat6-common tomcat6 apache2 git maven sysv-rc-conf hbase-master xfsprogs
 # get Java
-apt-get -q -y --force-yes install libasound2 libxi6 libxtst6 
+apt-get -q -y --force-yes install libasound2 libxi6 libxtst6 libxt6 
 wget http://archive.cloudera.com/cm4/ubuntu/precise/amd64/cm/pool/contrib/o/oracle-j2sdk1.6/oracle-j2sdk1.6_1.6.0+update31_amd64.deb
 dpkg -i oracle-j2sdk1.6_1.6.0+update31_amd64.deb
 apt-get -q -y --force-yes install hadoop-0.20-conf-pseudo hue hue-server hue-plugins oozie oozie-client postgresql-9.1 postgresql-client-9.1 tomcat6-common tomcat6 apache2 git maven sysv-rc-conf hbase-master xfsprogs
