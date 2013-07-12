@@ -165,3 +165,9 @@ mv /vagrant/seqware-portal-%{SEQWARE_VERSION}.xml /etc/tomcat6/Catalina/localhos
 # seqware landing page
 mv /vagrant/vm_landing/* /var/www/
 
+# seqware tutorials
+sudo mkdir /datastore
+sudo chown seqware /datastore
+# required for running oozie jobs
+mkdir /usr/lib/hadoop-0.20-mapreduce/.seqware
+ln -s /home/seqware/.seqware/settings /usr/lib/hadoop-0.20-mapreduce/.seqware/settings
