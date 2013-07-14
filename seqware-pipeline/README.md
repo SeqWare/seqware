@@ -268,6 +268,240 @@ Please follow the directions on Cloudera carefully, you need to make sure you in
 
 You also will probably want to enable the web console for Oozie, in which case you will need to follow the directions to install ExtJS. This will give you a nice interface at http://<OOZIE_HOSTNAME>:11000/oozie where you can browse the running workflows.
 
+#### Oozie Memory-based Scheduling
+
+Out of the box Oozie (or MapReduce for that matter) doesn't attempt to monitor or enforce memory limitations on any jobs.  For many users this might be fine but often time in bioinformatics we need to carefully manage job memory requirements.  Alignment and assembly tools, for example, are extremely memory hungry and can use dozens of GB of RAM.  If two of these jobs are scheduled to the same node there is a good chance the job will die or even kill the machine.
+
+To get around this we use the Capacity Scheduler which allows you to schedule MapReduce jobs based on memory requirements (it also lets you organize M/R clusters into different queues and was originally intended to help groups share M/R clusters).
+
+<p class="warning"><strong>Note:</strong> The Capacity Scheduler is intended for the Oozie engine. If you are using the Oozie-SGE engine the memory management happens on the SGE side, SeqWare workflows will pass along the memory request with the SGE-bound jobs but that's it.  Also, the Capacity Scheduler will not work with the Pegasus engine since that engine in no way uses Hadoop.</p>
+
+#### Install the Capacity Scheduler
+
+Just copy this to the right place:
+
+    cp /usr/lib/hadoop-0.20-mapreduce/contrib/capacity-scheduler/hadoop-capacity-scheduler-2.0.0-mr1-cdh4.1.2.jar /usr/lib/hadoop/lib/
+
+#### Setup Capacity Scheduler
+Now setup the number of map slots you want to have, the number of reducer slots (which doesn't get used for Oozie so matters less, typically you do 1 per node), and memory footprint for your mapper slots. 
+
+You should have n - 1 map slots where n = number of cores in your VM. For mapred.cluster.map.memory.mb take the system memory and divide by map slots. For the mapred.cluster.max.map.memory.mb use the system memory total.  I think this is the right algorithm but the documentation for this is very poor.
+
+<pre>
+# /etc/hadoop/conf/mapred-site.xml
+<configuration>
+  <property>
+    <name>mapred.job.tracker</name>
+    <value>localhost:8021</value>
+  </property>
+  <property>
+    <name>mapred.jobtracker.taskScheduler</name>
+    <value>org.apache.hadoop.mapred.CapacityTaskScheduler</value>
+  </property>
+  <property>
+    <name>mapred.queue.names</name>
+    <value>default</value>
+  </property>
+  <property>
+    <name>mapred.cluster.map.memory.mb</name>
+    <value>4024</value>
+  </property>
+  <property>
+    <name>mapred.cluster.reduce.memory.mb</name>
+    <value>4024</value>
+  </property>
+  <property>
+    <name>mapred.cluster.max.map.memory.mb</name>
+    <value>8024</value>
+  </property>
+  <property>
+    <name>mapred.cluster.max.reduce.memory.mb</name>
+    <value>8024</value>
+  </property>
+  <property>
+    <name>mapreduce.tasktracker.reserved.physicalmemory.mb</name>
+    <value>512</value>
+  </property>
+  <property>
+    <name>mapred.job.map.memory.mb</name>
+    <value>1024</value>
+  </property>
+  <property>
+    <name>mapred.job.reduce.memory.mb</name>
+    <value>1024</value>
+  </property>
+  <property>
+    <name>mapred.tasktracker.map.tasks.maximum</name>
+    <value>2</value>
+  </property>
+  <property>
+    <name>mapred.tasktracker.reduce.tasks.maximum</name>
+    <value>1</value>
+  </property>
+</configuration>
+</pre>
+
+Now create a config for the capacity scheduler.
+
+<pre>
+# /etc/hadoop/conf/capacity-scheduler.xml
+<configuration>
+  <property>
+    <name>mapred.capacity-scheduler.queue.default.minimum-user-limit-percent</name>
+    <value>100</value>
+  </property>
+  <property>
+    <name>mapred.capacity-scheduler.queue.default.capacity</name>
+    <value>100</value>
+  </property>
+</configuration>
+</pre>
+
+Make sure core-sites.xml has these oozie proxy settings in it:
+
+<pre>
+<configuration>
+  <property>
+    <name>fs.default.name</name>
+    <value>hdfs://localhost:8020</value>
+  </property>
+  <!-- OOZIE proxy user setting -->
+  <property>
+    <name>hadoop.proxyuser.oozie.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.oozie.groups</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.mapred.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.mapred.groups</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.hdfs.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.hdfs.groups</name>
+    <value>*</value>
+  </property>
+  <!-- HTTPFS proxy user setting -->
+  <property>
+    <name>hadoop.proxyuser.httpfs.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.httpfs.groups</name>
+    <value>*</value>
+  </property>
+</configuration>
+</pre>
+
+#### Making Sure Capacity Scheduler is Configured Correctly
+
+If you don't setup the capacity scheduler then the TaskTracker log will look like this:
+
+<pre>
+2013-03-21 13:12:58,990 INFO org.apache.hadoop.mapred.TaskTracker:  Using ResourceCalculatorPlugin : org.apache.hadoop.util.LinuxResourceCalculatorPlugin@52f235bf
+2013-03-21 13:12:58,995 INFO org.apache.hadoop.mapred.TaskMemoryManagerThread: Physical memory monitoring enabled. System total: 8306794496. Reserved: 536870912. Maximum: 7769923584.
+2013-03-21 13:12:58,995 INFO org.apache.hadoop.mapred.TaskMemoryManagerThread: Starting thread: class org.apache.hadoop.mapred.TaskMemoryManagerThread
+</pre>
+
+If you do then you should see something like the following:
+
+<pre>
+2013-03-21 13:06:35,675 INFO org.apache.hadoop.mapred.TaskTracker:  Using ResourceCalculatorPlugin : org.apache.hadoop.util.LinuxResourceCalculatorPlugin@52c635bd
+2013-03-21 13:06:35,678 WARN org.apache.hadoop.mapred.TaskTracker: TaskTracker's totalMemoryAllottedForTasks is -1 and reserved physical memory is not configured. TaskMemoryManager is disabled.
+</pre>
+
+Also, keep in mind this needs to be setup for all nodes not just the head node!  All nodes that run the TaskTracker that is.
+
+You should see information in the JobTracker web console that tells you CapacityScheduler is working. Specifically you should see the "default" queue along with Scheduling Information. If you don't see this then the system is not configured properly.
+
+#### Affects of CapacityScheduler on M/R Jobs
+
+If you don't specify the correct memory requirements on M/R jobs once capacity scheduler is setup then the jobs will fail (I think).  You'll see something similar to:
+
+<pre>
+TaskTree [pid=1122691,tipID=attempt_201303211420_0001_m_000000_1] is running beyond physical memory-limits. Current usage : 113065984bytes. Limit : -1bytes. Killing task. TaskTree [pid=1122691,tipID=attempt_201303211420_0001_m_000000_1] is running beyond physical memory-limits. Current usage : 113065984bytes. Limit : -1bytes. Killing task. 
+Dump of the process-tree for attempt_201303211420_0001_m_000000_1 : 
+    |- PID PPID PGRPID SESSID CMD_NAME USER_MODE_TIME(MILLIS) SYSTEM_TIME(MILLIS) VMEM_USAGE(BYTES) RSSMEM_USAGE(PAGES) FULL_CMD_LINE
+    |- 1122691 1120967 1122691 1122691 (java) 501 36 589066240 27604 /nfs/seqware/java/jdk1.7.0_04/jre/bin/java -Djava.library.path=/usr/lib/hadoop-0.20-mapreduce/lib/native/Linux-amd64-64:/.mounts/labs/seqware/exchange/sqwdev_dfs/mapred/local/taskTracker/boconnor/jobcache/job_201303211420_0001/attempt_201303211420_0001_m_000000_1/work -Xmx200m -Djava.io.tmpdir=/.mounts/labs/seqware/exchange/sqwdev_dfs/mapred/local/taskTracker/boconnor/jobcache/job_201303211420_0001/attempt_20130
+</pre>
+
+You can see this in the Hadoop web console.  This means you need to specify params for the M/R job. In Oozie this looks like the following:
+
+<pre>
+<workflow-app xmlns="uri:oozie:workflow:0.2" name="java-main-wf">
+    <start to="java-node"/>
+    <action name="java-node">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+        <property>
+          <name>oozie.launcher.mapred.job.map.memory.mb</name>
+          <value>2048</value>
+        </property>
+        <property>
+          <name>oozie.launcher.mapred.job.reduce.memory.mb</name>
+          <value>2048</value>
+        </property>
+        <property>
+          <name>oozie.launcher.mapreduce.map.memory.physical.mb</name>
+          <value>2048</value>
+        </property>
+        <property>
+          <name>oozie.launcher.mapreduce.reduce.memory.physical.mb</name>
+          <value>2048</value>
+        </property>
+            </configuration>
+            <main-class>org.apache.oozie.example.DemoJavaMain</main-class>
+            <arg>Hello</arg>
+            <arg>Oozie!</arg>
+        </java>
+        <ok to="end"/>
+        <error to="fail"/>
+    </action>
+    <kill name="fail">
+        <message>Java failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name="end"/>
+</workflow-app>
+</pre>
+
+Notice the various memory params.  A SeqWare workflow automatically takes care of this but if you're on a shared cluster the other users will need to specify the params for their M/R jobs.
+
+#### User and Groups Setup
+
+All jobs run as the mapred user so if you refer to files in your user home dir in an Oozie workflow you will run into permissions problems like:
+
+<pre>
+Cannot find input file: /home/seqware/Temp/HelloWorld23/target/Workflow_Bundle_HelloWorld23_1.0_SeqWare_1.0.0-SNAPSHOT/Workflow_Bundle_HelloWorld23/1.0/data/input.txt
+</pre>
+
+To fix this you need to make sure you add mapred, oozie, and hdfs to the "seqware" or other user groups.  Also, make sure the seqware group can read /home/seqware.
+
+#### Shared Filesystem
+
+You need a shared filesystem to act as the working directory when workflows run and to host the workflow bundle.  On the sqwdev.res cluster the home directory is an NFS share and this is sufficient.  It's a good idea to have /home shared since SeqWare jobs will look for a ~/.seqware/settings file and it's useful to have this be consistent across the cluster.
+
+#### Restart Oozie/Hadoop
+
+Restart the daemons to ensure the settings are flushed out.
+
+    for i in /etc/init.d/hadoop-* /etc/init.d/oozie; do $i stop; done;
+    for i in /etc/init.d/hadoop-* /etc/init.d/oozie; do $i start; done;
+
 
 ## Setup SGE
 
