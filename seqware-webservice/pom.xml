@@ -540,7 +540,7 @@
                         <groupId>org.apache.tomcat.maven</groupId>
                         <artifactId>tomcat6-maven-plugin</artifactId>
 			 <configuration>   
-                            <contextFile>target/seqware-webservice-1.0.1-SNAPSHOT/META-INF/context.xml</contextFile>
+                            <contextFile>target/seqware-webservice-${project.version}/META-INF/context.xml</contextFile>
                         </configuration>
 
                     </plugin>
