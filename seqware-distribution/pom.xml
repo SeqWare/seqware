@@ -144,7 +144,7 @@
           </goals>
 
           <configuration>
-	        <pubScmUrl>scm:git:https://github.com/SeqWare/seqware.github.com.git</pubScmUrl>	
+	        <pubScmUrl>scm:git:ssh://git@github.com/SeqWare/seqware.github.com.git</pubScmUrl>	
 		<content>docs/site/output/</content>
 		<ignorePathsToDelete>
               		<ignorePathToDelete>javadoc</ignorePathToDelete>
