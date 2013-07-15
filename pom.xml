@@ -48,7 +48,7 @@
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
         <maven-project-info-reports-plugin.version>2.7</maven-project-info-reports-plugin.version>
-        <maven-release-plugin.version>2.4.1</maven-release-plugin.version>
+        <maven-release-plugin.version>2.3.2</maven-release-plugin.version>
         <maven-build-helper-plugin.version>1.8</maven-build-helper-plugin.version>
         
         <skipITs>true</skipITs>
@@ -79,7 +79,7 @@
     <artifactId>seqware</artifactId>
     <packaging>pom</packaging>
     <groupId>com.github.seqware</groupId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
 
     <repositories>
         <repository>

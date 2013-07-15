@@ -17,7 +17,7 @@
     <parent>
         <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -140,35 +140,6 @@
 never
 </forkMode>
                 		  -->
-                </configuration>
-            </plugin>
-            <plugin>
-                <!-- thanks to wibidata, this plugin allows us to spin up and shut down a mini-hbase cluster for hbase testing -->
-                <groupId>com.wibidata.maven.plugins</groupId>
-                <artifactId>hbase-maven-plugin</artifactId>
-                <version>1.0.7-cdh4</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>start</goal>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <skip>${skipITs}</skip>
-                    <mapReduceEnabled>true</mapReduceEnabled>
-                    <hadoopConfiguration>
-                        <!-- scanners seem to timeout more often when using this mini-cluster, possible for performance reasons -->
-                        <property>
-                            <name>hbase.client.scanner.timeout.period</name>	
-                            <value>120000</value>
-                        </property>
-                        <property>
-                            <name>hbase.regionserver.lease.period</name>	
-                            <value>120000</value>
-                        </property>
-                    </hadoopConfiguration>
                 </configuration>
             </plugin>
             <plugin>
@@ -655,4 +626,47 @@ never
             <version>2.7.1</version>
         </dependency>
     </dependencies>
+
+   <profiles>
+        <profile>
+            <id>embeddedHBase</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+  		<plugin>
+                <!-- thanks to wibidata, this plugin allows us to spin up and shut down a mini-hbase cluster for hbase testing -->
+                <groupId>com.wibidata.maven.plugins</groupId>
+                <artifactId>hbase-maven-plugin</artifactId>
+                <version>1.0.7-cdh4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>start</goal>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skip>${skipITs}</skip>
+                    <mapReduceEnabled>true</mapReduceEnabled>
+                    <hadoopConfiguration>
+                        <!-- scanners seem to timeout more often when using this mini-cluster, possible for performance reasons -->
+                        <property>
+                            <name>hbase.client.scanner.timeout.period</name>
+                            <value>120000</value>
+                        </property>
+                        <property>
+                            <name>hbase.regionserver.lease.period</name>
+                            <value>120000</value>
+                        </property>
+                    </hadoopConfiguration>
+                </configuration>
+            	</plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
