@@ -321,6 +321,22 @@ public class BasicDeciderTest extends PluginTest {
     }
     
     @Test
+    public void testIsContained_SameSize_different_set() {
+        TestingDecider decider = (TestingDecider) instance;
+        decider.setMetaws((MetadataWS)metadata);
+        decider.setMetaType(fastq_gz);
+        
+        List<String> filesToRun = new ArrayList<String>();
+        filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
+        filesToRun.add("s3://non_matching_file");
+        int workflowRunAcc = 6654;
+        
+
+        //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
+	Assert.assertTrue(!((BasicDecider)instance).isToRunContained(workflowRunAcc, filesToRun));
+    }
+    
+    @Test
     public void testIsContained_More() {
         TestingDecider decider = (TestingDecider) instance;
         decider.setMetaws((MetadataWS)metadata);

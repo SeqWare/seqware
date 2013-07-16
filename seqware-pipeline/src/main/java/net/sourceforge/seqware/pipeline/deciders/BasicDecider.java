@@ -18,6 +18,7 @@ package net.sourceforge.seqware.pipeline.deciders;
 
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
@@ -348,36 +349,23 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private ReturnValue launchWorkflows(Map<String, List<ReturnValue>> mappedFiles) {
         if (mappedFiles != null) {
 
-            for (String key : mappedFiles.keySet()) {
-                Log.info("Considering key:" + key);
+            for (Entry<String, List<ReturnValue>> entry : mappedFiles.entrySet()) {
+                Log.info("Considering key:" + entry.getKey());
 
                 parentAccessionsToRun = new HashSet<String>();
                 filesToRun = new HashSet<String>();
                 workflowParentAccessionsToRun = new HashSet<String>();
 
-                //List<String> previousWorkflowRuns = new ArrayList<String>();
-
                 //for each grouping (e.g. sample), iterate through the files
-                List<ReturnValue> files = mappedFiles.get(key);
-                Log.info("key:" + key + " consists of " + files.size() + " files");
+                List<ReturnValue> files = entry.getValue();
+                Log.info("key:" + entry.getKey() + " consists of " + files.size() + " files");
                 List<Integer> fileSWIDs = new ArrayList<Integer>();
                 
                 for (ReturnValue file : files) {
                     String wfAcc = file.getAttribute(Header.WORKFLOW_SWA.getTitle());
                     String fileSWID = file.getAttribute(Header.FILE_SWA.getTitle());
                     fileSWIDs.add(Integer.valueOf(fileSWID));
-//                    Log.debug(Header.WORKFLOW_SWA.getTitle() + ": WF accession is " + wfAcc);
-                    //We're allowing everything that produced this type of file 
-                    //other than the same workflow
-                    
-// the previous way of looking for workflow runs via FindAllFiles was not a good idea, we will instead use a new resource to find relevant
-// workflow runs
-//                    if (wfAcc != null) {
-//                        if (workflowAccessionsToCheck.contains(wfAcc) || workflowAccession.equals(wfAcc)) {
-//                            Log.trace("Found previous workflow run:" + file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
-//                            previousWorkflowRuns.add(file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
-//                        }
-//                    }
+                    Log.debug(Header.WORKFLOW_SWA.getTitle() + ": WF accession is " + wfAcc);
 
                     //if there is no parent accessions, or if the parent accession is correct
                     //this makes an assumption that if the wfAcc is null then the parentWorkflowAccessions will be empty
@@ -507,7 +495,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      */
     protected boolean rerunWorkflowRun(final Collection<String> filesToRun, List<Integer> fileSWIDs) {
         
-        boolean rerun = true;
+        boolean rerun;
         List<Boolean> failures = new ArrayList<Boolean>();
         List<WorkflowRun> runs1 = produceAccessionListWithFileList(fileSWIDs, "CHILDREN_VIA_PROCESSING_RELATIONSHIP");
         rerun = processWorkflowRuns(filesToRun, failures, runs1);
@@ -553,21 +541,23 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     /**
      * Returns true if the filesToRun are totally contained by the files associated with the 
      * files in a given workflowRunAcc
-     * @param workflowRunAcc
-     * @param filesToRun
+     * @param workflowRunAcc accession of the workflow run to compare against
+     * @param filesToRun the files to check to see if they are contained by the past run
      * @return 
      */
     protected boolean isToRunContained(int workflowRunAcc, Collection<String> filesToRun) {
         List<String> ranOnList = getListOfFiles(workflowRunAcc);
         Log.info("Files to run: " + StringUtils.join(filesToRun,','));
         if (ranOnList.size() >= filesToRun.size()) {
-            for (String file : ranOnList) {
+            for (String file : filesToRun) {
+                Log.debug("Checking: " + file);
                 //checks to see if the files in filesToRun are different from those it has ran on previously
                 if (!ranOnList.contains(file)) {
                     return false;
                 }
-                return true;
             }
+            // checked all files to see if the run is contained
+            return true;
         }
         return false;
     }
@@ -864,8 +854,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * @return
      */
     protected ReturnValue doFinalCheck(String commaSeparatedFilePaths, String commaSeparatedParentAccessions) {
-        ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-        return ret;
+        ReturnValue checkReturnValue = new ReturnValue(ReturnValue.SUCCESS);
+        return checkReturnValue;
     }
 
     /**
@@ -879,11 +869,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private Map<String, String> generateWorkflowRunMap(int workflowRunAcc) {
         String report = metaws.getWorkflowRunReport(workflowRunAcc);
         String[] lines = report.split("\n");
-        String[] header = lines[0].split("\t");
+        String[] reportHeader = lines[0].split("\t");
         String[] data = lines[1].split("\t");
         Map<String, String> map = new TreeMap<String, String>();
-        for (int i = 0; i < header.length; i++) {
-            map.put(header[i].trim(), data[i].trim());
+        for (int i = 0; i < reportHeader.length; i++) {
+            map.put(reportHeader[i].trim(), data[i].trim());
         }
         return map;
     }
