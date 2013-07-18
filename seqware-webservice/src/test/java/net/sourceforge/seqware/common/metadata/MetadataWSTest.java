@@ -23,6 +23,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -548,7 +549,7 @@ public class MetadataWSTest {
         String host = "localhost";
         String testEngine = "test engine";
         int expResult = 2862;
-        ReturnValue result = instance.update_workflow_run(workflowRunId, pegasusCmd, workflowTemplate, status, statusCmd, workingDirectory, dax, ini, host, null, null, testEngine);
+        ReturnValue result = instance.update_workflow_run(workflowRunId, pegasusCmd, workflowTemplate, status, statusCmd, workingDirectory, dax, ini, host, null, null, testEngine, null);
         Assert.assertEquals(expResult, result.getReturnValue());
         testTimestamp("select update_tstmp from workflow_run "
                 + "where workflow_run_id=32;", "update_tstmp", beforeDate);
@@ -731,5 +732,50 @@ public class MetadataWSTest {
         Log.info("testGetParentSamplesFrom");
         List<Sample> samples = instance.getParentSamplesFrom(1944);
         Assert.assertFalse(samples.isEmpty());
+    }
+    
+    @Test 
+    public void testGetParentAccessionsForExistingWorkflowRun(){
+        WorkflowRun workflowRun = instance.getWorkflowRun(862);
+        Assert.assertTrue("workflow run with no parents should have empty set", workflowRun.getInputFiles().isEmpty());
+    }
+    
+    @Test 
+    public void testUpdateWorkflowRunWithParentAccessions(){
+        WorkflowRun wr = instance.getWorkflowRun(863);
+        // try nulling it and asking for it back
+        instance.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
+                wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
+                wr.getHost(), wr.getStdOut(), wr.getStdErr(), wr.getWorkflowEngine(), new HashSet<Integer>());
+        wr = instance.getWorkflowRun(863);
+        Assert.assertTrue("nulled parent accession set should be blank", wr.getInputFiles().isEmpty());
+        // try a empty set and asking for it back
+        wr.getInputFiles().clear();
+        instance.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
+                wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
+                wr.getHost(), wr.getStdOut(), wr.getStdErr(), wr.getWorkflowEngine(), wr.getInputFiles());
+        wr = instance.getWorkflowRun(863);
+        Assert.assertTrue("nulled parent accession set should be blank", wr.getInputFiles().isEmpty());    
+        wr.getInputFiles().add(27);
+        wr.getInputFiles().add(28);
+        wr.getInputFiles().add(31);
+        instance.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
+                wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
+                wr.getHost(), wr.getStdOut(), wr.getStdErr(), wr.getWorkflowEngine(), wr.getInputFiles());
+        wr = instance.getWorkflowRun(863);
+        Assert.assertTrue("updated parent accession set should be size 3, was " + wr.getInputFiles().size() , wr.getInputFiles().size() == 3);
+        wr.getInputFiles().add(32);
+        instance.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
+                wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
+                wr.getHost(), wr.getStdOut(), wr.getStdErr(), wr.getWorkflowEngine(), wr.getInputFiles());
+        wr = instance.getWorkflowRun(863);
+        Assert.assertTrue("updated parent accession set should be size 4, was " + wr.getInputFiles().size(), wr.getInputFiles().size() == 4);
+        // try deleting the set and asking for it back (protects against cascading error as well)
+         wr.getInputFiles().clear();
+        instance.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
+                wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
+                wr.getHost(), wr.getStdOut(), wr.getStdErr(), wr.getWorkflowEngine(),  wr.getInputFiles());
+        wr = instance.getWorkflowRun(863);
+        Assert.assertTrue("final nulled parent accession set should be blank", wr.getInputFiles().isEmpty());
     }
 }

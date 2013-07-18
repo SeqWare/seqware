@@ -367,7 +367,7 @@ public class WorkflowStatusChecker extends Plugin {
                                                                   wr.getTemplate(), sqwStatus, wr.getStatusCmd(),
                                                                   wr.getCurrentWorkingDir(), wr.getDax(),
                                                                   wr.getIniFile(), wr.getHost(), err.toString(), "",
-                                                                  wr.getWorkflowEngine());
+                                                                  wr.getWorkflowEngine(), wr.getInputFiles());
         }
       } catch (RuntimeException e) {
         throw e;
@@ -396,7 +396,7 @@ public class WorkflowStatusChecker extends Plugin {
                                                                     wr.getTemplate(), "completed", wr.getStatusCmd(),
                                                                     wr.getCurrentWorkingDir(), wr.getDax(),
                                                                     wr.getIniFile(), wr.getHost(), currRet.getStderr(),
-                                                                    currRet.getStdout(), wr.getWorkflowEngine());
+                                                                    currRet.getStdout(), wr.getWorkflowEngine(), wr.getInputFiles());
           }
 
         } else if (currRet.getExitStatus() == ReturnValue.PROCESSING) {
@@ -405,7 +405,7 @@ public class WorkflowStatusChecker extends Plugin {
                                                                     wr.getTemplate(), "running", wr.getStatusCmd(),
                                                                     wr.getCurrentWorkingDir(), wr.getDax(),
                                                                     wr.getIniFile(), wr.getHost(), currRet.getStderr(),
-                                                                    currRet.getStdout(), wr.getWorkflowEngine());
+                                                                    currRet.getStdout(), wr.getWorkflowEngine(), wr.getInputFiles());
           }
 
         } else if (currRet.getExitStatus() == ReturnValue.FAILURE) {
@@ -415,7 +415,7 @@ public class WorkflowStatusChecker extends Plugin {
                                                                     wr.getTemplate(), "failed", wr.getStatusCmd(),
                                                                     wr.getCurrentWorkingDir(), wr.getDax(),
                                                                     wr.getIniFile(), wr.getHost(), currRet.getStderr(),
-                                                                    currRet.getStdout(), wr.getWorkflowEngine());
+                                                                    currRet.getStdout(), wr.getWorkflowEngine(), wr.getInputFiles());
           }
         } else if (currRet.getExitStatus() == ReturnValue.UNKNOWN) {
           Log.error("ERROR: the workflow status has returned UNKNOWN, this is typically if the workflow status command points"

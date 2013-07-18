@@ -66,6 +66,9 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
 
         WorkflowRun workflowRun = getWorkflowRun(ss);
         WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, workflowRun);
+        Log.fatal("Workflow run contains " + workflowRun.getInputFiles().size()  + " parent accessions ");
+        dto.getInputFiles().clear();
+        dto.getInputFiles().addAll(workflowRun.getInputFiles());
 
         if (fields.contains("lanes")) {
 
@@ -195,7 +198,10 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         wr.setStdErr(newWR.getStdErr());
         wr.setStdOut(newWR.getStdOut());
         wr.setWorkflowEngine(newWR.getWorkflowEngine());
-
+        wr.getInputFiles().clear();
+        wr.getInputFiles().addAll(newWR.getInputFiles());
+        Log.debug("Persisting " + wr.getInputFiles().size() + " input files");
+        
         if (newWR.getWorkflow() != null) {
             WorkflowService ws = BeanFactory.getWorkflowServiceBean();
             Workflow w = ws.findByID(newWR.getWorkflow().getWorkflowId());
