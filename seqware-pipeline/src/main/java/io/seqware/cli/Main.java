@@ -7,7 +7,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import net.sourceforge.seqware.pipeline.runner.Runner;
+import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 
 public class Main {
 
@@ -70,42 +70,6 @@ public class Main {
     return found;
   }
 
-  private static String optVal(List<String> args, String key, String defaultVal) {
-    String val = null;
-
-    for (int i = 0; i < args.size(); i++) {
-      String s = args.get(i);
-      if (key.equals(s)) {
-        if (val == null) {
-          args.remove(i);
-          if (i < args.size()) {
-            val = args.remove(i);
-          } else {
-            kill("seqware: missing required argument to '%s'.", key);
-          }
-        } else {
-          kill("seqware: multiple instances of '%s'.", key);
-        }
-      }
-    }
-
-    if (val == null) {
-      val = defaultVal;
-    }
-
-    return val;
-  }
-
-  private static String reqVal(List<String> args, String key) {
-    String val = optVal(args, key, null);
-
-    if (val == null) {
-      kill("seqware: missing required flag '%s'.", key);
-    }
-
-    return val;
-  }
-
   private static List<String> optVals(List<String> args, String key) {
     List<String> vals = new ArrayList<String>();
 
@@ -126,19 +90,33 @@ public class Main {
     return vals;
   }
 
-  private static List<String> reqVals(List<String> args, String key) {
-    List<String> vals = optVals(args, key);
+  private static String optVal(List<String> args, String key, String defaultVal) {
+    String val = defaultVal;
 
-    if (vals.isEmpty()) {
+    List<String> vals = optVals(args, key);
+    if (vals.size() == 1) {
+      val = vals.get(0);
+    } else if (vals.size() > 1) {
+      kill("seqware: multiple instances of '%s'.", key);
+    }
+
+    return val;
+  }
+
+  private static String reqVal(List<String> args, String key) {
+    String val = optVal(args, key, null);
+
+    if (val == null) {
       kill("seqware: missing required flag '%s'.", key);
     }
 
-    return vals;
+    return val;
   }
 
   private static boolean isHelp(List<String> args, boolean valOnEmpty) {
     if (args.isEmpty())
       return valOnEmpty;
+
     String first = args.get(0);
     return first.equals("-h") || first.equals("--help");
   }
@@ -168,9 +146,9 @@ public class Main {
           args[i] = "'" + args[i] + "'";
         }
       }
-      out("Runner.main: %s", dl(Arrays.asList(args), " "));
+      out("PluginRunner.main: %s", dl(Arrays.asList(args), " "));
     } else {
-      Runner.main(args);
+      PluginRunner.main(args);
     }
   }
 
@@ -243,32 +221,208 @@ public class Main {
     }
   }
 
+  private static void runCreateTable(List<String> args, String table, String... cols) {
+    if (flag(args, "--interactive")) {
+      extras(args, "create " + table.replace('_', '-'));
+
+      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.Metadata", "--", "--table", table, "--create",
+          "--interactive");
+    } else {
+      List<String> runnerArgs = new ArrayList<String>();
+      runnerArgs.add("--plugin");
+      runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.Metadata");
+      runnerArgs.add("--");
+      runnerArgs.add("--table");
+      runnerArgs.add(table);
+      runnerArgs.add("--create");
+
+      for (int i = 0; i < cols.length; i++) {
+        runnerArgs.add("--field");
+        String key = "--" + cols[i].replace('_', '-');
+        String arg = String.format("'%s::%s'", cols[i], reqVal(args, key));
+        runnerArgs.add(arg);
+      }
+
+      extras(args, "create " + table.replace('_', '-'));
+
+      run(runnerArgs);
+    }
+  }
+
   private static void createExperiment(List<String> args) {
-    // TODO
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware create experiment [--help]");
+      out("       seqware create experiment --interactive");
+      out("       seqware create experiment <fields>");
+      out("");
+      out("Note: It is strongly recommended that the '--interactive' mode be used when");
+      out("      possible, since some columns have a dynamic set of allowable values.");
+      out("");
+      out("Required fields:");
+      out("  --description <val>");
+      out("  --platform-id <val>");
+      out("  --study-accession <val>");
+      out("  --title <val>");
+      out("");
+    } else {
+      runCreateTable(args, "experiment", "description", "platform_id", "study_accession", "title");
+    }
   }
 
   private static void createFile(List<String> args) {
-    // TODO
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware create file [--help]");
+      out("       seqware create file --interactive");
+      out("       seqware create file <fields>");
+      out("");
+      out("Required fields:");
+      out("  --file <val>");
+      out("  --mime-type <val>");
+      out("  --name <val>");
+      out("  --pid <val>");
+      out("");
+      out("Optional fields:");
+      out("  --description <val>");
+      out("  --type <val>");
+      out("");
+    } else {
+      String file = reqVal(args, "--file");
+      String mime = reqVal(args, "--mime-type");
+      String name = reqVal(args, "--name");
+      String pid = reqVal(args, "--pid");
+      String type = optVal(args, "--type", "");
+      String description = optVal(args, "--description", "");
+
+      extras(args, "create file");
+
+      String concat = String.format("'%s::%s::%s::%s'", type, mime, file, description);
+
+      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.ModuleRunner", "--", "--metadata-parent-accession",
+          pid, "--module", "net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver", "--", "--gms-output-file",
+          concat, "--gms-algorithm", name);
+    }
   }
 
   private static void createIus(List<String> args) {
-    // TODO
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware create ius [--help]");
+      out("       seqware create ius --interactive");
+      out("       seqware create ius <fields>");
+      out("");
+      out("Required fields:");
+      out("  --barcode <val>");
+      out("  --description <val>");
+      out("  --lane-accession <val>");
+      out("  --name <val>");
+      out("  --sample-accession <val>");
+      out("  --skip <val>");
+      out("");
+    } else {
+      runCreateTable(args, "ius", "barcode", "description", "lane_accession", "name", "sample_accession", "skip");
+    }
   }
 
   private static void createLane(List<String> args) {
-    // TODO
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware create lane [--help]");
+      out("       seqware create lane --interactive");
+      out("       seqware create lane <fields>");
+      out("");
+      out("Note: It is strongly recommended that the '--interactive' mode be used when");
+      out("      possible, since some columns have a dynamic set of allowable values.");
+      out("");
+      out("Required fields:");
+      out("  --cycle-descriptor <val>");
+      out("  --description <val>");
+      out("  --lane-number <val>");
+      out("  --library-selection-accession <val>");
+      out("  --library-source-accession <val>");
+      out("  --library-strategy-accession <val>");
+      out("  --name <val>");
+      out("  --sequencer-run-accession <val>");
+      out("  --skip <val>");
+      out("  --study-type-accession <val>");
+      out("");
+    } else {
+      runCreateTable(args, "lane", "cycle_descriptor", "description", "lane_number", "library_selection_accession",
+                     "library_source_accession", "library_strategy_accession", "name", "sequencer_run_accession",
+                     "skip", "study_type_accession");
+    }
   }
 
   private static void createSample(List<String> args) {
-    // TODO
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware create sample [--help]");
+      out("       seqware create sample --interactive");
+      out("       seqware create sample <fields>");
+      out("");
+      out("Note: It is strongly recommended that the '--interactive' mode be used when");
+      out("      possible, since some columns have a dynamic set of allowable values.");
+      out("");
+      out("Required fields:");
+      out("  --description <val>");
+      out("  --experiment-accession <val>");
+      out("  --organism-id <val>");
+      out("  --parent-sample-accession <val>");
+      out("  --title <val>");
+      out("");
+    } else {
+      runCreateTable(args, "sample", "description", "experiment_accession", "organism_id", "parent_sample_accession",
+                     "title");
+    }
   }
 
   private static void createSequencerRun(List<String> args) {
-    // TODO
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware create sequencer-run [--help]");
+      out("       seqware create sequencer-run --interactive");
+      out("       seqware create sequencer-run <fields>");
+      out("");
+      out("Note: It is strongly recommended that the '--interactive' mode be used when");
+      out("      possible, since some columns have a dynamic set of allowable values.");
+      out("");
+      out("Required fields:");
+      out("  --description <val>");
+      out("  --file-path <val>");
+      out("  --name <val>");
+      out("  --paired-end <val>");
+      out("  --platform-accession <val>");
+      out("  --skip <val>");
+      out("");
+    } else {
+      runCreateTable(args, "sequencer_run", "description", "file_path", "name", "paired_end", "platform_accession",
+                     "skip");
+    }
   }
 
   private static void createStudy(List<String> args) {
-    // TODO
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware create study [--help]");
+      out("       seqware create study --interactive");
+      out("       seqware create study <fields>");
+      out("");
+      out("Note: It is strongly recommended that the '--interactive' mode be used when");
+      out("      possible, since some columns have a dynamic set of allowable values.");
+      out("");
+      out("Required fields:");
+      out("  --accession <val>");
+      out("  --center-name <val>");
+      out("  --center-project-name <val>");
+      out("  --description <val>");
+      out("  --study-type <val>");
+      out("  --title <val>");
+      out("");
+    } else {
+      runCreateTable(args, "study", "accession", "center_name", "center_project_name", "description", "study_type",
+                     "title");
+    }
   }
 
   private static void create(List<String> args) {
@@ -276,7 +430,11 @@ public class Main {
       out("");
       out("Usage: seqware create [--help]");
       out("       seqware create <object> --help");
-      out("       seqware create <object> ...");
+      out("       seqware create <object> --interactive");
+      out("       seqware create <object> <fields>");
+      out("");
+      out("Note: It is strongly recommended that the '--interactive' mode be used when");
+      out("      possible, since some columns may have a dynamic set of allowable values.");
       out("");
       out("Objects:");
       out("  experiment");
