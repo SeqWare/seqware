@@ -17,15 +17,10 @@
 package net.sourceforge.seqware.common.metadata;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import junit.framework.Assert;
-import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.factory.DBAccess;
-import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.webservice.resources.tables.FileChildWorkflowRunsResource;
 import org.apache.log4j.Logger;
 import org.junit.*;
 
@@ -67,7 +62,7 @@ public class MetadataDBTest extends MetadataWSTest {
         String host = "localhost";
         String workflowEngine = "test engine";
         int expResult = 0;
-        ReturnValue result = instance.update_workflow_run(workflowRunId, pegasusCmd, workflowTemplate, status, statusCmd, workingDirectory, dax, ini, host, null, null, workflowEngine);
+        ReturnValue result = instance.update_workflow_run(workflowRunId, pegasusCmd, workflowTemplate, status, statusCmd, workingDirectory, dax, ini, host, null, null, workflowEngine, null);
         Assert.assertEquals(expResult, result.getReturnValue());
         testTimestamp("select update_tstmp from workflow_run "
                 + "where workflow_run_id=32;", "update_tstmp", beforeDate);

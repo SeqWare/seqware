@@ -580,7 +580,7 @@ public class WorkflowPlugin extends Plugin {
       metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                                    dataModel.getTags().get("workflow_template"), "failed", workflowRunToken,
                                    dataModel.getWorkflowBundleDir(), "", "", wr.getHost(),
-                                   retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine());
+                                   retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine(), null);
 
       return retPegasus;
     } else {
@@ -589,7 +589,7 @@ public class WorkflowPlugin extends Plugin {
       metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                                    dataModel.getTags().get("workflow_template"), status, workflowRunToken,
                                    dataModel.getWorkflowBundleDir(), "", "", wr.getHost(),
-                                   retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine());
+                                   retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine(), null);
       return ret;
     }
   }
