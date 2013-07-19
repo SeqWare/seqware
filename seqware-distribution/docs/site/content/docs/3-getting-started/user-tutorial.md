@@ -157,35 +157,45 @@ entries you make with the command line tools (or create more studies,
 experiments, and samples). See the <a href="/docs/5-portal/user-guide/">Portal
 User Guide</a> for more information.</p>
 
-First, you can find out what tables this tool is capable of writing to:
+First, you can find out what objects this tool is capable of creating:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --list-tables
+	> seqware create --help
 	
-	TableName
+	Usage: seqware create [--help]
+	       seqware create <object> [--help]
 
-	study
-	experiment
-	sample
-	sequencer_run
-	ius	
-	lane
+	Objects:
+	  experiment
+	  file
+	  ius
+	  lane
+	  sample
+	  sequencer-run
+	  study
 
 
-Now, for a given table, you can find out what fields you can write back to and their type:
+Now, for a given object, you can find out what fields you can write, e.g.:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --list-fields
-	
-	Field    Type    Possible_Values
-	title    String
-	description    String
-	accession    String
-	center_name    String
-	center_project_name    String
-	study_type    Integer    [1: Whole Genome Sequencing, 2: Metagenomics, 3: Transcriptome Analysis, 4: Resequencing, 5: Epigenetics, 6: Synthetic Genomics, 7: Forensic or Paleo-genomics, 8: Gene Regulation Study, 9: Cancer Genomics, 10: Population Genomics, 11: Other]
+	> seqware create study --help
 
-So using the information above you can create a new study:
+	Usage: seqware create study [--help]
+	       seqware create study --interactive
+	       seqware create study <fields>
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --create --field 'title::New Test Study' --field 'description::This is a test description' --field 'accession::InternalID123' --field 'center_name::SeqWare' --field 'center_project_name::SeqWare Test Project' --field study_type::4
+	Note: It is strongly recommended that the '--interactive' mode be used when
+	      possible, since some columns have a dynamic set of allowable values.
+
+	Required fields:
+	  --accession <val>
+	  --center-name <val>
+	  --center-project-name <val>
+	  --description <val>
+	  --study-type <val>           Dynamic-valued field
+	  --title <val>
+
+As noted above, one should use the interactive mode, but for the remainder of this tutorial suppose we know the valid values of the dynamic fields (in this case, study-type):
+
+	> seqware create study --title 'New Test Study' --description 'This is a test description' --accession 'InternalID123' --center-name 'SeqWare' --center-project-name 'SeqWare Test Project' --study-type 4
 	
 	SWID: 2
 
@@ -198,17 +208,16 @@ and supply these numbers then the hierarchy of study/experiment/sample cannot
 be created.
 
 The next step is to create an experiment and link it to the study you created
-above. You can find the platform ID using the <tt>--list-fields</tt> option shown above:
+above:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table experiment --create --field 'title::New Test Experiment' --field 'description::This is a test description' --field platform_id::26 --field study_accession::2
+	> seqware create experiment --title 'New Test Experiment' --description 'This is a test description' --platform-id 26 --study-accession 2
 	
 	SWID: 3 
 
 Again, you use the SWID from the above output in the next step to create an
-associated sample. You can find the platform ID using the <tt>--list-fields</tt> option
-shown above:
+associated sample:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table sample --create --field 'title::New Test Sample' --field 'description::This is a test description' --field organism_id::26 --field experiment_accession::3
+	> seqware create sample --title 'New Test Sample' --description 'This is a test description' --organism-id 26 --experiment-accession 3
 	
 	SWID: 4
 
@@ -242,35 +251,19 @@ and associate them with the correct sample.
 
 Moving on with the HelloWorld example workflow, you will now need to create an input text
 file to associate with the sample created previously. This will be the input file for the
-HelloWorld workflow.  For example, do the following in your home directory:
+HelloWorld workflow.  For example, do the following:
 
-	echo 'testing HelloWorld' > ~/input.txt
+	> echo 'testing HelloWorld' > /datastore/input.txt
 
-### Associating Uploaded Files with a Sample 
+### Associating Existing Files with a Sample
 
-Here is an example of calling the ProvisionFiles command line utility which
-will copy a file (<tt>~/input.txt</tt>) to a destination (<tt>/datastore/</tt>)
-and also update the database to link the parent sample (SWID:4 above) to
-the newly copied file that has the final path <tt>/datastore/input.txt</tt>:
+Here is an example of linking the file to a parent sample (SWID:4 above):
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles --metadata-output-file-prefix /datastore/ --metadata-processing-accession-file accession.txt --metadata-parent-accession 4 -- -im text::text/plain::/home/seqware/input.txt -o /datastore/ --force-copy 
+	> seqware create file --file /datastore/input.txt --type text --mime-type text/plain --parent-id 4
 
-In this example it will copy the /home/seqware/input.txt text file to
-/datastore/ directory (which we are using for this tutorial) and will link it 
-to the sample identified by 4 (the sample’s SWID).  So the final output
-file is "/datastore/input.txt" in the database. If you left off --force-copy
-you would get a symlink in this case since it is a local file operation.  If
-you left off "--metadata-output-file-prefix /datastore/" then the file path in
-the DB would just be "input.txt". The parameter
-"--metadata-processing-accession-file accession.txt" will cause the SWID for
-the ProvisionFiles event to be written to the accession.txt file. Take a look
-at the accession for the ProvisionFiles event now, you will use this value as
-the parent for the actual run of the HelloWorld workflow:
-
-	cat /home/seqware/accession.txt
-	5	
-
-In this case the SWID for the ProvisionFiles is 5.
+In this example it will link that file to the sample identified by 4 (the sample’s SWID). Take a look
+at the output and you will find the SWID of the file. You will use this value as
+the parent for the actual run of the HelloWorld workflow. In this case the SWID is 5.
 
 <p class="warning"><strong>Tip:</strong> you can find a list of the meta types
 (like chemical/seq-na-text-gzip or text/plain above) at <a
@@ -279,25 +272,6 @@ Conventions - Module MIME Types</a>. This is the list we add to as needed when
 creating new workflows.  It is extremely important to be consistent with these
 since a workflow will not recognize your input unless the meta type string
 matches what it expects exactly.</p>
-
-### Associating Existing Files with a Sample 
-
-The ProvisionFiles utility above both uploads/copies the input file and also
-saves the metadata back to the database.  However, sometimes you have already
-uploaded data or, as is the case for the local VM, it is a single filesystem so
-there is no reason to make copies of the data (the same would be true if
-/home/seqware/ was on an NFS share on a cluster for example).  In this case you
-just want to link the files to particular samples in the database.
-GenericMetadataSaver is the tool you can use to accomplish this, for example,
-if you already had input2.txt in /datastore you could insert this into the
-MetaDB using:
-
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver --metadata-parent-accession 4 --metadata-processing-accession-file accession2.txt -- --gms-output-file text::text/plain::/datastore/input2.txt --gms-algorithm UploadText --gms-suppress-output-file-check
-
-Here files are associated with the parent (SWID: 4 which is a sample). 
-Also, the file accession2.txt contains the SWID for this /datastore/input2.txt file.
-
-	cat /home/seqware/accession2.txt
 
 One word of caution, if you expect people to download your files through the
 Portal then the paths you inject into the database must be in a place where the
@@ -311,13 +285,7 @@ Once you have uploaded data the next step is to find the available workflows
 and their parameters.  To see the list of available workflows you can execute
 the following command:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-install
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-install --human-aligned
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-install --human-expanded
-
-First, you will get a tab-delimited list of workflows showing their name, version, and 
-(most importantly) their SWID that you can use in scripts. In the second and third examples
-, you will get a more user-friendly versions of the output. 
+	> seqware workflow list
 
 In this example we are going to use the latest (at the time of this writing)
 HelloWorld workflow bundle (SWID 1 below).  The output of the above command
@@ -336,7 +304,7 @@ next command to find all the parameters (and their defaults) that this workflow
 takes.  Here is the command, notice we redirect the output to create a basic ini
 file that can later be customized and used to submit a run of this workflow:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession 1 > /home/seqware/workflow.ini
+	> seqware workflow ini --id 1 --out /home/seqware/workflow.ini
 
 In this example the workflow “HelloWorld” version 1.0 (SWID 1)
 parameters are listed.  The output conforms to the input you can use to
