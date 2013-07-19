@@ -185,11 +185,26 @@ elif [ "$1" = "init" ]; then
     read WEBSERVICE_USERNAME
     echo "SW_REST_USER=$WEBSERVICE_USERNAME" >> $SEQWARE_SETTINGS
     
-    echo -n "  Seqware WebService Password: "
-    read -s WEBSERVICE_PASSWORD
+    prompt="  Seqware WebService Password: "
+    while IFS= read -p "$prompt" -r -s -n 1 char
+    do
+        if [[ $char == $'\0' ]]
+        then
+            break
+        fi
+        if [[ $char == $'\177' ]];  then
+            prompt=$'\b \b'
+            WEBSERVICE_PASSWORD="${WEBSERVICE_PASSWORD%?}"
+        else
+            prompt='*'
+            WEBSERVICE_PASSWORD+="$char"
+        fi
+    done
+    
     echo "SW_REST_PASS=$WEBSERVICE_PASSWORD" >> $SEQWARE_SETTINGS
     
-    echo "Created Seqware settings file at $SEQWARE_SETTINGS."
+    echo
+    echo "Created Seqware settings file at $SEQWARE_SETTINGS"
     echo
     echo "Seqware is ready to use!"
     
