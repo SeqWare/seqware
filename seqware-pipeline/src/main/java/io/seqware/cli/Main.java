@@ -1,5 +1,6 @@
 package io.seqware.cli;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -137,7 +138,7 @@ public class Main {
     return isDev() || isAdmin() || isDaemon();
   }
 
-  public static final AtomicBoolean DEBUG = new AtomicBoolean(true);
+  public static final AtomicBoolean DEBUG = new AtomicBoolean(false);
 
   private static void run(String... args) {
     if (DEBUG.get()) {
@@ -221,6 +222,128 @@ public class Main {
     }
   }
 
+  private static void bundleCheck(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware bundle check [--help]");
+      out("       seqware bundle check --dir <bundle-dir>");
+      out("");
+      out("Parameters:");
+      out("  --dir <bundle-dir> The root directory of the bundle");
+      out("");
+    } else {
+      String dir = reqVal(args, "--dir");
+
+      extras(args, "bundle check");
+
+      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--validate", "--bundle", dir);
+    }
+  }
+
+  private static void bundleInstall(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware bundle list [--help]");
+      out("       seqware bundle list --zip <bundle-zip>");
+      out("");
+      out("Parameters:");
+      out("  --zip <bundle-zip> The zip file of the bundle");
+      out("");
+    } else {
+      String zip = reqVal(args, "--zip");
+
+      extras(args, "bundle launch");
+
+      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--install", "--bundle", zip);
+    }
+  }
+
+  private static void bundleLaunch(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware bundle launch [--help]");
+      out("       seqware bundle launch --dir <bundle-dir>");
+      out("");
+      out("Parameters:");
+      out("  --dir <bundle-dir>  The root directory of the bundle");
+      out("");
+    } else {
+      String dir = reqVal(args, "--dir");
+
+      extras(args, "bundle launch");
+
+      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--test", "--bundle", dir);
+    }
+  }
+
+  private static void bundleList(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware bundle list [--help]");
+      out("       seqware bundle list --dir <bundle-dir>");
+      out("");
+      out("Parameters:");
+      out("  --dir <bundle-dir> The root directory of the bundle");
+      out("");
+    } else {
+      String dir = reqVal(args, "--dir");
+
+      extras(args, "bundle list");
+
+      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--list", "--bundle", dir);
+    }
+  }
+
+  private static void bundlePackage(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware bundle package [--help]");
+      out("       seqware bundle package --dir <bundle-dir>");
+      out("");
+      out("Parameters:");
+      out("  --dir <bundle-dir> The root directory of the bundle");
+      out("");
+    } else {
+      String dir = reqVal(args, "--dir");
+
+      extras(args, "bundle package");
+
+      String outdir = new File("").getAbsolutePath();
+      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--path-to-package", dir, "--bundle", outdir);
+    }
+  }
+
+  private static void bundle(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware bundle [--help]");
+      out("       seqware bundle <sub-command> [--help]");
+      out("");
+      out("Sub-commands:");
+      out("  check    Check that the bundle directory is structured correctly");
+      out("  install  Inform the Seqware system of the availability of a bundle");
+      out("  launch   Launch a workflow from within a bundle directory");
+      out("  list     List workflows within a bundle directory");
+      out("  package  Package a bundle directory into a zip file");
+      out("");
+    } else {
+      String cmd = args.remove(0);
+      if ("check".equals(cmd)) {
+        bundleCheck(args);
+      } else if ("install".equals(cmd)) {
+        bundleInstall(args);
+      } else if ("launch".equals(cmd)) {
+        bundleLaunch(args);
+      } else if ("list".equals(cmd)) {
+        bundleList(args);
+      } else if ("package".equals(cmd)) {
+        bundlePackage(args);
+      } else {
+        invalid("bundle", cmd);
+      }
+    }
+  }
+
   private static void runCreateTable(List<String> args, String table, String... cols) {
     if (flag(args, "--interactive")) {
       extras(args, "create " + table.replace('_', '-'));
@@ -239,7 +362,7 @@ public class Main {
       for (int i = 0; i < cols.length; i++) {
         runnerArgs.add("--field");
         String key = "--" + cols[i].replace('_', '-');
-        String arg = String.format("'%s::%s'", cols[i], reqVal(args, key));
+        String arg = String.format("%s::%s", cols[i], reqVal(args, key));
         runnerArgs.add(arg);
       }
 
@@ -280,7 +403,6 @@ public class Main {
       out("Required fields:");
       out("  --file <val>");
       out("  --mime-type <val>");
-      out("  --name <val>");
       out("  --pid <val>");
       out("");
       out("Optional fields:");
@@ -290,18 +412,17 @@ public class Main {
     } else {
       String file = reqVal(args, "--file");
       String mime = reqVal(args, "--mime-type");
-      String name = reqVal(args, "--name");
       String pid = reqVal(args, "--pid");
       String type = optVal(args, "--type", "");
       String description = optVal(args, "--description", "");
 
       extras(args, "create file");
 
-      String concat = String.format("'%s::%s::%s::%s'", type, mime, file, description);
+      String concat = String.format("%s::%s::%s::%s", type, mime, file, description);
 
       run("--plugin", "net.sourceforge.seqware.pipeline.plugins.ModuleRunner", "--", "--metadata-parent-accession",
           pid, "--module", "net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver", "--", "--gms-output-file",
-          concat, "--gms-algorithm", name);
+          concat, "--gms-algorithm", "ManualProvisionFile");
     }
   }
 
@@ -429,12 +550,7 @@ public class Main {
     if (isHelp(args, true)) {
       out("");
       out("Usage: seqware create [--help]");
-      out("       seqware create <object> --help");
-      out("       seqware create <object> --interactive");
-      out("       seqware create <object> <fields>");
-      out("");
-      out("Note: It is strongly recommended that the '--interactive' mode be used when");
-      out("      possible, since some columns may have a dynamic set of allowable values.");
+      out("       seqware create <object> [--help]");
       out("");
       out("Objects:");
       out("  experiment");
@@ -589,8 +705,7 @@ public class Main {
     if (isHelp(args, true)) {
       out("");
       out("Usage: seqware report --help");
-      out("       seqware report <sub-command> --help");
-      out("       seqware report <sub-command> ...");
+      out("       seqware report <sub-command> [--help]");
       out("");
       out("Sub-commands:");
       out("  study         List the provenance of every output file related to a study");
@@ -675,8 +790,7 @@ public class Main {
     if (isHelp(args, true)) {
       out("");
       out("Usage: seqware workflow [--help]");
-      out("       seqware workflow <sub-command> --help");
-      out("       seqware workflow <sub-command> ...");
+      out("       seqware workflow <sub-command> [--help]");
       out("");
       out("Sub-commands:");
       out("  list              List all installed workflows");
@@ -733,8 +847,7 @@ public class Main {
     if (isHelp(args, true)) {
       out("");
       out("Usage: seqware workflow-run --help");
-      out("       seqware workflow-run <sub-command> --help");
-      out("       seqware workflow-run <sub-command> ...");
+      out("       seqware workflow-run <sub-command> [--help]");
       out("");
       out("Sub-commands:");
       out("  launch-scheduled    Launch scheduled workflow runs");
@@ -758,18 +871,15 @@ public class Main {
     if (isHelp(args, true)) {
       out("");
       out("Usage: seqware [<flag>]");
-      out("       seqware <command> --help");
-      out("       seqware <command> ...");
+      out("       seqware <command> [--help]");
       out("");
       out("Commands:");
       out("  annotate      Add arbitrary key/value pairs to seqware objects");
-      // if (isDev())
-      // out("  bundle        Interact with a workflow bundle");
+      out("  bundle        Interact with a workflow bundle");
       out("  create        Create new seqware objects (e.g., study)");
       out("  report        Generate reports");
       out("  workflow      Interact with workflows");
-      if (isSuperUser())
-        out("  workflow-run  Interact with workflow runs");
+      out("  workflow-run  Interact with workflow runs");
       out("");
       out("flags:");
       out("   -h --help     Print help out");
@@ -777,18 +887,24 @@ public class Main {
       out("   -v --version  Print Seqware's version");
       out("");
     } else {
+      if (flag(args, "--debug")){
+        DEBUG.set(true);
+      }
+      
       String cmd = args.remove(0);
       if ("-v".equals(cmd) || "--version".equals(cmd)) {
         kill("seqware: version information is provided by the wrapper script.");
       } else if ("annotate".equals(cmd)) {
         annotate(args);
+      } else if ("bundle".equals(cmd)) {
+        bundle(args);
       } else if ("create".equals(cmd)) {
         create(args);
       } else if ("report".equals(cmd)) {
         report(args);
       } else if ("workflow".equals(cmd)) {
         workflow(args);
-      } else if ("workflow-run".equals(cmd) && isSuperUser()) {
+      } else if ("workflow-run".equals(cmd)) {
         workflowRun(args);
       } else {
         invalid(cmd);
