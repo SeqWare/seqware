@@ -1,6 +1,8 @@
 package io.seqware.cli;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -309,7 +311,8 @@ public class Main {
       extras(args, "bundle package");
 
       String outdir = new File("").getAbsolutePath();
-      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--path-to-package", dir, "--bundle", outdir);
+      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--path-to-package", dir,
+          "--bundle", outdir);
     }
   }
 
@@ -403,7 +406,7 @@ public class Main {
       out("Required fields:");
       out("  --file <val>");
       out("  --mime-type <val>");
-      out("  --pid <val>");
+      out("  --parent-id <val>");
       out("");
       out("Optional fields:");
       out("  --description <val>");
@@ -412,7 +415,7 @@ public class Main {
     } else {
       String file = reqVal(args, "--file");
       String mime = reqVal(args, "--mime-type");
-      String pid = reqVal(args, "--pid");
+      String parentId = reqVal(args, "--parent-id");
       String type = optVal(args, "--type", "");
       String description = optVal(args, "--description", "");
 
@@ -421,8 +424,8 @@ public class Main {
       String concat = String.format("%s::%s::%s::%s", type, mime, file, description);
 
       run("--plugin", "net.sourceforge.seqware.pipeline.plugins.ModuleRunner", "--", "--metadata-parent-accession",
-          pid, "--module", "net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver", "--", "--gms-output-file",
-          concat, "--gms-algorithm", "ManualProvisionFile");
+          parentId, "--module", "net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver", "--",
+          "--gms-output-file", concat, "--gms-algorithm", "ManualProvisionFile");
     }
   }
 
@@ -489,12 +492,10 @@ public class Main {
       out("  --description <val>");
       out("  --experiment-accession <val>");
       out("  --organism-id <val>              Dynamic-valued field");
-      out("  --parent-sample-accession <val>");
       out("  --title <val>");
       out("");
     } else {
-      runCreateTable(args, "sample", "description", "experiment_accession", "organism_id", "parent_sample_accession",
-                     "title");
+      runCreateTable(args, "sample", "description", "experiment_accession", "organism_id", "title");
     }
   }
 
@@ -726,6 +727,43 @@ public class Main {
     }
   }
 
+  private static void workflowIni(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware workflow ini --help");
+      out("       seqware workflow ini <params>");
+      out("");
+      out("Required parameters:");
+      out("  --id <swid>   The SWID of the workflow");
+      out("");
+      out("Optional parameters:");
+      out("  --out <file>  Where to write the file contents (defaults to 'workflow.ini')");
+      out("");
+    } else {
+      String id = reqVal(args, "--id");
+      String outfile = optVal(args, "--out", "workflow.ini");
+
+      extras(args, "workflow ini");
+
+      PrintStream origOut = System.out;
+      PrintStream temp = null;
+      try {
+        temp = new PrintStream(outfile);
+        System.setOut(temp);
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--list-workflow-params",
+            "--workflow-accession", id);
+        out("Created '%s'.", outfile);
+      } catch (FileNotFoundException e) {
+        kill("seqware: cannot write to '%s'.", outfile);
+      } finally {
+        System.setOut(origOut);
+        if (temp != null) {
+          temp.close();
+        }
+      }
+    }
+  }
+
   private static void workflowList(List<String> args) {
     if (isHelp(args, false)) {
       out("");
@@ -750,15 +788,15 @@ public class Main {
       out("  --id <swid>        The SWID of the workflow to be run");
       out("");
       out("Optional parameters:");
-      out("  --ini <ini-file>   An ini file to configure the workflow run (repeatable)");
-      out("  --host <host>      The host on which to launch the workflow run");
-      out("  --pid <swid>       The SWID of a parent to the workflow run (repeatable)");
+      out("  --ini <ini-file>    An ini file to configure the workflow run (repeatable)");
+      out("  --host <host>       The host on which to launch the workflow run");
+      out("  --parent-id <swid>  The SWID of a parent to the workflow run (repeatable)");
       out("");
     } else {
       String wfId = reqVal(args, "--id");
       List<String> iniFiles = optVals(args, "--ini");
       String host = optVal(args, "--host", null);
-      List<String> parentIds = optVals(args, "--pid");
+      List<String> parentIds = optVals(args, "--parent-id");
 
       extras(args, "workflow schedule");
 
@@ -793,12 +831,15 @@ public class Main {
       out("       seqware workflow <sub-command> [--help]");
       out("");
       out("Sub-commands:");
+      out("  ini               Generate an ini file for a workflow");
       out("  list              List all installed workflows");
       out("  schedule          Schedule a workflow to be run");
       out("");
     } else {
       String cmd = args.remove(0);
-      if ("list".equals(cmd)) {
+      if ("ini".equals(cmd)) {
+        workflowIni(args);
+      } else if ("list".equals(cmd)) {
         workflowList(args);
       } else if ("schedule".equals(cmd)) {
         workflowSchedule(args);
@@ -867,10 +908,10 @@ public class Main {
 
   public static void main(String[] argv) {
     List<String> args = new ArrayList<String>(Arrays.asList(argv));
-    if (flag(args, "--debug")){
+    if (flag(args, "--debug")) {
       DEBUG.set(true);
     }
-    
+
     if (isHelp(args, true)) {
       out("");
       out("Usage: seqware [<flag>]");
