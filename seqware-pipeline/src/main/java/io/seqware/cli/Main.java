@@ -867,7 +867,10 @@ public class Main {
 
   public static void main(String[] argv) {
     List<String> args = new ArrayList<String>(Arrays.asList(argv));
-
+    if (flag(args, "--debug")){
+      DEBUG.set(true);
+    }
+    
     if (isHelp(args, true)) {
       out("");
       out("Usage: seqware [<flag>]");
@@ -887,10 +890,6 @@ public class Main {
       out("   -v --version  Print Seqware's version");
       out("");
     } else {
-      if (flag(args, "--debug")){
-        DEBUG.set(true);
-      }
-      
       String cmd = args.remove(0);
       if ("-v".equals(cmd) || "--version".equals(cmd)) {
         kill("seqware: version information is provided by the wrapper script.");
