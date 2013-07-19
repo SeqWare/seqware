@@ -5,10 +5,7 @@
 CREATE TABLE workflow_run_files
 (
   workflow_run_id integer,
-  file_id integer,
-  CONSTRAINT workflow_run_files_file_id_fkey FOREIGN KEY (file_id)
-      REFERENCES file (file_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  file_sw_accession integer,
   CONSTRAINT workflow_run_id FOREIGN KEY (workflow_run_id)
       REFERENCES workflow_run (workflow_run_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -26,7 +23,7 @@ ALTER TABLE workflow_run_files
 CREATE INDEX file_id_workflow_run_files
   ON workflow_run_files
   USING btree
-  (file_id);
+  (file_sw_accession);
 
 -- Index: workflow_run_id_workflow_run_files
 
@@ -36,3 +33,5 @@ CREATE INDEX workflow_run_id_workflow_run_files
   ON workflow_run_files
   USING btree
   (workflow_run_id);
+
+
