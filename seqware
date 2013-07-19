@@ -248,7 +248,7 @@ elif [ "$1" = "upgrade" ]; then
 elif [ "$1" = "version" -o "$1" = "-v" -o "$1" = "--version" ]; then
     echo "Seqware version $SEQWARE_VERSION"
 else
-    $JAVA_CMD $SEQWARE_JVM_OPTS io.seqware.cli.Main
+    $JAVA_CMD $SEQWARE_JVM_OPTS io.seqware.cli.Main $@
     
     EXIT_CODE=$?
 
