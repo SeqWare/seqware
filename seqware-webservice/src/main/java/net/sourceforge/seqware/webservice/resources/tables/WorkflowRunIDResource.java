@@ -66,7 +66,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
 
         WorkflowRun workflowRun = getWorkflowRun(ss);
         WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, workflowRun);
-        Log.fatal("Workflow run contains " + workflowRun.getInputFiles().size()  + " parent accessions ");
+        Log.debug("Workflow run contains " + workflowRun.getInputFiles().size()  + " input files");
         dto.getInputFiles().clear();
         dto.getInputFiles().addAll(workflowRun.getInputFiles());
 

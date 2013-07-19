@@ -78,7 +78,7 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
   private String stdOut;
   private Set<WorkflowRunAttribute> workflowRunAttributes = new TreeSet<WorkflowRunAttribute>();
   private String workflowEngine;
-  private Set<Integer> inputFiles = new TreeSet<Integer>();
+  private Set<Integer> inputFileAccessions = new TreeSet<Integer>();
   
   // artificial fields for SEQWARE-1134, we will need to populate these artificially
   // this is an ugly hack, need to get a better solution 
@@ -919,14 +919,14 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
      * @return the parentAccessions
      */
     public Set<Integer> getInputFiles() {
-        return inputFiles;
+        return inputFileAccessions;
     }
 
     /**
      * @param parentAccessions the parentAccessions to set
      */
     public void setInputFiles(Set<Integer> inputFiles) {
-        this.inputFiles = inputFiles;
+        this.inputFileAccessions = inputFiles;
     }
   
     

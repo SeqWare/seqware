@@ -522,7 +522,7 @@
         </set>
         <set name="inputFiles" inverse="false" lazy="false" table="workflow_run_files" fetch="select">
             <key column="workflow_run_id"/>
-            <element type="integer" column="file_id" not-null="true" />
+            <element type="integer" column="file_sw_accession" not-null="true" />
         </set>
     </class>
 
