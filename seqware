@@ -85,8 +85,16 @@ add_path CLASSPATH "$SEQWARE_JAR"
 
 BOOTCLASSPATH="-Xbootclasspath/a:$SEQWARE_JAR"
 
-if [ ! -r "$SEQWARE_JAR" -a "$1" != "self-install" ]; then
+if [ ! -r "$SEQWARE_JAR" -a "$1" != "self-install" -a "$1" != "init" ]; then
     "$0" self-install
+    if [ $? != 0 ]; then
+        exit $?
+    fi
+fi
+
+if [ ! -r "$SEQWARE_SETTINGS" -a "$1" != "self-install" -a "$1" != "init" ]; then
+    "$0" init
+    exit $?
 fi
 
 if [ "$HTTP_CLIENT" = "" ]; then
@@ -160,13 +168,30 @@ elif [ "$1" = "init" ]; then
         exit 1
     fi
     
+    touch $SEQWARE_SETTINGS
+    chmod 600 $SEQWARE_SETTINGS
+    
+    echo "# SeqWare MetaDB communication method, can be one of: database, webservice, or none" > $SEQWARE_SETTINGS
+    echo "SW_METADATA_METHOD=webservice" >> $SEQWARE_SETTINGS
+    
+    echo
     echo "Initializing Seqware settings:"
     echo -n "  Seqware WebService URL: "
     read WEBSERVICE_URL
-    echo "# the base URL for the RESTful SeqWare API" > $SEQWARE_SETTINGS
+    echo "# the base URL for the RESTful SeqWare API" >> $SEQWARE_SETTINGS
     echo "SW_REST_URL=$WEBSERVICE_URL" >> $SEQWARE_SETTINGS
     
+    echo -n "  Seqware WebService Username: "
+    read WEBSERVICE_USERNAME
+    echo "SW_REST_USER=$WEBSERVICE_USERNAME" >> $SEQWARE_SETTINGS
+    
+    echo -n "  Seqware WebService Password: "
+    read -s WEBSERVICE_PASSWORD
+    echo "SW_REST_PASS=$WEBSERVICE_PASSWORD" >> $SEQWARE_SETTINGS
+    
     echo "Created Seqware settings file at $SEQWARE_SETTINGS."
+    echo
+    echo "Seqware is ready to use!"
     
 elif [ "$1" = "upgrade" ]; then
     if [ $SNAPSHOT = "YES" ]; then
