@@ -23,6 +23,7 @@ my $launch_vb = 0;
 my $launch_os = 0;
 my $launch_cmd = "vagrant up --provider=aws &> vagrant_launch.log";
 my $work_dir = "target";
+my $config_file = 'vagrant_launch.config';
 
 GetOptions (
   "seqware-build-cmd=s" => \$seqware_build_cmd,
@@ -32,6 +33,7 @@ GetOptions (
   "use-virtualbox" => \$launch_vb,
   "use-openstack" => \$launch_os,
   "working-dir=s" => \$work_dir,
+  "config-file=s" => \$config_file,
 );
 
 
@@ -42,12 +44,12 @@ GetOptions (
 $seqware_version = find_version();
 
 # config object used for find and replace
-my $configs = {
-  '%{SEQWARE_BUILD_CMD}' => $seqware_build_cmd,
-  '%{SEQWARE_VERSION}' => $seqware_version,
-  '%{AWS_KEY}' => $aws_key,
-  '%{AWS_SECRET_KEY}' => $aws_secret_key,
-};
+my $configs = {};
+read_config($config_file, $configs);
+$configs->{'%{SEQWARE_BUILD_CMD}'} = $seqware_build_cmd;
+$configs->{'%{SEQWARE_VERSION}'} = $seqware_version;
+$configs->{'%{AWS_KEY}'} = $aws_key;
+$configs->{'%{AWS_SECRET_KEY}'} = $aws_secret_key;
 
 # make this explicit, one or the other, aws is given priority
 if ($launch_vb) {
@@ -72,6 +74,18 @@ launch_instances();
 
 
 # SUBS
+
+sub read_config() {
+  my ($file, $config) = @_;
+  open IN, "<$file" or die "Can't open your vagrant launch config file: $file\n";
+  while (<IN>) {
+   chomp;
+   my @a = split /=/;
+   $config->{'%{'.$a[0].'}'} = $a[1];
+  }
+  close IN;
+}
+
 
 sub launch_instances {
   run("cd $work_dir; $launch_cmd");
