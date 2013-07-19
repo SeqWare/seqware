@@ -384,7 +384,7 @@ public class Main {
       out("");
       out("Required fields:");
       out("  --description <val>");
-      out("  --platform-id <val>");
+      out("  --platform-id <val>      Dynamic-valued column");
       out("  --study-accession <val>");
       out("  --title <val>");
       out("");
@@ -460,13 +460,13 @@ public class Main {
       out("  --cycle-descriptor <val>");
       out("  --description <val>");
       out("  --lane-number <val>");
-      out("  --library-selection-accession <val>");
-      out("  --library-source-accession <val>");
-      out("  --library-strategy-accession <val>");
+      out("  --library-selection-accession <val>  Dynamic-valued field");
+      out("  --library-source-accession <val>     Dynamic-valued field");
+      out("  --library-strategy-accession <val>   Dynamic-valued field");
       out("  --name <val>");
       out("  --sequencer-run-accession <val>");
       out("  --skip <val>");
-      out("  --study-type-accession <val>");
+      out("  --study-type-accession <val>         Dynamic-valued field");
       out("");
     } else {
       runCreateTable(args, "lane", "cycle_descriptor", "description", "lane_number", "library_selection_accession",
@@ -488,7 +488,7 @@ public class Main {
       out("Required fields:");
       out("  --description <val>");
       out("  --experiment-accession <val>");
-      out("  --organism-id <val>");
+      out("  --organism-id <val>              Dynamic-valued field");
       out("  --parent-sample-accession <val>");
       out("  --title <val>");
       out("");
@@ -513,7 +513,7 @@ public class Main {
       out("  --file-path <val>");
       out("  --name <val>");
       out("  --paired-end <val>");
-      out("  --platform-accession <val>");
+      out("  --platform-accession <val>  Dynamic-valued field");
       out("  --skip <val>");
       out("");
     } else {
@@ -537,7 +537,7 @@ public class Main {
       out("  --center-name <val>");
       out("  --center-project-name <val>");
       out("  --description <val>");
-      out("  --study-type <val>");
+      out("  --study-type <val>           Dynamic-valued field");
       out("  --title <val>");
       out("");
     } else {
