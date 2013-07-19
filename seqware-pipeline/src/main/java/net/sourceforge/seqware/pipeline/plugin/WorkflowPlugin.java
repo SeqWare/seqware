@@ -24,6 +24,7 @@ import java.util.Set;
 
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
+import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -54,6 +55,7 @@ public class WorkflowPlugin extends Plugin {
   public static final String SCHEDULE = "schedule";
   public static final String LAUNCH_SCHEDULED = "launch-scheduled";
   public static final String WAIT = "wait";
+  public static final String INPUT_FILES = "input-files";
 
   protected ReturnValue ret = new ReturnValue();
   // NOTE: this is shared with WorkflowStatusChecker so only one can run at a
@@ -89,6 +91,8 @@ public class WorkflowPlugin extends Plugin {
                       "Optional: The sw_accession of the sequencer_run, lane, ius, processing, study, experiment, or sample (NOTE: only currently supports ius and lane) that should be linked to the workflow_run row created by this tool. This is optional but useful since it simplifies future queries on the metadb. Can be specified multiple times if there are multiple parents or comma-delimited with no spaces (or both).").withRequiredArg();
     parser.acceptsAll(Arrays.asList("ini-files", "i"),
                       "One or more ini files can be specified, these contain the parameters needed by the workflow template. Use commas without space to delimit a list of ini files.").withRequiredArg();
+    parser.acceptsAll(Arrays.asList(INPUT_FILES, "if"),
+                      "One or more input files can be specified as sw_accessions. Use commas without space to delimit a list of input files.").withRequiredArg();
     parser.acceptsAll(Arrays.asList("no-meta-db", "no-metadata"),
                       "Optional: a flag that prevents metadata writeback (which is done by default) by the WorkflowLauncher and that is subsequently passed to the called workflow which can use it to determine if they should write metadata at runtime on the cluster.");
     parser.acceptsAll(Arrays.asList(WAIT),
@@ -199,9 +203,7 @@ public class WorkflowPlugin extends Plugin {
       List opts = options.valuesOf("parent-accessions");
       for (Object opt : opts) {
         String[] tokens = ((String) opt).split(",");
-        for (String t : tokens) {
-          parentAccessions.add(t);
-        }
+          parentAccessions.addAll(Arrays.asList(tokens));
       }
     }
 
@@ -211,9 +213,7 @@ public class WorkflowPlugin extends Plugin {
       List opts = options.valuesOf("link-workflow-run-to-parents");
       for (Object opt : opts) {
         String[] tokens = ((String) opt).split(",");
-        for (String t : tokens) {
-          parentsLinkedToWR.add(t);
-        }
+          parentsLinkedToWR.addAll(Arrays.asList(tokens));
       }
     }
 
@@ -223,11 +223,16 @@ public class WorkflowPlugin extends Plugin {
       List opts = options.valuesOf("ini-files");
       for (Object opt : opts) {
         String[] tokens = ((String) opt).split(",");
-        for (String t : tokens) {
-          iniFiles.add(t);
-        }
+          iniFiles.addAll(Arrays.asList(tokens));
       }
     }
+    
+    Set<Integer> inputFiles = WorkflowPlugin.collectInputFiles(options, metadata);
+    if (inputFiles == null){
+        Log.error("Error parsing provided input files");
+        ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
+        return ret;
+    }    
 
     // extra params, these will be passed directly to the FTL layer
     // so you can use this to override key/values from the ini files
@@ -253,14 +258,14 @@ public class WorkflowPlugin extends Plugin {
         Log.info("You are scheduling a workflow to run on " + host + " by adding it to the metadb.");
         ret = w.scheduleInstalledBundle((String) options.valueOf("workflow-accession"),
                                         (String) options.valueOf("workflow-run-accession"), iniFiles,
-                                        metadataWriteback, parentAccessions, parentsLinkedToWR, false, nonOptions, host, engine);
+                                        metadataWriteback, parentAccessions, parentsLinkedToWR, false, nonOptions, host, engine, inputFiles);
       } else {
         // then your running locally but taking info saved in the
         // workflow table from the DB
         Log.info("You are running a workflow installed in the metadb on the local computer.");
         ret = w.launchInstalledBundle((String) options.valueOf("workflow-accession"),
                                       (String) options.valueOf("workflow-run-accession"), iniFiles, metadataWriteback,
-                                      parentAccessions, parentsLinkedToWR, options.has(WAIT), nonOptions);
+                                      parentAccessions, parentsLinkedToWR, options.has(WAIT), nonOptions, inputFiles);
       }
 
     } else if ((options.has("bundle") || options.has("provisioned-bundle-dir")) && options.has("workflow")
@@ -284,7 +289,7 @@ public class WorkflowPlugin extends Plugin {
       // NOTE: this overrides options to process with metadata writeback
       // since this is not supported for bundle running!
       ret = w.launchBundle(workflow, version, metadataFile, bundlePath, iniFiles, false, new ArrayList<String>(),
-                           new ArrayList<String>(), options.has(WAIT), nonOptions);
+                           new ArrayList<String>(), options.has(WAIT), nonOptions, inputFiles);
 
     } else if (options.has(LAUNCH_SCHEDULED)) {
       // check to see if this code is already running, if so exit
@@ -550,9 +555,7 @@ public class WorkflowPlugin extends Plugin {
       List opts = options.valuesOf("link-workflow-run-to-parents");
       for (Object opt : opts) {
         String[] tokens = ((String) opt).split(",");
-        for (String t : tokens) {
-          parentsLinkedToWR.add(t);
-        }
+          parentsLinkedToWR.addAll(Arrays.asList(tokens));
       }
     }
 
@@ -567,6 +570,13 @@ public class WorkflowPlugin extends Plugin {
         Log.error(e.getMessage());
       }
     }
+       
+    Set<Integer> inputFiles = collectInputFiles(options, metadata);
+    if (inputFiles == null){
+        Log.error("Error parsing provided input files");
+        ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
+        return ret;
+    }    
 
     // need to pull back the workflow run object since some fields may
     // already be set
@@ -580,7 +590,7 @@ public class WorkflowPlugin extends Plugin {
       metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                                    dataModel.getTags().get("workflow_template"), "failed", workflowRunToken,
                                    dataModel.getWorkflowBundleDir(), "", "", wr.getHost(),
-                                   retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine(), null);
+                                   retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine(), inputFiles);
 
       return retPegasus;
     } else {
@@ -589,8 +599,33 @@ public class WorkflowPlugin extends Plugin {
       metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                                    dataModel.getTags().get("workflow_template"), status, workflowRunToken,
                                    dataModel.getWorkflowBundleDir(), "", "", wr.getHost(),
-                                   retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine(), null);
+                                   retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine(), inputFiles);
       return ret;
     }
   }
+  
+    private static Set<Integer> collectInputFiles(OptionSet options, Metadata metadata) {
+        Set<Integer> inputFiles = null;
+        if (options.has(INPUT_FILES)) {
+            try {
+                List<String> files = (List<String>) options.valuesOf(INPUT_FILES);
+                inputFiles = new HashSet<Integer>();
+                for (String file : files) {
+                    String[] tokens = ((String) file).split(",");
+                    for (String token : tokens) {
+                        File file1 = metadata.getFile(Integer.valueOf(token));
+                        if (file1 == null) {
+                            inputFiles = null;
+                            Log.error("Input file not found, please check your sw_accession");
+                            break;
+                        }
+                        inputFiles.add(file1.getSwAccession());
+                    }
+                }
+            } catch (Exception e) {
+                inputFiles = null;
+            }
+        }
+        return inputFiles;
+    }
 }
