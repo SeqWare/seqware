@@ -344,6 +344,14 @@ public interface MetadataInterface {
   
   /**
    * Returns the workflow_runs associated with a group of files.
+   * @param fileAccessions
+   * @return 
+   */
+  List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions);
+  
+  
+  /**
+   * Returns the workflow_runs associated with a group of files.
    * Search types are defined as:
    * @param fileAccessions
    * @return 

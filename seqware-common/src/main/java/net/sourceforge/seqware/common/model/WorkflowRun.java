@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -78,7 +79,7 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
   private String stdOut;
   private Set<WorkflowRunAttribute> workflowRunAttributes = new TreeSet<WorkflowRunAttribute>();
   private String workflowEngine;
-  private Set<Integer> inputFileAccessions = new TreeSet<Integer>();
+  private Set<Integer> inputFileAccessions = new HashSet<Integer>();
   
   // artificial fields for SEQWARE-1134, we will need to populate these artificially
   // this is an ugly hack, need to get a better solution 

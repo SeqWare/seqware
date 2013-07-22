@@ -2344,6 +2344,22 @@ public class MetadataWS extends Metadata {
         }
         return null;
     }
+    
+    @Override
+    public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions) {
+        try {
+            if (fileAccessions.size() > 0){
+                return ll.findWorkflowByFiles(fileAccessions);
+            } else{
+                return new ArrayList<WorkflowRun>();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (JAXBException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
@@ -2697,11 +2713,19 @@ public class MetadataWS extends Metadata {
             JaxbObject<Workflow> jaxb = new JaxbObject<Workflow>();
             return (Workflow) findObject("/workflowruns", "/" + workflowRunAccession + "/workflow", jaxb, w);
         }
+        
+        private List<WorkflowRun> findWorkflowByFiles(List<Integer> files) throws IOException, JAXBException {
+            WorkflowRunList2 w = new WorkflowRunList2();
+            JaxbObject<WorkflowRunList2> jaxb = new JaxbObject<WorkflowRunList2>();
+            String fileList = StringUtils.join(files.iterator(),',');
+            WorkflowRunList2 wrl2 = (WorkflowRunList2) findObject("/reports/fileworkflowruns", "?files=" + fileList + "&DIRECT_SEARCH=true", jaxb, w);
+            return wrl2.getList();
+        }
 
         private List<WorkflowRun> findWorkflowByFiles(List<Integer> files, String search_type) throws IOException, JAXBException {
             WorkflowRunList2 w = new WorkflowRunList2();
             JaxbObject<WorkflowRunList2> jaxb = new JaxbObject<WorkflowRunList2>();
-      String fileList = StringUtils.join(files.iterator(),',');
+            String fileList = StringUtils.join(files.iterator(),',');
             WorkflowRunList2 wrl2 = (WorkflowRunList2) findObject("/reports/fileworkflowruns", "?files=" + fileList + "&search=" + search_type, jaxb, w);
             return wrl2.getList();
         }
