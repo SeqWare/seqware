@@ -8,7 +8,8 @@ use Getopt::Long;
 
 
 # skips all unit and integration tests
-my $seqware_build_cmd = 'mvn clean install -DskipTests &> build.log';
+my $default_seqware_build_cmd = 'mvn clean install -DskipTests';
+my $default_seqware_it_cmd = "mvn clean install -DskipITs=false -P 'extITs,!embeddedTomcat,!embeddedHBase'";
 # runs unit tests
 # my $seqware_build_cmd = 'mvn clean install &> build.log';
 # all unit and integration tests that only require postgres
@@ -21,21 +22,19 @@ my $aws_secret_key = '';
 my $launch_aws = 0;
 my $launch_vb = 0;
 my $launch_os = 0;
-my $launch_cmd = "vagrant up --provider=aws &> vagrant_launch.log";
+my $launch_cmd = "vagrant up &> vagrant_launch.log";
 my $work_dir = "target";
-my $config_file = 'vagrant_launch.config';
+my $config_file = 'vagrant_launch.conf';
+my $skip_its = 0;
 
 GetOptions (
-  "seqware-build-cmd=s" => \$seqware_build_cmd,
-  "aws-key=s" => \$aws_key,
-  "aws-secret-key=s" => \$aws_secret_key,
   "use-aws" => \$launch_aws,
   "use-virtualbox" => \$launch_vb,
   "use-openstack" => \$launch_os,
   "working-dir=s" => \$work_dir,
   "config-file=s" => \$config_file,
+  "skip-it-tests" => \$skip_its,
 );
-
 
 
 # MAIN
@@ -46,10 +45,8 @@ $seqware_version = find_version();
 # config object used for find and replace
 my $configs = {};
 read_config($config_file, $configs);
-$configs->{'%{SEQWARE_BUILD_CMD}'} = $seqware_build_cmd;
+if (!defined($configs->{'%{SEQWARE_BUILD_CMD}'})) { $configs->{'%{SEQWARE_BUILD_CMD}'} = $default_seqware_build_cmd; }
 $configs->{'%{SEQWARE_VERSION}'} = $seqware_version;
-$configs->{'%{AWS_KEY}'} = $aws_key;
-$configs->{'%{AWS_SECRET_KEY}'} = $aws_secret_key;
 
 # make this explicit, one or the other, aws is given priority
 if ($launch_vb) {
@@ -68,6 +65,9 @@ if ($launch_vb) {
   die "Don't understand the launcher type to use: AWS, OpenStack, or VirtualBox. Please specify with a --use-* param\n";
 }
 
+# add the integration tests
+if (!$skip_its) { $configs->{'%{SEQWARE_IT_CMD}'} = "mvn clean install -DskipITs=false -P 'extITs,!embeddedTomcat,!embeddedHBase' &> build.log"; }
+
 prepare_files();
 launch_instances();
 
@@ -80,8 +80,11 @@ sub read_config() {
   open IN, "<$file" or die "Can't open your vagrant launch config file: $file\n";
   while (<IN>) {
    chomp;
-   my @a = split /=/;
-   $config->{'%{'.$a[0].'}'} = $a[1];
+   next if (/^#/);
+   if (/^\s*(\S+)\s*=\s*(.*)$/) {
+     $config->{'%{'.$1.'}'} = $2;
+     #print "$1 \t $2\n";
+   }
   }
   close IN;
 }
@@ -132,8 +135,8 @@ sub prepare_files {
 sub autoreplace {
   my ($src, $dest) = @_;
   print "AUTOREPLACE: $src $dest\n";
-  open IN, "<$src" or die;
-  open OUT, ">$dest" or die;
+  open IN, "<$src" or die "Can't open input file $src\n";
+  open OUT, ">$dest" or die "Can't open output file $dest\n";
   while(<IN>) {
     foreach my $key (keys %{$configs}) {
       my $value = $configs->{$key};

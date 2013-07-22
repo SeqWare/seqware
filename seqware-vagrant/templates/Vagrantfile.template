@@ -121,55 +121,33 @@ Vagrant.configure("2") do |config|
     master.vm.provider :aws do |aws, override|
   
       aws.tags = {
-        'Name' => `whoami`.chomp + "Testing" 
+        'Name' => `whoami`.chomp + "Vagrant" 
       }
-  
       aws.access_key_id = "%{AWS_KEY}"
       aws.secret_access_key = "%{AWS_SECRET_KEY}"
-      aws.keypair_name = "brian-oicr-1"
+      aws.keypair_name = "%{AWS_SSH_KEY_NAME}"
       aws.user_data = File.read("user_data.txt")
-  
-      # seqware AMI
-      # v17, BN v1
-      #aws.ami = "ami-4382ec2a"
-      # v17
-      #aws.ami = "ami-c386e8aa"
-      # v16
-      #aws.ami = "ami-1b5d3e72"
-      # amazon AMI
-      #aws.ami = "ami-05355a6c"
-      # Amazon_Virginia_BioNimbus_v2
-      #aws.ami = "ami-d76a02be"
-      # Amazon Ubuntu 12.04.2 LTS
-      aws.ami = "ami-d0f89fb9"
-      #aws.instance_type = "cc1.4xlarge"
-      #aws.instance_type = "c1.xlarge"
-      aws.instance_type = "m3.xlarge"
-      # aws.instance_type = "m1.xlarge"
-  
-      #override.ssh.username = "root"
-      #override.ssh.username = "ec2-user"
-      override.ssh.username = "ubuntu"
-      override.ssh.private_key_path = "~/.ssh/brian-oicr-1.pem"
+      aws.ami = "%{AWS_IMAGE}"
+      aws.instance_type = "%{AWS_INSTANCE_TYPE}"
+      override.ssh.username = "%{AWS_SSH_USERNAME}"
+      override.ssh.private_key_path = "%{AWS_SSH_PEM_FILE}"
     end
 
-    master.vm.provider :openstack do |os, override|    # e.g.
-        os.username = "%{OS_USER}"          #change to boconnor
-        os.api_key  = "%{OS_API_KEY}"           # removed, it's in your env as OS_PASSWORD
-        os.flavor   = /m1.tiny/
-        os.image    = /Ubuntu-12.04-LTS-v1.2/
-        os.endpoint = "https://api.opensciencedatacloud.org:5000/sullivan/v2.0/"
-        os.keypair_name = "brian-bionimbus-1"  #change
-        os.ssh_username = "ubuntu"
-        override.ssh.username = "ubuntu"
-        override.ssh.private_key_path = "~/.ssh/brian-bionimbus-1.pem"
+    master.vm.provider :openstack do |os, override| # e.g. BioNimbus' Sullivan cluster
+        os.username = "%{OS_USER}"
+        os.api_key  = "%{OS_API_KEY}"
+        os.flavor   = /%{OS_INSTANCE_TYPE}/
+        os.image    = /%{OS_IMAGE}/
+        os.endpoint = "%{OS_ENDPOINT}"
+        os.keypair_name = "%{OS_SSH_KEY_NAME}"
+        os.ssh_username = "%{OS_SSH_USERNAME}"
+        override.ssh.username = "%{OS_SSH_USERNAME}"
+        override.ssh.private_key_path = "%{OS_SSH_PEM_FILE}"
     end
 
     #master.vm.network :private_network, ip: "10.211.55.100"
     master.vm.hostname = "vm-cluster-node1"
     master.vm.provision :shell, :path => "ubuntu_12.04_master_script.sh"
   end
-
-
 
 end
