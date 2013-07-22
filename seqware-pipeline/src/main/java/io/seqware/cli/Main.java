@@ -306,7 +306,7 @@ public class Main {
       out("  --dir <bundle-dir> The root directory of the bundle");
       out("");
     } else {
-      String dir = reqVal(args, "--dir");
+      String dir = new File(reqVal(args, "--dir")).getAbsolutePath();
 
       extras(args, "bundle package");
 
