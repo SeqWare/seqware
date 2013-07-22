@@ -66,9 +66,8 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
 
         WorkflowRun workflowRun = getWorkflowRun(ss);
         WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, workflowRun);
-        Log.debug("Workflow run contains " + workflowRun.getInputFiles().size()  + " input files");
-        dto.getInputFiles().clear();
-        dto.getInputFiles().addAll(workflowRun.getInputFiles());
+        Log.debug("getXML() Workflow run contains " + workflowRun.getInputFiles().size()  + " input files");
+        dto.setInputFiles(workflowRun.getInputFiles());
 
         if (fields.contains("lanes")) {
 
@@ -198,9 +197,11 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         wr.setStdErr(newWR.getStdErr());
         wr.setStdOut(newWR.getStdOut());
         wr.setWorkflowEngine(newWR.getWorkflowEngine());
-        wr.getInputFiles().clear();
-        wr.getInputFiles().addAll(newWR.getInputFiles());
-        Log.debug("Persisting " + wr.getInputFiles().size() + " input files");
+        if (newWR.getInputFiles() != null){
+            Log.debug("Saving " + wr.getInputFiles().size() + " input files");
+            wr.getInputFiles().clear();
+            wr.getInputFiles().addAll(newWR.getInputFiles());
+        }
         
         if (newWR.getWorkflow() != null) {
             WorkflowService ws = BeanFactory.getWorkflowServiceBean();
@@ -254,6 +255,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
             JaxbObject<WorkflowRun> jo = new JaxbObject<WorkflowRun>();
             try {
                 String text = entity.getText();
+                Log.debug(text);
                 newWR = (WorkflowRun) XmlTools.unMarshal(jo, new WorkflowRun(), text);
             } catch (SAXException ex) {
                 ex.printStackTrace();
