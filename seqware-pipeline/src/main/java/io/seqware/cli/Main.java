@@ -584,145 +584,68 @@ public class Main {
     }
   }
 
-  private static void reportStudy(List<String> args) {
-    if (isHelp(args, true)) {
+  private static void filesReport(List<String> args) {
+    if (isHelp(args, false)) {
       out("");
-      out("Usage: seqware report study --help");
-      out("       seqware report study <params>");
+      out("Usage: seqware files report --help");
+      out("       seqware files report <params>");
       out("");
       out("Optional parameters:");
-      out("  --title <title>  The title of the study to report on (all studies, if omitted)");
-      out("  --out <file>     The name of the report file");
+      out("  --mime-type <type>  Limit files to the specified mime-type");
+      out("  --study <title>     Limit files to the specified study title");
+      out("  --out <file>        The name of the output file");
+      out("  --workflow <swid>   Limit files to the specified workflow SWID");
       out("");
     } else {
-      String title = optVal(args, "--title", null);
+      String mimeType = optVal(args, "--mime-type", null);
+      String study = optVal(args, "--study", null);
       String file = optVal(args, "--out", null);
+      String workflow = optVal(args, "--workflow", null);
 
-      extras(args, "report study");
+      extras(args, "files report");
 
       List<String> runnerArgs = new ArrayList<String>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter");
       runnerArgs.add("--");
       runnerArgs.add("--no-links");
-      if (title != null) {
+
+      if (mimeType != null) {
+        runnerArgs.add("--file-type");
+        runnerArgs.add(mimeType);
+      }
+      if (study != null) {
         runnerArgs.add("--study");
-        runnerArgs.add(title);
+        runnerArgs.add(study);
       }
       if (file != null) {
         runnerArgs.add("--output-filename");
         runnerArgs.add(file);
       }
-
-      run(runnerArgs);
-    }
-  }
-
-  private static void reportWorkflow(List<String> args) {
-    if (isHelp(args, true)) {
-      out("");
-      out("Usage: seqware report workflow --help");
-      out("       seqware report workflow <params>");
-      out("");
-      out("Required parameters:");
-      out("  --id <swid>  The SWID of the workflow");
-      out("");
-      out("Optional parameters:");
-      out("  --out <file>   The name of the report file");
-      out("  --tsv          Emit a tab-separated values report");
-      out("  --when <date>  The date or date-range of runs to include (all runs if omitted)");
-      out("                 Dates are in the form YYYY-MM-DD");
-      out("                 Date ranges are in the form YYYY-MM-DD:YYYY-MM-DD");
-      out("");
-    } else {
-      String swid = reqVal(args, "--id");
-      String when = optVal(args, "--when", null);
-      String out = optVal(args, "--out", null);
-      boolean tsv = flag(args, "--tsv");
-
-      extras(args, "report workflow");
-
-      List<String> runnerArgs = new ArrayList<String>();
-      runnerArgs.add("--plugin");
-      runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter");
-      runnerArgs.add("--");
-      runnerArgs.add("--workflow-accession");
-      runnerArgs.add(swid);
-      if (when != null) {
-        runnerArgs.add("--time-period");
-        runnerArgs.add(when);
-      }
-      if (out != null) {
-        runnerArgs.add("--output-filename");
-        runnerArgs.add(out);
-      }
-      if (!tsv) {
-        runnerArgs.add("--human");
+      if (workflow != null) {
+        runnerArgs.add("--workflow-accession");
+        runnerArgs.add(workflow);
       }
 
       run(runnerArgs);
     }
   }
 
-  private static void reportWorkflowRun(List<String> args) {
+  private static void files(List<String> args) {
     if (isHelp(args, true)) {
       out("");
-      out("Usage: seqware report workflow-run --help");
-      out("       seqware report workflow-run <params>");
-      out("");
-      out("Required parameters:");
-      out("  --id <swid>  The SWID of the workflow run");
-      out("");
-      out("Optional parameters:");
-      out("  --out <file>   The name of the report file");
-      out("  --tsv          Emit a tab-separated values report");
-      out("");
-    } else {
-      String swid = reqVal(args, "--id");
-      String out = optVal(args, "--out", null);
-      boolean tsv = flag(args, "--tsv");
-
-      extras(args, "report workflow-run");
-
-      List<String> runnerArgs = new ArrayList<String>();
-      runnerArgs.add("--plugin");
-      runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter");
-      runnerArgs.add("--");
-      runnerArgs.add("--workflow-run-accession");
-      runnerArgs.add(swid);
-      if (out != null) {
-        runnerArgs.add("--output-filename");
-        runnerArgs.add(out);
-      }
-      if (!tsv) {
-        runnerArgs.add("--human");
-      }
-
-      run(runnerArgs);
-    }
-  }
-
-  private static void report(List<String> args) {
-    if (isHelp(args, true)) {
-      out("");
-      out("Usage: seqware report --help");
-      out("       seqware report <sub-command> [--help]");
+      out("Usage: seqware files --help");
+      out("       seqware files <sub-command> [--help]");
       out("");
       out("Sub-commands:");
-      out("  study         List the provenance of every output file related to a study");
-      out("  workflow      List the details of every run of a given workflow");
-      out("  workflow-run  The details of a given workflow-run");
+      out("  report          A report of the provenance of output files");
       out("");
     } else {
       String cmd = args.remove(0);
-      if ("study".equals(cmd)) {
-        reportStudy(args);
-      } else if ("workflow".equals(cmd)) {
-        reportWorkflow(args);
-      } else if ("workflow-run".equals(cmd)) {
-        reportWorkflowRun(args);
+      if ("report".equals(cmd)) {
+        filesReport(args);
       } else {
-        invalid("report", cmd);
+        invalid("files", cmd);
       }
     }
   }
@@ -778,6 +701,52 @@ public class Main {
     }
   }
 
+  private static void workflowReport(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware workflow report --help");
+      out("       seqware workflow report <params>");
+      out("");
+      out("Required parameters:");
+      out("  --id <swid>  The SWID of the workflow");
+      out("");
+      out("Optional parameters:");
+      out("  --out <file>   The name of the report file");
+      out("  --tsv          Emit a tab-separated values report");
+      out("  --when <date>  The date or date-range of runs to include (all runs if omitted)");
+      out("                 Dates are in the form YYYY-MM-DD");
+      out("                 Date ranges are in the form YYYY-MM-DD:YYYY-MM-DD");
+      out("");
+    } else {
+      String swid = reqVal(args, "--id");
+      String when = optVal(args, "--when", null);
+      String out = optVal(args, "--out", null);
+      boolean tsv = flag(args, "--tsv");
+
+      extras(args, "workflow report");
+
+      List<String> runnerArgs = new ArrayList<String>();
+      runnerArgs.add("--plugin");
+      runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter");
+      runnerArgs.add("--");
+      runnerArgs.add("--workflow-accession");
+      runnerArgs.add(swid);
+      if (when != null) {
+        runnerArgs.add("--time-period");
+        runnerArgs.add(when);
+      }
+      if (out != null) {
+        runnerArgs.add("--output-filename");
+        runnerArgs.add(out);
+      }
+      if (!tsv) {
+        runnerArgs.add("--human");
+      }
+
+      run(runnerArgs);
+    }
+  }
+
   private static void workflowSchedule(List<String> args) {
     if (isHelp(args, true)) {
       out("");
@@ -824,6 +793,44 @@ public class Main {
     }
   }
 
+  private static void workflowRunReport(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware workflow-run report --help");
+      out("       seqware workflow-run report <params>");
+      out("");
+      out("Required parameters:");
+      out("  --id <swid>  The SWID of the workflow run");
+      out("");
+      out("Optional parameters:");
+      out("  --out <file>   The name of the report file");
+      out("  --tsv          Emit a tab-separated values report");
+      out("");
+    } else {
+      String swid = reqVal(args, "--id");
+      String out = optVal(args, "--out", null);
+      boolean tsv = flag(args, "--tsv");
+
+      extras(args, "workflow-run report");
+
+      List<String> runnerArgs = new ArrayList<String>();
+      runnerArgs.add("--plugin");
+      runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter");
+      runnerArgs.add("--");
+      runnerArgs.add("--workflow-run-accession");
+      runnerArgs.add(swid);
+      if (out != null) {
+        runnerArgs.add("--output-filename");
+        runnerArgs.add(out);
+      }
+      if (!tsv) {
+        runnerArgs.add("--human");
+      }
+
+      run(runnerArgs);
+    }
+  }
+
   private static void workflow(List<String> args) {
     if (isHelp(args, true)) {
       out("");
@@ -833,6 +840,7 @@ public class Main {
       out("Sub-commands:");
       out("  ini               Generate an ini file for a workflow");
       out("  list              List all installed workflows");
+      out("  report            List the details of all runs of a given workflow");
       out("  schedule          Schedule a workflow to be run");
       out("");
     } else {
@@ -841,6 +849,8 @@ public class Main {
         workflowIni(args);
       } else if ("list".equals(cmd)) {
         workflowList(args);
+      } else if ("report".equals(cmd)) {
+        workflowReport(args);
       } else if ("schedule".equals(cmd)) {
         workflowSchedule(args);
       } else {
@@ -884,6 +894,72 @@ public class Main {
     }
   }
 
+  private static void workflowRunStderr(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware workflow-run stderr --help");
+      out("       seqware workflow-run stderr <params>");
+      out("");
+      out("Required parameters:");
+      out("  --id <swid>  The SWID of the workflow run");
+      out("");
+      out("Optional parameters:");
+      out("  --out <file>   The name of the file to write the stderr");
+      out("");
+    } else {
+      String swid = reqVal(args, "--id");
+      String out = optVal(args, "--out", null);
+
+      extras(args, "workflow-run stderr");
+
+      List<String> runnerArgs = new ArrayList<String>();
+      runnerArgs.add("--plugin");
+      runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter");
+      runnerArgs.add("--");
+      runnerArgs.add("--workflow-run-accession");
+      runnerArgs.add(swid);
+      if (out != null) {
+        runnerArgs.add("--output-filename");
+        runnerArgs.add(out);
+      }
+      runnerArgs.add("--wr-stderr");
+      run(runnerArgs);
+    }
+  }
+
+  private static void workflowRunStdout(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware workflow-run stdout --help");
+      out("       seqware workflow-run stdout <params>");
+      out("");
+      out("Required parameters:");
+      out("  --id <swid>  The SWID of the workflow run");
+      out("");
+      out("Optional parameters:");
+      out("  --out <file>   The name of the file to write the stdout");
+      out("");
+    } else {
+      String swid = reqVal(args, "--id");
+      String out = optVal(args, "--out", null);
+
+      extras(args, "workflow-run stdout");
+
+      List<String> runnerArgs = new ArrayList<String>();
+      runnerArgs.add("--plugin");
+      runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter");
+      runnerArgs.add("--");
+      runnerArgs.add("--workflow-run-accession");
+      runnerArgs.add(swid);
+      if (out != null) {
+        runnerArgs.add("--output-filename");
+        runnerArgs.add(out);
+      }
+      runnerArgs.add("--wr-stdout");
+      run(runnerArgs);
+    }
+  }
+
   private static void workflowRun(List<String> args) {
     if (isHelp(args, true)) {
       out("");
@@ -893,6 +969,9 @@ public class Main {
       out("Sub-commands:");
       out("  launch-scheduled    Launch scheduled workflow runs");
       out("  propagate-statuses  Propagate workflow engine statuses to seqware meta DB");
+      out("  stderr              Obtain the stderr output of the run");
+      out("  stdout              Obtain the stdout output of the run");
+      out("  report              The details of a given workflow-run");
       out("");
     } else {
       String cmd = args.remove(0);
@@ -900,6 +979,12 @@ public class Main {
         workflowRunLaunchScheduled(args);
       } else if ("propagate-statuses".equals(cmd)) {
         workflowRunPropagateStatuses(args);
+      } else if ("stderr".equals(cmd)) {
+        workflowRunStderr(args);
+      } else if ("stdout".equals(cmd)) {
+        workflowRunStdout(args);
+      } else if ("report".equals(cmd)) {
+        workflowRunReport(args);
       } else {
         invalid("workflow", cmd);
       }
@@ -921,7 +1006,7 @@ public class Main {
       out("  annotate      Add arbitrary key/value pairs to seqware objects");
       out("  bundle        Interact with a workflow bundle");
       out("  create        Create new seqware objects (e.g., study)");
-      out("  report        Generate reports");
+      out("  files         Extract information about workflow output files");
       out("  workflow      Interact with workflows");
       out("  workflow-run  Interact with workflow runs");
       out("");
@@ -940,8 +1025,8 @@ public class Main {
         bundle(args);
       } else if ("create".equals(cmd)) {
         create(args);
-      } else if ("report".equals(cmd)) {
-        report(args);
+      } else if ("files".equals(cmd)) {
+        files(args);
       } else if ("workflow".equals(cmd)) {
         workflow(args);
       } else if ("workflow-run".equals(cmd)) {
