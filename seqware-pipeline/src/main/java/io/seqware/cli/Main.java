@@ -224,11 +224,11 @@ public class Main {
     }
   }
 
-  private static void bundleCheck(List<String> args) {
+  private static void bundleValidate(List<String> args) {
     if (isHelp(args, true)) {
       out("");
-      out("Usage: seqware bundle check [--help]");
-      out("       seqware bundle check --dir <bundle-dir>");
+      out("Usage: seqware bundle validate [--help]");
+      out("       seqware bundle validate --dir <bundle-dir>");
       out("");
       out("Parameters:");
       out("  --dir <bundle-dir>  The root directory of the bundle");
@@ -236,7 +236,7 @@ public class Main {
     } else {
       String dir = reqVal(args, "--dir");
 
-      extras(args, "bundle check");
+      extras(args, "bundle validate");
 
       run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--validate", "--bundle", dir);
     }
@@ -323,17 +323,15 @@ public class Main {
       out("       seqware bundle <sub-command> [--help]");
       out("");
       out("Sub-commands:");
-      out("  check    Check that the bundle directory is structured correctly");
-      out("  install  Inform the Seqware system of the availability of a bundle");
-      out("  launch   Launch a workflow from within a bundle directory");
-      out("  list     List workflows within a bundle directory");
-      out("  package  Package a bundle directory into a zip file");
+      out("  install   Inform the Seqware system of the availability of a bundle");
+      out("  launch    Launch a workflow from within a bundle directory");
+      out("  list      List workflows within a bundle directory");
+      out("  package   Package a bundle directory into a zip file");
+      out("  validate  Validate that the bundle directory is structured correctly");
       out("");
     } else {
       String cmd = args.remove(0);
-      if ("check".equals(cmd)) {
-        bundleCheck(args);
-      } else if ("install".equals(cmd)) {
+      if ("install".equals(cmd)) {
         bundleInstall(args);
       } else if ("launch".equals(cmd)) {
         bundleLaunch(args);
@@ -341,6 +339,8 @@ public class Main {
         bundleList(args);
       } else if ("package".equals(cmd)) {
         bundlePackage(args);
+      } else if ("validate".equals(cmd)) {
+        bundleValidate(args);
       } else {
         invalid("bundle", cmd);
       }
@@ -591,16 +591,12 @@ public class Main {
       out("       seqware files report <params>");
       out("");
       out("Optional parameters:");
-      out("  --meta-type <type>  Limit files to the specified meta-type");
-      out("  --study <title>     Limit files to the specified study title");
       out("  --out <file>        The name of the output file");
-      out("  --workflow <swid>   Limit files to the specified workflow SWID");
+      out("  --study <title>     Limit files to the specified study title");
       out("");
     } else {
-      String metaType = optVal(args, "--meta-type", null);
       String study = optVal(args, "--study", null);
       String file = optVal(args, "--out", null);
-      String workflow = optVal(args, "--workflow", null);
 
       extras(args, "files report");
 
@@ -610,10 +606,6 @@ public class Main {
       runnerArgs.add("--");
       runnerArgs.add("--no-links");
 
-      if (metaType != null) {
-        runnerArgs.add("--file-type");
-        runnerArgs.add(metaType);
-      }
       if (study != null) {
         runnerArgs.add("--study");
         runnerArgs.add(study);
@@ -621,10 +613,6 @@ public class Main {
       if (file != null) {
         runnerArgs.add("--output-filename");
         runnerArgs.add(file);
-      }
-      if (workflow != null) {
-        runnerArgs.add("--workflow-accession");
-        runnerArgs.add(workflow);
       }
 
       run(runnerArgs);
