@@ -405,7 +405,7 @@ public class Main {
       out("");
       out("Required fields:");
       out("  --file <val>");
-      out("  --mime-type <val>");
+      out("  --meta-type <val>");
       out("  --parent-accession <val>");
       out("");
       out("Optional fields:");
@@ -414,14 +414,14 @@ public class Main {
       out("");
     } else {
       String file = reqVal(args, "--file");
-      String mime = reqVal(args, "--mime-type");
+      String meta = reqVal(args, "--meta-type");
       String parentId = reqVal(args, "--parent-accession");
       String type = optVal(args, "--type", "");
       String description = optVal(args, "--description", "");
 
       extras(args, "create file");
 
-      String concat = String.format("%s::%s::%s::%s", type, mime, file, description);
+      String concat = String.format("%s::%s::%s::%s", type, meta, file, description);
 
       run("--plugin", "net.sourceforge.seqware.pipeline.plugins.ModuleRunner", "--", "--metadata-parent-accession",
           parentId, "--module", "net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver", "--",
@@ -591,13 +591,13 @@ public class Main {
       out("       seqware files report <params>");
       out("");
       out("Optional parameters:");
-      out("  --mime-type <type>  Limit files to the specified mime-type");
+      out("  --meta-type <type>  Limit files to the specified meta-type");
       out("  --study <title>     Limit files to the specified study title");
       out("  --out <file>        The name of the output file");
       out("  --workflow <swid>   Limit files to the specified workflow SWID");
       out("");
     } else {
-      String mimeType = optVal(args, "--mime-type", null);
+      String metaType = optVal(args, "--meta-type", null);
       String study = optVal(args, "--study", null);
       String file = optVal(args, "--out", null);
       String workflow = optVal(args, "--workflow", null);
@@ -610,9 +610,9 @@ public class Main {
       runnerArgs.add("--");
       runnerArgs.add("--no-links");
 
-      if (mimeType != null) {
+      if (metaType != null) {
         runnerArgs.add("--file-type");
-        runnerArgs.add(mimeType);
+        runnerArgs.add(metaType);
       }
       if (study != null) {
         runnerArgs.add("--study");
