@@ -22,7 +22,7 @@ my $aws_secret_key = '';
 my $launch_aws = 0;
 my $launch_vb = 0;
 my $launch_os = 0;
-my $launch_cmd = "vagrant up &> vagrant_launch.log";
+my $launch_cmd = "vagrant up";
 my $work_dir = "target";
 my $config_file = 'vagrant_launch.conf';
 my $skip_its = 0;
@@ -50,15 +50,15 @@ $configs->{'%{SEQWARE_VERSION}'} = $seqware_version;
 
 # make this explicit, one or the other, aws is given priority
 if ($launch_vb) {
-  $launch_cmd = "vagrant up &> vagrant_launch.log";
+  $launch_cmd = "vagrant up";
   $configs->{'%{BOX}'} = "Ubuntu_12.04";
   $configs->{'%{BOX_URL}'} = "http://cloud-images.ubuntu.com/precise/current/precise-server-cloudimg-vagrant-amd64-disk1.box";
 } elsif ($launch_os) {
-  $launch_cmd = "vagrant up --provider=openstack &> vagrant_launch.log";
+  $launch_cmd = "vagrant up --provider=openstack";
   $configs->{'%{BOX}'} = "dummy";
   $configs->{'%{BOX_URL}'} = "https://github.com/cloudbau/vagrant-openstack-plugin/raw/master/dummy.box";
 } elsif ($launch_aws) {
-  $launch_cmd = "vagrant up --provider=aws &> vagrant_launch.log";
+  $launch_cmd = "vagrant up --provider=aws";
   $configs->{'%{BOX}'} = "dummy";
   $configs->{'%{BOX_URL}'} = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box";
 } else {
