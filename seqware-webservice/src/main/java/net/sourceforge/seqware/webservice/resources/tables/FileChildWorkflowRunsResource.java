@@ -16,6 +16,8 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -23,7 +25,10 @@ import java.util.Set;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.FileService;
 import net.sourceforge.seqware.common.business.SampleService;
+import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
+import net.sourceforge.seqware.common.factory.DBAccess;
+import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
@@ -36,6 +41,7 @@ import net.sourceforge.seqware.common.model.lists.WorkflowRunList2;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import org.apache.commons.dbutils.DbUtils;
 import org.restlet.data.Status;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
@@ -53,6 +59,11 @@ import org.w3c.dom.Document;
  * @version $Id: $Id
  */
 public class FileChildWorkflowRunsResource extends DatabaseResource {
+    /**
+     * A direct search uses the workflow_run_files table rather than 
+     * attempting a search via the ius_workflow_run and lane_workflow_run and processing hierarchy
+     */
+    public static final String DIRECT_SEARCH = "DIRECT_SEARCH";
 
     /**
      * <p>Constructor for FileChildWorkflowRunsResource.</p>
@@ -65,12 +76,18 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
      * <p>getXml.</p>
      */
     @Get
-    public void getXml() {
+    public void getXml() throws SQLException {
         authenticate();
         final Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject jaxbTool;
         Log.debug("Dealing with FileChildWorkflowRunsResource");
 
+        if (queryValues.keySet().contains(DIRECT_SEARCH) && queryValues.get(DIRECT_SEARCH).equalsIgnoreCase("true")) {
+            handleDirectGetXML();
+            return;
+        }
+        
+        
         FileService fs = BeanFactory.getFileServiceBean();
         Set<File> files = new HashSet<File>();
         SEARCH_TYPE searchType = SEARCH_TYPE.CHILDREN_VIA_PROCESSING_RELATIONSHIP;
@@ -223,6 +240,77 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Use SQL to directly retrieve relevant workflows runs (defined as any workflow runs that 
+     * include one or more files in the set we were given)
+     * @param files
+     * @return
+     * @throws SQLException 
+     */
+    private WorkflowRunList2 directRetrieveWorkflowRuns(List<Integer> files) throws SQLException {
+        final WorkflowRunList2 runs = new WorkflowRunList2();
+        runs.setList(new ArrayList());
+        if (files.size() > 0) {
+
+            ResultSet rs = null;
+            MetadataDB mdb = null;
+            try {
+                WorkflowRunService ss = BeanFactory.getWorkflowRunServiceBean();
+                StringBuilder query = new StringBuilder();
+                query.append("select distinct r.sw_accession from workflow_run r, ");
+                query.append("workflow_run_files f WHERE r.workflow_run_id = f.workflow_run_id AND (");
+                for(int i = 0; i < files.size() - 1; i++){
+                    Integer fInt = files.get(i);
+                    query.append(" f.file_sw_accession = ").append(fInt).append(" OR");
+                }
+                Integer fInt = files.get(files.size() -1);
+                query.append(" f.file_sw_accession = ").append(fInt).append(")");
+                query.append(" ORDER BY sw_accession");
+                
+                Log.info("Executing query: " + query);
+                mdb = DBAccess.get();
+                rs = mdb.executeQuery(query.toString());
+                while (rs.next()) {
+                    int workflowSWID = rs.getInt("sw_accession");
+                    WorkflowRun workflowRun = (WorkflowRun) testIfNull(ss.findBySWAccession(workflowSWID));
+                    runs.add(workflowRun);
+                    
+                }           
+            } finally {
+                if (mdb != null) {
+                    DbUtils.closeQuietly(mdb.getDb(), mdb.getSql(), rs);
+                }
+                DBAccess.close();
+            }
+        }
+        return runs;
+    }
+
+    private void handleDirectGetXML() throws SQLException, NumberFormatException {
+        JaxbObject jaxbTool;
+        Log.info("Using direct search");
+        List<Integer> files = new ArrayList<Integer>();
+        for (String key : queryValues.keySet()) {
+            Log.debug("key: " + key + " -> " + queryValues.get(key));
+            if (key.equals("files")) {
+                String value = queryValues.get(key);
+                String[] filesSWIDs = value.split(",");
+                for (String swid : filesSWIDs) {
+                    files.add(Integer.valueOf(swid));
+                }
+            }
+        }
+        Log.debug("Working with " + files.size() + " files");
+        WorkflowRunList2 runs = directRetrieveWorkflowRuns(files);
+        // these variables will be used to return information
+        jaxbTool = new JaxbObject<WorkflowRunList>();
+        Log.debug("JaxbObjects started");
+        assert runs.getList().isEmpty();
+        final Document line = XmlTools.marshalToDocument(jaxbTool, runs);
+        getResponse().setEntity(XmlTools.getRepresentation(line));
+        getResponse().setStatus(Status.SUCCESS_CREATED);
     }
 
     public enum SEARCH_TYPE {

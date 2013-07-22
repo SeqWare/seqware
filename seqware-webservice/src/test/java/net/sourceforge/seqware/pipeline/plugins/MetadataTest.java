@@ -26,6 +26,7 @@ import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import net.sourceforge.seqware.common.util.runtools.TestConsoleAdapter;
+import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
@@ -49,7 +50,7 @@ public class MetadataTest extends PluginTest {
     @Before
     @Override
     public void setUp() {
-        super.setUp();
+        super.setUp();        
         instance = new Metadata();
         instance.setMetadata(metadata);
 
