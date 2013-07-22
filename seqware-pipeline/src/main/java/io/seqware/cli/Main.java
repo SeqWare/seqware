@@ -54,7 +54,7 @@ public class Main {
 
   private static void extras(List<String> args, String curCommand) {
     if (args.size() > 0) {
-      kill("seqware: unexpected arguments to '" + curCommand + "': %s", dl(args, " "));
+      kill("seqware: unexpected arguments to '%s': %s", curCommand, dl(args, " "));
     }
   }
 
