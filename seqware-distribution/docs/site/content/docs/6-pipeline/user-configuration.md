@@ -48,6 +48,10 @@ SW_BUNDLE_DIR=/home/seqware/SeqWare/provisioned-bundles
 SW_BUNDLE_REPO_DIR=/home/seqware/SeqWare/released-bundles
 # the default engine to use if otherwise unspecified (one of: pegasus, oozie, oozie-sge)
 SW_DEFAULT_WORKFLOW_ENGINE=oozie-sge
+# the default count of threads for workflow jobs that don't specify their requirement [default is "1"]
+SW_DEFAULT_JOB_THREADS=1
+# the default memory requirement (in MB) for workflow jobs that don't specify their requirement [default is "2048"]
+SW_DEFAULT_JOB_MEMORY_MB=2048
 #
 # SEQWARE PIPELINE SETTINGS
 # PEGASUS WORKFLOW ENGINE SETTINGS

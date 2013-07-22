@@ -18,10 +18,16 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
+import java.net.URL;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -39,6 +45,14 @@ import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.mapred.JobClient;
+import org.apache.hadoop.mapred.JobID;
+import org.apache.hadoop.mapred.JobStatus;
+import org.apache.hadoop.mapred.RunningJob;
+import org.apache.hadoop.mapred.TaskCompletionEvent;
+import org.apache.hadoop.mapred.TaskLog;
+import org.apache.hadoop.mapreduce.v2.api.records.JobId;
 
 import org.apache.oozie.client.OozieClient;
 import org.apache.oozie.client.WorkflowAction;
@@ -309,15 +323,26 @@ public class WorkflowStatusChecker extends Plugin {
       }
 
       if (hostMatch && userMatch && workflowRunAccessionMatch && workflowAccessionMatch) {
-        if (wr.getWorkflowEngine() != null && wr.getWorkflowEngine().startsWith("oozie")) {
+        if (wr.getWorkflowEngine() != null && wr.getWorkflowEngine().equals("oozie")) {
           checkOozie();
+        } else if (wr.getWorkflowEngine() != null && wr.getWorkflowEngine().equals("oozie-sge")) {
+          checkOozieSGE();
         } else {
           checkPegasus();
         }
       }
     }
-
+    
+    private void checkOozieSGE() {
+      checkOozie("oozie-sge");
+    }
+    
     private void checkOozie() {
+      checkOozie("oozie");
+    }
+
+    // TODO: this needs to be refactored into a OozieWorkflowTools object
+    private void checkOozie(String engineType) {
       try {
         OozieClient oc = new OozieClient((String) config.get("OOZIE_URL"));
         String jobId = wr.getStatusCmd();
@@ -356,10 +381,100 @@ public class WorkflowStatusChecker extends Plugin {
 
         StringBuilder err = new StringBuilder();
         for (WorkflowAction action : wfJob.getActions()) {
-          if (action.getErrorMessage() != null) {
-            err.append(MessageFormat.format("   Name: {0} Type: {1} ErrorMessage: {2}\n", action.getName(),
+          //if (action.getErrorMessage() != null) {
+            err.append(MessageFormat.format("\n\n\n   Name: {0} Type: {1} ErrorMessage: {2}\n", action.getName(),
                                             action.getType(), action.getErrorMessage()));
+          //}
+          
+          err.append("CONF: "+action.getConf()+"\n");
+          err.append("Console URL: "+action.getConsoleUrl()+"\n");
+          //err.append("CRED: "+action.getCred()+"\n");
+          err.append("ERR CODE: "+action.getErrorCode()+"\n");
+          err.append("ERR MESSG: "+action.getErrorMessage()+"\n");
+          err.append("EXT CHILD IDs: "+action.getExternalChildIDs()+"\n");
+          err.append("EXT ID: "+action.getExternalId()+"\n");
+          err.append("EXT STATUS: "+action.getExternalStatus()+"\n");
+          err.append("ID: "+action.getId()+"\n");
+          err.append("NAME: "+action.getName()+"\n");
+          err.append("Retries: "+action.getRetries()+"\n");
+          err.append("STATS: "+action.getStats()+"\n");
+          if (action.getStatus() != null) { err.append("STATUS: "+action.getStatus().name()+" "+action.getStatus().toString()+"\n"); }
+          err.append("TRACKERURI: "+action.getTrackerUri()+"\n");
+          err.append("TRANSITION: "+action.getTransition()+"\n");
+          err.append("TYPE: "+action.getType()+"\n");
+          //err.append("RETRY COUNT: "+action.getUserRetryCount()+"\n");
+          //err.append("RETRY INTERVAL: "+action.getUserRetryInterval()+"\n");
+          //err.append("USER RETRY MAX: "+action.getUserRetryMax()+"\n");
+          
+          // with the Oozie-Hadoop backend we know all jobs run as M/R tasks so we can use 
+          // the M/R client to pull back information on jobs.
+          if ("oozie".equals(engineType) && action.getExternalId() != null && action.getExternalId().matches(JobID.JOBID_REGEX)) {
+            
+            err.append("YES THE JOB ID MATCHES!");
+            
+            // FIXME: again, need to move all this code to OozieWorkflowTools.java like the Pegasus tools
+            String[] jobTrackerURL = config.get("OOZIE_JOBTRACKER").split(":");
+            // if it's available take the job tracker URI directly from the config
+            if (action.getTrackerUri() != null) {
+              jobTrackerURL = action.getTrackerUri().split(":");
+            }
+            try {
+              Log.error("URL: "+action.getTrackerUri()+" "+jobTrackerURL[0]);
+              Configuration conf = new Configuration();
+              conf.addResource("/etc/hadoop/conf/mapred-site.xml");
+              JobClient jobClient = new JobClient(new InetSocketAddress(jobTrackerURL[0], Integer.parseInt(jobTrackerURL[1])), new Configuration());
+              RunningJob rJob = jobClient.getJob(JobID.forName(action.getExternalId()));
+              // getting stderr/stdout in Hadoop sucks!
+              // see http://www.myhowto.org/java/2013/01/20/collecting-diagnostic-information-from-mapreduce-jobs-in-hadoop/
+              List<TaskCompletionEvent> completionEvents = new LinkedList<TaskCompletionEvent>();
+              while(true) {
+                try {
+                  TaskCompletionEvent[] events;
+                  events = rJob.getTaskCompletionEvents(completionEvents.size());
+                  if (events == null || events.length == 0) {
+                    break;
+                  }
+                  completionEvents.addAll(Arrays.asList(events));
+                } catch (IOException e) {
+                  e.printStackTrace();
+                  String msg = "There was a problem getting logs for: "+action.getExternalId()+"\nMessage: "+e.getMessage();
+                  Log.error(msg);
+                  err.append(msg);
+                  break;
+                }
+              }
+              StringBuilder stderr = new StringBuilder();
+              err.append("\n\nSTDERR:\n");
+              for (TaskCompletionEvent taskCompletionEvent : completionEvents) {
+                
+                StringBuilder logURL = new StringBuilder(taskCompletionEvent.getTaskTrackerHttp());
+                logURL.append("/tasklog?attemptid=");
+                logURL.append(taskCompletionEvent.getTaskAttemptId().toString());
+                logURL.append("&plaintext=true");
+                logURL.append("&filter=" + TaskLog.LogName.STDOUT);
+                
+                // now get the content and add it to stderr
+                URL url = new URL(logURL.toString());
+                BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+                String line = null;
+                while((line = br.readLine()) != null) {
+                  err.append(line);
+                  err.append("\n");
+                }
+                br.close();
+                
+              }
+            } catch (Exception e) {
+              e.printStackTrace();
+              String msg = "There was a problem setting up the Hadoop JobClient to query information about job: "+action.getExternalId()+"\nMessage: "+e.getMessage();
+              Log.error(msg);
+              err.append(msg);
+            }
+            
+          } else if ("oozie-sge".equals(engineType)) {
+            // FIXME: OozieSGE will need it's own approach I suspect --BDO
           }
+
         }
 
         synchronized (metadata_sync) {
@@ -370,8 +485,10 @@ public class WorkflowStatusChecker extends Plugin {
                                                                   wr.getWorkflowEngine());
         }
       } catch (RuntimeException e) {
+        e.printStackTrace();
         throw e;
       } catch (Exception e) {
+        e.printStackTrace();
         throw new RuntimeException(e);
       }
     }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 
 import net.sourceforge.seqware.pipeline.workflowV2.model.Requirement.Type;
 
@@ -23,6 +25,7 @@ public class AbstractJob implements Job {
 	protected boolean hasMetadataWriteback;
 	private List<String> parentAccessions;
 	private boolean runLocal;
+  private Map<String, String> config = null;
 	
 	/**
 	 * for bash Job
@@ -31,6 +34,13 @@ public class AbstractJob implements Job {
 	public AbstractJob(String algo) {
 		this(algo, "", "");
 		this.parentAccessions = new ArrayList<String>();
+    try {
+      this.config = ConfigTools.getSettings();
+    } catch (Exception e) {
+      System.err.println("Error reading settings file: "+e.getMessage());
+      e.printStackTrace();
+    }
+
 	}
 	
 	/**
@@ -49,6 +59,7 @@ public class AbstractJob implements Job {
 	
 	
 	private void initRequirements() {
+    // FIXME: this is Pegasus-specific and not generic. We should drop this or repurpose it for something not engine specific
 		Requirement jobR = new Requirement();
 		jobR.setType(Type.JOBTYPE);
 		jobR.setValue("condor");
@@ -57,11 +68,19 @@ public class AbstractJob implements Job {
 		Requirement threadR = new Requirement();
 		threadR.setType(Type.COUNT);
 		threadR.setValue("1");
+    // check to see if there's a setting for this in the SeqWare settings
+    if (this.config != null && this.config.containsKey("SW_DEFAULT_JOB_THREADS") && this.config.get("SW_DEFAULT_JOB_THREADS") != null && this.config.get("SW_DEFAULT_JOB_THREADS").length() > 0) {
+      threadR.setValue(this.config.get("SW_DEFAULT_JOB_THREADS"));
+    }
 		this.requirements.add(threadR);
 		
 		Requirement memR = new Requirement();
 		memR.setType(Type.MAXMEMORY);
-		memR.setValue("8192");
+		memR.setValue("2048");
+    // check to see if there's a setting for this in the SeqWare settings
+    if (this.config != null && this.config.containsKey("SW_DEFAULT_JOB_MEMORY_MB") && this.config.get("SW_DEFAULT_JOB_MEMORY_MB") != null && this.config.get("SW_DEFAULT_JOB_MEMORY_MB").length() > 0) {
+      threadR.setValue(this.config.get("SW_DEFAULT_JOB_MEMORY_MB"));
+    }
 		this.requirements.add(memR);
 		
 	}
