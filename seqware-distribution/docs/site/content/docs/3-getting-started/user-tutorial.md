@@ -387,29 +387,27 @@ customized ini file that contains the <tt>input_file</tt> and
 <tt>output_prefix</tt>. The next step is to launch the workflow using the ini
 file you prepared. Make sure you use the correct workflow accession and parent
 accession. The former was listed when you listed all workflows (SWID:1 in this
-example) and the latter was printed to the <tt>accession.txt</tt> file when you
+example) and the latter was printed to the console when you
 copied the file using ProvisionFile (SWID:5 in this example).
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files /home/seqware/workflow.ini --workflow-accession 1 --schedule --parent-accessions 5 --host `hostname --long` 
+	> seqware workflow schedule --id 1 --ini /home/seqware/workflow.ini --parent-id 5 --host `hostname --long` 
+
 	WORKFLOW_RUN ACCESSION: 11
 
 
 <p class="warning"><strong>Tip:</strong> the parent-accessions is the SWID of
-the ProvisionFiles element that was added under the sample when use used this
-tool to upload the text files in the example above.  You MUST specify this
+the file that was linked to the sample in the example above.  You MUST specify this
 otherwise the workflow's results will not be linked to anything (they will be
 orphaned and will not be visible in the Portal or present in the reports
-below). Conveniently the ProvisionFiles tool will write these accessions to a
-file and the portal displays these values.</p>
+below). Conveniently the portal displays these values.</p>
 
 This schedules the workflow to run on the VM. Notice it also prints the
 workflow run accession which you can use to help monitor the workflow.
 
-You can then monitor workflow progress (and getting a list of the outputs)
-using the WorkflowRunReporter plugin. This will let you script the monitoring
-of workflow runs.
+You can then monitor workflow progress (and getting a list of the outputs):
 
-	[seqware@master ~]$ java -jar ~/seqware-distribution-0.13.6.5-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --workflow-accession 1 --stdout --human
+	> seqware workflow report --id 1
+
 	Running Plugin: net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter
 	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter@744a6cbf
 	Apr 24, 2013 9:12:40 AM org.restlet.ext.httpclient.HttpClientHelper start
@@ -435,19 +433,17 @@ of workflow runs.
 
 This output includes several columns of interest including the status of the
 workflow, the output file types, and their locations in S3 or the file system.
-If you omit the <tt>--human</tt> option, you can get tabbed output to automate 
+If you include the <tt>--tsv</tt> option, you can get tabbed output to automate 
 the checking of workflows and the
-retrieval of the results! You can skip writing to an output
-file by just using the <tt>--stdout</tt> option which is helpful if you are scripting
-on top of this command. 
+retrieval of the results! You can write the result to an output
+file by just using the <tt>--out</tt> option. 
 
 After about ten minutes, the workflow should complete. 
 
 Alternatively, you can just get the status of a particular workflow run, for
-example, the workflow run accession printed when you launched the workflow with
-the WorkflowLauncher(for example SWID: 11).  
+example, the workflow run accession printed when you scheduled the workflow (for example SWID: 11).  
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --workflow-run-accession 11 --stdout
+	> seqware workflow-run report --id 11
 
 In the output from the above command you will see accessions for each workflow
 run. If the status is “failed” you can download the stderr and stdout from the
@@ -455,13 +451,12 @@ workflow run. This is how you might do that for our workflow_run with an
 accession of SWID: 11 (Note that there is no useful output in our tutorial after the 
 workflow completes successfully):
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wra 11 --wr-stderr
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wra 11 --wr-stdout
+	> seqware workflow-run stderr --id 11
 
-Again, this command automatically creates output files for stderr and stdout,
-for example <tt>20130414_202120__workflowrun_11_STDERR.csv</tt>.  You can
-use the <tt>--stdout</tt> option if you wish to skip the output file and just
-write to the terminal.
+	> seqware workflow-run stdout --id 11
+
+Again, these command automatically create output files for stderr and stdout,
+for example <tt>20130414_202120__workflowrun_11_STDERR.csv</tt>.
 
 ## The Resulting Structure in MetaDB
 
