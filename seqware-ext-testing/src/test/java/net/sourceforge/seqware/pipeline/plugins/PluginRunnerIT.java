@@ -92,7 +92,9 @@ public class PluginRunnerIT {
         Log.info("SeqWare version detected as: " + SEQWARE_VERSION);
 
         // for all tests, we're going to need to create and install our basic archetypes
-        String[] archetypes = {"java-workflow", "simplified-ftl-workflow", "legacy-ftl-workflow", "simple-legacy-ftl-workflow"};
+        //String[] archetypes = {"java-workflow", "simplified-ftl-workflow", "legacy-ftl-workflow", "simple-legacy-ftl-workflow"};
+        // starting with the 1.0.x series we are deprecating the FTL workflows and the Pegasus backend so skip testing them
+        String[] archetypes = {"java-workflow"};
         buildAndInstallArchetypes(archetypes, SEQWARE_VERSION);
         Assert.assertTrue("could not locate installed workflows", installedWorkflows.size() == archetypes.length);
         Assert.assertTrue("could not locate installed workflow paths", installedWorkflows.size() == bundleLocations.size());
