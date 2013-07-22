@@ -759,12 +759,15 @@ public class Main {
       out("  --id <swid>        The SWID of the workflow to be run");
       out("");
       out("Optional parameters:");
+      out("  --engine <type>     The engine that will process the workflow run");
+      out("                      May be one of: 'oozie' or 'oozie-sge'.");
       out("  --ini <ini-file>    An ini file to configure the workflow run (repeatable)");
       out("  --host <host>       The host on which to launch the workflow run");
       out("  --parent-id <swid>  The SWID of a parent to the workflow run (repeatable)");
       out("");
     } else {
       String wfId = reqVal(args, "--id");
+      String engine = optVal(args, "--engine", null);
       List<String> iniFiles = optVals(args, "--ini");
       String host = optVal(args, "--host", null);
       List<String> parentIds = optVals(args, "--parent-id");
@@ -778,6 +781,10 @@ public class Main {
       runnerArgs.add("--schedule");
       runnerArgs.add("--workflow-accession");
       runnerArgs.add(wfId);
+      if (engine != null){
+        runnerArgs.add("--workflow-engine");
+        runnerArgs.add(engine);
+      }
       if (!iniFiles.isEmpty()) {
         runnerArgs.add("--ini-files");
         runnerArgs.add(cdl(iniFiles));
