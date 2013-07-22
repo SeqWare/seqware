@@ -124,7 +124,7 @@ su - seqware -c 'chmod 600 /home/seqware/.seqware/*'
 su - seqware -c 'cd /home/seqware/gitroot/seqware; git hf init; git hf update'
 
 # build with develop
-su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_BUILD_CMD}'
+su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_BUILD_CMD} &> build.log'
 
 # setup jar
 cp /home/seqware/gitroot/seqware/seqware-distribution/target/seqware-distribution-%{SEQWARE_VERSION}-full.jar /home/seqware/jars/
@@ -140,10 +140,15 @@ chown -R seqware:seqware /home/seqware
 # seqware database
 /etc/init.d/postgresql start
 sudo -u postgres psql -c "CREATE USER seqware WITH PASSWORD 'seqware' CREATEDB;"
+sudo -u postgres psql --command "ALTER USER seqware WITH superuser;"
+# this is the DB actually used by people
 sudo -u postgres psql --command "CREATE DATABASE seqware_meta_db WITH OWNER = seqware;"
 sudo -u postgres psql seqware_meta_db < /vagrant/seqware_meta_db.sql
 sudo -u postgres psql seqware_meta_db < /vagrant/seqware_meta_db_data.sql
-sudo -u postgres psql --command "ALTER USER seqware WITH superuser;"
+# the testing DB
+sudo -u postgres psql --command "CREATE DATABASE test_seqware_meta_db WITH OWNER = seqware;"
+sudo -u postgres psql test_seqware_meta_db < /vagrant/seqware_meta_db.sql
+sudo -u postgres psql test_seqware_meta_db < /vagrant/seqware_meta_db_data.sql
 
 # stop tomcat6
 /etc/init.d/tomcat6 stop
@@ -170,4 +175,10 @@ sudo mkdir /datastore
 sudo chown seqware /datastore
 # required for running oozie jobs
 mkdir /usr/lib/hadoop-0.20-mapreduce/.seqware
-ln -s /home/seqware/.seqware/settings /usr/lib/hadoop-0.20-mapreduce/.seqware/settings
+cp /home/seqware/.seqware/settings /usr/lib/hadoop-0.20-mapreduce/.seqware/settings
+chown -R mapred:mapred /usr/lib/hadoop-0.20-mapreduce/.seqware
+
+# run full integration testing
+su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_IT_CMD} &> it.log'
+
+
