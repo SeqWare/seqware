@@ -75,3 +75,4 @@ In case you need to re-run the provisioning script e.g. your testing changes:
 * setup services with chkconfig to ensure a rebooted machine works properly -- done
 * better integration with our Maven build process, perhaps automatically calling this to setup integration test environment -- done
 * message of the day on login over ssh
+* pass in the particular branch to use with SeqWare -- done
