@@ -738,6 +738,8 @@ public class Main {
       if (out != null) {
         runnerArgs.add("--output-filename");
         runnerArgs.add(out);
+      } else {
+        runnerArgs.add("--stdout");
       }
       if (!tsv) {
         runnerArgs.add("--human");
@@ -822,6 +824,8 @@ public class Main {
       if (out != null) {
         runnerArgs.add("--output-filename");
         runnerArgs.add(out);
+      } else {
+        runnerArgs.add("--stdout");
       }
       if (!tsv) {
         runnerArgs.add("--human");
@@ -1011,9 +1015,9 @@ public class Main {
       out("  workflow-run  Interact with workflow runs");
       out("");
       out("flags:");
-      out("   -h --help     Print help out");
+      out("  --help        Print help out");
       // handled in seqware script:
-      out("   -v --version  Print Seqware's version");
+      out("  --version     Print Seqware's version");
       out("");
     } else {
       String cmd = args.remove(0);
