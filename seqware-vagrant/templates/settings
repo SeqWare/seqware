@@ -13,7 +13,7 @@ SW_REST_PASS=admin
 AWS_ACCESS_KEY=FILLMEIN
 AWS_SECRET_KEY=FILLMEIN
 # the default engine to use if otherwise unspecified (one of: pegasus, oozie, oozie-sge)
-SW_DEFAULT_WORKFLOW_ENGINE=oozie-sge
+SW_DEFAULT_WORKFLOW_ENGINE=oozie
 #
 # SEQWARE PIPELINE
 # OOZIE WORKFLOW ENGINE SETTINGS
@@ -44,4 +44,14 @@ MAPRED.JOB.TRACKER=localhost:8021
 FS.DEFAULT.NAME=hdfs://localhost:8020
 FS.DEFAULTFS=hdfs://localhost:8020
 FS.HDFS.IMPL=org.apache.hadoop.hdfs.DistributedFileSystem
+
+BASIC_TEST_DB_HOST=localhost
+BASIC_TEST_DB_NAME=seqware_meta_db
+BASIC_TEST_DB_USER=seqware
+BASIC_TEST_DB_PASSWORD=seqware
+
+EXTENDED_TEST_DB_HOST=localhost
+EXTENDED_TEST_DB_NAME=seqware_meta_db
+EXTENDED_TEST_DB_USER=seqware
+EXTENDED_TEST_DB_PASSWORD=seqware
 
