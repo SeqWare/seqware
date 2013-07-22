@@ -124,6 +124,7 @@ su - seqware -c 'chmod 600 /home/seqware/.seqware/*'
 su - seqware -c 'cd /home/seqware/gitroot/seqware; git hf init; git hf update'
 
 # build with develop
+su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_BRANCH_CMD}'
 su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_BUILD_CMD} &> build.log'
 
 # setup jar
