@@ -169,8 +169,8 @@ public class Main {
   private static void annotateHelp() {
     out("");
     out("Usage: seqware annotate [--help]");
-    out("       seqware annotate <object> --id <swid> --key <key> --val <value>");
-    out("       seqware annotate <object> --id <swid> --skip");
+    out("       seqware annotate <object> --accession <swid> --key <key> --val <value>");
+    out("       seqware annotate <object> --accession <swid> --skip");
     out("       seqware annotate <object> --csv <file>");
     out("");
     out("Objects:");
@@ -179,11 +179,11 @@ public class Main {
     }
     out("");
     out("Parameters:");
-    out("  --csv <file>   Bulk annotation from comma-separated file of id, key, value.");
-    out("  --id <swid>    The SWID of the object to annotate");
-    out("  --key <key>    The identifier of the annotation");
-    out("  --skip         Sets the skip attribute flag on the object.");
-    out("  --val <value>  The value of the annotation. Quote if containing spaces, etc.");
+    out("  --csv <file>        Bulk annotation from CSV file of: accession, key, value.");
+    out("  --accession <swid>  The SWID of the object to annotate");
+    out("  --key <key>         The identifier of the annotation");
+    out("  --skip              Sets the skip attribute flag on the object.");
+    out("  --val <value>       The value of the annotation.");
     out("");
   }
 
@@ -198,7 +198,7 @@ public class Main {
         if (isHelp(args, true)) {
           annotateHelp();
         } else {
-          String swid = optVal(args, "--id", null);
+          String swid = optVal(args, "--accession", null);
           String key = optVal(args, "--key", null);
           String val = optVal(args, "--val", null);
           boolean skip = flag(args, "--skip");
@@ -231,7 +231,7 @@ public class Main {
       out("       seqware bundle check --dir <bundle-dir>");
       out("");
       out("Parameters:");
-      out("  --dir <bundle-dir> The root directory of the bundle");
+      out("  --dir <bundle-dir>  The root directory of the bundle");
       out("");
     } else {
       String dir = reqVal(args, "--dir");
@@ -249,7 +249,7 @@ public class Main {
       out("       seqware bundle list --zip <bundle-zip>");
       out("");
       out("Parameters:");
-      out("  --zip <bundle-zip> The zip file of the bundle");
+      out("  --zip <bundle-zip>  The zip file of the bundle");
       out("");
     } else {
       String zip = reqVal(args, "--zip");
@@ -285,7 +285,7 @@ public class Main {
       out("       seqware bundle list --dir <bundle-dir>");
       out("");
       out("Parameters:");
-      out("  --dir <bundle-dir> The root directory of the bundle");
+      out("  --dir <bundle-dir>  The root directory of the bundle");
       out("");
     } else {
       String dir = reqVal(args, "--dir");
@@ -303,7 +303,7 @@ public class Main {
       out("       seqware bundle package --dir <bundle-dir>");
       out("");
       out("Parameters:");
-      out("  --dir <bundle-dir> The root directory of the bundle");
+      out("  --dir <bundle-dir>  The root directory of the bundle");
       out("");
     } else {
       String dir = new File(reqVal(args, "--dir")).getAbsolutePath();
@@ -406,7 +406,7 @@ public class Main {
       out("Required fields:");
       out("  --file <val>");
       out("  --mime-type <val>");
-      out("  --parent-id <val>");
+      out("  --parent-accession <val>");
       out("");
       out("Optional fields:");
       out("  --description <val>");
@@ -415,7 +415,7 @@ public class Main {
     } else {
       String file = reqVal(args, "--file");
       String mime = reqVal(args, "--mime-type");
-      String parentId = reqVal(args, "--parent-id");
+      String parentId = reqVal(args, "--parent-accession");
       String type = optVal(args, "--type", "");
       String description = optVal(args, "--description", "");
 
@@ -491,7 +491,7 @@ public class Main {
       out("Required fields:");
       out("  --description <val>");
       out("  --experiment-accession <val>");
-      out("  --organism-id <val>              Dynamic-valued field");
+      out("  --organism-id <val>           Dynamic-valued field");
       out("  --title <val>");
       out("");
     } else {
@@ -657,13 +657,13 @@ public class Main {
       out("       seqware workflow ini <params>");
       out("");
       out("Required parameters:");
-      out("  --id <swid>   The SWID of the workflow");
+      out("  --accession <swid>  The SWID of the workflow");
       out("");
       out("Optional parameters:");
-      out("  --out <file>  Where to write the file contents (defaults to 'workflow.ini')");
+      out("  --out <file>        Where to write the file (defaults to 'workflow.ini')");
       out("");
     } else {
-      String id = reqVal(args, "--id");
+      String id = reqVal(args, "--accession");
       String outfile = optVal(args, "--out", "workflow.ini");
 
       extras(args, "workflow ini");
@@ -708,17 +708,18 @@ public class Main {
       out("       seqware workflow report <params>");
       out("");
       out("Required parameters:");
-      out("  --id <swid>  The SWID of the workflow");
+      out("  --accession <swid>  The SWID of the workflow");
       out("");
       out("Optional parameters:");
-      out("  --out <file>   The name of the report file");
-      out("  --tsv          Emit a tab-separated values report");
-      out("  --when <date>  The date or date-range of runs to include (all runs if omitted)");
-      out("                 Dates are in the form YYYY-MM-DD");
-      out("                 Date ranges are in the form YYYY-MM-DD:YYYY-MM-DD");
+      out("  --out <file>        The name of the report file");
+      out("  --tsv               Emit a tab-separated values report");
+      out("  --when <date>       The date or date-range of runs to include");
+      out("                      If omitted, all runs included");
+      out("                      Dates are in the form YYYY-MM-DD");
+      out("                      Date ranges are in the form YYYY-MM-DD:YYYY-MM-DD");
       out("");
     } else {
-      String swid = reqVal(args, "--id");
+      String swid = reqVal(args, "--accession");
       String when = optVal(args, "--when", null);
       String out = optVal(args, "--out", null);
       boolean tsv = flag(args, "--tsv");
@@ -756,21 +757,23 @@ public class Main {
       out("       seqware workflow schedule <params>");
       out("");
       out("Required parameters:");
-      out("  --id <swid>        The SWID of the workflow to be run");
+      out("  --accession <swid>         The SWID of the workflow to be run");
       out("");
       out("Optional parameters:");
-      out("  --engine <type>     The engine that will process the workflow run");
-      out("                      May be one of: 'oozie' or 'oozie-sge'.");
-      out("  --ini <ini-file>    An ini file to configure the workflow run (repeatable)");
-      out("  --host <host>       The host on which to launch the workflow run");
-      out("  --parent-id <swid>  The SWID of a parent to the workflow run (repeatable)");
+      out("  --engine <type>            The engine that will process the workflow run");
+      out("                             May be one of: 'oozie' or 'oozie-sge'");
+      out("  --ini <ini-file>           An ini file to configure the workflow run ");
+      out("                             Repeat this parameter to provide multiple files");
+      out("  --host <host>              The host on which to launch the workflow run");
+      out("  --parent-accession <swid>  The SWID of a parent to the workflow run");
+      out("                             Repeat this parameter to provide multiple parents");
       out("");
     } else {
-      String wfId = reqVal(args, "--id");
+      String wfId = reqVal(args, "--accession");
       String engine = optVal(args, "--engine", null);
       List<String> iniFiles = optVals(args, "--ini");
       String host = optVal(args, "--host", null);
-      List<String> parentIds = optVals(args, "--parent-id");
+      List<String> parentIds = optVals(args, "--parent-accession");
 
       extras(args, "workflow schedule");
 
@@ -781,7 +784,7 @@ public class Main {
       runnerArgs.add("--schedule");
       runnerArgs.add("--workflow-accession");
       runnerArgs.add(wfId);
-      if (engine != null){
+      if (engine != null) {
         runnerArgs.add("--workflow-engine");
         runnerArgs.add(engine);
       }
@@ -809,14 +812,14 @@ public class Main {
       out("       seqware workflow-run report <params>");
       out("");
       out("Required parameters:");
-      out("  --id <swid>  The SWID of the workflow run");
+      out("  --accession <swid>  The SWID of the workflow run");
       out("");
       out("Optional parameters:");
-      out("  --out <file>   The name of the report file");
-      out("  --tsv          Emit a tab-separated values report");
+      out("  --out <file>        The name of the report file");
+      out("  --tsv               Emit a tab-separated values report");
       out("");
     } else {
-      String swid = reqVal(args, "--id");
+      String swid = reqVal(args, "--accession");
       String out = optVal(args, "--out", null);
       boolean tsv = flag(args, "--tsv");
 
@@ -912,13 +915,13 @@ public class Main {
       out("       seqware workflow-run stderr <params>");
       out("");
       out("Required parameters:");
-      out("  --id <swid>  The SWID of the workflow run");
+      out("  --accession <swid>  The SWID of the workflow run");
       out("");
       out("Optional parameters:");
-      out("  --out <file>   The name of the file to write the stderr");
+      out("  --out <file>        The name of the file to write the stderr");
       out("");
     } else {
-      String swid = reqVal(args, "--id");
+      String swid = reqVal(args, "--accession");
       String out = optVal(args, "--out", null);
 
       extras(args, "workflow-run stderr");
@@ -945,13 +948,13 @@ public class Main {
       out("       seqware workflow-run stdout <params>");
       out("");
       out("Required parameters:");
-      out("  --id <swid>  The SWID of the workflow run");
+      out("  --accession <swid>  The SWID of the workflow run");
       out("");
       out("Optional parameters:");
-      out("  --out <file>   The name of the file to write the stdout");
+      out("  --out <file>        The name of the file to write the stdout");
       out("");
     } else {
-      String swid = reqVal(args, "--id");
+      String swid = reqVal(args, "--accession");
       String out = optVal(args, "--out", null);
 
       extras(args, "workflow-run stdout");
