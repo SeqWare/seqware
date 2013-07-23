@@ -12,6 +12,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 
+/*
+ * TODO:
+ * - update seqware script to pull jar from proper location
+ * - apply user-role filtering of available commands
+ * - add descriptions to fields of create
+ * - add copying helpers (e.g., S3)
+ * - probably need to add developer functionality for controlled launching of bundle workflow
+ */
 public class Main {
 
   private static String dl(List<String> tokens, String delim) {
