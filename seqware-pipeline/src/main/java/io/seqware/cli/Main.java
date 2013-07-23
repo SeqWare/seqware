@@ -253,8 +253,8 @@ public class Main {
   private static void bundleInstall(List<String> args) {
     if (isHelp(args, true)) {
       out("");
-      out("Usage: seqware bundle list [--help]");
-      out("       seqware bundle list --zip <bundle-zip>");
+      out("Usage: seqware bundle install [--help]");
+      out("       seqware bundle install --zip <bundle-zip>");
       out("");
       out("Parameters:");
       out("  --zip <bundle-zip>  The zip file of the bundle");
@@ -262,7 +262,7 @@ public class Main {
     } else {
       String zip = reqVal(args, "--zip");
 
-      extras(args, "bundle launch");
+      extras(args, "bundle install");
 
       run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--install", "--bundle", zip);
     }
