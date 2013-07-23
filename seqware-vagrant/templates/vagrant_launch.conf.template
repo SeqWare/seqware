@@ -13,8 +13,9 @@ AWS_KEY=
 AWS_SECRET_KEY=
 # Amazon Ubuntu 12.04.2 LTS
 AWS_IMAGE=ami-d0f89fb9
-# could also use cc1.4xlarge or c1.xlarge or m1.xlarge
-AWS_INSTANCE_TYPE=m3.xlarge
+# could also use cc1.4xlarge or c1.xlarge or m1.xlarge or m3.xlarge
+# our full integration test work just fine on m1.xlarge
+AWS_INSTANCE_TYPE=m1.xlarge
 AWS_SSH_KEY_NAME=
 AWS_SSH_USERNAME=ubuntu
 AWS_SSH_PEM_FILE=
