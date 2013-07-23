@@ -19,10 +19,17 @@ package net.sourceforge.seqware.pipeline.plugins;
 import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,7 +46,9 @@ import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.oozie.client.OozieClient;
 import org.apache.oozie.client.WorkflowAction;
 import org.apache.oozie.client.WorkflowJob;
@@ -55,7 +64,6 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = PluginInterface.class)
 public class WorkflowStatusChecker extends Plugin {
-
   private ReturnValue ret = new ReturnValue();
   // NOTE: this is shared with WorkflowLauncher so only one can run at a time
   public static final String appID = "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusCheckerOrLauncher";
@@ -354,19 +362,31 @@ public class WorkflowStatusChecker extends Plugin {
           throw new RuntimeException("Unexpected status value (" + status + ") from oozie workflow job (" + jobId + ")");
         }
 
-        StringBuilder err = new StringBuilder();
-        for (WorkflowAction action : wfJob.getActions()) {
-          if (action.getErrorMessage() != null) {
-            err.append(MessageFormat.format("   Name: {0} Type: {1} ErrorMessage: {2}\n", action.getName(),
-                                            action.getType(), action.getErrorMessage()));
+        String err;
+        String out;
+
+        if (wr.getWorkflowEngine().equals("oozie-sge")) {
+          File dir = OozieJob.scriptsDir(wr.getCurrentWorkingDir());
+          Set<String> extIds = sgeIds(wfJob);
+          out = sgeConcat(sgeFiles(SGE_OUT_FILE, dir, extIds));
+          err = sgeConcat(sgeFiles(SGE_ERR_FILE, dir, extIds));
+        } else {
+          StringBuilder sb = new StringBuilder();
+          for (WorkflowAction action : wfJob.getActions()) {
+            if (action.getErrorMessage() != null) {
+              sb.append(MessageFormat.format("   Name: {0} Type: {1} ErrorMessage: {2}\n", action.getName(),
+                                             action.getType(), action.getErrorMessage()));
+            }
           }
+          out = "";
+          err = sb.toString();
         }
 
         synchronized (metadata_sync) {
           WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(),
                                                                   wr.getTemplate(), sqwStatus, wr.getStatusCmd(),
                                                                   wr.getCurrentWorkingDir(), wr.getDax(),
-                                                                  wr.getIniFile(), wr.getHost(), err.toString(), "",
+                                                                  wr.getIniFile(), wr.getHost(), err, out,
                                                                   wr.getWorkflowEngine());
         }
       } catch (RuntimeException e) {
@@ -427,4 +447,55 @@ public class WorkflowStatusChecker extends Plugin {
     }
 
   }
+
+  private static final Pattern SGE_OUT_FILE = Pattern.compile(".+\\.o(\\d+)");
+  private static final Pattern SGE_ERR_FILE = Pattern.compile(".+\\.e(\\d+)");
+
+  private static SortedMap<Integer, File> sgeFiles(Pattern p, File dir, final Set<String> extIds) {
+    SortedMap<Integer, File> idFiles = new TreeMap<Integer, File>();
+    for (File f : dir.listFiles()) {
+      Matcher m = p.matcher(f.getName());
+      if (m.find()) {
+        String id = m.group(1);
+        if (extIds.contains(id)) {
+          idFiles.put(Integer.parseInt(id), f);
+        }
+      }
+    }
+    return idFiles;
+  }
+
+  private static String sgeConcat(SortedMap<Integer, File> idFiles) {
+    StringBuilder sb = new StringBuilder();
+    for (Map.Entry<Integer, File> e : idFiles.entrySet()) {
+      sb.append("-----------------------------------------------------------------------\n");
+      sb.append("Job ID: ");
+      sb.append(e.getKey());
+      sb.append("File: ");
+      sb.append(e.getValue().getAbsolutePath());
+      sb.append("Contents:\n");
+      try {
+        sb.append(FileUtils.readFileToString(e.getValue()));
+      } catch (IOException ex) {
+        sb.append(" *** ERROR READING FILE: ");
+        sb.append(ex.getMessage());
+        sb.append(" ***");
+      }
+      sb.append("-----------------------------------------------------------------------\n\n");
+    }
+    return null;
+  }
+  
+  private static Set<String> sgeIds(WorkflowJob wf){
+    List<WorkflowAction> actions = wf.getActions();
+    final Set<String> extIds = new HashSet<String>();
+    for (WorkflowAction a : actions) {
+      String extId = a.getExternalId();
+      if (a != null) {
+        extIds.add(extId);
+      }
+    }
+    return extIds;
+  }
+
 }
