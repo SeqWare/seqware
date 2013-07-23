@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import org.hibernate.annotations.Cascade;
 
 @Entity
 /**
@@ -21,7 +22,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Table(name = "workflow_attribute", uniqueConstraints = { @UniqueConstraint(columnNames = { "workflow_id", "tag",
     "value" }) })
-public class WorkflowAttribute implements Attribute, Comparable<WorkflowAttribute> {
+public class WorkflowAttribute implements Attribute<Workflow>, Comparable<WorkflowAttribute> {
 
   @Id
   @SequenceGenerator(name = "workflow_attribute_id_seq_gen", sequenceName = "workflow_attribute_id_seq")
@@ -29,7 +30,10 @@ public class WorkflowAttribute implements Attribute, Comparable<WorkflowAttribut
   @Column(name = "workflow_attribute_id")
   private Integer workflowAttributeId;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  // SEQWARE-1578 
+  @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH} )
+  // a special Hibernate workaround since http://tai-dev.blog.co.uk/2011/11/18/fun-with-hibernates-cascadetype-persist-and-cascadetype-all-the-case-of-the-unsaved-transient-instance-12187037/
+  @Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
   @JoinColumn(name = "workflow_id", nullable = false)
   private Workflow workflow;
 
@@ -109,5 +113,10 @@ public class WorkflowAttribute implements Attribute, Comparable<WorkflowAttribut
   public int compareTo(WorkflowAttribute wfa) {
     return (this.tag + this.value).compareTo(wfa.tag + wfa.value);
   }
+
+    @Override
+    public void setAttributeParent(Workflow parent) {
+        this.setWorkflow(parent);
+    }
 
 }

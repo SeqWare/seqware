@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.common.metadata;
 
+import java.io.Writer;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,7 +8,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-import net.sourceforge.seqware.common.model.*;
+
+import net.sourceforge.seqware.common.model.Experiment;
+import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.FileAttribute;
+import net.sourceforge.seqware.common.model.IUS;
+import net.sourceforge.seqware.common.model.IUSAttribute;
+import net.sourceforge.seqware.common.model.Lane;
+import net.sourceforge.seqware.common.model.LaneAttribute;
+import net.sourceforge.seqware.common.model.LibrarySelection;
+import net.sourceforge.seqware.common.model.LibrarySource;
+import net.sourceforge.seqware.common.model.LibraryStrategy;
+import net.sourceforge.seqware.common.model.Organism;
+import net.sourceforge.seqware.common.model.Platform;
+import net.sourceforge.seqware.common.model.ProcessingAttribute;
+import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.common.model.SampleAttribute;
+import net.sourceforge.seqware.common.model.SequencerRun;
+import net.sourceforge.seqware.common.model.SequencerRunAttribute;
+import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.model.StudyAttribute;
+import net.sourceforge.seqware.common.model.StudyType;
+import net.sourceforge.seqware.common.model.Workflow;
+import net.sourceforge.seqware.common.model.WorkflowAttribute;
+import net.sourceforge.seqware.common.model.WorkflowParam;
+import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
@@ -353,15 +379,13 @@ public interface MetadataInterface {
      * @param dax a {@link java.lang.String} object.
      * @param ini a {@link java.lang.String} object.
      * @param host a {@link java.lang.String} object.
-     * @param currStep a int.
-     * @param totalSteps a int.
      * @param stdErr a {@link java.lang.String} object.
      * @param stdOut a {@link java.lang.String} object.
      * @param workflowEngine the value of workflowEngine
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     
-  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps, String stdErr, String stdOut, String workflowEngine);
+  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine);
 
   /**
    * <p>findFilesAssociatedWithASample.</p>
@@ -430,6 +454,19 @@ public interface MetadataInterface {
    */
   public int getWorkflowAccession(String name, String version);
 
+  /**
+   * Retrieves the study report, writing it to the specified output stream.
+   * @param studyTitle
+   * @param out where the content will be written
+   */
+  public void studyReport(String studyTitle, Writer out);
+  
+  /**
+   * Retrieves the all-studies report, writing it to the specified output stream.
+   * @param out where the content will be written
+   */
+  public void allStudiesReport(Writer out);
+  
   /**
    * <p>findFilesAssociatedWithAStudy.</p>
    *
@@ -521,6 +558,23 @@ public interface MetadataInterface {
    */
   public String getSequencerRunReport();
 
+  /**
+   * <p>annotateFile.</p>
+   *
+   * @param fileSWID a int.
+   * @param fileAtt a {@link net.sourceforge.seqware.common.model.FileAttribute} object.
+   * @param skip a {@link java.lang.Boolean} object.
+   */
+  void annotateFile(int laneSWID, FileAttribute iusAtt, Boolean skip);
+
+  /**
+   * <p>annotateFile.</p>
+   *
+   * @param fileSWID a int.
+   * @param fileAtts a {@link java.util.Set} object.
+   */
+  void annotateFile(int fileSWID, Set<FileAttribute> iusAtts);
+  
   /**
    * <p>annotateIUS.</p>
    *

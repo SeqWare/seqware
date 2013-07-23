@@ -1,180 +1,132 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 
-import org.jdom.Element;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 
+import org.jdom.Element;
+
 public class OozieProvisionFileJob extends OozieJob {
 
-	private String metadataOutputPrefix;
-	private String outputDir;
-	private SqwFile file;
-	
-	public OozieProvisionFileJob(AbstractJob job, SqwFile file, String name, String oozie_working_dir) {
-		super(job, name, oozie_working_dir);
-		this.file = file;
-	}
+  private String metadataOutputPrefix;
+  private String outputDir;
+  private SqwFile file;
 
-	public String getOutputDir() {
-		return outputDir;
-	}
+  public OozieProvisionFileJob(AbstractJob job, SqwFile file, String name, String oozie_working_dir, boolean useSge,
+                               File seqwareJar, String slotsSgeParamFormat, String maxMemorySgeParamFormat) {
+    super(job, name, oozie_working_dir, useSge, seqwareJar, slotsSgeParamFormat, maxMemorySgeParamFormat);
+    this.file = file;
+  }
 
-	public void setOutputDir(String outputDir) {
-		this.outputDir = outputDir;
-	}
-	
-	public String getMetadataOutputPrefix() {
-		return metadataOutputPrefix;
-	}
+  protected Element createSgeElement() {
+    File runnerScript = emitRunnerScript();
+    File optionsFile = emitOptionsFile();
 
-	public void setMetadataOutputPrefix(String metadataOutputPrefix) {
-		this.metadataOutputPrefix = metadataOutputPrefix;
-	}
-	
-	public Element serializeXML() {
-		Element element = new Element("action", WorkflowApp.NAMESPACE);
-		element.setAttribute("name", this.name);
-		Element javaE = this.getJavaElement();
-		element.addContent(javaE);
-		
-		//okTo
-		Element ok = new Element("ok", WorkflowApp.NAMESPACE);
-		ok.setAttribute("to",this.okTo);
-		element.addContent(ok);
-		
-		Element error = new Element("error", WorkflowApp.NAMESPACE);
-		error.setAttribute("to","fail");
-		element.addContent(error);
+    Element sge = new Element("sge", SGE_XMLNS);
+    add(sge, "script", runnerScript.getAbsolutePath());
+    add(sge, "options-file", optionsFile.getAbsolutePath());
 
-		return element;
-	}
+    return sge;
+  }
 
-	protected Element getJavaElement() {
-		Element javaE = new Element("java", WorkflowApp.NAMESPACE);
-		Element jobTracker = new Element("job-tracker", WorkflowApp.NAMESPACE);
-		jobTracker.setText("${jobTracker}");
-		javaE.addContent(jobTracker);
-		
-		Element nameNode = new Element("name-node", WorkflowApp.NAMESPACE);
-		nameNode.setText("${nameNode}");
-		javaE.addContent(nameNode);
-		
-		Element config = new Element("configuration", WorkflowApp.NAMESPACE);
-		Element p0 = new Element("property", WorkflowApp.NAMESPACE);
-		config.addContent(p0);
-		Element name0 = new Element("name",WorkflowApp.NAMESPACE);
-		name0.setText("mapred.job.queue.name");
-		p0.addContent(name0);
-		Element value0 = new Element("value",WorkflowApp.NAMESPACE);
-		value0.setText("${queueName}");
-		p0.addContent(value0);
-                
-                // map memory
-                p0 = new Element("property", WorkflowApp.NAMESPACE);
-                config.addContent(p0);
-                name0 = new Element("name", WorkflowApp.NAMESPACE);
-                name0.setText("oozie.launcher.mapred.job.map.memory.mb");
-                p0.addContent(name0);
-                value0 = new Element("value", WorkflowApp.NAMESPACE);
-                value0.setText(this.getJobObject().getMaxMemory());
-                p0.addContent(value0);
+  protected Element createJavaElement() {
+    Element java = new Element("java", WF_XMLNS);
+    add(java, "job-tracker", "${jobTracker}");
+    add(java, "name-node", "${nameNode}");
 
-                p0 = new Element("property", WorkflowApp.NAMESPACE);
-                config.addContent(p0);
-                name0 = new Element("name", WorkflowApp.NAMESPACE);
-                name0.setText("oozie.launcher.mapred.job.reduce.memory.mb");
-                p0.addContent(name0);
-                value0 = new Element("value", WorkflowApp.NAMESPACE);
-                value0.setText(this.getJobObject().getMaxMemory());
-                p0.addContent(value0);
-                
-                p0 = new Element("property", WorkflowApp.NAMESPACE);
-                config.addContent(p0);
-                name0 = new Element("name", WorkflowApp.NAMESPACE);
-                name0.setText("oozie.launcher.mapreduce.map.memory.physical.mb");
-                p0.addContent(name0);
-                value0 = new Element("value", WorkflowApp.NAMESPACE);
-                value0.setText(this.getJobObject().getMaxMemory());
-                p0.addContent(value0);
+    Element config = add(java, "configuration");
+    addProp(config, "mapred.job.queue.name", "${queueName}");
+    addProp(config, "oozie.launcher.mapred.job.map.memory.mb", jobObj.getMaxMemory());
+    addProp(config, "oozie.launcher.mapred.job.reduce.memory.mb", jobObj.getMaxMemory());
+    addProp(config, "oozie.launcher.mapreduce.map.memory.physical.mb", jobObj.getMaxMemory());
+    addProp(config, "oozie.launcher.mapreduce.reduce.memory.physical.mb", jobObj.getMaxMemory());
 
-                p0 = new Element("property", WorkflowApp.NAMESPACE);
-                config.addContent(p0);
-                name0 = new Element("name", WorkflowApp.NAMESPACE);
-                name0.setText("oozie.launcher.mapreduce.reduce.memory.physical.mb");
-                p0.addContent(name0);
-                value0 = new Element("value", WorkflowApp.NAMESPACE);
-                value0.setText(this.getJobObject().getMaxMemory());
-                p0.addContent(value0);
-                
-                // add configuration
-                javaE.addContent(config);
-		
-		Element mainClass = new Element("main-class", WorkflowApp.NAMESPACE);
-		mainClass.setText("net.sourceforge.seqware.pipeline.runner.Runner");
-		javaE.addContent(mainClass);
-		
-		this.buildMetadataString(javaE);
-		
-		Element arg1 = new Element("arg", WorkflowApp.NAMESPACE);
-		arg1.setText("--module");
-		javaE.addContent(arg1);
-		
-		Element argModule = new Element("arg", WorkflowApp.NAMESPACE);
-		argModule.setText("net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles");
-		javaE.addContent(argModule);
-		
-		Element dash = new Element("arg", WorkflowApp.NAMESPACE);
-		dash.setText("--");
-		javaE.addContent(dash);
-		
-		// set input, output
-		String inputArg = "--input-file";
-		String inputValue = this.file.getSourcePath();
-		String output = this.outputDir;
-		if(this.file.isOutput()) {
-			inputArg = "--input-file-metadata";
-			inputValue =  this.jobObj.getAlgo() + "::" + this.file.getType() + "::" + this.getOozieWorkingDir() + "/" + this.file.getSourcePath();
-			output = this.metadataOutputPrefix + "/" + this.outputDir;
-                        // if this is true then we have the full output path, not just prefix and output dir!
-                        if (this.file.getOutputPath() != null) {
-                          output = this.file.getOutputPath();
-                        }
-		} else{
-                    //SEQWARE-1608             
-                    Element skipArg = new Element("arg", WorkflowApp.NAMESPACE);
-                    skipArg.setText("--skip-record-file");
-                    javaE.addContent(skipArg);
-                }
-		Element inputTE = new Element("arg", WorkflowApp.NAMESPACE);
-		inputTE.setText(inputArg);
-		javaE.addContent(inputTE);
-		
-		Element inputVE = new Element("arg", WorkflowApp.NAMESPACE);
-		inputVE.setText(inputValue);
-		javaE.addContent(inputVE);
-		
-		Element outputArg = new Element("arg", WorkflowApp.NAMESPACE);
-		// now just check to see if it's a full path or just output dir
-                if (this.file.getOutputPath() != null) { 
-                  outputArg.setText("--output-file");
-                } else {
-                  outputArg.setText("--output-dir");
-                }
-		javaE.addContent(outputArg);
-		
-		Element outputValue = new Element("arg", WorkflowApp.NAMESPACE);
-		outputValue.setText(output);
-		javaE.addContent(outputValue);
+    add(java, "main-class", "net.sourceforge.seqware.pipeline.runner.Runner");
+    for (String arg : runnerArgs()) {
+      add(java, "arg", arg);
+    }
 
-		if(this.file.isForceCopy()) {
-			Element forceE = new Element("arg", WorkflowApp.NAMESPACE);
-			forceE.setText("--force-copy");
-			javaE.addContent(forceE);
-		}
+    return java;
+  }
 
-			
-		return javaE;
-	}
+  private File emitRunnerScript() {
+    File file = file(scriptsDir, name + "-runner.sh", true);
+
+    ArrayList<String> args = new ArrayList<String>();
+    args.add("java");
+    args.add("-classpath");
+    args.add(seqwareJarPath);
+    args.add("net.sourceforge.seqware.pipeline.runner.Runner");
+    args.addAll(runnerArgs());
+
+    StringBuilder contents = new StringBuilder("#!/usr/bin/env bash\n\n");
+    for (String arg : args) {
+      contents.append(arg);
+      contents.append(" ");
+    }
+
+    write(contents.toString(), file);
+    return file;
+  }
+
+  private List<String> runnerArgs() {
+    List<String> args = runnerMetaDataArgs();
+
+    args.add("--module");
+    args.add("net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles");
+
+    args.add("--");
+
+    if (file.isInput()) {
+      args.add("--skip-record-file");
+      
+      args.add("--input-file");
+      args.add(file.getSourcePath());
+      
+      if (file.getOutputPath() != null) {
+        args.add("--output-file");
+        args.add(file.getOutputPath());
+      } else {
+        args.add("--output-dir");
+        args.add(outputDir);
+      }
+    } else { // output file
+      args.add("--input-file-metadata");
+      args.add(String.format("%s::%s::%s/%s", jobObj.getAlgo(), file.getType(), oozie_working_dir, file.getSourcePath()));
+      
+      if (file.getOutputPath() != null) {
+        args.add("--output-file");
+        args.add(file.getOutputPath());
+      } else {
+        args.add("--output-dir");
+        args.add(metadataOutputPrefix + "/" + outputDir);
+      }
+    }
+
+    if (file.isForceCopy()) {
+      args.add("--force-copy");
+    }
+
+    return args;
+  }
+
+  public String getOutputDir() {
+    return outputDir;
+  }
+
+  public void setOutputDir(String outputDir) {
+    this.outputDir = outputDir;
+  }
+
+  public String getMetadataOutputPrefix() {
+    return metadataOutputPrefix;
+  }
+
+  public void setMetadataOutputPrefix(String metadataOutputPrefix) {
+    this.metadataOutputPrefix = metadataOutputPrefix;
+  }
 
 }

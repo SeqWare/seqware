@@ -983,7 +983,8 @@ CREATE TABLE file (
     owner_id integer,
     sw_accession integer DEFAULT nextval('sw_accession_seq'::regclass),
     file_type_id integer,
-    size bigint
+    size bigint, 
+    skip boolean
 );
 
 

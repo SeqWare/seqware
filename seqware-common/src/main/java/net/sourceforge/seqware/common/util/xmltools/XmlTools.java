@@ -47,27 +47,8 @@ public class XmlTools {
 //        
 //        return true;
 //    }
-    /**
-     * <p>prettyPrint.</p>
-     *
-     * @param filename a {@link java.lang.String} object.
-     * @return a boolean.
-     */
-    public static boolean prettyPrint(String filename) {
-        Logger.getLogger(XmlTools.class).info("start");
-        // Parse input file
-        DocumentBuilderFactory dFactory = DocumentBuilderFactory.newInstance();
-        Document inputDOM = null;
-        try {
-            DocumentBuilder parser = dFactory.newDocumentBuilder();
-            inputDOM = parser.parse(new File(filename));
-        } catch (SAXException e1) {
-            e1.printStackTrace();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
+    
+    public static boolean prettyPrint(Document doc, OutputStream out) {
 
         TransformerFactory tfactory = TransformerFactory.newInstance();
         Transformer serializer;
@@ -76,18 +57,57 @@ public class XmlTools {
             //Setup indenting to "pretty print"
             serializer.setOutputProperty(OutputKeys.INDENT, "yes");
             serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-            filename = filename + "prettyprint";
-            serializer.transform(new DOMSource(inputDOM), new StreamResult(new FileOutputStream(filename)));
+            
+            serializer.transform(new DOMSource(doc), new StreamResult(out));
         } catch (TransformerException e) {
             // this is fatal, just dump the stack and throw a runtime exception
             e.printStackTrace();
 
             throw new RuntimeException(e);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
 
         return true;
+    }
+    
+    /**
+     * <p>prettyPrint.</p>
+     *
+     * @param filename a {@link java.lang.String} object.
+     * @return a boolean.
+     */
+    public static boolean prettyPrint(String filename){
+      Logger.getLogger(XmlTools.class).info("start");
+      // Parse input file
+      DocumentBuilderFactory dFactory = DocumentBuilderFactory.newInstance();
+      Document inputDOM = null;
+      try {
+          DocumentBuilder parser = dFactory.newDocumentBuilder();
+          inputDOM = parser.parse(new File(filename));
+          return prettyPrint(inputDOM, new FileOutputStream(filename+ "prettyprint"));
+      } catch (RuntimeException e){
+          throw e;
+      } catch (Exception e) {
+          throw new RuntimeException(e);
+      }
+      
+    }
+
+
+    public static String prettyPrintString(Document doc){
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      prettyPrint(doc, out);
+      return new String(out.toByteArray());
+    }
+    
+    public static String prettyPrintString(String xml){
+      try {
+        Document doc = XmlTools.getDocument(xml);
+        return prettyPrintString(doc);
+      } catch (RuntimeException e) {
+        throw e;
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
     }
 
     /**
