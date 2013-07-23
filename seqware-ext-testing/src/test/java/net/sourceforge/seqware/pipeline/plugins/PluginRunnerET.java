@@ -92,7 +92,9 @@ public class PluginRunnerET {
         Log.info("SeqWare version detected as: " + SEQWARE_VERSION);
 
         // for all tests, we're going to need to create and install our basic archetypes
-        String[] archetypes = {"java-workflow", "simplified-ftl-workflow", "legacy-ftl-workflow", "simple-legacy-ftl-workflow"};
+        //String[] archetypes = {"java-workflow", "simplified-ftl-workflow", "legacy-ftl-workflow", "simple-legacy-ftl-workflow"};
+        // we are now only testing Java workflows on the Oozie-* backends
+        String[] archetypes = {"java-workflow"};
         buildAndInstallArchetypes(archetypes, SEQWARE_VERSION, true, true);
         Assert.assertTrue("could not locate installed workflows", installedWorkflows.size() == archetypes.length);
         Assert.assertTrue("could not locate installed workflow paths", installedWorkflows.size() == bundleLocations.size());
