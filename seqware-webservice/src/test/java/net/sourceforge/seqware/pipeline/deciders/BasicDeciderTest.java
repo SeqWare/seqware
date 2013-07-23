@@ -28,7 +28,6 @@ import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.pipeline.deciders.BasicDecider.FILE_STATUS;
 import net.sourceforge.seqware.pipeline.plugins.PluginTest;
 import org.junit.*;
 
@@ -182,7 +181,7 @@ public class BasicDeciderTest extends PluginTest {
         TestingDecider decider = (TestingDecider) instance;
         // we expect to see 133 files in total
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 96);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 97);
     }
     
     @Test
@@ -384,7 +383,7 @@ public class BasicDeciderTest extends PluginTest {
         
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun) == BasicDecider.FILE_STATUS.SAME_FILES_SAME_PATHS_3);
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun) == BasicDecider.FILE_STATUS.SAME_FILES);
     }
 
     /**
@@ -403,7 +402,7 @@ public class BasicDeciderTest extends PluginTest {
         int workflowRunAcc = 6654;
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun) == BasicDecider.FILE_STATUS.MORE_CURRENT_FILES_1);
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun) == BasicDecider.FILE_STATUS.PAST_SUBSET_OR_INTERSECTION);
     }
 
     /**
@@ -421,7 +420,7 @@ public class BasicDeciderTest extends PluginTest {
         int workflowRunAcc = 6654;
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun) == BasicDecider.FILE_STATUS.SAME_FILES_DIFFERENT_PATHS_2);
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun) == BasicDecider.FILE_STATUS.PAST_SUBSET_OR_INTERSECTION);
     }
 
     /**
@@ -438,7 +437,24 @@ public class BasicDeciderTest extends PluginTest {
         int workflowRunAcc = 6654;
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun) == BasicDecider.FILE_STATUS.MORE_PAST_FILES_4);
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun) == BasicDecider.FILE_STATUS.PAST_SUBSET_OR_INTERSECTION);
+    }
+    
+        /**
+     * <p>testCompareWorkflowRunFiles_Smaller.</p>
+     */
+    @Test
+    public void testCompareWorkflowRunFiles_Disjoint() {
+        TestingDecider decider = (TestingDecider) instance;
+        decider.setMetaws((MetadataWS)metadata);
+        decider.setMetaType(fastq_gz);
+
+        List<String> filesToRun = new ArrayList<String>();
+        filesToRun.add("s3://garbage.gz");
+        int workflowRunAcc = 6654;
+
+        //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(workflowRunAcc, filesToRun) == BasicDecider.FILE_STATUS.DISJOINT_SETS);
     }
 
     /**
