@@ -996,7 +996,7 @@ public class Main {
       } else if ("report".equals(cmd)) {
         workflowRunReport(args);
       } else {
-        invalid("workflow", cmd);
+        invalid("workflow-run", cmd);
       }
     }
   }
