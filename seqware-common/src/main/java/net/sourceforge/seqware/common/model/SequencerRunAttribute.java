@@ -6,7 +6,7 @@ package net.sourceforge.seqware.common.model;
  * @author boconnor
  * @version $Id: $Id
  */
-public class SequencerRunAttribute implements java.io.Serializable, Attribute, Comparable<SequencerRunAttribute> {
+public class SequencerRunAttribute implements java.io.Serializable, Attribute<SequencerRunWizardDTO>, Comparable<SequencerRunAttribute> {
 
   private static final long serialVersionUID = 1L;
   private Integer sequencerRunAttributeId;
@@ -154,6 +154,11 @@ public class SequencerRunAttribute implements java.io.Serializable, Attribute, C
 	public int compareTo(SequencerRunAttribute t) {
 		return this.tag.compareTo(t.tag);
 	}
+
+    @Override
+    public void setAttributeParent(SequencerRunWizardDTO parent) {
+        this.setSequencerRunWizardDTO(parent);
+    }
 
 
 

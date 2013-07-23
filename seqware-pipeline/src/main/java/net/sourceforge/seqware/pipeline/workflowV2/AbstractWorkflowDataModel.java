@@ -368,7 +368,7 @@ public abstract class AbstractWorkflowDataModel  {
 	 * default is pegasus
 	 * @param workflow_engine
 	 */
-	void setWorkflow_engine(String workflow_engine) {
+	public void setWorkflow_engine(String workflow_engine) {
 		this.workflow_engine = workflow_engine;
 	}
 	

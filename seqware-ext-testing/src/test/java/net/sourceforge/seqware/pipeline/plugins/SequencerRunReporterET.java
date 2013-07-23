@@ -24,7 +24,7 @@ import java.util.UUID;
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.pipeline.modules.utilities.ExternalTestingUtility;
+import net.sourceforge.seqware.metadb.util.TestDatabaseCreator;
 import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,11 +35,11 @@ import org.junit.Test;
  *
  * @author dyuen
  */
-public class SequencerRunReporterIT {
+public class SequencerRunReporterET {
     
     @BeforeClass
     public static void resetDatabase() {
-        ExternalTestingUtility.resetDatabaseWithUsers();
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
 
     @Test

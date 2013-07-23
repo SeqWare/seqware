@@ -46,6 +46,8 @@ SW_METADATA_METHOD=webservice
 SW_BUNDLE_DIR=/home/seqware/SeqWare/provisioned-bundles
 # the central repository for installed bundles
 SW_BUNDLE_REPO_DIR=/home/seqware/SeqWare/released-bundles
+# the default engine to use if otherwise unspecified (one of: pegasus, oozie, oozie-sge)
+SW_DEFAULT_WORKFLOW_ENGINE=oozie-sge
 #
 # SEQWARE PIPELINE SETTINGS
 # PEGASUS WORKFLOW ENGINE SETTINGS
@@ -68,6 +70,18 @@ OOZIE_JOBTRACKER=localhost:8021
 OOZIE_NAMENODE=hdfs://localhost:8020
 OOZIE_QUEUENAME=default
 OOZIE_WORK_DIR=/usr/tmp/seqware-oozie
+
+#
+# OOZIE-SGE SETTINGS:
+
+# Format of qsub flag for specifying number of threads.
+# If present, ${threads} will be replaced with the job-specific value.
+OOZIE_SGE_THREADS_PARAM_FORMAT=-pe serial ${threads}
+
+# Format of qsub flag for specifying the max memory.
+# If present, ${maxMemory} will be replaced with the job-specific value.
+OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT=-l h_vmem=${maxMemory}M
+
 #
 # SEQWARE WEBSERVICE SETTINGS
 # these settings are only used if the SW_METADATA_METHOD=webservice
@@ -85,6 +99,22 @@ SW_DB_USER=seqware
 SW_DB_PASS=seqware
 SW_DB_SERVER=localhost
 SW_DB=test_seqware_meta_db
+
+## Test databases
+## Used only by SeqWare developers, these settings override the database supporting the extended integration tests
+## WARNING: If used, seqware will automatically drop, mutate, and re-create these databases. In addition, 
+## the SW_REST_URL will be used for tests against a webservice. 
+
+#BASIC_TEST_DB_HOST=sqwdev.res.oicr.on.ca
+#BASIC_TEST_DB_NAME=seqware_meta_db_2013_07_04_preindex
+#BASIC_TEST_DB_USER=seqware
+#BASIC_TEST_DB_PASSWORD=seqware
+
+#EXTENDED_TEST_DB_HOST=sqwdev.res.oicr.on.ca
+#EXTENDED_TEST_DB_NAME=seqware_meta_db_2013_07_04_preindex
+#EXTENDED_TEST_DB_USER=seqware
+#EXTENDED_TEST_DB_PASSWORD=seqware
+
 #
 # AMAZON CLOUD SETTINGS (OPTIONAL)
 # used by tools reading and writing to S3 buckets (dependency data/software bundles, inputs, outputs, etc)

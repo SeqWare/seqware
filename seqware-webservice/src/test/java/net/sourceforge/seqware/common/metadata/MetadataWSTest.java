@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -34,6 +35,8 @@ import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.webservice.resources.tables.FileChildWorkflowRunsResource;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
+import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import org.apache.log4j.Logger;
 import org.junit.*;
 
@@ -44,6 +47,21 @@ import org.junit.*;
 public class MetadataWSTest {
 
     protected static Metadata instance;
+
+    public static void configureTestMetadataInstance(Metadata instance) {
+        // if an alternative database is set, then we need to redirect to look at the defined REST URL
+        Map<String, String> settings = new HashMap<String, String>();
+        try {
+            settings = ConfigTools.getSettings();
+        } catch (Exception e) {
+            Log.stderr("Error reading settings file: " + e.getMessage());
+        }
+        if (settings.containsKey(BasicTestDatabaseCreator.BASIC_TEST_DB_HOST_KEY)){
+            instance.init(settings.get("SW_REST_URL"), settings.get("SW_REST_USER"), settings.get("SW_REST_PASS"));
+        } else{
+            instance.init("http://localhost:8889/seqware-webservice", "admin@admin.com", "admin");
+        }
+    }
     private Logger logger;
 
     public MetadataWSTest() {
@@ -53,7 +71,7 @@ public class MetadataWSTest {
     @BeforeClass
     public static void setUpClass() throws Exception {
         instance = new MetadataWS();
-        instance.init("http://localhost:8889/seqware-webservice", "admin@admin.com", "admin");
+        configureTestMetadataInstance(instance);
     }
 
     @AfterClass
@@ -530,7 +548,7 @@ public class MetadataWSTest {
         String host = "localhost";
         String testEngine = "test engine";
         int expResult = 2862;
-        ReturnValue result = instance.update_workflow_run(workflowRunId, pegasusCmd, workflowTemplate, status, statusCmd, workingDirectory, dax, ini, host, 0, 0, null, null, testEngine);
+        ReturnValue result = instance.update_workflow_run(workflowRunId, pegasusCmd, workflowTemplate, status, statusCmd, workingDirectory, dax, ini, host, null, null, testEngine);
         Assert.assertEquals(expResult, result.getReturnValue());
         testTimestamp("select update_tstmp from workflow_run "
                 + "where workflow_run_id=32;", "update_tstmp", beforeDate);

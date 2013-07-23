@@ -168,7 +168,7 @@ public class MarkdownPlugin extends Plugin {
             String[] vals = valueOf.toString().split(",");
             toSkip.addAll(Arrays.asList(vals));
         }
-
+        
         if (options.has("modules")) {
             Collection<ModuleInterface> mods;
             mods = (Collection<ModuleInterface>) Lookup.getDefault().lookupAll(ModuleInterface.class);
@@ -279,7 +279,7 @@ public class MarkdownPlugin extends Plugin {
         if (skip.contains(simpleName)) {
             return;
         }
-
+            
         bufferedWriter.newLine();
         bufferedWriter.append("##  " + simpleName);
         bufferedWriter.newLine();
