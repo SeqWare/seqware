@@ -6,7 +6,7 @@ package net.sourceforge.seqware.common.model;
  * @author boconnor
  * @version $Id: $Id
  */
-public interface Attribute {
+public interface Attribute<T> {
 
   /**
    * <p>getTag.</p>
@@ -50,4 +50,9 @@ public interface Attribute {
    */
   public void setUnit(String unit);
 
+  /**
+   * Associate this attribute with its parent
+   * @param parent 
+   */
+  public void setAttributeParent(T parent);
 }

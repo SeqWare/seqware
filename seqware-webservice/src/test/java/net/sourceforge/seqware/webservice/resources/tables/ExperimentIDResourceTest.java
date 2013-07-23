@@ -16,11 +16,9 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import junit.framework.Assert;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
-import org.restlet.representation.Representation;
 
 /**
  *

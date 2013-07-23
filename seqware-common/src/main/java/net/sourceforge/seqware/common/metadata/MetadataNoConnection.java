@@ -1,5 +1,7 @@
 package net.sourceforge.seqware.common.metadata;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,10 +11,35 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import net.sourceforge.seqware.common.model.*;
+
+import net.sourceforge.seqware.common.model.Experiment;
+import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.FileAttribute;
+import net.sourceforge.seqware.common.model.IUS;
+import net.sourceforge.seqware.common.model.IUSAttribute;
+import net.sourceforge.seqware.common.model.Lane;
+import net.sourceforge.seqware.common.model.LaneAttribute;
+import net.sourceforge.seqware.common.model.LibrarySelection;
+import net.sourceforge.seqware.common.model.LibrarySource;
+import net.sourceforge.seqware.common.model.LibraryStrategy;
+import net.sourceforge.seqware.common.model.Organism;
+import net.sourceforge.seqware.common.model.Platform;
+import net.sourceforge.seqware.common.model.ProcessingAttribute;
+import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.common.model.SampleAttribute;
+import net.sourceforge.seqware.common.model.SequencerRun;
+import net.sourceforge.seqware.common.model.SequencerRunAttribute;
+import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.model.StudyAttribute;
+import net.sourceforge.seqware.common.model.StudyType;
+import net.sourceforge.seqware.common.model.Workflow;
+import net.sourceforge.seqware.common.model.WorkflowAttribute;
+import net.sourceforge.seqware.common.model.WorkflowParam;
+import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import org.apache.commons.lang.NotImplementedException;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -30,6 +57,30 @@ import org.apache.log4j.Logger;
 public class MetadataNoConnection extends Metadata {
 
   private Logger logger = Logger.getLogger(MetadataNoConnection.class);
+
+  
+  
+  @Override
+  public void studyReport(String studyTitle, Writer out) {
+    try {
+      out.write("Last Modified\tStudy Title\tStudy SWID\tStudy Attributes\tExperiment Name\tExperiment SWID\tExperiment Attributes\tParent Sample Name\tParent Sample SWID\tParent Sample Attributes\tSample Name\tSample SWID\tSample Attributes\tSequencer Run Name\tSequencer Run SWID\tSequencer Run Attributes\tLane Name\tLane Number\tLane SWID\tLane Attributes\tIUS Tag\tIUS SWID\tIUS Attributes\tWorkflow Name\tWorkflow Version\tWorkflow SWID\tWorkflow Run Name\tWorkflow Run Status\tWorkflow Run SWID\tProcessing Algorithm\tProcessing SWID\tProcessing Attributes\tFile Meta-Type\tFile SWID\tFile Path");
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  
+  
+  @Override
+  public void allStudiesReport(Writer out) {
+    try {
+      out.write("Last Modified\tStudy Title\tStudy SWID\tStudy Attributes\tExperiment Name\tExperiment SWID\tExperiment Attributes\tParent Sample Name\tParent Sample SWID\tParent Sample Attributes\tSample Name\tSample SWID\tSample Attributes\tSequencer Run Name\tSequencer Run SWID\tSequencer Run Attributes\tLane Name\tLane Number\tLane SWID\tLane Attributes\tIUS Tag\tIUS SWID\tIUS Attributes\tWorkflow Name\tWorkflow Version\tWorkflow SWID\tWorkflow Run Name\tWorkflow Run Status\tWorkflow Run SWID\tProcessing Algorithm\tProcessing SWID\tProcessing Attributes\tFile Meta-Type\tFile SWID\tFile Path");
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
 
   /** {@inheritDoc} */
   @Override
@@ -275,7 +326,7 @@ public class MetadataNoConnection extends Metadata {
   /** {@inheritDoc} */
   @Override
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
-      String statusCmd, String workingDirectory, String dax, String ini, String host, int currStep, int totalSteps,
+      String statusCmd, String workingDirectory, String dax, String ini, String host,
       String stdErr, String stdOut, String workflowEngine) {
     logger.info("No metadata connection");
     ReturnValue finished = new ReturnValue(ReturnValue.PROCESSING);
@@ -662,5 +713,15 @@ public class MetadataNoConnection extends Metadata {
     @Override
     public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
         return new ArrayList<WorkflowRun>();
+    }
+
+    @Override
+    public void annotateFile(int laneSWID, FileAttribute iusAtt, Boolean skip) {
+        logger.info("No metadata connection");
+    }
+
+    @Override
+    public void annotateFile(int fileSWID, Set<FileAttribute> iusAtts) {
+       logger.info("No metadata connection");
     }
 }

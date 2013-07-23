@@ -13,7 +13,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @author boconnor
  * @version $Id: $Id
  */
-public class StudyAttribute implements java.io.Serializable, Comparable<StudyAttribute>, Attribute {
+public class StudyAttribute implements java.io.Serializable, Comparable<StudyAttribute>, Attribute<Study> {
 
   private static final long serialVersionUID = 1L;
   private int studyAttributeId;
@@ -172,4 +172,9 @@ public class StudyAttribute implements java.io.Serializable, Comparable<StudyAtt
 	public int hashCode() {
 		return new HashCodeBuilder(17,37).append(tag).toHashCode();
 	}
+
+    @Override
+    public void setAttributeParent(Study parent) {
+        this.setStudy(parent);
+    }
 }
