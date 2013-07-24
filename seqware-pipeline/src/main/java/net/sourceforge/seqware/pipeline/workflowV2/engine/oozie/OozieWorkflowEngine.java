@@ -163,6 +163,11 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 
   }
 
+  @Override
+  public String getWorkingDirectory() {
+    return dir == null ? null : dir.getAbsolutePath();
+  }
+
   /**
    * return a workflow.xml for hadoop
    * 

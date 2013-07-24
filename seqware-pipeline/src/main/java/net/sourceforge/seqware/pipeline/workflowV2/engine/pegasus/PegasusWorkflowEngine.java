@@ -39,6 +39,11 @@ public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
     env = objectModel.getEnv();
   }
 
+  @Override
+  public String getWorkingDirectory() {
+    return null;
+  }
+
   private static File parseDataModel(AbstractWorkflowDataModel objectModel) {
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
