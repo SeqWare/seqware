@@ -175,7 +175,7 @@ public abstract class Module implements ModuleInterface {
         quoteString = "\"";
         readingQuoteString = true;
         buffer.append(param.substring(1));
-      } else if (param.startsWith("'") && !readingQuoteString) {
+      } else if (param.startsWith("'") && !param.endsWith("'") && !readingQuoteString) {
         quoteString = "'";
         readingQuoteString = true;
         buffer.append(param.substring(1));
