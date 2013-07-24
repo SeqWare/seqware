@@ -268,11 +268,11 @@ public class Main {
     }
   }
 
-  private static void bundleLaunch(List<String> args) {
+  private static void bundleTest(List<String> args) {
     if (isHelp(args, true)) {
       out("");
-      out("Usage: seqware bundle launch [--help]");
-      out("       seqware bundle launch --dir <bundle-dir>");
+      out("Usage: seqware bundle test [--help]");
+      out("       seqware bundle test --dir <bundle-dir>");
       out("");
       out("Parameters:");
       out("  --dir <bundle-dir>  The root directory of the bundle");
@@ -280,7 +280,7 @@ public class Main {
     } else {
       String dir = reqVal(args, "--dir");
 
-      extras(args, "bundle launch");
+      extras(args, "bundle test");
 
       run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--test", "--bundle", dir);
     }
@@ -332,23 +332,20 @@ public class Main {
       out("");
       out("Sub-commands:");
       out("  install   Inform the Seqware system of the availability of a bundle");
-      out("  launch    Launch a workflow from within a bundle directory");
+      out("  test      Test-launch the workflows in a bundle directory");
       out("  list      List workflows within a bundle directory");
       out("  package   Package a bundle directory into a zip file");
-      out("  validate  Validate that the bundle directory is structured correctly");
       out("");
     } else {
       String cmd = args.remove(0);
       if ("install".equals(cmd)) {
         bundleInstall(args);
       } else if ("launch".equals(cmd)) {
-        bundleLaunch(args);
+        bundleTest(args);
       } else if ("list".equals(cmd)) {
         bundleList(args);
       } else if ("package".equals(cmd)) {
         bundlePackage(args);
-      } else if ("validate".equals(cmd)) {
-        bundleValidate(args);
       } else {
         invalid("bundle", cmd);
       }
