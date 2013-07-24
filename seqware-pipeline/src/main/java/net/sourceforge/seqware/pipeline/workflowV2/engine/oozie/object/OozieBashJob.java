@@ -50,8 +50,12 @@ public class OozieBashJob extends OozieJob {
     return java;
   }
 
+  public static String scriptFileName(String jobName){
+    return jobName + ".sh";
+  }
+
   private File emitJobScript() {
-    File file = file(scriptsDir, name + ".sh", true);
+    File file = file(scriptsDir, scriptFileName(name), true);
 
     StringBuilder contents = new StringBuilder("#!/usr/bin/env bash\n\n");
     contents.append("cd ");
@@ -67,7 +71,7 @@ public class OozieBashJob extends OozieJob {
   }
 
   private File emitRunnerScript(File jobScript) {
-    File file = file(scriptsDir, name + "-runner.sh", true);
+    File file = file(scriptsDir, runnerFileName(name), true);
 
     ArrayList<String> args = new ArrayList<String>();
     args.add("java");
