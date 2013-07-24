@@ -878,7 +878,7 @@ public class Main {
       out("Optional parameters:");
       out("  --accession <swid>   Launch the specified workflow-run");
       out("                       Repeat this parameter to provide multiple runs");
-
+      out("");
     } else {
       List<String> ids = optVals(args, "--accession");
       
@@ -901,6 +901,7 @@ public class Main {
       out("Optional arameters:");
       out("  --accession <swid>   Launch the specified workflow-run");
       out("  --threads <num>      The number of concurrent worker threads (default 1)");
+      out("");
     } else {
       String threads = optVal(args, "--threads", null);
       String wfr = optVal(args, "--accession", null);
@@ -920,6 +921,8 @@ public class Main {
         runnerArgs.add("--workflow-run-accession");
         runnerArgs.add(wfr);
       }
+      
+      run(runnerArgs);
     }
   }
 
