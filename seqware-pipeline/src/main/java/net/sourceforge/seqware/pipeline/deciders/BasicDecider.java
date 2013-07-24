@@ -18,6 +18,7 @@ package net.sourceforge.seqware.pipeline.deciders;
 
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
@@ -37,6 +38,7 @@ import net.sourceforge.seqware.pipeline.decider.DeciderInterface;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
+import net.sourceforge.seqware.pipeline.tools.SetOperations;
 import org.apache.commons.lang.StringUtils;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -348,36 +350,23 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private ReturnValue launchWorkflows(Map<String, List<ReturnValue>> mappedFiles) {
         if (mappedFiles != null) {
 
-            for (String key : mappedFiles.keySet()) {
-                Log.info("Considering key:" + key);
+            for (Entry<String, List<ReturnValue>> entry : mappedFiles.entrySet()) {
+                Log.info("Considering key:" + entry.getKey());
 
                 parentAccessionsToRun = new HashSet<String>();
                 filesToRun = new HashSet<String>();
                 workflowParentAccessionsToRun = new HashSet<String>();
 
-                //List<String> previousWorkflowRuns = new ArrayList<String>();
-
                 //for each grouping (e.g. sample), iterate through the files
-                List<ReturnValue> files = mappedFiles.get(key);
-                Log.info("key:" + key + " consists of " + files.size() + " files");
+                List<ReturnValue> files = entry.getValue();
+                Log.info("key:" + entry.getKey() + " consists of " + files.size() + " files");
                 List<Integer> fileSWIDs = new ArrayList<Integer>();
                 
                 for (ReturnValue file : files) {
                     String wfAcc = file.getAttribute(Header.WORKFLOW_SWA.getTitle());
                     String fileSWID = file.getAttribute(Header.FILE_SWA.getTitle());
                     fileSWIDs.add(Integer.valueOf(fileSWID));
-//                    Log.debug(Header.WORKFLOW_SWA.getTitle() + ": WF accession is " + wfAcc);
-                    //We're allowing everything that produced this type of file 
-                    //other than the same workflow
-                    
-// the previous way of looking for workflow runs via FindAllFiles was not a good idea, we will instead use a new resource to find relevant
-// workflow runs
-//                    if (wfAcc != null) {
-//                        if (workflowAccessionsToCheck.contains(wfAcc) || workflowAccession.equals(wfAcc)) {
-//                            Log.trace("Found previous workflow run:" + file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
-//                            previousWorkflowRuns.add(file.getAttribute(Header.WORKFLOW_RUN_SWA.getTitle()));
-//                        }
-//                    }
+                    Log.debug(Header.WORKFLOW_SWA.getTitle() + ": WF accession is " + wfAcc);
 
                     //if there is no parent accessions, or if the parent accession is correct
                     //this makes an assumption that if the wfAcc is null then the parentWorkflowAccessions will be empty
@@ -425,15 +414,16 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     if (test || !rerun){
                         // we need to simplify the logic and make it more readable here for testing
                         if (rerun){
-                            Log.debug("NOT RUNNING. test=" + test + " or !rerun=" + !rerun);
+                            Log.debug("NOT RUNNING (but would have ran). test=" + test + " or !rerun=" + !rerun);
                             reportLaunch();
-                            Log.stdout("Tested key: " + key + " would have launched");
+                            // SEQWARE-1642 - output to stdout only whether a decider would launch
+                            ret = do_summary();
+                            launched++;
                         } else{
-                            Log.debug("NOT RUNNING. test=" + test + " or !rerun=" + !rerun);
-                            Log.stdout("Tested key: " + key + " would not have launched");
+                            Log.debug("NOT RUNNING (and would not have ran). test=" + test + " or !rerun=" + !rerun);
                         }
-                        ret = do_summary();
-                    } else if (launched++ < launchMax) {
+                    } else if (launched < launchMax) {
+                        launched++;
                         //construct the INI and run it
                         Log.debug("RUNNING");
 //                        // setup workflow object
@@ -453,9 +443,13 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                         Log.stdout("Launching.");
                         do_summary();
                         
-                    } else {
-                        Log.info("The maximum number of jobs has been launched. The next jobs will be launched when the decider runs again.");
+                    } 
+                    // separate this out so that it is reachable when in --test
+                    if (launched >= launchMax) {
+                        Log.info("The maximum number of jobs has been "+(runNow?"launched":"scheduled")+". The next jobs will be launched when the decider runs again.");
                         ret.setExitStatus(ReturnValue.QUEUED);
+                        // SEQWARE-1666 - short-circuit and exit when the maximum number of jobs have been launched
+                        return ret;
                     }
                 } else {
                     Log.debug("Cannot run: parentAccessions: "+parentAccessionsToRun.size() + " filesToRun: "+ filesToRun.size()+ " workflowParentAccessions: "+ workflowParentAccessionsToRun.size());
@@ -507,24 +501,24 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      */
     protected boolean rerunWorkflowRun(final Collection<String> filesToRun, List<Integer> fileSWIDs) {
         
-        boolean rerun = true;
+        boolean rerun;
         List<Boolean> failures = new ArrayList<Boolean>();
         List<WorkflowRun> runs1 = produceAccessionListWithFileList(fileSWIDs, "CHILDREN_VIA_PROCESSING_RELATIONSHIP");
         rerun = processWorkflowRuns(filesToRun, failures, runs1);
         if (!rerun){
-            Log.debug("This workflow has failed to launch based on workflow runs via Processing");
+            Log.debug("This workflow has failed to launch based on workflow runs found via Processing");
             return rerun;
         }
         List<WorkflowRun> runs2 = produceAccessionListWithFileList(fileSWIDs, "CHILDREN_VIA_IUS_WORKFLOW_RUN");
         rerun = processWorkflowRuns(filesToRun, failures, runs2);
         if (!rerun){
-            Log.debug("This workflow has failed to launch based on workflow runs via IUS");
+            Log.debug("This workflow has failed to launch based on workflow runs found via IUS");
             return rerun;
         }
         List<WorkflowRun> runs3 = produceAccessionListWithFileList(fileSWIDs, "CHILDREN_VIA_LANE_WORKFLOW_RUN");
         rerun = processWorkflowRuns(filesToRun, failures, runs3);
         if (!rerun){
-            Log.debug("This workflow has failed to launch based on workflow runs via Lane");
+            Log.debug("This workflow has failed to launch based on workflow runs found via Lane");
             return rerun;
         }
         if (failures.size() >= this.rerunMax) {
@@ -553,23 +547,17 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     /**
      * Returns true if the filesToRun are totally contained by the files associated with the 
      * files in a given workflowRunAcc
-     * @param workflowRunAcc
-     * @param filesToRun
+     * @param workflowRunAcc accession of the workflow run to compare against
+     * @param filesToRun the files to check to see if they are contained by the past run
      * @return 
      */
     protected boolean isToRunContained(int workflowRunAcc, Collection<String> filesToRun) {
         List<String> ranOnList = getListOfFiles(workflowRunAcc);
         Log.info("Files to run: " + StringUtils.join(filesToRun,','));
-        if (ranOnList.size() >= filesToRun.size()) {
-            for (String file : ranOnList) {
-                //checks to see if the files in filesToRun are different from those it has ran on previously
-                if (!ranOnList.contains(file)) {
-                    return false;
-                }
-                return true;
-            }
-        }
-        return false;
+        // use set operations to be more explicit about our cases
+        Set<String> setToRun = new HashSet<String>(filesToRun);
+        Set<String> setHasRun = new HashSet<String>(ranOnList);
+        return SetOperations.isSuperset(setHasRun, setToRun);
     }
     
     /**
@@ -584,26 +572,24 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     protected FILE_STATUS compareWorkflowRunFiles(int workflowRunAcc, Collection<String> filesToRun) {
         List<String> ranOnList = getListOfFiles(workflowRunAcc);
         Log.info("Files to run: " + StringUtils.join(filesToRun,','));
-        if (ranOnList.size() < filesToRun.size()) {
-            return FILE_STATUS.MORE_CURRENT_FILES_1;
-        } else if (ranOnList.size() == filesToRun.size()) {
-            boolean rerun = false;
-            for (String file : ranOnList) {
-                //checks to see if the files in filesToRun are different from those it has ran on previously
-                if (!filesToRun.contains(file)) {
-                    rerun = true;
-                }
-            }
-            if (rerun){
-                return FILE_STATUS.SAME_FILES_DIFFERENT_PATHS_2;
-            }
-            return FILE_STATUS.SAME_FILES_SAME_PATHS_3;
-        } else {
-            Log.error("There are fewer files to run on in the database than were previously run on this sample!");
-            Log.error("Files found to run in database: " + filesToRun.size());
-            Log.error("But yet workflow run " + workflowRunAcc + " ran on " + ranOnList.size());
-            return FILE_STATUS.MORE_PAST_FILES_4;
+        Log.info("Files has run: " + StringUtils.join(ranOnList,','));
+
+        // use set operations to be more explicit about our cases
+        Set<String> setToRun = new HashSet<String>(filesToRun);
+        Set<String> setHasRun = new HashSet<String>(ranOnList);
+        if (setToRun.equals(setHasRun)){
+            return FILE_STATUS.SAME_FILES;
         }
+        if (SetOperations.isSubset(setHasRun, setToRun)){
+            return FILE_STATUS.PAST_SUBSET_OR_INTERSECTION;
+        }
+        if (SetOperations.isSuperset(setHasRun, setToRun)){
+            return FILE_STATUS.PAST_SUPERSET;
+        }
+        if (SetOperations.intersection(setToRun, setHasRun).size() > 0){
+            return FILE_STATUS.PAST_SUBSET_OR_INTERSECTION;
+        }
+        return FILE_STATUS.DISJOINT_SETS;
     }
 
     private void addFileToSets(ReturnValue file, FileMetadata fm, Collection<String> workflowParentAccessionsToRun,
@@ -761,13 +747,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     @Override
     public ReturnValue do_summary() {
-        StringBuilder command = new StringBuilder();
-        command.append("\njava -jar seqware-full.jar ");
-        command.append(spaceSeparateMy(constructCommand()));
-        command.append("\n");
-
-        Log.stdout(command.toString());
-
+        String command = do_summary_command();
+        Log.stdout(command);
         return ret;
     }
 
@@ -864,8 +845,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * @return
      */
     protected ReturnValue doFinalCheck(String commaSeparatedFilePaths, String commaSeparatedParentAccessions) {
-        ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-        return ret;
+        ReturnValue checkReturnValue = new ReturnValue(ReturnValue.SUCCESS);
+        return checkReturnValue;
     }
 
     /**
@@ -879,11 +860,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private Map<String, String> generateWorkflowRunMap(int workflowRunAcc) {
         String report = metaws.getWorkflowRunReport(workflowRunAcc);
         String[] lines = report.split("\n");
-        String[] header = lines[0].split("\t");
+        String[] reportHeader = lines[0].split("\t");
         String[] data = lines[1].split("\t");
         Map<String, String> map = new TreeMap<String, String>();
-        for (int i = 0; i < header.length; i++) {
-            map.put(header[i].trim(), data[i].trim());
+        for (int i = 0; i < reportHeader.length; i++) {
+            map.put(reportHeader[i].trim(), data[i].trim());
         }
         return map;
     }
@@ -908,33 +889,37 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * @return 
      */
     protected static boolean isCountAsFail(FILE_STATUS fileStatus, PREVIOUS_RUN_STATUS previousStatus) {
-        return (fileStatus == FILE_STATUS.SAME_FILES_SAME_PATHS_3 && previousStatus == PREVIOUS_RUN_STATUS.FAILED);
+        return (fileStatus == FILE_STATUS.SAME_FILES && previousStatus == PREVIOUS_RUN_STATUS.FAILED);
     }
 
     /**
-     * We want to re-run in a variety of conditions. a) when we have more files
-     * now and we failed in the past b) when we have more files now and we
-     * completed in the past c) when we have the same files on different paths
-     * and we failed in the past d) when we have the same files on different
-     * paths and we completed in the past e) when we have the same files on same
-     * paths and we failed in the past f) when we have more files in the past we
-     * failed in the past (but add a warning message)
-     *
+     * See https://wiki.oicr.on.ca/display/SEQWARE/BasicDecider+logic
      * @param fileStatus
      * @param previousStatus
      * @return
      */
     protected static boolean isDoRerun(FILE_STATUS fileStatus, PREVIOUS_RUN_STATUS previousStatus) {
-        boolean strangeCondition = fileStatus == FILE_STATUS.MORE_PAST_FILES_4 && previousStatus == PREVIOUS_RUN_STATUS.FAILED;
+        Log.info("Considering match with " + fileStatus.name() + " status:" + previousStatus.name());
+        boolean strangeCondition = fileStatus == FILE_STATUS.PAST_SUPERSET && previousStatus == PREVIOUS_RUN_STATUS.FAILED;
         if (strangeCondition){
             Log.stderr("****** Workflow run has more files in the past but failed. We will try to re-run, but you should investigate!!!! *******");
         }
-        return (fileStatus == FILE_STATUS.MORE_CURRENT_FILES_1 && previousStatus == PREVIOUS_RUN_STATUS.FAILED)
-                || (fileStatus == FILE_STATUS.MORE_CURRENT_FILES_1 && previousStatus == PREVIOUS_RUN_STATUS.COMPLETED)
-                || (fileStatus == FILE_STATUS.SAME_FILES_DIFFERENT_PATHS_2 && previousStatus == PREVIOUS_RUN_STATUS.FAILED)
-                || (fileStatus == FILE_STATUS.SAME_FILES_DIFFERENT_PATHS_2 && previousStatus == PREVIOUS_RUN_STATUS.COMPLETED)
-                || (fileStatus == FILE_STATUS.SAME_FILES_SAME_PATHS_3 && previousStatus == PREVIOUS_RUN_STATUS.FAILED)
-                || strangeCondition;
+        boolean doRerun = true;
+        if (fileStatus == FILE_STATUS.PAST_SUBSET_OR_INTERSECTION){
+            if (previousStatus == PREVIOUS_RUN_STATUS.OTHER){
+                doRerun = false;     
+            } else{
+                doRerun = true;
+            }
+        }
+        else if (fileStatus == FILE_STATUS.SAME_FILES || fileStatus == FILE_STATUS.PAST_SUPERSET){ 
+             if (previousStatus == PREVIOUS_RUN_STATUS.FAILED){
+                doRerun = true;
+             } else{
+                doRerun = false;
+             }
+        } 
+        return doRerun;
     }
 
     private List<WorkflowRun> produceAccessionListWithFileList(List<Integer> fileSWIDs, String searchType) {
@@ -953,14 +938,12 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * @return 
      */
     private boolean processWorkflowRuns(Collection<String> filesToRun, List<Boolean> failures, List<WorkflowRun> previousWorkflowRuns) {
-        int outerCount = 0; 
-        int innerCount = 0;
+        int count = 0; 
         boolean rerun = true;
         for (WorkflowRun previousWorkflowRun : previousWorkflowRuns) {
-            outerCount++;
+            count++;
             // only consider previous runs of the same workflow
             if (workflowAccession.equals(previousWorkflowRun.getWorkflowAccession().toString())) {
-                innerCount++;
                 FILE_STATUS fileStatus = compareWorkflowRunFiles(previousWorkflowRun.getSwAccession(), filesToRun);
                 Log.info("Workflow run " + previousWorkflowRun.getSwAccession() + " has a file status of " + fileStatus);
                 PREVIOUS_RUN_STATUS previousStatus = determineStatus(previousWorkflowRun.getSwAccession());
@@ -971,12 +954,12 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 
                 if (countAsFail){
                     Log.info("Workflow run " + previousWorkflowRun.getSwAccession() + " counted as a failure with a file status of " + fileStatus);
-                    Log.info("The failing run was workflow_run " + outerCount + "/" + innerCount + " out of " + previousWorkflowRuns.size());
+                    Log.info("The failing run was workflow_run " + count  + "/" + previousWorkflowRuns.size() + " out of " + previousWorkflowRuns.size());
                     failures.add(true);
                 }
                 if (!doRerun){
                     Log.info("Workflow run " + previousWorkflowRun.getSwAccession() + " blocking re-run with a status of: " +previousStatus+"  file status of: " + fileStatus);
-                    Log.info("The blocking run was workflow_run " + outerCount + "/" + innerCount + " out of " + previousWorkflowRuns.size());
+                    Log.info("The blocking run was workflow_run " + count + "/" + previousWorkflowRuns.size() + " out of " + previousWorkflowRuns.size());
                     rerun = false;
                     break;
                 }
@@ -1019,33 +1002,45 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         ranOnList = new ArrayList<String>();
         for (Integer i:indices) {
             ranOnList.add(ranOnArr[i].trim());
-            Log.stdout("Adding item: " + ranOnArr[i]);
+            Log.trace("Adding item: " + ranOnArr[i]);
         }
-        Log.info("Ran on: " + StringUtils.join(ranOnList,','));
+        Log.debug("Got list of files: " + StringUtils.join(ranOnList,','));
         return ranOnList;
+    }
+
+    private String do_summary_command() {
+        StringBuilder command = new StringBuilder();
+        // SEQWARE-1612 Change test command to actual jar name
+        String SEQWARE_VERSION = this.metadata.getClass().getPackage().getImplementationVersion();
+        command.append("\njava -jar seqware-distribution-").append(SEQWARE_VERSION).append("-full.jar ");
+        command.append(spaceSeparateMy(constructCommand()));
+        command.append("\n");
+        return command.toString();
     }
     
     /**
      * These file statuses reflect the discussion at  
-     * https://wiki.oicr.on.ca/display/SEQWARE/2013/01/15/Jan+15%2C+2013%3A+Problematic+Basic+Decider+Logic
+     * https://wiki.oicr.on.ca/display/SEQWARE/BasicDecider+logic     
      */
     protected enum FILE_STATUS{
         /**
-         * there are more files to run in the workflow under consideration than in the past workflow_run
+         * Two sets of files have no relationship
          */
-        MORE_CURRENT_FILES_1,
+        DISJOINT_SETS,
         /**
-         * the same (number of) files are found at different paths
+         * Two sets of files partially overlap
+         * i.e. intersection and subset (set of files in the past was smaller)
          */
-        SAME_FILES_DIFFERENT_PATHS_2,
+        PAST_SUBSET_OR_INTERSECTION,
         /**
          * the same files are found at the same paths
          */
-        SAME_FILES_SAME_PATHS_3,
+        SAME_FILES,
         /**
-         * there are fewer files to run in the workflow under consideration than in the past workflow_run
+         * The set of files in the past was strictly larger than the current
+         * files under consideration
          */
-        MORE_PAST_FILES_4
+        PAST_SUPERSET
     }
     
     /**
