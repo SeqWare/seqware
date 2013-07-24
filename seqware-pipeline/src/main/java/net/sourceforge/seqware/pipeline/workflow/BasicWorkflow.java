@@ -689,7 +689,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
       }
 
       this.metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "submitted", null,
-                                        wi.getWorkflowDir(), null, mapBuffer.toString(), scheduledHost, null,
+                                        null, null, mapBuffer.toString(), scheduledHost, null,
                                         null, workflowEngine);
 
     } else {
