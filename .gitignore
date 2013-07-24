@@ -47,3 +47,4 @@ dao-test.log
 # vagrant
 seqware-vagrant/credentials.settings
 seqware-vagrant/.vagrant
+seqware-vagrant/vagrant_launch.conf
