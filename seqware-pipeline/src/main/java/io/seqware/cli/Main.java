@@ -332,7 +332,7 @@ public class Main {
       out("");
       out("Sub-commands:");
       out("  install   Inform the Seqware system of the availability of a bundle");
-      out("  test      Test-launch the workflows in a bundle directory");
+      out("  test      Test-launch all the workflows in a bundle directory");
       out("  list      List workflows within a bundle directory");
       out("  package   Package a bundle directory into a zip file");
       out("");
@@ -340,7 +340,7 @@ public class Main {
       String cmd = args.remove(0);
       if ("install".equals(cmd)) {
         bundleInstall(args);
-      } else if ("launch".equals(cmd)) {
+      } else if ("test".equals(cmd)) {
         bundleTest(args);
       } else if ("list".equals(cmd)) {
         bundleList(args);
