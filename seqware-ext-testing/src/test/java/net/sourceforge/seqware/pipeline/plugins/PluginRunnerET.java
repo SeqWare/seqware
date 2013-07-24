@@ -93,6 +93,7 @@ public class PluginRunnerET {
 
         // for all tests, we're going to need to create and install our basic archetypes
         //String[] archetypes = {"java-workflow", "simplified-ftl-workflow", "legacy-ftl-workflow", "simple-legacy-ftl-workflow"};
+        // starting with the 1.0.x series we are deprecating the FTL workflows and the Pegasus backend so skip testing them
         // we are now only testing Java workflows on the Oozie-* backends
         String[] archetypes = {"java-workflow"};
         buildAndInstallArchetypes(archetypes, SEQWARE_VERSION, true, true);
