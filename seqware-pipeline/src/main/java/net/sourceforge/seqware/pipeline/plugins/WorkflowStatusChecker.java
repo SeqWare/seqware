@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -465,25 +466,39 @@ public class WorkflowStatusChecker extends Plugin {
     return idFiles;
   }
 
+  private static final Pattern SGE_FILE = Pattern.compile("(.+)\\.[eo]\\d+");
   private static String sgeConcat(SortedMap<Integer, File> idFiles) {
     StringBuilder sb = new StringBuilder();
     for (Map.Entry<Integer, File> e : idFiles.entrySet()) {
-      sb.append("-----------------------------------------------------------------------\n");
-      sb.append("Job ID: ");
+      File f = e.getValue();
+      
+      Matcher m = SGE_FILE.matcher(f.getName());
+      m.find();
+      String jobName = m.group(1);
+      
+      sb.append("-----------------------------------------------------------------------");
+      sb.append("\nJob Name: ");
+      sb.append(jobName);
+      sb.append("\nJob ID:   ");
       sb.append(e.getKey());
-      sb.append("File: ");
-      sb.append(e.getValue().getAbsolutePath());
-      sb.append("Contents:\n");
+      sb.append("\nFile:     ");
+      sb.append(f.getAbsolutePath());
+      sb.append("\nUpdated:  ");
+      sb.append(new Date(f.lastModified()));
+      sb.append("\nContents:\n");
       try {
-        sb.append(FileUtils.readFileToString(e.getValue()));
+        sb.append(FileUtils.readFileToString(f));
       } catch (IOException ex) {
         sb.append(" *** ERROR READING FILE: ");
         sb.append(ex.getMessage());
         sb.append(" ***");
       }
+      if (sb.charAt(sb.length()-1) != '\n'){
+        sb.append("\n");
+      }
       sb.append("-----------------------------------------------------------------------\n\n");
     }
-    return null;
+    return sb.toString();
   }
   
   private static Set<String> sgeIds(WorkflowJob wf){
