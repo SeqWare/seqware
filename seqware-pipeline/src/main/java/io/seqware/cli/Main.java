@@ -101,6 +101,16 @@ public class Main {
     return vals;
   }
 
+  private static List<String> reqVals(List<String> args, String key) {
+    List<String> vals = optVals(args, key);
+
+    if (vals.isEmpty()) {
+      kill("seqware: missing required flag '%s'.", key);
+    }
+
+    return vals;
+  }
+
   private static String optVal(List<String> args, String key, String defaultVal) {
     String val = defaultVal;
 
@@ -286,6 +296,32 @@ public class Main {
     }
   }
 
+  private static void bundleLaunch(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware bundle launch [--help]");
+      out("       seqware bundle launch <params>");
+      out("");
+      out("Parameters:");
+      out("  --dir <bundle-dir>  The root directory of the bundle");
+      out("  --ini <ini-file>    An ini file to configure the workflow run");
+      out("                      Repeat this parameter to provide multiple files");
+      out("  --name <wf-name>    The name of the workflow in the bundle");
+      out("  --version <ver>     The version of the workflow in the bundle");
+      out("");
+    } else {
+      String dir = reqVal(args, "--dir");
+      List<String> inis = reqVals(args, "--ini");
+      String name = reqVal(args, "--name");
+      String version = reqVal(args, "--version");
+
+      extras(args, "bundle launch");
+
+      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir, "--workflow",
+          name, "--version", version, "--ini-files", cdl(inis), "--no-metadata");
+    }
+  }
+
   private static void bundleList(List<String> args) {
     if (isHelp(args, true)) {
       out("");
@@ -333,6 +369,7 @@ public class Main {
       out("Sub-commands:");
       out("  install   Inform the Seqware system of the availability of a bundle");
       out("  test      Test-launch all the workflows in a bundle directory");
+      out("  launch    Launch a specified workflow in a bundle directory");
       out("  list      List workflows within a bundle directory");
       out("  package   Package a bundle directory into a zip file");
       out("");
@@ -340,12 +377,14 @@ public class Main {
       String cmd = args.remove(0);
       if ("install".equals(cmd)) {
         bundleInstall(args);
-      } else if ("test".equals(cmd)) {
-        bundleTest(args);
+      } else if ("launch".equals(cmd)) {
+        bundleLaunch(args);
       } else if ("list".equals(cmd)) {
         bundleList(args);
       } else if ("package".equals(cmd)) {
         bundlePackage(args);
+      } else if ("test".equals(cmd)) {
+        bundleTest(args);
       } else {
         invalid("bundle", cmd);
       }
@@ -763,9 +802,9 @@ public class Main {
       out("");
     } else {
       String wfId = reqVal(args, "--accession");
+      String host = reqVal(args, "--host");
+      List<String> iniFiles = reqVals(args, "--ini");
       String engine = optVal(args, "--engine", null);
-      List<String> iniFiles = optVals(args, "--ini");
-      String host = optVal(args, "--host", null);
       List<String> parentIds = optVals(args, "--parent-accession");
 
       extras(args, "workflow schedule");
@@ -878,13 +917,14 @@ public class Main {
       out("");
     } else {
       List<String> ids = optVals(args, "--accession");
-      
+
       extras(args, "workflow-run launch-scheduled");
 
       if (ids.isEmpty()) {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--launch-scheduled");  
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--launch-scheduled");
       } else {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--launch-scheduled", cdl(ids));
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--launch-scheduled",
+            cdl(ids));
       }
     }
   }
@@ -909,16 +949,16 @@ public class Main {
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker");
       runnerArgs.add("--");
-      
+
       if (threads != null) {
         runnerArgs.add("--threads-in-thread-pool");
         runnerArgs.add(threads);
       }
-      if (wfr != null){
+      if (wfr != null) {
         runnerArgs.add("--workflow-run-accession");
         runnerArgs.add(wfr);
       }
-      
+
       run(runnerArgs);
     }
   }
