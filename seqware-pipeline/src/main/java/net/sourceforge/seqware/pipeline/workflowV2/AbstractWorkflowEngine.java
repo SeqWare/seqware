@@ -25,6 +25,13 @@ public abstract class AbstractWorkflowEngine {
    */
   public abstract String getLookupToken();
 
+  /**
+   * The working directory for the prepared workflow run, or null if not yet
+   * prepared or if not applicable for the concrete engine.
+   * @return the working directory, or null
+   */
+  public abstract String getWorkingDirectory();
+
 //  /**
 //   * Obtain the status of the workflow run.
 //   * 
