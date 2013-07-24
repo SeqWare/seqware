@@ -875,10 +875,20 @@ public class Main {
       out("Usage: seqware workflow-run launch-scheduled --help");
       out("       seqware workflow-run launch-scheduled");
       out("");
+      out("Optional parameters:");
+      out("  --accession <swid>   Launch the specified workflow-run");
+      out("                       Repeat this parameter to provide multiple runs");
+
     } else {
+      List<String> ids = optVals(args, "--accession");
+      
       extras(args, "workflow-run launch-scheduled");
 
-      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--launch-scheduled");
+      if (ids.isEmpty()) {
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--launch-scheduled");  
+      } else {
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--launch-scheduled", cdl(ids));
+      }
     }
   }
 
@@ -889,17 +899,26 @@ public class Main {
       out("       seqware workflow-run propagate-statuses <params>");
       out("");
       out("Optional arameters:");
-      out("  --threads <num>  The number of concurrent worker threads (default 1)");
+      out("  --accession <swid>   Launch the specified workflow-run");
+      out("  --threads <num>      The number of concurrent worker threads (default 1)");
     } else {
       String threads = optVal(args, "--threads", null);
+      String wfr = optVal(args, "--accession", null);
 
       extras(args, "workflow-run propagate-statuses");
 
-      if (threads == null) {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker");
-      } else {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker", "--",
-            "--threads-in-thread-pool", threads);
+      List<String> runnerArgs = new ArrayList<String>();
+      runnerArgs.add("--plugin");
+      runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker");
+      runnerArgs.add("--");
+      
+      if (threads != null) {
+        runnerArgs.add("--threads-in-thread-pool");
+        runnerArgs.add(threads);
+      }
+      if (wfr != null){
+        runnerArgs.add("--workflow-run-accession");
+        runnerArgs.add(wfr);
       }
     }
   }
