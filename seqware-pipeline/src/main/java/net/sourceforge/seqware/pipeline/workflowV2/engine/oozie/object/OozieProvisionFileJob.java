@@ -53,7 +53,7 @@ public class OozieProvisionFileJob extends OozieJob {
   }
 
   private File emitRunnerScript() {
-    File file = file(scriptsDir, name + "-runner.sh", true);
+    File file = file(scriptsDir, runnerFileName(name), true);
 
     ArrayList<String> args = new ArrayList<String>();
     args.add("java");

@@ -75,7 +75,7 @@ public abstract class OozieJob {
     this.seqwareJarPath = seqwareJar.getAbsolutePath();
     this.threadsSgeParamFormat = threadsSgeParamFormat;
     this.maxMemorySgeParamFormat = maxMemorySgeParamFormat;
-    this.scriptsDir = new File(oozie_working_dir, SCRIPTS_SUBDIR);
+    this.scriptsDir = scriptsDir(oozie_working_dir);
 
     if (useSge) {
       if (this.seqwareJarPath == null) {
@@ -156,9 +156,21 @@ public abstract class OozieJob {
 
     return args;
   }
+  
+  public static File scriptsDir(String oozieWorkingDir){
+    return new File(oozieWorkingDir, SCRIPTS_SUBDIR);
+  }
+  public static String runnerFileName(String jobName){
+    return jobName + "-runner.sh";
+  }
+  public static String optsFileName(String jobName){
+    return jobName + "-qsub.opts";
+  }
+  
+  
 
   protected File emitOptionsFile() {
-    File file = file(scriptsDir, name + "-qsub.opts", false);
+    File file = file(scriptsDir, optsFileName(name), false);
 
     ArrayList<String> args = new ArrayList<String>();
     args.add("-b");
