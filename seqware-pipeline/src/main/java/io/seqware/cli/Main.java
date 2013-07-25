@@ -188,8 +188,11 @@ public class Main {
     out("");
     out("Usage: seqware annotate [--help]");
     out("       seqware annotate <object> --accession <swid> --key <key> --val <value>");
-    out("       seqware annotate <object> --accession <swid> --skip");
+    out("       seqware annotate <object> --accession <swid> --skip [--reason <text>]");
     out("       seqware annotate <object> --csv <file>");
+    out("");
+    out("Description:");
+    out("  Add arbitrary key/value pairs to seqware objects.");
     out("");
     out("Objects:");
     for (String obj : ANNO_OBJS) {
@@ -197,11 +200,12 @@ public class Main {
     }
     out("");
     out("Parameters:");
-    out("  --csv <file>        Bulk annotation from CSV file of: accession, key, value.");
+    out("  --csv <file>        Bulk annotation from CSV file of: accession, key, value");
     out("  --accession <swid>  The SWID of the object to annotate");
     out("  --key <key>         The identifier of the annotation");
-    out("  --skip              Sets the skip attribute flag on the object.");
-    out("  --val <value>       The value of the annotation.");
+    out("  --reason <text>     The reason the object is skipped");
+    out("  --skip              Sets the skip attribute flag on the object");
+    out("  --val <value>       The value of the annotation");
     out("");
   }
 
@@ -220,6 +224,7 @@ public class Main {
           String key = optVal(args, "--key", null);
           String val = optVal(args, "--val", null);
           boolean skip = flag(args, "--skip");
+          String reason = optVal(args, "--reason", null);
           String csv = optVal(args, "--csv", null);
 
           extras(args, "annotate " + obj);
@@ -230,8 +235,13 @@ public class Main {
                 key, "--value", val);
           } else if (swid != null && key == null && val == null & skip == true && csv == null) {
             String idFlag = "--" + obj + "-accession";
-            run("--plugin", "net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator", "--", idFlag, swid,
-                "--skip", "true");
+            if (reason == null) {
+              run("--plugin", "net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator", "--", idFlag, swid,
+                  "--skip", "true");
+            } else {
+              run("--plugin", "net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator", "--", idFlag, swid,
+                  "--skip", "true", "--value", reason);
+            }
           } else if (swid == null && key == null && val == null & skip == false && csv != null) {
             run("--plugin", "net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator", "--", "--file", csv);
           } else {
