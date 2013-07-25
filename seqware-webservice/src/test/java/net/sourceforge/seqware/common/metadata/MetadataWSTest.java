@@ -793,10 +793,12 @@ public class MetadataWSTest {
 
     @Test
     public void getDirectFilesAssociatedWithWorkflowRuns() {
+        BasicTestDatabaseCreator.resetDatabaseWithUsers();
+        
         List<Integer> files = new ArrayList<Integer>();
         // try getting nothing
         List<WorkflowRun> result = instance.getWorkflowRunsAssociatedWithFiles(files);
-        Assert.assertTrue("should have been no files", result == null);
+        Assert.assertTrue("should have been no files", result.isEmpty());
 
         // build required file structures
         WorkflowRun wr = instance.getWorkflowRun(863);
@@ -810,23 +812,32 @@ public class MetadataWSTest {
         instance.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
                 wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
                 wr.getHost(), wr.getStdOut(), wr.getStdErr(), wr.getWorkflowEngine(), wr.getInputFiles());
+        // add a couple more files to a different workflow_run
         final int f4_sw_accession = 867;
+        wr = instance.getWorkflowRun(6603);
         wr.getInputFiles().add(f1_sw_accession);
         wr.getInputFiles().add(f4_sw_accession);
-        wr = instance.getWorkflowRun(6603);
         instance.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
                 wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
                 wr.getHost(), wr.getStdOut(), wr.getStdErr(), wr.getWorkflowEngine(), wr.getInputFiles());
-        files.add(835);
+        // try a file accession that both workflow runs should have
+        files.add(f1_sw_accession);
         result = instance.getWorkflowRunsAssociatedWithFiles(files);
         Assert.assertTrue("should have been 2 workflow runs, found " + result.size(), result.size() == 2);
         Assert.assertTrue("incorrect workflow runs found", result.get(0).getSwAccession() == 863);
         Assert.assertTrue("incorrect workflow runs found", result.get(1).getSwAccession() == 6603);
         files.clear();
-        files.add(867);
+        // try a file accession that only the latter workflow run should have
+        files.add(f4_sw_accession);
         result = instance.getWorkflowRunsAssociatedWithFiles(files);
         Assert.assertTrue("should have been 1 file, found " + result.size(), result.size() == 1);
-
+        Assert.assertTrue("incorrect workflow runs found", result.get(0).getSwAccession() == 6603);
+        // try both file accessions, should get both back (allows for partial matching) 
+        files.add(f1_sw_accession);
+        result = instance.getWorkflowRunsAssociatedWithFiles(files);
+        Assert.assertTrue("should have been 2 workflow runs, found " + result.size(), result.size() == 2);
+        Assert.assertTrue("incorrect workflow runs found", result.get(0).getSwAccession() == 863);
+        Assert.assertTrue("incorrect workflow runs found", result.get(1).getSwAccession() == 6603);
     }
 
 
