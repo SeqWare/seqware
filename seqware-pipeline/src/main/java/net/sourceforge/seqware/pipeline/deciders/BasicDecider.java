@@ -63,7 +63,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private Collection<String> parentAccessionsToRun;
     private Collection<String> filesToRun;
     private Collection<String> workflowParentAccessionsToRun;
-    private List<Integer> fileSWIDsToRun;
+    private Collection<Integer> fileSWIDsToRun;
     private ArrayList<String> iniFiles;
     private Boolean runNow = null;
     private Boolean skipStuff = null;
@@ -357,7 +357,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 parentAccessionsToRun = new HashSet<String>();
                 filesToRun = new HashSet<String>();
                 workflowParentAccessionsToRun = new HashSet<String>();
-                fileSWIDsToRun = new ArrayList<Integer>();
+                fileSWIDsToRun = new HashSet<Integer>();
 
                 //for each grouping (e.g. sample), iterate through the files
                 List<ReturnValue> files = entry.getValue();
@@ -503,11 +503,12 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * @param fileSWIDs
      * @return 
      */
-    protected boolean rerunWorkflowRun(final Collection<String> filesToRun, List<Integer> fileSWIDs) {
+    protected boolean rerunWorkflowRun(final Collection<String> filesToRun, Collection<Integer> fileSWIDs) {
         
         boolean rerun;
         List<Boolean> failures = new ArrayList<Boolean>();
-        List<WorkflowRun> runs = produceAccessionListWithFileList(fileSWIDs);
+        List<Integer> asList = Arrays.asList(fileSWIDs.toArray(new Integer[fileSWIDs.size()]));
+        List<WorkflowRun> runs = produceAccessionListWithFileList(asList);
         rerun = processWorkflowRuns(filesToRun, failures, runs);
         if (!rerun){
             Log.debug("This workflow has failed to launch based on workflow runs found via direct search");
