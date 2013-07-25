@@ -27,7 +27,7 @@ public class WorkflowApp {
   private AbstractWorkflowDataModel wfdm;
   private List<OozieJob> jobs;
   private String lastJoin;
-  private Map<SqwFile, OozieJob> fileJobMap;
+  private Map<SqwFile, OozieProvisionFileJob> fileJobMap;
   private String unqiueWorkingDir;
   private boolean useSge;
   private File seqwareJar;
@@ -39,7 +39,7 @@ public class WorkflowApp {
     this.wfdm = wfdm;
     this.unqiueWorkingDir = dir;
     this.jobs = new ArrayList<OozieJob>();
-    this.fileJobMap = new HashMap<SqwFile, OozieJob>();
+    this.fileJobMap = new HashMap<SqwFile, OozieProvisionFileJob>();
     this.useSge = useSge;
     this.seqwareJar = seqwareJar;
     this.threadsSgeParamFormat = threadsSgeParamFormat;
@@ -293,16 +293,18 @@ public class WorkflowApp {
     // get all the leaf job
     List<OozieJob> leaves = new ArrayList<OozieJob>();
     for (OozieJob _job : this.jobs) {
-      if (_job.getChildren().isEmpty()) {
+      // Note: the leaves accumulated are to be parents of output provisions,
+      //       thus the leaves themselves should not be file provisions
+      if((_job instanceof OozieProvisionFileJob == false)
+          && _job.getChildren().isEmpty()) {
         leaves.add(_job);
       }
     }
-    for (Map.Entry<SqwFile, OozieJob> entry : fileJobMap.entrySet()) {
+    for (Map.Entry<SqwFile, OozieProvisionFileJob> entry : fileJobMap.entrySet()) {
       if (entry.getKey().isOutput()) {
         // set parents to all leaf jobs
         for (OozieJob leaf : leaves) {
-          if (leaf != entry.getValue())
-            entry.getValue().addParent(leaf);
+          entry.getValue().addParent(leaf);
         }
       }
     }
