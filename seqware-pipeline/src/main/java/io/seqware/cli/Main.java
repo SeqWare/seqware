@@ -420,20 +420,31 @@ public class Main {
     if (isHelp(args, true)) {
       out("");
       out("Usage: seqware bundle package [--help]");
-      out("       seqware bundle package --dir <bundle-dir>");
+      out("       seqware bundle package <params>");
       out("");
       out("Description:");
       out("  Package a bundle directory into a zip file.");
       out("");
-      out("Parameters:");
+      out("Required parameters:");
       out("  --dir <bundle-dir>  The root directory of the bundle");
+      out("");
+      out("Optional parameters:");
+      out("  --to <dir>          The directory to place the zip");
+      out("                      Defaults to the current directory");
       out("");
     } else {
       String dir = new File(reqVal(args, "--dir")).getAbsolutePath();
+      String to = optVal(args, "--to", null);
 
       extras(args, "bundle package");
 
-      String outdir = new File("").getAbsolutePath();
+      String outdir;
+      if (to == null) {
+        outdir = new File("").getAbsolutePath();
+      } else {
+        outdir = new File(to).getAbsolutePath();
+      }
+
       run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--path-to-package", dir,
           "--bundle", outdir);
     }
