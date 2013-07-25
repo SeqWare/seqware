@@ -63,6 +63,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private Collection<String> parentAccessionsToRun;
     private Collection<String> filesToRun;
     private Collection<String> workflowParentAccessionsToRun;
+    private List<Integer> fileSWIDsToRun;
     private ArrayList<String> iniFiles;
     private Boolean runNow = null;
     private Boolean skipStuff = null;
@@ -356,16 +357,14 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 parentAccessionsToRun = new HashSet<String>();
                 filesToRun = new HashSet<String>();
                 workflowParentAccessionsToRun = new HashSet<String>();
+                fileSWIDsToRun = new ArrayList<Integer>();
 
                 //for each grouping (e.g. sample), iterate through the files
                 List<ReturnValue> files = entry.getValue();
                 Log.info("key:" + entry.getKey() + " consists of " + files.size() + " files");
-                List<Integer> fileSWIDs = new ArrayList<Integer>();
                 
                 for (ReturnValue file : files) {
                     String wfAcc = file.getAttribute(Header.WORKFLOW_SWA.getTitle());
-                    String fileSWID = file.getAttribute(Header.FILE_SWA.getTitle());
-                    fileSWIDs.add(Integer.valueOf(fileSWID));
                     Log.debug(Header.WORKFLOW_SWA.getTitle() + ": WF accession is " + wfAcc);
 
                     //if there is no parent accessions, or if the parent accession is correct
@@ -379,11 +378,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                             if (metaTypes != null) {
                                 if (metaTypes.contains(fm.getMetaType())) {
                                     addFileToSets(file, fm, workflowParentAccessionsToRun,
-                                            parentAccessionsToRun, filesToRun);
+                                            parentAccessionsToRun, filesToRun, fileSWIDsToRun);
                                 }
                             } else {
                                 addFileToSets(file, fm, workflowParentAccessionsToRun,
-                                        parentAccessionsToRun, filesToRun);
+                                        parentAccessionsToRun, filesToRun, fileSWIDsToRun);
                             }
                         }
 
@@ -395,7 +394,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     String parentAccessionString = commaSeparateMy(parentAccessionsToRun);
                     String fileString = commaSeparateMy(filesToRun);
                     Log.debug("FileString: " + fileString);
-                    boolean rerun = rerunWorkflowRun(filesToRun, fileSWIDs);
+                    boolean rerun = rerunWorkflowRun(filesToRun, fileSWIDsToRun);
 
                     iniFiles = new ArrayList<String>();
                     iniFiles.add(createIniFile(fileString, parentAccessionString));
@@ -471,6 +470,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         runArgs.add(workflowAccession);
         runArgs.add("--ini-files");
         runArgs.add(commaSeparateMy(iniFiles));
+        Collection<String> fileSWIDs = new ArrayList<String>();
+        for(Integer fileSWID : fileSWIDsToRun){
+            fileSWIDs.add(String.valueOf(fileSWID));
+        }
+        runArgs.add(commaSeparateMy(fileSWIDs));
         if (!metadataWriteback) {
             runArgs.add("--no-metadata");
         }
@@ -503,22 +507,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         
         boolean rerun;
         List<Boolean> failures = new ArrayList<Boolean>();
-        List<WorkflowRun> runs1 = produceAccessionListWithFileList(fileSWIDs, "CHILDREN_VIA_PROCESSING_RELATIONSHIP");
-        rerun = processWorkflowRuns(filesToRun, failures, runs1);
+        List<WorkflowRun> runs = produceAccessionListWithFileList(fileSWIDs);
+        rerun = processWorkflowRuns(filesToRun, failures, runs);
         if (!rerun){
-            Log.debug("This workflow has failed to launch based on workflow runs found via Processing");
-            return rerun;
-        }
-        List<WorkflowRun> runs2 = produceAccessionListWithFileList(fileSWIDs, "CHILDREN_VIA_IUS_WORKFLOW_RUN");
-        rerun = processWorkflowRuns(filesToRun, failures, runs2);
-        if (!rerun){
-            Log.debug("This workflow has failed to launch based on workflow runs found via IUS");
-            return rerun;
-        }
-        List<WorkflowRun> runs3 = produceAccessionListWithFileList(fileSWIDs, "CHILDREN_VIA_LANE_WORKFLOW_RUN");
-        rerun = processWorkflowRuns(filesToRun, failures, runs3);
-        if (!rerun){
-            Log.debug("This workflow has failed to launch based on workflow runs found via Lane");
+            Log.debug("This workflow has failed to launch based on workflow runs found via direct search");
             return rerun;
         }
         if (failures.size() >= this.rerunMax) {
@@ -592,8 +584,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         return FILE_STATUS.DISJOINT_SETS;
     }
 
-    private void addFileToSets(ReturnValue file, FileMetadata fm, Collection<String> workflowParentAccessionsToRun,
-            Collection<String> parentAccessionsToRun, Collection<String> filesToRun) {
+    private void addFileToSets(ReturnValue file, FileMetadata fm, Collection<String> workflowParentAccessionsToRun, Collection<String> parentAccessionsToRun, Collection<String> filesToRun, Collection<Integer> fileToRunSWIDs) {
         if (checkFileDetails(file, fm)) {
             if (skipStuff) {
                 for (String key : file.getAttributes().keySet()) {
@@ -608,6 +599,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             }
 
             filesToRun.add(fm.getFilePath());
+            String fileSWID = file.getAttribute(Header.FILE_SWA.getTitle());
+            fileToRunSWIDs.add(Integer.valueOf(fileSWID));
             parentAccessionsToRun.add(file.getAttribute(Header.PROCESSING_SWID.getTitle()));
 
             String swid = file.getAttribute(Header.IUS_SWA.getTitle());
@@ -922,10 +915,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         return doRerun;
     }
 
-    private List<WorkflowRun> produceAccessionListWithFileList(List<Integer> fileSWIDs, String searchType) {
+    private List<WorkflowRun> produceAccessionListWithFileList(List<Integer> fileSWIDs) {
         // find relevant workflow runs for this group of files
-        List<WorkflowRun> wrFiles1 = this.metadata.getWorkflowRunsAssociatedWithFiles(fileSWIDs, searchType);
-        Log.debug("Found " + wrFiles1.size() + " workflow runs via " + searchType);
+        List<WorkflowRun> wrFiles1 = this.metadata.getWorkflowRunsAssociatedWithFiles(fileSWIDs);
+        Log.debug("Found " + wrFiles1.size() + " workflow runs via direct search");
         return wrFiles1;
     }
 
