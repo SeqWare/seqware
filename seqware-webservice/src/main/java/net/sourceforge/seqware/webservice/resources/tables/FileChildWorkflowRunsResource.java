@@ -250,6 +250,7 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
      * @throws SQLException 
      */
     private WorkflowRunList2 directRetrieveWorkflowRuns(List<Integer> files) throws SQLException {
+        final Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         final WorkflowRunList2 runs = new WorkflowRunList2();
         runs.setList(new ArrayList());
         if (files.size() > 0) {
@@ -275,7 +276,8 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
                 while (rs.next()) {
                     int workflowSWID = rs.getInt("sw_accession");
                     WorkflowRun workflowRun = (WorkflowRun) testIfNull(ss.findBySWAccession(workflowSWID));
-                    runs.add(workflowRun);
+                    WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, workflowRun);
+                    runs.add(dto);
                     
                 }           
             } finally {
