@@ -311,6 +311,8 @@ public class Main {
       out("  --version <ver>     The version of the workflow in the bundle");
       out("");
       out("Optional parameters:");
+      out("  --engine <type>     The engine that will process the workflow run");
+      out("                      May be one of: 'oozie' or 'oozie-sge'");
       out("  --metadata          Perform metadata write-back of the workflow run");
       out("");
     } else {
@@ -318,17 +320,26 @@ public class Main {
       List<String> inis = reqVals(args, "--ini");
       String name = reqVal(args, "--name");
       String version = reqVal(args, "--version");
+      String engine = optVal(args, "--engine", null);
       boolean md = flag(args, "--metadata");
 
       extras(args, "bundle launch");
 
-      if (md) {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir,
-            "--workflow", name, "--version", version, "--ini-files", cdl(inis));
-      } else {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir,
-            "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata");
+      List<String> runnerArgs = new ArrayList<String>(
+                                                      Arrays.asList("--plugin",
+                                                                    "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher",
+                                                                    "--", "--bundle", dir, "--workflow", name,
+                                                                    "--version", version, "--ini-files", cdl(inis)));
+      if (!md) {
+        runnerArgs.add("--no-metadata");
       }
+
+      if (engine != null) {
+        runnerArgs.add("--workflow-engine");
+        runnerArgs.add(engine);
+      }
+
+      run(runnerArgs);
     }
   }
 
@@ -348,16 +359,27 @@ public class Main {
       out("  --name <wf-name>    The name of the workflow in the bundle");
       out("  --version <ver>     The version of the workflow in the bundle");
       out("");
+      out("Optional parameters:");
+      out("  --engine <type>     The engine that will process the workflow run");
+      out("                      May be one of: 'oozie' or 'oozie-sge'");
+      out("");
     } else {
       String dir = reqVal(args, "--dir");
       List<String> inis = reqVals(args, "--ini");
       String name = reqVal(args, "--name");
       String version = reqVal(args, "--version");
+      String engine = optVal(args, "--engine", null);
 
       extras(args, "bundle dry-run");
 
-      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir, "--workflow",
-          name, "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--no-run");
+      if (engine == null) {
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir,
+            "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--no-run");
+      } else {
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir,
+            "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--no-run",
+            "--workflow-engine", engine);
+      }
     }
   }
 
