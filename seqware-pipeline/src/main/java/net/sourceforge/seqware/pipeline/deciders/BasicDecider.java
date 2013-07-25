@@ -226,7 +226,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             StringWriter writer = new StringWriter();
             try {
                 FindAllTheFiles.printHeader(writer, true);
-                Log.debug(writer.toString());
+                Log.stdout(writer.toString());
             } catch (IOException ex) {
                 Log.error(ex);
             }
@@ -624,7 +624,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         try {
             StringWriter writer = new StringWriter();
             FindAllTheFiles.print(writer, file, studyName, true, fm);
-            Log.debug(writer.getBuffer().toString().trim());
+            Log.stdout(writer.getBuffer().toString().trim());
         } catch (IOException ex) {
             Log.error("Error printing file metadata", ex);
         }
@@ -1012,8 +1012,9 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         StringBuilder command = new StringBuilder();
         // SEQWARE-1612 Change test command to actual jar name
         String SEQWARE_VERSION = this.metadata.getClass().getPackage().getImplementationVersion();
-        command.append("java -jar seqware-distribution-").append(SEQWARE_VERSION).append("-full.jar ");
+        command.append("\njava -jar seqware-distribution-").append(SEQWARE_VERSION).append("-full.jar ");
         command.append(spaceSeparateMy(constructCommand()));
+        command.append("\n");
         return command.toString();
     }
     
