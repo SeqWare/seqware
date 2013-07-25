@@ -453,6 +453,9 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     } else if (launched < launchMax) {
                         launched++;
                         //construct the INI and run it
+                        for (String line : studyReporterOutput) {
+                            Log.stdout(line);
+                        }
                         Log.debug("RUNNING");
 //                        // setup workflow object
 //                        Workflow w = new Workflow(metadata, config);
