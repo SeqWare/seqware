@@ -63,6 +63,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private Collection<String> parentAccessionsToRun;
     private Collection<String> filesToRun;
     private Collection<String> workflowParentAccessionsToRun;
+    private Set<String> studyReporterOutput;
     private ArrayList<String> iniFiles;
     private Boolean runNow = null;
     private Boolean skipStuff = null;
@@ -356,6 +357,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 parentAccessionsToRun = new HashSet<String>();
                 filesToRun = new HashSet<String>();
                 workflowParentAccessionsToRun = new HashSet<String>();
+                studyReporterOutput = new HashSet<String>();
 
                 //for each grouping (e.g. sample), iterate through the files
                 List<ReturnValue> files = entry.getValue();
@@ -414,12 +416,18 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     if (test || !rerun){
                         // we need to simplify the logic and make it more readable here for testing
                         if (rerun){
+                            for(String line: studyReporterOutput){
+                                Log.stdout(line);
+                            }
                             Log.debug("NOT RUNNING (but would have ran). test=" + test + " or !rerun=" + !rerun);
                             reportLaunch();
                             // SEQWARE-1642 - output to stdout only whether a decider would launch
                             ret = do_summary();
                             launched++;
                         } else{
+                             for(String line: studyReporterOutput){
+                                Log.debug(line);
+                            }
                             Log.debug("NOT RUNNING (and would not have ran). test=" + test + " or !rerun=" + !rerun);
                         }
                     } else if (launched < launchMax) {
@@ -624,7 +632,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         try {
             StringWriter writer = new StringWriter();
             FindAllTheFiles.print(writer, file, studyName, true, fm);
-            Log.stdout(writer.getBuffer().toString().trim());
+            studyReporterOutput.add(writer.getBuffer().toString().trim());
         } catch (IOException ex) {
             Log.error("Error printing file metadata", ex);
         }
