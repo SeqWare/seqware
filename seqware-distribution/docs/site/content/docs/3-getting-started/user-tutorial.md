@@ -159,6 +159,8 @@ User Guide</a> for more information.</p>
 
 First, you can find out what tables this tool is capable of writing to:
 
+    seqware create --help
+    
     Usage: seqware create [--help]
            seqware create <object> [--help]
     
@@ -195,7 +197,7 @@ Now, for a given table, you can find out what fields you can write back to and t
 
 So using the information above you can create a new study:
 
-	seqware create study -title 'New Test Study' --description 'This is a test description' --accession 'InternalID123' --center-name 'SeqWare' --center-project-name 'SeqWare Test Project' --study-type 4
+	seqware create study --title 'New Test Study' --description 'This is a test description' --accession 'InternalID123' --center-name 'SeqWare' --center-project-name 'SeqWare Test Project' --study-type 4
 	
 	SWID: 2
 
