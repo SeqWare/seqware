@@ -242,24 +242,6 @@ public class Main {
     }
   }
 
-  private static void bundleValidate(List<String> args) {
-    if (isHelp(args, true)) {
-      out("");
-      out("Usage: seqware bundle validate [--help]");
-      out("       seqware bundle validate --dir <bundle-dir>");
-      out("");
-      out("Parameters:");
-      out("  --dir <bundle-dir>  The root directory of the bundle");
-      out("");
-    } else {
-      String dir = reqVal(args, "--dir");
-
-      extras(args, "bundle validate");
-
-      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--validate", "--bundle", dir);
-    }
-  }
-
   private static void bundleInstall(List<String> args) {
     if (isHelp(args, true)) {
       out("");
