@@ -294,6 +294,12 @@ public class Main {
     }
   }
 
+  // TODO: move this logic to somewhere that is responsible for understanding
+  // the directory structure of a built workflow.
+  private static String defaultIniFile(String bundleDir, String workflowName, String workflowVersion) {
+    return String.format("%s/Workflow_Bundle_%s/%s/config/workflow.ini", bundleDir, workflowName, workflowVersion);
+  }
+
   private static void bundleLaunch(List<String> args) {
     if (isHelp(args, true)) {
       out("");
@@ -305,31 +311,37 @@ public class Main {
       out("");
       out("Required parameters:");
       out("  --dir <bundle-dir>  The root directory of the bundle");
-      out("  --ini <ini-file>    An ini file to configure the workflow run");
-      out("                      Repeat this parameter to provide multiple files");
       out("  --name <wf-name>    The name of the workflow in the bundle");
       out("  --version <ver>     The version of the workflow in the bundle");
       out("");
       out("Optional parameters:");
       out("  --engine <type>     The engine that will process the workflow run");
       out("                      May be one of: 'oozie' or 'oozie-sge'");
+      out("  --ini <ini-file>    An ini file to configure the workflow run");
+      out("                      Defaults to the workflow.ini file inside the bundle-dir");
+      out("                      Repeat this parameter to provide multiple files");
       out("  --metadata          Perform metadata write-back of the workflow run");
       out("");
     } else {
       String dir = reqVal(args, "--dir");
-      List<String> inis = reqVals(args, "--ini");
       String name = reqVal(args, "--name");
       String version = reqVal(args, "--version");
       String engine = optVal(args, "--engine", null);
+      List<String> inis = optVals(args, "--ini");
       boolean md = flag(args, "--metadata");
 
       extras(args, "bundle launch");
 
+      if (inis.isEmpty()) {
+        inis = Arrays.asList(defaultIniFile(dir, name, version));
+      }
+
       List<String> runnerArgs = new ArrayList<String>(
                                                       Arrays.asList("--plugin",
                                                                     "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher",
-                                                                    "--", "--bundle", dir, "--workflow", name,
-                                                                    "--version", version, "--ini-files", cdl(inis)));
+                                                                    "--", "--wait", "--bundle", dir, "--workflow",
+                                                                    name, "--version", version, "--ini-files",
+                                                                    cdl(inis)));
       if (!md) {
         runnerArgs.add("--no-metadata");
       }
