@@ -284,7 +284,42 @@ public class Main {
       out("Usage: seqware bundle launch [--help]");
       out("       seqware bundle launch <params>");
       out("");
-      out("Parameters:");
+      out("Required parameters:");
+      out("  --dir <bundle-dir>  The root directory of the bundle");
+      out("  --ini <ini-file>    An ini file to configure the workflow run");
+      out("                      Repeat this parameter to provide multiple files");
+      out("  --name <wf-name>    The name of the workflow in the bundle");
+      out("  --version <ver>     The version of the workflow in the bundle");
+      out("");
+      out("Optional parameters:");
+      out("  --metadata          Perform metadata write-back of the workflow run");
+      out("");
+    } else {
+      String dir = reqVal(args, "--dir");
+      List<String> inis = reqVals(args, "--ini");
+      String name = reqVal(args, "--name");
+      String version = reqVal(args, "--version");
+      boolean md = flag(args, "--metadata");
+
+      extras(args, "bundle launch");
+
+      if (md) {
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir,
+            "--workflow", name, "--version", version, "--ini-files", cdl(inis));
+      } else {
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir,
+            "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata");
+      }
+    }
+  }
+
+  private static void bundleDryRun(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware bundle dry-run [--help]");
+      out("       seqware bundle dry-run <params>");
+      out("");
+      out("Required parameters:");
       out("  --dir <bundle-dir>  The root directory of the bundle");
       out("  --ini <ini-file>    An ini file to configure the workflow run");
       out("                      Repeat this parameter to provide multiple files");
@@ -297,10 +332,10 @@ public class Main {
       String name = reqVal(args, "--name");
       String version = reqVal(args, "--version");
 
-      extras(args, "bundle launch");
+      extras(args, "bundle dry-run");
 
       run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir, "--workflow",
-          name, "--version", version, "--ini-files", cdl(inis), "--no-metadata");
+          name, "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--no-run");
     }
   }
 
@@ -349,15 +384,18 @@ public class Main {
       out("       seqware bundle <sub-command> [--help]");
       out("");
       out("Sub-commands:");
+      out("  dry-run   Perform all steps to prepare for a launch, but not actually launch");
       out("  install   Inform the Seqware system of the availability of a bundle");
-      out("  test      Test-launch all the workflows in a bundle directory");
       out("  launch    Launch a specified workflow in a bundle directory");
       out("  list      List workflows within a bundle directory");
       out("  package   Package a bundle directory into a zip file");
+      out("  test      Test-launch all the workflows in a bundle directory");
       out("");
     } else {
       String cmd = args.remove(0);
-      if ("install".equals(cmd)) {
+      if ("dry-run".equals(cmd)) {
+        bundleDryRun(args);
+      } else if ("install".equals(cmd)) {
         bundleInstall(args);
       } else if ("launch".equals(cmd)) {
         bundleLaunch(args);
