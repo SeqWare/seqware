@@ -258,6 +258,9 @@ public class Main {
       out("Usage: seqware bundle install [--help]");
       out("       seqware bundle install --zip <bundle-zip>");
       out("");
+      out("Description:");
+      out("  Inform the Seqware system of the availability of a bundle.");
+      out("");
       out("Parameters:");
       out("  --zip <bundle-zip>  The zip file of the bundle");
       out("");
@@ -276,6 +279,9 @@ public class Main {
       out("Usage: seqware bundle test [--help]");
       out("       seqware bundle test --dir <bundle-dir>");
       out("");
+      out("Description:");
+      out("  Test-launch all the workflows in a bundle directory.");
+      out("");
       out("Parameters:");
       out("  --dir <bundle-dir>  The root directory of the bundle");
       out("");
@@ -293,6 +299,9 @@ public class Main {
       out("");
       out("Usage: seqware bundle launch [--help]");
       out("       seqware bundle launch <params>");
+      out("");
+      out("Description:");
+      out("  Launch a specified workflow in a bundle directory.");
       out("");
       out("Required parameters:");
       out("  --dir <bundle-dir>  The root directory of the bundle");
@@ -329,6 +338,9 @@ public class Main {
       out("Usage: seqware bundle dry-run [--help]");
       out("       seqware bundle dry-run <params>");
       out("");
+      out("Description:");
+      out("  Perform all steps to prepare for a launch, but not actually launch.");
+      out("");
       out("Required parameters:");
       out("  --dir <bundle-dir>  The root directory of the bundle");
       out("  --ini <ini-file>    An ini file to configure the workflow run");
@@ -355,6 +367,9 @@ public class Main {
       out("Usage: seqware bundle list [--help]");
       out("       seqware bundle list --dir <bundle-dir>");
       out("");
+      out("Description:");
+      out("  List workflows within a bundle directory.");
+      out("");
       out("Parameters:");
       out("  --dir <bundle-dir>  The root directory of the bundle");
       out("");
@@ -372,6 +387,9 @@ public class Main {
       out("");
       out("Usage: seqware bundle package [--help]");
       out("       seqware bundle package --dir <bundle-dir>");
+      out("");
+      out("Description:");
+      out("  Package a bundle directory into a zip file.");
       out("");
       out("Parameters:");
       out("  --dir <bundle-dir>  The root directory of the bundle");
@@ -392,6 +410,9 @@ public class Main {
       out("");
       out("Usage: seqware bundle [--help]");
       out("       seqware bundle <sub-command> [--help]");
+      out("");
+      out("Description:");
+      out("  Interact with a workflow bundle.");
       out("");
       out("Sub-commands:");
       out("  dry-run   Perform all steps to prepare for a launch, but not actually launch");
@@ -627,6 +648,9 @@ public class Main {
       out("Usage: seqware create [--help]");
       out("       seqware create <object> [--help]");
       out("");
+      out("Description:");
+      out("  Create new seqware objects (e.g., study).");
+      out("");
       out("Objects:");
       out("  experiment");
       out("  file");
@@ -664,6 +688,9 @@ public class Main {
       out("Usage: seqware files report --help");
       out("       seqware files report <params>");
       out("");
+      out("Description:");
+      out("  A report of the provenance of output files.");
+      out("");
       out("Optional parameters:");
       out("  --out <file>        The name of the output file");
       out("  --study <title>     Limit files to the specified study title");
@@ -699,6 +726,9 @@ public class Main {
       out("Usage: seqware files --help");
       out("       seqware files <sub-command> [--help]");
       out("");
+      out("Description:");
+      out("  Extract information about workflow output files.");
+      out("");
       out("Sub-commands:");
       out("  report          A report of the provenance of output files");
       out("");
@@ -717,6 +747,9 @@ public class Main {
       out("");
       out("Usage: seqware workflow ini --help");
       out("       seqware workflow ini <params>");
+      out("");
+      out("Description:");
+      out("  Generate an ini file for a workflow.");
       out("");
       out("Required parameters:");
       out("  --accession <swid>  The SWID of the workflow");
@@ -755,6 +788,9 @@ public class Main {
       out("Usage: seqware workflow list --help");
       out("       seqware workflow list");
       out("");
+      out("Description:");
+      out("  List all installed workflows.");
+      out("");
     } else {
       extras(args, "workflow list");
 
@@ -768,6 +804,9 @@ public class Main {
       out("");
       out("Usage: seqware workflow report --help");
       out("       seqware workflow report <params>");
+      out("");
+      out("Description:");
+      out("  List the details of all runs of a given workflow.");
       out("");
       out("Required parameters:");
       out("  --accession <swid>  The SWID of the workflow");
@@ -817,6 +856,9 @@ public class Main {
       out("");
       out("Usage: seqware workflow schedule [--help]");
       out("       seqware workflow schedule <params>");
+      out("");
+      out("Description:");
+      out("  Schedule a workflow to be run.");
       out("");
       out("Required parameters:");
       out("  --accession <swid>         The SWID of the workflow to be run");
@@ -873,6 +915,9 @@ public class Main {
       out("Usage: seqware workflow-run report --help");
       out("       seqware workflow-run report <params>");
       out("");
+      out("Description:");
+      out("  The details of a given workflow-run.");
+      out("");
       out("Required parameters:");
       out("  --accession <swid>  The SWID of the workflow run");
       out("");
@@ -913,6 +958,9 @@ public class Main {
       out("Usage: seqware workflow [--help]");
       out("       seqware workflow <sub-command> [--help]");
       out("");
+      out("Description:");
+      out("  Interact with workflows.");
+      out("");
       out("Sub-commands:");
       out("  ini               Generate an ini file for a workflow");
       out("  list              List all installed workflows");
@@ -941,6 +989,9 @@ public class Main {
       out("Usage: seqware workflow-run launch-scheduled --help");
       out("       seqware workflow-run launch-scheduled");
       out("");
+      out("Description:");
+      out("  Launch scheduled workflow runs.");
+      out("");
       out("Optional parameters:");
       out("  --accession <swid>   Launch the specified workflow-run");
       out("                       Repeat this parameter to provide multiple runs");
@@ -965,7 +1016,10 @@ public class Main {
       out("Usage: seqware workflow-run propagate-statuses --help");
       out("       seqware workflow-run propagate-statuses <params>");
       out("");
-      out("Optional arameters:");
+      out("Description:");
+      out("  Propagate workflow engine statuses to seqware meta DB.");
+      out("");
+      out("Optional parameters:");
       out("  --accession <swid>   Launch the specified workflow-run");
       out("  --threads <num>      The number of concurrent worker threads (default 1)");
       out("");
@@ -998,6 +1052,9 @@ public class Main {
       out("");
       out("Usage: seqware workflow-run stderr --help");
       out("       seqware workflow-run stderr <params>");
+      out("");
+      out("Description:");
+      out("  Obtain the stderr output of the run.");
       out("");
       out("Required parameters:");
       out("  --accession <swid>  The SWID of the workflow run");
@@ -1032,6 +1089,9 @@ public class Main {
       out("Usage: seqware workflow-run stdout --help");
       out("       seqware workflow-run stdout <params>");
       out("");
+      out("Description:");
+      out("  Obtain the stdout output of the run.");
+      out("");
       out("Required parameters:");
       out("  --accession <swid>  The SWID of the workflow run");
       out("");
@@ -1064,6 +1124,9 @@ public class Main {
       out("");
       out("Usage: seqware workflow-run --help");
       out("       seqware workflow-run <sub-command> [--help]");
+      out("");
+      out("Description:");
+      out("  Interact with workflow runs.");
       out("");
       out("Sub-commands:");
       out("  launch-scheduled    Launch scheduled workflow runs");
