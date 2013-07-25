@@ -101,6 +101,16 @@ public class Main {
     return vals;
   }
 
+  private static List<String> reqVals(List<String> args, String key) {
+    List<String> vals = optVals(args, key);
+
+    if (vals.isEmpty()) {
+      kill("seqware: missing required flag '%s'.", key);
+    }
+
+    return vals;
+  }
+
   private static String optVal(List<String> args, String key, String defaultVal) {
     String val = defaultVal;
 
@@ -178,8 +188,11 @@ public class Main {
     out("");
     out("Usage: seqware annotate [--help]");
     out("       seqware annotate <object> --accession <swid> --key <key> --val <value>");
-    out("       seqware annotate <object> --accession <swid> --skip");
+    out("       seqware annotate <object> --accession <swid> --skip [--reason <text>]");
     out("       seqware annotate <object> --csv <file>");
+    out("");
+    out("Description:");
+    out("  Add arbitrary key/value pairs to seqware objects.");
     out("");
     out("Objects:");
     for (String obj : ANNO_OBJS) {
@@ -187,11 +200,12 @@ public class Main {
     }
     out("");
     out("Parameters:");
-    out("  --csv <file>        Bulk annotation from CSV file of: accession, key, value.");
+    out("  --csv <file>        Bulk annotation from CSV file of: accession, key, value");
     out("  --accession <swid>  The SWID of the object to annotate");
     out("  --key <key>         The identifier of the annotation");
-    out("  --skip              Sets the skip attribute flag on the object.");
-    out("  --val <value>       The value of the annotation.");
+    out("  --reason <text>     The reason the object is skipped");
+    out("  --skip              Sets the skip attribute flag on the object");
+    out("  --val <value>       The value of the annotation");
     out("");
   }
 
@@ -210,6 +224,7 @@ public class Main {
           String key = optVal(args, "--key", null);
           String val = optVal(args, "--val", null);
           boolean skip = flag(args, "--skip");
+          String reason = optVal(args, "--reason", null);
           String csv = optVal(args, "--csv", null);
 
           extras(args, "annotate " + obj);
@@ -220,8 +235,13 @@ public class Main {
                 key, "--value", val);
           } else if (swid != null && key == null && val == null & skip == true && csv == null) {
             String idFlag = "--" + obj + "-accession";
-            run("--plugin", "net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator", "--", idFlag, swid,
-                "--skip", "true");
+            if (reason == null) {
+              run("--plugin", "net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator", "--", idFlag, swid,
+                  "--skip", "true");
+            } else {
+              run("--plugin", "net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator", "--", idFlag, swid,
+                  "--skip", "true", "--value", reason);
+            }
           } else if (swid == null && key == null && val == null & skip == false && csv != null) {
             run("--plugin", "net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator", "--", "--file", csv);
           } else {
@@ -232,29 +252,14 @@ public class Main {
     }
   }
 
-  private static void bundleValidate(List<String> args) {
-    if (isHelp(args, true)) {
-      out("");
-      out("Usage: seqware bundle validate [--help]");
-      out("       seqware bundle validate --dir <bundle-dir>");
-      out("");
-      out("Parameters:");
-      out("  --dir <bundle-dir>  The root directory of the bundle");
-      out("");
-    } else {
-      String dir = reqVal(args, "--dir");
-
-      extras(args, "bundle validate");
-
-      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--validate", "--bundle", dir);
-    }
-  }
-
   private static void bundleInstall(List<String> args) {
     if (isHelp(args, true)) {
       out("");
       out("Usage: seqware bundle install [--help]");
       out("       seqware bundle install --zip <bundle-zip>");
+      out("");
+      out("Description:");
+      out("  Inform the Seqware system of the availability of a bundle.");
       out("");
       out("Parameters:");
       out("  --zip <bundle-zip>  The zip file of the bundle");
@@ -268,11 +273,14 @@ public class Main {
     }
   }
 
-  private static void bundleLaunch(List<String> args) {
+  private static void bundleTest(List<String> args) {
     if (isHelp(args, true)) {
       out("");
-      out("Usage: seqware bundle launch [--help]");
-      out("       seqware bundle launch --dir <bundle-dir>");
+      out("Usage: seqware bundle test [--help]");
+      out("       seqware bundle test --dir <bundle-dir>");
+      out("");
+      out("Description:");
+      out("  Test-launch all the workflows in a bundle directory.");
       out("");
       out("Parameters:");
       out("  --dir <bundle-dir>  The root directory of the bundle");
@@ -280,9 +288,76 @@ public class Main {
     } else {
       String dir = reqVal(args, "--dir");
 
-      extras(args, "bundle launch");
+      extras(args, "bundle test");
 
       run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--test", "--bundle", dir);
+    }
+  }
+
+  private static void bundleLaunch(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware bundle launch [--help]");
+      out("       seqware bundle launch <params>");
+      out("");
+      out("Description:");
+      out("  Launch a specified workflow in a bundle directory.");
+      out("");
+      out("Required parameters:");
+      out("  --dir <bundle-dir>  The root directory of the bundle");
+      out("  --ini <ini-file>    An ini file to configure the workflow run");
+      out("                      Repeat this parameter to provide multiple files");
+      out("  --name <wf-name>    The name of the workflow in the bundle");
+      out("  --version <ver>     The version of the workflow in the bundle");
+      out("");
+      out("Optional parameters:");
+      out("  --metadata          Perform metadata write-back of the workflow run");
+      out("");
+    } else {
+      String dir = reqVal(args, "--dir");
+      List<String> inis = reqVals(args, "--ini");
+      String name = reqVal(args, "--name");
+      String version = reqVal(args, "--version");
+      boolean md = flag(args, "--metadata");
+
+      extras(args, "bundle launch");
+
+      if (md) {
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir,
+            "--workflow", name, "--version", version, "--ini-files", cdl(inis));
+      } else {
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir,
+            "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata");
+      }
+    }
+  }
+
+  private static void bundleDryRun(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware bundle dry-run [--help]");
+      out("       seqware bundle dry-run <params>");
+      out("");
+      out("Description:");
+      out("  Perform all steps to prepare for a launch, but not actually launch.");
+      out("");
+      out("Required parameters:");
+      out("  --dir <bundle-dir>  The root directory of the bundle");
+      out("  --ini <ini-file>    An ini file to configure the workflow run");
+      out("                      Repeat this parameter to provide multiple files");
+      out("  --name <wf-name>    The name of the workflow in the bundle");
+      out("  --version <ver>     The version of the workflow in the bundle");
+      out("");
+    } else {
+      String dir = reqVal(args, "--dir");
+      List<String> inis = reqVals(args, "--ini");
+      String name = reqVal(args, "--name");
+      String version = reqVal(args, "--version");
+
+      extras(args, "bundle dry-run");
+
+      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir, "--workflow",
+          name, "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--no-run");
     }
   }
 
@@ -291,6 +366,9 @@ public class Main {
       out("");
       out("Usage: seqware bundle list [--help]");
       out("       seqware bundle list --dir <bundle-dir>");
+      out("");
+      out("Description:");
+      out("  List workflows within a bundle directory.");
       out("");
       out("Parameters:");
       out("  --dir <bundle-dir>  The root directory of the bundle");
@@ -309,6 +387,9 @@ public class Main {
       out("");
       out("Usage: seqware bundle package [--help]");
       out("       seqware bundle package --dir <bundle-dir>");
+      out("");
+      out("Description:");
+      out("  Package a bundle directory into a zip file.");
       out("");
       out("Parameters:");
       out("  --dir <bundle-dir>  The root directory of the bundle");
@@ -330,16 +411,22 @@ public class Main {
       out("Usage: seqware bundle [--help]");
       out("       seqware bundle <sub-command> [--help]");
       out("");
+      out("Description:");
+      out("  Interact with a workflow bundle.");
+      out("");
       out("Sub-commands:");
+      out("  dry-run   Perform all steps to prepare for a launch, but not actually launch");
       out("  install   Inform the Seqware system of the availability of a bundle");
-      out("  launch    Launch a workflow from within a bundle directory");
+      out("  launch    Launch a specified workflow in a bundle directory");
       out("  list      List workflows within a bundle directory");
       out("  package   Package a bundle directory into a zip file");
-      out("  validate  Validate that the bundle directory is structured correctly");
+      out("  test      Test-launch all the workflows in a bundle directory");
       out("");
     } else {
       String cmd = args.remove(0);
-      if ("install".equals(cmd)) {
+      if ("dry-run".equals(cmd)) {
+        bundleDryRun(args);
+      } else if ("install".equals(cmd)) {
         bundleInstall(args);
       } else if ("launch".equals(cmd)) {
         bundleLaunch(args);
@@ -347,8 +434,8 @@ public class Main {
         bundleList(args);
       } else if ("package".equals(cmd)) {
         bundlePackage(args);
-      } else if ("validate".equals(cmd)) {
-        bundleValidate(args);
+      } else if ("test".equals(cmd)) {
+        bundleTest(args);
       } else {
         invalid("bundle", cmd);
       }
@@ -561,6 +648,9 @@ public class Main {
       out("Usage: seqware create [--help]");
       out("       seqware create <object> [--help]");
       out("");
+      out("Description:");
+      out("  Create new seqware objects (e.g., study).");
+      out("");
       out("Objects:");
       out("  experiment");
       out("  file");
@@ -598,6 +688,9 @@ public class Main {
       out("Usage: seqware files report --help");
       out("       seqware files report <params>");
       out("");
+      out("Description:");
+      out("  A report of the provenance of output files.");
+      out("");
       out("Optional parameters:");
       out("  --out <file>        The name of the output file");
       out("  --study <title>     Limit files to the specified study title");
@@ -633,6 +726,9 @@ public class Main {
       out("Usage: seqware files --help");
       out("       seqware files <sub-command> [--help]");
       out("");
+      out("Description:");
+      out("  Extract information about workflow output files.");
+      out("");
       out("Sub-commands:");
       out("  report          A report of the provenance of output files");
       out("");
@@ -651,6 +747,9 @@ public class Main {
       out("");
       out("Usage: seqware workflow ini --help");
       out("       seqware workflow ini <params>");
+      out("");
+      out("Description:");
+      out("  Generate an ini file for a workflow.");
       out("");
       out("Required parameters:");
       out("  --accession <swid>  The SWID of the workflow");
@@ -689,6 +788,9 @@ public class Main {
       out("Usage: seqware workflow list --help");
       out("       seqware workflow list");
       out("");
+      out("Description:");
+      out("  List all installed workflows.");
+      out("");
     } else {
       extras(args, "workflow list");
 
@@ -702,6 +804,9 @@ public class Main {
       out("");
       out("Usage: seqware workflow report --help");
       out("       seqware workflow report <params>");
+      out("");
+      out("Description:");
+      out("  List the details of all runs of a given workflow.");
       out("");
       out("Required parameters:");
       out("  --accession <swid>  The SWID of the workflow");
@@ -752,23 +857,26 @@ public class Main {
       out("Usage: seqware workflow schedule [--help]");
       out("       seqware workflow schedule <params>");
       out("");
+      out("Description:");
+      out("  Schedule a workflow to be run.");
+      out("");
       out("Required parameters:");
       out("  --accession <swid>         The SWID of the workflow to be run");
+      out("  --host <host>              The host on which to launch the workflow run");
+      out("  --ini <ini-file>           An ini file to configure the workflow run ");
+      out("                             Repeat this parameter to provide multiple files");
       out("");
       out("Optional parameters:");
       out("  --engine <type>            The engine that will process the workflow run");
       out("                             May be one of: 'oozie' or 'oozie-sge'");
-      out("  --ini <ini-file>           An ini file to configure the workflow run ");
-      out("                             Repeat this parameter to provide multiple files");
-      out("  --host <host>              The host on which to launch the workflow run");
       out("  --parent-accession <swid>  The SWID of a parent to the workflow run");
       out("                             Repeat this parameter to provide multiple parents");
       out("");
     } else {
       String wfId = reqVal(args, "--accession");
+      String host = reqVal(args, "--host");
+      List<String> iniFiles = reqVals(args, "--ini");
       String engine = optVal(args, "--engine", null);
-      List<String> iniFiles = optVals(args, "--ini");
-      String host = optVal(args, "--host", null);
       List<String> parentIds = optVals(args, "--parent-accession");
 
       extras(args, "workflow schedule");
@@ -806,6 +914,9 @@ public class Main {
       out("");
       out("Usage: seqware workflow-run report --help");
       out("       seqware workflow-run report <params>");
+      out("");
+      out("Description:");
+      out("  The details of a given workflow-run.");
       out("");
       out("Required parameters:");
       out("  --accession <swid>  The SWID of the workflow run");
@@ -847,6 +958,9 @@ public class Main {
       out("Usage: seqware workflow [--help]");
       out("       seqware workflow <sub-command> [--help]");
       out("");
+      out("Description:");
+      out("  Interact with workflows.");
+      out("");
       out("Sub-commands:");
       out("  ini               Generate an ini file for a workflow");
       out("  list              List all installed workflows");
@@ -875,10 +989,24 @@ public class Main {
       out("Usage: seqware workflow-run launch-scheduled --help");
       out("       seqware workflow-run launch-scheduled");
       out("");
+      out("Description:");
+      out("  Launch scheduled workflow runs.");
+      out("");
+      out("Optional parameters:");
+      out("  --accession <swid>   Launch the specified workflow-run");
+      out("                       Repeat this parameter to provide multiple runs");
+      out("");
     } else {
+      List<String> ids = optVals(args, "--accession");
+
       extras(args, "workflow-run launch-scheduled");
 
-      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--launch-scheduled");
+      if (ids.isEmpty()) {
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--launch-scheduled");
+      } else {
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--launch-scheduled",
+            cdl(ids));
+      }
     }
   }
 
@@ -888,19 +1016,34 @@ public class Main {
       out("Usage: seqware workflow-run propagate-statuses --help");
       out("       seqware workflow-run propagate-statuses <params>");
       out("");
-      out("Optional arameters:");
-      out("  --threads <num>  The number of concurrent worker threads (default 1)");
+      out("Description:");
+      out("  Propagate workflow engine statuses to seqware meta DB.");
+      out("");
+      out("Optional parameters:");
+      out("  --accession <swid>   Launch the specified workflow-run");
+      out("  --threads <num>      The number of concurrent worker threads (default 1)");
+      out("");
     } else {
       String threads = optVal(args, "--threads", null);
+      String wfr = optVal(args, "--accession", null);
 
       extras(args, "workflow-run propagate-statuses");
 
-      if (threads == null) {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker");
-      } else {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker", "--",
-            "--threads-in-thread-pool", threads);
+      List<String> runnerArgs = new ArrayList<String>();
+      runnerArgs.add("--plugin");
+      runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker");
+      runnerArgs.add("--");
+
+      if (threads != null) {
+        runnerArgs.add("--threads-in-thread-pool");
+        runnerArgs.add(threads);
       }
+      if (wfr != null) {
+        runnerArgs.add("--workflow-run-accession");
+        runnerArgs.add(wfr);
+      }
+
+      run(runnerArgs);
     }
   }
 
@@ -909,6 +1052,9 @@ public class Main {
       out("");
       out("Usage: seqware workflow-run stderr --help");
       out("       seqware workflow-run stderr <params>");
+      out("");
+      out("Description:");
+      out("  Obtain the stderr output of the run.");
       out("");
       out("Required parameters:");
       out("  --accession <swid>  The SWID of the workflow run");
@@ -943,6 +1089,9 @@ public class Main {
       out("Usage: seqware workflow-run stdout --help");
       out("       seqware workflow-run stdout <params>");
       out("");
+      out("Description:");
+      out("  Obtain the stdout output of the run.");
+      out("");
       out("Required parameters:");
       out("  --accession <swid>  The SWID of the workflow run");
       out("");
@@ -975,6 +1124,9 @@ public class Main {
       out("");
       out("Usage: seqware workflow-run --help");
       out("       seqware workflow-run <sub-command> [--help]");
+      out("");
+      out("Description:");
+      out("  Interact with workflow runs.");
       out("");
       out("Sub-commands:");
       out("  launch-scheduled    Launch scheduled workflow runs");
