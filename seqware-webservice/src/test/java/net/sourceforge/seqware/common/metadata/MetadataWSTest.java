@@ -736,7 +736,7 @@ public class MetadataWSTest {
     
     @Test 
     public void testGetInputFilesForExistingWorkflowRun(){
-        WorkflowRun workflowRun = instance.getWorkflowRun(862);
+        WorkflowRun workflowRun = instance.getWorkflowRun(4735);
         Assert.assertTrue("workflow run with no parents should have empty set", workflowRun.getInputFiles().isEmpty());
     }
     
@@ -799,22 +799,24 @@ public class MetadataWSTest {
         // try getting nothing
         List<WorkflowRun> result = instance.getWorkflowRunsAssociatedWithFiles(files);
         Assert.assertTrue("should have been no files", result.isEmpty());
+        final int workflow_run1 = 6480;
 
         // build required file structures
-        WorkflowRun wr = instance.getWorkflowRun(863);
+        WorkflowRun wr = instance.getWorkflowRun(workflow_run1);
         Assert.assertTrue("nulled  input file set  should be blank", wr.getInputFiles().isEmpty());
-        final int f1_sw_accession = 835;
+        final int f1_sw_accession = 1963;
         wr.getInputFiles().add(f1_sw_accession);
-        final int f2_sw_accession = 838;
+        final int f2_sw_accession = 1978;
         wr.getInputFiles().add(f2_sw_accession);
-        final int f3_sw_accession = 866;
+        final int f3_sw_accession = 2139;
         wr.getInputFiles().add(f3_sw_accession);
         instance.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
                 wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
                 wr.getHost(), wr.getStdOut(), wr.getStdErr(), wr.getWorkflowEngine(), wr.getInputFiles());
         // add a couple more files to a different workflow_run
-        final int f4_sw_accession = 867;
-        wr = instance.getWorkflowRun(6603);
+        final int f4_sw_accession = 2160;
+        final int workflow_run2 = 6603;
+        wr = instance.getWorkflowRun(workflow_run2);
         wr.getInputFiles().add(f1_sw_accession);
         wr.getInputFiles().add(f4_sw_accession);
         instance.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
@@ -824,20 +826,20 @@ public class MetadataWSTest {
         files.add(f1_sw_accession);
         result = instance.getWorkflowRunsAssociatedWithFiles(files);
         Assert.assertTrue("should have been 2 workflow runs, found " + result.size(), result.size() == 2);
-        Assert.assertTrue("incorrect workflow runs found", result.get(0).getSwAccession() == 863);
-        Assert.assertTrue("incorrect workflow runs found", result.get(1).getSwAccession() == 6603);
+        Assert.assertTrue("incorrect workflow runs found", result.get(0).getSwAccession() == workflow_run1);
+        Assert.assertTrue("incorrect workflow runs found", result.get(1).getSwAccession() == workflow_run2);
         files.clear();
         // try a file accession that only the latter workflow run should have
         files.add(f4_sw_accession);
         result = instance.getWorkflowRunsAssociatedWithFiles(files);
         Assert.assertTrue("should have been 1 file, found " + result.size(), result.size() == 1);
-        Assert.assertTrue("incorrect workflow runs found", result.get(0).getSwAccession() == 6603);
+        Assert.assertTrue("incorrect workflow runs found", result.get(0).getSwAccession() == workflow_run2);
         // try both file accessions, should get both back (allows for partial matching) 
         files.add(f1_sw_accession);
         result = instance.getWorkflowRunsAssociatedWithFiles(files);
         Assert.assertTrue("should have been 2 workflow runs, found " + result.size(), result.size() == 2);
-        Assert.assertTrue("incorrect workflow runs found", result.get(0).getSwAccession() == 863);
-        Assert.assertTrue("incorrect workflow runs found", result.get(1).getSwAccession() == 6603);
+        Assert.assertTrue("incorrect workflow runs found", result.get(0).getSwAccession() == workflow_run1);
+        Assert.assertTrue("incorrect workflow runs found", result.get(1).getSwAccession() == workflow_run2);
     }
 
 

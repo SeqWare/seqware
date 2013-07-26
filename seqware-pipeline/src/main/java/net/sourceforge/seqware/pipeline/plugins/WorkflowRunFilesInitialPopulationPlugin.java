@@ -4,27 +4,27 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import joptsimple.OptionException;
-import net.sourceforge.seqware.common.business.WorkflowRunService;
-import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
-import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.common.util.Log;
 import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.lang.StringUtils;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -157,9 +157,8 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
         ResultSet rs = null;
         MetadataDB mdb = null;
         try {
-            WorkflowRunService ss = BeanFactory.getWorkflowRunServiceBean();
             StringBuilder query = new StringBuilder();
-            query.append("select w.sw_accession, status, f.* FROM workflow_run w LEFT OUTER JOIN workflow_run_files f ");
+            query.append("select w.sw_accession, w.workflow_run_id, w.status, f.* FROM workflow_run w LEFT OUTER JOIN workflow_run_files f ");
             query.append("ON w.workflow_run_id = f.workflow_run_id WHERE (status = 'completed' OR status= 'failed') AND ");
             query.append("f.workflow_run_id IS NULL ORDER BY w.sw_accession;");
 
@@ -167,13 +166,23 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
             mdb = DBAccess.get();
             mdb.getDb().setAutoCommit(false);
             rs = mdb.executeQuery(query.toString());
+            PreparedStatement prepareStatement = mdb.getDb().prepareStatement("INSERT INTO workflow_run_files (workflow_run_id, file_sw_accession) VALUES(?,?)");
             while (rs.next()) {
                 int workflowSWID = rs.getInt("sw_accession");
-                WorkflowRun workflowRun = (WorkflowRun) ss.findBySWAccession(workflowSWID);
-                if (workflowRun.getInputFiles().isEmpty()) {
-                    // populate input files
+                int workflowRunID = rs.getInt("workflow_run_id");
+                Log.stdout("Working on workflow_run " + workflowSWID);
+
+                // populate input files
+                List<Integer> listOfFiles = this.getListOfFiles(workflowSWID);
+                Log.stdout("Found " + listOfFiles.size() + " input files for workflow_run " + workflowSWID);
+                // insert into new workflow_run_files table
+                for (Integer fSWID : listOfFiles) {
+                    prepareStatement.setInt(1, workflowRunID);
+                    prepareStatement.setInt(2, fSWID);
+                    prepareStatement.executeUpdate();
                 }
             }
+            Log.stdout("Success!");
             mdb.getDb().commit();
             return ret;
         } catch (SQLException ex) {
@@ -189,6 +198,55 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
         ret.setExitStatus(ReturnValue.FAILURE);
         return ret;
     }
+
+    /**
+     * Given a workflowRunAcc returns a list of file paths that were used in
+     * that run using effectively, the workflow run reporter.
+     *
+     * Hopefully, this is the last we'll use this approach!
+     *
+     * @param workflowRunAcc
+     * @param filesToRun
+     * @return
+     */
+    private List<Integer> getListOfFiles(int workflowRunAcc) {
+        Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
+        List<Integer> indices = new ArrayList<Integer>();
+        String ranOnString = map.get("Input File SWIDs");
+        String[] ranOnArr = ranOnString.split(",");
+        List<Integer> ranOnList = new ArrayList<Integer>();
+        if (ranOnString.isEmpty()) {
+            return ranOnList;
+        }
+        for (String i : ranOnArr) {
+            ranOnList.add(Integer.valueOf(i.trim()));
+            Log.trace("Adding item: " + i);
+        }
+        Log.debug("Got list of files: " + StringUtils.join(ranOnList, ','));
+        return ranOnList;
+    }
+
+    /**
+     * Report an actual launch of a workflow for testing purpose
+     *
+     * @return false iff we don't actually want to launch
+     */
+    protected boolean reportLaunch() {
+        return true;
+    }
+
+    private Map<String, String> generateWorkflowRunMap(int workflowRunAcc) {
+        String report = metadata.getWorkflowRunReport(workflowRunAcc);
+        String[] lines = report.split("\n");
+        String[] reportHeader = lines[0].split("\t");
+        String[] data = lines[1].split("\t");
+        Map<String, String> map = new TreeMap<String, String>();
+        for (int i = 0; i < reportHeader.length; i++) {
+            map.put(reportHeader[i].trim(), data[i].trim());
+        }
+        return map;
+    }
+
 
     /* (non-Javadoc)
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#clean_up()

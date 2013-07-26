@@ -68,8 +68,7 @@ public class DBAccess {
                 InitialContext initCtx = new InitialContext();
                 ds = (DataSource) initCtx.lookup("java:comp/env/jdbc/SeqWareMetaDB");
             } catch (NamingException ex) {
-                Log.fatal(ex);
-                ex.printStackTrace();
+                Log.info("Could not lookup database via context", ex);
             }
             if (ds != null) {
                 Log.debug("init via db.init(ds), datasource is " + ds.getClass());
