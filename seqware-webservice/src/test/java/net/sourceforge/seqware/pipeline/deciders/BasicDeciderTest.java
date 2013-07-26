@@ -181,7 +181,7 @@ public class BasicDeciderTest extends PluginTest {
         TestingDecider decider = (TestingDecider) instance;
         // we expect to see 133 files in total
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 97);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 94);
     }
     
     @Test
@@ -316,7 +316,7 @@ public class BasicDeciderTest extends PluginTest {
         
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-	Assert.assertTrue(((BasicDecider)instance).isToRunContained(metadata.getWorkflowRun(workflowRunAcc).getInputFiles(), filesToRun));
+	Assert.assertTrue(((BasicDecider)instance).isToRunContained(metadata.getWorkflowRun(workflowRunAcc).getInputFileAccessions(), filesToRun));
     }
     
     @Test
@@ -332,7 +332,7 @@ public class BasicDeciderTest extends PluginTest {
         
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-	Assert.assertTrue(!((BasicDecider)instance).isToRunContained(metadata.getWorkflowRun(workflowRunAcc).getInputFiles(), filesToRun));
+	Assert.assertTrue(!((BasicDecider)instance).isToRunContained(metadata.getWorkflowRun(workflowRunAcc).getInputFileAccessions(), filesToRun));
     }
     
     @Test
@@ -349,7 +349,7 @@ public class BasicDeciderTest extends PluginTest {
         
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-	Assert.assertTrue(!((BasicDecider)instance).isToRunContained(metadata.getWorkflowRun(workflowRunAcc).getInputFiles(), filesToRun));
+	Assert.assertTrue(!((BasicDecider)instance).isToRunContained(metadata.getWorkflowRun(workflowRunAcc).getInputFileAccessions(), filesToRun));
     }
     
     @Test
@@ -364,7 +364,7 @@ public class BasicDeciderTest extends PluginTest {
         
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-	Assert.assertTrue(((BasicDecider)instance).isToRunContained(metadata.getWorkflowRun(workflowRunAcc).getInputFiles(), filesToRun));
+	Assert.assertTrue(((BasicDecider)instance).isToRunContained(metadata.getWorkflowRun(workflowRunAcc).getInputFileAccessions(), filesToRun));
     }
     
     /**
@@ -383,7 +383,7 @@ public class BasicDeciderTest extends PluginTest {
         
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(metadata.getWorkflowRun(workflowRunAcc).getInputFiles(), filesToRun) == BasicDecider.FILE_STATUS.SAME_FILES);
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(metadata.getWorkflowRun(workflowRunAcc).getInputFileAccessions(), filesToRun) == BasicDecider.FILE_STATUS.SAME_FILES);
     }
     
         /**
@@ -417,7 +417,7 @@ public class BasicDeciderTest extends PluginTest {
         int workflowRunAcc = 6654;
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(metadata.getWorkflowRun(workflowRunAcc).getInputFiles(), filesToRun) == BasicDecider.FILE_STATUS.PAST_SUBSET_OR_INTERSECTION);
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(metadata.getWorkflowRun(workflowRunAcc).getInputFileAccessions(), filesToRun) == BasicDecider.FILE_STATUS.PAST_SUBSET_OR_INTERSECTION);
     }
 
     /**
@@ -435,7 +435,7 @@ public class BasicDeciderTest extends PluginTest {
         int workflowRunAcc = 6654;
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(metadata.getWorkflowRun(workflowRunAcc).getInputFiles(), filesToRun) == BasicDecider.FILE_STATUS.PAST_SUBSET_OR_INTERSECTION);
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(metadata.getWorkflowRun(workflowRunAcc).getInputFileAccessions(), filesToRun) == BasicDecider.FILE_STATUS.PAST_SUBSET_OR_INTERSECTION);
     }
 
     /**
@@ -451,7 +451,7 @@ public class BasicDeciderTest extends PluginTest {
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         int workflowRunAcc = 6654;
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-        Set<Integer> inputFiles = metadata.getWorkflowRun(workflowRunAcc).getInputFiles();
+        Set<Integer> inputFiles = metadata.getWorkflowRun(workflowRunAcc).getInputFileAccessions();
 	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(inputFiles, filesToRun) == BasicDecider.FILE_STATUS.PAST_SUPERSET);
     }
     
@@ -469,7 +469,7 @@ public class BasicDeciderTest extends PluginTest {
         int workflowRunAcc = 6654;
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(metadata.getWorkflowRun(workflowRunAcc).getInputFiles(), filesToRun) == BasicDecider.FILE_STATUS.DISJOINT_SETS);
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(metadata.getWorkflowRun(workflowRunAcc).getInputFileAccessions(), filesToRun) == BasicDecider.FILE_STATUS.DISJOINT_SETS);
     }
 
     /**

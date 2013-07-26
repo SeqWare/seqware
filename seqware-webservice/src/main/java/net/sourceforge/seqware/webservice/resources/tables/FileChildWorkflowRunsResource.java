@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.FileService;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
@@ -39,6 +40,7 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.restlet.data.Status;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
@@ -273,10 +275,10 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
                 while (rs.next()) {
                     int workflowSWID = rs.getInt("sw_accession");
                     WorkflowRun workflowRun = (WorkflowRun) testIfNull(ss.findBySWAccession(workflowSWID));
-                    WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, workflowRun);
+                    CollectionPropertyName<WorkflowRun>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(WorkflowRun.class, new String[]{"inputFileAccessions"});
+                    WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, workflowRun, ArrayUtils.EMPTY_CLASS_ARRAY, createCollectionPropertyNames);
                     runs.add(dto);
-                    
-                }           
+                }
             } finally {
                 if (mdb != null) {
                     DbUtils.closeQuietly(mdb.getDb(), mdb.getSql(), rs);

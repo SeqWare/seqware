@@ -337,7 +337,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     // ArrayList<String> parentsLinkedToWR = parseParentsLinkedToWR(map);
 
     ret = runWorkflow(wi, workflowRunAccession, new ArrayList<String>(), map, metadataWriteback, parentAccessions,
-                      new ArrayList<String>(), wait, new ArrayList<String>(), wr.getInputFiles());
+                      new ArrayList<String>(), wait, new ArrayList<String>(), wr.getInputFileAccessions());
 
     return (ret);
   }
@@ -514,7 +514,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     // and we need to use their values before writing back to the DB!
     WorkflowRun wr = metadata.getWorkflowRun(workflowRunAccessionInt);
     // merge in any input files that may be fed in when launching bundles directly
-    wr.getInputFiles().addAll(inputFiles);
+    wr.getInputFileAccessions().addAll(inputFiles);
 
     // return if not successful
     if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS || statusCmd == null) {
@@ -522,7 +522,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
       if (metadataWriteback) {
         metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "failed", statusCmd,
                                      wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
-                                     retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFiles());
+                                     retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
       }
       return (retPegasus);
     }
@@ -531,7 +531,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     if (metadataWriteback) {
       metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "pending", statusCmd,
                                    wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
-                                   retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFiles());
+                                   retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
     }
 
     Log.stdout("PEGASUS STATUS COMMAND: " + statusCmd);
@@ -554,7 +554,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
         if (metadataWriteback) {
           metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "completed", statusCmd,
                                        wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
-                                       retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFiles());
+                                       retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
         }
 
       } else if (watchedResult.getExitStatus() == ReturnValue.FAILURE) {
@@ -563,7 +563,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
         if (metadataWriteback) {
           metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "failed", statusCmd,
                                        wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
-                                       watchedResult.getStderr(), watchedResult.getStdout(), wr.getWorkflowEngine(), wr.getInputFiles());
+                                       watchedResult.getStderr(), watchedResult.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
         }
         ret.setExitStatus(ReturnValue.FAILURE);
         return (ret);

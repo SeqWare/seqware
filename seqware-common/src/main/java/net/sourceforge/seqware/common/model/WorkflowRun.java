@@ -919,14 +919,14 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
     /**
      * @return the parentAccessions
      */
-    public Set<Integer> getInputFiles() {
+    public Set<Integer> getInputFileAccessions() {
         return inputFileAccessions;
     }
 
     /**
      * @param parentAccessions the parentAccessions to set
      */
-    public void setInputFiles(Set<Integer> inputFiles) {
+    public void setInputFileAccessions(Set<Integer> inputFiles) {
         this.inputFileAccessions = inputFiles;
     }
   
