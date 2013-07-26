@@ -514,6 +514,14 @@ never
                     <artifactId>org.restlet.ext.xstream</artifactId>
                     <groupId>org.restlet.jee</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>jcl-over-slf4j</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jul-to-slf4j</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <!-- dependencies for REST, some may be optional -->
