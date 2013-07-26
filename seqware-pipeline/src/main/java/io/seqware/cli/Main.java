@@ -815,7 +815,6 @@ public class Main {
         System.setOut(temp);
         run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--list-workflow-params",
             "--workflow-accession", id);
-        out("Created '%s'.", outfile);
       } catch (FileNotFoundException e) {
         kill("seqware: cannot write to '%s'.", outfile);
       } finally {
@@ -824,6 +823,7 @@ public class Main {
           temp.close();
         }
       }
+      out("Created '%s'.", outfile);
     }
   }
 
