@@ -385,6 +385,21 @@ public class BasicDeciderTest extends PluginTest {
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
 	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(metadata.getWorkflowRun(workflowRunAcc).getInputFiles(), filesToRun) == BasicDecider.FILE_STATUS.SAME_FILES);
     }
+    
+        /**
+     * <p>testCompareWorkflowRunFiles_Same.</p>
+     */
+    @Test
+    public void testCompareWorkflowRunFiles_BothEmpty() {
+        TestingDecider decider = (TestingDecider) instance;
+        decider.setMetaws((MetadataWS)metadata);
+        
+        List<String> filesToRun = new ArrayList<String>();
+        
+
+        //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
+	Assert.assertTrue(((BasicDecider)instance).compareWorkflowRunFiles(new HashSet<Integer>(), filesToRun) == BasicDecider.FILE_STATUS.SAME_FILES);
+    }
 
     /**
      * <p>testCompareWorkflowRunFiles_Bigger.</p>
