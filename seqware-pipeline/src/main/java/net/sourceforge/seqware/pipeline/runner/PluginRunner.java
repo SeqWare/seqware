@@ -206,7 +206,7 @@ public class PluginRunner {
     String PluginName = null;
     if (options.has("plugin")) {
       PluginName = (String)options.valueOf("plugin");
-      Log.stdout("Running Plugin: "+PluginName);
+      Log.debug("Running Plugin: "+PluginName);
       
       try {
         plugin = (Plugin) Class.forName(PluginName).newInstance();
@@ -235,7 +235,7 @@ public class PluginRunner {
         // set the metadata object in case the plugin needs access to the DB
         plugin.setMetadata(meta);
   
-        Log.stdout("Setting Up Plugin: "+plugin);
+        Log.debug("Setting Up Plugin: "+plugin);
       }
       
     } else if (options.has("list")) {
@@ -290,7 +290,7 @@ public class PluginRunner {
     ReturnValue newReturn = null;
 
     try {
-      Log.info("  Invoking Method: "+methodName);
+      Log.debug("  Invoking Method: "+methodName);
       method = app.getClass().getMethod(methodName);
       newReturn = (ReturnValue) method.invoke(app);
 
