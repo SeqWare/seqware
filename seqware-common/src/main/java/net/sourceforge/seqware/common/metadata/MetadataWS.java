@@ -1280,7 +1280,7 @@ public class MetadataWS extends Metadata {
             wr.setStdErr(stdErr);
             wr.setStdOut(stdOut);
             wr.setWorkflowEngine(workflowEngine);
-            wr.setInputFiles(inputFiles);
+            wr.setInputFileAccessions(inputFiles);
 
             ll.updateWorkflowRun("/" + accession, wr);
         } catch (Exception e) {

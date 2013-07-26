@@ -951,7 +951,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             count++;
             // only consider previous runs of the same workflow
             if (workflowAccession.equals(previousWorkflowRun.getWorkflowAccession().toString())) {
-                FILE_STATUS fileStatus = compareWorkflowRunFiles(previousWorkflowRun.getInputFiles(), filesToRun);
+                FILE_STATUS fileStatus = compareWorkflowRunFiles(previousWorkflowRun.getInputFileAccessions(), filesToRun);
                 Log.info("Workflow run " + previousWorkflowRun.getSwAccession() + " has a file status of " + fileStatus);
                 PREVIOUS_RUN_STATUS previousStatus = determineStatus(previousWorkflowRun.getStatus());
                 Log.info("Workflow run " + previousWorkflowRun.getSwAccession() + " has a status of " + previousStatus);
@@ -973,9 +973,9 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             } else if (this.workflowAccessionsToCheck.contains(previousWorkflowRun.getWorkflowAccession().toString())){
                 Log.debug("Workflow run " + previousWorkflowRun.getWorkflowAccession() + " has a workflow "+previousWorkflowRun.getWorkflowAccession()+" on the list of workflow accessions to check");
                 // we will check whether all the files to run are contained within the previous run of the workflow, if so we will not re-run
-                FILE_STATUS fileStatus = compareWorkflowRunFiles(previousWorkflowRun.getInputFiles(), filesToRun);
+                FILE_STATUS fileStatus = compareWorkflowRunFiles(previousWorkflowRun.getInputFileAccessions(), filesToRun);
                 Log.info("Workflow run " + previousWorkflowRun.getSwAccession() + " has a file status of " + fileStatus);
-                if (this.isToRunContained(previousWorkflowRun.getInputFiles(), filesToRun)){
+                if (this.isToRunContained(previousWorkflowRun.getInputFileAccessions(), filesToRun)){
                     Log.info("Previous workflow run contained the all of the files that we want to run");
                     rerun = false;
                 }         
