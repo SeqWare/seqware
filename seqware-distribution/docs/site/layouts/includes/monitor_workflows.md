@@ -9,11 +9,11 @@ WorkflowLauncher  scheduled  via a cronjob.
 Specifically, a user will schedule workflow launches using a command similar to
 that below:
 
-	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession $workflow_acc --parent-accessions 99 --host `hostname --long` 
+	seqware workflow schedule --accession $workflow_acc --parent-accession 99  --ini workflow.ini --host `hostname --long` 
 
 Then in a cronjob we use the following command to launch scheduled jobs. 
 
-	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --launch-scheduled
+	seqware workflow-run launch-scheduled
 
 Note that in the first command, we allow jobs to be scheduled on a specific
 host. When we launch scheduled workflows, we check this value in order to
