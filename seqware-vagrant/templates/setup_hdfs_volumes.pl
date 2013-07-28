@@ -31,6 +31,7 @@ foreach my $dev (@list) {
         else {
           # <value>file:///var/lib/hadoop-hdfs/cache/${user.name}/dfs/data</value>
           add_to_config("/mnt/$dev_name/hadoop-hdfs/cache/hdfs/dfs/data");
+          setup_ecryptfs("/mnt/$dev_name/hadoop-hdfs/cache/hdfs/dfs/data");
         }
       }
     }
@@ -76,6 +77,23 @@ sub add_to_config {
        } else {
          print "  ERROR: can't find /etc/hadoop/conf/hdfs-site.xml\n";
        }
+}
+
+sub setup_ecryptfs {
+  my ($dir) = @_;
+  # attempt to find this tool
+  my $result = system("which mount.ecryptfs");
+  if ($result == 0) {
+    my @chars = ( "A" .. "Z", "a" .. "z", 0 .. 9 );
+    my $password = join("", @chars[ map { rand @chars } ( 1 .. 11 ) ]);
+    my $ecrypt_cmd = "mount.ecryptfs $dir $dir -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,no_sig_cache,key=passphrase:passwd=$password";
+    my $ecrypt_result = system($ecrypt_cmd);
+    if ($ecrypt_result) {
+       print "   ERROR: there was a problem running the ecrypt command $ecrypt_cmd\n";
+    }
+  } else {
+    print "   ERROR: can't find mount.ecryptfs so skipping encryption of the HDFS volume\n";
+  }
 }
 
 sub find_mount_path {
