@@ -3,6 +3,7 @@ use Getopt::Long;
 
 # VARS
 
+# Notes:
 # OS_AUTH_URL=https://api.opensciencedatacloud.org:5000/sullivan/v2.0/
 # EC2_URL=https://api.opensciencedatacloud.org:8773/sullivan/services/Cloud
 
