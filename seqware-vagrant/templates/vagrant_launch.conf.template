@@ -23,5 +23,3 @@ AWS_SSH_PEM_FILE=
 SEQWARE_IT_CMD=mvn clean install -DskipITs=false -P 'extITs,!embeddedTomcat,!embeddedHBase'
 SEQWARE_BUILD_CMD=mvn clean install -DskipTests
 SEQWARE_BRANCH_CMD=git checkout develop
-# OS setup script
-OS_SETUP_SCRIPT=templates/ubuntu_12.04_master_script.sh
