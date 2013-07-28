@@ -45,6 +45,9 @@ GetOptions (
 # figure out the current seqware version based on the most-recently built jar
 $seqware_version = find_version();
 
+# make the target dir
+run("mkdir $work_dir");
+
 # config object used for find and replace
 my $configs = {};
 read_config($config_file, $configs);
@@ -123,7 +126,6 @@ sub find_version {
 }
 
 sub prepare_files {
-  run("mkdir $work_dir");
   # the jar file
   #copy("../seqware-distribution/target/seqware-distribution-$seqware_version-full.jar", "$work_dir/seqware-distribution-$seqware_version-full.jar");
   # the web service
