@@ -984,7 +984,7 @@ CREATE TABLE file (
     sw_accession integer DEFAULT nextval('sw_accession_seq'::regclass),
     file_type_id integer,
     size bigint, 
-    skip boolean
+    skip boolean DEFAULT false
 );
 
 
