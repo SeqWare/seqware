@@ -64,7 +64,17 @@ and skip the integration tests if desired:
   # example
   perl vagrant_launch.pl --use-aws --working-dir target-aws --config-files templates/server_setup_scripts/ubuntu_12.04_base_script.sh,templates/server_setup_scripts/ubuntu_12.04_database_script.sh,templates/server_setup_scripts/ubuntu_12.04_portal_script.sh --skip-it-tests
 
-## Manual Running
+## Debugging
+
+If you need to debug a problem set the VAGRANT_LOG variable e.g.:
+
+   VAGRANT_LOG=DEBUG perl vagrant_launch.pl --use-aws
+
+## Shutting Down
+
+You can terminate your instance via the provider interface (Open Stack, AWS, or VirtualBox).
+
+## Manual Running Vagrant
 
 You can use the Vagrantfile created by the launch script to manually start a
 cluster node (note, you would have to run the vagrant_launch.pl at least once
