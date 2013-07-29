@@ -107,7 +107,7 @@ sub setup_ecryptfs {
   if ($result == 0) {
     my @chars = ( "A" .. "Z", "a" .. "z", 0 .. 9 );
     my $password = join("", @chars[ map { rand @chars } ( 1 .. 11 ) ]);
-    my $ecrypt_cmd = "mkdir -p $dir/encrypted && mount.ecryptfs $dir/encrypted $dir/encrypted -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,no_sig_cache,key=passphrase:passwd=$password";
+    my $ecrypt_cmd = "mkdir -p $dir/encrypted && mount.ecryptfs $dir/encrypted $dir/encrypted -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=n,no_sig_cache,key=passphrase:passwd=$password";
     $ecrypt_result = system($ecrypt_cmd);
     if ($ecrypt_result) {
        print "   ERROR: there was a problem running the ecrypt command $ecrypt_cmd\n";
