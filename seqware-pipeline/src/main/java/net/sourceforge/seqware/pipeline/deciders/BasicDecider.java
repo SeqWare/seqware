@@ -908,24 +908,19 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     protected static boolean isDoRerun(FILE_STATUS fileStatus, PREVIOUS_RUN_STATUS previousStatus) {
         Log.info("Considering match with " + fileStatus.name() + " status:" + previousStatus.name());
         boolean strangeCondition = fileStatus == FILE_STATUS.PAST_SUPERSET && previousStatus == PREVIOUS_RUN_STATUS.FAILED;
-        if (strangeCondition){
+        if (strangeCondition) {
             Log.stderr("****** Workflow run has more files in the past but failed. We will try to re-run, but you should investigate!!!! *******");
         }
         boolean doRerun = true;
-        if (fileStatus == FILE_STATUS.PAST_SUBSET_OR_INTERSECTION){
-            if (previousStatus == PREVIOUS_RUN_STATUS.OTHER){
-                doRerun = false;     
-            } else{
+        if (fileStatus == FILE_STATUS.PAST_SUBSET_OR_INTERSECTION) {
+            doRerun = true;
+        } else if (fileStatus == FILE_STATUS.SAME_FILES || fileStatus == FILE_STATUS.PAST_SUPERSET) {
+            if (previousStatus == PREVIOUS_RUN_STATUS.FAILED) {
                 doRerun = true;
+            } else {
+                doRerun = false;
             }
         }
-        else if (fileStatus == FILE_STATUS.SAME_FILES || fileStatus == FILE_STATUS.PAST_SUPERSET){ 
-             if (previousStatus == PREVIOUS_RUN_STATUS.FAILED){
-                doRerun = true;
-             } else{
-                doRerun = false;
-             }
-        } 
         return doRerun;
     }
 
