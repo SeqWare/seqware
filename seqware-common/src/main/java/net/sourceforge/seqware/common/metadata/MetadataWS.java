@@ -1384,22 +1384,24 @@ public class MetadataWS extends Metadata {
     @Override
     public String listInstalledWorkflowParams(String workflowAccession) {
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         try {
             Workflow workflow = ll.findWorkflowParams(workflowAccession);
-
+            if (workflow.getWorkflowParams() == null){
+                return sb.toString();
+            }
             for (WorkflowParam wp : workflow.getWorkflowParams()) {
-                sb.append("#key=" + wp.getKey() + ":type=" + wp.getType() + ":display=");
+                sb.append("#key=").append(wp.getKey()).append(":type=").append(wp.getType()).append(":display=");
                 if (wp.getDisplay()) {
                     sb.append("T");
                 } else {
                     sb.append("F");
                 }
                 if (wp.getDisplayName() != null && wp.getDisplayName().length() > 0) {
-                    sb.append(":display_name=" + wp.getDisplayName());
+                    sb.append(":display_name=").append(wp.getDisplayName());
                 }
                 if (wp.getFileMetaType() != null && wp.getFileMetaType().length() > 0) {
-                    sb.append(":file_meta_type=" + wp.getFileMetaType());
+                    sb.append(":file_meta_type=").append(wp.getFileMetaType());
                 }
                 SortedSet<WorkflowParamValue> wpvalues = wp.getValues();
                 if (wpvalues != null && wpvalues.size() > 0) {
@@ -1408,24 +1410,24 @@ public class MetadataWS extends Metadata {
                     for (WorkflowParamValue wpv : wpvalues) {
                         if (first) {
                             first = false;
-                            sb.append(wpv.getDisplayName() + "|" + wpv.getValue());
+                            sb.append(wpv.getDisplayName()).append("|").append(wpv.getValue());
                         } else {
-                            sb.append(";" + wpv.getDisplayName() + "|" + wpv.getValue());
+                            sb.append(";").append(wpv.getDisplayName()).append("|").append(wpv.getValue());
                         }
                     }
                 }
                 sb.append("\n");
         if (wp.getDefaultValue() == null){
-                    sb.append(wp.getKey() + "=" + "\n");
+                    sb.append(wp.getKey()).append("=" + "\n");
         } else{
-                    sb.append(wp.getKey() + "=" + wp.getDefaultValue() + "\n");
+                    sb.append(wp.getKey()).append("=").append(wp.getDefaultValue()).append("\n");
                 }
             }
 
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Log.error(ex);
         } catch (JAXBException ex) {
-            ex.printStackTrace();
+            Log.error(ex);
         }
 
         return (sb.toString());
