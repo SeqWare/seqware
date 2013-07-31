@@ -4,7 +4,7 @@
 # somewhere on your $PATH, like ~/bin. The rest of Seqware will be
 # installed upon first run into the ~/.seqware directory.
 
-CURRENT_SEQWARE_VERSION="1.0.2-SNAPSHOT"
+CURRENT_SEQWARE_VERSION="1.0.2"
 
 export SEQWARE_VERSION="${SEQWARE_VERSION:-"$CURRENT_SEQWARE_VERSION"}"
 
