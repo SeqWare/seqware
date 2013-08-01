@@ -231,10 +231,12 @@ public class MetadataWS extends Metadata {
 
     /**
      * {@inheritDoc}
+     *
      */
+    
+    
   @Override
-    public ReturnValue addStudy(String title, String description, String accession, StudyType studyType,
-            String centerName, String centerProjectName, Integer studyTypeId) {
+    public ReturnValue addStudy(String title, String description, String centerName, String centerProjectName, Integer studyTypeId) {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 

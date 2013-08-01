@@ -97,7 +97,7 @@ public class MetadataDB extends Metadata {
    * {@inheritDoc}
    */
   @Override
-  public ReturnValue addStudy(String title, String description, String accession, StudyType studyType,
+  public ReturnValue addStudy(String title, String description,
           String centerName, String centerProjectName, Integer studyTypeId) {
     return (new ReturnValue(ReturnValue.NOTIMPLEMENTED));
   }
@@ -105,6 +105,7 @@ public class MetadataDB extends Metadata {
   /**
    * {@inheritDoc}
    */
+  @Override
   public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title) {
     return (new ReturnValue(ReturnValue.NOTIMPLEMENTED));
   }
@@ -501,6 +502,7 @@ public class MetadataDB extends Metadata {
    *
    * This maps processing_id to sw_accession for that event.
    */
+  @Override
   public int mapProcessingIdToAccession(int processingId) {
     int result = 0;
     String sql = "select sw_accession from processing where processing_id = " + processingId;
@@ -523,6 +525,7 @@ public class MetadataDB extends Metadata {
    * TODO: needs to support more relationship types, but will need to add to the
    * SQL schema to support this
    */
+  @Override
   public boolean linkWorkflowRunAndParent(int workflowRunId, int parentAccession) throws SQLException {
     StringBuffer sql = new StringBuffer();
     if (findAccessionInTable("ius", "ius_id", parentAccession) != 0) {
@@ -860,6 +863,7 @@ public class MetadataDB extends Metadata {
   /**
    * {@inheritDoc}
    */
+  @Override
   public int add_workflow_run(int workflowAccession) {
     int workflowId = 0;
     int id = 0;
@@ -881,6 +885,7 @@ public class MetadataDB extends Metadata {
   /**
    * {@inheritDoc}
    */
+  @Override
   public int get_workflow_run_accession(int workflowRunId) {
     int result = 0;
 
@@ -901,6 +906,7 @@ public class MetadataDB extends Metadata {
   /**
    * {@inheritDoc}
    */
+  @Override
   public int get_workflow_run_id(int workflowRunAccession) {
     int result = 0;
 
@@ -959,6 +965,7 @@ public class MetadataDB extends Metadata {
   /**
    * {@inheritDoc}
    */
+  @Override
   public void add_workflow_run_ancestor(int workflowRunAccession, int processingId) {
     int workflowRunId = 0;
     try {
@@ -1005,6 +1012,7 @@ public class MetadataDB extends Metadata {
   /**
    * {@inheritDoc}
    */
+  @Override
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
           String statusCmd, String workingDirectory, String dax, String ini, String host,
           String stdErr, String stdOut, String workflowengine) {
@@ -1432,6 +1440,7 @@ public class MetadataDB extends Metadata {
      */
     
     
+  @Override
   public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflowClass, String workflowType, String workflowEngine) {
 
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
@@ -1665,6 +1674,7 @@ public class MetadataDB extends Metadata {
    *
    * @return a {@link java.lang.String} object.
    */
+  @Override
   public String listInstalledWorkflows() {
     String sql = "SELECT name, version, sw_accession, create_tstmp, permanent_bundle_location FROM workflow";
     StringBuffer sb = new StringBuffer();
@@ -1695,6 +1705,7 @@ public class MetadataDB extends Metadata {
   /**
    * {@inheritDoc}
    */
+  @Override
   public int getWorkflowAccession(String name, String version) {
     int result = 0;
 
@@ -1750,6 +1761,7 @@ public class MetadataDB extends Metadata {
   /**
    * {@inheritDoc}
    */
+  @Override
   public List<WorkflowRun> getWorkflowRunsByStatus(String status) {
 
     ArrayList<WorkflowRun> results = new ArrayList<WorkflowRun>();
@@ -1785,6 +1797,7 @@ public class MetadataDB extends Metadata {
   /**
    * {@inheritDoc}
    */
+  @Override
   public List<WorkflowRun> getWorkflowRunsByHost(String host) {
     ArrayList<WorkflowRun> results = new ArrayList<WorkflowRun>();
 
@@ -1828,6 +1841,7 @@ public class MetadataDB extends Metadata {
    *
    * @return a {@link java.util.List} object.
    */
+  @Override
   public List<Study> getAllStudies() {
     throw new NotImplementedException("All studies must be retrieved through webservice");
   }
@@ -1837,6 +1851,7 @@ public class MetadataDB extends Metadata {
    *
    * @return a {@link java.lang.String} object.
    */
+  @Override
   public String getSequencerRunReport() {
     return (null);
   }
@@ -2025,38 +2040,47 @@ public class MetadataDB extends Metadata {
     // TODO Auto-generated method stub
   }
 
+  @Override
   public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath) {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
 
+  @Override
   public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip, Integer laneNumber) {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
 
+  @Override
   public ReturnValue addIUS(Integer laneAccession, Integer sampleAccession, String name, String description, String barcode, boolean skip) {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
 
+  @Override
   public List<Platform> getPlatforms() {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
 
+  @Override
   public List<Organism> getOrganisms() {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
 
+  @Override
   public List<StudyType> getStudyTypes() {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
 
+  @Override
   public List<LibraryStrategy> getLibraryStrategies() {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
 
+  @Override
   public List<LibrarySelection> getLibrarySelections() {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
 
+  @Override
   public List<LibrarySource> getLibrarySource() {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
