@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.List;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreatorWrapper;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.junit.AfterClass;
