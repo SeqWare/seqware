@@ -17,7 +17,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author boconnor
  * @version $Id: $Id
  */
-public class ExperimentSpotDesign implements Serializable, Comparable<ExperimentSpotDesign> {
+public class ExperimentSpotDesign implements Serializable, Comparable<ExperimentSpotDesign>, SecondTierModel {
 	/**
 	 * 
 	 * LEFT OFF WITH: NEED TO FINISH THIS OBJECT
@@ -225,5 +225,10 @@ public class ExperimentSpotDesign implements Serializable, Comparable<Experiment
 	public void setReadSpecs(SortedSet<ExperimentSpotDesignReadSpec> readSpecs) {
 		this.readSpecs = readSpecs;
 	}
+
+    @Override
+    public int getModelId() {
+        return this.getExperimentSpotDesignId();
+    }
 
 }

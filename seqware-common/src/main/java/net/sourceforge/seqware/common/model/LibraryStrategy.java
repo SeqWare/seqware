@@ -12,7 +12,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author boconnor
  * @version $Id: $Id
  */
-public class LibraryStrategy implements Serializable, Comparable<LibraryStrategy> {
+public class LibraryStrategy implements Serializable, Comparable<LibraryStrategy>, SecondTierModel {
 	private static final long serialVersionUID = 3681345328915990568L;
 	
 	private Integer		libraryStrategyId;
@@ -121,5 +121,10 @@ public class LibraryStrategy implements Serializable, Comparable<LibraryStrategy
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+    @Override
+    public int getModelId() {
+        return this.getLibraryStrategyId();
+    }
 	
 }

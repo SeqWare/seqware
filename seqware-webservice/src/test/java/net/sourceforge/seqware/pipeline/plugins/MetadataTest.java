@@ -351,7 +351,7 @@ public class MetadataTest extends PluginTest {
 
     }
     
-     @Test
+    @Test
     public void testCreateSampleWithExperimentWrongOrganismFail() {
         String eAcc = experimentAccession;
         if (eAcc == null) {
@@ -363,7 +363,7 @@ public class MetadataTest extends PluginTest {
                 "--field", "title::sampletitle",
                 "--field", "description::sampledescription",
                 "--field", "organism_id::100000"));
-         
+
         checkExpectedIncorrectParameters();
     }
 
