@@ -186,7 +186,7 @@ public class Metadata extends Plugin {
         ReturnValue rv = new ReturnValue(ReturnValue.SUCCESS);
         if ("study".equals(table)) {
             List<StudyType> studyTypes = this.metadata.getStudyTypes();
-            print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\naccession\tString\ncenter_name\tString\ncenter_project_name\tString\nstudy_type\tInteger\t[");
+            print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\ncenter_name\tString\ncenter_project_name\tString\nstudy_type\tInteger\t[");
             for (StudyType st : studyTypes) {
                 print(st.getStudyTypeId() + ": " + st.getName() + ", ");
             }
