@@ -3,7 +3,6 @@ package	net.sourceforge.seqware.common.model;
 import java.io.Serializable;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * <p>Platform class.</p>
@@ -11,7 +10,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Platform implements Serializable, Comparable<Platform> {
+public class Platform implements Serializable, Comparable<Platform>, SecondTierModel {
 	private static final long serialVersionUID = 3681345328115990568L;
 	
 	private Integer		platformId;
@@ -157,5 +156,10 @@ public class Platform implements Serializable, Comparable<Platform> {
      */
     public static long getSerialVersionUID() {
         return serialVersionUID;
+    }
+
+    @Override
+    public int getModelId() {
+        return this.getPlatformId();
     }
 }

@@ -17,7 +17,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author boconnor
  * @version $Id: $Id
  */
-public class ExperimentLibraryDesign implements Serializable, Comparable<ExperimentLibraryDesign> {
+public class ExperimentLibraryDesign implements Serializable, Comparable<ExperimentLibraryDesign>, SecondTierModel {
 	/**
 	 * 
 	 */
@@ -299,5 +299,10 @@ public class ExperimentLibraryDesign implements Serializable, Comparable<Experim
   public static long getSerialVersionUID() {
 		return serialVersionUID;
 	}
+
+    @Override
+    public int getModelId() {
+        return getExperimentLibraryDesignId();
+    }
 
 }

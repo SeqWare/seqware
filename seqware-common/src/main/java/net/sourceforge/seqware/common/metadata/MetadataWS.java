@@ -59,6 +59,7 @@ import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleAttribute;
+import net.sourceforge.seqware.common.model.SecondTierModel;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.SequencerRunAttribute;
 import net.sourceforge.seqware.common.model.Study;
@@ -231,11 +232,17 @@ public class MetadataWS extends Metadata {
     /**
      * {@inheritDoc}
      */
+  @Override
     public ReturnValue addStudy(String title, String description, String accession, StudyType studyType,
             String centerName, String centerProjectName, Integer studyTypeId) {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
+        boolean studyTypeFound = isValidModelId(getStudyTypes(), studyTypeId);
+        if (!studyTypeFound) {
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            return ret;
+        }
         StudyType st = new StudyType();
         st.setStudyTypeId(studyTypeId);
 
@@ -267,12 +274,17 @@ public class MetadataWS extends Metadata {
      * TODO: this needs to setup rows in experiment_library_design and
      * experiment_spot_design
      */
+  @Override
     public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title) {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
         try {
-
+            boolean platformFound = isValidModelId(getPlatforms(), platformId);
+            if (!platformFound){
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return ret;
+            }
             Platform p = new Platform();
             p.setPlatformId(platformId);
 
@@ -318,6 +330,11 @@ public class MetadataWS extends Metadata {
 
             Sample s = new Sample();
 
+            boolean organismFound = isValidModelId(getOrganisms(), organismId);
+            if (!organismFound){
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return ret;
+            }
             Organism o = new Organism();
             o.setOrganismId(organismId);
 
@@ -345,8 +362,12 @@ public class MetadataWS extends Metadata {
 
             ret.setAttribute("sw_accession", s.getSwAccession().toString());
 
+        } catch(NotFoundException e){
+            Log.fatal("NotFoundException, e");
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            return ret;
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.fatal("Exception, e");
             ret.setExitStatus(ReturnValue.FAILURE);
             return ret;
         }
@@ -366,11 +387,18 @@ public class MetadataWS extends Metadata {
      * @param skip
      * @return
      */
+  @Override
     public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath) {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
         try {
 
+            boolean platformFound = isValidModelId(this.getPlatforms(), platformAccession);
+            if (!platformFound){
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return ret;
+            }
+            
             Platform p = new Platform();
             p.setPlatformId(platformAccession);
 
@@ -388,6 +416,10 @@ public class MetadataWS extends Metadata {
 
             ret.setAttribute("sw_accession", sr.getSwAccession().toString());
 
+        } catch(NotFoundException e){
+            Log.fatal("NotFoundException, e");
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            return ret;
         } catch (Exception e) {
             e.printStackTrace();
             ret.setExitStatus(ReturnValue.FAILURE);
@@ -405,6 +437,15 @@ public class MetadataWS extends Metadata {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
         try {
+            
+            boolean studyTypeFound = isValidModelId(getStudyTypes(), studyTypeId);
+            boolean libraryStrategyFound = isValidModelId(this.getLibraryStrategies(), libraryStrategyId);
+            boolean librarySelectionFound = isValidModelId(this.getLibrarySelections(), librarySelectionId);
+            boolean librarySourceFound = isValidModelId(this.getLibrarySource(), librarySourceId);
+            if (!studyTypeFound || !libraryStrategyFound || !librarySelectionFound || !librarySourceFound){
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return ret;
+            }
 
             SequencerRun sr = ll.findSequencerRun("/" + sequencerRunAccession);
             StudyType st = new StudyType();
@@ -434,6 +475,10 @@ public class MetadataWS extends Metadata {
 
             ret.setAttribute("sw_accession", l.getSwAccession().toString());
 
+        } catch(NotFoundException e){
+            Log.fatal("NotFoundException, e");
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            return ret;
         } catch (Exception e) {
             e.printStackTrace();
             ret.setExitStatus(ReturnValue.FAILURE);
@@ -443,6 +488,7 @@ public class MetadataWS extends Metadata {
         return (ret);
     }
 
+  @Override
     public ReturnValue addIUS(Integer laneAccession, Integer sampleAccession, String name, String description, String barcode, boolean skip) {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -465,6 +511,10 @@ public class MetadataWS extends Metadata {
 
             ret.setAttribute("sw_accession", i.getSwAccession().toString());
 
+        } catch(NotFoundException e){
+            Log.fatal("NotFoundException, e");
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            return ret;
         } catch (Exception e) {
             e.printStackTrace();
             ret.setExitStatus(ReturnValue.FAILURE);
@@ -3087,5 +3137,15 @@ public class MetadataWS extends Metadata {
     public String getProcessingRelations(String swAccession) {
         String report = (String) ll.getString("/processingstructure?swAccession=" + swAccession);
         return report;
+    }
+    
+    private boolean isValidModelId(final List<? extends SecondTierModel> models, final int modelId) {
+        boolean modelFound = false;
+        for (SecondTierModel organism : models) {
+            if (organism.getModelId() == modelId) {
+                modelFound = true;
+            }
+        }
+        return modelFound;
     }
 }
