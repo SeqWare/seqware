@@ -178,7 +178,6 @@ public class MetadataTest extends PluginTest {
         expectedFields.put("Field", "Type");
         expectedFields.put("title", "String");
         expectedFields.put("description", "String");
-        expectedFields.put("accession", "String");
         expectedFields.put("center_name", "String");
         expectedFields.put("center_project_name", "String");
         expectedFields.put("study_type", "Integer");
