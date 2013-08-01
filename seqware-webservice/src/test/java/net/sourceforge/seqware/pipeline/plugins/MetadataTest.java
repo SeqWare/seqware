@@ -27,6 +27,7 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import net.sourceforge.seqware.common.util.runtools.TestConsoleAdapter;
+import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
@@ -349,6 +350,22 @@ public class MetadataTest extends PluginTest {
         Assert.assertTrue("Did not find the sample attached to the experiment", foundIt);
 
     }
+    
+     @Test
+    public void testCreateSampleWithExperimentWrongOrganismFail() {
+        String eAcc = experimentAccession;
+        if (eAcc == null) {
+            eAcc = "834";
+        }
+
+        instance.setParams(Arrays.asList("--table", "sample", "--create",
+                "--field", "experiment_accession::" + eAcc,
+                "--field", "title::sampletitle",
+                "--field", "description::sampledescription",
+                "--field", "organism_id::100000"));
+         
+        checkExpectedIncorrectParameters();
+    }
 
     @Test
     public void testCreateSampleWithParent() {
@@ -410,6 +427,90 @@ public class MetadataTest extends PluginTest {
         String s = getOut();
         laneAccession = getAndCheckSwid(s);
     }
+    
+    @Test
+    public void testCreateLaneWrongStudyTypeFail() {
+        String rAcc = runAccession;
+        if (rAcc == null) {
+            rAcc = "4715";
+        }
+
+        instance.setParams(Arrays.asList("--table", "lane", "--create",
+                "--field", "name::lane",
+                "--field", "description::description",
+                "--field", "cycle_descriptor::{F*120}{..}{R*120}",
+                "--field", "sequencer_run_accession::" + rAcc,
+                "--field", "library_strategy_accession::1",
+                "--field", "study_type_accession::1000000",
+                "--field", "library_selection_accession::1",
+                "--field", "library_source_accession::1",
+                "--field", "skip::false",
+                "--field", "lane_number::1"));
+        checkExpectedIncorrectParameters();
+    }
+    
+    @Test
+    public void testCreateLaneWrongLibraryStrategyFail() {
+        String rAcc = runAccession;
+        if (rAcc == null) {
+            rAcc = "4715";
+        }
+
+        instance.setParams(Arrays.asList("--table", "lane", "--create",
+                "--field", "name::lane",
+                "--field", "description::description",
+                "--field", "cycle_descriptor::{F*120}{..}{R*120}",
+                "--field", "sequencer_run_accession::" + rAcc,
+                "--field", "library_strategy_accession::10000",
+                "--field", "study_type_accession::1",
+                "--field", "library_selection_accession::1",
+                "--field", "library_source_accession::1",
+                "--field", "skip::false",
+                "--field", "lane_number::1"));
+        checkExpectedIncorrectParameters();
+    }
+    
+    @Test
+    public void testCreateLaneWrongLibrarySelectionFail() {
+        String rAcc = runAccession;
+        if (rAcc == null) {
+            rAcc = "4715";
+        }
+
+        instance.setParams(Arrays.asList("--table", "lane", "--create",
+                "--field", "name::lane",
+                "--field", "description::description",
+                "--field", "cycle_descriptor::{F*120}{..}{R*120}",
+                "--field", "sequencer_run_accession::" + rAcc,
+                "--field", "library_strategy_accession::1",
+                "--field", "study_type_accession::1",
+                "--field", "library_selection_accession::100000",
+                "--field", "library_source_accession::1",
+                "--field", "skip::false",
+                "--field", "lane_number::1"));
+        checkExpectedIncorrectParameters();
+    }
+    
+    @Test
+    public void testCreateLaneWrongLibrarySourceFail() {
+        String rAcc = runAccession;
+        if (rAcc == null) {
+            rAcc = "4715";
+        }
+
+        instance.setParams(Arrays.asList("--table", "lane", "--create",
+                "--field", "name::lane",
+                "--field", "description::description",
+                "--field", "cycle_descriptor::{F*120}{..}{R*120}",
+                "--field", "sequencer_run_accession::" + rAcc,
+                "--field", "library_strategy_accession::1",
+                "--field", "study_type_accession::1",
+                "--field", "library_selection_accession::1",
+                "--field", "library_source_accession::100000",
+                "--field", "skip::false",
+                "--field", "lane_number::1"));
+        checkExpectedIncorrectParameters();
+    }
 
     @Test
     public void testCreateIUS() {
@@ -433,6 +534,26 @@ public class MetadataTest extends PluginTest {
         getAndCheckSwid(s);
 
     }
+    
+    @Test
+    public void testCreateSampleWithExperimentFail() {
+        instance.setParams(Arrays.asList("--table", "sample", "--create",
+                "--field", "experiment_accession::100000",
+                "--field", "title::sampletitle",
+                "--field", "description::sampledescription",
+                "--field", "organism_id::31"));
+        checkExpectedIncorrectParameters();
+    }
+
+    @Test
+    public void testCreateSampleWithParentFail() {
+        instance.setParams(Arrays.asList("--table", "sample", "--create",
+                "--field", "parent_sample_accession::100000" ,
+                "--field", "title::sampletitle",
+                "--field", "description::sampledescription",
+                "--field", "organism_id::31"));
+        checkExpectedIncorrectParameters();
+    }
 
     //////////////////////////////////////////////////Negative tests
     // re-enabled to test SEQWARE-1331
@@ -445,7 +566,7 @@ public class MetadataTest extends PluginTest {
                 "--field", "title::sampletitle",
                 "--field", "description::sampledescription",
                 "--field", "organism_id::31"));
-        checkExpectedFailure();
+        checkExpectedIncorrectParameters();
     }
 
     @Test
@@ -457,7 +578,7 @@ public class MetadataTest extends PluginTest {
                 "--field", "title::sampletitle",
                 "--field", "description::sampledescription",
                 "--field", "organism_id::31"));
-        checkExpectedFailure();
+        checkExpectedIncorrectParameters();
     }
 
     @Test
@@ -470,40 +591,42 @@ public class MetadataTest extends PluginTest {
     }
 
     // See SEQWARE-1374
-//    @Test
-//    public void testCreateStudyFail() {
-//        instance.setParams(Arrays.asList("--table", "study", "--create",
-//                "--field", "title::alal" + System.currentTimeMillis(),
-//                "--field", "description::alal",
-//                "--field", "accession::1235",
-//                "--field", "center_name::oicr",
-//                "--field", "center_project_name::mine",
-//                "--field", "study_type::42"));
-//        checkExpectedFailure();
-//    }
+    @Test
+    public void testCreateStudyFail() {
+        instance.setParams(Arrays.asList("--table", "study", "--create",
+                "--field", "title::alal" + System.currentTimeMillis(),
+                "--field", "description::alal",
+                "--field", "accession::1235",
+                "--field", "center_name::oicr",
+                "--field", "center_project_name::mine",
+                "--field", "study_type::42"));
+        checkExpectedIncorrectParameters();
+    }
     // See SEQWARE-1374
-//    @Test
-//    public void testCreateExperimentFail() {
-//        String sAcc = "120";
-//
-//        instance.setParams(Arrays.asList("--table", "experiment", "--create",
-//                "--field", "study_accession::" + sAcc,
-//                "--field", "title::experimenttitle" + System.currentTimeMillis(),
-//                "--field", "description::\"Experiment Description\"",
-//                "--field", "platform_id::42"));
-//        checkExpectedFailure();
-//    }
+    @Test
+    public void testCreateExperimentFail() {
+        String sAcc = "120";
+
+        instance.setParams(Arrays.asList("--table", "experiment", "--create",
+                "--field", "study_accession::" + sAcc,
+                "--field", "title::experimenttitle" + System.currentTimeMillis(),
+                "--field", "description::\"Experiment Description\"",
+                "--field", "platform_id::42"));
+        checkExpectedIncorrectParameters();
+    }
     // See SEQWARE-1374
-//    @Test
-//    public void testCreateSequencerRunFail() {
-//        instance.setParams(Arrays.asList("--table", "sequencer_run", "--create",
-//                "--field", "name::SR" + System.currentTimeMillis(),
-//                "--field", "description::SRD",
-//                "--field", "platform_accession::20000",
-//                "--field", "paired_end::true",
-//                "--field", "skip::false"));
-//        checkExpectedFailure();
-//    }
+    @Test
+    public void testCreateSequencerRunFail() {
+        instance.setParams(Arrays.asList("--table", "sequencer_run", "--create",
+                "--field", "name::SR" + System.currentTimeMillis(),
+                "--field", "description::SRD",
+                "--field", "platform_accession::20000",
+                "--field", "paired_end::true",
+                "--field", "skip::false",
+                "--field", "file_path::/funky/filepath"
+                ));
+        checkExpectedIncorrectParameters();
+    }
     @Test
     public void testCreateLaneFail() {
         String rAcc = "20000";
@@ -519,7 +642,7 @@ public class MetadataTest extends PluginTest {
                 "--field", "library_source_accession::1",
                 "--field", "skip::false",
                 "--field", "lane_number::1"));
-        checkExpectedFailure();
+        checkExpectedIncorrectParameters();
     }
 
     @Test
@@ -542,7 +665,7 @@ public class MetadataTest extends PluginTest {
                 "--field", "sample_accession::" + sAcc,
                 "--field", "skip::false",
                 "--field", "barcode::NoIndex"));
-        checkExpectedFailure();
+        checkExpectedIncorrectParameters();
     }
 
     @Test
@@ -565,7 +688,7 @@ public class MetadataTest extends PluginTest {
                 "--field", "sample_accession::" + sAcc,
                 "--field", "skip::false",
                 "--field", "barcode::NoIndex"));
-        checkExpectedFailure();
+        checkExpectedIncorrectParameters();
     }
     ////////////////////////////////////////////////////////////////////////////
     /////Test interactive components
