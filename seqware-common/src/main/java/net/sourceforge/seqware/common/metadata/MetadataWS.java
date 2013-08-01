@@ -116,6 +116,11 @@ import org.xml.sax.SAXException;
  */
 public class MetadataWS extends Metadata {
 
+  static{
+    // deal with restlet's annoying logging implementation details
+    System.getProperties().put("org.restlet.engine.loggerFacadeClass", "org.restlet.ext.slf4j.Slf4jLoggerFacade");
+  }
+  
     private String version;
     private String user;
     private char[] pass;
