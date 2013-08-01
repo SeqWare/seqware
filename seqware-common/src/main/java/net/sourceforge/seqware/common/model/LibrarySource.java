@@ -12,7 +12,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author boconnor
  * @version $Id: $Id
  */
-public class LibrarySource implements Serializable, Comparable<LibrarySource> {
+public class LibrarySource implements Serializable, Comparable<LibrarySource>, SecondTierModel {
 	private static final long serialVersionUID = 3681345318915990568L;
 	
 	private Integer		librarySourceId;
@@ -123,5 +123,10 @@ public class LibrarySource implements Serializable, Comparable<LibrarySource> {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+    @Override
+    public int getModelId() {
+        return this.getLibrarySourceId();
+    }
 	
 }

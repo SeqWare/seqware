@@ -338,6 +338,10 @@ public class Metadata extends Plugin {
             ret = metadata.addStudy(fields.get("title"), fields.get("description"),
                     null, null, fields.get("center_name"), fields.get("center_project_name"),
                     Integer.parseInt(fields.get("study_type")));
+            if (ret.getReturnValue() == ReturnValue.INVALIDPARAMETERS){
+                print ("Invalid parameters, please check your id values");
+                return ret;
+            }
             print("SWID: " + ret.getAttribute("sw_accession"));
         } else {
             printErrorMessage(necessaryFields, null);
@@ -359,8 +363,14 @@ public class Metadata extends Plugin {
             promptForExperiment(necessaryFields);
         }
         if (checkFields(necessaryFields)) {
+            // check for valid platform id
+            final int platformId = Integer.parseInt(fields.get("platform_id"));
             // create a new experiment
-            ret = metadata.addExperiment(Integer.parseInt(fields.get("study_accession")), Integer.parseInt(fields.get("platform_id")), fields.get("description"), fields.get("title"));
+            ret = metadata.addExperiment(Integer.parseInt(fields.get("study_accession")), platformId, fields.get("description"), fields.get("title"));
+            if (ret.getReturnValue() == ReturnValue.INVALIDPARAMETERS){
+                print ("Invalid parameters, please check your id values");
+                return ret;
+            }
             print("SWID: " + ret.getAttribute("sw_accession"));
 
         } else {
@@ -391,10 +401,16 @@ public class Metadata extends Plugin {
         
         if (checkFields(necessaryFields)
                 && (notNullOrLessThanZero("experiment_accession") || notNullOrLessThanZero("parent_sample_accession"))) {
-            // create a new sample
+            // check for valid organism id (accession is blank and should not confuse with sw_accession)
+            final int organismId = Integer.parseInt(fields.get("organism_id"));
+            // create a new sample 
             ret = metadata.addSample(Integer.parseInt(fields.get("experiment_accession")),
-                    Integer.parseInt(fields.get("parent_sample_accession")), Integer.parseInt(fields.get("organism_id")),
+                    Integer.parseInt(fields.get("parent_sample_accession")), organismId,
                     fields.get("description"), fields.get("title"));
+            if (ret.getReturnValue() == ReturnValue.INVALIDPARAMETERS){
+                print ("Invalid parameters, please check your id values");
+                return ret;
+            }
             print("SWID: " + ret.getAttribute("sw_accession"));
 
         } else {
@@ -402,7 +418,7 @@ public class Metadata extends Plugin {
             //Log.error("You need to supply experiment_accession (reported if you create an experiment using this tool), title, and description for the sample table along with an integer for organism_id [31: Homo sapiens]. Alternatively, enable --interactive mode.");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
-        return (ret);
+        return ret;
     }
 
     private boolean notNullOrLessThanZero(String fieldName) {
@@ -456,9 +472,14 @@ public class Metadata extends Plugin {
         }
 
         if (checkFields(necessaryFields)) {
+            // note, study type has no accession in the database
+            final int studyTypeId = Integer.parseInt(fields.get("study_type_accession"));
             // create a new experiment
-            ret = metadata.addLane(Integer.parseInt(fields.get("sequencer_run_accession")), Integer.parseInt(fields.get("study_type_accession")), Integer.parseInt(fields.get("library_strategy_accession")), Integer.parseInt(fields.get("library_selection_accession")), Integer.parseInt(fields.get("library_source_accession")), fields.get("name"), fields.get("description"), fields.get("cycle_descriptor"), "true".equalsIgnoreCase(fields.get("skip")), Integer.parseInt(fields.get("lane_number")));
-
+            ret = metadata.addLane(Integer.parseInt(fields.get("sequencer_run_accession")), studyTypeId, Integer.parseInt(fields.get("library_strategy_accession")), Integer.parseInt(fields.get("library_selection_accession")), Integer.parseInt(fields.get("library_source_accession")), fields.get("name"), fields.get("description"), fields.get("cycle_descriptor"), "true".equalsIgnoreCase(fields.get("skip")), Integer.parseInt(fields.get("lane_number")));
+            if (ret.getReturnValue() == ReturnValue.INVALIDPARAMETERS){
+                print ("Invalid parameters, please check your id values");
+                return ret;
+            }
             print("SWID: " + ret.getAttribute("sw_accession"));
 
         } else {
@@ -466,7 +487,7 @@ public class Metadata extends Plugin {
             //Log.error("You need to supply name, description, cycle_descriptor [e.g. {F*120}{..}{R*120}], sequencer_run_accession, study_type_accession, library_strategy_accession, library_selection_accession, library_source_accession and 'true' or 'false' for skip. Alternatively, enable --interactive mode.");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
-        return (ret);
+        return ret;
     }
 
     protected ReturnValue addIUS() {
@@ -484,7 +505,10 @@ public class Metadata extends Plugin {
 
             // create a new experiment
             ret = metadata.addIUS(Integer.parseInt(fields.get("lane_accession")), Integer.parseInt(fields.get("sample_accession")), fields.get("name"), fields.get("description"), fields.get("barcode"), "true".equalsIgnoreCase(fields.get("skip")));
-
+            if (ret.getReturnValue() == ReturnValue.INVALIDPARAMETERS){
+                print ("Invalid parameters, please check your id values");
+                return ret;
+            }
             print("SWID: " + ret.getAttribute("sw_accession"));
 
         } else {
