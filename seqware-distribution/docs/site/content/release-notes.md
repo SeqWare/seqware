@@ -9,6 +9,9 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 0.13.6.9 (2013-08-10)
+* Fixes to the logic of the BasicDecider
+
 ## 0.13.6.8 (2013-07-10)
 * Implementation of new tools for wrapping external scripts with SeqWare metadata write-back
 * Database indexing scripts optimizing against common queries and our various utilities
