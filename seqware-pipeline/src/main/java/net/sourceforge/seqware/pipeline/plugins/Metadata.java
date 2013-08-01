@@ -335,8 +335,7 @@ public class Metadata extends Plugin {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
         if (checkFields(necessaryFields)) {
             // create a new study!
-            ret = metadata.addStudy(fields.get("title"), fields.get("description"),
-                    null, null, fields.get("center_name"), fields.get("center_project_name"),
+            ret = metadata.addStudy(fields.get("title"), fields.get("description"), fields.get("center_name"), fields.get("center_project_name"),
                     Integer.parseInt(fields.get("study_type")));
             if (ret.getReturnValue() == ReturnValue.INVALIDPARAMETERS){
                 print ("Invalid parameters, please check your id values");
