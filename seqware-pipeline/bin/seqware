@@ -4,7 +4,9 @@
 # somewhere on your $PATH, like ~/bin. The rest of Seqware will be
 # installed upon first run into the ~/.seqware directory.
 
-export SEQWARE_VERSION="1.0.2-SNAPSHOT"
+CURRENT_SEQWARE_VERSION="1.0.2"
+
+export SEQWARE_VERSION="${SEQWARE_VERSION:-"$CURRENT_SEQWARE_VERSION"}"
 
 case $SEQWARE_VERSION in
     *SNAPSHOT) SNAPSHOT="YES" ;;
@@ -36,7 +38,7 @@ if $cygwin; then
     export SEQWARE_HOME=`cygpath -w "$SEQWARE_HOME"`
 fi
 
-SEQWARE_JAR="$SEQWARE_HOME/self-installs/seqware-$SEQWARE_VERSION-standalone.jar"
+SEQWARE_JAR="$SEQWARE_HOME/self-installs/seqware-distribution-$SEQWARE_VERSION-full.jar"
 SEQWARE_SETTINGS="$SEQWARE_HOME/settings"
 
 # normalize $0 on certain BSDs
@@ -150,8 +152,12 @@ if [ "$1" = "self-install" ]; then
     echo "Downloading Seqware to $SEQWARE_JAR now..."
     mkdir -p "$(dirname "$SEQWARE_JAR")"
     
-    # TODO: change this to a accessible URL
-    SEQWARE_URL="file:///$HOME/.m2/repository/com/github/seqware/seqware-distribution/$SEQWARE_VERSION/seqware-distribution-$SEQWARE_VERSION-full.jar"
+    if [ $SNAPSHOT = "YES" ]; then
+        SEQWARE_URL="file:///$HOME/.m2/repository/com/github/seqware/seqware-distribution/$SEQWARE_VERSION/seqware-distribution-$SEQWARE_VERSION-full.jar"
+    else
+        SEQWARE_URL="http://wrench.res.oicr.on.ca/artifactory/seqware-release/com/github/seqware/seqware-distribution/$SEQWARE_VERSION/seqware-distribution-$SEQWARE_VERSION-full.jar"
+    fi
+
     $HTTP_CLIENT "$SEQWARE_JAR.pending" "$SEQWARE_URL"
     if [ $? == 0 ]; then
         # TODO: checksum

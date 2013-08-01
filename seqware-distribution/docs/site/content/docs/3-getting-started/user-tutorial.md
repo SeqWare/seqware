@@ -159,33 +159,45 @@ User Guide</a> for more information.</p>
 
 First, you can find out what tables this tool is capable of writing to:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --list-tables
-	
-	TableName
-
-	study
-	experiment
-	sample
-	sequencer_run
-	ius	
-	lane
-
+    seqware create --help
+    
+    Usage: seqware create [--help]
+           seqware create <object> [--help]
+    
+    Description:
+      Create new seqware objects (e.g., study).
+    
+    Objects:
+      experiment
+      file
+      ius
+      lane
+      sample
+      sequencer-run
+      study
 
 Now, for a given table, you can find out what fields you can write back to and their type:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --list-fields
+	seqware create study --help
 	
-	Field    Type    Possible_Values
-	title    String
-	description    String
-	accession    String
-	center_name    String
-	center_project_name    String
-	study_type    Integer    [1: Whole Genome Sequencing, 2: Metagenomics, 3: Transcriptome Analysis, 4: Resequencing, 5: Epigenetics, 6: Synthetic Genomics, 7: Forensic or Paleo-genomics, 8: Gene Regulation Study, 9: Cancer Genomics, 10: Population Genomics, 11: Other]
+    Usage: seqware create study [--help]
+           seqware create study --interactive
+           seqware create study <fields>
+    
+    Note: It is strongly recommended that the '--interactive' mode be used when
+          possible, since some columns have a dynamic set of allowable values.
+    
+    Required fields:
+      --accession <val>
+      --center-name <val>
+      --center-project-name <val>
+      --description <val>
+      --study-type <val>           Dynamic-valued field
+      --title <val>
 
 So using the information above you can create a new study:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --create --field 'title::New Test Study' --field 'description::This is a test description' --field 'accession::InternalID123' --field 'center_name::SeqWare' --field 'center_project_name::SeqWare Test Project' --field study_type::4
+	seqware create study --title 'New Test Study' --description 'This is a test description' --accession 'InternalID123' --center-name 'SeqWare' --center-project-name 'SeqWare Test Project' --study-type 4
 	
 	SWID: 2
 
@@ -200,7 +212,7 @@ be created.
 The next step is to create an experiment and link it to the study you created
 above. You can find the platform ID using the <tt>--list-fields</tt> option shown above:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table experiment --create --field 'title::New Test Experiment' --field 'description::This is a test description' --field platform_id::26 --field study_accession::2
+	seqware create experiment --title 'New Test Experiment' --description 'This is a test description' --platform-id 26 --study-accession 2
 	
 	SWID: 3 
 
@@ -208,7 +220,7 @@ Again, you use the SWID from the above output in the next step to create an
 associated sample. You can find the platform ID using the <tt>--list-fields</tt> option
 shown above:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table sample --create --field 'title::New Test Sample' --field 'description::This is a test description' --field organism_id::26 --field experiment_accession::3
+	seqware create sample --title 'New Test Sample' --description 'This is a test description' --organism-id 26 --experiment-accession 3
 	
 	SWID: 4
 
@@ -292,7 +304,7 @@ GenericMetadataSaver is the tool you can use to accomplish this, for example,
 if you already had input2.txt in /datastore you could insert this into the
 MetaDB using:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver --metadata-parent-accession 4 --metadata-processing-accession-file accession2.txt -- --gms-output-file text::text/plain::/datastore/input2.txt --gms-algorithm UploadText --gms-suppress-output-file-check
+	seqware create file --parent-accession 4 --meta-type text/plain --file /datastore/input2.txt
 
 Here files are associated with the parent (SWID: 4 which is a sample). 
 Also, the file accession2.txt contains the SWID for this /datastore/input2.txt file.
@@ -311,9 +323,7 @@ Once you have uploaded data the next step is to find the available workflows
 and their parameters.  To see the list of available workflows you can execute
 the following command:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-install
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-install --human-aligned
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-install --human-expanded
+	seqware workflow list
 
 First, you will get a tab-delimited list of workflows showing their name, version, and 
 (most importantly) their SWID that you can use in scripts. In the second and third examples
@@ -336,7 +346,7 @@ next command to find all the parameters (and their defaults) that this workflow
 takes.  Here is the command, notice we redirect the output to create a basic ini
 file that can later be customized and used to submit a run of this workflow:
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession 1 > /home/seqware/workflow.ini
+	seqware workflow ini --accession 1 --out /home/seqware/workflow.ini
 
 In this example the workflow “HelloWorld” version 1.0 (SWID 1)
 parameters are listed.  The output conforms to the input you can use to
@@ -422,7 +432,7 @@ accession. The former was listed when you listed all workflows (SWID:1 in this
 example) and the latter was printed to the <tt>accession.txt</tt> file when you
 copied the file using ProvisionFile (SWID:5 in this example).
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files /home/seqware/workflow.ini --workflow-accession 1 --schedule --parent-accessions 5 --host `hostname --long` 
+	seware workflow schedule --accession 1 --parent-accession 5 --ini /home/seqware/workflow.ini --host `hostname --long` 
 	WORKFLOW_RUN ACCESSION: 11
 
 
@@ -441,7 +451,7 @@ You can then monitor workflow progress (and getting a list of the outputs)
 using the WorkflowRunReporter plugin. This will let you script the monitoring
 of workflow runs.
 
-	[seqware@master ~]$ java -jar ~/seqware-distribution-0.13.6.5-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --workflow-accession 1 --stdout --human
+	[seqware@master ~]$ seqware workflow report --accession 1
 	Running Plugin: net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter
 	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter@744a6cbf
 	Apr 24, 2013 9:12:40 AM org.restlet.ext.httpclient.HttpClientHelper start
@@ -479,7 +489,7 @@ Alternatively, you can just get the status of a particular workflow run, for
 example, the workflow run accession printed when you launched the workflow with
 the WorkflowLauncher(for example SWID: 11).  
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --workflow-run-accession 11 --stdout
+	seqware workflow-run report --accession 11
 
 In the output from the above command you will see accessions for each workflow
 run. If the status is “failed” you can download the stderr and stdout from the
@@ -487,8 +497,8 @@ workflow run. This is how you might do that for our workflow_run with an
 accession of SWID: 11 (Note that there is no useful output in our tutorial after the 
 workflow completes successfully):
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wra 11 --wr-stderr
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wra 11 --wr-stdout
+	seqware workflow-run stderr --accession 11
+	seqware workflow-run stdout --accession 11
 
 Again, this command automatically creates output files for stderr and stdout,
 for example <tt>20130414_202120__workflowrun_11_STDERR.csv</tt>.  You can
@@ -531,8 +541,7 @@ utility above to pull files back.  Since the report produces a simple
 tab-delimited file you can easily automate the downloading of results by
 looping over the output files and calling ProvisionFiles using a script.
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 1 --study 'New Test Study'
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- --no-links --output-filename study_report --workflow-accession 1 --study 'New Test Study' --human --stdout
+	seqware files report --study 'New Test Study'
 
 In the first case, the output is a <tt>study_report.csv</tt> file that contains a line for
 each file output for this workflow.

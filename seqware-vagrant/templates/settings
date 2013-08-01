@@ -12,6 +12,8 @@ SW_REST_PASS=admin
 # used by tools reading and writing to S3 buckets (dependency data/software bundles, inputs, outputs, etc)
 AWS_ACCESS_KEY=FILLMEIN
 AWS_SECRET_KEY=FILLMEIN
+# the default engine to use if otherwise unspecified (one of: pegasus, oozie, oozie-sge)
+SW_DEFAULT_WORKFLOW_ENGINE=oozie
 #
 # SEQWARE PIPELINE
 # OOZIE WORKFLOW ENGINE SETTINGS
@@ -25,6 +27,14 @@ OOZIE_NAMENODE=hdfs://localhost:8020
 OOZIE_QUEUENAME=default
 OOZIE_WORK_DIR=/usr/tmp/seqware-oozie
 #
+# OOZIE-SGE SETTINGS:
+# Format of qsub flag for specifying number of threads.
+# If present, ${threads} will be replaced with the job-specific value.
+OOZIE_SGE_THREADS_PARAM_FORMAT=-pe serial ${threads}
+# Format of qsub flag for specifying the max memory.
+# If present, ${maxMemory} will be replaced with the job-specific value.
+OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT=-l h_vmem=${maxMemory}M
+#
 # SEQWARE QUERY ENGINE (OPTIONAL)
 #    
 HBASE.ZOOKEEPER.QUORUM=localhost
@@ -34,4 +44,14 @@ MAPRED.JOB.TRACKER=localhost:8021
 FS.DEFAULT.NAME=hdfs://localhost:8020
 FS.DEFAULTFS=hdfs://localhost:8020
 FS.HDFS.IMPL=org.apache.hadoop.hdfs.DistributedFileSystem
+
+BASIC_TEST_DB_HOST=localhost
+BASIC_TEST_DB_NAME=seqware_meta_db
+BASIC_TEST_DB_USER=seqware
+BASIC_TEST_DB_PASSWORD=seqware
+
+EXTENDED_TEST_DB_HOST=localhost
+EXTENDED_TEST_DB_NAME=seqware_meta_db
+EXTENDED_TEST_DB_USER=seqware
+EXTENDED_TEST_DB_PASSWORD=seqware
 
