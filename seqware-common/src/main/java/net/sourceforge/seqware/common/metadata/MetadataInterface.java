@@ -74,20 +74,18 @@ public interface MetadataInterface {
    */
   int mapProcessingIdToAccession(int processingId);
 
-  /**
-   * <p>addStudy.</p>
-   *
-   * @param title a {@link java.lang.String} object.
-   * @param description a {@link java.lang.String} object.
-   * @param accession a {@link java.lang.String} object.
-   * @param studyType a {@link net.sourceforge.seqware.common.model.StudyType} object.
-   * @param centerName a {@link java.lang.String} object.
-   * @param centerProjectName a {@link java.lang.String} object.
-   * @param studyTypeId a {@link java.lang.Integer} object.
-   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-   */
-  public ReturnValue addStudy(String title, String description, String accession, StudyType studyType,
-      String centerName, String centerProjectName, Integer studyTypeId);
+    /**
+     * <p>addStudy.</p>
+     *
+     * @param title a {@link java.lang.String} object.
+     * @param description a {@link java.lang.String} object.
+     * @param centerName a {@link java.lang.String} object.
+     * @param centerProjectName a {@link java.lang.String} object.
+     * @param studyTypeId a {@link java.lang.Integer} object.
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
+    
+  public ReturnValue addStudy(String title, String description, String centerName, String centerProjectName, Integer studyTypeId);
 
   /**
    * <p>addExperiment.</p>
