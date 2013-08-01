@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent> 
-        <version>0.13.6.8</version> 
+        <version>0.13.6.9</version> 
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
         <relativePath>../pom.xml</relativePath> 
@@ -144,7 +144,7 @@
           </goals>
 
           <configuration>
-	        <pubScmUrl>scm:git:https://github.com/SeqWare/seqware.github.com.git</pubScmUrl>	
+	        <pubScmUrl>scm:git:ssh://git@github.com/SeqWare/seqware.github.com.git</pubScmUrl>	
 		<content>docs/site/output/</content>
 		<ignorePathsToDelete>
               		<ignorePathToDelete>javadoc</ignorePathToDelete>

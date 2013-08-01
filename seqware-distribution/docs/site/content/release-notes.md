@@ -9,6 +9,43 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 0.13.6.8 (2013-07-10)
+* Implementation of new tools for wrapping external scripts with SeqWare metadata write-back
+* Database indexing scripts optimizing against common queries and our various utilities
+
+<!-- pending fix for oozie-sge -->
+## 1.0.1 (2013-07-10)
+
+### Defect
+* [SEQWARE-1516] - NullPointer when trying to test installed workflows
+
+### Improvement
+* [SEQWARE-1632] - --install-dir-only and --install should be exclusive options
+
+### Task
+* [SEQWARE-1621] - Get oozie working on the AMI
+* [SEQWARE-1660] - Support for external user : BD
+* [SEQWARE-1674] - The workflowrun report can throw a null pointer exception on valid params
+
+### Sub-task
+* [SEQWARE-1637] - Document pom.xml file links for workflow bundles
+
+###Technical task
+* [SEQWARE-547] - Comments and javadoc coverage statistics
+* [SEQWARE-548] - JUnit coverage
+* [SEQWARE-585] - Run through Chef, Puppet, Whirr or other tools for provisioning cloud instances
+* [SEQWARE-1225] - The build test suite should both create and remove the test metadb
+* [SEQWARE-1460] - Integrate either GetSatisfaction or Disqus into GitHub website
+* [SEQWARE-1488] - Handle build busy-work automatically
+* [SEQWARE-1506] - Create and release source jars that can automatically be pulled down by IDEs
+* [SEQWARE-1560] - Configurations - make sure we consistently handle magic variables like ${workflow_bundle_dir}
+* [SEQWARE-1614] - ext-testing against arbitrary host
+* [SEQWARE-1677] - AttributeAnnotator does not reject skipping unskippable tables
+* [SEQWARE-1678] - AttributeAnnotator claims success with invalid parameters
+* [SEQWARE-1679] - AttributeAnnotator unable to annotate Processing
+* [SEQWARE-1680] - AttributeAnnotator cannot re-annotate Sample and Lane
+* [SEQWARE-1685] - Implement annotation of File records
+
 ## 0.13.6.6 (2013-05-29)
 
 ### Defect
