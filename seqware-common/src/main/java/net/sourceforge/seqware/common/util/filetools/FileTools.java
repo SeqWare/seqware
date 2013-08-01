@@ -13,6 +13,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -934,17 +936,10 @@ public class FileTools {
             hostname = (String) options.valueOf("force-host");
             returnValue = new ReturnValue(ReturnValue.SUCCESS);
         } else {
-            ArrayList<String> theCommand = new ArrayList<String>();
-            theCommand.add("bash");
-            theCommand.add("-lc");
-            theCommand.add("hostname --long");
-            returnValue = RunTools.runCommand(theCommand.toArray(new String[0]));
-            if (returnValue.getExitStatus() == ReturnValue.SUCCESS) {
-                String stdout = returnValue.getStdout();
-                stdout = stdout.trim();
-                hostname = stdout;
-            } else {
-                Log.error("Can't figure out the hostname using 'hostname --long' " + returnValue.getStdout());
+            try{
+                hostname = InetAddress.getLocalHost().getCanonicalHostName();
+            } catch (UnknownHostException e) {
+                Log.error("Can't figure out the hostname: " + e.getMessage());
                 return new LocalhostPair(hostname, returnValue);
             }
         }

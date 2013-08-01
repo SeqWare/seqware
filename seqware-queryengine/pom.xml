@@ -17,7 +17,7 @@
     <parent>
         <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.0.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -513,6 +513,14 @@ never
                 <exclusion>
                     <artifactId>org.restlet.ext.xstream</artifactId>
                     <groupId>org.restlet.jee</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jcl-over-slf4j</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jul-to-slf4j</artifactId>
+                    <groupId>org.slf4j</groupId>
                 </exclusion>
             </exclusions>
         </dependency>

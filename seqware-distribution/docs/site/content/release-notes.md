@@ -77,10 +77,6 @@ Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=4453317
 * [SEQWARE-1611] - Assorted user-friendly features
 * [SEQWARE-1620] - Create clean-up script
 
-## 0.13.6.6 (2013-05-29)
-
-* [SEQWARE-1638] - Seems like setQueue not implemented
-
 ## 0.13.6.5 (2013-04-25)
 <!-- includes a few tasks from 0.13.6.3 which was not released publically -->
 
