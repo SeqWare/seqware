@@ -27,7 +27,9 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import net.sourceforge.seqware.common.util.runtools.TestConsoleAdapter;
+import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
+import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
@@ -417,14 +419,19 @@ public class MetadataTest extends PluginTest {
                 "--field", "description::description",
                 "--field", "cycle_descriptor::{F*120}{..}{R*120}",
                 "--field", "sequencer_run_accession::" + rAcc,
-                "--field", "library_strategy_accession::1",
+                "--field", "library_strategy_accession::2",
                 "--field", "study_type_accession::1",
-                "--field", "library_selection_accession::1",
-                "--field", "library_source_accession::1",
+                "--field", "library_selection_accession::3",
+                "--field", "library_source_accession::4",
                 "--field", "skip::false",
                 "--field", "lane_number::1");
         String s = getOut();
         laneAccession = getAndCheckSwid(s);
+        
+        // SEQWARE-1561 check that library strategy, selection, and source make it into the database
+        BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
+        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select library_strategy, library_selection, library_source from lane WHERE sw_accession=?", Integer.valueOf(laneAccession));
+        Assert.assertTrue("library columns were incorrect", runQuery[0].equals(2) && runQuery[1].equals(3) && runQuery[2].equals(4));
     }
     
     @Test
