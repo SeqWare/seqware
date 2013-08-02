@@ -234,6 +234,7 @@ public class MetadataTest extends PluginTest {
         expectedFields.put("skip", "Boolean");
         expectedFields.put("platform_accession", "Integer");
         expectedFields.put("file_path", "String");
+        expectedFields.put("status", "String");
 
 
 
