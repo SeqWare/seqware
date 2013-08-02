@@ -63,7 +63,7 @@ public class WorkflowLauncherET {
         String extractValueFrom = ITUtility.extractValueFrom(listOutput, "WORKFLOW_RUN ACCESSION:");
         int wr_accession = Integer.valueOf(extractValueFrom);
        
-        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select count(*) from workflow_run r, workflow_run_files j WHERE r.workflow_run_id=j.workflow_run_id AND r.sw_accession=?", wr_accession);
+        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select count(*) from workflow_run r, workflow_run_input_files j WHERE r.workflow_run_id=j.workflow_run_id AND r.sw_accession=?", wr_accession);
         Assert.assertTrue("number of added parameters incorrect", runQuery.length == 1 && (Long)runQuery[0] == 1L);
     }
     
@@ -77,7 +77,7 @@ public class WorkflowLauncherET {
         String extractValueFrom = ITUtility.extractValueFrom(listOutput, "WORKFLOW_RUN ACCESSION:");
         int wr_accession = Integer.valueOf(extractValueFrom);
        
-        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select count(*) from workflow_run r, workflow_run_files j WHERE r.workflow_run_id=j.workflow_run_id AND r.sw_accession=?", wr_accession);
+        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select count(*) from workflow_run r, workflow_run_input_files j WHERE r.workflow_run_id=j.workflow_run_id AND r.sw_accession=?", wr_accession);
         Assert.assertTrue("number of added parameters incorrect", runQuery.length == 1 && (Long)runQuery[0] == 5L);
     }
 
