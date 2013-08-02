@@ -2351,7 +2351,7 @@ public class MetadataWS extends Metadata {
     }
     
     @Override
-    public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions) {
+    public List<WorkflowRun> getWorkflowRunsAssociatedWithInputFiles(List<Integer> fileAccessions) {
         try {
             if (fileAccessions.size() > 0){
                 return ll.findWorkflowByFiles(fileAccessions);
@@ -2359,11 +2359,12 @@ public class MetadataWS extends Metadata {
                 return new ArrayList<WorkflowRun>();
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Log.fatal("IOException", ex);
+            throw new RuntimeException(ex);
         } catch (JAXBException ex) {
-            ex.printStackTrace();
+            Log.fatal("JAXBException", ex);
+            throw new RuntimeException(ex);
         }
-        return null;
     }
 
     @Override

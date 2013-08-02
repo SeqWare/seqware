@@ -343,11 +343,15 @@ public interface MetadataInterface {
   WorkflowRun getWorkflowRun(int workflowRunAccession);
   
   /**
-   * Returns the workflow_runs associated with a group of files.
+   * Returns the workflow_runs associated with a group of input files.
+   * 
+   * Specifically, this resource will return all workflow runs that use at least one of the 
+   * input file accessions
+   * 
    * @param fileAccessions
    * @return 
    */
-  List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions);
+  List<WorkflowRun> getWorkflowRunsAssociatedWithInputFiles(List<Integer> fileAccessions);
   
   
   /**
