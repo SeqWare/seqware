@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -432,6 +433,12 @@ public class MetadataTest extends PluginTest {
         BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
         Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select library_strategy, library_selection, library_source from lane WHERE sw_accession=?", Integer.valueOf(laneAccession));
         Assert.assertTrue("library columns were incorrect", runQuery[0].equals(2) && runQuery[1].equals(3) && runQuery[2].equals(4));
+        // check that we can get them back via metadata methods as well
+        Lane l = metadata.getLane(Integer.valueOf(laneAccession));
+        Assert.assertTrue("could not retrieve lane via metadata", l != null);
+        Assert.assertTrue("could not retrieve lane library values", l.getLibraryStrategy().getLibraryStrategyId() == 2);
+        Assert.assertTrue("could not retrieve lane library values", l.getLibrarySelection().getLibrarySelectionId() == 3);
+        Assert.assertTrue("could not retrieve lane library values", l.getLibrarySource().getLibrarySourceId() == 4);
     }
     
     @Test

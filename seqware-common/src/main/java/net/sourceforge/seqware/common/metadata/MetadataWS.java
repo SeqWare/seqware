@@ -110,8 +110,6 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * TODO: this needs to setup rows in experiment_library_design and
- * experiment_spot_design
  *
  * @version $Id: $Id
  */
@@ -2413,6 +2411,17 @@ public class MetadataWS extends Metadata {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public Lane getLane(int laneAccession) {
+         try {
+            return ll.findLane("/" + laneAccession);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        } catch (JAXBException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     /*
