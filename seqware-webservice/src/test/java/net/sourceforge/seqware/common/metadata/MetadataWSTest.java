@@ -797,7 +797,7 @@ public class MetadataWSTest {
         
         List<Integer> files = new ArrayList<Integer>();
         // try getting nothing
-        List<WorkflowRun> result = instance.getWorkflowRunsAssociatedWithFiles(files);
+        List<WorkflowRun> result = instance.getWorkflowRunsAssociatedWithInputFiles(files);
         Assert.assertTrue("should have been no files", result.isEmpty());
         final int workflow_run1 = 6480;
 
@@ -824,19 +824,19 @@ public class MetadataWSTest {
                 wr.getHost(), wr.getStdOut(), wr.getStdErr(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
         // try a file accession that both workflow runs should have
         files.add(f1_sw_accession);
-        result = instance.getWorkflowRunsAssociatedWithFiles(files);
+        result = instance.getWorkflowRunsAssociatedWithInputFiles(files);
         Assert.assertTrue("should have been 2 workflow runs, found " + result.size(), result.size() == 2);
         Assert.assertTrue("incorrect workflow runs found", result.get(0).getSwAccession() == workflow_run1);
         Assert.assertTrue("incorrect workflow runs found", result.get(1).getSwAccession() == workflow_run2);
         files.clear();
         // try a file accession that only the latter workflow run should have
         files.add(f4_sw_accession);
-        result = instance.getWorkflowRunsAssociatedWithFiles(files);
+        result = instance.getWorkflowRunsAssociatedWithInputFiles(files);
         Assert.assertTrue("should have been 1 file, found " + result.size(), result.size() == 1);
         Assert.assertTrue("incorrect workflow runs found", result.get(0).getSwAccession() == workflow_run2);
         // try both file accessions, should get both back (allows for partial matching) 
         files.add(f1_sw_accession);
-        result = instance.getWorkflowRunsAssociatedWithFiles(files);
+        result = instance.getWorkflowRunsAssociatedWithInputFiles(files);
         Assert.assertTrue("should have been 2 workflow runs, found " + result.size(), result.size() == 2);
         Assert.assertTrue("incorrect workflow runs found", result.get(0).getSwAccession() == workflow_run1);
         Assert.assertTrue("incorrect workflow runs found", result.get(1).getSwAccession() == workflow_run2);
