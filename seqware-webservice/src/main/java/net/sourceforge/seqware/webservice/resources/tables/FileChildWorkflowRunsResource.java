@@ -59,7 +59,7 @@ import org.w3c.dom.Document;
  */
 public class FileChildWorkflowRunsResource extends DatabaseResource {
     /**
-     * A direct search uses the workflow_run_files table rather than 
+     * A direct search uses the workflow_run_input_files table rather than 
      * attempting a search via the ius_workflow_run and lane_workflow_run and processing hierarchy
      */
     public static final String DIRECT_SEARCH = "DIRECT_SEARCH";
@@ -260,13 +260,15 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
                 WorkflowRunService ss = BeanFactory.getWorkflowRunServiceBean();
                 StringBuilder query = new StringBuilder();
                 query.append("select distinct r.sw_accession from workflow_run r, ");
-                query.append("workflow_run_files f WHERE r.workflow_run_id = f.workflow_run_id AND (");
+                query.append("workflow_run_input_files rf, file f WHERE r.workflow_run_id = rf.workflow_run_id "
+                        + "AND rf.file_id = f.file_id "
+                        + "AND (");
                 for(int i = 0; i < files.size() - 1; i++){
                     Integer fInt = files.get(i);
-                    query.append(" f.file_sw_accession = ").append(fInt).append(" OR");
+                    query.append(" f.sw_accession = ").append(fInt).append(" OR");
                 }
                 Integer fInt = files.get(files.size() -1);
-                query.append(" f.file_sw_accession = ").append(fInt).append(")");
+                query.append(" f.sw_accession = ").append(fInt).append(")");
                 query.append(" ORDER BY sw_accession");
                 
                 Log.info("Executing query: " + query);
