@@ -71,6 +71,10 @@ public class LaneIDResource extends DatabaseIDResource {
         LaneService ss = BeanFactory.getLaneServiceBean();
         Lane lane = (Lane) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
         dto = copier.hibernate2dto(Lane.class, lane);
+        
+        Log.info("Lane library selection: " + lane.getLibrarySelection());
+        Log.info("Lane library source: " + lane.getLibrarySource());
+        Log.info("Lane library strategy: " + lane.getLibraryStrategy());
 
         if (fields.contains("sequencerRun")) {
             SequencerRun sr = lane.getSequencerRun();
