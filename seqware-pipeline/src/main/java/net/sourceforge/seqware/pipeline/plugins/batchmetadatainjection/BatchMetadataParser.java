@@ -209,12 +209,12 @@ public abstract class BatchMetadataParser {
         //See https://jira.oicr.on.ca/browse/SEQWARE-1561. Uncomment when fixed.
 
         KeyVal[] list = getKeyVals(metadata.getLibraryStrategies());
-        laneInfo.setLibraryStrategyAcc(promptAccession("Library Strategy Accession", 0, list, Field.library_strategy_accession));
+        laneInfo.setLibraryStrategyAcc(promptAccession("Library Strategy Accession", 1, list, Field.library_strategy_accession));
         list = getKeyVals(metadata.getLibrarySelections());
-        laneInfo.setLibrarySelectionAcc(promptAccession("Library Selection Accession", 0, list, Field.library_selection_accession));
+        laneInfo.setLibrarySelectionAcc(promptAccession("Library Selection Accession", 1, list, Field.library_selection_accession));
 
         list = getKeyVals(metadata.getLibrarySource());
-        laneInfo.setLibrarySourceAcc(promptAccession("Library Source Accession", 0, list, Field.library_source_accession));
+        laneInfo.setLibrarySourceAcc(promptAccession("Library Source Accession", 1, list, Field.library_source_accession));
 
 
         return laneInfo;
