@@ -808,6 +808,14 @@ public interface MetadataInterface {
   public List<SequencerRun> getAllSequencerRuns();
   
   /**
+   * <p>getLane.</p>
+   *
+   * @param laneAccession a int.
+   * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
+   */
+  public Lane getLane(int laneAccession);
+  
+  /**
    * Get Lanes from a sequencer run.
    * @param sequencerRunAccession the sw_accession of the sequencer run
    * @return the lanes from the run

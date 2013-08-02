@@ -2170,4 +2170,9 @@ public class MetadataDB extends Metadata {
     public void annotateFile(int fileSWID, Set<FileAttribute> iusAtts) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
+
+    @Override
+    public Lane getLane(int laneAccession) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
 }

@@ -744,4 +744,10 @@ public class MetadataNoConnection extends Metadata {
     public void annotateFile(int fileSWID, Set<FileAttribute> iusAtts) {
        logger.info("No metadata connection");
     }
+
+    @Override
+    public Lane getLane(int laneAccession) {
+        logger.info("No metadata connection");
+        return null;
+    }
 }
