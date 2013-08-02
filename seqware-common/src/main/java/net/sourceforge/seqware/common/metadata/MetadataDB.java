@@ -2041,7 +2041,7 @@ public class MetadataDB extends Metadata {
   }
 
   @Override
-  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath) {
+  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath, String status) {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
 
@@ -2173,6 +2173,11 @@ public class MetadataDB extends Metadata {
 
     @Override
     public Lane getLane(int laneAccession) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public SequencerRun getSequencerRun(int sequencerRunAccession) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
 }

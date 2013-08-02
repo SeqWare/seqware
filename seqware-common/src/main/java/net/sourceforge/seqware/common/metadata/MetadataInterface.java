@@ -110,15 +110,13 @@ public interface MetadataInterface {
   public ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession, Integer organismId, String description, String title);
   
     /**
-   * <p>addSample.</p>
-   *
-   * @param experimentAccession a {@link java.lang.Integer} object.
-   * @param organismId a {@link java.lang.Integer} object.
-   * @param description a {@link java.lang.String} object.
-   * @param title a {@link java.lang.String} object.
-   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-   */
-  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath);
+     * <p>addSample.</p>
+     *
+     * @param description a {@link java.lang.String} object.
+     * @param status the value of status
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
+  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath, String status);
   
     /**
    * <p>addSample.</p>
@@ -814,6 +812,14 @@ public interface MetadataInterface {
    * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
    */
   public Lane getLane(int laneAccession);
+  
+    /**
+   * <p>getSequencerRun.</p>
+   *
+   * @param sequencerRunAccession a int.
+   * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
+   */
+  public SequencerRun getSequencerRun(int sequencerRunAccession);
   
   /**
    * Get Lanes from a sequencer run.

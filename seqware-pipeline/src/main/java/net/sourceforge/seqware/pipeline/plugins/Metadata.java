@@ -207,7 +207,7 @@ public class Metadata extends Plugin {
             }
             print("]\n");
         } else if ("sequencer_run".equals(table)) {
-            print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\npaired_end\tBoolean\t[true, false]\nskip\tBoolean\t[true, false]\nfile_path\tString\nplatform_accession\tInteger\t[");
+            print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\npaired_end\tBoolean\t[true, false]\nskip\tBoolean\t[true, false]\nfile_path\tString\nstatus\tString\nplatform_accession\tInteger\t[");
             List<Platform> platforms = this.metadata.getPlatforms();
             for (Platform obj : platforms) {
                 print(obj.getPlatformId() + ": " + obj.getName() + " " + obj.getInstrumentModel() + ", ");
@@ -439,20 +439,25 @@ public class Metadata extends Plugin {
      */
     protected ReturnValue addSequencerRun() {
         String[] necessaryFields = {"platform_accession", "name", "description", "paired_end", "skip", "file_path"};
+        String[] optionalFields = {"status"};
         // check to make sure we have what we need
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
         if (interactive) {
             promptForSequencerRun(necessaryFields);
         }
+        
+        for (String s: optionalFields)
+            if (fields.get(s) == null)
+                fields.put(s, null);
 
         if (checkFields(necessaryFields)) {
             // create a new experiment
-            ret = metadata.addSequencerRun(Integer.parseInt(fields.get("platform_accession")), fields.get("name"), fields.get("description"), "true".equalsIgnoreCase(fields.get("paired_end")), "true".equalsIgnoreCase(fields.get("skip")), fields.get("file_path"));
+            ret = metadata.addSequencerRun(Integer.parseInt(fields.get("platform_accession")), fields.get("name"), fields.get("description"), "true".equalsIgnoreCase(fields.get("paired_end")), "true".equalsIgnoreCase(fields.get("skip")), fields.get("file_path"), fields.get("status"));
 
             print("SWID: " + ret.getAttribute("sw_accession"));
 
         } else {
-            printErrorMessage(necessaryFields, null);
+            printErrorMessage(necessaryFields, optionalFields);
             //Log.error("You need to supply name, description, platform_accession [see platform lookup], the complete file path of the run, and 'true' or 'false' for paired_end and skip. Alternatively, enable --interactive mode.");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }

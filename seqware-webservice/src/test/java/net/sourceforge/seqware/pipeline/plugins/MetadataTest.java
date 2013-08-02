@@ -24,6 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
@@ -406,7 +407,33 @@ public class MetadataTest extends PluginTest {
         String s = getOut();
         runAccession = getAndCheckSwid(s);
     }
-    private String laneAccession = null;
+    
+       private String laneAccession = null;
+
+    @Test
+    public void testCreateSequencerRunWithStatus() {
+        final String funky_status = "funky_status";
+        launchPlugin("--table", "sequencer_run", "--create",
+                "--field", "name::SR" + System.currentTimeMillis(),
+                "--field", "description::SRD",
+                "--field", "platform_accession::20",
+                "--field", "paired_end::true",
+                "--field", "skip::false",
+                "--field", "file_path::/home/user/mysequencerrun",
+                "--field", "status::"+funky_status);
+        String s = getOut();
+        String accession = getAndCheckSwid(s);
+        
+        // SEQWARE-1561 check that library strategy, selection, and source make it into the database
+        BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
+        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select status from sequencer_run WHERE sw_accession=?", Integer.valueOf(accession));
+        Assert.assertTrue("status was incorrect", runQuery[0].equals(funky_status));
+        // check that we can get them back via metadata methods as well
+        SequencerRun r = metadata.getSequencerRun(Integer.valueOf(accession));
+        Assert.assertTrue("could not retrieve lane via metadata", r != null);
+        Assert.assertTrue("could not retrieve lane status", r.getStatus().equals(funky_status));
+    }
+
 
     @Test
     public void testCreateLane() {

@@ -147,7 +147,7 @@ public class MetadataNoConnection extends Metadata {
     }
 
   @Override
-    public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath) {
+    public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath, String status) {
         logger.info("No metadata connection");
         return (new ReturnValue(ReturnValue.SUCCESS));
     }
@@ -747,6 +747,12 @@ public class MetadataNoConnection extends Metadata {
 
     @Override
     public Lane getLane(int laneAccession) {
+        logger.info("No metadata connection");
+        return null;
+    }
+
+    @Override
+    public SequencerRun getSequencerRun(int sequencerRunAccession) {
         logger.info("No metadata connection");
         return null;
     }

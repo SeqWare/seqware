@@ -378,17 +378,17 @@ public class MetadataWS extends Metadata {
     /**
      * FIXME: there are problems with setting accession when I should set ID
      *
-     * @param experimentAccession
-     * @param organismAccession
      * @param platformAccession
      * @param name
      * @param description
      * @param pairdEnd
      * @param skip
+     * @param status the value of status
      * @return
      */
+    
   @Override
-    public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath) {
+    public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath, String status) {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
         try {
@@ -409,6 +409,7 @@ public class MetadataWS extends Metadata {
             sr.setSkip(skip);
             sr.setPlatform(p);
             sr.setFilePath(filePath);
+            sr.setStatus(status);
 
             Log.info("Posting new sequencer_run");
 
@@ -2417,6 +2418,17 @@ public class MetadataWS extends Metadata {
     public Lane getLane(int laneAccession) {
          try {
             return ll.findLane("/" + laneAccession);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        } catch (JAXBException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public SequencerRun getSequencerRun(int sequencerRunAccession) {
+        try {
+            return ll.findSequencerRun("/" + sequencerRunAccession);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         } catch (JAXBException ex) {
