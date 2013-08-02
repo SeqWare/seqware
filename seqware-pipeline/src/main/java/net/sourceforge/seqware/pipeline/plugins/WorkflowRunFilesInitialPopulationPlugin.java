@@ -158,7 +158,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
         MetadataDB mdb = null;
         try {
             StringBuilder query = new StringBuilder();
-            query.append("select w.sw_accession, w.workflow_run_id, w.status, f.* FROM workflow_run w LEFT OUTER JOIN workflow_run_files f ");
+            query.append("select w.sw_accession, w.workflow_run_id, w.status, f.* FROM workflow_run w LEFT OUTER JOIN workflow_run_input_files f ");
             query.append("ON w.workflow_run_id = f.workflow_run_id WHERE (status = 'completed' OR status= 'failed') AND ");
             query.append("f.workflow_run_id IS NULL ORDER BY w.sw_accession;");
 
@@ -166,7 +166,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
             mdb = DBAccess.get();
             mdb.getDb().setAutoCommit(false);
             rs = mdb.executeQuery(query.toString());
-            PreparedStatement prepareStatement = mdb.getDb().prepareStatement("INSERT INTO workflow_run_files (workflow_run_id, file_sw_accession) VALUES(?,?)");
+            PreparedStatement prepareStatement = mdb.getDb().prepareStatement("INSERT INTO workflow_run_input_files (workflow_run_id, file_id) VALUES(?,?)");
             while (rs.next()) {
                 int workflowSWID = rs.getInt("sw_accession");
                 int workflowRunID = rs.getInt("workflow_run_id");
@@ -175,10 +175,11 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
                 // populate input files
                 List<Integer> listOfFiles = this.getListOfFiles(workflowSWID);
                 Log.stdout("Found " + listOfFiles.size() + " input files for workflow_run " + workflowSWID);
-                // insert into new workflow_run_files table
+                // insert into new workflow_run_input_files table
                 for (Integer fSWID : listOfFiles) {
+                    Integer file_id = this.metadata.getFile(fSWID).getFileId();
                     prepareStatement.setInt(1, workflowRunID);
-                    prepareStatement.setInt(2, fSWID);
+                    prepareStatement.setInt(2, file_id);
                     prepareStatement.executeUpdate();
                 }
             }
@@ -212,7 +213,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
     private List<Integer> getListOfFiles(int workflowRunAcc) {
         Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
         List<Integer> indices = new ArrayList<Integer>();
-        String ranOnString = map.get("Input File SWIDs");
+        String ranOnString = map.get("Immediate Input File SWIDs");
         String[] ranOnArr = ranOnString.split(",");
         List<Integer> ranOnList = new ArrayList<Integer>();
         if (ranOnString.isEmpty()) {
