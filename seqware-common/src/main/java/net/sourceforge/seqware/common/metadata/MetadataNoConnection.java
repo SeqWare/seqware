@@ -712,7 +712,7 @@ public class MetadataNoConnection extends Metadata {
     }
     
     @Override
-    public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions) {
+    public List<WorkflowRun> getWorkflowRunsAssociatedWithInputFiles(List<Integer> fileAccessions) {
         return new ArrayList<WorkflowRun>();
     }
     
