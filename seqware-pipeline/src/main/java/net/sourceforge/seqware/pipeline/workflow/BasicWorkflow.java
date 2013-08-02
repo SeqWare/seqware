@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -95,17 +96,18 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     return (retVal);
   }
 
-  /**
-   * {@inheritDoc}
-   * 
-   * This method just needs a sw_accession value from the workflow table and an
-   * ini file(s) in order to launch a workflow. All needed info is pulled from
-   * the workflow table which was populated when the workflow was installed.
-   */
-  public ReturnValue launchInstalledBundle(String workflowAccession, String workflowRunAccession,
-                                           ArrayList<String> iniFiles, boolean metadataWriteback,
-                                           ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR,
-                                           boolean wait, List<String> cmdLineOptions) {
+    /**
+     * {@inheritDoc}
+     *
+     * This method just needs a sw_accession value from the workflow table and an
+     * ini file(s) in order to launch a workflow. All needed info is pulled from
+     * the workflow table which was populated when the workflow was installed.
+     *
+     * @param inputFiles the value of inputFiles
+     */
+    
+  @Override
+  public ReturnValue launchInstalledBundle(String workflowAccession, String workflowRunAccession, ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, Set<Integer> inputFiles) {
 
     // do basic common setup tasks
     ReturnValue setupRet = setup();
@@ -117,7 +119,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
 
     return (runWorkflow(wi, workflowRunAccession, iniFiles, new HashMap<String, String>(), metadataWriteback,
-                        parentAccessions, parentsLinkedToWR, wait, cmdLineOptions));
+                        parentAccessions, parentsLinkedToWR, wait, cmdLineOptions, inputFiles));
 
   }
 
@@ -142,49 +144,50 @@ public abstract class BasicWorkflow implements WorkflowEngine {
                                              boolean wait, List<String> cmdLineOptions) {
 
     return scheduleInstalledBundle(workflowAccession, workflowRunAccession, iniFiles, metadataWriteback,
-                                   parentAccessions, parentsLinkedToWR, wait, cmdLineOptions, null, null);
+                                   parentAccessions, parentsLinkedToWR, wait, cmdLineOptions, null, null, null);
   }
 
-  /**
-   * {@inheritDoc}
-   * 
-   * This method just needs a sw_accession value from the workflow table and an
-   * ini file(s) in order to schedule a workflow. All needed info is pulled from
-   * the workflow table which was populated when the workflow was installed.
-   * Keep in mind this does not actually trigger anything, it just schedules the
-   * workflow to run by adding to the workflow_run table. This lets you run
-   * workflows on a different host from where this command line tool is run but
-   * requires an external process to launch workflows that have been scheduled.
-   */
   // Yes, adding workflowEngine as a param makes no sense given that this class *is* a
   // WorkflowEngine, but since this method is being called directly from WorkflowPlugin.doOldRun(), and
   // *isn't* in the WorkflowEngine interface, I'm disinclined to begin fixing
   // things to conform to what I can only guess is the design of these
   // interfaces/classes.
-  public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession,
-                                             ArrayList<String> iniFiles, boolean metadataWriteback,
-                                             ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR,
-                                             boolean wait, List<String> cmdLineOptions, String scheduledHost,
-                                             String workflowEngine) {
+    /**
+     * {@inheritDoc}
+     *
+     * This method just needs a sw_accession value from the workflow table and an
+     * ini file(s) in order to schedule a workflow. All needed info is pulled from
+     * the workflow table which was populated when the workflow was installed.
+     * Keep in mind this does not actually trigger anything, it just schedules the
+     * workflow to run by adding to the workflow_run table. This lets you run
+     * workflows on a different host from where this command line tool is run but
+     * requires an external process to launch workflows that have been scheduled.
+     *
+     * @param inputFiles the value of inputFiles
+     */
+      public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession,
+        ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, String scheduledHost, String workflowEngine, Set<Integer> inputFiles) {
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
     Map<String, String> workflowMetadata = this.metadata.get_workflow_info(Integer.parseInt(workflowAccession));
     WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
     scheduleWorkflow(wi, workflowRunAccession, iniFiles, metadataWriteback, parentAccessions, parentsLinkedToWR, wait,
-                     cmdLineOptions, scheduledHost, workflowEngine);
+                     cmdLineOptions, scheduledHost, workflowEngine, inputFiles);
 
     return (ret);
   }
 
-  /**
-   * {@inheritDoc}
-   * 
-   * This method just needs a sw_accession value from the workflow_run table to
-   * launch a workflow. All needed info is pulled from the workflow_run table
-   * which was populated when the workflow was scheduled.
-   */
-  public ReturnValue launchScheduledBundle(String workflowAccession, String workflowRunAccession,
-                                           boolean metadataWriteback, boolean wait) {
+    /**
+     * {@inheritDoc}
+     *
+     * This method just needs a sw_accession value from the workflow_run table to
+     * launch a workflow. All needed info is pulled from the workflow_run table
+     * which was populated when the workflow was scheduled.
+     *
+     */
+    
+  @Override
+  public ReturnValue launchScheduledBundle(String workflowAccession, String workflowRunAccession, boolean metadataWriteback, boolean wait) {
 
     // do basic common setup tasks
     ReturnValue setupRet = setup();
@@ -204,15 +207,16 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
   }
 
-  /**
-   * {@inheritDoc}
-   * 
-   * FIXME: need to add metadata writeback
-   */
-  public ReturnValue launchBundle(String workflow, String version, String metadataFile, String bundle,
-                                  ArrayList<String> iniFiles, boolean metadataWriteback,
-                                  ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR,
-                                  boolean wait, List<String> cmdLineOptions) {
+    /**
+     * {@inheritDoc}
+     *
+     * FIXME: need to add metadata writeback
+     *
+     * @param inputFiles the value of inputFiles
+     */
+    
+  @Override
+  public ReturnValue launchBundle(String workflow, String version, String metadataFile, String bundle, ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, Set<Integer> inputFiles) {
 
     // do basic common setup tasks
     ReturnValue setupRet = setup();
@@ -247,7 +251,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
           wi.setWorkflowDir(bundlePath);
 
           ret = runWorkflow(wi, null, iniFiles, new HashMap<String, String>(), metadataWriteback, parentAccessions,
-                            parentsLinkedToWR, wait, cmdLineOptions);
+                            parentsLinkedToWR, wait, cmdLineOptions, inputFiles);
 
         } catch (Exception e) {
           // TODO Auto-generated catch block
@@ -333,23 +337,21 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     // ArrayList<String> parentsLinkedToWR = parseParentsLinkedToWR(map);
 
     ret = runWorkflow(wi, workflowRunAccession, new ArrayList<String>(), map, metadataWriteback, parentAccessions,
-                      new ArrayList<String>(), wait, new ArrayList<String>());
+                      new ArrayList<String>(), wait, new ArrayList<String>(), wr.getInputFileAccessions());
 
     return (ret);
   }
 
-  /**
-   * This method needs to ensure the workflow has been downloaded, if not, it
-   * needs to provision it it also should take a map object too so it doesn't
-   * need to read ini files in order to work.
-   * 
-   * TODO: make sure all workflow_bundle_dir subs happen
-   * 
-   */
-  private ReturnValue runWorkflow(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles,
-                                  HashMap<String, String> preParsedIni, boolean metadataWriteback,
-                                  ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR,
-                                  boolean wait, List<String> cmdLineOptions) {
+    /**
+     * This method needs to ensure the workflow has been downloaded, if not, it
+     * needs to provision it it also should take a map object too so it doesn't
+     * need to read ini files in order to work.
+     *
+     * TODO: make sure all workflow_bundle_dir subs happen
+     *
+     * @param inputFiles the value of inputFiles
+     */
+  private ReturnValue runWorkflow(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles, HashMap<String, String> preParsedIni, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, Set<Integer> inputFiles) {
 
     // keep this id handy
     int workflowRunId = 0;
@@ -359,14 +361,14 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     // the return value to use
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
     boolean first = true;
-    StringBuffer iniFilesStr = new StringBuffer();
+    StringBuilder iniFilesStr = new StringBuilder();
     for (String iniFile : iniFiles) {
       String newIniFile = replaceWBD(iniFile, wi.getWorkflowDir());
       if (first) {
         first = false;
         iniFilesStr.append(newIniFile);
       } else {
-        iniFilesStr.append("," + newIniFile);
+        iniFilesStr.append(",").append(newIniFile);
       }
     }
     // this method takes the wi object, checks to see if the workflow is
@@ -511,6 +513,8 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     // already be set
     // and we need to use their values before writing back to the DB!
     WorkflowRun wr = metadata.getWorkflowRun(workflowRunAccessionInt);
+    // merge in any input files that may be fed in when launching bundles directly
+    wr.getInputFileAccessions().addAll(inputFiles);
 
     // return if not successful
     if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS || statusCmd == null) {
@@ -518,7 +522,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
       if (metadataWriteback) {
         metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "failed", statusCmd,
                                      wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
-                                     retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine());
+                                     retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
       }
       return (retPegasus);
     }
@@ -527,7 +531,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     if (metadataWriteback) {
       metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "pending", statusCmd,
                                    wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
-                                   retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine());
+                                   retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
     }
 
     Log.stdout("PEGASUS STATUS COMMAND: " + statusCmd);
@@ -550,7 +554,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
         if (metadataWriteback) {
           metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "completed", statusCmd,
                                        wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
-                                       retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine());
+                                       retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
         }
 
       } else if (watchedResult.getExitStatus() == ReturnValue.FAILURE) {
@@ -559,7 +563,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
         if (metadataWriteback) {
           metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "failed", statusCmd,
                                        wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
-                                       watchedResult.getStderr(), watchedResult.getStdout(), wr.getWorkflowEngine());
+                                       watchedResult.getStderr(), watchedResult.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
         }
         ret.setExitStatus(ReturnValue.FAILURE);
         return (ret);
@@ -577,10 +581,22 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     return (ret);
   }
 
-  private ReturnValue scheduleWorkflow(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles,
-                                       boolean metadataWriteback, ArrayList<String> parentAccessions,
-                                       ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions,
-                                       String scheduledHost, String workflowEngine) {
+  /**
+   * 
+   * @param wi
+   * @param workflowRunAccession
+   * @param iniFiles
+   * @param metadataWriteback
+   * @param parentAccessions
+   * @param parentsLinkedToWR
+   * @param wait
+   * @param cmdLineOptions
+   * @param scheduledHost
+   * @param workflowEngine
+   * @param inputFiles
+   * @return 
+   */
+  private ReturnValue scheduleWorkflow(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, String scheduledHost, String workflowEngine, Set<Integer> inputFiles) {
 
     // keep this id handy
     int workflowRunId = 0;
@@ -690,7 +706,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
       this.metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "submitted", null,
                                         null, null, mapBuffer.toString(), scheduledHost, null,
-                                        null, workflowEngine);
+                                        null, workflowEngine, inputFiles);
 
     } else {
       Log.error("you can't schedule a workflow run unless you have metadata writeback turned on.");
