@@ -4,3 +4,17 @@
 *.jar
 *.war
 *.ear
+/seqware-webservice-prototype/seqware-webservice/target/
+/seqware-webservice-prototype/seqware-webservice/nbproject/private/
+/seqware-webservice-prototype/seqware-webservice/build/
+/seqware-webservice-prototype/seqware-webservice/dist/
+/seqware-webservice-client-prototype/seqware-webservice-client/nbproject/private/
+/seqware-webservice-client-prototype/seqware-webservice-client/build/
+/seqware-webservice-prototype-2/SeqWareWebService/nbproject/private/
+/seqware-webservice-prototype-2/SeqWareWebService/build/
+/seqware-webservice-prototype-2/SeqWareWebService/dist/
+/seqware-webservice-client-prototype-2/SeqWareWebServiceClient/target/
+/seqware-webservice-client-prototype-2/SeqWarePortalPrototype/nbproject/private/
+/seqware-webservice-client-prototype-2/HTML5Application/nbproject/private
+/seqware-webservice-client-prototype-2/HTML5Application1/nbproject/private/
+/seqware-webservice/target/
