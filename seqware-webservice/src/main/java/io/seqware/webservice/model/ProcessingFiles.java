@@ -17,6 +17,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -58,6 +59,7 @@ public class ProcessingFiles implements Serializable {
     this.processingFilesId = processingFilesId;
   }
 
+  @XmlTransient
   public Processing getProcessingId() {
     return processingId;
   }

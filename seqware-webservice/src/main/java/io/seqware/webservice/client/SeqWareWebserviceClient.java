@@ -43,7 +43,9 @@ import java.util.List;
 public class SeqWareWebserviceClient {
   private WebResource webResource;
   private Client client;
-  private static final String BASE_URI = "http://localhost:41217/seqware-webservice/webresources";
+  // you will need to change this
+  //private static final String BASE_URI = "http://localhost:41217/seqware-webservice/webresources";
+  private static final String BASE_URI = "http://localhost:8080/seqware-webservice/webresources";
 
   
   public static void main(String args[])throws UniformInterfaceException
@@ -83,6 +85,7 @@ public class SeqWareWebserviceClient {
     */
     
     // some testing for workflow_runs
+    SeqWareWebserviceClient processingClient=new SeqWareWebserviceClient("processing");
     SeqWareWebserviceClient client1=new SeqWareWebserviceClient("workflowrun");
     ClientResponse response=client1.findRange_XML(ClientResponse.class, "1", "5");
     GenericType<List<WorkflowRun>> genericType = new GenericType<List<WorkflowRun>>() {};
@@ -96,10 +99,15 @@ public class SeqWareWebserviceClient {
           Collection<ProcessingFiles> procFiles = currProc.getProcessingFilesCollection();
           if (procFiles != null) {
             for(ProcessingFiles procFile : procFiles) {
-              System.out.println("  PROC FILE: "+procFile.getFileId());
+              System.out.println("  PROC FILE: "+procFile.getFileId()+" PATH: "+procFile.getFileId().getFilePath());
             }
           } else {
             System.out.println("  Can't get proc files for processing ID: "+currProc.getProcessingId());
+            ClientResponse procRes = processingClient.find_XML(ClientResponse.class, currProc.getProcessingId().toString());
+	    Processing procData = procRes.getEntity(new GenericType<Processing>() {});
+	    if (procData != null) {
+	  	System.out.println(  "   PROC FILE2: "+procData.getProcessingFilesCollection());
+	    }
           }
         }
       } else {

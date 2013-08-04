@@ -421,7 +421,6 @@ public class Processing implements Serializable {
     this.processingStudiesCollection = processingStudiesCollection;
   }
 
-  @XmlTransient
   public Collection<ProcessingFiles> getProcessingFilesCollection() {
     return processingFilesCollection;
   }
