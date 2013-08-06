@@ -9,6 +9,7 @@ import java.util.*;
 
 import net.sourceforge.seqware.common.dao.WorkflowRunDAO;
 import net.sourceforge.seqware.common.model.*;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;

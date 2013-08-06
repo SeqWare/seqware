@@ -19,6 +19,7 @@ package net.sourceforge.seqware.webservice.resources.tables;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
+import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.IUSService;
 import net.sourceforge.seqware.common.business.LaneService;
@@ -30,6 +31,7 @@ import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import org.apache.commons.lang.ArrayUtils;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -65,7 +67,11 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         WorkflowRunService ss = BeanFactory.getWorkflowRunServiceBean();
 
         WorkflowRun workflowRun = getWorkflowRun(ss);
-        WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, workflowRun);
+        // specify that we want the input file set to be copied along, if this works, we should clean up the manual copying below
+        CollectionPropertyName<WorkflowRun>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(WorkflowRun.class, new String[]{"inputFileAccessions"});
+        WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, workflowRun, ArrayUtils.EMPTY_CLASS_ARRAY, createCollectionPropertyNames);
+        //Log.debug("getXML() Workflow run contains " + workflowRun.getInputFileAccessions().size()  + " input files");
+        //dto.setInputFileAccessions(workflowRun.getInputFileAccessions());
 
         if (fields.contains("lanes")) {
 
@@ -195,7 +201,12 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         wr.setStdErr(newWR.getStdErr());
         wr.setStdOut(newWR.getStdOut());
         wr.setWorkflowEngine(newWR.getWorkflowEngine());
-
+        if (newWR.getInputFileAccessions() != null){
+            Log.debug("Saving " + wr.getInputFileAccessions().size() + " input files");
+            wr.getInputFileAccessions().clear();
+            wr.getInputFileAccessions().addAll(newWR.getInputFileAccessions());
+        }
+        
         if (newWR.getWorkflow() != null) {
             WorkflowService ws = BeanFactory.getWorkflowServiceBean();
             Workflow w = ws.findByID(newWR.getWorkflow().getWorkflowId());
@@ -248,6 +259,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
             JaxbObject<WorkflowRun> jo = new JaxbObject<WorkflowRun>();
             try {
                 String text = entity.getText();
+                Log.debug(text);
                 newWR = (WorkflowRun) XmlTools.unMarshal(jo, new WorkflowRun(), text);
             } catch (SAXException ex) {
                 ex.printStackTrace();

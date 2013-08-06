@@ -22,6 +22,7 @@ import javax.sql.DataSource;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
@@ -1005,9 +1006,10 @@ public class MetadataDB extends Metadata {
   /**
    * {@inheritDoc}
    */
+  @Override
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
           String statusCmd, String workingDirectory, String dax, String ini, String host,
-          String stdErr, String stdOut, String workflowengine) {
+          String stdErr, String stdOut, String workflowengine, Set<Integer> inputFiles) {
 
     // metadata.update_workflow_run(workflowRunId, pegasusCmd, template,
     // "pending", statusCmd, wi.getWorkflowDir(), daxReader.toString(),
@@ -2132,6 +2134,11 @@ public class MetadataDB extends Metadata {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
 
+    @Override
+    public List<WorkflowRun> getWorkflowRunsAssociatedWithInputFiles(List<Integer> fileAccessions) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+    
     @Override
     public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
