@@ -9,11 +9,6 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
 
---
--- Name: plpgsql; Type: PROCEDURAL LANGUAGE; Schema: -; Owner: postgres
---
-
-
 
 SET search_path = public, pg_catalog;
 
@@ -696,6 +691,20 @@ END;$$;
 ALTER FUNCTION public.fill_sample_report() OWNER TO seqware;
 
 --
+-- Name: expense_expense_id_seq; Type: SEQUENCE; Schema: public; Owner: seqware
+--
+
+CREATE SEQUENCE expense_expense_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.expense_expense_id_seq OWNER TO seqware;
+
+--
 -- Name: sw_accession_seq; Type: SEQUENCE; Schema: public; Owner: seqware
 --
 
@@ -712,6 +721,57 @@ ALTER TABLE public.sw_accession_seq OWNER TO seqware;
 SET default_tablespace = '';
 
 SET default_with_oids = false;
+
+--
+-- Name: expense; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
+--
+
+CREATE TABLE expense (
+    expense_id integer DEFAULT nextval('expense_expense_id_seq'::regclass) NOT NULL,
+    invoice_id integer NOT NULL,
+    workflow_run_id integer,
+    agent text,
+    expense_type text,
+    description text,
+    price_per_unit numeric,
+    total_units numeric,
+    total_price numeric,
+    added_surcharge numeric,
+    sw_accession integer DEFAULT nextval('sw_accession_seq'::regclass),
+    expense_finished_tstmp timestamp without time zone
+);
+
+
+ALTER TABLE public.expense OWNER TO seqware;
+
+--
+-- Name: expense_attribute_expense_attribute_id_seq; Type: SEQUENCE; Schema: public; Owner: seqware
+--
+
+CREATE SEQUENCE expense_attribute_expense_attribute_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.expense_attribute_expense_attribute_id_seq OWNER TO seqware;
+
+--
+-- Name: expense_attribute; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
+--
+
+CREATE TABLE expense_attribute (
+    expense_attribute_id integer DEFAULT nextval('expense_attribute_expense_attribute_id_seq'::regclass) NOT NULL,
+    expense_id integer NOT NULL,
+    tag text,
+    value text,
+    units text
+);
+
+
+ALTER TABLE public.expense_attribute OWNER TO seqware;
 
 --
 -- Name: experiment; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
@@ -983,7 +1043,7 @@ CREATE TABLE file (
     owner_id integer,
     sw_accession integer DEFAULT nextval('sw_accession_seq'::regclass),
     file_type_id integer,
-    size bigint, 
+    size bigint,
     skip boolean DEFAULT false
 );
 
@@ -1114,6 +1174,73 @@ ALTER TABLE public.file_type_file_type_id_seq OWNER TO seqware;
 
 ALTER SEQUENCE file_type_file_type_id_seq OWNED BY file_type.file_type_id;
 
+
+--
+-- Name: invoice_invoice_id_seq; Type: SEQUENCE; Schema: public; Owner: seqware
+--
+
+CREATE SEQUENCE invoice_invoice_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.invoice_invoice_id_seq OWNER TO seqware;
+
+--
+-- Name: invoice; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
+--
+
+CREATE TABLE invoice (
+    invoice_id integer DEFAULT nextval('invoice_invoice_id_seq'::regclass) NOT NULL,
+    owner_id integer NOT NULL,
+    start_date date NOT NULL,
+    end_date date NOT NULL,
+    state text,
+    finalized boolean,
+    fully_paid boolean,
+    paid_amount numeric,
+    days_until_due integer,
+    external_id text,
+    client_notes text,
+    notes text,
+    sw_accession integer DEFAULT nextval('sw_accession_seq'::regclass),
+    create_tstmp timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.invoice OWNER TO seqware;
+
+--
+-- Name: invoice_attribute_invoice_attribute_id_seq; Type: SEQUENCE; Schema: public; Owner: seqware
+--
+
+CREATE SEQUENCE invoice_attribute_invoice_attribute_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.invoice_attribute_invoice_attribute_id_seq OWNER TO seqware;
+
+--
+-- Name: invoice_attribute; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
+--
+
+CREATE TABLE invoice_attribute (
+    invoice_attribute_id integer DEFAULT nextval('invoice_attribute_invoice_attribute_id_seq'::regclass) NOT NULL,
+    invoice_id integer NOT NULL,
+    tag text,
+    value text,
+    units text
+);
+
+
+ALTER TABLE public.invoice_attribute OWNER TO seqware;
 
 --
 -- Name: ius; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
@@ -2985,6 +3112,18 @@ CREATE TABLE workflow_run_attribute (
 ALTER TABLE public.workflow_run_attribute OWNER TO seqware;
 
 --
+-- Name: workflow_run_input_files; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
+--
+
+CREATE TABLE workflow_run_input_files (
+    workflow_run_id integer,
+    file_id integer
+);
+
+
+ALTER TABLE public.workflow_run_input_files OWNER TO seqware;
+
+--
 -- Name: workflow_run_param; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
 --
 
@@ -3067,357 +3206,373 @@ ALTER SEQUENCE workflow_workflow_id_seq OWNED BY workflow.workflow_id;
 -- Name: experiment_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY experiment ALTER COLUMN experiment_id SET DEFAULT nextval('experiment_experiment_id_seq'::regclass);
+ALTER TABLE experiment ALTER COLUMN experiment_id SET DEFAULT nextval('experiment_experiment_id_seq'::regclass);
 
 
 --
 -- Name: experiment_attribute_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY experiment_attribute ALTER COLUMN experiment_attribute_id SET DEFAULT nextval('experiment_attribute_experiment_attribute_id_seq'::regclass);
+ALTER TABLE experiment_attribute ALTER COLUMN experiment_attribute_id SET DEFAULT nextval('experiment_attribute_experiment_attribute_id_seq'::regclass);
 
 
 --
 -- Name: experiment_library_design_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY experiment_library_design ALTER COLUMN experiment_library_design_id SET DEFAULT nextval('experiment_library_design_experiment_library_design_id_seq'::regclass);
+ALTER TABLE experiment_library_design ALTER COLUMN experiment_library_design_id SET DEFAULT nextval('experiment_library_design_experiment_library_design_id_seq'::regclass);
 
 
 --
 -- Name: experiment_link_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY experiment_link ALTER COLUMN experiment_link_id SET DEFAULT nextval('experiment_link_experiment_link_id_seq'::regclass);
+ALTER TABLE experiment_link ALTER COLUMN experiment_link_id SET DEFAULT nextval('experiment_link_experiment_link_id_seq'::regclass);
 
 
 --
 -- Name: experiment_spot_design_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY experiment_spot_design ALTER COLUMN experiment_spot_design_id SET DEFAULT nextval('experiment_spot_design_experiment_spot_design_id_seq'::regclass);
+ALTER TABLE experiment_spot_design ALTER COLUMN experiment_spot_design_id SET DEFAULT nextval('experiment_spot_design_experiment_spot_design_id_seq'::regclass);
 
 
 --
 -- Name: experiment_spot_design_read_spec_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY experiment_spot_design_read_spec ALTER COLUMN experiment_spot_design_read_spec_id SET DEFAULT nextval('experiment_spot_design_read_s_experiment_spot_design_read_s_seq'::regclass);
+ALTER TABLE experiment_spot_design_read_spec ALTER COLUMN experiment_spot_design_read_spec_id SET DEFAULT nextval('experiment_spot_design_read_s_experiment_spot_design_read_s_seq'::regclass);
 
 
 --
 -- Name: file_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY file ALTER COLUMN file_id SET DEFAULT nextval('file_file_id_seq'::regclass);
+ALTER TABLE file ALTER COLUMN file_id SET DEFAULT nextval('file_file_id_seq'::regclass);
 
 
 --
 -- Name: row_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY file_report ALTER COLUMN row_id SET DEFAULT nextval('file_report_row_id_seq'::regclass);
+ALTER TABLE file_report ALTER COLUMN row_id SET DEFAULT nextval('file_report_row_id_seq'::regclass);
 
 
 --
 -- Name: file_type_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY file_type ALTER COLUMN file_type_id SET DEFAULT nextval('file_type_file_type_id_seq'::regclass);
+ALTER TABLE file_type ALTER COLUMN file_type_id SET DEFAULT nextval('file_type_file_type_id_seq'::regclass);
 
 
 --
 -- Name: ius_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY ius ALTER COLUMN ius_id SET DEFAULT nextval('ius_ius_id_seq'::regclass);
+ALTER TABLE ius ALTER COLUMN ius_id SET DEFAULT nextval('ius_ius_id_seq'::regclass);
 
 
 --
 -- Name: ius_attribute_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY ius_attribute ALTER COLUMN ius_attribute_id SET DEFAULT nextval('ius_attribute_ius_attribute_id_seq'::regclass);
+ALTER TABLE ius_attribute ALTER COLUMN ius_attribute_id SET DEFAULT nextval('ius_attribute_ius_attribute_id_seq'::regclass);
 
 
 --
 -- Name: ius_workflow_runs_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY ius_workflow_runs ALTER COLUMN ius_workflow_runs_id SET DEFAULT nextval('ius_workflow_runs_ius_workflow_runs_id_seq'::regclass);
+ALTER TABLE ius_workflow_runs ALTER COLUMN ius_workflow_runs_id SET DEFAULT nextval('ius_workflow_runs_ius_workflow_runs_id_seq'::regclass);
 
 
 --
 -- Name: lane_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY lane ALTER COLUMN lane_id SET DEFAULT nextval('lane_lane_id_seq'::regclass);
+ALTER TABLE lane ALTER COLUMN lane_id SET DEFAULT nextval('lane_lane_id_seq'::regclass);
 
 
 --
 -- Name: lane_attribute_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY lane_attribute ALTER COLUMN lane_attribute_id SET DEFAULT nextval('lane_attribute_lane_attribute_id_seq'::regclass);
+ALTER TABLE lane_attribute ALTER COLUMN lane_attribute_id SET DEFAULT nextval('lane_attribute_lane_attribute_id_seq'::regclass);
 
 
 --
 -- Name: lane_type_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY lane_type ALTER COLUMN lane_type_id SET DEFAULT nextval('lane_type_lane_type_id_seq'::regclass);
+ALTER TABLE lane_type ALTER COLUMN lane_type_id SET DEFAULT nextval('lane_type_lane_type_id_seq'::regclass);
 
 
 --
 -- Name: lane_workflow_runs_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY lane_workflow_runs ALTER COLUMN lane_workflow_runs_id SET DEFAULT nextval('lane_workflow_runs_lane_workflow_runs_id_seq'::regclass);
+ALTER TABLE lane_workflow_runs ALTER COLUMN lane_workflow_runs_id SET DEFAULT nextval('lane_workflow_runs_lane_workflow_runs_id_seq'::regclass);
 
 
 --
 -- Name: library_selection_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY library_selection ALTER COLUMN library_selection_id SET DEFAULT nextval('library_selection_library_selection_id_seq'::regclass);
+ALTER TABLE library_selection ALTER COLUMN library_selection_id SET DEFAULT nextval('library_selection_library_selection_id_seq'::regclass);
 
 
 --
 -- Name: library_source_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY library_source ALTER COLUMN library_source_id SET DEFAULT nextval('library_source_library_source_id_seq'::regclass);
+ALTER TABLE library_source ALTER COLUMN library_source_id SET DEFAULT nextval('library_source_library_source_id_seq'::regclass);
 
 
 --
 -- Name: library_strategy_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY library_strategy ALTER COLUMN library_strategy_id SET DEFAULT nextval('library_strategy_library_strategy_id_seq'::regclass);
+ALTER TABLE library_strategy ALTER COLUMN library_strategy_id SET DEFAULT nextval('library_strategy_library_strategy_id_seq'::regclass);
 
 
 --
 -- Name: organism_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY organism ALTER COLUMN organism_id SET DEFAULT nextval('organism_organism_id_seq'::regclass);
+ALTER TABLE organism ALTER COLUMN organism_id SET DEFAULT nextval('organism_organism_id_seq'::regclass);
 
 
 --
 -- Name: platform_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY platform ALTER COLUMN platform_id SET DEFAULT nextval('platform_platform_id_seq'::regclass);
+ALTER TABLE platform ALTER COLUMN platform_id SET DEFAULT nextval('platform_platform_id_seq'::regclass);
 
 
 --
 -- Name: processing_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY processing ALTER COLUMN processing_id SET DEFAULT nextval('processing_processing_id_seq'::regclass);
+ALTER TABLE processing ALTER COLUMN processing_id SET DEFAULT nextval('processing_processing_id_seq'::regclass);
 
 
 --
 -- Name: processing_attribute_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY processing_attribute ALTER COLUMN processing_attribute_id SET DEFAULT nextval('processing_attribute_processing_attribute_id_seq'::regclass);
+ALTER TABLE processing_attribute ALTER COLUMN processing_attribute_id SET DEFAULT nextval('processing_attribute_processing_attribute_id_seq'::regclass);
 
 
 --
 -- Name: processing_experiments_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY processing_experiments ALTER COLUMN processing_experiments_id SET DEFAULT nextval('processing_experiments_processing_experiments_id_seq'::regclass);
+ALTER TABLE processing_experiments ALTER COLUMN processing_experiments_id SET DEFAULT nextval('processing_experiments_processing_experiments_id_seq'::regclass);
 
 
 --
 -- Name: processing_files_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY processing_files ALTER COLUMN processing_files_id SET DEFAULT nextval('processing_files_processing_files_id_seq'::regclass);
+ALTER TABLE processing_files ALTER COLUMN processing_files_id SET DEFAULT nextval('processing_files_processing_files_id_seq'::regclass);
 
 
 --
 -- Name: processing_ius_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY processing_ius ALTER COLUMN processing_ius_id SET DEFAULT nextval('processing_ius_processing_ius_id_seq'::regclass);
+ALTER TABLE processing_ius ALTER COLUMN processing_ius_id SET DEFAULT nextval('processing_ius_processing_ius_id_seq'::regclass);
 
 
 --
 -- Name: processing_lanes_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY processing_lanes ALTER COLUMN processing_lanes_id SET DEFAULT nextval('processing_lanes_processing_lanes_id_seq'::regclass);
+ALTER TABLE processing_lanes ALTER COLUMN processing_lanes_id SET DEFAULT nextval('processing_lanes_processing_lanes_id_seq'::regclass);
 
 
 --
 -- Name: processing_relationship_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY processing_relationship ALTER COLUMN processing_relationship_id SET DEFAULT nextval('processing_relationship_processing_relationship_id_seq'::regclass);
+ALTER TABLE processing_relationship ALTER COLUMN processing_relationship_id SET DEFAULT nextval('processing_relationship_processing_relationship_id_seq'::regclass);
 
 
 --
 -- Name: processing_samples_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY processing_samples ALTER COLUMN processing_samples_id SET DEFAULT nextval('processing_samples_processing_samples_id_seq'::regclass);
+ALTER TABLE processing_samples ALTER COLUMN processing_samples_id SET DEFAULT nextval('processing_samples_processing_samples_id_seq'::regclass);
 
 
 --
 -- Name: processing_sequencer_runs_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY processing_sequencer_runs ALTER COLUMN processing_sequencer_runs_id SET DEFAULT nextval('processing_sequencer_runs_processing_sequencer_runs_id_seq'::regclass);
+ALTER TABLE processing_sequencer_runs ALTER COLUMN processing_sequencer_runs_id SET DEFAULT nextval('processing_sequencer_runs_processing_sequencer_runs_id_seq'::regclass);
 
 
 --
 -- Name: processing_studies_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY processing_studies ALTER COLUMN processing_studies_id SET DEFAULT nextval('processing_studies_processing_studies_id_seq'::regclass);
+ALTER TABLE processing_studies ALTER COLUMN processing_studies_id SET DEFAULT nextval('processing_studies_processing_studies_id_seq'::regclass);
 
 
 --
 -- Name: registration_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY registration ALTER COLUMN registration_id SET DEFAULT nextval('registration_registration_id_seq'::regclass);
+ALTER TABLE registration ALTER COLUMN registration_id SET DEFAULT nextval('registration_registration_id_seq'::regclass);
 
 
 --
 -- Name: sample_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY sample ALTER COLUMN sample_id SET DEFAULT nextval('sample_sample_id_seq'::regclass);
+ALTER TABLE sample ALTER COLUMN sample_id SET DEFAULT nextval('sample_sample_id_seq'::regclass);
 
 
 --
 -- Name: sample_attribute_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY sample_attribute ALTER COLUMN sample_attribute_id SET DEFAULT nextval('sample_attribute_sample_attribute_id_seq'::regclass);
+ALTER TABLE sample_attribute ALTER COLUMN sample_attribute_id SET DEFAULT nextval('sample_attribute_sample_attribute_id_seq'::regclass);
 
 
 --
 -- Name: sample_link_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY sample_link ALTER COLUMN sample_link_id SET DEFAULT nextval('sample_link_sample_link_id_seq'::regclass);
+ALTER TABLE sample_link ALTER COLUMN sample_link_id SET DEFAULT nextval('sample_link_sample_link_id_seq'::regclass);
 
 
 --
 -- Name: sample_relationship_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY sample_relationship ALTER COLUMN sample_relationship_id SET DEFAULT nextval('sample_relationship_sample_relationship_id_seq'::regclass);
+ALTER TABLE sample_relationship ALTER COLUMN sample_relationship_id SET DEFAULT nextval('sample_relationship_sample_relationship_id_seq'::regclass);
 
 
 --
 -- Name: row_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY sample_report ALTER COLUMN row_id SET DEFAULT nextval('sample_report_row_id_seq'::regclass);
+ALTER TABLE sample_report ALTER COLUMN row_id SET DEFAULT nextval('sample_report_row_id_seq'::regclass);
 
 
 --
 -- Name: sequencer_run_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY sequencer_run ALTER COLUMN sequencer_run_id SET DEFAULT nextval('sequencer_run_sequencer_run_id_seq'::regclass);
+ALTER TABLE sequencer_run ALTER COLUMN sequencer_run_id SET DEFAULT nextval('sequencer_run_sequencer_run_id_seq'::regclass);
 
 
 --
 -- Name: sequencer_run_attribute_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY sequencer_run_attribute ALTER COLUMN sequencer_run_attribute_id SET DEFAULT nextval('sequencer_run_attribute_sequencer_run_attribute_id_seq'::regclass);
+ALTER TABLE sequencer_run_attribute ALTER COLUMN sequencer_run_attribute_id SET DEFAULT nextval('sequencer_run_attribute_sequencer_run_attribute_id_seq'::regclass);
 
 
 --
 -- Name: share_study_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY share_study ALTER COLUMN share_study_id SET DEFAULT nextval('share_study_id_seq'::regclass);
+ALTER TABLE share_study ALTER COLUMN share_study_id SET DEFAULT nextval('share_study_id_seq'::regclass);
 
 
 --
 -- Name: share_workflow_run_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY share_workflow_run ALTER COLUMN share_workflow_run_id SET DEFAULT nextval('share_workflow_run_share_workflow_run_id_seq'::regclass);
+ALTER TABLE share_workflow_run ALTER COLUMN share_workflow_run_id SET DEFAULT nextval('share_workflow_run_share_workflow_run_id_seq'::regclass);
 
 
 --
 -- Name: study_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY study ALTER COLUMN study_id SET DEFAULT nextval('study_study_id_seq'::regclass);
+ALTER TABLE study ALTER COLUMN study_id SET DEFAULT nextval('study_study_id_seq'::regclass);
 
 
 --
 -- Name: study_attribute_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY study_attribute ALTER COLUMN study_attribute_id SET DEFAULT nextval('study_attribute_study_attribute_id_seq'::regclass);
+ALTER TABLE study_attribute ALTER COLUMN study_attribute_id SET DEFAULT nextval('study_attribute_study_attribute_id_seq'::regclass);
 
 
 --
 -- Name: study_link_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY study_link ALTER COLUMN study_link_id SET DEFAULT nextval('study_link_study_link_id_seq'::regclass);
+ALTER TABLE study_link ALTER COLUMN study_link_id SET DEFAULT nextval('study_link_study_link_id_seq'::regclass);
 
 
 --
 -- Name: study_type_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY study_type ALTER COLUMN study_type_id SET DEFAULT nextval('study_type_study_type_id_seq'::regclass);
+ALTER TABLE study_type ALTER COLUMN study_type_id SET DEFAULT nextval('study_type_study_type_id_seq'::regclass);
 
 
 --
 -- Name: version_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY version ALTER COLUMN version_id SET DEFAULT nextval('version_version_id_seq'::regclass);
+ALTER TABLE version ALTER COLUMN version_id SET DEFAULT nextval('version_version_id_seq'::regclass);
 
 
 --
 -- Name: workflow_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY workflow ALTER COLUMN workflow_id SET DEFAULT nextval('workflow_workflow_id_seq'::regclass);
+ALTER TABLE workflow ALTER COLUMN workflow_id SET DEFAULT nextval('workflow_workflow_id_seq'::regclass);
 
 
 --
 -- Name: workflow_param_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY workflow_param ALTER COLUMN workflow_param_id SET DEFAULT nextval('workflow_param_workflow_param_id_seq'::regclass);
+ALTER TABLE workflow_param ALTER COLUMN workflow_param_id SET DEFAULT nextval('workflow_param_workflow_param_id_seq'::regclass);
 
 
 --
 -- Name: workflow_param_value_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY workflow_param_value ALTER COLUMN workflow_param_value_id SET DEFAULT nextval('workflow_param_value_workflow_param_value_id_seq'::regclass);
+ALTER TABLE workflow_param_value ALTER COLUMN workflow_param_value_id SET DEFAULT nextval('workflow_param_value_workflow_param_value_id_seq'::regclass);
 
 
 --
 -- Name: workflow_run_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY workflow_run ALTER COLUMN workflow_run_id SET DEFAULT nextval('workflow_run_workflow_run_id_seq'::regclass);
+ALTER TABLE workflow_run ALTER COLUMN workflow_run_id SET DEFAULT nextval('workflow_run_workflow_run_id_seq'::regclass);
 
 
 --
 -- Name: workflow_run_param_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
-ALTER TABLE ONLY workflow_run_param ALTER COLUMN workflow_run_param_id SET DEFAULT nextval('workflow_run_param_workflow_run_param_id_seq'::regclass);
+ALTER TABLE workflow_run_param ALTER COLUMN workflow_run_param_id SET DEFAULT nextval('workflow_run_param_workflow_run_param_id_seq'::regclass);
+
+
+--
+-- Name: expense_attribute_pkey; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 
+--
+
+ALTER TABLE ONLY expense_attribute
+    ADD CONSTRAINT expense_attribute_pkey PRIMARY KEY (expense_attribute_id);
+
+
+--
+-- Name: expense_pkey; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 
+--
+
+ALTER TABLE ONLY expense
+    ADD CONSTRAINT expense_pkey PRIMARY KEY (expense_id);
 
 
 --
@@ -3506,6 +3661,22 @@ ALTER TABLE ONLY file_report
 
 ALTER TABLE ONLY file_type
     ADD CONSTRAINT file_type_pkey PRIMARY KEY (file_type_id);
+
+
+--
+-- Name: invoice_attribute_pkey; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 
+--
+
+ALTER TABLE ONLY invoice_attribute
+    ADD CONSTRAINT invoice_attribute_pkey PRIMARY KEY (invoice_attribute_id);
+
+
+--
+-- Name: invoice_pkey; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 
+--
+
+ALTER TABLE ONLY invoice
+    ADD CONSTRAINT invoice_pkey PRIMARY KEY (invoice_id);
 
 
 --
@@ -4065,6 +4236,13 @@ CREATE INDEX file_id_processing_files ON processing_files USING btree (file_id);
 
 
 --
+-- Name: file_id_workflow_run_input_files; Type: INDEX; Schema: public; Owner: seqware; Tablespace: 
+--
+
+CREATE INDEX file_id_workflow_run_input_files ON workflow_run_input_files USING btree (file_id);
+
+
+--
 -- Name: file_report_study_id_idx; Type: INDEX; Schema: public; Owner: seqware; Tablespace: 
 --
 
@@ -4083,6 +4261,7 @@ CREATE INDEX index_processing_relationship_child_id ON processing_relationship U
 --
 
 CREATE INDEX index_processing_relationship_parent_id ON processing_relationship USING btree (parent_id);
+
 
 --
 -- Name: ius_id_ius_workflow_runs; Type: INDEX; Schema: public; Owner: seqware; Tablespace: 
@@ -4169,51 +4348,25 @@ CREATE INDEX workflow_run_id_ius_workflow_runs ON ius_workflow_runs USING btree 
 
 
 --
+-- Name: workflow_run_id_workflow_run_input_files; Type: INDEX; Schema: public; Owner: seqware; Tablespace: 
+--
+
+CREATE INDEX workflow_run_id_workflow_run_input_files ON workflow_run_input_files USING btree (workflow_run_id);
+
+
+--
 -- Name: workflow_run_processing; Type: INDEX; Schema: public; Owner: seqware; Tablespace: 
 --
 
 CREATE INDEX workflow_run_processing ON processing USING btree (workflow_run_id);
 
 
-
 --
--- Name: FileReportTrigger; Type: TRIGGER; Schema: public; Owner: seqware
---
-
--- CREATE TRIGGER "FileReportTrigger"
---    AFTER INSERT ON processing_files
---    FOR EACH ROW
---    EXECUTE PROCEDURE "FileReportInsert"();
-
-
---
--- Name: removeFileReport; Type: TRIGGER; Schema: public; Owner: seqware
+-- Name: expense_attribute_expense_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: seqware
 --
 
--- CREATE TRIGGER "removeFileReport"
---    AFTER DELETE ON processing_files
---    FOR EACH ROW
---    EXECUTE PROCEDURE "FileReportDelete"();
-
-
---
--- Name: sampleReportDelete; Type: TRIGGER; Schema: public; Owner: seqware
---
-
--- CREATE TRIGGER "sampleReportDelete"
---    AFTER DELETE ON workflow_run
---    FOR EACH ROW
---    EXECUTE PROCEDURE "SampleReportDelete"();
-
-
---
--- Name: sample_report_update; Type: TRIGGER; Schema: public; Owner: seqware
---
-
--- CREATE TRIGGER sample_report_update
---    AFTER INSERT OR UPDATE ON workflow_run
---    FOR EACH ROW
---    EXECUTE PROCEDURE "SampleReportUpdate"();
+ALTER TABLE ONLY expense_attribute
+    ADD CONSTRAINT expense_attribute_expense_id_fkey FOREIGN KEY (expense_id) REFERENCES expense(expense_id);
 
 
 --
@@ -4302,6 +4455,14 @@ ALTER TABLE ONLY experiment_spot_design_read_spec
 
 ALTER TABLE ONLY experiment
     ADD CONSTRAINT experiment_study_id_fkey FOREIGN KEY (study_id) REFERENCES study(study_id);
+
+
+--
+-- Name: file_id; Type: FK CONSTRAINT; Schema: public; Owner: seqware
+--
+
+ALTER TABLE ONLY workflow_run_input_files
+    ADD CONSTRAINT file_id FOREIGN KEY (file_id) REFERENCES file(file_id);
 
 
 --
@@ -4582,6 +4743,30 @@ ALTER TABLE ONLY workflow_run
 
 ALTER TABLE ONLY sample_search_attribute
     ADD CONSTRAINT fkf378ceba921d0a72 FOREIGN KEY (sample_search_id) REFERENCES sample_search(sample_search_id);
+
+
+--
+-- Name: invoice_attribute_invoice_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: seqware
+--
+
+ALTER TABLE ONLY invoice_attribute
+    ADD CONSTRAINT invoice_attribute_invoice_id_fkey FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id);
+
+
+--
+-- Name: invoice_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: seqware
+--
+
+ALTER TABLE ONLY expense
+    ADD CONSTRAINT invoice_id_fk FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id);
+
+
+--
+-- Name: invoice_owner_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: seqware
+--
+
+ALTER TABLE ONLY invoice
+    ADD CONSTRAINT invoice_owner_id_fk FOREIGN KEY (owner_id) REFERENCES registration(registration_id);
 
 
 --
@@ -4961,188 +5146,29 @@ ALTER TABLE ONLY study
 
 
 --
+-- Name: workflow_run_id; Type: FK CONSTRAINT; Schema: public; Owner: seqware
+--
+
+ALTER TABLE ONLY workflow_run_input_files
+    ADD CONSTRAINT workflow_run_id FOREIGN KEY (workflow_run_id) REFERENCES workflow_run(workflow_run_id);
+
+
+--
 -- Name: workflow_run_workflow_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: seqware
 --
 
 ALTER TABLE ONLY workflow_run
     ADD CONSTRAINT workflow_run_workflow_id_fkey FOREIGN KEY (workflow_id) REFERENCES workflow(workflow_id);
 
---
--- Name: invoice_id_seq; Type: SEQUENCE; Schema: public; Owner: seqware
---
-
-CREATE SEQUENCE invoice_invoice_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
---
--- Name: expense_id_seq; Type: SEQUENCE; Schema: public; Owner: seqware
---
-
-CREATE SEQUENCE expense_expense_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
---
--- Name: invoice_attribute; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
---
-
-CREATE TABLE invoice_attribute (
-    invoice_attribute_id integer NOT NULL,
-    invoice_id integer NOT NULL,
-    tag text,
-    value text,
-    units text
-);
-
---
--- Name: invoice_attribute_invoice_attribute_id_seq; Type: SEQUENCE; Schema: public; Owner: seqware
---
-
-CREATE SEQUENCE invoice_attribute_invoice_attribute_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
---
--- Name: invoice_attribute_id; Type: DEFAULT; Schema: public; Owner: seqware
---
-
-ALTER TABLE ONLY invoice_attribute ALTER COLUMN invoice_attribute_id SET DEFAULT nextval('invoice_attribute_invoice_attribute_id_seq'::regclass);
-
---
--- Name: invoice_attribute_pkey; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 
---
-
-ALTER TABLE ONLY invoice_attribute
-    ADD CONSTRAINT invoice_attribute_pkey PRIMARY KEY (invoice_attribute_id);
-
-
---
--- Name: expense_attribute; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
---
-
-CREATE TABLE expense_attribute (
-    expense_attribute_id integer NOT NULL,
-    expense_id integer NOT NULL,
-    tag text,
-    value text,
-    units text
-);
-
---
--- Name: expense_attribute_expense_attribute_id_seq; Type: SEQUENCE; Schema: public; Owner: seqware
---
-
-CREATE SEQUENCE expense_attribute_expense_attribute_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
---
--- Name: expense_attribute_id; Type: DEFAULT; Schema: public; Owner: seqware
---
-
-ALTER TABLE ONLY expense_attribute ALTER COLUMN expense_attribute_id SET DEFAULT nextval('expense_attribute_expense_attribute_id_seq'::regclass);
-
---
--- Name: expense_attribute_pkey; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 
---
-
-ALTER TABLE ONLY expense_attribute
-    ADD CONSTRAINT expense_attribute_pkey PRIMARY KEY (expense_attribute_id);
-
---
--- Name: invoice; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
---
-
-CREATE TABLE invoice (
-    invoice_id integer NOT NULL,
-    owner_id integer NOT NULL,
-    start_date date NOT NULL,
-    end_date date NOT NULL,
-    state text,
-    finalized boolean,
-    fully_paid boolean,
-    paid_amount numeric,
-    days_until_due integer,
-    external_id text,
-    client_notes text,
-    notes text,
-    sw_accession integer DEFAULT nextval('sw_accession_seq'::regclass),
-    create_tstmp timestamp without time zone NOT NULL
-    );
-
-
-ALTER TABLE ONLY invoice ALTER COLUMN invoice_id SET DEFAULT nextval('invoice_invoice_id_seq'::regclass);
-
-ALTER TABLE ONLY invoice
-    ADD CONSTRAINT invoice_pkey PRIMARY KEY (invoice_id);
-
-ALTER TABLE ONLY invoice
-    ADD CONSTRAINT invoice_owner_id_fk FOREIGN KEY (owner_id) REFERENCES registration(registration_id);
-
---
--- Name: expense; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
---
-
-CREATE TABLE expense (
-    expense_id integer NOT NULL,
-    invoice_id integer NOT NULL,
-    workflow_run_id integer,
-    agent text,
-    expense_type text,
-    description text,
-    price_per_unit numeric,
-    total_units numeric,
-    total_price numeric,
-    added_surcharge numeric,
-    sw_accession integer DEFAULT nextval('sw_accession_seq'::regclass),
-    expense_finished_tstmp timestamp without time zone
-    );
-
-ALTER TABLE ONLY expense ALTER COLUMN expense_id SET DEFAULT nextval('expense_expense_id_seq'::regclass);
-
-ALTER TABLE ONLY expense
-    ADD CONSTRAINT expense_pkey PRIMARY KEY (expense_id);
-
-ALTER TABLE ONLY expense
-    ADD CONSTRAINT invoice_id_fk FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id);
-
---
--- Name: expense_attribute_expense_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: seqware
---
-
-ALTER TABLE ONLY expense_attribute
-    ADD CONSTRAINT expense_attribute_expense_id_fkey FOREIGN KEY (expense_id) REFERENCES expense(expense_id);
-
---
--- Name: invoice_attribute_invoice_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: seqware
---
-
-ALTER TABLE ONLY invoice_attribute
-    ADD CONSTRAINT invoice_attribute_invoice_id_fkey FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id);
-
-
 
 --
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
 
--- REVOKE ALL ON SCHEMA public FROM PUBLIC;
--- REVOKE ALL ON SCHEMA public FROM postgres;
--- GRANT ALL ON SCHEMA public TO postgres;
--- GRANT ALL ON SCHEMA public TO PUBLIC;
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
