@@ -32,13 +32,13 @@ public class BasicDeciderTest {
         Assert.assertTrue("should have rerun", BasicDecider.isDoRerun(BasicDecider.FILE_STATUS.DISJOINT_SETS, BasicDecider.PREVIOUS_RUN_STATUS.FAILED));
         Assert.assertTrue("should have rerun", BasicDecider.isDoRerun(BasicDecider.FILE_STATUS.PAST_SUBSET_OR_INTERSECTION, BasicDecider.PREVIOUS_RUN_STATUS.FAILED));
         Assert.assertTrue("should have rerun", BasicDecider.isDoRerun(BasicDecider.FILE_STATUS.PAST_SUBSET_OR_INTERSECTION, BasicDecider.PREVIOUS_RUN_STATUS.COMPLETED));
+        Assert.assertTrue("should have rerun", BasicDecider.isDoRerun(BasicDecider.FILE_STATUS.PAST_SUBSET_OR_INTERSECTION, BasicDecider.PREVIOUS_RUN_STATUS.OTHER));
         Assert.assertTrue("should have rerun", BasicDecider.isDoRerun(BasicDecider.FILE_STATUS.SAME_FILES, BasicDecider.PREVIOUS_RUN_STATUS.FAILED));
         Assert.assertTrue("should have rerun", BasicDecider.isDoRerun(BasicDecider.FILE_STATUS.PAST_SUPERSET, BasicDecider.PREVIOUS_RUN_STATUS.FAILED));
     }
 
     @Test
     public void testNegativeRerunConditions() {
-        Assert.assertTrue("should not have rerun", !BasicDecider.isDoRerun(BasicDecider.FILE_STATUS.PAST_SUBSET_OR_INTERSECTION, BasicDecider.PREVIOUS_RUN_STATUS.OTHER));
         Assert.assertTrue("should not have rerun", !BasicDecider.isDoRerun(BasicDecider.FILE_STATUS.SAME_FILES, BasicDecider.PREVIOUS_RUN_STATUS.OTHER));
         Assert.assertTrue("should not have rerun", !BasicDecider.isDoRerun(BasicDecider.FILE_STATUS.SAME_FILES, BasicDecider.PREVIOUS_RUN_STATUS.COMPLETED));
         Assert.assertTrue("should not have rerun", !BasicDecider.isDoRerun(BasicDecider.FILE_STATUS.PAST_SUPERSET, BasicDecider.PREVIOUS_RUN_STATUS.OTHER));
