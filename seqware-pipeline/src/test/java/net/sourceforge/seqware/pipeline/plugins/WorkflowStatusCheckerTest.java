@@ -20,7 +20,9 @@ import it.sauronsoftware.junique.JUnique;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import joptsimple.OptionSet;
+import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
@@ -181,6 +183,6 @@ public class WorkflowStatusCheckerTest{
         Assert.assertTrue("workflowStatusChecker ran properly", ret2.getExitStatus() == ReturnValue.SUCCESS);
         verify(metadata).getWorkflowRunsByStatus(metadata.RUNNING);
         verify(metadata).getWorkflowRunsByStatus(metadata.PENDING);
-        verify(metadata, times(100)).update_workflow_run(anyInt(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
+        verify(metadata, times(100)).update_workflow_run(anyInt(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), (Set<Integer>) anyObject());
     }
 }
