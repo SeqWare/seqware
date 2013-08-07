@@ -162,6 +162,8 @@ public class SampleResource extends DatabaseResource {
                 SampleService ss = BeanFactory.getSampleServiceBean();
                 HashSet<Sample> parents = new HashSet<Sample>();
                 for (Sample s : o.getParents()) {
+                    // SEQWARE-1576, 1724 Attempting to force a root sample by adding an explicit null leads to a weird sample with a null sample id, 
+                    // this seems to be the cause for the two duplicates, ignoring them and triggering an SQL update below
                     if (s.getSampleId() == null){
                         createExplicitRootSample = true;
                     } else{
