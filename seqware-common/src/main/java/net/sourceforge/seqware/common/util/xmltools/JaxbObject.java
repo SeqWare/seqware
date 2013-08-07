@@ -57,8 +57,8 @@ public class JaxbObject<T> {
         try {
             if (context == null) {
                 context = JAXBContext.newInstance(Experiment.class,
-                                                ExperimentAttribute.class, //ExperimentLibraryDesign.class, ExperimentLink.class,
-                        //                        ExperimentSpotDesign.class, ExperimentSpotDesignReadSpec.class,
+                                                ExperimentAttribute.class, ExperimentLibraryDesign.class, // ExperimentLink.class,
+                                                ExperimentSpotDesign.class, ExperimentSpotDesignReadSpec.class,
                         File.class,
                         FileType.class, IUS.class, IUSAttribute.class, IUSLink.class, Lane.class,
                         LaneAttribute.class, LaneLink.class, LibrarySelection.class, LibrarySource.class,
@@ -74,7 +74,9 @@ public class JaxbObject<T> {
                         Study.class, StudyAttribute.class, StudyLink.class, StudyType.class,
                         Workflow.class, WorkflowParam.class, WorkflowParamValue.class,
                         WorkflowRun.class, WorkflowRunParam.class,
-                        ExperimentList.class, FileList.class, IUSList.class, LaneList.class, 
+                        ExperimentList.class,
+                        ExperimentLibraryDesignList.class, ExperimentSpotDesignList.class, ExperimentSpotDesignReadSpecList.class,
+                        FileList.class, IUSList.class, LaneList.class, 
                         LibrarySelectionList.class, LibrarySourceList.class, LibraryStrategyList.class,
                         OrganismList.class, PlatformList.class, ProcessingList.class,
                         ReturnValueList.class, SampleList.class, SequencerRunList.class, StudyList.class,

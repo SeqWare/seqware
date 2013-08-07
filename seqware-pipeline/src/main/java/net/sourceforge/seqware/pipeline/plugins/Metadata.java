@@ -199,6 +199,18 @@ public class Metadata extends Plugin {
                 print(obj.getPlatformId() + ": " + obj.getName() + " " + obj.getInstrumentModel() + ", ");
             }
             print("]\n");
+            print("experiment_library_design_id\tInteger\t[");
+            List<ExperimentLibraryDesign> elds = this.metadata.getExperimentLibraryDesigns();
+            for (ExperimentLibraryDesign obj : elds) {
+                print(obj.getExperimentLibraryDesignId()+ ": " + obj.getName() + ", ");
+            }
+            print("]\n");
+            print("experiment_spot_design_id\tInteger\t[");
+            List<ExperimentSpotDesign> esds = this.metadata.getExperimentSpotDesigns();
+            for (ExperimentSpotDesign obj : esds) {
+                print(obj.getExperimentSpotDesignId()+ ": " + obj.getReadSpec()+ ", ");
+            }
+            print("]\n");
         } else if ("sample".equals(table)) {
             print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\nexperiment_accession\tInteger\nparent_sample_accession\tInteger\norganism_id\tInteger\t[\n");
             List<Organism> objs = this.metadata.getOrganisms();
@@ -356,16 +368,26 @@ public class Metadata extends Plugin {
      */
     protected ReturnValue addExperiment() {
         String[] necessaryFields = {"study_accession", "platform_id", "title", "description"};
+        final String experiment_library_design_id = "experiment_library_design_id";
+        final String experiment_spot_design_id = "experiment_spot_design_id";
+        String[] optionalFields = {experiment_library_design_id, experiment_spot_design_id};
         // check to make sure we have what we need
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
         if (interactive) {
             promptForExperiment(necessaryFields);
         }
-        if (checkFields(necessaryFields)) {
+        
+         for (String s: optionalFields){
+            if (fields.get(s) == null){
+                fields.put(s, null);
+            }
+         }
+        
+        if (checkFields(necessaryFields) && nullOrLessThanZero(experiment_library_design_id) && nullOrLessThanZero(experiment_spot_design_id)){
             // check for valid platform id
             final int platformId = Integer.parseInt(fields.get("platform_id"));
             // create a new experiment
-            ret = metadata.addExperiment(Integer.parseInt(fields.get("study_accession")), platformId, fields.get("description"), fields.get("title"));
+            ret = metadata.addExperiment(Integer.parseInt(fields.get("study_accession")), platformId, fields.get("description"), fields.get("title"), parseNullOrInteger(experiment_library_design_id), parseNullOrInteger(experiment_spot_design_id));
             if (ret.getReturnValue() == ReturnValue.INVALIDPARAMETERS){
                 print ("Invalid parameters, please check your id values");
                 return ret;
@@ -394,9 +416,11 @@ public class Metadata extends Plugin {
             promptForSample(necessaryFields);
         }
 
-        for (String s: optionalFields)
-            if (fields.get(s) == null)
+        for (String s: optionalFields){
+            if (fields.get(s) == null){
                 fields.put(s, "0");
+            }
+        }
         
         if (checkFields(necessaryFields)
                 && (notNullOrLessThanZero("experiment_accession") || notNullOrLessThanZero("parent_sample_accession"))) {
@@ -419,7 +443,41 @@ public class Metadata extends Plugin {
         }
         return ret;
     }
-
+    
+    private String parseNullOrString(String fieldName) {
+        boolean usable = true;
+        String field = fields.get(fieldName);
+        //Log.stdout(field);
+        if (field == null) {
+           return null;
+        } else {
+           return field;
+        }
+    }
+    
+    private Integer parseNullOrInteger(String fieldName) {
+        boolean usable = true;
+        String field = fields.get(fieldName);
+        //Log.stdout(field);
+        if (field == null) {
+           return null;
+        } else {
+           return Integer.valueOf(field);
+        }
+    }
+    
+    private boolean nullOrLessThanZero(String fieldName) {
+        boolean usable = true;
+        String field = fields.get(fieldName);
+        //Log.stdout(field);
+        if (field == null) {
+            usable = true;
+        } else if (Integer.parseInt(field) <= 0) {
+            usable = false;
+        }
+        return usable;
+    }
+    
     private boolean notNullOrLessThanZero(String fieldName) {
         boolean usable = true;
         String field = fields.get(fieldName);
@@ -446,9 +504,11 @@ public class Metadata extends Plugin {
             promptForSequencerRun(necessaryFields);
         }
         
-        for (String s: optionalFields)
-            if (fields.get(s) == null)
+        for (String s: optionalFields){
+            if (fields.get(s) == null){
                 fields.put(s, null);
+            }
+        }
 
         if (checkFields(necessaryFields)) {
             // create a new experiment

@@ -22,6 +22,9 @@ import javax.sql.DataSource;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
@@ -102,11 +105,15 @@ public class MetadataDB extends Metadata {
     return (new ReturnValue(ReturnValue.NOTIMPLEMENTED));
   }
 
-  /**
-   * {@inheritDoc}
-   */
+    /**
+     * {@inheritDoc}
+     *
+     * @param experiment_library_design_id the value of experiment_library_design_id
+     * @param experiment_spot_design_id the value of experiment_spot_design_id
+     */
+    
   @Override
-  public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title) {
+  public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title, Integer experiment_library_design_id, Integer experiment_spot_design_id) {
     return (new ReturnValue(ReturnValue.NOTIMPLEMENTED));
   }
 
@@ -2178,6 +2185,26 @@ public class MetadataDB extends Metadata {
 
     @Override
     public SequencerRun getSequencerRun(int sequencerRunAccession) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<ExperimentLibraryDesign> getExperimentLibraryDesigns() {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<ExperimentSpotDesignReadSpec> getExperimentSpotDesignReadSpecs() {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<ExperimentSpotDesign> getExperimentSpotDesigns() {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public Experiment getExperiment(int swAccession) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
 }

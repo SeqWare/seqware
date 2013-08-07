@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.sourceforge.seqware.common.dao.ExperimentLibraryDesignDAO;
 import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
@@ -89,6 +90,9 @@ public class ExperimentLibraryDesignDAOHibernate extends HibernateDaoSupport imp
     /** {@inheritDoc} */
     @Override
     public List<ExperimentLibraryDesign> list() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List expmts = this.getHibernateTemplate().find("from ExperimentLibraryDesign as libraryDesign order by libraryDesign.experimentLibraryDesignId asc" // desc
+                );
+
+        return expmts;
     }
 }

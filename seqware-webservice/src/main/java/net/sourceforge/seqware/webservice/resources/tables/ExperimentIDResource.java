@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.*;
 import net.sourceforge.seqware.common.factory.BeanFactory;
@@ -63,7 +64,8 @@ public class ExperimentIDResource extends DatabaseIDResource {
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<Experiment> jaxbTool = new JaxbObject<Experiment>();
 
-        Experiment dto = copier.hibernate2dto(Experiment.class, experiment);
+        Experiment dto = copier.hibernate2dto(Experiment.class, experiment, new Class<?>[]{ExperimentSpotDesign.class, ExperimentLibraryDesign.class}, new CollectionPropertyName<?>[]{});
+        
 		if (fields.contains("attributes")) {
 			Set<ExperimentAttribute> eas = experiment.getExperimentAttributes();
 			if(eas!=null && !eas.isEmpty()) {

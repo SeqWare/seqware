@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
@@ -200,6 +201,8 @@ public class MetadataTest extends PluginTest {
         expectedFields.put("description", "String");
         expectedFields.put("study_accession", "Integer");
         expectedFields.put("platform_id", "Integer");
+        expectedFields.put("experiment_library_design_id", "Integer");
+        expectedFields.put("experiment_spot_design_id", "Integer");
 
 
         launchPlugin("--table", "experiment", "--list-fields");
@@ -327,6 +330,34 @@ public class MetadataTest extends PluginTest {
         experimentAccession = getAndCheckSwid(s);
     }
     private String sampleAccession = null;
+    
+    @Test
+    public void testCreateExperimentWithLibraryDesignAndSpotDesign() {
+        String sAcc = studyAccession;
+        if (sAcc == null) {
+            sAcc = "120";
+        }
+
+        launchPlugin("--table", "experiment", "--create",
+                "--field", "study_accession::" + sAcc,
+                "--field", "title::experimenttitle" + System.currentTimeMillis(),
+                "--field", "description::\"Experiment Description\"",
+                "--field", "platform_id::9",
+                "--field", "experiment_spot_design_id::7",
+                "--field", "experiment_library_design_id::8"
+                );
+        String s = getOut();
+        String localExperimentAccession = getAndCheckSwid(s);
+        // SEQWARE-1713 check that the two optional fields make it into the database
+        BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
+        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select experiment_library_design_id,experiment_spot_design_id from experiment WHERE sw_accession=?", Integer.valueOf(localExperimentAccession));
+        Assert.assertTrue("optional values were incorrect", runQuery[0].equals(8) && runQuery[1].equals(7));
+        // check that we can get them back via metadata methods as well
+        Experiment e = metadata.getExperiment(Integer.valueOf(localExperimentAccession));
+        Assert.assertTrue("could not retrieve optional fields via metadata", e.getExperimentLibraryDesign() != null && e.getExperimentSpotDesign() != null);
+        Assert.assertTrue("optional fields via metadata were incorrect, found " + e.getExperimentLibraryDesign().getExperimentLibraryDesignId() + ":" + e.getExperimentSpotDesign().getExperimentSpotDesignId(), 
+                e.getExperimentLibraryDesign().getExperimentLibraryDesignId() == 8 && e.getExperimentSpotDesign().getExperimentSpotDesignId() == 7);
+    }
 
     @Test
     public void testCreateSampleWithExperiment() {
