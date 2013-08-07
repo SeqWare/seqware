@@ -19,10 +19,10 @@ package net.sourceforge.seqware.webservice.resources.tables;
 import java.util.ArrayList;
 import java.util.List;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
-import net.sourceforge.seqware.common.business.PlatformService;
+import net.sourceforge.seqware.common.business.ExperimentSpotDesignService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
-import net.sourceforge.seqware.common.model.Platform;
-import net.sourceforge.seqware.common.model.lists.PlatformList;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
+import net.sourceforge.seqware.common.model.lists.ExperimentSpotDesignList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import org.apache.log4j.Logger;
@@ -31,21 +31,21 @@ import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 
 /**
- * <p>ExperimentResource class.</p>
+ * <p>ExperimentSpotDesignResource class.</p>
  *
- * @author boconnor
+ * @author dyuen
  * @version $Id: $Id
  */
-public class PlatformResource extends DatabaseResource {
+public class ExperimentSpotDesignResource extends DatabaseResource {
 
     private Logger logger;
 
     /**
      * <p>Constructor for ExperimentResource.</p>
      */
-    public PlatformResource() {
-        super("platform");
-        logger = Logger.getLogger(PlatformResource.class);
+    public ExperimentSpotDesignResource() {
+        super("experiment_spot_design");
+        logger = Logger.getLogger(ExperimentSpotDesignResource.class);
     }
 
     /** {@inheritDoc} */
@@ -60,19 +60,19 @@ public class PlatformResource extends DatabaseResource {
      */
     @Get
     public void getXml() {
-        PlatformService ss = BeanFactory.getPlatformServiceBean();
+        ExperimentSpotDesignService ss = BeanFactory.getExperimentSpotDesignServiceBean();
         logger.debug("registration: " + registration);
 
-        List<Platform> objects = (List<Platform>) testIfNull(ss.list());
-        logger.debug("platforms: " + objects.size() + " " + objects);
+        List<ExperimentSpotDesign> objects = (List<ExperimentSpotDesign>) testIfNull(ss.list());
+        logger.debug("experiment spot designs: " + objects.size() + " " + objects);
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<PlatformList> jaxbTool = new JaxbObject<PlatformList>();
+        JaxbObject<ExperimentSpotDesignList> jaxbTool = new JaxbObject<ExperimentSpotDesignList>();
 
-        PlatformList list = new PlatformList();
+        ExperimentSpotDesignList list = new ExperimentSpotDesignList();
         list.setList(new ArrayList());
 
-        for (Platform obj : objects) {
-            Platform dto = copier.hibernate2dto(Platform.class, obj);
+        for (ExperimentSpotDesign obj : objects) {
+            ExperimentSpotDesign dto = copier.hibernate2dto(ExperimentSpotDesign.class, obj);
             list.add(dto);
         }
 

@@ -88,6 +88,9 @@ import org.restlet.security.ChallengeAuthenticator;
 import freemarker.template.Configuration;
 import net.sourceforge.seqware.webservice.resources.tables.FileChildWorkflowRunsResource;
 import net.sourceforge.seqware.webservice.resources.filters.*;
+import net.sourceforge.seqware.webservice.resources.tables.ExperimentLibraryDesignResource;
+import net.sourceforge.seqware.webservice.resources.tables.ExperimentSpotDesignReadSpecResource;
+import net.sourceforge.seqware.webservice.resources.tables.ExperimentSpotDesignResource;
 import net.sourceforge.seqware.webservice.resources.tables.LibrarySelectionResource;
 import net.sourceforge.seqware.webservice.resources.tables.LibrarySourceResource;
 import net.sourceforge.seqware.webservice.resources.tables.LibraryStrategyResource;
@@ -183,6 +186,12 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/librarystrategies/", slashRedirect);
         router.attach("/organisms", OrganismResource.class); 
         router.attach("/organisms/", slashRedirect);        
+        router.attach("/experimentspotdesigns", ExperimentSpotDesignResource.class);
+        router.attach("/experimentspotdesigns/", slashRedirect);        
+        router.attach("/experimentlibrarydesigns", ExperimentLibraryDesignResource.class);
+        router.attach("/experimentlibrarydesigns/", slashRedirect);      
+        router.attach("/experimentspotdesignreadspecs", ExperimentSpotDesignReadSpecResource.class);
+        router.attach("/experimentspotdesignreadspecs/", slashRedirect);      
 
         router.attach("/files", FileResource.class);
         router.attach("/files/", slashRedirect);

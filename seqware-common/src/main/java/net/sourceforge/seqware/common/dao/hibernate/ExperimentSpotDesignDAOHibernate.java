@@ -1,10 +1,13 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.seqware.common.dao.ExperimentSpotDesignDAO;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
+import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
@@ -26,11 +29,13 @@ public class ExperimentSpotDesignDAOHibernate extends HibernateDaoSupport implem
   }
 
   /** {@inheritDoc} */
+  @Override
   public void insert(ExperimentSpotDesign obj) {
     this.getHibernateTemplate().save(obj);
   }
 
   /** {@inheritDoc} */
+  @Override
   public void update(ExperimentSpotDesign obj) {
     this.getHibernateTemplate().update(obj);
   }
@@ -41,6 +46,7 @@ public class ExperimentSpotDesignDAOHibernate extends HibernateDaoSupport implem
    * Finds an instance of ExperimentSpotDesign in the database by the
    * ExperimentSpotDesign ID.
    */
+  @Override
   public ExperimentSpotDesign findByID(Integer id) {
     String query = "from ExperimentSpotDesign as e where e.experimentSpotDesignId = ?";
     ExperimentSpotDesign obj = null;
@@ -71,6 +77,8 @@ public class ExperimentSpotDesignDAOHibernate extends HibernateDaoSupport implem
     /** {@inheritDoc} */
     @Override
     public List<ExperimentSpotDesign> list() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List expmts = this.getHibernateTemplate().find("from ExperimentSpotDesign as spotDesign order by readSpec.experimentSpotDesignId asc" // desc
+                );
+        return expmts;
     }
 }

@@ -14,6 +14,9 @@ import java.util.TreeSet;
 
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
@@ -132,9 +135,15 @@ public class MetadataNoConnection extends Metadata {
     return (new ReturnValue(ReturnValue.SUCCESS));
   }
 
-  /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @param experiment_library_design_id the value of experiment_library_design_id
+     * @param experiment_spot_design_id the value of experiment_spot_design_id
+     */
+    
   @Override
-  public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title) {
+  public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title, Integer experiment_library_design_id, Integer experiment_spot_design_id) {
     logger.info("No metadata connection");
     return (new ReturnValue(ReturnValue.SUCCESS));
   }
@@ -753,6 +762,30 @@ public class MetadataNoConnection extends Metadata {
 
     @Override
     public SequencerRun getSequencerRun(int sequencerRunAccession) {
+        logger.info("No metadata connection");
+        return null;
+    }
+
+    @Override
+    public List<ExperimentLibraryDesign> getExperimentLibraryDesigns() {
+        logger.info("No metadata connection");
+        return null;
+    }
+
+    @Override
+    public List<ExperimentSpotDesignReadSpec> getExperimentSpotDesignReadSpecs() {
+        logger.info("No metadata connection");
+        return null;
+    }
+
+    @Override
+    public List<ExperimentSpotDesign> getExperimentSpotDesigns() {
+        logger.info("No metadata connection");
+        return null;
+    }
+
+    @Override
+    public Experiment getExperiment(int swAccession) {
         logger.info("No metadata connection");
         return null;
     }

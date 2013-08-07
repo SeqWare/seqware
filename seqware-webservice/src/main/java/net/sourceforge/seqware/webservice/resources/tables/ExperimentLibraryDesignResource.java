@@ -19,9 +19,12 @@ package net.sourceforge.seqware.webservice.resources.tables;
 import java.util.ArrayList;
 import java.util.List;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
+import net.sourceforge.seqware.common.business.ExperimentLibraryDesignService;
 import net.sourceforge.seqware.common.business.PlatformService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
+import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
 import net.sourceforge.seqware.common.model.Platform;
+import net.sourceforge.seqware.common.model.lists.ExperimentLibraryDesignList;
 import net.sourceforge.seqware.common.model.lists.PlatformList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
@@ -31,21 +34,21 @@ import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 
 /**
- * <p>ExperimentResource class.</p>
+ * <p>ExperimentLibraryDesignResource class.</p>
  *
- * @author boconnor
+ * @author dyuen
  * @version $Id: $Id
  */
-public class PlatformResource extends DatabaseResource {
+public class ExperimentLibraryDesignResource extends DatabaseResource {
 
     private Logger logger;
 
     /**
      * <p>Constructor for ExperimentResource.</p>
      */
-    public PlatformResource() {
-        super("platform");
-        logger = Logger.getLogger(PlatformResource.class);
+    public ExperimentLibraryDesignResource() {
+        super("experiment_library_design");
+        logger = Logger.getLogger(ExperimentLibraryDesignResource.class);
     }
 
     /** {@inheritDoc} */
@@ -60,19 +63,19 @@ public class PlatformResource extends DatabaseResource {
      */
     @Get
     public void getXml() {
-        PlatformService ss = BeanFactory.getPlatformServiceBean();
+        ExperimentLibraryDesignService ss = BeanFactory.getExperimentLibraryDesignServiceBean();
         logger.debug("registration: " + registration);
 
-        List<Platform> objects = (List<Platform>) testIfNull(ss.list());
-        logger.debug("platforms: " + objects.size() + " " + objects);
+        List<ExperimentLibraryDesign> objects = (List<ExperimentLibraryDesign>) testIfNull(ss.list());
+        logger.debug("experiment library designs: " + objects.size() + " " + objects);
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<PlatformList> jaxbTool = new JaxbObject<PlatformList>();
+        JaxbObject<ExperimentLibraryDesignList> jaxbTool = new JaxbObject<ExperimentLibraryDesignList>();
 
-        PlatformList list = new PlatformList();
+        ExperimentLibraryDesignList list = new ExperimentLibraryDesignList();
         list.setList(new ArrayList());
 
-        for (Platform obj : objects) {
-            Platform dto = copier.hibernate2dto(Platform.class, obj);
+        for (ExperimentLibraryDesign obj : objects) {
+            ExperimentLibraryDesign dto = copier.hibernate2dto(ExperimentLibraryDesign.class, obj);
             list.add(dto);
         }
 

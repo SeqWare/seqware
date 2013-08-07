@@ -1,6 +1,9 @@
 package net.sourceforge.seqware.common;
 
+import net.sourceforge.seqware.common.business.ExperimentLibraryDesignService;
 import net.sourceforge.seqware.common.business.ExperimentService;
+import net.sourceforge.seqware.common.business.ExperimentSpotDesignReadSpecService;
+import net.sourceforge.seqware.common.business.ExperimentSpotDesignService;
 import net.sourceforge.seqware.common.business.FileAttributeService;
 import net.sourceforge.seqware.common.business.FileService;
 import net.sourceforge.seqware.common.business.IUSService;
@@ -77,6 +80,12 @@ public class ContextImpl {
   private LibrarySourceService librarySourceService;
   private LibraryStrategyService libraryStrategyService;
   private OrganismService organismService;
+  @Autowired
+  private ExperimentSpotDesignService experimentSpotDesignService;
+  @Autowired
+  private ExperimentLibraryDesignService experimentLibraryDesignService;
+  @Autowired
+  private ExperimentSpotDesignReadSpecService experimentSpotDesignReadSpecService;
 
   @Autowired
   private LibraryService libraryService;
@@ -622,5 +631,47 @@ public class ContextImpl {
   public void setOrganismService(OrganismService organismService) {
     this.organismService = organismService;
   }
+
+    /**
+     * @return the experimentSpotDesignService
+     */
+    public ExperimentSpotDesignService getExperimentSpotDesignService() {
+        return experimentSpotDesignService;
+    }
+
+    /**
+     * @param experimentSpotDesignService the experimentSpotDesignService to set
+     */
+    public void setExperimentSpotDesignService(ExperimentSpotDesignService experimentSpotDesignService) {
+        this.experimentSpotDesignService = experimentSpotDesignService;
+    }
+
+    /**
+     * @return the experimentLibraryDesignService
+     */
+    public ExperimentLibraryDesignService getExperimentLibraryDesignService() {
+        return experimentLibraryDesignService;
+    }
+
+    /**
+     * @param experimentLibraryDesignService the experimentLibraryDesignService to set
+     */
+    public void setExperimentLibraryDesignService(ExperimentLibraryDesignService experimentLibraryDesignService) {
+        this.experimentLibraryDesignService = experimentLibraryDesignService;
+    }
+
+    /**
+     * @return the experimentSpotDesignReadSpecService
+     */
+    public ExperimentSpotDesignReadSpecService getExperimentSpotDesignReadSpecService() {
+        return experimentSpotDesignReadSpecService;
+    }
+
+    /**
+     * @param experimentSpotDesignReadSpecService the experimentSpotDesignReadSpecService to set
+     */
+    public void setExperimentSpotDesignReadSpecService(ExperimentSpotDesignReadSpecService experimentSpotDesignReadSpecService) {
+        this.experimentSpotDesignReadSpecService = experimentSpotDesignReadSpecService;
+    }
 
 }

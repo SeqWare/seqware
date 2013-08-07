@@ -44,6 +44,9 @@ import javax.xml.bind.JAXBException;
 import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUS;
@@ -71,7 +74,10 @@ import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowParamValue;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
+import net.sourceforge.seqware.common.model.lists.ExperimentLibraryDesignList;
 import net.sourceforge.seqware.common.model.lists.ExperimentList;
+import net.sourceforge.seqware.common.model.lists.ExperimentSpotDesignList;
+import net.sourceforge.seqware.common.model.lists.ExperimentSpotDesignReadSpecList;
 import net.sourceforge.seqware.common.model.lists.IUSList;
 import net.sourceforge.seqware.common.model.lists.LaneList;
 import net.sourceforge.seqware.common.model.lists.LibrarySelectionList;
@@ -273,9 +279,13 @@ public class MetadataWS extends Metadata {
      *
      * TODO: this needs to setup rows in experiment_library_design and
      * experiment_spot_design
+     *
+     * @param experiment_library_design_id the value of experiment_library_design_id
+     * @param experiment_spot_design_id the value of experiment_spot_design_id
      */
+    
   @Override
-    public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title) {
+    public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title, Integer experiment_library_design_id, Integer experiment_spot_design_id) {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -287,7 +297,7 @@ public class MetadataWS extends Metadata {
             }
             Platform p = new Platform();
             p.setPlatformId(platformId);
-
+      
             Study s = ll.findStudy("/" + studySwAccession.toString());
 
             Log.debug("Study: " + s);
@@ -298,7 +308,27 @@ public class MetadataWS extends Metadata {
             e.setDescription(description);
             e.setTitle(title);
             e.setName(title);
-
+            
+            if (experiment_library_design_id != null){
+                if (!isValidModelId(this.getExperimentLibraryDesigns(), experiment_library_design_id)){
+                    ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                    return ret;
+                }
+                ExperimentLibraryDesign eld = new ExperimentLibraryDesign();
+                eld.setExperimentLibraryDesignId(experiment_library_design_id);
+                e.setExperimentLibraryDesign(eld);
+            }
+            if (experiment_spot_design_id != null){
+                if (!isValidModelId(this.getExperimentSpotDesigns(), experiment_spot_design_id)){
+                    ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                    return ret;
+                }
+                ExperimentSpotDesign esd = new ExperimentSpotDesign();
+                esd.setExperimentSpotDesignId(experiment_spot_design_id);
+                e.setExperimentSpotDesign(esd);
+            }
+            
+            
             Log.info("Posting new experiment");
 
             e = ll.addExperiment(e);
@@ -525,6 +555,7 @@ public class MetadataWS extends Metadata {
         return (ret);
     }
 
+  @Override
     public List<Platform> getPlatforms() {
         try {
             return ll.findPlatforms();
@@ -536,6 +567,7 @@ public class MetadataWS extends Metadata {
         return null;
     }
 
+  @Override
     public List<Organism> getOrganisms() {
         try {
             return ll.findOrganisms();
@@ -547,6 +579,7 @@ public class MetadataWS extends Metadata {
         return null;
     }
 
+  @Override
     public List<StudyType> getStudyTypes() {
         try {
             return ll.findStudyTypes();
@@ -558,6 +591,7 @@ public class MetadataWS extends Metadata {
         return null;
     }
 
+  @Override
     public List<LibraryStrategy> getLibraryStrategies() {
         try {
             return ll.findLibraryStrategies();
@@ -569,6 +603,7 @@ public class MetadataWS extends Metadata {
         return null;
     }
 
+  @Override
     public List<LibrarySelection> getLibrarySelections() {
         try {
             return ll.findLibrarySelections();
@@ -580,6 +615,7 @@ public class MetadataWS extends Metadata {
         return null;
     }
 
+  @Override
     public List<LibrarySource> getLibrarySource() {
         try {
             return ll.findLibrarySources();
@@ -1595,6 +1631,7 @@ public class MetadataWS extends Metadata {
      *
      * @return a {@link java.util.List} object.
      */
+  @Override
     public List<SequencerRun> getAllSequencerRuns() {
         try {
             return ll.findSequencerRuns();
@@ -2436,6 +2473,50 @@ public class MetadataWS extends Metadata {
         }
     }
 
+    @Override
+    public List<ExperimentLibraryDesign> getExperimentLibraryDesigns() {
+        try {
+            return ll.findExperimentLibraryDesigns();
+        } catch (IOException ex) {
+             throw new RuntimeException(ex);
+        } catch (JAXBException ex) {
+             throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public List<ExperimentSpotDesignReadSpec> getExperimentSpotDesignReadSpecs() {
+        try {
+            return ll.findExperimentSpotDesignReadSpecs();
+        } catch (IOException ex) {
+             throw new RuntimeException(ex);
+        } catch (JAXBException ex) {
+             throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public List<ExperimentSpotDesign> getExperimentSpotDesigns() {
+        try {
+            return ll.findExperimentSpotDesigns();
+        } catch (IOException ex) {
+             throw new RuntimeException(ex);
+        } catch (JAXBException ex) {
+             throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public Experiment getExperiment(int swAccession) {
+        try {
+            return ll.findExperiment("/" + swAccession);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        } catch (JAXBException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     /*
      * public void annotateFile(int fileSWID, FileAttribute att, Boolean skip) {
      * try { Log.debug("Annotating WorkflowRun " + fileSWID + " with skip=" +
@@ -2699,6 +2780,33 @@ public class MetadataWS extends Metadata {
             return list;
         }
 
+        private List<ExperimentLibraryDesign> findExperimentLibraryDesigns() throws IOException, JAXBException {
+            JaxbObject<ExperimentLibraryDesignList> jaxb = new JaxbObject<ExperimentLibraryDesignList>();
+            ExperimentLibraryDesignList list = (ExperimentLibraryDesignList) findObject("/experimentlibrarydesigns", "", jaxb, new ExperimentLibraryDesignList());
+            if (list != null) {
+                return list.getList();
+            }
+            return null;
+        }
+
+        private List<ExperimentSpotDesignReadSpec> findExperimentSpotDesignReadSpecs() throws IOException, JAXBException {
+            JaxbObject<ExperimentSpotDesignReadSpecList> jaxb = new JaxbObject<ExperimentSpotDesignReadSpecList>();
+            ExperimentSpotDesignReadSpecList list = (ExperimentSpotDesignReadSpecList) findObject("/experimentspotdesignreadspecs", "", jaxb, new ExperimentSpotDesignReadSpecList());
+            if (list != null) {
+                return list.getList();
+            }
+            return null;
+        }
+
+        private List<ExperimentSpotDesign> findExperimentSpotDesigns() throws IOException, JAXBException {
+            JaxbObject<ExperimentSpotDesignList> jaxb = new JaxbObject<ExperimentSpotDesignList>();
+            ExperimentSpotDesignList list = (ExperimentSpotDesignList) findObject("/experimentspotdesigns", "", jaxb, new ExperimentSpotDesignList());
+            if (list != null) {
+                return list.getList();
+            }
+            return null;
+        }
+        
         private List<Platform> findPlatforms() throws IOException, JAXBException {
             JaxbObject<PlatformList> jaxb = new JaxbObject<PlatformList>();
             PlatformList list = (PlatformList) findObject("/platforms", "", jaxb, new PlatformList());
