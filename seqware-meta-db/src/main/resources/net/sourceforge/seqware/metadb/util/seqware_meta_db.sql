@@ -4030,6 +4030,25 @@ ALTER TABLE ONLY sample_attribute
 ALTER TABLE ONLY sample_hierarchy
     ADD CONSTRAINT sample_hierarchy_sample_id_key UNIQUE (sample_id, parent_id);
 
+-- Index: sample_hierarchy_not_null
+
+-- DROP INDEX sample_hierarchy_not_null;
+
+CREATE UNIQUE INDEX sample_hierarchy_not_null
+  ON sample_hierarchy
+  USING btree
+  (sample_id, parent_id)
+  WHERE parent_id IS NOT NULL;
+
+-- Index: sample_hierarchy_null
+
+-- DROP INDEX sample_hierarchy_null;
+
+CREATE UNIQUE INDEX sample_hierarchy_null
+  ON sample_hierarchy
+  USING btree
+  (sample_id)
+  WHERE parent_id IS NULL;
 
 --
 -- Name: sample_link_pkey; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 

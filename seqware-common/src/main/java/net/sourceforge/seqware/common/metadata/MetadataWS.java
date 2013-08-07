@@ -393,16 +393,16 @@ public class MetadataWS extends Metadata {
             ret.setAttribute("sw_accession", s.getSwAccession().toString());
 
         } catch(NotFoundException e){
-            Log.fatal("NotFoundException, e");
+            Log.fatal("NotFoundException" , e);
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
             return ret;
         } catch (Exception e) {
-            Log.fatal("Exception, e");
+            Log.fatal("Exception", e);
             ret.setExitStatus(ReturnValue.FAILURE);
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
