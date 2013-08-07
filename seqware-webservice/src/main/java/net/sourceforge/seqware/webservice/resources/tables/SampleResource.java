@@ -32,6 +32,7 @@ import net.sourceforge.seqware.common.model.lists.SampleList;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import org.hibernate.Query;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
@@ -156,20 +157,25 @@ public class SampleResource extends DatabaseResource {
                 }
             }
 
+            boolean createExplicitRootSample = false;
             if (null != o.getParents()) {
                 SampleService ss = BeanFactory.getSampleServiceBean();
                 HashSet<Sample> parents = new HashSet<Sample>();
                 for (Sample s : o.getParents()) {
+                    if (s.getSampleId() == null){
+                        createExplicitRootSample = true;
+                    } else{
                         parents.add(ss.findByID(s.getSampleId()));
                     }
+                }
                 o.setParents(parents);
             }
             if (null != o.getChildren()) {
                 SampleService ss = BeanFactory.getSampleServiceBean();
                 HashSet<Sample> children = new HashSet<Sample>();
                 for (Sample s : o.getChildren()) {
-                    children.add(ss.findByID(s.getSampleId()));
-                }
+                        children.add(ss.findByID(s.getSampleId()));
+                    }
                 o.setChildren(children);
             }
 
@@ -179,6 +185,15 @@ public class SampleResource extends DatabaseResource {
             Integer swAccession = service.insert(registration, o);
 
             Sample sample = (Sample) testIfNull(service.findBySWAccession(swAccession));
+            
+            // explicitly create root sample if needed
+            if (createExplicitRootSample) {
+                Log.info("Found null parent in sample object, creating explicit root sample in sample_hierarchy");
+                Query query = BeanFactory.getSessionFactoryBean().openSession().createSQLQuery("INSERT INTO sample_hierarchy(sample_id, parent_id) VALUES (" + sample.getSampleId() + ",null)");
+                int result = query.executeUpdate();
+            }
+            
+            
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
             Sample detachedSample = copier.hibernate2dto(Sample.class, sample);
             if (null!=o.getParents()) {
