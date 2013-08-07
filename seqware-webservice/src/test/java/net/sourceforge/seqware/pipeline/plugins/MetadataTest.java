@@ -383,6 +383,11 @@ public class MetadataTest extends PluginTest {
             }
         }
         Assert.assertTrue("Did not find the sample attached to the experiment", foundIt);
+        
+        // SEQWARE-1716 : omitting the parent sample should result in a "production"-like root sample with a null parent in the sample hierarchy
+        BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
+        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select h.sample_id, h.parent_id from sample s, sample_hierarchy h WHERE s.sample_id = h.sample_id AND s.sw_accession=?", Integer.valueOf(sampleAccession));
+        Assert.assertTrue("optional values were incorrect", runQuery[0] != null && runQuery[1] == null);
 
     }
     
