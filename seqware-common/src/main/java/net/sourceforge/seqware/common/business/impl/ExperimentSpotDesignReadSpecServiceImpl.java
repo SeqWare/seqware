@@ -26,6 +26,7 @@ public class ExperimentSpotDesignReadSpecServiceImpl implements ExperimentSpotDe
   }
 
   /** {@inheritDoc} */
+  @Override
   public void setExperimentSpotDesignReadSpecDAO(ExperimentSpotDesignReadSpecDAO dao) {
     this.dao = dao;
   }
@@ -35,6 +36,7 @@ public class ExperimentSpotDesignReadSpecServiceImpl implements ExperimentSpotDe
    *
    * Inserts an instance of ExperimentSpotDesignReadSpec into the database.
    */
+  @Override
   public void insert(ExperimentSpotDesignReadSpec obj) {
     dao.insert(obj);
   }
@@ -44,16 +46,19 @@ public class ExperimentSpotDesignReadSpecServiceImpl implements ExperimentSpotDe
    *
    * Updates an instance of ExperimentSpotDesignReadSpec in the database.
    */
+  @Override
   public void update(ExperimentSpotDesignReadSpec obj) {
     dao.update(obj);
   }
 
   /** {@inheritDoc} */
+  @Override
   public void delete(ExperimentSpotDesignReadSpec obj) {
     dao.delete(obj);
   }
 
   /** {@inheritDoc} */
+  @Override
   public ExperimentSpotDesignReadSpec findByID(Integer id) {
     ExperimentSpotDesignReadSpec obj = null;
     if (id != null) {

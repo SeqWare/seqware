@@ -11,6 +11,9 @@ import java.util.SortedSet;
 
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
@@ -87,16 +90,19 @@ public interface MetadataInterface {
     
   public ReturnValue addStudy(String title, String description, String centerName, String centerProjectName, Integer studyTypeId);
 
-  /**
-   * <p>addExperiment.</p>
-   *
-   * @param studySwAccession a {@link java.lang.Integer} object.
-   * @param platformId a {@link java.lang.Integer} object.
-   * @param description a {@link java.lang.String} object.
-   * @param title a {@link java.lang.String} object.
-   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-   */
-  public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title);
+    /**
+     * <p>addExperiment.</p>
+     *
+     * @param studySwAccession a {@link java.lang.Integer} object.
+     * @param platformId a {@link java.lang.Integer} object.
+     * @param description a {@link java.lang.String} object.
+     * @param title a {@link java.lang.String} object.
+     * @param experiment_library_design_id the value of experiment_library_design_id
+     * @param experiment_spot_design_id the value of experiment_spot_design_id
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
+    
+  public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title, Integer experiment_library_design_id, Integer experiment_spot_design_id);
 
   /**
    * <p>addSample.</p>
@@ -143,6 +149,35 @@ public interface MetadataInterface {
    * @return a {@link net.sourceforge.seqware.common.model.Platform} object.
    */
   public List<Platform> getPlatforms();
+  
+    /**
+   * <p>getExperiment.</p>
+   *
+   * @param swAccession a int.
+   * @return a {@link net.sourceforge.seqware.common.model.Experiment} object.
+   */
+  public Experiment getExperiment(int swAccession);
+  
+  /**
+   * <p>getExperimentLibraryDesigns.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.ExperimentLibraryDesign} object.
+   */
+  public List<ExperimentLibraryDesign> getExperimentLibraryDesigns();
+  
+  /**
+   * <p>getPlatforms.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec} object.
+   */
+  public List<ExperimentSpotDesignReadSpec> getExperimentSpotDesignReadSpecs();
+  
+  /**
+   * <p>getExperimentSpotDesigns.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
+   */
+  public List<ExperimentSpotDesign> getExperimentSpotDesigns();
   
     /**
    * <p>getOrganisms.</p>

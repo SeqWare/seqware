@@ -18,12 +18,12 @@ package net.sourceforge.seqware.webservice.resources.tables;
 
 /**
  *
- * @author mtaschuk
+ * @author dyuen
  */
-public class StudyResourceTest extends DatabaseResourceTest {
+public class ExperimentSpotDesignResourceTest extends DatabaseResourceTest {
 
-    public StudyResourceTest() {
-        super("/studies");
+    public ExperimentSpotDesignResourceTest() {
+        super("/experimentspotdesigns");
     }
 
   @Override
