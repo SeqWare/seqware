@@ -16,12 +16,18 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -69,11 +75,6 @@ public class AttributeAnnotatorET {
     @BeforeClass
     public static void resetDatabase() {
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
-    }
-
-    @AfterClass
-    public static void cleanup() throws Exception {
-        DBAccess.close();
     }
 
     @Test
@@ -179,7 +180,7 @@ public class AttributeAnnotatorET {
     
     @Test
     public void testFileAnnotateArbitrary() throws IOException {
-        annotateAndReannotate(AttributeType.FILE, 835);
+        annotateAndReannotate(AttributeType.FILE, 6120);
     }
 
     @Test
@@ -189,22 +190,22 @@ public class AttributeAnnotatorET {
 
     @Test
     public void testLaneAnnotateArbitrary() throws IOException {
-        annotateAndReannotate(AttributeType.LANE, 4708);
+        annotateAndReannotate(AttributeType.LANE, 6123);
     }
 
     @Test
     public void testIUSAnnotateArbitrary() throws IOException {
-        annotateAndReannotate(AttributeType.IUS, 4789);
+        annotateAndReannotate(AttributeType.IUS, 6124);
     }
 
     @Test
     public void testExperimentAnnotateArbitrary() throws IOException {
-        annotateAndReannotate(AttributeType.EXPERIMENT, 2587);
+        annotateAndReannotate(AttributeType.EXPERIMENT, 4759);
     }
 
     @Test
     public void testProcessingAnnotateArbitrary() throws IOException {
-        annotateAndReannotate(AttributeType.PROCESSING, 6676);
+        annotateAndReannotate(AttributeType.PROCESSING, 6122);
     }
 
     @Test
@@ -383,5 +384,44 @@ public class AttributeAnnotatorET {
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
                 + "-- --file " + path  ;
         ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);    
+    }
+    
+    
+    @AfterClass
+    public static void testNewStudyReporter() throws IOException{
+        DBAccess.close();
+        // SEQWARE-1682 - check that the new study reporter can report all annotations including file annotations
+        File createTempFile = File.createTempFile("study_reporter", "out");
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.StudyReporter "
+                + "-- --all --out " + createTempFile.getAbsolutePath() ;
+        ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
+        List<String> readLines = FileUtils.readLines(createTempFile);
+        // read headers 
+        String[] headers = readLines.get(0).split("\t");
+        Map<String, Boolean> map = new HashMap<String, Boolean>();
+        for(String header : headers){
+            // ignore Parent Sample for now, testing db does not have these with results
+            if (header.contains("Parent Sample Attributes")){
+                continue;
+            }
+            if (header.contains("Attributes")){
+                map.put(header, Boolean.FALSE);
+            }
+        }
+        // scroll down and hunt 
+        for (String line : readLines){
+            String[] splitLine = line.split("\t");
+            for(int i = 0; i < splitLine.length; i++){
+                String part = splitLine[i];
+                if (part.contains("funky_key") && part.contains("groovy_value")){
+                    map.put(headers[i], true);
+                }
+            }
+        }
+        // assert that there are no attribute headers that did not contain attributes
+        Assert.assertTrue("no headers found", map.size() > 0);
+        for(Entry<String, Boolean> e : map.entrySet()){
+                Assert.assertTrue("did not find attribute for header " + e.getKey(), e.getValue());
+        }
     }
 }
