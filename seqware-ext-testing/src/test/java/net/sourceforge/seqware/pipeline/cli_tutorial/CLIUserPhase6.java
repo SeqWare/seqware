@@ -33,21 +33,21 @@ public class CLIUserPhase6 extends UserPhase6{
 
     @Override
     protected void runWorkflowRunReporter(File workingDir) throws IOException {
-        String output = ITUtility.runSeqwareCLI(" workflow report --accession " + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW)
+        String output = ITUtility.runSeqwareCLI(" workflow report --tsv --out yay.csv --accession " + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW)
                 , ReturnValue.SUCCESS
                 , workingDir);
     }
 
     @Override
     protected void runWorkflowRunReporterStdErr(String swid, File workingDir) throws IOException {
-        String output = ITUtility.runSeqwareCLI(" workflow-run stderr --accession " + swid
+        String output = ITUtility.runSeqwareCLI(" workflow-run stderr --out err.csv --accession " + swid
                 , ReturnValue.SUCCESS
                 , workingDir);
     }
 
     @Override
     protected void runWorkflowRunReporterStdOut(String swid, File workingDir) throws IOException {
-        String output = ITUtility.runSeqwareCLI(" workflow-run stdout --accession " + swid
+        String output = ITUtility.runSeqwareCLI(" workflow-run stdout --out err.csv --accession " + swid
                 , ReturnValue.SUCCESS
                 , workingDir);
     }
