@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
-import net.sourceforge.seqware.common.model.SequencerRun.Status;
+import net.sourceforge.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.solexatools.Security;
 
 import org.springframework.web.servlet.ModelAndView;
@@ -47,7 +47,7 @@ public class SequencerRunSetupController extends BaseCommandController {
 		boolean isReport = request.getParameter("report") != null;
 
 		if (sequencerRun != null) {
-			if (sequencerRun.getStatus() == Status.ready_to_process) {
+			if (sequencerRun.getStatus() == SequencerRunStatus.ready_to_process) {
 				sequencerRun.setProcess(true);
 			} else {
 				sequencerRun.setProcess(false);
