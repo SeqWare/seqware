@@ -6,6 +6,9 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
@@ -29,6 +32,7 @@ public class Invoice implements Serializable, Comparable<Invoice>, PermissionsAw
   private Registration owner;
   private Date startDate;
   private Date endDate;
+  @Enumerated(EnumType.STRING)
   private InvoiceState state;
   private boolean finalized;
   private boolean fullyPaid;

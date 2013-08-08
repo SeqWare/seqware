@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import net.sourceforge.seqware.common.business.IUSService;
@@ -22,8 +24,8 @@ import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.adapters.XmlizeXML;
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
-import org.apache.commons.dbutils.DbUtils;
 
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -58,6 +60,7 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
   private String html;
   private Boolean isHasFile = false;
   // additional fields
+  @Enumerated(EnumType.STRING)
   private WorkflowRunStatus status;
   private String statusCmd;
   private String seqwareRevision;
