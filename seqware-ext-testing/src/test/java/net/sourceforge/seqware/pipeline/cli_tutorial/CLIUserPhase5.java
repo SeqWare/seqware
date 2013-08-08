@@ -29,6 +29,7 @@ import net.sourceforge.seqware.pipeline.tutorial.UserPhase5;
 public class CLIUserPhase5 extends UserPhase5 {
     
 
+    @Override
     protected File exportINI(PluginRunnerET pit, List<Integer> accessions) throws IOException {
         // launch our specific workflow and get store its workflow run accession
         File exportINIFile = pit.exportINIFile("Java workflow", accessions.get(0), true);
