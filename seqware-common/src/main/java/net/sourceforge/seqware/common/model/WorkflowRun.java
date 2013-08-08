@@ -37,13 +37,38 @@ import org.apache.log4j.Logger;
  * @version $Id: $Id
  */
 public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, PermissionsAware {
-
-  /** Constant <code>RUNNING="running"</code> */
-  public static final String RUNNING = "running";
-  /** Constant <code>FINISHED="completed"</code> */
-  public static final String FINISHED = "completed";
-  /** Constant <code>FAILED="failed"</code> */
-  public static final String FAILED = "failed";
+  
+  public enum Status {
+    /**
+     * The workflow run exists in seqware but has not yet been launched on a workflow engine
+     */
+    submitted,
+    
+    /**
+     * The workflow run has been launched on a workflow engine; status in the engine has not yet been propagated
+     */
+    pending,
+    
+    /**
+     * The workflow run is being executed on a workflow engine
+     */
+    running,
+    
+    /**
+     * The workflow run has completed unsuccessfully.
+     */
+    failed,
+    
+    /**
+     * The workflow run has completed successfully.
+     */
+    completed,
+    
+    /**
+     * The workflow run is cancelled.
+     */
+    cancelled
+  }
 
   private static final long serialVersionUID = 1L;
   private Integer workflowRunId;
@@ -65,7 +90,7 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
   private String html;
   private Boolean isHasFile = false;
   // additional fields
-  private String status;
+  private Status status;
   private String statusCmd;
   private String seqwareRevision;
   private String host;
@@ -452,18 +477,18 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
   /**
    * <p>Getter for the field <code>status</code>.</p>
    *
-   * @return a {@link java.lang.String} object.
+   * @return the status of the workflow run
    */
-  public String getStatus() {
+  public Status getStatus() {
     return status;
   }
 
   /**
    * <p>Setter for the field <code>status</code>.</p>
    *
-   * @param status a {@link java.lang.String} object.
+   * @param status the status of the workflow run
    */
-  public void setStatus(String status) {
+  public void setStatus(Status status) {
     this.status = status;
   }
 
@@ -816,7 +841,7 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
         wr.setCommand(rs.getString("cmd"));
         wr.setTemplate(rs.getString("workflow_template"));
         wr.setDax(rs.getString("dax"));
-        wr.setStatus(rs.getString("status"));
+        wr.setStatus(Status.valueOf(rs.getString("status")));
         wr.setStatusCmd(rs.getString("status_cmd"));
         wr.setSeqwareRevision(rs.getString("seqware_revision"));
         wr.setHost(rs.getString("host"));

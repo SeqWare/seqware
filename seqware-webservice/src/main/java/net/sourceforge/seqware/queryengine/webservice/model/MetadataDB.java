@@ -15,6 +15,7 @@ import java.util.Map;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.queryengine.webservice.util.EnvUtil;
 
 /**
@@ -610,7 +611,7 @@ public class MetadataDB {
    * @param workflowTemplate a {@link java.lang.String} object.
    * @param status a {@link java.lang.String} object.
    */
-  public void updateWorkflowRun(int workflowRunAccession, String name, String cwd, String iniContents, String command, String workflowTemplate, String status) {
+  public void updateWorkflowRun(int workflowRunAccession, String name, String cwd, String iniContents, String command, String workflowTemplate, WorkflowRun.Status status) {
     Connection c = setupConnection();
     Statement s = null;
     

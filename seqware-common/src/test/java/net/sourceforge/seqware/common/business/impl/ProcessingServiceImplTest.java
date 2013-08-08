@@ -74,7 +74,7 @@ public class ProcessingServiceImplTest extends BaseUnit {
     Processing newProcessing = new Processing();
     newProcessing.setOwner(regDto);
     newProcessing.setFiles(new HashSet<File>());
-    newProcessing.setStatus("success");
+    newProcessing.setStatus(Processing.Status.success);
     newProcessing.setExitStatus(0);
     newProcessing.setProcessExitStatus(0);
     newProcessing.setRunStartTimestamp(null);

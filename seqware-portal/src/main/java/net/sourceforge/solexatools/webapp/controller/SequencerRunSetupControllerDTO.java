@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
+import net.sourceforge.seqware.common.model.SequencerRun.Status;
 import net.sourceforge.seqware.common.model.SequencerRunDTO;
 import net.sourceforge.solexatools.Security;
 
@@ -60,11 +61,10 @@ public class SequencerRunSetupControllerDTO extends BaseCommandController {
   		SequencerRun				sequencerRun		= getRequestedSequencerRun(request);
   
   		if (sequencerRun != null) {
-  			if (sequencerRun.getStatus() != null
-  				&& sequencerRun.getStatus().startsWith("ready_to_process")) {
-  				sequencerRun.setReadyToProcess("Y");
+  			if (sequencerRun.getStatus()  == Status.ready_to_process) {
+  				sequencerRun.setProcess(true);
   			} else {
-  				sequencerRun.setReadyToProcess(null);
+  				sequencerRun.setProcess(false);
   			}
   			request.setAttribute(getCommandName(), sequencerRun);
   			model.put("strategy", "update");

@@ -25,6 +25,7 @@ import java.util.Map;
 
 import joptsimple.OptionSpec;
 import net.sourceforge.seqware.common.metadata.Metadata;
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -111,7 +112,7 @@ public class FileLinker extends Plugin {
             if (!saveFiles(workflowRunId, entry.getKey(), entry.getValue())) { return ret; }
 
             // Update the workflow run to reflect success.
-            ReturnValue rv = metadata.update_workflow_run(workflowRunId, null, null, Metadata.SUCCESS, null, currentDir, null,
+            ReturnValue rv = metadata.update_workflow_run(workflowRunId, null, null, WorkflowRun.Status.completed, null, currentDir, null,
                   null, null, null, null, null, null);
             if (rv.getExitStatus() != ReturnValue.SUCCESS) {
                Log.error("Failure in updating the workflow run " + workflowRunId

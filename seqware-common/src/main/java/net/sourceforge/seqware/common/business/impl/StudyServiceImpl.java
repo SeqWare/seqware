@@ -94,9 +94,9 @@ public class StudyServiceImpl implements StudyService {
    *
    * Updates an instance of Study in the database.
    */
-  public void delete(Study study, String deleteRealFiles) {
+  public void delete(Study study, boolean deleteRealFiles) {
     List<File> deleteFiles = null;
-    if ("yes".equals(deleteRealFiles)) {
+    if (deleteRealFiles) {
       deleteFiles = studyDAO.getFiles(study.getStudyId());
       fileDAO.deleteAllWithFolderStore(deleteFiles);
     }
@@ -351,19 +351,19 @@ public class StudyServiceImpl implements StudyService {
   /** {@inheritDoc} */
   @Override
   public int getRunningCount(Study study) {
-    return studyDAO.getStatusCount(study, WorkflowRun.RUNNING);
+    return studyDAO.getStatusCount(study, WorkflowRun.Status.running);
   }
 
   /** {@inheritDoc} */
   @Override
   public int getFinishedCount(Study study) {
-    return studyDAO.getStatusCount(study, WorkflowRun.FINISHED);
+    return studyDAO.getStatusCount(study, WorkflowRun.Status.completed);
   }
 
   /** {@inheritDoc} */
   @Override
   public int getFailedCount(Study study) {
-    return studyDAO.getStatusCount(study, WorkflowRun.FAILED);
+    return studyDAO.getStatusCount(study, WorkflowRun.Status.failed);
   }
 }
 

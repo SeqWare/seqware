@@ -10,7 +10,10 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
  * @version $Id: $Id
  */
 public class StudySampleReportLineItem implements Comparable<StudySampleReportLineItem>{
-	
+	static{
+	  if(true)
+	    throw new Error("This class needs to have the status strings changed to some enum, but it's not clear what they should refer to.");
+	}
 	private final static String SUCCESS = "completed";
 	private final static String PENDING = "pending";
 	private final static String RUNNING = "running";

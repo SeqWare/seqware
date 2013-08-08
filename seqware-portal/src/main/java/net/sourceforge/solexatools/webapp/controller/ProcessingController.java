@@ -14,6 +14,7 @@ import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
+import net.sourceforge.seqware.common.util.Bool;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.solexatools.Security;
 import net.sourceforge.solexatools.util.Constant;
@@ -255,7 +256,7 @@ public class ProcessingController extends MultiActionController {
 		Processing				processing		= getRequestedProcessing(request);
 		
 		ServletContext context = this.getServletContext();
-		String deleteRealFiles = context.getInitParameter("delete.files.for.node.deletion");
+		boolean deleteRealFiles = Bool.parse(context.getInitParameter("delete.files.for.node.deletion"));
 		
 //		String viewName = "redirect:/myStudyList.htm";
 

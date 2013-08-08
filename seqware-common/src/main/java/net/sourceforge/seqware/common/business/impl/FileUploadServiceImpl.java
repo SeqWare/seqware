@@ -160,7 +160,7 @@ public class FileUploadServiceImpl implements FileUploadService {
     Processing newProcessing = new Processing();
     newProcessing.setOwner(owner);
     newProcessing.setFiles(files);
-    newProcessing.setStatus("success");
+    newProcessing.setStatus(Processing.Status.success);
     newProcessing.setExitStatus(0);
     newProcessing.setProcessExitStatus(0);
     newProcessing.setRunStartTimestamp(null);

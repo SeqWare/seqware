@@ -28,6 +28,13 @@ import org.apache.log4j.Logger;
  */
 public class Sample implements Serializable, Comparable<Sample>, PermissionsAware {
 
+  // Attributes relied upon by seqware code
+  
+  /**
+   * The presence of this attribute is used to identify that the sample is a library
+   */
+  public static final String GEO_REACTION_ID_ATTR_TAG = "geo_reaction_id";
+  
     private static final long serialVersionUID = 3681367228115990568L;
     private Integer sampleId;
     private Experiment experiment;

@@ -27,17 +27,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
+
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.*;
-import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.webservice.resources.tables.FileChildWorkflowRunsResource;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
+
 import org.apache.log4j.Logger;
 import org.junit.*;
 
@@ -505,7 +505,7 @@ public class MetadataWSTest {
         logger.info("update_processing_status");
         Date beforeDate = new Timestamp(System.currentTimeMillis());
         int processingID = 5247;
-        String status = "testUpdate_processing_status()";
+        Processing.Status status = Processing.Status.success;
         int expResult = ReturnValue.SUCCESS;
         ReturnValue result = instance.update_processing_status(processingID, status);
         Assert.assertEquals(expResult, result.getExitStatus());
@@ -541,7 +541,7 @@ public class MetadataWSTest {
         int workflowRunId = 32;
         String pegasusCmd = "test pegasus cmd";
         String workflowTemplate = "test template";
-        String status = "test status ";
+        WorkflowRun.Status status = WorkflowRun.Status.completed;
         String statusCmd = "test command";
         String workingDirectory = "test working dir";
         String dax = "test dax";
