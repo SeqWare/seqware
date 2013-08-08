@@ -20,12 +20,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import net.sourceforge.seqware.pipeline.plugins.PluginRunnerET;
+import net.sourceforge.seqware.pipeline.tutorial.UserPhase5;
 
 /**
  * Build and install a bundle, used by both the User tutorial and the Developer tutorial
  * @author dyuen
  */
-public class CLIUserPhase5 {
+public class CLIUserPhase5 extends UserPhase5 {
     
 
     protected File exportINI(PluginRunnerET pit, List<Integer> accessions) throws IOException {
