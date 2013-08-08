@@ -36,6 +36,8 @@ EOF
 chmod +x /tmp/qconf-editor.sh
 export EDITOR=/tmp/qconf-editor.sh
 qconf -ahgrp @allhosts
+# might need to do this instead
+qconf -mhgrp @allhosts
 
 # config
 qconf -aattr hostgroup hostlist $HOST @allhosts
@@ -43,6 +45,8 @@ qconf -aattr hostgroup hostlist $HOST @allhosts
 # interactive
 # uses the same editor as above
 qconf -aq main.q
+# same as above, may need to modify the queue instead
+qconf -mq main.q
 
 qconf -aattr queue hostlist @allhosts main.q
 
