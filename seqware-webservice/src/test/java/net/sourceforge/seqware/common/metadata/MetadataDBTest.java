@@ -17,15 +17,10 @@
 package net.sourceforge.seqware.common.metadata;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import junit.framework.Assert;
-import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.factory.DBAccess;
-import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.webservice.resources.tables.FileChildWorkflowRunsResource;
 import org.apache.log4j.Logger;
 import org.junit.*;
 
@@ -46,6 +41,7 @@ public class MetadataDBTest extends MetadataWSTest {
     }
 
     @Before
+    @Override
     public void setUp() {
         //This method needs to be called before every method because the methods 
         //inside might close the statement after finishing
@@ -53,6 +49,7 @@ public class MetadataDBTest extends MetadataWSTest {
     }
     
     @Test
+    @Override
     public void testUpdate_workflow_run() {
         logger.info("update_workflow_run");
         Date beforeDate = new Timestamp(System.currentTimeMillis());
@@ -74,6 +71,7 @@ public class MetadataDBTest extends MetadataWSTest {
     }
 
     @Test
+    @Override
     public void testFindFilesAssociatedWithASample() {
     }
 
@@ -81,6 +79,7 @@ public class MetadataDBTest extends MetadataWSTest {
      * Test of findSamplesAssociatedWithAStudy method, of class MetadataWS.
      */
     @Test
+    @Override
     public void testFindSamplesAssociatedWithAStudy() {
     }
 

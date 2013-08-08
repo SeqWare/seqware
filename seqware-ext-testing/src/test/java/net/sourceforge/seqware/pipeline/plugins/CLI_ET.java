@@ -21,9 +21,12 @@ import junit.framework.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.util.StringUtils;
 
 /**
- * These tests support the new simplified command-line tools
+ * These tests support the new simplified command-line tools.
+ * 
+ * Try a few simple commands as a sanity check. 
  *
  * @author dyuen
  */
@@ -37,11 +40,32 @@ public class CLI_ET {
 
     @Test
     public void runHelp() throws IOException {
-        String listCommand = "--help ";
+        String listCommand = "--help";
         String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, null);
         Assert.assertTrue("output contains Usage", listOutput.contains("Usage:") && listOutput.contains("Commands:"));
         Assert.assertTrue("output contains exception", !listOutput.contains("Exception"));
     }
     
+    @Test
+    public void checkVersion() throws IOException {
+        String listCommand = "--version";
+        String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, null);
+        Assert.assertTrue("output does not contain version", listOutput.startsWith("Seqware version"));
+    }
     
+    @Test
+    public void listBundles() throws IOException {
+        String listCommand = " workflow list";
+        String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, null);
+        int countOccurrencesOf = StringUtils.countOccurrencesOf(listOutput, "RECORD");
+        Assert.assertTrue("incorrect number of expected bundles", countOccurrencesOf == 20);
+    }
+    
+    @Test
+    public void workflowRunReport() throws IOException {
+        String listCommand = " workflow-run report --accession 6603";
+        String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, null);
+        int countOccurrencesOf = StringUtils.countOccurrencesOf(listOutput, "RECORD");
+        Assert.assertTrue("incorrect number of expected bundles", countOccurrencesOf == 1);
+    }
 }

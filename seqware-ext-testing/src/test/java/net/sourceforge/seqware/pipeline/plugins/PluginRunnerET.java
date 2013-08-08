@@ -310,7 +310,7 @@ public class PluginRunnerET {
     private Map<String, File> exportWorkflowInis() throws IOException {
         Map<String, File> iniParams = new HashMap<String, File>();
         for(Entry<String, Integer> e : installedWorkflows.entrySet()){
-            File workflowIni = exportINIFile(e.getKey(), e.getValue());
+            File workflowIni = exportINIFile(e.getKey(), e.getValue(), false);
             iniParams.put(e.getKey(), workflowIni);
         }
         return iniParams;
@@ -388,19 +388,29 @@ public class PluginRunnerET {
         threadPool.shutdown();
     }
 
-    public File exportINIFile(String name, Integer accession) throws IOException {
-        Log.info("Attempting to export parameters for  " + name);
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession " + accession;
-        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
-        Log.info(listOutput);
+    public File exportINIFile(String name, Integer accession, boolean newCLI) throws IOException {
+        String listOutput;
+        if (newCLI) {
+            Log.info("Attempting to export parameters for  " + name);
+            File workflowIni = File.createTempFile("workflow", "ini");
+            String listCommand = " workflow ini --accession " + accession + " --out " + workflowIni.getAbsolutePath();
+            listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, null);
+            // new command line does not go to stdout
+            FileUtils.readFileToString(workflowIni);
+        } else {
+            Log.info("Attempting to export parameters for  " + name);
+            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession " + accession;
+            listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
+            Log.info(listOutput);
+        }
         // go through output and dump out the workflow.ini
         File workflowIni = File.createTempFile("workflow", "ini");
         String[] lines = listOutput.split(System.getProperty("line.separator"));
         PrintWriter out = new PrintWriter(new FileWriter(workflowIni));
         for (String line : lines) {
-            if (line.startsWith("-") || line.startsWith("=") || line.startsWith("$") || line.startsWith("Running Plugin") || line.startsWith("Setting Up Plugin")){
+            if (line.startsWith("-") || line.startsWith("=") || line.startsWith("$") || line.startsWith("Running Plugin") || line.startsWith("Setting Up Plugin")) {
                 continue;
-            } 
+            }
             out.println(line);
         }
         out.close();

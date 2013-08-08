@@ -69,9 +69,7 @@ public class AdminPhase1 {
             // locate the zip bundle and then install it
             File zippedBundle = new File(packageDir, bundleDir.getName() + ".zip");
             Assert.assertTrue("zipped bundle " + zippedBundle.getAbsolutePath() + ".zip", zippedBundle.exists());
-
-            String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -b " + zippedBundle + " -i";
-            String installOutput = ITUtility.runSeqWareJar(installCommand, ReturnValue.SUCCESS, null);
+            String installOutput = installBundle(zippedBundle);
             Log.info(installOutput);
         }
         
@@ -80,16 +78,13 @@ public class AdminPhase1 {
 
     @Test
     public void testLaunchScheduled() throws IOException {
-        // launch-scheduled
-        String schedCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --launch-scheduled";
-        String schedOutput = ITUtility.runSeqWareJar(schedCommand, ReturnValue.SUCCESS, null);
+        String schedOutput = launchScheduled();
         Log.info(schedOutput);
     }
 
     @Test
     public void testMonitoring() throws IOException {
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker -- --tp 1000";
-        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
+        String listOutput = statusCheck();
         Log.info(listOutput);
     }
     
@@ -98,5 +93,24 @@ public class AdminPhase1 {
     @AfterClass
     public static void cleanup() throws IOException{
         FileUtils.deleteDirectory(separateTempDir);
+    }
+
+    protected String installBundle(File zippedBundle) throws IOException {
+        String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -b " + zippedBundle + " -i";
+        String installOutput = ITUtility.runSeqWareJar(installCommand, ReturnValue.SUCCESS, null);
+        return installOutput;
+    }
+
+    protected String launchScheduled() throws IOException {
+        // launch-scheduled
+        String schedCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --launch-scheduled";
+        String schedOutput = ITUtility.runSeqWareJar(schedCommand, ReturnValue.SUCCESS, null);
+        return schedOutput;
+    }
+
+    protected String statusCheck() throws IOException {
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker -- --tp 1000";
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
+        return listOutput;
     }
 }

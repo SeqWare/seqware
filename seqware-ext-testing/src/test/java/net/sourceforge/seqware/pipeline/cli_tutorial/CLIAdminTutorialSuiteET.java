@@ -14,22 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.seqware.pipeline.tutorial;
+package net.sourceforge.seqware.pipeline.cli_tutorial;
 
+import net.sourceforge.seqware.pipeline.tutorial.*;
 import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * This runs all the tests needed to test the User Tutorials. The test suite
- * actually enforces order for us.
+ * This runs all the tests needed to test the Admin Tutorials. The test suite
+ * actually enforces order for us. 
  *
  * @author dyuen
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses(value = {UserPhase1.class, UserPhase2.class, UserPhase3.class , UserPhase4.class , UserPhase5.class, UserPhase6.class})
-public class UserTutorialSuiteET extends TutorialSuite {
+@Suite.SuiteClasses(value = {CLIAdminPhase1.class})
+public class CLIAdminTutorialSuiteET extends TutorialSuite {
     @BeforeClass
     public static void resetDatabase() {
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
