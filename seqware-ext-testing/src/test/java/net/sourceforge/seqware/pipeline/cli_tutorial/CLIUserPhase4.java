@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.seqware.pipeline.tutorial;
+package net.sourceforge.seqware.pipeline.cli_tutorial;
 
+import net.sourceforge.seqware.pipeline.tutorial.*;
 import java.io.IOException;
 import net.sourceforge.seqware.pipeline.plugins.GenericMetadataSaverET;
 import net.sourceforge.seqware.pipeline.plugins.ProvisionFilesET;
@@ -25,21 +26,22 @@ import org.junit.Test;
  *
  * @author dyuen
  */
-public class UserPhase4 {
+public class CLIUserPhase4 extends UserPhase4{
         
-    public static final String FILE = "File";
-    
     @Test
+    @Override
     public void testProvisionFileInAndAssociateWithSample() throws IOException {
         ProvisionFilesET it = new ProvisionFilesET();
         it.provisionFileWithRandomInput(AccessionMap.accessionMap.get(UserPhase3.SAMPLE));
     }
     
     @Test
+    @Override
     public void testExistingFileInAndAssociateWithSample() throws IOException {
         GenericMetadataSaverET it = new GenericMetadataSaverET();
-        String output = it.saveGenericMetadataFileForSample(AccessionMap.accessionMap.get(UserPhase3.SAMPLE), false);
+        String output = it.saveGenericMetadataFileForSample(AccessionMap.accessionMap.get(UserPhase3.SAMPLE), true);
         String sw_accession = OldUserTutorialSuiteET.getAndCheckProcessingAccession(output);
-        AccessionMap.accessionMap.put(FILE, sw_accession);
+        AccessionMap.accessionMap.put(UserPhase4.FILE, sw_accession);
     }
+   
 }

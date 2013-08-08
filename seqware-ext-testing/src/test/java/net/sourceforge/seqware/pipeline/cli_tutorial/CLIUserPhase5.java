@@ -14,25 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.seqware.pipeline.tutorial;
+package net.sourceforge.seqware.pipeline.cli_tutorial;
 
-import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import net.sourceforge.seqware.pipeline.plugins.PluginRunnerET;
 
 /**
- * This runs all the tests needed to test the Developer Tutorials. The test suite
- * actually enforces order for us. We actually started with built and installed bundles from step 5 of 
- * the user tutorials.
- *
+ * Build and install a bundle, used by both the User tutorial and the Developer tutorial
  * @author dyuen
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses(value = {DeveloperPhase1.class, DeveloperPhase2.class})
-public class DeveloperTutorialSuiteET extends TutorialSuite {
-    @BeforeClass
-    public static void resetDatabase() {
-        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
+public class CLIUserPhase5 {
+    
+
+    protected File exportINI(PluginRunnerET pit, List<Integer> accessions) throws IOException {
+        // launch our specific workflow and get store its workflow run accession
+        File exportINIFile = pit.exportINIFile("Java workflow", accessions.get(0), true);
+        return exportINIFile;
     }
 }
