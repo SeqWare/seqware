@@ -33,6 +33,8 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import org.hibernate.Query;
+import org.hibernate.SessionFactory;
+import org.hibernate.classic.Session;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
@@ -191,8 +193,17 @@ public class SampleResource extends DatabaseResource {
             // explicitly create root sample if needed
             if (createExplicitRootSample) {
                 Log.info("Found null parent in sample object, creating explicit root sample in sample_hierarchy");
-                Query query = BeanFactory.getSessionFactoryBean().openSession().createSQLQuery("INSERT INTO sample_hierarchy(sample_id, parent_id) VALUES (" + sample.getSampleId() + ",null)");
-                int result = query.executeUpdate();
+                
+                Session openSession = BeanFactory.getSessionFactoryBean().openSession();
+                try{ 
+                    Query query = openSession.createSQLQuery("INSERT INTO sample_hierarchy(sample_id, parent_id) VALUES (" + sample.getSampleId() + ",null)");
+                    query.executeUpdate();
+                } catch(Exception e){
+                     getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e);
+                     return;
+                }finally{
+                    openSession.close();
+                }
             }
             
             
