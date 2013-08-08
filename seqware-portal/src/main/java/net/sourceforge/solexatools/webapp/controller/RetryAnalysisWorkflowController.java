@@ -45,9 +45,9 @@ public class RetryAnalysisWorkflowController  extends BaseCommandController {
 			Integer registrationId = registration.getRegistrationId();
 			
 		    if(registrationId.equals(ownerId)){
-		    	if("failed".equals(workflowRun.getStatus()) || "cancelled".equals(workflowRun.getStatus()))
+		    	if(WorkflowRun.Status.failed == workflowRun.getStatus() || WorkflowRun.Status.cancelled == workflowRun.getStatus())
                         {
-		    		workflowRun.setStatus("submitted");
+		    		workflowRun.setStatus(WorkflowRun.Status.submitted);
                                 workflowRun.setHost(null);
                                 
 		    		getWorkflowRunService().update(workflowRun);

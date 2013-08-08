@@ -1,8 +1,9 @@
 package net.sourceforge.seqware.common.metadata;
 
 import java.io.File;
-import net.sourceforge.seqware.common.util.Log;
 
+import net.sourceforge.seqware.common.util.Bool;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.MD5Generator;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 
@@ -13,23 +14,6 @@ import net.sourceforge.seqware.common.util.configtools.ConfigTools;
  * @version $Id: $Id
  */
 public abstract class Metadata implements MetadataInterface {
-  /** Constant <code>SUCCESS="success"</code> */
-  public static final String SUCCESS = "success";
-  /** Constant <code>FAILED="failed"</code> */
-  public static final String FAILED = "failed";
-  /** Constant <code>PENDING="pending"</code> */
-  public static final String PENDING = "pending";
-  /** Constant <code>RUNNING="running"</code> */
-  public static final String RUNNING = "running";
-  /** Constant <code>SUBMITTED="submitted"</code> */
-  public static final String SUBMITTED = "submitted";
-  /** Constant <code>RESUBMITTED="resubmitted"</code> */
-  public static final String RESUBMITTED = "resubmitted";
-  /** Constant <code>COMPLETED="completed"</code> */
-  public static final String COMPLETED = "completed";
-  /** Constant <code>UNKNOWN="unknown"</code> */
-  public static final String UNKNOWN = "unknown";
-
   /**
    * <p>getMD5Hash.</p>
    *
@@ -39,7 +23,7 @@ public abstract class Metadata implements MetadataInterface {
   protected String getMD5Hash(String filename) {
     String hash = null;
     try {
-      if ("true".equalsIgnoreCase(ConfigTools.getSettings().get("CALC_MD5_FOR_ALL_FILES"))) {
+      if (Bool.parse(ConfigTools.getSettings().get("CALC_MD5_FOR_ALL_FILES"))) {
         filename = locateFile(filename);
         if (filename != null) {
           hash = new MD5Generator().md5sum(filename);

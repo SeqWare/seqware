@@ -61,11 +61,8 @@ public interface ExperimentService {
 
   /**
    * <p>delete.</p>
-   *
-   * @param experiment a {@link net.sourceforge.seqware.common.model.Experiment} object.
-   * @param deleteRealFiles a {@link java.lang.String} object.
    */
-  public void delete(Experiment experiment, String deleteRealFiles);
+  public void delete(Experiment experiment, boolean deleteRealFiles);
 
   /**
    * <p>list.</p>

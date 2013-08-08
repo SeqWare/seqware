@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.seqware.common.dao.InvoiceDAO;
+import net.sourceforge.seqware.common.model.Invoice.State;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Invoice;
@@ -97,7 +98,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
   }
   
   /** {@inheritDoc} */
-  public List<Invoice> list(Registration registration, String state) {
+  public List<Invoice> list(Registration registration, State state) {
     ArrayList<Invoice> invoices = new ArrayList<Invoice>();
 
     // Limit the invoices to those owned by the user
@@ -106,10 +107,10 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
 
     if (registration.isLIMSAdmin()) {
       query = "from Invoice as invoice where invoice.state = ? order by createTimestamp";
-      parameters = new Object[]{ state };
+      parameters = new Object[]{ state.name() };
     } else {
       query = "from Invoice as invoice where invoice.owner.registrationId=? and invoice.state = ? order by createTimestamp";
-      parameters = new Object[]{ registration.getRegistrationId(), state };
+      parameters = new Object[]{ registration.getRegistrationId(), state.name() };
     }
 
     List list = this.getHibernateTemplate().find(query, parameters);

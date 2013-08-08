@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.seqware.common.business.InvoiceService;
 
 import net.sourceforge.seqware.common.business.WorkflowService;
+import net.sourceforge.seqware.common.model.Invoice;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.solexatools.Security;
 
@@ -43,9 +44,9 @@ public class OpenInvoiceController  extends BaseCommandController {
 		ModelAndView			modelAndView	= null;
 		HashMap<String,Object>	model			= new HashMap<String,Object>();
 
-		model.put("pendingInvoiceList", getInvoiceService().list(registration, "pending"));
-                model.put("openInvoiceList", getInvoiceService().list(registration, "open"));
-                model.put("closedInvoiceList", getInvoiceService().list(registration, "closed"));
+		model.put("pendingInvoiceList", getInvoiceService().list(registration, Invoice.State.pending));
+                model.put("openInvoiceList", getInvoiceService().list(registration, Invoice.State.open));
+                model.put("closedInvoiceList", getInvoiceService().list(registration, Invoice.State.closed));
 
 		modelAndView = new ModelAndView("OpenInvoice", model);
 		

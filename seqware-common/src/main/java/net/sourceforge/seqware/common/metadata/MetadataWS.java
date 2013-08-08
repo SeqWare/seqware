@@ -693,7 +693,7 @@ public class MetadataWS extends Metadata {
     public ReturnValue add_empty_processing_event(int[] parentIDs) {
         // FIXME: Add a new processing entry
         Processing processing = new Processing();
-        processing.setStatus(Metadata.PENDING);
+        processing.setStatus(Processing.Status.pending);
         processing.setCreateTimestamp(new Date());
 
         return addProcessingEventWithParentsAndChildren(processing, convertIDs(parentIDs, "?id="), null);
@@ -706,7 +706,7 @@ public class MetadataWS extends Metadata {
     public ReturnValue add_empty_processing_event_by_parent_accession(int[] parentAccessions) {
         // FIXME: Add a new processing entry
         Processing processing = new Processing();
-        processing.setStatus(Metadata.PENDING);
+        processing.setStatus(Processing.Status.pending);
         processing.setCreateTimestamp(new Date());
 
         return addProcessingEventWithParentsAndChildren(processing, convertIDs(parentAccessions, "/"), null);
@@ -1214,7 +1214,7 @@ public class MetadataWS extends Metadata {
      * {@inheritDoc}
      */
     @Override
-    public ReturnValue update_processing_status(int processingID, String status) {
+    public ReturnValue update_processing_status(int processingID, Processing.Status status) {
         try {
             Processing processing = ll.findProcessing("?id=" + processingID);
 
@@ -1268,7 +1268,7 @@ public class MetadataWS extends Metadata {
      * @param workflowEngine the value of workflowEngine
      */
     @Override
-    public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles) {
+    public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRun.Status status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles) {
         int accession = 0;
         try {
             WorkflowRun wr = ll.findWorkflowRun("?id=" + workflowRunId);
@@ -1474,7 +1474,7 @@ public class MetadataWS extends Metadata {
      * {@inheritDoc}
      */
     @Override
-    public List<WorkflowRun> getWorkflowRunsByStatus(String status) {
+    public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRun.Status status) {
         try {
             String searchString = "?status=" + status + "";
             return ll.findWorkflowRuns(searchString);

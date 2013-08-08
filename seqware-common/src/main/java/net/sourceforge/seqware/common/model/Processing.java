@@ -55,6 +55,13 @@ import org.restlet.resource.ResourceException;
  */
 public class Processing implements Serializable, Comparable<Processing>, PermissionsAware {
 
+  public enum Status {
+    pending,
+    running,
+    failed,
+    success
+  }
+  
   private static final long serialVersionUID = 4681328115923390568L;
   private Integer processingId;
   private String filePath;
@@ -71,7 +78,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
   private Set<ProcessingAttribute> processingAttributes = new TreeSet<ProcessingAttribute>();
   private WorkflowRun workflowRunByAncestorWorkflowRunId;
   private String algorithm;
-  private String status;
+  private Status status;
   private Integer exitStatus;
   private Integer processExitStatus;
   private String description;
@@ -377,21 +384,11 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     this.processingId = processingId;
   }
 
-  /**
-   * <p>Getter for the field <code>status</code>.</p>
-   *
-   * @return a {@link java.lang.String} object.
-   */
-  public String getStatus() {
+  public Status getStatus() {
     return status;
   }
 
-  /**
-   * <p>Setter for the field <code>status</code>.</p>
-   *
-   * @param status a {@link java.lang.String} object.
-   */
-  public void setStatus(String status) {
+  public void setStatus(Status status) {
     this.status = status;
   }
 
@@ -843,7 +840,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     // get processing with workflow run has not status equal completed
     for (Processing pr : all) {
       WorkflowRun wr = pr.getWorkflowRun();
-      if (wr == null || wr.getStatus().equals("completed")) {
+      if (wr == null || wr.getStatus() == WorkflowRun.Status.completed) {
         res.add(pr);
       }
     }
@@ -861,7 +858,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     // get processing with workflow run has not status equal completed
     for (Processing pr : all) {
       WorkflowRun wr = pr.getWorkflowRun();
-      if (wr == null || !wr.getStatus().equals("completed")) {
+      if (wr == null || wr.getStatus() != WorkflowRun.Status.completed) {
         res.add(pr);
       }
     }
@@ -915,7 +912,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
         updatedProcessing = new Processing();
         updatedProcessing.setProcessingId(rs.getInt("processing_id"));
         updatedProcessing.setAlgorithm(rs.getString("algorithm"));
-        updatedProcessing.setStatus(rs.getString("status"));
+        updatedProcessing.setStatus(Status.valueOf(rs.getString("status")));
         updatedProcessing.setDescription(rs.getString("description"));
         updatedProcessing.setUrl(rs.getString("url"));
         updatedProcessing.setUrlLabel(rs.getString("url_label"));
@@ -935,7 +932,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
         ancestorWorkflowRunId = rs.getInt("ancestor_workflow_run_id");
         workflowRunId = rs.getInt("workflow_run_id");
       } else {
-        throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "The Processing does not exist");
+        throw new ResourceException(org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST, "The Processing does not exist");
       }
 
       if (ownerId != 0) {

@@ -147,7 +147,7 @@ public class WorkflowManager {
       run.setIniFile(iniBuffer.toString());
       run.setCommand(wi.getCommand());
       run.setTemplate(wi.getTemplatePath());
-      run.setStatus(Metadata.SUBMITTED);
+      run.setStatus(WorkflowRun.Status.submitted);
       run.setOwner(owner);
       
       // FIXME: Deal with workflow Run Params. I am not handling parent files

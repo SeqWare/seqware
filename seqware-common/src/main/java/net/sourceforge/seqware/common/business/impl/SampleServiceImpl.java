@@ -83,9 +83,9 @@ public class SampleServiceImpl implements SampleService {
      *
      * Deletes an instance of Sample in the database.
      */
-    public void delete(Sample sample, String deleteRealFiles) {
+    public void delete(Sample sample, boolean deleteRealFiles) {
         List<File> deleteFiles = null;
-        if ("yes".equals(deleteRealFiles)) {
+        if (deleteRealFiles) {
             deleteFiles = sampleDAO.getFiles(sample.getSampleId());
         }
 
@@ -101,7 +101,7 @@ public class SampleServiceImpl implements SampleService {
 
         sampleDAO.delete(sample);
 
-        if ("yes".equals(deleteRealFiles)) {
+        if (deleteRealFiles) {
             fileDAO.deleteAllWithFolderStore(deleteFiles);
         }
     }

@@ -181,7 +181,7 @@ public class TreeNodeHtmlUtil {
 		String decs = processing.getJsonEscapeDescription();
 		String algorithm = processing.getAlgorithm();
 		String updateTimestamp = processing.getUpdateTimestamp().toString();
-		String status = processing.getStatus();
+		String status = processing.getStatus().toString();
 		
 		String name = algorithm + updateTimestamp +	" SWID: "+ swAccession;
 		

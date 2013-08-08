@@ -22,6 +22,7 @@ import net.sourceforge.seqware.common.model.LibrarySource;
 import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
+import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleAttribute;
@@ -252,7 +253,7 @@ public interface MetadataInterface {
    * @param status a {@link java.lang.String} object.
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
-  ReturnValue update_processing_status(int processingID, String status);
+  ReturnValue update_processing_status(int processingID, Processing.Status status);
 
   /**
    * <p>associate_processing_event_with_parents_and_child.</p>
@@ -397,7 +398,7 @@ public interface MetadataInterface {
      * @param workflowEngine the value of workflowEngine
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles);
+  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRun.Status status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles);
 
   /**
    * <p>findFilesAssociatedWithASample.</p>
@@ -538,7 +539,7 @@ public interface MetadataInterface {
    * @param status a {@link java.lang.String} object.
    * @return a {@link java.util.List} object.
    */
-  public List<WorkflowRun> getWorkflowRunsByStatus(String status);
+  public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRun.Status status);
 
   /**
    * <p>getWorkflowRunsByHost.</p>

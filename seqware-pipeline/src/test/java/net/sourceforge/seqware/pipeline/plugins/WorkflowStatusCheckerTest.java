@@ -99,8 +99,8 @@ public class WorkflowStatusCheckerTest{
         Assert.assertTrue("workflowStatusChecker could not init", ret1.getExitStatus() == ReturnValue.SUCCESS);
         final ReturnValue ret2 = workflowStatusChecker.do_run();
         Assert.assertTrue("workflowStatusChecker ran properly", ret2.getExitStatus() == ReturnValue.SUCCESS);
-        verify(metadata).getWorkflowRunsByStatus(metadata.RUNNING);
-        verify(metadata).getWorkflowRunsByStatus(metadata.PENDING);
+        verify(metadata).getWorkflowRunsByStatus(WorkflowRun.Status.running);
+        verify(metadata).getWorkflowRunsByStatus(WorkflowRun.Status.pending);
         verifyNoMoreInteractions(metadata);
     }
     
@@ -172,7 +172,7 @@ public class WorkflowStatusCheckerTest{
         fakeReturn.setAttribute("totalSteps", "1");
         
         when(workflowTools.watchWorkflow(anyString(), anyString(), anyInt())).thenReturn(fakeReturn);
-        when(metadata.getWorkflowRunsByStatus(metadata.RUNNING)).thenReturn(wrList);
+        when(metadata.getWorkflowRunsByStatus(WorkflowRun.Status.running)).thenReturn(wrList);
     }
 
     /**
@@ -181,8 +181,8 @@ public class WorkflowStatusCheckerTest{
      */
     private void verifyNormalRun(final ReturnValue ret2) {
         Assert.assertTrue("workflowStatusChecker ran properly", ret2.getExitStatus() == ReturnValue.SUCCESS);
-        verify(metadata).getWorkflowRunsByStatus(metadata.RUNNING);
-        verify(metadata).getWorkflowRunsByStatus(metadata.PENDING);
-        verify(metadata, times(100)).update_workflow_run(anyInt(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), (Set<Integer>) anyObject());
+        verify(metadata).getWorkflowRunsByStatus(WorkflowRun.Status.running);
+        verify(metadata).getWorkflowRunsByStatus(WorkflowRun.Status.pending);
+        verify(metadata, times(100)).update_workflow_run(anyInt(), anyString(), anyString(), any(WorkflowRun.Status.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), (Set<Integer>) anyObject());
     }
 }

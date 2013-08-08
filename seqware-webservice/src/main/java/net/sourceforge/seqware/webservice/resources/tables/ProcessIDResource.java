@@ -165,7 +165,7 @@ public class ProcessIDResource extends DatabaseIDResource {
                 } else {
                     processing.setOwner(registration);
                 }
-                processing.setStatus(p.getStatus() == null ? "pending" : p.getStatus());
+                processing.setStatus(p.getStatus() == null ? Processing.Status.pending : p.getStatus());
                 processing.setTaskGroup(p.isTaskGroup());
                 if (p.getRunStartTimestamp() != null) {
                     processing.setRunStartTimestamp(p.getRunStartTimestamp());

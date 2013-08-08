@@ -5,6 +5,7 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
 /**
@@ -223,12 +224,12 @@ public interface StudyDAO {
   public List<Study> list();
 
   /**
-   * <p>getStatusCount.</p>
+   * <p>Count the number of workflow runs with the given status, under the given study</p>
    *
-   * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
-   * @param running a {@link java.lang.String} object.
-   * @return a int.
+   * @param study the study
+   * @param status the status of the workflow runs to count
+   * @return the count
    */
-  public int getStatusCount(Study study, String running);
+  public int getStatusCount(Study study, WorkflowRun.Status status);
 
 }

@@ -118,7 +118,7 @@ public class SelectInputController  extends MultiActionController {
 			WorkflowRun workflowRun = new WorkflowRun();
 			
 			workflowRun.setWorkflow(workflow);
-			workflowRun.setStatus("pending");
+			workflowRun.setStatus(WorkflowRun.Status.pending);
 			workflowRun.setOwner(registration);
 			
 			

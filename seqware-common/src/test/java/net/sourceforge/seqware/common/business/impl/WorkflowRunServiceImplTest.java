@@ -107,7 +107,7 @@ public class WorkflowRunServiceImplTest extends BaseUnit {
     createdWorkflowRun.setWorkflowRunId(22);
     createdWorkflowRun.setIniFile("newIniFile"); // <-- ini file has been
                                                  // updated
-    createdWorkflowRun.setStatus("complete");
+    createdWorkflowRun.setStatus(WorkflowRun.Status.completed);
     createdWorkflowRun.setStatusCmd("newCommand"); // <-- command has been
                                                    // updated
     createdWorkflowRun.setSeqwareRevision("2305M");

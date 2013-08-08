@@ -173,10 +173,8 @@ public class SequencerRunWizardController extends MultiActionController {
 		  if (oldSequencerRun != null && newSequencerRun != null) {
 			  
 			  oldSequencerRun.setPlatform(getPlatformService().findByID(newSequencerRun.getPlatformInt()));
-			  new ServletRequestDataBinder(oldSequencerRun).bind(request);		  
-			  if ("Y".equals(oldSequencerRun.getReadyToProcess())) {
-			    oldSequencerRun.setProcess(new Boolean(true));
-		  }
+			  new ServletRequestDataBinder(oldSequencerRun).bind(request);
+			  oldSequencerRun.setProcess(newSequencerRun.getProcess());
 			  
 			 getSequencerRunService().update(oldSequencerRun);
 			 session.setAttribute("sequencerRun", command);
