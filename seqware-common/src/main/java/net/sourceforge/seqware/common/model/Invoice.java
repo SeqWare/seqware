@@ -32,7 +32,6 @@ public class Invoice implements Serializable, Comparable<Invoice>, PermissionsAw
   private Registration owner;
   private Date startDate;
   private Date endDate;
-  @Enumerated(EnumType.STRING)
   private InvoiceState state;
   private boolean finalized;
   private boolean fullyPaid;
@@ -189,6 +188,7 @@ public class Invoice implements Serializable, Comparable<Invoice>, PermissionsAw
      *
      * @return a {@link java.lang.String} object.
      */
+    @Enumerated(EnumType.STRING)
     public InvoiceState getState() {
         return state;
     }

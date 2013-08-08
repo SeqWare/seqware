@@ -60,7 +60,6 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
   private String html;
   private Boolean isHasFile = false;
   // additional fields
-  @Enumerated(EnumType.STRING)
   private WorkflowRunStatus status;
   private String statusCmd;
   private String seqwareRevision;
@@ -450,6 +449,7 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
    *
    * @return the status of the workflow run
    */
+  @Enumerated(EnumType.STRING)
   public WorkflowRunStatus getStatus() {
     return status;
   }
