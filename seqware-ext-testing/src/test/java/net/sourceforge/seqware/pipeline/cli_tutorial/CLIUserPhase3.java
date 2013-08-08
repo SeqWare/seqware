@@ -14,24 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.seqware.pipeline.tutorial;
+package net.sourceforge.seqware.pipeline.cli_tutorial;
 
-import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import net.sourceforge.seqware.pipeline.tutorial.*;
+import java.io.IOException;
+import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 
 /**
- * This runs all the tests needed to test the User Tutorials. The test suite
- * actually enforces order for us.
  *
  * @author dyuen
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses(value = {UserPhase1.class, UserPhase2.class, UserPhase3.class , UserPhase4.class , UserPhase5.class, UserPhase6.class})
-public class UserTutorialSuiteET extends TutorialSuite {
-    @BeforeClass
-    public static void resetDatabase() {
-        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
+public class CLIUserPhase3 extends UserPhase3{
+        
+     @Override
+     protected String createSampleAndLinkToExperiment() throws IOException {
+        String output = ITUtility.runSeqwareCLI("  create sample --title 'New Test Sample' --description 'This is a test description' --organism-id 26 --experiment-accession "+AccessionMap.accessionMap.get(UserPhase2.EXPERIMENT)
+                , ReturnValue.SUCCESS
+                , null);
+        return output;
     }
 }

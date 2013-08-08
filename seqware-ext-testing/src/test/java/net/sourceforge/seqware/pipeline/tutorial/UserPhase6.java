@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import net.sourceforge.seqware.pipeline.plugins.PluginRunnerET;
 import org.apache.commons.io.FileUtils;
@@ -50,10 +49,7 @@ public class UserPhase6 {
          // check on existence and contents of output
         // delete files that would interfere
         WorkFlowRunReporterFilterStdOut filter = new WorkFlowRunReporterFilterStdOut(swid);
-        
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stdout -wra " + swid
-                , ReturnValue.SUCCESS
-                , workingDir);
+        runWorkflowRunReporterStdOut(swid, workingDir);
         
         Collection<File> listFiles = FileUtils.listFiles(workingDir, filter, filter);
         Assert.assertTrue("wrong number of csv files found, found " + listFiles.size(), listFiles.size() == 1);
@@ -67,9 +63,7 @@ public class UserPhase6 {
         String swid = monitorAndReturnWorkflowRun();
          // check on existence and contents of output
         WorkFlowRunReporterFilterStdErr filter = new WorkFlowRunReporterFilterStdErr(swid);     
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stderr -wra " + swid
-                , ReturnValue.SUCCESS
-                , workingDir);
+        runWorkflowRunReporterStdErr(swid, workingDir);
         Collection<File> listFiles = FileUtils.listFiles(workingDir, filter, filter);
         Assert.assertTrue("wrong number of csv files found, found " + listFiles.size(), listFiles.size() == 1);
         File foundFile = listFiles.iterator().next();
@@ -78,11 +72,7 @@ public class UserPhase6 {
 
     @Test
     public void testdownloadWorkflowResults() throws IOException {
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- "
-                + " --no-links --output-filename study_report "
-                + "--workflow-accession "
-                + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW) + " "
-                + "--study 'New Test Study'", ReturnValue.SUCCESS, null);
+        exportStudyResults();
     }
     
     @AfterClass
@@ -94,9 +84,7 @@ public class UserPhase6 {
         File workingDir = Files.createTempDir();
         // delete files that would interfere
         WorkFlowRunReporterFilter filter = new WorkFlowRunReporterFilter();
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- -wa " + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW)
-                , ReturnValue.SUCCESS
-                , workingDir);
+        runWorkflowRunReporter(workingDir);
 
         Collection<File> listFiles = FileUtils.listFiles(workingDir, filter, filter);
         // ensure that we only have one csv file
@@ -115,6 +103,32 @@ public class UserPhase6 {
         foundFile.delete();
         Assert.assertTrue("invalid workflow run SWID", runFound && workflowRunSWID != null);
         return workflowRunSWID;
+    }
+
+    protected void runWorkflowRunReporter(File workingDir) throws IOException {
+        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- -wa " + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW)
+                , ReturnValue.SUCCESS
+                , workingDir);
+    }
+
+    protected void runWorkflowRunReporterStdErr(String swid, File workingDir) throws IOException {
+        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stderr -wra " + swid
+                , ReturnValue.SUCCESS
+                , workingDir);
+    }
+
+    protected void runWorkflowRunReporterStdOut(String swid, File workingDir) throws IOException {
+        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stdout -wra " + swid
+                , ReturnValue.SUCCESS
+                , workingDir);
+    }
+
+    protected void exportStudyResults() throws IOException {
+        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- "
+                + " --no-links --output-filename study_report "
+                + "--workflow-accession "
+                + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW) + " "
+                + "--study 'New Test Study'", ReturnValue.SUCCESS, null);
     }
 
     public static class WorkFlowRunReporterFilter implements IOFileFilter {

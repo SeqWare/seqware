@@ -31,11 +31,20 @@ public class UserPhase3 {
     
     @Test
     public void createExperimentAndLinkToStudy() throws IOException{
+        String output = createSampleAndLinkToExperiment();
+        String sw_accession  = OldUserTutorialSuiteET.getAndCheckSwid(output);
+        AccessionMap.accessionMap.put(getSampleString(), sw_accession);
+    }
+
+    protected String createSampleAndLinkToExperiment() throws IOException {
         String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table sample "
                 + "--create --field title::New Test Sample --field description::This is a test description --field experiment_accession::"+AccessionMap.accessionMap.get(UserPhase2.EXPERIMENT) +" --field organism_id::26"
                 , ReturnValue.SUCCESS
                 , null);
-        String sw_accession  = UserTutorialSuiteET.getAndCheckSwid(output);
-        AccessionMap.accessionMap.put(SAMPLE, sw_accession);
+        return output;
+    }
+    
+    public String getSampleString(){
+        return this.getClass() + ".SAMPLE";
     }
 }

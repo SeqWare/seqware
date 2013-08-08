@@ -14,32 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.seqware.pipeline.tutorial;
+package net.sourceforge.seqware.pipeline.cli_tutorial;
 
 import java.io.IOException;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
-import org.junit.Test;
+import net.sourceforge.seqware.pipeline.tutorial.AccessionMap;
+import net.sourceforge.seqware.pipeline.tutorial.UserPhase1;
+import net.sourceforge.seqware.pipeline.tutorial.UserPhase2;
 
 /**
  *
  * @author dyuen
  */
-public class UserPhase2 {
-        
-    public static final String EXPERIMENT = "experiment";
-    
-    @Test
-    public void createExperimentAndLinkToStudy() throws IOException{
-        String output = runCreateExperimentAndLinkStudy();
-        String sw_accession  = OldUserTutorialSuiteET.getAndCheckSwid(output);
-        AccessionMap.accessionMap.put(EXPERIMENT, sw_accession);
-    }
+public class CLIUserPhase2 extends UserPhase2 {
 
+    @Override
     protected String runCreateExperimentAndLinkStudy() throws IOException {
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table experiment "
-                + "--create --field title::New Test Experiment --field description::This is a test description --field study_accession::"+AccessionMap.accessionMap.get(UserPhase1.STUDY) +" --field platform_id::26", 
+        String output = ITUtility.runSeqwareCLI(" create experiment --title 'New Test Experiment' --description 'This is a test description' --platform-id 26 --study-accession " + AccessionMap.accessionMap.get(UserPhase1.STUDY),
                 ReturnValue.SUCCESS, null);
-        return output;     
+        return output;
     }
 }
