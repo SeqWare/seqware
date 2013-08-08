@@ -49,6 +49,7 @@ public class ITUtility {
      */
     public static String runSeqwareCLI(String parameters, int expectedReturnValue, File workingDir) throws IOException{
         File script = retrieveCompiledSeqwareScript();
+        script.setExecutable(true);
                 
         if (workingDir == null){
             workingDir = Files.createTempDir();
