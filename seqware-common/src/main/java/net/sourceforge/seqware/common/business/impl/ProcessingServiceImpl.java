@@ -15,6 +15,7 @@ import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Processing;
+import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
@@ -74,7 +75,7 @@ public class ProcessingServiceImpl implements ProcessingService {
   public void insert(SequencerRun sequencerRun, Processing processing) {
 
     if (processing.getStatus() == null) {
-      processing.setStatus(Processing.Status.pending);
+      processing.setStatus(ProcessingStatus.pending);
     }
     // processing.setExperimentId(experiment.getExperimentId());
     processing.setCreateTimestamp(new Date());
@@ -86,7 +87,7 @@ public class ProcessingServiceImpl implements ProcessingService {
   @Override
   public void insert(Registration registration, SequencerRun sequencerRun, Processing processing) {
     if (processing.getStatus() == null) {
-      processing.setStatus(Processing.Status.pending);
+      processing.setStatus(ProcessingStatus.pending);
     }
     // processing.setExperimentId(experiment.getExperimentId());
     processing.setCreateTimestamp(new Date());
@@ -98,7 +99,7 @@ public class ProcessingServiceImpl implements ProcessingService {
   public Integer insert(Processing processing) {
 
     if (processing.getStatus() == null) {
-      processing.setStatus(Processing.Status.pending);
+      processing.setStatus(ProcessingStatus.pending);
     }
     // processing.setExperimentId(experiment.getExperimentId());
     processing.setCreateTimestamp(new Date());
@@ -314,7 +315,7 @@ public class ProcessingServiceImpl implements ProcessingService {
   @Override
   public Integer insert(Registration registration, Processing processing) {
     if (processing.getStatus() == null) {
-      processing.setStatus(Processing.Status.pending);
+      processing.setStatus(ProcessingStatus.pending);
     }
     processing.setCreateTimestamp(new Date());
     return processingDAO.insert(registration, processing);

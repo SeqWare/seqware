@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.solexatools.Security;
 
 import org.springframework.web.servlet.ModelAndView;
@@ -45,9 +46,9 @@ public class RetryAnalysisWorkflowController  extends BaseCommandController {
 			Integer registrationId = registration.getRegistrationId();
 			
 		    if(registrationId.equals(ownerId)){
-		    	if(WorkflowRun.Status.failed == workflowRun.getStatus() || WorkflowRun.Status.cancelled == workflowRun.getStatus())
+		    	if(WorkflowRunStatus.failed == workflowRun.getStatus() || WorkflowRunStatus.cancelled == workflowRun.getStatus())
                         {
-		    		workflowRun.setStatus(WorkflowRun.Status.submitted);
+		    		workflowRun.setStatus(WorkflowRunStatus.submitted);
                                 workflowRun.setHost(null);
                                 
 		    		getWorkflowRunService().update(workflowRun);

@@ -21,12 +21,6 @@ import org.apache.log4j.Logger;
  * @version $Id: $Id
  */
 public class Invoice implements Serializable, Comparable<Invoice>, PermissionsAware {
-  public enum State{
-    pending,
-    open,
-    closed
-  }
-  
   /**
    * LEFT OFF WITH: this needs to be finished
    */
@@ -35,7 +29,7 @@ public class Invoice implements Serializable, Comparable<Invoice>, PermissionsAw
   private Registration owner;
   private Date startDate;
   private Date endDate;
-  private State state;
+  private InvoiceState state;
   private boolean finalized;
   private boolean fullyPaid;
   private Double paidAmount;
@@ -191,7 +185,7 @@ public class Invoice implements Serializable, Comparable<Invoice>, PermissionsAw
      *
      * @return a {@link java.lang.String} object.
      */
-    public State getState() {
+    public InvoiceState getState() {
         return state;
     }
 
@@ -200,7 +194,7 @@ public class Invoice implements Serializable, Comparable<Invoice>, PermissionsAw
      *
      * @param state a {@link java.lang.String} object.
      */
-    public void setState(State state) {
+    public void setState(InvoiceState state) {
         this.state = state;
     }
 

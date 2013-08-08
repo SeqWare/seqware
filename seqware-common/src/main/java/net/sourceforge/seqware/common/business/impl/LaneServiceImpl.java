@@ -19,6 +19,7 @@ import net.sourceforge.seqware.common.model.FileType;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Processing;
+import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.UploadSequence;
@@ -308,7 +309,7 @@ public class LaneServiceImpl implements LaneService {
     newProcessing.setFiles(files);
     // if (newProcessing.getStatus() == null) {
     // newProcessing.setStatus("pending"); }
-    newProcessing.setStatus(Processing.Status.success);
+    newProcessing.setStatus(ProcessingStatus.success);
     newProcessing.setExitStatus(0);
     newProcessing.setProcessExitStatus(0);
     newProcessing.setRunStartTimestamp(null);

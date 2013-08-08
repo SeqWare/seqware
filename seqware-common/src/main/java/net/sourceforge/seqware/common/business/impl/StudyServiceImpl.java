@@ -11,7 +11,7 @@ import net.sourceforge.seqware.common.dao.StudyTypeDAO;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Study;
-import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
 import org.apache.commons.logging.Log;
@@ -351,19 +351,19 @@ public class StudyServiceImpl implements StudyService {
   /** {@inheritDoc} */
   @Override
   public int getRunningCount(Study study) {
-    return studyDAO.getStatusCount(study, WorkflowRun.Status.running);
+    return studyDAO.getStatusCount(study, WorkflowRunStatus.running);
   }
 
   /** {@inheritDoc} */
   @Override
   public int getFinishedCount(Study study) {
-    return studyDAO.getStatusCount(study, WorkflowRun.Status.completed);
+    return studyDAO.getStatusCount(study, WorkflowRunStatus.completed);
   }
 
   /** {@inheritDoc} */
   @Override
   public int getFailedCount(Study study) {
-    return studyDAO.getStatusCount(study, WorkflowRun.Status.failed);
+    return studyDAO.getStatusCount(study, WorkflowRunStatus.failed);
   }
 }
 

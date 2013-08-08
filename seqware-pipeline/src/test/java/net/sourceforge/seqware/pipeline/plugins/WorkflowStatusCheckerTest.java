@@ -17,17 +17,21 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import it.sauronsoftware.junique.JUnique;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -35,7 +39,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
 import static org.mockito.Mockito.*;
+
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -99,8 +105,8 @@ public class WorkflowStatusCheckerTest{
         Assert.assertTrue("workflowStatusChecker could not init", ret1.getExitStatus() == ReturnValue.SUCCESS);
         final ReturnValue ret2 = workflowStatusChecker.do_run();
         Assert.assertTrue("workflowStatusChecker ran properly", ret2.getExitStatus() == ReturnValue.SUCCESS);
-        verify(metadata).getWorkflowRunsByStatus(WorkflowRun.Status.running);
-        verify(metadata).getWorkflowRunsByStatus(WorkflowRun.Status.pending);
+        verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.running);
+        verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.pending);
         verifyNoMoreInteractions(metadata);
     }
     
@@ -172,7 +178,7 @@ public class WorkflowStatusCheckerTest{
         fakeReturn.setAttribute("totalSteps", "1");
         
         when(workflowTools.watchWorkflow(anyString(), anyString(), anyInt())).thenReturn(fakeReturn);
-        when(metadata.getWorkflowRunsByStatus(WorkflowRun.Status.running)).thenReturn(wrList);
+        when(metadata.getWorkflowRunsByStatus(WorkflowRunStatus.running)).thenReturn(wrList);
     }
 
     /**
@@ -181,8 +187,8 @@ public class WorkflowStatusCheckerTest{
      */
     private void verifyNormalRun(final ReturnValue ret2) {
         Assert.assertTrue("workflowStatusChecker ran properly", ret2.getExitStatus() == ReturnValue.SUCCESS);
-        verify(metadata).getWorkflowRunsByStatus(WorkflowRun.Status.running);
-        verify(metadata).getWorkflowRunsByStatus(WorkflowRun.Status.pending);
-        verify(metadata, times(100)).update_workflow_run(anyInt(), anyString(), anyString(), any(WorkflowRun.Status.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), (Set<Integer>) anyObject());
+        verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.running);
+        verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.pending);
+        verify(metadata, times(100)).update_workflow_run(anyInt(), anyString(), anyString(), any(WorkflowRunStatus.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), (Set<Integer>) anyObject());
     }
 }

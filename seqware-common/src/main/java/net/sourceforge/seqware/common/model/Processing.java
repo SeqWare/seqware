@@ -55,13 +55,6 @@ import org.restlet.resource.ResourceException;
  */
 public class Processing implements Serializable, Comparable<Processing>, PermissionsAware {
 
-  public enum Status {
-    pending,
-    running,
-    failed,
-    success
-  }
-  
   private static final long serialVersionUID = 4681328115923390568L;
   private Integer processingId;
   private String filePath;
@@ -78,7 +71,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
   private Set<ProcessingAttribute> processingAttributes = new TreeSet<ProcessingAttribute>();
   private WorkflowRun workflowRunByAncestorWorkflowRunId;
   private String algorithm;
-  private Status status;
+  private ProcessingStatus status;
   private Integer exitStatus;
   private Integer processExitStatus;
   private String description;
@@ -384,11 +377,11 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     this.processingId = processingId;
   }
 
-  public Status getStatus() {
+  public ProcessingStatus getStatus() {
     return status;
   }
 
-  public void setStatus(Status status) {
+  public void setStatus(ProcessingStatus status) {
     this.status = status;
   }
 
@@ -840,7 +833,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     // get processing with workflow run has not status equal completed
     for (Processing pr : all) {
       WorkflowRun wr = pr.getWorkflowRun();
-      if (wr == null || wr.getStatus() == WorkflowRun.Status.completed) {
+      if (wr == null || wr.getStatus() == WorkflowRunStatus.completed) {
         res.add(pr);
       }
     }
@@ -858,7 +851,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     // get processing with workflow run has not status equal completed
     for (Processing pr : all) {
       WorkflowRun wr = pr.getWorkflowRun();
-      if (wr == null || wr.getStatus() != WorkflowRun.Status.completed) {
+      if (wr == null || wr.getStatus() != WorkflowRunStatus.completed) {
         res.add(pr);
       }
     }
@@ -912,7 +905,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
         updatedProcessing = new Processing();
         updatedProcessing.setProcessingId(rs.getInt("processing_id"));
         updatedProcessing.setAlgorithm(rs.getString("algorithm"));
-        updatedProcessing.setStatus(Status.valueOf(rs.getString("status")));
+        updatedProcessing.setStatus(ProcessingStatus.valueOf(rs.getString("status")));
         updatedProcessing.setDescription(rs.getString("description"));
         updatedProcessing.setUrl(rs.getString("url"));
         updatedProcessing.setUrlLabel(rs.getString("url_label"));

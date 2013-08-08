@@ -153,7 +153,7 @@ public class Lane implements Serializable, Comparable<Lane>, PermissionsAware {
 
     private int recursiveCountProcErrors(Processing proc) {
         int errorCnt = 0;
-        if (proc != null && (Processing.Status.failed == proc.getStatus())) {
+        if (proc != null && (ProcessingStatus.failed == proc.getStatus())) {
             errorCnt++;
         }
         for (Processing childProc : proc.getChildren()) {
@@ -178,7 +178,7 @@ public class Lane implements Serializable, Comparable<Lane>, PermissionsAware {
     private int recursiveCountProcRunning(Processing proc) {
         int runCnt = 0;
         if (proc != null
-                && (proc.getStatus() == Processing.Status.running || proc.getStatus() == Processing.Status.pending)) {
+                && (proc.getStatus() == ProcessingStatus.running || proc.getStatus() == ProcessingStatus.pending)) {
             runCnt++;
         }
         for (Processing childProc : proc.getChildren()) {
@@ -218,7 +218,7 @@ public class Lane implements Serializable, Comparable<Lane>, PermissionsAware {
 
     private int recursiveCountProcessed(Processing proc) {
         int runCnt = 0;
-        if (proc != null && (proc.getStatus() == Processing.Status.success)) {
+        if (proc != null && (proc.getStatus() == ProcessingStatus.success)) {
             runCnt++;
         }
         for (Processing childProc : proc.getChildren()) {

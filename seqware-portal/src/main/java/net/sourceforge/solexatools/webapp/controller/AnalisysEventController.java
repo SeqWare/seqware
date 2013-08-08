@@ -12,6 +12,7 @@ import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.ShareWorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.util.Bool;
 import net.sourceforge.solexatools.Security;
 
@@ -197,7 +198,7 @@ public class AnalisysEventController extends MultiActionController {
 			Integer registrationId = registration.getRegistrationId();
 			
 		    if(registrationId.equals(ownerId)){
-		    	workflowRun.setStatus(WorkflowRun.Status.cancelled);
+		    	workflowRun.setStatus(WorkflowRunStatus.cancelled);
 		    	getWorkflowRunService().update(workflowRun);
 		    }
 		} 

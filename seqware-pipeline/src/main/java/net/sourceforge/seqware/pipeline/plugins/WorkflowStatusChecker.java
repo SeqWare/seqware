@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
 
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
@@ -162,10 +163,10 @@ public class WorkflowStatusChecker extends Plugin {
     } else { // this checks workflows and writes their status back to the DB
 
       // get a list of running workflows
-      List<WorkflowRun> runningWorkflows = this.metadata.getWorkflowRunsByStatus(WorkflowRun.Status.running);
-      runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRun.Status.pending));
+      List<WorkflowRun> runningWorkflows = this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.running);
+      runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.pending));
       if (options.has("check-failed")) {
-        runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRun.Status.failed));
+        runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.failed));
       }
 
       // setup thread pool
@@ -335,19 +336,19 @@ public class WorkflowStatusChecker extends Plugin {
          * There's no analog to SUSPENDED or KILLED on the pegasus side,
          * thus no specific seqware equivalent.
          */
-        WorkflowRun.Status sqwStatus;
+        WorkflowRunStatus sqwStatus;
         switch (status) {
         case PREP:
         case RUNNING:
         case SUSPENDED:
-          sqwStatus = WorkflowRun.Status.running;
+          sqwStatus = WorkflowRunStatus.running;
           break;
         case FAILED:
         case KILLED:
-          sqwStatus = WorkflowRun.Status.failed;
+          sqwStatus = WorkflowRunStatus.failed;
           break;
         case SUCCEEDED:
-          sqwStatus = WorkflowRun.Status.completed;
+          sqwStatus = WorkflowRunStatus.completed;
           break;
         default:
           throw new RuntimeException("Unexpected status value (" + status + ") from oozie workflow job (" + jobId + ")");
@@ -404,7 +405,7 @@ public class WorkflowStatusChecker extends Plugin {
         if (currRet.getExitStatus() == ReturnValue.SUCCESS) {
           synchronized (metadata_sync) {
             WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(),
-                                                                    wr.getTemplate(), WorkflowRun.Status.completed, wr.getStatusCmd(),
+                                                                    wr.getTemplate(), WorkflowRunStatus.completed, wr.getStatusCmd(),
                                                                     wr.getCurrentWorkingDir(), wr.getDax(),
                                                                     wr.getIniFile(), wr.getHost(), currRet.getStderr(),
                                                                     currRet.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
@@ -413,7 +414,7 @@ public class WorkflowStatusChecker extends Plugin {
         } else if (currRet.getExitStatus() == ReturnValue.PROCESSING) {
           synchronized (metadata_sync) {
             WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(),
-                                                                    wr.getTemplate(), WorkflowRun.Status.running, wr.getStatusCmd(),
+                                                                    wr.getTemplate(), WorkflowRunStatus.running, wr.getStatusCmd(),
                                                                     wr.getCurrentWorkingDir(), wr.getDax(),
                                                                     wr.getIniFile(), wr.getHost(), currRet.getStderr(),
                                                                     currRet.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
@@ -423,7 +424,7 @@ public class WorkflowStatusChecker extends Plugin {
           Log.error("WORKFLOW FAILURE: this workflow has failed and this status will be saved to the DB.");
           synchronized (metadata_sync) {
             WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(),
-                                                                    wr.getTemplate(), WorkflowRun.Status.failed, wr.getStatusCmd(),
+                                                                    wr.getTemplate(), WorkflowRunStatus.failed, wr.getStatusCmd(),
                                                                     wr.getCurrentWorkingDir(), wr.getDax(),
                                                                     wr.getIniFile(), wr.getHost(), currRet.getStderr(),
                                                                     currRet.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
