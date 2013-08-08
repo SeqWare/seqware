@@ -70,6 +70,9 @@ If you need to debug a problem set the VAGRANT_LOG variable e.g.:
 
    VAGRANT_LOG=DEBUG perl vagrant_launch.pl --use-aws
 
+Also you can use the "--skip-launch" option to just create the various launch
+files not actually trigger a VM.
+
 ## Shutting Down
 
 You can terminate your instance via the provider interface (Open Stack, AWS, or VirtualBox).

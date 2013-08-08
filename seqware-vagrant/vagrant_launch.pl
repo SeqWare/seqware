@@ -10,7 +10,6 @@ use Getopt::Long;
 
 # skips all unit and integration tests
 my $default_seqware_build_cmd = 'mvn clean install -DskipTests';
-my $default_seqware_it_cmd = "mvn clean install -DskipITs=false -P 'extITs,!embeddedTomcat,!embeddedHBase'";
 # runs unit tests
 # my $seqware_build_cmd = 'mvn clean install &> build.log';
 # all unit and integration tests that only require postgres
@@ -27,6 +26,7 @@ my $launch_cmd = "vagrant up";
 my $work_dir = "target";
 my $config_file = 'vagrant_launch.conf';
 my $skip_its = 0;
+my $skip_launch = 0;
 my $config_scripts = "templates/server_setup_scripts/ubuntu_12.04_master_script.sh";
 
 GetOptions (
@@ -37,6 +37,7 @@ GetOptions (
   "config-file=s" => \$config_file,
   "os-config-scripts=s" => \$config_scripts,
   "skip-it-tests" => \$skip_its,
+  "skip-launch" => \$skip_launch,
 );
 
 
@@ -52,9 +53,6 @@ run("mkdir $work_dir");
 my $configs = {};
 read_config($config_file, $configs);
 if (!defined($configs->{'%{SEQWARE_BUILD_CMD}'})) { $configs->{'%{SEQWARE_BUILD_CMD}'} = $default_seqware_build_cmd; }
-
-# process server scripts into single bash script
-setup_os_config_scripts($config_scripts, "$work_dir/os_server_setup.sh");
 
 $configs->{'%{SEQWARE_VERSION}'} = $seqware_version;
 
@@ -75,12 +73,15 @@ if ($launch_vb) {
   die "Don't understand the launcher type to use: AWS, OpenStack, or VirtualBox. Please specify with a --use-* param\n";
 }
 
-# add the integration tests
-if (!$skip_its) { $configs->{'%{SEQWARE_IT_CMD}'} = "mvn clean install -DskipITs=false -P 'extITs,!embeddedTomcat,!embeddedHBase' &> build.log"; }
+# skip the integration tests if specified --skip-its
+if ($skip_its) { $configs->{'%{SEQWARE_IT_CMD}'} = ""; }
 
+# process server scripts into single bash script
+setup_os_config_scripts($config_scripts, "$work_dir/os_server_setup.sh");
 prepare_files();
-launch_instances();
-
+if (!$skip_launch) {
+  launch_instances();
+}
 
 
 # SUBS
@@ -119,6 +120,7 @@ sub find_version {
   my $file = `ls ../seqware-distribution/target/seqware-distribution-*-full.jar | grep -v qe-full`;
   chomp $file;
   if ($file =~ /seqware-distribution-(\S+)-full.jar/) {
+   print "SEQWARE VERSION: $1\n";
    return($1);
   } else { 
     die "ERROR: CAN'T FIGURE OUT VERSION FROM FILE: $file\n";
