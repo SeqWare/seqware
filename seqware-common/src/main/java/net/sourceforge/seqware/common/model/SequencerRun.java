@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -38,6 +40,7 @@ public class SequencerRun implements Serializable, Comparable<SequencerRun>, Per
     private String cycleDescriptor;
     private String cycleSequence;
     private Integer cycleCount;
+    @Enumerated(EnumType.STRING)
     private SequencerRunStatus status;
     private String cycles;
     private Integer refLane;
