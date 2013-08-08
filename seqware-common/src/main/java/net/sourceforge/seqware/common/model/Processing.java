@@ -73,7 +73,6 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
   private Set<ProcessingAttribute> processingAttributes = new TreeSet<ProcessingAttribute>();
   private WorkflowRun workflowRunByAncestorWorkflowRunId;
   private String algorithm;
-  @Enumerated(EnumType.STRING)
   private ProcessingStatus status;
   private Integer exitStatus;
   private Integer processExitStatus;
@@ -380,6 +379,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     this.processingId = processingId;
   }
 
+  @Enumerated(EnumType.STRING)
   public ProcessingStatus getStatus() {
     return status;
   }
