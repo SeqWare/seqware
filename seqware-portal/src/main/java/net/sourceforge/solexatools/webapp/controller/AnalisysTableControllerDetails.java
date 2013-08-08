@@ -155,23 +155,23 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
 	    cellsModel.add(workflowRun.getCreateTimestamp().toString());
 	    cellsModel.add(workflowRun.getWorkflow().getName());
 	    cellsModel.add(workflowRun.getWorkflow().getVersion());
-	    cellsModel.add(workflowRun.getStatus());
+	    cellsModel.add(workflowRun.getStatus().toString());
 	    cellsModel.add(workflowRun.getSwAccession().toString());
 	    //cellsModel.add(sampleToHtml(workflowRun.getSamples()));
 	    //cellsModel.add(iUSToHtml(workflowRun.getIus()));
 	    //cellsModel.add(laneToHtml(workflowRun.getLanes()));
 	    cellsModel.add(workflowRun.getHost());
-	    if ("failed".equals(workflowRun.getStatus())) {
+	    if (WorkflowRun.Status.failed == workflowRun.getStatus()) {
 		cellsModel.add("<a href='#' popup-stdout='true' tt='wfr' stdout='" + workflowRun.getStdOut() + "'>output</a> / <a href='#' popup-stderr='true' tt='wfr' stderr='" + workflowRun.getStdErr() + "' >errors</a>");
 	    } else {
 		cellsModel.add("");
 	    }
 	    cellsModel.add("<a href='#' popup-stdout='true' tt='wfr' stdout='" + workflowRun.getIniFile() + "'>parameters</a>");
-            if ("running".equals(workflowRun.getStatus())) {
+            if (WorkflowRun.Status.running == workflowRun.getStatus()) {
               cellsModel.add("<a href='#' popup-workflow-cancel='true' tt='wfrr' object-id='"+workflowRun.getWorkflowRunId()+"'>cancel</a>");
-            } else if ("cancelled".equals(workflowRun.getStatus())) {
+            } else if (WorkflowRun.Status.cancelled == workflowRun.getStatus()) {
               cellsModel.add("<a href='#' popup-workflow-retry='true' tt='wfrr' object-id='"+workflowRun.getWorkflowRunId()+"'>retry</a>");
-            } else if ("failed".equals(workflowRun.getStatus())) {
+            } else if (WorkflowRun.Status.failed == workflowRun.getStatus()) {
               cellsModel.add("<a href='#' popup-workflow-retry='true' tt='wfrr' object-id='"+workflowRun.getWorkflowRunId()+"'>retry</a>");
             } else {
               cellsModel.add("");

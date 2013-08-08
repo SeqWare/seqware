@@ -11,6 +11,7 @@ import net.sourceforge.seqware.common.business.FileService;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Registration;
+import net.sourceforge.seqware.common.util.Bool;
 import net.sourceforge.solexatools.Security;
 import net.sourceforge.solexatools.util.Constant;
 
@@ -194,7 +195,7 @@ public class FileController extends MultiActionController {
 		File				    file			= getRequestedFile(request);
 		
 		ServletContext context = this.getServletContext();
-		String deleteRealFiles = context.getInitParameter("delete.files.for.node.deletion");
+		boolean deleteRealFiles = Bool.parse(context.getInitParameter("delete.files.for.node.deletion"));
 
 		if (file != null) {			
 		    if(registration.equals(file.getOwner()) || registration.isLIMSAdmin()){

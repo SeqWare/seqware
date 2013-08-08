@@ -308,7 +308,7 @@ public class LaneServiceImpl implements LaneService {
     newProcessing.setFiles(files);
     // if (newProcessing.getStatus() == null) {
     // newProcessing.setStatus("pending"); }
-    newProcessing.setStatus("success");
+    newProcessing.setStatus(Processing.Status.success);
     newProcessing.setExitStatus(0);
     newProcessing.setProcessExitStatus(0);
     newProcessing.setRunStartTimestamp(null);
@@ -370,15 +370,15 @@ public class LaneServiceImpl implements LaneService {
    *
    * Deletes an instance of Lane in the database.
    */
-  public void delete(Lane lane, String deleteRealFiles) {
+  public void delete(Lane lane, boolean deleteRealFiles) {
     List<File> deleteFiles = null;
-    if ("yes".equals(deleteRealFiles)) {
+    if (deleteRealFiles) {
       deleteFiles = laneDAO.getFiles(lane.getLaneId());
     }
 
     laneDAO.delete(lane);
 
-    if ("yes".equals(deleteRealFiles)) {
+    if (deleteRealFiles) {
       fileDAO.deleteAllWithFolderStore(deleteFiles);
     }
   }

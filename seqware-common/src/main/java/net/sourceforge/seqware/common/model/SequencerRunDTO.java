@@ -3,7 +3,9 @@ package net.sourceforge.seqware.common.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.SortedSet;
+
 import javax.xml.bind.annotation.XmlTransient;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -98,7 +100,7 @@ public class SequencerRunDTO implements Serializable {
 	public int getErrorCnt() {
 		int errorCnt = 0;
 		for (Processing proc : processings) {
-			if (proc.getStatus().contains("error")) {
+			if (proc.getStatus() == Processing.Status.failed) {
 				errorCnt++;
 			}
 		}
@@ -113,7 +115,8 @@ public class SequencerRunDTO implements Serializable {
 	public int getProcessingCnt() {
 		int errorCnt = 0;
 		for (Processing proc : processings) {
-			if (proc.getStatus().endsWith("ing")) {
+			if (proc.getStatus() == Processing.Status.running ||
+			    proc.getStatus() == Processing.Status.pending) {
 				errorCnt++;
 			}
 		}

@@ -560,14 +560,12 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * @param status
      * @return 
      */
-    protected PREVIOUS_RUN_STATUS determineStatus(String generateStatus){
-        if (generateStatus.equals(Metadata.COMPLETED)){
-            return PREVIOUS_RUN_STATUS.COMPLETED;
-        } else if (generateStatus.equals(Metadata.FAILED)){
-            return PREVIOUS_RUN_STATUS.FAILED;
-        } else{
-            return PREVIOUS_RUN_STATUS.OTHER;
-        }
+    protected PREVIOUS_RUN_STATUS determineStatus(WorkflowRun.Status generateStatus){
+      switch(generateStatus){
+      case completed: return PREVIOUS_RUN_STATUS.COMPLETED;
+      case failed: return PREVIOUS_RUN_STATUS.FAILED;
+      default: return PREVIOUS_RUN_STATUS.OTHER;
+      }
     }
     
     /**

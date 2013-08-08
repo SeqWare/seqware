@@ -19,14 +19,6 @@ import net.sourceforge.seqware.common.util.Log;
  * @version $Id: $Id
  */
 public abstract class Decider implements DeciderInterface {
-  /** Constant <code>SUCCESS="success"</code> */
-  public static final String SUCCESS = "success";
-  /** Constant <code>FAILED="failed"</code> */
-  public static final String FAILED = "failed";
-  /** Constant <code>PENDING="pending"</code> */
-  public static final String PENDING = "pending";
-  /** Constant <code>RUNNING="running"</code> */
-  public static final String RUNNING = "running";
   
   protected OptionParser parser = new OptionParser();
   protected OptionSet options = null;

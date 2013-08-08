@@ -231,7 +231,7 @@ public class NodeHtmlUtil {
     String desc = escapeString(workflowRun.getWorkflow().getDescription());
     String name = escapeString(workflowRun.getWorkflow().getJsonEscapeName()) + " "
         + escapeString(workflowRun.getWorkflow().getVersion()) + " " + workflowRun.getWorkflow().getCreateTimestamp()
-        + " (" + escapeString(workflowRun.getStatus()) + ")";
+        + " (" + escapeString(workflowRun.getStatus().toString()) + ")";
 
     String lastClassHtml = "";
     if (isLast) {
@@ -250,7 +250,7 @@ public class NodeHtmlUtil {
     // "text" :
     // "<li class='expandable'><div class='hitarea hasChildren-hitarea expandable-hitarea' ></div><span id='wfr_<c:out value="${wfr.workflowRunId}"/>'>Analysis Workflow <c:out value="${wfr.workflow.name}"/> <c:out value="${wfrRun.workflow.version}"/> <c:out value="${wfr.createTimestamp}"/></span> <c:if test="${isBulk}"><span>${selectLinkHtml}</span></c:if>  <span><a class='m-question np-mousetrack supernote-hover-demo1' href='#demo1'><img src='i/ico/ico_question.gif'></a></span> <span class='m-link'><a href='#'>edit</a> - <a href='#'>delete</a></span> <span class='m-description'>Description: <c:out value="${wfr.workflow.jsonEscapeDescription}"/></span><ul style='display: none;'></li>",
     String linksHtml = "";
-    if (workflowRun.getStatus().equals("completed")) {
+    if (workflowRun.getStatus() == WorkflowRun.Status.completed) {
       linksHtml = "";
       //linksHtml = "<a href='javascript:void(0)' popup-delete='true' tt='" + typeTree
       //    + "' form-action='analisysDelete.htm' object-id='" + wfrId + "' object-name='" + desc
@@ -302,7 +302,7 @@ public class NodeHtmlUtil {
     String decs = escapeString(processing.getJsonEscapeDescription());
     String algorithm = escapeString(processing.getAlgorithm());
     String updateTimestamp = processing.getUpdateTimestamp().toString();
-    String status = processing.getStatus();
+    String status = processing.getStatus().toString();
 
     String name = algorithm + " " + updateTimestamp + " SWID: " + swAccession;
 

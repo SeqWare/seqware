@@ -13,6 +13,7 @@ import net.sourceforge.seqware.common.business.WorkflowService;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.util.Bool;
 import net.sourceforge.solexatools.Security;
 import net.sourceforge.solexatools.util.LaunchWorkflowUtil;
 
@@ -107,7 +108,7 @@ public class SummaryLaunchWorkflowController extends MultiActionController {
 		Workflow workflow = getWorkflowService().findByID(workflowId);
 		
 		if(workflowRun!=null){
-			workflowRun.setStatus("submitted");
+			workflowRun.setStatus(WorkflowRun.Status.submitted);
 			if (workflow != null) {
 			  workflowRun.setName(workflow.getName());
 			  workflowRun.setCommand(workflow.getCommand());
@@ -181,7 +182,7 @@ public class SummaryLaunchWorkflowController extends MultiActionController {
 			return new ModelAndView("redirect:/login.htm");
 		
 		ServletContext context = this.getServletContext();
-		String deleteRealFiles = context.getInitParameter("delete.files.for.node.deletion");
+		boolean deleteRealFiles = Bool.parse(context.getInitParameter("delete.files.for.node.deletion"));
 
 		ModelAndView	modelAndView = null;
 		

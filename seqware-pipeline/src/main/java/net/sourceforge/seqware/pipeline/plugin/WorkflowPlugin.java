@@ -450,7 +450,7 @@ public class WorkflowPlugin extends Plugin {
 
     // then need to loop over these and just launch those workflows or
     // launch all if accession not specified
-    List<WorkflowRun> scheduledWorkflows = this.metadata.getWorkflowRunsByStatus("submitted");
+    List<WorkflowRun> scheduledWorkflows = this.metadata.getWorkflowRunsByStatus(WorkflowRun.Status.submitted);
 
     Log.stdout("Number of submitted workflows: " + scheduledWorkflows.size());
 
@@ -588,14 +588,14 @@ public class WorkflowPlugin extends Plugin {
     if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS || workflowRunToken == null) {
       // then something went wrong trying to call pegasus
       metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
-                                   dataModel.getTags().get("workflow_template"), "failed", workflowRunToken,
+                                   dataModel.getTags().get("workflow_template"), WorkflowRun.Status.failed, workflowRunToken,
                                    engine.getWorkingDirectory(), "", "", wr.getHost(),
                                    retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine(), inputFiles);
 
       return retPegasus;
     } else {
       // determine status based on object model
-      String status = dataModel.isWait() ? "completed" : "pending";
+      WorkflowRun.Status status = dataModel.isWait() ? WorkflowRun.Status.completed : WorkflowRun.Status.pending;
       metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                                    dataModel.getTags().get("workflow_template"), status, workflowRunToken,
                                    engine.getWorkingDirectory(), "", "", wr.getHost(),

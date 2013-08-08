@@ -677,7 +677,7 @@ public class FindAllTheFiles {
       if (workflowRun != null) {
           ret.setAttribute(WORKFLOW_RUN_NAME, workflowRun.getName());
           ret.setAttribute(WORKFLOW_RUN_SWA, workflowRun.getSwAccession().toString());
-          ret.setAttribute(WORKFLOW_RUN_STATUS, workflowRun.getStatus());
+          ret.setAttribute(WORKFLOW_RUN_STATUS, workflowRun.getStatus().name());
 
           if (this.isReportInputFiles()) {
               WorkflowRunReport wrr = new WorkflowRunReport();
@@ -902,8 +902,7 @@ public class FindAllTheFiles {
       // if the workflow run is not successful and we don't want to see all of
       // the files, then skip it.
       String workflowRunStatus = rv.getAttribute(FindAllTheFiles.WORKFLOW_RUN_STATUS);
-      if (workflowRunStatus != null && !workflowRunStatus.equals(Metadata.SUCCESS)
-          && !workflowRunStatus.equals(Metadata.COMPLETED)) {
+      if (workflowRunStatus != null && WorkflowRun.Status.valueOf(workflowRunStatus) != WorkflowRun.Status.completed) {
         if (!showFailedAndRunning) {
           Log.debug("Not showing failed or running workflow run" + workflowRunStatus);
           continue;

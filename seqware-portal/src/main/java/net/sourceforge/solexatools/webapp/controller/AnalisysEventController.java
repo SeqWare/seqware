@@ -12,6 +12,7 @@ import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.ShareWorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.util.Bool;
 import net.sourceforge.solexatools.Security;
 
 import org.springframework.web.servlet.ModelAndView;
@@ -113,7 +114,7 @@ public class AnalisysEventController extends MultiActionController {
 		WorkflowRun				workflowRun		= getRequestedWorkflowRun(request);
 		
 		ServletContext context = this.getServletContext();
-		String deleteRealFiles = context.getInitParameter("delete.files.for.node.deletion");
+		boolean deleteRealFiles = Bool.parse(context.getInitParameter("delete.files.for.node.deletion"));
 
 		if (workflowRun != null) {			
 		    if(registration.equals(workflowRun.getOwner()) || registration.isLIMSAdmin()){
@@ -196,7 +197,7 @@ public class AnalisysEventController extends MultiActionController {
 			Integer registrationId = registration.getRegistrationId();
 			
 		    if(registrationId.equals(ownerId)){
-		    	workflowRun.setStatus("cancelled");
+		    	workflowRun.setStatus(WorkflowRun.Status.cancelled);
 		    	getWorkflowRunService().update(workflowRun);
 		    }
 		} 

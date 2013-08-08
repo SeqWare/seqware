@@ -166,13 +166,13 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   /** {@inheritDoc} */
-  public void delete(WorkflowRun workflowRun, String deleteRealFiles) {
+  public void delete(WorkflowRun workflowRun, boolean deleteRealFiles) {
     Set<Processing> processings = workflowRun.getProcessings();
 
     // get all files from processings
     List<File> deleteFiles = new LinkedList<File>();
 
-    if ("yes".equals(deleteRealFiles)) {
+    if (deleteRealFiles) {
       if (processings != null) {
         for (Processing processing : processings) {
           deleteFiles.addAll(processingDAO.getFiles(processing.getProcessingId()));
@@ -208,7 +208,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
 
     workflowRunDAO.delete(workflowRun);
 
-    if ("yes".equals(deleteRealFiles)) {
+    if (deleteRealFiles) {
       fileDAO.deleteAllWithFolderStore(deleteFiles);
     }
   }

@@ -83,15 +83,15 @@ public class ExperimentServiceImpl implements ExperimentService {
   }
 
   /** {@inheritDoc} */
-  public void delete(Experiment experiment, String deleteRealFiles) {
+  public void delete(Experiment experiment, boolean deleteRealFiles) {
     List<File> deleteFiles = null;
-    if ("yes".equals(deleteRealFiles)) {
+    if (deleteRealFiles) {
       deleteFiles = experimentDAO.getFiles(experiment.getExperimentId());
     }
 
     experimentDAO.delete(experiment);
 
-    if ("yes".equals(deleteRealFiles)) {
+    if (deleteRealFiles) {
       fileDAO.deleteAllWithFolderStore(deleteFiles);
     }
   }

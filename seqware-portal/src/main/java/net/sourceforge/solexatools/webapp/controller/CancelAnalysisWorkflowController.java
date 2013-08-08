@@ -45,8 +45,8 @@ public class CancelAnalysisWorkflowController  extends BaseCommandController {
 			Integer registrationId = registration.getRegistrationId();
 			
 		    if(registrationId.equals(ownerId)){
-		    	if(!workflowRun.getStatus().equals("completed")){
-		    		workflowRun.setStatus("cancelled");
+		    	if(workflowRun.getStatus() != WorkflowRun.Status.completed){
+		    		workflowRun.setStatus(WorkflowRun.Status.cancelled);
 		    		getWorkflowRunService().update(workflowRun);
 		    	}
 		    }

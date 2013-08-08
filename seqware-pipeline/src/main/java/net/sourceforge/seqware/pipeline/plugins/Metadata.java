@@ -307,7 +307,7 @@ public class Metadata extends Plugin {
             metadata.update_processing_workflow_run(processingId, workflowRunAccession);
             //SEQWARE-1692 - need to update workflow with the status
             WorkflowRun wr = metadata.getWorkflowRun(workflowRunAccession);
-            wr.setStatus(fields.get("status"));
+            wr.setStatus(WorkflowRun.Status.valueOf(fields.get("status")));
             wr.setStdOut(fields.get("stdout"));
             wr.setStdErr(fields.get("stderr"));
             metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),

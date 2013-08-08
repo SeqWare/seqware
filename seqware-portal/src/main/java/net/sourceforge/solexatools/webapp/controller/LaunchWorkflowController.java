@@ -141,7 +141,7 @@ public class LaunchWorkflowController extends SimpleFormController {
 				WorkflowRun workflowRun = new WorkflowRun();
 				
 				workflowRun.setWorkflow(workflow);
-				workflowRun.setStatus("pending");
+				workflowRun.setStatus(WorkflowRun.Status.pending);
 				workflowRun.setOwner(registration);
 				
 				getWorkflowRunService().insert(workflowRun, LaunchWorkflowUtil.getWorkflowRunParam(visibleParams), LaunchWorkflowUtil.getAllSelectedFiles(request));

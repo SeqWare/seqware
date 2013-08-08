@@ -25,6 +25,7 @@ import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.metadata.MetadataWS;
+import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -278,7 +279,7 @@ public class Runner {
     // If metaDB is defined, let's update status to methodName so we know what
     // we are running
     if (meta != null && processingID != 0) {
-      meta.update_processing_status(processingID, methodName + " " + Metadata.RUNNING);
+      meta.update_processing_status(processingID, Processing.Status.running);
     }
 
     Method method;
@@ -310,7 +311,7 @@ public class Runner {
       // Update processing table to show it failed
       if (meta != null && processingID != 0) {
         meta.update_processing_event(processingID, ret);
-        meta.update_processing_status(processingID, Metadata.FAILED);
+        meta.update_processing_status(processingID, Processing.Status.failed);
       }
 
       // Exit on error
@@ -338,7 +339,7 @@ public class Runner {
         newReturn.setStdout(stdout.toString());
         newReturn.setStderr(stderr.toString());
         meta.update_processing_event(processingID, newReturn);
-        meta.update_processing_status(processingID, Metadata.FAILED);
+        meta.update_processing_status(processingID, Processing.Status.failed);
       }
       System.exit(newReturn.getExitStatus());
     } // Otherwise we will continue, after updating metadata
@@ -647,7 +648,7 @@ public class Runner {
                 retval.printAndAppendtoStderr("Could not write to processingID File for metadata");
                 retval.setExitStatus(ReturnValue.METADATAINVALIDIDCHAIN);
                 meta.update_processing_event(workflowRunAccession, retval);
-                meta.update_processing_status(workflowRunAccession, Metadata.FAILED);
+                meta.update_processing_status(workflowRunAccession, Processing.Status.failed);
                 System.exit(retval.getExitStatus());
               }
             }
@@ -884,7 +885,7 @@ public class Runner {
             retval.printAndAppendtoStderr("Could not write to processingID File for metadata");
             retval.setExitStatus(ReturnValue.METADATAINVALIDIDCHAIN);
             meta.update_processing_event(processingID, retval);
-            meta.update_processing_status(processingID, Metadata.FAILED);
+            meta.update_processing_status(processingID, Processing.Status.failed);
             System.exit(retval.getExitStatus());
           }
         }
@@ -906,13 +907,13 @@ public class Runner {
             retval.printAndAppendtoStderr("Could not write to processingAccession File for metadata");
             retval.setExitStatus(ReturnValue.METADATAINVALIDIDCHAIN);
             meta.update_processing_event(processingID, retval);
-            meta.update_processing_status(processingID, Metadata.FAILED);
+            meta.update_processing_status(processingID, Processing.Status.failed);
             System.exit(retval.getExitStatus());
           }
         }
       }
 
-      meta.update_processing_status(processingID, Metadata.SUCCESS);
+      meta.update_processing_status(processingID, Processing.Status.success);
     }
   }
 
