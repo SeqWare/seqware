@@ -28,11 +28,7 @@ import org.apache.log4j.Logger;
  */
 public class SequencerRun implements Serializable, Comparable<SequencerRun>, PermissionsAware {
 
-  public enum Status {
-    ready_to_process,
-    not_ready_to_process
-  }
-    private static final long serialVersionUID = 3681328115923390568L;
+  private static final long serialVersionUID = 3681328115923390568L;
     private Integer sequencerRunId;
     private Registration owner;
     private Platform platform;
@@ -42,7 +38,7 @@ public class SequencerRun implements Serializable, Comparable<SequencerRun>, Per
     private String cycleDescriptor;
     private String cycleSequence;
     private Integer cycleCount;
-    private Status status;
+    private SequencerRunStatus status;
     private String cycles;
     private Integer refLane;
     private String filePath;
@@ -385,7 +381,7 @@ public class SequencerRun implements Serializable, Comparable<SequencerRun>, Per
      *
      * @return a {@link java.lang.String} object.
      */
-    public Status getStatus() {
+    public SequencerRunStatus getStatus() {
         return status;
     }
 
@@ -394,7 +390,7 @@ public class SequencerRun implements Serializable, Comparable<SequencerRun>, Per
      *
      * @param status a {@link java.lang.String} object.
      */
-    public void setStatus(Status status) {
+    public void setStatus(SequencerRunStatus status) {
         this.status = status;
     }
 
