@@ -34,16 +34,15 @@ public class UserPhase1 {
     @Test
     public void testMetadataListTables() throws IOException {
         String output = runListTables();
-        Assert.assertTrue("output should include table names", output.contains("TableName") && output.contains("study") && output.contains("experiment"));
-        Assert.assertTrue("output should include table names", output.contains("sample") && output.contains("sequencer_run") && output.contains("ius") && output.contains("lane"));
+        Assert.assertTrue("output should include table names", output.contains("study") && output.contains("experiment"));
+        Assert.assertTrue("output should include table names", output.contains("sample") && (output.contains("sequencer_run") || output.contains("sequencer-run")) && output.contains("ius") && output.contains("lane"));
     }
 
     @Test
     public void testMetadataListFields() throws IOException {
         String output = runListFields();
-        Assert.assertTrue("output should include column names", output.contains("Field\tType\tPossible_Values"));
-        Assert.assertTrue("output should include field names", output.contains("title\tString"));
-        Assert.assertTrue("output should include field names", output.contains("study_type\tInteger"));
+        Assert.assertTrue("output should include field names", output.contains("title"));
+        Assert.assertTrue("output should include field names", output.contains("study_type") || output.contains("study-type"));
     }
 
     @Test
