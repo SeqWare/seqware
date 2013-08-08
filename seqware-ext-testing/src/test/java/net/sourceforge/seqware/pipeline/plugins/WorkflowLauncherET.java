@@ -19,7 +19,6 @@ package net.sourceforge.seqware.pipeline.plugins;
 import java.io.IOException;
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.metadb.util.TestDatabaseCreator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
