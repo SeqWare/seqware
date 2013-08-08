@@ -46,6 +46,7 @@ import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -902,7 +903,7 @@ public class FindAllTheFiles {
       // if the workflow run is not successful and we don't want to see all of
       // the files, then skip it.
       String workflowRunStatus = rv.getAttribute(FindAllTheFiles.WORKFLOW_RUN_STATUS);
-      if (workflowRunStatus != null && WorkflowRun.Status.valueOf(workflowRunStatus) != WorkflowRun.Status.completed) {
+      if (workflowRunStatus != null && WorkflowRunStatus.valueOf(workflowRunStatus) != WorkflowRunStatus.completed) {
         if (!showFailedAndRunning) {
           Log.debug("Not showing failed or running workflow run" + workflowRunStatus);
           continue;

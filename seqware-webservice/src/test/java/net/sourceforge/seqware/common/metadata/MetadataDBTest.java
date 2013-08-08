@@ -21,7 +21,7 @@ import java.util.Date;
 
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.factory.DBAccess;
-import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
 import org.apache.log4j.Logger;
@@ -57,7 +57,7 @@ public class MetadataDBTest extends MetadataWSTest {
         int workflowRunId = 32;
         String pegasusCmd = "test pegasus cmd";
         String workflowTemplate = "test template";
-        WorkflowRun.Status status = WorkflowRun.Status.completed;
+        WorkflowRunStatus status = WorkflowRunStatus.completed;
         String statusCmd = "test command";
         String workingDirectory = "test working dir";
         String dax = "test dax";

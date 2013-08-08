@@ -505,7 +505,7 @@ public class MetadataWSTest {
         logger.info("update_processing_status");
         Date beforeDate = new Timestamp(System.currentTimeMillis());
         int processingID = 5247;
-        Processing.Status status = Processing.Status.success;
+        ProcessingStatus status = ProcessingStatus.success;
         int expResult = ReturnValue.SUCCESS;
         ReturnValue result = instance.update_processing_status(processingID, status);
         Assert.assertEquals(expResult, result.getExitStatus());
@@ -541,7 +541,7 @@ public class MetadataWSTest {
         int workflowRunId = 32;
         String pegasusCmd = "test pegasus cmd";
         String workflowTemplate = "test template";
-        WorkflowRun.Status status = WorkflowRun.Status.completed;
+        WorkflowRunStatus status = WorkflowRunStatus.completed;
         String statusCmd = "test command";
         String workingDirectory = "test working dir";
         String dax = "test dax";

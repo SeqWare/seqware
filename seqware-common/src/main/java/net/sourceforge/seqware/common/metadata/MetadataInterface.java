@@ -22,8 +22,8 @@ import net.sourceforge.seqware.common.model.LibrarySource;
 import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
-import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
+import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleAttribute;
 import net.sourceforge.seqware.common.model.SequencerRun;
@@ -36,6 +36,7 @@ import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
@@ -253,7 +254,7 @@ public interface MetadataInterface {
    * @param status a {@link java.lang.String} object.
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
-  ReturnValue update_processing_status(int processingID, Processing.Status status);
+  ReturnValue update_processing_status(int processingID, ProcessingStatus status);
 
   /**
    * <p>associate_processing_event_with_parents_and_child.</p>
@@ -398,7 +399,7 @@ public interface MetadataInterface {
      * @param workflowEngine the value of workflowEngine
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRun.Status status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles);
+  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRunStatus status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles);
 
   /**
    * <p>findFilesAssociatedWithASample.</p>
@@ -539,7 +540,7 @@ public interface MetadataInterface {
    * @param status a {@link java.lang.String} object.
    * @return a {@link java.util.List} object.
    */
-  public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRun.Status status);
+  public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRunStatus status);
 
   /**
    * <p>getWorkflowRunsByHost.</p>

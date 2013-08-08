@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 
-import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.queryengine.webservice.model.MetadataDB;
 import net.sourceforge.seqware.queryengine.webservice.util.EnvUtil;
 
@@ -259,7 +259,7 @@ public class WorkflowResource extends ServerResource {
                 out.write("workflow_run_accession=" + wrAccession + "\n");
                 iniContents.append("workflow_run_accession=" + wrAccession + "\n");
                 out.close();
-                metadataDB.updateWorkflowRun(wrAccession, "VariantAnnotationWorkflow", "/home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline", iniContents.toString(), command, "/home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline/workflows/VariantAnnotation/VariantAnnotation_0.8.0.ftl", WorkflowRun.Status.submitted);
+                metadataDB.updateWorkflowRun(wrAccession, "VariantAnnotationWorkflow", "/home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline", iniContents.toString(), command, "/home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline/workflows/VariantAnnotation/VariantAnnotation_0.8.0.ftl", WorkflowRunStatus.submitted);
 
                 Request req = getRequest();
                 String host = req.getResourceRef().getHostIdentifier();

@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.common.util.workflowtools;
 
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -147,7 +148,7 @@ public class WorkflowManager {
       run.setIniFile(iniBuffer.toString());
       run.setCommand(wi.getCommand());
       run.setTemplate(wi.getTemplatePath());
-      run.setStatus(WorkflowRun.Status.submitted);
+      run.setStatus(WorkflowRunStatus.submitted);
       run.setOwner(owner);
       
       // FIXME: Deal with workflow Run Params. I am not handling parent files

@@ -25,8 +25,8 @@ import net.sourceforge.seqware.common.model.LibrarySource;
 import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
-import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
+import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleAttribute;
 import net.sourceforge.seqware.common.model.SequencerRun;
@@ -39,6 +39,7 @@ import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
@@ -278,7 +279,7 @@ public class MetadataNoConnection extends Metadata {
 
   /** {@inheritDoc} */
   @Override
-  public ReturnValue update_processing_status(int processingID, Processing.Status status) {
+  public ReturnValue update_processing_status(int processingID, ProcessingStatus status) {
     logger.info("No metadata connection");
     ReturnValue finished = new ReturnValue(ReturnValue.PROCESSING);
     finished.setExitStatus(ReturnValue.SUCCESS);
@@ -327,7 +328,7 @@ public class MetadataNoConnection extends Metadata {
 
   /** {@inheritDoc} */
   @Override
-  public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRun.Status status,
+  public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRunStatus status,
       String statusCmd, String workingDirectory, String dax, String ini, String host,
       String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles) {
     logger.info("No metadata connection");
@@ -447,7 +448,7 @@ public class MetadataNoConnection extends Metadata {
   }
 
   /** {@inheritDoc} */
-  public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRun.Status status) {
+  public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRunStatus status) {
     logger.info("No metadata connection");
     return new ArrayList<WorkflowRun>();
   }

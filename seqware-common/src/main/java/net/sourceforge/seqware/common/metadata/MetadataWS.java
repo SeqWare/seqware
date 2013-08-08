@@ -57,6 +57,7 @@ import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
+import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleAttribute;
 import net.sourceforge.seqware.common.model.SequencerRun;
@@ -70,6 +71,7 @@ import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowParamValue;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.model.lists.ExperimentList;
 import net.sourceforge.seqware.common.model.lists.IUSList;
 import net.sourceforge.seqware.common.model.lists.LaneList;
@@ -693,7 +695,7 @@ public class MetadataWS extends Metadata {
     public ReturnValue add_empty_processing_event(int[] parentIDs) {
         // FIXME: Add a new processing entry
         Processing processing = new Processing();
-        processing.setStatus(Processing.Status.pending);
+        processing.setStatus(ProcessingStatus.pending);
         processing.setCreateTimestamp(new Date());
 
         return addProcessingEventWithParentsAndChildren(processing, convertIDs(parentIDs, "?id="), null);
@@ -706,7 +708,7 @@ public class MetadataWS extends Metadata {
     public ReturnValue add_empty_processing_event_by_parent_accession(int[] parentAccessions) {
         // FIXME: Add a new processing entry
         Processing processing = new Processing();
-        processing.setStatus(Processing.Status.pending);
+        processing.setStatus(ProcessingStatus.pending);
         processing.setCreateTimestamp(new Date());
 
         return addProcessingEventWithParentsAndChildren(processing, convertIDs(parentAccessions, "/"), null);
@@ -1214,7 +1216,7 @@ public class MetadataWS extends Metadata {
      * {@inheritDoc}
      */
     @Override
-    public ReturnValue update_processing_status(int processingID, Processing.Status status) {
+    public ReturnValue update_processing_status(int processingID, ProcessingStatus status) {
         try {
             Processing processing = ll.findProcessing("?id=" + processingID);
 
@@ -1268,7 +1270,7 @@ public class MetadataWS extends Metadata {
      * @param workflowEngine the value of workflowEngine
      */
     @Override
-    public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRun.Status status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles) {
+    public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRunStatus status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles) {
         int accession = 0;
         try {
             WorkflowRun wr = ll.findWorkflowRun("?id=" + workflowRunId);
@@ -1474,7 +1476,7 @@ public class MetadataWS extends Metadata {
      * {@inheritDoc}
      */
     @Override
-    public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRun.Status status) {
+    public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRunStatus status) {
         try {
             String searchString = "?status=" + status + "";
             return ll.findWorkflowRuns(searchString);

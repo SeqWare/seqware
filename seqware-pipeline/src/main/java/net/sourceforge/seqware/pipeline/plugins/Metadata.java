@@ -30,6 +30,7 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
+
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -307,7 +308,7 @@ public class Metadata extends Plugin {
             metadata.update_processing_workflow_run(processingId, workflowRunAccession);
             //SEQWARE-1692 - need to update workflow with the status
             WorkflowRun wr = metadata.getWorkflowRun(workflowRunAccession);
-            wr.setStatus(WorkflowRun.Status.valueOf(fields.get("status")));
+            wr.setStatus(WorkflowRunStatus.valueOf(fields.get("status")));
             wr.setStdOut(fields.get("stdout"));
             wr.setStdErr(fields.get("stderr"));
             metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
