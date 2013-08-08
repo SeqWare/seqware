@@ -33,7 +33,7 @@ public class UserPhase3 {
     public void createExperimentAndLinkToStudy() throws IOException{
         String output = createSampleAndLinkToExperiment();
         String sw_accession  = OldUserTutorialSuiteET.getAndCheckSwid(output);
-        AccessionMap.accessionMap.put(getSampleString(), sw_accession);
+        AccessionMap.accessionMap.put(SAMPLE, sw_accession);
     }
 
     protected String createSampleAndLinkToExperiment() throws IOException {
@@ -42,9 +42,5 @@ public class UserPhase3 {
                 , ReturnValue.SUCCESS
                 , null);
         return output;
-    }
-    
-    public String getSampleString(){
-        return this.getClass() + ".SAMPLE";
     }
 }
