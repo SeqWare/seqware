@@ -1,11 +1,13 @@
 package net.sourceforge.solexatools.webapp.controller;
 
 import com.google.gson.Gson;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -17,6 +19,7 @@ import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.solexatools.Security;
 import net.sourceforge.solexatools.util.PaginationUtil;
 import net.sourceforge.solexatools.webapp.metamodel.Flexigrid;
@@ -161,17 +164,17 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
 	    //cellsModel.add(iUSToHtml(workflowRun.getIus()));
 	    //cellsModel.add(laneToHtml(workflowRun.getLanes()));
 	    cellsModel.add(workflowRun.getHost());
-	    if (WorkflowRun.Status.failed == workflowRun.getStatus()) {
+	    if (WorkflowRunStatus.failed == workflowRun.getStatus()) {
 		cellsModel.add("<a href='#' popup-stdout='true' tt='wfr' stdout='" + workflowRun.getStdOut() + "'>output</a> / <a href='#' popup-stderr='true' tt='wfr' stderr='" + workflowRun.getStdErr() + "' >errors</a>");
 	    } else {
 		cellsModel.add("");
 	    }
 	    cellsModel.add("<a href='#' popup-stdout='true' tt='wfr' stdout='" + workflowRun.getIniFile() + "'>parameters</a>");
-            if (WorkflowRun.Status.running == workflowRun.getStatus()) {
+            if (WorkflowRunStatus.running == workflowRun.getStatus()) {
               cellsModel.add("<a href='#' popup-workflow-cancel='true' tt='wfrr' object-id='"+workflowRun.getWorkflowRunId()+"'>cancel</a>");
-            } else if (WorkflowRun.Status.cancelled == workflowRun.getStatus()) {
+            } else if (WorkflowRunStatus.cancelled == workflowRun.getStatus()) {
               cellsModel.add("<a href='#' popup-workflow-retry='true' tt='wfrr' object-id='"+workflowRun.getWorkflowRunId()+"'>retry</a>");
-            } else if (WorkflowRun.Status.failed == workflowRun.getStatus()) {
+            } else if (WorkflowRunStatus.failed == workflowRun.getStatus()) {
               cellsModel.add("<a href='#' popup-workflow-retry='true' tt='wfrr' object-id='"+workflowRun.getWorkflowRunId()+"'>retry</a>");
             } else {
               cellsModel.add("");

@@ -100,7 +100,7 @@ public class SequencerRunDTO implements Serializable {
 	public int getErrorCnt() {
 		int errorCnt = 0;
 		for (Processing proc : processings) {
-			if (proc.getStatus() == Processing.Status.failed) {
+			if (proc.getStatus() == ProcessingStatus.failed) {
 				errorCnt++;
 			}
 		}
@@ -115,8 +115,8 @@ public class SequencerRunDTO implements Serializable {
 	public int getProcessingCnt() {
 		int errorCnt = 0;
 		for (Processing proc : processings) {
-			if (proc.getStatus() == Processing.Status.running ||
-			    proc.getStatus() == Processing.Status.pending) {
+			if (proc.getStatus() == ProcessingStatus.running ||
+			    proc.getStatus() == ProcessingStatus.pending) {
 				errorCnt++;
 			}
 		}

@@ -2,7 +2,7 @@ package net.sourceforge.seqware.common.dao;
 
 import java.util.List;
 
-import net.sourceforge.seqware.common.model.Invoice.State;
+import net.sourceforge.seqware.common.model.InvoiceState;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Invoice;
@@ -77,7 +77,7 @@ public interface InvoiceDAO {
      * @param state a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Invoice> list(Registration registration, State state);
+    public List<Invoice> list(Registration registration, InvoiceState state);
 
   /**
    * <p>findByID.</p>

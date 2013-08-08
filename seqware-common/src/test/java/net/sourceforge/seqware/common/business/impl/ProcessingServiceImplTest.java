@@ -13,6 +13,7 @@ import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.hibernate.InSessionExecutions;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Processing;
+import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.RegistrationDTO;
 import net.sourceforge.seqware.common.util.Log;
 
@@ -74,7 +75,7 @@ public class ProcessingServiceImplTest extends BaseUnit {
     Processing newProcessing = new Processing();
     newProcessing.setOwner(regDto);
     newProcessing.setFiles(new HashSet<File>());
-    newProcessing.setStatus(Processing.Status.success);
+    newProcessing.setStatus(ProcessingStatus.success);
     newProcessing.setExitStatus(0);
     newProcessing.setProcessExitStatus(0);
     newProcessing.setRunStartTimestamp(null);

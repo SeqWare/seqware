@@ -40,6 +40,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
 import net.sourceforge.seqware.common.metadata.Metadata;
@@ -48,6 +49,7 @@ import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -60,6 +62,7 @@ import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
 import net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import net.sourceforge.seqware.pipeline.tools.SetOperations;
+
 import org.apache.commons.lang.StringUtils;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -560,7 +563,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * @param status
      * @return 
      */
-    protected PREVIOUS_RUN_STATUS determineStatus(WorkflowRun.Status generateStatus){
+    protected PREVIOUS_RUN_STATUS determineStatus(WorkflowRunStatus generateStatus){
       switch(generateStatus){
       case completed: return PREVIOUS_RUN_STATUS.COMPLETED;
       case failed: return PREVIOUS_RUN_STATUS.FAILED;

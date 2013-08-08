@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.seqware.common.dao.InvoiceDAO;
-import net.sourceforge.seqware.common.model.Invoice.State;
+import net.sourceforge.seqware.common.model.InvoiceState;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Invoice;
@@ -98,7 +98,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
   }
   
   /** {@inheritDoc} */
-  public List<Invoice> list(Registration registration, State state) {
+  public List<Invoice> list(Registration registration, InvoiceState state) {
     ArrayList<Invoice> invoices = new ArrayList<Invoice>();
 
     // Limit the invoices to those owned by the user
