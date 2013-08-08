@@ -6,10 +6,20 @@
 # watch qstat -f"
 # you should then see your job run and also see STDIN.* files get created with the hostname in them
 
+# first, fix the /etc/hosts file since SGE wants reverse lookup to work
+cp /etc/hosts /tmp/hosts
+echo `/sbin/ifconfig  | grep -A 3 eth0 | grep 'inet addr' | perl -e 'while(<>){ chomp; /inet addr:(\d+\.\d+\.\d+\.\d+)/; print $1; }'` `hostname` > /etc/hosts
+cat /tmp/hosts >> /etc/hosts
+
 # get packages
 apt-get update
 export DEBIAN_FRONTEND=noninteractive
 apt-get -q -y --force-yes install gridengine-client gridengine-common gridengine-exec gridengine-master
+
+# restart
+/etc/init.d/gridengine-exec stop
+/etc/init.d/gridengine-master restart
+/etc/init.d/gridengine-exec start
 
 # configure
 export HOST=`hostname`
@@ -52,4 +62,8 @@ qconf -aattr queue hostlist @allhosts main.q
 
 qconf -aattr queue slots "[$HOST=1]" main.q
 
+# restart
+/etc/init.d/gridengine-exec stop
+/etc/init.d/gridengine-master restart
+/etc/init.d/gridengine-exec start
 
