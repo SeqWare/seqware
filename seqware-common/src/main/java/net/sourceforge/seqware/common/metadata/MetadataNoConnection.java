@@ -15,6 +15,7 @@ import java.util.TreeSet;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
 import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
+import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.FileAttribute;
@@ -352,7 +353,7 @@ public class MetadataNoConnection extends Metadata {
   @Override
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
       String statusCmd, String workingDirectory, String dax, String ini, String host,
-      String stdErr, String stdOut, String workflowEngine) {
+      String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles) {
     logger.info("No metadata connection");
     ReturnValue finished = new ReturnValue(ReturnValue.PROCESSING);
     finished.setExitStatus(ReturnValue.SUCCESS);
@@ -738,7 +739,12 @@ public class MetadataNoConnection extends Metadata {
     public List<Sample> getParentSamplesFrom(int childSampleAccession) {
         return new ArrayList<Sample>();
     }
-
+    
+    @Override
+    public List<WorkflowRun> getWorkflowRunsAssociatedWithInputFiles(List<Integer> fileAccessions) {
+        return new ArrayList<WorkflowRun>();
+    }
+    
     @Override
     public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
         return new ArrayList<WorkflowRun>();

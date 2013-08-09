@@ -56,7 +56,7 @@ public class MetadataTest extends PluginTest {
     @Before
     @Override
     public void setUp() {
-        super.setUp();
+        super.setUp();        
         instance = new Metadata();
         instance.setMetadata(metadata);
 

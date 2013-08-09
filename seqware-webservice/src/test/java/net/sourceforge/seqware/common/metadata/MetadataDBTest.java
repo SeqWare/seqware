@@ -64,7 +64,7 @@ public class MetadataDBTest extends MetadataWSTest {
         String host = "localhost";
         String workflowEngine = "test engine";
         int expResult = 0;
-        ReturnValue result = instance.update_workflow_run(workflowRunId, pegasusCmd, workflowTemplate, status, statusCmd, workingDirectory, dax, ini, host, null, null, workflowEngine);
+        ReturnValue result = instance.update_workflow_run(workflowRunId, pegasusCmd, workflowTemplate, status, statusCmd, workingDirectory, dax, ini, host, null, null, workflowEngine, null);
         Assert.assertEquals(expResult, result.getReturnValue());
         testTimestamp("select update_tstmp from workflow_run "
                 + "where workflow_run_id=32;", "update_tstmp", beforeDate);
@@ -158,4 +158,13 @@ public class MetadataDBTest extends MetadataWSTest {
         /** test not supported in direct DB mode */
     }
     
+    @Test 
+    public void testUpdateWorkflowRunWithInputFiles(){
+        /** test not supported in direct DB mode */
+    }
+    
+     @Test
+    public void getDirectFilesAssociatedWithWorkflowRuns() {
+         /** test not supported in direct DB mode */
+     }
 }
