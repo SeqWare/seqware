@@ -394,9 +394,9 @@ public class PluginRunnerET {
             Log.info("Attempting to export parameters for  " + name);
             File workflowIni = File.createTempFile("workflow", "ini");
             String listCommand = " workflow ini --accession " + accession + " --out " + workflowIni.getAbsolutePath();
-            listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, null);
+            ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, null);
             // new command line does not go to stdout
-            FileUtils.readFileToString(workflowIni);
+            listOutput = FileUtils.readFileToString(workflowIni);
         } else {
             Log.info("Attempting to export parameters for  " + name);
             String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession " + accession;
