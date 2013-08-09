@@ -59,7 +59,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
   /** {@inheritDoc} */
   public void insert(String[] emails, InvitationParams invitationParams, MailSender sender) {
-    String isInvitatonCode = invitationParams.getIsInvitationCode();
+    boolean isInvitatonCode = invitationParams.getIsInvitationCode();
     String subjectEmail = invitationParams.getSubjectEmail();
     String templateEmail = invitationParams.getTemplateEmail();
 
@@ -73,7 +73,7 @@ public class RegistrationServiceImpl implements RegistrationService {
       String email = emails[index].trim().toLowerCase();
 
       String invitationCode = null;
-      if ("true".equals(isInvitatonCode)) {
+      if (isInvitatonCode) {
         invitationCode = ric.nextInvitationCode();
       }
 

@@ -45,6 +45,7 @@ import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
+import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Study;
@@ -53,8 +54,8 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
-import org.apache.commons.dbutils.DbUtils;
 
+import org.apache.commons.dbutils.DbUtils;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -165,7 +166,7 @@ public class ProcessIDResource extends DatabaseIDResource {
                 } else {
                     processing.setOwner(registration);
                 }
-                processing.setStatus(p.getStatus() == null ? "pending" : p.getStatus());
+                processing.setStatus(p.getStatus() == null ? ProcessingStatus.pending : p.getStatus());
                 processing.setTaskGroup(p.isTaskGroup());
                 if (p.getRunStartTimestamp() != null) {
                     processing.setRunStartTimestamp(p.getRunStartTimestamp());

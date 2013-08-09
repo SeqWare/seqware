@@ -82,11 +82,8 @@ public interface ProcessingService {
 
   /**
    * <p>delete.</p>
-   *
-   * @param processing a {@link net.sourceforge.seqware.common.model.Processing} object.
-   * @param deleteRealFiles a {@link java.lang.String} object.
    */
-  public void delete(Processing processing, String deleteRealFiles);
+  public void delete(Processing processing, boolean deleteRealFiles);
 
   // public List<Processing> list();
   // public Processing findByExperiment(Integer expID);

@@ -16,6 +16,7 @@ import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.ShareStudy;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyType;
+import net.sourceforge.seqware.common.util.Bool;
 import net.sourceforge.solexatools.Security;
 import net.sourceforge.solexatools.util.SetNodeIdInSession;
 
@@ -325,7 +326,7 @@ public class StudyController extends MultiActionController {
     Study study = getRequestedStudy(request);
 
     ServletContext context = this.getServletContext();
-    String deleteRealFiles = context.getInitParameter("delete.files.for.node.deletion");
+    boolean deleteRealFiles = Bool.parse(context.getInitParameter("delete.files.for.node.deletion"));
 
     if (study != null) {
       if (registration.equals(study.getOwner()) || registration.isLIMSAdmin()) {

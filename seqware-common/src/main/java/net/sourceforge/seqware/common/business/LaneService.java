@@ -62,11 +62,8 @@ public interface LaneService {
 
     /**
      * <p>delete.</p>
-     *
-     * @param lane a {@link net.sourceforge.seqware.common.model.Lane} object.
-     * @param deleteRealFiles a {@link java.lang.String} object.
      */
-    public void delete(Lane lane, String deleteRealFiles);
+    public void delete(Lane lane, boolean deleteRealFiles);
 
     /**
      * <p>findByName.</p>

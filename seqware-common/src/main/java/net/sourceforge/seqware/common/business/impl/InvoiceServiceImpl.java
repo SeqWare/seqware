@@ -6,10 +6,13 @@ import java.util.SortedSet;
 
 import net.sourceforge.seqware.common.business.InvoiceService;
 import net.sourceforge.seqware.common.dao.InvoiceDAO;
+import net.sourceforge.seqware.common.model.InvoiceState;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Invoice;
 //import net.sourceforge.seqware.common.model.InvoiceParam;
+
+
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -75,7 +78,7 @@ public class InvoiceServiceImpl implements InvoiceService {
   }
   
   /** {@inheritDoc} */
-  public List<Invoice> list(Registration registration, String state) {
+  public List<Invoice> list(Registration registration, InvoiceState state) {
     return invoiceDAO.list(registration, state);
   }
 
