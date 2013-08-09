@@ -558,33 +558,37 @@ public class MetadataWS extends Metadata {
         // Associate the processing entry with the zero or more parents
         if (parentIds != null && parentIds.length != 0 && !(parentIds[0].trim().equals("/0"))) {
             for (String parentID : parentIds) {
-                Processing pr = ll.existsProcessing(parentID);
-                Lane l = ll.existsLane(parentID);
-                IUS i = ll.existsIUS(parentID);
-                SequencerRun sr = ll.existsSequencerRun(parentID);
-                Study study = ll.existsStudy(parentID);
-                Experiment exp = ll.existsExperiment(parentID);
-                Sample samp = ll.existsSample(parentID);
+                Processing pr;
+                Lane l;
+                IUS i;
+                SequencerRun sr;
+                Study study;
+                Experiment exp;
+                Sample samp;
+                
+                // TODO: I've moved the fetching so that it only occurs when needed,
+                //       but should we really just associate to the first entity that
+                //       happens to have the (not globally unique) ID?
 
-                if (pr != null) {
+                if ((pr = ll.existsProcessing(parentID)) != null) {
                     Log.debug("Adding parent processing " + pr.getSwAccession());
                     p.getParents().add(pr);
-                } else if (l != null) {
+                } else if ((l = ll.existsLane(parentID)) != null) {
                     Log.debug("Adding parent lane " + l.getSwAccession());
                     p.getLanes().add(l);
-                } else if (i != null) {
+                } else if ((i = ll.existsIUS(parentID)) != null) {
                     Log.debug("Adding parent ius " + i.getSwAccession());
                     p.getIUS().add(i);
-                } else if (sr != null) {
+                } else if ((sr = ll.existsSequencerRun(parentID)) != null) {
                     Log.debug("Adding parent sequencer_run " + sr.getSwAccession());
                     p.getSequencerRuns().add(sr);
-                } else if (study != null) {
+                } else if ((study = ll.existsStudy(parentID)) != null) {
                     Log.debug("Adding parent study " + study.getSwAccession());
                     p.getStudies().add(study);
-                } else if (exp != null) {
+                } else if ((exp = ll.existsExperiment(parentID)) != null) {
                     Log.debug("Adding parent experiment " + exp.getSwAccession());
                     p.getExperiments().add(exp);
-                } else if (samp != null) {
+                } else if ((samp = ll.existsSample(parentID)) != null) {
                     Log.debug("Adding parent sample " + samp.getSwAccession());
                     p.getSamples().add(samp);
                 } else {
