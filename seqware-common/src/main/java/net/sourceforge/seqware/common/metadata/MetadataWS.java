@@ -57,6 +57,7 @@ import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
+import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleAttribute;
 import net.sourceforge.seqware.common.model.SequencerRun;
@@ -70,6 +71,7 @@ import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowParamValue;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.model.lists.ExperimentList;
 import net.sourceforge.seqware.common.model.lists.IUSList;
 import net.sourceforge.seqware.common.model.lists.LaneList;
@@ -556,33 +558,37 @@ public class MetadataWS extends Metadata {
         // Associate the processing entry with the zero or more parents
         if (parentIds != null && parentIds.length != 0 && !(parentIds[0].trim().equals("/0"))) {
             for (String parentID : parentIds) {
-                Processing pr = ll.existsProcessing(parentID);
-                Lane l = ll.existsLane(parentID);
-                IUS i = ll.existsIUS(parentID);
-                SequencerRun sr = ll.existsSequencerRun(parentID);
-                Study study = ll.existsStudy(parentID);
-                Experiment exp = ll.existsExperiment(parentID);
-                Sample samp = ll.existsSample(parentID);
+                Processing pr;
+                Lane l;
+                IUS i;
+                SequencerRun sr;
+                Study study;
+                Experiment exp;
+                Sample samp;
+                
+                // TODO: I've moved the fetching so that it only occurs when needed,
+                //       but should we really just associate to the first entity that
+                //       happens to have the (not globally unique) ID?
 
-                if (pr != null) {
+                if ((pr = ll.existsProcessing(parentID)) != null) {
                     Log.debug("Adding parent processing " + pr.getSwAccession());
                     p.getParents().add(pr);
-                } else if (l != null) {
+                } else if ((l = ll.existsLane(parentID)) != null) {
                     Log.debug("Adding parent lane " + l.getSwAccession());
                     p.getLanes().add(l);
-                } else if (i != null) {
+                } else if ((i = ll.existsIUS(parentID)) != null) {
                     Log.debug("Adding parent ius " + i.getSwAccession());
                     p.getIUS().add(i);
-                } else if (sr != null) {
+                } else if ((sr = ll.existsSequencerRun(parentID)) != null) {
                     Log.debug("Adding parent sequencer_run " + sr.getSwAccession());
                     p.getSequencerRuns().add(sr);
-                } else if (study != null) {
+                } else if ((study = ll.existsStudy(parentID)) != null) {
                     Log.debug("Adding parent study " + study.getSwAccession());
                     p.getStudies().add(study);
-                } else if (exp != null) {
+                } else if ((exp = ll.existsExperiment(parentID)) != null) {
                     Log.debug("Adding parent experiment " + exp.getSwAccession());
                     p.getExperiments().add(exp);
-                } else if (samp != null) {
+                } else if ((samp = ll.existsSample(parentID)) != null) {
                     Log.debug("Adding parent sample " + samp.getSwAccession());
                     p.getSamples().add(samp);
                 } else {
@@ -693,7 +699,7 @@ public class MetadataWS extends Metadata {
     public ReturnValue add_empty_processing_event(int[] parentIDs) {
         // FIXME: Add a new processing entry
         Processing processing = new Processing();
-        processing.setStatus(Metadata.PENDING);
+        processing.setStatus(ProcessingStatus.pending);
         processing.setCreateTimestamp(new Date());
 
         return addProcessingEventWithParentsAndChildren(processing, convertIDs(parentIDs, "?id="), null);
@@ -706,7 +712,7 @@ public class MetadataWS extends Metadata {
     public ReturnValue add_empty_processing_event_by_parent_accession(int[] parentAccessions) {
         // FIXME: Add a new processing entry
         Processing processing = new Processing();
-        processing.setStatus(Metadata.PENDING);
+        processing.setStatus(ProcessingStatus.pending);
         processing.setCreateTimestamp(new Date());
 
         return addProcessingEventWithParentsAndChildren(processing, convertIDs(parentAccessions, "/"), null);
@@ -1214,7 +1220,7 @@ public class MetadataWS extends Metadata {
      * {@inheritDoc}
      */
     @Override
-    public ReturnValue update_processing_status(int processingID, String status) {
+    public ReturnValue update_processing_status(int processingID, ProcessingStatus status) {
         try {
             Processing processing = ll.findProcessing("?id=" + processingID);
 
@@ -1268,7 +1274,7 @@ public class MetadataWS extends Metadata {
      * @param workflowEngine the value of workflowEngine
      */
     @Override
-    public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles) {
+    public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRunStatus status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles) {
         int accession = 0;
         try {
             WorkflowRun wr = ll.findWorkflowRun("?id=" + workflowRunId);
@@ -1474,7 +1480,7 @@ public class MetadataWS extends Metadata {
      * {@inheritDoc}
      */
     @Override
-    public List<WorkflowRun> getWorkflowRunsByStatus(String status) {
+    public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRunStatus status) {
         try {
             String searchString = "?status=" + status + "";
             return ll.findWorkflowRuns(searchString);

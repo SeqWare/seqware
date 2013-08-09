@@ -214,7 +214,12 @@
 
         <property name="startDate" column="start_date" type="date" not-null="true"/>
         <property name="endDate" column="end_date" type="date" not-null="true"/>
-        <property name="state" column="state" type="string"/>
+        <property name="state" column="state">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">net.sourceforge.seqware.common.model.InvoiceState</param>
+                <param name="type">12</param>
+            </type>
+        </property>
         <property name="finalized" column="finalized" type="boolean"/>
         <property name="fullyPaid" column="fully_paid" type="boolean"/>
         <property name="paidAmount" column="paid_amount" type="double"/>
@@ -421,7 +426,12 @@
 
         <property name="name" column="name" type="string"/>
 
-        <property name="status" column="status" type="string"/>
+        <property name="status" column="status">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">net.sourceforge.seqware.common.model.WorkflowRunStatus</param>
+                <param name="type">12</param>
+            </type>
+        </property>
         <property name="statusCmd" column="status_cmd" type="string"/>
         <property name="seqwareRevision" column="seqware_revision" type="string"/>
         <property name="host" column="host" type="string"/>
@@ -1329,7 +1339,12 @@
         </property>
 
         <property name="description" column="description" type="string"/>
-        <property name="status" column="status" type="string"/>
+        <property name="status" column="status">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">net.sourceforge.seqware.common.model.SequencerRunStatus</param>
+                <param name="type">12</param>
+            </type>
+        </property>
         <property name="instrumentName" column="instrument_name" type="string"/>
         <property name="cycleDescriptor" column="cycle_descriptor" type="string"/>
         <property name="cycleCount" column="cycle_count" type="integer"/>
@@ -1428,7 +1443,12 @@
         <version column="update_tstmp" name="updateTimestamp" type="timestamp" unsaved-value="null"/>
 
         <property name="description" column="description" type="string"/>
-        <property name="status" column="status" type="string"/>
+        <property name="status" column="status">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">net.sourceforge.seqware.common.model.SequencerRunStatus</param>
+                <param name="type">12</param>
+            </type>
+        </property>
         <property name="instrumentName" column="instrument_name" type="string"/>
         <property name="cycleDescriptor" column="cycle_descriptor" type="string"/>
         <property name="cycleCount" column="cycle_count" type="integer"/>
@@ -2089,7 +2109,12 @@
         <property name="taskGroup" column="task_group" type="boolean"/>
         <property name="swAccession" column="sw_accession" type="integer" generated="insert"/>
         <property name="algorithm" column="algorithm" type="string"/>
-        <property name="status" column="status" type="string"/>
+        <property name="status" column="status">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">net.sourceforge.seqware.common.model.ProcessingStatus</param>
+                <param name="type">12</param>
+            </type>
+        </property>
         <property name="exitStatus" column="exit_status" type="integer"/>
         <property name="processExitStatus" column="process_exit_status" type="integer"/>
         <property name="description" column="description" type="string"/>

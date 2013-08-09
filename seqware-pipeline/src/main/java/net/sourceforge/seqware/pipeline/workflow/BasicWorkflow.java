@@ -17,6 +17,7 @@ import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataNoConnection;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
@@ -520,7 +521,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS || statusCmd == null) {
       // then something went wrong trying to call pegasus
       if (metadataWriteback) {
-        metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "failed", statusCmd,
+        metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.failed, statusCmd,
                                      wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
                                      retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
       }
@@ -529,7 +530,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
     // now save to the DB
     if (metadataWriteback) {
-      metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "pending", statusCmd,
+      metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.pending, statusCmd,
                                    wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
                                    retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
     }
@@ -552,7 +553,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
       if (watchedResult.getExitStatus() == ReturnValue.SUCCESS) {
         success = true;
         if (metadataWriteback) {
-          metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "completed", statusCmd,
+          metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.completed, statusCmd,
                                        wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
                                        retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
         }
@@ -561,7 +562,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
         Log.error("ERROR: problems watching workflow");
         // need to save back to the DB if watching
         if (metadataWriteback) {
-          metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "failed", statusCmd,
+          metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.failed, statusCmd,
                                        wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
                                        watchedResult.getStderr(), watchedResult.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
         }
@@ -704,7 +705,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
         mapBuffer.append(key + "=" + map.get(key) + "\n");
       }
 
-      this.metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), "submitted", null,
+      this.metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.submitted, null,
                                         null, null, mapBuffer.toString(), scheduledHost, null,
                                         null, workflowEngine, inputFiles);
 

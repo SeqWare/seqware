@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import net.sourceforge.seqware.common.business.IUSService;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Registration;
+import net.sourceforge.seqware.common.util.Bool;
 import net.sourceforge.solexatools.Security;
 import net.sourceforge.solexatools.util.Constant;
 
@@ -103,7 +104,7 @@ public class IUSController extends MultiActionController {
 		IUS						ius				= getRequestedIUS(request);
 		
 		ServletContext context = this.getServletContext();
-		String deleteRealFiles = context.getInitParameter("delete.files.for.node.deletion");
+		boolean deleteRealFiles = Bool.parse(context.getInitParameter("delete.files.for.node.deletion"));
 
 		if (ius != null) {
 		    if(registration.equals(ius.getOwner()) || registration.isLIMSAdmin()){
