@@ -12,6 +12,7 @@ import java.util.SortedSet;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
 import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
+import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.FileAttribute;
@@ -373,6 +374,18 @@ public interface MetadataInterface {
   WorkflowRun getWorkflowRun(int workflowRunAccession);
   
   /**
+   * Returns the workflow_runs associated with a group of input files.
+   * 
+   * Specifically, this resource will return all workflow runs that use at least one of the 
+   * input file accessions
+   * 
+   * @param fileAccessions
+   * @return 
+   */
+  List<WorkflowRun> getWorkflowRunsAssociatedWithInputFiles(List<Integer> fileAccessions);
+  
+  
+  /**
    * Returns the workflow_runs associated with a group of files.
    * Search types are defined as:
    * @param fileAccessions
@@ -415,8 +428,7 @@ public interface MetadataInterface {
      * @param workflowEngine the value of workflowEngine
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-    
-  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine);
+  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles);
 
   /**
    * <p>findFilesAssociatedWithASample.</p>
