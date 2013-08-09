@@ -383,7 +383,6 @@ public class SequencerRun implements Serializable, Comparable<SequencerRun>, Per
      *
      * @return a {@link java.lang.String} object.
      */
-    @Enumerated(EnumType.STRING)
     public SequencerRunStatus getStatus() {
         return status;
     }

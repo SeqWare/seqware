@@ -449,7 +449,6 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
    *
    * @return the status of the workflow run
    */
-  @Enumerated(EnumType.STRING)
   public WorkflowRunStatus getStatus() {
     return status;
   }

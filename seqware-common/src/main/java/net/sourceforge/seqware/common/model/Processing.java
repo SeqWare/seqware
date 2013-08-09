@@ -379,7 +379,6 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     this.processingId = processingId;
   }
 
-  @Enumerated(EnumType.STRING)
   public ProcessingStatus getStatus() {
     return status;
   }
