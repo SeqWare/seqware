@@ -217,6 +217,7 @@
         <property name="state" column="state">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">net.sourceforge.seqware.common.model.InvoiceState</param>
+                <param name="type">12</param>
             </type>
         </property>
         <property name="finalized" column="finalized" type="boolean"/>
@@ -428,6 +429,7 @@
         <property name="status" column="status">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">net.sourceforge.seqware.common.model.WorkflowRunStatus</param>
+                <param name="type">12</param>
             </type>
         </property>
         <property name="statusCmd" column="status_cmd" type="string"/>
@@ -1340,6 +1342,7 @@
         <property name="status" column="status">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">net.sourceforge.seqware.common.model.SequencerRunStatus</param>
+                <param name="type">12</param>
             </type>
         </property>
         <property name="instrumentName" column="instrument_name" type="string"/>
@@ -1443,6 +1446,7 @@
         <property name="status" column="status">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">net.sourceforge.seqware.common.model.SequencerRunStatus</param>
+                <param name="type">12</param>
             </type>
         </property>
         <property name="instrumentName" column="instrument_name" type="string"/>
@@ -2108,6 +2112,7 @@
         <property name="status" column="status">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">net.sourceforge.seqware.common.model.ProcessingStatus</param>
+                <param name="type">12</param>
             </type>
         </property>
         <property name="exitStatus" column="exit_status" type="integer"/>
