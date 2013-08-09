@@ -188,7 +188,6 @@ public class Invoice implements Serializable, Comparable<Invoice>, PermissionsAw
      *
      * @return a {@link java.lang.String} object.
      */
-    @Enumerated(EnumType.STRING)
     public InvoiceState getState() {
         return state;
     }
