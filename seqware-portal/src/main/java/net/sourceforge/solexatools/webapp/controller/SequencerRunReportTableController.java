@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.seqware.common.business.FileReportService;
 import net.sourceforge.seqware.common.business.SampleReportService;
+import net.sourceforge.seqware.common.business.SampleReportService.Status;
 import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.model.FileReportRow;
 import net.sourceforge.seqware.common.model.Processing;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
+
 import net.sourceforge.seqware.common.util.Log;
 
 @Controller
@@ -67,13 +69,6 @@ public class SequencerRunReportTableController implements Serializable {
   public final static String CSV_TYPE = "csvtype";
   /** Constant <code>CHECK="check"</code> */
   public final static String CHECK = "check";
-
-  // Statuses
-  private final static String SUCCESS = "completed";
-  private final static String PENDING = "pending";
-  private final static String RUNNING = "running";
-  private final static String FAILED = "failed";
-  private final static String NOT_STARTED = "notstarted";
 
   // Sortfields
   /** Constant <code>FILE_SAMPLE="f_sample"</code> */
@@ -333,10 +328,10 @@ public class SequencerRunReportTableController implements Serializable {
       sb.append(removeNulls(row.getIus().getSwAccession().toString())).append("\t");
       sb.append(removeNulls(row.getChildSample().getTitle())).append("\t");
       for (Workflow workflow : workflows) {
-        String status = sampleReportService.getStatus(row.getStudy(), row.getChildSample(), row.getIus(),
+        Status status = sampleReportService.getStatus(row.getStudy(), row.getChildSample(), row.getIus(),
             row.getLane(), row.getSequencerRun(), workflow);
         if (status == null) {
-          sb.append(NOT_STARTED).append("\t");
+          sb.append(Status.notstarted.name()).append("\t");
         } else {
           sb.append(status).append("\t");
         }
@@ -422,26 +417,27 @@ public class SequencerRunReportTableController implements Serializable {
   private void createWorkflowCharts(ModelAndView modelAndView, SequencerRun seqRun) {
     Map<Workflow, String> workflowCharts = new HashMap<Workflow, String>();
     for (Workflow workflow : workflows) {
-      List<String> statuses = sampleReportService.getStatusesForWorkflow(seqRun, workflow);
-      Map<String, Integer> statusCount = new LinkedHashMap<String, Integer>();
-      statusCount.put(FAILED, 0);
-      statusCount.put(PENDING, 0);
-      statusCount.put(RUNNING, 0);
-      statusCount.put(NOT_STARTED, 0);
-      statusCount.put(SUCCESS, 0);
-      for (String status : statuses) {
+      List<Status> statuses = sampleReportService.getStatusesForWorkflow(seqRun, workflow);
+      Map<Status, Integer> statusCount = new LinkedHashMap<Status, Integer>();
+      statusCount.put(Status.failed, 0);
+      statusCount.put(Status.pending, 0);
+      statusCount.put(Status.running, 0);
+      statusCount.put(Status.notstarted, 0);
+      statusCount.put(Status.completed, 0);
+      for (Status status : statuses) {
         int count = sampleReportService.countOfStatus(seqRun, workflow, status);
         statusCount.put(status, count);
       }
       int current = 0;
       StringBuilder out = new StringBuilder();
-      for (String status : statusCount.keySet()) {
+      for (Status status : statusCount.keySet()) {
         current++;
         int count = statusCount.get(status);
-        if (NOT_STARTED.equals(status)) {
-          status = "not started";
+        String sStatus = status.toString();
+        if (Status.notstarted == status) {
+          sStatus = "not started";
         }
-        out.append("['" + status + "'," + count + "]");
+        out.append("['" + sStatus + "'," + count + "]");
         if (current != statusCount.keySet().size()) {
           out.append(",");
         }
@@ -453,26 +449,27 @@ public class SequencerRunReportTableController implements Serializable {
   }
 
   private void createOverallChart(ModelAndView modelAndView, SequencerRun seqRun) {
-    List<String> statuses = sampleReportService.getStatusesForSequencerRun(seqRun);
-    Map<String, Integer> statusCount = new LinkedHashMap<String, Integer>();
-    statusCount.put(FAILED, 0);
-    statusCount.put(PENDING, 0);
-    statusCount.put(RUNNING, 0);
-    statusCount.put(NOT_STARTED, 0);
-    statusCount.put(SUCCESS, 0);
-    for (String status : statuses) {
+    List<Status> statuses = sampleReportService.getStatusesForSequencerRun(seqRun);
+    Map<Status, Integer> statusCount = new LinkedHashMap<Status, Integer>();
+    statusCount.put(Status.failed, 0);
+    statusCount.put(Status.pending, 0);
+    statusCount.put(Status.running, 0);
+    statusCount.put(Status.notstarted, 0);
+    statusCount.put(Status.completed, 0);
+    for (Status status : statuses) {
       int count = sampleReportService.countOfStatus(seqRun, status);
       statusCount.put(status, count);
     }
     int current = 0;
     StringBuilder out = new StringBuilder();
-    for (String status : statusCount.keySet()) {
+    for (Status status : statusCount.keySet()) {
       current++;
       int count = statusCount.get(status);
-      if (NOT_STARTED.equals(status)) {
-        status = "not started";
+      String sStatus = status.toString();
+      if (Status.notstarted == status) {
+        sStatus = "not started";
       }
-      out.append("['" + status + "'," + count + "]");
+      out.append("['" + sStatus + "'," + count + "]");
       if (current != statusCount.keySet().size()) {
         out.append(",");
       }
@@ -668,10 +665,10 @@ public class SequencerRunReportTableController implements Serializable {
     for (SequencerRunReportId srriD : rows) {
       String[] statusesOut = new String[this.workflows.size()];
       for (int i = 0; i < this.workflows.size(); i++) {
-        String status = sampleReportService.getStatus(srriD.getStudy(), srriD.getChildSample(), srriD.getIus(),
+        Status status = sampleReportService.getStatus(srriD.getStudy(), srriD.getChildSample(), srriD.getIus(),
             srriD.getLane(), srriD.getSequencerRun(), this.workflows.get(i));
         if (status == null) {
-          statusesOut[i] = wrapStatus(NOT_STARTED);
+          statusesOut[i] = wrapStatus(Status.notstarted);
         } else {
           statusesOut[i] = wrapStatus(status);
         }
@@ -727,7 +724,7 @@ public class SequencerRunReportTableController implements Serializable {
     return "<div class=\"label\">" + label + "</div>" + "<div class=\"sw\" swid=\"" + swId + "\"></div>";
   }
 
-  private String wrapStatus(String status) {
+  private String wrapStatus(Status status) {
     return "<div class=\"status\" >" + status + "</div>";
   }
 

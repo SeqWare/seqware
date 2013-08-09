@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -28,7 +30,7 @@ import org.apache.log4j.Logger;
  */
 public class SequencerRun implements Serializable, Comparable<SequencerRun>, PermissionsAware {
 
-    private static final long serialVersionUID = 3681328115923390568L;
+  private static final long serialVersionUID = 3681328115923390568L;
     private Integer sequencerRunId;
     private Registration owner;
     private Platform platform;
@@ -38,12 +40,12 @@ public class SequencerRun implements Serializable, Comparable<SequencerRun>, Per
     private String cycleDescriptor;
     private String cycleSequence;
     private Integer cycleCount;
-    private String status;
+    private SequencerRunStatus status;
     private String cycles;
     private Integer refLane;
     private String filePath;
     // private String readyToProcess;
-    private Boolean process;
+    private boolean process;
     private Boolean pairedEnd;
     private String pairedFilePath;
     private Boolean useIparIntensities;
@@ -165,7 +167,7 @@ public class SequencerRun implements Serializable, Comparable<SequencerRun>, Per
 
     private int recursiveCountProcErrors(Processing proc) {
         int errorCnt = 0;
-        if (proc != null && ("failed".equals(proc.getStatus()))) {
+        if (proc != null && ProcessingStatus.failed == proc.getStatus()) {
             errorCnt++;
         }
         for (Processing childProc : proc.getChildren()) {
@@ -190,7 +192,7 @@ public class SequencerRun implements Serializable, Comparable<SequencerRun>, Per
     private int recursiveCountProcRunning(Processing proc) {
         int runCnt = 0;
         if (proc != null
-                && (proc.getStatus().toLowerCase().contains("running") || proc.getStatus().toLowerCase().contains("pending"))) {
+                && (proc.getStatus() == ProcessingStatus.running || proc.getStatus() == ProcessingStatus.pending)) {
             runCnt++;
         }
         for (Processing childProc : proc.getChildren()) {
@@ -214,7 +216,7 @@ public class SequencerRun implements Serializable, Comparable<SequencerRun>, Per
 
     private int recursiveCountProcessed(Processing proc) {
         int runCnt = 0;
-        if (proc != null && (proc.getStatus().toLowerCase().contains("success"))) {
+        if (proc != null && (proc.getStatus() == ProcessingStatus.success)) {
             runCnt++;
         }
         for (Processing childProc : proc.getChildren()) {
@@ -228,7 +230,7 @@ public class SequencerRun implements Serializable, Comparable<SequencerRun>, Per
      *
      * @return a {@link java.lang.Boolean} object.
      */
-    public Boolean getProcess() {
+    public boolean getProcess() {
         return process;
     }
 
@@ -238,7 +240,7 @@ public class SequencerRun implements Serializable, Comparable<SequencerRun>, Per
      * @param process a {@link java.lang.Boolean} object.
      */
     public void setProcess(Boolean process) {
-        this.process = process;
+        this.process = process == null ? false : true;
     }
 
     /**
@@ -381,7 +383,7 @@ public class SequencerRun implements Serializable, Comparable<SequencerRun>, Per
      *
      * @return a {@link java.lang.String} object.
      */
-    public String getStatus() {
+    public SequencerRunStatus getStatus() {
         return status;
     }
 
@@ -390,7 +392,7 @@ public class SequencerRun implements Serializable, Comparable<SequencerRun>, Per
      *
      * @param status a {@link java.lang.String} object.
      */
-    public void setStatus(String status) {
+    public void setStatus(SequencerRunStatus status) {
         this.status = status;
     }
 
@@ -508,31 +510,6 @@ public class SequencerRun implements Serializable, Comparable<SequencerRun>, Per
      *
      * public void setLane8(Lane lane8) { this.lane8 = lane8; }
      */
-    /**
-     * <p>getReadyToProcess.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getReadyToProcess() {
-        if (this.getProcess() != null && this.getProcess().equals(true)) {
-            return "Y";
-        } else {
-            return "";
-        }
-    }
-
-    /**
-     * <p>setReadyToProcess.</p>
-     *
-     * @param readyToProcess a {@link java.lang.String} object.
-     */
-    public void setReadyToProcess(String readyToProcess) {
-        if (readyToProcess != null && "Y".equals(readyToProcess.toUpperCase().trim())) {
-            this.setProcess(true);
-        } else {
-            this.setProcess(false);
-        }
-    }
 
     /**
      * <p>Getter for the field <code>pairedEnd</code>.</p>

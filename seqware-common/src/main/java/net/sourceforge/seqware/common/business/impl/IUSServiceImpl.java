@@ -61,9 +61,9 @@ public class IUSServiceImpl implements IUSService {
   }
 
   /** {@inheritDoc} */
-  public void delete(IUS ius, String deleteRealFiles) {
+  public void delete(IUS ius, boolean deleteRealFiles) {
     List<File> deleteFiles = null;
-    if ("yes".equals(deleteRealFiles)) {
+    if (deleteRealFiles) {
       deleteFiles = dao.getFiles(ius.getIusId());
     }
 
@@ -77,7 +77,7 @@ public class IUSServiceImpl implements IUSService {
 
     dao.delete(ius);
 
-    if ("yes".equals(deleteRealFiles)) {
+    if (deleteRealFiles) {
       fileDAO.deleteAllWithFolderStore(deleteFiles);
     }
   }

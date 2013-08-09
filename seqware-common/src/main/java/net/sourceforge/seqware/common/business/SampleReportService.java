@@ -18,6 +18,13 @@ import net.sourceforge.seqware.common.model.Workflow;
  * @version $Id: $Id
  */
 public interface SampleReportService {
+  public enum Status{
+    notstarted,
+    pending,
+    running,
+    failed,
+    completed
+  }
 
   /**
    * <p>getStatusesForStudy.</p>
@@ -25,7 +32,7 @@ public interface SampleReportService {
    * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
    * @return a {@link java.util.List} object.
    */
-  List<String> getStatusesForStudy(Study study);
+  List<Status> getStatusesForStudy(Study study);
 
   /**
    * <p>getStatusesForWorkflow.</p>
@@ -34,7 +41,7 @@ public interface SampleReportService {
    * @param workflow a {@link net.sourceforge.seqware.common.model.Workflow} object.
    * @return a {@link java.util.List} object.
    */
-  List<String> getStatusesForWorkflow(Study study, Workflow workflow);
+  List<Status> getStatusesForWorkflow(Study study, Workflow workflow);
 
   /**
    * <p>getWorkflowsForStudy.</p>
@@ -51,7 +58,7 @@ public interface SampleReportService {
    * @param status a {@link java.lang.String} object.
    * @return a int.
    */
-  int countOfStatus(Study study, String status);
+  int countOfStatus(Study study, Status status);
 
   /**
    * <p>getChildSamples.</p>
@@ -69,7 +76,7 @@ public interface SampleReportService {
    * @param workflow a {@link net.sourceforge.seqware.common.model.Workflow} object.
    * @return a {@link java.lang.String} object.
    */
-  String getStatus(Study study, Sample childSample, Workflow workflow);
+  Status getStatus(Study study, Sample childSample, Workflow workflow);
 
   /**
    * <p>countOfStatus.</p>
@@ -79,7 +86,7 @@ public interface SampleReportService {
    * @param status a {@link java.lang.String} object.
    * @return a int.
    */
-  int countOfStatus(Study study, Workflow workflow, String status);
+  int countOfStatus(Study study, Workflow workflow, Status status);
 
   /**
    * <p>getRowsForSequencerRun.</p>
@@ -103,7 +110,7 @@ public interface SampleReportService {
    * @param workflow a {@link net.sourceforge.seqware.common.model.Workflow} object.
    * @return a {@link java.util.List} object.
    */
-  List<String> getStatusesForWorkflow(SequencerRun seqRun, Workflow workflow);
+  List<Status> getStatusesForWorkflow(SequencerRun seqRun, Workflow workflow);
 
   /**
    * <p>getStatusesForSequencerRun.</p>
@@ -111,7 +118,7 @@ public interface SampleReportService {
    * @param seqRun a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
    * @return a {@link java.util.List} object.
    */
-  List<String> getStatusesForSequencerRun(SequencerRun seqRun);
+  List<Status> getStatusesForSequencerRun(SequencerRun seqRun);
 
   /**
    * <p>countOfStatus.</p>
@@ -120,7 +127,7 @@ public interface SampleReportService {
    * @param status a {@link java.lang.String} object.
    * @return a int.
    */
-  int countOfStatus(SequencerRun seqRun, String status);
+  int countOfStatus(SequencerRun seqRun, Status status);
 
   /**
    * <p>countOfStatus.</p>
@@ -130,7 +137,7 @@ public interface SampleReportService {
    * @param status a {@link java.lang.String} object.
    * @return a int.
    */
-  int countOfStatus(SequencerRun seqRun, Workflow workflow, String status);
+  int countOfStatus(SequencerRun seqRun, Workflow workflow, Status status);
 
   /**
    * <p>countOfRows.</p>
@@ -159,7 +166,7 @@ public interface SampleReportService {
    * @param workflow a {@link net.sourceforge.seqware.common.model.Workflow} object.
    * @return a {@link java.lang.String} object.
    */
-  String getStatus(Study study, Sample sample, IUS ius, Lane lane, SequencerRun seqRun, Workflow workflow);
+  Status getStatus(Study study, Sample sample, IUS ius, Lane lane, SequencerRun seqRun, Workflow workflow);
 
   /**
    * <p>getSequencerRunReportIds.</p>

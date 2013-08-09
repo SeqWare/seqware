@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.solexatools.Security;
 
 import org.springframework.web.servlet.ModelAndView;
@@ -45,8 +46,8 @@ public class CancelAnalysisWorkflowController  extends BaseCommandController {
 			Integer registrationId = registration.getRegistrationId();
 			
 		    if(registrationId.equals(ownerId)){
-		    	if(!workflowRun.getStatus().equals("completed")){
-		    		workflowRun.setStatus("cancelled");
+		    	if(workflowRun.getStatus() != WorkflowRunStatus.completed){
+		    		workflowRun.setStatus(WorkflowRunStatus.cancelled);
 		    		getWorkflowRunService().update(workflowRun);
 		    	}
 		    }
