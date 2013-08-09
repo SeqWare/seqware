@@ -59,11 +59,8 @@ public interface IUSService {
 
   /**
    * <p>delete.</p>
-   *
-   * @param ius a {@link net.sourceforge.seqware.common.model.IUS} object.
-   * @param deleteRealFiles a {@link java.lang.String} object.
    */
-  public void delete(IUS ius, String deleteRealFiles);
+  public void delete(IUS ius, boolean deleteRealFiles);
 
   /**
    * <p>findByID.</p>

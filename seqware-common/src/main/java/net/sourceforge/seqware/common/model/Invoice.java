@@ -6,6 +6,9 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
@@ -29,7 +32,7 @@ public class Invoice implements Serializable, Comparable<Invoice>, PermissionsAw
   private Registration owner;
   private Date startDate;
   private Date endDate;
-  private String state;
+  private InvoiceState state;
   private boolean finalized;
   private boolean fullyPaid;
   private Double paidAmount;
@@ -185,7 +188,7 @@ public class Invoice implements Serializable, Comparable<Invoice>, PermissionsAw
      *
      * @return a {@link java.lang.String} object.
      */
-    public String getState() {
+    public InvoiceState getState() {
         return state;
     }
 
@@ -194,7 +197,7 @@ public class Invoice implements Serializable, Comparable<Invoice>, PermissionsAw
      *
      * @param state a {@link java.lang.String} object.
      */
-    public void setState(String state) {
+    public void setState(InvoiceState state) {
         this.state = state;
     }
 

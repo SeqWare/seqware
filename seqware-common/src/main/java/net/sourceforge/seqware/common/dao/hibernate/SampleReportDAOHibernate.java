@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sourceforge.seqware.common.business.SampleReportService.Status;
 import net.sourceforge.seqware.common.dao.SampleReportDAO;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
@@ -24,31 +25,31 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class SampleReportDAOHibernate extends HibernateDaoSupport implements SampleReportDAO {
 
+  private static List<Status> statuses(List result){
+    List<Status> statuses = new ArrayList<Status>();
+    for (Object obj : result) {
+      statuses.add(Status.valueOf((String) obj));
+    }
+    return statuses;
+  }
+  
   /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
-  public List<String> getStatusesForStudy(Study study) {
+  public List<Status> getStatusesForStudy(Study study) {
     String query = "select distinct status from sample_report where study_id = ?";
     List result = this.getSession().createSQLQuery(query).setInteger(0, study.getStudyId()).list();
-    List<String> statuses = new ArrayList<String>();
-    for (Object obj : result) {
-      statuses.add((String) obj);
-    }
-    return statuses;
+    return statuses(result);
   }
 
   /** {@inheritDoc} */
   @Override
-  public List<String> getStatusesForWorkflow(Study study, Workflow workflow) {
+  public List<Status> getStatusesForWorkflow(Study study, Workflow workflow) {
     String query = "select distinct status from sample_report where study_id = ? and workflow_id = ?";
     @SuppressWarnings("rawtypes")
     List result = this.getSession().createSQLQuery(query).setInteger(0, study.getStudyId())
         .setInteger(1, workflow.getWorkflowId()).list();
-    List<String> statuses = new ArrayList<String>();
-    for (Object obj : result) {
-      statuses.add((String) obj);
-    }
-    return statuses;
+    return statuses(result);
   }
 
   /** {@inheritDoc} */
@@ -92,9 +93,9 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
   /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
-  public int countOfStatus(Study study, String status) {
+  public int countOfStatus(Study study, Status status) {
     String query = "select count(status) from sample_report where study_id = ? and status = ?";
-    List result = this.getSession().createSQLQuery(query).setInteger(0, study.getStudyId()).setString(1, status).list();
+    List result = this.getSession().createSQLQuery(query).setInteger(0, study.getStudyId()).setString(1, status.name()).list();
     int count = 0;
     if (result.size() > 0) {
       count = ((BigInteger) result.get(0)).intValue();
@@ -105,9 +106,9 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
   /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
-  public int countOfStatus(Study study, Workflow workflow, String status) {
+  public int countOfStatus(Study study, Workflow workflow, Status status) {
     String query = "select count(status) from sample_report where study_id = ? and status = ? and workflow_id = ? ";
-    List result = this.getSession().createSQLQuery(query).setInteger(0, study.getStudyId()).setString(1, status)
+    List result = this.getSession().createSQLQuery(query).setInteger(0, study.getStudyId()).setString(1, status.name())
         .setInteger(2, workflow.getWorkflowId()).list();
     int count = 0;
     if (result.size() > 0) {
@@ -119,11 +120,11 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
   /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
-  public int countOfStatus(SequencerRun seqRun, Workflow workflow, String status) {
+  public int countOfStatus(SequencerRun seqRun, Workflow workflow, Status status) {
     if (seqRun != null) {
       String query = "select count(status) from sample_report where sequencer_run_id = ? and status = ? and workflow_id = ? ";
       List result = this.getSession().createSQLQuery(query).setInteger(0, seqRun.getSequencerRunId())
-          .setString(1, status).setInteger(2, workflow.getWorkflowId()).list();
+          .setString(1, status.name()).setInteger(2, workflow.getWorkflowId()).list();
       int count = 0;
       if (result.size() > 0) {
         count = ((BigInteger) result.get(0)).intValue();
@@ -131,7 +132,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
       return count;
     } else {
       String query = "select count(status) from sample_report where sequencer_run_id is not null and status = ? and workflow_id = ? ";
-      List result = this.getSession().createSQLQuery(query).setString(0, status)
+      List result = this.getSession().createSQLQuery(query).setString(0, status.name())
           .setInteger(1, workflow.getWorkflowId()).list();
       int count = 0;
       if (result.size() > 0) {
@@ -144,11 +145,11 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
   /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
-  public int countOfStatus(SequencerRun seqRun, String status) {
+  public int countOfStatus(SequencerRun seqRun, Status status) {
     if (seqRun != null) {
       String query = "select count(status) from sample_report where sequencer_run_id = ? and status = ? ";
       List result = this.getSession().createSQLQuery(query).setInteger(0, seqRun.getSequencerRunId())
-          .setString(1, status).list();
+          .setString(1, status.name()).list();
       int count = 0;
       if (result.size() > 0) {
         count = ((BigInteger) result.get(0)).intValue();
@@ -156,7 +157,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
       return count;
     } else {
       String query = "select count(status) from sample_report where sequencer_run_id is not null and status = ? ";
-      List result = this.getSession().createSQLQuery(query).setString(0, status).list();
+      List result = this.getSession().createSQLQuery(query).setString(0, status.name()).list();
       int count = 0;
       if (result.size() > 0) {
         count = ((BigInteger) result.get(0)).intValue();
@@ -206,13 +207,13 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
   /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
-  public String getStatus(Study study, Sample childSample, Workflow workflow) {
+  public Status getStatus(Study study, Sample childSample, Workflow workflow) {
     String query = "select sr.status from sample_report sr where sr.study_id = ? and sr.child_sample_id = ? and sr.workflow_id = ?";
     List result = this.getSession().createSQLQuery(query).setInteger(0, study.getStudyId())
         .setInteger(1, childSample.getSampleId()).setInteger(2, workflow.getWorkflowId()).list();
-    String status = "notstarted";
+    Status status = Status.notstarted;
     if (result.size() > 0) {
-      status = (String) result.get(0);
+      status = Status.valueOf((String) result.get(0));
     }
     return status;
   }
@@ -220,16 +221,16 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
   /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
-  public String getStatus(Study study, Sample sample, IUS ius, Lane lane, SequencerRun seqRun, Workflow workflow) {
+  public Status getStatus(Study study, Sample sample, IUS ius, Lane lane, SequencerRun seqRun, Workflow workflow) {
     String query = "select sr.status from sample_report sr where sr.study_id = ? "
         + " and sr.child_sample_id = ? and sr.workflow_id = ? and sr.sequencer_run_id = ?"
         + " and sr.ius_id = ? and sr.lane_id = ?";
     List result = this.getSession().createSQLQuery(query).setInteger(0, study.getStudyId())
         .setInteger(1, sample.getSampleId()).setInteger(2, workflow.getWorkflowId())
         .setInteger(3, seqRun.getSequencerRunId()).setInteger(4, ius.getIusId()).setInteger(5, lane.getLaneId()).list();
-    String status = "notstarted";
+    Status status = Status.notstarted;
     if (result.size() > 0) {
-      status = (String) result.get(0);
+      status = Status.valueOf((String) result.get(0));
     }
     return status;
   }
@@ -256,48 +257,32 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
   /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
-  public List<String> getStatusesForSequencerRun(SequencerRun seqRun) {
+  public List<Status> getStatusesForSequencerRun(SequencerRun seqRun) {
     if (seqRun != null) {
       String query = "select distinct status from sample_report where sequencer_run_id = ?";
       List result = this.getSession().createSQLQuery(query).setInteger(0, seqRun.getSequencerRunId()).list();
-      List<String> statuses = new ArrayList<String>();
-      for (Object obj : result) {
-        statuses.add((String) obj);
-      }
-      return statuses;
+      return statuses(result);
     } else {
       String query = "select distinct status from sample_report where sequencer_run_id is not null";
       List result = this.getSession().createSQLQuery(query).list();
-      List<String> statuses = new ArrayList<String>();
-      for (Object obj : result) {
-        statuses.add((String) obj);
-      }
-      return statuses;
+      return statuses(result);
     }
   }
 
   /** {@inheritDoc} */
   @Override
-  public List<String> getStatusesForWorkflow(SequencerRun seqRun, Workflow workflow) {
+  public List<Status> getStatusesForWorkflow(SequencerRun seqRun, Workflow workflow) {
     if (seqRun != null) {
       String query = "select distinct status from sample_report where sequencer_run_id = ? and workflow_id = ?";
       @SuppressWarnings("rawtypes")
       List result = this.getSession().createSQLQuery(query).setInteger(0, seqRun.getSequencerRunId())
           .setInteger(1, workflow.getWorkflowId()).list();
-      List<String> statuses = new ArrayList<String>();
-      for (Object obj : result) {
-        statuses.add((String) obj);
-      }
-      return statuses;
+      return statuses(result);
     } else {
       String query = "select distinct status from sample_report where sequencer_run_id is not null and workflow_id = ?";
       @SuppressWarnings("rawtypes")
       List result = this.getSession().createSQLQuery(query).setInteger(0, workflow.getWorkflowId()).list();
-      List<String> statuses = new ArrayList<String>();
-      for (Object obj : result) {
-        statuses.add((String) obj);
-      }
-      return statuses;
+      return statuses(result);
     }
   }
 

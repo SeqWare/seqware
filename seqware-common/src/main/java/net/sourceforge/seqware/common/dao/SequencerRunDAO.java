@@ -97,6 +97,7 @@ public interface SequencerRunDAO {
      * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return a {@link java.lang.Integer} object.
      */
+    @Deprecated
     public Integer getProcessedCnt(SequencerRun sequencerRun);
 
     /**
@@ -105,6 +106,7 @@ public interface SequencerRunDAO {
      * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return a {@link java.lang.Integer} object.
      */
+    @Deprecated
     public Integer getProcessingCnt(SequencerRun sequencerRun);
 
     /**
@@ -113,6 +115,7 @@ public interface SequencerRunDAO {
      * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return a {@link java.lang.Integer} object.
      */
+    @Deprecated
     public Integer getErrorCnt(SequencerRun sequencerRun);
 
     /**
@@ -121,6 +124,7 @@ public interface SequencerRunDAO {
      * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return a {@link java.util.List} object.
      */
+    @Deprecated
     public List<Integer> getProcStatuses(SequencerRun sequencerRun);
 
     /**

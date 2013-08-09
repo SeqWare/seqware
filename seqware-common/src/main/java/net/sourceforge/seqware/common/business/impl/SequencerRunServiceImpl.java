@@ -12,6 +12,7 @@ import net.sourceforge.seqware.common.dao.SequencerRunDAO;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
+import net.sourceforge.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.seqware.common.model.SequencerRunWizardDTO;
 import net.sourceforge.seqware.common.util.Log;
 
@@ -101,10 +102,10 @@ public class SequencerRunServiceImpl implements SequencerRunService {
      */
     sequencerRun.setCreateTimestamp(new Date());
 
-    if (sequencerRun.getReadyToProcess() != null && sequencerRun.getReadyToProcess().equals("Y")) {
-      sequencerRun.setStatus("ready_to_process");
+    if (sequencerRun.getProcess()) {
+      sequencerRun.setStatus(SequencerRunStatus.ready_to_process);
     } else {
-      sequencerRun.setStatus("not_ready_to_process");
+      sequencerRun.setStatus(SequencerRunStatus.not_ready_to_process);
     }
     return(sequencerRunDAO.insert(sequencerRun));
   }
@@ -165,10 +166,10 @@ public class SequencerRunServiceImpl implements SequencerRunService {
      * sequencerRun.setLanes(list);
      */
 
-    if (sequencerRun.getReadyToProcess() != null && sequencerRun.getReadyToProcess().equals("Y")) {
-      sequencerRun.setStatus("ready_to_process");
+    if (sequencerRun.getProcess()) {
+      sequencerRun.setStatus(SequencerRunStatus.ready_to_process);
     } else {
-      sequencerRun.setStatus("not_ready_to_process");
+      sequencerRun.setStatus(SequencerRunStatus.not_ready_to_process);
     }
     return(sequencerRunDAO.insert(sequencerRun));
   }
@@ -180,10 +181,10 @@ public class SequencerRunServiceImpl implements SequencerRunService {
    */
   public void update(SequencerRun sequencerRun) {
 
-    if (sequencerRun.getReadyToProcess() != null && sequencerRun.getReadyToProcess().equals("Y")) {
-      sequencerRun.setStatus("ready_to_process");
+    if (sequencerRun.getProcess()) {
+      sequencerRun.setStatus(SequencerRunStatus.ready_to_process);
     } else {
-      sequencerRun.setStatus("not_ready_to_process");
+      sequencerRun.setStatus(SequencerRunStatus.not_ready_to_process);
     }
 
     sequencerRunDAO.update(sequencerRun);

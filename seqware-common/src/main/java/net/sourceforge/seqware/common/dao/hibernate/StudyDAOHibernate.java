@@ -13,6 +13,7 @@ import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
@@ -1220,7 +1221,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
 
   /** {@inheritDoc} */
   @Override
-  public int getStatusCount(Study study, String status) {
+  public int getStatusCount(Study study, WorkflowRunStatus status) {
     String query = "WITH RECURSIVE all_the_runs(workflow_run_id) AS ("
         + " WITH RECURSIVE root_to_leaf(root_sample, child_id) AS (" + " SELECT sample_id, sample_id FROM sample s"
         + " JOIN experiment e ON (s.experiment_id = e.experiment_id)" + " JOIN study st ON (st.study_id = e.study_id)"
@@ -1241,7 +1242,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
 
     @SuppressWarnings("rawtypes")
     List list = this.getSession().createSQLQuery(query).setInteger("study", study.getStudyId())
-        .setString("status", status).list();
+        .setString("status", status.name()).list();
 
     return ((BigInteger) list.get(0)).intValue();
   }
