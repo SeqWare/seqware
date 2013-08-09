@@ -520,6 +520,13 @@
             <key column="workflow_run_id" />
             <one-to-many class="WorkflowRunAttribute" />
         </set>
+        <set name="inputFileAccessions" inverse="false" lazy="false" table="workflow_run_input_files" fetch="select" cascade="all-delete-orphan">
+            <key column="workflow_run_id"/>
+            <!-- <element type="integer" column="file_id" not-null="true" /> -->
+            <element type="integer">
+                <column name="file_id" read="(select f.sw_accession from file f where f.file_id=file_id)" write="(select f.file_id from file f WHERE f.sw_accession = ?)"/>
+            </element>
+        </set>
     </class>
 
   <!-- ********** **************** Workflow_Run_Param **************** ********** -->

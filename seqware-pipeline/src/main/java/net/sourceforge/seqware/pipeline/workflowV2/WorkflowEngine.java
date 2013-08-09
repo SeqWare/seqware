@@ -18,6 +18,7 @@ package net.sourceforge.seqware.pipeline.workflowV2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import net.sourceforge.seqware.common.module.ReturnValue;
 
@@ -41,13 +42,11 @@ public interface WorkflowEngine {
      * @param parentsLinkedToWR a {@link java.util.ArrayList} object.
      * @param wait a boolean.
      * @param cmdLineOptions a {@link java.util.List} object.
+     * @param inputFiles the value of inputFiles
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-    public ReturnValue launchBundle(String workflow, String version,
-	    String metadataFile, String bundle, ArrayList<String> iniFiles,
-	    boolean metadataWriteback, ArrayList<String> parentAccessions,
-	    ArrayList<String> parentsLinkedToWR, boolean wait,
-	    List<String> cmdLineOptions);
+    
+    public ReturnValue launchBundle(String workflow, String version, String metadataFile, String bundle, ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, Set<Integer> inputFiles);
 
     /**
      * <p>launchInstalledBundle.</p>
@@ -60,13 +59,11 @@ public interface WorkflowEngine {
      * @param parentsLinkedToWR a {@link java.util.ArrayList} object.
      * @param wait a boolean.
      * @param cmdLineOptions a {@link java.util.List} object.
+     * @param inputFiles the value of inputFiles
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-    public ReturnValue launchInstalledBundle(String workflowAccession,
-	    String workflowRunAccession, ArrayList<String> iniFiles,
-	    boolean metadataWriteback, ArrayList<String> parentAccessions,
-	    ArrayList<String> parentsLinkedToWR, boolean wait,
-	    List<String> cmdLineOptions);
+    
+    public ReturnValue launchInstalledBundle(String workflowAccession, String workflowRunAccession, ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, Set<Integer> inputFiles);
 
     /**
      * <p>launchScheduledBundle.</p>
@@ -77,8 +74,8 @@ public interface WorkflowEngine {
      * @param wait a boolean.
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-    public ReturnValue launchScheduledBundle(String workflowAccession,
-	    String workflowRunAccession, boolean metadataWriteback, boolean wait);
+    
+    public ReturnValue launchScheduledBundle(String workflowAccession, String workflowRunAccession, boolean metadataWriteback, boolean wait);
 
     /**
      * <p>scheduleInstalledBundle.</p>

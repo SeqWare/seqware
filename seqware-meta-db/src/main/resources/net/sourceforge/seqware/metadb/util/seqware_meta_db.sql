@@ -5180,7 +5180,6 @@ ALTER TABLE ONLY workflow_run
     ADD CONSTRAINT workflow_run_workflow_id_fkey FOREIGN KEY (workflow_id) REFERENCES workflow(workflow_id);
 
 
---
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
 

@@ -1355,7 +1355,7 @@ public class MetadataWS extends Metadata {
      * @param workflowEngine the value of workflowEngine
      */
     @Override
-    public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine) {
+    public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles) {
         int accession = 0;
         try {
             WorkflowRun wr = ll.findWorkflowRun("?id=" + workflowRunId);
@@ -1372,6 +1372,7 @@ public class MetadataWS extends Metadata {
             wr.setStdErr(stdErr);
             wr.setStdOut(stdOut);
             wr.setWorkflowEngine(workflowEngine);
+            wr.setInputFileAccessions(inputFiles);
 
             ll.updateWorkflowRun("/" + accession, wr);
         } catch (Exception e) {
@@ -2438,6 +2439,23 @@ public class MetadataWS extends Metadata {
         }
         return null;
     }
+    
+    @Override
+    public List<WorkflowRun> getWorkflowRunsAssociatedWithInputFiles(List<Integer> fileAccessions) {
+        try {
+            if (fileAccessions.size() > 0){
+                return ll.findWorkflowByFiles(fileAccessions);
+            } else{
+                return new ArrayList<WorkflowRun>();
+            }
+        } catch (IOException ex) {
+            Log.fatal("IOException", ex);
+            throw new RuntimeException(ex);
+        } catch (JAXBException ex) {
+            Log.fatal("JAXBException", ex);
+            throw new RuntimeException(ex);
+        }
+    }
 
     @Override
     public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
@@ -2884,11 +2902,19 @@ public class MetadataWS extends Metadata {
             JaxbObject<Workflow> jaxb = new JaxbObject<Workflow>();
             return (Workflow) findObject("/workflowruns", "/" + workflowRunAccession + "/workflow", jaxb, w);
         }
+        
+        private List<WorkflowRun> findWorkflowByFiles(List<Integer> files) throws IOException, JAXBException {
+            WorkflowRunList2 w = new WorkflowRunList2();
+            JaxbObject<WorkflowRunList2> jaxb = new JaxbObject<WorkflowRunList2>();
+            String fileList = StringUtils.join(files.iterator(),',');
+            WorkflowRunList2 wrl2 = (WorkflowRunList2) findObject("/reports/fileworkflowruns", "?files=" + fileList + "&DIRECT_SEARCH=true", jaxb, w);
+            return wrl2.getList();
+        }
 
         private List<WorkflowRun> findWorkflowByFiles(List<Integer> files, String search_type) throws IOException, JAXBException {
             WorkflowRunList2 w = new WorkflowRunList2();
             JaxbObject<WorkflowRunList2> jaxb = new JaxbObject<WorkflowRunList2>();
-      String fileList = StringUtils.join(files.iterator(),',');
+            String fileList = StringUtils.join(files.iterator(),',');
             WorkflowRunList2 wrl2 = (WorkflowRunList2) findObject("/reports/fileworkflowruns", "?files=" + fileList + "&search=" + search_type, jaxb, w);
             return wrl2.getList();
         }
