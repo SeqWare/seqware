@@ -33,29 +33,23 @@ public class CLIUserPhase6 extends UserPhase6{
 
     @Override
     protected void runWorkflowRunReporter(File workingDir) throws IOException {
-        String output = ITUtility.runSeqwareCLI(" workflow report --tsv --out yay.csv --accession " + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW)
-                , ReturnValue.SUCCESS
-                , workingDir);
+        ITUtility.runSeqwareCLI(" workflow report --tsv --out _workflowrun_" + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW)
+                + ".csv --accession " + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW), ReturnValue.SUCCESS, workingDir);
     }
 
     @Override
     protected void runWorkflowRunReporterStdErr(String swid, File workingDir) throws IOException {
-        String output = ITUtility.runSeqwareCLI(" workflow-run stderr --out err.csv --accession " + swid
-                , ReturnValue.SUCCESS
-                , workingDir);
+        ITUtility.runSeqwareCLI(" workflow-run stderr --out _workflowrun_" + swid + "_STDERR.csv --accession " + swid, ReturnValue.SUCCESS, workingDir);
     }
 
     @Override
     protected void runWorkflowRunReporterStdOut(String swid, File workingDir) throws IOException {
-        String output = ITUtility.runSeqwareCLI(" workflow-run stdout --out err.csv --accession " + swid
-                , ReturnValue.SUCCESS
-                , workingDir);
+        ITUtility.runSeqwareCLI(" workflow-run stdout --out _workflowrun_" + swid + "_STDOUT.csv --accession " + swid, ReturnValue.SUCCESS, workingDir);
     }
 
     @Override
     protected void exportStudyResults() throws IOException {
-        String output = ITUtility.runSeqwareCLI(" files report --study 'New Test Study'", ReturnValue.SUCCESS, null);
+        ITUtility.runSeqwareCLI(" files report --study 'New Test Study'", ReturnValue.SUCCESS, null);
     }
 
-    
 }

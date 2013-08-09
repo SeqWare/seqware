@@ -88,7 +88,7 @@ public class UserPhase6 {
 
         Collection<File> listFiles = FileUtils.listFiles(workingDir, filter, filter);
         // ensure that we only have one csv file
-        Assert.assertTrue("too many csv files found", listFiles.size() == 1);
+        Assert.assertTrue("wrong number of csv files, found " + listFiles.size() + " in " + workingDir.getAbsolutePath(), listFiles.size() == 1);
         File foundFile = listFiles.iterator().next();
         // check that we have at least one run in the output
         boolean runFound = false;
@@ -106,25 +106,25 @@ public class UserPhase6 {
     }
 
     protected void runWorkflowRunReporter(File workingDir) throws IOException {
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- -wa " + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW)
+        ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- -wa " + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW)
                 , ReturnValue.SUCCESS
                 , workingDir);
     }
 
     protected void runWorkflowRunReporterStdErr(String swid, File workingDir) throws IOException {
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stderr -wra " + swid
+        ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stderr -wra " + swid
                 , ReturnValue.SUCCESS
                 , workingDir);
     }
 
     protected void runWorkflowRunReporterStdOut(String swid, File workingDir) throws IOException {
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stdout -wra " + swid
+        ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stdout -wra " + swid
                 , ReturnValue.SUCCESS
                 , workingDir);
     }
 
     protected void exportStudyResults() throws IOException {
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- "
+        ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- "
                 + " --no-links --output-filename study_report "
                 + "--workflow-accession "
                 + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW) + " "
