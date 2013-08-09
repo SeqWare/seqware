@@ -28,7 +28,6 @@ import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import net.sourceforge.seqware.common.util.runtools.TestConsoleAdapter;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
