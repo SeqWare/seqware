@@ -283,12 +283,13 @@ public class MetadataWS extends Metadata {
      * TODO: this needs to setup rows in experiment_library_design and
      * experiment_spot_design
      *
-     * @param experiment_library_design_id the value of experiment_library_design_id
-     * @param experiment_spot_design_id the value of experiment_spot_design_id
+     * @param experimentLibraryDesignId the value of experimentLibraryDesignId
+     * @param experimentSpotDesignId the value of experimentSpotDesignId
      */
     
+    
   @Override
-    public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title, Integer experiment_library_design_id, Integer experiment_spot_design_id) {
+    public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title, Integer experimentLibraryDesignId, Integer experimentSpotDesignId) {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -312,22 +313,22 @@ public class MetadataWS extends Metadata {
             e.setTitle(title);
             e.setName(title);
             
-            if (experiment_library_design_id != null){
-                if (!isValidModelId(this.getExperimentLibraryDesigns(), experiment_library_design_id)){
+            if (experimentLibraryDesignId != null){
+                if (!isValidModelId(this.getExperimentLibraryDesigns(), experimentLibraryDesignId)){
                     ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
                     return ret;
                 }
                 ExperimentLibraryDesign eld = new ExperimentLibraryDesign();
-                eld.setExperimentLibraryDesignId(experiment_library_design_id);
+                eld.setExperimentLibraryDesignId(experimentLibraryDesignId);
                 e.setExperimentLibraryDesign(eld);
             }
-            if (experiment_spot_design_id != null){
-                if (!isValidModelId(this.getExperimentSpotDesigns(), experiment_spot_design_id)){
+            if (experimentSpotDesignId != null){
+                if (!isValidModelId(this.getExperimentSpotDesigns(), experimentSpotDesignId)){
                     ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
                     return ret;
                 }
                 ExperimentSpotDesign esd = new ExperimentSpotDesign();
-                esd.setExperimentSpotDesignId(experiment_spot_design_id);
+                esd.setExperimentSpotDesignId(experimentSpotDesignId);
                 e.setExperimentSpotDesign(esd);
             }
             
@@ -379,9 +380,8 @@ public class MetadataWS extends Metadata {
             if (parentSampleAccession != 0) {
                 Sample parentSample = ll.findSample("/"+parentSampleAccession);
                 parents.add(parentSample);
-            } else{
-                parents.add(null);
             }
+            /** SEQWARE-1576, let's try using an empty parent set to signal instead of a null */
             s.setParents(parents);
             s.setOrganism(o);
             s.setTitle(title);
@@ -472,11 +472,10 @@ public class MetadataWS extends Metadata {
 
         try {
             
-            boolean studyTypeFound = isValidModelId(getStudyTypes(), studyTypeId);
-            boolean libraryStrategyFound = isValidModelId(this.getLibraryStrategies(), libraryStrategyId);
-            boolean librarySelectionFound = isValidModelId(this.getLibrarySelections(), librarySelectionId);
-            boolean librarySourceFound = isValidModelId(this.getLibrarySource(), librarySourceId);
-            if (!studyTypeFound || !libraryStrategyFound || !librarySelectionFound || !librarySourceFound){
+            if (!isValidModelId(getStudyTypes(), studyTypeId) || 
+                    !isValidModelId(this.getLibraryStrategies(), libraryStrategyId) || 
+                    !isValidModelId(this.getLibrarySelections(), librarySelectionId) || 
+                    !isValidModelId(this.getLibrarySource(), librarySourceId)){
                 ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
                 return ret;
             }
