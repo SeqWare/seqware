@@ -14,24 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.seqware.pipeline.tutorial;
-
-import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+package net.sourceforge.seqware.common.model;
 
 /**
- * This runs all the tests needed to test the Admin Tutorials. The test suite
- * actually enforces order for us. 
- *
+ * This links together all models that do not have sw_accession
  * @author dyuen
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses(value = {AdminPhase1.class})
-public class AdminTutorialSuiteET extends TutorialSuite {
-    @BeforeClass
-    public static void resetDatabase() {
-        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
-    }
+public interface SecondTierModel {
+    /**
+     * Get the id for this model
+     * @return 
+     */
+    public int getModelId();
 }

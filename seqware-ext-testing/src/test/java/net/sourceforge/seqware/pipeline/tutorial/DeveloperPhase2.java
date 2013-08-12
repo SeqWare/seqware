@@ -34,15 +34,13 @@ public class DeveloperPhase2 {
     
     @Test
     public void testTestingTheWorkflow() throws IOException{
-       String tOutput = ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + DeveloperPhase1.BundleDir.getAbsolutePath() + 
-               " -t --workflow seqware-archetype-java-workflow --version 1.0-SNAPSHOT", ReturnValue.SUCCESS, null);
+        testWorkflow();
     }
     
     @Test 
     public void testPackagingWorkflow()throws IOException{
         File tempPackageDir = Files.createTempDir();
-        String tOutput = ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + tempPackageDir.getAbsolutePath() + 
-               " -p " + DeveloperPhase1.BundleDir.getAbsolutePath() , ReturnValue.SUCCESS, null);
+        packageBundle(tempPackageDir);
         FileUtils.deleteDirectory(tempPackageDir);
     }
     
@@ -50,5 +48,15 @@ public class DeveloperPhase2 {
     public static void cleanup() throws IOException{
         FileUtils.deleteDirectory(DeveloperPhase1.BundleDir);
         PluginRunnerET.monitorAndClean(false);
+    }
+
+    protected void testWorkflow() throws IOException {
+        ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + DeveloperPhase1.BundleDir.getAbsolutePath() + 
+               " -t --workflow seqware-archetype-java-workflow --version 1.0-SNAPSHOT", ReturnValue.SUCCESS, null);
+    }
+
+    protected void packageBundle(File tempPackageDir) throws IOException {
+        ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + tempPackageDir.getAbsolutePath() + 
+               " -p " + DeveloperPhase1.BundleDir.getAbsolutePath() , ReturnValue.SUCCESS, null);
     }
 }

@@ -16,11 +16,6 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.io.IOException;
-import junit.framework.Assert;
-import org.junit.Ignore;
-import org.restlet.representation.Representation;
-
 /**
  *
  * @author mtaschuk

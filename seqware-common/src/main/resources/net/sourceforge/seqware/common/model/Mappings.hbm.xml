@@ -1647,6 +1647,30 @@
         <property name="cycleDescriptor" column="cycle_descriptor" type="string"/>
         <property name="laneIndex" column="lane_index" type="integer"/>
         <property name="swAccession" column="sw_accession" type="integer" generated="insert"/>
+        
+        <many-to-one
+            name="libraryStrategy"
+            class="LibraryStrategy"
+            cascade="none"
+            column="library_strategy"
+            not-found="ignore"
+        />
+        
+        <many-to-one
+            name="librarySelection"
+            class="LibrarySelection"
+            cascade="none"
+            column="library_selection"
+            not-found="ignore"
+        />
+         
+        <many-to-one
+            name="librarySource"
+            class="LibrarySource"
+            cascade="none"
+            column="library_source"
+            not-found="ignore"
+        />
 
         <many-to-one
             name="sequencerRun"

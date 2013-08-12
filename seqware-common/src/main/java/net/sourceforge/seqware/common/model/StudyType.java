@@ -12,7 +12,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author boconnor
  * @version $Id: $Id
  */
-public class StudyType implements Serializable {
+public class StudyType implements Serializable, SecondTierModel {
 	/**
 	 * 
 	 */
@@ -126,6 +126,11 @@ public class StudyType implements Serializable {
      */
     public static long getSerialVersionUID() {
         return serialVersionUID;
+    }
+
+    @Override
+    public int getModelId() {
+        return this.getStudyTypeId();
     }
 
 }

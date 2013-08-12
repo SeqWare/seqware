@@ -32,6 +32,9 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         net.sourceforge.seqware.webservice.resources.tables.ExperimentIDResourceTest.class,
+        net.sourceforge.seqware.webservice.resources.tables.ExperimentLibraryDesignResourceTest.class,
+        net.sourceforge.seqware.webservice.resources.tables.ExperimentSpotDesignResourceTest.class,
+        net.sourceforge.seqware.webservice.resources.tables.ExperimentSpotDesignReadSpecResourceTest.class,
         net.sourceforge.seqware.webservice.resources.tables.StudyResourceTest.class,
         net.sourceforge.seqware.webservice.resources.tables.SequencerRunResourceTest.class,
         net.sourceforge.seqware.webservice.resources.tables.SampleIDResourceTest.class,
