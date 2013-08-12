@@ -142,12 +142,11 @@ public class MetadataNoConnection extends Metadata {
     /**
      * {@inheritDoc}
      *
-     * @param experiment_library_design_id the value of experiment_library_design_id
-     * @param experiment_spot_design_id the value of experiment_spot_design_id
-     */
-    
+     * @param experimentLibraryDesignId the value of experimentLibraryDesignId
+     * @param experimentSpotDesignId the value of experimentSpotDesignId
+     */   
   @Override
-  public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title, Integer experiment_library_design_id, Integer experiment_spot_design_id) {
+  public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title, Integer experimentLibraryDesignId, Integer experimentSpotDesignId) {
     logger.info("No metadata connection");
     return (new ReturnValue(ReturnValue.SUCCESS));
   }
