@@ -444,21 +444,9 @@ public class Metadata extends Plugin {
         return ret;
     }
     
-    private String parseNullOrString(String fieldName) {
-        boolean usable = true;
-        String field = fields.get(fieldName);
-        //Log.stdout(field);
-        if (field == null) {
-           return null;
-        } else {
-           return field;
-        }
-    }
     
     private Integer parseNullOrInteger(String fieldName) {
-        boolean usable = true;
         String field = fields.get(fieldName);
-        //Log.stdout(field);
         if (field == null) {
            return null;
         } else {
@@ -469,7 +457,6 @@ public class Metadata extends Plugin {
     private boolean nullOrLessThanZero(String fieldName) {
         boolean usable = true;
         String field = fields.get(fieldName);
-        //Log.stdout(field);
         if (field == null) {
             usable = true;
         } else if (Integer.parseInt(field) <= 0) {
@@ -481,7 +468,6 @@ public class Metadata extends Plugin {
     private boolean notNullOrLessThanZero(String fieldName) {
         boolean usable = true;
         String field = fields.get(fieldName);
-        //Log.stdout(field);
         if (field == null) {
             usable = false;
         } else if (Integer.parseInt(field) <= 0) {

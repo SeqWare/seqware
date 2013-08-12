@@ -1,13 +1,10 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.seqware.common.dao.ExperimentSpotDesignDAO;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
-import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
-import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
@@ -77,7 +74,7 @@ public class ExperimentSpotDesignDAOHibernate extends HibernateDaoSupport implem
     /** {@inheritDoc} */
     @Override
     public List<ExperimentSpotDesign> list() {
-        List expmts = this.getHibernateTemplate().find("from ExperimentSpotDesign as spotDesign order by readSpec.experimentSpotDesignId asc" // desc
+        List expmts = this.getHibernateTemplate().find("from ExperimentSpotDesign as spotDesign" // desc
                 );
         return expmts;
     }
