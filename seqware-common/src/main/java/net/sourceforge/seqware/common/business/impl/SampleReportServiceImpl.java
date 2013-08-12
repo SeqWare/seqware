@@ -34,7 +34,7 @@ public class SampleReportServiceImpl implements SampleReportService {
 
   /** {@inheritDoc} */
   @Override
-  public List<String> getStatusesForStudy(Study study) {
+  public List<Status> getStatusesForStudy(Study study) {
     return sampleReportDAO.getStatusesForStudy(study);
   }
 
@@ -52,25 +52,25 @@ public class SampleReportServiceImpl implements SampleReportService {
 
   /** {@inheritDoc} */
   @Override
-  public int countOfStatus(Study study, String status) {
+  public int countOfStatus(Study study, Status status) {
     return sampleReportDAO.countOfStatus(study, status);
   }
 
   /** {@inheritDoc} */
   @Override
-  public int countOfStatus(SequencerRun seqRun, String status) {
+  public int countOfStatus(SequencerRun seqRun, Status status) {
     return sampleReportDAO.countOfStatus(seqRun, status);
   }
 
   /** {@inheritDoc} */
   @Override
-  public int countOfStatus(Study study, Workflow workflow, String status) {
+  public int countOfStatus(Study study, Workflow workflow, Status status) {
     return sampleReportDAO.countOfStatus(study, workflow, status);
   }
 
   /** {@inheritDoc} */
   @Override
-  public int countOfStatus(SequencerRun seqRun, Workflow workflow, String status) {
+  public int countOfStatus(SequencerRun seqRun, Workflow workflow, Status status) {
     return sampleReportDAO.countOfStatus(seqRun, workflow, status);
   }
 
@@ -88,13 +88,13 @@ public class SampleReportServiceImpl implements SampleReportService {
 
   /** {@inheritDoc} */
   @Override
-  public String getStatus(Study study, Sample childSample, Workflow workflow) {
+  public Status getStatus(Study study, Sample childSample, Workflow workflow) {
     return sampleReportDAO.getStatus(study, childSample, workflow);
   }
 
   /** {@inheritDoc} */
   @Override
-  public String getStatus(Study study, Sample sample, IUS ius, Lane lane, SequencerRun seqRun, Workflow workflow) {
+  public Status getStatus(Study study, Sample sample, IUS ius, Lane lane, SequencerRun seqRun, Workflow workflow) {
     if (seqRun == null) {
       return getStatus(study, sample, workflow);
     }
@@ -103,7 +103,7 @@ public class SampleReportServiceImpl implements SampleReportService {
 
   /** {@inheritDoc} */
   @Override
-  public List<String> getStatusesForWorkflow(Study study, Workflow workflow) {
+  public List<Status> getStatusesForWorkflow(Study study, Workflow workflow) {
     return sampleReportDAO.getStatusesForWorkflow(study, workflow);
   }
 
@@ -124,13 +124,13 @@ public class SampleReportServiceImpl implements SampleReportService {
 
   /** {@inheritDoc} */
   @Override
-  public List<String> getStatusesForWorkflow(SequencerRun seqRun, Workflow workflow) {
+  public List<Status> getStatusesForWorkflow(SequencerRun seqRun, Workflow workflow) {
     return sampleReportDAO.getStatusesForWorkflow(seqRun, workflow);
   }
 
   /** {@inheritDoc} */
   @Override
-  public List<String> getStatusesForSequencerRun(SequencerRun seqRun) {
+  public List<Status> getStatusesForSequencerRun(SequencerRun seqRun) {
     return sampleReportDAO.getStatusesForSequencerRun(seqRun);
   }
 

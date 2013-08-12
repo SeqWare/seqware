@@ -74,7 +74,7 @@ public class LibraryDAOHibernate implements LibraryDAO {
 
   private boolean isLibrary(Sample sample) {
     for (SampleAttribute sampleAttribute : sample.getSampleAttributes()) {
-      if (sampleAttribute.getTag().equals("geo_reaction_id")) {
+      if (sampleAttribute.getTag().equals(Sample.GEO_REACTION_ID_ATTR_TAG)) {
         return true;
       }
     }

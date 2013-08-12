@@ -13,6 +13,7 @@ import net.sourceforge.seqware.common.business.OrganismService;
 import net.sourceforge.seqware.common.business.SampleService;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.common.util.Bool;
 import net.sourceforge.solexatools.Security;
 import net.sourceforge.solexatools.util.Constant;
 
@@ -356,7 +357,7 @@ public class SampleController extends MultiActionController {
 		Sample				    sample			= getRequestedSample(request);
 		
 		ServletContext context = this.getServletContext();
-		String deleteRealFiles = context.getInitParameter("delete.files.for.node.deletion");
+		boolean deleteRealFiles = Bool.parse(context.getInitParameter("delete.files.for.node.deletion"));
 
 		if (sample != null) {
 		    if(registration.equals(sample.getOwner()) || registration.isLIMSAdmin()){

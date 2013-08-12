@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
 
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
@@ -91,8 +92,6 @@ public class WorkflowStatusChecker extends Plugin {
                       "Optional: if specified, workflow runs scheduled to this specified host will be checked even if this is not the current host (a dangerous option).").withRequiredArg();
     parser.acceptsAll(Arrays.asList("check-failed", "cf"),
                       "Optional: if specified, workflow runs that have previously failed will be re-checked.");
-    parser.acceptsAll(Arrays.asList("check-unknown", "cu"),
-                      "Optional: if specified, workflow runs that have previously marked unknown will be re-checked.");
     parser.acceptsAll(Arrays.asList("threads-in-thread-pool", "tp"),
                       "Optional: this will determine the number of threads to run with. Default: 1").withRequiredArg().ofType(Integer.class);
 
@@ -164,13 +163,10 @@ public class WorkflowStatusChecker extends Plugin {
     } else { // this checks workflows and writes their status back to the DB
 
       // get a list of running workflows
-      List<WorkflowRun> runningWorkflows = this.metadata.getWorkflowRunsByStatus(metadata.RUNNING);
-      runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(metadata.PENDING));
+      List<WorkflowRun> runningWorkflows = this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.running);
+      runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.pending));
       if (options.has("check-failed")) {
-        runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(metadata.FAILED));
-      }
-      if (options.has("check-unknown")) {
-        runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(metadata.UNKNOWN));
+        runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.failed));
       }
 
       // setup thread pool
@@ -337,27 +333,22 @@ public class WorkflowStatusChecker extends Plugin {
         Status status = wfJob.getStatus();
 
         /*
-         * Not sure about these, but since I can find no documentation regarding
-         * the canonical set of seqware workflow run statuses (and since the DB
-         * has both "completed" and "success"), I'm going to limit these to what
-         * checkPegasus() uses.
-         * 
-         * Also, there's no analog to SUSPENDED or KILLED on the pegasus side,
+         * There's no analog to SUSPENDED or KILLED on the pegasus side,
          * thus no specific seqware equivalent.
          */
-        String sqwStatus;
+        WorkflowRunStatus sqwStatus;
         switch (status) {
         case PREP:
         case RUNNING:
         case SUSPENDED:
-          sqwStatus = "running";
+          sqwStatus = WorkflowRunStatus.running;
           break;
         case FAILED:
         case KILLED:
-          sqwStatus = "failed";
+          sqwStatus = WorkflowRunStatus.failed;
           break;
         case SUCCEEDED:
-          sqwStatus = "completed";
+          sqwStatus = WorkflowRunStatus.completed;
           break;
         default:
           throw new RuntimeException("Unexpected status value (" + status + ") from oozie workflow job (" + jobId + ")");
@@ -414,7 +405,7 @@ public class WorkflowStatusChecker extends Plugin {
         if (currRet.getExitStatus() == ReturnValue.SUCCESS) {
           synchronized (metadata_sync) {
             WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(),
-                                                                    wr.getTemplate(), "completed", wr.getStatusCmd(),
+                                                                    wr.getTemplate(), WorkflowRunStatus.completed, wr.getStatusCmd(),
                                                                     wr.getCurrentWorkingDir(), wr.getDax(),
                                                                     wr.getIniFile(), wr.getHost(), currRet.getStderr(),
                                                                     currRet.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
@@ -423,7 +414,7 @@ public class WorkflowStatusChecker extends Plugin {
         } else if (currRet.getExitStatus() == ReturnValue.PROCESSING) {
           synchronized (metadata_sync) {
             WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(),
-                                                                    wr.getTemplate(), "running", wr.getStatusCmd(),
+                                                                    wr.getTemplate(), WorkflowRunStatus.running, wr.getStatusCmd(),
                                                                     wr.getCurrentWorkingDir(), wr.getDax(),
                                                                     wr.getIniFile(), wr.getHost(), currRet.getStderr(),
                                                                     currRet.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
@@ -433,7 +424,7 @@ public class WorkflowStatusChecker extends Plugin {
           Log.error("WORKFLOW FAILURE: this workflow has failed and this status will be saved to the DB.");
           synchronized (metadata_sync) {
             WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(),
-                                                                    wr.getTemplate(), "failed", wr.getStatusCmd(),
+                                                                    wr.getTemplate(), WorkflowRunStatus.failed, wr.getStatusCmd(),
                                                                     wr.getCurrentWorkingDir(), wr.getDax(),
                                                                     wr.getIniFile(), wr.getHost(), currRet.getStderr(),
                                                                     currRet.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());

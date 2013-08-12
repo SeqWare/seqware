@@ -29,10 +29,12 @@ import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
+import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleAttribute;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.SequencerRunAttribute;
+import net.sourceforge.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.model.StudyType;
@@ -41,6 +43,7 @@ import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
@@ -157,7 +160,7 @@ public class MetadataNoConnection extends Metadata {
     }
 
   @Override
-    public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath, String status) {
+    public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath, SequencerRunStatus status) {
         logger.info("No metadata connection");
         return (new ReturnValue(ReturnValue.SUCCESS));
     }
@@ -298,7 +301,7 @@ public class MetadataNoConnection extends Metadata {
 
   /** {@inheritDoc} */
   @Override
-  public ReturnValue update_processing_status(int processingID, String status) {
+  public ReturnValue update_processing_status(int processingID, ProcessingStatus status) {
     logger.info("No metadata connection");
     ReturnValue finished = new ReturnValue(ReturnValue.PROCESSING);
     finished.setExitStatus(ReturnValue.SUCCESS);
@@ -351,7 +354,7 @@ public class MetadataNoConnection extends Metadata {
 
   /** {@inheritDoc} */
   @Override
-  public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
+  public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRunStatus status,
       String statusCmd, String workingDirectory, String dax, String ini, String host,
       String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles) {
     logger.info("No metadata connection");
@@ -474,7 +477,7 @@ public class MetadataNoConnection extends Metadata {
 
   /** {@inheritDoc} */
   @Override
-  public List<WorkflowRun> getWorkflowRunsByStatus(String status) {
+  public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRunStatus status) {
     logger.info("No metadata connection");
     return new ArrayList<WorkflowRun>();
   }

@@ -75,150 +75,161 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
      */
     /** {@inheritDoc} */
     public List<Integer> getProcStatuses(SequencerRun sequencerRun) {
-        List<Integer> procStatuses = Arrays.asList(0, 0, 0);
-
-        String subQuery = "select COUNT(status)  from Processing myproc,( "
-                + "select child_id id from processing_root_to_leaf p " + "UNION ALL "
-                + "select distinct parent_id id from processing_root_to_leaf p "
-                + "UNION ALL "
-                + "select processing_id id from processing_ius pr_i "
-                + "inner join ius i on (i.ius_id = pr_i.ius_id)"
-                + "inner join lane ln on (ln.lane_id = i.lane_id) "
-                + "where ln.sequencer_run_id = ? and processing_id not in (select parent_id from processing_relationship) "
-                + // -- processing_sequencer_runs
-                "UNION ALL "
-                + "SELECT processing_id id FROM processing_sequencer_runs p_s_r "
-                + "where p_s_r.sequencer_run_id = ? and processing_id not in (select parent_id from processing_relationship) "
-                + // -- processing_lanes
-                "UNION ALL " + "SELECT processing_id id FROM processing_lanes p_l "
-                + "inner join lane l on (p_l.lane_id = l.lane_id) "
-                + "where l.sequencer_run_id = ? and processing_id not in (select parent_id from processing_relationship)) ";
-
-        String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
-                + "SELECT p.child_id as child_id, p.parent_id "
-                + "FROM processing_relationship p "
-                + "inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
-                + "inner join ius i on (i.ius_id = pr_i.ius_id) "
-                + "inner join lane ln on (ln.lane_id=i.lane_id)"
-                + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
-                + "where sr.sequencer_run_id = ? "
-                + // -- processing_sequencer_runs
-                "UNION "
-                + "SELECT p.child_id as child_id, p.parent_id "
-                + "FROM processing_relationship p "
-                + "inner join processing_sequencer_runs p_s_r on (p_s_r.processing_id = p.parent_id) "
-                + "where p_s_r.sequencer_run_id = ? "
-                + // -- processing_lanes
-                "UNION " + "SELECT p.child_id as child_id, p.parent_id "
-                + "FROM processing_relationship p inner join processing_lanes p_l on (p_l.processing_id = p.parent_id) "
-                + "inner join lane l on (p_l.lane_id = l.lane_id) " + "where l.sequencer_run_id = ? "
-                + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
-                + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id)  "
-                + subQuery + "q where ( position(? in status) > 0) and myproc.processing_id=q.id " + "UNION ALL " + subQuery
-                + "q where ( position(? in status) > 0 or position(? in status) > 0) and myproc.processing_id=q.id "
-                + "UNION ALL " + subQuery + "q where ( position(? in status) > 0) and myproc.processing_id=q.id";
-
-        List list = this.getSession().createSQLQuery(query).setInteger(0, sequencerRun.getSequencerRunId()).setInteger(1, sequencerRun.getSequencerRunId()).setInteger(2, sequencerRun.getSequencerRunId()).setInteger(3, sequencerRun.getSequencerRunId()).setInteger(4, sequencerRun.getSequencerRunId()).setInteger(5, sequencerRun.getSequencerRunId()).setString(6, "success").setInteger(7, sequencerRun.getSequencerRunId()).setInteger(8, sequencerRun.getSequencerRunId()).setInteger(9, sequencerRun.getSequencerRunId()).setString(10, "running").setString(11, "pending").setInteger(12, sequencerRun.getSequencerRunId()).setInteger(13, sequencerRun.getSequencerRunId()).setInteger(14, sequencerRun.getSequencerRunId()).setString(15, "failed").list();
-
-        if (list.get(0) != null) {
-            procStatuses.set(0, Integer.parseInt(list.get(0).toString()));
-        }
-        if (list.get(1) != null) {
-            procStatuses.set(1, Integer.parseInt(list.get(1).toString()));
-        }
-        if (list.get(2) != null) {
-            procStatuses.set(2, Integer.parseInt(list.get(2).toString()));
-        }
-
-        // logger.debug("Count =" + list.toString());
-
-        return procStatuses;
+      // FIXME: maybe?
+      throw new RuntimeException("Current implementation known to be broken.  Fix if you need it.");
+//        List<Integer> procStatuses = Arrays.asList(0, 0, 0);
+//
+//        String subQuery = "select COUNT(status)  from Processing myproc,( "
+//                + "select child_id id from processing_root_to_leaf p " + "UNION ALL "
+//                + "select distinct parent_id id from processing_root_to_leaf p "
+//                + "UNION ALL "
+//                + "select processing_id id from processing_ius pr_i "
+//                + "inner join ius i on (i.ius_id = pr_i.ius_id)"
+//                + "inner join lane ln on (ln.lane_id = i.lane_id) "
+//                + "where ln.sequencer_run_id = ? and processing_id not in (select parent_id from processing_relationship) "
+//                + // -- processing_sequencer_runs
+//                "UNION ALL "
+//                + "SELECT processing_id id FROM processing_sequencer_runs p_s_r "
+//                + "where p_s_r.sequencer_run_id = ? and processing_id not in (select parent_id from processing_relationship) "
+//                + // -- processing_lanes
+//                "UNION ALL " + "SELECT processing_id id FROM processing_lanes p_l "
+//                + "inner join lane l on (p_l.lane_id = l.lane_id) "
+//                + "where l.sequencer_run_id = ? and processing_id not in (select parent_id from processing_relationship)) ";
+//
+//        String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
+//                + "SELECT p.child_id as child_id, p.parent_id "
+//                + "FROM processing_relationship p "
+//                + "inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
+//                + "inner join ius i on (i.ius_id = pr_i.ius_id) "
+//                + "inner join lane ln on (ln.lane_id=i.lane_id)"
+//                + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
+//                + "where sr.sequencer_run_id = ? "
+//                + // -- processing_sequencer_runs
+//                "UNION "
+//                + "SELECT p.child_id as child_id, p.parent_id "
+//                + "FROM processing_relationship p "
+//                + "inner join processing_sequencer_runs p_s_r on (p_s_r.processing_id = p.parent_id) "
+//                + "where p_s_r.sequencer_run_id = ? "
+//                + // -- processing_lanes
+//                "UNION " + "SELECT p.child_id as child_id, p.parent_id "
+//                + "FROM processing_relationship p inner join processing_lanes p_l on (p_l.processing_id = p.parent_id) "
+//                + "inner join lane l on (p_l.lane_id = l.lane_id) " + "where l.sequencer_run_id = ? "
+//                + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
+//                + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id)  "
+//                + subQuery + "q where ( position(? in status) > 0) and myproc.processing_id=q.id " + "UNION ALL " + subQuery
+//                + "q where ( position(? in status) > 0 or position(? in status) > 0) and myproc.processing_id=q.id "
+//                + "UNION ALL " + subQuery + "q where ( position(? in status) > 0) and myproc.processing_id=q.id";
+//
+//        List list = this.getSession().createSQLQuery(query).setInteger(0, sequencerRun.getSequencerRunId()).setInteger(1, sequencerRun.getSequencerRunId()).setInteger(2, sequencerRun.getSequencerRunId()).setInteger(3, sequencerRun.getSequencerRunId()).setInteger(4, sequencerRun.getSequencerRunId()).setInteger(5, sequencerRun.getSequencerRunId()).setString(6, "success").setInteger(7, sequencerRun.getSequencerRunId()).setInteger(8, sequencerRun.getSequencerRunId()).setInteger(9, sequencerRun.getSequencerRunId()).setString(10, "running").setString(11, "pending").setInteger(12, sequencerRun.getSequencerRunId()).setInteger(13, sequencerRun.getSequencerRunId()).setInteger(14, sequencerRun.getSequencerRunId()).setString(15, "failed").list();
+//
+//        if (list.get(0) != null) {
+//            procStatuses.set(0, Integer.parseInt(list.get(0).toString()));
+//        }
+//        if (list.get(1) != null) {
+//            procStatuses.set(1, Integer.parseInt(list.get(1).toString()));
+//        }
+//        if (list.get(2) != null) {
+//            procStatuses.set(2, Integer.parseInt(list.get(2).toString()));
+//        }
+//
+//        // logger.debug("Count =" + list.toString());
+//
+//        return procStatuses;
     }
 
     /** {@inheritDoc} */
     public Integer getProcessedCnt(SequencerRun sequencerRun) {
-        Integer processedCount = 0;
+      // FIXME: maybe?
+      throw new RuntimeException("Current implementation known to be broken.  Fix if you need it.");
 
-        String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
-                + "SELECT p.child_id as child_id, p.parent_id " + "FROM processing_relationship p "
-                + "inner join processing_lanes l on (l.processing_id = p.parent_id) "
-                + "inner join lane ln on (ln.lane_id = l.lane_id) "
-                + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
-                + "where sr.sequencer_run_id = ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
-                + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id) "
-                + "select COUNT(status)  from Processing myproc, " + "(select child_id id from processing_root_to_leaf p "
-                + "UNION ALL " + "select distinct parent_id id from processing_root_to_leaf p " + "UNION ALL "
-                + "select processing_id id from processing_lanes l " + "inner join lane ln on (ln.lane_id = l.lane_id) "
-                + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
-                + "where sr.sequencer_run_id = ? "
-                + "and processing_id not in (select parent_id from processing_relationship)) q "
-                + "where ( position(? in status) > 0) " + "and myproc.processing_id=q.id";
-
-        List list = this.getSession().createSQLQuery(query).setInteger(0, sequencerRun.getSequencerRunId()).setInteger(1, sequencerRun.getSequencerRunId()).setString(2, "success").list();
-
-        if (list.get(0) != null) {
-            processedCount = Integer.parseInt(list.get(0).toString());
-        }
-
-        logger.debug("SUCCESS count =" + processedCount);
-
-        return processedCount;
+//        Integer processedCount = 0;
+//
+//        String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
+//                + "SELECT p.child_id as child_id, p.parent_id " + "FROM processing_relationship p "
+//                + "inner join processing_lanes l on (l.processing_id = p.parent_id) "
+//                + "inner join lane ln on (ln.lane_id = l.lane_id) "
+//                + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
+//                + "where sr.sequencer_run_id = ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
+//                + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id) "
+//                + "select COUNT(status)  from Processing myproc, " + "(select child_id id from processing_root_to_leaf p "
+//                + "UNION ALL " + "select distinct parent_id id from processing_root_to_leaf p " + "UNION ALL "
+//                + "select processing_id id from processing_lanes l " + "inner join lane ln on (ln.lane_id = l.lane_id) "
+//                + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
+//                + "where sr.sequencer_run_id = ? "
+//                + "and processing_id not in (select parent_id from processing_relationship)) q "
+//                + "where ( position(? in status) > 0) " + "and myproc.processing_id=q.id";
+//
+//        List list = this.getSession().createSQLQuery(query).setInteger(0, sequencerRun.getSequencerRunId()).setInteger(1, sequencerRun.getSequencerRunId()).setString(2, "success").list();
+//
+//        if (list.get(0) != null) {
+//            processedCount = Integer.parseInt(list.get(0).toString());
+//        }
+//
+//        logger.debug("SUCCESS count =" + processedCount);
+//
+//        return processedCount;
     }
 
     /** {@inheritDoc} */
     public Integer getProcessingCnt(SequencerRun sequencerRun) {
-        Integer processingCount = 0;
-
-        String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
-                + "SELECT p.child_id as child_id, p.parent_id " + "FROM processing_relationship p "
-                + "inner join processing_lanes l on (l.processing_id = p.parent_id) "
-                + "inner join lane ln on (ln.lane_id = l.lane_id) "
-                + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
-                + "where sr.sequencer_run_id = ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
-                + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id) "
-                + "select COUNT(status)  from Processing myproc, " + "(select child_id id from processing_root_to_leaf p "
-                + "UNION ALL " + "select distinct parent_id id from processing_root_to_leaf p " + "UNION ALL "
-                + "select processing_id id from processing_lanes l " + "inner join lane ln on (ln.lane_id = l.lane_id) "
-                + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
-                + "where sr.sequencer_run_id = ? "
-                + "and processing_id not in (select parent_id from processing_relationship)) q "
-                + "where ( position(? in status) > 0 or position(? in status) > 0) " + "and myproc.processing_id=q.id";
-
-        List list = this.getSession().createSQLQuery(query).setInteger(0, sequencerRun.getSequencerRunId()).setInteger(1, sequencerRun.getSequencerRunId()).setString(2, "running").setString(3, "pending").list();
-
-        if (list.get(0) != null) {
-            processingCount = Integer.parseInt(list.get(0).toString());
-        }
-
-        return processingCount;
+      // FIXME: maybe?
+      throw new RuntimeException("Current implementation known to be broken.  Fix if you need it.");
+      
+//        Integer processingCount = 0;
+//
+//        String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
+//                + "SELECT p.child_id as child_id, p.parent_id " + "FROM processing_relationship p "
+//                + "inner join processing_lanes l on (l.processing_id = p.parent_id) "
+//                + "inner join lane ln on (ln.lane_id = l.lane_id) "
+//                + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
+//                + "where sr.sequencer_run_id = ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
+//                + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id) "
+//                + "select COUNT(status)  from Processing myproc, " + "(select child_id id from processing_root_to_leaf p "
+//                + "UNION ALL " + "select distinct parent_id id from processing_root_to_leaf p " + "UNION ALL "
+//                + "select processing_id id from processing_lanes l " + "inner join lane ln on (ln.lane_id = l.lane_id) "
+//                + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
+//                + "where sr.sequencer_run_id = ? "
+//                + "and processing_id not in (select parent_id from processing_relationship)) q "
+//                + "where ( position(? in status) > 0 or position(? in status) > 0) " + "and myproc.processing_id=q.id";
+//
+//        List list = this.getSession().createSQLQuery(query).setInteger(0, sequencerRun.getSequencerRunId()).setInteger(1, sequencerRun.getSequencerRunId()).setString(2, "running").setString(3, "pending").list();
+//
+//        if (list.get(0) != null) {
+//            processingCount = Integer.parseInt(list.get(0).toString());
+//        }
+//
+//        return processingCount;
     }
 
     /** {@inheritDoc} */
     public Integer getErrorCnt(SequencerRun sequencerRun) {
-        Integer errorCount = 0;
+      // FIXME: maybe?
+      throw new RuntimeException("Current implementation known to be broken.  Fix if you need it.");
 
-        String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
-                + "SELECT p.child_id as child_id, p.parent_id " + "FROM processing_relationship p "
-                + "inner join processing_lanes l on (l.processing_id = p.parent_id) "
-                + "inner join lane ln on (ln.lane_id = l.lane_id) "
-                + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
-                + "where sr.sequencer_run_id = ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
-                + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id) "
-                + "select COUNT(status)  from Processing myproc, " + "(select child_id id from processing_root_to_leaf p "
-                + "UNION ALL " + "select distinct parent_id id from processing_root_to_leaf p " + "UNION ALL "
-                + "select processing_id id from processing_lanes l " + "inner join lane ln on (ln.lane_id = l.lane_id) "
-                + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
-                + "where sr.sequencer_run_id = ? "
-                + "and processing_id not in (select parent_id from processing_relationship)) q "
-                + "where ( position(? in status) > 0) " + "and myproc.processing_id=q.id";
-
-        List list = this.getSession().createSQLQuery(query).setInteger(0, sequencerRun.getSequencerRunId()).setInteger(1, sequencerRun.getSequencerRunId()).setString(2, "failed").list();
-
-        if (list.get(0) != null) {
-            errorCount = Integer.parseInt(list.get(0).toString());
-        }
-
-        return errorCount;
+//        Integer errorCount = 0;
+//
+//        String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
+//                + "SELECT p.child_id as child_id, p.parent_id " + "FROM processing_relationship p "
+//                + "inner join processing_lanes l on (l.processing_id = p.parent_id) "
+//                + "inner join lane ln on (ln.lane_id = l.lane_id) "
+//                + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
+//                + "where sr.sequencer_run_id = ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
+//                + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id) "
+//                + "select COUNT(status)  from Processing myproc, " + "(select child_id id from processing_root_to_leaf p "
+//                + "UNION ALL " + "select distinct parent_id id from processing_root_to_leaf p " + "UNION ALL "
+//                + "select processing_id id from processing_lanes l " + "inner join lane ln on (ln.lane_id = l.lane_id) "
+//                + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
+//                + "where sr.sequencer_run_id = ? "
+//                + "and processing_id not in (select parent_id from processing_relationship)) q "
+//                + "where ( position(? in status) > 0) " + "and myproc.processing_id=q.id";
+//
+//        List list = this.getSession().createSQLQuery(query).setInteger(0, sequencerRun.getSequencerRunId()).setInteger(1, sequencerRun.getSequencerRunId()).setString(2, "failed").list();
+//
+//        if (list.get(0) != null) {
+//            errorCount = Integer.parseInt(list.get(0).toString());
+//        }
+//
+//        return errorCount;
     }
 
     /** {@inheritDoc} */

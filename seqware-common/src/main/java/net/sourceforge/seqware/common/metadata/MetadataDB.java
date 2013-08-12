@@ -37,10 +37,12 @@ import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
+import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleAttribute;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.SequencerRunAttribute;
+import net.sourceforge.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.model.StudyType;
@@ -49,8 +51,10 @@ import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Bool;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 
@@ -425,7 +429,7 @@ public class MetadataDB extends Metadata {
     StringBuffer sql = new StringBuffer();
     try {
       // FIXME: Add a new processing entry
-      sql.append("INSERT INTO processing (status, create_tstmp) VALUES( '" + Metadata.PENDING + "', now())");
+      sql.append("INSERT INTO processing (status, create_tstmp) VALUES( '" + ProcessingStatus.pending.name() + "', now())");
       processingID = InsertAndReturnNewPrimaryKey(sql.toString(), "processing_processing_id_seq");
 
       // Associate the processing entry with the zero or more parents
@@ -472,7 +476,7 @@ public class MetadataDB extends Metadata {
     StringBuffer sql = new StringBuffer();
     try {
       // FIXME: Add a new processing entry
-      sql.append("INSERT INTO processing (status, create_tstmp) VALUES( '" + Metadata.PENDING + "', now())");
+      sql.append("INSERT INTO processing (status, create_tstmp) VALUES( '" + ProcessingStatus.pending.name() + "', now())");
       processingID = InsertAndReturnNewPrimaryKey(sql.toString(), "processing_processing_id_seq");
 
       // Associate the processing entry with the zero or more parents
@@ -843,17 +847,17 @@ public class MetadataDB extends Metadata {
    * {@inheritDoc}
    */
   @Override
-  public ReturnValue update_processing_status(int processingID, String status) {
+  public ReturnValue update_processing_status(int processingID, ProcessingStatus status) {
 
     if (status == null) {
-      return new ReturnValue(null, "String argument cannot be null", ReturnValue.INVALIDARGUMENT);
+      return new ReturnValue(null, "Processing.Status argument cannot be null", ReturnValue.INVALIDARGUMENT);
     }
 
     // Create a SQL statement
     StringBuffer sql = new StringBuffer();
     try {
       sql.append("UPDATE processing SET status = ");
-      sql.append("'" + status + "'");
+      sql.append("'" + status.name() + "'");
       sql.append(", update_tstmp='" + new Timestamp(System.currentTimeMillis()) + "' ");
       sql.append(" WHERE processing_id = " + processingID);
 
@@ -954,7 +958,7 @@ public class MetadataDB extends Metadata {
         wr.setCommand(rs.getString("cmd"));
         wr.setTemplate(rs.getString("workflow_template"));
         wr.setDax(rs.getString("dax"));
-        wr.setStatus(rs.getString("status"));
+        wr.setStatus(WorkflowRunStatus.valueOf(rs.getString("status")));
         wr.setStatusCmd(rs.getString("status_cmd"));
         wr.setHost(rs.getString("host"));
         wr.setCurrentWorkingDir(rs.getString("current_working_dir"));
@@ -1021,7 +1025,7 @@ public class MetadataDB extends Metadata {
    * {@inheritDoc}
    */
   @Override
-  public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status,
+  public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRunStatus status,
           String statusCmd, String workingDirectory, String dax, String ini, String host,
           String stdErr, String stdOut, String workflowengine, Set<Integer> inputFiles) {
 
@@ -1035,7 +1039,7 @@ public class MetadataDB extends Metadata {
     // TODO: need to add the currStep, stderr, etc
     try {
       //
-      String sql = "UPDATE workflow_run SET status = " + formatSQL(status, "pending") + ", cmd = "
+      String sql = "UPDATE workflow_run SET status = " + formatSQL(status.name(), WorkflowRunStatus.pending.name()) + ", cmd = "
               + formatSQL(pegasusCmd, null) + ", workflow_template = " + formatSQL(workflowTemplate, null) + ", dax = "
               + formatSQL(dax, null) + ", status_cmd = " + formatSQL(statusCmd, null) + ", current_working_dir = "
               + formatSQL(workingDirectory, null) + ", ini_file = " + formatSQL(ini, null) + ", host = "
@@ -1505,10 +1509,7 @@ public class MetadataDB extends Metadata {
       // foreach workflow param add an entry in the workflow_param table
       for (String key : hm.keySet()) {
         Map<String, String> details = hm.get(key);
-        String display = "false";
-        if ("T".equals(details.get("display"))) {
-          display = "true";
-        }
+        boolean display = Bool.parse(details.get("display"));
         String insert = "insert into workflow_param (workflow_id, type, key, display, display_name, file_meta_type, default_value) values ( "
                 + workflowId
                 + ", "
@@ -1616,19 +1617,19 @@ public class MetadataDB extends Metadata {
     try {
       int fileId = insertFileRecord(file);
       if (!linkWorkflowRunAndParent(workflowRunId, iusAccession)) {
-        update_processing_status(processingId, Metadata.FAILED);
+        update_processing_status(processingId, ProcessingStatus.failed);
         returnVal = new ReturnValue(ReturnValue.INVALIDPARAMETERS);
         return returnVal;
       }
       update_processing_workflow_run(processingId, get_workflow_run_accession(workflowRunId));
       linkProcessingAndFile(processingId, fileId);
-      update_processing_status(processingId, Metadata.SUCCESS);
+      update_processing_status(processingId, ProcessingStatus.success);
 
     } catch (SQLException e) {
       e.printStackTrace();
       returnVal = new ReturnValue(ReturnValue.SQLQUERYFAILED);
       if (processingId != Integer.MIN_VALUE) {
-        update_processing_status(processingId, Metadata.FAILED);
+        update_processing_status(processingId, ProcessingStatus.failed);
       }
     }
 
@@ -1770,12 +1771,12 @@ public class MetadataDB extends Metadata {
    * {@inheritDoc}
    */
   @Override
-  public List<WorkflowRun> getWorkflowRunsByStatus(String status) {
+  public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRunStatus status) {
 
     ArrayList<WorkflowRun> results = new ArrayList<WorkflowRun>();
 
     String sql = "select workflow_run_id, name, ini_file, cmd, workflow_template, dax, status, status_cmd, seqware_revision, host, current_working_dir, username, create_tstmp from workflow_run where status = '"
-            + status + "'";
+            + status.name() + "'";
     ResultSet rs;
     try {
       rs = executeQuery(sql);
@@ -1787,7 +1788,7 @@ public class MetadataDB extends Metadata {
         wr.setCommand(rs.getString("cmd"));
         wr.setTemplate(rs.getString("workflow_template"));
         wr.setDax(rs.getString("dax"));
-        wr.setStatus(rs.getString("status"));
+        wr.setStatus(WorkflowRunStatus.valueOf(rs.getString("status")));
         wr.setStatusCmd(rs.getString("status_cmd"));
         wr.setHost(rs.getString("host"));
         wr.setCurrentWorkingDir(rs.getString("current_working_dir"));
@@ -1822,7 +1823,7 @@ public class MetadataDB extends Metadata {
         wr.setCommand(rs.getString("cmd"));
         wr.setTemplate(rs.getString("workflow_template"));
         wr.setDax(rs.getString("dax"));
-        wr.setStatus(rs.getString("status"));
+        wr.setStatus(WorkflowRunStatus.valueOf(rs.getString("status")));
         wr.setStatusCmd(rs.getString("status_cmd"));
         wr.setHost(rs.getString("host"));
         wr.setCurrentWorkingDir(rs.getString("current_working_dir"));
@@ -2049,7 +2050,7 @@ public class MetadataDB extends Metadata {
   }
 
   @Override
-  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath, String status) {
+  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath, SequencerRunStatus status) {
     throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
   }
 
