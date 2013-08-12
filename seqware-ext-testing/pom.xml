@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent> 
-        <version>0.13.6.9</version> 
+        <version>0.13.6.10-SNAPSHOT</version> 
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
         <relativePath>../pom.xml</relativePath> 
