@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -165,6 +166,7 @@ public class WorkflowStatusChecker extends Plugin {
       List<WorkflowRun> runningWorkflows = this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.running);
       runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.pending));
       runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted_cancel));
+      runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted_retry));
       if (options.has("check-failed")) {
         runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.failed));
       }
@@ -330,29 +332,50 @@ public class WorkflowStatusChecker extends Plugin {
         if (wfJob == null)
           return;
 
-        WorkflowJob.Status curOozieStatus = wfJob.getStatus();
         WorkflowRunStatus curSqwStatus = wr.getStatus();
         WorkflowRunStatus nextSqwStatus;
         
-        if (curSqwStatus == WorkflowRunStatus.submitted_cancel){
-          switch (curOozieStatus) {
+        switch(curSqwStatus){
+        case submitted_cancel:
+        {
+          switch (wfJob.getStatus()) {
           case PREP:
           case RUNNING:
           case SUSPENDED:
             // Note: here we treat SUSPENDED as running, so that it can be killed
             oc.kill(jobId);
-            wfJob = oc.getJobInfo(jobId);
-            curOozieStatus = wfJob.getStatus();
             nextSqwStatus = WorkflowRunStatus.cancelled;
+            break;
           default:
-            // Let FAILED/SUCCEEDED propagate as normal
-            nextSqwStatus = convertOozieToSeqware(curOozieStatus);
+            // Let others propagate as normal
+            nextSqwStatus = convertOozieToSeqware(wfJob.getStatus());
           }            
+          break;
         }
-        else {
-          nextSqwStatus = convertOozieToSeqware(curOozieStatus);
+        case submitted_retry:
+        {
+          switch(wfJob.getStatus()){
+          case SUSPENDED:
+            oc.resume(jobId);
+            nextSqwStatus = WorkflowRunStatus.pending;
+            break;
+          case FAILED:
+          case KILLED:
+            Properties conf = oc.createConfiguration();
+            conf.setProperty(OozieClient.APP_PATH, wfJob.getAppPath());
+            conf.setProperty(OozieClient.RERUN_FAIL_NODES, "true");
+            oc.reRun(jobId, conf);
+            nextSqwStatus = WorkflowRunStatus.pending;
+            break;
+          default:
+            // Let others propagate as normal
+            nextSqwStatus = convertOozieToSeqware(wfJob.getStatus());
+          }
+          break;
         }
-        
+        default:
+          nextSqwStatus = convertOozieToSeqware(wfJob.getStatus());
+        }
 
         String err;
         String out;
