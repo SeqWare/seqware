@@ -26,11 +26,13 @@ public class ExperimentSpotDesignDAOHibernate extends HibernateDaoSupport implem
   }
 
   /** {@inheritDoc} */
+  @Override
   public void insert(ExperimentSpotDesign obj) {
     this.getHibernateTemplate().save(obj);
   }
 
   /** {@inheritDoc} */
+  @Override
   public void update(ExperimentSpotDesign obj) {
     this.getHibernateTemplate().update(obj);
   }
@@ -41,6 +43,7 @@ public class ExperimentSpotDesignDAOHibernate extends HibernateDaoSupport implem
    * Finds an instance of ExperimentSpotDesign in the database by the
    * ExperimentSpotDesign ID.
    */
+  @Override
   public ExperimentSpotDesign findByID(Integer id) {
     String query = "from ExperimentSpotDesign as e where e.experimentSpotDesignId = ?";
     ExperimentSpotDesign obj = null;
@@ -71,6 +74,8 @@ public class ExperimentSpotDesignDAOHibernate extends HibernateDaoSupport implem
     /** {@inheritDoc} */
     @Override
     public List<ExperimentSpotDesign> list() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List expmts = this.getHibernateTemplate().find("from ExperimentSpotDesign as spotDesign" // desc
+                );
+        return expmts;
     }
 }

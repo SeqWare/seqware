@@ -19,7 +19,6 @@ package net.sourceforge.seqware.pipeline.plugins;
 import java.io.IOException;
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.metadb.util.TestDatabaseCreator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -45,6 +44,17 @@ public class BundleManagerET {
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDPARAMETERS, null);
         Assert.assertTrue("output contains exception", !listOutput.contains("Exception"));
         
+    }
+    
+    
+    @Test
+    public void exportEmptyParameters() throws IOException {
+        // SEQWARE-1700 -- export parameters for workflow without parameters
+        // cannot use install and install-dir-only at the same time SEQWARE-1632
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager "
+                + "-- --workflow-accession 4 --list-params";
+        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
+        Assert.assertTrue("output contains exception", !listOutput.contains("Exception"));
     }
     
     

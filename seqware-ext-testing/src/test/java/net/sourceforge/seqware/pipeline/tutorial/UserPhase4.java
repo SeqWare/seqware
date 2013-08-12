@@ -26,7 +26,7 @@ import org.junit.Test;
  * @author dyuen
  */
 public class UserPhase4 {
-    
+        
     public static final String FILE = "File";
     
     @Test
@@ -38,8 +38,8 @@ public class UserPhase4 {
     @Test
     public void testExistingFileInAndAssociateWithSample() throws IOException {
         GenericMetadataSaverET it = new GenericMetadataSaverET();
-        String output = it.saveGenericMetadataFileForSample(AccessionMap.accessionMap.get(UserPhase3.SAMPLE));
-        String sw_accession = UserTutorialSuiteET.getAndCheckProcessingAccession(output);
+        String output = it.saveGenericMetadataFileForSample(AccessionMap.accessionMap.get(UserPhase3.SAMPLE), false);
+        String sw_accession = OldUserTutorialSuiteET.getAndCheckProcessingAccession(output);
         AccessionMap.accessionMap.put(FILE, sw_accession);
     }
 }

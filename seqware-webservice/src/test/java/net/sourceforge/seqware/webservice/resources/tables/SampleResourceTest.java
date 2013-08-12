@@ -39,31 +39,57 @@ public class SampleResourceTest extends DatabaseResourceTest {
   @Override
   public void testPost() {
               System.out.println(getRelativeURI() + " POST");
+        testCreateNormalSample();
+        testCreateRootSample();
+  }
+
+    private void testCreateNormalSample() {
         Representation rep = null;
         JaxbObject<Sample> jbo = new JaxbObject<Sample>();
         try {
             Sample sample = new Sample();
+            sample.setName("Normal Sample");
             sample.setCreateTimestamp(new Date());
             sample.setUpdateTimestamp(new Date());
             Set<Sample> samples = sample.getParents();
-            samples.add(null);
+            //samples.add(null);
             Sample n = new Sample();
             n.setSampleId(1792);
             samples.add(n);
-            Assert.assertEquals(2, samples.size());
+            //Assert.assertEquals(2, samples.size());
             sample.setParents(samples);
             
             Document doc = XmlTools.marshalToDocument(jbo, sample);
             rep = resource.post(XmlTools.getRepresentation(doc));
             Sample s2 = (Sample)XmlTools.unMarshal(jbo,new Sample(), rep.getText());
-            Assert.assertEquals("Should have two parents!", 2, s2.getParents().size());
+            Assert.assertEquals("Should have 1 parent! (" + s2.getSampleId() + ")", 1, s2.getParents().size());
             rep.exhaust();
             rep.release();
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
         }
-  }
+    }
     
-    
+     private void testCreateRootSample() {
+        Representation rep = null;
+        JaxbObject<Sample> jbo = new JaxbObject<Sample>();
+        try {
+            Sample sample = new Sample();
+            sample.setName("Intended Root Sample");
+            sample.setCreateTimestamp(new Date());
+            sample.setUpdateTimestamp(new Date());
+            sample.getParents().add(null);
+            
+            Document doc = XmlTools.marshalToDocument(jbo, sample);
+            rep = resource.post(XmlTools.getRepresentation(doc));
+            Sample s2 = (Sample)XmlTools.unMarshal(jbo,new Sample(), rep.getText());
+            Assert.assertEquals("Should have no parents! (" + s2.getSampleId() + ")", 0, s2.getParents().size());
+            rep.exhaust();
+            rep.release();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(e.getMessage());
+        }
+    }
 }

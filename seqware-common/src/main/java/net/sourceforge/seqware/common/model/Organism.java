@@ -3,7 +3,6 @@ package	net.sourceforge.seqware.common.model;
 import java.io.Serializable;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 
 /**
@@ -12,7 +11,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Organism implements Serializable, Comparable<Organism> {
+public class Organism implements Serializable, Comparable<Organism>, SecondTierModel {
 	
 	private static final long serialVersionUID = 3472028192033390568L;
 	private Integer		organismId;
@@ -65,6 +64,7 @@ public class Organism implements Serializable, Comparable<Organism> {
 	 *
 	 * @return a int.
 	 */
+        @Override
 	public int hashCode() {
 		return new HashCodeBuilder()
 			.append(getName())
@@ -160,5 +160,10 @@ public class Organism implements Serializable, Comparable<Organism> {
 	public void setNcbiTaxId(Integer ncbiTaxId) {
 		this.ncbiTaxId = ncbiTaxId;
 	}
+
+    @Override
+    public int getModelId() {
+        return this.getOrganismId();
+    }
 	
 }

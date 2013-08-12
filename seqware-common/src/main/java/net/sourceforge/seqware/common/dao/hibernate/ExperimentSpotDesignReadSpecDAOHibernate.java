@@ -27,16 +27,19 @@ public class ExperimentSpotDesignReadSpecDAOHibernate extends HibernateDaoSuppor
   }
 
   /** {@inheritDoc} */
+  @Override
   public void insert(ExperimentSpotDesignReadSpec obj) {
     this.getHibernateTemplate().save(obj);
   }
 
   /** {@inheritDoc} */
+  @Override
   public void update(ExperimentSpotDesignReadSpec obj) {
     this.getHibernateTemplate().update(obj);
   }
 
   /** {@inheritDoc} */
+  @Override
   public void delete(ExperimentSpotDesignReadSpec obj) {
     this.getHibernateTemplate().delete(obj);
   }
@@ -47,6 +50,7 @@ public class ExperimentSpotDesignReadSpecDAOHibernate extends HibernateDaoSuppor
    * Finds an instance of ExperimentSpotDesignReadSpec in the database by the
    * ExperimentSpotDesignReadSpec ID.
    */
+  @Override
   public ExperimentSpotDesignReadSpec findByID(Integer id) {
     String query = "from ExperimentSpotDesignReadSpec as e where e.experimentSpotDesignReadSpecId = ?";
     ExperimentSpotDesignReadSpec obj = null;
@@ -59,6 +63,7 @@ public class ExperimentSpotDesignReadSpecDAOHibernate extends HibernateDaoSuppor
   }
 
   /** {@inheritDoc} */
+  @Override
   public ExperimentSpotDesignReadSpec updateDetached(ExperimentSpotDesignReadSpec experiment) {
     ExperimentSpotDesignReadSpec dbObject = findByID(experiment.getExperimentSpotDesignReadSpecId());
     try {
@@ -76,6 +81,8 @@ public class ExperimentSpotDesignReadSpecDAOHibernate extends HibernateDaoSuppor
     /** {@inheritDoc} */
     @Override
     public List<ExperimentSpotDesignReadSpec> list() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List expmts = this.getHibernateTemplate().find("from ExperimentSpotDesignReadSpec as readSpec" // desc
+                );
+        return expmts;
     }
 }

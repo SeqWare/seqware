@@ -4,7 +4,7 @@
 # somewhere on your $PATH, like ~/bin. The rest of Seqware will be
 # installed upon first run into the ~/.seqware directory.
 
-CURRENT_SEQWARE_VERSION="1.0.2"
+CURRENT_SEQWARE_VERSION="${project.version}"
 
 export SEQWARE_VERSION="${SEQWARE_VERSION:-"$CURRENT_SEQWARE_VERSION"}"
 
@@ -153,6 +153,9 @@ if [ "$1" = "self-install" ]; then
     mkdir -p "$(dirname "$SEQWARE_JAR")"
     
     if [ $SNAPSHOT = "YES" ]; then
+        SEQWARE_URL="file:///$HOME/.m2/repository/com/github/seqware/seqware-distribution/$SEQWARE_VERSION/seqware-distribution-$SEQWARE_VERSION-full.jar"
+    elif [ -r "/$HOME/.m2/repository/com/github/seqware/seqware-distribution/$SEQWARE_VERSION/seqware-distribution-$SEQWARE_VERSION-full.jar" ]; then
+	# for testing, if you have a local release version, just use it
         SEQWARE_URL="file:///$HOME/.m2/repository/com/github/seqware/seqware-distribution/$SEQWARE_VERSION/seqware-distribution-$SEQWARE_VERSION-full.jar"
     else
         SEQWARE_URL="http://wrench.res.oicr.on.ca/artifactory/seqware-release/com/github/seqware/seqware-distribution/$SEQWARE_VERSION/seqware-distribution-$SEQWARE_VERSION-full.jar"
