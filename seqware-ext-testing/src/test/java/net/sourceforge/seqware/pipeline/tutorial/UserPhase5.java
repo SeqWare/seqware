@@ -54,9 +54,7 @@ public class UserPhase5 {
         accessions.addAll(PluginRunnerET.getInstalledWorkflows().values());
         Assert.assertTrue("one accession expected", accessions.size() == 1);
         AccessionMap.accessionMap.put(WORKFLOW, accessions.get(0).toString());
-
-        // launch our specific workflow and get store its workflow run accession
-        File exportINIFile = pit.exportINIFile("Java workflow", accessions.get(0));
+        File exportINIFile = exportINI(pit, accessions);
         
         String localhost = ITUtility.getLocalhost();
         Log.info("Attempting to launch with wait on host: " + localhost);
@@ -65,5 +63,11 @@ public class UserPhase5 {
                 + " --parent-accessions " + AccessionMap.accessionMap.get(UserPhase4.FILE) + " --wait --host " + localhost;
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Log.info(listOutput);
+    }
+
+    protected File exportINI(PluginRunnerET pit, List<Integer> accessions) throws IOException {
+        // launch our specific workflow and get store its workflow run accession
+        File exportINIFile = pit.exportINIFile("Java workflow", accessions.get(0), false);
+        return exportINIFile;
     }
 }

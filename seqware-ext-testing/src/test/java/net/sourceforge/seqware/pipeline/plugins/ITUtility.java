@@ -19,8 +19,6 @@ package net.sourceforge.seqware.pipeline.plugins;
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Properties;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -40,6 +38,30 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 public class ITUtility {
     
     /**
+     * Run the new SeqWare simplified command-line script given a particular set of parameters and check for an 
+     * expected return value.
+     * 
+     * @param parameters 
+     * @param expectedReturnValue this will be checked via a JUnit assert
+     * @param workingDir
+     * @return
+     * @throws IOException 
+     */
+    public static String runSeqwareCLI(String parameters, int expectedReturnValue, File workingDir) throws IOException{
+        File script = retrieveCompiledSeqwareScript();
+        script.setExecutable(true);
+                
+        if (workingDir == null){
+            workingDir = Files.createTempDir();
+            workingDir.deleteOnExit();
+        }
+ 
+        String line = "bash " + script.getAbsolutePath() + " " + parameters;
+        String output = runArbitraryCommand(line, expectedReturnValue, workingDir);
+        return output;
+    }
+    
+    /**
      * Run the SeqWare jar given a particular set of parameters and check for an
      * expected return value.
      *
@@ -51,7 +73,7 @@ public class ITUtility {
      * @param parameters
      * @param expectedReturnValue
      * @param workingDir null, if caller does not care about the working directory
-     * @return
+     * @return 
      * @throws IOException
      */
     public static String runSeqWareJar(String parameters, int expectedReturnValue, File workingDir) throws IOException {
@@ -96,47 +118,6 @@ public class ITUtility {
     }
 
     /**
-     * Method returns code source of given class. This is URL of classpath
-     * folder, zip or jar file. If code source is unknown, returns null (for
-     * example, for classes java.io.*).
-     *
-     * Edited from
-     * http://asolntsev.blogspot.ca/2008/03/how-to-find-which-jar-file-contains.html
-     * This is extremely close to what we need to identify the full.jar, however
-     * right now it returns the pipeline jar in the maven repo rather than the
-     * full jar, which I suspect is an issue with how I've defined dependencies
-     * in Maven rather than a issueJava.
-     *
-     * @param clazz For example, java.sql.SQLException.class
-     * @return for example, "file:/C:/jdev10/jdev/mywork/classes/" or
-     * "file:/C:/works/projects/classes12.zip"
-     */
-    public static File getCodeSource(Class clazz) {
-        if (clazz == null
-                || clazz.getProtectionDomain() == null
-                || clazz.getProtectionDomain().getCodeSource() == null
-                || clazz.getProtectionDomain().getCodeSource().getLocation() == null) // This typically happens for system classloader
-        {
-            Log.error("Could not access protection domainon " + clazz.getName());
-            return null;
-        }
-
-        URI uri = null;
-        try {
-            uri = clazz.getProtectionDomain().getCodeSource().getLocation().toURI();
-        } catch (URISyntaxException ex) {
-            Log.error("Could not determine location of " + clazz.getName());
-            return null;
-        }
-        if (uri != null) {
-            File file = new File(uri);
-            return file;
-        }
-        Log.error("Could not translate URI location of " + clazz.getName());
-        return null;
-    }
-
-    /**
      * This is the hackiest hack in the universe of hacks for getting the final
      * assembly jar so I can run tests.
      *
@@ -145,7 +126,7 @@ public class ITUtility {
      * run tests on production bundles
      *
      */
-    public static File retrieveFullAssembledJar() {
+    private static File retrieveFullAssembledJar() {
         String workingDir = System.getProperty("user.dir");
         File workingDirectory = new File(workingDir);
         File targetFullJar = searchForFullJar(workingDirectory);
@@ -209,5 +190,18 @@ public class ITUtility {
         OptionSet set = parser.parse("");
         String localhost = FileTools.getLocalhost(set).hostname;
         return localhost;
+    }
+
+    /**
+     * Grab the location of the compiled seqware script.
+     * 
+     * This uses Maven system properties to pass variables from Maven into Java
+     * 
+     * @return script file
+     */
+    private static File retrieveCompiledSeqwareScript() {
+        String property = System.getProperty("cliPath");
+        File seqwareScript = new File(property);
+        return seqwareScript;
     }
 }

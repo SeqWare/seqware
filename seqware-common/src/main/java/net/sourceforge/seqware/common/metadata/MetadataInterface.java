@@ -11,7 +11,10 @@ import java.util.SortedSet;
 
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
 import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
@@ -28,6 +31,7 @@ import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleAttribute;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.SequencerRunAttribute;
+import net.sourceforge.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.model.StudyType;
@@ -77,31 +81,31 @@ public interface MetadataInterface {
    */
   int mapProcessingIdToAccession(int processingId);
 
-  /**
-   * <p>addStudy.</p>
-   *
-   * @param title a {@link java.lang.String} object.
-   * @param description a {@link java.lang.String} object.
-   * @param accession a {@link java.lang.String} object.
-   * @param studyType a {@link net.sourceforge.seqware.common.model.StudyType} object.
-   * @param centerName a {@link java.lang.String} object.
-   * @param centerProjectName a {@link java.lang.String} object.
-   * @param studyTypeId a {@link java.lang.Integer} object.
-   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-   */
-  public ReturnValue addStudy(String title, String description, String accession, StudyType studyType,
-      String centerName, String centerProjectName, Integer studyTypeId);
+    /**
+     * <p>addStudy.</p>
+     *
+     * @param title a {@link java.lang.String} object.
+     * @param description a {@link java.lang.String} object.
+     * @param centerName a {@link java.lang.String} object.
+     * @param centerProjectName a {@link java.lang.String} object.
+     * @param studyTypeId a {@link java.lang.Integer} object.
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
+    
+  public ReturnValue addStudy(String title, String description, String centerName, String centerProjectName, Integer studyTypeId);
 
-  /**
-   * <p>addExperiment.</p>
-   *
-   * @param studySwAccession a {@link java.lang.Integer} object.
-   * @param platformId a {@link java.lang.Integer} object.
-   * @param description a {@link java.lang.String} object.
-   * @param title a {@link java.lang.String} object.
-   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-   */
-  public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title);
+    /**
+     * <p>addExperiment.</p>
+     *
+     * @param studySwAccession a {@link java.lang.Integer} object.
+     * @param platformId a {@link java.lang.Integer} object.
+     * @param description a {@link java.lang.String} object.
+     * @param title a {@link java.lang.String} object.
+     * @param experimentLibraryDesignId the value of experimentLibraryDesignId
+     * @param experimentSpotDesignId the value of experimentSpotDesignId
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
+  public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title, Integer experimentLibraryDesignId, Integer experimentSpotDesignId);
 
   /**
    * <p>addSample.</p>
@@ -115,15 +119,13 @@ public interface MetadataInterface {
   public ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession, Integer organismId, String description, String title);
   
     /**
-   * <p>addSample.</p>
-   *
-   * @param experimentAccession a {@link java.lang.Integer} object.
-   * @param organismId a {@link java.lang.Integer} object.
-   * @param description a {@link java.lang.String} object.
-   * @param title a {@link java.lang.String} object.
-   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-   */
-  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath);
+     * <p>addSample.</p>
+     *
+     * @param description a {@link java.lang.String} object.
+     * @param status the value of status
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
+  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath, SequencerRunStatus status);
   
     /**
    * <p>addSample.</p>
@@ -150,6 +152,35 @@ public interface MetadataInterface {
    * @return a {@link net.sourceforge.seqware.common.model.Platform} object.
    */
   public List<Platform> getPlatforms();
+  
+    /**
+   * <p>getExperiment.</p>
+   *
+   * @param swAccession a int.
+   * @return a {@link net.sourceforge.seqware.common.model.Experiment} object.
+   */
+  public Experiment getExperiment(int swAccession);
+  
+  /**
+   * <p>getExperimentLibraryDesigns.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.ExperimentLibraryDesign} object.
+   */
+  public List<ExperimentLibraryDesign> getExperimentLibraryDesigns();
+  
+  /**
+   * <p>getPlatforms.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec} object.
+   */
+  public List<ExperimentSpotDesignReadSpec> getExperimentSpotDesignReadSpecs();
+  
+  /**
+   * <p>getExperimentSpotDesigns.</p>
+   *
+   * @return a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
+   */
+  public List<ExperimentSpotDesign> getExperimentSpotDesigns();
   
     /**
    * <p>getOrganisms.</p>
@@ -822,6 +853,22 @@ public interface MetadataInterface {
    * @return a list of Sequencer runs
    */
   public List<SequencerRun> getAllSequencerRuns();
+  
+  /**
+   * <p>getLane.</p>
+   *
+   * @param laneAccession a int.
+   * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
+   */
+  public Lane getLane(int laneAccession);
+  
+    /**
+   * <p>getSequencerRun.</p>
+   *
+   * @param sequencerRunAccession a int.
+   * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
+   */
+  public SequencerRun getSequencerRun(int sequencerRunAccession);
   
   /**
    * Get Lanes from a sequencer run.
