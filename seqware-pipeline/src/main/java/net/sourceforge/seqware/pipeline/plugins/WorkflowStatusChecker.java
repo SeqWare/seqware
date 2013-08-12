@@ -415,6 +415,14 @@ public class WorkflowStatusChecker extends Plugin {
     }
 
     private void checkPegasus() {
+      switch(wr.getStatus()){
+      case submitted_cancel:
+      case submitted_retry:
+        // This should be prevented from ever happening on the submit-side.
+        throw new RuntimeException("cancel/retry not supported with pegasus engine.");
+      default: // continue
+      }
+      
       // check the owner of the status dir
       boolean dirOwner = true;
       String statusDir = findStatusDir(wr.getStatusCmd());
