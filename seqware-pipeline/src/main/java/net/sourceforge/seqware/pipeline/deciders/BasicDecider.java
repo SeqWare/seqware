@@ -429,6 +429,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                                 Log.debug(line);
                             }
                             Log.debug("NOT RUNNING (and would not have ran). test=" + test + " or !rerun=" + !rerun);
+                            // SPB created ticket - BasicDecider should not leave behind ini files when not launching 
+                            for (String iniFilePath : iniFiles){
+                                File iniFile = new File(iniFilePath);
+                                iniFile.deleteOnExit();
+                            }
                         }
                     } else if (launched < launchMax) {
                         launched++;
