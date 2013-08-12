@@ -228,7 +228,7 @@ public class WorkflowPlugin extends Plugin {
     }
     
     Set<Integer> inputFiles = WorkflowPlugin.collectInputFiles(options, metadata);
-    if (options.has(INPUT_FILES) && inputFiles == null){
+    if (options.has(INPUT_FILES) && (inputFiles == null || inputFiles.isEmpty())){
         Log.error("Error parsing provided input files");
         ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
         return ret;
@@ -572,7 +572,7 @@ public class WorkflowPlugin extends Plugin {
     }
        
     Set<Integer> inputFiles = collectInputFiles(options, metadata);
-    if (options.has(INPUT_FILES) && inputFiles == null){
+    if (options.has(INPUT_FILES) && (inputFiles == null || inputFiles.isEmpty())){
         Log.error("Error parsing provided input files");
         ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
         return ret;
