@@ -499,7 +499,7 @@ public class Metadata extends Plugin {
 
         if (checkFields(necessaryFields)) {
             // create a new experiment
-            ret = metadata.addSequencerRun(Integer.parseInt(fields.get("platform_accession")), fields.get("name"), fields.get("description"), "true".equalsIgnoreCase(fields.get("paired_end")), "true".equalsIgnoreCase(fields.get("skip")), fields.get("file_path"), fields.get("status"));
+            ret = metadata.addSequencerRun(Integer.parseInt(fields.get("platform_accession")), fields.get("name"), fields.get("description"), "true".equalsIgnoreCase(fields.get("paired_end")), "true".equalsIgnoreCase(fields.get("skip")), fields.get("file_path"), SequencerRunStatus.valueOf(fields.get("status")));
 
             print("SWID: " + ret.getAttribute("sw_accession"));
 
