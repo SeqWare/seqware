@@ -90,7 +90,7 @@ public class ExperimentLibraryDesignDAOHibernate extends HibernateDaoSupport imp
     /** {@inheritDoc} */
     @Override
     public List<ExperimentLibraryDesign> list() {
-        List expmts = this.getHibernateTemplate().find("from ExperimentLibraryDesign as libraryDesign order by libraryDesign.experimentLibraryDesignId asc" // desc
+        List expmts = this.getHibernateTemplate().find("from ExperimentLibraryDesign as libraryDesign" // desc
                 );
 
         return expmts;
