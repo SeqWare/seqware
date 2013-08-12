@@ -16,16 +16,6 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.io.File;
-import java.net.URL;
-import junit.framework.Assert;
-import org.junit.Test;
-import org.restlet.data.Disposition;
-import org.restlet.data.MediaType;
-import org.restlet.representation.FileRepresentation;
-import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
-
 /**
  *
  * @author mtaschuk

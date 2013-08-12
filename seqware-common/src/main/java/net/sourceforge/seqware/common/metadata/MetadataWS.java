@@ -44,6 +44,9 @@ import javax.xml.bind.JAXBException;
 import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUS;
@@ -60,8 +63,10 @@ import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleAttribute;
+import net.sourceforge.seqware.common.model.SecondTierModel;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.SequencerRunAttribute;
+import net.sourceforge.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.model.StudyType;
@@ -71,8 +76,11 @@ import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowParamValue;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
+import net.sourceforge.seqware.common.model.lists.ExperimentLibraryDesignList;
 import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.model.lists.ExperimentList;
+import net.sourceforge.seqware.common.model.lists.ExperimentSpotDesignList;
+import net.sourceforge.seqware.common.model.lists.ExperimentSpotDesignReadSpecList;
 import net.sourceforge.seqware.common.model.lists.IUSList;
 import net.sourceforge.seqware.common.model.lists.LaneList;
 import net.sourceforge.seqware.common.model.lists.LibrarySelectionList;
@@ -111,8 +119,6 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * TODO: this needs to setup rows in experiment_library_design and
- * experiment_spot_design
  *
  * @version $Id: $Id
  */
@@ -232,12 +238,20 @@ public class MetadataWS extends Metadata {
 
     /**
      * {@inheritDoc}
+     *
      */
-    public ReturnValue addStudy(String title, String description, String accession, StudyType studyType,
-            String centerName, String centerProjectName, Integer studyTypeId) {
+    
+    
+  @Override
+    public ReturnValue addStudy(String title, String description, String centerName, String centerProjectName, Integer studyTypeId) {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
+        boolean studyTypeFound = isValidModelId(getStudyTypes(), studyTypeId);
+        if (!studyTypeFound) {
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            return ret;
+        }
         StudyType st = new StudyType();
         st.setStudyTypeId(studyTypeId);
 
@@ -268,16 +282,26 @@ public class MetadataWS extends Metadata {
      *
      * TODO: this needs to setup rows in experiment_library_design and
      * experiment_spot_design
+     *
+     * @param experimentLibraryDesignId the value of experimentLibraryDesignId
+     * @param experimentSpotDesignId the value of experimentSpotDesignId
      */
-    public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title) {
+    
+    
+  @Override
+    public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title, Integer experimentLibraryDesignId, Integer experimentSpotDesignId) {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
         try {
-
+            boolean platformFound = isValidModelId(getPlatforms(), platformId);
+            if (!platformFound){
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return ret;
+            }
             Platform p = new Platform();
             p.setPlatformId(platformId);
-
+      
             Study s = ll.findStudy("/" + studySwAccession.toString());
 
             Log.debug("Study: " + s);
@@ -288,7 +312,27 @@ public class MetadataWS extends Metadata {
             e.setDescription(description);
             e.setTitle(title);
             e.setName(title);
-
+            
+            if (experimentLibraryDesignId != null){
+                if (!isValidModelId(this.getExperimentLibraryDesigns(), experimentLibraryDesignId)){
+                    ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                    return ret;
+                }
+                ExperimentLibraryDesign eld = new ExperimentLibraryDesign();
+                eld.setExperimentLibraryDesignId(experimentLibraryDesignId);
+                e.setExperimentLibraryDesign(eld);
+            }
+            if (experimentSpotDesignId != null){
+                if (!isValidModelId(this.getExperimentSpotDesigns(), experimentSpotDesignId)){
+                    ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                    return ret;
+                }
+                ExperimentSpotDesign esd = new ExperimentSpotDesign();
+                esd.setExperimentSpotDesignId(experimentSpotDesignId);
+                e.setExperimentSpotDesign(esd);
+            }
+            
+            
             Log.info("Posting new experiment");
 
             e = ll.addExperiment(e);
@@ -320,6 +364,11 @@ public class MetadataWS extends Metadata {
 
             Sample s = new Sample();
 
+            boolean organismFound = isValidModelId(getOrganisms(), organismId);
+            if (!organismFound){
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return ret;
+            }
             Organism o = new Organism();
             o.setOrganismId(organismId);
 
@@ -331,9 +380,8 @@ public class MetadataWS extends Metadata {
             if (parentSampleAccession != 0) {
                 Sample parentSample = ll.findSample("/"+parentSampleAccession);
                 parents.add(parentSample);
-            } else{
-                parents.add(null);
             }
+            /** SEQWARE-1576, let's try using an empty parent set to signal instead of a null */
             s.setParents(parents);
             s.setOrganism(o);
             s.setTitle(title);
@@ -347,32 +395,43 @@ public class MetadataWS extends Metadata {
 
             ret.setAttribute("sw_accession", s.getSwAccession().toString());
 
+        } catch(NotFoundException e){
+            Log.fatal("NotFoundException" , e);
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            return ret;
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.fatal("Exception", e);
             ret.setExitStatus(ReturnValue.FAILURE);
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
      * FIXME: there are problems with setting accession when I should set ID
      *
-     * @param experimentAccession
-     * @param organismAccession
      * @param platformAccession
      * @param name
      * @param description
      * @param pairdEnd
      * @param skip
+     * @param status the value of status
      * @return
      */
-    public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath) {
+    
+  @Override
+    public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath, SequencerRunStatus status) {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
         try {
 
+            boolean platformFound = isValidModelId(this.getPlatforms(), platformAccession);
+            if (!platformFound){
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return ret;
+            }
+            
             Platform p = new Platform();
             p.setPlatformId(platformAccession);
 
@@ -383,6 +442,7 @@ public class MetadataWS extends Metadata {
             sr.setSkip(skip);
             sr.setPlatform(p);
             sr.setFilePath(filePath);
+            sr.setStatus(status);
 
             Log.info("Posting new sequencer_run");
 
@@ -390,6 +450,10 @@ public class MetadataWS extends Metadata {
 
             ret.setAttribute("sw_accession", sr.getSwAccession().toString());
 
+        } catch(NotFoundException e){
+            Log.fatal("NotFoundException, e");
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            return ret;
         } catch (Exception e) {
             e.printStackTrace();
             ret.setExitStatus(ReturnValue.FAILURE);
@@ -407,6 +471,14 @@ public class MetadataWS extends Metadata {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
         try {
+            
+            if (!isValidModelId(getStudyTypes(), studyTypeId) || 
+                    !isValidModelId(this.getLibraryStrategies(), libraryStrategyId) || 
+                    !isValidModelId(this.getLibrarySelections(), librarySelectionId) || 
+                    !isValidModelId(this.getLibrarySource(), librarySourceId)){
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return ret;
+            }
 
             SequencerRun sr = ll.findSequencerRun("/" + sequencerRunAccession);
             StudyType st = new StudyType();
@@ -436,6 +508,10 @@ public class MetadataWS extends Metadata {
 
             ret.setAttribute("sw_accession", l.getSwAccession().toString());
 
+        } catch(NotFoundException e){
+            Log.fatal("NotFoundException, e");
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            return ret;
         } catch (Exception e) {
             e.printStackTrace();
             ret.setExitStatus(ReturnValue.FAILURE);
@@ -445,6 +521,7 @@ public class MetadataWS extends Metadata {
         return (ret);
     }
 
+  @Override
     public ReturnValue addIUS(Integer laneAccession, Integer sampleAccession, String name, String description, String barcode, boolean skip) {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -467,6 +544,10 @@ public class MetadataWS extends Metadata {
 
             ret.setAttribute("sw_accession", i.getSwAccession().toString());
 
+        } catch(NotFoundException e){
+            Log.fatal("NotFoundException, e");
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            return ret;
         } catch (Exception e) {
             e.printStackTrace();
             ret.setExitStatus(ReturnValue.FAILURE);
@@ -476,6 +557,7 @@ public class MetadataWS extends Metadata {
         return (ret);
     }
 
+  @Override
     public List<Platform> getPlatforms() {
         try {
             return ll.findPlatforms();
@@ -487,6 +569,7 @@ public class MetadataWS extends Metadata {
         return null;
     }
 
+  @Override
     public List<Organism> getOrganisms() {
         try {
             return ll.findOrganisms();
@@ -498,6 +581,7 @@ public class MetadataWS extends Metadata {
         return null;
     }
 
+  @Override
     public List<StudyType> getStudyTypes() {
         try {
             return ll.findStudyTypes();
@@ -509,6 +593,7 @@ public class MetadataWS extends Metadata {
         return null;
     }
 
+  @Override
     public List<LibraryStrategy> getLibraryStrategies() {
         try {
             return ll.findLibraryStrategies();
@@ -520,6 +605,7 @@ public class MetadataWS extends Metadata {
         return null;
     }
 
+  @Override
     public List<LibrarySelection> getLibrarySelections() {
         try {
             return ll.findLibrarySelections();
@@ -531,6 +617,7 @@ public class MetadataWS extends Metadata {
         return null;
     }
 
+  @Override
     public List<LibrarySource> getLibrarySource() {
         try {
             return ll.findLibrarySources();
@@ -1391,22 +1478,24 @@ public class MetadataWS extends Metadata {
     @Override
     public String listInstalledWorkflowParams(String workflowAccession) {
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         try {
             Workflow workflow = ll.findWorkflowParams(workflowAccession);
-
+            if (workflow.getWorkflowParams() == null){
+                return sb.toString();
+            }
             for (WorkflowParam wp : workflow.getWorkflowParams()) {
-                sb.append("#key=" + wp.getKey() + ":type=" + wp.getType() + ":display=");
+                sb.append("#key=").append(wp.getKey()).append(":type=").append(wp.getType()).append(":display=");
                 if (wp.getDisplay()) {
                     sb.append("T");
                 } else {
                     sb.append("F");
                 }
                 if (wp.getDisplayName() != null && wp.getDisplayName().length() > 0) {
-                    sb.append(":display_name=" + wp.getDisplayName());
+                    sb.append(":display_name=").append(wp.getDisplayName());
                 }
                 if (wp.getFileMetaType() != null && wp.getFileMetaType().length() > 0) {
-                    sb.append(":file_meta_type=" + wp.getFileMetaType());
+                    sb.append(":file_meta_type=").append(wp.getFileMetaType());
                 }
                 SortedSet<WorkflowParamValue> wpvalues = wp.getValues();
                 if (wpvalues != null && wpvalues.size() > 0) {
@@ -1415,24 +1504,24 @@ public class MetadataWS extends Metadata {
                     for (WorkflowParamValue wpv : wpvalues) {
                         if (first) {
                             first = false;
-                            sb.append(wpv.getDisplayName() + "|" + wpv.getValue());
+                            sb.append(wpv.getDisplayName()).append("|").append(wpv.getValue());
                         } else {
-                            sb.append(";" + wpv.getDisplayName() + "|" + wpv.getValue());
+                            sb.append(";").append(wpv.getDisplayName()).append("|").append(wpv.getValue());
                         }
                     }
                 }
                 sb.append("\n");
         if (wp.getDefaultValue() == null){
-                    sb.append(wp.getKey() + "=" + "\n");
+                    sb.append(wp.getKey()).append("=" + "\n");
         } else{
-                    sb.append(wp.getKey() + "=" + wp.getDefaultValue() + "\n");
+                    sb.append(wp.getKey()).append("=").append(wp.getDefaultValue()).append("\n");
                 }
             }
 
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Log.error(ex);
         } catch (JAXBException ex) {
-            ex.printStackTrace();
+            Log.error(ex);
         }
 
         return (sb.toString());
@@ -1482,7 +1571,7 @@ public class MetadataWS extends Metadata {
     @Override
     public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRunStatus status) {
         try {
-            String searchString = "?status=" + status + "";
+            String searchString = "?status=" + status.name() + "";
             return ll.findWorkflowRuns(searchString);
         } catch (IOException ex) {
             Log.error("", ex);
@@ -1549,6 +1638,7 @@ public class MetadataWS extends Metadata {
      *
      * @return a {@link java.util.List} object.
      */
+  @Override
     public List<SequencerRun> getAllSequencerRuns() {
         try {
             return ll.findSequencerRuns();
@@ -2385,6 +2475,72 @@ public class MetadataWS extends Metadata {
         return null;
     }
 
+    @Override
+    public Lane getLane(int laneAccession) {
+         try {
+            return ll.findLane("/" + laneAccession);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        } catch (JAXBException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public SequencerRun getSequencerRun(int sequencerRunAccession) {
+        try {
+            return ll.findSequencerRun("/" + sequencerRunAccession);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        } catch (JAXBException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public List<ExperimentLibraryDesign> getExperimentLibraryDesigns() {
+        try {
+            return ll.findExperimentLibraryDesigns();
+        } catch (IOException ex) {
+             throw new RuntimeException(ex);
+        } catch (JAXBException ex) {
+             throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public List<ExperimentSpotDesignReadSpec> getExperimentSpotDesignReadSpecs() {
+        try {
+            return ll.findExperimentSpotDesignReadSpecs();
+        } catch (IOException ex) {
+             throw new RuntimeException(ex);
+        } catch (JAXBException ex) {
+             throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public List<ExperimentSpotDesign> getExperimentSpotDesigns() {
+        try {
+            return ll.findExperimentSpotDesigns();
+        } catch (IOException ex) {
+             throw new RuntimeException(ex);
+        } catch (JAXBException ex) {
+             throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public Experiment getExperiment(int swAccession) {
+        try {
+            return ll.findExperiment("/" + swAccession);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        } catch (JAXBException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     /*
      * public void annotateFile(int fileSWID, FileAttribute att, Boolean skip) {
      * try { Log.debug("Annotating WorkflowRun " + fileSWID + " with skip=" +
@@ -2648,6 +2804,33 @@ public class MetadataWS extends Metadata {
             return list;
         }
 
+        private List<ExperimentLibraryDesign> findExperimentLibraryDesigns() throws IOException, JAXBException {
+            JaxbObject<ExperimentLibraryDesignList> jaxb = new JaxbObject<ExperimentLibraryDesignList>();
+            ExperimentLibraryDesignList list = (ExperimentLibraryDesignList) findObject("/experimentlibrarydesigns", "", jaxb, new ExperimentLibraryDesignList());
+            if (list != null) {
+                return list.getList();
+            }
+            return null;
+        }
+
+        private List<ExperimentSpotDesignReadSpec> findExperimentSpotDesignReadSpecs() throws IOException, JAXBException {
+            JaxbObject<ExperimentSpotDesignReadSpecList> jaxb = new JaxbObject<ExperimentSpotDesignReadSpecList>();
+            ExperimentSpotDesignReadSpecList list = (ExperimentSpotDesignReadSpecList) findObject("/experimentspotdesignreadspecs", "", jaxb, new ExperimentSpotDesignReadSpecList());
+            if (list != null) {
+                return list.getList();
+            }
+            return null;
+        }
+
+        private List<ExperimentSpotDesign> findExperimentSpotDesigns() throws IOException, JAXBException {
+            JaxbObject<ExperimentSpotDesignList> jaxb = new JaxbObject<ExperimentSpotDesignList>();
+            ExperimentSpotDesignList list = (ExperimentSpotDesignList) findObject("/experimentspotdesigns", "", jaxb, new ExperimentSpotDesignList());
+            if (list != null) {
+                return list.getList();
+            }
+            return null;
+        }
+        
         private List<Platform> findPlatforms() throws IOException, JAXBException {
             JaxbObject<PlatformList> jaxb = new JaxbObject<PlatformList>();
             PlatformList list = (PlatformList) findObject("/platforms", "", jaxb, new PlatformList());
@@ -3117,5 +3300,15 @@ public class MetadataWS extends Metadata {
     public String getProcessingRelations(String swAccession) {
         String report = (String) ll.getString("/processingstructure?swAccession=" + swAccession);
         return report;
+    }
+    
+    private boolean isValidModelId(final List<? extends SecondTierModel> models, final int modelId) {
+        boolean modelFound = false;
+        for (SecondTierModel organism : models) {
+            if (organism.getModelId() == modelId) {
+                modelFound = true;
+            }
+        }
+        return modelFound;
     }
 }

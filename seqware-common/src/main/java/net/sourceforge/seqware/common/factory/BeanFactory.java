@@ -1,7 +1,10 @@
 package net.sourceforge.seqware.common.factory;
 
 import net.sourceforge.seqware.common.ContextImpl;
+import net.sourceforge.seqware.common.business.ExperimentLibraryDesignService;
 import net.sourceforge.seqware.common.business.ExperimentService;
+import net.sourceforge.seqware.common.business.ExperimentSpotDesignReadSpecService;
+import net.sourceforge.seqware.common.business.ExperimentSpotDesignService;
 import net.sourceforge.seqware.common.business.FileAttributeService;
 import net.sourceforge.seqware.common.business.StudyTypeService;
 import net.sourceforge.seqware.common.business.FileService;
@@ -32,6 +35,7 @@ import net.sourceforge.seqware.common.business.WorkflowParamService;
 import net.sourceforge.seqware.common.business.WorkflowParamValueService;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.business.WorkflowService;
+import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
 
 import org.hibernate.SessionFactory;
 
@@ -335,6 +339,18 @@ public abstract class BeanFactory {
    */
   public static FileAttributeService getFileAttributeServiceBean() {
     return ContextImpl.getInstance().getFileAttributeService();
+  }
+  
+  public static ExperimentLibraryDesignService getExperimentLibraryDesignServiceBean(){
+        return ContextImpl.getInstance().getExperimentLibraryDesignService();
+  }
+
+  public static ExperimentSpotDesignService getExperimentSpotDesignServiceBean() {
+    return ContextImpl.getInstance().getExperimentSpotDesignService();
+  }
+
+  public static ExperimentSpotDesignReadSpecService getExperimentSpotDesignReadSpecServiceBean() {
+    return ContextImpl.getInstance().getExperimentSpotDesignReadSpecService();
   }
   
 }
