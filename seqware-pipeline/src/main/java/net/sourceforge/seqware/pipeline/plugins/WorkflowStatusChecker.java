@@ -54,7 +54,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.oozie.client.OozieClient;
 import org.apache.oozie.client.WorkflowAction;
 import org.apache.oozie.client.WorkflowJob;
-import org.apache.oozie.client.WorkflowJob.Status;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -165,6 +164,7 @@ public class WorkflowStatusChecker extends Plugin {
       // get a list of running workflows
       List<WorkflowRun> runningWorkflows = this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.running);
       runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.pending));
+      runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted_cancel));
       if (options.has("check-failed")) {
         runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.failed));
       }
@@ -330,29 +330,29 @@ public class WorkflowStatusChecker extends Plugin {
         if (wfJob == null)
           return;
 
-        Status status = wfJob.getStatus();
-
-        /*
-         * There's no analog to SUSPENDED or KILLED on the pegasus side,
-         * thus no specific seqware equivalent.
-         */
-        WorkflowRunStatus sqwStatus;
-        switch (status) {
-        case PREP:
-        case RUNNING:
-        case SUSPENDED:
-          sqwStatus = WorkflowRunStatus.running;
-          break;
-        case FAILED:
-        case KILLED:
-          sqwStatus = WorkflowRunStatus.failed;
-          break;
-        case SUCCEEDED:
-          sqwStatus = WorkflowRunStatus.completed;
-          break;
-        default:
-          throw new RuntimeException("Unexpected status value (" + status + ") from oozie workflow job (" + jobId + ")");
+        WorkflowJob.Status curOozieStatus = wfJob.getStatus();
+        WorkflowRunStatus curSqwStatus = wr.getStatus();
+        WorkflowRunStatus nextSqwStatus;
+        
+        if (curSqwStatus == WorkflowRunStatus.submitted_cancel){
+          switch (curOozieStatus) {
+          case PREP:
+          case RUNNING:
+          case SUSPENDED:
+            // Note: here we treat SUSPENDED as running, so that it can be killed
+            oc.kill(jobId);
+            wfJob = oc.getJobInfo(jobId);
+            curOozieStatus = wfJob.getStatus();
+            nextSqwStatus = WorkflowRunStatus.cancelled;
+          default:
+            // Let FAILED/SUCCEEDED propagate as normal
+            nextSqwStatus = convertOozieToSeqware(curOozieStatus);
+          }            
         }
+        else {
+          nextSqwStatus = convertOozieToSeqware(curOozieStatus);
+        }
+        
 
         String err;
         String out;
@@ -376,7 +376,7 @@ public class WorkflowStatusChecker extends Plugin {
 
         synchronized (metadata_sync) {
           WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(),
-                                                                  wr.getTemplate(), sqwStatus, wr.getStatusCmd(),
+                                                                  wr.getTemplate(), nextSqwStatus, wr.getStatusCmd(),
                                                                   wr.getCurrentWorkingDir(), wr.getDax(),
                                                                   wr.getIniFile(), wr.getHost(), err, out,
                                                                   wr.getWorkflowEngine(), wr.getInputFileAccessions());
@@ -386,6 +386,32 @@ public class WorkflowStatusChecker extends Plugin {
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
+    }
+    
+    private WorkflowRunStatus convertOozieToSeqware(WorkflowJob.Status oozieStatus){
+      WorkflowRunStatus sqwStatus;
+      /*
+       * There's no analog to SUSPENDED on the seware side, treating as failed so it can be picked up for retry
+       */
+      switch (oozieStatus) {
+      case PREP:
+      case RUNNING:
+      case SUSPENDED:
+        sqwStatus = WorkflowRunStatus.running;
+        break;
+      case FAILED:
+        sqwStatus = WorkflowRunStatus.failed;
+        break;
+      case KILLED:
+        sqwStatus = WorkflowRunStatus.cancelled;
+        break;
+      case SUCCEEDED:
+        sqwStatus = WorkflowRunStatus.completed;
+        break;
+      default:
+        throw new RuntimeException("Unexpected oozie status value: " + oozieStatus);
+      }
+      return sqwStatus;
     }
 
     private void checkPegasus() {
