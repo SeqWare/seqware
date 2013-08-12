@@ -11,10 +11,10 @@ import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.util.filetools.lock.LockingFileTools;
 import net.sourceforge.seqware.common.util.processtools.ProcessTools;
-
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 
@@ -270,7 +270,7 @@ public class ProcessingTaskGroup {
               retval.printAndAppendtoStderr("Could not write to processingID File for metadata");
               retval.setExitStatus(ReturnValue.METADATAINVALIDIDCHAIN);
               meta.update_processing_event(processingID, retval);
-              meta.update_processing_status(processingID, Metadata.FAILED);
+              meta.update_processing_status(processingID, ProcessingStatus.failed);
               System.exit(retval.getExitStatus());
             }
           }
@@ -279,7 +279,7 @@ public class ProcessingTaskGroup {
 
       // If none of the methods exited, it was a success
       if ( meta != null && processingID != 0 ) {
-        meta.update_processing_status( processingID, Metadata.SUCCESS);
+        meta.update_processing_status( processingID, ProcessingStatus.success);
       }
       System.exit(ReturnValue.SUCCESS);
     }

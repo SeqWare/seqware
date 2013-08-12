@@ -25,6 +25,7 @@ import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.util.Bool;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.solexatools.Security;
 import net.sourceforge.solexatools.util.SetNodeIdInSession;
@@ -474,7 +475,7 @@ public class ExperimentController extends MultiActionController {
     Experiment experiment = getRequestedExperiment(request);
 
     ServletContext context = this.getServletContext();
-    String deleteRealFiles = context.getInitParameter("delete.files.for.node.deletion");
+    boolean deleteRealFiles = Bool.parse(context.getInitParameter("delete.files.for.node.deletion"));
 
     if (experiment != null) {
       if (registration.equals(experiment.getOwner()) || registration.isLIMSAdmin()) {

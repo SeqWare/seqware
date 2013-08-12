@@ -16,6 +16,7 @@ import net.sourceforge.seqware.common.hibernate.InSessionExecutions;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 
 import org.junit.Test;
 
@@ -107,7 +108,7 @@ public class WorkflowRunServiceImplTest extends BaseUnit {
     createdWorkflowRun.setWorkflowRunId(22);
     createdWorkflowRun.setIniFile("newIniFile"); // <-- ini file has been
                                                  // updated
-    createdWorkflowRun.setStatus("complete");
+    createdWorkflowRun.setStatus(WorkflowRunStatus.completed);
     createdWorkflowRun.setStatusCmd("newCommand"); // <-- command has been
                                                    // updated
     createdWorkflowRun.setSeqwareRevision("2305M");

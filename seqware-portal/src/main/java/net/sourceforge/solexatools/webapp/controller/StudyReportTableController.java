@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.seqware.common.business.FileReportService;
 import net.sourceforge.seqware.common.business.SampleReportService;
+import net.sourceforge.seqware.common.business.SampleReportService.Status;
 import net.sourceforge.seqware.common.business.SampleService;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.model.FileReportRow;
@@ -33,6 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
 import com.google.gson.Gson;
+
 import net.sourceforge.seqware.common.util.Log;
 
 /**
@@ -512,9 +514,9 @@ public class StudyReportTableController extends BaseCommandController {
       // Fill statuses with row model
       List<String> statusesOut = new ArrayList<String>();
       for (Workflow workflow : this.workflows) {
-        String status = sampleReportService.getStatus(study, sample, workflow);
+        Status status = sampleReportService.getStatus(study, sample, workflow);
         if (status == null) {
-          statusesOut.add(wrapStatus(NOT_STARTED));
+          statusesOut.add(wrapStatus(Status.notstarted));
         } else {
           statusesOut.add(wrapStatus(status));
         }
@@ -591,7 +593,7 @@ public class StudyReportTableController extends BaseCommandController {
     return "<div class=\"label\">" + label + "</div>" + "<div class=\"sw\" swid=\"" + swId + "\"></div>";
   }
 
-  private String wrapStatus(String status) {
+  private String wrapStatus(Status status) {
     return "<div class=\"status\" >" + status + "</div>";
   }
 

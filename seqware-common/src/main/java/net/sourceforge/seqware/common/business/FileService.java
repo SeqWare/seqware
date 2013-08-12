@@ -57,19 +57,13 @@ public interface FileService {
 
   /**
    * <p>delete.</p>
-   *
-   * @param file a {@link net.sourceforge.seqware.common.model.File} object.
-   * @param deleteRealFiles a {@link java.lang.String} object.
    */
-  public void delete(File file, String deleteRealFiles);
+  public void delete(File file, boolean deleteRealFiles);
 
   /**
    * <p>deleteAll.</p>
-   *
-   * @param file a {@link java.util.List} object.
-   * @param deleteRealFiles a {@link java.lang.String} object.
    */
-  public void deleteAll(List<File> file, String deleteRealFiles);
+  public void deleteAll(List<File> file, boolean deleteRealFiles);
 
   /**
    * <p>findByID.</p>

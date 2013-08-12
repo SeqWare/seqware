@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.seqware.common.business.FileReportService;
 import net.sourceforge.seqware.common.business.SampleReportService;
+import net.sourceforge.seqware.common.business.SampleReportService.Status;
 import net.sourceforge.seqware.common.business.SampleService;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.model.FileReportRow;
@@ -38,7 +39,6 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 @SuppressWarnings("deprecation")
 public class StudyReportBoxController extends BaseCommandController {
 
-  private static final String NOT_STARTED = "notstarted";
   /** Constant <code>STUDY_ID="study_id"</code> */
   public final static String STUDY_ID = "study_id";
   /** Constant <code>JSON="json"</code> */
@@ -51,12 +51,6 @@ public class StudyReportBoxController extends BaseCommandController {
   public final static String CSV_TYPE = "csvtype";
   /** Constant <code>CHECK="check"</code> */
   public final static String CHECK = "check";
-
-  // Statuses
-  private final static String SUCCESS = "completed";
-  private final static String PENDING = "pending";
-  private final static String RUNNING = "running";
-  private final static String FAILED = "failed";
 
   private StudyService studyService;
   private SampleService sampleService;
@@ -163,9 +157,9 @@ public class StudyReportBoxController extends BaseCommandController {
             sb.append(rootSample.getSampleId().intValue() != sample.getSampleId().intValue() ? sample.getTitle() + "\t"
                 : "no child" + "\t");
             for (Workflow workflow : workflows) {
-              String status = sampleReportService.getStatus(currentStudy, sample, workflow);
+              Status status = sampleReportService.getStatus(currentStudy, sample, workflow);
               if (status == null) {
-                sb.append(NOT_STARTED + "\t");
+                sb.append(Status.notstarted + "\t");
               } else {
                 sb.append(status + "\t");
               }
@@ -321,26 +315,27 @@ public class StudyReportBoxController extends BaseCommandController {
     Map<Workflow, String> workflowCharts = new HashMap<Workflow, String>();
     List<Workflow> usedWorkflows = sampleReportService.getWorkflowsForStudy(study);
     for (Workflow workflow : usedWorkflows) {
-      List<String> statuses = sampleReportService.getStatusesForWorkflow(study, workflow);
-      Map<String, Integer> statusCount = new LinkedHashMap<String, Integer>();
-      statusCount.put(FAILED, 0);
-      statusCount.put(PENDING, 0);
-      statusCount.put(RUNNING, 0);
-      statusCount.put(NOT_STARTED, 0);
-      statusCount.put(SUCCESS, 0);
-      for (String status : statuses) {
+      List<Status> statuses = sampleReportService.getStatusesForWorkflow(study, workflow);
+      Map<Status, Integer> statusCount = new LinkedHashMap<Status, Integer>();
+      statusCount.put(Status.failed, 0);
+      statusCount.put(Status.pending, 0);
+      statusCount.put(Status.running, 0);
+      statusCount.put(Status.notstarted, 0);
+      statusCount.put(Status.completed, 0);
+      for (Status status : statuses) {
         int count = sampleReportService.countOfStatus(study, workflow, status);
         statusCount.put(status, count);
       }
       int current = 0;
       StringBuilder out = new StringBuilder();
-      for (String status : statusCount.keySet()) {
+      for (Status status : statusCount.keySet()) {
         current++;
         int count = statusCount.get(status);
-        if (NOT_STARTED.equals(status)) {
-          status = "not started";
+        String sStatus = status.toString();
+        if (Status.notstarted == status) {
+          sStatus = "not started";
         }
-        out.append("['" + status + "'," + count + "]");
+        out.append("['" + sStatus + "'," + count + "]");
         if (current != statusCount.keySet().size()) {
           out.append(",");
         }
@@ -352,26 +347,27 @@ public class StudyReportBoxController extends BaseCommandController {
   }
 
   private void createOverallChart(ModelAndView modelAndView, Study study) {
-    List<String> statuses = sampleReportService.getStatusesForStudy(study);
-    Map<String, Integer> statusCount = new LinkedHashMap<String, Integer>();
-    statusCount.put(FAILED, 0);
-    statusCount.put(PENDING, 0);
-    statusCount.put(RUNNING, 0);
-    statusCount.put(NOT_STARTED, 0);
-    statusCount.put(SUCCESS, 0);
-    for (String status : statuses) {
+    List<Status> statuses = sampleReportService.getStatusesForStudy(study);
+    Map<Status, Integer> statusCount = new LinkedHashMap<Status, Integer>();
+    statusCount.put(Status.failed, 0);
+    statusCount.put(Status.pending, 0);
+    statusCount.put(Status.running, 0);
+    statusCount.put(Status.notstarted, 0);
+    statusCount.put(Status.completed, 0);
+    for (Status status : statuses) {
       int count = sampleReportService.countOfStatus(study, status);
       statusCount.put(status, count);
     }
     int current = 0;
     StringBuilder out = new StringBuilder();
-    for (String status : statusCount.keySet()) {
+    for (Status status : statusCount.keySet()) {
       current++;
       int count = statusCount.get(status);
-      if (NOT_STARTED.equals(status)) {
-        status = "not started";
+      String sStatus = status.toString();
+      if (Status.notstarted == status) {
+        sStatus = "not started";
       }
-      out.append("['" + status + "'," + count + "]");
+      out.append("['" + sStatus + "'," + count + "]");
       if (current != statusCount.keySet().size()) {
         out.append(",");
       }
