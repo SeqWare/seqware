@@ -27,6 +27,7 @@ import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
+import net.sourceforge.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import net.sourceforge.seqware.common.util.runtools.TestConsoleAdapter;
@@ -450,7 +451,7 @@ public class MetadataTest extends PluginTest {
 
     @Test
     public void testCreateSequencerRunWithStatus() {
-        final String funky_status = "funky_status";
+        SequencerRunStatus funky_status = SequencerRunStatus.ready_to_process;
         launchPlugin("--table", "sequencer_run", "--create",
                 "--field", "name::SR" + System.currentTimeMillis(),
                 "--field", "description::SRD",
@@ -458,14 +459,14 @@ public class MetadataTest extends PluginTest {
                 "--field", "paired_end::true",
                 "--field", "skip::false",
                 "--field", "file_path::/home/user/mysequencerrun",
-                "--field", "status::"+funky_status);
+                "--field", "status::"+funky_status.name());
         String s = getOut();
         String accession = getAndCheckSwid(s);
         
         // SEQWARE-1561 check that library strategy, selection, and source make it into the database
         BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
         Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select status from sequencer_run WHERE sw_accession=?", Integer.valueOf(accession));
-        Assert.assertTrue("status was incorrect", runQuery[0].equals(funky_status));
+        Assert.assertTrue("status was incorrect", runQuery[0].equals(funky_status.name()));
         // check that we can get them back via metadata methods as well
         SequencerRun r = metadata.getSequencerRun(Integer.valueOf(accession));
         Assert.assertTrue("could not retrieve lane via metadata", r != null);
