@@ -22,6 +22,7 @@ import net.sourceforge.seqware.common.model.FileType;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Processing;
+import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
@@ -160,7 +161,7 @@ public class FileUploadServiceImpl implements FileUploadService {
     Processing newProcessing = new Processing();
     newProcessing.setOwner(owner);
     newProcessing.setFiles(files);
-    newProcessing.setStatus("success");
+    newProcessing.setStatus(ProcessingStatus.success);
     newProcessing.setExitStatus(0);
     newProcessing.setProcessExitStatus(0);
     newProcessing.setRunStartTimestamp(null);

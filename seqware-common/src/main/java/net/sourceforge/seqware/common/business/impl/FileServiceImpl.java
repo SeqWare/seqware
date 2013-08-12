@@ -63,7 +63,7 @@ public class FileServiceImpl implements FileService {
   }
 
   /** {@inheritDoc} */
-  public void delete(File file, String deleteRealFiles) {
+  public void delete(File file, boolean deleteRealFiles) {
     Set<Processing> processings = file.getProcessings();
 
     for (Processing processing : processings) {
@@ -74,7 +74,7 @@ public class FileServiceImpl implements FileService {
 
     fileDAO.delete(file);
 
-    if ("yes".equals(deleteRealFiles)) {
+    if (deleteRealFiles) {
       List<File> deleteFiles = new LinkedList<File>();
       deleteFiles.add(file);
       fileDAO.deleteAllWithFolderStore(deleteFiles);
@@ -83,9 +83,9 @@ public class FileServiceImpl implements FileService {
   }
 
   /** {@inheritDoc} */
-  public void deleteAll(List<File> files, String deleteRealFiles) {
+  public void deleteAll(List<File> files, boolean deleteRealFiles) {
     fileDAO.deleteAll(files);
-    if ("yes".equals(deleteRealFiles)) {
+    if (deleteRealFiles) {
       fileDAO.deleteAllWithFolderStore(files);
     }
   }

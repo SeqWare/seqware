@@ -26,10 +26,12 @@ import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
+import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleAttribute;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.SequencerRunAttribute;
+import net.sourceforge.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.model.StudyType;
@@ -38,6 +40,7 @@ import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
@@ -123,7 +126,7 @@ public interface MetadataInterface {
      * @param status the value of status
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath, String status);
+  public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath, SequencerRunStatus status);
   
     /**
    * <p>addSample.</p>
@@ -283,7 +286,7 @@ public interface MetadataInterface {
    * @param status a {@link java.lang.String} object.
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
-  ReturnValue update_processing_status(int processingID, String status);
+  ReturnValue update_processing_status(int processingID, ProcessingStatus status);
 
   /**
    * <p>associate_processing_event_with_parents_and_child.</p>
@@ -428,7 +431,7 @@ public interface MetadataInterface {
      * @param workflowEngine the value of workflowEngine
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, String status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles);
+  ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRunStatus status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles);
 
   /**
    * <p>findFilesAssociatedWithASample.</p>
@@ -569,7 +572,7 @@ public interface MetadataInterface {
    * @param status a {@link java.lang.String} object.
    * @return a {@link java.util.List} object.
    */
-  public List<WorkflowRun> getWorkflowRunsByStatus(String status);
+  public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRunStatus status);
 
   /**
    * <p>getWorkflowRunsByHost.</p>

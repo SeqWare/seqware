@@ -153,7 +153,7 @@ public class Lane implements Serializable, Comparable<Lane>, PermissionsAware {
 
     private int recursiveCountProcErrors(Processing proc) {
         int errorCnt = 0;
-        if (proc != null && ("failed".equals(proc.getStatus()))) {
+        if (proc != null && (ProcessingStatus.failed == proc.getStatus())) {
             errorCnt++;
         }
         for (Processing childProc : proc.getChildren()) {
@@ -178,7 +178,7 @@ public class Lane implements Serializable, Comparable<Lane>, PermissionsAware {
     private int recursiveCountProcRunning(Processing proc) {
         int runCnt = 0;
         if (proc != null
-                && (proc.getStatus().toLowerCase().contains("running") || proc.getStatus().toLowerCase().contains("pending"))) {
+                && (proc.getStatus() == ProcessingStatus.running || proc.getStatus() == ProcessingStatus.pending)) {
             runCnt++;
         }
         for (Processing childProc : proc.getChildren()) {
@@ -218,7 +218,7 @@ public class Lane implements Serializable, Comparable<Lane>, PermissionsAware {
 
     private int recursiveCountProcessed(Processing proc) {
         int runCnt = 0;
-        if (proc != null && (proc.getStatus().toLowerCase().contains("success"))) {
+        if (proc != null && (proc.getStatus() == ProcessingStatus.success)) {
             runCnt++;
         }
         for (Processing childProc : proc.getChildren()) {
@@ -611,35 +611,6 @@ public class Lane implements Serializable, Comparable<Lane>, PermissionsAware {
         this.sampleCode = sampleCode;
     }
 
-    /**
-     * <p>Getter for the field <code>skipTxt</code>.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getSkipTxt() {
-        if (skip == null) {
-            return "";
-        } else if (skip) {
-            return "Y";
-        } else {
-            return "";
-        }
-    }
-
-    /**
-     * <p>Setter for the field <code>skipTxt</code>.</p>
-     *
-     * @param skip a {@link java.lang.String} object.
-     */
-    public void setSkipTxt(String skip) {
-        if (skip == null) {
-            this.skip = false;
-        } else if ("Y".equals(skip.toUpperCase().trim())) {
-            this.skip = true;
-        } else {
-            this.skip = false;
-        }
-    }
 
     /**
      * <p>Getter for the field <code>skip</code>.</p>

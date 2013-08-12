@@ -67,11 +67,8 @@ public interface StudyService {
 
   /**
    * <p>delete.</p>
-   *
-   * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
-   * @param deleteRealFiles a {@link java.lang.String} object.
    */
-  public void delete(Study study, String deleteRealFiles);
+  public void delete(Study study, boolean deleteRealFiles);
 
   /**
    * <p>merge.</p>

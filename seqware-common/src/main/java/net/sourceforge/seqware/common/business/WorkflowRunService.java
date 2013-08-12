@@ -63,11 +63,8 @@ public interface WorkflowRunService {
 
   /**
    * <p>delete.</p>
-   *
-   * @param workflowRun a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
-   * @param deleteRealFiles a {@link java.lang.String} object.
    */
-  public void delete(WorkflowRun workflowRun, String deleteRealFiles);
+  public void delete(WorkflowRun workflowRun, boolean deleteRealFiles);
 
   /**
    * <p>insert.</p>

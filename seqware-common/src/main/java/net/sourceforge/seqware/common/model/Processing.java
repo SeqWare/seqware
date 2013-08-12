@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -37,8 +39,8 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
-import org.apache.commons.dbutils.DbUtils;
 
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -71,7 +73,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
   private Set<ProcessingAttribute> processingAttributes = new TreeSet<ProcessingAttribute>();
   private WorkflowRun workflowRunByAncestorWorkflowRunId;
   private String algorithm;
-  private String status;
+  private ProcessingStatus status;
   private Integer exitStatus;
   private Integer processExitStatus;
   private String description;
@@ -377,21 +379,11 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     this.processingId = processingId;
   }
 
-  /**
-   * <p>Getter for the field <code>status</code>.</p>
-   *
-   * @return a {@link java.lang.String} object.
-   */
-  public String getStatus() {
+  public ProcessingStatus getStatus() {
     return status;
   }
 
-  /**
-   * <p>Setter for the field <code>status</code>.</p>
-   *
-   * @param status a {@link java.lang.String} object.
-   */
-  public void setStatus(String status) {
+  public void setStatus(ProcessingStatus status) {
     this.status = status;
   }
 
@@ -843,7 +835,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     // get processing with workflow run has not status equal completed
     for (Processing pr : all) {
       WorkflowRun wr = pr.getWorkflowRun();
-      if (wr == null || wr.getStatus().equals("completed")) {
+      if (wr == null || wr.getStatus() == WorkflowRunStatus.completed) {
         res.add(pr);
       }
     }
@@ -861,7 +853,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
     // get processing with workflow run has not status equal completed
     for (Processing pr : all) {
       WorkflowRun wr = pr.getWorkflowRun();
-      if (wr == null || !wr.getStatus().equals("completed")) {
+      if (wr == null || wr.getStatus() != WorkflowRunStatus.completed) {
         res.add(pr);
       }
     }
@@ -915,7 +907,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
         updatedProcessing = new Processing();
         updatedProcessing.setProcessingId(rs.getInt("processing_id"));
         updatedProcessing.setAlgorithm(rs.getString("algorithm"));
-        updatedProcessing.setStatus(rs.getString("status"));
+        updatedProcessing.setStatus(ProcessingStatus.valueOf(rs.getString("status")));
         updatedProcessing.setDescription(rs.getString("description"));
         updatedProcessing.setUrl(rs.getString("url"));
         updatedProcessing.setUrlLabel(rs.getString("url_label"));
@@ -935,7 +927,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
         ancestorWorkflowRunId = rs.getInt("ancestor_workflow_run_id");
         workflowRunId = rs.getInt("workflow_run_id");
       } else {
-        throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "The Processing does not exist");
+        throw new ResourceException(org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST, "The Processing does not exist");
       }
 
       if (ownerId != 0) {

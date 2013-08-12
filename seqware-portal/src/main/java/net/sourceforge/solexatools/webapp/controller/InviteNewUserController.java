@@ -118,7 +118,7 @@ public class InviteNewUserController extends BaseCommandController {
 			modelAndView = new ModelAndView("InviteNewUser", model);
 		}else{
 			ServletContext context = this.getServletContext();
-			String isInvitationCode = context.getInitParameter("invitation.code");
+			boolean isInvitationCode = Boolean.parseBoolean(context.getInitParameter("invitation.code"));
             String subjectEmail = context.getInitParameter("subject.invite.email");
             String templateEmail = context.getInitParameter("template.invite.email");
 			InvitationParams invParams = new InvitationParams(isInvitationCode, subjectEmail, templateEmail);

@@ -62,11 +62,8 @@ public interface SampleService {
 
     /**
      * <p>delete.</p>
-     *
-     * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
-     * @param deleteRealFiles a {@link java.lang.String} object.
      */
-    public void delete(Sample sample, String deleteRealFiles);
+    public void delete(Sample sample, boolean deleteRealFiles);
 
     /**
      * <p>findByName.</p>
