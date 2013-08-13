@@ -49,20 +49,21 @@ public class MetadataWSTest {
 
     protected static Metadata instance;
 
-    public static void configureTestMetadataInstance(Metadata instance) {
+    public static Metadata newTestMetadataInstance() {
         // if an alternative database is set, then we need to redirect to look at the defined REST URL
-        Map<String, String> settings = new HashMap<String, String>();
-        try {
-            settings = ConfigTools.getSettings();
-        } catch (Exception e) {
-            Log.stderr("Error reading settings file: " + e.getMessage());
+        Map<String, String> settings = ConfigTools.getSettings();
+        if (useEmbeddedWebService(settings)){
+          return new MetadataWS("http://localhost:8889/seqware-webservice", "admin@admin.com", "admin");
+        } else {
+          return MetadataFactory.get(settings);
         }
-        if (settings.containsKey(BasicTestDatabaseCreator.BASIC_TEST_DB_HOST_KEY)){
-            instance.init(settings.get("SW_REST_URL"), settings.get("SW_REST_USER"), settings.get("SW_REST_PASS"));
-        } else{
-            instance.init("http://localhost:8889/seqware-webservice", "admin@admin.com", "admin");
-        }
+        
     }
+    
+    public static boolean useEmbeddedWebService(Map<String, String> settings){
+      return !settings.containsKey(BasicTestDatabaseCreator.BASIC_TEST_DB_HOST_KEY);
+    }
+    
     private Logger logger;
 
     public MetadataWSTest() {
@@ -71,8 +72,7 @@ public class MetadataWSTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        instance = new MetadataWS();
-        configureTestMetadataInstance(instance);
+        instance = newTestMetadataInstance();
     }
 
     @AfterClass

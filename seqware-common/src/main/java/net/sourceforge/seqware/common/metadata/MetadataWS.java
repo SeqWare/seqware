@@ -122,7 +122,7 @@ import org.xml.sax.SAXException;
  *
  * @version $Id: $Id
  */
-public class MetadataWS extends Metadata {
+public class MetadataWS implements Metadata {
 
   static{
     // deal with restlet's annoying logging implementation details
@@ -130,16 +130,13 @@ public class MetadataWS extends Metadata {
   }
   
     private String version;
-    private String user;
-    private char[] pass;
     private LowLevel ll;
 
     /**
      * <p>Constructor for MetadataWS.</p>
      */
-    public MetadataWS() {
-        super();
-
+    public MetadataWS(String database, String username, String password) {
+      ll = new LowLevel(database, username, password);
     }
 
     /**
@@ -1131,15 +1128,6 @@ public class MetadataWS extends Metadata {
             e.printStackTrace();
         }
         return id;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ReturnValue init(String database, String username, String password) {
-        ll = new LowLevel(database, username, password);
-        return new ReturnValue(ReturnValue.SUCCESS);
     }
 
     /**
@@ -2638,9 +2626,6 @@ public class MetadataWS extends Metadata {
             Log.debug("Database string is " + database);
             Log.debug("root is " + resource);
             Log.debug("Version is " + version);
-            user = username;
-            pass = password.toCharArray();
-
         }
 
         public Processing existsProcessing(String searchString) {
