@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import io.seqware.Engines;
 import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
 
@@ -316,7 +317,7 @@ public class WorkflowStatusChecker extends Plugin {
       }
 
       if (hostMatch && userMatch && workflowRunAccessionMatch && workflowAccessionMatch) {
-        if (wr.getWorkflowEngine() != null && wr.getWorkflowEngine().startsWith("oozie")) {
+        if (Engines.isOozie(wr.getWorkflowEngine())) {
           checkOozie();
         } else {
           checkPegasus();
