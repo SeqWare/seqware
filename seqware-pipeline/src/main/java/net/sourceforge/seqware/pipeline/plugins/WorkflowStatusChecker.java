@@ -336,46 +336,50 @@ public class WorkflowStatusChecker extends Plugin {
         WorkflowRunStatus curSqwStatus = wr.getStatus();
         WorkflowRunStatus nextSqwStatus;
         
-        switch(curSqwStatus){
-        case submitted_cancel:
-        {
-          switch (wfJob.getStatus()) {
-          case PREP:
-          case RUNNING:
-          case SUSPENDED:
-            // Note: here we treat SUSPENDED as running, so that it can be killed
-            oc.kill(jobId);
-            nextSqwStatus = WorkflowRunStatus.cancelled;
+        if (curSqwStatus == null){
+          nextSqwStatus = convertOozieToSeqware(wfJob.getStatus());
+        } else{
+          switch(curSqwStatus){
+          case submitted_cancel:
+          {
+            switch (wfJob.getStatus()) {
+            case PREP:
+            case RUNNING:
+            case SUSPENDED:
+              // Note: here we treat SUSPENDED as running, so that it can be killed
+              oc.kill(jobId);
+              nextSqwStatus = WorkflowRunStatus.cancelled;
+              break;
+            default:
+              // Let others propagate as normal
+              nextSqwStatus = convertOozieToSeqware(wfJob.getStatus());
+            }
             break;
+          }
+          case submitted_retry:
+          {
+            switch(wfJob.getStatus()){
+            case SUSPENDED:
+              oc.resume(jobId);
+              nextSqwStatus = WorkflowRunStatus.pending;
+              break;
+            case FAILED:
+            case KILLED:
+              Properties conf = oc.createConfiguration();
+              conf.setProperty(OozieClient.APP_PATH, wfJob.getAppPath());
+              conf.setProperty(OozieClient.RERUN_FAIL_NODES, "true");
+              oc.reRun(jobId, conf);
+              nextSqwStatus = WorkflowRunStatus.pending;
+              break;
+            default:
+              // Let others propagate as normal
+              nextSqwStatus = convertOozieToSeqware(wfJob.getStatus());
+            }
+            break;
+          }
           default:
-            // Let others propagate as normal
-            nextSqwStatus = convertOozieToSeqware(wfJob.getStatus());
-          }            
-          break;
-        }
-        case submitted_retry:
-        {
-          switch(wfJob.getStatus()){
-          case SUSPENDED:
-            oc.resume(jobId);
-            nextSqwStatus = WorkflowRunStatus.pending;
-            break;
-          case FAILED:
-          case KILLED:
-            Properties conf = oc.createConfiguration();
-            conf.setProperty(OozieClient.APP_PATH, wfJob.getAppPath());
-            conf.setProperty(OozieClient.RERUN_FAIL_NODES, "true");
-            oc.reRun(jobId, conf);
-            nextSqwStatus = WorkflowRunStatus.pending;
-            break;
-          default:
-            // Let others propagate as normal
             nextSqwStatus = convertOozieToSeqware(wfJob.getStatus());
           }
-          break;
-        }
-        default:
-          nextSqwStatus = convertOozieToSeqware(wfJob.getStatus());
         }
 
         String err;
@@ -439,12 +443,14 @@ public class WorkflowStatusChecker extends Plugin {
     }
 
     private void checkPegasus() {
-      switch(wr.getStatus()){
-      case submitted_cancel:
-      case submitted_retry:
-        // This should be prevented from ever happening on the submit-side.
-        throw new RuntimeException("cancel/retry not supported with pegasus engine.");
-      default: // continue
+      if (wr.getStatus() != null) {
+        switch(wr.getStatus()){
+        case submitted_cancel:
+        case submitted_retry:
+          // This should be prevented from ever happening on the submit-side.
+          throw new RuntimeException("cancel/retry not supported with pegasus engine.");
+        default: // continue
+        }
       }
       
       // check the owner of the status dir
