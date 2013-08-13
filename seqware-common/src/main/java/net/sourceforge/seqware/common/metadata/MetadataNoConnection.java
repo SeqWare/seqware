@@ -363,6 +363,11 @@ public class MetadataNoConnection implements Metadata {
 
   }
 
+  @Override
+  public void updateWorkflowRun(WorkflowRun wr) {
+    logger.info("No metadata connection");
+  }
+
   /** {@inheritDoc} */
   @Override
   public ReturnValue update_processing_event(int processingID, ReturnValue retval) {
