@@ -71,7 +71,7 @@ import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
  * @author boconnor
  * @version $Id: $Id
  */
-public class MetadataDB extends Metadata {
+public class MetadataDB implements Metadata {
 
   private Connection db; // A connection to the database
   private DatabaseMetaData dbmd; // This is basically info the driver delivers
@@ -87,6 +87,11 @@ public class MetadataDB extends Metadata {
   public MetadataDB() {
     super();
     logger = Logger.getLogger(MetadataDB.class);
+  }
+  
+  public MetadataDB(String url, String username, String password){
+    this();
+    init(url, username, password);
   }
 
 
@@ -1246,7 +1251,6 @@ public class MetadataDB extends Metadata {
    *
    * Connect to a database for future use
    */
-  @Override
   public ReturnValue init(String database, String username, String password) {
     // FIXME: Do we need to do this or not? If so, how do we do it abstractly to
     // support different meta-db backends?
