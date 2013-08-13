@@ -27,6 +27,7 @@ import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.SequencerRunStatus;
+import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
@@ -612,6 +613,21 @@ public class MetadataTest extends PluginTest {
         String s = getOut();
         getAndCheckSwid(s);
 
+    }
+    
+    @Test
+    public void testCreateWorkflow() {
+        launchPlugin("--table", "workflow", "--create",
+                "--field", "name::CalculateMeaningOfLife",
+                "--field", "version::1",
+                "--field", "description::'Workflow that simulates the Earth'"
+                );
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int integer = Integer.valueOf(swid);
+        Workflow workflow = metadata.getWorkflow(integer);
+        Assert.assertTrue("could not find workflow", workflow != null && workflow.getSwAccession() == integer);
+        
     }
     
     @Test
