@@ -298,35 +298,6 @@ public interface MetadataInterface {
   ReturnValue associate_processing_event_with_parents_and_child(int processingID, int[] parentIDs, int[] childIDs);
 
   /**
-   * <p>fix_file_paths.</p>
-   *
-   * @param prefix a {@link java.lang.String} object.
-   * @param files a {@link java.util.ArrayList} object.
-   * @return a {@link java.util.ArrayList} object.
-   */
-  ArrayList<String> fix_file_paths(String prefix, ArrayList<String> files); // this
-                                                                            // is
-                                                                            // going
-                                                                            // to
-                                                                            // take
-                                                                            // relative
-                                                                            // path
-                                                                            // from
-                                                                            // run
-                                                                            // and
-                                                                            // fix
-                                                                            // them
-                                                                            // to
-                                                                            // the
-                                                                            // root
-                                                                            // where
-                                                                            // file
-                                                                            // are
-                                                                            // staged
-                                                                            // back
-                                                                            // to
-
-  /**
    * <p>add_workflow_run.</p>
    *
    * @param workflowAccession a int.
