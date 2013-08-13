@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -vx
 # install the hadoop repo
 wget -q http://archive.cloudera.com/cdh4/one-click-install/precise/amd64/cdh4-repository_1.0_all.deb
 dpkg -i cdh4-repository_1.0_all.deb
@@ -125,7 +125,7 @@ su - seqware -c 'cd /home/seqware/gitroot/seqware; git hf init; git hf update'
 
 # build with develop
 su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_BRANCH_CMD}'
-su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_BUILD_CMD} &> build.log'
+su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_BUILD_CMD} 2>&1 | tee build.log'
 
 # setup jar
 cp /home/seqware/gitroot/seqware/seqware-distribution/target/seqware-distribution-%{SEQWARE_VERSION}-full.jar /home/seqware/jars/
@@ -180,6 +180,6 @@ cp /home/seqware/.seqware/settings /usr/lib/hadoop-0.20-mapreduce/.seqware/setti
 chown -R mapred:mapred /usr/lib/hadoop-0.20-mapreduce/.seqware
 
 # run full integration testing
-su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_IT_CMD} &> it.log'
+su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_IT_CMD} 2>&1 | tee it.log'
 
 
