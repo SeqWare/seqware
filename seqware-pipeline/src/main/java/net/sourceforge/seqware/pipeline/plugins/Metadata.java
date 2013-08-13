@@ -301,6 +301,11 @@ public class Metadata extends Plugin {
         if (checkFields(necessaryFields)) {
             // create a new workflow!
             int workflowRunId = metadata.add_workflow_run(Integer.parseInt(fields.get("workflow_accession")));
+            if (workflowRunId == 0){
+                Log.error("Workflow_accession invalid.");
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return ret;
+            }
             int workflowRunAccession = metadata.get_workflow_run_accession(workflowRunId);
             print("SWID: " + workflowRunAccession);
             
@@ -309,6 +314,11 @@ public class Metadata extends Plugin {
             
             // create and update processing
             ReturnValue metaret = metadata.add_empty_processing_event_by_parent_accession(parents);
+            if (metaret.getExitStatus() == ReturnValue.FAILURE){
+                Log.error("Parent_accessions invalid.");
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return ret;
+            }
             int processingId = metaret.getReturnValue();
             ReturnValue newRet = new ReturnValue();
             newRet.setFiles(this.files);
@@ -320,7 +330,9 @@ public class Metadata extends Plugin {
             metadata.update_processing_workflow_run(processingId, workflowRunAccession);
             //SEQWARE-1692 - need to update workflow with the status
             WorkflowRun wr = metadata.getWorkflowRun(workflowRunAccession);
-            wr.setStatus(WorkflowRunStatus.valueOf(fields.get("status")));
+            String statusField = fields.get("status");
+            WorkflowRunStatus status = statusField == null ? null : WorkflowRunStatus.valueOf(statusField);
+            wr.setStatus(status);
             wr.setStdOut(fields.get("stdout"));
             wr.setStdErr(fields.get("stderr"));
             metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
