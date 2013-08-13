@@ -1372,15 +1372,6 @@ public class MetadataDB extends Metadata {
   }
 
   /**
-   * {@inheritDoc}
-   */
-  @Override
-  public ArrayList<String> fix_file_paths(String prefix, ArrayList<String> files) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
    * <p>Getter for the field
    * <code>db</code>.</p>
    *

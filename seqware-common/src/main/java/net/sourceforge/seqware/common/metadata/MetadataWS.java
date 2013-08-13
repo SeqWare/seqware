@@ -1029,14 +1029,6 @@ public class MetadataWS extends Metadata {
      * {@inheritDoc}
      */
     @Override
-    public ArrayList<String> fix_file_paths(String prefix, ArrayList<String> files) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Map<String, String> get_workflow_info(int workflowAccession) {
         Map<String, String> map = new HashMap<String, String>();
 
