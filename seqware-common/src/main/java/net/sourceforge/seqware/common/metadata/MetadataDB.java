@@ -71,7 +71,7 @@ import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
  * @author boconnor
  * @version $Id: $Id
  */
-public class MetadataDB extends Metadata {
+public class MetadataDB implements Metadata {
 
   private Connection db; // A connection to the database
   private DatabaseMetaData dbmd; // This is basically info the driver delivers
@@ -87,6 +87,11 @@ public class MetadataDB extends Metadata {
   public MetadataDB() {
     super();
     logger = Logger.getLogger(MetadataDB.class);
+  }
+  
+  public MetadataDB(String url, String username, String password){
+    this();
+    init(url, username, password);
   }
 
 
@@ -1037,7 +1042,6 @@ public class MetadataDB extends Metadata {
 
     // Create a SQL statement
     // TODO: need to add the currStep, stderr, etc
-    try {
       //
       String sql = "UPDATE workflow_run SET status = " + formatSQL(status.name(), WorkflowRunStatus.pending.name()) + ", cmd = "
               + formatSQL(pegasusCmd, null) + ", workflow_template = " + formatSQL(workflowTemplate, null) + ", dax = "
@@ -1047,7 +1051,7 @@ public class MetadataDB extends Metadata {
               + ", workflow_engine = " + formatSQL(workflowengine, null) 
               + ", update_tstmp='" + new Timestamp(System.currentTimeMillis())
               + "' where workflow_run_id = "+ workflowRunId;
-            
+    try {
       executeUpdate(sql);
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql + "\n" + e.getMessage());
@@ -1247,7 +1251,6 @@ public class MetadataDB extends Metadata {
    *
    * Connect to a database for future use
    */
-  @Override
   public ReturnValue init(String database, String username, String password) {
     // FIXME: Do we need to do this or not? If so, how do we do it abstractly to
     // support different meta-db backends?

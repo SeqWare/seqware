@@ -49,8 +49,7 @@ public class PluginTest {
 
     @Before
     public void setUp() {
-        metadata = new MetadataWS();
-        MetadataWSTest.configureTestMetadataInstance(metadata);
+        metadata = MetadataWSTest.newTestMetadataInstance();
     }
 
     @After

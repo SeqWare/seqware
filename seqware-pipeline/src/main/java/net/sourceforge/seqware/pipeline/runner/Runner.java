@@ -24,6 +24,7 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
+import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.module.FileMetadata;
@@ -555,56 +556,22 @@ public class Runner {
     }
 
     String meta_db = null;
-    Map<String, String> settings = null;
+    Map<String, String> settings = ConfigTools.getSettings();
 
     // Should try settings only if when user does not specify
     // "metadata-config-database" etc. Although it is legacy
     // code, however, user using those will not know to set up the .seqware
     // file.
 
-    String connection = null, user = null, pass = null;
-
     if (optionHasOneOf(new String[] { "metadata-config-database", "metadata-config-username",
         "metadata-config-password" })) {
       // legacy mode
-      user = options.valueOf("metdata-config-username").toString();
-      pass = options.valueOf("metadata-config-password").toString();
-      connection = options.valueOf("metadata-config-database").toString();
-      meta = new MetadataDB();
+      String user = options.valueOf("metdata-config-username").toString();
+      String pass = options.valueOf("metadata-config-password").toString();
+      String connection = options.valueOf("metadata-config-database").toString();
+      meta = new MetadataDB(connection, user, pass);
     } else {
-      try {
-        settings = ConfigTools.getSettings();
-        if (settings.containsKey("SW_METADATA_METHOD")) {
-          String value = settings.get("SW_METADATA_METHOD");
-          if (value.equals("database")) {
-            user = settings.get(Keys.DB_USER);
-            pass = settings.get(Keys.DB_PASS);
-            connection = "jdbc:postgresql://" + settings.get(Keys.DB_SERVER) + "/" + settings.get(Keys.DB_NAME);
-            meta = new MetadataDB();
-          } else if (value.equals("webservice")) {
-            user = settings.get(Keys.WS_USER);
-            pass = settings.get(Keys.WS_PASS);
-            connection = settings.get(Keys.WS_URL);
-            meta = new MetadataWS();
-          } else {
-            Log.error("The metadata method is not specified properly in the .seqware/settings file!");
-            return;
-          }
-        }
-      } catch (Exception e1) {
-        // TODO Auto-generated catch block
-        Log.error("Unable to obtain configuration for Seqware's metadata DB");
-        e1.printStackTrace();
-        System.exit(-1);
-      }
-    }
-
-    ReturnValue ret = meta.init(connection, user, pass);
-    if (ret.getExitStatus() != ReturnValue.SUCCESS) {
-      Log.debug("ERROR connecting to metadata " + settings.get("SW_METADATA_METHOD") + ": " + connection + " " + user
-          + " " + pass);
-      Log.debug(ret.getStderr());
-      System.exit(ret.getExitStatus());
+      meta = MetadataFactory.get(settings);
     }
 
     // If we established a metadb connection, let's find all parentID

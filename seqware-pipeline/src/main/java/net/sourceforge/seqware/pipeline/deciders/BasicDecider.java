@@ -74,7 +74,6 @@ import org.openide.util.lookup.ServiceProvider;
 public class BasicDecider extends Plugin implements DeciderInterface {
 
     protected ReturnValue ret = new ReturnValue();
-    private MetadataWS metaws;
     private Header header = Header.FILE_SWA;
     private Set<String> parentWorkflowAccessions = new TreeSet<String>();
     private Set<String> workflowAccessionsToCheck = new TreeSet<String>();
@@ -316,17 +315,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
 
-        if (metadata instanceof MetadataDB) {
-            metaws = new MetadataWS();
-            ret = metaws.init(config.get("SW_REST_URL"), config.get("SW_REST_USER"), config.get("SW_REST_PASS"));
-        } else if (metadata instanceof MetadataWS) {
-            metaws = (MetadataWS) metadata;
-            //metadb = new MetadataDB();
-            //String connection = "jdbc:postgresql://" + config.get("SW_DB_SERVER") + "/" + config.get("SW_DB");
-            //ret = metadb.init(connection, config.get("SW_DB_USER"), config.get("SW_DB_PASS"));
-        } else {
-            ret.setExitStatus(ReturnValue.DBCOULDNOTINITIALIZE);
-        }
         return ret;
     }
 
@@ -357,13 +345,13 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             return ret;
         } else if (options.has("study-name")) {
             String studyName = (String) options.valueOf("study-name");
-            vals = metaws.findFilesAssociatedWithAStudy(studyName, true);
+            vals = metadata.findFilesAssociatedWithAStudy(studyName, true);
         } else if (options.has("sample-name")) {
             String sampleName = (String) options.valueOf("sample-name");
-            vals = metaws.findFilesAssociatedWithASample(sampleName, true);
+            vals = metadata.findFilesAssociatedWithASample(sampleName, true);
         } else if (options.has("sequencer-run-name")) {
             String runName = (String) options.valueOf("sequencer-run-name");
-            vals = metaws.findFilesAssociatedWithASequencerRun(runName, true);
+            vals = metadata.findFilesAssociatedWithASequencerRun(runName, true);
         } else {
             Log.error("Unknown option");
         }
@@ -681,7 +669,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         String iniPath = "";
 
         Map<String, String> iniFileMap = new TreeMap<String, String>();
-        SortedSet<WorkflowParam> wps = metaws.getWorkflowParams(workflowAccession);
+        SortedSet<WorkflowParam> wps = metadata.getWorkflowParams(workflowAccession);
         for (WorkflowParam param : wps) {
             iniFileMap.put(param.getKey(), param.getDefaultValue());
         }
@@ -885,8 +873,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         return true;
     }  
     
-    public void setMetaws(MetadataWS metaws) {
-        this.metaws = metaws;
+    public void setMetaws(Metadata metaws) {
+        metadata = metaws;
     }
 
     /**
@@ -985,7 +973,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private Set<String> determineFilePaths(Set<Integer> fileSWIDs){
         Set<String> results = new HashSet<String>();
         for(Integer fileSWID: fileSWIDs){
-            net.sourceforge.seqware.common.model.File file = metaws.getFile(fileSWID);
+            net.sourceforge.seqware.common.model.File file = metadata.getFile(fileSWID);
             results.add(file.getFilePath());
         }
         return results;
