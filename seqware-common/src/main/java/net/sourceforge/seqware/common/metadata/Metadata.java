@@ -412,6 +412,8 @@ public interface Metadata {
      */
   ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRunStatus status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles);
 
+  void updateWorkflowRun(WorkflowRun wr);
+
   /**
    * <p>findFilesAssociatedWithASample.</p>
    *
