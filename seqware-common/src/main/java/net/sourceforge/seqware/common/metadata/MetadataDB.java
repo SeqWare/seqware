@@ -1037,7 +1037,6 @@ public class MetadataDB extends Metadata {
 
     // Create a SQL statement
     // TODO: need to add the currStep, stderr, etc
-    try {
       //
       String sql = "UPDATE workflow_run SET status = " + formatSQL(status.name(), WorkflowRunStatus.pending.name()) + ", cmd = "
               + formatSQL(pegasusCmd, null) + ", workflow_template = " + formatSQL(workflowTemplate, null) + ", dax = "
@@ -1047,7 +1046,7 @@ public class MetadataDB extends Metadata {
               + ", workflow_engine = " + formatSQL(workflowengine, null) 
               + ", update_tstmp='" + new Timestamp(System.currentTimeMillis())
               + "' where workflow_run_id = "+ workflowRunId;
-            
+    try {
       executeUpdate(sql);
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql + "\n" + e.getMessage());
