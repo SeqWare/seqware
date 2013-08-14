@@ -16,11 +16,13 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import io.seqware.Engines;
 import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringBufferInputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +30,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -51,10 +54,10 @@ import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.oozie.client.OozieClient;
 import org.apache.oozie.client.WorkflowAction;
 import org.apache.oozie.client.WorkflowJob;
-import org.apache.oozie.client.WorkflowJob.Status;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -165,6 +168,8 @@ public class WorkflowStatusChecker extends Plugin {
       // get a list of running workflows
       List<WorkflowRun> runningWorkflows = this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.running);
       runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.pending));
+      runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted_cancel));
+      runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted_retry));
       if (options.has("check-failed")) {
         runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.failed));
       }
@@ -314,7 +319,7 @@ public class WorkflowStatusChecker extends Plugin {
       }
 
       if (hostMatch && userMatch && workflowRunAccessionMatch && workflowAccessionMatch) {
-        if (wr.getWorkflowEngine() != null && wr.getWorkflowEngine().startsWith("oozie")) {
+        if (Engines.isOozie(wr.getWorkflowEngine())) {
           checkOozie();
         } else {
           checkPegasus();
@@ -330,28 +335,52 @@ public class WorkflowStatusChecker extends Plugin {
         if (wfJob == null)
           return;
 
-        Status status = wfJob.getStatus();
-
-        /*
-         * There's no analog to SUSPENDED or KILLED on the pegasus side,
-         * thus no specific seqware equivalent.
-         */
-        WorkflowRunStatus sqwStatus;
-        switch (status) {
-        case PREP:
-        case RUNNING:
-        case SUSPENDED:
-          sqwStatus = WorkflowRunStatus.running;
-          break;
-        case FAILED:
-        case KILLED:
-          sqwStatus = WorkflowRunStatus.failed;
-          break;
-        case SUCCEEDED:
-          sqwStatus = WorkflowRunStatus.completed;
-          break;
-        default:
-          throw new RuntimeException("Unexpected status value (" + status + ") from oozie workflow job (" + jobId + ")");
+        WorkflowRunStatus curSqwStatus = wr.getStatus();
+        WorkflowRunStatus nextSqwStatus;
+        
+        if (curSqwStatus == null){
+          nextSqwStatus = convertOozieToSeqware(wfJob.getStatus());
+        } else{
+          switch(curSqwStatus){
+          case submitted_cancel:
+          {
+            switch (wfJob.getStatus()) {
+            case PREP:
+            case RUNNING:
+            case SUSPENDED:
+              // Note: here we treat SUSPENDED as running, so that it can be killed
+              oc.kill(jobId);
+              nextSqwStatus = WorkflowRunStatus.cancelled;
+              break;
+            default:
+              // Let others propagate as normal
+              nextSqwStatus = convertOozieToSeqware(wfJob.getStatus());
+            }
+            break;
+          }
+          case submitted_retry:
+          {
+            switch(wfJob.getStatus()){
+            case SUSPENDED:
+              oc.resume(jobId);
+              nextSqwStatus = WorkflowRunStatus.pending;
+              break;
+            case FAILED:
+            case KILLED:
+              Properties conf = getCurrentConf(wfJob);
+              conf.setProperty(OozieClient.RERUN_FAIL_NODES, "true");
+              oc.reRun(jobId, conf);
+              nextSqwStatus = WorkflowRunStatus.pending;
+              break;
+            default:
+              // Let others propagate as normal
+              nextSqwStatus = convertOozieToSeqware(wfJob.getStatus());
+            }
+            break;
+          }
+          default:
+            nextSqwStatus = convertOozieToSeqware(wfJob.getStatus());
+          }
         }
 
         String err;
@@ -376,7 +405,7 @@ public class WorkflowStatusChecker extends Plugin {
 
         synchronized (metadata_sync) {
           WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(),
-                                                                  wr.getTemplate(), sqwStatus, wr.getStatusCmd(),
+                                                                  wr.getTemplate(), nextSqwStatus, wr.getStatusCmd(),
                                                                   wr.getCurrentWorkingDir(), wr.getDax(),
                                                                   wr.getIniFile(), wr.getHost(), err, out,
                                                                   wr.getWorkflowEngine(), wr.getInputFileAccessions());
@@ -387,8 +416,77 @@ public class WorkflowStatusChecker extends Plugin {
         throw new RuntimeException(e);
       }
     }
+    
+    @SuppressWarnings("deprecation")
+    private Properties getCurrentConf(WorkflowJob wfJob){
+      /*
+       * Why this method is needed:
+       * 
+       * To rerun an oozie job, one must pass in a Properties instance.
+       * 
+       * The current conf of a WorkflowJob is only exposed via getConf() which
+       * does not return a Properties instance, but rather a String of XML.
+       * 
+       * The XML is not of a Properties, but rather of a hadoop Configuration!
+       * 
+       * A hadoop Configuration instance cannot be loaded from a String, but
+       * only from resources or an input stream.
+       * 
+       * Further, a hadoop Configuration instance does not expose a public
+       * method for obtaining a Properties representation.
+       * 
+       * It does expose an iterator of Map.Entry objects (which is internally
+       * obtained from a Properties instance!).
+       * 
+       * It'd be swell if these guys could just pick one representation, or at
+       * least an easy way to convert between them.
+       */
+      Configuration conf = new Configuration(false);
+      conf.addResource(new StringBufferInputStream(wfJob.getConf()));
+      Properties props = new Properties();
+      for(Map.Entry<String, String> e : conf){
+        props.setProperty(e.getKey(), e.getValue());
+      }
+      return props;
+    }
+
+    private WorkflowRunStatus convertOozieToSeqware(WorkflowJob.Status oozieStatus){
+      WorkflowRunStatus sqwStatus;
+      /*
+       * There's no analog to SUSPENDED on the seware side, treating as failed so it can be picked up for retry
+       */
+      switch (oozieStatus) {
+      case PREP:
+      case RUNNING:
+      case SUSPENDED:
+        sqwStatus = WorkflowRunStatus.running;
+        break;
+      case FAILED:
+        sqwStatus = WorkflowRunStatus.failed;
+        break;
+      case KILLED:
+        sqwStatus = WorkflowRunStatus.cancelled;
+        break;
+      case SUCCEEDED:
+        sqwStatus = WorkflowRunStatus.completed;
+        break;
+      default:
+        throw new RuntimeException("Unexpected oozie status value: " + oozieStatus);
+      }
+      return sqwStatus;
+    }
 
     private void checkPegasus() {
+      if (wr.getStatus() != null) {
+        switch(wr.getStatus()){
+        case submitted_cancel:
+        case submitted_retry:
+          // This should be prevented from ever happening on the submit-side.
+          throw new RuntimeException("cancel/retry not supported with pegasus engine.");
+        default: // continue
+        }
+      }
+      
       // check the owner of the status dir
       boolean dirOwner = true;
       String statusDir = findStatusDir(wr.getStatusCmd());
