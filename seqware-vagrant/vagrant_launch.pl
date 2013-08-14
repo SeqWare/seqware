@@ -139,9 +139,6 @@ sub prepare_files {
   # Vagrantfile
   autoreplace("templates/Vagrantfile.template", "$work_dir/Vagrantfile");
 
-  # database
-  copy("../seqware-meta-db/seqware_meta_db.sql", "$work_dir/seqware_meta_db.sql");
-  copy("../seqware-meta-db/seqware_meta_db_data.sql", "$work_dir/seqware_meta_db_data.sql");
   # cron
   autoreplace("templates/status.cron", "$work_dir/status.cron");
   # settings, user data
