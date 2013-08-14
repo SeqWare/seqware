@@ -22,13 +22,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
+import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.junit.*;
+import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
+
 
 /**
  * Runs the tests for the GenericMetadataSaver plugin 
@@ -42,13 +45,22 @@ public class GenericMetadataSaverTest extends PluginTest {
     private Pattern swidPattern = Pattern.compile("SWID: ([\\d]+)");
     private Pattern errorPattern = Pattern.compile("ERROR|error|Error|FATAL|fatal|Fatal|WARN|warn|Warn");
     private PrintStream systemErr = System.err;
-    private PrintStream systemOut = System.out;
+    
+    private BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
+    
+    /**
+     * This allows us to intercept and ignore the various System.exit calls within runner
+     * so they don't take down the tests as well
+     */
+    @Rule
+    public final ExpectedSystemExit exit = ExpectedSystemExit.none();
+
 
     @Before
     @Override
     public void setUp() {
         super.setUp();        
-        instance = new Metadata();
+        instance = new ModuleRunner();
         instance.setMetadata(metadata);
 
         outStream = new ByteArrayOutputStream();
@@ -58,13 +70,11 @@ public class GenericMetadataSaverTest extends PluginTest {
 
             @Override
             public PrintStream append(CharSequence csq) {
-//                systemErr.append(csq);
                 return super.append(csq);
             }
 
             @Override
             public void print(String s) {
-//                systemErr.print(s);
                 super.print(s);
             }
         };
@@ -131,17 +141,6 @@ public class GenericMetadataSaverTest extends PluginTest {
         Matcher matcher = errorPattern.matcher(s);
         systemErr.println("~~~~~~~~~~" + s);
         Assert.assertFalse("Output contains errors:" + s, matcher.find());
-//        systemErr.println("~~~~~~~~~~"+matcher.group());
-
-    }
-
-    private void checkFields(Map<String, String> expectedFields) {
-        String out = getOut();
-        for (String s : out.split("\n")) {
-            String[] tokens = s.split("\t");
-            Assert.assertTrue("Unknown field exists: " + s, expectedFields.containsKey(tokens[0]));
-            Assert.assertEquals("Field has different parameter type than expected", expectedFields.get(tokens[0]), tokens[1]);
-        }
     }
 
     
@@ -157,34 +156,56 @@ public class GenericMetadataSaverTest extends PluginTest {
         match = errorPattern.matcher(string);
         Assert.assertTrue(match.find());
         Assert.assertEquals("ERROR", match.group(0));
-
     }
     
     @Test
-    public void testCreateWorkflowRunWrongWorkflowFail() {
-        instance.setParams(Arrays.asList("--table", "workflow_run", "--create",
-                "--field", "workflow_accession::100000",
-                "--field", "status::completed"));
+    public void testSaveNonExistingFileFail() {
+        exit.expectSystemExitWithStatus(ReturnValue.FILENOTREADABLE);
+        instance.setParams(Arrays.asList("--module","net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver", 
+                "--metadata-parent-accession", "10",
+                "--", "--gms-output-file","text::text/plain::/abcdefghijklmnop/test.txt",
+                "--gms-algorithm","UploadText"));
         String s = getOut();
-        checkExpectedIncorrectParameters();
+        checkExpectedFailure();
     }
-    
+
     @Test
-    public void testCreateWorkflowRunWithFiles() {
-        launchPlugin("--table", "workflow_run", "--create",
-                "--field", "workflow_accession::4",
-                "--field", "status::completed",
-                "--file","cool_algorithm1::adamantium/gzip::/datastore/adamantium.gz",
-                "--file","hot_algorithm1::corbomite/gzip::/datastore/corbomite.gz");
+    public void testSaveNonExistingFile() throws IOException {  
+        exit.expectSystemExitWithStatus(ReturnValue.SUCCESS);
+        launchPlugin("--module", "net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver", 
+                "--metadata-parent-accession", "10",
+                "--", "--gms-output-file","text::text/plain::/tmp/abcdefghijklmnop/xyz",
+                "--gms-algorithm","UploadText","--gms-suppress-output-file-check");
         String s = getOut();
         String swid = getAndCheckSwid(s);
-        int integer = Integer.valueOf(swid);
-        // check that file records were created correctly and linked in properly, 0.13.13.6.x does not have access to TestDatabaseCreator, so 
-        // let's try some workflow run reporter parsing
-        WorkflowRun workflowRun = metadata.getWorkflowRun(integer);
-        String workflowRunReport = metadata.getWorkflowRunReport(integer);
-        Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
-        Assert.assertTrue("could not find files", workflowRunReport.contains("/datastore/adamantium.gz") && workflowRunReport.contains("/datastore/corbomite.gz"));
+        int accession = Integer.valueOf(swid);
+        // check that file records and processing were created properly
+        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select file_path, meta_type, algorithm from file f, processing_files pf, processing p WHERE f.file_id = pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession == ?", accession);
+        Assert.assertTrue("values not found", runQuery.length == 3);
+        Assert.assertTrue("file_path value incorrect", runQuery[0].equals("/tmp/abcdefghijklmnop/xyz"));
+        Assert.assertTrue("meta_type value incorrect", runQuery[1].equals("text/plain"));
+        Assert.assertTrue("algorithm value incorrect", runQuery[2].equals("UploadText"));
+    }
+    
+    @Test
+    public void testSaveExistingFile() throws IOException {
+        exit.expectSystemExitWithStatus(ReturnValue.SUCCESS);
+        File createTempFile = File.createTempFile("output", "txt");
+        createTempFile.createNewFile();
+        
+        launchPlugin("--module","net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver", 
+                "--metadata-parent-accession", "10",
+                "--", "--gms-output-file","text::text/plain::"+createTempFile.getAbsolutePath(),
+                "--gms-algorithm","UploadText");
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int accession = Integer.valueOf(swid);
+        // check that file records and processing were created properly
+        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select file_path, meta_type, algorithm from file f, processing_files pf, processing p WHERE f.file_id = pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession == ?", accession);
+        Assert.assertTrue("values not found", runQuery.length == 3);
+        Assert.assertTrue("file_path value incorrect", runQuery[0].equals(createTempFile.getAbsolutePath()));
+        Assert.assertTrue("meta_type value incorrect", runQuery[1].equals("text/plain"));
+        Assert.assertTrue("algorithm value incorrect", runQuery[2].equals("UploadText"));
     }
 
     ////////////////////////////////////////////////////////////////////////////
