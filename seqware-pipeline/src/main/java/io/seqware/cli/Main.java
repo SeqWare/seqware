@@ -1,5 +1,7 @@
 package io.seqware.cli;
 
+import io.seqware.WorkflowRuns;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -1164,6 +1166,48 @@ public class Main {
     }
   }
 
+  private static void workflowRunCancel(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware workflow-run cancel --help");
+      out("       seqware workflow-run cancel <params>");
+      out("");
+      out("Description:");
+      out("  Cancel a submitted or running workflow run.");
+      out("");
+      out("Required parameters:");
+      out("  --accession <swid>  The SWID of the workflow run");
+      out("");
+    } else {
+      int swid = Integer.parseInt(reqVal(args, "--accession"));
+
+      extras(args, "workflow-run cancel");
+
+      WorkflowRuns.submitCancel(swid);
+    }
+  }
+
+  private static void workflowRunRetry(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware workflow-run retry --help");
+      out("       seqware workflow-run retry <params>");
+      out("");
+      out("Description:");
+      out("  Retry a failed or cancelled workflow run.");
+      out("");
+      out("Required parameters:");
+      out("  --accession <swid>  The SWID of the workflow run");
+      out("");
+    } else {
+      int swid = Integer.parseInt(reqVal(args, "--accession"));
+
+      extras(args, "workflow-run retry");
+
+      WorkflowRuns.submitRetry(swid);
+    }
+  }
+
   private static void workflowRun(List<String> args) {
     if (isHelp(args, true)) {
       out("");
@@ -1174,18 +1218,24 @@ public class Main {
       out("  Interact with workflow runs.");
       out("");
       out("Sub-commands:");
+      out("  cancel              Cancel a submitted or running workflow run");
       out("  launch-scheduled    Launch scheduled workflow runs");
       out("  propagate-statuses  Propagate workflow engine statuses to seqware meta DB");
+      out("  retry               Retry a failed or cancelled workflow run");
       out("  stderr              Obtain the stderr output of the run");
       out("  stdout              Obtain the stdout output of the run");
       out("  report              The details of a given workflow-run");
       out("");
     } else {
       String cmd = args.remove(0);
-      if ("launch-scheduled".equals(cmd)) {
+      if ("cancel".equals(cmd)) {
+        workflowRunCancel(args);
+      } else if ("launch-scheduled".equals(cmd)) {
         workflowRunLaunchScheduled(args);
       } else if ("propagate-statuses".equals(cmd)) {
         workflowRunPropagateStatuses(args);
+      } else if ("retry".equals(cmd)) {
+        workflowRunRetry(args);
       } else if ("stderr".equals(cmd)) {
         workflowRunStderr(args);
       } else if ("stdout".equals(cmd)) {

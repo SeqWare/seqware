@@ -1063,6 +1063,11 @@ public class MetadataDB implements Metadata {
 
   }
 
+  @Override
+  public void updateWorkflowRun(WorkflowRun wr) {
+    throw new NotImplementedException("This is currently not implemented for a direct DB connection!");
+  }
+
   /**
    * <p>linkProcessingAndFile.</p>
    *
