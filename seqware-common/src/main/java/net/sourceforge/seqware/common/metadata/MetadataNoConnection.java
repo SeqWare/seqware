@@ -62,7 +62,7 @@ import org.apache.log4j.Logger;
  *         a Database- or WebService-backed Metadata object!
  * @version $Id: $Id
  */
-public class MetadataNoConnection extends Metadata {
+public class MetadataNoConnection implements Metadata {
 
   private Logger logger = Logger.getLogger(MetadataNoConnection.class);
 
@@ -367,19 +367,6 @@ public class MetadataNoConnection extends Metadata {
   /** {@inheritDoc} */
   @Override
   public ReturnValue update_processing_event(int processingID, ReturnValue retval) {
-    logger.info("No metadata connection");
-    ReturnValue finished = new ReturnValue(ReturnValue.PROCESSING);
-    finished.setExitStatus(ReturnValue.SUCCESS);
-    return finished;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * Connect to a database for future use
-   */
-  @Override
-  public ReturnValue init(String database, String username, String password) {
     logger.info("No metadata connection");
     ReturnValue finished = new ReturnValue(ReturnValue.PROCESSING);
     finished.setExitStatus(ReturnValue.SUCCESS);

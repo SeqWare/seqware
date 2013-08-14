@@ -94,7 +94,7 @@ public class ProcessingTaskGroup {
       
       
       // Parse MetadataDB options. If have what we need, then try to connect
-      Metadata meta = null;
+      MetadataDB meta = null;
       if (options.has("metadata-config-database") && options.has("metadata-config-username") && options.has("metadata-config-password") ) {
         // Try to connect and exit if there was a problem.
         meta = new MetadataDB();
