@@ -681,7 +681,7 @@ public class MetadataTest extends PluginTest {
                 "--parent-accession", "4760", // sample
                 "--parent-accession", "4715", // sequencer_run
                 "--parent-accession", "120", //study
-                "--parent-accession", "6780" //processing
+                "--parent-accession", "10" //processing
         );
         String s = getOut();
         String swid = getAndCheckSwid(s);
@@ -713,7 +713,7 @@ public class MetadataTest extends PluginTest {
                 "--parent-accession", "4760", // sample
                 "--parent-accession", "4715", // sequencer_run
                 "--parent-accession", "120", //study
-                "--parent-accession", "6780", //processing
+                "--parent-accession", "10", //processing
                 "--file","cool_algorithm1::adamantium/gzip::/datastore/adamantium.gz",
                 "--file","hot_algorithm1::corbomite/gzip::/datastore/corbomite.gz");
         String s = getOut();
