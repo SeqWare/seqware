@@ -22,6 +22,7 @@ import it.sauronsoftware.junique.JUnique;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringBufferInputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +54,7 @@ import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.oozie.client.OozieClient;
 import org.apache.oozie.client.WorkflowAction;
 import org.apache.oozie.client.WorkflowJob;
@@ -365,8 +367,7 @@ public class WorkflowStatusChecker extends Plugin {
               break;
             case FAILED:
             case KILLED:
-              Properties conf = oc.createConfiguration();
-              conf.setProperty(OozieClient.APP_PATH, wfJob.getAppPath());
+              Properties conf = getCurrentConf(wfJob);
               conf.setProperty(OozieClient.RERUN_FAIL_NODES, "true");
               oc.reRun(jobId, conf);
               nextSqwStatus = WorkflowRunStatus.pending;
@@ -416,6 +417,39 @@ public class WorkflowStatusChecker extends Plugin {
       }
     }
     
+    @SuppressWarnings("deprecation")
+    private Properties getCurrentConf(WorkflowJob wfJob){
+      /*
+       * Why this method is needed:
+       * 
+       * To rerun an oozie job, one must pass in a Properties instance.
+       * 
+       * The current conf of a WorkflowJob is only exposed via getConf() which
+       * does not return a Properties instance, but rather a String of XML.
+       * 
+       * The XML is not of a Properties, but rather of a hadoop Configuration!
+       * 
+       * A hadoop Configuration instance cannot be loaded from a String, but
+       * only from resources or an input stream.
+       * 
+       * Further, a hadoop Configuration instance does not expose a public
+       * method for obtaining a Properties representation.
+       * 
+       * It does expose an iterator of Map.Entry objects (which is internally
+       * obtained from a Properties instance!).
+       * 
+       * It'd be swell if these guys could just pick one representation, or at
+       * least an easy way to convert between them.
+       */
+      Configuration conf = new Configuration(false);
+      conf.addResource(new StringBufferInputStream(wfJob.getConf()));
+      Properties props = new Properties();
+      for(Map.Entry<String, String> e : conf){
+        props.setProperty(e.getKey(), e.getValue());
+      }
+      return props;
+    }
+
     private WorkflowRunStatus convertOozieToSeqware(WorkflowJob.Status oozieStatus){
       WorkflowRunStatus sqwStatus;
       /*
