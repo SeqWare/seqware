@@ -19,12 +19,9 @@ package net.sourceforge.seqware.pipeline.plugins;
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.util.StringUtils;
@@ -60,7 +57,14 @@ public class BasicDeciderET {
                 + "-DworkflowName=seqware-archetype-decider -DworkflowVersion=1.0-SNAPSHOT -B -Dgoals=install";
         String genOutput = ITUtility.runArbitraryCommand(command, 0, createTempDir);
         Log.info(genOutput);
-        
+        // run the decider
+        File seqwareJar = ITUtility.retrieveFullAssembledJar();
+        command = "java -cp "+createTempDir.getAbsolutePath()+"/seqware-archetype-decider/target/seqware-archetype-decider-1.0-SNAPSHOT.jar:"
+                + seqwareJar.getAbsolutePath() 
+                + " net.sourceforge.seqware.pipeline.runner.PluginRunner -p com.seqware.github.HelloWorldDecider -- --all --wf-accession 6685 --parent-wf-accessions 4767 --test";
+        genOutput = ITUtility.runArbitraryCommand(command, 0, createTempDir);
+        Log.info(genOutput);
+        Assert.assertTrue("expected to see 1 launches, found " + StringUtils.countOccurrencesOf(genOutput, "java -jar") , StringUtils.countOccurrencesOf(genOutput, "java -jar") == 1);
     }
     
 }
