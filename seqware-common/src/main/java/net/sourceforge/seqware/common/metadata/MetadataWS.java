@@ -636,7 +636,7 @@ public class MetadataWS extends Metadata {
         List<ParentAccessionModel> results = new ArrayList<ParentAccessionModel>();
 
         for (int parentAccession : potentialParentAccessions) {
-            ParentAccessionModel resolveParentAccession = this.resolveParentAccession(String.valueOf(parentAccession));
+            ParentAccessionModel resolveParentAccession = this.resolveParentAccession("/" + String.valueOf(parentAccession));
             results.add(resolveParentAccession);
         }
         return results;
