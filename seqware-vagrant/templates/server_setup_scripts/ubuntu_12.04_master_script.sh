@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -vx
 # install the hadoop repo
 wget -q http://archive.cloudera.com/cdh4/one-click-install/precise/amd64/cdh4-repository_1.0_all.deb
 dpkg -i cdh4-repository_1.0_all.deb
@@ -87,6 +87,7 @@ chmod -R a+rwx /usr/tmp/
 chown -R seqware:seqware /usr/tmp/seqware-oozie
 
 # various seqware dirs
+mkdir -p /home/seqware/bin
 mkdir -p /home/seqware/jars
 mkdir -p /home/seqware/crons
 mkdir -p /home/seqware/logs
@@ -125,10 +126,17 @@ su - seqware -c 'cd /home/seqware/gitroot/seqware; git hf init; git hf update'
 
 # build with develop
 su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_BRANCH_CMD}'
-su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_BUILD_CMD} &> build.log'
+su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_BUILD_CMD} 2>&1 | tee build.log'
+
+export SEQWARE_VERSION=`ls /home/seqware/gitroot/seqware/seqware-distribution/target/seqware-distribution-*-full.jar | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+(-SNAPSHOT)?' | head -1`
 
 # setup jar
-cp /home/seqware/gitroot/seqware/seqware-distribution/target/seqware-distribution-%{SEQWARE_VERSION}-full.jar /home/seqware/jars/
+cp /home/seqware/gitroot/seqware/seqware-distribution/target/seqware-distribution-${SEQWARE_VERSION}-full.jar /home/seqware/jars/
+
+# setup seqware cli
+cp /home/seqware/gitroot/seqware/seqware-pipeline/target/seqware /home/seqware/bin
+chmod +x /home/seqware/bin/seqware
+echo 'export PATH=$PATH:/home/seqware/bin' >> /home/seqware/.bash_profile
 
 # setup cronjobs
 cp /vagrant/status.cron /home/seqware/crons/
@@ -142,14 +150,19 @@ chown -R seqware:seqware /home/seqware
 /etc/init.d/postgresql start
 sudo -u postgres psql -c "CREATE USER seqware WITH PASSWORD 'seqware' CREATEDB;"
 sudo -u postgres psql --command "ALTER USER seqware WITH superuser;"
+# expose sql scripts
+cp /home/seqware/gitroot/seqware/seqware-meta-db/seqware_meta_db.sql /tmp/seqware_meta_db.sql
+cp /home/seqware/gitroot/seqware/seqware-meta-db/seqware_meta_db_data.sql /tmp/seqware_meta_db_data.sql
+chmod a+rx /tmp/seqware_meta_db.sql
+chmod a+rx /tmp/seqware_meta_db_data.sql
 # this is the DB actually used by people
 sudo -u postgres psql --command "CREATE DATABASE seqware_meta_db WITH OWNER = seqware;"
-sudo -u postgres psql seqware_meta_db < /vagrant/seqware_meta_db.sql
-sudo -u postgres psql seqware_meta_db < /vagrant/seqware_meta_db_data.sql
+sudo -u postgres psql seqware_meta_db < /tmp/seqware_meta_db.sql
+sudo -u postgres psql seqware_meta_db < /tmp/seqware_meta_db_data.sql
 # the testing DB
 sudo -u postgres psql --command "CREATE DATABASE test_seqware_meta_db WITH OWNER = seqware;"
-sudo -u postgres psql test_seqware_meta_db < /vagrant/seqware_meta_db.sql
-sudo -u postgres psql test_seqware_meta_db < /vagrant/seqware_meta_db_data.sql
+sudo -u postgres psql test_seqware_meta_db < /tmp/seqware_meta_db.sql
+sudo -u postgres psql test_seqware_meta_db < /tmp/seqware_meta_db_data.sql
 
 # stop tomcat6
 /etc/init.d/tomcat6 stop
@@ -158,18 +171,20 @@ sudo -u postgres psql test_seqware_meta_db < /vagrant/seqware_meta_db_data.sql
 rm -rf /var/lib/tomcat6/webapps/ROOT
 
 # seqware web service
-cp /home/seqware/gitroot/seqware/seqware-webservice/target/seqware-webservice-%{SEQWARE_VERSION}.war /var/lib/tomcat6/webapps/SeqWareWebService.war
-mv /vagrant/seqware-webservice-%{SEQWARE_VERSION}.xml /etc/tomcat6/Catalina/localhost/SeqWareWebService.xml
+cp /home/seqware/gitroot/seqware/seqware-webservice/target/seqware-webservice-${SEQWARE_VERSION}.war /var/lib/tomcat6/webapps/SeqWareWebService.war
+cp /home/seqware/gitroot/seqware/seqware-webservice/target/seqware-webservice-${SEQWARE_VERSION}.xml /etc/tomcat6/Catalina/localhost/SeqWareWebService.xml
+perl -pi -e "s/test_seqware_meta_db/seqware_meta_db/;" /etc/tomcat6/Catalina/localhost/SeqWareWebService.xml
 
 # seqware portal
-cp /home/seqware/gitroot/seqware/seqware-portal/target/seqware-portal-%{SEQWARE_VERSION}.war /var/lib/tomcat6/webapps/SeqWarePortal.war
-mv /vagrant/seqware-portal-%{SEQWARE_VERSION}.xml /etc/tomcat6/Catalina/localhost/SeqWarePortal.xml
+cp /home/seqware/gitroot/seqware/seqware-portal/target/seqware-portal-${SEQWARE_VERSION}.war /var/lib/tomcat6/webapps/SeqWarePortal.war
+cp /home/seqware/gitroot/seqware/seqware-portal/target/seqware-portal-${SEQWARE_VERSION}.xml /etc/tomcat6/Catalina/localhost/SeqWarePortal.xml
+perl -pi -e "s/test_seqware_meta_db/seqware_meta_db/;" /etc/tomcat6/Catalina/localhost/SeqWarePortal.xml
 
 # restart tomcat6
 /etc/init.d/tomcat6 start
 
 # seqware landing page
-mv /vagrant/vm_landing/* /var/www/
+cp -r /home/seqware/gitroot/seqware/seqware-distribution/docs/vm_landing/* /var/www/
 
 # seqware tutorials
 sudo mkdir /datastore
@@ -180,6 +195,6 @@ cp /home/seqware/.seqware/settings /usr/lib/hadoop-0.20-mapreduce/.seqware/setti
 chown -R mapred:mapred /usr/lib/hadoop-0.20-mapreduce/.seqware
 
 # run full integration testing
-su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_IT_CMD} &> it.log'
+su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_IT_CMD} 2>&1 | tee it.log'
 
 

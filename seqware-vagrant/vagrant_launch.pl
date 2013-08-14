@@ -3,13 +3,13 @@ use Getopt::Long;
 
 # VARS
 
+# Notes:
 # OS_AUTH_URL=https://api.opensciencedatacloud.org:5000/sullivan/v2.0/
 # EC2_URL=https://api.opensciencedatacloud.org:8773/sullivan/services/Cloud
 
 
 # skips all unit and integration tests
 my $default_seqware_build_cmd = 'mvn clean install -DskipTests';
-my $default_seqware_it_cmd = "mvn clean install -DskipITs=false -P 'extITs,!embeddedTomcat,!embeddedHBase'";
 # runs unit tests
 # my $seqware_build_cmd = 'mvn clean install &> build.log';
 # all unit and integration tests that only require postgres
@@ -26,6 +26,8 @@ my $launch_cmd = "vagrant up";
 my $work_dir = "target";
 my $config_file = 'vagrant_launch.conf';
 my $skip_its = 0;
+my $skip_launch = 0;
+my $config_scripts = "templates/server_setup_scripts/ubuntu_12.04_master_script.sh";
 
 GetOptions (
   "use-aws" => \$launch_aws,
@@ -33,7 +35,9 @@ GetOptions (
   "use-openstack" => \$launch_os,
   "working-dir=s" => \$work_dir,
   "config-file=s" => \$config_file,
+  "os-config-scripts=s" => \$config_scripts,
   "skip-it-tests" => \$skip_its,
+  "skip-launch" => \$skip_launch,
 );
 
 
@@ -42,10 +46,14 @@ GetOptions (
 # figure out the current seqware version based on the most-recently built jar
 $seqware_version = find_version();
 
+# make the target dir
+run("mkdir $work_dir");
+
 # config object used for find and replace
 my $configs = {};
 read_config($config_file, $configs);
 if (!defined($configs->{'%{SEQWARE_BUILD_CMD}'})) { $configs->{'%{SEQWARE_BUILD_CMD}'} = $default_seqware_build_cmd; }
+
 $configs->{'%{SEQWARE_VERSION}'} = $seqware_version;
 
 # make this explicit, one or the other, aws is given priority
@@ -65,15 +73,29 @@ if ($launch_vb) {
   die "Don't understand the launcher type to use: AWS, OpenStack, or VirtualBox. Please specify with a --use-* param\n";
 }
 
-# add the integration tests
-if (!$skip_its) { $configs->{'%{SEQWARE_IT_CMD}'} = "mvn clean install -DskipITs=false -P 'extITs,!embeddedTomcat,!embeddedHBase' &> build.log"; }
+# skip the integration tests if specified --skip-its
+if ($skip_its) { $configs->{'%{SEQWARE_IT_CMD}'} = ""; }
 
+# process server scripts into single bash script
+setup_os_config_scripts($config_scripts, "$work_dir/os_server_setup.sh");
 prepare_files();
-launch_instances();
-
+if (!$skip_launch) {
+  launch_instances();
+}
 
 
 # SUBS
+
+# this basically cats files together after doing an autoreplace
+sub setup_os_config_scripts() {
+  my ($config_scripts, $output) = @_;
+  my @scripts = split /,/, $config_scripts;
+  foreach my $script (@scripts) {
+    autoreplace($script, "$output.temp"); 
+    run("cat $output.temp >> $output");
+    run("rm $output.temp");
+  }
+}
 
 sub read_config() {
   my ($file, $config) = @_;
@@ -98,6 +120,7 @@ sub find_version {
   my $file = `ls ../seqware-distribution/target/seqware-distribution-*-full.jar | grep -v qe-full`;
   chomp $file;
   if ($file =~ /seqware-distribution-(\S+)-full.jar/) {
+   print "SEQWARE VERSION: $1\n";
    return($1);
   } else { 
     die "ERROR: CAN'T FIGURE OUT VERSION FROM FILE: $file\n";
@@ -105,29 +128,13 @@ sub find_version {
 }
 
 sub prepare_files {
-  run("mkdir $work_dir");
-  # the jar file
-  #copy("../seqware-distribution/target/seqware-distribution-$seqware_version-full.jar", "$work_dir/seqware-distribution-$seqware_version-full.jar");
-  # the web service
-  #copy("../seqware-webservice/target/seqware-webservice-$seqware_version.war", "$work_dir/seqware-webservice-$seqware_version.war");
-  replace("../seqware-webservice/target/seqware-webservice-$seqware_version.xml", "$work_dir/seqware-webservice-$seqware_version.xml", "jdbc:postgresql://localhost:5432/test_seqware_meta_db", "jdbc:postgresql://localhost:5432/seqware_meta_db");
-  # the portal
-  #copy("../seqware-portal/target/seqware-portal-$seqware_version.war", "$work_dir/seqware-portal-$seqware_version.war");
-  replace("../seqware-portal/target/seqware-portal-$seqware_version.xml", "$work_dir/seqware-portal-$seqware_version.xml", "jdbc:postgresql://localhost:5432/test_seqware_meta_db", "jdbc:postgresql://localhost:5432/seqware_meta_db");
-  # Vagrantfile
+   # Vagrantfile
   autoreplace("templates/Vagrantfile.template", "$work_dir/Vagrantfile");
-  # the master configuration script
-  autoreplace("templates/ubuntu_12.04_master_script.sh", "$work_dir/ubuntu_12.04_master_script.sh");
-  # database
-  copy("../seqware-meta-db/seqware_meta_db.sql", "$work_dir/seqware_meta_db.sql");
-  copy("../seqware-meta-db/seqware_meta_db_data.sql", "$work_dir/seqware_meta_db_data.sql");
   # cron
   autoreplace("templates/status.cron", "$work_dir/status.cron");
   # settings, user data
   copy("templates/settings", "$work_dir/settings");
   copy("templates/user_data.txt", "$work_dir/user_data.txt");
-  # landing page
-  rec_copy("../seqware-distribution/docs/vm_landing", "$work_dir/");
   # script for setting up hadoop hdfs
   copy("templates/setup_hdfs_volumes.pl", "$work_dir/setup_hdfs_volumes.pl");
 }
