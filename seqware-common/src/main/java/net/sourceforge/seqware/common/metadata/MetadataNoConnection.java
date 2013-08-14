@@ -19,6 +19,7 @@ import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.FileAttribute;
+import net.sourceforge.seqware.common.model.ParentAccessionModel;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Lane;
@@ -785,6 +786,12 @@ public class MetadataNoConnection extends Metadata {
 
     @Override
     public Experiment getExperiment(int swAccession) {
+        logger.info("No metadata connection");
+        return null;
+    }
+
+    @Override
+    public List<ParentAccessionModel> getViaParentAccessions(int[] potentialParentAccessions) {
         logger.info("No metadata connection");
         return null;
     }

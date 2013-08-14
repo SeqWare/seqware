@@ -2,7 +2,6 @@ package net.sourceforge.seqware.common.metadata;
 
 import java.io.Writer;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,7 @@ import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.FileAttribute;
+import net.sourceforge.seqware.common.model.ParentAccessionModel;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Lane;
@@ -890,5 +890,9 @@ public interface MetadataInterface {
    */
   public List<Sample> getParentSamplesFrom(int childSampleAccession);
   
-  
+  /**
+   * @param potentialParentAccessions
+   * @return 
+   */
+  public List<ParentAccessionModel> getViaParentAccessions(int[] potentialParentAccessions);
 }
