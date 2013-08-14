@@ -7,6 +7,12 @@ support for OpenStack and VirtualBox and are testing now.
 The current script is designed for single-nodes but we will soon add code that
 lets you launch clusters as well.
 
+In the latest version of the script you can specify multiple OS setup scripts.
+This lets you have different "profiles" that can be combined to setup different
+types of servers (e.g. database vs. web server etc). In the near future this
+functionality will be re-implemented as Puppet scripts instead but for now this
+will let us setup different types of SeqWare boxes if we need to.
+
 ## Installing 
 
 Install Vagrant using the package from their site: http://www.vagrantup.com/.
@@ -31,9 +37,10 @@ For example, to download the base Ubuntu 12.04 box you do the following:
 ## Configuration
 
 Copy the file templates/vagrant_launch.conf.template to the root dir of this
-project and rename it vagrant_launch.conf.  Next, fill in your various
-settings.  You can keep distinct settings for each of the backend types which
-allows you to launch both AWS and OpenStack-based machines.
+project (seqware-vagrant) and rename it vagrant_launch.conf.  Next, fill in
+your various settings.  You can keep distinct settings for each of the backend
+types which allows you to launch both AWS and OpenStack-based machines with
+slightly tweaked differences.
 
 ## Running with the Wrapper
 
@@ -49,7 +56,28 @@ other parts of the SeqWare build.
   # for VirtualBox
   perl vagrant_launch.pl --use-virtualbox
 
-## Manual Running
+This script also lets you point to the config file explicitly, change the
+working directory (which defaults to target, it's the location where Vagrant
+puts all of its runtime files), point to different OS-specific setup script(s),
+and skip the integration tests if desired:
+
+  # example
+  perl vagrant_launch.pl --use-aws --working-dir target-aws --config-files templates/server_setup_scripts/ubuntu_12.04_base_script.sh,templates/server_setup_scripts/ubuntu_12.04_database_script.sh,templates/server_setup_scripts/ubuntu_12.04_portal_script.sh --skip-it-tests
+
+## Debugging
+
+If you need to debug a problem set the VAGRANT_LOG variable e.g.:
+
+   VAGRANT_LOG=DEBUG perl vagrant_launch.pl --use-aws
+
+Also you can use the "--skip-launch" option to just create the various launch
+files not actually trigger a VM.
+
+## Shutting Down
+
+You can terminate your instance via the provider interface (Open Stack, AWS, or VirtualBox).
+
+## Manual Running Vagrant
 
 You can use the Vagrantfile created by the launch script to manually start a
 cluster node (note, you would have to run the vagrant_launch.pl at least once
@@ -59,7 +87,8 @@ command brings up a SeqWare VM on Amazon:
   cd target
   vagrant up --provider=aws
 
-In case you need to re-run the provisioning script e.g. your testing changes:
+In case you need to re-run the provisioning script e.g. you're testing changes
+and want to re-run without restarting the box:
 
   # just test shell setup
   vagrant provision --provision-with shell
@@ -69,7 +98,9 @@ In case you need to re-run the provisioning script e.g. your testing changes:
 * need to setup HBase for the QueryEngine -- done
 * need to edit the landing page to remove mention of Pegasus
 * need to add code that will add all local drives to HDFS to maximize available storage (e.g. ephemerial drives) -- done
+* ecryptfs -- done
 * need to have a cluster provisioning template that works properly and coordinates network settings somehow
+* should I add glusterfs in parallel since it's POSIX compliant and will play better with SeqWare or should I just use NFS?
 * add teardown for cluster to this script
 * need to add setup init.d script that will run on first boot for subsequent images of the provisioned node
 * setup services with chkconfig to ensure a rebooted machine works properly -- done
