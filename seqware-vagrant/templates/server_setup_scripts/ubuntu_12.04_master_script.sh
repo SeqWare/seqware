@@ -87,6 +87,7 @@ chmod -R a+rwx /usr/tmp/
 chown -R seqware:seqware /usr/tmp/seqware-oozie
 
 # various seqware dirs
+mkdir -p /home/seqware/bin
 mkdir -p /home/seqware/jars
 mkdir -p /home/seqware/crons
 mkdir -p /home/seqware/logs
@@ -130,6 +131,11 @@ su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_BUILD_CMD} 2>&1 | t
 # setup jar
 cp /home/seqware/gitroot/seqware/seqware-distribution/target/seqware-distribution-%{SEQWARE_VERSION}-full.jar /home/seqware/jars/
 
+# setup seqware cli
+cp /home/seqware/gitroot/seqware/seqware-pipeline/target/seqware /home/seqware/bin
+chmod +x /home/seqware/bin/seqware
+echo 'export PATH=$PATH:/home/seqware/bin' >> /home/seqware/.bash_profile
+
 # setup cronjobs
 cp /vagrant/status.cron /home/seqware/crons/
 chmod a+x /home/seqware/crons/status.cron
@@ -142,14 +148,19 @@ chown -R seqware:seqware /home/seqware
 /etc/init.d/postgresql start
 sudo -u postgres psql -c "CREATE USER seqware WITH PASSWORD 'seqware' CREATEDB;"
 sudo -u postgres psql --command "ALTER USER seqware WITH superuser;"
+# expose sql scripts
+cp /home/seqware/gitroot/seqware/seqware-meta-db/seqware_meta_db.sql /tmp/seqware_meta_db.sql
+cp /home/seqware/gitroot/seqware/seqware-meta-db/seqware_meta_db_data.sql /tmp/seqware_meta_db_data.sql
+chmod a+rx /tmp/seqware_meta_db.sql
+chmod a+rx /tmp/seqware_meta_db_data.sql
 # this is the DB actually used by people
 sudo -u postgres psql --command "CREATE DATABASE seqware_meta_db WITH OWNER = seqware;"
-sudo -u postgres psql seqware_meta_db < /vagrant/seqware_meta_db.sql
-sudo -u postgres psql seqware_meta_db < /vagrant/seqware_meta_db_data.sql
+sudo -u postgres psql seqware_meta_db < /tmp/seqware_meta_db.sql
+sudo -u postgres psql seqware_meta_db < /tmp/seqware_meta_db_data.sql
 # the testing DB
 sudo -u postgres psql --command "CREATE DATABASE test_seqware_meta_db WITH OWNER = seqware;"
-sudo -u postgres psql test_seqware_meta_db < /vagrant/seqware_meta_db.sql
-sudo -u postgres psql test_seqware_meta_db < /vagrant/seqware_meta_db_data.sql
+sudo -u postgres psql test_seqware_meta_db < /tmp/seqware_meta_db.sql
+sudo -u postgres psql test_seqware_meta_db < /tmp/seqware_meta_db_data.sql
 
 # stop tomcat6
 /etc/init.d/tomcat6 stop
