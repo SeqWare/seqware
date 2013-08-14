@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Sample implements Serializable, Comparable<Sample>, PermissionsAware {
+public class Sample implements Serializable, Comparable<Sample>, PermissionsAware, ParentAccessionModel {
 
   // Attributes relied upon by seqware code
   
