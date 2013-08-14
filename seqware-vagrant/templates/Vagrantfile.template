@@ -141,6 +141,9 @@ Vagrant.configure("2") do |config|
         os.endpoint = "%{OS_ENDPOINT}"
         os.keypair_name = "%{OS_SSH_KEY_NAME}"
         os.ssh_username = "%{OS_SSH_USERNAME}"
+        os.tenant = "%{OS_TENANT}"
+        os.network = "Speyside"
+        os.floating_ip = "10.0.20.213"
         override.ssh.username = "%{OS_SSH_USERNAME}"
         override.ssh.private_key_path = "%{OS_SSH_PEM_FILE}"
     end
