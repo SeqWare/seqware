@@ -107,6 +107,8 @@ public class WorkflowStatusCheckerTest{
         Assert.assertTrue("workflowStatusChecker ran properly", ret2.getExitStatus() == ReturnValue.SUCCESS);
         verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.running);
         verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.pending);
+        verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.submitted_cancel);
+        verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.submitted_retry);
         verifyNoMoreInteractions(metadata);
     }
     
@@ -189,6 +191,8 @@ public class WorkflowStatusCheckerTest{
         Assert.assertTrue("workflowStatusChecker ran properly", ret2.getExitStatus() == ReturnValue.SUCCESS);
         verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.running);
         verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.pending);
+        verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.submitted_cancel);
+        verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.submitted_retry);
         verify(metadata, times(100)).update_workflow_run(anyInt(), anyString(), anyString(), any(WorkflowRunStatus.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), (Set<Integer>) anyObject());
     }
 }

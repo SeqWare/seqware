@@ -1377,6 +1377,17 @@ public class MetadataWS implements Metadata {
         return ret;
     }
 
+    @Override
+    public void updateWorkflowRun(WorkflowRun wr) {
+      try {
+        ll.updateWorkflowRun("/" + wr.getSwAccession(), wr);
+      } catch (RuntimeException e) {
+        throw e;
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+
     private String format(String variable, String defaultStr) {
 
         if ((variable == null || "".equals(variable)) && (defaultStr != null && !"".equals(defaultStr))) {
