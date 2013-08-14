@@ -8,6 +8,7 @@ OS_ENDPOINT=https://api.opensciencedatacloud.org:5000/sullivan/v2.0/
 OS_SSH_KEY_NAME=
 OS_SSH_USERNAME=ubuntu
 OS_SSH_PEM_FILE=
+OS_TENANT=
 # AMAZON
 AWS_KEY=
 AWS_SECRET_KEY=
