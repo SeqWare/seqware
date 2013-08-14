@@ -13,6 +13,7 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
+import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.metadata.MetadataNoConnection;
 import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -333,31 +334,7 @@ public class PluginRunner {
   }
 
   private void setupMetadata() {
-    if ("database".equals(config.get("SW_METADATA_METHOD"))) {
-      this.meta = new MetadataDB();
-      String connection = "jdbc:postgresql://" + config.get("SW_DB_SERVER") + "/" + config.get("SW_DB");
-      ReturnValue ret = meta.init(connection, config.get("SW_DB_USER"), config.get("SW_DB_PASS"));
-      if (ret.getExitStatus() != ReturnValue.SUCCESS) {
-        Log.stderr("ERROR connecting to metadata DB "+connection+" "+config.get("SW_DB_USER")+" "+config.get("SW_DB_PASS"));
-        Log.stderr(ret.getStderr());
-        System.exit(ret.getExitStatus());
-      }
-    } 
-    else if ("webservice".equals(config.get("SW_METADATA_METHOD"))) {
-      this.meta = new MetadataWS();
-      ReturnValue ret = meta.init(config.get("SW_REST_URL"), config.get("SW_REST_USER"), config.get("SW_REST_PASS"));
-      if (ret.getExitStatus() != ReturnValue.SUCCESS) {
-        Log.stderr("ERROR connecting to metadata WS "+config.get("SW_REST_URL")+" "+config.get("SW_REST_USER")+" "+config.get("SW_REST_PASS"));
-        Log.stderr(ret.getStderr());
-        System.exit(ret.getExitStatus());
-      }
-    }else if ("none".equals(config.get("SW_METADATA_METHOD"))) {
-      Log.info("you have selected to use no metadb connection, a lack of MetaDB may result in unforseen failures of components expecting a MetaDB connection!");
-      this.meta = new MetadataNoConnection();
-    } else {
-      Log.stderr("don't know how to connect to the metadata type of: "+config.get("SW_METADATA_METHOD")+". Make sure you have SW_METADATA_METHOD defined in your SeqWare settings file.");
-      System.exit(ReturnValue.METADATAINVALIDIDCHAIN);
-    }
+    this.meta = MetadataFactory.get(config);
   }
 
 }
