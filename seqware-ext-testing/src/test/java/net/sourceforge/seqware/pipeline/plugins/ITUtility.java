@@ -126,7 +126,7 @@ public class ITUtility {
      * run tests on production bundles
      *
      */
-    private static File retrieveFullAssembledJar() {
+    protected static File retrieveFullAssembledJar() {
         String workingDir = System.getProperty("user.dir");
         File workingDirectory = new File(workingDir);
         File targetFullJar = searchForFullJar(workingDirectory);
