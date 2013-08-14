@@ -46,7 +46,6 @@ public class GenericMetadataSaverTest extends PluginTest {
     private Pattern errorPattern = Pattern.compile("ERROR|error|Error|FATAL|fatal|Fatal|WARN|warn|Warn");
     private PrintStream systemErr = System.err;
     
-    private BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
     
     /**
      * This allows us to intercept and ignore the various System.exit calls within runner
@@ -55,6 +54,11 @@ public class GenericMetadataSaverTest extends PluginTest {
     @Rule
     public final ExpectedSystemExit exit = ExpectedSystemExit.none();
 
+    @BeforeClass
+    public static void beforeClass(){
+        BasicTestDatabaseCreator.resetDatabaseWithUsers();
+    }
+    
 
     @Before
     @Override
@@ -180,6 +184,7 @@ public class GenericMetadataSaverTest extends PluginTest {
         String swid = getAndCheckSwid(s);
         int accession = Integer.valueOf(swid);
         // check that file records and processing were created properly
+        BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
         Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select file_path, meta_type, algorithm from file f, processing_files pf, processing p WHERE f.file_id = pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession == ?", accession);
         Assert.assertTrue("values not found", runQuery.length == 3);
         Assert.assertTrue("file_path value incorrect", runQuery[0].equals("/tmp/abcdefghijklmnop/xyz"));
@@ -201,6 +206,7 @@ public class GenericMetadataSaverTest extends PluginTest {
         String swid = getAndCheckSwid(s);
         int accession = Integer.valueOf(swid);
         // check that file records and processing were created properly
+        BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
         Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select file_path, meta_type, algorithm from file f, processing_files pf, processing p WHERE f.file_id = pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession == ?", accession);
         Assert.assertTrue("values not found", runQuery.length == 3);
         Assert.assertTrue("file_path value incorrect", runQuery[0].equals(createTempFile.getAbsolutePath()));
