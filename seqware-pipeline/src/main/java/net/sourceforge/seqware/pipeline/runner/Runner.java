@@ -797,7 +797,9 @@ public class Runner {
           if (metaret.getStderr() != null) {
             printAndAppendtoStderr("STDERR: " + metaret.getStderr());
           }
-
+          Log.fatal("Reprint errors stderr: " + metaret.getStderr());
+          Log.fatal("Reprint errors stdout: " + metaret.getStdout());
+          Log.fatal("SQLQUERYFAILED after add_empty_processing_event_by_parent_accession");
           System.exit(ReturnValue.SQLQUERYFAILED);
         }
       } else {
