@@ -1,3 +1,9 @@
+## WARNING
+
+I'm working on multi-pass provisioning, be aware I'm probably going to break
+the script quite badly at times.  You probably want to stick to the develop
+branch until I merge this feature branch.
+
 ## About
 
 This Vagrant script will setup a single-node SeqWare box configured to use the
