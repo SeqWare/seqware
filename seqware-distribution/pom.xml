@@ -15,10 +15,10 @@
     <url>https://github.com/SeqWare/seqware</url>
 
     <dependencies>
-        <dependency>
+   <!-- <dependency>
             <groupId>com.github.seqware</groupId>
             <artifactId>seqware-queryengine</artifactId>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>com.github.seqware</groupId>
             <artifactId>seqware-pipeline</artifactId>
@@ -112,10 +112,9 @@
                             <descriptors>
                                 <descriptor>src/assemble/seqware-pipeline-full.xml</descriptor>
                             </descriptors>
-                            <!-- <finalName>seqware</finalName> -->
                         </configuration>
                     </execution>
-                    <execution>
+               <!-- <execution>
                         <id>executable-queryengine-jar-assembly</id>
                         <phase>package</phase>
                         <goals>
@@ -134,9 +133,8 @@
                             <descriptors>
                                 <descriptor>src/assemble/seqware-queryengine.xml</descriptor>
                             </descriptors>
-                            <!-- <finalName>seqware</finalName> -->
                         </configuration>
-                    </execution>
+                    </execution> -->
                 </executions>
             </plugin>
             <plugin>
@@ -157,7 +155,7 @@
                             <ignorePathsToDelete>
                                 <ignorePathToDelete>javadoc</ignorePathToDelete>
                                 <ignorePathToDelete>manuals</ignorePathToDelete>
-                                <ignorePathToDelete>queryengine-api</ignorePathToDelete>
+                           <!-- <ignorePathToDelete>queryengine-api</ignorePathToDelete> -->
                                 <ignorePathToDelete>webservice-api</ignorePathToDelete>
                                 <ignorePathToDelete>pictures</ignorePathToDelete>
                             </ignorePathsToDelete>
