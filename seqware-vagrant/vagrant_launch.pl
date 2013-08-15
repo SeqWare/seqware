@@ -28,6 +28,7 @@ my $config_file = 'vagrant_launch.conf';
 my $skip_its = 0;
 my $skip_launch = 0;
 my $config_scripts = "templates/server_setup_scripts/ubuntu_12.04_master_script.sh";
+my $secondary_config_scripts = "";
 
 GetOptions (
   "use-aws" => \$launch_aws,
@@ -35,7 +36,8 @@ GetOptions (
   "use-openstack" => \$launch_os,
   "working-dir=s" => \$work_dir,
   "config-file=s" => \$config_file,
-  "os-config-scripts=s" => \$config_scripts,
+  "os-primary-config-scripts=s" => \$config_scripts,
+  "os-secondary-config-scripts=s" => \$secondary_config_scripts,
   "skip-it-tests" => \$skip_its,
   "skip-launch" => \$skip_launch,
 );
@@ -80,11 +82,31 @@ if ($skip_its) { $configs->{'%{SEQWARE_IT_CMD}'} = ""; }
 setup_os_config_scripts($config_scripts, "$work_dir/os_server_setup.sh");
 prepare_files();
 if (!$skip_launch) {
+  # this launches and does first round setup
   launch_instances();
+  # this finds IP addresses and does second round of setup
+  provision_instances();
 }
 
 
 # SUBS
+
+sub find_node_info {
+  my $d = {};
+
+  run("cd $work_dir");
+  
+  return($d);
+}
+
+# this finds all the host IP addresses and then runs the second provisioning on them
+sub provision_intances {
+  # first, find all the hosts and get their info
+  my $hosts = find_node_info();
+  print Dumper($hosts);
+
+  # LEFT OFF HERE
+}
 
 # this basically cats files together after doing an autoreplace
 sub setup_os_config_scripts() {
