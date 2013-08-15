@@ -692,11 +692,10 @@ public class MetadataWS implements Metadata {
      */
     private void addParentsAndChildren(Processing p, String[] parentIds, String[] childIds) throws ResourceException,
             IOException, JAXBException {
+
         // Associate the processing entry with the zero or more parents
         if (parentIds != null && parentIds.length != 0 && !(parentIds[0].trim().equals("/0"))) {
-            Log.fatal("addParentAndChildren: " + parentIds.toString() + " " + parentIds.length);
             for (String parentID : parentIds) {
-                Log.fatal("parentID: " + parentID);
                 // TODO: I've moved the fetching so that it only occurs when needed,
                 //       but should we really just associate to the first entity that
                 //       happens to have the (not globally unique) ID?
@@ -720,7 +719,6 @@ public class MetadataWS implements Metadata {
                         throw new RuntimeException("Model unaccounted for, we cannot attach this");
                     }
                 } else{
-                    Log.fatal("invalid parentID: " + parentID);
                     throw new IOException("This parent ID is invalid: " + parentID);
                 }
             }
