@@ -62,7 +62,7 @@ puts all of its runtime files), point to different OS-specific setup script(s),
 and skip the integration tests if desired:
 
   # example
-  perl vagrant_launch.pl --use-aws --working-dir target-aws --config-files templates/server_setup_scripts/ubuntu_12.04_base_script.sh,templates/server_setup_scripts/ubuntu_12.04_database_script.sh,templates/server_setup_scripts/ubuntu_12.04_portal_script.sh --skip-it-tests
+  perl vagrant_launch.pl --use-aws --working-dir target-aws --os-config-scripts templates/server_setup_scripts/ubuntu_12.04_base_script.sh,templates/server_setup_scripts/ubuntu_12.04_database_script.sh,templates/server_setup_scripts/ubuntu_12.04_portal_script.sh --skip-it-tests
 
 ## Debugging
 
