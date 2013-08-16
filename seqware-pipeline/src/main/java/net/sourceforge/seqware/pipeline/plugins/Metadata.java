@@ -299,39 +299,58 @@ public class Metadata extends Plugin {
         // check to make sure we have what we need
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
         if (checkFields(necessaryFields)) {
-            // create a new workflow!
-            int workflowRunId = metadata.add_workflow_run(Integer.parseInt(fields.get("workflow_accession")));
-            int workflowRunAccession = metadata.get_workflow_run_accession(workflowRunId);
-            print("SWID: " + workflowRunAccession);
-            
             // parent accessions
             int[] parents = parseParentAccessions();
-            
+            // if we have parent accessions, check that they're valid right up front
+            if(metadata.getViaParentAccessions(parents).contains(null)) {
+                    Log.error("parent accession invalid.");
+                    ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                    return ret;
+            }
+
+
+            // create a new workflow!
+            int workflowRunId = metadata.add_workflow_run(Integer.parseInt(fields.get("workflow_accession")));
+            if (workflowRunId == 0) {
+                Log.error("Workflow_accession invalid.");
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return ret;
+            }
+            int workflowRunAccession = metadata.get_workflow_run_accession(workflowRunId);
+            print("SWID: " + workflowRunAccession);
+
             // create and update processing
             ReturnValue metaret = metadata.add_empty_processing_event_by_parent_accession(parents);
+            if (metaret.getExitStatus() != ReturnValue.SUCCESS) {
+                Log.error("Parent_accessions invalid.");
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return ret;
+            }
             int processingId = metaret.getReturnValue();
             ReturnValue newRet = new ReturnValue();
             newRet.setFiles(this.files);
             //newRet.setExitStatus(fields.get("status"));
-           
+
             metadata.update_processing_event(processingId, newRet);
-            
+
             // LEFT OFF WITH: need to link process with workflow_run
             metadata.update_processing_workflow_run(processingId, workflowRunAccession);
             //SEQWARE-1692 - need to update workflow with the status
             WorkflowRun wr = metadata.getWorkflowRun(workflowRunAccession);
-            wr.setStatus(WorkflowRunStatus.valueOf(fields.get("status")));
+            String statusField = fields.get("status");
+            WorkflowRunStatus status = statusField == null ? null : WorkflowRunStatus.valueOf(statusField);
+            wr.setStatus(status);
             wr.setStdOut(fields.get("stdout"));
             wr.setStdErr(fields.get("stderr"));
             metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
-                                wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
-                                wr.getHost(), wr.getStdErr(), wr.getStdOut(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
-            
+                    wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
+                    wr.getHost(), wr.getStdErr(), wr.getStdOut(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
+
         } else {
             Log.error("You need to supply workflow_accession and status for the workflow_run table.");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
-        
+
         return (ret);
     }
     
