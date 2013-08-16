@@ -302,12 +302,10 @@ public class Metadata extends Plugin {
             // parent accessions
             int[] parents = parseParentAccessions();
             // if we have parent accessions, check that they're valid right up front
-            for (ParentAccessionModel m : metadata.getViaParentAccessions(parents)) {
-                if (m == null) {
+            if(metadata.getViaParentAccessions(parents).contains(null)) {
                     Log.error("parent accession invalid.");
                     ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
                     return ret;
-                }
             }
 
 
@@ -323,7 +321,7 @@ public class Metadata extends Plugin {
 
             // create and update processing
             ReturnValue metaret = metadata.add_empty_processing_event_by_parent_accession(parents);
-            if (metaret.getExitStatus() == ReturnValue.FAILURE) {
+            if (metaret.getExitStatus() != ReturnValue.SUCCESS) {
                 Log.error("Parent_accessions invalid.");
                 ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
                 return ret;
