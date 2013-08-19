@@ -24,6 +24,7 @@ import net.sourceforge.seqware.common.model.LibrarySelection;
 import net.sourceforge.seqware.common.model.LibrarySource;
 import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
+import net.sourceforge.seqware.common.model.ParentAccessionModel;
 import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.model.ProcessingStatus;
@@ -276,35 +277,6 @@ public interface Metadata {
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
   ReturnValue associate_processing_event_with_parents_and_child(int processingID, int[] parentIDs, int[] childIDs);
-
-  /**
-   * <p>fix_file_paths.</p>
-   *
-   * @param prefix a {@link java.lang.String} object.
-   * @param files a {@link java.util.ArrayList} object.
-   * @return a {@link java.util.ArrayList} object.
-   */
-  ArrayList<String> fix_file_paths(String prefix, ArrayList<String> files); // this
-                                                                            // is
-                                                                            // going
-                                                                            // to
-                                                                            // take
-                                                                            // relative
-                                                                            // path
-                                                                            // from
-                                                                            // run
-                                                                            // and
-                                                                            // fix
-                                                                            // them
-                                                                            // to
-                                                                            // the
-                                                                            // root
-                                                                            // where
-                                                                            // file
-                                                                            // are
-                                                                            // staged
-                                                                            // back
-                                                                            // to
 
   /**
    * <p>add_workflow_run.</p>
@@ -901,5 +873,10 @@ public interface Metadata {
    */
   public List<Sample> getParentSamplesFrom(int childSampleAccession);
   
-  
+  /**
+   * Get the models corresponding to potential parent accessions
+   * @param potentialParentAccessions
+   * @return a list, with null when parent accessions are invalid
+   */
+  public List<ParentAccessionModel> getViaParentAccessions(int[] potentialParentAccessions);
 }

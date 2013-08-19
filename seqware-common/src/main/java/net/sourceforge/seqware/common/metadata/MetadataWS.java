@@ -49,6 +49,7 @@ import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.FileAttribute;
+import net.sourceforge.seqware.common.model.ParentAccessionModel;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Lane;
@@ -625,6 +626,59 @@ public class MetadataWS implements Metadata {
         }
         return null;
     }
+  
+    @Override
+    public List<ParentAccessionModel> getViaParentAccessions(int[] potentialParentAccessions) {
+
+        List<ParentAccessionModel> results = new ArrayList<ParentAccessionModel>();
+
+        for (int parentAccession : potentialParentAccessions) {
+            ParentAccessionModel resolveParentAccession = this.resolveParentAccession("/" + String.valueOf(parentAccession));
+            results.add(resolveParentAccession);
+        }
+        return results;
+    }
+    
+    /**
+     * @param searchString resolve an accession "/SWA" or parent_id "?id=X"
+     * @return null if the searchString cannot be resolved;
+     */
+    private ParentAccessionModel resolveParentAccession(String searchString) {
+
+        Processing pr;
+        Lane l;
+        IUS i;
+        SequencerRun sr;
+        Study study;
+        Experiment exp;
+        Sample samp;
+
+        if ((pr = ll.existsProcessing(searchString)) != null) {
+            Log.debug("Adding parent processing " + pr.getSwAccession());
+            return pr;
+        } else if ((l = ll.existsLane(searchString)) != null) {
+            Log.debug("Adding parent lane " + l.getSwAccession());
+            return l;
+        } else if ((i = ll.existsIUS(searchString)) != null) {
+            Log.debug("Adding parent ius " + i.getSwAccession());
+            return i;
+        } else if ((sr = ll.existsSequencerRun(searchString)) != null) {
+            Log.debug("Adding parent sequencer_run " + sr.getSwAccession());
+            return sr;
+        } else if ((study = ll.existsStudy(searchString)) != null) {
+            Log.debug("Adding parent study " + study.getSwAccession());
+            return study;
+        } else if ((exp = ll.existsExperiment(searchString)) != null) {
+            Log.debug("Adding parent experiment " + exp.getSwAccession());
+            return exp;
+        } else if ((samp = ll.existsSample(searchString)) != null) {
+            Log.debug("Adding parent sample " + samp.getSwAccession());
+            return samp;
+        } else {
+            return null;
+        }
+    }
+  
 
     /**
      *
@@ -642,40 +696,29 @@ public class MetadataWS implements Metadata {
         // Associate the processing entry with the zero or more parents
         if (parentIds != null && parentIds.length != 0 && !(parentIds[0].trim().equals("/0"))) {
             for (String parentID : parentIds) {
-                Processing pr;
-                Lane l;
-                IUS i;
-                SequencerRun sr;
-                Study study;
-                Experiment exp;
-                Sample samp;
-                
                 // TODO: I've moved the fetching so that it only occurs when needed,
                 //       but should we really just associate to the first entity that
                 //       happens to have the (not globally unique) ID?
-
-                if ((pr = ll.existsProcessing(parentID)) != null) {
-                    Log.debug("Adding parent processing " + pr.getSwAccession());
-                    p.getParents().add(pr);
-                } else if ((l = ll.existsLane(parentID)) != null) {
-                    Log.debug("Adding parent lane " + l.getSwAccession());
-                    p.getLanes().add(l);
-                } else if ((i = ll.existsIUS(parentID)) != null) {
-                    Log.debug("Adding parent ius " + i.getSwAccession());
-                    p.getIUS().add(i);
-                } else if ((sr = ll.existsSequencerRun(parentID)) != null) {
-                    Log.debug("Adding parent sequencer_run " + sr.getSwAccession());
-                    p.getSequencerRuns().add(sr);
-                } else if ((study = ll.existsStudy(parentID)) != null) {
-                    Log.debug("Adding parent study " + study.getSwAccession());
-                    p.getStudies().add(study);
-                } else if ((exp = ll.existsExperiment(parentID)) != null) {
-                    Log.debug("Adding parent experiment " + exp.getSwAccession());
-                    p.getExperiments().add(exp);
-                } else if ((samp = ll.existsSample(parentID)) != null) {
-                    Log.debug("Adding parent sample " + samp.getSwAccession());
-                    p.getSamples().add(samp);
-                } else {
+                ParentAccessionModel resolveParentAccession = this.resolveParentAccession(parentID);
+                if (resolveParentAccession != null){
+                    if (resolveParentAccession instanceof Processing){
+                         p.getParents().add((Processing)resolveParentAccession);
+                    } else if (resolveParentAccession instanceof Lane){
+                        p.getLanes().add((Lane)resolveParentAccession);
+                    } else if (resolveParentAccession instanceof IUS){
+                        p.getIUS().add((IUS)resolveParentAccession);
+                    } else if (resolveParentAccession instanceof SequencerRun){
+                        p.getSequencerRuns().add((SequencerRun)resolveParentAccession);
+                    } else if (resolveParentAccession instanceof Study){
+                        p.getStudies().add((Study)resolveParentAccession);
+                    } else if (resolveParentAccession instanceof Experiment){
+                        p.getExperiments().add((Experiment)resolveParentAccession);
+                    } else if (resolveParentAccession instanceof Sample){
+                        p.getSamples().add((Sample)resolveParentAccession);
+                    } else{
+                        throw new RuntimeException("Model unaccounted for, we cannot attach this");
+                    }
+                } else{
                     throw new IOException("This parent ID is invalid: " + parentID);
                 }
             }
@@ -1020,14 +1063,6 @@ public class MetadataWS implements Metadata {
     @Override
     public List<ReturnValue> findFilesAssociatedWithASequencerRun(String runName) {
         return findFilesAssociatedWithASequencerRun(runName, true);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ArrayList<String> fix_file_paths(String prefix, ArrayList<String> files) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
