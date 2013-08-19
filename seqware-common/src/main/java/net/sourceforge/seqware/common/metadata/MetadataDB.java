@@ -27,6 +27,7 @@ import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.FileAttribute;
+import net.sourceforge.seqware.common.model.ParentAccessionModel;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Lane;
@@ -1380,15 +1381,6 @@ public class MetadataDB implements Metadata {
   }
 
   /**
-   * {@inheritDoc}
-   */
-  @Override
-  public ArrayList<String> fix_file_paths(String prefix, ArrayList<String> files) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
    * <p>Getter for the field
    * <code>db</code>.</p>
    *
@@ -2220,6 +2212,11 @@ public class MetadataDB implements Metadata {
 
     @Override
     public Experiment getExperiment(int swAccession) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<ParentAccessionModel> getViaParentAccessions(int[] potentialParentAccessions) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
 }

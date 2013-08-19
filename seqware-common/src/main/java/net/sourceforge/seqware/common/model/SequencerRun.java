@@ -6,8 +6,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -28,7 +26,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class SequencerRun implements Serializable, Comparable<SequencerRun>, PermissionsAware {
+public class SequencerRun implements Serializable, Comparable<SequencerRun>, PermissionsAware, ParentAccessionModel {
 
   private static final long serialVersionUID = 3681328115923390568L;
     private Integer sequencerRunId;

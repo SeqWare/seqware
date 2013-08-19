@@ -60,6 +60,7 @@ public class GenericMetadataSaver extends Module {
    *
    * @return OptionParser this is used to get command line options
    */
+  @Override
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
 
