@@ -1179,11 +1179,15 @@ public class Main {
       out("  --accession <swid>  The SWID of the workflow run");
       out("");
     } else {
-      int swid = Integer.parseInt(reqVal(args, "--accession"));
+      String swid = reqVal(args, "--accession");
 
       extras(args, "workflow-run cancel");
 
-      WorkflowRuns.submitCancel(swid);
+      try {
+        WorkflowRuns.submitCancel(Integer.parseInt(swid));
+      } catch (NumberFormatException e) {
+        kill("seqware: invalid seqware accession: '" + swid + "'");
+      }
     }
   }
 
