@@ -152,7 +152,7 @@ Vagrant.configure("2") do |config|
     jenkinsremote.vm.network :forwarded_port, host: 8888, guest: 8888
     jenkinsremote.vm.network :forwarded_port, host: 11000, guest: 11000
     jenkinsremote.vm.network :forwarded_port, host: 5432, guest: 5432
-    jenkinsremote.vm.hostname = "jenkins-remote"
+    jenkinsremote.vm.hostname = "jenkinsremote"
     jenkinsremote.vm.provision :shell, :path => "os_server_setup.sh"
   end
 
