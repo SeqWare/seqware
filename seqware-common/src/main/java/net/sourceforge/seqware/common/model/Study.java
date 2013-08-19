@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Study implements Serializable, PermissionsAware {
+public class Study implements Serializable, PermissionsAware, ParentAccessionModel {
 
   private static final long serialVersionUID = 2L;
   private Integer studyId;

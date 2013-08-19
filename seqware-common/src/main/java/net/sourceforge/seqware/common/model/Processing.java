@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -45,7 +43,6 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
-import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
 @XmlRootElement
@@ -55,7 +52,7 @@ import org.restlet.resource.ResourceException;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Processing implements Serializable, Comparable<Processing>, PermissionsAware {
+public class Processing implements Serializable, Comparable<Processing>, PermissionsAware, ParentAccessionModel {
 
   private static final long serialVersionUID = 4681328115923390568L;
   private Integer processingId;
