@@ -332,8 +332,8 @@ public class AttributeAnnotatorET {
         Assert.assertTrue("incorrect resulting number of unrelated annotations, found: " + runQuery.size(), runQuery.size() == 2);
         Assert.assertTrue("second tag incorrect", runQuery.get(0)[1].equals(funky_key));
         Assert.assertTrue("second value incorrect", runQuery.get(0)[2].equals(funky_second_value));
-        Assert.assertTrue("third tag incorrect", runQuery.get(1)[1].equals(groovy_key));
-        Assert.assertTrue("third value incorrect", runQuery.get(1)[2].equals(groovy_value));
+        Assert.assertTrue("third tag incorrect", runQuery.get(1)[1].equals("robin"));
+        Assert.assertTrue("third value incorrect", runQuery.get(1)[2].equals("batman"));
         List<Object[]> count3 = dbCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);
         compareTwoCounts(count2.get(0), count3.get(0));
     }
