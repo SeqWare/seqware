@@ -1,4 +1,4 @@
-## Introduction 
+## Introduction to Awesome 
 
 This README is just a quick overview of building SeqWare. See our
 [project homepage](http://seqware.github.com) for much more documentation.
