@@ -454,7 +454,7 @@ public class MetadataTest extends PluginTest {
                 "--field", "workflow_accession::100000",
                 "--field", "status::completed"));
         String s = getOut();
-        checkExpectedFailure();
+        checkExpectedIncorrectParameters();
     }
     
     @Test
@@ -509,7 +509,7 @@ public class MetadataTest extends PluginTest {
                 "--parent-accession", "4760", // sample
                 "--parent-accession", "4715", // sequencer_run
                 "--parent-accession", "120", //study
-                "--parent-accession", "6780", //processing
+                "--parent-accession", "10", //processing
                 "--file","cool_algorithm1::adamantium/gzip::/datastore/adamantium.gz",
                 "--file","hot_algorithm1::corbomite/gzip::/datastore/corbomite.gz");
         String s = getOut();
