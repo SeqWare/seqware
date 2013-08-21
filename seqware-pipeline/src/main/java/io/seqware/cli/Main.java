@@ -1040,20 +1040,33 @@ public class Main {
       out("  Launch scheduled workflow runs.");
       out("");
       out("Optional parameters:");
-      out("  --accession <swid>   Launch the specified workflow-run");
-      out("                       Repeat this parameter to provide multiple runs");
+      out("  --accession <swid>   Launch the specified workflow-run. Repeat this parameter");
+      out("                       to provide multiple runs.");
+      out("  --host <value>       Use the specified value instead of the local hostname");
+      out("                       when selecting which workflow-runs to launch.");
       out("");
     } else {
       List<String> ids = optVals(args, "--accession");
+      String host = optVal(args, "--host", null);
 
       extras(args, "workflow-run launch-scheduled");
 
-      if (ids.isEmpty()) {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--launch-scheduled");
-      } else {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--launch-scheduled",
-            cdl(ids));
+      List<String> runnerArgs = new ArrayList<String>();
+      runnerArgs.add("--plugin");
+      runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher");
+      runnerArgs.add("--");
+
+      if (host != null) {
+        runnerArgs.add("--force-host");
+        runnerArgs.add(host);
       }
+
+      runnerArgs.add("--launch-scheduled");
+      if (!ids.isEmpty()) {
+        runnerArgs.add(cdl(ids));
+      }
+
+      run(runnerArgs);
     }
   }
 
