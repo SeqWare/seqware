@@ -230,14 +230,8 @@ public class BundleManager extends Plugin {
             }
         // ((options.has("workflow") && options.has("version") && options.has("bundle")) || options.has("workflow-accession"))
         } else if (options.has("list-workflow-params") && options.has("workflow-accession")) {
-            println("=====================================================");
-            println("=================WORKFLOW PARAMS=====================");
-            println("=====================================================");
-            println("-----------------------------------------------------");
             String params = metadata.listInstalledWorkflowParams((String)options.valueOf("workflow-accession"));
             println(params);
-            println("-----------------------------------------------------");
-
         } else if (options.has("workflow") && options.has("version") && options.has("download")) {
             println("Downloading Bundle");
             String workflowName = (String) options.valueOf("workflow");
