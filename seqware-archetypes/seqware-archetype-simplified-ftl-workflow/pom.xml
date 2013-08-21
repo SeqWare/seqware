@@ -9,7 +9,7 @@
   <description>SeqWare FTL workflow archetype</description>
 
     <parent> 
-        <version>0.13.6.10-SNAPSHOT</version> 
+        <version>0.13.6.10</version> 
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
 	<relativePath>../../pom.xml</relativePath>
