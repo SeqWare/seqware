@@ -1,4 +1,11 @@
 #!/bin/bash -vx
+
+# first, fix the /etc/hosts file since SGE wants reverse lookup to work
+cp /etc/hosts /tmp/hosts
+echo `/sbin/ifconfig  | grep -A 3 eth0 | grep 'inet addr' | perl -e 'while(<>){ chomp; /inet addr:(\d+\.\d+\.\d+\.\d+)/; print $1; }'` `hostname` > /etc/hosts
+cat /tmp/hosts >> /etc/hosts
+
+
 # install the hadoop repo
 wget -q http://archive.cloudera.com/cdh4/one-click-install/precise/amd64/cdh4-repository_1.0_all.deb
 dpkg -i cdh4-repository_1.0_all.deb
