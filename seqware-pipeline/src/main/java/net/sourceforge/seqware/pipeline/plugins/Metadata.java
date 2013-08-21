@@ -275,6 +275,11 @@ public class Metadata extends Plugin {
         if (checkFields(necessaryFields)) {
             // create a new workflow!
             int workflowRunId = metadata.add_workflow_run(Integer.parseInt(fields.get("workflow_accession")));
+            if (workflowRunId == 0){
+                Log.error("Workflow_accession invalid.");
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return ret;
+            }
             int workflowRunAccession = metadata.get_workflow_run_accession(workflowRunId);
             print("SWID: " + workflowRunAccession);
             
