@@ -1,17 +1,11 @@
-	[seqware@master workflow-dev]$ cd /home/seqware/workflow-dev/MyHelloWorld 
-	[seqware@master MyHelloWorld]$ mvn clean install
-        [INFO] Scanning for projects...                                                                                       
-        [INFO] ------------------------------------------------------------------------                                       
-        [INFO] Building seqware-workflow                                                                                      
-	[INFO]    task-segment: [clean, install]
-	[INFO] ------------------------------------------------------------------------
-	[INFO] [clean:clean {execution: default-clean}]
-	[INFO] Deleting /mnt/databases/workflow-dev/MyHelloWorld/target
-        <snip> 
+        $ cd ~/workflow-dev/MyHelloWorld/
+        $ mvn clean install
+        [INFO] Scanning for projects...
+        ...
         [INFO] ------------------------------------------------------------------------
-        [INFO] BUILD SUCCESSFUL
+        [INFO] BUILD SUCCESS
         [INFO] ------------------------------------------------------------------------
-        [INFO] Total time: 26 seconds
-        [INFO] Finished at: Fri Nov 23 14:48:15 EST 2012
-        [INFO] Final Memory: 67M/423M
+        [INFO] Total time: 40.100s
+        [INFO] Finished at: Thu Aug 15 19:59:22 UTC 2013
+        [INFO] Final Memory: 28M/67M
         [INFO] ------------------------------------------------------------------------
