@@ -124,11 +124,15 @@ In order to publish to seqware.github.com, checkout our current hotfix and publi
     cd seqware-distribution 
     mvn site-deploy
 
+Then you would look at the site at: http://seqware.github.io
+
 In order to publish to our unstable docs supporting the development of 1.0.0, checkout from develop and publish:
 
     git checkout develop 
     cd seqware-distribution 
     mvn site-deploy
+
+Then you would look at the site at: http://seqware.github.io/unstable.seqware.github.com/
 
 ###Problems with Maven
 
