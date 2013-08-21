@@ -489,6 +489,34 @@ public class Main {
     }
   }
 
+  private static void copy(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware copy [--help]");
+      out("       seqware copy <source> <destination>");
+      out("");
+      out("Description:");
+      out("  Convenience tool to copy files between local and remote file systems, e.g. S3.");
+      out("  If destination is a local directory, the input file's name will be used for the");
+      out("  output file.");
+      out("");
+    } else {
+      if (args.size() == 2) {
+        String src = args.remove(0);
+        String dest = args.remove(0);
+
+        extras(args, "copy");
+
+        String destFlag = new File(dest).isDirectory() ? "--output-dir" : "--output-file";
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.ModuleRunner", "--", "--module",
+            "net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles", "--no-metadata", "--", "--force-copy",
+            "--input-file", src, destFlag, dest);
+      } else {
+        kill("seqware: invalid arguments to 'seqware copy'. See 'seqware copy --help'.");
+      }
+    }
+  }
+
   private static void runCreateTable(List<String> args, String table, String... cols) {
     if (flag(args, "--interactive")) {
       extras(args, "create " + table.replace('_', '-'));
@@ -1192,11 +1220,15 @@ public class Main {
       out("  --accession <swid>  The SWID of the workflow run");
       out("");
     } else {
-      int swid = Integer.parseInt(reqVal(args, "--accession"));
+      String swid = reqVal(args, "--accession");
 
       extras(args, "workflow-run cancel");
 
-      WorkflowRuns.submitCancel(swid);
+      try {
+        WorkflowRuns.submitCancel(Integer.parseInt(swid));
+      } catch (NumberFormatException e) {
+        kill("seqware: invalid seqware accession: '" + swid + "'");
+      }
     }
   }
 
@@ -1275,12 +1307,13 @@ public class Main {
       out("Commands:");
       out("  annotate      Add arbitrary key/value pairs to seqware objects");
       out("  bundle        Interact with a workflow bundle");
+      out("  copy          Copy files between local and remote file systems");
       out("  create        Create new seqware objects (e.g., study)");
       out("  files         Extract information about workflow output files");
       out("  workflow      Interact with workflows");
       out("  workflow-run  Interact with workflow runs");
       out("");
-      out("flags:");
+      out("Flags:");
       out("  --help        Print help out");
       // handled in seqware script:
       out("  --version     Print Seqware's version");
@@ -1293,6 +1326,8 @@ public class Main {
         annotate(args);
       } else if ("bundle".equals(cmd)) {
         bundle(args);
+      } else if ("copy".equals(cmd)) {
+        copy(args);
       } else if ("create".equals(cmd)) {
         create(args);
       } else if ("files".equals(cmd)) {
