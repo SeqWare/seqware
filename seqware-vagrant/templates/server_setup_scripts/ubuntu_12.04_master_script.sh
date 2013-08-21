@@ -138,11 +138,6 @@ cp /home/seqware/gitroot/seqware/seqware-pipeline/target/seqware /home/seqware/b
 chmod +x /home/seqware/bin/seqware
 echo 'export PATH=$PATH:/home/seqware/bin' >> /home/seqware/.bash_profile
 
-# setup cronjobs
-cp /vagrant/status.cron /home/seqware/crons/
-chmod a+x /home/seqware/crons/status.cron
-su - seqware -c '(echo "* * * * * /home/seqware/crons/status.cron >> /home/seqware/logs/status.log") | crontab -'
-
 # make everything owned by seqware
 chown -R seqware:seqware /home/seqware
 
@@ -197,4 +192,8 @@ chown -R mapred:mapred /usr/lib/hadoop-0.20-mapreduce/.seqware
 # run full integration testing
 su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_IT_CMD} 2>&1 | tee it.log'
 
+# setup cronjobs after testing to avoid WorkflowStatusChecker or Launcher clashes
+cp /vagrant/status.cron /home/seqware/crons/
+chmod a+x /home/seqware/crons/status.cron
+su - seqware -c '(echo "* * * * * /home/seqware/crons/status.cron >> /home/seqware/logs/status.log") | crontab -'
 
