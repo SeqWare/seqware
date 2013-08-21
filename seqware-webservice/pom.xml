@@ -269,37 +269,6 @@
         </dependency>
         <dependency>
             <groupId>com.github.seqware</groupId>
-            <artifactId>seqware-queryengine-legacy</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.hbase</groupId>
-                    <artifactId>hbase</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>hadoop-core</artifactId>
-                    <groupId>org.apache.hadoop</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.sourceforge.seqware</groupId>
-                    <artifactId>seqware-common</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.github.seqware</groupId>
-                    <artifactId>seqware-common</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.github.seqware</groupId>
-                    <artifactId>seqware-common</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-                
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.github.seqware</groupId>
             <artifactId>seqware-webservice-dto</artifactId>
         </dependency>
         <dependency>

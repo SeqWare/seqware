@@ -3,11 +3,6 @@ package net.sourceforge.seqware.queryengine.webservice.controller;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import net.sourceforge.seqware.queryengine.backend.model.Variant;
-import net.sourceforge.seqware.queryengine.webservice.view.GeneReportResource;
-import net.sourceforge.seqware.queryengine.webservice.view.ProcessingResource;
-import net.sourceforge.seqware.queryengine.webservice.view.TagResource;
-import net.sourceforge.seqware.queryengine.webservice.view.TemplateResource;
 import net.sourceforge.seqware.queryengine.webservice.view.WorkflowRunStatusResource;
 import net.sourceforge.seqware.webservice.resources.SeqwareAccessionIDResource;
 import net.sourceforge.seqware.webservice.resources.SeqwareAccessionResource;
@@ -73,7 +68,6 @@ import org.restlet.ext.wadl.*;
  */
 public class SeqWareWebServiceApplicationVersion extends WadlApplication {
 
-    private final ConcurrentMap<String, Variant> mismatches = new ConcurrentHashMap<String, Variant>();
     private Configuration configuration = null;
 
     /**
@@ -143,15 +137,6 @@ public class SeqWareWebServiceApplicationVersion extends WadlApplication {
         SeqWareVerifier verifier = new SeqWareVerifier();
         guard.setVerifier(verifier);
         return guard;
-    }
-
-    /**
-     * <p>Getter for the field <code>mismatches</code>.</p>
-     *
-     * @return a {@link java.util.concurrent.ConcurrentMap} object.
-     */
-    public ConcurrentMap<String, Variant> getMismatches() {
-        return mismatches;
     }
 
     /** {@inheritDoc} */
