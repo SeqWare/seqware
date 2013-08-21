@@ -22,10 +22,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.sourceforge.seqware.common.factory.DBAccess;
+import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import net.sourceforge.seqware.common.util.runtools.TestConsoleAdapter;
+import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
@@ -430,6 +434,96 @@ public class MetadataTest extends PluginTest {
         getAndCheckSwid(s);
 
     }
+    
+    @Test
+    public void testCreateWorkflowRun() {
+        launchPlugin("--table", "workflow_run", "--create",
+                "--field", "workflow_accession::4",
+                "--field", "status::completed");
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int integer = Integer.valueOf(swid);
+        WorkflowRun workflowRun = metadata.getWorkflowRun(integer);
+        Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
+        
+    }
+    
+    @Test
+    public void testCreateWorkflowRunWrongWorkflowFail() {
+        instance.setParams(Arrays.asList("--table", "workflow_run", "--create",
+                "--field", "workflow_accession::100000",
+                "--field", "status::completed"));
+        String s = getOut();
+        checkExpectedIncorrectParameters();
+    }
+    
+    @Test
+    public void testCreateWorkflowRunWithFiles() {
+        launchPlugin("--table", "workflow_run", "--create",
+                "--field", "workflow_accession::4",
+                "--field", "status::completed",
+                "--file","cool_algorithm1::adamantium/gzip::/datastore/adamantium.gz",
+                "--file","hot_algorithm1::corbomite/gzip::/datastore/corbomite.gz");
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int integer = Integer.valueOf(swid);
+        // check that file records were created correctly and linked in properly, 0.13.13.6.x does not have access to TestDatabaseCreator, so 
+        // let's try some workflow run reporter parsing
+        WorkflowRun workflowRun = metadata.getWorkflowRun(integer);
+        String workflowRunReport = ((MetadataWS)metadata).getWorkflowRunReport(integer);
+        Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
+        Assert.assertTrue("could not find files", workflowRunReport.contains("/datastore/adamantium.gz") && workflowRunReport.contains("/datastore/corbomite.gz"));
+    }
+    
+    @Test
+    public void testCreateWorkflowRunWithParentAccessions() {
+        launchPlugin("--table", "workflow_run", "--create",
+                "--field", "workflow_accession::4",
+                "--field", "status::completed",
+                "--parent-accession","834", // experiment
+                "--parent-accession", "4765", // ius 
+                "--parent-accession", "4707", // lane
+                "--parent-accession", "4760", // sample
+                "--parent-accession", "4715", // sequencer_run
+                "--parent-accession", "120", //study
+                "--parent-accession", "6780" //processing
+        );
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int integer = Integer.valueOf(swid);
+        // check that file records were created correctly and linked in properly, 0.13.13.6.x does not have access to TestDatabaseCreator, so 
+        // let's try some workflow run reporter parsing
+        WorkflowRun workflowRun = metadata.getWorkflowRun(integer);
+        String workflowRunReport = metadata.getWorkflowRunReport(integer);
+        Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
+    }
+    
+    @Test
+    public void testCreateWorkflowRunWithFilesAndAccessions() {
+        launchPlugin("--table", "workflow_run", "--create",
+                "--field", "workflow_accession::4",
+                "--field", "status::completed",
+                 "--parent-accession","834", // experiment
+                "--parent-accession", "4765", // ius 
+                "--parent-accession", "4707", // lane
+                "--parent-accession", "4760", // sample
+                "--parent-accession", "4715", // sequencer_run
+                "--parent-accession", "120", //study
+                "--parent-accession", "10", //processing
+                "--file","cool_algorithm1::adamantium/gzip::/datastore/adamantium.gz",
+                "--file","hot_algorithm1::corbomite/gzip::/datastore/corbomite.gz");
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int integer = Integer.valueOf(swid);
+        // check that file records were created correctly and linked in properly, 0.13.13.6.x does not have access to TestDatabaseCreator, so 
+        // let's try some workflow run reporter parsing
+        WorkflowRun workflowRun = metadata.getWorkflowRun(integer);
+        String workflowRunReport = ((MetadataWS)metadata).getWorkflowRunReport(integer);
+        Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
+        Assert.assertTrue("could not find files", workflowRunReport.contains("/datastore/adamantium.gz") && workflowRunReport.contains("/datastore/corbomite.gz"));
+    }
+    
+    
 
     //////////////////////////////////////////////////Negative tests
     // re-enabled to test SEQWARE-1331
