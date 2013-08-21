@@ -405,13 +405,13 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 
 
                 if (!parentAccessionsToRun.isEmpty() && !filesToRun.isEmpty() && !workflowParentAccessionsToRun.isEmpty()) {
-                    String parentAccessionString = commaSeparateMy(parentAccessionsToRun);
-                    String fileString = commaSeparateMy(filesToRun);
+                    final String parentAccessionString = commaSeparateMy(parentAccessionsToRun);
+                    final String fileString = commaSeparateMy(filesToRun);
                     Log.debug("FileString: " + fileString);
                     boolean rerun = rerunWorkflowRun(filesToRun, fileSWIDsToRun);
 
+                    // SEQWARE-1728 - move creation of ini to launches (and test launches) to conserve disk space 
                     iniFiles = new ArrayList<String>();
-                    iniFiles.add(createIniFile(fileString, parentAccessionString));
 
                     ReturnValue newRet = this.doFinalCheck(fileString, parentAccessionString);
                     if (newRet.getExitStatus() != ReturnValue.SUCCESS) {
@@ -427,6 +427,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     if (test || !rerun){
                         // we need to simplify the logic and make it more readable here for testing
                         if (rerun){
+                            iniFiles.add(createIniFile(fileString, parentAccessionString));
                             for(String line: studyReporterOutput){
                                 Log.stdout(line);
                             }
@@ -442,6 +443,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                             Log.debug("NOT RUNNING (and would not have ran). test=" + test + " or !rerun=" + !rerun);
                         }
                     } else if (launched < launchMax) {
+                        iniFiles.add(createIniFile(fileString, parentAccessionString));
                         launched++;
                         //construct the INI and run it
                         for (String line : studyReporterOutput) {
