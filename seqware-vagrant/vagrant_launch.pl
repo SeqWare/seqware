@@ -1,5 +1,6 @@
 use strict;
 use Getopt::Long;
+use Data::Dumper;
 
 # VARS
 
@@ -80,6 +81,7 @@ if ($skip_its) { $configs->{'%{SEQWARE_IT_CMD}'} = ""; }
 
 # process server scripts into single bash script
 setup_os_config_scripts($config_scripts, "$work_dir/os_server_setup.sh");
+setup_os_config_scripts($secondary_config_scripts, "$work_dir/secondary_os_server_setup.sh");
 prepare_files();
 if (!$skip_launch) {
   # this launches and does first round setup
@@ -95,15 +97,43 @@ sub find_node_info {
   my $d = {};
 
   run("cd $work_dir");
-  
+  my $node_list = `cd $work_dir && vagrant status`;
+  my @t = split /\n/, $node_list;
+  foreach my $l (@t) {
+    chomp $l;
+    if ($l =~ /(\S+)\s+active/) {
+      my $host_id = $1;
+      my $host_info = `cd $work_dir && vagrant ssh-config $host_id`;
+      my @h = split /\n/, $host_info;
+      my $ip = "";
+      my $user = "";
+      my $key = "";
+      foreach my $hl (@h) {
+        chomp $hl;
+        if ($hl =~ /HostName\s+(\S+)/) { $ip = $1; }
+        if ($hl =~ /User\s+(\S+)/) { $user = $1; }
+        if ($hl =~ /IdentityFile\s+(\S+)/) { $key = $1; }
+      }
+      $d->{$host_id}{ip} = $ip;
+      $d->{$host_id}{user} = $user;
+      $d->{$host_id}{key} = $key;
+      my $pip = `cd $work_dir && ssh -o StrictHostKeyChecking=no -i /home/boconnor/.ssh/oicr-os-1.pem  ubuntu\@10.0.20.213 "/sbin/ifconfig | grep -A 1 eth0 | grep inet"`;
+      if ($pip =~ /addr:(\S+)/) { $d->{$host_id}{pip} = $1; }
+    }
+  }
+ 
   return($d);
 }
 
 # this finds all the host IP addresses and then runs the second provisioning on them
-sub provision_intances {
+sub provision_instances {
   # first, find all the hosts and get their info
   my $hosts = find_node_info();
   print Dumper($hosts);
+
+  foreach my $host (keys %{$hosts}) {
+    print "$host\n";
+  }
 
   # LEFT OFF HERE
 }
