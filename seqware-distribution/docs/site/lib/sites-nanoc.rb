@@ -14,7 +14,7 @@ def nav_item_for(identifier, params={})
 
   # Add link itself
   res << link_to_unless_current(
-    '<span>' + (other[:short_title] || other[:title]) + '</span>',
+    '<span>' + (other[:short_title] || other[:title] || 'SeqWare') + '</span>',
     other
   )
 
