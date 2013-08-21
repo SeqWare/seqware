@@ -1,22 +1,14 @@
 package net.sourceforge.seqware.queryengine.webservice.controller;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import net.sf.beanlib.hibernate.UnEnhancer;
-import net.sourceforge.seqware.queryengine.backend.model.Variant;
 import net.sourceforge.seqware.queryengine.webservice.security.SeqWareVerifier;
-import net.sourceforge.seqware.queryengine.webservice.view.GeneReportResource;
-import net.sourceforge.seqware.queryengine.webservice.view.ProcessingResource;
-import net.sourceforge.seqware.queryengine.webservice.view.TagResource;
-import net.sourceforge.seqware.queryengine.webservice.view.TemplateResource;
 import net.sourceforge.seqware.queryengine.webservice.view.WorkflowRunStatusResource;
 import net.sourceforge.seqware.webservice.resources.SeqwareAccessionIDResource;
 import net.sourceforge.seqware.webservice.resources.SeqwareAccessionResource;
 import net.sourceforge.seqware.webservice.resources.filters.ExperimentIDFilter;
 import net.sourceforge.seqware.webservice.resources.filters.WorkflowRunIDsFilter;
 import net.sourceforge.seqware.webservice.resources.filters.WorkflowRunsFilter;
-import net.sourceforge.seqware.webservice.resources.queries.CycleCheckResource;
 import net.sourceforge.seqware.webservice.resources.queries.ProcessIdProcessResource;
 import net.sourceforge.seqware.webservice.resources.queries.RunWorkflowResource;
 import net.sourceforge.seqware.webservice.resources.queries.SampleHierarchyResource;
@@ -106,7 +98,6 @@ import net.sourceforge.seqware.webservice.resources.tables.StudyTypeResource;
  */
 public class SeqWareWebServiceApplication extends WadlApplication {
 
-    private final ConcurrentMap<String, Variant> mismatches = new ConcurrentHashMap<String, Variant>();
     private Configuration configuration = null;
 
     /**
@@ -322,20 +313,14 @@ public class SeqWareWebServiceApplication extends WadlApplication {
 
         // REPORT RESOURCES
         
-        router.attach("/" + version + "/realtime/reports/genes/{mismatchId}", GeneReportResource.class);
-        router.attach("/" + version + "/realtime/reports/workflows/composition", TemplateResource.class);
         //router.attach("/"+version+"/realtime/reports/workflows/errors", WorkflowErrors.class);
         //router.attach("/"+version+"/realtime/reports/workflows/runtime", WorkflowRuntimes.class);
 
-        router.attach("/" + version + "/realtime/api/processing", ProcessingResource.class);
-        router.attach("/" + version + "/realtime/api/processing/{processingId}", ProcessingResource.class);
 
         // ASYNCHRONOUS
 
         // ANALYSIS RESOURCES
         // these are the various asynchronous tools, most importantly a resource that calls workflows
-        router.attach("/" + version + "/asynchronous", TemplateResource.class);
-        router.attach("/" + version + "/asynchronous/workflows", TemplateResource.class);
         router.attach("/" + version + "/asynchronous/workflow/{workflowId}", net.sourceforge.seqware.queryengine.webservice.view.WorkflowResource.class);
 
         //router.attach(rootURL+"/"+version+"/asynchronous/workflow_run/submit", WorkflowResource.class);
@@ -345,10 +330,6 @@ public class SeqWareWebServiceApplication extends WadlApplication {
 
         // STATIC COMPONENTS
         
-        // static reporting of tags with limited search abilities
-        // Not really used anymore since replacing with CachedTagResource
-        router.attach("/" + version + "/static/variants/tags", TemplateResource.class);
-        router.attach("/" + version + "/static/variants/tags/{tagsId}", TagResource.class);
         router.attach("/x/report/filelinkreport", FileLinkReportResource.class);
         router.attach("/x/report/filelinkreport/{swas}", FileLinkReportResource.class);
         router.attach("/x/report/reversehierarchy/{swa}", FileReverseHierarchyDisplayResource.class);
@@ -378,15 +359,6 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         SeqWareVerifier verifier = new SeqWareVerifier();
         guard.setVerifier(verifier);
         return guard;
-    }
-
-    /**
-     * <p>Getter for the field <code>mismatches</code>.</p>
-     *
-     * @return a {@link java.util.concurrent.ConcurrentMap} object.
-     */
-    public ConcurrentMap<String, Variant> getMismatches() {
-        return mismatches;
     }
 
     /** {@inheritDoc} */
