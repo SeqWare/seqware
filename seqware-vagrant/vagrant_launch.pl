@@ -29,7 +29,8 @@ my $config_file = 'vagrant_launch.conf';
 my $skip_its = 0;
 my $skip_launch = 0;
 my $config_scripts = "templates/server_setup_scripts/ubuntu_12.04_master_script.sh";
-my $secondary_config_scripts = "";
+my $master_config_scripts = "";
+my $worker_config_scripts = "";
 
 GetOptions (
   "use-aws" => \$launch_aws,
@@ -37,8 +38,9 @@ GetOptions (
   "use-openstack" => \$launch_os,
   "working-dir=s" => \$work_dir,
   "config-file=s" => \$config_file,
-  "os-primary-config-scripts=s" => \$config_scripts,
-  "os-secondary-config-scripts=s" => \$secondary_config_scripts,
+  "os-initial-config-scripts=s" => \$config_scripts,
+  "os-master-config-scripts=s" => \$master_config_scripts,
+  "os-worker-config-scripts=s" => \$worker_config_scripts,
   "skip-it-tests" => \$skip_its,
   "skip-launch" => \$skip_launch,
 );
@@ -81,7 +83,8 @@ if ($skip_its) { $configs->{'%{SEQWARE_IT_CMD}'} = ""; }
 
 # process server scripts into single bash script
 setup_os_config_scripts($config_scripts, "$work_dir/os_server_setup.sh");
-setup_os_config_scripts($secondary_config_scripts, "$work_dir/secondary_os_server_setup.sh");
+# TODO: need to setup these scripts! after nodes launched and we have host info
+#setup_os_config_scripts($secondary_config_scripts, "$work_dir/secondary_os_server_setup.sh");
 prepare_files();
 if (!$skip_launch) {
   # this launches and does first round setup
@@ -117,7 +120,7 @@ sub find_node_info {
       $d->{$host_id}{ip} = $ip;
       $d->{$host_id}{user} = $user;
       $d->{$host_id}{key} = $key;
-      my $pip = `cd $work_dir && ssh -o StrictHostKeyChecking=no -i /home/boconnor/.ssh/oicr-os-1.pem  ubuntu\@10.0.20.213 "/sbin/ifconfig | grep -A 1 eth0 | grep inet"`;
+      my $pip = `cd $work_dir && ssh -o StrictHostKeyChecking=no -i $key $user\@$ip "/sbin/ifconfig | grep -A 1 eth0 | grep inet"`;
       if ($pip =~ /addr:(\S+)/) { $d->{$host_id}{pip} = $1; }
     }
   }
@@ -132,11 +135,27 @@ sub provision_instances {
   print Dumper($hosts);
 
   foreach my $host (keys %{$hosts}) {
-    print "$host\n";
+    print "PROVISION: $host\n";
+    if ($host =~ /master/) {
+      # has all the master daemons
+      run_provision_script($master_config_scripts, $hosts->{$host});
+    } else {
+      # then it's a worker node
+      run_provision_script($worker_config_scripts, $hosts->{$host});
+    }
   }
-
-  # LEFT OFF HERE
 }
+
+sub run_provision_script {
+  my ($config_scripts, $host) = @_;
+  my @a = split /,/, $config_scripts;
+  foreach my $script (@a) {
+    $script =~ /\/([^\/]+)$/;
+    my $script_name = $1;
+    run("scp -o StrictHostKeyChecking=no -i ".$host->{key}." $script ".$host->{user}."@".$host->{ip}.":/tmp/ && ssh -o StrictHostKeyChecking=no -i ".$host->{key}." ".$host->{user}."@".$host->{ip}." bash /tmp/script_name");
+  }
+}
+
 
 # this basically cats files together after doing an autoreplace
 sub setup_os_config_scripts() {
