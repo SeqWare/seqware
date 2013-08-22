@@ -69,16 +69,16 @@ Vagrant.configure("2") do |config|
     master.vm.network :forwarded_port, host: 8888, guest: 8888
     master.vm.network :forwarded_port, host: 11000, guest: 11000
     master.vm.network :forwarded_port, host: 5432, guest: 5432
-    master.vm.hostname = "vm-cluster-node1"
+    master.vm.hostname = "master"
     master.vm.provision :shell, :path => "os_server_setup.sh"
   end
 
-  config.vm.define :slave do |slave|
+  config.vm.define :worker1 do |worker1|
 
     # name it
-    slave.vm.box = "slave"
+    worker1.vm.box = "worker1"
 
-    slave.vm.provider "vmware_fusion" do |v|
+    worker1.vm.provider "vmware_fusion" do |v|
       v.box = "precise64"
       v.vmx["memsize"]  = "4096"
     end
@@ -86,7 +86,7 @@ Vagrant.configure("2") do |config|
     # backing providers for Vagrant. These expose provider-specific options.
     # Example for VirtualBox:
     #
-    slave.vm.provider :virtualbox do |vb|
+    worker1.vm.provider :virtualbox do |vb|
    
       # Don't boot with headless mode
       vb.gui = true
@@ -97,7 +97,7 @@ Vagrant.configure("2") do |config|
     end
  
     # from https://github.com/mitchellh/vagrant-aws
-    slave.vm.provider :aws do |aws, override|
+    worker1.vm.provider :aws do |aws, override|
   
       aws.tags = {
         'Name' => `whoami`.chomp + "Vagrant" 
@@ -112,7 +112,7 @@ Vagrant.configure("2") do |config|
       override.ssh.private_key_path = "%{AWS_SSH_PEM_FILE}"
     end
 
-    slave.vm.provider :openstack do |os, override| # e.g. BioNimbus' Sullivan cluster
+    worker1.vm.provider :openstack do |os, override| # e.g. BioNimbus' Sullivan cluster
         os.username = "%{OS_USER}"
         os.api_key  = "%{OS_API_KEY}"
         os.flavor   = /%{OS_INSTANCE_TYPE}/
@@ -121,19 +121,19 @@ Vagrant.configure("2") do |config|
         os.keypair_name = "%{OS_SSH_KEY_NAME}"
         os.ssh_username = "%{OS_SSH_USERNAME}"
         os.tenant = "%{OS_TENANT}"
-        os.network = "Speyside"
-        os.floating_ip = "10.0.20.214"
+        #os.network = "Speyside"
+        #os.floating_ip = "10.0.20.214"
         override.ssh.username = "%{OS_SSH_USERNAME}"
         override.ssh.private_key_path = "%{OS_SSH_PEM_FILE}"
     end
 
-    #slave.vm.network :private_network, ip: "10.211.55.100"
-    slave.vm.network :forwarded_port, host: 8080, guest: 8080
-    slave.vm.network :forwarded_port, host: 8888, guest: 8888
-    slave.vm.network :forwarded_port, host: 11000, guest: 11000
-    slave.vm.network :forwarded_port, host: 5432, guest: 5432
-    slave.vm.hostname = "vm-cluster-node1"
-    slave.vm.provision :shell, :path => "os_server_setup.sh"
+    #worker1.vm.network :private_network, ip: "10.211.55.100"
+    worker1.vm.network :forwarded_port, host: 8080, guest: 8080
+    worker1.vm.network :forwarded_port, host: 8888, guest: 8888
+    worker1.vm.network :forwarded_port, host: 11000, guest: 11000
+    worker1.vm.network :forwarded_port, host: 5432, guest: 5432
+    worker1.vm.hostname = "worker1"
+    worker1.vm.provision :shell, :path => "os_server_setup.sh"
   end
 
 
