@@ -48,6 +48,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author briandoconnor@gmail.com
  * @version $Id: $Id
+ * @deprecated Deprecating this in favour of Metadata(plugin) and the new CLI
  */
 @ServiceProvider(service = ModuleInterface.class)
 public class GenericMetadataSaver extends Module {
