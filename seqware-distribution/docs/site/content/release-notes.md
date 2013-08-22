@@ -9,6 +9,9 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 0.13.6.10 (2013-08-21)
+* Reduce the amount of temporary file space used by the basic decider 
+
 ## 0.13.6.9 (2013-08-10)
 * Fixes to the logic of the BasicDecider
 
