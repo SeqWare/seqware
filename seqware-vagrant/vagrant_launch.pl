@@ -8,6 +8,9 @@ use Data::Dumper;
 # OS_AUTH_URL=https://api.opensciencedatacloud.org:5000/sullivan/v2.0/
 # EC2_URL=https://api.opensciencedatacloud.org:8773/sullivan/services/Cloud
 
+# TODO:
+# * need to prepare /etc/hosts as %{HOSTS}
+# * need to find/replace post-initialization scripts
 
 # skips all unit and integration tests
 my $default_seqware_build_cmd = 'mvn clean install -DskipTests';

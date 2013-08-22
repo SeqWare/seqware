@@ -1,84 +1,59 @@
-#!/bin/bash -vx
+# things to add 
 
-# setup hosts
-# NOTE: the hostname seems to already be set at least on BioNimubs OS
-echo '%{HOSTS}' >> /etc/hosts
-
-# general apt-get
-apt-get update
-
-# setup zookeeper
-apt-get -q -y --force-yes install zookeeper zookeeper-server
-service zookeeper-server init
-service zookeeper-server start
-
-# the repos have been setup in the minimal script
-##apt-get -q -y --force-yes install hadoop-0.20-conf-pseudo hue hue-server hue-plugins oozie oozie-client postgresql-9.1 postgresql-client-9.1 tomcat6-common tomcat6 apache2 git maven sysv-rc-conf hbase-master xfsprogs
-apt-get -q -y --force-yes install postgresql-9.1 postgresql-client-9.1 tomcat6-common tomcat6 apache2 git maven sysv-rc-conf xfsprogs
-
-# install Hadoop deps, the master node runs the NameNode, SecondaryNameNode and JobTracker
-# NOTE: shouldn't really use secondary name node on same box for production
-apt-get -q -y --force-yes install hadoop-0.20-mapreduce-jobtracker hadoop-hdfs-namenode hadoop-hdfs-datanode hadoop-hdfs-secondarynamenode hadoop-client 
+# install Hadoop deps, the worker node runs the TaskTracker and DataNode
+apt-get install hadoop-0.20-mapreduce-tasktracker hadoop-hdfs-datanode hadoop-client
 
 # setup LZO
 wget -q http://archive.cloudera.com/gplextras/ubuntu/lucid/amd64/gplextras/cloudera.list
 mv cloudera.list /etc/apt/sources.list.d/gplextras.list
 apt-get update
-apt-get -q -y --force-yes install hadoop-lzo-cdh4
+apt-get install hadoop-lzo-cdh4
 
-# configuration for hadoop
-cp -r /etc/hadoop/conf.empty /etc/hadoop/conf.my_cluster
-update-alternatives --install /etc/hadoop/conf hadoop-conf /etc/hadoop/conf.my_cluster 50
-update-alternatives --set hadoop-conf /etc/hadoop/conf.my_cluster
 
-# setup HDFS configs
-echo '<?xml version="1.0"?>
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
-<configuration>
-  <property>
-   <name>fs.defaultFS</name>
-   <value>hdfs://master/</value>
-  </property>
-</configuration>
-' > /etc/hadoop/conf/core-site.xml
 
-# hdfs config
-# should setup multiple directories in hdfs-site.xml
-mkdir -p /data/1/dfs/nn
-mkdir -p /data/1/dfs/dn
-chown -R hdfs:hdfs /data/1/dfs/nn /data/1/dfs/dn
-chmod 700 /data/1/dfs/nn /data/1/dfs/dn
 
-echo '<?xml version="1.0"?>
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<configuration>
-  <property>
-     <name>dfs.name.dir</name>
-     <value>/var/lib/hadoop-hdfs/cache/hdfs/dfs/name</value>
-  </property>
-  <property>
-     <name>dfs.permissions.superusergroup</name>
-     <value>hadoop</value>
-  </property>
-  <property>
-     <name>dfs.namenode.name.dir</name>
-     <value>/data/1/dfs/nn</value>
-  </property>
-  <property>
-     <name>dfs.namenode.data.dir</name>
-     <value>/data/1/dfs/dn</value>
-  </property>
-</configuration>
-' > /etc/hadoop/conf/hdfs-site.xml
 
-# format HDFS
-sudo -u hdfs hadoop namenode -format
 
+#!/bin/bash -vx
+# install the hadoop repo
+wget -q http://archive.cloudera.com/cdh4/one-click-install/precise/amd64/cdh4-repository_1.0_all.deb
+dpkg -i cdh4-repository_1.0_all.deb
+curl -s http://archive.cloudera.com/cdh4/ubuntu/precise/amd64/cdh/archive.key | sudo apt-key add -
+
+# basic tools
+apt-get install curl unzip -y
+
+# setup cloudera manager repo (not used)
+REPOCM=${REPOCM:-cm4}
+CM_REPO_HOST=${CM_REPO_HOST:-archive.cloudera.com}
+CM_MAJOR_VERSION=$(echo $REPOCM | sed -e 's/cm\\([0-9]\\).*/\\1/')
+CM_VERSION=$(echo $REPOCM | sed -e 's/cm\\([0-9][0-9]*\\)/\\1/')
+OS_CODENAME=$(lsb_release -sc)
+OS_DISTID=$(lsb_release -si | tr '[A-Z]' '[a-z]')
+if [ $CM_MAJOR_VERSION -ge 4 ]; then
+  cat > /etc/apt/sources.list.d/cloudera-$REPOCM.list <<EOF
+deb [arch=amd64] http://$CM_REPO_HOST/cm$CM_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cm $OS_CODENAME-$REPOCM contrib
+deb-src http://$CM_REPO_HOST/cm$CM_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cm $OS_CODENAME-$REPOCM contrib
+EOF
+curl -s http://$CM_REPO_HOST/cm$CM_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cm/archive.key > key
+apt-key add key
+rm key
+fi
+
+# get packages
+apt-get update
+export DEBIAN_FRONTEND=noninteractive
+#apt-get -q -y --force-yes install oracle-j2sdk1.6 cloudera-manager-server-db cloudera-manager-server cloudera-manager-daemons
+#apt-get -q -y --force-yes install oracle-j2sdk1.6 hadoop-0.20-conf-pseudo hue hue-server hue-plugins oozie oozie-client postgresql-9.1 postgresql-client-9.1 tomcat6-common tomcat6 apache2 git maven sysv-rc-conf hbase-master xfsprogs
+# get Java
+apt-get -q -y --force-yes install libasound2 libxi6 libxtst6 libxt6 
+wget http://archive.cloudera.com/cm4/ubuntu/precise/amd64/cm/pool/contrib/o/oracle-j2sdk1.6/oracle-j2sdk1.6_1.6.0+update31_amd64.deb
+dpkg -i oracle-j2sdk1.6_1.6.0+update31_amd64.deb
+apt-get -q -y --force-yes install hadoop-0.20-conf-pseudo hue hue-server hue-plugins oozie oozie-client postgresql-9.1 postgresql-client-9.1 tomcat6-common tomcat6 apache2 git maven sysv-rc-conf hbase-master xfsprogs
 
 # setup the HDFS drives
-# TODO: this perl script should do all of the above
-#perl /vagrant/setup_hdfs_volumes.pl
+perl /vagrant/setup_hdfs_volumes.pl
 
 # start cloudera manager
 #service cloudera-scm-server-db initdb
@@ -119,10 +94,6 @@ service hbase-master start
 
 # setup daemons to start on boot
 for i in apache2 cron hadoop-hdfs-namenode hadoop-hdfs-datanode hadoop-hdfs-secondarynamenode hadoop-0.20-mapreduce-tasktracker hadoop-0.20-mapreduce-jobtracker hue oozie postgresql tomcat6 hbase-master; do echo $i; sysv-rc-conf $i on; done
-
-
-## TODO: setup NFS before seqware
-
 
 # add seqware user
 useradd -d /home/seqware -m seqware -s /bin/bash
