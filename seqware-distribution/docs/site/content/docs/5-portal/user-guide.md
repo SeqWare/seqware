@@ -107,7 +107,7 @@ The default <kbd>/datastore</kbd> will work fine on both the VM and AMI.
 
 Once you have these two pieces of information (destination path "/datastore/"
 and the SWID) you can then use either the Portal or the command line utilities
-(ProvisionFiles or GenericMetadataSaver) to put your files into the right place
+to put your files into the right place
 and associate them with the correct sample.
 
 First, create your text document that you want to associate with a sample (we
