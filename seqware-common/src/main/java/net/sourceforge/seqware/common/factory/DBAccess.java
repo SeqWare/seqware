@@ -16,14 +16,18 @@
  */
 package net.sourceforge.seqware.common.factory;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+
 import net.sourceforge.seqware.common.metadata.MetadataDB;
+import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 
@@ -34,65 +38,50 @@ import net.sourceforge.seqware.common.util.configtools.ConfigTools;
  * @version $Id: $Id
  */
 public class DBAccess {
+  
+  private static final ThreadLocal<MetadataDB> metadataDBWrapper = new ThreadLocal<MetadataDB>() {
+    @Override
+    protected synchronized MetadataDB initialValue() {
+      DataSource ds = null;
+      try {
+        InitialContext initCtx = new InitialContext();
+        ds = (DataSource) initCtx.lookup("java:comp/env/jdbc/SeqWareMetaDB");
+      } catch (NamingException ex) {
+        Log.info("Could not lookup database via context", ex);
+      }
 
-    private static ThreadLocal<MetadataDB> metadataDBWrapper = new ThreadLocal<MetadataDB>(){
-        @Override
-        protected synchronized MetadataDB initialValue() {
-             return null;
-         }
-    };
-
-    /**
-     * <p>get.</p>
-     *
-     * @return a {@link net.sourceforge.seqware.common.metadata.MetadataDB} object.
-     */
-    public synchronized static MetadataDB get() {
+      if (ds != null) {
+        Log.debug("Instantiate MetadataDB via datasource " + ds.getClass());
         try {
-            if (metadataDBWrapper.get()!=null &&
-                    ((metadataDBWrapper.get().getDb()!=null && metadataDBWrapper.get().getDb().isClosed()))) 
-                    //|| db.getSql()!=null && db.getSql().isClosed()))
-            {
-                metadataDBWrapper.get().clean_up();
-                metadataDBWrapper.set(null);
-                //db = null;
-            }
-        } catch (SQLException ex) {
-            Log.error("Closing DB connection and creating a new one failed", ex);
+          return new MetadataDB(ds);
+        } catch (SQLException e) {
+          throw new RuntimeException(e);
         }
-        if (metadataDBWrapper.get() == null) {
-            metadataDBWrapper.set(new MetadataDB());
-            //Log.debug("DBAccess is using " + user + " " + pass + " on " + connection);
-            DataSource ds = null;
-            try {
-                InitialContext initCtx = new InitialContext();
-                ds = (DataSource) initCtx.lookup("java:comp/env/jdbc/SeqWareMetaDB");
-            } catch (NamingException ex) {
-                Log.info("Could not lookup database via context", ex);
-            }
-            if (ds != null) {
-                Log.debug("init via db.init(ds), datasource is " + ds.getClass());
-                metadataDBWrapper.get().init(ds);
-            } else {
-                Log.debug("init via init(user,pass,connection)");
-                Map<String, String> settings = null;
-                try {
-                    settings = ConfigTools.getSettings();
-                    String connection = "jdbc:postgresql://" + settings.get("SW_DB_SERVER") + "/" + settings.get("SW_DB");
-                    String user = settings.get("SW_DB_USER");
-                    String pass = settings.get("SW_DB_PASS");
-                    Log.debug("DBAccess is using " + user + " " + pass + " on " + connection);
-                    metadataDBWrapper.get().init(connection, user, pass);
-                } catch (Exception ex) {
-                    Log.fatal("get()  could not init ", ex);
-                    Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-            }
-        }
-        Log.debug(metadataDBWrapper.get().toString() + " was returned ");
-        return metadataDBWrapper.get();
+      } else {
+        Log.debug("Obtain MetadataDB via MetadataFactory");
+        Map<String, String> settings = ConfigTools.getSettings();
+        return MetadataFactory.getDB(settings);
+      }
     }
+  };
+
+  public synchronized static MetadataDB get() {
+    MetadataDB mdb = metadataDBWrapper.get();
+
+    boolean cleanup = true;
+    try {
+      cleanup = mdb.getDb().isClosed();
+    } catch (SQLException e) {
+    }
+
+    if (cleanup) {
+      mdb.clean_up();
+      metadataDBWrapper.remove();
+      return metadataDBWrapper.get();
+    } else {
+      return mdb;
+    }
+  }
 
     /**
      * <p>close.</p>

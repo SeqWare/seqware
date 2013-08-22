@@ -4,11 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
+import net.sourceforge.seqware.common.metadata.MetadataFactory;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.common.util.filetools.lock.LockingFileTools;
 import net.sourceforge.seqware.common.util.processtools.ProcessTools;
 import joptsimple.OptionException;
@@ -97,12 +100,10 @@ public class ProcessingTaskGroup {
       MetadataDB meta = null;
       if (options.has("metadata-config-database") && options.has("metadata-config-username") && options.has("metadata-config-password") ) {
         // Try to connect and exit if there was a problem.
-        meta = new MetadataDB();
-        ReturnValue ret = meta.init( (String) options.valueOf("metadata-config-database"), (String) options.valueOf("metadata-config-username"), (String) options.valueOf("metadata-config-password") );
-        if ( ret.getExitStatus() != ReturnValue.SUCCESS) {
-          Log.stderr( "ERROR connecting to metadata DB" );
-          Log.stderr( ret.getStderr() );
-          System.exit( ret.getExitStatus() );
+        try {
+          meta = new MetadataDB( (String) options.valueOf("metadata-config-database"), (String) options.valueOf("metadata-config-username"), (String) options.valueOf("metadata-config-password") );
+        } catch (SQLException e) {
+          throw new RuntimeException(e);
         }
       }
       else {
