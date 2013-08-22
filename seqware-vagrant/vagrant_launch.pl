@@ -146,6 +146,7 @@ sub provision_instances {
   }
 }
 
+# TODO: don't I need to process the script files before sending them over? I'll need to fill in with host info for sure!
 sub run_provision_script {
   my ($config_scripts, $host) = @_;
   my @a = split /,/, $config_scripts;
@@ -154,6 +155,7 @@ sub run_provision_script {
     my $script_name = $1;
     run("scp -o StrictHostKeyChecking=no -i ".$host->{key}." $script ".$host->{user}."@".$host->{ip}.":/tmp/ && ssh -o StrictHostKeyChecking=no -i ".$host->{key}." ".$host->{user}."@".$host->{ip}." bash /tmp/script_name");
   }
+  # left off here
 }
 
 
