@@ -12,14 +12,111 @@ Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=4453317
 ## 0.13.6.10 (2013-08-21)
 * Reduce the amount of temporary file space used by the basic decider 
 
+## 1.0.3 (2013-08-21)
+
+### Defect
+
+* [SEQWARE-1287] - WorkflowLauncher should mark finished workflows as "completed" and not "success"
+* [SEQWARE-1374] - Metadata does not check for valid id links
+* [SEQWARE-1690] - SeqWare Pipeline: does the PegasusEngine not include random in the workflow name for Java workflows? Without this Pegasus can overwrite working directories when run concurrently!
+* [SEQWARE-1693] - BasicDecider incorrectly skips launching of workflow runs when input files share a common workflow run id
+
+### Improvement
+
+* [SEQWARE-851] - improvement of workflow run report
+* [SEQWARE-1328] - Remove accession from the Metadata object for the study table
+
+### Story
+
+* [SEQWARE-1400] - Oozie engines need to be supported transparently by all our command line utils (status checker, workflow launcher, etc)
+* [SEQWARE-1564] - Cmd Line Tools - rework command line interface to work more like the hadoop command; easier, better docs, less typing
+* [SEQWARE-1586] - ProvisionFiles - support HTTP, SFTP, SCP, etc to allow for easy pulling and pushing of data between systems
+
+### Task
+
+* [SEQWARE-1489] - Number of SequencerRuns retrieved by the WS is doubled.
+* [SEQWARE-1544] - Create integration tests for SeqWare generic decider from archetype
+* [SEQWARE-1561] - Library selection, library source and library strategy are not inserted when a lane is created
+* [SEQWARE-1695] - Test BioNimbus
+* [SEQWARE-1697] - BundleManager does not test properly (passes test without waiting)
+* [SEQWARE-1700] - BundleManager list params fails on FileImport (possibly workflows with no parameters)
+* [SEQWARE-1705] - AttributeAnnotator file skip default value should be false
+* [SEQWARE-1727] - Investigate discovered potential issue with processing links
+
+### Sub-task
+
+* [SEQWARE-1639] - Review the documentation comments and re-work our docs accordingly
+
+### Technical task
+
+* [SEQWARE-595] - populate workflow_run_param table when use command line tools
+* [SEQWARE-1138] - WorkflowLauncher: when template parsing fails, workflowlauncher --launch-scheduled does not set the run to failed
+* [SEQWARE-1490] - BUG - issue with multiple workflow output files and Oozie backend
+* [SEQWARE-1554] - Pipeline - Need command line, web service, and StatusChecker support for cancelling workflows
+* [SEQWARE-1563] - Pipeline - some sort of metadata/workflow report tool to generate methods documents & record of metadata
+* [SEQWARE-1570] - Investigate how to use plugin with --new without --interactive.
+* [SEQWARE-1579] - Fix the way the sample hierarchy injection works.
+* [SEQWARE-1584] - SeqWare command line Metadata plugin needs full lifecycle... e.g. query, create, and (possibly) update/delete.
+* [SEQWARE-1624] - Update the integration tests to match tutorials
+* [SEQWARE-1628] - Implement and test an Oozie -> SGE bridge in the Oozie workflow engine
+* [SEQWARE-1682] - Add integration tests for retrieval of annotations from new report
+* [SEQWARE-1688] - AttributeAnnotator should output list of attribute changes
+* [SEQWARE-1701] - Job default thread/memory in seqware settings
+* [SEQWARE-1702] - Stderr/Stdout propagation in the Oozie-Hadoop engine (Alex will work on the Oozie-SGE engine)
+* [SEQWARE-1703] - Workflow cancel/restart state propagation
+* [SEQWARE-1708] - Improve vagrant launcher with software profiles support
+* [SEQWARE-1709] - Improve vagrant launcher to include cluster support
+* [SEQWARE-1710] - Adapt the integration tests for our tutorials to use the CLI
+* [SEQWARE-1713] - MetadataWS experiment spot_design_id and library_design_id support
+* [SEQWARE-1714] - MetadataWS sequencer_run status support
+* [SEQWARE-1717] - Create integration tests for the Metadata plugin
+* [SEQWARE-1723] - Database build scripts should populate extra tables needed for setting experiment fields
+* [SEQWARE-1724] - Multiple root/parent nodes inserted into sample_heirarchy
+
 ## 0.13.6.9 (2013-08-10)
 * Fixes to the logic of the BasicDecider
+
+## 1.0.2 (2013-08-10)
+
+### Defect
+
+* [SEQWARE-1668] - GenericCommandRunner - Morgan reported broken --stdout and --stderr redirects in this tool
+
+### Improvement
+
+* [SEQWARE-1508] - Alarming Not Found message in decider output
+* [SEQWARE-1675] - BasicDecider is very slow
+* [SEQWARE-1683] - We need a SW_DEFAULT_WORKFLOW_ENGINE parameter that can be set in the .seqware/settinngs file
+
+### Task
+
+* [SEQWARE-1527] - WorkflowRunReporter needs to print stdout and stderr in separate commands
+* [SEQWARE-1612] - Seqware BasicDecider Testing mode
+* [SEQWARE-1642] - Refine the BasicDecider --test output
+* [SEQWARE-1666] - BasicDecider --launch-max
+* [SEQWARE-1669] - Generic Command Runner only produces output when it fails
+* [SEQWARE-1673] - The twitter feed in our docs is broken
+* [SEQWARE-1691] - Update .seqware/settings file with new params
+* [SEQWARE-1692] - New basic workflow creation tools (bugs)
+
+### Technical task
+
+* [SEQWARE-1269] - generic command runner should optionally take commands from a file
+* [SEQWARE-1304] - Add documentation for new Web Service resources (sequencer run, ius, lane)
+* [SEQWARE-1340] - Assorted ideas for plugin integration testing
+* [SEQWARE-1415] - Document AttributeAnnotator for nanoc
+* [SEQWARE-1418] - Create nanoc documentation for the WorkflowRunReporter
+* [SEQWARE-1420] - Create integration tests for the AttributeAnnotator
+* [SEQWARE-1423] - Create integration tests for the WorkflowRunReporter
+* [SEQWARE-1606] - Change VM startup script to auto-create "emphemeral drives" if they aren't available
+* [SEQWARE-1633] - Specification for Oozie SGE Submitter and associated components
+* [SEQWARE-1664] - Setup our query integration tests to work against the HBase installed by Vagrant
+* [SEQWARE-1698] - Successfully run extended integration tests on Vagrant VM
 
 ## 0.13.6.8 (2013-07-10)
 * Implementation of new tools for wrapping external scripts with SeqWare metadata write-back
 * Database indexing scripts optimizing against common queries and our various utilities
 
-<!-- pending fix for oozie-sge -->
 ## 1.0.1 (2013-07-10)
 
 ### Defect
