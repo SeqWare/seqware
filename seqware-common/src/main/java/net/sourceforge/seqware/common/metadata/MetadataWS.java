@@ -2520,17 +2520,6 @@ public class MetadataWS implements Metadata {
         }
     }
     
-    @Override
-    public Processing getProcessing(int processingAccession) {
-        try {
-            return ll.findProcessing("/" + processingAccession);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (JAXBException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-    
 
     @Override
     public SequencerRun getSequencerRun(int sequencerRunAccession) {
