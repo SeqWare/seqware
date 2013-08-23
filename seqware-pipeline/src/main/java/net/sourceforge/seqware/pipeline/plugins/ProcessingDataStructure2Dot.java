@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.openide.util.lookup.ServiceProvider;
@@ -130,21 +131,33 @@ public class ProcessingDataStructure2Dot extends Plugin {
 	private void buildDotTree(MetadataDB metadb, String parentAccession, File file) throws SQLException, IOException {
 		
 		String sql0 = "select processing_id from processing where sw_accession = " + parentAccession;
-		ResultSet rs0 = metadb.executeQuery(sql0);
-		if(!rs0.next())
+		String s = metadb.executeQuery(sql0, new ResultSetHandler<String>(){
+      @Override
+      public String handle(ResultSet rs) throws SQLException {
+        if (rs.next()){
+          return rs.getString("processing_id");
+        } else {
+          return null;
+        }
+      }
+		});
+		if(s == null)
 			return;
 		
-		DotNode root = new DotNode(rs0.getString("processing_id"));
-		rs0.close();
+		DotNode root = new DotNode(s);
 		
 		String sql = "select child_id from processing_relationship where parent_id = " + root.toString();    
-		ResultSet rs = metadb.executeQuery(sql);
-		//to avoid recursively open resultset, store them in array first, then close rs
-		List<String> children = new ArrayList<String>();
-		while(rs.next()) {
-			children.add(rs.getString("child_id"));
-		}
-		rs.close();	
+		List<String> children = metadb.executeQuery(sql, new ResultSetHandler<List<String>>(){
+      @Override
+      public List<String> handle(ResultSet rs) throws SQLException {
+        List<String> children = new ArrayList<String>();
+        while(rs.next()) {
+          children.add(rs.getString("child_id"));
+        }
+        return children;
+      }
+		});
+		
 		for(String c: children) {
 			DotNode child = new DotNode(c);
 			root.addChild(child);
@@ -163,13 +176,16 @@ public class ProcessingDataStructure2Dot extends Plugin {
 	
 	private void addSubNodes(MetadataDB db, DotNode parent) throws SQLException {
 		String sql = "select child_id from processing_relationship where parent_id = " + parent.toString();
-		ResultSet rs = db.executeQuery(sql);
-		//to avoid recursively open resultset, store them in array first, then close rs
-		List<String> children = new ArrayList<String>();
-		while(rs.next()) {
-			children.add(rs.getString("child_id"));
-		}
-		rs.close();	
+		List<String> children = db.executeQuery(sql, new ResultSetHandler<List<String>>(){
+      @Override
+      public List<String> handle(ResultSet rs) throws SQLException {
+        List<String> children = new ArrayList<String>();
+        while(rs.next()) {
+          children.add(rs.getString("child_id"));
+        }
+        return children;
+      }
+		});
 		for(String c: children) {
 			DotNode child = new DotNode(c);
 			parent.addChild(child);
