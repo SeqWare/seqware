@@ -20,9 +20,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+
 import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.ResultSetHandler;
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -103,21 +108,27 @@ public class WorkflowRuntimeResource
 
                 query = query + " order by p.create_tstmp";
 
-                ResultSet rs = DBAccess.get().executeQuery(query);
-                HashMap<Integer, HashMap<String, String>> currentProcIds = new HashMap<Integer, HashMap<String, String>>();
-                while (rs.next()) {
-                    Integer processingId = rs.getInt(1);
-                    String algorithm = rs.getString(2);
-                    String status = rs.getString(3);
-                    Timestamp createTstmp = rs.getTimestamp(4);
-                    String workflowName = rs.getString(5);
-                    Integer workflowRunId = rs.getInt(6);
-                    HashMap<String, String> currentProcHash = new HashMap<String, String>();
-                    currentProcHash.put("procId", processingId.toString());
-                    currentProcHash.put("workflowRunId", workflowRunId.toString());
-                    currentProcHash.put("workflowName", workflowName);
-                    currentProcIds.put(processingId, currentProcHash);
-                }
+                Map<Integer, Map<String, String>> currentProcIds = DBAccess.get().executeQuery(query, new ResultSetHandler<Map<Integer, Map<String, String>>>(){
+                  @Override
+                  public Map<Integer, Map<String, String>> handle(ResultSet rs) throws SQLException {
+                    Map<Integer, Map<String, String>> currentProcIds = new HashMap<Integer, Map<String, String>>();
+                    while (rs.next()) {
+                      Integer processingId = rs.getInt(1);
+                      String algorithm = rs.getString(2);
+                      String status = rs.getString(3);
+                      Timestamp createTstmp = rs.getTimestamp(4);
+                      String workflowName = rs.getString(5);
+                      Integer workflowRunId = rs.getInt(6);
+                      HashMap<String, String> currentProcHash = new HashMap<String, String>();
+                      currentProcHash.put("procId", processingId.toString());
+                      currentProcHash.put("workflowRunId", workflowRunId.toString());
+                      currentProcHash.put("workflowName", workflowName);
+                      currentProcIds.put(processingId, currentProcHash);
+                    }
+                    return currentProcIds;
+                  }
+                });
+                
 
                 for (Integer currentProcId : currentProcIds.keySet()) {
                     String procId = currentProcIds.get(currentProcId).get("procId");
@@ -171,19 +182,25 @@ public class WorkflowRuntimeResource
         }
         seen.put(processingId, true);
 
-        ResultSet rs = null;
-        ResultSet childRs = null;
         try {
-            rs = DBAccess.get().executeQuery("select p.processing_id, p.algorithm, p.status, p.create_tstmp, EXTRACT(EPOCH from p.run_stop_tstmp - p.run_start_tstmp) as length from processing as p where p.processing_id = " + processingId + " and p.status = 'success' order by p.create_tstmp");
+            Object[] tuple = DBAccess.get().executeQuery("select p.processing_id, p.algorithm, p.status, p.create_tstmp, EXTRACT(EPOCH from p.run_stop_tstmp - p.run_start_tstmp) as length from processing as p where p.processing_id = " + processingId + " and p.status = 'success' order by p.create_tstmp", new ResultSetHandler<Object[]>(){
+              @Override
+              public Object[] handle(ResultSet rs) throws SQLException {
+                if (rs.next()) {
+                  return new Object[]{rs.getString(2), rs.getString(3), rs.getTimestamp(4), rs.getInt(5)};
+                } else {
+                  return null;                  
+                }
+              }
+            });
 
-            HashMap<Integer, Boolean> childProcessingHash = new HashMap<Integer, Boolean>();
+            Map<Integer, Boolean> childProcessingHash = new HashMap<Integer, Boolean>();
+            if (tuple != null) {
 
-            if (rs.next()) {
-
-                String algorithm = rs.getString(2);
-                String status = rs.getString(3);
-                Timestamp create = rs.getTimestamp(4);
-                Integer runtime = rs.getInt(5);
+                String algorithm = (String)tuple[0];
+                String status = (String)tuple[1];
+                Timestamp create = (Timestamp)tuple[2];
+                Integer runtime = (Integer)tuple[3];
 
                 algos.put(algorithm, true);
                 wrIds.put(workflowRunId, true);
@@ -226,12 +243,17 @@ public class WorkflowRuntimeResource
                 }
                 runtimeHash.put("counts", counts);
 
-                childRs = DBAccess.get().executeQuery("select p.processing_id, p.algorithm, p.status, p.create_tstmp from processing as p, processing_relationship as pr where pr.parent_id = " + processingId + " and pr.child_id = p.processing_id and p.ancestor_workflow_run_id = " + workflowRunId);
+                childProcessingHash = DBAccess.get().executeQuery("select p.processing_id, p.algorithm, p.status, p.create_tstmp from processing as p, processing_relationship as pr where pr.parent_id = " + processingId + " and pr.child_id = p.processing_id and p.ancestor_workflow_run_id = " + workflowRunId, new ResultSetHandler<Map<Integer, Boolean>>(){
+                  @Override
+                  public Map<Integer, Boolean> handle(ResultSet rs) throws SQLException {
+                    Map<Integer, Boolean> childProcessingHash = new HashMap<Integer, Boolean>();
+                    while (rs.next()) {
+                      childProcessingHash.put(rs.getInt(1), true);
+                    }
+                    return childProcessingHash;
+                  }
+                });
 
-                while (childRs.next()) {
-
-                    childProcessingHash.put(childRs.getInt(1), true);
-                }
 
             }
 
@@ -246,8 +268,6 @@ public class WorkflowRuntimeResource
             e.printStackTrace();
         } finally{
             DBAccess.close();
-            DbUtils.closeQuietly(rs);
-            DbUtils.closeQuietly(childRs);
         }
     }
 }
