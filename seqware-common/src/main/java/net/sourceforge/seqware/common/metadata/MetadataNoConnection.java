@@ -788,10 +788,4 @@ public class MetadataNoConnection implements Metadata {
         logger.info("No metadata connection");
         return null;
     }
-
-    @Override
-    public Processing getProcessing(int processingAccession) {
-        logger.info("No metadata connection");
-        return null;
-    }
 }
