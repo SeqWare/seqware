@@ -24,11 +24,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.Lane;
-import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
-import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -36,7 +34,6 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import net.sourceforge.seqware.common.util.runtools.TestConsoleAdapter;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
-import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.junit.*;
@@ -680,6 +677,46 @@ public class MetadataTest extends PluginTest {
         WorkflowRun workflowRun = metadata.getWorkflowRun(integer);
         String workflowRunReport = metadata.getWorkflowRunReport(integer);
         Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
+    }
+    
+    @Test
+    public void testCreateFile() {
+        final String algorithm = "cool_algorithm1";
+        final String meta_type = "adamantium/gzip";
+        final String file_path = "/datastore/adamantium.gz";
+        launchPlugin("--table", "file", "--create",
+                "--file",algorithm+"::"+meta_type+"::"+file_path);
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int integer = Integer.valueOf(swid);
+        net.sourceforge.seqware.common.model.File file = metadata.getFile(integer);
+        Assert.assertTrue("could not find file", file != null && file.getSwAccession() == integer);
+        Assert.assertTrue("file values incorrect", file.getFilePath().equals(file_path) && file.getMetaType().equals(meta_type));
+    }
+    
+    @Test
+    public void testCreateFileWithParentAccessions() {
+        final String algorithm = "cool_algorithm1";
+        final String meta_type = "adamantium/gzip";
+        final String file_path = "/datastore/adamantium.gz";
+        launchPlugin("--table", "file", "--create",
+                "--file",algorithm+"::"+meta_type+"::"+file_path,
+                "--parent-accession","834", // experiment
+                "--parent-accession", "4765", // ius 
+                "--parent-accession", "4707", // lane
+                "--parent-accession", "4760", // sample
+                "--parent-accession", "4715", // sequencer_run
+                "--parent-accession", "120", //study
+                "--parent-accession", "10" //processing
+        );
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int integer = Integer.valueOf(swid);
+        net.sourceforge.seqware.common.model.File file = metadata.getFile(integer);
+        Assert.assertTrue("could not find file", file != null && file.getSwAccession() == integer);
+        Assert.assertTrue("file values incorrect", file.getFilePath().equals(file_path) && file.getMetaType().equals(meta_type));
+        // tests to verify rthat parent-accession links are created properly
+        
     }
     
     @Test

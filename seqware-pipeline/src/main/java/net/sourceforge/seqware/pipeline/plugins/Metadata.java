@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.module.FileMetadata;
@@ -78,7 +79,7 @@ public class Metadata extends Plugin {
         parser.acceptsAll(Arrays.asList("output-file", "of"), "Optional: if provided along with the --list or --list-tables options this will cause the output list of rows/tables to be written to the file specified rather than stdout.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("list-fields", "lf"), "Optional: if provided along with the --table option this will list out the fields for that table and their type.");
         parser.acceptsAll(Arrays.asList("field", "f"), "Optional: the field you are interested in writing. This is encoded as '<field_name>::<value>', you should use single quotes when the value includes spaces. You supply multiple --field arguments for a given table insert.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("file"), "Optional: one or more --file options can be specified when you create a workflow_run. This is encoded as '<algorithm>::<file-meta-type>::<file-path>', you should use single quotes when the value includes spaces.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("file"), "Optional: one file option can be specified when you create a file, one or more --file options can be specified when you create a workflow_run. This is encoded as '<algorithm>::<file-meta-type>::<file-path>', you should use single quotes when the value includes spaces.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("parent-accession"), "Optional: one or more --parent-accession options can be specified when you create a workflow_run.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("create", "c"), "Optional: indicates you want to create a new row, must supply --table and all the required --field params.");
         parser.accepts("interactive", "Optional: Interactively prompt for fields during creation");
@@ -167,7 +168,9 @@ public class Metadata extends Plugin {
             }  else if ("workflow_run".equals((String) options.valueOf("table"))) {
                 ret = addWorkflowRun();
                 return ret;
-
+            } else if ("file".equals((String) options.valueOf("table"))) {
+                ret = addFile();
+                return ret;
             } else {
                 Log.error("This tool does not know how to save to the " + options.valueOf("table") + " table.");
             }
@@ -253,12 +256,15 @@ public class Metadata extends Plugin {
 
         } else if ("workflow".equals(table)) {
             print("Field\tType\tPossible_Values\nname\tString\nversion\tString\ndescription\tString\n");
-
         }  else if ("workflow_run".equals(table)) {
             print("Field\tType\tPossible_Values\nworkflow_accession\tInteger\nstatus\tString\t[completed, failed]\nstdout\tString\nstderr\tString\n");
             print("\nThis also takes one or more files encoded as --file algorithm::file-meta-type::file-path\n");
             print("\nThis also takes one or more --parent-accession options.\n");
             print("\nThis command will result in one workflow_run, one processing tied to the parents specified, and n files attached to that processing event.\n");
+        }  else if ("file".equals(table)) {
+            print("This uses no fields.\n"); 
+            print("\nThis takes one file encoded as --file algorithm::file-meta-type::file-path\n");
+            print("\nThis also takes one or more --parent-accession options.\n");
         } else {
             Log.error("This tool does not know how to list the fields for the " + table + " table.");
         }
@@ -287,7 +293,7 @@ public class Metadata extends Plugin {
         return (ret);
     }
 
-     /**
+    /**
      *
      * @return ReturnValue
      */
@@ -345,6 +351,57 @@ public class Metadata extends Plugin {
             metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
                     wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
                     wr.getHost(), wr.getStdErr(), wr.getStdOut(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
+
+        } else {
+            Log.error("You need to supply workflow_accession and status for the workflow_run table.");
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+        }
+
+        return (ret);
+    }
+    
+    /**
+     *
+     * @return ReturnValue
+     */
+    protected ReturnValue addFile() {
+        String[] necessaryFields = {};
+        if (interactive) {
+            print("Unfortunately interactive mode is not supported for adding files.");
+        }
+        // check to make sure we have what we need
+        ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+        if (checkFields(necessaryFields)) {
+            // parent accessions
+            int[] parents = parseParentAccessions();
+            // if we have parent accessions, check that they're valid right up front
+            if (metadata.getViaParentAccessions(parents).contains(null)) {
+                Log.error("parent accession invalid.");
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return ret;
+            }
+            if (this.files.size() != 1) {
+                Log.error("incorrect number of files.");
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return ret;
+            }
+            // create a new file!
+            ReturnValue processingEventRet = metadata.add_empty_processing_event_by_parent_accession(parents);
+            if (processingEventRet.getExitStatus() != ReturnValue.SUCCESS) {
+                Log.error("Error creating processing event.");
+                ret.setExitStatus(ReturnValue.FAILURE);
+                return ret;
+            }
+            int procID = processingEventRet.getReturnValue();
+
+            ReturnValue newRet = new ReturnValue();
+            newRet.setFiles(this.files);
+            // send up the files via ReturnValue (ewww)
+            metadata.update_processing_event(procID, newRet);
+            // need to determine accession of file we just uploaded (ewww)
+            Set<net.sourceforge.seqware.common.model.File> files = metadata.getProcessing(procID).getFiles();
+            assert(files.size() == 1);
+            print("SWID: " + files.iterator().next().getSwAccession());
 
         } else {
             Log.error("You need to supply workflow_accession and status for the workflow_run table.");
@@ -616,6 +673,7 @@ public class Metadata extends Plugin {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void print(String string) {
         if (bw != null) {
             try {
