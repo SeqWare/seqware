@@ -580,22 +580,19 @@ public class Main {
       out("");
       out("Optional fields:");
       out("  --description <val>");
-      out("  --type <val>");
       out("");
     } else {
       String file = reqVal(args, "--file");
       String meta = reqVal(args, "--meta-type");
       String parentId = reqVal(args, "--parent-accession");
-      String type = optVal(args, "--type", "");
       String description = optVal(args, "--description", "");
 
       extras(args, "create file");
 
-      String concat = String.format("%s::%s::%s::%s", type, meta, file, description);
+      String concat = String.format("%s::%s::%s::%s", "ManualProvisionFile", meta, file, description);
 
-      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.ModuleRunner", "--", "--metadata-parent-accession",
-          parentId, "--module", "net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver", "--",
-          "--gms-output-file", concat, "--gms-algorithm", "ManualProvisionFile");
+      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.Metadata", "--", "--parent-accession",
+          parentId, "--create", "--table", "file", "--file", concat);
     }
   }
 

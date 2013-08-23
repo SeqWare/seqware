@@ -2220,9 +2220,4 @@ public class MetadataDB implements Metadata {
     public List<ParentAccessionModel> getViaParentAccessions(int[] potentialParentAccessions) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
-    
-    @Override
-    public Processing getProcessing(int processingAccession){
-        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
-    }
 }
