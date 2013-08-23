@@ -60,6 +60,7 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 
 import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
@@ -74,25 +75,53 @@ import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
  */
 public class MetadataDB implements Metadata {
 
-  private Connection db; // A connection to the database
-  private DatabaseMetaData dbmd; // This is basically info the driver delivers
+  private final Connection db; // A connection to the database
+  private final DatabaseMetaData dbmd; // This is basically info the driver delivers
   // about the DB it just connected to. I use
   // it to get the DB version to confirm the
   // connection in this example.
-  private Statement sql;
-  private Logger logger;
+  private final Statement sql;
+  private final Logger logger = Logger.getLogger(MetadataDB.class);
 
-  /**
-   * <p>Constructor for MetadataDB.</p>
-   */
-  public MetadataDB() {
-    super();
-    logger = Logger.getLogger(MetadataDB.class);
+  public MetadataDB(Connection conn) throws SQLException{
+    this.db = conn;
+    this.dbmd = conn.getMetaData();
+    this.sql = conn.createStatement();
   }
   
-  public MetadataDB(String url, String username, String password){
-    this();
-    init(url, username, password);
+  public MetadataDB(DataSource ds) throws SQLException{
+    this(getConnection(ds));
+  }
+  
+  public MetadataDB(String url, String username, String password) throws SQLException{
+    this(getConnection(url, username, password));
+  }
+  
+  private static Connection getConnection(String url, String username, String password) throws SQLException{
+    try {
+      Class.forName("org.postgresql.Driver");
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+    return DriverManager.getConnection(url, username, password);
+  }
+  private static Connection getConnection(DataSource ds) throws SQLException{
+    try {
+      Class.forName("org.postgresql.Driver");
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+    if (ds instanceof BasicDataSource){
+      BasicDataSource bds = (BasicDataSource)ds;
+      Log.info("Tomcat Basic data source init with: Log-abandoned =" +  bds.getLogAbandoned() + 
+               " Max-active: " + bds.getMaxActive() +  
+               " Max-wait: " + bds.getMaxWait() + 
+               " Remove-abandoned: " + bds.getRemoveAbandoned() + 
+               " Remove-abandoned-timeout: " + bds.getRemoveAbandonedTimeout() + 
+               " Num-active: " + bds.getNumActive() + 
+               " Num-idle: " + bds.getNumIdle());
+    }
+    return ds.getConnection();
   }
 
 
@@ -379,9 +408,7 @@ public class MetadataDB implements Metadata {
    */
   public int InsertAndReturnNewPrimaryKey(String sqlQuery, String SequenceID) throws SQLException {
     executeUpdate(sqlQuery);
-    executeQuery("select currval('" + SequenceID + "')");
-    this.getSql().getResultSet().next();
-    return this.getSql().getResultSet().getInt(1);
+    return executeQuery("select currval('" + SequenceID + "')", new IntByIndex(1, 0));
   }
   
     /**
@@ -522,19 +549,13 @@ public class MetadataDB implements Metadata {
    */
   @Override
   public int mapProcessingIdToAccession(int processingId) {
-    int result = 0;
     String sql = "select sw_accession from processing where processing_id = " + processingId;
-    ResultSet rs;
     try {
-      rs = executeQuery(sql);
-      if (rs.next()) {
-        result = rs.getInt("sw_accession");
-      }
+      return executeQuery(sql, new IntByName("sw_accession", 0));
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString());
       return (-1);
     }
-    return (result);
   }
 
   /**
@@ -695,20 +716,8 @@ public class MetadataDB implements Metadata {
   }
 
   private int findAccessionInTable(String table, String idCol, int accession) throws SQLException {
-
-    int result = 0;
     String sql = "select " + idCol + " from " + table + " where sw_accession = " + accession;
-    ResultSet rs = null;
-    try{
-    rs = executeQuery(sql);
-    if (rs.next()) {
-      result = rs.getInt(idCol);
-    } 
-      } finally {
-          DbUtils.closeQuietly(rs);
-          // DBAccess.close(); causes problems since this is called privately
-      }
-    return (result);
+    return executeQuery(sql, new IntByName(idCol, 0));
   }
 
   /**
@@ -905,20 +914,13 @@ public class MetadataDB implements Metadata {
    */
   @Override
   public int get_workflow_run_accession(int workflowRunId) {
-    int result = 0;
-
     String sql = "select sw_accession from workflow_run where workflow_run_id = " + workflowRunId;
-    ResultSet rs;
     try {
-      rs = executeQuery(sql);
-      if (rs.next()) {
-        result = rs.getInt("sw_accession");
-      }
+      return executeQuery(sql, new IntByName("sw_accession", 0));
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
       return (-1);
     }
-    return (result);
   }
 
   /**
@@ -926,20 +928,13 @@ public class MetadataDB implements Metadata {
    */
   @Override
   public int get_workflow_run_id(int workflowRunAccession) {
-    int result = 0;
-
     String sql = "select workflow_run_id from workflow_run where sw_accession = " + workflowRunAccession;
-    ResultSet rs;
     try {
-      rs = executeQuery(sql);
-      if (rs.next()) {
-        result = rs.getInt("workflow_run_id");
-      }
+      return executeQuery(sql, new IntByName("workflow_run_id", 0));
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
       return (-1);
     }
-    return (result);
   }
 
   /**
@@ -947,37 +942,37 @@ public class MetadataDB implements Metadata {
    */
   @Override
   public WorkflowRun getWorkflowRun(int workflowRunAccession) {
-
-    WorkflowRun wr = null;
-
     String sql = "select workflow_run_id, name, ini_file, cmd, workflow_template, dax, "
             + "status, status_cmd, seqware_revision, host, stderr, stdout, "
             + "current_working_dir, username, create_tstmp from workflow_run where sw_accession = " + workflowRunAccession;
-    ResultSet rs;
     try {
-      rs = executeQuery(sql);
-      if (rs.next()) {
-        wr = new WorkflowRun();
-        wr.setWorkflowRunId(rs.getInt("workflow_run_id"));
-        wr.setName(rs.getString("name"));
-        wr.setIniFile(rs.getString("ini_file"));
-        wr.setCommand(rs.getString("cmd"));
-        wr.setTemplate(rs.getString("workflow_template"));
-        wr.setDax(rs.getString("dax"));
-        wr.setStatus(WorkflowRunStatus.valueOf(rs.getString("status")));
-        wr.setStatusCmd(rs.getString("status_cmd"));
-        wr.setHost(rs.getString("host"));
-        wr.setCurrentWorkingDir(rs.getString("current_working_dir"));
-        wr.setStdErr(rs.getString("stderr"));
-        wr.setStdOut(rs.getString("stdout"));
-        wr.setCreateTimestamp(rs.getDate("create_tstmp"));
-      }
+      return executeQuery(sql, new ResultSetHandler<WorkflowRun>(){
+        @Override
+        public WorkflowRun handle(ResultSet rs) throws SQLException {
+          WorkflowRun wr = null;
+          if (rs.next()) {
+            wr = new WorkflowRun();
+            wr.setWorkflowRunId(rs.getInt("workflow_run_id"));
+            wr.setName(rs.getString("name"));
+            wr.setIniFile(rs.getString("ini_file"));
+            wr.setCommand(rs.getString("cmd"));
+            wr.setTemplate(rs.getString("workflow_template"));
+            wr.setDax(rs.getString("dax"));
+            wr.setStatus(WorkflowRunStatus.valueOf(rs.getString("status")));
+            wr.setStatusCmd(rs.getString("status_cmd"));
+            wr.setHost(rs.getString("host"));
+            wr.setCurrentWorkingDir(rs.getString("current_working_dir"));
+            wr.setStdErr(rs.getString("stderr"));
+            wr.setStdOut(rs.getString("stdout"));
+            wr.setCreateTimestamp(rs.getDate("create_tstmp"));
+          }
+          return wr;
+        }
+      });
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
+      return null;
     }
-
-    return (wr);
-
   }
 
   /**
@@ -1252,102 +1247,6 @@ public class MetadataDB implements Metadata {
     return new ReturnValue();
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   * Connect to a database for future use
-   */
-  public ReturnValue init(String database, String username, String password) {
-    // FIXME: Do we need to do this or not? If so, how do we do it abstractly to
-    // support different meta-db backends?
-    try {
-      Class.forName("org.postgresql.Driver");
-    } catch (ClassNotFoundException e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    }
-
-    try {
-      this.setDb(DriverManager.getConnection(database, username, password));
-    } catch (SQLException e) {
-      e.printStackTrace();
-      return new ReturnValue(null, "Could not connect to SQL database: " + e.getMessage(),
-              ReturnValue.DBCOULDNOTINITIALIZE);
-    }
-    return init();
-
-  }
-
-  /**
-   * Connect to a database for future use
-   *
-   * @param ds a {@link javax.sql.DataSource} object.
-   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-   */
-  public ReturnValue init(DataSource ds) {
-    try {
-      Class.forName("org.postgresql.Driver");
-    } catch (ClassNotFoundException e1) {
-      e1.printStackTrace();
-      Log.fatal("Class not found: " + e1.getMessage(), e1);
-    }
-    
-    // try to output some information on connections
-    if (ds instanceof BasicDataSource){
-        BasicDataSource bds = (BasicDataSource)ds;
-        Log.info("Tomcat Basic data source init with: Log-abandoned =" +  bds.getLogAbandoned() + 
-                " Max-active: " + bds.getMaxActive() +  
-                " Max-wait: " + bds.getMaxWait() + 
-                " Remove-abandoned: " + bds.getRemoveAbandoned() + 
-                " Remove-abandoned-timeout: " + bds.getRemoveAbandonedTimeout() + 
-                " Num-active: " + bds.getNumActive() + 
-                " Num-idle: " + bds.getNumIdle());
-        bds.getMaxWait();
-    }
-
-    try {
-      this.setDb(ds.getConnection());
-    } catch (SQLException e) {
-      e.printStackTrace();
-      Log.fatal("init()  could not connect to SQL database", e);
-      return new ReturnValue(null, "Could not connect to SQL database: " + e.getMessage(),
-              ReturnValue.DBCOULDNOTINITIALIZE);
-    }
-    return init();
-  }
-
-  private ReturnValue init() {
-    try {
-      DatabaseMetaData foo2 = this.getDb().getMetaData();
-      this.setDbmd(foo2);
-
-      this.setDbmd(this.getDb().getMetaData());
-    } catch (SQLException e) {
-      return new ReturnValue(null,
-              "Could not retreive Connection Metadata from Database. Assuming connection was not successful: "
-              + e.getMessage(), ReturnValue.DBCOULDNOTINITIALIZE);
-    }
-
-    Log.debug("init() and create statement");
-    // Create a SQL statement and preparedStatement
-    try {
-      this.setSql(this.getDb().createStatement());
-    } catch (SQLException e) {
-      Log.debug("init() could not create a Statement", e);
-      return new ReturnValue(null, "Could not create a SQL statement" + e.getMessage(), ReturnValue.SQLQUERYFAILED);
-    }
-
-    Log.debug("init() of  " + this.toString());
-    // If no error so far, return Meta information
-    try {
-      return new ReturnValue(null, "Connection to " + dbmd.getDatabaseProductName() + " "
-              + dbmd.getDatabaseProductVersion() + " successful.\n", ReturnValue.SUCCESS);
-    } catch (SQLException e) {
-      return new ReturnValue(null,
-              "Could not parse Connection Metadata from Database. Assuming connection was not successful: "
-              + e.getMessage(), ReturnValue.DBCOULDNOTINITIALIZE);
-    }
-  }
 
   /**
    * {@inheritDoc}
@@ -1355,29 +1254,11 @@ public class MetadataDB implements Metadata {
   @Override
   public ReturnValue clean_up() {
     Log.debug("clean_up() of MetadataDB occured " + Integer.toHexString(this.hashCode()));
-    ReturnValue ret = new ReturnValue();
-
-    try {
-      if (this.getSql() != null) {
-          Log.debug("clean_up() of statement " + Integer.toHexString(this.getSql().hashCode()));
-          this.getSql().close();
-          // we need to explicitly set the statement to null to avoid the risk of closing it twice
-          this.setSql(null);
-      }
-      if (this.getDb() != null) {
-          Log.debug("clean_up() of connection " + Integer.toHexString(this.getDb().hashCode()));
-        this.getDb().close();
-        // we need to explicitly set the connection to null to avoid the risk of closing it tiwce
-        // see https://tomcat.apache.org/tomcat-6.0-doc/jndi-datasource-examples-howto.html
-        this.setDb(null);
-      }
-    } catch (SQLException e) {
-      Log.fatal("clean_up() of occured, with exception " + e);
-      ret.setStderr("Failed to close database connection: " + e.getMessage());
-      ret.setExitStatus(ReturnValue.DBCOULDNOTDISCONNECT);
-    }
-
-    return ret;
+    Log.debug("clean_up() of statement " + Integer.toHexString(this.getSql().hashCode()));
+    DbUtils.closeQuietly(this.sql);
+    Log.debug("clean_up() of connection " + Integer.toHexString(this.getDb().hashCode()));
+    DbUtils.closeQuietly(this.db);
+    return new ReturnValue();
   }
 
   /**
@@ -1391,19 +1272,6 @@ public class MetadataDB implements Metadata {
   }
 
   /**
-   * <p>Setter for the field
-   * <code>db</code>.</p>
-   *
-   * @param db a {@link java.sql.Connection} object.
-   */
-  public void setDb(Connection db) {
-    if (db != null) {
-        Log.debug("MetadataDB set connection + " + Integer.toHexString(db.hashCode()));
-    }
-    this.db = db;
-  }
-
-  /**
    * <p>Getter for the field
    * <code>dbmd</code>.</p>
    *
@@ -1411,16 +1279,6 @@ public class MetadataDB implements Metadata {
    */
   public DatabaseMetaData getDbmd() {
     return dbmd;
-  }
-
-  /**
-   * <p>Setter for the field
-   * <code>dbmd</code>.</p>
-   *
-   * @param dbmd a {@link java.sql.DatabaseMetaData} object.
-   */
-  public void setDbmd(DatabaseMetaData dbmd) {
-    this.dbmd = dbmd;
   }
 
   /**
@@ -1432,24 +1290,6 @@ public class MetadataDB implements Metadata {
   public Statement getSql() {
     return sql;
   }
-
-  /**
-   * <p>Setter for the field
-   * <code>sql</code>.</p>
-   *
-   * @param sql a {@link java.sql.Statement} object.
-   */
-  public void setSql(Statement sql) {
-    if (sql != null) {
-        Log.debug("MetadataDB set statement + " + Integer.toHexString(sql.hashCode()));
-    }
-    this.sql = sql;
-  }
-
-    /**
-     * {@inheritDoc}
-     *
-     */
     
     
   @Override
@@ -1575,37 +1415,37 @@ public class MetadataDB implements Metadata {
    * {@inheritDoc}
    */
   @Override
-  public Map<String, String> get_workflow_info(int workflowAccession) {
-
-    HashMap<String, String> map = new HashMap<String, String>();
+  public Map<String, String> get_workflow_info(final int workflowAccession) {
     String sql = "SELECT name, description, version, base_ini_file, cmd, current_working_dir, workflow_template, create_tstmp, update_tstmp, permanent_bundle_location, workflow_engine, workflow_type, workflow_class FROM workflow where sw_accession = "
             + workflowAccession;
-    ResultSet rs;
-
     try {
-      rs = executeQuery(sql);
-      if (rs.next()) {
-        map.put("name", rs.getString("name"));
-        map.put("description", rs.getString("description"));
-        map.put("version", rs.getString("version"));
-        map.put("base_ini_file", rs.getString("base_ini_file"));
-        map.put("cmd", rs.getString("cmd"));
-        map.put("current_working_dir", rs.getString("current_working_dir"));
-        map.put("workflow_template", rs.getString("workflow_template"));
-        map.put("create_tstmp", rs.getString("create_tstmp"));
-        map.put("update_tstmp", rs.getString("update_tstmp"));
-        map.put("workflow_accession", new Integer(workflowAccession).toString());
-        map.put("permanent_bundle_location", rs.getString("permanent_bundle_location"));
-        map.put("workflow_engine", rs.getString("workflow_engine"));
-        map.put("workflow_type", rs.getString("workflow_type"));
-        map.put("workflow_class", rs.getString("workflow_class"));
-      }
+      return executeQuery(sql, new ResultSetHandler<Map<String, String>>(){
+        @Override
+        public Map<String, String> handle(ResultSet rs) throws SQLException {
+          HashMap<String, String> map = new HashMap<String, String>();
+          if (rs.next()) {
+            map.put("name", rs.getString("name"));
+            map.put("description", rs.getString("description"));
+            map.put("version", rs.getString("version"));
+            map.put("base_ini_file", rs.getString("base_ini_file"));
+            map.put("cmd", rs.getString("cmd"));
+            map.put("current_working_dir", rs.getString("current_working_dir"));
+            map.put("workflow_template", rs.getString("workflow_template"));
+            map.put("create_tstmp", rs.getString("create_tstmp"));
+            map.put("update_tstmp", rs.getString("update_tstmp"));
+            map.put("workflow_accession", new Integer(workflowAccession).toString());
+            map.put("permanent_bundle_location", rs.getString("permanent_bundle_location"));
+            map.put("workflow_engine", rs.getString("workflow_engine"));
+            map.put("workflow_type", rs.getString("workflow_type"));
+            map.put("workflow_class", rs.getString("workflow_class"));
+          }
+          return map;
+        }
+      });
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
       return (null);
     }
-
-    return (map);
   }
 
   /**
@@ -1641,22 +1481,18 @@ public class MetadataDB implements Metadata {
    */
   @Override
   public Boolean isDuplicateFile(String filepath) {
-
     String sql = "SELECT sw_accession FROM file WHERE file_path = '" + filepath + "';";
-    ResultSet rs;
-
     try {
-      rs = executeQuery(sql);
-      if (rs.next()) {
-        return true;
-      }
+      return executeQuery(sql, new ResultSetHandler<Boolean>(){
+        @Override
+        public Boolean handle(ResultSet rs) throws SQLException {
+          return rs.next();
+        }
+      });
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
-      e.printStackTrace();
-      return null;
+      throw new RuntimeException(e);
     }
-
-    return false;
   }
 
   /**
@@ -1686,20 +1522,25 @@ public class MetadataDB implements Metadata {
   @Override
   public String listInstalledWorkflows() {
     String sql = "SELECT name, version, sw_accession, create_tstmp, permanent_bundle_location FROM workflow";
-    StringBuffer sb = new StringBuffer();
     try {
-      ResultSet rs = executeQuery(sql);
-      while (rs.next()) {
-        sb.append(rs.getString("name") + "\t");
-        sb.append(rs.getString("version") + "\t");
-        sb.append(rs.getString("create_tstmp") + "\t");
-        sb.append(rs.getString("sw_accession") + "\t");
-        sb.append(rs.getString("permanent_bundle_location") + "\n");
-      }
+      return executeQuery(sql, new ResultSetHandler<String>(){
+        @Override
+        public String handle(ResultSet rs) throws SQLException {
+          StringBuffer sb = new StringBuffer();
+          while (rs.next()) {
+            sb.append(rs.getString("name") + "\t");
+            sb.append(rs.getString("version") + "\t");
+            sb.append(rs.getString("create_tstmp") + "\t");
+            sb.append(rs.getString("sw_accession") + "\t");
+            sb.append(rs.getString("permanent_bundle_location") + "\n");
+          }
+          return sb.toString();
+        }
+      });
     } catch (SQLException e) {
-      e.printStackTrace();
+      logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
+      throw new RuntimeException(e);
     }
-    return (sb.toString());
   }
 
   /**
@@ -1716,21 +1557,45 @@ public class MetadataDB implements Metadata {
    */
   @Override
   public int getWorkflowAccession(String name, String version) {
-    int result = 0;
-
     String sql = "select sw_accession from workflow where name = '" + name + "' AND version = '" + version + "'";
-    ResultSet rs;
     try {
-      rs = executeQuery(sql);
-      if (rs.next()) {
-        result = rs.getInt("sw_accession");
-      }
+      return executeQuery(sql, new IntByName("sw_accession", 0));
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
       return (-1);
     }
-    return (result);
   }
+  
+  public static class IntByIndex implements ResultSetHandler<Integer>{
+    private final int col;
+    private final int defaultVal;
+    public IntByIndex(int col, int defaultVal){
+      this.col = col;
+      this.defaultVal = defaultVal;
+    }
+    public Integer handle(ResultSet rs) throws SQLException{
+      if (rs.next()){
+        return rs.getInt(col);
+      } else {
+        return defaultVal;
+      }
+    }
+  }
+  public static class IntByName implements ResultSetHandler<Integer>{
+    private final String col;
+    private final int defaultVal;
+    public IntByName(String col, int defaultVal){
+      this.col = col;
+      this.defaultVal = defaultVal;
+    }
+    public Integer handle(ResultSet rs) throws SQLException{
+      if (rs.next()){
+        return rs.getInt(col);
+      } else {
+        return defaultVal;
+      }
+    }
+  }  
 
   /**
    * <p>executeQuery.</p>
@@ -1739,12 +1604,17 @@ public class MetadataDB implements Metadata {
    * @return a {@link java.sql.ResultSet} object.
    * @throws java.sql.SQLException if any.
    */
-  public ResultSet executeQuery(String s) throws SQLException {
+  public <T> T executeQuery(String s, ResultSetHandler<T> h) throws SQLException {
     Statement sql1 = getSql();
     Log.debug("MetadataDB executeQuery: \"" + s + "\" on connection + " + Integer.toHexString(this.getDb().hashCode()));
     Log.debug("MetadataDB executeQuery: query is " + (s == null ? "null": "not null"));
     Log.debug("MetadataDB executeQuery: statement "+Integer.toHexString(sql1.hashCode())+" is " + (sql1 == null ? "null": "not null"));
-    return sql1.executeQuery(s);
+    ResultSet rs = sql1.executeQuery(s);
+    try {
+      return h.handle(rs);
+    } finally {
+      DbUtils.closeQuietly(rs);
+    }
   }
 
   /**
@@ -1772,35 +1642,36 @@ public class MetadataDB implements Metadata {
    */
   @Override
   public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRunStatus status) {
-
-    ArrayList<WorkflowRun> results = new ArrayList<WorkflowRun>();
-
     String sql = "select workflow_run_id, name, ini_file, cmd, workflow_template, dax, status, status_cmd, seqware_revision, host, current_working_dir, username, create_tstmp from workflow_run where status = '"
             + status.name() + "'";
-    ResultSet rs;
     try {
-      rs = executeQuery(sql);
-      while (rs.next()) {
-        WorkflowRun wr = new WorkflowRun();
-        wr.setWorkflowRunId(rs.getInt("workflow_run_id"));
-        wr.setName(rs.getString("name"));
-        wr.setIniFile(rs.getString("ini_file"));
-        wr.setCommand(rs.getString("cmd"));
-        wr.setTemplate(rs.getString("workflow_template"));
-        wr.setDax(rs.getString("dax"));
-        wr.setStatus(WorkflowRunStatus.valueOf(rs.getString("status")));
-        wr.setStatusCmd(rs.getString("status_cmd"));
-        wr.setHost(rs.getString("host"));
-        wr.setCurrentWorkingDir(rs.getString("current_working_dir"));
-        wr.setCreateTimestamp(rs.getDate("create_tstmp"));
-        // FIXME: need to update with workflow engine etc
-        results.add(wr);
-      }
+      return executeQuery(sql, new ResultSetHandler<List<WorkflowRun>>(){
+        @Override
+        public List<WorkflowRun> handle(ResultSet rs) throws SQLException {
+          ArrayList<WorkflowRun> results = new ArrayList<WorkflowRun>();
+          while (rs.next()) {
+            WorkflowRun wr = new WorkflowRun();
+            wr.setWorkflowRunId(rs.getInt("workflow_run_id"));
+            wr.setName(rs.getString("name"));
+            wr.setIniFile(rs.getString("ini_file"));
+            wr.setCommand(rs.getString("cmd"));
+            wr.setTemplate(rs.getString("workflow_template"));
+            wr.setDax(rs.getString("dax"));
+            wr.setStatus(WorkflowRunStatus.valueOf(rs.getString("status")));
+            wr.setStatusCmd(rs.getString("status_cmd"));
+            wr.setHost(rs.getString("host"));
+            wr.setCurrentWorkingDir(rs.getString("current_working_dir"));
+            wr.setCreateTimestamp(rs.getDate("create_tstmp"));
+            // FIXME: need to update with workflow engine etc
+            results.add(wr);
+          }
+          return results;
+        }
+      });
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
+      throw new RuntimeException(e);
     }
-
-    return (results);
   }
 
   /**
@@ -1808,33 +1679,38 @@ public class MetadataDB implements Metadata {
    */
   @Override
   public List<WorkflowRun> getWorkflowRunsByHost(String host) {
-    ArrayList<WorkflowRun> results = new ArrayList<WorkflowRun>();
+    
 
     String sql = "select workflow_run_id, name, ini_file, cmd, workflow_template, dax, status, status_cmd, seqware_revision, host, current_working_dir, username, create_tstmp from workflow_run where host = '"
             + host + "'";
     ResultSet rs;
     try {
-      rs = executeQuery(sql);
-      while (rs.next()) {
-        WorkflowRun wr = new WorkflowRun();
-        wr.setWorkflowRunId(rs.getInt("workflow_run_id"));
-        wr.setName(rs.getString("name"));
-        wr.setIniFile(rs.getString("ini_file"));
-        wr.setCommand(rs.getString("cmd"));
-        wr.setTemplate(rs.getString("workflow_template"));
-        wr.setDax(rs.getString("dax"));
-        wr.setStatus(WorkflowRunStatus.valueOf(rs.getString("status")));
-        wr.setStatusCmd(rs.getString("status_cmd"));
-        wr.setHost(rs.getString("host"));
-        wr.setCurrentWorkingDir(rs.getString("current_working_dir"));
-        wr.setCreateTimestamp(rs.getDate("create_tstmp"));
-        results.add(wr);
-      }
+      return executeQuery(sql, new ResultSetHandler<List<WorkflowRun>>(){
+        @Override
+        public List<WorkflowRun> handle(ResultSet rs) throws SQLException {
+          ArrayList<WorkflowRun> results = new ArrayList<WorkflowRun>();
+          while (rs.next()) {
+            WorkflowRun wr = new WorkflowRun();
+            wr.setWorkflowRunId(rs.getInt("workflow_run_id"));
+            wr.setName(rs.getString("name"));
+            wr.setIniFile(rs.getString("ini_file"));
+            wr.setCommand(rs.getString("cmd"));
+            wr.setTemplate(rs.getString("workflow_template"));
+            wr.setDax(rs.getString("dax"));
+            wr.setStatus(WorkflowRunStatus.valueOf(rs.getString("status")));
+            wr.setStatusCmd(rs.getString("status_cmd"));
+            wr.setHost(rs.getString("host"));
+            wr.setCurrentWorkingDir(rs.getString("current_working_dir"));
+            wr.setCreateTimestamp(rs.getDate("create_tstmp"));
+            results.add(wr);
+          }
+          return results;
+        }
+      });
     } catch (SQLException e) {
       logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
+      throw new RuntimeException(e);
     }
-
-    return (results);
   }
 
   /**
