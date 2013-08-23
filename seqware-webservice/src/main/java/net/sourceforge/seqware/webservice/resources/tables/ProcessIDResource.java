@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
+import net.sf.beanlib.CollectionPropertyName;
 
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.IUSService;
@@ -40,6 +41,8 @@ import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.model.Experiment;
+import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
@@ -56,6 +59,7 @@ import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 
 import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -92,7 +96,9 @@ public class ProcessIDResource extends DatabaseIDResource {
 
         ProcessingService ss = BeanFactory.getProcessingServiceBean();
         Processing processing = (Processing) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
-        Processing dto = copier.hibernate2dto(Processing.class, processing);
+        // SEQWARE-1733 - we need to get back files by processing in order to do validation
+        CollectionPropertyName<Processing>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(Processing.class, new String[]{"files"});
+        Processing dto = copier.hibernate2dto(Processing.class, processing, ArrayUtils.EMPTY_CLASS_ARRAY, createCollectionPropertyNames);
 
         if (fields.contains("workflowRun")) {
             WorkflowRun wr = processing.getWorkflowRun();
@@ -103,16 +109,16 @@ public class ProcessIDResource extends DatabaseIDResource {
                 Log.info("Could not be found : workflow run");
             }
         }
-		if (fields.contains("attributes")) {
-			Set<ProcessingAttribute> pas = processing.getProcessingAttributes();
-			if(pas!=null && !pas.isEmpty()) {
-				Set<ProcessingAttribute> newpas = new TreeSet<ProcessingAttribute>();
-				for(ProcessingAttribute pa: pas) {
-					newpas.add(copier.hibernate2dto(ProcessingAttribute.class,pa));
-				}
-				dto.setProcessingAttributes(newpas);
-			}
-		}
+        if (fields.contains("attributes")) {
+            Set<ProcessingAttribute> pas = processing.getProcessingAttributes();
+            if (pas != null && !pas.isEmpty()) {
+                Set<ProcessingAttribute> newpas = new TreeSet<ProcessingAttribute>();
+                for (ProcessingAttribute pa : pas) {
+                    newpas.add(copier.hibernate2dto(ProcessingAttribute.class, pa));
+                }
+                dto.setProcessingAttributes(newpas);
+            }
+        }
 
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
         getResponse().setEntity(XmlTools.getRepresentation(line));
