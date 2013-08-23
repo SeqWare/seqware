@@ -96,9 +96,7 @@ public class ProcessIDResource extends DatabaseIDResource {
 
         ProcessingService ss = BeanFactory.getProcessingServiceBean();
         Processing processing = (Processing) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
-        // SEQWARE-1733 - we need to get back files by processing in order to do validation
-        CollectionPropertyName<Processing>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(Processing.class, new String[]{"files"});
-        Processing dto = copier.hibernate2dto(Processing.class, processing, ArrayUtils.EMPTY_CLASS_ARRAY, createCollectionPropertyNames);
+        Processing dto = copier.hibernate2dto(Processing.class, processing);
 
         if (fields.contains("workflowRun")) {
             WorkflowRun wr = processing.getWorkflowRun();
