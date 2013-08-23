@@ -7,6 +7,7 @@ import java.util.List;
 import org.jdom.Element;
 
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Command;
 
 public class OozieBashJob extends OozieJob {
 
@@ -95,6 +96,19 @@ public class OozieBashJob extends OozieJob {
     args.add("--module");
     args.add("net.sourceforge.seqware.pipeline.modules.GenericCommandRunner");
     args.add("--");
+
+    Command cmd = jobObj.getCommand();
+    if (cmd.isGcrSkipIfMissing()){
+      args.add("--gcr-skip-if-missing");
+    }
+    if (cmd.isGcrSkipIfOutputExists()){
+      args.add("--gcr-skip-if-output-exists");
+    }
+    if(cmd.getGcrOutputFile() != null){
+      args.add("--gcr-output-file");
+      args.add(cmd.getGcrOutputFile());
+    }
+
     args.add("--gcr-algorithm");
     args.add(jobObj.getAlgo());
     args.add("--gcr-script");
