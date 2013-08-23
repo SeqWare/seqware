@@ -791,50 +791,6 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
     return (that.getSwAccession().compareTo(this.getSwAccession()));
   }
 
-  /**
-   * <p>cloneFromDB.</p>
-   *
-   * @param wrId a int.
-   * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
-   * @throws java.sql.SQLException if any.
-   */
-  public static WorkflowRun cloneFromDB(int wrId) throws SQLException {
-    WorkflowRun wr = null;
-    ResultSet rs = null;
-    try {
-      rs = DBAccess.get().executeQuery("SELECT * FROM workflow_run WHERE workflow_run_id=" + wrId);
-      if (rs.next()) {
-        wr = new WorkflowRun();
-        wr.setWorkflowRunId(rs.getInt("workflow_run_id"));
-        wr.setName(rs.getString("name"));
-        wr.setIniFile(rs.getString("ini_file"));
-        wr.setCommand(rs.getString("cmd"));
-        wr.setTemplate(rs.getString("workflow_template"));
-        wr.setDax(rs.getString("dax"));
-        wr.setStatus(WorkflowRunStatus.valueOf(rs.getString("status")));
-        wr.setStatusCmd(rs.getString("status_cmd"));
-        wr.setSeqwareRevision(rs.getString("seqware_revision"));
-        wr.setHost(rs.getString("host"));
-        wr.setCurrentWorkingDir(rs.getString("current_working_dir"));
-        wr.setUserName(rs.getString("username"));
-        wr.setCreateTimestamp(rs.getTimestamp("create_tstmp"));
-        wr.setUpdateTimestamp(rs.getTimestamp("update_tstmp"));
-        wr.setSwAccession(rs.getInt("sw_accession"));
-        wr.setStdErr(rs.getString("stderr"));
-        wr.setStdOut(rs.getString("stdout"));
-
-        // owner
-        
-        // workflowid
-
-      }
-    } finally {
-      DbUtils.closeQuietly(rs);
-      DBAccess.close();
-    }
-    return wr;
-  }
-
   /** {@inheritDoc} */
   @Override
   public boolean givesPermission(Registration registration) {

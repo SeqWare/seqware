@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.common.metadata;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 public final class MetadataFactory {
@@ -18,7 +19,7 @@ public final class MetadataFactory {
     }
   }
 
-  private static Metadata getWS(Map<String, String> settings) {
+  public static MetadataWS getWS(Map<String, String> settings) {
     String url = settings.get("SW_REST_URL");
     String user = settings.get("SW_REST_USER");
     String pass = settings.get("SW_REST_PASS");
@@ -30,7 +31,7 @@ public final class MetadataFactory {
     return new MetadataWS(url, user, pass);
   }
 
-  private static Metadata getDB(Map<String, String> settings) {
+  public static MetadataDB getDB(Map<String, String> settings) {
     String server = settings.get("SW_DB_SERVER");
     String dbName = settings.get("SW_DB");
     String user = settings.get("SW_DB_USER");
@@ -41,10 +42,14 @@ public final class MetadataFactory {
     }
     
     String url = "jdbc:postgresql://" + settings.get("SW_DB_SERVER") + "/" + settings.get("SW_DB");
-    return new MetadataDB(url, user, pass);
+    try {
+      return new MetadataDB(url, user, pass);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  private static Metadata getNoOp() {
+  public static MetadataNoConnection getNoOp() {
     return new MetadataNoConnection();
   }
 }

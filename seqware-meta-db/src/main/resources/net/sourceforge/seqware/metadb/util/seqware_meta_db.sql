@@ -5171,6 +5171,10 @@ ALTER TABLE ONLY study
 ALTER TABLE ONLY workflow_run_input_files
     ADD CONSTRAINT workflow_run_id FOREIGN KEY (workflow_run_id) REFERENCES workflow_run(workflow_run_id);
 
+-- Constraint: workflow_run_input_files_unique
+
+ALTER TABLE workflow_run_input_files
+  ADD CONSTRAINT workflow_run_input_files_unique UNIQUE(workflow_run_id, file_id);
 
 --
 -- Name: workflow_run_workflow_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: seqware
