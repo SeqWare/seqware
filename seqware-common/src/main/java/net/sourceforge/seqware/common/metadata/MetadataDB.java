@@ -37,6 +37,7 @@ import net.sourceforge.seqware.common.model.LibrarySource;
 import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
+import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
@@ -2217,6 +2218,11 @@ public class MetadataDB implements Metadata {
 
     @Override
     public List<ParentAccessionModel> getViaParentAccessions(int[] potentialParentAccessions) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+    
+    @Override
+    public Processing getProcessing(int processingAccession){
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
 }
