@@ -97,6 +97,10 @@ public class WorkflowStatusChecker extends Plugin {
                       "Optional: if specified, workflow runs that have previously failed will be re-checked.");
     parser.acceptsAll(Arrays.asList("threads-in-thread-pool", "tp"),
                       "Optional: this will determine the number of threads to run with. Default: 1").withRequiredArg().ofType(Integer.class);
+    //SEQWARE-1732 custom lock ID
+    parser.acceptsAll(Arrays.asList("custom-lock-file", "clf"),
+                      "Optional: This option is discouraged and unsupported. A custom lock-file allows multiple workflow status checkers "
+            + "and workflow launchers to run at the same time, but could lead to a corrupt state in the metadb").withRequiredArg();
 
     ret.setExitStatus(ReturnValue.SUCCESS);
   }
@@ -109,7 +113,12 @@ public class WorkflowStatusChecker extends Plugin {
 
     // check to see if this code is already running, if so exit
     try {
-      JUnique.acquireLock(appID);
+        String lock = appID;
+        if (options.has("custom-lock-file")){
+            Log.stderr("Using a custom-lock-file. This mode is unsupported.");
+            lock = (String)options.valueOf("custom-lock-file");
+        } 
+        JUnique.acquireLock(lock);
     } catch (AlreadyLockedException e) {
       Log.error("I could not get a lock for " + appID
           + " this most likely means the application is already running and this instance will exit!");
