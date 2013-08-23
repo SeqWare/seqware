@@ -9,16 +9,18 @@
     <version>${version}</version>
     <packaging>jar</packaging>
 
-    <name>seqware-decider</name>
+    <name>${artifactId}</name>
     <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <seqware-version>1.0.4-SNAPSHOT</seqware-version>
+	<workflow-version>1.0</workflow-version>
     </properties>
     
     <build>
+	<finalName>Decider_${version}_${artifactId}_${workflow-version}_SeqWare_${seqware-version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
