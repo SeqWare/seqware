@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.jdom.Element;
 
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Command;
 
@@ -42,6 +43,7 @@ public class OozieBashJob extends OozieJob {
     addProp(config, "oozie.launcher.mapred.job.reduce.memory.mb", jobObj.getMaxMemory());
     addProp(config, "oozie.launcher.mapreduce.map.memory.physical.mb", jobObj.getMaxMemory());
     addProp(config, "oozie.launcher.mapreduce.reduce.memory.physical.mb", jobObj.getMaxMemory());
+    addProp(config, ConfigTools.SEQWARE_SETTINGS_PROPERTY, ConfigTools.getSettingsFilePath());
 
     add(java, "main-class", "net.sourceforge.seqware.pipeline.runner.Runner");
     for (String arg : runnerArgs(jobScript)) {
