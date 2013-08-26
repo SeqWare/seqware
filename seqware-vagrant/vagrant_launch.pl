@@ -31,7 +31,7 @@ my $work_dir = "target";
 my $config_file = 'vagrant_launch.conf';
 my $skip_its = 0;
 my $skip_launch = 0;
-my $config_scripts = "templates/server_setup_scripts/ubuntu_12.04_master_script.sh";
+my $config_scripts = "templates/server_setup_scripts/ubuntu_12.04_minimal_script.sh";
 my $master_config_scripts = "";
 my $worker_config_scripts = "";
 
@@ -102,12 +102,20 @@ if (!$skip_launch) {
 sub find_node_info {
   my $d = {};
 
-  run("cd $work_dir");
   my $node_list = `cd $work_dir && vagrant status`;
+  print "$node_list\n";
   my @t = split /\n/, $node_list;
   foreach my $l (@t) {
     chomp $l;
+    my $host_id = "";
     if ($l =~ /(\S+)\s+active/) {
+      # openstack
+      $host_id = $1;
+    } if ($l =~ /(\S+)\s+running/) {
+      # aws 
+      $host_id = $1;
+    }
+    if ($host_id ne "") {
       my $host_id = $1;
       my $host_info = `cd $work_dir && vagrant ssh-config $host_id`;
       my @h = split /\n/, $host_info;
