@@ -49,9 +49,12 @@ public class Main {
     System.err.println(String.format(format, args));
   }
 
+  private static class Kill extends RuntimeException{
+  }
+
   private static void kill(String format, Object... args) {
     err(format, args);
-    System.exit(1);
+    throw new Kill();
   }
 
   private static void invalid(String cmd) {
@@ -1319,27 +1322,30 @@ public class Main {
       out("  --version     Print Seqware's version");
       out("");
     } else {
-      String cmd = args.remove(0);
-      if ("-v".equals(cmd) || "--version".equals(cmd)) {
-        kill("seqware: version information is provided by the wrapper script.");
-      } else if ("annotate".equals(cmd)) {
-        annotate(args);
-      } else if ("bundle".equals(cmd)) {
-        bundle(args);
-      } else if ("copy".equals(cmd)) {
-        copy(args);
-      } else if ("create".equals(cmd)) {
-        create(args);
-      } else if ("files".equals(cmd)) {
-        files(args);
-      } else if ("workflow".equals(cmd)) {
-        workflow(args);
-      } else if ("workflow-run".equals(cmd)) {
-        workflowRun(args);
-      } else {
-        invalid(cmd);
+      try {
+        String cmd = args.remove(0);
+        if ("-v".equals(cmd) || "--version".equals(cmd)) {
+          kill("seqware: version information is provided by the wrapper script.");
+        } else if ("annotate".equals(cmd)) {
+          annotate(args);
+        } else if ("bundle".equals(cmd)) {
+          bundle(args);
+        } else if ("copy".equals(cmd)) {
+          copy(args);
+        } else if ("create".equals(cmd)) {
+          create(args);
+        } else if ("files".equals(cmd)) {
+          files(args);
+        } else if ("workflow".equals(cmd)) {
+          workflow(args);
+        } else if ("workflow-run".equals(cmd)) {
+          workflowRun(args);
+        } else {
+          invalid(cmd);
+        }
+      } catch (Kill k){
+        System.exit(1);
       }
     }
   }
-
 }
