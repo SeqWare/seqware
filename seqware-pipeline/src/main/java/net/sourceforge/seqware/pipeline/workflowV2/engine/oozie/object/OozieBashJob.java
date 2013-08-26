@@ -57,17 +57,7 @@ public class OozieBashJob extends OozieJob {
 
   private File emitJobScript() {
     File file = file(scriptsDir, scriptFileName(name), true);
-
-    StringBuilder contents = new StringBuilder("#!/usr/bin/env bash\n\n");
-    contents.append("cd ");
-    contents.append(oozie_working_dir);
-    contents.append("\n");
-    for (String arg : jobObj.getCommand().getArguments()) {
-      contents.append(arg);
-    }
-    contents.append("\n");
-
-    write(contents.toString(), file);
+    writeScript(concat(" ", jobObj.getCommand().getArguments()), file);
     return file;
   }
 
@@ -81,13 +71,8 @@ public class OozieBashJob extends OozieJob {
     args.add("net.sourceforge.seqware.pipeline.runner.Runner");
     args.addAll(runnerArgs(jobScript));
 
-    StringBuilder contents = new StringBuilder("#!/usr/bin/env bash\n\n");
-    for (String arg : args) {
-      contents.append(arg);
-      contents.append(" ");
-    }
+    writeScript(concat(" ", args), file);
 
-    write(contents.toString(), file);
     return file;
   }
 
