@@ -3,6 +3,7 @@ package net.sourceforge.seqware.pipeline.plugin;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import joptsimple.BuiltinHelpFormatter;
 
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
@@ -74,6 +75,7 @@ public abstract class Plugin implements PluginInterface {
   public String get_syntax() {
     
     try {
+        parser.formatHelpWith(new BuiltinHelpFormatter(160,2));
       parser.printHelpOn(System.out);
     } catch (IOException e) {
       // TODO Auto-generated catch block
