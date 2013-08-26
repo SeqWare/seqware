@@ -44,8 +44,6 @@ import java.util.logging.Logger;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
 import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.common.metadata.MetadataDB;
-import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -58,7 +56,6 @@ import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
 import net.sourceforge.seqware.pipeline.decider.DeciderInterface;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
-import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
 import net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import net.sourceforge.seqware.pipeline.tools.SetOperations;
@@ -120,6 +117,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         parser.acceptsAll(Arrays.asList("launch-max"), "The maximum number of jobs to launch at once.").withRequiredArg().defaultsTo("2147483647");
         parser.acceptsAll(Arrays.asList("rerun-max"), "The maximum number of times to re-launch a workflowrun if failed.").withRequiredArg().defaultsTo("5");
         parser.acceptsAll(Arrays.asList("host", "ho"), "Used only in combination with --schedule to schedule onto a specific host. If not provided, the default is the local host").withRequiredArg();
+        //SEQWARE-1622 - check whether files exist
+        parser.acceptsAll(Arrays.asList("check-file-exists", "cf"), "Optional: only launch on the file if the file exists");
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
     
@@ -721,6 +720,13 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * @return true if the file can be added to the list, false otherwise
      */
     protected boolean checkFileDetails(ReturnValue returnValue, FileMetadata fm) {
+        if (this.options.has("check-file-exists")) {
+            if (!new File(fm.getFilePath()).exists()) {
+                Log.warn("File not found:" + fm.getFilePath());
+                return false;
+            }
+        }
+
         return true;
     }
 
