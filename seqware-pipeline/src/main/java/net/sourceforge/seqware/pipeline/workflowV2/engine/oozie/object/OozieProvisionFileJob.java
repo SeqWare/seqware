@@ -62,13 +62,7 @@ public class OozieProvisionFileJob extends OozieJob {
     args.add("net.sourceforge.seqware.pipeline.runner.Runner");
     args.addAll(runnerArgs());
 
-    StringBuilder contents = new StringBuilder("#!/usr/bin/env bash\n\n");
-    for (String arg : args) {
-      contents.append(arg);
-      contents.append(" ");
-    }
-
-    write(contents.toString(), file);
+    writeScript(concat(" ", args), file);
     return file;
   }
 
