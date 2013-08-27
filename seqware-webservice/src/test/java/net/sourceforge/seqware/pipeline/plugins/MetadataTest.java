@@ -683,37 +683,46 @@ public class MetadataTest extends PluginTest {
     @Test
     public void testCreateFile() {
         final String algorithm = "kryptonite_algorithm1";
+        final String type = "kryptonite_type1";
         final String meta_type = "kryptonite/gzip";
         final String file_path = "/datastore/kryptonite.gz";
         final String description = "glowing_metal";
         launchPlugin("--table", "file", "--create",
-                "--file",algorithm+"::"+meta_type+"::"+file_path + "::" + description);
+                "--file",type+"::"+meta_type+"::"+file_path + "::" + description,
+                "--field", "algorithm::" + algorithm
+                );
         String s = getOut();
         String swid = getAndCheckSwid(s);
         int integer = Integer.valueOf(swid); 
         BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
-        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select f.sw_accession from file f, processing p, processing_files pf WHERE f.file_id=pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession =?", Integer.valueOf(integer));
+        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select f.sw_accession, p.algorithm from file f, processing p, processing_files pf WHERE f.file_id=pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession =?", Integer.valueOf(integer));
         int file_sw_accession = (Integer)runQuery[0];
+        String dbAlgorithm = (String)runQuery[1];
         
         net.sourceforge.seqware.common.model.File file = metadata.getFile(file_sw_accession);
         Assert.assertTrue("could not find file", file != null && file.getSwAccession() == file_sw_accession);
-        Assert.assertTrue("file values incorrect", file.getFilePath().equals(file_path) && file.getMetaType().equals(meta_type) && file.getDescription().equals(description));
+        Assert.assertTrue("file values incorrect", file.getFilePath().equals(file_path) 
+                && file.getMetaType().equals(meta_type) && file.getDescription().equals(description)
+                && file.getType().equals(type));
+        Assert.assertTrue("algorithm incorrect", dbAlgorithm.equals(algorithm));
     }
     
     @Test
     public void testCreateFileWithParentAccessions() {
-        final String algorithm = "cool_algorithm1";
+        final String algorithm = "kryptonite_algorithm1";
+        final String type = "cool_type1";
         final String meta_type = "adamantium/gzip";
         final String file_path = "/datastore/adamantium.gz";
         launchPlugin("--table", "file", "--create",
-                "--file",algorithm+"::"+meta_type+"::"+file_path,
+                "--file",type+"::"+meta_type+"::"+file_path,
                 "--parent-accession","834", // experiment
                 "--parent-accession", "4765", // ius 
                 "--parent-accession", "4707", // lane
                 "--parent-accession", "4760", // sample
                 "--parent-accession", "4715", // sequencer_run
                 "--parent-accession", "120", //study
-                "--parent-accession", "10" //processing
+                "--parent-accession", "10", //processing
+                "--field", "algorithm::" + algorithm
         );
         String s = getOut();
         String swid = getAndCheckSwid(s);
