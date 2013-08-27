@@ -134,7 +134,7 @@ public class WorkflowRuntimeResource
                     String procId = currentProcIds.get(currentProcId).get("procId");
                     String workflowRunId = currentProcIds.get(currentProcId).get("workflowRunId");
                     String workflowName = currentProcIds.get(currentProcId).get("workflowName");
-                    recursiveFindProcessings(currentProcId, Integer.parseInt(workflowRunId), workflowName);
+                    recursiveFindProcessings(currentProcId, convertIDWithResourceException(workflowRunId), workflowName);
                 }
 
                 // at this point the whole hash should be populated

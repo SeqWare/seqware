@@ -57,7 +57,7 @@ public class SampleIdFilesResource extends BasicRestlet {
         ReturnValueList returnValues = new ReturnValueList();
 
         SampleService ss = BeanFactory.getSampleServiceBean();
-        Sample sample = (Sample) testIfNull(ss.findBySWAccession(Integer.parseInt(id)));
+        Sample sample = (Sample) testIfNull(ss.findBySWAccession(convertIDWithResourceException(id)));
         FindAllTheFiles fatf = new FindAllTheFiles();
         
         if (this.getQueryValue("requireFiles") != null){

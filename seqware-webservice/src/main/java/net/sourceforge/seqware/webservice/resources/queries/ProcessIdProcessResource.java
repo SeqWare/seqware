@@ -58,7 +58,7 @@ public class ProcessIdProcessResource extends BasicRestlet {
         String id = request.getAttributes().get("processId").toString();
 
         ProcessingService s = BeanFactory.getProcessingServiceBean();
-        Processing p = (Processing) testIfNull(s.findBySWAccession(Integer.parseInt(id)));
+        Processing p = (Processing) testIfNull(s.findBySWAccession(convertIDWithResourceException(id)));
 
         JaxbObject<ProcessingList> jaxbTool = new JaxbObject<ProcessingList>();
 

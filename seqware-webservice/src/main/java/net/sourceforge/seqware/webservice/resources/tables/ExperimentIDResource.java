@@ -60,7 +60,8 @@ public class ExperimentIDResource extends DatabaseIDResource {
     @Get
     public void getXml() {
         ExperimentService ss = BeanFactory.getExperimentServiceBean();
-        Experiment experiment = (Experiment) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
+        
+        Experiment experiment = (Experiment) testIfNull(ss.findBySWAccession(convertIDWithResourceException()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<Experiment> jaxbTool = new JaxbObject<Experiment>();
 
