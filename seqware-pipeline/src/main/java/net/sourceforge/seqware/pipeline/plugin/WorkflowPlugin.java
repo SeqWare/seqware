@@ -506,6 +506,7 @@ public class WorkflowPlugin extends Plugin {
   public static ReturnValue launchNewWorkflow(OptionSet options, Map<String, String> config, String[] params,
                                               Metadata metadata, Integer workflowAccession, Integer workflowRunAccession, String workflowEngine) {
     Log.info("launching new workflow");
+    boolean scheduled = workflowRunAccession != null;
     ReturnValue ret = new ReturnValue();
     AbstractWorkflowDataModel dataModel;
     try {
@@ -586,11 +587,13 @@ public class WorkflowPlugin extends Plugin {
 
     String workflowRunToken = engine.getLookupToken();
 
+    String host = scheduled && !options.has(HOST) ? wr.getHost() : (String)options.valueOf(HOST);
+
     if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS || workflowRunToken == null) {
       // then something went wrong trying to call pegasus
       metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                                    dataModel.getTags().get("workflow_template"), WorkflowRunStatus.failed, workflowRunToken,
-                                   engine.getWorkingDirectory(), "", "", wr.getHost(),
+                                   engine.getWorkingDirectory(), "", "", host,
                                    retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine(), inputFiles);
 
       return retPegasus;
@@ -599,7 +602,7 @@ public class WorkflowPlugin extends Plugin {
       WorkflowRunStatus status = dataModel.isWait() ? WorkflowRunStatus.completed : WorkflowRunStatus.pending;
       metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                                    dataModel.getTags().get("workflow_template"), status, workflowRunToken,
-                                   engine.getWorkingDirectory(), "", "", wr.getHost(),
+                                   engine.getWorkingDirectory(), "", "", host,
                                    retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine(), inputFiles);
       return ret;
     }

@@ -11,7 +11,8 @@ CREATE TABLE workflow_run_input_files
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT file_id FOREIGN KEY (file_id)
       REFERENCES file (file_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT workflow_run_input_files_unique UNIQUE (workflow_run_id, file_id)
 )
 WITH (
   OIDS=FALSE
