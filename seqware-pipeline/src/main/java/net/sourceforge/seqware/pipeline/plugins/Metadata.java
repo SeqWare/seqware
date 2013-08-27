@@ -28,6 +28,7 @@ import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
+import net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 
@@ -134,7 +135,7 @@ public class Metadata extends Plugin {
             ret = (listFields((String) options.valueOf("table")));
             return ret;
         } else if (options.has("table") && options.has("create") && 
-                (options.has("field") || options.has("interactive") || options.valueOf("table").equals("file"))) {
+                (options.has("field") || options.has("interactive"))) {
 
             // create a row with these fields
             if ("study".equals((String) options.valueOf("table"))) {
@@ -187,6 +188,7 @@ public class Metadata extends Plugin {
      * list the fields available to set
      */
     protected ReturnValue listFields(String table) {
+        final String fileDescription = "\nThis takes one file encoded as --file type::file-meta-type::file-path[::description] \n";
         ReturnValue rv = new ReturnValue(ReturnValue.SUCCESS);
         if ("study".equals(table)) {
             List<StudyType> studyTypes = this.metadata.getStudyTypes();
@@ -258,12 +260,12 @@ public class Metadata extends Plugin {
             print("Field\tType\tPossible_Values\nname\tString\nversion\tString\ndescription\tString\n");
         }  else if ("workflow_run".equals(table)) {
             print("Field\tType\tPossible_Values\nworkflow_accession\tInteger\nstatus\tString\t[completed, failed]\nstdout\tString\nstderr\tString\n");
-            print("\nThis also takes one or more files encoded as --file algorithm::file-meta-type::file-path\n");
+            print(fileDescription);
             print("\nThis also takes one or more --parent-accession options.\n");
             print("\nThis command will result in one workflow_run, one processing tied to the parents specified, and n files attached to that processing event.\n");
         }  else if ("file".equals(table)) {
-            print("This uses no fields.\n"); 
-            print("\nThis takes one file encoded as --file algorithm::file-meta-type::file-path[::description] \n");
+            print("Field\tType\tPossible_Values\nalgorithm\tString\n"); 
+            print(fileDescription);
             print("\nThis also takes one or more --parent-accession options.\n");
         } else {
             Log.error("This tool does not know how to list the fields for the " + table + " table.");
@@ -365,7 +367,7 @@ public class Metadata extends Plugin {
      * @return ReturnValue
      */
     protected ReturnValue addFile() {
-        String[] necessaryFields = {};
+        String[] necessaryFields = {"algorithm"};
         if (interactive) {
             print("Unfortunately interactive mode is not supported for adding files.");
         }
@@ -396,6 +398,7 @@ public class Metadata extends Plugin {
 
             ReturnValue newRet = new ReturnValue();
             newRet.setFiles(this.files);
+            newRet.setAlgorithm(fields.get("algorithm"));
             // send up the files via ReturnValue (ewww)
             metadata.update_processing_event(procID, newRet);
             int mapProcessingIdToAccession = metadata.mapProcessingIdToAccession(procID);
@@ -705,18 +708,11 @@ public class Metadata extends Plugin {
         ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
         List<?> valuesOf = options.valuesOf("file");
         for (Object value : valuesOf) {
-            String[] tokens = value.toString().split("::");
-            if (tokens.length >= 3) {
-                FileMetadata f = new FileMetadata();
-                f.setType(tokens[0]);
-                f.setMetaType(tokens[1]);
-                f.setFilePath(tokens[2]);
-                if (tokens.length > 3) {
-                    f.setDescription(tokens[3]);
-                }
+            FileMetadata f = Metadata.fileString2FileMetadata(value.toString());
+            if (f != null) {
                 files.add(f);
             } else {
-                print("You need to encode the file as '<algorithm>::<file-meta-type>::<file-path>'\n");
+                print("You need to encode the file as '<type>::<file-meta-type>::<file-path>'\n");
             }
         }
         return (localRet);
@@ -976,5 +972,24 @@ public class Metadata extends Plugin {
             parseFields();
             return false;
         }
+    }
+    
+    public static FileMetadata fileString2FileMetadata(String fileString) {
+        FileMetadata fm = null;
+        String[] tokens = fileString.split("::");
+        if (tokens.length > 0) {
+            fm = new FileMetadata();
+            fm.setType(tokens[0]);
+            if (tokens.length > 1) {
+                fm.setMetaType(tokens[1]);
+                if (tokens.length > 2) {
+                    fm.setFilePath(tokens[2]);
+                    if (tokens.length > 3) {
+                        fm.setDescription(tokens[3]);
+                    }
+                }
+            }
+        }
+        return fm;
     }
 }
